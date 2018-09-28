@@ -1,8 +1,10 @@
+//XXX Add line numbers
+
 #[derive(Debug)]
 pub enum Expr {
     Int(i32),
     Str(String),
-    Real(f64),
+    Real(String),
     Var(String),
     FnApp(String, Vec<Box<Expr>>),
 }

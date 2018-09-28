@@ -35,4 +35,5 @@ fn exprs_test() {
     assert_eq!(interpret::eval_scal(&ep.parse("2 + 3 * 4").unwrap()), 14.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * 4 - 1").unwrap()), 7.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * (4 - 1)").unwrap()), 6.0);
+    assert_eq!(interpret::eval_scal(&ep.parse("sassy(4, 2.0) + 1").unwrap()), 10.0);
 }
