@@ -1,35 +1,42 @@
 use std::str::FromStr;
-use ast::{Expr, BinOp};
+use ast::Expr::*;
+use ast::Expr;
 
 grammar;
 
 pub Expr: Box<Expr> = {
-    Expr ExprOp Factor => Box::new(Expr::BinOp(<>)),
+    <l:Expr> <op:tier2op> <r:Factor> => Box::new(FnApp(op, vec![l, r])),
     Factor,
 };
 
-ExprOp: BinOp = {
-    "+" => BinOp::Add,
-    "-" => BinOp::Sub,
-};
-
 Factor: Box<Expr> = {
-    Factor FactorOp Term => Box::new(Expr::BinOp(<>)),
+    <l:Factor> <op:tier1op> <r:Term> => Box::new(FnApp(op, vec![l, r])),
     Term,
 };
 
-FactorOp: BinOp = {
-    "*" => BinOp::Mul,
-    "/" => BinOp::Div,
+ExprList: Vec<Box<Expr>> = {
+    <v:ExprList> comma <e:Expr> => {
+        let mut v = v;
+        v.push(e);
+        v
+    },
+    Expr => vec![<>],
 };
 
 pub Term: Box<Expr> = {
-    Int => Box::new(Expr::Int(<>)),
-    Float => Box::new(Expr::Real(<>)),
-    "(" <Expr> ")" };
+    int => Box::new(Int(<>)),
+    float => Box::new(Real(<>)),
+    "(" <Expr> ")",
+    ident => Box::new(Var(<>)),
+    <f:ident> "(" <args:ExprList> ")" => Box::new(FnApp(f, args))
+};
 
-Int: i32 = r"[0-9]+" => i32::from_str(<>).unwrap();
-Float: f64 = r"[0-9]+\.[0-9]+" => f64::from_str(<>).unwrap();
-Ident: String = r"[a-zA-Z][a-zA-Z0-9_]*" => String::from(<>);
+tier1op: String = r"[\*/]" => String::from(<>);
+tier2op: String = r"[\+\-]" => String::from(<>);
+int: i32 = r"[0-9]+" => i32::from_str(<>).unwrap();
+float: f64 = r"[0-9]+\.[0-9]+" => f64::from_str(<>).unwrap();
+ident: String = r"[a-zA-Z][a-zA-Z0-9_]*" => String::from(<>);
+comma: () = ",";
+
 
 // <p:A> <q:B> => Foo {<>} is equivalent to	<p:A> <q:B> => Foo {p:p, q:q}

@@ -3,27 +3,27 @@ pub enum Expr {
     Int(i32),
     Str(String),
     Real(f64),
-    BinOp(Box<Expr>, BinOp, Box<Expr>),
-    UnaryOp(UnaryOp, Box<Expr>),
     Var(String),
-    FnApp(String, Vec<Expr>),
-}
-
-#[derive(Debug)]
-pub enum UnaryOp {Not, Neg, Transpose}
-
-#[derive(Debug)]
-pub enum BinOp {
-    Mul, Div, Add, Sub, Mod, CoeffMul, And, Or, Lte, Gte, Neq, Eq, Lt, Gt
+    FnApp(String, Vec<Box<Expr>>),
 }
 
 pub enum TypePrim {
-    Bool, Real, Int, Array(Box<TypePrim>, Vec<Expr>),
-    Vector(Box<Expr>), Matrix(Box<Expr>, Box<Expr>), Unit
+    Bool,
+    Real,
+    Int,
+    Array(Box<TypePrim>, Vec<Expr>),
+    Vector(Box<Expr>),
+    Matrix(Box<Expr>, Box<Expr>),
+    Unit,
 }
 
 pub enum TypeLevel {
-    LevelVar(String), Data, Model, GenQuant, Lub(Vec<TypeLevel>), Glb(Vec<TypeLevel>)
+    LevelVar(String),
+    Data,
+    Model,
+    GenQuant,
+    Lub(Vec<TypeLevel>),
+    Glb(Vec<TypeLevel>),
 }
 
 // FullType = (TypePrim, TypeLevel)
