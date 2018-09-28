@@ -1,0 +1,35 @@
+use std::str::FromStr;
+use ast::{Expr, BinOp};
+
+grammar;
+
+pub Expr: Box<Expr> = {
+    Expr ExprOp Factor => Box::new(Expr::BinOp(<>)),
+    Factor,
+};
+
+ExprOp: BinOp = {
+    "+" => BinOp::Add,
+    "-" => BinOp::Sub,
+};
+
+Factor: Box<Expr> = {
+    Factor FactorOp Term => Box::new(Expr::BinOp(<>)),
+    Term,
+};
+
+FactorOp: BinOp = {
+    "*" => BinOp::Mul,
+    "/" => BinOp::Div,
+};
+
+pub Term: Box<Expr> = {
+    Int => Box::new(Expr::Int(<>)),
+    Float => Box::new(Expr::Real(<>)),
+    "(" <Expr> ")" };
+
+Int: i32 = r"[0-9]+" => i32::from_str(<>).unwrap();
+Float: f64 = r"[0-9]+\.[0-9]+" => f64::from_str(<>).unwrap();
+Ident: String = r"[a-zA-Z][a-zA-Z0-9_]*" => String::from(<>);
+
+// <p:A> <q:B> => Foo {<>} is equivalent to	<p:A> <q:B> => Foo {p:p, q:q}
