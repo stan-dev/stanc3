@@ -4,35 +4,38 @@ use ast::Expr;
 
 grammar;
 
-pub Expr: Box<Expr> = {
-    <l:Expr> <op:tier2op> <r:Factor> => Box::new(FnApp(op, vec![l, r])),
-    Factor,
+Tier<Op, NextTier>: Box<Expr> = {
+    <l: Tier<Op, NextTier>> <f:Op> <r:NextTier>
+        => Box::new(FnApp(f, vec![l, r])),
+    NextTier
+}
+
+CommaList<T>: Vec<T> = {
+    <v:(<T> ",")*> <e:T?> => match e { // (1)
+        None=> v,
+        Some(e) => {
+            let mut v = v;
+            v.push(e);
+            v
+        }
+    }
 };
 
-Factor: Box<Expr> = {
-    <l:Factor> <op:tier1op> <r:Term> => Box::new(FnApp(op, vec![l, r])),
-    Term,
-};
-
-ExprList: Vec<Box<Expr>> = {
-    <v:ExprList> comma <e:Expr> => {
-        let mut v = v;
-        v.push(e);
-        v
-    },
-    Expr => vec![<>],
-};
+pub Expr = Tier<tier2op, Factor>;
+pub Factor = Tier<tier1op, Term>;
+pub Exprs = CommaList<Expr>;
 
 pub Term: Box<Expr> = {
     int => Box::new(Int(<>)),
     float => Box::new(Real(<>)),
     "(" <Expr> ")",
     ident => Box::new(Var(<>)),
-    <f:ident> "(" <args:ExprList> ")" => Box::new(FnApp(f, args))
+    <f:ident> "(" <args:Exprs> ")" => Box::new(FnApp(f, args))
 };
 
 tier1op: String = r"[\*/]" => String::from(<>);
 tier2op: String = r"[\+\-]" => String::from(<>);
+//prefix_op: String = r"[-]" => String::from(<>);
 int: i32 = r"[0-9]+" => i32::from_str(<>).unwrap();
 float: String = r"[0-9]+\.[0-9]+" => String::from(<>);
 ident: String = r"[a-zA-Z][a-zA-Z0-9_]*" => String::from(<>);
