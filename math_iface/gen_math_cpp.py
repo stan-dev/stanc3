@@ -86,32 +86,18 @@ def to_tokens(line):
                    split_and_retain(",")],
                   line.split())
 
-stdlib_fns = [
-    "is_nan(real)", "abs(int)", "abs(real)", "add(int, int)", "add(real, real)",
-    "add(int)", "add(real)", "atan2(real, real)"
-]
-stdlib_fn_re_pattern = "|".join("(.*" + re.escape(s) + ".*)" for s in stdlib_fns)
-stdlib_fn_re = re.compile(stdlib_fn_re_pattern)
-def is_stdlib_fn(line):
-    return re.search(stdlib_fn_re, line)
-
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "test":
         #t = to_tokens("real sars(int[,,,,,,,])")
-        #print sorted(types.keys())
+        print sorted(types.keys())
         #print('tokens:', t)
         #print("cpp: ", to_cpp(t))
         sys.exit(0)
     print("#include <stan/math/rev/mat.hpp>")
     print("namespace stan {")
     print("namespace math {")
+    # TODO: Filter out all containers and scalars except vector and matrix
     for line in sys.stdin:
-        if "row vector" in line:
-            continue
-        if "_rng" in line: # XXX
-            continue
-        if is_stdlib_fn(line):
-            continue
         print(to_cpp(to_tokens(line)))
     print("} // namespace math")
     print("} // namespace stan")

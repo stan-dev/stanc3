@@ -1,3 +1,7 @@
 /target
 **/*.rs.bk
 Cargo.lock
+math_iface/gen/*
+
+*.swp
+*.a

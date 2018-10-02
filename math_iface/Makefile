@@ -1,11 +1,27 @@
-print_sigs:
-	cd ../stan2; make print_sigs; cp print_sigs ../math_iface
+math.a: gen/math.o
+	ar rcs $@ $^
 
-sigs.txt: print_sigs
-	./print_sigs > sigs.txt
+gen/print_sigs:
+	cd ../stan2; make print_sigs; mv print_sigs ../math_iface/gen
 
-math.cpp: sigs.txt gen_math_cpp.py
-	python gen_math_cpp.py < sigs.txt > math.cpp
+.DELETE_ON_ERROR: gen/sigs.txt gen/filtered_sigs.txt gen/math.cpp
 
-math.o: math.cpp
-	$(COMPILE.cc) math.cpp -o math.o
+gen/sigs.txt: gen/print_sigs
+	$< > $@
+
+gen/filtered_sigs.txt: gen/sigs.txt filter_sigs.py
+	python filter_sigs.py < $< > $@
+
+gen/math.cpp: gen/filtered_sigs.txt gen_math_cpp.py
+	python gen_math_cpp.py < $< > $@
+
+MATH=../stan2/lib/stan_math/
+include $(MATH)make/libraries
+
+CXXFLAGS+=-std=c++1y -Wno-unknown-warning-option -Wno-tautological-compare -Wno-sign-compare -O3  -I$(MATH) -I$(EIGEN) -I$(BOOST) -I$(SUNDIALS)/include -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -DGTEST_USE_OWN_TR1_TUPLE -DGTEST_USE_OWN_TR1_TUPLE
+
+gen/math.o: gen/math.cpp
+	$(COMPILE.cc) -o $@ $<
+
+clean:
+	rm -f gen/math.o gen/math.cpp gen/filtered_sigs.txt gen/sigs.txt
