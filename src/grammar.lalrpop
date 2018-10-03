@@ -1,6 +1,7 @@
 use std::str::FromStr;
 use ast::Expr::*;
 use ast::Expr;
+use stan_to_math::maybe_translate;
 
 grammar;
 
@@ -30,7 +31,7 @@ pub Term: Box<Expr> = {
     float => Box::new(Real(<>)),
     "(" <Expr> ")",
     ident => Box::new(Var(<>)),
-    <f:ident> "(" <args:Exprs> ")" => Box::new(FnApp(f, args))
+    <f:ident> "(" <args:Exprs> ")" => Box::new(FnApp(maybe_translate(f), args))
 };
 
 tier1op: String = r"[\*/]" => String::from(<>);

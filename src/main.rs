@@ -1,7 +1,9 @@
 #![feature(box_syntax, box_patterns)]
 #[macro_use] extern crate lalrpop_util;
+#[macro_use] extern crate lazy_static;
 pub mod ast;
 pub mod interpret;
+pub mod stan_to_math;
 
 //use ast::Expr;
 //use ast::Expr::{Int};
@@ -35,5 +37,5 @@ fn exprs_test() {
     assert_eq!(interpret::eval_scal(&ep.parse("2 + 3 * 4").unwrap()), 14.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * 4 - 1").unwrap()), 7.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * (4 - 1)").unwrap()), 6.0);
-    assert_eq!(interpret::eval_scal(&ep.parse("sassy(4, 2.0) + 1").unwrap()), 10.0);
+    assert_eq!(interpret::eval_scal(&ep.parse("normal_lpdf(4, 0.0, 1.0) + 1").unwrap()), 10.0);
 }

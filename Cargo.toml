@@ -4,17 +4,10 @@ version = "0.1.0"
 authors = ["Sean Talts <sean.talts@gmail.com>"]
 build = "build.rs" # LALRPOP preprocessing
 
-# The generated code depends on lalrpop-util.
-#
-# The generated tokenizer depends on the regex crate.
-#
-# (If you write your own tokenizer, or already have the regex
-# crate, you can skip this dependency.)
 [dependencies]
 lalrpop-util = "0.16.0"
 regex = "0.2.0"
+lazy_static = "1.1.0"
 
-# Add a build-time dependency on the lalrpop library:
 [build-dependencies]
 lalrpop = "0.16.0"
-

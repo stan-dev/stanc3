@@ -36,6 +36,8 @@
 
 # Roadmap
 1. Get a simple language working end to end in Rust (and maybe OCaml to compare). This means all 4 phases (though optimization can be simple).
+  1. TODO: Typechecking phase
+  1. TODO: Optimization phase
 1. Get Stan 2 parsing and input AST defined.
 1. Figure out IR - maps? new data types?
 1. Pretty print AST sexp
