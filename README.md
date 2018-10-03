@@ -3,7 +3,7 @@
 * Keep **line number** information throughout all phases through to runtime - there are some errors that only pop up during sampling (key example - discrete parameters do not work with HMC).
 * First, an **interpreter** - improves compile times and distribution. Later, JIT with LLVM.
 * **Optimizing** - takes advantage of info known at the Stan language level.
-* Keep useful Stan language level info at runtime - e.g. `isFinite(X)`, matrix sizes (useful for JIT)
+* **Retain info at runtime** - e.g. `isFinite(X)` can be checked once, matrix sizes (useful for JIT)
 
 ## Phases
 1. Parse Stan language into AST

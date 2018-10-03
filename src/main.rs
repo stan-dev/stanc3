@@ -4,6 +4,7 @@
 pub mod ast;
 pub mod interpret;
 pub mod stan_to_math;
+//pub mod optimize;
 
 //use ast::Expr;
 //use ast::Expr::{Int};
