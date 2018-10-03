@@ -36,11 +36,11 @@
 
 # Roadmap
 1. Get a simple language working end to end in Rust (and maybe OCaml to compare). This means all 4 phases (though optimization can be simple).
-  1. TODO: Typechecking phase
-  1. TODO: Optimization phase
+    1. TODO: Typechecking phase
+    1. TODO: Optimization phase
+    1. TODO: FFI with simple AOT compiled Math library
 1. Get Stan 2 parsing and input AST defined.
+1. Expand FFI coverage to all of Math library for a single container type
 1. Figure out IR - maps? new data types?
 1. Pretty print AST sexp
-1. (independent) pre-compile Math library for reduced container types
-  1. Link Rust or OCaml FFI to AOT-compiled Math library
-1.
+1. More optimizations ;)
