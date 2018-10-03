@@ -39,6 +39,7 @@
     1. TODO: Typechecking phase
     1. TODO: Optimization phase
     1. TODO: FFI with simple AOT compiled Math library
+    1. TODO: Compile and link against HMC algorithm
 1. Get Stan 2 parsing and input AST defined.
 1. Expand FFI coverage to all of Math library for a single container type
 1. Figure out IR - maps? new data types?
