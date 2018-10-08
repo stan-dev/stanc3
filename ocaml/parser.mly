@@ -77,10 +77,10 @@ expression: IDENT { Var $1 }
   | INT { IntLit $1 }
   | REAL { NumLit $1 }
   | expression QMARK expression COLON expression { If($1, $3, $5) }
-  | expression PLUS expression { FnApp("Add", [$1; $3]) }
-  | expression MINUS expression { FnApp("Sub", [$1; $3]) }
-  | expression MULT expression { FnApp("Mul", [$1; $3]) }
-  | expression DIV expression { FnApp("Div", [$1; $3]) }
+  | expression PLUS expression { FnApp("add", [$1; $3]) }
+  | expression MINUS expression { FnApp("sub", [$1; $3]) }
+  | expression MULT expression { FnApp("mul", [$1; $3]) }
+  | expression DIV expression { FnApp("div", [$1; $3]) }
   | MINUS expression { FnApp("Neg", [$2]) }
   | BANG expression { FnApp("Not", [$2]) }
 

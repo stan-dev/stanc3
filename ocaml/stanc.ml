@@ -1,4 +1,3 @@
-let (fprintf) = Core_kernel.fprintf
 open Lexer
 open Lexing
 open Ast
@@ -22,6 +21,7 @@ let () =
 let lexbuf = Lexing.from_channel In_channel.stdin in
 try
   let exp = parse_with_error lexbuf in
-  [%sexp (exp : stanProg)] |> Sexp.to_string_hum |> print_endline
+  let () = [%sexp (exp : stanProg)] |> Sexp.to_string_hum |> print_endline in
+  Interpret.interpret exp |> string_of_float |> print_endline
 with
   | End_of_file -> print_string "EOF"
