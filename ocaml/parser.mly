@@ -4,7 +4,6 @@
 %token <int> INT
 %token <float> REAL
 %token <string> IDENT
-%token <string> FUNIDENT
 
 %token DATA INTTYPE REALTYPE
 %token TRANSFORMED_DATA
@@ -35,15 +34,17 @@
 
 %%
 
+(*
 prog: MODEL statement { Prog([], $2, Unit) }
-
+*)
+prog: expression SEMICOLON { Prog($1) }
 statement: atomic_statement { $1 } | nested_statement { $1 }
 
 atomic_statement: atomic_statement_body SEMICOLON { $1 }
 
 atomic_statement_body:
   | lhs assignment_op expression { Assign($2, $1, $3) }
-  | typeLevel? typePrim lhs { VarDecl(($1, $2), $3) }
+  | typePrim lhs { VarDecl($1, $2) }
 (*
   | expression '~' identifier '(' expressions ')' ?truncation
   | function_literal '(' expressions ')'
@@ -76,14 +77,13 @@ expression: IDENT { Var $1 }
   | INT { IntLit $1 }
   | REAL { NumLit $1 }
   | expression QMARK expression COLON expression { If($1, $3, $5) }
-  | expression PLUS expression { BinOp(Add, $1, $3) }
-  | expression MINUS expression { BinOp(Sub, $1, $3) }
-  | expression MULT expression { BinOp(Mul, $1, $3) }
-  | expression DIV expression { BinOp(Div, $1, $3) }
-  | MINUS expression { UnaryOp(Neg, $2) }
-  | BANG expression { UnaryOp(Not, $2) }
+  | expression PLUS expression { FnApp("Add", [$1; $3]) }
+  | expression MINUS expression { FnApp("Sub", [$1; $3]) }
+  | expression MULT expression { FnApp("Mul", [$1; $3]) }
+  | expression DIV expression { FnApp("Div", [$1; $3]) }
+  | MINUS expression { FnApp("Neg", [$2]) }
+  | BANG expression { FnApp("Not", [$2]) }
 
-typePrim: REALTYPE { TReal } | INTTYPE { TInt } | VECTOR { TVector }
-typeLevel: DATA {} | MODEL {} | GENQUANT {}
+typePrim: REALTYPE { TReal } | INTTYPE { TInt } | VECTOR expression { TVector $2 }
 
 %%

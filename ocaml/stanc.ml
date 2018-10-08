@@ -1,6 +1,8 @@
 let (fprintf) = Core_kernel.fprintf
 open Lexer
 open Lexing
+open Ast
+open Core_kernel
 
 let print_position outx lexbuf =
   let pos = lexbuf.lex_curr_p in
@@ -17,11 +19,9 @@ let parse_with_error lexbuf =
     exit (-1)
 
 let () =
-let lexbuf = Lexing.from_channel stdin in
+let lexbuf = Lexing.from_channel In_channel.stdin in
 try
-  let ()  = print_newline () in
   let exp = parse_with_error lexbuf in
-  print_string "hi";
-  print_string (Lexing.lexeme lexbuf)
+  [%sexp (exp : stanProg)] |> Sexp.to_string_hum |> print_endline
 with
   | End_of_file -> print_string "EOF"

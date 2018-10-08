@@ -6,4 +6,6 @@
 
 (executable (
  (name stanc)
- (libraries (core_kernel))))
+ (libraries (core_kernel))
+ (preprocess (pps (ppx_jane ppx_driver.runner)))
+))

@@ -1,17 +1,15 @@
-type unaryOp = Not | Neg
-type binOp = Add | Sub | Mul | Div | Mod | CoeffMul
-           | And | Or | Lte | Gte | Neq | Eq | Lt | Gt
+open Core_kernel
 
 type ident = string
+[@@deriving sexp]
 
 type expr = Var of ident
           | IntLit of int
           | NumLit of float
           | StrLit of string
-          | UnaryOp of unaryOp * expr
-          | BinOp of binOp * expr * expr
-          | FCall of ident * expr list
+          | FnApp of ident * expr list
           | If of expr * expr * expr
+[@@deriving sexp]
 
 type typePrim = TBool | TReal | TInt
               | TArray of typePrim * expr list
@@ -23,7 +21,10 @@ type typeLevel = LevelVar of string
                | Data | Model | GenQuant
                | Lub of typeLevel list | Glb of typeLevel list
 
-type fullType = typePrim * typeLevel
+type fullType = typePrim
+
+type binOp = Add | Sub | Mul | Div | Mod | CoeffMul
+           | And | Or | Lte | Gte | Neq | Eq | Lt | Gt
 
 type statement = Block of statement list
                | DistAs of ident * expr list
@@ -40,7 +41,13 @@ type arg = fullType * ident
 type funDef = FunExpr of ident * arg list * statement * expr
             | FunVoid of ident * arg list * statement * unit
 
+(*
 type stanProg = Prog of funDef list * statement * statement
               | None
+*)
+
+type stanProg = Prog of expr
+              | None
+[@@deriving sexp]
 
 let next() = "0"
