@@ -4,7 +4,7 @@
 pub mod ast;
 pub mod interpret;
 pub mod stan_to_math;
-//pub mod optimize;
+pub mod optimize;
 
 //use ast::Expr;
 //use ast::Expr::{Int};
@@ -39,4 +39,26 @@ fn exprs_test() {
     assert_eq!(interpret::eval_scal(&ep.parse("2 * 4 - 1").unwrap()), 7.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * (4 - 1)").unwrap()), 6.0);
     assert_eq!(interpret::eval_scal(&ep.parse("normal_lpdf(4, 0.0, 1.0) + 1").unwrap()), 10.0);
+}
+
+#[test]
+fn ownership_vs_mutation() {
+    let mut x = String::from("hi");
+    mut_str(&mut x);
+    mut_str(&mut x);
+    println!("{}", &x);
+    let s = String::from("hi");
+    let s = rnstr(s);
+    let s = rnstr(s);
+    println!("{}", &s);
+    assert_eq!(s, x);
+}
+
+fn mut_str(s: &mut String) {
+    s.push_str(" world");
+}
+
+fn rnstr(mut s: String) -> String {
+    s.push_str(" world");
+    s
 }

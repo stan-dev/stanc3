@@ -33,9 +33,10 @@
 * tuples or structs
 * missing data
 * automated vectorization
+* `extern` for FFI w/ gradients
 
 # Roadmap
-1. Get a simple language working end to end in Rust (and maybe OCaml to compare). This means all 4 phases (though optimization can be simple).
+1. Get a simple language working end to end in Rust (and maybe OCaml to compare). This means all 4 phases (though all can be simple).
     1. TODO: Typechecking phase
     1. TODO: Optimization phase
     1. TODO: FFI with simple AOT compiled Math library

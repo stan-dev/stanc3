@@ -2,7 +2,8 @@ use ast::Expr;
 use ast::Expr::*;
 use std::str::FromStr;
 
-// XXX When to de-sugar "+" into "add"?
+// XXX When to de-sugar?
+// separate phase?
 
 
 pub fn eval_scal(e: &Expr) -> f64 {
@@ -12,11 +13,6 @@ pub fn eval_scal(e: &Expr) -> f64 {
                 .map(|e| { eval_scal(e) })
                 .collect();
             match fname.as_str() {
-                "+" => eargs[0] + eargs[1],
-                "-" => eargs[0] - eargs[1],
-                "*" => eargs[0] * eargs[1],
-                "/" => eargs[0] / eargs[1],
-                "sassy" => eargs[0] * eargs[1] + 1.0,
                 _ => panic!("Operator {} not handled!", fname),
             }
         }
