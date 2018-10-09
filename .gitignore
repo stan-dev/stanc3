@@ -5,3 +5,5 @@ math_iface/gen/*
 
 *.swp
 *.a
+*.merlin
+_build
