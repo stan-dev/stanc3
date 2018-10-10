@@ -1,4 +1,4 @@
-/target
+/rust/target
 **/*.rs.bk
 Cargo.lock
 math_iface/gen/*
@@ -7,3 +7,4 @@ math_iface/gen/*
 *.a
 *.merlin
 _build
+

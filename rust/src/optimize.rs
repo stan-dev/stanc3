@@ -18,11 +18,11 @@ impl Optimizer {
             // If we have two or more, replace with a local variable.
             // The interpreter will then be responsible for looking up the var.
             // This pass should write out the list of vars somewhere.
-            f @ box FnApp(name, ref args) => Box::new(if self.fn_cache.contains_key(&f) {
-                self.fn_cache.get(&f).unwrap()
+            ref f @ box FnApp(_, _) => Box::new(if self.fn_cache.contains_key(&f) {
+                self.fn_cache.get(&f).unwrap().clone()
             } else {
                 let new_var = Var(String::from("new symbol lol XXX"));
-                self.fn_cache.insert(*f, new_var);
+                self.fn_cache.insert(*f.clone(), new_var.clone());
                 new_var
             }),
             anything_else => anything_else,
@@ -30,4 +30,4 @@ impl Optimizer {
     }
 }
 
-pub fn optimize(e: &Expr) {}
+pub fn optimize(_e: &Expr) {}

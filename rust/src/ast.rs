@@ -1,6 +1,6 @@
 //XXX Add line numbers...?
 
-#[derive(Debug, Hash, PartialEq, Eq)]
+#[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub enum Expr {
     Int(i32),
     Str(String),

@@ -9,7 +9,7 @@ use std::str::FromStr;
 pub fn eval_scal(e: &Expr) -> f64 {
     match e {
         FnApp(fname, args) => {
-            let eargs: Vec<f64> = args.into_iter()
+            let _eargs: Vec<f64> = args.into_iter()
                 .map(|e| { eval_scal(e) })
                 .collect();
             match fname.as_str() {
