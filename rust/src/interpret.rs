@@ -1,5 +1,4 @@
-use ast::Expr;
-use ast::Expr::*;
+use ast::{Expr, Expr::*, Statement, Statement::*};
 use std::str::FromStr;
 
 use std::collections::HashMap;
@@ -43,17 +42,40 @@ pub fn eval_scal(e: &Expr) -> f64 {
     Interpreter::<()>::new().eval_scal(e)
 }
 
+pub fn eval_statements(s: &Vec<Statement>) -> f64 {
+    Interpreter::<()>::new().eval_statements(s)
+}
+
 pub struct Interpreter<T: Tracer> {
-    pub tracer: T
+    pub tracer: T,
+    environment: HashMap<String, f64>,
+
 }
 
 impl<T: Tracer> Interpreter<T> {
     pub fn new() -> Self {
         Interpreter{
             tracer: T::new(),
+            environment: HashMap::new(),
         }
     }
 
+    pub fn eval_statement(&mut self, statement: &Statement) -> Option<f64> {
+        match statement {
+            Assign(symbol, expr) => {
+                let result = self.eval_scal(expr);
+                self.environment.insert(symbol.clone(), result);
+                None
+            },
+            Expr(e) => {
+                Some(self.eval_scal(e))
+            }
+        }
+    }
+
+    pub fn eval_statements(&mut self, statements: &Vec<Statement>) -> f64 {
+        statements.iter().map(|s| self.eval_statement(s)).last().unwrap().unwrap()
+    }
 
     pub fn eval_scal(&mut self, e: &Expr) -> f64 {
         match e {
@@ -72,7 +94,11 @@ impl<T: Tracer> Interpreter<T> {
             }
             Int(i) => f64::from(*i),
             Real(s) => f64::from_str(s).unwrap(),
-            _ => panic!("haha"),
+            Var(symbol) => {
+                *self.environment.get(symbol).expect(&format!("Var `{}` used before write", symbol))
+            }
+
+            expr => panic!(format!("No Evaluator defined for {:?}", expr)),
         }
     }
 }

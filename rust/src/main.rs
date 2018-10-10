@@ -43,15 +43,15 @@ fn exprs_test() {
 
 #[test]
 fn optimize_test() {
-    let ep = grammar::ExprParser::new();
+    let sp = grammar::StatementsParser::new();
 
-    let ast = *ep.parse("ident(10) + ident(10)").unwrap();
+    let ast = sp.parse("ident(10) + ident(10)").unwrap();
     let optimized_ast = optimize::optimize(ast.clone());
-    assert_eq!(interpret::eval_scal(&ast), 20.0);
+    assert_eq!(interpret::eval_statements(&ast), 20.0);
 
 
     let mut optimized_interpreter = interpret::Interpreter::<interpret::StatsTracer>::new();
-    assert_eq!(optimized_interpreter.eval_scal(&optimized_ast), 20.0);
+    assert_eq!(optimized_interpreter.eval_statements(&optimized_ast), 20.0);
     assert_eq!(optimized_interpreter.tracer.call_count("ident"), 1);
 }
 

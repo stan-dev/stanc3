@@ -1,13 +1,12 @@
 use std::str::FromStr;
-use ast::Expr::*;
-use ast::Expr;
+use ast::{Expr, Expr::*, Statement, Statement::*};
 use stan_to_math::maybe_translate;
 
 grammar;
 
-Tier<Op, NextTier>: Box<Expr> = {
+Tier<Op, NextTier>: Expr = {
     <l: Tier<Op, NextTier>> <f:Op> <r:NextTier>
-        => Box::new(FnApp(f, vec![l, r])),
+        => FnApp(f, vec![l, r]),
     NextTier
 }
 
@@ -22,17 +21,35 @@ CommaList<T>: Vec<T> = {
     }
 };
 
+SemicolonList<T>: Vec<T> = {
+    <v:(<T> ";")*> <e:T?> => match e { // (1)
+        None=> v,
+        Some(e) => {
+            let mut v = v;
+            v.push(e);
+            v
+        }
+    }
+};
+
 pub Expr = Tier<tier2op, Factor>;
 pub Factor = Tier<tier1op, Term>;
 pub Exprs = CommaList<Expr>;
 
-pub Term: Box<Expr> = {
-    int => Box::new(Int(<>)),
-    float => Box::new(Real(<>)),
+pub Term: Expr = {
+    int => Int(<>),
+    float => Real(<>),
     "(" <Expr> ")",
-    ident => Box::new(Var(<>)),
-    <f:ident> "(" <args:Exprs> ")" => Box::new(FnApp(maybe_translate(f), args))
+    ident => Var(<>),
+    <f:ident> "(" <args:Exprs> ")" => FnApp(maybe_translate(f), args)
 };
+
+pub Statement: Statement = {
+    <f:ident> "=" <expr:Expr> => Assign(f, expr),
+    <e: Expr> => Expr(e),
+}
+
+pub Statements = SemicolonList<Statement>;
 
 tier1op: String = r"[\*/]" => String::from(<>);
 tier2op: String = r"[\+\-]" => String::from(<>);
