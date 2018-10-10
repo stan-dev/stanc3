@@ -1,0 +1,11 @@
+(library
+ ((name stanclib)
+  (libraries (core_kernel))
+  (preprocess (pps (ppx_jane ppx_driver.runner)))
+))
+
+(ocamllex (lexer))
+
+(menhir ((modules (parser))))
+
+(jbuild_version 1)

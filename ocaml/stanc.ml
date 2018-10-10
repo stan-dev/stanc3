@@ -1,6 +1,5 @@
-open Lexer
+open Stanclib
 open Lexing
-open Ast
 open Core_kernel
 
 let print_position outx lexbuf =
@@ -10,7 +9,7 @@ let print_position outx lexbuf =
 
 let parse_with_error lexbuf =
   try Parser.prog Lexer.read lexbuf with
-  | SyntaxError msg ->
+  | Lexer.SyntaxError msg ->
     fprintf stderr "%a: %s\n" print_position lexbuf msg;
     None
   | Parser.Error ->
@@ -21,7 +20,7 @@ let () =
 let lexbuf = Lexing.from_channel In_channel.stdin in
 try
   let exp = parse_with_error lexbuf in
-  let () = [%sexp (exp : stanProg)] |> Sexp.to_string_hum |> print_endline in
+  let () = [%sexp (exp : Ast.stanProg)] |> Sexp.to_string_hum |> print_endline in
   Interpret.interpret exp |> string_of_float |> print_endline
 with
   | End_of_file -> print_string "EOF"

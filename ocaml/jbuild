@@ -1,11 +1,7 @@
 (jbuild_version 1)
 
-(ocamllex (lexer))
-
-(menhir ((modules (parser))))
-
-(executable (
- (name stanc)
- (libraries (core_kernel))
- (preprocess (pps (ppx_jane ppx_driver.runner)))
+(executable
+ ((name stanc)
+  (libraries (stanclib))
+  (preprocess (pps (ppx_jane ppx_driver.runner)))
 ))
