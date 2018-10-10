@@ -38,7 +38,21 @@ fn exprs_test() {
     assert_eq!(interpret::eval_scal(&ep.parse("2 + 3 * 4").unwrap()), 14.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * 4 - 1").unwrap()), 7.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * (4 - 1)").unwrap()), 6.0);
-    assert_eq!(interpret::eval_scal(&ep.parse("normal_lpdf(4, 0.0, 1.0) + 1").unwrap()), 10.0);
+    assert_eq!(interpret::eval_scal(&ep.parse("ident(10) + 1").unwrap()), 11.0);
+}
+
+#[test]
+fn optimize_test() {
+    let ep = grammar::ExprParser::new();
+
+    let ast = *ep.parse("ident(10) + ident(10)").unwrap();
+    let optimized_ast = optimize::optimize(ast.clone());
+    assert_eq!(interpret::eval_scal(&ast), 20.0);
+
+
+    let mut optimized_interpreter = interpret::Interpreter::<interpret::StatsTracer>::new();
+    assert_eq!(optimized_interpreter.eval_scal(&optimized_ast), 20.0);
+    assert_eq!(optimized_interpreter.tracer.call_count("ident"), 1);
 }
 
 #[test]

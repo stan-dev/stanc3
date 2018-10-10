@@ -5,6 +5,10 @@ use std::collections::HashMap;
 
 struct Sym {}
 
+pub fn optimize(e: Expr) -> Expr {
+    e
+}
+
 struct Optimizer {
     // Function applications to Vars with a symbol that will have the result
     fn_cache: HashMap<Expr, Expr>,
@@ -18,16 +22,15 @@ impl Optimizer {
             // If we have two or more, replace with a local variable.
             // The interpreter will then be responsible for looking up the var.
             // This pass should write out the list of vars somewhere.
-            ref f @ box FnApp(_, _) => Box::new(if self.fn_cache.contains_key(&f) {
-                self.fn_cache.get(&f).unwrap().clone()
-            } else {
-                let new_var = Var(String::from("new symbol lol XXX"));
-                self.fn_cache.insert(*f.clone(), new_var.clone());
-                new_var
-            }),
+            ref f @ box FnApp(_, _) => {
+                let var = self
+                    .fn_cache
+                    .entry((**f).clone())
+                    .or_insert(Var(String::from("new symbol lol XXX")));
+                Box::new(var.clone())
+            }
             anything_else => anything_else,
         }
     }
 }
 
-pub fn optimize(_e: &Expr) {}
