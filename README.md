@@ -31,11 +31,10 @@ a roadmap for how the work splits up over time, and goals for additions to the S
 * **Retain info at runtime** - e.g. `isFinite(X)` can be checked once, matrix sizes (useful for JIT)
 
 ## Distinct Phases
-1. Parse Stan language into AST
-1. De-sugar AST into Intermediate Representation (IR)
-1. Typecheck IR
-1. Analyze & optimize IR (will be many distinct passes)
-1. Interpret IR or emit C++
+1. Parse Stan language into AST that represents the syntax quite closely
+1. Typecheck & add type information to [Middle Intermediate Representation](https://blog.rust-lang.org/2016/04/19/MIR.html)
+1. Analyze & optimize MIR -> MIR (could be many passes)
+1. Interpret MIR or emit LLVM IR or Tensorflow
 
 ## Potential Optimizations
 * Data and parameters are never modified
@@ -49,7 +48,7 @@ a roadmap for how the work splits up over time, and goals for additions to the S
     1. Parse a simple arithmetic expression language
     1. TODO: Typechecking phase
     1. TODO: Optimization phase
-    1. Interpret the AST
+    1. Interpret
     1. TODO: FFI with simple AOT compiled Math library
     1. TODO: Compile and link against HMC algorithm
     1. TODO(optional): Emit C++ code
@@ -68,17 +67,16 @@ a roadmap for how the work splits up over time, and goals for additions to the S
 # Interpreter design
 1. Lex and parse Stan 2+3 into a typed AST that retains type and line number information
 1. Typecheck AST: Returns "OK" or some error with line numbers.
-1. Optimize AST: Returns a new AST and populates a set of data structures from AST node to arbitrary metadata to capture information from flow analysis, etc.
+1. Optimize MIR: Returns a new MIR graph and populates a set of data structures from AST node to arbitrary metadata to capture information from flow analysis, etc.
 1. Interpret! This stage must have FFI externs to C from both the OCaml side and the C++ side (to wrap C++ functions in C wrappers we can call from OCaml).
 
-## AST
-I think it behooves us to make some simplifications in AST design while adding more metadata.
-
-* For example, I can't think of good reasons to keep track of whether some function application is in fact a binary operation, unary operation, or function call. This may end up being extended to other special forms like if, for, while, etc.
-* The AST should probably keep track of debug information (line number, etc) in each node itself, rather than in some external data structures keyed off nodes. This is so that when we run an optimization pass, we will be forced to design how our AST operations affect line numbers as well as the semantics, and at the end of the day we can always point a user to a specific place in their Stan code.
+## AST and IRs
+* The AST should have different variant types for each different type of syntax, and thus follow closely. Think about how a pretty-printer would want to deal with an AST (thanks @jimtla!)
+* The AST should keep track of debug information (line number, etc) in each node itself, rather than in some external data structures keyed off nodes.
+This is so that when we run an optimization pass, we will be forced to design how our AST operations affect line numbers as well as the semantics, and at the end of the day we can always point a user to a specific place in their Stan code.
 * We should also keep track of the string representation of numeric literals so we can make sure not to convert accidentally and lose precision.
 * It would be nice to have different types for side-effect free code. We might need to analyze for print statements, or possibly ignore them as they are moved around.
-* We would prefer to keep track of flow dependencies via AST pointers to other AST nodes or symbols rather than via SSA or other renaming schemes.
+* We would prefer to keep track of flow dependencies via MIR CFG pointers to other MIR nodes or symbols rather than via SSA or other renaming schemes.
 
 # Stan 3 language goals
 * Make it easier for users to share code (modularity and encapsulation are important here)
