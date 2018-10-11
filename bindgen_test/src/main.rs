@@ -8,9 +8,8 @@ extern "C" {
 }
 
 fn main() {
-    println!("Hello, world!");
     unsafe {
-        println!("{}", lognormal_ccdf_log(1f64,1f64,1f64));
+        println!("lognormal_ccdf_log(1,1,1) == {}", lognormal_ccdf_log(1f64,1f64,1f64));
     }
 }
 
