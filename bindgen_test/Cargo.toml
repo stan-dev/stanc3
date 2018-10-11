@@ -1,0 +1,7 @@
+[package]
+name = "bindgen_test"
+version = "0.1.0"
+authors = ["Jim Grandpre <jimtla@gmail.com>"]
+
+[dependencies]
+

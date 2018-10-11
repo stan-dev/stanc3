@@ -74,7 +74,7 @@ impl<T: Tracer> Interpreter<T> {
     }
 
     pub fn eval_statements(&mut self, statements: &Vec<Statement>) -> f64 {
-        statements.iter().map(|s| self.eval_statement(s)).last().unwrap().unwrap()
+        statements.iter().filter_map(|s| self.eval_statement(s)).last().expect("No expressions in program")
     }
 
     pub fn eval_scal(&mut self, e: &Expr) -> f64 {

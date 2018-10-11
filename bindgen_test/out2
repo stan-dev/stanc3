@@ -1,0 +1,389 @@
+Undefined symbols for architecture x86_64:
+  "std::runtime_error::what() const", referenced from:
+      vtable for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> > in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::error_info_injector<std::overflow_error> in libmath_c.a(math_c.o)
+      vtable for boost::math::rounding_error in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> > in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::error_info_injector<boost::math::rounding_error> in libmath_c.a(math_c.o)
+      vtable for boost::math::evaluation_error in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::evaluation_error> > in libmath_c.a(math_c.o)
+      ...
+  "typeinfo for std::__1::basic_streambuf<char, std::__1::char_traits<char> >", referenced from:
+      typeinfo for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::imbue(std::__1::locale const&)", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::setbuf(char*, long)", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::uflow()", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "vtable for __cxxabiv1::__si_class_type_info", referenced from:
+      typeinfo for std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      typeinfo for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      typeinfo for boost::math::rounding_error in libmath_c.a(math_c.o)
+      typeinfo for boost::math::evaluation_error in libmath_c.a(math_c.o)
+      typeinfo for std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "virtual thunk to std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "virtual thunk to std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+      construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "virtual thunk to std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+      construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "virtual thunk to std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+      construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "non-virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "non-virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "typeinfo for std::__1::basic_iostream<char, std::__1::char_traits<char> >", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      typeinfo for std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "typeinfo for std::domain_error", referenced from:
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::error_info_injector<std::domain_error> in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+      std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_ostringstream() in libmath_c.a(math_c.o)
+      std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_ostringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_ostringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_ostringstream() in libmath_c.a(math_c.o)
+  "std::logic_error::~logic_error()", referenced from:
+      long double boost::math::detail::owens_t_dispatch<long double, boost::math::policies::policy<boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> >(long double, long double, long double, boost::math::policies::policy<boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> const&, mpl_::int_<64> const&) in libmath_c.a(math_c.o)
+  "std::domain_error::~domain_error()", referenced from:
+      void boost::throw_exception<std::domain_error>(std::domain_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      boost::exception_detail::error_info_injector<std::domain_error>::~error_info_injector() in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::error_info_injector<std::domain_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      ...
+  "vtable for std::domain_error", referenced from:
+      void boost::math::policies::detail::raise_error<std::domain_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::error_info_injector<std::domain_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> > const&, boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_tag) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> > const&) in libmath_c.a(math_c.o)
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "std::domain_error::~domain_error()", referenced from:
+      void boost::math::policies::detail::raise_error<std::domain_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+  "std::overflow_error::~overflow_error()", referenced from:
+      void boost::throw_exception<std::overflow_error>(std::overflow_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      boost::exception_detail::error_info_injector<std::overflow_error>::~error_info_injector() in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::error_info_injector<std::overflow_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      ...
+  "typeinfo for std::__1::basic_ostream<char, std::__1::char_traits<char> >", referenced from:
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+      typeinfo for std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::runtime_error::~runtime_error()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "std::runtime_error::runtime_error(std::runtime_error const&)", referenced from:
+      void boost::throw_exception<std::overflow_error>(std::overflow_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::error_info_injector<std::overflow_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> > const&, boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_tag) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> > const&) in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::math::rounding_error>(boost::math::rounding_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::clone_impl(boost::exception_detail::error_info_injector<boost::math::rounding_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> > const&, boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::clone_tag) in libmath_c.a(math_c.o)
+      ...
+  "typeinfo for std::__1::basic_istream<char, std::__1::char_traits<char> >", referenced from:
+      construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::append(char const*, unsigned long)", referenced from:
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::rounding_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::domain_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::evaluation_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, double>(char const*, char const*) in libmath_c.a(math_c.o)
+  "virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::append(char const*)", referenced from:
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::rounding_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::domain_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::evaluation_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, double>(char const*, char const*) in libmath_c.a(math_c.o)
+  "std::runtime_error::runtime_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::rounding_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::evaluation_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, double>(char const*, char const*) in libmath_c.a(math_c.o)
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::xsputn(char const*, long)", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::operator<<(unsigned long)", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::replace(unsigned long, unsigned long, char const*)", referenced from:
+      boost::math::policies::detail::replace_all_in_string(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&, char const*, char const*) in libmath_c.a(math_c.o)
+  "std::__1::__basic_string_common<true>::__throw_length_error() const", referenced from:
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::str() const in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::rounding_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::domain_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::evaluation_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, double>(char const*, char const*) in libmath_c.a(math_c.o)
+  "std::logic_error::logic_error(char const*)", referenced from:
+      long double boost::math::detail::owens_t_dispatch<long double, boost::math::policies::policy<boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> >(long double, long double, long double, boost::math::policies::policy<boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> const&, mpl_::int_<64> const&) in libmath_c.a(math_c.o)
+  "std::overflow_error::~overflow_error()", referenced from:
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, double>(char const*, char const*) in libmath_c.a(math_c.o)
+  "std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::sentry::sentry(std::__1::basic_ostream<char, std::__1::char_traits<char> >&)", referenced from:
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::showmanyc()", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::logic_error::logic_error(std::logic_error const&)", referenced from:
+      void boost::throw_exception<std::domain_error>(std::domain_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::error_info_injector<std::domain_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> > const&, boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_tag) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> > const&) in libmath_c.a(math_c.o)
+      void boost::exception_detail::throw_exception_<std::logic_error>(std::logic_error const&, char const*, char const*, int) in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::exception_detail::error_info_injector<std::logic_error> >(boost::exception_detail::error_info_injector<std::logic_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::clone_impl(boost::exception_detail::error_info_injector<std::logic_error> const&) in libmath_c.a(math_c.o)
+      ...
+  "std::logic_error::logic_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+      void boost::math::policies::detail::raise_error<std::domain_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+  "std::bad_alloc::~bad_alloc()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "___cxa_guard_acquire", referenced from:
+      boost::math::detail::erf_initializer<long double, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy>, mpl_::int_<64> >::init::do_init(mpl_::int_<64> const&) in libmath_c.a(math_c.o)
+      long double boost::math::detail::erf_imp<long double, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> >(long double, bool, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> const&, mpl_::int_<64> const&) in libmath_c.a(math_c.o)
+      boost::math::detail::erf_initializer<long double, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy>, mpl_::int_<53> >::init::do_init(mpl_::int_<53> const&) in libmath_c.a(math_c.o)
+      long double boost::math::detail::lgamma_small_imp<long double, boost::math::policies::policy<boost::math::policies::pole_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::overflow_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy>, boost::math::lanczos::lanczos17m64>(long double, long double, long double, mpl_::int_<64> const&, boost::math::policies::policy<boost::math::policies::pole_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::overflow_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> const&, boost::math::lanczos::lanczos17m64 const&) in libmath_c.a(math_c.o)
+      boost::math::lanczos::lanczos_initializer<boost::math::lanczos::lanczos17m64, long double>::init::init() in libmath_c.a(math_c.o)
+      long double boost::math::detail::digamma_imp_large<long double>(long double, mpl_::int_<64> const*) in libmath_c.a(math_c.o)
+      long double boost::math::detail::digamma_imp_1_2<long double>(long double, mpl_::int_<64> const*) in libmath_c.a(math_c.o)
+      ...
+  "std::__1::ios_base::__set_badbit_and_consider_rethrow()", referenced from:
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "vtable for __cxxabiv1::__vmi_class_type_info", referenced from:
+      typeinfo for boost::exception_detail::error_info_injector<std::overflow_error> in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> > in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::error_info_injector<boost::math::rounding_error> in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> > in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::error_info_injector<std::domain_error> in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> > in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::error_info_injector<boost::math::evaluation_error> in libmath_c.a(math_c.o)
+      ...
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::put(char)", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::resize(unsigned long, char)", referenced from:
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::str(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libmath_c.a(math_c.o)
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libmath_c.a(math_c.o)
+  "vtable for std::overflow_error", referenced from:
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::error_info_injector<std::overflow_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> > const&, boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_tag) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone_impl(boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> > const&) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, double>(char const*, char const*) in libmath_c.a(math_c.o)
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "std::__1::ios_base::init(void*)", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > boost::math::policies::detail::prec_format<long double>(long double const&) in libmath_c.a(math_c.o)
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+  "operator new(unsigned long)", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char) in libmath_c.a(math_c.o)
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::str() const in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::clone() const in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<boost::math::rounding_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      ...
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator=(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::str(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::operator<<(long double)", referenced from:
+      std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > boost::math::policies::detail::prec_format<long double>(long double const&) in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::flush()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "typeinfo for std::bad_alloc", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "std::bad_alloc::bad_alloc()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "typeinfo for std::logic_error", referenced from:
+      typeinfo for boost::exception_detail::error_info_injector<std::logic_error> in libmath_c.a(math_c.o)
+  "___cxa_allocate_exception", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      void boost::throw_exception<std::overflow_error>(std::overflow_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::rethrow() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::rethrow() const in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::math::rounding_error>(boost::math::rounding_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::rethrow() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::rethrow() const in libmath_c.a(math_c.o)
+      ...
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::xsgetn(char*, long)", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::sentry::~sentry()", referenced from:
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "typeinfo for std::runtime_error", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      typeinfo for boost::math::rounding_error in libmath_c.a(math_c.o)
+      typeinfo for boost::math::evaluation_error in libmath_c.a(math_c.o)
+  "___cxa_throw", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      void boost::throw_exception<std::overflow_error>(std::overflow_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::rethrow() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::rethrow() const in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::math::rounding_error>(boost::math::rounding_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::rethrow() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::rethrow() const in libmath_c.a(math_c.o)
+      ...
+  "std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+      construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::ios_base::clear(unsigned int)", referenced from:
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "typeinfo for std::overflow_error", referenced from:
+      typeinfo for boost::exception_detail::error_info_injector<std::overflow_error> in libmath_c.a(math_c.o)
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::basic_streambuf()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > boost::math::policies::detail::prec_format<long double>(long double const&) in libmath_c.a(math_c.o)
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+  "___cxa_free_exception", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      void boost::throw_exception<std::overflow_error>(std::overflow_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::rethrow() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::overflow_error> >::rethrow() const in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::math::rounding_error>(boost::math::rounding_error const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::rethrow() const in libmath_c.a(math_c.o)
+      virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::rethrow() const in libmath_c.a(math_c.o)
+      ...
+  "std::__1::ios_base::getloc() const", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "___cxa_guard_release", referenced from:
+      boost::math::detail::erf_initializer<long double, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy>, mpl_::int_<64> >::init::do_init(mpl_::int_<64> const&) in libmath_c.a(math_c.o)
+      long double boost::math::detail::erf_imp<long double, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> >(long double, bool, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> const&, mpl_::int_<64> const&) in libmath_c.a(math_c.o)
+      boost::math::detail::erf_initializer<long double, boost::math::policies::policy<boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy>, mpl_::int_<53> >::init::do_init(mpl_::int_<53> const&) in libmath_c.a(math_c.o)
+      long double boost::math::detail::lgamma_small_imp<long double, boost::math::policies::policy<boost::math::policies::pole_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::overflow_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy>, boost::math::lanczos::lanczos17m64>(long double, long double, long double, mpl_::int_<64> const&, boost::math::policies::policy<boost::math::policies::pole_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::overflow_error<(boost::math::policies::error_policy_type)1>, boost::math::policies::promote_float<false>, boost::math::policies::promote_double<false>, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy, boost::math::policies::default_policy> const&, boost::math::lanczos::lanczos17m64 const&) in libmath_c.a(math_c.o)
+      boost::math::lanczos::lanczos_initializer<boost::math::lanczos::lanczos17m64, long double>::init::init() in libmath_c.a(math_c.o)
+      long double boost::math::detail::digamma_imp_large<long double>(long double, mpl_::int_<64> const*) in libmath_c.a(math_c.o)
+      long double boost::math::detail::digamma_imp_1_2<long double>(long double, mpl_::int_<64> const*) in libmath_c.a(math_c.o)
+      ...
+  "___cxa_pure_virtual", referenced from:
+      vtable for boost::exception_detail::clone_base in libmath_c.a(math_c.o)
+      vtable for boost::exception in libmath_c.a(math_c.o)
+  "operator delete(void*)", referenced from:
+      stan::math::AutodiffStackSingleton<stan::math::vari, stan::math::chainable_alloc>::AutodiffStackStorage::AutodiffStackStorage() in libmath_c.a(math_c.o)
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      ...
+  "std::runtime_error::~runtime_error()", referenced from:
+      void boost::math::policies::detail::raise_error<boost::math::rounding_error, long double>(char const*, char const*, long double const&) in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::math::rounding_error>(boost::math::rounding_error const&) in libmath_c.a(math_c.o)
+      boost::math::rounding_error::~rounding_error() in libmath_c.a(math_c.o)
+      boost::math::rounding_error::~rounding_error() in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      boost::exception_detail::error_info_injector<boost::math::rounding_error>::~error_info_injector() in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::math::rounding_error> >::clone_impl(boost::exception_detail::error_info_injector<boost::math::rounding_error> const&) in libmath_c.a(math_c.o)
+      ...
+  "vtable for __cxxabiv1::__class_type_info", referenced from:
+      typeinfo for boost::exception in libmath_c.a(math_c.o)
+      typeinfo for boost::exception_detail::clone_base in libmath_c.a(math_c.o)
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::sync()", referenced from:
+      vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "std::__1::basic_ostream<char, std::__1::char_traits<char> >::operator<<(double)", referenced from:
+      void stan::math::domain_error<double>(char const*, char const*, double const&, char const*, char const*) in libmath_c.a(math_c.o)
+  "std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      ...
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::push_back(char)", referenced from:
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libmath_c.a(math_c.o)
+  "std::terminate()", referenced from:
+      ___clang_call_terminate in libmath_c.a(math_c.o)
+  "___cxa_begin_catch", referenced from:
+      _lognormal_ccdf_log in libmath_c.a(math_c.o)
+      ___clang_call_terminate in libmath_c.a(math_c.o)
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "std::__1::locale::use_facet(std::__1::locale::id&) const", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "std::runtime_error::runtime_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+  "std::logic_error::what() const", referenced from:
+      vtable for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::domain_error> > in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::error_info_injector<std::domain_error> in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> > in libmath_c.a(math_c.o)
+      vtable for boost::exception_detail::error_info_injector<std::logic_error> in libmath_c.a(math_c.o)
+  "std::__1::basic_ios<char, std::__1::char_traits<char> >::~basic_ios()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      ...
+  "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_string()", referenced from:
+      __GLOBAL__sub_I_iface.cpp in libmath_c.a(math_c.o)
+  "std::logic_error::~logic_error()", referenced from:
+      void boost::exception_detail::throw_exception_<std::logic_error>(std::logic_error const&, char const*, char const*, int) in libmath_c.a(math_c.o)
+      void boost::throw_exception<boost::exception_detail::error_info_injector<std::logic_error> >(boost::exception_detail::error_info_injector<std::logic_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::error_info_injector<std::logic_error>::~error_info_injector() in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::clone_impl(boost::exception_detail::error_info_injector<std::logic_error> const&) in libmath_c.a(math_c.o)
+      boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      non-virtual thunk to boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::logic_error> >::~clone_impl() in libmath_c.a(math_c.o)
+      ...
+  "std::__1::ctype<char>::id", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "std::__1::locale::~locale()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+  "___gxx_personality_v0", referenced from:
+      _lognormal_ccdf_log in libmath_c.a(math_c.o)
+      stan::math::AutodiffStackSingleton<stan::math::vari, stan::math::chainable_alloc>::AutodiffStackStorage::AutodiffStackStorage() in libmath_c.a(math_c.o)
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+      std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char) in libmath_c.a(math_c.o)
+      void boost::math::policies::detail::raise_error<std::overflow_error, long double>(char const*, char const*) in libmath_c.a(math_c.o)
+      ...
+  "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::~basic_streambuf()", referenced from:
+      stan::math::stack_alloc::stack_alloc(unsigned long) in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      non-virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      virtual thunk to std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libmath_c.a(math_c.o)
+      ...
+  "virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+      construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libmath_c.a(math_c.o)
+  "___cxa_end_catch", referenced from:
+      _lognormal_ccdf_log in libmath_c.a(math_c.o)
+      std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libmath_c.a(math_c.o)
+      std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libmath_c.a(math_c.o)
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)

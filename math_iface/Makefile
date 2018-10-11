@@ -23,5 +23,14 @@ CXXFLAGS+=-std=c++1y -Wno-unknown-warning-option -Wno-tautological-compare -Wno-
 gen/math.o: gen/math.cpp
 	$(COMPILE.cc) -o $@ $<
 
+gen/math_c.o: iface.cpp
+	$(COMPILE.cc) -static -o $@ $<
+
+gen/test: test.c gen/math_c.o
+	cc -lstdc++ -o $@ $^
+
+gen/libmath_c.a: gen/math_c.o
+	ar rcs $@ $^
+
 clean:
 	rm -f gen/math.o gen/math.cpp gen/filtered_sigs.txt gen/sigs.txt
