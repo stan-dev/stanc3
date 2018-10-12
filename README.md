@@ -25,10 +25,11 @@ a roadmap for how the work splits up over time, and goals for additions to the S
 
 # Architectural goals for the new compiler and/or interpreter
 * **Multiple phases**, each with human-readable intermediate representations for easy debugging and optimization design.
-* Keep **line number** information throughout all phases through to runtime - there are some errors that only pop up during sampling (key example - discrete parameters do not work with HMC).
 * First, an **interpreter** - improves compile times and distribution. Later, JIT with LLVM.
 * **Optimizing** - takes advantage of info known at the Stan language level.
-* **Retain info at runtime** - e.g. `isFinite(X)` can be checked once, matrix sizes (useful for JIT)
+* **Retain info at runtime** - e.g. `isFinite(X)` can be checked once, matrix sizes (useful for JIT). And line numbers!
+* [Mono I/O layer](https://discourse.mc-stan.org/t/universal-static-logger-style-output/4851) ([design doc](https://docs.google.com/document/d/1wgmYDI2RW91S4Amh0w0O2PL9BCsdCKFqBLev65Zr5Lg/edit))
+* Eventually, have a server mode that serves `log_prob` and `grad_log_prob`
 
 ## Distinct Phases
 1. Parse Stan language into AST that represents the syntax quite closely
