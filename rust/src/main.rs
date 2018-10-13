@@ -1,14 +1,15 @@
-#![feature(box_syntax, box_patterns)]
-#[macro_use] extern crate lalrpop_util;
-#[macro_use] extern crate lazy_static;
+#[macro_use]
+extern crate lalrpop_util;
+#[macro_use]
+extern crate lazy_static;
 pub mod ast;
 pub mod interpret;
-pub mod stan_to_math;
 pub mod optimize;
+pub mod stan_to_math;
 
 //use ast::Expr;
 //use ast::Expr::{Int};
-
+//
 lalrpop_mod!(pub grammar); // synthesized by LALRPOP
 
 fn main() {
@@ -38,7 +39,10 @@ fn exprs_test() {
     assert_eq!(interpret::eval_scal(&ep.parse("2 + 3 * 4").unwrap()), 14.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * 4 - 1").unwrap()), 7.0);
     assert_eq!(interpret::eval_scal(&ep.parse("2 * (4 - 1)").unwrap()), 6.0);
-    assert_eq!(interpret::eval_scal(&ep.parse("ident(10) + 1").unwrap()), 11.0);
+    assert_eq!(
+        interpret::eval_scal(&ep.parse("ident(10) + 1").unwrap()),
+        11.0
+    );
 }
 
 #[test]
@@ -48,7 +52,6 @@ fn optimize_test() {
     let ast = sp.parse("ident(10) + ident(10)").unwrap();
     let optimized_ast = optimize::optimize(ast.clone());
     assert_eq!(interpret::eval_statements(&ast), 20.0);
-
 
     let mut optimized_interpreter = interpret::Interpreter::<interpret::StatsTracer>::new();
     assert_eq!(optimized_interpreter.eval_statements(&optimized_ast), 20.0);
