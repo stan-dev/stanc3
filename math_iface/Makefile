@@ -1,7 +1,10 @@
 math.a: gen/math.o
 	ar rcs $@ $^
 
-gen/print_sigs:
+gen: 
+	mkdir gen
+
+gen/print_sigs: gen
 	cd ../stan2; make print_sigs; mv print_sigs ../math_iface/gen/print_sigs
 
 .DELETE_ON_ERROR: gen/sigs.txt gen/filtered_sigs.txt gen/math.cpp
