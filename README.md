@@ -6,7 +6,15 @@ a roadmap for how the work splits up over time, and goals for additions to the S
 1. C++ is a pain to write optimization and type-checking passes in; adding a language feature touches 40+ files
 2. No one has wanted to work on the compiler (probably because of C++ + Spirit Qi)
 3. Distribution is a pain (targets C++ and requires C++ toolchain at runtime)
-4. Difficult for possible contributors to jump in - people tend to compile TO Stan, [rewrite a Stan parser in another language](https://github.com/deepppl/yaps/blob/master/yaps/stan.g4), or trick the compiler into emitting the AST as text so they can read it in somewhere else.
+4. Compilation takes a long time.
+5. Difficult for possible contributors to jump in - people tend to compile TO Stan, [rewrite a Stan parser in another language](https://github.com/deepppl/yaps/blob/master/yaps/stan.g4), or trick the compiler into emitting the AST as text so they can read it in somewhere else.
+6. R and Python interfaces are buggy, hard to install, and time-consuming to maintain
+
+# Ways we could address the pain points
+1. (And 2) Switch implementation languages to something more expressive and fun
+3. (and 4) Try to switch to a single binary distribution that ends up either interpreting or linking against something that emits native code.
+5. Split up the compiler into many phases with human-readable intermediate representations between the phases
+6. Focus on CmdStan as the correct unit of Stan / reference implementation, and jazz it up with some logging I/O.
 
 # Timeline for a New Stanc
 1. Create skeleton end-to-end functional interpreters in both Rust an OCaml displaying a minimum non-trivial operation in each module (Nov 2018)
