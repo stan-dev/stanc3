@@ -9,6 +9,7 @@ type expr = Var of ident
           | StrLit of string
           | FnApp of ident * expr list
           | If of expr * expr * expr
+          | AssignExpr of string * expr
 [@@deriving sexp, hash]
 
 type typePrim = TBool | TReal | TInt
