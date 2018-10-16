@@ -1,7 +1,7 @@
 open Core_kernel
 
 type ident = string
-[@@deriving sexp]
+[@@deriving sexp, hash]
 
 type expr = Var of ident
           | IntLit of int
@@ -9,7 +9,7 @@ type expr = Var of ident
           | StrLit of string
           | FnApp of ident * expr list
           | If of expr * expr * expr
-[@@deriving sexp]
+[@@deriving sexp, hash]
 
 type typePrim = TBool | TReal | TInt
               | TArray of typePrim * expr list

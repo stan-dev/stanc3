@@ -2,6 +2,27 @@ This repo is here to explore designs and architectures for new stanc, `stanc3`.
 We'll go through some goals of the compiler redesign and new AST,
 a roadmap for how the work splits up over time, and goals for additions to the Stan language (these may be moved later).
 
+# Pain points with the current `stanc` architecture
+1. C++ is a pain to write optimization and type-checking passes in; adding a language feature touches 40+ files
+2. No one has wanted to work on the compiler (probably because of C++ + Spirit Qi)
+3. Distribution is a pain (targets C++ and requires C++ toolchain at runtime)
+4. Difficult for possible contributors to jump in - people tend to compile TO Stan, [rewrite a Stan parser in another language](https://github.com/deepppl/yaps/blob/master/yaps/stan.g4), or trick the compiler into emitting the AST as text so they can read it in somewhere else.
+
+# Timeline for a New Stanc
+1. Create skeleton end-to-end functional interpreters in both Rust an OCaml displaying a minimum non-trivial operation in each module (Nov 2018)
+1. Choose Rust or OCaml and
+    1. announce project seeking help,
+    1. Define AST [Middle Intermediate Representation](https://blog.rust-lang.org/2016/04/19/MIR.html) equivalent
+    1. extend parsing to full Stan 2 language (2 months)
+    1. type-checking (2 months)
+    1. "backend" - Interpreter + FFI to Math lib or emit C++ (2 months)
+1. In parallel,
+    1. Change model, algorithms, and cmdstan to support ahead-of-time compilation (1.5 months?)
+    1. Refactor CmdStan to CmdStan 3 to serve as new basis for interfaces (3 months)
+        1. Logging-style I/O refactor? (2 months)
+    1. Figure out builds (2 weeks)
+    1. Create `install_stan()` CRAN script (2 weeks)
+
 # Architectural goals for the new compiler and/or interpreter
 * **Multiple phases**, each with human-readable intermediate representations for easy debugging and optimization design.
 * Keep **line number** information throughout all phases through to runtime - there are some errors that only pop up during sampling (key example - discrete parameters do not work with HMC).
@@ -11,9 +32,10 @@ a roadmap for how the work splits up over time, and goals for additions to the S
 
 ## Distinct Phases
 1. Parse Stan language into AST
-1. Typecheck AST
-1. Analyze & optimize AST -> IR (could be many passes)
-1. Interpret IR
+1. De-sugar AST into Intermediate Representation (IR)
+1. Typecheck IR
+1. Analyze & optimize IR (will be many distinct passes)
+1. Interpret IR or emit C++
 
 ## Potential Optimizations
 * Data and parameters are never modified
