@@ -21,7 +21,14 @@ let mk_assign e =
 
 let rec cse e = match e with
   | FnApp(fname, args) ->
-    let args = List.map args cse in
+    let args = List.map args ~f:cse in
     let new_fn_app = FnApp (fname, args) in
     Hashtbl.Poly.find_or_add fnapp2sym new_fn_app ~default:(mk_assign new_fn_app)
   | _ -> e
+
+
+let%expect_test _ =
+print_endline "Hello, world!";
+[%expect{|
+  Hello, world!
+|}]
