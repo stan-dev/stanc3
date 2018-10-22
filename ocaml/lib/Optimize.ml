@@ -21,10 +21,6 @@ let count_subtrees e = let fnapp2sym = Hashtbl.Poly.create () in
   count_subtrees_rec fnapp2sym e;
   fnapp2sym
 
-(* XXX Pull out symbol assignment somewhere else.
-   find_dups should just populate the dictionary and filter out
-   entries that only occur once *)
-
 let%expect_test "count_subtrees" =
   let dict = count_subtrees (FnApp("plus",
                                    [FnApp("plus", [IntLit 2; IntLit 3]);
@@ -32,18 +28,15 @@ let%expect_test "count_subtrees" =
   [%sexp (Hashtbl.Poly.to_alist dict : (expr * int) list)]
   |> Sexp.to_string_hum |> print_endline;
   [%expect{|
-    ((((FnApp plus ((IntLit 2) (IntLit 3))) (Var sym1))
-      ((FnApp plus
-        ((FnApp plus ((IntLit 2) (IntLit 3)))
-         (FnApp plus ((IntLit 2) (IntLit 3)))))
-       (Var sym2)))
-     ((Var sym1))) |}]
+    (((FnApp plus ((IntLit 2) (IntLit 3))) 2)
+     ((FnApp plus
+       ((FnApp plus ((IntLit 2) (IntLit 3)))
+        (FnApp plus ((IntLit 2) (IntLit 3)))))
+      1)) |}]
 
 let filter_dups fnapp2sym =
   let dups = Hashtbl.Poly.filter fnapp2sym ~f:(fun x -> x > 1) in
   Hashtbl.Poly.map dups ~f:(fun _ -> gensym ())
-
-exception NeverHappens
 
 let add_assigns dups e =
   ExprList(
@@ -55,26 +48,26 @@ let%expect_test "add_assigns" =
   let dups = Hashtbl.Poly.of_alist_exn [(Var "hi"), "lo"] in
   [%sexp ((add_assigns dups ast_node) : expr)]
 |> Sexp.to_string_hum |> print_endline;
-  [%expect{| |}]
+  [%expect{| (ExprList ((AssignExpr lo (Var hi)) (FnApp plus ((IntLit 2))))) |}]
 
-(* Need to refactor so that we:
-   1. go through the AST and find duplicate subtrees (or do GVN?)
-   2. then replace duplicates with Var reference to the symbol
-   3. then add assignments to the appropriate level (at first, top)
-   Also fix find_dups to just find them!
-
-*)
-
-let replaceUsages dups e = match Hashtbl.Poly.find dups e with
+let rec replace_usages dups e = match Hashtbl.Poly.find dups e with
   | Some(sym) -> Var sym
-  | None -> e
+  | None -> (match e with
+      | FnApp(fname, args) -> FnApp(fname, List.map args
+                                      ~f:(replace_usages dups))
+      | x -> x)
+
+let%expect_test "replace_usages" =
+  let e = (FnApp("p", [IntLit 2])) in
+  let dups = Hashtbl.Poly.of_alist_exn [e, "sup"] in
+  [%sexp ((replace_usages dups e) : expr)]
+|> Sexp.to_string_hum |> print_endline;
+  [%expect{| (Var sup) |}]
 
 let cse e = let dups = filter_dups (count_subtrees e) in
-  replaceUsages dups e
+  add_assigns dups (replace_usages dups e)
 
-let optimize e =
-  e
-
+let optimize e = cse e
 
 let%expect_test _ =
 [%sexp
@@ -84,8 +77,6 @@ let%expect_test _ =
     : expr)] |> Sexp.to_string_hum |> print_endline;
   [%expect{|
   (ExprList
-   ((FnApp plus
-     ((FnApp plus ((IntLit 2) (IntLit 3)))
-      (FnApp plus ((IntLit 2) (IntLit 3)))))
-    (AssignExpr sym3 (FnApp plus ((IntLit 2) (IntLit 3))))))
+   ((AssignExpr sym1 (FnApp plus ((IntLit 2) (IntLit 3))))
+    (FnApp plus ((Var sym1) (Var sym1)))))
 |}]
