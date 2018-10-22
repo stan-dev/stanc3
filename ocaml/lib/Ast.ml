@@ -1,15 +1,13 @@
 open Core_kernel
 
-type ident = string
-[@@deriving sexp, hash]
-
-type expr = Var of ident
+type expr = Var of string
           | IntLit of int
           | NumLit of float
           | StrLit of string
-          | FnApp of ident * expr list
+          | FnApp of string * expr list
           | If of expr * expr * expr
           | AssignExpr of string * expr
+          | ExprList of expr list
 [@@deriving sexp, hash]
 
 type typePrim = TBool | TReal | TInt
@@ -28,19 +26,19 @@ type binOp = Add | Sub | Mul | Div | Mod | CoeffMul
            | And | Or | Lte | Gte | Neq | Eq | Lt | Gt
 
 type statement = Block of statement list
-               | DistAs of ident * expr list
-               | Assign of binOp * ident * expr
-               | VarDecl of fullType * ident
-               | FCall of ident * expr list
+               | DistAs of string * expr list
+               | Assign of binOp * string * expr
+               | VarDecl of fullType * string
+               | FCall of string * expr list
                | If of expr * statement * statement
                | While of expr * statement
-               | For of ident * expr * expr * statement
+               | For of string * expr * expr * statement
                | Break | Continue | Unit
 
-type arg = fullType * ident
+type arg = fullType * string
 
-type funDef = FunExpr of ident * arg list * statement * expr
-            | FunVoid of ident * arg list * statement * unit
+type funDef = FunExpr of string * arg list * statement * expr
+            | FunVoid of string * arg list * statement * unit
 
 (*
 type stanProg = Prog of funDef list * statement * statement

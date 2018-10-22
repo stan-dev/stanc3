@@ -3,8 +3,6 @@ use ast::Expr::Var;
 use ast::{Expr, Statement};
 use std::collections::HashMap;
 
-struct Sym {}
-
 trait ExprRewriter {
     fn rewrite(&mut self, Expr) -> Expr;
 }
