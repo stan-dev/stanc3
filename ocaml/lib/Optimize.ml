@@ -3,63 +3,59 @@ ideally expressed as a visitor with a separate visit() function? *)
 open Ast
 open Core_kernel
 
-let fnapp2sym = Hashtbl.Poly.create ();;
-let newSyms = ref []
 let _counter = ref 0;;
 let gensym =
   fun () ->
     _counter := (!_counter) + 1;
     String.concat ["sym"; (string_of_int !_counter)];;
 
-let mk_var () = Var (gensym ())
+(* XXX Add type annotation - returns a list of new symbols *)
+let rec count_subtrees_rec fnapp2sym e =
+  match e with
+  | FnApp(_, args) ->
+    let _ = List.map args ~f:(count_subtrees_rec fnapp2sym) in
+    Hashtbl.Poly.update fnapp2sym e ~f:(function Some(i) -> i+1 | None -> 1)
+  | _ -> ()
 
-let mk_assign e =
-  fun () ->
-    AssignExpr ((gensym ()), e)
+let count_subtrees e = let fnapp2sym = Hashtbl.Poly.create () in
+  count_subtrees_rec fnapp2sym e;
+  fnapp2sym
 
-let rec find_dups e = match e with
-  | FnApp(fname, args) -> (
-      let args = List.map args ~f:find_dups in
-      let new_fn_app = FnApp (fname, args) in
-      match Hashtbl.Poly.find fnapp2sym new_fn_app with
-      | None -> let newVar = mk_var () in
-        Hashtbl.Poly.add_exn fnapp2sym ~key:new_fn_app ~data:newVar;
-        newVar
-      | Some(sym) -> newSyms := sym :: !newSyms; sym
-      (*Hashtbl.Poly.find_or_add fnapp2sym new_fn_app ~default:mk_var*)
-    )
-  | _ -> e
+(* XXX Pull out symbol assignment somewhere else.
+   find_dups should just populate the dictionary and filter out
+   entries that only occur once *)
 
-let invertTable m =
-  Hashtbl.Poly.fold m ~init:(Hashtbl.Poly.create ())
-    ~f:(fun ~key:k ~data:v map ->
-        Hashtbl.Poly.add_exn map ~key:v ~data:k;
-        map)
-
-let%expect_test "invertTable" =
-  [%sexp
-    ([0, "zero"; 1, "one"; 2, "two"]
-     |>    Hashtbl.Poly.of_alist_exn
-     |> invertTable
-     : ((string, int) Hashtbl.Poly.t))]
+let%expect_test "count_subtrees" =
+  let dict = count_subtrees (FnApp("plus",
+                                   [FnApp("plus", [IntLit 2; IntLit 3]);
+                                    FnApp("plus", [IntLit 2; IntLit 3])])) in
+  [%sexp (Hashtbl.Poly.to_alist dict : (expr * int) list)]
   |> Sexp.to_string_hum |> print_endline;
-  [%expect{| ((one 1) (two 2) (zero 0)) |}]
+  [%expect{|
+    ((((FnApp plus ((IntLit 2) (IntLit 3))) (Var sym1))
+      ((FnApp plus
+        ((FnApp plus ((IntLit 2) (IntLit 3)))
+         (FnApp plus ((IntLit 2) (IntLit 3)))))
+       (Var sym2)))
+     ((Var sym1))) |}]
 
+let filter_dups fnapp2sym =
+  let dups = Hashtbl.Poly.filter fnapp2sym ~f:(fun x -> x > 1) in
+  Hashtbl.Poly.map dups ~f:(fun _ -> gensym ())
 
 exception NeverHappens
 
-let addAssigns e =
-  let defTable = invertTable fnapp2sym in
-  let newSyms' = !newSyms in
-  let defs = List.map newSyms' ~f:(Hashtbl.find_exn defTable) in
-  let assigns =
-    List.map (List.zip_exn newSyms' defs)
-      ~f:(function
-            (Var(s), d) -> AssignExpr(s, d)
-          | _ -> raise NeverHappens
-         )
-  in
-  ExprList(List.append [e] assigns)
+let add_assigns dups e =
+  ExprList(
+    (Hashtbl.Poly.fold dups ~init:[e] ~f:(fun ~key:ast_node ~data:var l ->
+         AssignExpr(var, ast_node) :: l)))
+
+let%expect_test "add_assigns" =
+  let ast_node = (FnApp("plus", [IntLit 2])) in
+  let dups = Hashtbl.Poly.of_alist_exn [(Var "hi"), "lo"] in
+  [%sexp ((add_assigns dups ast_node) : expr)]
+|> Sexp.to_string_hum |> print_endline;
+  [%expect{| |}]
 
 (* Need to refactor so that we:
    1. go through the AST and find duplicate subtrees (or do GVN?)
@@ -67,13 +63,16 @@ let addAssigns e =
    3. then add assignments to the appropriate level (at first, top)
    Also fix find_dups to just find them!
 
-let replaceUsages e = 1;;
-
 *)
 
+let replaceUsages dups e = match Hashtbl.Poly.find dups e with
+  | Some(sym) -> Var sym
+  | None -> e
+
+let cse e = let dups = filter_dups (count_subtrees e) in
+  replaceUsages dups e
+
 let optimize e =
-  let newExpr = find_dups e in
-  let e = addAssigns newExpr in
   e
 
 
@@ -85,5 +84,8 @@ let%expect_test _ =
     : expr)] |> Sexp.to_string_hum |> print_endline;
   [%expect{|
   (ExprList
-   ((Var sym2) (AssignExpr sym1 (FnApp plus ((IntLit 2) (IntLit 3))))))
+   ((FnApp plus
+     ((FnApp plus ((IntLit 2) (IntLit 3)))
+      (FnApp plus ((IntLit 2) (IntLit 3)))))
+    (AssignExpr sym3 (FnApp plus ((IntLit 2) (IntLit 3))))))
 |}]

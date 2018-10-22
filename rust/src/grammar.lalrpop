@@ -11,7 +11,7 @@ Tier<Op, NextTier>: Expr = {
 }
 
 CommaList<T>: Vec<T> = {
-    <v:(<T> ",")*> <e:T?> => match e { // (1)
+    <v:(<T> ",")*> <e:T?> => match e {
         None=> v,
         Some(e) => {
             let mut v = v;
@@ -22,7 +22,7 @@ CommaList<T>: Vec<T> = {
 };
 
 SemicolonList<T>: Vec<T> = {
-    <v:(<T> ";")*> <e:T?> => match e { // (1)
+    <v:(<T> ";")*> <e:T?> => match e {
         None=> v,
         Some(e) => {
             let mut v = v;
