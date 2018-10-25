@@ -3,7 +3,5 @@
 (executable
  ((name stanc)
   (libraries (stanclib))
-  (preprocess (pps (ppx_jane ppx_expect
-                    ;;must go last
-                    ppx_driver.runner)))
+  (preprocess (pps (ppx_jane)))
 ))

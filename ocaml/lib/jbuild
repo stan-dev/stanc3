@@ -2,9 +2,7 @@
  ((name stanclib)
   (libraries (core_kernel))
   (inline_tests)
-  (preprocess (pps (ppx_jane ppx_expect
-                    ;;must go last
-                    ppx_driver.runner)))
+  (preprocess (pps (ppx_jane)))
 ))
 
 (ocamllex (lexer))
