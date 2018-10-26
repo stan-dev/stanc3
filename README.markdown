@@ -1,5 +1,7 @@
 # The Programming Languages Zoo
 
+Copyright © 2016 Andrej Bauer, Matija Pretnar
+
 The Programming Languages Zoo, or *PL Zoo* for short, is a collection of implementations
 of miniature programming languages which demonstrates various techniques used in
 implementation of programming languages. It is a good starting point for those who would
