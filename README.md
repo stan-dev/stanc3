@@ -1,6 +1,4 @@
 This repo is here to explore designs and architectures for new stanc, `stanc3`.
-We'll go through some goals of the compiler redesign and new AST,
-a roadmap for how the work splits up over time, and goals for additions to the Stan language (these may be moved later).
 
 # Timeline for a New Stanc
 1. Create skeleton end-to-end functional interpreters in both Rust an OCaml displaying a minimum non-trivial operation in each module.
