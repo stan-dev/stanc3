@@ -18,6 +18,11 @@ as I found it instructive for ultra simple examples to get started. Eventually, 
 we'd get rid of the other languages and integrate the shared components.
 
 # To Get Started
+The project has the following prerequisites:
+- GNU Make, which you probably have already
+- OCaml programming language, version 4 or later,
+- menhir parser generator.
+
 To build, run
 `
 make stan
