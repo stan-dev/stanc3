@@ -213,14 +213,6 @@ postfixop =
 
 and
 
-higherorderfunction =
-  | IntegrateODE
-  | IntegrateODERK45
-  | IntegrateODEBDF
-  | AlgebraicSolver
-
-and
-
 printable =
   | PString of string
   | PExpr of expression
