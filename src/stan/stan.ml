@@ -9,20 +9,7 @@ module CalcVar = Zoo.Main(struct
   (** There is no top-level environment as all variables are local *)
   type environment = unit
 
-  (** Should we show compiled code? *)
-  let show_code = ref false
-
-  (** RAM size *)
-  let ram_size = ref 64
-
-  let options = [
-      ("--ram",
-       Arg.Set_int ram_size,
-       Format.sprintf "<size> RAM size (default: %d)" !ram_size);
-      ("--code",
-       Arg.Set show_code,
-       " Print compiled code")
-  ]
+  let options = []
 
   (** At the beginning no variables are defined. *)
   let initial_environment = ()
