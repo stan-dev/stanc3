@@ -20,9 +20,7 @@ module CalcVar = Zoo.Main(struct
   let toplevel_parser = Some (Parser.program Lexer.token)
 
   (** The command that actually executes a command. *)
-  let exec _ cmd =
-    let code = Compile.compile toplevel_parser in
-    print_string code;
+  let exec _ cmd = ()
 end) ;;
 
 CalcVar.main ()

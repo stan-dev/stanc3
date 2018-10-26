@@ -1,4 +1,4 @@
-OCAMLBUILD=ocamlbuild
+OCAMLBUILD=corebuild
 
 # Should we build native or bytecode by default?
 BUILD=native
@@ -18,8 +18,10 @@ default:
 
 all: $(LANGS)
 
+
+
 $(LANGS): % :
-	$(OCAMLBUILD) -use-menhir -menhir "menhir --explain" -libs unix -I $(SRCDIR) src/$@/$@.$(BUILD)
+	$(OCAMLBUILD)  -use-menhir -menhir "menhir --explain"  -I $(SRCDIR) src/$@/$@.$(BUILD)
 
 clean:
 	$(OCAMLBUILD) -clean

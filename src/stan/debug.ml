@@ -1,19 +1,17 @@
 (* some helpers for debugging *)
 
 open Syntax
-(* open Core_kernel *)  (* For s-expression support *)
+open Core_kernel  (* For s-expression support *)
 
-let grammar_logging = true (* TODO - let these flags come from command line arguments *)
-let ast_printing = false
-
-
-let grammar_logger s = if grammar_logging then print_string s
+(* TODO - let these flags come from command line arguments *)
+let grammar_logging = true (* Controls whether the parsing operations get logged *)
+let ast_printing = true (* Controls whether an AST gets printed during parsing *)
 
 
-let ast_to_string x = "test" (* [%sexp (exp : Syntax.program)] |> Sexp.to_string_hum *)
+let grammar_logger s = if grammar_logging then print_endline s
 
-let asts_to_string t = match t with x::xs -> ast_to_string xs
-                                  | _ -> ""
 
-let asts_string t = if ast_printing then ast_to_string t else "Done\n"
+let ast_to_string x = [%sexp (x : Syntax.program)] |> Sexp.to_string_hum
+
+let ast_logger t = if ast_printing then print_endline (ast_to_string t)
 
