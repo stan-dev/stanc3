@@ -1,5 +1,5 @@
 (* Abstract syntax. *)
-(*open Core_kernel (* for auto generating s-exp *) *)
+(* open Core_kernel *) (* for auto generating s-exp *)
 
 (* TODO: constructors to take multiple arguments, rather than a tuple? *)
 
@@ -278,5 +278,5 @@ assignmentoperator =
   | EltTimesAssign
   | EltDivideAssign
   | ArrowAssign (* deprecated *)
-(*
-[@@deriving sexp]*)
+
+(* [@@deriving sexp] *)
