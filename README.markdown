@@ -21,6 +21,7 @@ we'd get rid of the other languages and integrate the shared components.
 The project has the following prerequisites:
 - GNU Make, which you probably have already
 - OCaml programming language, version 4 or later,
+- Core(kernel) library
 - menhir parser generator.
 
 To build, run
