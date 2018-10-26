@@ -1,5 +1,7 @@
 # The Programming Languages Zoo
 
+This project builds on the PL Zoo.
+
 Copyright © 2016 Andrej Bauer, Matija Pretnar
 
 The Programming Languages Zoo, or *PL Zoo* for short, is a collection of implementations
