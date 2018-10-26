@@ -40,7 +40,7 @@ be parsed).
 
 
 # TODO
-- I need to tinker a bit with jbuilder to get the AST serialisation to build
+- I need to tinker a bit with jbuilder to get the AST (de)serialisation to build
 properly as it relies on an s-expression generator that is part of the
 Core library.
 - Create semantic checking phase to operate on AST, building up var-map and doing type checking (this should pull in the signatures of the Stan Math library)
