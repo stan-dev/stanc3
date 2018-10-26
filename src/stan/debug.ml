@@ -4,7 +4,7 @@ open Syntax
 open Core_kernel  (* For s-expression support *)
 
 (* TODO - let these flags come from command line arguments *)
-let grammar_logging = true (* Controls whether the parsing operations get logged *)
+let grammar_logging = false (* Controls whether the parsing operations get logged *)
 let ast_printing = true (* Controls whether an AST gets printed during parsing *)
 
 
