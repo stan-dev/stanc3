@@ -11,7 +11,7 @@ See the [PL Zoo website](http://plzoo.andrej.com/) for further information, incl
 installation instructions.
 
 # A Starting Point for a New Stan Compiler
-I have chosen to use this as a starting point for implementing a compiler for Stan,
+I have chosen to use Andrej Bauer Matija Pretnar PL Zoo as a starting point for implementing a compiler for Stan,
 as I found it instructive for examples to get started. Eventually, of course,
 we'd get rid of the other languages and integrate the shared components.
 
