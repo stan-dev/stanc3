@@ -1,0 +1,259 @@
+
+** Conflict (shift/reduce) in state 335.
+** Tokens involved: TIMES QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE
+** The following explanations concentrate on token TIMES.
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN constr_expression arithmeticInfixOp constr_expression 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                       data_block 
+                                       DATABLOCK LBRACE src_stan_parser_list(block_var_decl) RBRACE 
+                                                        block_var_decl src_stan_parser_list(block_var_decl) 
+                                                        block_var_type IDENTIFIER src_stan_parser_option(dims) src_stan_parser_option(src_stan_parser_pair(ASSIGN,expression)) SEMICOLON 
+                                                        VECTOR type_constraint LBRACK expression RBRACK 
+                                                               range_constraint 
+                                                               LABRACK range RABRACK 
+                                                                       UPPER ASSIGN constr_expression 
+                                                                                    (?)
+
+** In state 335, looking ahead at TIMES, shifting is permitted
+** because of the following sub-derivation:
+
+constr_expression arithmeticInfixOp constr_expression 
+                                    constr_expression arithmeticInfixOp constr_expression 
+                                                      . TIMES 
+
+** In state 335, looking ahead at TIMES, reducing production
+** constr_expression -> constr_expression arithmeticInfixOp constr_expression 
+** is permitted because of the following sub-derivation:
+
+constr_expression arithmeticInfixOp constr_expression // lookahead token appears because arithmeticInfixOp can begin with TIMES
+constr_expression arithmeticInfixOp constr_expression . 
+
+** Conflict (shift/reduce) in state 332.
+** Token involved: DIVIDE
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN prefixOp constr_expression 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                       data_block 
+                                       DATABLOCK LBRACE src_stan_parser_list(block_var_decl) RBRACE 
+                                                        block_var_decl src_stan_parser_list(block_var_decl) 
+                                                        block_var_type IDENTIFIER src_stan_parser_option(dims) src_stan_parser_option(src_stan_parser_pair(ASSIGN,expression)) SEMICOLON 
+                                                        VECTOR type_constraint LBRACK expression RBRACK 
+                                                               range_constraint 
+                                                               LABRACK range RABRACK 
+                                                                       UPPER ASSIGN constr_expression 
+                                                                                    (?)
+
+** In state 332, looking ahead at DIVIDE, shifting is permitted
+** because of the following sub-derivation:
+
+prefixOp constr_expression 
+         constr_expression arithmeticInfixOp constr_expression 
+                           . DIVIDE 
+
+** In state 332, looking ahead at DIVIDE, reducing production
+** constr_expression -> prefixOp constr_expression 
+** is permitted because of the following sub-derivation:
+
+constr_expression arithmeticInfixOp constr_expression // lookahead token appears because arithmeticInfixOp can begin with DIVIDE
+prefixOp constr_expression . 
+
+** Conflict (shift/reduce) in state 222.
+** Tokens involved: TARGET REALNUMERAL RBRACE PLUS MINUS LPAREN LBRACK LBRACE INTNUMERAL INTEGRATEODERK45 INTEGRATEODEBDF INTEGRATEODE IDENTIFIER GETLP BANG ALGEBRASOLVER
+** The following explanations concentrate on token TARGET.
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) TRANSFORMEDDATABLOCK LBRACE src_stan_parser_list(block_var_decl) LBRACE 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                                                          transformed_data_block 
+                                                                          TRANSFORMEDDATABLOCK LBRACE src_stan_parser_list(block_var_decl) src_stan_parser_list(statement) RBRACE 
+                                                                                                                                           statement src_stan_parser_list(statement) 
+                                                                                                                                           (?)
+
+** In state 222, looking ahead at TARGET, shifting is permitted
+** because of the following sub-derivation:
+
+atomic_statement 
+expression TILDE IDENTIFIER LPAREN alt_list(expression,COMMA) RPAREN src_stan_parser_option(truncation) SEMICOLON 
+non_lhs 
+common_expression 
+LBRACE alt_list(expression,COMMA) RBRACE 
+       expression src_stan_parser_list(src_stan_parser_pair(COMMA,expression)) 
+       non_lhs 
+       common_expression 
+       . TARGET LPAREN RPAREN 
+
+** In state 222, looking ahead at TARGET, reducing production
+** src_stan_parser_list(var_decl) -> 
+** is permitted because of the following sub-derivation:
+
+nested_statement 
+LBRACE src_stan_parser_list(var_decl) src_stan_parser_list(statement) RBRACE // lookahead token appears because src_stan_parser_list(statement) can begin with TARGET
+       . 
+
+** Conflict (shift/reduce) in state 113.
+** Token involved: DIVIDE
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) DATABLOCK LBRACE UNITVECTOR LBRACK prefixOp expression 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                       data_block 
+                                       DATABLOCK LBRACE src_stan_parser_list(block_var_decl) RBRACE 
+                                                        block_var_decl src_stan_parser_list(block_var_decl) 
+                                                        block_var_type IDENTIFIER src_stan_parser_option(dims) src_stan_parser_option(src_stan_parser_pair(ASSIGN,expression)) SEMICOLON 
+                                                        UNITVECTOR LBRACK expression RBRACK 
+                                                                          non_lhs 
+                                                                          (?)
+
+** In state 113, looking ahead at DIVIDE, shifting is permitted
+** because of the following sub-derivation:
+
+prefixOp expression 
+         non_lhs 
+         expression infixOp expression 
+                    arithmeticInfixOp 
+                    . DIVIDE 
+
+** In state 113, looking ahead at DIVIDE, reducing production
+** non_lhs -> prefixOp expression 
+** is permitted because of the following sub-derivation:
+
+expression infixOp expression // lookahead token appears because infixOp can begin with DIVIDE
+non_lhs // lookahead token is inherited
+prefixOp expression . 
+
+** Conflict (shift/reduce) in state 104.
+** Tokens involved: TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND
+** The following explanations concentrate on token TIMES.
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) DATABLOCK LBRACE UNITVECTOR LBRACK expression infixOp expression 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                       data_block 
+                                       DATABLOCK LBRACE src_stan_parser_list(block_var_decl) RBRACE 
+                                                        block_var_decl src_stan_parser_list(block_var_decl) 
+                                                        block_var_type IDENTIFIER src_stan_parser_option(dims) src_stan_parser_option(src_stan_parser_pair(ASSIGN,expression)) SEMICOLON 
+                                                        UNITVECTOR LBRACK expression RBRACK 
+                                                                          non_lhs 
+                                                                          (?)
+
+** In state 104, looking ahead at TIMES, shifting is permitted
+** because of the following sub-derivation:
+
+expression infixOp expression 
+                   non_lhs 
+                   expression infixOp expression 
+                              arithmeticInfixOp 
+                              . TIMES 
+
+** In state 104, looking ahead at TIMES, reducing production
+** non_lhs -> expression infixOp expression 
+** is permitted because of the following sub-derivation:
+
+expression infixOp expression // lookahead token appears because infixOp can begin with TIMES
+non_lhs // lookahead token is inherited
+expression infixOp expression . 
+
+** Conflict (shift/reduce) in state 100.
+** Token involved: DIVIDE
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) DATABLOCK LBRACE UNITVECTOR LBRACK expression QMARK expression COLON expression 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                       data_block 
+                                       DATABLOCK LBRACE src_stan_parser_list(block_var_decl) RBRACE 
+                                                        block_var_decl src_stan_parser_list(block_var_decl) 
+                                                        block_var_type IDENTIFIER src_stan_parser_option(dims) src_stan_parser_option(src_stan_parser_pair(ASSIGN,expression)) SEMICOLON 
+                                                        UNITVECTOR LBRACK expression RBRACK 
+                                                                          non_lhs 
+                                                                          (?)
+
+** In state 100, looking ahead at DIVIDE, shifting is permitted
+** because of the following sub-derivation:
+
+expression QMARK expression COLON expression 
+                                  non_lhs 
+                                  expression infixOp expression 
+                                             arithmeticInfixOp 
+                                             . DIVIDE 
+
+** In state 100, looking ahead at DIVIDE, reducing production
+** non_lhs -> expression QMARK expression COLON expression 
+** is permitted because of the following sub-derivation:
+
+expression infixOp expression // lookahead token appears because infixOp can begin with DIVIDE
+non_lhs // lookahead token is inherited
+expression QMARK expression COLON expression . 
+
+** Conflict (shift/reduce) in state 70.
+** Token involved: LBRACK
+** This state is reached from file after reading:
+
+src_stan_parser_option(function_block) DATABLOCK LBRACE UNITVECTOR LBRACK prefixOp non_lhs 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+program 
+src_stan_parser_option(function_block) src_stan_parser_option(data_block) src_stan_parser_option(transformed_data_block) src_stan_parser_option(parameters_block) src_stan_parser_option(transformed_parameters_block) src_stan_parser_option(model_block) src_stan_parser_option(generated_quantities_block) EOF 
+                                       data_block 
+                                       DATABLOCK LBRACE src_stan_parser_list(block_var_decl) RBRACE 
+                                                        block_var_decl src_stan_parser_list(block_var_decl) 
+                                                        block_var_type IDENTIFIER src_stan_parser_option(dims) src_stan_parser_option(src_stan_parser_pair(ASSIGN,expression)) SEMICOLON 
+                                                        UNITVECTOR LBRACK expression RBRACK 
+                                                                          non_lhs 
+                                                                          (?)
+
+** In state 70, looking ahead at LBRACK, reducing production
+** expression -> non_lhs 
+** is permitted because of the following sub-derivation:
+
+non_lhs LBRACK indexes RBRACK // lookahead token appears
+prefixOp expression // lookahead token is inherited
+         non_lhs . 
+
+** In state 70, looking ahead at LBRACK, shifting is permitted
+** because of the following sub-derivation:
+
+prefixOp expression 
+         non_lhs 
+         non_lhs . LBRACK indexes RBRACK 
