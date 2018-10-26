@@ -39,7 +39,10 @@ be parsed).
 
 
 
-# Note on jbuilder WIP
-I need to tinker a bit with jbuilder to get the AST serialisation to build
+# TODO
+- I need to tinker a bit with jbuilder to get the AST serialisation to build
 properly as it relies on an s-expression generator that is part of the
 Core library.
+- Create semantic checking phase to operate on AST, building up var-map and doing type checking (this should pull in the signatures of the Stan Math library)
+- Create IRs and transforms (embodying compiler optimisations) from AST
+- Create code generation phase from IRs
