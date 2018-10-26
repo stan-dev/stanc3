@@ -7,3 +7,18 @@ like to implement their own programming language, or just learn how it is done.
 
 See the [PL Zoo website](http://plzoo.andrej.com/) for further information, including
 installation instructions.
+
+I have chosen to use this as a starting point for implementing a compiler for Stan,
+as I found it instructive for examples to get started. Eventually, of course,
+we'd get rid of the other languages and integrate the shared components.
+
+To test the parser on all good models in stan/src/test/test-models/good, run
+the shell script 'run-stan-examples-good.sh'.
+This will produce an output file (containing logging info, presuming that
+logging is turned on, which should let you reproduce the parse)
+as well as an error file (which should be empty, unless some files could not
+be parsed).
+
+I need to tinker a bit with jbuilder to get the AST serialisation to build
+properly as it relies on an s-expression generator that is part of the
+Core library.
