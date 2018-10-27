@@ -37,10 +37,11 @@ let filter_dups fnapp2sym =
   Hashtbl.Poly.map dups ~f:(fun _ -> gensym ())
 
 let add_assigns dups e =
-  if Hashtbl.Poly.is_empty dups then e else
-  Hashtbl.Poly.fold dups ~init:[e] ~f:(fun ~key:ast_node ~data:var l ->
+  if Hashtbl.Poly.is_empty dups then e
+  else
+    Hashtbl.Poly.fold dups ~init:[e] ~f:(fun ~key:ast_node ~data:var l ->
         AssignExpr(var, ast_node) :: l)
-|> ExprList
+    |> ExprList
 
 let%expect_test "add_assigns" =
   let ast_node = (FnApp("plus", [Lit(Int, "2")])) in
@@ -65,21 +66,15 @@ let cse e = let dups = filter_dups (count_subtrees e) in
   add_assigns dups (replace_usages dups e)
 
 let optimize e =
-  e |> cse |> Peep.run_peephole_opts
+  e |> Peep.run_peephole_opts |> cse
 
 let%expect_test _ =
   print_s [%sexp
     ((optimize (FnApp("plus",
-                      [FnApp("plus", [Lit(Int, "2"); Lit(Int, "3")]);
-                       FnApp("plus", [Lit(Int, "2"); Lit(Int, "3")])])))
+                      [FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])]);
+                       FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])])])))
      : expr)];
   [%expect{|
       (ExprList
-       ((AssignExpr sym1 (FnApp plus ((Lit Int 2) (Lit Int 3))))
+       ((AssignExpr sym1 (FnApp log1m ((Var hi))))
         (FnApp plus ((Var sym1) (Var sym1))))) |}]
-
-
-let%expect_test "l1m" =
-  let n = FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])]) in
-  print_s [%sexp (optimize n : expr)];
-  [%expect {| (FnApp log1m ((Var hi))) |}]
