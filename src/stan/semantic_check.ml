@@ -75,9 +75,11 @@ Perhaps use Appel's imperative symbol table?
                                                                  semantic_check(bm) ;
                                                                  vm.endscope() ;
                                                                  semantic_check(bgq)  *)
-let vm = ref "a"
+open Symbol_table
+let vm2 = Symbol_table.Symbol.enter 
+let vm3 = ref ""
                                                            
-let rec semantic_check_program p = match p with Syntax.Program (bf, bd, btd, bp, btp, bm, bgq) -> semantic_check_fun_block bf ; print_endline(!vm)
-                                              | _ -> print_endline(!vm)
+let rec semantic_check_program p = match p with Syntax.Program (bf, bd, btd, bp, btp, bm, bgq) -> semantic_check_fun_block bf ; print_endline(!vm3)
+                                              | _ -> print_endline(!vm3)
 and
-semantic_check_fun_block bf = print_endline(!vm) ; (vm := "b")  
+semantic_check_fun_block bf = print_endline(!vm3) ; (vm3 := "b")  
