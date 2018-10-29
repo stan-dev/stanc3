@@ -21,6 +21,7 @@ we'd get rid of the other languages and integrate the shared components.
 The project has the following prerequisites:
 - GNU Make, which you probably have already
 - OCaml programming language, version 4 or later,
+- Core(kernel) library
 - menhir parser generator.
 
 To build, run
@@ -33,7 +34,8 @@ To test the parser on all good models in stan/src/test/test-models/good, run
 ./run-stan-examples-good.sh
 `
 This will produce an output file (containing logging info, presuming that
-logging is turned on, which should let you reproduce the parse)
+logging is turned on in `debug.ml`, which should let you reproduce the parse and/or should
+print the AST as an s-expression)
 as well as an error file (which should be empty, unless some files could not
 be parsed).
 
