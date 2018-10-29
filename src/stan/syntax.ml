@@ -99,19 +99,6 @@ unsizedtype =
 
 and
 
-sizedbasictype =
-  | SInt
-  | SReal
-  | SVector of expression
-  | SRowVector of expression
-  | SMatrix of expression * expression
-
-and
-
-topvarbasictype = sizedbasictype * transformation
-
-and
-
 topvardecl = topvartype * identifier
 
 and
@@ -132,11 +119,17 @@ vardecl_or_statement =
 
 and
 
-topvartype =  topvarbasictype * (expression list) (* list of expression for the array dimension sizes *)
+topvartype =  sizedtype * transformation
 
 and
 
-sizedtype =  sizedbasictype * (expression list) (* list of expression for the array dimension sizes *)
+sizedtype =
+  | SInt
+  | SReal
+  | SVector of expression
+  | SRowVector of expression
+  | SMatrix of expression * expression
+  | SArray of sizedtype * expression (* expression is for size *)
 
 and
 
