@@ -22,14 +22,12 @@ module CalcVar = Zoo.Main(struct
   let toplevel_parser = Some (Parser.program Lexer.token)
 
   (** The command that actually executes a command. *)
-  let exec _ _ = ()
+  let exec _ = fun p ->
+    let vm = Symbol_table.Symbol.initialize () in
+    let _ = Semantic_check.semantic_check_program vm p in
+    ()
 end) ;;
 
 
-
-let vm = Symbol_table.Symbol.initialize () in
-
-(* TODO: just a test here, so the function gets called; we need to wire through the actual parsed AST here later *)
-let _ = Semantic_check.semantic_check_program vm (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) in
 
 CalcVar.main ()
