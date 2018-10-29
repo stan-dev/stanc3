@@ -14,7 +14,7 @@ end
 module Symbol : SYMBOL =
 struct 
   type 'a table = ((string, 'a) Hashtbl.t) * ((string list) ref)
-  let initialize _ = (Hashtbl.create 123456, ref []) 
+  let initialize _ = (Hashtbl.create 123456, ref []) (* We just pick some initial size. Hash tables get resized dynamically if necessary, so it doesn't hugely matter. *)
   let enter tab str ty =  Hashtbl.add (fst tab) str ty ; (snd tab) := str :: !(snd tab) (* recall that OCaml hash tables store a stack of all the values for each key; this will allow us to use shadowing; if we don't want shadowing we can add an extra check here. *)
   let look tab str = Hashtbl.find_opt (fst tab) str
 

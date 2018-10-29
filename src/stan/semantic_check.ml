@@ -64,17 +64,6 @@ Perhaps use Appel's imperative symbol table?
 (* specialised commonly used definitions like check_int, check_data *)
 
 
-(* e.g.
-   semantic_check(Program (bf, bd, btd, bp, btp, bm, bgq), env) = let vm = var_map.new() in 
-                                                                 semantic_check(bf) ;
-                                                                 semantic_check(bd) ;
-                                                                 semantic_check(btd) ;
-                                                                 semantic_check(bp) ;
-                                                                 semantic_check(btp) ;
-                                                                 vm.beginscope() ;
-                                                                 semantic_check(bm) ;
-                                                                 vm.endscope() ;
-                                                                 semantic_check(bgq)  *)
 open Symbol_table
 open Syntax
 
@@ -109,17 +98,123 @@ let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp
                                       let ubgq = semantic_check_generatedquantitiesblock vm bgq in
                                       Program (ubf, ubd, ubtd, ubp, ubtp, ubm, ubgq)
                                       
+
 and
+
 semantic_check_functionblock vm bf = bf
+
 and
+
 semantic_check_datablock vm bd = bd
+
 and
+
 semantic_check_transformeddatablock vm btd = btd
+
 and
+
 semantic_check_parametersblock vm bp = bp
+
 and
+
 semantic_check_transformedparametersblock vm btp = btp
+
 and
+
 semantic_check_modelblock vm bm = bm
+
 and
+
 semantic_check_generatedquantitiesblock vm bgq = bgq
+
+and
+
+semantic_check_fundef vm fd = fd
+
+and
+
+semantic_check_identifier vm id = id
+
+and
+
+semantic_check_real vm r = r
+
+and
+
+semantic_check_size vm s = s
+
+and
+
+semantic_check_argdecl vm ad = ad
+
+and
+
+semantic_check_returntype vm rt = rt
+
+and
+
+semantic_check_unsizedtype vm ut = ut
+
+and
+
+semantic_check_topvardecl vm tvd = tvd
+
+and
+
+semantic_check_vardecl vm vd = vd
+
+and
+
+semantic_check_topvardecl_or_statement vm tvds = tvds
+
+and
+
+semantic_check_vardecl_or_statement vm vds = vds
+
+and
+
+semantic_check_topvartype vm tvt = tvt
+
+and
+
+semantic_check_sizedtyped vm st = st
+
+and
+
+semantic_check_transformation vm t = t
+
+and
+
+semantic_check_expression vm e = e
+
+and
+
+semantic_check_infixop vm i = i
+
+and
+
+semantic_check_prefixop vm p = p
+
+and
+
+semantic_check_postfixop vm p = p
+
+and
+
+semantic_check_printable vm p = p
+
+and
+
+semantic_check_statement vm s = s
+
+and
+
+semantic_check_truncation vm t = t
+
+and
+
+semantic_check_lhs vm l = l
+
+and
+
+semantic_check_index vm i = i

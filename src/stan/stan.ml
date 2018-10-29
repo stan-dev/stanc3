@@ -27,9 +27,9 @@ end) ;;
 
 
 
-let vm = Symbol_table.Symbol.initialize ()
-let _ = Symbol_table.Symbol.enter vm "a" "a" ;
+let vm = Symbol_table.Symbol.initialize () in
 
+(* TODO: just a test here, so the function gets called; we need to wire through the actual parsed AST here later *)
 let _ = Semantic_check.semantic_check_program vm (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) in
 
 CalcVar.main ()
