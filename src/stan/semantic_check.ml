@@ -49,3 +49,15 @@ Build up hash table (and break down again) with variables in scope (as strings) 
 Implement function signatures as partial functions on types. Also implement operators that way. That lets us quickly compute the type of an expression.
 Perhaps use Appel's imperative symbol table?
 *)
+
+
+
+(* semantic_check : program -> program | recursive function, side effecting on var_map *)
+(* var_map (imperative) stores type and block for each variable in scope + flags: in function body, in loop, in lpdf/model, in rng, current block; has operations new, enter, look, beginscope, endscope *)
+(* infer_type : expression -> (type * block) option (recursively implemented calling var_map.look) *)
+(* use var_map.infer_type to make sure all types are OK for operations we perform and to decorate AST with extra type information as we proceed *)
+(* use var_map enter to enter math library functions into var map at start of program *)
+(* use var_map enter to enter functions from function block and whenever we encounter a variable *)
+(* use begin scope and end scope to deal with block structure *)
+(* use new once to initialise var_map *)
+(* use var_map flags for checking other constraints *)
