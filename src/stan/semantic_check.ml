@@ -64,6 +64,12 @@ Perhaps use Appel's imperative symbol table?
 (* specialised commonly used definitions like check_int, check_data *)
 
 
+(* idea!! : use data keywords in var map to store that we are in a data block;
+similarly for other blocks;
+and language constructs;
+may need to add remove function to var map (as it's not obvious we can always use scope to exit blocks again like that) *)
+
+
 open Symbol_table
 open Syntax
 
@@ -77,6 +83,7 @@ type var_origin =
   | GQuant
 
 type var_type =
+  | Void
   | Int
   | Real
   | Vector
