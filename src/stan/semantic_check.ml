@@ -76,11 +76,28 @@ Perhaps use Appel's imperative symbol table?
                                                                  vm.endscope() ;
                                                                  semantic_check(bgq)  *)
 open Symbol_table
-let vm = Symbol.initialize ()
-let _ = Symbol.enter vm "a" "a"  
+
+type var_origin =
+  | Functions
+  | Data
+  | TData
+  | Param
+  | TParam
+  | Model
+  | GQuant
+
+type var_type =
+  | Int
+  | Real
+  | Vector
+  | RowVector
+  | Matrix
+  | Array of var_type
+  | Fun of (var_type list) * var_type
+
 let vm3 = ref ""
                                                            
-let rec semantic_check_program p = match p with Syntax.Program (bf, bd, btd, bp, btp, bm, bgq) -> semantic_check_fun_block bf ; print_endline(!vm3)
+let rec semantic_check_program vm p = match p with Syntax.Program (bf, bd, btd, bp, btp, bm, bgq) -> semantic_check_fun_block vm bf ; print_endline(!vm3)
                                               | _ -> print_endline(!vm3)
 and
-semantic_check_fun_block bf = print_endline(!vm3) ; (vm3 := "b")  
+semantic_check_fun_block vm bf = Symbol.enter vm "a" "a" ; print_endline(!vm3) ; (vm3 := "")  

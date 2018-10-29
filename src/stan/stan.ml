@@ -1,4 +1,6 @@
 (** The main program. *)
+open Syntax
+
 
 module CalcVar = Zoo.Main(struct
   let name = "stan"
@@ -23,10 +25,9 @@ module CalcVar = Zoo.Main(struct
   let exec _ _ = ()
 end) ;;
 
-open Syntax
-open Symbol_table
 
 
-let _ = Semantic_check.semantic_check_program (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) ;
+let vm = Symbol_table.Symbol.initialize ()
+let _ = Semantic_check.semantic_check_program vm (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) ;
 
 CalcVar.main ()
