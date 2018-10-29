@@ -98,7 +98,16 @@ type var_type =
 
                                                     
 let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) ->
-                                      let ubf = semantic_check_functionblock vm bf in Program (ubf, bd, btd, bp, btp, bm, bgq) | _ -> p
+                                      let ubf = semantic_check_functionblock vm bf in
+                                      let ubd = semantic_check_datablock vm bd in
+                                      let ubtd = semantic_check_transformeddatablock vm btd in
+                                      let ubp = semantic_check_parametersblock vm bp in
+                                      let ubtp = semantic_check_transformedparametersblock vm btp in
+                                      let _ = Symbol.begin_scope vm in
+                                      let ubm = semantic_check_modelblock vm bm in
+                                      let _ = Symbol.end_scope vm in
+                                      let ubgq = semantic_check_generatedquantitiesblock vm bgq in
+                                      Program (ubf, ubd, ubtd, ubp, ubtp, ubm, ubgq)
                                       
 and
 semantic_check_functionblock vm bf = bf
