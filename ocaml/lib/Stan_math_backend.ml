@@ -17,6 +17,7 @@ let rec emit_cpp = function
   | FnApp(f, args) ->
     let args = List.map ~f:emit_cpp args in
     begin match f with
+      (* XXX Choose one loop type!*)
       | "if" | "for" | "while" ->
         begin match args with
           | fst :: snd :: thrd ->
@@ -24,6 +25,10 @@ let rec emit_cpp = function
                f fst snd (List.fold ~init:""
                             ~f:(fun _ e -> sprintf " else {\n  %s;\n}\n" e)
                             thrd))
+      (* XXX Is this non-typesafety too ugly? Alternative here is probably to
+         just have the MIR have a separate variant for loop, if, and ifelse.
+         ... that seems better...
+      *)
           | _ -> raise ShouldNeverHappen
         end
       | f -> String.concat [f; "("; (String.concat ~sep:", " args); ")"]
