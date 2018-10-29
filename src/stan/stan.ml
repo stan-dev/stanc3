@@ -20,7 +20,13 @@ module CalcVar = Zoo.Main(struct
   let toplevel_parser = Some (Parser.program Lexer.token)
 
   (** The command that actually executes a command. *)
-  let exec _ cmd = ()
+  let exec _ _ = ()
 end) ;;
+
+open Syntax
+open Symbol_table
+
+
+let _ = Semantic_check.semantic_check_program (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) ;
 
 CalcVar.main ()

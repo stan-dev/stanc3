@@ -61,3 +61,23 @@ Perhaps use Appel's imperative symbol table?
 (* use begin scope and end scope to deal with block structure *)
 (* use new once to initialise var_map *)
 (* use var_map flags for checking other constraints *)
+(* specialised commonly used definitions like check_int, check_data *)
+
+
+(* e.g.
+   semantic_check(Program (bf, bd, btd, bp, btp, bm, bgq), env) = let vm = var_map.new() in 
+                                                                 semantic_check(bf) ;
+                                                                 semantic_check(bd) ;
+                                                                 semantic_check(btd) ;
+                                                                 semantic_check(bp) ;
+                                                                 semantic_check(btp) ;
+                                                                 vm.beginscope() ;
+                                                                 semantic_check(bm) ;
+                                                                 vm.endscope() ;
+                                                                 semantic_check(bgq)  *)
+let vm = ref "a"
+                                                           
+let rec semantic_check_program p = match p with Syntax.Program (bf, bd, btd, bp, btp, bm, bgq) -> semantic_check_fun_block bf ; print_endline(!vm)
+                                              | _ -> print_endline(!vm)
+and
+semantic_check_fun_block bf = print_endline(!vm) ; (vm := "b")  
