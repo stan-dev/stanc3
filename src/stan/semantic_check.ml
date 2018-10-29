@@ -76,6 +76,7 @@ Perhaps use Appel's imperative symbol table?
                                                                  vm.endscope() ;
                                                                  semantic_check(bgq)  *)
 open Symbol_table
+open Syntax
 
 type var_origin =
   | Functions
@@ -95,9 +96,21 @@ type var_type =
   | Array of var_type
   | Fun of (var_type list) * var_type
 
-let vm3 = ref ""
-                                                           
-let rec semantic_check_program vm p = match p with Syntax.Program (bf, bd, btd, bp, btp, bm, bgq) -> semantic_check_fun_block vm bf ; print_endline(!vm3)
-                                              | _ -> print_endline(!vm3)
+                                                    
+let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) ->
+                                      let ubf = semantic_check_functionblock vm bf in Program (ubf, bd, btd, bp, btp, bm, bgq) | _ -> p
+                                      
 and
-semantic_check_fun_block vm bf = Symbol.enter vm "a" "a" ; print_endline(!vm3) ; (vm3 := "")  
+semantic_check_functionblock vm bf = bf
+and
+semantic_check_datablock vm bd = bd
+and
+semantic_check_transformeddatablock vm btd = btd
+and
+semantic_check_parametersblock vm bp = bp
+and
+semantic_check_transformedparametersblock vm btp = btp
+and
+semantic_check_modelblock vm bm = bm
+and
+semantic_check_generatedquantitiesblock vm bgq = bgq

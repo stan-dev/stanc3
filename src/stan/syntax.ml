@@ -1,7 +1,6 @@
 (* Abstract syntax. *)
 open Core_kernel (* for auto generating s-exp *)
 
-(* TODO: constructors to take multiple arguments, rather than a tuple? *)
 
 (* Programs. *)
 type program =

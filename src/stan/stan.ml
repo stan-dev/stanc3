@@ -28,6 +28,8 @@ end) ;;
 
 
 let vm = Symbol_table.Symbol.initialize ()
-let _ = Semantic_check.semantic_check_program vm (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) ;
+let _ = Symbol_table.Symbol.enter vm "a" "a" ;
+
+let _ = Semantic_check.semantic_check_program vm (Program (EmptyFunBlock, EmptyDataBlock, EmptyTDataBlock, EmptyParamBlock, EmptyTParamBlock, EmptyModelBlock, EmptyGQBlock)) in
 
 CalcVar.main ()
