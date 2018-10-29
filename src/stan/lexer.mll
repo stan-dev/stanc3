@@ -10,6 +10,8 @@
     }
 }
 
+(* TODO: Add restriction that identifiers cannot be key words.  *)
+
 (* TODO: capture source span properly wherever we need it. I think I'm currently misreporting the position by one. *)
 
 (* Some auxiliary definition for variables and constants *)
