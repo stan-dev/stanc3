@@ -89,16 +89,13 @@ returntype =
 
 and
 
-unsizedtype = basictype * size (* int is for the array dimensions *) (* TODO: maybe we should make array a type constructor immediately *)
-
-and
-
-basictype =
+unsizedtype =
   | Int
   | Real
   | Vector
   | RowVector
   | Matrix
+  | Array of unsizedtype
 
 and
 

@@ -18,10 +18,12 @@ let construct_program obf obd obtd obp obtp obm obg = let rbf = match obf with S
                                                                              | _ -> EmptyGQBlock
 
                                                       in Program (rbf, rbd, rbtd, rbp, rbtp, rbm, rbg)
+                                                      
+let rec repeat n f x = if n <= Int64.zero then x else repeat (Int64.pred n) f (f x)
 
 let construct_unsized_type bt ud = let size = match ud with Some d -> Int64.succ(Int64.of_int(d)) 
                                                           | _ -> Int64.zero
-                                   in (bt, size)
+                                   in repeat size (fun y -> Array y) bt
 
 let construct_arg_decl od ut id = match od with None -> Arg (ut, id)
                                               | _    -> DataArg (ut, id)
