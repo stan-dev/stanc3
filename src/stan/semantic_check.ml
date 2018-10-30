@@ -251,7 +251,16 @@ semantic_check_topvardecl vm tvd = let id = snd tvd in
 
 and
 
-semantic_check_vardecl vm vd = vd
+semantic_check_vardecl vm vd = let id = snd vd in
+                               let st = fst vd in
+                               let uid = semantic_check_identifier vm id in
+                               let ust = semantic_check_sizedtype vm st in
+                               let vt = vartype_of_sizedtype st in
+                               let currentblock = match Symbol.look vm "1currentblock" with Some p -> (fst p) | _ -> Meta in
+                               let _ = match Symbol.look vm id with Some x -> (let error_msg = String.concat " " ["Identifier "; id; " is already in use."] in semantic_error error_msg)
+                                                                  | None -> () in
+                               let _ = Symbol.enter vm id (currentblock, vt) in
+                               (ust, uid)
 
 and
 
@@ -267,7 +276,7 @@ semantic_check_topvartype vm tvt = tvt
 
 and
 
-semantic_check_sizedtyped vm st = st
+semantic_check_sizedtype vm st = st
 
 and
 
