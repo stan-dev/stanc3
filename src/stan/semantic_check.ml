@@ -186,7 +186,13 @@ semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
                               let uargs = List.map (semantic_check_argdecl vm) args in
                               let _ = Symbol.enter vm "1noreturn" (Meta, True) in
                               let _ = Symbol.enter vm "1allreturn" (Meta, True) in
+                              let _ = Symbol.enter vm "1fundef" (Meta, True) in
+                              let _ = if Filename.check_suffix uid "_rng" then Symbol.enter vm "1rng" (Meta, True) in
+                              let _ = if Filename.check_suffix uid "_lp" then Symbol.enter vm "1rng" (Meta, True) in
                               let ub = semantic_check_statement vm b in
+                              let _ = Symbol.enter vm "1fundef" (Meta, False) in
+                              let _ = Symbol.enter vm "1rng" (Meta, False) in
+                              let _ = Symbol.enter vm "1lp" (Meta, False) in
                               let _ = match rt with Void -> (match Symbol.look vm "1noreturn" with Some (Meta, False) -> semantic_error "Void function bodies cannot contain return statements." | _ -> ())
                                                    | _   -> (match Symbol.look vm "1allreturn" with Some (Meta, False) -> semantic_error "Non-void function bodies must contain a return statement in every branch." | _ -> ()) in
                               FunDef (urt, uid, uargs, ub)

@@ -1,6 +1,3 @@
-model {
-  real x;
-  {
-  x = 2;
-  }
+functions {
+void foo(int bar) {return;}
 }
