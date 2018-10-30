@@ -192,18 +192,18 @@ semantic_check_generatedquantitiesblock vm bgq = match bgq with GQBlock ltvds ->
 and
 
 semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
+                              let urt = semantic_check_returntype vm rt in
+                              let uid = semantic_check_identifier vm id in
                               match Symbol.look vm id with Some x -> let error_msg = String.concat " " ["Identifier "; id; " is already in use."] in semantic_error error_msg
                                                          | None ->
                               let _ = Symbol.enter vm id (Functions, Fun (List.map var_type_of_argdecl args, Basic rt)) in
-                              let urt = semantic_check_returntype vm rt in
-                              let uid = semantic_check_identifier vm id in
                               let _ = if duplicate_arg_names args then semantic_error "All function arguments should be distinct identifiers." in 
                               let uargs = List.map (semantic_check_argdecl vm) args in
                               let _ = Symbol.enter vm "1noreturn" (Meta, True) in
                               let _ = Symbol.enter vm "1allreturn" (Meta, True) in
                               let _ = Symbol.enter vm "1fundef" (Meta, True) in
-                              let _ = if Filename.check_suffix uid "_rng" then Symbol.enter vm "1rng" (Meta, True) in
-                              let _ = if Filename.check_suffix uid "_lp" then Symbol.enter vm "1rng" (Meta, True) in
+                              let _ = if Filename.check_suffix id "_rng" then Symbol.enter vm "1rng" (Meta, True) in
+                              let _ = if Filename.check_suffix id "_lp" then Symbol.enter vm "1rng" (Meta, True) in
                               let ub = semantic_check_statement vm b in
                               let _ = Symbol.enter vm "1fundef" (Meta, False) in
                               let _ = Symbol.enter vm "1rng" (Meta, False) in
@@ -238,13 +238,16 @@ semantic_check_unsizedtype vm ut = ut (* Probably nothing to do here *)
 and
 
 semantic_check_topvardecl vm tvd = let id = snd tvd in
-                                   let vt = vartype_of_sizedtype (fst (fst tvd)) in
+                                   let tvt = fst tvd in
+                                   let uid = semantic_check_identifier vm id in
+                                   let utvt = semantic_check_topvartype vm tvt in
+                                   let vt = vartype_of_sizedtype (fst tvt) in
                                    let currentblock = match Symbol.look vm "1currentblock" with Some p -> (fst p) | _ -> Meta in
                                    let _ = match Symbol.look vm id with Some x -> (let error_msg = String.concat " " ["Identifier "; id; " is already in use."] in semantic_error error_msg)
                                                                       | None -> () in
                                    let _ = Symbol.enter vm id (currentblock, vt) in
                                    let _ = if ((currentblock = Param) || (currentblock = TParam)) && (vartype_contains_int vt) then semantic_error "(Transformed) Parameters cannot be integers." in
-                                   tvd
+                                   (utvt, uid)
 
 and
 
