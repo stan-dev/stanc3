@@ -178,7 +178,7 @@ semantic_check_generatedquantitiesblock vm bgq = match bgq with GQBlock ltvds ->
 and
 
 semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
-                              match Symbol.look vm id with Some x -> let error_msg = String.concat " " ["Identifier '"; id; "'is already in use"] in semantic_error error_msg
+                              match Symbol.look vm id with Some x -> let error_msg = String.concat " " ["Identifier "; id; " is already in use."] in semantic_error error_msg
                                                          | None ->
                               let _ = Symbol.enter vm id (Functions, Fun (List.map var_type_of_argdecl args, Basic rt)) in
                               let urt = semantic_check_returntype vm rt in
@@ -187,8 +187,8 @@ semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
                               let _ = Symbol.enter vm "1noreturn" (Meta, True) in
                               let _ = Symbol.enter vm "1allreturn" (Meta, True) in
                               let ub = semantic_check_statement vm b in
-                              let _ = match rt with Void -> match Symbol.look vm "1noreturn" with Some (Meta, False) -> semantic_error "Void function bodies cannot contain return statements." | _ -> ()
-                                                   | _   -> match Symbol.look vm "1allreturn" with Some (Meta, False) -> semantic_error "Non-void function bodies must contain a return statement in every branch." | _ -> () in
+                              let _ = match rt with Void -> (match Symbol.look vm "1noreturn" with Some (Meta, False) -> semantic_error "Void function bodies cannot contain return statements." | _ -> ())
+                                                   | _   -> (match Symbol.look vm "1allreturn" with Some (Meta, False) -> semantic_error "Non-void function bodies must contain a return statement in every branch." | _ -> ()) in
                               FunDef (urt, uid, uargs, ub)
 and
 
