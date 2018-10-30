@@ -269,7 +269,8 @@ semantic_check_topvardecl_or_statement vm tvds = match tvds with TVDecl tvd -> T
 
 and
 
-semantic_check_vardecl_or_statement vm vds = vds
+semantic_check_vardecl_or_statement vm vds = match vds with VDecl vd -> VDecl (semantic_check_vardecl vm vd)
+                                                          | Stmt s -> Stmt (semantic_check_statement vm s)
 
 and
 
