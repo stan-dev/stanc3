@@ -264,7 +264,8 @@ semantic_check_vardecl vm vd = let id = snd vd in
 
 and
 
-semantic_check_topvardecl_or_statement vm tvds = tvds
+semantic_check_topvardecl_or_statement vm tvds = match tvds with TVDecl tvd -> TVDecl (semantic_check_topvardecl vm tvd)
+                                                               | TStmt s -> TStmt (semantic_check_statement vm s)
 
 and
 
