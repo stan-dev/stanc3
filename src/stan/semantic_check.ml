@@ -348,4 +348,9 @@ semantic_check_lhs vm l = l
 
 and
 
-semantic_check_index vm i = i
+semantic_check_index vm = function
+                            All -> All
+                          | Single e -> if check_of_int_type vm e then Single (semantic_check_expression vm e) else semantic_error "Index should be of type int."
+                          | Upfrom e -> if check_of_int_type vm e then Upfrom (semantic_check_expression vm e) else semantic_error "Index should be of type int."
+                          | Downfrom e -> if check_of_int_type vm e then Downfrom (semantic_check_expression vm e) else semantic_error "Index should be of type int."
+                          | Between (e1, e2) -> if (check_of_int_type vm e1) && (check_of_int_type vm e2) then Between (semantic_check_expression vm e1, semantic_check_expression vm e2) else semantic_error "Index should be of type int."
