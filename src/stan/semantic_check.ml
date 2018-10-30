@@ -130,6 +130,8 @@ let rec unsizedtype_of_sizedtype = function
 
 let vartype_of_sizedtype st = Basic (ReturnType (unsizedtype_of_sizedtype st))
 
+let check_of_int_type vm e = true (* TODO *)
+
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
@@ -274,11 +276,21 @@ semantic_check_vardecl_or_statement vm vds = match vds with VDecl vd -> VDecl (s
 
 and
 
-semantic_check_topvartype vm tvt = tvt
+semantic_check_topvartype vm tvt = let st = fst tvt in
+                                   let trans = snd tvt in
+                                   let ust = semantic_check_sizedtype vm st in
+                                   let utrans = semantic_check_transformation vm trans in
+                                   (ust, utrans)
 
 and
 
-semantic_check_sizedtype vm st = st
+semantic_check_sizedtype vm = function
+                                SInt -> SInt
+                              | SReal -> SReal
+                              | SVector e -> if check_of_int_type vm e then SVector (semantic_check_expression vm e) else semantic_error "Vector sizes should be of type int."
+                              | SRowVector e -> if check_of_int_type vm e then SRowVector (semantic_check_expression vm e) else semantic_error "Row vector sizes should be of type int."
+                              | SMatrix (e1, e2) -> if (check_of_int_type vm e1) && (check_of_int_type vm e2) then SMatrix (semantic_check_expression vm e1, semantic_check_expression vm e2) else semantic_error "Matrix sizes should be of type int."
+                              | SArray (st, e) -> if check_of_int_type vm e then SArray (semantic_check_sizedtype vm st, semantic_check_expression vm e) else semantic_error "Array sizes should be of type int."
 
 and
 
