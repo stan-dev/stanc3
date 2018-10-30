@@ -96,12 +96,12 @@ type var_origin =
   | Meta
 
 type var_type =
-  | Basic of returntype
+  | Ground of returntype
   | Fun of (var_type list) * var_type
   | True (* for use with Meta *)
   | False (* for use with Meta *)
 
-let var_type_of_argdecl ad = match ad with DataArg (ut, id) -> Basic (ReturnType ut) | Arg (ut, id) -> Basic (ReturnType ut)
+let var_type_of_argdecl ad = match ad with DataArg (ut, id) -> Ground (ReturnType ut) | Arg (ut, id) -> Ground (ReturnType ut)
 
 let identifier_of_argdecl ad = match ad with DataArg (ut, id) -> id | Arg (ut, id) -> id
 
@@ -117,7 +117,7 @@ let duplicate_arg_names args = let lst = (List.map identifier_of_argdecl args) i
 
 let rec unsizedtype_contains_int ut = match ut with Int -> true | Array ut -> unsizedtype_contains_int ut | _ -> false
 
-let vartype_contains_int vt = match vt with Basic rt -> (match rt with ReturnType ut -> unsizedtype_contains_int ut | _ -> false)
+let vartype_contains_int vt = match vt with Ground rt -> (match rt with ReturnType ut -> unsizedtype_contains_int ut | _ -> false)
                                           | _ -> false
 
 let rec unsizedtype_of_sizedtype = function
@@ -128,13 +128,15 @@ let rec unsizedtype_of_sizedtype = function
                                     | SMatrix (e1, e2) -> Matrix
                                     | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
 
-let vartype_of_sizedtype st = Basic (ReturnType (unsizedtype_of_sizedtype st))
+let vartype_of_sizedtype st = Ground (ReturnType (unsizedtype_of_sizedtype st))
 
-let check_of_int_type vm e = true (* TODO *)
+let infer_type vm e = Some (Ground (ReturnType Int)) (* TODO!!!! *)
 
-let check_of_real_type vm e = true (* TODO *)
+let check_of_int_type vm e = match (infer_type vm e) with Some (Ground (ReturnType Int)) -> true | _ -> false 
 
-let check_of_int_or_real_type vm e = true (* TODO *)
+let check_of_real_type vm e = match (infer_type vm e) with Some (Ground (ReturnType Real)) -> true | _ -> false 
+
+let check_of_int_or_real_type vm e =  match (infer_type vm e) with Some (Ground (ReturnType Int)) -> true | Some (Ground (ReturnType Real)) -> true | _ -> false 
 
 (* TODO: insert positions into semantic errors! *)
 
@@ -202,7 +204,7 @@ semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
                               let uid = semantic_check_identifier vm id in
                               match Symbol.look vm id with Some x -> let error_msg = String.concat " " ["Identifier "; id; " is already in use."] in semantic_error error_msg
                                                          | None ->
-                              let _ = Symbol.enter vm id (Functions, Fun (List.map var_type_of_argdecl args, Basic rt)) in
+                              let _ = Symbol.enter vm id (Functions, Fun (List.map var_type_of_argdecl args, Ground rt)) in
                               let _ = if duplicate_arg_names args then semantic_error "All function arguments should be distinct identifiers." in 
                               let uargs = List.map (semantic_check_argdecl vm) args in
                               let _ = Symbol.enter vm "1noreturn" (Meta, True) in
