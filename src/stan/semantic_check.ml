@@ -142,6 +142,11 @@ let check_not_of_type_void vm e = match (infer_type vm e) with Some (Ground Void
 
 let check_compatible_indices vm e lindex = true (* TODO!!! *)
 
+let check_of_same_type_mod_conv vm e1 e2 = match (infer_type vm e1) with Some t1 -> (
+                                           match (infer_type vm e2) with Some t2 ->
+                                           (t1 = t2) || (((t1 = Ground (ReturnType Real)) && (t1 = Ground (ReturnType Int)))) || (((t1 = Ground (ReturnType Int)) && (t1 = Ground (ReturnType Real))))
+                                           | _ -> false) | _ -> false
+
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
@@ -324,7 +329,9 @@ semantic_check_transformation vm = function
                               | Covariance -> Covariance
 and
 
-semantic_check_expression vm e = e
+semantic_check_expression vm = function
+                                 Conditional (e1, e2, e3) -> if check_of_int_type vm e1 then (if check_of_same_type_mod_conv vm e2 e3 then Conditional (semantic_check_expression vm e1, semantic_check_expression vm e2, semantic_check_expression vm e3) else semantic_error "Both branches of a conditional operator need to have the same type." ) else semantic_error "Condition in conditional should be of type int."
+                                       | _ -> GetTarget (* TODO!!! *)
 
 and
 
@@ -346,7 +353,7 @@ semantic_check_printable vm = function
 
 and
 
-semantic_check_statement vm s = s
+semantic_check_statement vm s = s (* TODO!!! *)
 
 and
 
