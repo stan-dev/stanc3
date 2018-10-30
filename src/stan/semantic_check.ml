@@ -140,6 +140,8 @@ let check_of_int_or_real_type vm e =  match (infer_type vm e) with Some (Ground 
 
 let check_not_of_type_void vm e = match (infer_type vm e) with Some (Ground Void) -> false | None -> false | _ -> true
 
+let check_compatible_indices vm e lindex = true (* TODO!!! *)
+
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
@@ -326,15 +328,15 @@ semantic_check_expression vm e = e
 
 and
 
-semantic_check_infixop vm i = i
+semantic_check_infixop vm i = i (* Probably nothing to do here *)
 
 and
 
-semantic_check_prefixop vm p = p
+semantic_check_prefixop vm p = p (* Probably nothing to do here *)
 
 and
 
-semantic_check_postfixop vm p = p
+semantic_check_postfixop vm p = p (* Probably nothing to do here *)
 
 and
 
@@ -356,7 +358,12 @@ semantic_check_truncation vm = function
 
 and
 
-semantic_check_lhs vm l = l
+semantic_check_lhs vm lhs = let id = fst lhs in
+                            let lindex = snd lhs in
+                            let uid = semantic_check_identifier vm id in
+                            let ulindex = (List.map (semantic_check_index vm) lindex) in
+                            let _ = check_compatible_indices vm (Variable uid) ulindex in
+                            (uid, ulindex)
 
 and
 
