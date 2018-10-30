@@ -235,11 +235,15 @@ semantic_check_size vm s = s (* Probably nothing to do here *)
 
 and
 
-semantic_check_argdecl vm ad = ad (* Probably nothing to do here *)
+semantic_check_argdecl vm = function 
+                              DataArg (ut, id) -> DataArg(semantic_check_unsizedtype vm ut, semantic_check_identifier vm id)
+                            | Arg (ut, id) -> DataArg(semantic_check_unsizedtype vm ut, semantic_check_identifier vm id) (* Probably nothing to do here *)
 
 and
 
-semantic_check_returntype vm rt = rt (* Probably nothing to do here *)
+semantic_check_returntype vm = function
+                                Void -> Void
+                              | ReturnType ut -> ReturnType (semantic_check_unsizedtype vm ut) (* Probably nothing to do here *)
 
 and
 
@@ -275,20 +279,20 @@ semantic_check_vardecl vm vd = let id = snd vd in
 and
 
 semantic_check_topvardecl_or_statement vm tvds = match tvds with TVDecl tvd -> TVDecl (semantic_check_topvardecl vm tvd)
-                                                               | TStmt s -> TStmt (semantic_check_statement vm s)
+                                                               | TStmt s -> TStmt (semantic_check_statement vm s) (* Probably nothing to do here *)
 
 and
 
 semantic_check_vardecl_or_statement vm vds = match vds with VDecl vd -> VDecl (semantic_check_vardecl vm vd)
-                                                          | Stmt s -> Stmt (semantic_check_statement vm s)
+                                                          | Stmt s -> Stmt (semantic_check_statement vm s) (* Probably nothing to do here *)
 
 and
 
 semantic_check_topvartype vm tvt = let st = fst tvt in
                                    let trans = snd tvt in
                                    let ust = semantic_check_sizedtype vm st in
-                                   let utrans = semantic_check_transformation vm trans in
-                                   (ust, utrans)
+                                   let utrans = semantic_check_transformation vm trans in 
+                                   (ust, utrans) (* Probably nothing to do here *)
 
 and
 
