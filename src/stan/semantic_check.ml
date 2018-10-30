@@ -31,6 +31,7 @@ Also check whether function arguments meet data requirement.
 Maybe should also infer bounds for every indexing that happens so we know what code to generate for bound checking?
 Every trace through function body contains return statement
 In case of void function, no return statements anywhere
+All function arguments are distinct
 *)
 
 (*
@@ -67,13 +68,7 @@ Perhaps use Appel's imperative symbol table?
 
 
 (* We will use the following non-identifier (protected) strings in the var map as flags for properties of our position in the program:
-1functions              - in functions block
-1data                   - in data block
-1transformed data       - in transformed data block
-1parameters             - in parameters block
-1transformed parameters - in transformed parameters block
-1model                  - in model block
-1generated quantities   - in generated quantities block
+1currentblock           - holds value of current block we are in
 1for                    - in for/foreach loop
 1while                  - in while loop
 1if                     - in if condition
@@ -120,34 +115,42 @@ let rec remove_dups lst= match lst with
 let duplicate_arg_names args = let lst = (List.map identifier_of_argdecl args) in
                                if List.length (remove_dups lst) < List.length lst then true else false
 
+let rec unsizedtype_contains_int ut = match ut with Int -> true | Array ut -> unsizedtype_contains_int ut | _ -> false
+
+let vartype_contains_int vt = match vt with Basic rt -> (match rt with ReturnType ut -> unsizedtype_contains_int ut | _ -> false)
+                                          | _ -> false
+
+let rec unsizedtype_of_sizedtype = function
+                                      SInt -> Int
+                                    | SReal -> Real
+                                    | SVector e -> Vector
+                                    | SRowVector e -> RowVector
+                                    | SMatrix (e1, e2) -> Matrix
+                                    | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
+
+let vartype_of_sizedtype st = Basic (ReturnType (unsizedtype_of_sizedtype st))
+
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
                                         
 let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) -> (* TODO: first load whole math library into the vm *)
-                                      let _ = Symbol.enter vm "1functions" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (Functions, True) in
                                       let ubf = semantic_check_functionblock vm bf in
-                                      let _ = Symbol.enter vm "1functions" (Meta, False) in
-                                      let _ = Symbol.enter vm "1data" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (Data, True) in
                                       let ubd = semantic_check_datablock vm bd in
-                                      let _ = Symbol.enter vm "1data" (Meta, False) in
-                                      let _ = Symbol.enter vm "1transformed data" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (TData, True) in
                                       let ubtd = semantic_check_transformeddatablock vm btd in
-                                      let _ = Symbol.enter vm "1transformed data" (Meta, False) in
-                                      let _ = Symbol.enter vm "1parameters" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (Param, True) in
                                       let ubp = semantic_check_parametersblock vm bp in
-                                      let _ = Symbol.enter vm "1parameters" (Meta, False) in
-                                      let _ = Symbol.enter vm "1transformed parameters" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (TParam, True) in
                                       let ubtp = semantic_check_transformedparametersblock vm btp in
-                                      let _ = Symbol.enter vm "1transformed parameters" (Meta, False) in
-                                      let _ = Symbol.enter vm "1model" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (Model, True) in
                                       let _ = Symbol.begin_scope vm in
                                       let ubm = semantic_check_modelblock vm bm in
                                       let _ = Symbol.end_scope vm in
-                                      let _ = Symbol.enter vm "1model" (Meta, False) in
-                                      let _ = Symbol.enter vm "1generated quantities" (Meta, True) in
+                                      let _ = Symbol.enter vm "1currentblock" (GQuant, True) in
                                       let ubgq = semantic_check_generatedquantitiesblock vm bgq in
-                                      let _ = Symbol.enter vm "1generated quantities" (Meta, False) in
                                       Program (ubf, ubd, ubtd, ubp, ubtp, ubm, ubgq)
                                       
 
@@ -222,19 +225,26 @@ semantic_check_size vm s = s (* Probably nothing to do here *)
 
 and
 
-semantic_check_argdecl vm ad = ad
+semantic_check_argdecl vm ad = ad (* Probably nothing to do here *)
 
 and
 
-semantic_check_returntype vm rt = rt
+semantic_check_returntype vm rt = rt (* Probably nothing to do here *)
 
 and
 
-semantic_check_unsizedtype vm ut = ut
+semantic_check_unsizedtype vm ut = ut (* Probably nothing to do here *)
 
 and
 
-semantic_check_topvardecl vm tvd = tvd
+semantic_check_topvardecl vm tvd = let id = snd tvd in
+                                   let vt = vartype_of_sizedtype (fst (fst tvd)) in
+                                   let currentblock = match Symbol.look vm "1currentblock" with Some p -> (fst p) | _ -> Meta in
+                                   let _ = match Symbol.look vm id with Some x -> (let error_msg = String.concat " " ["Identifier "; id; " is already in use."] in semantic_error error_msg)
+                                                                      | None -> () in
+                                   let _ = Symbol.enter vm id (currentblock, vt) in
+                                   let _ = if ((currentblock = Param) || (currentblock = TParam)) && (vartype_contains_int vt) then semantic_error "(Transformed) Parameters cannot be integers." in
+                                   tvd
 
 and
 
