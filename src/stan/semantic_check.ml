@@ -340,7 +340,11 @@ semantic_check_statement vm s = s
 
 and
 
-semantic_check_truncation vm t = t
+semantic_check_truncation vm = function
+                            NoTruncate -> NoTruncate
+                          | TruncateUpFrom e -> if check_of_int_or_real_type vm e then TruncateUpFrom (semantic_check_expression vm e) else semantic_error "Truncation bound should be of type int or real."
+                          | TruncateDownFrom e -> if check_of_int_or_real_type vm e then TruncateDownFrom (semantic_check_expression vm e) else semantic_error "Truncation bound should be of type int or real."
+                          | TruncateBetween (e1, e2) -> if (check_of_int_or_real_type vm e1) && (check_of_int_or_real_type vm e2) then TruncateBetween (semantic_check_expression vm e1, semantic_check_expression vm e2) else semantic_error "Truncation bound should be of type int or real."
 
 and
 
