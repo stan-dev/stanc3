@@ -138,6 +138,8 @@ let check_of_real_type vm e = match (infer_type vm e) with Some (Ground (ReturnT
 
 let check_of_int_or_real_type vm e =  match (infer_type vm e) with Some (Ground (ReturnType Int)) -> true | Some (Ground (ReturnType Real)) -> true | _ -> false 
 
+let check_not_of_type_void vm e = match (infer_type vm e) with Some (Ground Void) -> false | None -> false | _ -> true
+
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
@@ -332,7 +334,9 @@ semantic_check_postfixop vm p = p
 
 and
 
-semantic_check_printable vm p = p
+semantic_check_printable vm = function
+                                PString s -> PString s
+                              | PExpr e -> if check_not_of_type_void vm e then PExpr (semantic_check_expression vm e) else semantic_error "Expressions of type void cannot be printed." (* TODO: do we even want to check this? *)
 
 and
 
