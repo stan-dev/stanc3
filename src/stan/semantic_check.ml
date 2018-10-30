@@ -108,10 +108,21 @@ type var_type =
 
 let var_type_of_argdecl ad = match ad with DataArg (ut, id) -> Basic (ReturnType ut) | Arg (ut, id) -> Basic (ReturnType ut)
 
+let identifier_of_argdecl ad = match ad with DataArg (ut, id) -> id | Arg (ut, id) -> id
+
 (** A semantic error reported by the toplevel *)
 let semantic_error ?loc msg = Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "") (* TODO: this is not very pretty *)
 
+let rec remove_dups lst= match lst with
+                             | [] -> []
+                             | h::t -> h::(remove_dups (List.filter (fun x -> x<>h) t))
+
+let duplicate_arg_names args = let lst = (List.map identifier_of_argdecl args) in
+                               if List.length (remove_dups lst) < List.length lst then true else false
+
 (* TODO: insert positions into semantic errors! *)
+
+(* TODO: return decorated AST instead of plain one *)
                                         
 let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) -> (* TODO: first load whole math library into the vm *)
                                       let _ = Symbol.enter vm "1functions" (Meta, True) in
@@ -183,6 +194,7 @@ semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
                               let _ = Symbol.enter vm id (Functions, Fun (List.map var_type_of_argdecl args, Basic rt)) in
                               let urt = semantic_check_returntype vm rt in
                               let uid = semantic_check_identifier vm id in
+                              let _ = if duplicate_arg_names args then semantic_error "All function arguments should be distinct identifiers." in 
                               let uargs = List.map (semantic_check_argdecl vm) args in
                               let _ = Symbol.enter vm "1noreturn" (Meta, True) in
                               let _ = Symbol.enter vm "1allreturn" (Meta, True) in
@@ -198,15 +210,15 @@ semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
                               FunDef (urt, uid, uargs, ub)
 and
 
-semantic_check_identifier vm id = id
+semantic_check_identifier vm id = id (* TODO: This could be one place where we check for reserved variable names. Though it would be nicer to just do it in the lexer. *)
 
 and
 
-semantic_check_real vm r = r
+semantic_check_real vm r = r (* Probably nothing to do here *)
 
 and
 
-semantic_check_size vm s = s
+semantic_check_size vm s = s (* Probably nothing to do here *)
 
 and
 
