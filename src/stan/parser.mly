@@ -291,6 +291,7 @@ atomic_statement:
   | PRINT LPAREN l=printables RPAREN SEMICOLON {  grammar_logger "print_statement" ; Print l }
   | REJECT LPAREN l=printables RPAREN SEMICOLON {  grammar_logger "reject_statement" ; Reject l  }
   | RETURN e=expression SEMICOLON {  grammar_logger "return_statement" ; Return e }
+  | RETURN SEMICOLON {  grammar_logger "return_nothing_statement" ; Skip }
   | SEMICOLON {  grammar_logger "skip" ; Skip }
 
 assignment_op:

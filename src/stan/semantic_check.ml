@@ -29,6 +29,8 @@ Array expressions must be of uniform type. (Or mix of int and real)
 Typing of ~ and target +=
 Also check whether function arguments meet data requirement.
 Maybe should also infer bounds for every indexing that happens so we know what code to generate for bound checking?
+Every trace through function body contains return statement
+In case of void function, no return statements anywhere
 *)
 
 (*
@@ -80,6 +82,9 @@ Perhaps use Appel's imperative symbol table?
 1fundef                 - in fundef
 1lp                     - in lp fun def
 1rng                    - in rng fun def
+1allreturn              - have seen return statement in every path so far
+1noreturn               - have seen return statement in no path so far
+1voidfun                - in non-returning function
  *)
 
 open Symbol_table
@@ -96,18 +101,18 @@ type var_origin =
   | Meta
 
 type var_type =
-  | Void
-  | Int
-  | Real
-  | Vector
-  | RowVector
-  | Matrix
-  | Array of var_type
+  | Basic of returntype
   | Fun of (var_type list) * var_type
   | True (* for use with Meta *)
   | False (* for use with Meta *)
 
-                                                    
+let var_type_of_argdecl ad = match ad with DataArg (ut, id) -> Basic (ReturnType ut) | Arg (ut, id) -> Basic (ReturnType ut)
+
+(** A semantic error reported by the toplevel *)
+let semantic_error ?loc msg = Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "") (* TODO: this is not very pretty *)
+
+(* TODO: insert positions into semantic errors! *)
+                                        
 let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) -> (* TODO: first load whole math library into the vm *)
                                       let _ = Symbol.enter vm "1functions" (Meta, True) in
                                       let ubf = semantic_check_functionblock vm bf in
@@ -172,8 +177,19 @@ semantic_check_generatedquantitiesblock vm bgq = match bgq with GQBlock ltvds ->
 
 and
 
-semantic_check_fundef vm fd = fd
-
+semantic_check_fundef vm fd = match fd with FunDef (rt, id, args, b) ->
+                              match Symbol.look vm id with Some x -> let error_msg = String.concat " " ["Identifier '"; id; "'is already in use"] in semantic_error error_msg
+                                                         | None ->
+                              let _ = Symbol.enter vm id (Functions, Fun (List.map var_type_of_argdecl args, Basic rt)) in
+                              let urt = semantic_check_returntype vm rt in
+                              let uid = semantic_check_identifier vm id in
+                              let uargs = List.map (semantic_check_argdecl vm) args in
+                              let _ = Symbol.enter vm "1noreturn" (Meta, True) in
+                              let _ = Symbol.enter vm "1allreturn" (Meta, True) in
+                              let ub = semantic_check_statement vm b in
+                              let _ = match rt with Void -> match Symbol.look vm "1noreturn" with Some (Meta, False) -> semantic_error "Void function bodies cannot contain return statements." | _ -> ()
+                                                   | _   -> match Symbol.look vm "1allreturn" with Some (Meta, False) -> semantic_error "Non-void function bodies must contain a return statement in every branch." | _ -> () in
+                              FunDef (urt, uid, uargs, ub)
 and
 
 semantic_check_identifier vm id = id
