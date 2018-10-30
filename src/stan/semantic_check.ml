@@ -108,46 +108,67 @@ type var_type =
   | False (* for use with Meta *)
 
                                                     
-let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) ->
+let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) -> (* TODO: first load whole math library into the vm *)
+                                      let _ = Symbol.enter vm "1functions" (Meta, True) in
                                       let ubf = semantic_check_functionblock vm bf in
+                                      let _ = Symbol.enter vm "1functions" (Meta, False) in
+                                      let _ = Symbol.enter vm "1data" (Meta, True) in
                                       let ubd = semantic_check_datablock vm bd in
+                                      let _ = Symbol.enter vm "1data" (Meta, False) in
+                                      let _ = Symbol.enter vm "1transformed data" (Meta, True) in
                                       let ubtd = semantic_check_transformeddatablock vm btd in
+                                      let _ = Symbol.enter vm "1transformed data" (Meta, False) in
+                                      let _ = Symbol.enter vm "1parameters" (Meta, True) in
                                       let ubp = semantic_check_parametersblock vm bp in
+                                      let _ = Symbol.enter vm "1parameters" (Meta, False) in
+                                      let _ = Symbol.enter vm "1transformed parameters" (Meta, True) in
                                       let ubtp = semantic_check_transformedparametersblock vm btp in
+                                      let _ = Symbol.enter vm "1transformed parameters" (Meta, False) in
+                                      let _ = Symbol.enter vm "1model" (Meta, True) in
                                       let _ = Symbol.begin_scope vm in
                                       let ubm = semantic_check_modelblock vm bm in
                                       let _ = Symbol.end_scope vm in
+                                      let _ = Symbol.enter vm "1model" (Meta, False) in
+                                      let _ = Symbol.enter vm "1generated quantities" (Meta, True) in
                                       let ubgq = semantic_check_generatedquantitiesblock vm bgq in
+                                      let _ = Symbol.enter vm "1generated quantities" (Meta, False) in
                                       Program (ubf, ubd, ubtd, ubp, ubtp, ubm, ubgq)
                                       
 
 and
 
-semantic_check_functionblock vm bf = bf
+semantic_check_functionblock vm bf = match bf with FunBlock lfd -> FunBlock (List.map (semantic_check_fundef vm) lfd)
+                                                 | _ -> bf
 
 and
 
-semantic_check_datablock vm bd = bd
+semantic_check_datablock vm bd = match bd with DataBlock ltvd -> DataBlock (List.map (semantic_check_topvardecl vm) ltvd)
+                                             | _ -> bd
 
 and
 
-semantic_check_transformeddatablock vm btd = btd
+semantic_check_transformeddatablock vm btd = match btd with TDataBlock ltvds -> TDataBlock (List.map (semantic_check_topvardecl_or_statement vm) ltvds)
+                                                          | _ -> btd
 
 and
 
-semantic_check_parametersblock vm bp = bp
+semantic_check_parametersblock vm bp = match bp with ParamBlock ltvd -> ParamBlock (List.map (semantic_check_topvardecl vm) ltvd)
+                                                   | _ -> bp
 
 and
 
-semantic_check_transformedparametersblock vm btp = btp
+semantic_check_transformedparametersblock vm btp = match btp with TParamBlock ltvds -> TParamBlock (List.map (semantic_check_topvardecl_or_statement vm) ltvds)
+                                                                | _ -> btp
 
 and
 
-semantic_check_modelblock vm bm = bm
+semantic_check_modelblock vm bm = match bm with ModelBlock lvds -> ModelBlock (List.map (semantic_check_vardecl_or_statement vm) lvds)
+                                              | _ -> bm
 
 and
 
-semantic_check_generatedquantitiesblock vm bgq = bgq
+semantic_check_generatedquantitiesblock vm bgq = match bgq with GQBlock ltvds -> GQBlock (List.map (semantic_check_topvardecl_or_statement vm) ltvds)
+                                                              | _ -> bgq
 
 and
 
