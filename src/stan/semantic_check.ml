@@ -20,7 +20,7 @@ Funaps are actually functions
 For, while, for each, if constructs take expressions of valid type
 No shadowing!
 Check variable not already declared during declaration
-Check that function args and loop identifiers are not modified in function. (passed by cost ref) 
+Check that function args and loop identifiers are not modified in function. (passed by const ref) 
 No returns outside of function definitions?
 Rng functions cannot be used in Tp or Model and only in funciton defs with the right suffix
 Print/reject expressions cannot be of type void.
@@ -64,11 +64,23 @@ Perhaps use Appel's imperative symbol table?
 (* specialised commonly used definitions like check_int, check_data *)
 
 
-(* idea!! : use data keywords in var map to store that we are in a data block;
-similarly for other blocks;
-and language constructs;
-may need to add remove function to var map (as it's not obvious we can always use scope to exit blocks again like that) *)
-
+(* We will use the following non-identifier (protected) strings in the var map as flags for properties of our position in the program:
+1functions              - in functions block
+1data                   - in data block
+1transformed data       - in transformed data block
+1parameters             - in parameters block
+1transformed parameters - in transformed parameters block
+1model                  - in model block
+1generated quantities   - in generated quantities block
+1for                    - in for/foreach loop
+1while                  - in while loop
+1if                     - in if condition
+1then                   - in then body
+1else                   - in else body
+1fundef                 - in fundef
+1lp                     - in lp fun def
+1rng                    - in rng fun def
+ *)
 
 open Symbol_table
 open Syntax
@@ -81,6 +93,7 @@ type var_origin =
   | TParam
   | Model
   | GQuant
+  | Meta
 
 type var_type =
   | Void
@@ -91,6 +104,8 @@ type var_type =
   | Matrix
   | Array of var_type
   | Fun of (var_type list) * var_type
+  | True (* for use with Meta *)
+  | False (* for use with Meta *)
 
                                                     
 let rec semantic_check_program vm p = match p with Program (bf, bd, btd, bp, btp, bm, bgq) ->
