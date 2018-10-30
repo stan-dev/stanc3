@@ -132,6 +132,10 @@ let vartype_of_sizedtype st = Basic (ReturnType (unsizedtype_of_sizedtype st))
 
 let check_of_int_type vm e = true (* TODO *)
 
+let check_of_real_type vm e = true (* TODO *)
+
+let check_of_int_or_real_type vm e = true (* TODO *)
+
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
@@ -294,8 +298,20 @@ semantic_check_sizedtype vm = function
 
 and
 
-semantic_check_transformation vm t = t
-
+semantic_check_transformation vm = function
+                                Identity -> Identity
+                              | Lower e -> if check_of_int_or_real_type vm e then Lower (semantic_check_expression vm e) else semantic_error "Lower bound should be of int or real type."
+                              | Upper e -> if check_of_int_or_real_type vm e then Upper (semantic_check_expression vm e) else semantic_error "Upper bound should be of int or real type."
+                              | LowerUpper (e1, e2) -> if (check_of_int_or_real_type vm e1) && (check_of_int_or_real_type vm e2) then LowerUpper (semantic_check_expression vm e1, semantic_check_expression vm e2) else semantic_error "Lower and upper bound should be of int or real type."
+                              | LocationScale (e1, e2) -> if (check_of_int_or_real_type vm e1) && (check_of_int_or_real_type vm e2) then LocationScale (semantic_check_expression vm e1, semantic_check_expression vm e2) else semantic_error "Location and scale should be of int or real type."
+                              | Ordered -> Ordered
+                              | PositiveOrdered -> PositiveOrdered
+                              | Simplex -> Simplex
+                              | UnitVector -> UnitVector
+                              | CholeskyCorr -> CholeskyCorr
+                              | CholeskyCov -> CholeskyCov
+                              | Correlation -> Correlation
+                              | Covariance -> Covariance
 and
 
 semantic_check_expression vm e = e
