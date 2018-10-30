@@ -130,6 +130,8 @@ let rec unsizedtype_of_sizedtype = function
 
 let vartype_of_sizedtype st = Ground (ReturnType (unsizedtype_of_sizedtype st))
 
+let look_block vm id = Some Data (* TODO!!! *)
+
 let infer_type vm e = Some (Ground (ReturnType Int)) (* TODO!!!! *)
 
 let check_of_int_type vm e = match (infer_type vm e) with Some (Ground (ReturnType Int)) -> true | _ -> false 
@@ -353,7 +355,17 @@ semantic_check_printable vm = function
 
 and
 
-semantic_check_statement vm s = s (* TODO!!! *)
+semantic_check_statement vm = function
+                                Assignment (lhs, assop, e) -> if check_of_same_type_mod_conv vm (Indexed (Variable (fst lhs), snd lhs)) e (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
+                                                              then (if (look_block (fst lhs) = look_block "1currentblock")
+                                                                    then (if ((look_block vm (fst lhs)) = Some Data)
+                                                                          then (if (look_block vm (fst lhs) = Some Param)
+                                                                                then Assignment (semantic_check_lhs vm lhs, semantic_check_assignmentoperator vm assop, semantic_check_expression vm e)
+                                                                                else semantic_error "Parameters cannot be assigned to.")
+                                                                          else semantic_error "Data variables cannot be assigned to.")
+                                                                    else semantic_error "Variables from previous blocks cannot be assigned to." )
+                                                              else semantic_error "Assignment is ill-typed."
+                                | _ -> Skip (* TODO!!! *)
 
 and
 
@@ -380,3 +392,7 @@ semantic_check_index vm = function
                           | Upfrom e -> if check_of_int_type vm e then Upfrom (semantic_check_expression vm e) else semantic_error "Index should be of type int."
                           | Downfrom e -> if check_of_int_type vm e then Downfrom (semantic_check_expression vm e) else semantic_error "Index should be of type int."
                           | Between (e1, e2) -> if (check_of_int_type vm e1) && (check_of_int_type vm e2) then Between (semantic_check_expression vm e1, semantic_check_expression vm e2) else semantic_error "Index should be of type int."
+
+and
+
+semantic_check_assignmentoperator vm op = op (* Probably nothing to do here *)
