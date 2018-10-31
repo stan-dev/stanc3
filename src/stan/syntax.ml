@@ -1,5 +1,7 @@
 (* Abstract syntax. *)
-open Core_kernel (* for auto generating s-exp *)
+open Core_kernel
+
+(* for auto generating s-exp *)
 
 (* TODO: Reorder and get rid of some 'and's *)
 
@@ -11,91 +13,53 @@ open Core_kernel (* for auto generating s-exp *)
 
 (* Programs. *)
 type program =
-  | Program of 
-        functionblock
-          * datablock
-          * transformeddatablock
-          * parametersblock
-          * transformedparametersblock
-          * modelblock
-          * generatedquantitiesblock
-
-and
+  | Program of
+      functionblock
+      * datablock
+      * transformeddatablock
+      * parametersblock
+      * transformedparametersblock
+      * modelblock
+      * generatedquantitiesblock
 
 (* Blocks. *)
-functionblock =
-  | EmptyFunBlock
-  | FunBlock of (fundef list)
+and functionblock = EmptyFunBlock | FunBlock of fundef list
 
-and
+and datablock = EmptyDataBlock | DataBlock of topvardecl list
 
-datablock =
-  | EmptyDataBlock
-  | DataBlock of (topvardecl list)
-
-and
-
-transformeddatablock =
+and transformeddatablock =
   | EmptyTDataBlock
-  | TDataBlock of (topvardecl_or_statement list)
+  | TDataBlock of topvardecl_or_statement list
 
-and
+and parametersblock = EmptyParamBlock | ParamBlock of topvardecl list
 
-parametersblock =
-  | EmptyParamBlock
-  | ParamBlock of (topvardecl list)
-
-and
-
-transformedparametersblock =
+and transformedparametersblock =
   | EmptyTParamBlock
-  | TParamBlock of (topvardecl_or_statement list)
+  | TParamBlock of topvardecl_or_statement list
 
-and
+and modelblock = EmptyModelBlock | ModelBlock of vardecl_or_statement list
 
-modelblock =
-  | EmptyModelBlock
-  | ModelBlock of (vardecl_or_statement list)
-
-and
-
-generatedquantitiesblock =
+and generatedquantitiesblock =
   | EmptyGQBlock
-  | GQBlock of (topvardecl_or_statement list)
-
-and
+  | GQBlock of topvardecl_or_statement list
 
 (* Declarations and definitions *)
-fundef =
-  | FunDef of returntype * identifier * (argdecl list) * statement
+and fundef = FunDef of returntype * identifier * argdecl list * statement
 
-and
+and identifier = string
 
-identifier = string
+and real = float
 
-and
+(* TODO: represent numerals as strings *)
+and size = int64
 
-real = float
-
-and (* TODO: represent numerals as strings *)
-
-size = int64
-
-and
-
-argdecl =
+and argdecl =
   | DataArg of unsizedtype * identifier
   | Arg of unsizedtype * identifier
 
-and
+and returntype = Void | ReturnType of unsizedtype
 
-returntype =
-  | Void
-  | ReturnType of unsizedtype
-
-and
-
-unsizedtype =
+and unsizedtype =
   | Int
   | Real
   | Vector
@@ -103,43 +67,26 @@ unsizedtype =
   | Matrix
   | Array of unsizedtype
 
-and
+and topvardecl = topvartype * identifier
 
-topvardecl = topvartype * identifier
+and vardecl = sizedtype * identifier
 
-and
+and topvardecl_or_statement = TVDecl of topvardecl | TStmt of statement
 
-vardecl = sizedtype * identifier
+and vardecl_or_statement = VDecl of vardecl | Stmt of statement
 
-and
+and topvartype = sizedtype * transformation
 
-topvardecl_or_statement =
-  | TVDecl of topvardecl
-  | TStmt of statement
-
-and
-
-vardecl_or_statement =
-  | VDecl of vardecl
-  | Stmt of statement
-
-and
-
-topvartype =  sizedtype * transformation
-
-and
-
-sizedtype =
+and sizedtype =
   | SInt
   | SReal
   | SVector of expression
   | SRowVector of expression
   | SMatrix of expression * expression
-  | SArray of sizedtype * expression (* expression is for size *)
+  | SArray of sizedtype * expression
 
-and
-
-transformation =
+(* expression is for size *)
+and transformation =
   | Identity
   | Lower of expression
   | Upper of expression
@@ -154,29 +101,29 @@ transformation =
   | Correlation
   | Covariance
 
-and
-
 (* Expressions. *)
-expression =
+and expression =
   | Conditional of expression * expression * expression
   | InfixOp of expression * infixop * expression
   | PrefixOp of prefixop * expression
   | PostfixOp of expression * postfixop
-  | Variable of identifier (* a variable *)
-  | IntNumeral of int64 (* integer constant *)
-  | RealNumeral of real (* real constant *)
-  | FunApp of identifier * (expression list)
-  | CondFunApp of identifier * (expression list)
-  | GetLP (* deprecated *)
+  | Variable of identifier
+  (* a variable *)
+  | IntNumeral of int64
+  (* integer constant *)
+  | RealNumeral of real
+  (* real constant *)
+  | FunApp of identifier * expression list
+  | CondFunApp of identifier * expression list
+  | GetLP
+  (* deprecated *)
   | GetTarget
-  | ArrayExpr of (expression list)
-  | RowVectorExpr of (expression list)
+  | ArrayExpr of expression list
+  | RowVectorExpr of expression list
   | Paren of expression
-  | Indexed of expression * (index list)
+  | Indexed of expression * index list
 
-and
-
-infixop =
+and infixop =
   | Plus
   | Minus
   | Times
@@ -195,69 +142,48 @@ infixop =
   | Greater
   | Geq
 
-and
+and prefixop = Not | UMinus | UPlus
 
-prefixop =
-  | Not
-  | UMinus
-  | UPlus
+and postfixop = Transpose
 
-and
-
-postfixop =
-  | Transpose
-
-and
-
-printable =
-  | PString of string
-  | PExpr of expression
-
-and
+and printable = PString of string | PExpr of expression
 
 (* Statements. *)
-statement =
+and statement =
   | Assignment of lhs * assignmentoperator * expression
-  | NRFunApp of identifier * (expression list)
+  | NRFunApp of identifier * expression list
   | TargetPE of expression
-  | IncrementLogProb of expression (* deprecated *)
-  | Tilde of expression * identifier * (expression list) * truncation
+  | IncrementLogProb of expression
+  (* deprecated *)
+  | Tilde of expression * identifier * expression list * truncation
   | Break
   | Continue
   | Return of expression
-  | Print of (printable list)
-  | Reject of (printable list)
+  | Print of printable list
+  | Reject of printable list
   | Skip
   | IfElse of expression * statement * statement
   | While of expression * statement
   | For of identifier * expression * expression * statement
   | ForEach of identifier * expression * statement
-  | Block of (vardecl_or_statement list)
+  | Block of vardecl_or_statement list
 
-and
-
-truncation =
+and truncation =
   | NoTruncate
   | TruncateUpFrom of expression
   | TruncateDownFrom of expression
   | TruncateBetween of expression * expression
 
-and
+and lhs = identifier * index list
 
-lhs = identifier * (index  list)
-
-and
-
-index =
+and index =
   | All
   | Single of expression
   | Upfrom of expression
   | Downfrom of expression
   | Between of expression * expression
 
-and
-
-assignmentoperator =
+and assignmentoperator =
   | Assign
   | PlusAssign
   | MinusAssign
@@ -265,7 +191,6 @@ assignmentoperator =
   | DivideAssign
   | EltTimesAssign
   | EltDivideAssign
-  | ArrowAssign (* deprecated *)
-
-
+  | ArrowAssign
+  (* deprecated *)
 [@@deriving sexp]

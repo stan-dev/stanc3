@@ -1,8 +1,7 @@
 (** The main program. *)
 open Syntax
 
-
-module CalcVar = Zoo.Main(struct
+module CalcVar = Zoo.Main (struct
   let name = "stan"
 
   type command = Syntax.program
@@ -22,12 +21,11 @@ module CalcVar = Zoo.Main(struct
   let toplevel_parser = Some (Parser.program Lexer.token)
 
   (** The command that actually executes a command. *)
-  let exec _ = fun p ->
+  let exec _ p =
     let vm = Symbol_table.Symbol.initialize () in
     let _ = Semantic_check.semantic_check_program vm p in
     ()
-end) ;;
+end)
 
-
-
+;;
 CalcVar.main ()
