@@ -146,6 +146,8 @@ let rec unsizedtype_of_sizedtype = function
 
 let vartype_of_sizedtype st = Ground (ReturnType (unsizedtype_of_sizedtype st))
 
+(* TODO: close over vm here *)
+
 let look_block vm id = Some Data
 
 (* TODO!!! *)
