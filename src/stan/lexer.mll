@@ -117,10 +117,10 @@ rule token = parse
   | "print"                   { Parser.PRINT }
   | "reject"                  { Parser.REJECT }
 (* Truncation *)
-  | 'T' '['                   { Parser.TRUNCATE } (* TODO: this is a hack; we shoudl change to something like truncate and make it a reserved keyword *)
+  | 'T' '['                   { Parser.TRUNCATE } (* TODO: this is a hack; we should change to something like truncate and make it a reserved keyword *)
 (* Constants and identifiers *)
-  | integer_constant          { Parser.INTNUMERAL (Int64.of_string(lexeme lexbuf)) }
-  | real_constant             { Parser.REALNUMERAL (float_of_string(lexeme lexbuf)) }
+  | integer_constant          { Parser.INTNUMERAL (Int64.of_string(lexeme lexbuf)) } (* TODO: represent these as strings *)
+  | real_constant             { Parser.REALNUMERAL (float_of_string(lexeme lexbuf)) } (* TODO: represent these as strings *)
   | "target"                  { Parser.TARGET } (* TODO: the current parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
   | "get_lp"                  { Parser.GETLP } (* deprecated *)
   | string_literal            { Parser.STRINGLITERAL (lexeme lexbuf) }

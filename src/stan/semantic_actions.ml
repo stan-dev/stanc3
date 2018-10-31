@@ -1,5 +1,7 @@
 (* Some semantic actions to aid legibility of the grammar file *)
 
+(* TODO: inline these in the grammar *)
+
 open Syntax
 
 let construct_program obf obd obtd obp obtp obm obg = let rbf = match obf with Some bf -> bf

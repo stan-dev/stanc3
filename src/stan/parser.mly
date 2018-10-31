@@ -49,6 +49,8 @@ open Debug
 
 (* TODO: deal with unicode? *)
 
+(* TODO: change compound declare-define to be its own separate thing *)
+
 (* Top level rule *)
 %start program file
 %type <Syntax.program> program

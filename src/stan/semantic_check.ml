@@ -355,6 +355,7 @@ semantic_check_printable vm = function
 
 and
 
+(* TODO: get rid of some of this error checking *)
 semantic_check_statement vm = function
                                 Assignment (lhs, assop, e) -> if check_of_same_type_mod_conv vm (Indexed (Variable (fst lhs), snd lhs)) e (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
                                                               then (if (look_block (fst lhs) = look_block "1currentblock")
@@ -365,7 +366,7 @@ semantic_check_statement vm = function
                                                                           else semantic_error "Data variables cannot be assigned to.")
                                                                     else semantic_error "Variables from previous blocks cannot be assigned to." )
                                                               else semantic_error "Assignment is ill-typed."
-                                | _ -> Skip (* TODO!!! *)
+                                | _ -> Skip (* TODO!!! Probably should separate out these clauses; same for types of expressions. *)
 
 and
 

@@ -1,6 +1,13 @@
 (* Abstract syntax. *)
 open Core_kernel (* for auto generating s-exp *)
 
+(* TODO: Reorder and get rid of some 'and's *)
+
+(* TODO: Get rid of some redundant intermediate definitions. *)
+
+(* TODO: Change some tuples into records *)
+
+(* TODO: Change some EmptyFunBlocks into list option etc. *)
 
 (* Programs. *)
 type program =
@@ -70,7 +77,7 @@ and
 
 real = float
 
-and
+and (* TODO: represent numerals as strings *)
 
 size = int64
 
