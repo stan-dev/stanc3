@@ -72,7 +72,7 @@ open Syntax
 (* Idea: we have a semantic checking function for each AST node.
    Each such calls the corresponding checking functions for its children
    left-to-right. *)
-   
+
 (* Invariant: after an expression has been checked, it has a well-defined type *)
 
 (* Invariant: after a statement has been checked, it has a well-defined return type *)
@@ -123,12 +123,6 @@ let rec unsizedtype_contains_int ut =
   | Array ut -> unsizedtype_contains_int ut
   | _ -> false
 
-let vartype_contains_int vt =
-  match vt with
-  | rt -> (
-    match rt with ReturnType ut -> unsizedtype_contains_int ut | _ -> false )
-  | _ -> false
-
 let rec unsizedtype_of_sizedtype = function
   | SInt -> Int
   | SReal -> Real
@@ -136,8 +130,6 @@ let rec unsizedtype_of_sizedtype = function
   | SRowVector e -> RowVector
   | SMatrix (e1, e2) -> Matrix
   | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
-
-let vartype_of_sizedtype st = ReturnType (unsizedtype_of_sizedtype st)
 
 let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 
@@ -154,25 +146,20 @@ let infer_statement_return_type s = Some Void
 
 (* TODO!!!! Implement this *)
 
-let check_of_int_type e =
-  match (snd e) with Some Int -> true | _ -> false
+let check_of_int_type e = match snd e with Some Int -> true | _ -> false
 
-let check_of_real_type e =
-  match (snd e) with Some Real -> true | _ -> false
+let check_of_real_type e = match snd e with Some Real -> true | _ -> false
 
 let check_of_int_or_real_type e =
-  match (snd e) with
-  | Some Int -> true
-  | Some Real -> true
-  | _ -> false
+  match snd e with Some Int -> true | Some Real -> true | _ -> false
 
 (* TODO!!! *)
 let check_compatible_indices e lindex = true
 
 let check_of_same_type_mod_conv e1 e2 =
-  match (snd e1) with
+  match snd e1 with
   | Some t1 -> (
-    match (snd e2) with
+    match snd e2 with
     | Some t2 -> t1 = t2 || (t1 = Real && t1 = Int) || (t1 = Int && t1 = Real)
     | _ -> false )
   | _ -> false
@@ -252,8 +239,7 @@ and semantic_check_fundef = function
       let _ =
         Symbol.enter vm uid
           ( context_flags.current_block
-          , ReturnType
-              (Fun (List.map (function w, y, z -> (w, y)) args, urt)) )
+          , Fun (List.map (function w, y, z -> (w, y)) args, urt) )
       in
       let arg_names = List.map (function w, y, z -> z) args in
       let _ =
@@ -287,6 +273,7 @@ and semantic_check_fundef = function
       let _ = context_flags.in_rng_fun_def <- false in
       {returntype= urt; name= uid; arguments= uargs; body= ub}
 
+(* Probably nothing to do here *)
 and semantic_check_identifier id = id
 
 (* TODO: This could be one place where we check for reserved variable names. Though it would be nicer to just do it in the lexer. *)
@@ -309,44 +296,48 @@ and semantic_check_returntype = function
 (* Probably nothing to do here *)
 and semantic_check_unsizedtype = function
   | Array ut -> semantic_check_unsizedtype ut
-  | Fun (l, rt) -> Fun (List.map (function | (ab, ut) ->
-  (semantic_check_argblock ab, semantic_check_unsizedtype ut)) l, semantic_check_returntype rt)
+  | Fun (l, rt) ->
+      Fun
+        ( List.map
+            (function
+              | ab, ut ->
+                  (semantic_check_argblock ab, semantic_check_unsizedtype ut))
+            l
+        , semantic_check_returntype rt )
   | ut -> ut
 
+and semantic_check_topvardecl = function
+  | st, trans, id ->
+      let ust = semantic_check_sizedtype st in
+      let utrans = semantic_check_transformation trans in
+      let uid = semantic_check_identifier id in
+      let vt = unsizedtype_of_sizedtype st in
+      let _ =
+        match Symbol.look vm uid with
+        | Some x ->
+            let error_msg =
+              String.concat " " ["Identifier "; uid; " is already in use."]
+            in
+            semantic_error error_msg
+        | None -> ()
+      in
+      let _ = Symbol.enter vm id (context_flags.current_block, vt) in
+      let _ =
+        if
+          ( context_flags.current_block = Param
+          || context_flags.current_block = TParam )
+          && unsizedtype_contains_int vt
+        then semantic_error "(Transformed) Parameters cannot be integers."
+      in
+      (ust, utrans, uid)
+
 (* OK up to here *)
-
-(* Probably nothing to do here *)
-and semantic_check_topvardecl tvd =
-  match tvd with st, trans, id ->
-    let uid = semantic_check_identifier id in
-    let ust = semantic_check_sizedtype st in
-    let utrans = semantic_check_transformation trans in
-    let vt = vartype_of_sizedtype st in
-    let _ =
-      match Symbol.look vm id with
-      | Some x ->
-          let error_msg =
-            String.concat " " ["Identifier "; id; " is already in use."]
-          in
-          semantic_error error_msg
-      | None -> ()
-    in
-    let _ = Symbol.enter vm id (context_flags.current_block, vt) in
-    let _ =
-      if
-        ( context_flags.current_block = Param
-        || context_flags.current_block = TParam )
-        && vartype_contains_int vt
-      then semantic_error "(Transformed) Parameters cannot be integers."
-    in
-    (ust, utrans, uid)
-
 and semantic_check_vardecl vd =
   let id = snd vd in
   let st = fst vd in
   let uid = semantic_check_identifier id in
   let ust = semantic_check_sizedtype st in
-  let vt = vartype_of_sizedtype st in
+  let vt = unsizedtype_of_sizedtype st in
   let _ =
     match Symbol.look vm id with
     | Some x ->
