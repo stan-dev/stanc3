@@ -488,6 +488,7 @@ and semantic_check_printable vm = function
 (* TODO: do we even want to check this? *)
 and (* TODO: get rid of some of this error checking *)
     semantic_check_statement vm = function
+  (*
   | Assignment (lhs, assop, e) ->
       if
         check_of_same_type_mod_conv vm
@@ -507,7 +508,7 @@ and (* TODO: get rid of some of this error checking *)
         else
           semantic_error
             "Variables from previous blocks cannot be assigned to."
-      else semantic_error "Assignment is ill-typed."
+      else semantic_error "Assignment is ill-typed." *)
   | _ -> Skip
 
 (* TODO!!! Probably should separate out these clauses; same for types of expressions. *)
