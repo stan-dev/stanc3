@@ -504,31 +504,34 @@ and semantic_check_printable = function
   | _ ->*)
 
 (* TODO!!!! Implement this *)
-
-(* OK up until here *)
 and semantic_check_statement s = (fst s, Some Void)
 
-and semantic_check_assign ass_s = ass_s
-
-(* TODO; also for other statements *)
-
-(* TODO!!! Probably should separate out these clauses; same for types of expressions. *)
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
   | TruncateUpFrom e ->
-      if check_of_int_or_real_type e then
-        TruncateUpFrom (semantic_check_expression e)
-      else semantic_error "Truncation bound should be of type int or real."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error "Truncation bound should be of type int or real."
+      in
+      TruncateUpFrom ue
   | TruncateDownFrom e ->
-      if check_of_int_or_real_type e then
-        TruncateDownFrom (semantic_check_expression e)
-      else semantic_error "Truncation bound should be of type int or real."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error "Truncation bound should be of type int or real."
+      in
+      TruncateDownFrom ue
   | TruncateBetween (e1, e2) ->
-      if check_of_int_or_real_type e1 && check_of_int_or_real_type e2 then
-        TruncateBetween
-          (semantic_check_expression e1, semantic_check_expression e2)
-      else semantic_error "Truncation bound should be of type int or real."
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let _ =
+        if not (check_of_int_or_real_type ue1 && check_of_int_or_real_type ue2)
+        then semantic_error "Truncation bound should be of type int or real."
+      in
+      TruncateBetween (ue1, ue2)
 
+(* OK up until here except expressions and statements *)
 and semantic_check_lhs lhs =
   let id = fst lhs in
   let lindex = snd lhs in
