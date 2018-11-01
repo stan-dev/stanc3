@@ -74,43 +74,42 @@ let semantic_error ?loc msg =
 (* A type to keep track of the origin of variables *)
 type var_origin = Functions | Data | TData | Param | TParam | Model | GQuant
 
-(* NB: this file specifies a bunch of imperative algorithms which operate on
-   two bits of state:
+(* NB DANGER: this file specifies an imperative tree algorithm which
+   decorates the AST while operating on two bits of state:
    1) a global symbol table vm
    2) some context flags context_flags, to communicate information up and down
       the AST   *)
 let vm = Symbol.initialize ()
 
+(* TODO: first load whole math library into the *)
+
 type context_flags_record =
-  { mutable in_rng_fun_def: bool
-  ; mutable in_lp_fun_def: bool
-  ; mutable current_block: var_origin
-  ; mutable in_loop: bool
-  ; mutable in_void_fun_def: bool
+  { 
+    mutable current_block: var_origin
   ; mutable in_fun_def: bool
+  ; mutable in_void_fun_def: bool
+  ; mutable in_rng_fun_def: bool
+  ; mutable in_lp_fun_def: bool
+  ; mutable in_loop: bool
   ; mutable all_traces_return: bool }
 
 let context_flags =
-  { in_rng_fun_def= false
-  ; in_lp_fun_def= false
-  ; current_block= Functions
-  ; in_loop= false
-  ; in_void_fun_def= false
+  { 
+    current_block= Functions
   ; in_fun_def= false
-  ; all_traces_return= false }
+  ; in_void_fun_def= false
+  ; in_rng_fun_def= false
+  ; in_lp_fun_def= false
+  ; in_loop= false
+  ; all_traces_return= true }
 
 (* Some helper functions *)
-(* TODO: this is not very pretty *)
-let rec remove_dups lst =
-  match lst with
-  | [] -> []
-  | h :: t -> h :: remove_dups (List.filter (fun x -> x <> h) t)
-
-let duplicate_arg_names args =
-  let lst =
-    List.map (function DataArg (ut, id) -> id | Arg (ut, id) -> id) args
+let dup_exists l =
+  let rec dup_consecutive = function
+    | [] | [_] -> false
+    | x1 :: x2 :: tl -> x1 = x2 || dup_consecutive (x2 :: tl)
   in
-  if List.length (remove_dups lst) < List.length lst then true else false
+  dup_consecutive (List.sort String.compare l)
 
 let rec unsizedtype_contains_int ut =
   match ut with
@@ -188,7 +187,6 @@ let rec semantic_check_program p =
     ; modelblock= bm
     ; generatedquantitiesblock= bgq }
   ->
-    (* TODO: first load whole math library into the *)
     let _ = context_flags.current_block <- Functions in
     let ubf = semantic_check_functionblock bf in
     let _ = context_flags.current_block <- Data in
@@ -254,8 +252,11 @@ and semantic_check_fundef fd =
                     args
                 , rt ) )
         in
+        let arg_names =
+          List.map (function DataArg (y, z) -> z | Arg (y, z) -> z) args
+        in
         let _ =
-          if duplicate_arg_names args then
+          if dup_exists arg_names then
             semantic_error
               "All function arguments should be distinct identifiers."
         in
