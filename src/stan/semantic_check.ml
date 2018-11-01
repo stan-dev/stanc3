@@ -342,31 +342,31 @@ and semantic_check_unsizedtype vm ut = ut
 
 (* Probably nothing to do here *)
 and semantic_check_topvardecl vm tvd =
-  let id = snd tvd in
-  let tvt = fst tvd in
-  let uid = semantic_check_identifier vm id in
-  let utvt = semantic_check_topvartype vm tvt in
-  let vt = vartype_of_sizedtype (fst tvt) in
-  let currentblock =
-    match Symbol.look vm "1currentblock" with Some p -> fst p | _ -> Meta
-  in
-  let _ =
-    match Symbol.look vm id with
-    | Some x ->
-        let error_msg =
-          String.concat " " ["Identifier "; id; " is already in use."]
-        in
-        semantic_error error_msg
-    | None -> ()
-  in
-  let _ = Symbol.enter vm id (currentblock, vt) in
-  let _ =
-    if
-      (currentblock = Param || currentblock = TParam)
-      && vartype_contains_int vt
-    then semantic_error "(Transformed) Parameters cannot be integers."
-  in
-  (utvt, uid)
+  match tvd with st, trans, id ->
+    let uid = semantic_check_identifier vm id in
+    let ust = semantic_check_sizedtype vm st in
+    let utrans = semantic_check_transformation vm trans in
+    let vt = vartype_of_sizedtype st in
+    let currentblock =
+      match Symbol.look vm "1currentblock" with Some p -> fst p | _ -> Meta
+    in
+    let _ =
+      match Symbol.look vm id with
+      | Some x ->
+          let error_msg =
+            String.concat " " ["Identifier "; id; " is already in use."]
+          in
+          semantic_error error_msg
+      | None -> ()
+    in
+    let _ = Symbol.enter vm id (currentblock, vt) in
+    let _ =
+      if
+        (currentblock = Param || currentblock = TParam)
+        && vartype_contains_int vt
+      then semantic_error "(Transformed) Parameters cannot be integers."
+    in
+    (ust, utrans, uid)
 
 and semantic_check_vardecl vm vd =
   let id = snd vd in
@@ -399,14 +399,6 @@ and semantic_check_vardecl_or_statement vm vds =
   match vds with
   | VDecl vd -> VDecl (semantic_check_vardecl vm vd)
   | Stmt s -> Stmt (semantic_check_statement vm s)
-
-(* Probably nothing to do here *)
-and semantic_check_topvartype vm tvt =
-  let st = fst tvt in
-  let trans = snd tvt in
-  let ust = semantic_check_sizedtype vm st in
-  let utrans = semantic_check_transformation vm trans in
-  (ust, utrans)
 
 (* Probably nothing to do here *)
 and semantic_check_sizedtype vm = function

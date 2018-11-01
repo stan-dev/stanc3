@@ -49,15 +49,15 @@ let construct_var_decl sbt id d ae =
 
 let construct_top_var_decl_no_assign tvt id d =
   let sizes = match d with None -> [] | Some l -> l in
-  ((reducearray (fst tvt, sizes), snd tvt), id)
+  (reducearray (fst tvt, sizes), snd tvt, id)
 
 let construct_top_var_decl tvt id d ass =
   let sizes = match d with None -> [] | Some l -> l in
   match ass with
   | Some a ->
-      [ TVDecl ((reducearray (fst tvt, sizes), snd tvt), id)
+      [ TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
       ; TStmt (Assignment ((id, []), Assign, snd a)) ]
-  | _ -> [TVDecl ((reducearray (fst tvt, sizes), snd tvt), id)]
+  | _ -> [TVDecl (reducearray (fst tvt, sizes), snd tvt, id)]
 
 let construct_truncation e1 e2 =
   match (e1, e2) with

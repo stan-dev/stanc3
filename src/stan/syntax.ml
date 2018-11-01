@@ -59,15 +59,13 @@ and unsizedtype =
   | Matrix
   | Array of unsizedtype
 
-and topvardecl = topvartype * identifier
+and topvardecl = sizedtype * transformation * identifier
 
 and vardecl = sizedtype * identifier
 
 and topvardecl_or_statement = TVDecl of topvardecl | TStmt of statement
 
 and vardecl_or_statement = VDecl of vardecl | Stmt of statement
-
-and topvartype = sizedtype * transformation
 
 and sizedtype =
   | SInt
