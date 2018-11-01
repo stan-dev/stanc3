@@ -82,6 +82,10 @@ Perhaps use Appel's imperative symbol table?
 open Symbol_table
 open Syntax
 
+type context_flags_record = {mutable rng: bool; mutable lp: bool}
+
+(* TODO: fix this to be more useful. Also add stack for this. *)
+
 type var_origin =
   | Functions
   | Data
@@ -219,44 +223,28 @@ let rec semantic_check_program vm p =
     Program (ubf, ubd, ubtd, ubp, ubtp, ubm, ubgq)
 
 and semantic_check_functionblock vm bf =
-  match bf with
-  | FunBlock lfd -> FunBlock (List.map (semantic_check_fundef vm) lfd)
-  | _ -> bf
+  Core_kernel.Option.map bf (List.map (semantic_check_fundef vm))
 
 and semantic_check_datablock vm bd =
-  match bd with
-  | DataBlock ltvd -> DataBlock (List.map (semantic_check_topvardecl vm) ltvd)
-  | _ -> bd
+  Core_kernel.Option.map bd (List.map (semantic_check_topvardecl vm))
 
 and semantic_check_transformeddatablock vm btd =
-  match btd with
-  | TDataBlock ltvds ->
-      TDataBlock (List.map (semantic_check_topvardecl_or_statement vm) ltvds)
-  | _ -> btd
+  Core_kernel.Option.map btd
+    (List.map (semantic_check_topvardecl_or_statement vm))
 
 and semantic_check_parametersblock vm bp =
-  match bp with
-  | ParamBlock ltvd ->
-      ParamBlock (List.map (semantic_check_topvardecl vm) ltvd)
-  | _ -> bp
+  Core_kernel.Option.map bp (List.map (semantic_check_topvardecl vm))
 
 and semantic_check_transformedparametersblock vm btp =
-  match btp with
-  | TParamBlock ltvds ->
-      TParamBlock (List.map (semantic_check_topvardecl_or_statement vm) ltvds)
-  | _ -> btp
+  Core_kernel.Option.map btp
+    (List.map (semantic_check_topvardecl_or_statement vm))
 
 and semantic_check_modelblock vm bm =
-  match bm with
-  | ModelBlock lvds ->
-      ModelBlock (List.map (semantic_check_vardecl_or_statement vm) lvds)
-  | _ -> bm
+  Core_kernel.Option.map bm (List.map (semantic_check_vardecl_or_statement vm))
 
 and semantic_check_generatedquantitiesblock vm bgq =
-  match bgq with
-  | GQBlock ltvds ->
-      GQBlock (List.map (semantic_check_topvardecl_or_statement vm) ltvds)
-  | _ -> bgq
+  Core_kernel.Option.map bgq
+    (List.map (semantic_check_topvardecl_or_statement vm))
 
 and semantic_check_fundef vm fd =
   match fd with FunDef (rt, id, args, b) -> (

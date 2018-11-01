@@ -5,13 +5,13 @@
 open Syntax
 
 let construct_program obf obd obtd obp obtp obm obg =
-  let rbf = match obf with Some bf -> bf | _ -> EmptyFunBlock in
-  let rbd = match obd with Some bd -> bd | _ -> EmptyDataBlock in
-  let rbtd = match obtd with Some btd -> btd | _ -> EmptyTDataBlock in
-  let rbp = match obp with Some bp -> bp | _ -> EmptyParamBlock in
-  let rbtp = match obtp with Some btp -> btp | _ -> EmptyTParamBlock in
-  let rbm = match obm with Some bm -> bm | _ -> EmptyModelBlock in
-  let rbg = match obg with Some bg -> bg | _ -> EmptyGQBlock in
+  let rbf = match obf with Some bf -> bf | _ -> None in
+  let rbd = match obd with Some bd -> bd | _ -> None in
+  let rbtd = match obtd with Some btd -> btd | _ -> None in
+  let rbp = match obp with Some bp -> bp | _ -> None in
+  let rbtp = match obtp with Some btp -> btp | _ -> None in
+  let rbm = match obm with Some bm -> bm | _ -> None in
+  let rbg = match obg with Some bg -> bg | _ -> None in
   Program (rbf, rbd, rbtd, rbp, rbtp, rbm, rbg)
 
 let rec repeat n f x =

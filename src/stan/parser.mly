@@ -95,25 +95,25 @@ program:
 
 (* blocks *)
 function_block:
-  | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE {  grammar_logger "function_block" ; FunBlock fd}
+  | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE {  grammar_logger "function_block" ; Some fd}
 
 data_block:
-  | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE { grammar_logger "data_block" ; DataBlock tvd }
+  | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE { grammar_logger "data_block" ; Some tvd }
 
 transformed_data_block:
-  | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE {  grammar_logger "transformed_data_block" ; TDataBlock (List.concat tvds) } (* NOTE: I am choosing to allow mixing of statements and top_var_decls *)
+  | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE {  grammar_logger "transformed_data_block" ; Some (List.concat tvds) } (* NOTE: I am choosing to allow mixing of statements and top_var_decls *)
 
 parameters_block:
-  | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE { grammar_logger "parameters_block" ; ParamBlock tvd }
+  | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE { grammar_logger "parameters_block" ; Some tvd }
 
 transformed_parameters_block:
-  | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "transformed_parameters_block" ; TParamBlock (List.concat tvds) }
+  | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "transformed_parameters_block" ; Some (List.concat tvds) }
 
 model_block:
-  | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE { grammar_logger "model_block" ; ModelBlock (List.concat vds)  }
+  | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE { grammar_logger "model_block" ; Some (List.concat vds)  }
 
 generated_quantities_block:
-  | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "generated_quantities_block" ; GQBlock (List.concat tvds) }
+  | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "generated_quantities_block" ; Some (List.concat tvds) }
 
 (* function definitions *)
 function_def:

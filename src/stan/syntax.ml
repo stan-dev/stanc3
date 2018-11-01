@@ -23,25 +23,19 @@ type program =
       * generatedquantitiesblock
 
 (* Blocks. *)
-and functionblock = EmptyFunBlock | FunBlock of fundef list
+and functionblock = fundef list option
 
-and datablock = EmptyDataBlock | DataBlock of topvardecl list
+and datablock = topvardecl list option
 
-and transformeddatablock =
-  | EmptyTDataBlock
-  | TDataBlock of topvardecl_or_statement list
+and transformeddatablock = topvardecl_or_statement list option
 
-and parametersblock = EmptyParamBlock | ParamBlock of topvardecl list
+and parametersblock = topvardecl list option
 
-and transformedparametersblock =
-  | EmptyTParamBlock
-  | TParamBlock of topvardecl_or_statement list
+and transformedparametersblock = topvardecl_or_statement list option
 
-and modelblock = EmptyModelBlock | ModelBlock of vardecl_or_statement list
+and modelblock = vardecl_or_statement list option
 
-and generatedquantitiesblock =
-  | EmptyGQBlock
-  | GQBlock of topvardecl_or_statement list
+and generatedquantitiesblock = topvardecl_or_statement list option
 
 (* Declarations and definitions *)
 and fundef = FunDef of returntype * identifier * argdecl list * statement
