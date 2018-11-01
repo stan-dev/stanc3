@@ -1,3 +1,5 @@
+(* The parser for Stan *)
+
 %{
 open Semantic_actions
 open Syntax

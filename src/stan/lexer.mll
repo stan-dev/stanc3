@@ -1,3 +1,5 @@
+(* The lexer that will feed into the parser *)
+
 (* Boilerplate for getting line numbers for errors *)
 {
   open Lexing

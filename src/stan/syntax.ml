@@ -41,7 +41,10 @@ and argdecl =
   | DataArg of unsizedtype * identifier
   | Arg of unsizedtype * identifier
 
-and returntype = Void | ReturnType of unsizedtype
+and returntype =
+  | Void
+  | ReturnType of unsizedtype
+  | Fun of unsizedtype list * returntype
 
 and unsizedtype =
   | Int

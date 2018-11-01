@@ -105,11 +105,6 @@ type var_type =
 
 (* for use with Meta *)
 
-let var_type_of_argdecl ad =
-  match ad with
-  | DataArg (ut, id) -> Ground (ReturnType ut)
-  | Arg (ut, id) -> Ground (ReturnType ut)
-
 let identifier_of_argdecl ad =
   match ad with DataArg (ut, id) -> id | Arg (ut, id) -> id
 
@@ -274,7 +269,13 @@ and semantic_check_fundef vm fd =
     | None ->
         let _ =
           Symbol.enter vm id
-            (Functions, Fun (List.map var_type_of_argdecl args, Ground rt))
+            ( Functions
+            , Ground
+                (Fun
+                   ( List.map
+                       (function DataArg (y, z) -> y | Arg (y, z) -> y)
+                       args
+                   , rt )) )
         in
         let _ =
           if duplicate_arg_names args then
