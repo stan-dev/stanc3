@@ -276,9 +276,9 @@ loc_scale:
   | LOCATION ASSIGN e1=constr_expression COMMA SCALE ASSIGN e2=constr_expression
     { grammar_logger "loc_scale" ; LocationScale (e1, e2) }
   | LOCATION ASSIGN e=constr_expression
-    {  grammar_logger "loc" ; LocationScale (e, RealNumeral "1.") }
+    {  grammar_logger "loc" ; LocationScale (e, (RealNumeral "1.", None)) }
   | SCALE ASSIGN e=constr_expression
-    { grammar_logger "scale" ; LocationScale (RealNumeral "0.", e) }
+    { grammar_logger "scale" ; LocationScale ((RealNumeral "0.", None), e) }
 
 dims:
   | LBRACK l=sep_list(expression, COMMA) RBRACK
@@ -287,9 +287,12 @@ dims:
 (* expressions *)
 expression:
   | l=lhs
-    { grammar_logger "lhs_expression" ; Indexed (Variable (fst l), snd l) }
+    { 
+      grammar_logger "lhs_expression" ;
+      (Indexed ((Variable (fst l), None), snd l), None)
+    }
   | e=non_lhs
-    { grammar_logger "non_lhs_expression" ; e}
+    { grammar_logger "non_lhs_expression" ; (e, None)}
 
 non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e1=expression QMARK e2=expression COLON e3=expression 
@@ -300,25 +303,28 @@ non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
     { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
   | e=expression op=postfixOp 
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
-  | e=non_lhs LBRACK i=indexes RBRACK 
-    {  grammar_logger "expression_indexed" ; Indexed (e, i)}
+  | ue=non_lhs LBRACK i=indexes RBRACK 
+    {  grammar_logger "expression_indexed" ; Indexed ((ue, None), i)}
   | e=common_expression 
     { grammar_logger "common_expr" ; e }
 
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
 constr_expression:
   | e1=constr_expression op=arithmeticInfixOp e2=constr_expression 
-    { grammar_logger "constr_expression_arithmetic" ; InfixOp (e1, op, e2) }
+    { 
+      grammar_logger "constr_expression_arithmetic" ;
+      (InfixOp (e1, op, e2), None)
+    }
   | op=prefixOp e=constr_expression %prec unary_over_binary 
-    {  grammar_logger "constr_expression_prefixOp" ; PrefixOp (op, e) }
+    {  grammar_logger "constr_expression_prefixOp" ; (PrefixOp (op, e), None) }
   | e=constr_expression op=postfixOp 
-    {  grammar_logger "constr_expression_postfix" ; PostfixOp (e, op) }
+    {  grammar_logger "constr_expression_postfix" ; (PostfixOp (e, op), None) }
   | e=constr_expression LBRACK i=indexes RBRACK 
-    {  grammar_logger "constr_expression_indexed" ; Indexed (e, i) }
+    {  grammar_logger "constr_expression_indexed" ; (Indexed (e, i), None) }
   | e=common_expression 
-    {  grammar_logger "constr_expression_common_expr" ; e }
+    {  grammar_logger "constr_expression_common_expr" ; (e, None) }
   | id=IDENTIFIER 
-    { grammar_logger "constr_expression_identifier" ; Variable id }
+    { grammar_logger "constr_expression_identifier" ; (Variable id, None) }
 
 common_expression:
   | i=INTNUMERAL 
@@ -431,9 +437,9 @@ lhs:
 (* statements *)
 statement:
   | s=atomic_statement   
-    {  grammar_logger "atomic_statement" ; s }
+    {  grammar_logger "atomic_statement" ; (s, None) }
   | s=nested_statement 
-    {  grammar_logger "nested_statement" ; s }
+    {  grammar_logger "nested_statement" ; (s, None) }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  
@@ -492,7 +498,7 @@ nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement 
     {  grammar_logger "ifelse_statement" ; IfElse (e, s1, s2) }
   | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE 
-    {  grammar_logger "if_statement" ; IfElse (e, s, Skip) }
+    {  grammar_logger "if_statement" ; IfElse (e, s, (Skip, None)) }
   | WHILE LPAREN e=expression RPAREN s=statement 
     {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=IDENTIFIER IN e1=expression COLON e2=expression RPAREN

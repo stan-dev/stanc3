@@ -29,6 +29,7 @@ and modelblock = vardecl_or_statement list option
 and generatedquantitiesblock = topvardecl_or_statement list option
 
 (* Declarations and definitions *)
+(* TODO: Decorate fundef with optional marker like RNG, LP, PLAIN *)
 and fundef =
   { returntype: returntype
   ; name: identifier
@@ -99,7 +100,9 @@ and transformation =
   | Covariance
 
 (* Expressions. *)
-and expression =
+and expression = untypedexpression * unsizedtype option
+
+and untypedexpression =
   | Conditional of expression * expression * expression
   | InfixOp of expression * infixop * expression
   | PrefixOp of prefixop * expression
@@ -143,7 +146,9 @@ and postfixop = Transpose
 and printable = PString of string | PExpr of expression
 
 (* Statements. *)
-and statement =
+and statement = untypedstatement * returntype option
+
+and untypedstatement =
   | Assignment of lhs * assignmentoperator * expression
   | NRFunApp of identifier * expression list
   | TargetPE of expression

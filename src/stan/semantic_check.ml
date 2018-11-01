@@ -32,6 +32,8 @@ Maybe should also infer bounds for every indexing that happens so we know what c
 Every trace through function body contains return statement of right type
 In case of void function, no return statements anywhere
 All function arguments are distinct
+Function applications are returning functions
+NRFunction applications are non-returning functions
 *)
 
 (*
@@ -55,8 +57,8 @@ Perhaps use Appel's imperative symbol table?
 
 (* semantic_check : program -> program | recursive function, side effecting on var_map *)
 (* var_map (imperative) stores type and block for each variable in scope + flags: in function body, in loop, in lpdf/model, in rng, current block; has operations new, enter, look, beginscope, endscope *)
-(* infer_type : expression -> (type * block) option (recursively implemented calling var_map.look) *)
-(* use var_map.infer_type to make sure all types are OK for operations we perform and to decorate AST with extra type information as we proceed *)
+(* infer_expression_type : expression -> (type * block) option (recursively implemented calling var_map.look) *)
+(* use var_map.infer_expression_type to make sure all types are OK for operations we perform and to decorate AST with extra type information as we proceed *)
 (* use var_map enter to enter math library functions into var map at start of program *)
 (* use var_map enter to enter functions from function block and whenever we encounter a variable *)
 (* use begin scope and end scope to deal with block structure *)
@@ -132,72 +134,42 @@ let vartype_of_sizedtype st = ReturnType (unsizedtype_of_sizedtype st)
 let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 
 (* TODO: generalize this to arbitrary expressions? *)
+(* TODO: should throw if Funapp of non-returning function *)
+let infer_expression_type e = Some Int
 
-let infer_type e = Some (ReturnType Int)
+(* Now, derive optional return type of statement as we semantically check it: fill in.
+If two brances of else return different, then throw.
+Return type of list is the first return type encountered.
+At return here, check that it matches the specified type. *)
+(* TODO: should throw if NRFunapp of returning function *)
+let infer_statement_return_type s = Some Void
 
 (* TODO!!!! Implement this *)
 
 let check_of_int_type e =
-  match infer_type e with Some (ReturnType Int) -> true | _ -> false
+  match infer_expression_type e with Some Int -> true | _ -> false
 
 let check_of_real_type e =
-  match infer_type e with Some (ReturnType Real) -> true | _ -> false
+  match infer_expression_type e with Some Real -> true | _ -> false
 
 let check_of_int_or_real_type e =
-  match infer_type e with
-  | Some (ReturnType Int) -> true
-  | Some (ReturnType Real) -> true
+  match infer_expression_type e with
+  | Some Int -> true
+  | Some Real -> true
   | _ -> false
 
-let check_not_of_type_void e =
-  match infer_type e with Some Void -> false | None -> false | _ -> true
-
+(* TODO!!! *)
 let check_compatible_indices e lindex = true
 
-(* TODO!!! *)
-
 let check_of_same_type_mod_conv e1 e2 =
-  match infer_type e1 with
+  match infer_expression_type e1 with
   | Some t1 -> (
-    match infer_type e2 with
-    | Some t2 ->
-        t1 = t2
-        || (t1 = ReturnType Real && t1 = ReturnType Int)
-        || (t1 = ReturnType Int && t1 = ReturnType Real)
+    match infer_expression_type e2 with
+    | Some t2 -> t1 = t2 || (t1 = Real && t1 = Int) || (t1 = Int && t1 = Real)
     | _ -> false )
   | _ -> false
 
 (* TODO: insert positions into semantic errors! *)
-
-(* TODO: return decorated AST instead of plain one *)
-
-let rec all_traces_return_type rt =
-  match rt with
-  | Void -> fun s -> true
-  | ReturnType ut -> (
-      function
-      | Assignment _ -> false
-      | NRFunApp _ -> false
-      | TargetPE _ -> false
-      | IncrementLogProb _ -> false
-      | Tilde _ -> false
-      | Break -> false
-      | Continue -> false
-      | Return e -> infer_type e = Some (ReturnType ut)
-      | Print _ -> false
-      | Reject _ -> true
-      | Skip -> false
-      | IfElse (_, s1, s2) ->
-          all_traces_return_type rt s1 && all_traces_return_type rt s2
-      | While (e, s) -> all_traces_return_type rt s
-      | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s}
-        ->
-          all_traces_return_type rt s
-      | ForEach (id, e, s) -> all_traces_return_type rt s
-      | Block l ->
-          List.exists
-            (function Stmt s -> all_traces_return_type rt s | _ -> false)
-            l )
 
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
@@ -261,7 +233,7 @@ and semantic_check_fundef = function
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
       let _ =
-        match Symbol.look vm id with
+        match Symbol.look vm uid with
         | Some x ->
             let error_msg =
               String.concat " " ["Identifier "; id; " is already in use."]
@@ -270,10 +242,10 @@ and semantic_check_fundef = function
         | None -> ()
       in
       let _ =
-        Symbol.enter vm id
+        Symbol.enter vm uid
           ( context_flags.current_block
-          , ReturnType (Fun (List.map (function w, y, z -> (w, y)) args, rt))
-          )
+          , ReturnType
+              (Fun (List.map (function w, y, z -> (w, y)) args, urt)) )
       in
       let arg_names = List.map (function w, y, z -> z) args in
       let _ =
@@ -282,12 +254,7 @@ and semantic_check_fundef = function
             "All function arguments should be distinct identifiers."
       in
       let uargs = List.map semantic_check_argdecl args in
-      let _ =
-        if not (all_traces_return_type urt b) then
-          semantic_error
-            "Non-void function bodies must contain a return statement of \
-             correct type in every branch."
-      in
+      (* OK up to here. *)
       let _ = context_flags.in_fun_def <- true in
       let _ =
         if Filename.check_suffix id "_rng" then
@@ -298,7 +265,15 @@ and semantic_check_fundef = function
           context_flags.in_lp_fun_def <- true
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
+      let _ = Symbol.begin_scope vm in
       let ub = semantic_check_statement b in
+      let _ =
+        if snd ub <> Some urt then
+          semantic_error
+            "Function bodies must contain a return statement of correct type \
+             in every branch."
+      in
+      let _ = Symbol.end_scope vm in
       let _ = context_flags.in_fun_def <- false in
       let _ = context_flags.in_returning_fun_def <- false in
       let _ = context_flags.in_lp_fun_def <- false in
@@ -306,8 +281,6 @@ and semantic_check_fundef = function
       {returntype= urt; name= uid; arguments= uargs; body= ub}
 
 and semantic_check_identifier id = id
-
-(* OK up to here. *)
 
 (* TODO: This could be one place where we check for reserved variable names. Though it would be nicer to just do it in the lexer. *)
 
@@ -328,6 +301,8 @@ and semantic_check_returntype = function
 
 (* Probably nothing to do here *)
 and semantic_check_unsizedtype ut = ut
+
+(* OK up to here *)
 
 (* Probably nothing to do here *)
 and semantic_check_topvardecl tvd =
@@ -440,7 +415,9 @@ and semantic_check_transformation = function
   | Correlation -> Correlation
   | Covariance -> Covariance
 
-and semantic_check_expression = function
+and semantic_check_expression e = (fst e, infer_expression_type e)
+
+(*(function
   | Conditional (e1, e2, e3) ->
       if check_of_int_type e1 then
         if check_of_same_type_mod_conv e2 e3 then
@@ -453,7 +430,7 @@ and semantic_check_expression = function
             "Both branches of a conditional operator need to have the same \
              type."
       else semantic_error "Condition in conditional should be of type int."
-  | _ -> GetTarget
+  | _ -> GetTarget *)
 
 (* TODO!!! *)
 and semantic_check_infixop i = i
@@ -467,14 +444,12 @@ and semantic_check_postfixop p = p
 (* Probably nothing to do here *)
 and semantic_check_printable = function
   | PString s -> PString s
-  | PExpr e ->
-      if check_not_of_type_void e then PExpr (semantic_check_expression e)
-      else semantic_error "Expressions of type void cannot be printed."
+  | PExpr e -> PExpr (semantic_check_expression e)
 
 (* TODO: do we even want to check this? *)
 and (* TODO: get rid of some of this error checking *)
-    semantic_check_statement = function
-  (*
+    semantic_check_statement s =
+  (* function
   | Assignment (lhs, assop, e) ->
       if
         check_of_same_type_mod_conv
@@ -494,8 +469,9 @@ and (* TODO: get rid of some of this error checking *)
         else
           semantic_error
             "Variables from previous blocks cannot be assigned to."
-      else semantic_error "Assignment is ill-typed." *)
-  | _ -> Skip
+      else semantic_error "Assignment is ill-typed." 
+  | _ ->*)
+  (fst s, infer_statement_return_type s)
 
 and semantic_check_assign ass_s = ass_s
 
