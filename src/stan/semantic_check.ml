@@ -69,6 +69,14 @@ Perhaps use Appel's imperative symbol table?
 open Symbol_table
 open Syntax
 
+(* Idea: we have a semantic checking function for each AST node.
+   Each such calls the corresponding checking functions for its children
+   left-to-right. *)
+   
+(* Invariant: after an expression has been checked, it has a well-defined type *)
+
+(* Invariant: after a statement has been checked, it has a well-defined return type *)
+
 (* A semantic error reported by the toplevel *)
 let semantic_error ?loc msg =
   Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
@@ -147,13 +155,13 @@ let infer_statement_return_type s = Some Void
 (* TODO!!!! Implement this *)
 
 let check_of_int_type e =
-  match infer_expression_type e with Some Int -> true | _ -> false
+  match (snd e) with Some Int -> true | _ -> false
 
 let check_of_real_type e =
-  match infer_expression_type e with Some Real -> true | _ -> false
+  match (snd e) with Some Real -> true | _ -> false
 
 let check_of_int_or_real_type e =
-  match infer_expression_type e with
+  match (snd e) with
   | Some Int -> true
   | Some Real -> true
   | _ -> false
@@ -162,9 +170,9 @@ let check_of_int_or_real_type e =
 let check_compatible_indices e lindex = true
 
 let check_of_same_type_mod_conv e1 e2 =
-  match infer_expression_type e1 with
+  match (snd e1) with
   | Some t1 -> (
-    match infer_expression_type e2 with
+    match (snd e2) with
     | Some t2 -> t1 = t2 || (t1 = Real && t1 = Int) || (t1 = Int && t1 = Real)
     | _ -> false )
   | _ -> false
@@ -254,7 +262,6 @@ and semantic_check_fundef = function
             "All function arguments should be distinct identifiers."
       in
       let uargs = List.map semantic_check_argdecl args in
-      (* OK up to here. *)
       let _ = context_flags.in_fun_def <- true in
       let _ =
         if Filename.check_suffix id "_rng" then
@@ -300,7 +307,11 @@ and semantic_check_returntype = function
   | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
 
 (* Probably nothing to do here *)
-and semantic_check_unsizedtype ut = ut
+and semantic_check_unsizedtype = function
+  | Array ut -> semantic_check_unsizedtype ut
+  | Fun (l, rt) -> Fun (List.map (function | (ab, ut) ->
+  (semantic_check_argblock ab, semantic_check_unsizedtype ut)) l, semantic_check_returntype rt)
+  | ut -> ut
 
 (* OK up to here *)
 
@@ -369,6 +380,9 @@ and semantic_check_vardecl_or_statement vds =
       let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
       VDeclAss {sizedtype= ust; identifier= uid; value= ue}
 
+(* TODO: here, we only check_of_int_type after checking semantic check expression.
+We could also make these check of int types include the semantic check expression.
+Probably, that's the way to do it.*)
 (* Probably nothing to do here *)
 and semantic_check_sizedtype = function
   | SInt -> SInt
