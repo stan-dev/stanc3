@@ -256,7 +256,6 @@ and semantic_check_modelblock bm =
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
 
-(* OK up to here. *)
 and semantic_check_fundef = function
   | {returntype= rt; name= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
@@ -283,7 +282,6 @@ and semantic_check_fundef = function
             "All function arguments should be distinct identifiers."
       in
       let uargs = List.map semantic_check_argdecl args in
-      let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
       let _ =
         if not (all_traces_return_type urt b) then
           semantic_error
@@ -299,6 +297,7 @@ and semantic_check_fundef = function
         if Filename.check_suffix id "_lp" then
           context_flags.in_lp_fun_def <- true
       in
+      let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
       let ub = semantic_check_statement b in
       let _ = context_flags.in_fun_def <- false in
       let _ = context_flags.in_returning_fun_def <- false in
@@ -308,11 +307,9 @@ and semantic_check_fundef = function
 
 and semantic_check_identifier id = id
 
-(* TODO: This could be one place where we check for reserved variable names. Though it would be nicer to just do it in the lexer. *)
-and semantic_check_real r = r
+(* OK up to here. *)
 
-(* Probably nothing to do here *)
-and semantic_check_size s = s
+(* TODO: This could be one place where we check for reserved variable names. Though it would be nicer to just do it in the lexer. *)
 
 (* Probably nothing to do here *)
 and semantic_check_argblock isdata = isdata
