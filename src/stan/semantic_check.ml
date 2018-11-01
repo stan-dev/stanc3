@@ -506,7 +506,19 @@ and semantic_check_printable = function
 (* TODO!!!! Implement this *)
 and semantic_check_statement s =
   match fst s with
-  | Assignment (l, assop, e) -> semantic_error "not implemented"
+  | Assignment ((id, lindex), assop, e) ->
+      let uid, ulindex = semantic_check_lhs (id, lindex) in
+      let uassop = semantic_check_assignmentoperator assop in
+      let ue = semantic_check_expression e in
+      let ue2 =
+        semantic_check_expression
+          (Indexed ((Variable uid, None), ulindex), None)
+      in
+      let _ =
+        if not (check_of_same_type_mod_conv ue ue2) then
+          semantic_error "Type mismatch in assignment"
+      in
+      (Assignment ((uid, ulindex), uassop, ue), Some Void)
   | NRFunApp (id, es) -> semantic_error "not implemented"
   | TargetPE e -> semantic_error "not implemented"
   | IncrementLogProb e -> semantic_error "not implemented"
@@ -535,7 +547,7 @@ and semantic_check_statement s =
       (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType x))
   | Print ps -> semantic_error "not implemented"
   | Reject ps -> semantic_error "not implemented"
-  | Skip -> semantic_error "not implemented"
+  | Skip -> (Skip, Some Void)
   | IfElse (e, s1, s2) -> semantic_error "not implemented"
   | While (e, s) -> semantic_error "not implemented"
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
