@@ -42,8 +42,6 @@ and fundef = FunDef of returntype * identifier * argdecl list * statement
 
 and identifier = string
 
-and real = float
-
 (* TODO: represent numerals as strings *)
 and size = int64
 
@@ -103,9 +101,9 @@ and expression =
   | PostfixOp of expression * postfixop
   | Variable of identifier
   (* a variable *)
-  | IntNumeral of int64
+  | IntNumeral of string
   (* integer constant *)
-  | RealNumeral of real
+  | RealNumeral of string
   (* real constant *)
   | FunApp of identifier * expression list
   | CondFunApp of identifier * expression list

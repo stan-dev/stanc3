@@ -9,8 +9,8 @@ open Debug
 %token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE
 %token VOID INT REAL VECTOR ROWVECTOR MATRIX ORDERED POSITIVEORDERED SIMPLEX UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER LOCATION SCALE
-%token <int64> INTNUMERAL
-%token <float> REALNUMERAL
+%token <string> INTNUMERAL
+%token <string> REALNUMERAL
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
@@ -186,8 +186,8 @@ range:
 
 loc_scale:
   | LOCATION ASSIGN e1=constr_expression COMMA SCALE ASSIGN e2=constr_expression { grammar_logger "loc_scale" ; LocationScale (e1, e2) }
-  | LOCATION ASSIGN e=constr_expression {  grammar_logger "loc" ; LocationScale (e, RealNumeral 1.) }
-  | SCALE ASSIGN e=constr_expression { grammar_logger "scale" ; LocationScale (RealNumeral 0., e) }
+  | LOCATION ASSIGN e=constr_expression {  grammar_logger "loc" ; LocationScale (e, RealNumeral "1.") }
+  | SCALE ASSIGN e=constr_expression { grammar_logger "scale" ; LocationScale (RealNumeral "0.", e) }
 
 dims:
   | LBRACK l=sep_list(expression, COMMA) RBRACK { grammar_logger "dims" ; l  }
