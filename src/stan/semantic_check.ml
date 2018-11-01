@@ -262,7 +262,7 @@ and semantic_check_generatedquantitiesblock vm bgq =
     (List.map (semantic_check_topvardecl_or_statement vm))
 
 and semantic_check_fundef vm fd =
-  match fd with FunDef (rt, id, args, b) -> (
+  match fd with {returntype= rt; name= id; arguments= args; body= b} -> (
     let urt = semantic_check_returntype vm rt in
     let uid = semantic_check_identifier vm id in
     match Symbol.look vm id with
@@ -313,7 +313,7 @@ and semantic_check_fundef vm fd =
                    in every branch."
             | _ -> () )
         in
-        FunDef (urt, uid, uargs, ub) )
+        {returntype= urt; name= uid; arguments= uargs; body= ub} )
 
 and semantic_check_identifier vm id = id
 

@@ -117,7 +117,7 @@ generated_quantities_block:
 
 (* function definitions *)
 function_def:
-  | rt=return_type name=IDENTIFIER LPAREN args=sep_list(arg_decl, COMMA) RPAREN b=statement { grammar_logger "function_def" ; FunDef (rt, name, args, b) }
+  | rt=return_type name=IDENTIFIER LPAREN args=sep_list(arg_decl, COMMA) RPAREN b=statement { grammar_logger "function_def" ;  {returntype = rt; name = name; arguments = args; body=b;} }
 
 return_type:
   | VOID { grammar_logger "return_type VOID" ; Void }

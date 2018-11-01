@@ -37,7 +37,11 @@ and modelblock = vardecl_or_statement list option
 and generatedquantitiesblock = topvardecl_or_statement list option
 
 (* Declarations and definitions *)
-and fundef = FunDef of returntype * identifier * argdecl list * statement
+and fundef =
+  { returntype: returntype
+  ; name: identifier
+  ; arguments: argdecl list
+  ; body: statement }
 
 and identifier = string
 
