@@ -331,12 +331,19 @@ and semantic_check_topvardecl = function
       in
       (ust, utrans, uid)
 
-(* OK up to here *)
+(* Probably nothing to check here. *)
+and semantic_check_compound_topvardecl_assign = function
+  | {sizedtype= st; transformation= trans; identifier= id; value= e} ->
+      let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
+      let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
+      TVDeclAss
+        {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+
 and semantic_check_vardecl vd =
-  let id = snd vd in
   let st = fst vd in
-  let uid = semantic_check_identifier id in
+  let id = snd vd in
   let ust = semantic_check_sizedtype st in
+  let uid = semantic_check_identifier id in
   let vt = unsizedtype_of_sizedtype st in
   let _ =
     match Symbol.look vm id with
@@ -350,26 +357,28 @@ and semantic_check_vardecl vd =
   let _ = Symbol.enter vm id (context_flags.current_block, vt) in
   (ust, uid)
 
+(* Probably nothing to check here. *)
+and semantic_check_compound_vardecl_assign = function
+  | {sizedtype= st; identifier= id; value= e} ->
+      let ust, uid = semantic_check_vardecl (st, id) in
+      let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
+      VDeclAss {sizedtype= ust; identifier= uid; value= ue}
+
+(* Probably nothing to do here *)
 and semantic_check_topvardecl_or_statement tvds =
   match tvds with
   | TVDecl tvd -> TVDecl (semantic_check_topvardecl tvd)
   | TStmt s -> TStmt (semantic_check_statement s)
-  | TVDeclAss {sizedtype= st; transformation= trans; identifier= id; value= e}
-    ->
-      let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
-      let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
-      TVDeclAss
-        {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+  | TVDeclAss tvda -> semantic_check_compound_topvardecl_assign tvda
 
 (* Probably nothing to do here *)
 and semantic_check_vardecl_or_statement vds =
   match vds with
   | VDecl vd -> VDecl (semantic_check_vardecl vd)
   | Stmt s -> Stmt (semantic_check_statement s)
-  | VDeclAss {sizedtype= st; identifier= id; value= e} ->
-      let ust, uid = semantic_check_vardecl (st, id) in
-      let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
-      VDeclAss {sizedtype= ust; identifier= uid; value= ue}
+  | VDeclAss vda -> semantic_check_compound_vardecl_assign vda
+
+(* OK up to here *)
 
 (* TODO: here, we only check_of_int_type after checking semantic check expression.
 We could also make these check of int types include the semantic check expression.
