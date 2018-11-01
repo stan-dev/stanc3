@@ -319,7 +319,7 @@ and semantic_check_compound_topvardecl_assign = function
       | Assignment ((uid, _), Assign, ue), Some Void ->
           TVDeclAss
             {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
-      | _ -> semantic_error "Should never happen." )
+      | _ -> semantic_error "This should never happen. Please file a bug.." )
 
 and semantic_check_vardecl vd =
   let st = fst vd in
@@ -348,7 +348,7 @@ and semantic_check_compound_vardecl_assign = function
       with
       | Assignment ((uid, _), Assign, ue), Some Void ->
           VDeclAss {sizedtype= ust; identifier= uid; value= ue}
-      | _ -> semantic_error "Should never happen." )
+      | _ -> semantic_error "This should never happen. Please file a bug." )
 
 (* Probably nothing to do here *)
 and semantic_check_topvardecl_or_statement tvds =
@@ -531,13 +531,12 @@ and semantic_check_truncation = function
       in
       TruncateBetween (ue1, ue2)
 
-and semantic_check_lhs lhs =
-  let id = fst lhs in
-  let lindex = snd lhs in
-  let uid = semantic_check_identifier id in
-  let ulindex = List.map semantic_check_index lindex in
-  let _ = check_compatible_indices (Variable uid) ulindex in
-  (uid, ulindex)
+and semantic_check_lhs (id, lindex) =
+  match
+    semantic_check_expression (Indexed ((Variable id, None), lindex), None)
+  with
+  | Indexed ((Variable uid, _), ulindex), _ -> (uid, ulindex)
+  | _ -> semantic_error "This should never happen. Please file a bug."
 
 and semantic_check_index = function
   | All -> All
@@ -574,4 +573,4 @@ and semantic_check_index = function
 (* Probably nothing to do here *)
 and semantic_check_assignmentoperator op = op
 
-(* OK up until here except expressions and statements and compatible indices*)
+(* OK up until here except expressions and statements *)
