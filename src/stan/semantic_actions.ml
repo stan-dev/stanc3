@@ -43,9 +43,9 @@ let construct_var_decl sbt id d ae =
   let sizes = match d with None -> [] | Some l -> l in
   match ae with
   | Some a ->
-      [ VDecl (reducearray (sbt, sizes), id)
-      ; Stmt (Assignment ((id, []), Assign, snd a)) ]
-  | _ -> [VDecl (reducearray (sbt, sizes), id)]
+      VDeclAss
+        {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
+  | _ -> VDecl (reducearray (sbt, sizes), id)
 
 let construct_top_var_decl_no_assign tvt id d =
   let sizes = match d with None -> [] | Some l -> l in
@@ -55,9 +55,12 @@ let construct_top_var_decl tvt id d ass =
   let sizes = match d with None -> [] | Some l -> l in
   match ass with
   | Some a ->
-      [ TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
-      ; TStmt (Assignment ((id, []), Assign, snd a)) ]
-  | _ -> [TVDecl (reducearray (fst tvt, sizes), snd tvt, id)]
+      TVDeclAss
+        { sizedtype= reducearray (fst tvt, sizes)
+        ; transformation= snd tvt
+        ; identifier= id
+        ; value= snd a }
+  | _ -> TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
 
 let construct_truncation e1 e2 =
   match (e1, e2) with

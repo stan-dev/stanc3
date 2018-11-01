@@ -101,19 +101,19 @@ data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE { grammar_logger "data_block" ; Some tvd }
 
 transformed_data_block:
-  | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE {  grammar_logger "transformed_data_block" ; Some (List.concat tvds) } (* NOTE: I am choosing to allow mixing of statements and top_var_decls *)
+  | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE {  grammar_logger "transformed_data_block" ; Some  tvds } (* NOTE: I am choosing to allow mixing of statements and top_var_decls *)
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE { grammar_logger "parameters_block" ; Some tvd }
 
 transformed_parameters_block:
-  | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "transformed_parameters_block" ; Some (List.concat tvds) }
+  | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "transformed_parameters_block" ; Some tvds }
 
 model_block:
-  | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE { grammar_logger "model_block" ; Some (List.concat vds)  }
+  | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE { grammar_logger "model_block" ; Some vds  }
 
 generated_quantities_block:
-  | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "generated_quantities_block" ; Some (List.concat tvds) }
+  | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE { grammar_logger "generated_quantities_block" ; Some  tvds }
 
 (* function definitions *)
 function_def:
@@ -318,13 +318,13 @@ nested_statement:
   | WHILE LPAREN e=expression RPAREN s=statement {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=IDENTIFIER IN e1=expression COLON e2=expression RPAREN s=statement {  grammar_logger "for_statement" ; For {loop_variable = id; lower_bound= e1; upper_bound =  e2; loop_body = s;}  }
   | FOR LPAREN id=IDENTIFIER IN e=expression RPAREN s=statement {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
-  | LBRACE l=list(vardecl_or_statement)  RBRACE  {  grammar_logger "block_statement" ; Block (List.concat l) } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
+  | LBRACE l=list(vardecl_or_statement)  RBRACE  {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 
 (* statement or var decls *)
 vardecl_or_statement:
-  | s=statement { grammar_logger "vardecl_or_statement_statement" ; [Stmt s] }
+  | s=statement { grammar_logger "vardecl_or_statement_statement" ; Stmt s }
   | v=var_decl { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
-  | s=statement { grammar_logger "top_vardecl_or_statement_statement" ; [TStmt s] }
+  | s=statement { grammar_logger "top_vardecl_or_statement_statement" ; TStmt s }
   | v=top_var_decl { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }

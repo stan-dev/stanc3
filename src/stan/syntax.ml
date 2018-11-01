@@ -61,11 +61,26 @@ and unsizedtype =
 
 and topvardecl = sizedtype * transformation * identifier
 
+and compound_topvardecl_assign =
+  { sizedtype: sizedtype
+  ; transformation: transformation
+  ; identifier: identifier
+  ; value: expression }
+
 and vardecl = sizedtype * identifier
 
-and topvardecl_or_statement = TVDecl of topvardecl | TStmt of statement
+and compound_vardecl_assign =
+  {sizedtype: sizedtype; identifier: identifier; value: expression}
 
-and vardecl_or_statement = VDecl of vardecl | Stmt of statement
+and topvardecl_or_statement =
+  | TVDecl of topvardecl
+  | TStmt of statement
+  | TVDeclAss of compound_topvardecl_assign
+
+and vardecl_or_statement =
+  | VDecl of vardecl
+  | Stmt of statement
+  | VDeclAss of compound_vardecl_assign
 
 and sizedtype =
   | SInt

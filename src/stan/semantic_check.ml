@@ -393,12 +393,22 @@ and semantic_check_topvardecl_or_statement vm tvds =
   match tvds with
   | TVDecl tvd -> TVDecl (semantic_check_topvardecl vm tvd)
   | TStmt s -> TStmt (semantic_check_statement vm s)
+  | TVDeclAss {sizedtype= st; transformation= trans; identifier= id; value= e}
+    ->
+      let ust, utrans, uid = semantic_check_topvardecl vm (st, trans, id) in
+      let uid, uassop, ue = semantic_check_assign vm (uid, Assign, e) in
+      TVDeclAss
+        {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
 
 (* Probably nothing to do here *)
 and semantic_check_vardecl_or_statement vm vds =
   match vds with
   | VDecl vd -> VDecl (semantic_check_vardecl vm vd)
   | Stmt s -> Stmt (semantic_check_statement vm s)
+  | VDeclAss {sizedtype= st; identifier= id; value= e} ->
+      let ust, uid = semantic_check_vardecl vm (st, id) in
+      let uid, uassop, ue = semantic_check_assign vm (uid, Assign, e) in
+      VDeclAss {sizedtype= ust; identifier= uid; value= ue}
 
 (* Probably nothing to do here *)
 and semantic_check_sizedtype vm = function
@@ -510,6 +520,10 @@ and (* TODO: get rid of some of this error checking *)
             "Variables from previous blocks cannot be assigned to."
       else semantic_error "Assignment is ill-typed." *)
   | _ -> Skip
+
+and semantic_check_assign vm ass_s = ass_s
+
+(* TODO; also for other statements *)
 
 (* TODO!!! Probably should separate out these clauses; same for types of expressions. *)
 and semantic_check_truncation vm = function
