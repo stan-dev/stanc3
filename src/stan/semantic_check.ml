@@ -273,7 +273,8 @@ and semantic_check_fundef = function
       let _ =
         Symbol.enter vm id
           ( context_flags.current_block
-          , Fun (List.map (function w, y, z -> (w, y)) args, rt) )
+          , ReturnType (Fun (List.map (function w, y, z -> (w, y)) args, rt))
+          )
       in
       let arg_names = List.map (function w, y, z -> z) args in
       let _ =

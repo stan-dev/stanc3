@@ -41,12 +41,8 @@ and argblock = Data | Any
 
 and argdecl = argblock * unsizedtype * identifier
 
-and returntype =
-  | Void
-  | ReturnType of unsizedtype
-  | Fun of (argblock * unsizedtype) list * returntype
+and returntype = Void | ReturnType of unsizedtype
 
-(* TODO: move Fun to unsizedtype *)
 and unsizedtype =
   | Int
   | Real
@@ -54,6 +50,7 @@ and unsizedtype =
   | RowVector
   | Matrix
   | Array of unsizedtype
+  | Fun of (argblock * unsizedtype) list * returntype
 
 and topvardecl = sizedtype * transformation * identifier
 
