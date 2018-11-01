@@ -145,7 +145,11 @@ and statement =
   | TargetPE of expression
   | IncrementLogProb of expression
   (* deprecated *)
-  | Tilde of {arg : expression; distribution : identifier; args : expression list; truncation : truncation;}
+  | Tilde of
+      { arg: expression
+      ; distribution: identifier
+      ; args: expression list
+      ; truncation: truncation }
   | Break
   | Continue
   | Return of expression
@@ -154,7 +158,11 @@ and statement =
   | Skip
   | IfElse of expression * statement * statement
   | While of expression * statement
-  | For of identifier * expression * expression * statement
+  | For of
+      { loop_variable: identifier
+      ; lower_bound: expression
+      ; upper_bound: expression
+      ; loop_body: statement }
   | ForEach of identifier * expression * statement
   | Block of vardecl_or_statement list
 

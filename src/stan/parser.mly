@@ -316,7 +316,7 @@ nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement {  grammar_logger "ifelse_statement" ; IfElse (e, s1, s2) }
   | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE {  grammar_logger "if_statement" ; IfElse (e, s, Skip) }
   | WHILE LPAREN e=expression RPAREN s=statement {  grammar_logger "while_statement" ; While (e, s) }
-  | FOR LPAREN id=IDENTIFIER IN e1=expression COLON e2=expression RPAREN s=statement {  grammar_logger "for_statement" ; For (id, e1, e2, s)  }
+  | FOR LPAREN id=IDENTIFIER IN e1=expression COLON e2=expression RPAREN s=statement {  grammar_logger "for_statement" ; For {loop_variable = id; lower_bound= e1; upper_bound =  e2; loop_body = s;}  }
   | FOR LPAREN id=IDENTIFIER IN e=expression RPAREN s=statement {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE  {  grammar_logger "block_statement" ; Block (List.concat l) } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 
