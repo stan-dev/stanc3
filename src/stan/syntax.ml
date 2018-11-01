@@ -3,14 +3,6 @@ open Core_kernel
 
 (* for auto generating s-exp *)
 
-(* TODO: Reorder and get rid of some 'and's *)
-
-(* TODO: Get rid of some redundant intermediate definitions. *)
-
-(* TODO: Change some tuples into records *)
-
-(* TODO: Change some EmptyFunBlocks into list option etc. *)
-
 (* Programs. *)
 type program =
   { functionblock: functionblock
@@ -90,7 +82,6 @@ and sizedtype =
   | SMatrix of expression * expression
   | SArray of sizedtype * expression
 
-(* expression is for size *)
 and transformation =
   | Identity
   | Lower of expression
@@ -113,11 +104,8 @@ and expression =
   | PrefixOp of prefixop * expression
   | PostfixOp of expression * postfixop
   | Variable of identifier
-  (* a variable *)
   | IntNumeral of string
-  (* integer constant *)
   | RealNumeral of string
-  (* real constant *)
   | FunApp of identifier * expression list
   | CondFunApp of identifier * expression list
   | GetLP

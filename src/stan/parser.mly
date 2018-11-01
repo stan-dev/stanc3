@@ -45,11 +45,8 @@ open Debug
 (* TODO: deal properly with multi-file model *)
 
 (* TODO: propagate line numbers through properly for reporting semantic errors *)
+
 (* TODO: create decent parsing error messages: use menhir --list-errors to get overview of all possible errors to write custom messages for *)
-
-(* TODO: deal with unicode? *)
-
-(* TODO: change compound declare-define to be its own separate thing *)
 
 (* Top level rule *)
 %start program file
