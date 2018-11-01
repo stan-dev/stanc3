@@ -412,27 +412,39 @@ and semantic_check_sizedtype = function
       in
       SArray (ust, ue)
 
-
-(* OK up to here *)
-
 and semantic_check_transformation = function
   | Identity -> Identity
   | Lower e ->
-      if check_of_int_or_real_type e then Lower (semantic_check_expression e)
-      else semantic_error "Lower bound should be of int or real type."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error "Lower bound should be of int or real type."
+      in
+      Lower ue
   | Upper e ->
-      if check_of_int_or_real_type e then Upper (semantic_check_expression e)
-      else semantic_error "Upper bound should be of int or real type."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error "Upper bound should be of int or real type."
+      in
+      Upper ue
   | LowerUpper (e1, e2) ->
-      if check_of_int_or_real_type e1 && check_of_int_or_real_type e2 then
-        LowerUpper (semantic_check_expression e1, semantic_check_expression e2)
-      else
-        semantic_error "Lower and upper bound should be of int or real type."
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let _ =
+        if not (check_of_int_or_real_type ue1 && check_of_int_or_real_type ue2)
+        then
+          semantic_error "Lower and upper bound should be of int or real type."
+      in
+      LowerUpper (ue1, ue2)
   | LocationScale (e1, e2) ->
-      if check_of_int_or_real_type e1 && check_of_int_or_real_type e2 then
-        LocationScale
-          (semantic_check_expression e1, semantic_check_expression e2)
-      else semantic_error "Location and scale should be of int or real type."
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let _ =
+        if not (check_of_int_or_real_type ue1 && check_of_int_or_real_type ue2)
+        then semantic_error "Location and scale should be of int or real type."
+      in
+      LocationScale (ue1, ue2)
   | Ordered -> Ordered
   | PositiveOrdered -> PositiveOrdered
   | Simplex -> Simplex
@@ -441,6 +453,9 @@ and semantic_check_transformation = function
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
   | Covariance -> Covariance
+
+
+(* OK up to here *)
 
 and semantic_check_expression e = (fst e, infer_expression_type e)
 
