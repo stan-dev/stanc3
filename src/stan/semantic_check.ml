@@ -378,29 +378,42 @@ and semantic_check_vardecl_or_statement vds =
   | Stmt s -> Stmt (semantic_check_statement s)
   | VDeclAss vda -> semantic_check_compound_vardecl_assign vda
 
-(* OK up to here *)
-
-(* TODO: here, we only check_of_int_type after checking semantic check expression.
-We could also make these check of int types include the semantic check expression.
-Probably, that's the way to do it.*)
-(* Probably nothing to do here *)
 and semantic_check_sizedtype = function
   | SInt -> SInt
   | SReal -> SReal
   | SVector e ->
-      if check_of_int_type e then SVector (semantic_check_expression e)
-      else semantic_error "Vector sizes should be of type int."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_type ue) then
+          semantic_error "Vector sizes should be of type int."
+      in
+      SVector ue
   | SRowVector e ->
-      if check_of_int_type e then SRowVector (semantic_check_expression e)
-      else semantic_error "Row vector sizes should be of type int."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_type ue) then
+          semantic_error "Row vector sizes should be of type int."
+      in
+      SRowVector ue
   | SMatrix (e1, e2) ->
-      if check_of_int_type e1 && check_of_int_type e2 then
-        SMatrix (semantic_check_expression e1, semantic_check_expression e2)
-      else semantic_error "Matrix sizes should be of type int."
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let _ =
+        if not (check_of_int_type ue1 && check_of_int_type ue2) then
+          semantic_error "Matrix sizes should be of type int."
+      in
+      SMatrix (ue1, ue2)
   | SArray (st, e) ->
-      if check_of_int_type e then
-        SArray (semantic_check_sizedtype st, semantic_check_expression e)
-      else semantic_error "Array sizes should be of type int."
+      let ust = semantic_check_sizedtype st in
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_type ue) then
+          semantic_error "Array sizes should be of type int."
+      in
+      SArray (ust, ue)
+
+
+(* OK up to here *)
 
 and semantic_check_transformation = function
   | Identity -> Identity
