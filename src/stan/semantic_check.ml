@@ -504,7 +504,44 @@ and semantic_check_printable = function
   | _ ->*)
 
 (* TODO!!!! Implement this *)
-and semantic_check_statement s = (fst s, Some Void)
+and semantic_check_statement s =
+  match fst s with
+  | Assignment (l, assop, e) -> semantic_error "not implemented"
+  | NRFunApp (id, es) -> semantic_error "not implemented"
+  | TargetPE e -> semantic_error "not implemented"
+  | IncrementLogProb e -> semantic_error "not implemented"
+  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
+      semantic_error "not implemented"
+  | Break ->
+      let _ =
+        if not context_flags.in_loop then
+          semantic_error "Break statements may only be used in loops."
+      in
+      (Break, Some Void)
+  | Continue ->
+      let _ =
+        if not context_flags.in_loop then
+          semantic_error "Continue statements may only be used in loops."
+      in
+      (Continue, Some Void)
+  | Return e ->
+      let _ =
+        if not context_flags.in_returning_fun_def then
+          semantic_error
+            "Return statements may only be used inside returning function \
+             definitions."
+      in
+      let ue = semantic_check_expression e in
+      (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType x))
+  | Print ps -> semantic_error "not implemented"
+  | Reject ps -> semantic_error "not implemented"
+  | Skip -> semantic_error "not implemented"
+  | IfElse (e, s1, s2) -> semantic_error "not implemented"
+  | While (e, s) -> semantic_error "not implemented"
+  | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
+      semantic_error "not implemented"
+  | ForEach (id, e, s) -> semantic_error "not implemented"
+  | Block vdsl -> semantic_error "not implemented"
 
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
