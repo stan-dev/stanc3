@@ -145,7 +145,7 @@ and statement =
   | TargetPE of expression
   | IncrementLogProb of expression
   (* deprecated *)
-  | Tilde of expression * identifier * expression list * truncation
+  | Tilde of {arg : expression; distribution : identifier; args : expression list; truncation : truncation;}
   | Break
   | Continue
   | Return of expression
