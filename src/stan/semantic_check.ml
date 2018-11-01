@@ -137,12 +137,50 @@ let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 (* TODO: should throw if Funapp of non-returning function *)
 let infer_expression_type e = Some Int
 
+(*(function
+  | Conditional (e1, e2, e3) ->
+      if check_of_int_type e1 then
+        if check_of_same_type_mod_conv e2 e3 then
+          Conditional
+            ( semantic_check_expression e1
+            , semantic_check_expression e2
+            , semantic_check_expression e3 )
+        else
+          semantic_error
+            "Both branches of a conditional operator need to have the same \
+             type."
+      else semantic_error "Condition in conditional should be of type int."
+  | _ -> GetTarget *)
+
 (* Now, derive optional return type of statement as we semantically check it: fill in.
 If two brances of else return different, then throw.
 Return type of list is the first return type encountered.
 At return here, check that it matches the specified type. *)
 (* TODO: should throw if NRFunapp of returning function *)
 let infer_statement_return_type s = Some Void
+
+(* function
+  | Assignment (lhs, assop, e) ->
+      if
+        check_of_same_type_mod_conv
+          (Indexed (Variable (fst lhs), snd lhs))
+          e
+        (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
+      then
+        if look_block (fst lhs) = look_block "1currentblock" then
+          if look_block (fst lhs) = Some Data then
+            if look_block (fst lhs) = Some Param then
+              Assignment
+                ( semantic_check_lhs lhs
+                , semantic_check_assignmentoperator assop
+                , semantic_check_expression e )
+            else semantic_error "Parameters cannot be assigned to."
+          else semantic_error "Data variables cannot be assigned to."
+        else
+          semantic_error
+            "Variables from previous blocks cannot be assigned to."
+      else semantic_error "Assignment is ill-typed." 
+  | _ ->*)
 
 (* TODO!!!! Implement this *)
 
@@ -454,27 +492,9 @@ and semantic_check_transformation = function
   | Correlation -> Correlation
   | Covariance -> Covariance
 
-
-(* OK up to here *)
-
 and semantic_check_expression e = (fst e, infer_expression_type e)
 
-(*(function
-  | Conditional (e1, e2, e3) ->
-      if check_of_int_type e1 then
-        if check_of_same_type_mod_conv e2 e3 then
-          Conditional
-            ( semantic_check_expression e1
-            , semantic_check_expression e2
-            , semantic_check_expression e3 )
-        else
-          semantic_error
-            "Both branches of a conditional operator need to have the same \
-             type."
-      else semantic_error "Condition in conditional should be of type int."
-  | _ -> GetTarget *)
-
-(* TODO!!! *)
+(* Probably nothing to do here *)
 and semantic_check_infixop i = i
 
 (* Probably nothing to do here *)
@@ -483,37 +503,16 @@ and semantic_check_prefixop p = p
 (* Probably nothing to do here *)
 and semantic_check_postfixop p = p
 
-(* Probably nothing to do here *)
 and semantic_check_printable = function
   | PString s -> PString s
-  | PExpr e -> PExpr (semantic_check_expression e)
+  | PExpr e -> (
+      let ue = semantic_check_expression e in
+      match snd ue with
+      | Some (Fun _) -> semantic_error "Functions cannot be printed."
+      | _ -> PExpr ue )
 
-(* TODO: do we even want to check this? *)
-and (* TODO: get rid of some of this error checking *)
-    semantic_check_statement s =
-  (* function
-  | Assignment (lhs, assop, e) ->
-      if
-        check_of_same_type_mod_conv
-          (Indexed (Variable (fst lhs), snd lhs))
-          e
-        (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
-      then
-        if look_block (fst lhs) = look_block "1currentblock" then
-          if look_block (fst lhs) = Some Data then
-            if look_block (fst lhs) = Some Param then
-              Assignment
-                ( semantic_check_lhs lhs
-                , semantic_check_assignmentoperator assop
-                , semantic_check_expression e )
-            else semantic_error "Parameters cannot be assigned to."
-          else semantic_error "Data variables cannot be assigned to."
-        else
-          semantic_error
-            "Variables from previous blocks cannot be assigned to."
-      else semantic_error "Assignment is ill-typed." 
-  | _ ->*)
-  (fst s, infer_statement_return_type s)
+(* OK up until here *)
+and semantic_check_statement s = (fst s, infer_statement_return_type s)
 
 and semantic_check_assign ass_s = ass_s
 
