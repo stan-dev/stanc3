@@ -531,7 +531,6 @@ and semantic_check_truncation = function
       in
       TruncateBetween (ue1, ue2)
 
-(* OK up until here except expressions and statements *)
 and semantic_check_lhs lhs =
   let id = fst lhs in
   let lindex = snd lhs in
@@ -543,19 +542,36 @@ and semantic_check_lhs lhs =
 and semantic_check_index = function
   | All -> All
   | Single e ->
-      if check_of_int_type e then Single (semantic_check_expression e)
-      else semantic_error "Index should be of type int."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_type ue) then
+          semantic_error "Index should be of type int."
+      in
+      Single ue
   | Upfrom e ->
-      if check_of_int_type e then Upfrom (semantic_check_expression e)
-      else semantic_error "Index should be of type int."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_type ue) then
+          semantic_error "Index should be of type int."
+      in
+      Upfrom ue
   | Downfrom e ->
-      if check_of_int_type e then Downfrom (semantic_check_expression e)
-      else semantic_error "Index should be of type int."
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_type ue) then
+          semantic_error "Index should be of type int."
+      in
+      Downfrom ue
   | Between (e1, e2) ->
-      if check_of_int_type e1 && check_of_int_type e2 then
-        Between (semantic_check_expression e1, semantic_check_expression e2)
-      else semantic_error "Index should be of type int."
-
-and semantic_check_assignmentoperator op = op
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let _ =
+        if not (check_of_int_type ue1 && check_of_int_type ue2) then
+          semantic_error "Index should be of type int."
+      in
+      Between (ue1, ue2)
 
 (* Probably nothing to do here *)
+and semantic_check_assignmentoperator op = op
+
+(* OK up until here except expressions and statements and compatible indices*)
