@@ -202,7 +202,16 @@ let check_of_same_type_mod_conv vm e1 e2 =
 (* TODO: return decorated AST instead of plain one *)
 
 let rec semantic_check_program vm p =
-  match p with Program (bf, bd, btd, bp, btp, bm, bgq) ->
+  match p
+  with
+  | { functionblock= bf
+    ; datablock= bd
+    ; transformeddatablock= btd
+    ; parametersblock= bp
+    ; transformedparametersblock= btp
+    ; modelblock= bm
+    ; generatedquantitiesblock= bgq }
+  ->
     (* TODO: first load whole math library into the vm *)
     let _ = Symbol.enter vm "1currentblock" (Functions, True) in
     let ubf = semantic_check_functionblock vm bf in
@@ -220,7 +229,13 @@ let rec semantic_check_program vm p =
     let _ = Symbol.end_scope vm in
     let _ = Symbol.enter vm "1currentblock" (GQuant, True) in
     let ubgq = semantic_check_generatedquantitiesblock vm bgq in
-    Program (ubf, ubd, ubtd, ubp, ubtp, ubm, ubgq)
+    { functionblock= ubf
+    ; datablock= ubd
+    ; transformeddatablock= ubtd
+    ; parametersblock= ubp
+    ; transformedparametersblock= ubtp
+    ; modelblock= ubm
+    ; generatedquantitiesblock= ubgq }
 
 and semantic_check_functionblock vm bf =
   Core_kernel.Option.map bf (List.map (semantic_check_fundef vm))

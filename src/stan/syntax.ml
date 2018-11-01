@@ -13,14 +13,13 @@ open Core_kernel
 
 (* Programs. *)
 type program =
-  | Program of
-      functionblock
-      * datablock
-      * transformeddatablock
-      * parametersblock
-      * transformedparametersblock
-      * modelblock
-      * generatedquantitiesblock
+  { functionblock: functionblock
+  ; datablock: datablock
+  ; transformeddatablock: transformeddatablock
+  ; parametersblock: parametersblock
+  ; transformedparametersblock: transformedparametersblock
+  ; modelblock: modelblock
+  ; generatedquantitiesblock: generatedquantitiesblock }
 
 (* Blocks. *)
 and functionblock = fundef list option
@@ -41,9 +40,6 @@ and generatedquantitiesblock = topvardecl_or_statement list option
 and fundef = FunDef of returntype * identifier * argdecl list * statement
 
 and identifier = string
-
-(* TODO: represent numerals as strings *)
-and size = int64
 
 and argdecl =
   | DataArg of unsizedtype * identifier

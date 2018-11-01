@@ -12,7 +12,13 @@ let construct_program obf obd obtd obp obtp obm obg =
   let rbtp = match obtp with Some btp -> btp | _ -> None in
   let rbm = match obm with Some bm -> bm | _ -> None in
   let rbg = match obg with Some bg -> bg | _ -> None in
-  Program (rbf, rbd, rbtd, rbp, rbtp, rbm, rbg)
+  { functionblock= rbf
+  ; datablock= rbd
+  ; transformeddatablock= rbtd
+  ; parametersblock= rbp
+  ; transformedparametersblock= rbtp
+  ; modelblock= rbm
+  ; generatedquantitiesblock= rbg }
 
 let rec repeat n f x =
   if n <= Int64.zero then x else repeat (Int64.pred n) f (f x)
