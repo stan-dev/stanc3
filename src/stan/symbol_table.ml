@@ -27,11 +27,11 @@ module Symbol : SYMBOL = struct
   (* recall that OCaml hash tables store a stack of all the values for each key; this would allow us to use shadowing; if we don't want shadowing we can add an extra check here. *)
   let look s str = Hashtbl.find_opt s.table str
 
-  let begin_scope s = Stack.push "-" s.stack
+  let begin_scope s = Stack.push "-sentinel-new-scope-" s.stack
 
   (* using a string '-' here that can never be used as an identifier to indicate that new scope is entered *)
   let end_scope s =
-    while Stack.top s.stack <> "-" do
+    while Stack.top s.stack <> "-sentinel-new-scope-" do
       (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
       Hashtbl.remove s.table (Stack.top s.stack) ;
       let _ = Stack.pop s.stack in

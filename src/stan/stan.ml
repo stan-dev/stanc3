@@ -22,8 +22,7 @@ module CalcVar = Zoo.Main (struct
 
   (** The command that actually executes a command. *)
   let exec _ p =
-    let vm = Symbol_table.Symbol.initialize () in
-    let _ = Semantic_check.semantic_check_program vm p in
+    let _ = Semantic_check.semantic_check_program p in
     ()
 end)
 
