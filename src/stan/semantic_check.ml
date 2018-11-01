@@ -55,17 +55,6 @@ Implement function signatures as partial functions on types. Also implement oper
 Perhaps use Appel's imperative symbol table?
 *)
 
-(* semantic_check : program -> program | recursive function, side effecting on var_map *)
-(* var_map (imperative) stores type and block for each variable in scope + flags: in function body, in loop, in lpdf/model, in rng, current block; has operations new, enter, look, beginscope, endscope *)
-(* infer_expression_type : expression -> (type * block) option (recursively implemented calling var_map.look) *)
-(* use var_map.infer_expression_type to make sure all types are OK for operations we perform and to decorate AST with extra type information as we proceed *)
-(* use var_map enter to enter math library functions into var map at start of program *)
-(* use var_map enter to enter functions from function block and whenever we encounter a variable *)
-(* use begin scope and end scope to deal with block structure *)
-(* use new once to initialise var_map *)
-(* use var_map flags for checking other constraints *)
-(* specialised commonly used definitions like check_int, check_data *)
-
 open Symbol_table
 open Syntax
 
@@ -134,55 +123,6 @@ let rec unsizedtype_of_sizedtype = function
 let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 
 (* TODO: generalize this to arbitrary expressions? *)
-(* TODO: should throw if Funapp of non-returning function *)
-let infer_expression_type e = Some Int
-
-(*(function
-  | Conditional (e1, e2, e3) ->
-      if check_of_int_type e1 then
-        if check_of_same_type_mod_conv e2 e3 then
-          Conditional
-            ( semantic_check_expression e1
-            , semantic_check_expression e2
-            , semantic_check_expression e3 )
-        else
-          semantic_error
-            "Both branches of a conditional operator need to have the same \
-             type."
-      else semantic_error "Condition in conditional should be of type int."
-  | _ -> GetTarget *)
-
-(* Now, derive optional return type of statement as we semantically check it: fill in.
-If two brances of else return different, then throw.
-Return type of list is the first return type encountered.
-At return here, check that it matches the specified type. *)
-(* TODO: should throw if NRFunapp of returning function *)
-let infer_statement_return_type s = Some Void
-
-(* function
-  | Assignment (lhs, assop, e) ->
-      if
-        check_of_same_type_mod_conv
-          (Indexed (Variable (fst lhs), snd lhs))
-          e
-        (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
-      then
-        if look_block (fst lhs) = look_block "1currentblock" then
-          if look_block (fst lhs) = Some Data then
-            if look_block (fst lhs) = Some Param then
-              Assignment
-                ( semantic_check_lhs lhs
-                , semantic_check_assignmentoperator assop
-                , semantic_check_expression e )
-            else semantic_error "Parameters cannot be assigned to."
-          else semantic_error "Data variables cannot be assigned to."
-        else
-          semantic_error
-            "Variables from previous blocks cannot be assigned to."
-      else semantic_error "Assignment is ill-typed." 
-  | _ ->*)
-
-(* TODO!!!! Implement this *)
 
 let check_of_int_type e = match snd e with Some Int -> true | _ -> false
 
@@ -371,11 +311,15 @@ and semantic_check_topvardecl = function
 
 (* Probably nothing to check here. *)
 and semantic_check_compound_topvardecl_assign = function
-  | {sizedtype= st; transformation= trans; identifier= id; value= e} ->
+  | {sizedtype= st; transformation= trans; identifier= id; value= e} -> (
       let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
-      let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
-      TVDeclAss
-        {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+      match
+        semantic_check_statement (Assignment ((uid, []), Assign, e), None)
+      with
+      | Assignment ((uid, _), Assign, ue), Some Void ->
+          TVDeclAss
+            {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+      | _ -> semantic_error "Should never happen." )
 
 and semantic_check_vardecl vd =
   let st = fst vd in
@@ -397,10 +341,14 @@ and semantic_check_vardecl vd =
 
 (* Probably nothing to check here. *)
 and semantic_check_compound_vardecl_assign = function
-  | {sizedtype= st; identifier= id; value= e} ->
+  | {sizedtype= st; identifier= id; value= e} -> (
       let ust, uid = semantic_check_vardecl (st, id) in
-      let uid, uassop, ue = semantic_check_assign (uid, Assign, e) in
-      VDeclAss {sizedtype= ust; identifier= uid; value= ue}
+      match
+        semantic_check_statement (Assignment ((uid, []), Assign, e), None)
+      with
+      | Assignment ((uid, _), Assign, ue), Some Void ->
+          VDeclAss {sizedtype= ust; identifier= uid; value= ue}
+      | _ -> semantic_error "Should never happen." )
 
 (* Probably nothing to do here *)
 and semantic_check_topvardecl_or_statement tvds =
@@ -492,7 +440,28 @@ and semantic_check_transformation = function
   | Correlation -> Correlation
   | Covariance -> Covariance
 
-and semantic_check_expression e = (fst e, infer_expression_type e)
+(* TODO: should throw if Funapp of non-returning function *)
+(*(function
+  | Conditional (e1, e2, e3) ->
+      if check_of_int_type e1 then
+        if check_of_same_type_mod_conv e2 e3 then
+          Conditional
+            ( semantic_check_expression e1
+            , semantic_check_expression e2
+            , semantic_check_expression e3 )
+        else
+          semantic_error
+            "Both branches of a conditional operator need to have the same \
+             type."
+      else semantic_error "Condition in conditional should be of type int."
+  | _ -> GetTarget *)
+
+(* Now, derive optional return type of statement as we semantically check it: fill in.
+If two brances of else return different, then throw.
+Return type of list is the first return type encountered.
+At return here, check that it matches the specified type. *)
+(* TODO: should throw if NRFunapp of returning function *)
+and semantic_check_expression e = (fst e, Some Int)
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
@@ -511,8 +480,33 @@ and semantic_check_printable = function
       | Some (Fun _) -> semantic_error "Functions cannot be printed."
       | _ -> PExpr ue )
 
+(* function
+  | Assignment (lhs, assop, e) ->
+      if
+        check_of_same_type_mod_conv
+          (Indexed (Variable (fst lhs), snd lhs))
+          e
+        (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
+      then
+        if look_block (fst lhs) = look_block "1currentblock" then
+          if look_block (fst lhs) = Some Data then
+            if look_block (fst lhs) = Some Param then
+              Assignment
+                ( semantic_check_lhs lhs
+                , semantic_check_assignmentoperator assop
+                , semantic_check_expression e )
+            else semantic_error "Parameters cannot be assigned to."
+          else semantic_error "Data variables cannot be assigned to."
+        else
+          semantic_error
+            "Variables from previous blocks cannot be assigned to."
+      else semantic_error "Assignment is ill-typed." 
+  | _ ->*)
+
+(* TODO!!!! Implement this *)
+
 (* OK up until here *)
-and semantic_check_statement s = (fst s, infer_statement_return_type s)
+and semantic_check_statement s = (fst s, Some Void)
 
 and semantic_check_assign ass_s = ass_s
 
