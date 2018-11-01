@@ -29,7 +29,7 @@ Array expressions must be of uniform type. (Or mix of int and real)
 Typing of ~ and target +=
 Also check whether function arguments meet data requirement.
 Maybe should also infer bounds for every indexing that happens so we know what code to generate for bound checking?
-Every trace through function body contains return statement
+Every trace through function body contains return statement of right type
 In case of void function, no return statements anywhere
 All function arguments are distinct
 *)
@@ -77,31 +77,27 @@ type var_origin = Functions | Data | TData | Param | TParam | Model | GQuant
 (* NB DANGER: this file specifies an imperative tree algorithm which
    decorates the AST while operating on two bits of state:
    1) a global symbol table vm
-   2) some context flags context_flags, to communicate information up and down
+   2) some context flags context_flags, to communicate information down
       the AST   *)
 let vm = Symbol.initialize ()
 
 (* TODO: first load whole math library into the *)
 
 type context_flags_record =
-  { 
-    mutable current_block: var_origin
+  { mutable current_block: var_origin
   ; mutable in_fun_def: bool
-  ; mutable in_void_fun_def: bool
+  ; mutable in_returning_fun_def: bool
   ; mutable in_rng_fun_def: bool
   ; mutable in_lp_fun_def: bool
-  ; mutable in_loop: bool
-  ; mutable all_traces_return: bool }
+  ; mutable in_loop: bool }
 
 let context_flags =
-  { 
-    current_block= Functions
+  { current_block= Functions
   ; in_fun_def= false
-  ; in_void_fun_def= false
+  ; in_returning_fun_def= false
   ; in_rng_fun_def= false
   ; in_lp_fun_def= false
-  ; in_loop= false
-  ; all_traces_return= true }
+  ; in_loop= false }
 
 (* Some helper functions *)
 let dup_exists l =
@@ -133,13 +129,13 @@ let rec unsizedtype_of_sizedtype = function
 
 let vartype_of_sizedtype st = ReturnType (unsizedtype_of_sizedtype st)
 
-let look_block id = Some Data
+let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 
-(* TODO!!! *)
+(* TODO: generalize this to arbitrary expressions? *)
 
 let infer_type e = Some (ReturnType Int)
 
-(* TODO!!!! *)
+(* TODO!!!! Implement this *)
 
 let check_of_int_type e =
   match infer_type e with Some (ReturnType Int) -> true | _ -> false
@@ -174,6 +170,34 @@ let check_of_same_type_mod_conv e1 e2 =
 (* TODO: insert positions into semantic errors! *)
 
 (* TODO: return decorated AST instead of plain one *)
+
+let rec all_traces_return_type rt =
+  match rt with
+  | Void -> fun s -> true
+  | ReturnType ut -> (
+      function
+      | Assignment _ -> false
+      | NRFunApp _ -> false
+      | TargetPE _ -> false
+      | IncrementLogProb _ -> false
+      | Tilde _ -> false
+      | Break -> false
+      | Continue -> false
+      | Return e -> infer_type e = Some (ReturnType ut)
+      | Print _ -> false
+      | Reject _ -> true
+      | Skip -> false
+      | IfElse (_, s1, s2) ->
+          all_traces_return_type rt s1 && all_traces_return_type rt s2
+      | While (e, s) -> all_traces_return_type rt s
+      | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s}
+        ->
+          all_traces_return_type rt s
+      | ForEach (id, e, s) -> all_traces_return_type rt s
+      | Block l ->
+          List.exists
+            (function Stmt s -> all_traces_return_type rt s | _ -> false)
+            l )
 
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
@@ -232,58 +256,54 @@ and semantic_check_modelblock bm =
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
 
-and semantic_check_fundef fd =
-  match fd with {returntype= rt; name= id; arguments= args; body= b} -> (
-    let urt = semantic_check_returntype rt in
-    let uid = semantic_check_identifier id in
-    match Symbol.look vm id with
-    | Some x ->
-        let error_msg =
-          String.concat " " ["Identifier "; id; " is already in use."]
-        in
-        semantic_error error_msg
-    | None ->
-        let _ =
-          Symbol.enter vm id
-            ( Functions
-            , Fun
-                ( List.map
-                    (function DataArg (y, z) -> y | Arg (y, z) -> y)
-                    args
-                , rt ) )
-        in
-        let arg_names =
-          List.map (function DataArg (y, z) -> z | Arg (y, z) -> z) args
-        in
-        let _ =
-          if dup_exists arg_names then
-            semantic_error
-              "All function arguments should be distinct identifiers."
-        in
-        let uargs = List.map semantic_check_argdecl args in
-        let _ = if urt = Void then context_flags.in_void_fun_def <- true in
-        let _ = context_flags.all_traces_return <- true in
-        let _ = context_flags.in_fun_def <- true in
-        let _ =
-          if Filename.check_suffix id "_rng" then
-            context_flags.in_rng_fun_def <- true
-        in
-        let _ =
-          if Filename.check_suffix id "_lp" then
-            context_flags.in_lp_fun_def <- true
-        in
-        let ub = semantic_check_statement b in
-        let _ = context_flags.in_fun_def <- false in
-        let _ = context_flags.in_void_fun_def <- false in
-        let _ = context_flags.in_lp_fun_def <- false in
-        let _ = context_flags.in_rng_fun_def <- false in
-        let _ =
-          if context_flags.all_traces_return = false then
-            semantic_error
-              "Non-void function bodies must contain a return statement in \
-               every branch."
-        in
-        {returntype= urt; name= uid; arguments= uargs; body= ub} )
+(* OK up to here. *)
+and semantic_check_fundef = function
+  | {returntype= rt; name= id; arguments= args; body= b} ->
+      let urt = semantic_check_returntype rt in
+      let uid = semantic_check_identifier id in
+      let _ =
+        match Symbol.look vm id with
+        | Some x ->
+            let error_msg =
+              String.concat " " ["Identifier "; id; " is already in use."]
+            in
+            semantic_error error_msg
+        | None -> ()
+      in
+      let _ =
+        Symbol.enter vm id
+          ( context_flags.current_block
+          , Fun (List.map (function w, y, z -> (w, y)) args, rt) )
+      in
+      let arg_names = List.map (function w, y, z -> z) args in
+      let _ =
+        if dup_exists arg_names then
+          semantic_error
+            "All function arguments should be distinct identifiers."
+      in
+      let uargs = List.map semantic_check_argdecl args in
+      let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
+      let _ =
+        if not (all_traces_return_type urt b) then
+          semantic_error
+            "Non-void function bodies must contain a return statement of \
+             correct type in every branch."
+      in
+      let _ = context_flags.in_fun_def <- true in
+      let _ =
+        if Filename.check_suffix id "_rng" then
+          context_flags.in_rng_fun_def <- true
+      in
+      let _ =
+        if Filename.check_suffix id "_lp" then
+          context_flags.in_lp_fun_def <- true
+      in
+      let ub = semantic_check_statement b in
+      let _ = context_flags.in_fun_def <- false in
+      let _ = context_flags.in_returning_fun_def <- false in
+      let _ = context_flags.in_lp_fun_def <- false in
+      let _ = context_flags.in_rng_fun_def <- false in
+      {returntype= urt; name= uid; arguments= uargs; body= ub}
 
 and semantic_check_identifier id = id
 
@@ -294,11 +314,14 @@ and semantic_check_real r = r
 and semantic_check_size s = s
 
 (* Probably nothing to do here *)
+and semantic_check_argblock isdata = isdata
+
+(* Probably nothing to do here *)
 and semantic_check_argdecl = function
-  | DataArg (ut, id) ->
-      DataArg (semantic_check_unsizedtype ut, semantic_check_identifier id)
-  | Arg (ut, id) ->
-      DataArg (semantic_check_unsizedtype ut, semantic_check_identifier id)
+  | isdata, ut, id ->
+      ( semantic_check_argblock isdata
+      , semantic_check_unsizedtype ut
+      , semantic_check_identifier id )
 
 (* Probably nothing to do here *)
 and semantic_check_returntype = function

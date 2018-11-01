@@ -37,15 +37,16 @@ and fundef =
 
 and identifier = string
 
-and argdecl =
-  | DataArg of unsizedtype * identifier
-  | Arg of unsizedtype * identifier
+and argblock = Data | Any
+
+and argdecl = argblock * unsizedtype * identifier
 
 and returntype =
   | Void
   | ReturnType of unsizedtype
-  | Fun of unsizedtype list * returntype
+  | Fun of (argblock * unsizedtype) list * returntype
 
+(* TODO: move Fun to unsizedtype *)
 and unsizedtype =
   | Int
   | Real
