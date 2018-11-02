@@ -38,6 +38,7 @@ Primitives cannot be printed
 Functions cannot be printed
 User defined functions cannot be overloaded
 Function ending in _lp only where target is available
+TODO: Test that user defined functions with probability suffixes have right type.
 *)
 
 open Symbol_table
@@ -123,6 +124,9 @@ let rec lub_originblock = function
   | x :: xs ->
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
+
+let lub_op_originblock l =
+  lub_originblock (List.map (function None -> Functions | Some b -> b) l)
 
 let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
 
@@ -474,11 +478,18 @@ and semantic_check_expression x =
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let ue3 = semantic_check_expression e3 in
+      let returnblock =
+        lub_op_originblock
+          (List.map
+             (fun y -> Core_kernel.Option.map y fst)
+             (List.map snd [ue1; ue2; ue3]))
+      in
       match
         try_get_primitive_return_type "-operator-Conditional"
           [snd ue1; snd ue2; snd ue3]
       with
-      | Some rt -> (Conditional (ue1, ue2, ue3), Some rt)
+      | Some (ReturnType ut) ->
+          (Conditional (ue1, ue2, ue3), Some (returnblock, ut))
       | _ ->
           semantic_error
             "Ill-typed arguments supplied to Conditional operator." )
@@ -486,29 +497,44 @@ and semantic_check_expression x =
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
       let ue2 = semantic_check_expression e2 in
+      let returnblock =
+        lub_op_originblock
+          (List.map
+             (fun y -> Core_kernel.Option.map y fst)
+             (List.map snd [ue1; ue2]))
+      in
       let opname = Core_kernel.string_of_sexp (sexp_of_infixop uop) in
       match
         try_get_primitive_return_type ("-operator-" ^ opname) [snd ue1; snd ue2]
       with
-      | Some rt -> (InfixOp (ue1, uop, ue2), Some rt)
+      | Some (ReturnType ut) ->
+          (InfixOp (ue1, uop, ue2), Some (returnblock, ut))
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_prefixop op in
       let ue = semantic_check_expression e in
+      let returnblock =
+        lub_op_originblock
+          (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
+      in
       let opname = Core_kernel.string_of_sexp (sexp_of_prefixop uop) in
       match try_get_primitive_return_type ("-operator-" ^ opname) [snd ue] with
-      | Some rt -> (PrefixOp (uop, ue), Some rt)
+      | Some (ReturnType ut) -> (PrefixOp (uop, ue), Some (returnblock, ut))
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
+      let returnblock =
+        lub_op_originblock
+          (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
+      in
       let uop = semantic_check_postfixop op in
       let opname = Core_kernel.string_of_sexp (sexp_of_postfixop uop) in
       match try_get_primitive_return_type ("-operator-" ^ opname) [snd ue] with
-      | Some rt -> (PostfixOp (ue, uop), Some rt)
+      | Some (ReturnType ut) -> (PostfixOp (ue, uop), Some (returnblock, ut))
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
@@ -520,12 +546,115 @@ and semantic_check_expression x =
           semantic_error "Identifier not in scope."
       in
       (Variable uid, ort)
-  | IntNumeral s -> semantic_error "not implemented"
-  | RealNumeral s -> semantic_error "not implemented"
-  | FunApp (id, es) -> semantic_error "not implemented"
-  | CondFunApp (id, es) -> semantic_error "not implemented"
-  | GetLP -> semantic_error "not implemented"
-  | GetTarget -> semantic_error "not implemented"
+  | IntNumeral s -> (IntNumeral s, Some (Data, Int))
+  | RealNumeral s -> (RealNumeral s, Some (Data, Real))
+  | FunApp (id, es) -> (
+      let uid = semantic_check_identifier id in
+      let ues = List.map semantic_check_expression es in
+      let argumenttypes = List.map snd ues in
+      let _ =
+        if
+          Filename.check_suffix uid "_lp"
+          && not
+               ( context_flags.in_lp_fun_def
+               || context_flags.current_block = Model )
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
+      let returnblock =
+        lub_op_originblock
+          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+      in
+      match try_get_primitive_return_type uid argumenttypes with
+      | Some Void ->
+          semantic_error
+            "A returning function was expected but a non-returning function \
+             was supplied."
+      | Some (ReturnType ut) -> (FunApp (uid, ues), Some (returnblock, ut))
+      | _ -> (
+        match Symbol.look vm uid with
+        | Some (_, Fun (argumenttypes, Void)) ->
+            semantic_error
+              "A returning function was expected but a non-returning function \
+               was supplied."
+        | Some (_, Fun (argumenttypes, ReturnType ut)) ->
+            (FunApp (uid, ues), Some (returnblock, ut))
+        | _ ->
+            semantic_error
+              "A returning function was expected but a ground type value was \
+               supplied." ) )
+  | CondFunApp (id, es) -> (
+      let uid = semantic_check_identifier id in
+      let _ =
+        if
+          Filename.check_suffix uid "_lpdf"
+          || Filename.check_suffix uid "_lcdf"
+          || Filename.check_suffix uid "_lpmf"
+          || Filename.check_suffix uid "_lccdf"
+        then
+          semantic_error
+            "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
+             can make use of conditional notation."
+      in
+      let ues = List.map semantic_check_expression es in
+      let argumenttypes = List.map snd ues in
+      let _ =
+        if
+          Filename.check_suffix uid "_lp"
+          && not
+               ( context_flags.in_lp_fun_def
+               || context_flags.current_block = Model )
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
+      let returnblock =
+        lub_op_originblock
+          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+      in
+      match try_get_primitive_return_type uid argumenttypes with
+      | Some Void ->
+          semantic_error
+            "A returning function was expected but a non-returning function \
+             was supplied."
+      | Some (ReturnType ut) -> (CondFunApp (uid, ues), Some (returnblock, ut))
+      | _ -> (
+        match Symbol.look vm uid with
+        | Some (_, Fun (argumenttypes, Void)) ->
+            semantic_error
+              "A returning function was expected but a non-returning function \
+               was supplied."
+        | Some (_, Fun (argumenttypes, ReturnType ut)) ->
+            (CondFunApp (uid, ues), Some (returnblock, ut))
+        | _ ->
+            semantic_error
+              "A returning function was expected but a ground type value was \
+               supplied." ) )
+  | GetLP ->
+      let _ =
+        if
+          not
+            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
+      (GetLP, Some (Model, Real))
+  | GetTarget ->
+      let _ =
+        if
+          not
+            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
+      (GetTarget, Some (Model, Real))
   | ArrayExpr es -> semantic_error "not implemented"
   | RowVectorExpr es -> semantic_error "not implemented"
   | Paren e -> semantic_error "not implemented"
@@ -551,6 +680,8 @@ and semantic_check_printable = function
 
 and semantic_check_statement s =
   match fst s with
+  (* TODO: treat assignment operators as primitives here.
+They may in fact have a different signature than you expect!  *)
   | Assignment ((id, lindex), assop, e) ->
       let uid, ulindex = semantic_check_lhs (id, lindex) in
       let uassop = semantic_check_assignmentoperator assop in
