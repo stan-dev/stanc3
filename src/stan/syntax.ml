@@ -38,9 +38,9 @@ and fundef =
 
 and identifier = string
 
-and argblock = Data | Any
+and originblock = Functions | Data | TData | Param | TParam | Model | GQuant
 
-and argdecl = argblock * unsizedtype * identifier
+and argdecl = originblock * unsizedtype * identifier
 
 and returntype = Void | ReturnType of unsizedtype
 
@@ -51,7 +51,7 @@ and unsizedtype =
   | RowVector
   | Matrix
   | Array of unsizedtype
-  | Fun of (argblock * unsizedtype) list * returntype
+  | Fun of (originblock * unsizedtype) list * returntype
 
 and topvardecl = sizedtype * transformation * identifier
 
@@ -100,7 +100,7 @@ and transformation =
   | Covariance
 
 (* Expressions. *)
-and expression = untypedexpression * unsizedtype option
+and expression = untypedexpression * (originblock * unsizedtype) option
 
 and untypedexpression =
   | Conditional of expression * expression * expression

@@ -70,10 +70,6 @@ open Syntax
 let semantic_error ?loc msg =
   Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
-(* A type to keep track of the origin of variables *)
-type var_origin = Functions | Data | TData | Param | TParam | Model | GQuant
-[@@deriving sexp, compare]
-
 (* e.g. compare Data Model = -1  and compare GQuant Functions = 1 *)
 
 (* NB DANGER: this file specifies an imperative tree algorithm which
@@ -90,7 +86,7 @@ let is_primitive_name name = false
 let vm = Symbol.initialize ()
 
 type context_flags_record =
-  { mutable current_block: var_origin
+  { mutable current_block: originblock
   ; mutable in_fun_def: bool
   ; mutable in_returning_fun_def: bool
   ; mutable in_rng_fun_def: bool
@@ -131,21 +127,26 @@ let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 
 (* TODO: generalize this to arbitrary expressions? *)
 
-let check_of_int_type e = match snd e with Some Int -> true | _ -> false
+let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
 
-let check_of_real_type e = match snd e with Some Real -> true | _ -> false
+let check_of_real_type e =
+  match snd e with Some (_, Real) -> true | _ -> false
 
 let check_of_int_or_real_type e =
-  match snd e with Some Int -> true | Some Real -> true | _ -> false
+  match snd e with
+  | Some (_, Int) -> true
+  | Some (_, Real) -> true
+  | _ -> false
 
 (* TODO!!! *)
 let check_compatible_indices e lindex = true
 
 let check_of_same_type_mod_conv e1 e2 =
   match snd e1 with
-  | Some t1 -> (
+  | Some (_, t1) -> (
     match snd e2 with
-    | Some t2 -> t1 = t2 || (t1 = Real && t1 = Int) || (t1 = Int && t1 = Real)
+    | Some (_, t2) ->
+        t1 = t2 || (t1 = Real && t1 = Int) || (t1 = Int && t1 = Real)
     | _ -> false )
   | _ -> false
 
@@ -340,7 +341,7 @@ and semantic_check_compound_topvardecl_assign = function
       | Assignment ((uid, _), Assign, ue), Some Void ->
           TVDeclAss
             {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
-      | _ -> semantic_error "This should never happen. Please file a bug.." )
+      | _ -> semantic_error "This should never happen. Please file a bug." )
 
 and semantic_check_vardecl vd =
   let st = fst vd in
@@ -489,7 +490,9 @@ If two brances of else return different, then throw.
 Return type of list is the first return type encountered.
 At return here, check that it matches the specified type. *)
 (* TODO: should throw if NRFunapp of returning function *)
-and semantic_check_expression e = (fst e, Some Int)
+and semantic_check_expression e =
+  semantic_error "not implemented" ;
+  (fst e, Some (Data, Int))
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
@@ -505,7 +508,8 @@ and semantic_check_printable = function
   | PExpr e -> (
       let ue = semantic_check_expression e in
       match snd ue with
-      | Some (Fun _) -> semantic_error "Functions cannot be printed."
+      | Some (_, Fun _) -> semantic_error "Functions cannot be printed."
+      | None -> semantic_error "Primitives cannot be printed."
       | _ -> PExpr ue )
 
 (* function
@@ -547,10 +551,28 @@ and semantic_check_statement s =
           semantic_error "Type mismatch in assignment"
       in
       (Assignment ((uid, ulindex), uassop, ue), Some Void)
-  | NRFunApp (id, es) ->
+  | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
-      semantic_error "not implemented"
+      let argumenttypes = List.map snd ues in
+      match try_get_primitive_return_type uid argumenttypes with
+      | Some Void -> (NRFunApp (uid, ues), Some Void)
+      | Some (ReturnType _) ->
+          semantic_error
+            "A non-returning function was expected but a returning function \
+             was supplied."
+      | _ -> (
+        match Symbol.look vm uid with
+        | Some (_, Fun (argumenttypes, Void)) ->
+            (NRFunApp (uid, ues), Some Void)
+        | Some (_, Fun (argumenttypes, ReturnType _)) ->
+            semantic_error
+              "A non-returning function was expected but a returning function \
+               was supplied."
+        | _ ->
+            semantic_error
+              "A non-returning function was expected but a ground type value \
+               was supplied." ) )
   | TargetPE e -> semantic_error "not implemented"
   | IncrementLogProb e -> semantic_error "not implemented"
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
@@ -575,7 +597,7 @@ and semantic_check_statement s =
              definitions."
       in
       let ue = semantic_check_expression e in
-      (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType x))
+      (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType (snd x)))
   | Print ps -> semantic_error "not implemented"
   | Reject ps -> semantic_error "not implemented"
   | Skip -> (Skip, Some Void)
