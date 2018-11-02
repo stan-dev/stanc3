@@ -81,7 +81,7 @@ type var_origin = Functions | Data | TData | Param | TParam | Model | GQuant
    1) a global symbol table vm
    2) some context flags context_flags, to communicate information down
       the AST   *)
-let vm = Symbol.initialize ()
+let vm = Symbol.initialize (fun x y -> false)
 
 (* TODO: first load whole math library into the *)
 
