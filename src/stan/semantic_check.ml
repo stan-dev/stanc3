@@ -125,7 +125,11 @@ let rec unsizedtype_of_sizedtype = function
 
 let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
 
-(* TODO: generalize this to arbitrary expressions? *)
+let rec lub_originblock = function
+  | [] -> Functions
+  | x :: xs ->
+      let y = lub_originblock xs in
+      if compare_originblock x y < 0 then y else x
 
 let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
 
@@ -581,7 +585,14 @@ and semantic_check_statement s =
             "A real or int needs to be supplied to increment target."
       in
       (TargetPE e, Some Void)
-  | IncrementLogProb e -> semantic_error "not implemented"
+  | IncrementLogProb e ->
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error
+            "A real or int needs to be supplied to increment LogProb."
+      in
+      (IncrementLogProb e, Some Void)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       semantic_error "not implemented"
   | Break ->
