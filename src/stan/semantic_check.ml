@@ -494,9 +494,32 @@ and semantic_check_expression x =
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
-  | PrefixOp (op, e) -> semantic_error "not implemented"
-  | PostfixOp (e, op) -> semantic_error "not implemented"
-  | Variable id -> semantic_error "not implemented"
+  | PrefixOp (op, e) -> (
+      let uop = semantic_check_prefixop op in
+      let ue = semantic_check_expression e in
+      let opname = Core_kernel.string_of_sexp (sexp_of_prefixop uop) in
+      match try_get_primitive_return_type ("-operator-" ^ opname) [snd ue] with
+      | Some rt -> (PrefixOp (uop, ue), Some rt)
+      | _ ->
+          semantic_error
+            ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
+  | PostfixOp (e, op) -> (
+      let ue = semantic_check_expression e in
+      let uop = semantic_check_postfixop op in
+      let opname = Core_kernel.string_of_sexp (sexp_of_postfixop uop) in
+      match try_get_primitive_return_type ("-operator-" ^ opname) [snd ue] with
+      | Some rt -> (PostfixOp (ue, uop), Some rt)
+      | _ ->
+          semantic_error
+            ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
+  | Variable id ->
+      let uid = semantic_check_identifier id in
+      let ort = Symbol.look vm id in
+      let _ =
+        if ort = None && not (is_primitive_name uid) then
+          semantic_error "Identifier not in scope."
+      in
+      (Variable uid, ort)
   | IntNumeral s -> semantic_error "not implemented"
   | RealNumeral s -> semantic_error "not implemented"
   | FunApp (id, es) -> semantic_error "not implemented"
@@ -535,6 +558,17 @@ and semantic_check_statement s =
       let ue2 =
         semantic_check_expression
           (Indexed ((Variable uid, None), ulindex), None)
+      in
+      let uidoblock =
+        if is_primitive_name uid then Some Functions
+        else Core_kernel.Option.map (Symbol.look vm uid) fst
+      in
+      let _ =
+        match uidoblock with
+        | Some Functions -> semantic_error "Cannot assign to function."
+        | Some Data -> semantic_error "Cannot assign to data."
+        | Some Param -> semantic_error "Cannot assign to parameter."
+        | _ -> ()
       in
       let _ =
         if not (check_of_same_type_mod_conv ue ue2) then
