@@ -72,6 +72,9 @@ let semantic_error ?loc msg =
 
 (* A type to keep track of the origin of variables *)
 type var_origin = Functions | Data | TData | Param | TParam | Model | GQuant
+[@@deriving sexp, compare]
+
+(* e.g. compare Data Model = -1  and compare GQuant Functions = 1 *)
 
 (* NB DANGER: this file specifies an imperative tree algorithm which
    decorates the AST while operating on two bits of state:

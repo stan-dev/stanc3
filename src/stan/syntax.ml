@@ -200,4 +200,4 @@ and assignmentoperator =
   | EltDivideAssign
   | ArrowAssign
   (* deprecated *)
-[@@deriving sexp]
+[@@deriving sexp, compare]
