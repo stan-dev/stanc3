@@ -165,7 +165,8 @@ and untypedstatement =
   | Print of printable list
   | Reject of printable list
   | Skip
-  | IfElse of expression * statement * statement
+  | IfThenElse of expression * statement * statement
+  | IfThen of expression * statement
   | While of expression * statement
   | For of
       { loop_variable: identifier

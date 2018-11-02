@@ -496,9 +496,9 @@ truncation:
 
 nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement 
-    {  grammar_logger "ifelse_statement" ; IfElse (e, s1, s2) }
+    {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, s2) }
   | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE 
-    {  grammar_logger "if_statement" ; IfElse (e, s, (Skip, None)) }
+    {  grammar_logger "if_statement" ; IfThen (e, s) }
   | WHILE LPAREN e=expression RPAREN s=statement 
     {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=IDENTIFIER IN e1=expression COLON e2=expression RPAREN

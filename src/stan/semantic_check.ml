@@ -656,15 +656,115 @@ and semantic_check_statement s =
       in
       let ue = semantic_check_expression e in
       (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType (snd x)))
-  | Print ps -> semantic_error "not implemented"
-  | Reject ps -> semantic_error "not implemented"
+  | Print ps ->
+      let ups = List.map semantic_check_printable ps in
+      (Print ps, Some Void)
+  | Reject ps ->
+      let ups = List.map semantic_check_printable ps in
+      (Reject ps, Some Void)
   | Skip -> (Skip, Some Void)
-  | IfElse (e, s1, s2) -> semantic_error "not implemented"
-  | While (e, s) -> semantic_error "not implemented"
+  | IfThen (e, s) ->
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error
+            "Condition in conditional needs to be of type int or real."
+      in
+      let us = semantic_check_statement s in
+      (IfThen (ue, us), snd us)
+  | IfThenElse (e, s1, s2) ->
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error
+            "Condition in conditional needs to be of type int or real."
+      in
+      let us1 = semantic_check_statement s1 in
+      let us2 = semantic_check_statement s2 in
+      let _ =
+        if not (snd us1 = snd us2) then
+          semantic_error
+            "Branches of conditional need to have the same return type."
+      in
+      (IfThenElse (ue, us1, us2), snd us1)
+  | While (e, s) ->
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error
+            "Condition in while loop needs to be of type int or real."
+      in
+      let _ = context_flags.in_loop <- true in
+      let us = semantic_check_statement s in
+      let _ = context_flags.in_loop <- false in
+      (While (ue, us), snd us)
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
-      semantic_error "not implemented"
-  | ForEach (id, e, s) -> semantic_error "not implemented"
-  | Block vdsl -> semantic_error "not implemented"
+      let uid = semantic_check_identifier id in
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let _ =
+        if not (check_of_int_or_real_type ue1) then
+          semantic_error "Lower bound of for-loop needs to be of type int."
+      in
+      let _ =
+        if not (check_of_int_or_real_type ue2) then
+          semantic_error "Upper bound of for-loop needs to be of type int."
+      in
+      let _ = context_flags.in_loop <- true in
+      let us = semantic_check_statement s in
+      let _ = context_flags.in_loop <- false in
+      ( For
+          { loop_variable= uid
+          ; lower_bound= ue1
+          ; upper_bound= ue2
+          ; loop_body= us }
+      , snd us )
+  | ForEach (id, e, s) ->
+      let ue = semantic_check_expression e in
+      let _ =
+        match snd ue with
+        | Some (_, Int) ->
+            semantic_error
+              "Foreach loop must be over array, vector, row_vector or matrix"
+        | Some (_, Real) ->
+            semantic_error
+              "Foreach loop must be over array, vector, row_vector or matrix"
+        | Some (_, Fun _) ->
+            semantic_error
+              "Foreach loop must be over array, vector, row_vector or matrix"
+        | _ -> ()
+      in
+      let _ = context_flags.in_loop <- true in
+      let us = semantic_check_statement s in
+      let _ = context_flags.in_loop <- false in
+      (While (ue, us), snd us)
+  | Block vdsl ->
+      let uvdsl = List.map semantic_check_vardecl_or_statement vdsl in
+      let rec compute_ort = function
+        | [] -> Some Void
+        | x :: xs -> (
+          match x with
+          | false, Some (ReturnType x) -> Some (ReturnType x)
+          | true, y ->
+              if compute_ort xs = y then y
+              else
+                semantic_error
+                  "Branches of conditional need to have the same return type."
+          | false, Some Void -> compute_ort xs
+          | _ ->
+              semantic_error "This should never happen. Please report a bug." )
+      in
+      let temp =
+        List.map
+          (function
+            | VDecl x -> (false, Some Void)
+            | VDeclAss x -> (false, Some Void)
+            | Stmt (IfThen _, ort) -> (true, ort)
+            | Stmt (_, ort) -> (false, ort))
+          uvdsl
+      in
+      semantic_error "not implemented" ;
+      (Block uvdsl, compute_ort temp)
 
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
