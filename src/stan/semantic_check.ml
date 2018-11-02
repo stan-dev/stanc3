@@ -568,7 +568,12 @@ and semantic_check_statement s =
         | Some Functions -> semantic_error "Cannot assign to function."
         | Some Data -> semantic_error "Cannot assign to data."
         | Some Param -> semantic_error "Cannot assign to parameter."
-        | _ -> ()
+        | Some b ->
+            if b = context_flags.current_block then ()
+            else
+              semantic_error
+                "Cannot assign to variable declared in previous blocks."
+        | _ -> semantic_error "This should never happen. Please file a bug."
       in
       let _ =
         if not (check_of_same_type_mod_conv ue ue2) then
