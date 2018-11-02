@@ -489,27 +489,6 @@ and semantic_check_transformation = function
   | Correlation -> Correlation
   | Covariance -> Covariance
 
-(* TODO: should throw if Funapp of non-returning function *)
-(*(function
-  | Conditional (e1, e2, e3) ->
-      if check_of_int_type e1 then
-        if check_of_same_type_mod_conv e2 e3 then
-          Conditional
-            ( semantic_check_expression e1
-            , semantic_check_expression e2
-            , semantic_check_expression e3 )
-        else
-          semantic_error
-            "Both branches of a conditional operator need to have the same \
-             type."
-      else semantic_error "Condition in conditional should be of type int."
-  | _ -> GetTarget *)
-
-(* Now, derive optional return type of statement as we semantically check it: fill in.
-If two brances of else return different, then throw.
-Return type of list is the first return type encountered.
-At return here, check that it matches the specified type. *)
-(* TODO: should throw if NRFunapp of returning function *)
 and semantic_check_expression e =
   semantic_error "not implemented" ;
   (fst e, Some (Data, Int))
@@ -532,30 +511,6 @@ and semantic_check_printable = function
       | None -> semantic_error "Primitives cannot be printed."
       | _ -> PExpr ue )
 
-(* function
-  | Assignment (lhs, assop, e) ->
-      if
-        check_of_same_type_mod_conv
-          (Indexed (Variable (fst lhs), snd lhs))
-          e
-        (* TODO: This is probably too simplified. Go over all compound assignment operators to check their signature. *)
-      then
-        if look_block (fst lhs) = look_block "1currentblock" then
-          if look_block (fst lhs) = Some Data then
-            if look_block (fst lhs) = Some Param then
-              Assignment
-                ( semantic_check_lhs lhs
-                , semantic_check_assignmentoperator assop
-                , semantic_check_expression e )
-            else semantic_error "Parameters cannot be assigned to."
-          else semantic_error "Data variables cannot be assigned to."
-        else
-          semantic_error
-            "Variables from previous blocks cannot be assigned to."
-      else semantic_error "Assignment is ill-typed." 
-  | _ ->*)
-
-(* TODO!!!! Implement this *)
 and semantic_check_statement s =
   match fst s with
   | Assignment ((id, lindex), assop, e) ->
@@ -739,7 +694,9 @@ and semantic_check_statement s =
       let _ = context_flags.in_loop <- false in
       (While (ue, us), snd us)
   | Block vdsl ->
+      let _ = Symbol.begin_scope vm in
       let uvdsl = List.map semantic_check_vardecl_or_statement vdsl in
+      let _ = Symbol.end_scope vm in
       let rec compute_ort = function
         | [] -> Some Void
         | x :: xs -> (
