@@ -573,7 +573,14 @@ and semantic_check_statement s =
             semantic_error
               "A non-returning function was expected but a ground type value \
                was supplied." ) )
-  | TargetPE e -> semantic_error "not implemented"
+  | TargetPE e ->
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_or_real_type ue) then
+          semantic_error
+            "A real or int needs to be supplied to increment target."
+      in
+      (TargetPE e, Some Void)
   | IncrementLogProb e -> semantic_error "not implemented"
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       semantic_error "not implemented"
