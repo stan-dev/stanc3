@@ -34,6 +34,9 @@ In case of void function, no return statements anywhere
 All function arguments are distinct
 Function applications are returning functions
 NRFunction applications are non-returning functions
+Primitives cannot be printed
+Functions cannot be printed
+User defined functions cannot be overloaded
 *)
 
 (*
@@ -78,10 +81,21 @@ let semantic_error ?loc msg =
    2) some context flags context_flags, to communicate information down
       the AST   *)
 
+(* This is ugly. An ideal treatment of function overloading works by carrying around*
+   a LAZY set of types for each expression. However, that's awkward in OCaml.
+   Perhaps an argument for Haskell after all?
+   OCaml does have lazy lists. Perhaps those could be used for this purpose?
+   Or implement our own lazy sets?
+   
+*)
 (* TODO: first load whole math library into try_get_primitive_return_type -- we are using a predicate here because the functions are overloaded so heavily  *)
-let try_get_primitive_return_type name argtypes = None
+let try_get_primitive_return_type name argtypes =
+  semantic_error "not implemented" ;
+  None
 
-let is_primitive_name name = false
+let is_primitive_name name =
+  semantic_error "not implemented" ;
+  false
 
 let vm = Symbol.initialize ()
 
@@ -143,7 +157,9 @@ let check_of_int_or_real_type e =
   | _ -> false
 
 (* TODO!!! *)
-let check_compatible_indices e lindex = true
+let check_compatible_indices e lindex =
+  semantic_error "not implemented" ;
+  true
 
 let check_of_same_type_mod_conv e1 e2 =
   match snd e1 with
@@ -594,7 +610,31 @@ and semantic_check_statement s =
       in
       (IncrementLogProb e, Some Void)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-      semantic_error "not implemented"
+      let ue = semantic_check_expression e in
+      let uid = semantic_check_identifier id in
+      let ues = List.map semantic_check_expression es in
+      let ut = semantic_check_truncation t in
+      let argumenttypes = snd ue :: List.map snd ues in
+      if
+        try_get_primitive_return_type (uid ^ "_lpdf") argumenttypes = Some Real
+        || try_get_primitive_return_type (uid ^ "_lpmf") argumenttypes
+           = Some Real
+        || Symbol.look vm uid
+           = Some
+               ( Functions
+               , Fun
+                   ( List.map
+                       (function
+                         | Some x -> x
+                         | _ ->
+                             semantic_error
+                               "This should never happen. Please report a bug.")
+                       argumenttypes
+                   , ReturnType Real ) )
+      then
+        ( Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
+        , Some Void )
+      else semantic_error "Ill-typed arguments to '~' statement."
   | Break ->
       let _ =
         if not context_flags.in_loop then
