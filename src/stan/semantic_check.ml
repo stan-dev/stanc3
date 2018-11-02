@@ -81,9 +81,13 @@ type var_origin = Functions | Data | TData | Param | TParam | Model | GQuant
    1) a global symbol table vm
    2) some context flags context_flags, to communicate information down
       the AST   *)
-let vm = Symbol.initialize (fun x y -> false)
 
-(* TODO: first load whole math library into the *)
+(* TODO: first load whole math library into try_get_primitive_return_type -- we are using a predicate here because the functions are overloaded so heavily  *)
+let try_get_primitive_return_type name argtypes = None
+
+let is_primitive_name name = false
+
+let vm = Symbol.initialize ()
 
 type context_flags_record =
   { mutable current_block: var_origin
@@ -209,6 +213,13 @@ and semantic_check_fundef = function
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
       let _ =
+        if is_primitive_name uid then
+          let error_msg =
+            String.concat " " ["Identifier "; id; " clashes with primitive."]
+          in
+          semantic_error error_msg
+      in
+      let _ =
         match Symbol.look vm uid with
         | Some x ->
             let error_msg =
@@ -294,6 +305,13 @@ and semantic_check_topvardecl = function
       let uid = semantic_check_identifier id in
       let vt = unsizedtype_of_sizedtype st in
       let _ =
+        if is_primitive_name uid then
+          let error_msg =
+            String.concat " " ["Identifier "; id; " clashes with primitive."]
+          in
+          semantic_error error_msg
+      in
+      let _ =
         match Symbol.look vm uid with
         | Some x ->
             let error_msg =
@@ -330,6 +348,13 @@ and semantic_check_vardecl vd =
   let ust = semantic_check_sizedtype st in
   let uid = semantic_check_identifier id in
   let vt = unsizedtype_of_sizedtype st in
+  let _ =
+    if is_primitive_name uid then
+      let error_msg =
+        String.concat " " ["Identifier "; id; " clashes with primitive."]
+      in
+      semantic_error error_msg
+  in
   let _ =
     match Symbol.look vm id with
     | Some x ->
