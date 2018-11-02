@@ -519,7 +519,10 @@ and semantic_check_statement s =
           semantic_error "Type mismatch in assignment"
       in
       (Assignment ((uid, ulindex), uassop, ue), Some Void)
-  | NRFunApp (id, es) -> semantic_error "not implemented"
+  | NRFunApp (id, es) ->
+      let uid = semantic_check_identifier id in
+      let ues = List.map semantic_check_expression es in
+      semantic_error "not implemented"
   | TargetPE e -> semantic_error "not implemented"
   | IncrementLogProb e -> semantic_error "not implemented"
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
