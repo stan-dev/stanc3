@@ -643,7 +643,7 @@ and semantic_check_expression x =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (GetLP, Some (Model, Real))
+      (GetLP, Some (context_flags.current_block, Real))
   | GetTarget ->
       let _ =
         if
@@ -654,11 +654,60 @@ and semantic_check_expression x =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (GetTarget, Some (Model, Real))
-  | ArrayExpr es -> semantic_error "not implemented"
-  | RowVectorExpr es -> semantic_error "not implemented"
-  | Paren e -> semantic_error "not implemented"
-  | Indexed (e, indices) -> semantic_error "not implemented"
+      (GetTarget, Some (context_flags.current_block, Real))
+  | ArrayExpr es ->
+      let ues = List.map semantic_check_expression es in
+      let elementtypes =
+        List.map
+          (fun y ->
+            match snd y with
+            | None ->
+                semantic_error "This should never happen. Please file a bug."
+            | Some x -> snd x )
+          ues
+      in
+      let _ =
+        if List.exists (fun x -> x <> List.hd elementtypes) elementtypes then
+          semantic_error
+            "Array expression should have entries of consistent type."
+      in
+      let returnblock =
+        lub_op_originblock
+          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+      in
+      (ArrayExpr ues, Some (returnblock, Array (List.hd elementtypes)))
+  | RowVectorExpr es ->
+      let ues = List.map semantic_check_expression es in
+      let elementtypes =
+        List.map
+          (fun y ->
+            match snd y with
+            | None ->
+                semantic_error "This should never happen. Please file a bug."
+            | Some x -> snd x )
+          ues
+      in
+      let _ =
+        if List.exists (fun x -> not (x = Real || x = Int)) elementtypes then
+          semantic_error
+            "Row_vector expression should have int or real entries."
+      in
+      let returnblock =
+        lub_op_originblock
+          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+      in
+      (RowVectorExpr ues, Some (returnblock, Array (List.hd elementtypes)))
+  | Paren e ->
+      let ue = semantic_check_expression e in
+      (Paren ue, snd ue)
+  | Indexed (e, indices) ->
+      let ue = semantic_check_expression e in
+      let uindices = List.map semantic_check_index indices in
+      let _ =
+        if not (check_compatible_indices ue uindices) then
+          semantic_error "Incompatible indices in indexed expression."
+      in
+      (Indexed (ue, uindices), semantic_error "not implemented")
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
@@ -683,6 +732,7 @@ and semantic_check_statement s =
   (* TODO: treat assignment operators as primitives here.
 They may in fact have a different signature than you expect!  *)
   | Assignment ((id, lindex), assop, e) ->
+      let _ = semantic_error "not correctly implemented" in
       let uid, ulindex = semantic_check_lhs (id, lindex) in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in

@@ -96,6 +96,10 @@ sep_list(X, Y):
   | x=X xys=list(pair(Y, X))
     { x :: List.map snd xys }
 
+nonempty_sep_list(X, Y):
+  | x=X xys=list(pair(Y, X))
+    { x :: List.map snd xys }
+
 (* Grammar *)
 
 (* file-program *)
@@ -331,9 +335,9 @@ common_expression:
     {  grammar_logger "intnumeral" ; IntNumeral i }
   | r=REALNUMERAL 
     {  grammar_logger "realnumeral" ; RealNumeral r }
-  | LBRACE xs=sep_list(expression, COMMA) RBRACE 
+  | LBRACE xs=nonempty_sep_list(expression, COMMA) RBRACE 
     {  grammar_logger "array_expression" ; ArrayExpr xs  } (* potential shift/reduce conflict with blocks *)
-  | LBRACK xs=sep_list(expression, COMMA) RBRACK 
+  | LBRACK xs=nonempty_sep_list(expression, COMMA) RBRACK 
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs } (* potential shift/reduce conflict with indexing *)
   | id=IDENTIFIER LPAREN args=sep_list(expression, COMMA) RPAREN 
     {  grammar_logger "fun_app" ; FunApp (id, args) }
