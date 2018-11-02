@@ -37,25 +37,7 @@ NRFunction applications are non-returning functions
 Primitives cannot be printed
 Functions cannot be printed
 User defined functions cannot be overloaded
-*)
-
-(*
-To store:
-Function sigs from math library 
-Variables in scope at each point in program
-Type of every variable at point in program
-Block of every variable in program 
-For code generation, important to remember type of various expressions to know how to instantiate overloaded functions 
-*)
-
-(* Other ideas:
-Annotate identifiers (function apps) with signature during sem checking. That's all we need for code generation 
-Add extra optional field of type sig to every function app. Leave blank during parsing. Fill in during sem checking. Return decorated parse tree at end of recursive algorithm. Build up var map imperatively as you go
-Same with for each loop bounds. 
-Don't really seem to need function sigs after all for code generation as the names are the same in C++.
-Build up hash table (and break down again) with variables in scope (as strings) mapping to type and block, while we traverse the tree.
-Implement function signatures as partial functions on types. Also implement operators that way. That lets us quickly compute the type of an expression.
-Perhaps use Appel's imperative symbol table?
+Function ending in _lp only where target is available
 *)
 
 open Symbol_table
@@ -89,13 +71,10 @@ let semantic_error ?loc msg =
    
 *)
 (* TODO: first load whole math library into try_get_primitive_return_type -- we are using a predicate here because the functions are overloaded so heavily  *)
-let try_get_primitive_return_type name argtypes =
-  semantic_error "not implemented" ;
-  None
+let try_get_primitive_return_type name argtypes = None
 
-let is_primitive_name name =
-  semantic_error "not implemented" ;
-  false
+(* TODO *)
+let is_primitive_name name = false
 
 let vm = Symbol.initialize ()
 
@@ -489,9 +468,45 @@ and semantic_check_transformation = function
   | Correlation -> Correlation
   | Covariance -> Covariance
 
-and semantic_check_expression e =
-  semantic_error "not implemented" ;
-  (fst e, Some (Data, Int))
+and semantic_check_expression x =
+  match fst x with
+  | Conditional (e1, e2, e3) -> (
+      let ue1 = semantic_check_expression e1 in
+      let ue2 = semantic_check_expression e2 in
+      let ue3 = semantic_check_expression e3 in
+      match
+        try_get_primitive_return_type "-operator-Conditional"
+          [snd ue1; snd ue2; snd ue3]
+      with
+      | Some rt -> (Conditional (ue1, ue2, ue3), Some rt)
+      | _ ->
+          semantic_error
+            "Ill-typed arguments supplied to Conditional operator." )
+  | InfixOp (e1, op, e2) -> (
+      let ue1 = semantic_check_expression e1 in
+      let uop = semantic_check_infixop op in
+      let ue2 = semantic_check_expression e2 in
+      let opname = Core_kernel.string_of_sexp (sexp_of_infixop uop) in
+      match
+        try_get_primitive_return_type ("-operator-" ^ opname) [snd ue1; snd ue2]
+      with
+      | Some rt -> (InfixOp (ue1, uop, ue2), Some rt)
+      | _ ->
+          semantic_error
+            ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
+  | PrefixOp (op, e) -> semantic_error "not implemented"
+  | PostfixOp (e, op) -> semantic_error "not implemented"
+  | Variable id -> semantic_error "not implemented"
+  | IntNumeral s -> semantic_error "not implemented"
+  | RealNumeral s -> semantic_error "not implemented"
+  | FunApp (id, es) -> semantic_error "not implemented"
+  | CondFunApp (id, es) -> semantic_error "not implemented"
+  | GetLP -> semantic_error "not implemented"
+  | GetTarget -> semantic_error "not implemented"
+  | ArrayExpr es -> semantic_error "not implemented"
+  | RowVectorExpr es -> semantic_error "not implemented"
+  | Paren e -> semantic_error "not implemented"
+  | Indexed (e, indices) -> semantic_error "not implemented"
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
@@ -530,6 +545,17 @@ and semantic_check_statement s =
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
       let argumenttypes = List.map snd ues in
+      let _ =
+        if
+          Filename.check_suffix uid "_lp"
+          && not
+               ( context_flags.in_lp_fun_def
+               || context_flags.current_block = Model )
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
       match try_get_primitive_return_type uid argumenttypes with
       | Some Void -> (NRFunApp (uid, ues), Some Void)
       | Some (ReturnType _) ->
@@ -555,6 +581,15 @@ and semantic_check_statement s =
           semantic_error
             "A real or int needs to be supplied to increment target."
       in
+      let _ =
+        if
+          not
+            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
       (TargetPE e, Some Void)
   | IncrementLogProb e ->
       let ue = semantic_check_expression e in
@@ -563,6 +598,15 @@ and semantic_check_statement s =
           semantic_error
             "A real or int needs to be supplied to increment LogProb."
       in
+      let _ =
+        if
+          not
+            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
       (IncrementLogProb e, Some Void)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
@@ -570,6 +614,15 @@ and semantic_check_statement s =
       let ues = List.map semantic_check_expression es in
       let ut = semantic_check_truncation t in
       let argumenttypes = snd ue :: List.map snd ues in
+      let _ =
+        if
+          not
+            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+        then
+          semantic_error
+            "Target can only be accessed in the model block or in definitions \
+             of functions with the suffix _lp."
+      in
       if
         try_get_primitive_return_type (uid ^ "_lpdf") argumenttypes = Some Real
         || try_get_primitive_return_type (uid ^ "_lpmf") argumenttypes
@@ -720,7 +773,6 @@ and semantic_check_statement s =
             | Stmt (_, ort) -> (false, ort))
           uvdsl
       in
-      semantic_error "not implemented" ;
       (Block uvdsl, compute_ort temp)
 
 and semantic_check_truncation = function
