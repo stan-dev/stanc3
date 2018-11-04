@@ -70,11 +70,12 @@ let optimize e =
 
 let%expect_test _ =
   print_s [%sexp
-    ((optimize (FnApp("plus",
-                      [FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])]);
-                       FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])])])))
+    ((optimize
+        (FnApp("plus",
+               [FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])]);
+                FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])])])))
      : expr)];
   [%expect{|
-      (ExprList
-       ((AssignExpr sym1 (FnApp log1m ((Var hi))))
-        (FnApp plus ((Var sym1) (Var sym1))))) |}]
+    (ExprList
+     ((AssignExpr sym1 (FnApp log1m ((Var hi))))
+      (FnApp plus ((Var sym1) (Var sym1))))) |}]
