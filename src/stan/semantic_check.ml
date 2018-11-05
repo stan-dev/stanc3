@@ -39,6 +39,8 @@ Functions cannot be printed
 User defined functions cannot be overloaded
 Function ending in _lp only where target is available
 TODO: Test that user defined functions with probability suffixes have right type.
+(Mutual) recursive functions have a definition
+Make sure return types of statements involving continue and break are correct.
 *)
 
 open Symbol_table
@@ -1017,6 +1019,8 @@ and semantic_check_statement s =
       in
       (Block uvdsl, compute_ort temp)
 
+(* TODO: this is still not doing the correct thing in case a statement
+         has dead code due to break or continue statements      *)
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
   | TruncateUpFrom e ->
