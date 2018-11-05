@@ -868,8 +868,13 @@ let basic_bare_array_type = function
   | ReturnType Matrix -> ReturnType (Array Matrix)
   | _ -> semantic_error "This should never happen. Please report a bug."
 
-let rec bare_array_type (t, i) = match i with 0 -> t
-                                | j -> basic_bare_array_type (bare_array_type (t, j-1))
+let rec bare_array_type (t, i) =
+  match i with
+  | 0 -> t
+  | j -> basic_bare_array_type (bare_array_type (t, j - 1))
+
+let for_all_vector_types s =
+  for i = 0 to 5 do (s (all_vector_types i)) done
 
 let try_get_primitive_return_type name argtypes = None
 
@@ -900,28 +905,28 @@ let _ =
     add_plain
       ( "append_array"
       , bare_array_type (ReturnType Int, i)
-      , [bare_array_type (ReturnType Int, i)
-      ; bare_array_type (ReturnType Int, i)] ) ;
+      , [ bare_array_type (ReturnType Int, i)
+        ; bare_array_type (ReturnType Int, i) ] ) ;
     add_plain
       ( "append_array"
       , bare_array_type (ReturnType Real, i)
       , [ bare_array_type (ReturnType Real, i)
-      ; bare_array_type (ReturnType Real, i) ]) ;
+        ; bare_array_type (ReturnType Real, i) ] ) ;
     add_plain
       ( "append_array"
       , bare_array_type (ReturnType Vector, i)
-      ,[ bare_array_type (ReturnType Vector, i)
-      ; bare_array_type (ReturnType Vector, i)] ) ;
+      , [ bare_array_type (ReturnType Vector, i)
+        ; bare_array_type (ReturnType Vector, i) ] ) ;
     add_plain
       ( "append_array"
       , bare_array_type (ReturnType RowVector, i)
-      , [bare_array_type (ReturnType RowVector, i)
-      ; bare_array_type (ReturnType RowVector, i) ]) ;
+      , [ bare_array_type (ReturnType RowVector, i)
+        ; bare_array_type (ReturnType RowVector, i) ] ) ;
     add_plain
       ( "append_array"
       , bare_array_type (ReturnType Matrix, i)
       , [ bare_array_type (ReturnType Matrix, i)
-      ; bare_array_type (ReturnType Matrix, i) ])
+        ; bare_array_type (ReturnType Matrix, i) ] )
   done ;
   add_unary_vectorized "asin" ;
   add_unary_vectorized "asinh" ;
@@ -933,22 +938,60 @@ let _ =
       add_plain
         ( "bernoulli_ccdf_log"
         , ReturnType Real
-        , [ int_vector_types i
-        ; vector_types j ]) ;
+        , [int_vector_types i; vector_types j] ) ;
       add_plain
         ("bernoulli_cdf", ReturnType Real, [int_vector_types i; vector_types j]) ;
       add_plain
         ( "bernoulli_cdf_log"
         , ReturnType Real
-        , [int_vector_types i
-        ; vector_types j ]) ;
+        , [int_vector_types i; vector_types j] ) ;
       add_plain
         ("bernoulli_log", ReturnType Real, [int_vector_types i; vector_types j]) ;
       add_plain
-        ("bernoulli_lccdf", ReturnType Real, [int_vector_types i; vector_types j]) ;
+        ( "bernoulli_lccdf"
+        , ReturnType Real
+        , [int_vector_types i; vector_types j] ) ;
       add_plain
-        ("bernoulli_lcdf", ReturnType Real, [int_vector_types i; vector_types j]) ;
+        ( "bernoulli_lcdf"
+        , ReturnType Real
+        , [int_vector_types i; vector_types j] ) ;
       add_plain
-        ("bernoulli_lpmf", ReturnType Real,[ int_vector_types i; vector_types j])
+        ( "bernoulli_lpmf"
+        , ReturnType Real
+        , [int_vector_types i; vector_types j] )
     done
-  done
+  done ;
+  for_all_vector_types (fun t ->
+      add_plain ("bernoulli_rng", rng_return_type t, [t]) ) ;
+  for_all_vector_types (fun t ->
+      add_plain ("bernoulli_logit_rng", rng_return_type t, [t]) ) ;
+  for i = 0 to int_vector_types_size do
+    for j = 0 to vector_types_size do
+      add_plain
+        ( "bernoulli_logit_log"
+        , ReturnType Real
+        , [int_vector_types i; vector_types j] ) ;
+      add_plain
+        ( "bernoulli_logit_lpmf"
+        , ReturnType Real
+        , [int_vector_types i; vector_types j] )
+    done
+  done ;
+  add_plain
+    ( "bernoulli_logit_glm_lpmf"
+    , ReturnType Real
+    , [ bare_array_type (ReturnType Int, 1)
+      ; ReturnType Matrix
+      ; ReturnType Real
+      ; ReturnType Vector ] ) ;
+  add_plain
+    ( "bernoulli_logit_glm_lpmf"
+    , ReturnType Real
+    , [ bare_array_type (ReturnType Int, 1)
+      ; ReturnType Matrix
+      ; ReturnType Vector
+      ; ReturnType Vector ] ) ;
+  add_plain
+    ("bessel_first_kind", ReturnType Real, [ReturnType Int; ReturnType Real]) ;
+  add_plain
+    ("bessel_second_kind", ReturnType Real, [ReturnType Int; ReturnType Real])

@@ -1,9 +1,9 @@
 ;
-Core_kernel.List.map  all_vector_types  (  fun t -> 
-     add_plain ("bernoulli_rng",  (rng_return_type  e) (t), t) 
+for_all_vector_types  (  fun t -> 
+     add_plain ("bernoulli_rng",  (rng_return_type) (t), t) 
  ) 
-Core_kernel.List.map  all_vector_types  (  fun t -> 
-    add_plain ("bernoulli_logit_rng",  (rng_return_type  e) (t), t) 
+for_all_vector_types  (  fun t -> 
+    add_plain ("bernoulli_logit_rng",  (rng_return_type) (t), t) 
  )
 ; for i = 0 to int_vector_types_size do  
   for j = 0 to vector_types_size do    (
@@ -52,9 +52,9 @@ Core_kernel.List.map  all_vector_types  (  fun t ->
 	    vector_types k , vector_types l ) 
       ) done ;
 Core_kernel.List.map  int_vector_types  (   fun t -> 
-  Core_kernel.List.map  all_vector_types  (  fun u -> 
-    Core_kernel.List.map  all_vector_types  (   fun v -> 
-         add_plain ("beta_binomial_rng",  (rng_return_type  e) (t, u, v), t, u, v) 
+  for_all_vector_types  (  fun u -> 
+    for_all_vector_types  (   fun v -> 
+         add_plain ("beta_binomial_rng",  (rng_return_type) (t, u, v), t, u, v) 
     ) 
   ) 
  ) 
@@ -78,14 +78,14 @@ Core_kernel.List.map  int_vector_types  (   fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  (   fun t -> 
-  Core_kernel.List.map  all_vector_types  (   fun u -> 
-       add_plain ("beta_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  (   fun t -> 
+  for_all_vector_types  (   fun u -> 
+       add_plain ("beta_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  )  ;
 Core_kernel.List.map  vector_types  (   fun t -> 
   Core_kernel.List.map  vector_types  (   fun u -> 
-    Core_kernel.List.map  all_vector_types  (   fun v -> 
+    for_all_vector_types  (   fun v -> 
          add_plain ("beta_proportion_ccdf_log",  ((ReturnType Real)), t, u, v) 
         ; add_plain ("beta_proportion_cdf_log",  ((ReturnType Real)), t, u, v) 
         ; add_plain ("beta_proportion_log",  ((ReturnType Real)), t, u, v) 
@@ -96,8 +96,8 @@ Core_kernel.List.map  vector_types  (   fun t ->
   ) 
  ) ;
 Core_kernel.List.map  vector_types  (   fun t -> 
-  Core_kernel.List.map  all_vector_types  (   fun u -> 
-       add_plain ("beta_proportion_rng",  (rng_return_type  e) (t, u), t, u) 
+  for_all_vector_types  (   fun u -> 
+       add_plain ("beta_proportion_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("binary_log_loss",  ((ReturnType Real)),  (ReturnType Int),  ((ReturnType Real))) 
@@ -122,8 +122,8 @@ Core_kernel.List.map  vector_types  (   fun t ->
   ) done
 ) done ;
 Core_kernel.List.map  int_vector_types  (   fun t -> 
-  Core_kernel.List.map  all_vector_types  (   fun u -> 
-      add_plain ("binomial_rng",  (rng_return_type  e) (t, u), t, u) 
+  for_all_vector_types  (   fun u -> 
+      add_plain ("binomial_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_binary ("binomial_coefficient_log") 
@@ -168,9 +168,9 @@ Core_kernel.List.map  int_vector_types  (   fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-      add_plain ("cauchy_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+      add_plain ("cauchy_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) ;
    add_plain ("append_col",  ((ReturnType Matrix)),  ((ReturnType Matrix)),  ((ReturnType Matrix))) 
@@ -200,8 +200,8 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
         vector_types j ) 
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-     add_plain ("chi_square_rng",  (rng_return_type  e) (t), t) 
+for_all_vector_types  ( fun t -> 
+     add_plain ("chi_square_rng",  (rng_return_type) (t), t) 
  ) done
   ; add_plain ("cholesky_decompose",  ((ReturnType Matrix)),  ((ReturnType Matrix))) 
   ; add_plain ("choose",  (ReturnType Int),  (ReturnType Int),  (ReturnType Int)) 
@@ -299,9 +299,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("double_exponential_rng",  (rng_return_type  e) (t, u), t, u) 
+; for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("double_exponential_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_nullary ("e") 
@@ -349,10 +349,10 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-    Core_kernel.List.map  all_vector_types  ( fun v -> 
-         add_plain ("exp_mod_normal_rng",  (rng_return_type  e) (t, u, v), t, u, v) 
+; for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+    for_all_vector_types  ( fun v -> 
+         add_plain ("exp_mod_normal_rng",  (rng_return_type) (t, u, v), t, u, v) 
     ) 
   ) 
  ) 
@@ -368,8 +368,8 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
       ; add_plain ("exponential_lpdf",  ((ReturnType Real)), vector_types i , vector_types j ) 
   ) done
  ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-     add_plain ("exponential_rng",  (rng_return_type  e) (t), t) 
+; for_all_vector_types  ( fun t -> 
+     add_plain ("exponential_rng",  (rng_return_type) (t), t) 
  ) 
   ; add_unary_vectorized ("fabs") 
   ; add_plain ("falling_factorial",  ((ReturnType Real)),  ((ReturnType Real)),  (ReturnType Int)) 
@@ -400,9 +400,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("frechet_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("frechet_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
 ; for i = 0 to vector_types_size do    (
@@ -427,9 +427,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
  ) done
   ; add_binary ("gamma_p") 
   ; add_binary ("gamma_q") 
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("gamma_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("gamma_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("gaussian_dlm_obs_log",  ((ReturnType Real)),  ((ReturnType Matrix)),  ((ReturnType Matrix)),  ((ReturnType Matrix)),
@@ -461,9 +461,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("gumbel_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("gumbel_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("head",  ((ReturnType RowVector)),  ((ReturnType RowVector)),  (ReturnType Int)) 
@@ -496,8 +496,8 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
       ; add_plain ("inv_chi_square_lpdf",  ((ReturnType Real)), vector_types i , vector_types j ) 
   ) done
  ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-    add_plain ("inv_chi_square_rng",  (rng_return_type  e) (t), t) 
+; for_all_vector_types  ( fun t -> 
+    add_plain ("inv_chi_square_rng",  (rng_return_type) (t), t) 
  ) 
   ; add_unary_vectorized ("inv_cloglog") 
 ; for i = 0 to vector_types_size do    (
@@ -520,9 +520,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("inv_gamma_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("inv_gamma_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_unary_vectorized ("inv_logit") 
@@ -618,9 +618,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-      add_plain ("logistic_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+      add_plain ("logistic_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_unary_vectorized ("logit") 
@@ -644,9 +644,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("lognormal_rng",  (rng_return_type  e) (t, u), t, u) 
+; for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("lognormal_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_nullary ("machine_precision") 
@@ -805,19 +805,19 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
 ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("neg_binomial_rng",  (rng_return_type  e) (t, u), t, u) 
+; for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("neg_binomial_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("neg_binomial_2_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("neg_binomial_2_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("neg_binomial_2_log_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("neg_binomial_2_log_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("neg_binomial_2_log_glm_lpmf",
@@ -855,9 +855,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("normal_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("normal_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("normal_id_glm_lpdf",
@@ -949,9 +949,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("pareto_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("pareto_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
 ; for i = 0 to vector_types_size do    (
@@ -976,10 +976,10 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-    Core_kernel.List.map  all_vector_types  ( fun v -> 
-        add_plain ("pareto_type_2_rng",  (rng_return_type  e) (t, u, v), t, u, v) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+    for_all_vector_types  ( fun v -> 
+        add_plain ("pareto_type_2_rng",  (rng_return_type) (t, u, v), t, u, v) 
     ) 
   ) 
  ) 
@@ -1004,8 +1004,8 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
         vector_types j ) 
   ) done
 ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-    add_plain ("poisson_rng",  (rng_return_type  e) (t), t) 
+for_all_vector_types  ( fun t -> 
+    add_plain ("poisson_rng",  (rng_return_type) (t), t) 
  ) 
 ; for i = 0 to int_vector_types_size do    (
    for j = 0 to vector_types_size do    (
@@ -1015,8 +1015,8 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
         vector_types j ) 
   ) done
 ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-     add_plain ("poisson_log_rng",  (rng_return_type  e) (t), t) 
+for_all_vector_types  ( fun t -> 
+     add_plain ("poisson_log_rng",  (rng_return_type) (t), t) 
  ) 
   ; add_plain ("poisson_log_glm_lpmf",
      ((ReturnType Real)),
@@ -1058,8 +1058,8 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
       ; add_plain ("rayleigh_lpdf",  ((ReturnType Real)), vector_types i , vector_types j ) 
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-    add_plain ("rayleigh_rng",  (rng_return_type  e) (t), t) 
+for_all_vector_types  ( fun t -> 
+    add_plain ("rayleigh_rng",  (rng_return_type) (t), t) 
  ) 
   ; add_plain ("append_row",  ((ReturnType Matrix)),  ((ReturnType Matrix)),  ((ReturnType Matrix))) 
   ; add_plain ("append_row",  ((ReturnType Matrix)),  ((ReturnType RowVector)),  ((ReturnType Matrix))) 
@@ -1121,9 +1121,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("scaled_inv_chi_square_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("scaled_inv_chi_square_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("sd",  ((ReturnType Real)),  (bare_array_type ((ReturnType Real), 1))) 
@@ -1173,10 +1173,10 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done
-; Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-    Core_kernel.List.map  all_vector_types  ( fun v -> 
-         add_plain ("skew_normal_rng",  (rng_return_type  e) (t, u, v), t, u, v) 
+; for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+    for_all_vector_types  ( fun v -> 
+         add_plain ("skew_normal_rng",  (rng_return_type) (t, u, v), t, u, v) 
     ) 
   ) 
  ) 
@@ -1233,10 +1233,10 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-    Core_kernel.List.map  all_vector_types  ( fun v -> 
-         add_plain ("student_t_rng",  (rng_return_type  e) (t, u, v), t, u, v) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+    for_all_vector_types  ( fun v -> 
+         add_plain ("student_t_rng",  (rng_return_type) (t, u, v), t, u, v) 
     ) 
   ) 
  ) 
@@ -1334,9 +1334,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("uni; form_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("uni; form_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
   ; add_plain ("variance",  ((ReturnType Real)),  (bare_array_type ((ReturnType Real), 1))) 
@@ -1353,9 +1353,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
 ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-       add_plain ("von_mises_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+       add_plain ("von_mises_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
 ; for i = 0 to vector_types_size do    (
@@ -1378,9 +1378,9 @@ Core_kernel.List.map  all_vector_types  ( fun t ->
     ) done
   ) done
  ) done ;
-Core_kernel.List.map  all_vector_types  ( fun t -> 
-  Core_kernel.List.map  all_vector_types  ( fun u -> 
-      add_plain ("weibull_rng",  (rng_return_type  e) (t, u), t, u) 
+for_all_vector_types  ( fun t -> 
+  for_all_vector_types  ( fun u -> 
+      add_plain ("weibull_rng",  (rng_return_type) (t, u), t, u) 
   ) 
  ) 
 ; for i = 0 to vector_types_size do    (
