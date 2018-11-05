@@ -139,11 +139,6 @@ let check_of_int_or_real_type e =
   | Some (_, Real) -> true
   | _ -> false
 
-(* TODO!!! *)
-let check_compatible_indices e lindex =
-  semantic_error "not implemented" ;
-  Some (Data, Array Int)
-
 let check_of_same_type_mod_conv e1 e2 =
   match snd e1 with
   | Some (_, t1) -> (
@@ -512,7 +507,7 @@ and semantic_check_expression x =
           (InfixOp (ue1, uop, ue2), Some (returnblock, ut))
       | _ ->
           semantic_error
-            ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
+            ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_prefixop op in
       let ue = semantic_check_expression e in
@@ -525,7 +520,7 @@ and semantic_check_expression x =
       | Some (ReturnType ut) -> (PrefixOp (uop, ue), Some (returnblock, ut))
       | _ ->
           semantic_error
-            ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
+            ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
       let returnblock =
@@ -538,7 +533,7 @@ and semantic_check_expression x =
       | Some (ReturnType ut) -> (PostfixOp (ue, uop), Some (returnblock, ut))
       | _ ->
           semantic_error
-            ("Ill-typed arguments supplied to" ^ opname ^ "operator.") )
+            ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | Variable id ->
       let uid = semantic_check_identifier id in
       let ort = Symbol.look vm id in
@@ -701,12 +696,54 @@ and semantic_check_expression x =
   | Paren e ->
       let ue = semantic_check_expression e in
       (Paren ue, snd ue)
-  | Indexed (e, indices) -> (
+  | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
-      match check_compatible_indices ue uindices with
-      | None -> semantic_error "Incompatible indices in indexed expression."
-      | ort -> (Indexed (ue, uindices), ort) )
+      let infer_type_of_indexed etype index =
+        let originaltype, reducedtype =
+          match etype with
+          | Some (_, Array ut) -> (Array ut, ut)
+          | Some (_, Vector) -> (Vector, Real)
+          | Some (_, RowVector) -> (RowVector, Real)
+          | Some (_, Matrix) -> (Matrix, RowVector)
+          | _ ->
+              semantic_error
+                "Only expressions of array, matrix, row_vector and vector \
+                 type may be indexed."
+        in
+        match index with
+        | All -> etype
+        | Single e1 ->
+            let e1type = snd e1 in
+            let originblock =
+              lub_op_originblock
+                (List.map
+                   (fun x -> Core_kernel.Option.map x fst)
+                   [etype; e1type])
+            in
+            Some (originblock, reducedtype)
+        | Upfrom e1 | Downfrom e1 ->
+            let e1type = snd e1 in
+            let originblock =
+              lub_op_originblock
+                (List.map
+                   (fun x -> Core_kernel.Option.map x fst)
+                   [etype; e1type])
+            in
+            Some (originblock, originaltype)
+        | Between (e1, e2) ->
+            let e1type = snd e1 in
+            let e2type = snd e2 in
+            let originblock =
+              lub_op_originblock
+                (List.map
+                   (fun x -> Core_kernel.Option.map x fst)
+                   [etype; e1type; e2type])
+            in
+            Some (originblock, originaltype)
+      in
+      ( Indexed (ue, uindices)
+      , List.fold_left infer_type_of_indexed (snd ue) uindices )
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
