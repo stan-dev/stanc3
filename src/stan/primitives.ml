@@ -818,6 +818,15 @@ let all_vector_types = function
 
 let all_vector_types_size = 6
 
+let eigen_vector_types = function
+  | 0 -> ReturnType Vector
+  | 1 -> ReturnType (Array Vector)
+  | 2 -> ReturnType RowVector
+  | 3 -> ReturnType (Array RowVector)
+  | _ -> semantic_error "This should never happen. Please report a bug."
+
+let eigen_vector_types_size = 4
+
 let is_primitive = function
   | ReturnType Real -> true
   | ReturnType Int -> true
@@ -2036,4 +2045,404 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("logistic_rng", rng_return_type Real [t; u], [t; u]) ) )
+          add_plain ("logistic_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+  add_unary_vectorized "logit" ;
+  for i = 0 to vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        add_plain
+          ( "lognormal_ccdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "lognormal_cdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "lognormal_cdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "lognormal_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "lognormal_lccdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "lognormal_lcdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "lognormal_lpdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] )
+      done
+    done
+  done ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain ("lognormal_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+  add_nullary "machine_precision" ;
+  add_plain ("matrix_exp", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_plain
+    ( "matrix_exp_multiply"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain ("max", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
+  add_plain ("max", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
+  add_plain ("max", ReturnType Real, [ReturnType Vector]) ;
+  add_plain ("max", ReturnType Real, [ReturnType RowVector]) ;
+  add_plain ("max", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain ("max", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
+  add_plain
+    ("mdivide_left", ReturnType Vector, [ReturnType Matrix; ReturnType Vector]) ;
+  add_plain
+    ("mdivide_left", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
+  add_plain
+    ( "mdivide_left_spd"
+    , ReturnType Vector
+    , [ReturnType Matrix; ReturnType Vector] ) ;
+  add_plain
+    ( "mdivide_left_spd"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain
+    ( "mdivide_left_tri_low"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain
+    ( "mdivide_left_tri_low"
+    , ReturnType Vector
+    , [ReturnType Matrix; ReturnType Vector] ) ;
+  add_plain
+    ( "mdivide_right"
+    , ReturnType RowVector
+    , [ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ( "mdivide_right_spd"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain
+    ( "mdivide_right_spd"
+    , ReturnType RowVector
+    , [ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ("mdivide_right", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
+  add_plain
+    ( "mdivide_right_tri_low"
+    , ReturnType RowVector
+    , [ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ( "mdivide_right_tri_low"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain ("mean", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
+  add_plain ("mean", ReturnType Real, [ReturnType Vector]) ;
+  add_plain ("mean", ReturnType Real, [ReturnType RowVector]) ;
+  add_plain ("mean", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain ("min", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
+  add_plain ("min", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
+  add_plain ("min", ReturnType Real, [ReturnType Vector]) ;
+  add_plain ("min", ReturnType Real, [ReturnType RowVector]) ;
+  add_plain ("min", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain ("min", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
+  add_plain ("minus", ReturnType Real, [ReturnType Real]) ;
+  add_plain ("minus", ReturnType Vector, [ReturnType Vector]) ;
+  add_plain ("minus", ReturnType RowVector, [ReturnType RowVector]) ;
+  add_plain ("minus", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_plain
+    ( "modified_bessel_first_kind"
+    , ReturnType Real
+    , [ReturnType Int; ReturnType Real] ) ;
+  add_plain
+    ( "modified_bessel_second_kind"
+    , ReturnType Real
+    , [ReturnType Int; ReturnType Real] ) ;
+  add_plain ("modulus", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
+  add_plain
+    ( "multi_gp_log"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
+  add_plain
+    ( "multi_gp_lpdf"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
+  add_plain
+    ( "multi_gp_cholesky_log"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
+  add_plain
+    ( "multi_gp_cholesky_lpdf"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
+  for k = 0 to 4 - 1 do
+    for l = 0 to 4 - 1 do
+      add_plain
+        ( "multi_normal_cholesky_log"
+        , ReturnType Real
+        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+      add_plain
+        ( "multi_normal_cholesky_lpdf"
+        , ReturnType Real
+        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+      add_plain
+        ( "multi_normal_log"
+        , ReturnType Real
+        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+      add_plain
+        ( "multi_normal_lpdf"
+        , ReturnType Real
+        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+      add_plain
+        ( "multi_normal_prec_log"
+        , ReturnType Real
+        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+      add_plain
+        ( "multi_normal_prec_lpdf"
+        , ReturnType Real
+        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+      add_plain
+        ( "multi_student_t_log"
+        , ReturnType Real
+        , [ eigen_vector_types k
+          ; ReturnType Real
+          ; eigen_vector_types l
+          ; ReturnType Matrix ] ) ;
+      add_plain
+        ( "multi_student_t_lpdf"
+        , ReturnType Real
+        , [ eigen_vector_types k
+          ; ReturnType Real
+          ; eigen_vector_types l
+          ; ReturnType Matrix ] )
+    done
+  done ;
+  add_plain
+    ( "multi_normal_rng"
+    , ReturnType Vector
+    , [ReturnType Vector; ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_rng"
+    , bare_array_type (ReturnType Vector, 1)
+    , [bare_array_type (ReturnType Vector, 1); ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_rng"
+    , ReturnType Vector
+    , [ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_rng"
+    , bare_array_type (ReturnType Vector, 1)
+    , [bare_array_type (ReturnType RowVector, 1); ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_cholesky_rng"
+    , ReturnType Vector
+    , [ReturnType Vector; ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_cholesky_rng"
+    , bare_array_type (ReturnType Vector, 1)
+    , [bare_array_type (ReturnType Vector, 1); ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_cholesky_rng"
+    , ReturnType Vector
+    , [ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_normal_cholesky_rng"
+    , bare_array_type (ReturnType Vector, 1)
+    , [bare_array_type (ReturnType RowVector, 1); ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_student_t_rng"
+    , ReturnType Vector
+    , [ReturnType Real; ReturnType Vector; ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_student_t_rng"
+    , bare_array_type (ReturnType Vector, 1)
+    , [ ReturnType Real
+      ; bare_array_type (ReturnType Vector, 1)
+      ; ReturnType Matrix ] ) ;
+  add_plain
+    ( "multi_student_t_rng"
+    , ReturnType Vector
+    , [ReturnType Real; ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ( "multi_student_t_rng"
+    , bare_array_type (ReturnType Vector, 1)
+    , [ ReturnType Real
+      ; bare_array_type (ReturnType RowVector, 1)
+      ; ReturnType Matrix ] ) ;
+  add_plain
+    ( "multinomial_log"
+    , ReturnType Real
+    , [bare_array_type (ReturnType Int, 1); ReturnType Vector] ) ;
+  add_plain
+    ( "multinomial_lpmf"
+    , ReturnType Real
+    , [bare_array_type (ReturnType Int, 1); ReturnType Vector] ) ;
+  add_plain
+    ( "multinomial_rng"
+    , bare_array_type (ReturnType Int, 1)
+    , [ReturnType Vector; ReturnType Int] ) ;
+  add_plain ("multiply", ReturnType Real, [ReturnType Real; ReturnType Real]) ;
+  add_plain
+    ("multiply", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
+  add_plain
+    ("multiply", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
+  add_plain
+    ("multiply", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
+  add_plain
+    ("multiply", ReturnType Real, [ReturnType RowVector; ReturnType Vector]) ;
+  add_plain
+    ("multiply", ReturnType Matrix, [ReturnType Vector; ReturnType RowVector]) ;
+  add_plain
+    ("multiply", ReturnType Vector, [ReturnType Matrix; ReturnType Vector]) ;
+  add_plain
+    ( "multiply"
+    , ReturnType RowVector
+    , [ReturnType RowVector; ReturnType Matrix] ) ;
+  add_plain
+    ("multiply", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
+  add_plain
+    ("multiply", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
+  add_plain
+    ("multiply", ReturnType RowVector, [ReturnType Real; ReturnType RowVector]) ;
+  add_plain
+    ("multiply", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
+  add_binary "multiply_log" ;
+  add_plain
+    ( "multiply_lower_tri_self_transpose"
+    , ReturnType Matrix
+    , [ReturnType Matrix] ) ;
+  for i = 0 to int_vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        add_plain
+          ( "neg_binomial_ccdf_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_cdf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_cdf_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_lccdf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_lcdf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_lpmf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_ccdf_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_cdf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_cdf_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_lccdf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_lcdf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_lpmf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_log_log"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "neg_binomial_2_log_lpmf"
+          , ReturnType Real
+          , [int_vector_types i; vector_types j; vector_types k] )
+      done
+    done
+  done ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain ("neg_binomial_rng", rng_return_type Int [t; u], [t; u]) )
+  ) ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain ("neg_binomial_2_rng", rng_return_type Int [t; u], [t; u])
+      ) ) ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain
+            ("neg_binomial_2_log_rng", rng_return_type Int [t; u], [t; u]) ) ) ;
+  add_plain
+    ( "neg_binomial_2_log_glm_lpmf"
+    , ReturnType Real
+    , [ bare_array_type (ReturnType Int, 1)
+      ; ReturnType Matrix
+      ; ReturnType Real
+      ; ReturnType Vector
+      ; ReturnType Real ] ) ;
+  add_plain
+    ( "neg_binomial_2_log_glm_lpmf"
+    , ReturnType Real
+    , [ bare_array_type (ReturnType Int, 1)
+      ; ReturnType Matrix
+      ; ReturnType Vector
+      ; ReturnType Vector
+      ; ReturnType Real ] ) ;
+  add_nullary "negative_infinity" ;
+  for i = 0 to vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        add_plain
+          ( "normal_ccdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "normal_cdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "normal_cdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "normal_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "normal_lccdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "normal_lcdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "normal_lpdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] )
+      done
+    done
+  done
