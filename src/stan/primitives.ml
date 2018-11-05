@@ -19,759 +19,6 @@ open Syntax
 let semantic_error ?loc msg =
   Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
-let primitive_names =
-  [ "abs"
-  ; "abs"
-  ; "acos"
-  ; "acosh"
-  ; "add"
-  ; "add"
-  ; "add"
-  ; "add"
-  ; "add"
-  ; "add"
-  ; "add"
-  ; "add"
-  ; "append_array"
-  ; "append_array"
-  ; "append_array"
-  ; "append_array"
-  ; "append_array"
-  ; "asin"
-  ; "asinh"
-  ; "atan"
-  ; "atan2"
-  ; "atanh"
-  ; "bernoulli_ccdf_log"
-  ; "bernoulli_cdf"
-  ; "bernoulli_cdf_log"
-  ; "bernoulli_log"
-  ; "bernoulli_lccdf"
-  ; "bernoulli_lcdf"
-  ; "bernoulli_lpmf"
-  ; "bernoulli_rng"
-  ; "bernoulli_logit_rng"
-  ; "bernoulli_logit_log"
-  ; "bernoulli_logit_lpmf"
-  ; "bernoulli_logit_glm_lpmf"
-  ; "bernoulli_logit_glm_lpmf"
-  ; "bessel_first_kind"
-  ; "bessel_second_kind"
-  ; "beta_binomial_ccdf_log"
-  ; "beta_binomial_cdf"
-  ; "beta_binomial_cdf_log"
-  ; "beta_binomial_log"
-  ; "beta_binomial_lccdf"
-  ; "beta_binomial_lcdf"
-  ; "beta_binomial_lpmf"
-  ; "beta_binomial_rng"
-  ; "beta_ccdf_log"
-  ; "beta_cdf"
-  ; "beta_cdf_log"
-  ; "beta_log"
-  ; "beta_lccdf"
-  ; "beta_lcdf"
-  ; "beta_lpdf"
-  ; "beta_rng"
-  ; "beta_proportion_ccdf_log"
-  ; "beta_proportion_cdf_log"
-  ; "beta_proportion_log"
-  ; "beta_proportion_lccdf"
-  ; "beta_proportion_lcdf"
-  ; "beta_proportion_lpdf"
-  ; "beta_proportion_rng"
-  ; "binary_log_loss"
-  ; "binomial_ccdf_log"
-  ; "binomial_cdf"
-  ; "binomial_cdf_log"
-  ; "binomial_log"
-  ; "binomial_lccdf"
-  ; "binomial_lcdf"
-  ; "binomial_lpmf"
-  ; "binomial_rng"
-  ; "binomial_coefficient_log"
-  ; "binomial_logit_log"
-  ; "binomial_logit_lpmf"
-  ; "block"
-  ; "categorical_log"
-  ; "categorical_logit_log"
-  ; "categorical_lpmf"
-  ; "categorical_logit_lpmf"
-  ; "categorical_rng"
-  ; "categorical_logit_rng"
-  ; "cauchy_ccdf_log"
-  ; "cauchy_cdf"
-  ; "cauchy_cdf_log"
-  ; "cauchy_log"
-  ; "cauchy_lccdf"
-  ; "cauchy_lcdf"
-  ; "cauchy_lpdf"
-  ; "cauchy_rng"
-  ; "append_col"
-  ; "append_col"
-  ; "append_col"
-  ; "append_col"
-  ; "append_col"
-  ; "append_col"
-  ; "append_col"
-  ; "cbrt"
-  ; "ceil"
-  ; "chi_square_ccdf_log"
-  ; "chi_square_cdf"
-  ; "chi_square_cdf_log"
-  ; "chi_square_log"
-  ; "chi_square_lccdf"
-  ; "chi_square_lcdf"
-  ; "chi_square_lpdf"
-  ; "chi_square_rng"
-  ; "cholesky_decompose"
-  ; "choose"
-  ; "col"
-  ; "cols"
-  ; "cols"
-  ; "cols"
-  ; "columns_dot_product"
-  ; "columns_dot_product"
-  ; "columns_dot_product"
-  ; "columns_dot_self"
-  ; "columns_dot_self"
-  ; "columns_dot_self"
-  ; "cos"
-  ; "cosh"
-  ; "cov_exp_quad"
-  ; "cov_exp_quad"
-  ; "cov_exp_quad"
-  ; "cov_exp_quad"
-  ; "cov_exp_quad"
-  ; "cov_exp_quad"
-  ; "crossprod"
-  ; "csr_matrix_times_vector"
-  ; "csr_to_dense_matrix"
-  ; "csr_extract_w"
-  ; "csr_extract_v"
-  ; "csr_extract_u"
-  ; "cumulative_sum"
-  ; "cumulative_sum"
-  ; "cumulative_sum"
-  ; "determinant"
-  ; "diag_matrix"
-  ; "diag_post_multiply"
-  ; "diag_post_multiply"
-  ; "diag_pre_multiply"
-  ; "diag_pre_multiply"
-  ; "diagonal"
-  ; "digamma"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dims"
-  ; "dirichlet_log"
-  ; "dirichlet_lpdf"
-  ; "dirichlet_rng"
-  ; "distance"
-  ; "distance"
-  ; "distance"
-  ; "distance"
-  ; "divide"
-  ; "divide"
-  ; "divide"
-  ; "divide"
-  ; "divide"
-  ; "dot_product"
-  ; "dot_product"
-  ; "dot_product"
-  ; "dot_product"
-  ; "dot_product"
-  ; "dot_self"
-  ; "dot_self"
-  ; "double_exponential_ccdf_log"
-  ; "double_exponential_cdf"
-  ; "double_exponential_cdf_log"
-  ; "double_exponential_log"
-  ; "double_exponential_lccdf"
-  ; "double_exponential_lcdf"
-  ; "double_exponential_lpdf"
-  ; "double_exponential_rng"
-  ; "e"
-  ; "eigenvalues_sym"
-  ; "eigenvectors_sym"
-  ; "qr_Q"
-  ; "qr_R"
-  ; "qr_thin_Q"
-  ; "qr_thin_R"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_divide"
-  ; "elt_multiply"
-  ; "elt_multiply"
-  ; "elt_multiply"
-  ; "erf"
-  ; "erfc"
-  ; "exp"
-  ; "exp2"
-  ; "exp_mod_normal_ccdf_log"
-  ; "exp_mod_normal_cdf"
-  ; "exp_mod_normal_cdf_log"
-  ; "exp_mod_normal_log"
-  ; "exp_mod_normal_lccdf"
-  ; "exp_mod_normal_lcdf"
-  ; "exp_mod_normal_lpdf"
-  ; "exp_mod_normal_rng"
-  ; "expm1"
-  ; "exponential_ccdf_log"
-  ; "exponential_cdf"
-  ; "exponential_cdf_log"
-  ; "exponential_log"
-  ; "exponential_lccdf"
-  ; "exponential_lcdf"
-  ; "exponential_lpdf"
-  ; "exponential_rng"
-  ; "fabs"
-  ; "falling_factorial"
-  ; "falling_factorial"
-  ; "fdim"
-  ; "floor"
-  ; "fma"
-  ; "fmax"
-  ; "fmin"
-  ; "fmod"
-  ; "frechet_ccdf_log"
-  ; "frechet_cdf"
-  ; "frechet_cdf_log"
-  ; "frechet_log"
-  ; "frechet_lccdf"
-  ; "frechet_lcdf"
-  ; "frechet_lpdf"
-  ; "frechet_rng"
-  ; "gamma_ccdf_log"
-  ; "gamma_cdf"
-  ; "gamma_cdf_log"
-  ; "gamma_log"
-  ; "gamma_lccdf"
-  ; "gamma_lcdf"
-  ; "gamma_lpdf"
-  ; "gamma_p"
-  ; "gamma_q"
-  ; "gamma_rng"
-  ; "gaussian_dlm_obs_log"
-  ; "gaussian_dlm_obs_log"
-  ; "gaussian_dlm_obs_lpdf"
-  ; "gaussian_dlm_obs_lpdf"
-  ; "get_lp"
-  ; "gumbel_ccdf_log"
-  ; "gumbel_cdf"
-  ; "gumbel_cdf_log"
-  ; "gumbel_log"
-  ; "gumbel_lccdf"
-  ; "gumbel_lcdf"
-  ; "gumbel_lpdf"
-  ; "gumbel_rng"
-  ; "head"
-  ; "head"
-  ; "head"
-  ; "head"
-  ; "head"
-  ; "hypergeometric_log"
-  ; "hypergeometric_lpmf"
-  ; "hypergeometric_rng"
-  ; "hypot"
-  ; "if_else"
-  ; "inc_beta"
-  ; "int_step"
-  ; "int_step"
-  ; "inv"
-  ; "inv_chi_square_ccdf_log"
-  ; "inv_chi_square_cdf"
-  ; "inv_chi_square_cdf_log"
-  ; "inv_chi_square_log"
-  ; "inv_chi_square_lccdf"
-  ; "inv_chi_square_lcdf"
-  ; "inv_chi_square_lpdf"
-  ; "inv_chi_square_rng"
-  ; "inv_cloglog"
-  ; "inv_gamma_ccdf_log"
-  ; "inv_gamma_cdf"
-  ; "inv_gamma_cdf_log"
-  ; "inv_gamma_log"
-  ; "inv_gamma_lccdf"
-  ; "inv_gamma_lcdf"
-  ; "inv_gamma_lpdf"
-  ; "inv_gamma_rng"
-  ; "inv_logit"
-  ; "inv_Phi"
-  ; "inv_sqrt"
-  ; "inv_square"
-  ; "inv_wishart_log"
-  ; "inv_wishart_lpdf"
-  ; "inv_wishart_rng"
-  ; "inverse"
-  ; "inverse_spd"
-  ; "is_inf"
-  ; "is_nan"
-  ; "lbeta"
-  ; "lchoose"
-  ; "lgamma"
-  ; "lkj_corr_cholesky_log"
-  ; "lkj_corr_cholesky_lpdf"
-  ; "lkj_corr_cholesky_rng"
-  ; "lkj_corr_log"
-  ; "lkj_corr_lpdf"
-  ; "lkj_corr_rng"
-  ; "lkj_cov_log"
-  ; "lmgamma"
-  ; "lmultiply"
-  ; "log"
-  ; "log10"
-  ; "log10"
-  ; "log1m"
-  ; "log1m_exp"
-  ; "log1m_inv_logit"
-  ; "log1p"
-  ; "log1p_exp"
-  ; "log2"
-  ; "log2"
-  ; "log_determinant"
-  ; "log_diff_exp"
-  ; "log_falling_factorial"
-  ; "log_mix"
-  ; "log_mix"
-  ; "log_mix"
-  ; "log_mix"
-  ; "log_rising_factorial"
-  ; "log_inv_logit"
-  ; "log_softmax"
-  ; "log_sum_exp"
-  ; "log_sum_exp"
-  ; "log_sum_exp"
-  ; "log_sum_exp"
-  ; "log_sum_exp"
-  ; "logical_negation"
-  ; "logical_or"
-  ; "logical_and"
-  ; "logical_eq"
-  ; "logical_neq"
-  ; "logical_lt"
-  ; "logical_lte"
-  ; "logical_gt"
-  ; "logical_gte"
-  ; "logistic_ccdf_log"
-  ; "logistic_cdf"
-  ; "logistic_cdf_log"
-  ; "logistic_log"
-  ; "logistic_lccdf"
-  ; "logistic_lcdf"
-  ; "logistic_lpdf"
-  ; "logistic_rng"
-  ; "logit"
-  ; "lognormal_ccdf_log"
-  ; "lognormal_cdf"
-  ; "lognormal_cdf_log"
-  ; "lognormal_log"
-  ; "lognormal_lccdf"
-  ; "lognormal_lcdf"
-  ; "lognormal_lpdf"
-  ; "lognormal_rng"
-  ; "machine_precision"
-  ; "matrix_exp"
-  ; "matrix_exp_multiply"
-  ; "max"
-  ; "max"
-  ; "max"
-  ; "max"
-  ; "max"
-  ; "max"
-  ; "mdivide_left"
-  ; "mdivide_left"
-  ; "mdivide_left_spd"
-  ; "mdivide_left_spd"
-  ; "mdivide_left_tri_low"
-  ; "mdivide_left_tri_low"
-  ; "mdivide_right"
-  ; "mdivide_right_spd"
-  ; "mdivide_right_spd"
-  ; "mdivide_right"
-  ; "mdivide_right_tri_low"
-  ; "mdivide_right_tri_low"
-  ; "mean"
-  ; "mean"
-  ; "mean"
-  ; "mean"
-  ; "min"
-  ; "min"
-  ; "min"
-  ; "min"
-  ; "min"
-  ; "min"
-  ; "minus"
-  ; "minus"
-  ; "minus"
-  ; "minus"
-  ; "modified_bessel_first_kind"
-  ; "modified_bessel_second_kind"
-  ; "modulus"
-  ; "multi_gp_log"
-  ; "multi_gp_lpdf"
-  ; "multi_gp_cholesky_log"
-  ; "multi_gp_cholesky_lpdf"
-  ; "multi_normal_cholesky_log"
-  ; "multi_normal_cholesky_lpdf"
-  ; "multi_normal_log"
-  ; "multi_normal_lpdf"
-  ; "multi_normal_prec_log"
-  ; "multi_normal_prec_lpdf"
-  ; "multi_student_t_log"
-  ; "multi_student_t_lpdf"
-  ; "multi_normal_rng"
-  ; "multi_normal_rng"
-  ; "multi_normal_rng"
-  ; "multi_normal_rng"
-  ; "multi_normal_cholesky_rng"
-  ; "multi_normal_cholesky_rng"
-  ; "multi_normal_cholesky_rng"
-  ; "multi_normal_cholesky_rng"
-  ; "multi_student_t_rng"
-  ; "multi_student_t_rng"
-  ; "multi_student_t_rng"
-  ; "multi_student_t_rng"
-  ; "multinomial_log"
-  ; "multinomial_lpmf"
-  ; "multinomial_rng"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply"
-  ; "multiply_log"
-  ; "multiply_lower_tri_self_transpose"
-  ; "neg_binomial_ccdf_log"
-  ; "neg_binomial_cdf"
-  ; "neg_binomial_cdf_log"
-  ; "neg_binomial_log"
-  ; "neg_binomial_lccdf"
-  ; "neg_binomial_lcdf"
-  ; "neg_binomial_lpmf"
-  ; "neg_binomial_2_ccdf_log"
-  ; "neg_binomial_2_cdf"
-  ; "neg_binomial_2_cdf_log"
-  ; "neg_binomial_2_log"
-  ; "neg_binomial_2_lccdf"
-  ; "neg_binomial_2_lcdf"
-  ; "neg_binomial_2_lpmf"
-  ; "neg_binomial_2_log_log"
-  ; "neg_binomial_2_log_lpmf"
-  ; "neg_binomial_rng"
-  ; "neg_binomial_2_rng"
-  ; "neg_binomial_2_log_rng"
-  ; "neg_binomial_2_log_glm_lpmf"
-  ; "neg_binomial_2_log_glm_lpmf"
-  ; "negative_infinity"
-  ; "normal_ccdf_log"
-  ; "normal_cdf"
-  ; "normal_cdf_log"
-  ; "normal_log"
-  ; "normal_lccdf"
-  ; "normal_lcdf"
-  ; "normal_lpdf"
-  ; "normal_rng"
-  ; "normal_id_glm_lpdf"
-  ; "normal_id_glm_lpdf"
-  ; "not_a_number"
-  ; "num_elements"
-  ; "num_elements"
-  ; "num_elements"
-  ; "num_elements"
-  ; "num_elements"
-  ; "num_elements"
-  ; "num_elements"
-  ; "num_elements"
-  ; "ordered_logistic_log"
-  ; "ordered_logistic_log"
-  ; "ordered_logistic_log"
-  ; "ordered_logistic_lpmf"
-  ; "ordered_logistic_lpmf"
-  ; "ordered_logistic_lpmf"
-  ; "ordered_logistic_rng"
-  ; "ordered_probit_log"
-  ; "ordered_probit_log"
-  ; "ordered_probit_log"
-  ; "ordered_probit_lpmf"
-  ; "ordered_probit_lpmf"
-  ; "ordered_probit_lpmf"
-  ; "ordered_probit_rng"
-  ; "owens_t"
-  ; "pareto_ccdf_log"
-  ; "pareto_cdf"
-  ; "pareto_cdf_log"
-  ; "pareto_log"
-  ; "pareto_lccdf"
-  ; "pareto_lcdf"
-  ; "pareto_lpdf"
-  ; "pareto_rng"
-  ; "pareto_type_2_ccdf_log"
-  ; "pareto_type_2_cdf"
-  ; "pareto_type_2_cdf_log"
-  ; "pareto_type_2_log"
-  ; "pareto_type_2_lccdf"
-  ; "pareto_type_2_lcdf"
-  ; "pareto_type_2_lpdf"
-  ; "pareto_type_2_rng"
-  ; "Phi"
-  ; "Phi_approx"
-  ; "pi"
-  ; "poisson_ccdf_log"
-  ; "poisson_cdf"
-  ; "poisson_cdf_log"
-  ; "poisson_log"
-  ; "poisson_lccdf"
-  ; "poisson_lcdf"
-  ; "poisson_lpmf"
-  ; "poisson_rng"
-  ; "poisson_log_log"
-  ; "poisson_log_lpmf"
-  ; "poisson_log_rng"
-  ; "poisson_log_glm_lpmf"
-  ; "poisson_log_glm_lpmf"
-  ; "positive_infinity"
-  ; "pow"
-  ; "prod"
-  ; "prod"
-  ; "prod"
-  ; "prod"
-  ; "prod"
-  ; "quad_; form"
-  ; "quad_; form"
-  ; "quad_; form_sym"
-  ; "quad_; form_sym"
-  ; "quad_; form_diag"
-  ; "quad_; form_diag"
-  ; "rank"
-  ; "rank"
-  ; "rank"
-  ; "rank"
-  ; "rayleigh_ccdf_log"
-  ; "rayleigh_cdf"
-  ; "rayleigh_cdf_log"
-  ; "rayleigh_log"
-  ; "rayleigh_lccdf"
-  ; "rayleigh_lcdf"
-  ; "rayleigh_lpdf"
-  ; "rayleigh_rng"
-  ; "append_row"
-  ; "append_row"
-  ; "append_row"
-  ; "append_row"
-  ; "append_row"
-  ; "append_row"
-  ; "append_row"
-  ; "rep_array"
-  ; "rep_array"
-  ; "rep_array"
-  ; "rep_array"
-  ; "rep_array"
-  ; "rep_array"
-  ; "rep_matrix"
-  ; "rep_matrix"
-  ; "rep_matrix"
-  ; "rep_row_vector"
-  ; "rep_vector"
-  ; "rising_factorial"
-  ; "rising_factorial"
-  ; "round"
-  ; "row"
-  ; "rows"
-  ; "rows"
-  ; "rows"
-  ; "rows_dot_product"
-  ; "rows_dot_product"
-  ; "rows_dot_product"
-  ; "rows_dot_self"
-  ; "rows_dot_self"
-  ; "rows_dot_self"
-  ; "scale_matrix_exp_multiply"
-  ; "scaled_inv_chi_square_ccdf_log"
-  ; "scaled_inv_chi_square_cdf"
-  ; "scaled_inv_chi_square_cdf_log"
-  ; "scaled_inv_chi_square_log"
-  ; "scaled_inv_chi_square_lccdf"
-  ; "scaled_inv_chi_square_lcdf"
-  ; "scaled_inv_chi_square_lpdf"
-  ; "scaled_inv_chi_square_rng"
-  ; "sd"
-  ; "sd"
-  ; "sd"
-  ; "sd"
-  ; "segment"
-  ; "segment"
-  ; "segment"
-  ; "segment"
-  ; "segment"
-  ; "sin"
-  ; "singular_values"
-  ; "sinh"
-  ; "size"
-  ; "size"
-  ; "size"
-  ; "size"
-  ; "size"
-  ; "skew_normal_ccdf_log"
-  ; "skew_normal_cdf"
-  ; "skew_normal_cdf_log"
-  ; "skew_normal_log"
-  ; "skew_normal_lccdf"
-  ; "skew_normal_lcdf"
-  ; "skew_normal_lpdf"
-  ; "skew_normal_rng"
-  ; "softmax"
-  ; "sort_asc"
-  ; "sort_asc"
-  ; "sort_asc"
-  ; "sort_asc"
-  ; "sort_desc"
-  ; "sort_desc"
-  ; "sort_desc"
-  ; "sort_desc"
-  ; "sort_indices_asc"
-  ; "sort_indices_asc"
-  ; "sort_indices_asc"
-  ; "sort_indices_asc"
-  ; "sort_indices_desc"
-  ; "sort_indices_desc"
-  ; "sort_indices_desc"
-  ; "sort_indices_desc"
-  ; "squared_distance"
-  ; "squared_distance"
-  ; "squared_distance"
-  ; "squared_distance"
-  ; "squared_distance"
-  ; "sqrt"
-  ; "sqrt2"
-  ; "square"
-  ; "std_normal_log"
-  ; "std_normal_lpdf"
-  ; "step"
-  ; "student_t_ccdf_log"
-  ; "student_t_cdf"
-  ; "student_t_cdf_log"
-  ; "student_t_log"
-  ; "student_t_lccdf"
-  ; "student_t_lcdf"
-  ; "student_t_lpdf"
-  ; "student_t_rng"
-  ; "sub_col"
-  ; "sub_row"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "subtract"
-  ; "sum"
-  ; "sum"
-  ; "sum"
-  ; "sum"
-  ; "sum"
-  ; "tail"
-  ; "tail"
-  ; "tail"
-  ; "tail"
-  ; "tail"
-  ; "tan"
-  ; "tanh"
-  ; "target"
-  ; "get_lp"
-  ; "tcrossprod"
-  ; "tgamma"
-  ; "to_array_1d"
-  ; "to_array_1d"
-  ; "to_array_1d"
-  ; "to_array_1d"
-  ; "to_array_1d"
-  ; "to_array_2d"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_matrix"
-  ; "to_row_vector"
-  ; "to_row_vector"
-  ; "to_row_vector"
-  ; "to_row_vector"
-  ; "to_row_vector"
-  ; "to_vector"
-  ; "to_vector"
-  ; "to_vector"
-  ; "to_vector"
-  ; "to_vector"
-  ; "trace"
-  ; "trace_gen_quad_; form"
-  ; "trace_quad_; form"
-  ; "trace_quad_; form"
-  ; "transpose"
-  ; "transpose"
-  ; "transpose"
-  ; "trunc"
-  ; "trigamma"
-  ; "uni; form_ccdf_log"
-  ; "uni; form_cdf"
-  ; "uni; form_cdf_log"
-  ; "uni; form_log"
-  ; "uni; form_lccdf"
-  ; "uni; form_lcdf"
-  ; "uni; form_lpdf"
-  ; "uni; form_rng"
-  ; "variance"
-  ; "variance"
-  ; "variance"
-  ; "variance"
-  ; "von_mises_log"
-  ; "von_mises_lpdf"
-  ; "von_mises_rng"
-  ; "weibull_ccdf_log"
-  ; "weibull_cdf"
-  ; "weibull_cdf_log"
-  ; "weibull_log"
-  ; "weibull_lccdf"
-  ; "weibull_lcdf"
-  ; "weibull_lpdf"
-  ; "weibull_rng"
-  ; "wiener_log"
-  ; "wiener_lpdf"
-  ; "wishart_log"
-  ; "wishart_lpdf"
-  ; "wishart_rng" ]
-
 let primitive_signatures = Hashtbl.create 3000
 
 let bare_types = function
@@ -835,14 +82,10 @@ let is_primitive = function
 let rng_return_type t lt =
   if List.for_all is_primitive lt then ReturnType t else ReturnType (Array t)
 
-(* TODO: add in multi-argument ones *)
-
 let add_plain (name, rt, argts) =
   Hashtbl.add primitive_signatures name (rt, argts)
 
 let add_nullary name = add_plain (name, ReturnType Real, [])
-
-let _ = add_nullary "reject"
 
 let add_unary name = add_plain (name, ReturnType Real, [ReturnType Real])
 
@@ -898,11 +141,6 @@ let for_vector_types s =
   for i = 0 to vector_types_size - 1 do
     s (vector_types i)
   done
-
-let try_get_primitive_return_type name argtypes = None
-
-(* TODO *)
-let is_primitive_name name = Hashtbl.mem primitive_signatures name
 
 let _ =
   add_plain ("abs", ReturnType Int, [ReturnType Int]) ;
@@ -3082,4 +2320,311 @@ let _ =
         done
       done
     done
-  done
+  done ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          for_all_vector_types (fun v ->
+              add_plain
+                ("student_t_rng", rng_return_type Real [t; u; v], [t; u; v]) )
+      ) ) ;
+  add_plain
+    ( "sub_col"
+    , ReturnType Vector
+    , [ReturnType Matrix; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "sub_row"
+    , ReturnType RowVector
+    , [ReturnType Matrix; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ("subtract", ReturnType Vector, [ReturnType Vector; ReturnType Vector]) ;
+  add_plain
+    ( "subtract"
+    , ReturnType RowVector
+    , [ReturnType RowVector; ReturnType RowVector] ) ;
+  add_plain
+    ("subtract", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
+  add_plain
+    ("subtract", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
+  add_plain
+    ("subtract", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
+  add_plain
+    ("subtract", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
+  add_plain
+    ("subtract", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
+  add_plain
+    ("subtract", ReturnType RowVector, [ReturnType Real; ReturnType RowVector]) ;
+  add_plain
+    ("subtract", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
+  add_plain ("sum", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
+  add_plain ("sum", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
+  add_plain ("sum", ReturnType Real, [ReturnType Vector]) ;
+  add_plain ("sum", ReturnType Real, [ReturnType RowVector]) ;
+  add_plain ("sum", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain
+    ("tail", ReturnType RowVector, [ReturnType RowVector; ReturnType Int]) ;
+  add_plain ("tail", ReturnType Vector, [ReturnType Vector; ReturnType Int]) ;
+  for i = 0 to bare_types_size - 1 do
+    add_plain
+      ( "tail"
+      , bare_array_type (bare_types i, 1)
+      , [bare_array_type (bare_types i, 1); ReturnType Int] ) ;
+    add_plain
+      ( "tail"
+      , bare_array_type (bare_types i, 2)
+      , [bare_array_type (bare_types i, 2); ReturnType Int] ) ;
+    add_plain
+      ( "tail"
+      , bare_array_type (bare_types i, 3)
+      , [bare_array_type (bare_types i, 3); ReturnType Int] )
+  done ;
+  add_unary_vectorized "tan" ;
+  add_unary_vectorized "tanh" (* ; add_nullary ("target") *) ;
+  add_plain ("tcrossprod", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_unary_vectorized "tgamma" ;
+  add_plain
+    ("to_array_1d", bare_array_type (ReturnType Real, 1), [ReturnType Matrix]) ;
+  add_plain
+    ("to_array_1d", bare_array_type (ReturnType Real, 1), [ReturnType Vector]) ;
+  add_plain
+    ( "to_array_1d"
+    , bare_array_type (ReturnType Real, 1)
+    , [ReturnType RowVector] ) ;
+  for i = 1 to 10 - 1 do
+    add_plain
+      ( "to_array_1d"
+      , bare_array_type (ReturnType Real, 1)
+      , [bare_array_type (ReturnType Real, i)] ) ;
+    add_plain
+      ( "to_array_1d"
+      , bare_array_type (ReturnType Int, 1)
+      , [bare_array_type (ReturnType Int, i)] )
+  done ;
+  add_plain
+    ("to_array_2d", bare_array_type (ReturnType Real, 2), [ReturnType Matrix]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ReturnType Matrix; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+  add_plain ("to_matrix", ReturnType Matrix, [ReturnType Vector]) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ReturnType Vector; ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ReturnType Vector; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+  add_plain ("to_matrix", ReturnType Matrix, [ReturnType RowVector]) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ReturnType RowVector; ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ReturnType RowVector; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [bare_array_type (ReturnType Real, 1); ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ bare_array_type (ReturnType Real, 1)
+      ; ReturnType Int
+      ; ReturnType Int
+      ; ReturnType Int ] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [bare_array_type (ReturnType Int, 1); ReturnType Int; ReturnType Int] ) ;
+  add_plain
+    ( "to_matrix"
+    , ReturnType Matrix
+    , [ bare_array_type (ReturnType Int, 1)
+      ; ReturnType Int
+      ; ReturnType Int
+      ; ReturnType Int ] ) ;
+  add_plain
+    ("to_matrix", ReturnType Matrix, [bare_array_type (ReturnType Real, 2)]) ;
+  add_plain
+    ("to_matrix", ReturnType Matrix, [bare_array_type (ReturnType Int, 2)]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [ReturnType Matrix]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [ReturnType Vector]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [ReturnType RowVector]) ;
+  add_plain
+    ( "to_row_vector"
+    , ReturnType RowVector
+    , [bare_array_type (ReturnType Real, 1)] ) ;
+  add_plain
+    ( "to_row_vector"
+    , ReturnType RowVector
+    , [bare_array_type (ReturnType Int, 1)] ) ;
+  add_plain ("to_vector", ReturnType Vector, [ReturnType Matrix]) ;
+  add_plain ("to_vector", ReturnType Vector, [ReturnType Vector]) ;
+  add_plain ("to_vector", ReturnType Vector, [ReturnType RowVector]) ;
+  add_plain
+    ("to_vector", ReturnType Vector, [bare_array_type (ReturnType Real, 1)]) ;
+  add_plain
+    ("to_vector", ReturnType Vector, [bare_array_type (ReturnType Int, 1)]) ;
+  add_plain ("trace", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain
+    ( "trace_gen_quad_; form"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain
+    ( "trace_quad_; form"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Vector] ) ;
+  add_plain
+    ( "trace_quad_; form"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Matrix] ) ;
+  add_plain ("transpose", ReturnType RowVector, [ReturnType Vector]) ;
+  add_plain ("transpose", ReturnType Vector, [ReturnType RowVector]) ;
+  add_plain ("transpose", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_unary_vectorized "trunc" ;
+  add_unary_vectorized "trigamma" ;
+  for i = 0 to vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        add_plain
+          ( "uni; form_ccdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "uni; form_cdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "uni; form_cdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "uni; form_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "uni; form_lccdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "uni; form_lcdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "uni; form_lpdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] )
+      done
+    done
+  done ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain ("uniform_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+  add_plain
+    ("variance", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
+  add_plain ("variance", ReturnType Real, [ReturnType Vector]) ;
+  add_plain ("variance", ReturnType Real, [ReturnType RowVector]) ;
+  add_plain ("variance", ReturnType Real, [ReturnType Matrix]) ;
+  for i = 0 to vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        add_plain
+          ( "von_mises_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "von_mises_lpdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] )
+      done
+    done
+  done ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain ("von_mises_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+  for i = 0 to vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        add_plain
+          ( "weibull_ccdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "weibull_cdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "weibull_cdf_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "weibull_log"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "weibull_lccdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "weibull_lcdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] ) ;
+        add_plain
+          ( "weibull_lpdf"
+          , ReturnType Real
+          , [vector_types i; vector_types j; vector_types k] )
+      done
+    done
+  done ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain ("weibull_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+  for i = 0 to vector_types_size - 1 do
+    for j = 0 to vector_types_size - 1 do
+      for k = 0 to vector_types_size - 1 do
+        for l = 0 to vector_types_size - 1 do
+          for m = 0 to vector_types_size - 1 do
+            add_plain
+              ( "wiener_log"
+              , ReturnType Real
+              , [ vector_types i
+                ; vector_types j
+                ; vector_types k
+                ; vector_types l
+                ; vector_types m ] ) ;
+            add_plain
+              ( "wiener_lpdf"
+              , ReturnType Real
+              , [ vector_types i
+                ; vector_types j
+                ; vector_types k
+                ; vector_types l
+                ; vector_types m ] )
+          done
+        done
+      done
+    done
+  done ;
+  add_plain
+    ( "wishart_log"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Real; ReturnType Matrix] ) ;
+  add_plain
+    ( "wishart_lpdf"
+    , ReturnType Real
+    , [ReturnType Matrix; ReturnType Real; ReturnType Matrix] ) ;
+  add_plain
+    ("wishart_rng", ReturnType Matrix, [ReturnType Real; ReturnType Matrix])
+
+(* TODO *)
+let try_get_primitive_return_type name argtypes = None
+
+(* TODO *)
+let is_primitive_name name = Hashtbl.mem primitive_signatures name
