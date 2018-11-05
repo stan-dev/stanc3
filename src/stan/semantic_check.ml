@@ -142,7 +142,7 @@ let check_of_int_or_real_type e =
 (* TODO!!! *)
 let check_compatible_indices e lindex =
   semantic_error "not implemented" ;
-  true
+  Some (Data, Array Int)
 
 let check_of_same_type_mod_conv e1 e2 =
   match snd e1 with
@@ -212,6 +212,7 @@ and semantic_check_modelblock bm =
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
 
+(* TODO: deal properly with recursive functions here. *)
 and semantic_check_fundef = function
   | {returntype= rt; name= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
@@ -700,14 +701,12 @@ and semantic_check_expression x =
   | Paren e ->
       let ue = semantic_check_expression e in
       (Paren ue, snd ue)
-  | Indexed (e, indices) ->
+  | Indexed (e, indices) -> (
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
-      let _ =
-        if not (check_compatible_indices ue uindices) then
-          semantic_error "Incompatible indices in indexed expression."
-      in
-      (Indexed (ue, uindices), semantic_error "not implemented")
+      match check_compatible_indices ue uindices with
+      | None -> semantic_error "Incompatible indices in indexed expression."
+      | ort -> (Indexed (ue, uindices), ort) )
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
