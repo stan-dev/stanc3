@@ -1,76 +1,91 @@
-let primitives_signatures = Hashtbl.create 3000
 
-let bare_types = [ReturnType Int; ReturnType Real; ReturnType Vector; ReturnType RowVector; ReturnType Matrix]
+let primitive_signatures = Hashtbl.create 3000
 
-let vector_types = [ReturnType Real;  ReturnType (Array Real); ReturnType Vector; ReturnType RowVector]
+let bare_types =
+  [ ReturnType Int
+  ; ReturnType Real
+  ; ReturnType Vector
+  ; ReturnType RowVector
+  ; ReturnType Matrix ]
 
-let int_vector_types = [ReturnType Int; ReturnType (Array Int)]
+let vector_types =
+  [ ReturnType Real
+  ; ReturnType  (Array Real)
+  ; ReturnType Vector
+  ; ReturnType RowVector ]
+
+let int_vector_types = [ReturnType Int; ReturnType  (Array Int)]
 
 let primitive_types = [ReturnType Int; ReturnType Real]
 
-let all_vector_types = [ReturnType Real; ReturnType (Array Real); ReturnType Vector; ReturnType RowVector; ReturnType Int; ReturnType (Array Int)]
+let all_vector_types =
+  [ ReturnType Real
+  ; ReturnType  (Array Real)
+  ; ReturnType Vector
+  ; ReturnType RowVector
+  ; ReturnType Int
+  ; ReturnType  (Array Int) ]
 
-let rng_return_type = function (ReturnType Real -> ReturnType Real | ReturnType Int -> ReturnType Int | ReturnType t -> ReturnType (Array t))
-(* TODO: add in multi-argument ones *)
+let rng_return_type = function
+  | ReturnType Real -> ReturnType Real
+  | ReturnType Int -> ReturnType Int
+  | ReturnType t -> ReturnType  (Array t)
+  | Void -> Void
 
-let add_plain (name, rt, argts) = Hashtbl.add primitive_signatures name (rt, argts)
+ (* TODO: add in multi-argument ones *)
 
-let add_nullary name = add_plain (name, ReturnType Real, [])
+let add_plain  (name, rt, argts) =
+  Hashtbl.add primitive_signatures name  (rt, argts)
 
-let add_unary name = add_plain (name, ReturnType Real, [ReturnType Real])
+let add_nullary name = add_plain  (name, ReturnType Real, [])
 
-let add_unary_vectorized name = add_plain (name, ReturnType Real, [ReturnType Int]) ;
-                                add_plain (name, ReturnType Real, [ReturnType Real]) ;
-                                add_plain (name, ReturnType Vector, [ReturnType Vector]) ;
-                                add_plain (name, ReturnType RowVector, [ReturnType RowVector]) ;
-                                add_plain (name, ReturnType Matrix, [ReturnType Matrix]) ;
-                                add_plain (name, ReturnType (Array Real), [ReturnType (Array Int)]) ;
-                                add_plain (name, ReturnType (Array Real), [ReturnType (Array Real)]) ;
-                                add_plain (name, ReturnType (Array Vector), [ReturnType (Array Vector)]) ;
-                                add_plain (name, ReturnType (Array RowVector), [ReturnType (Array RowVector)]) ;
-                                add_plain (name, ReturnType (Array Matrix), [ReturnType (Array Matrix)])
+let _ = add_nullary "reject"
 
-let add_binary name = add_plain (name, ReturnType Real, [ReturnType Real; ReturnType Real])
+let add_unary name = add_plain  (name, ReturnType Real, [ReturnType Real])
 
-let add_ternary = add_plain (name, ReturnType Real, [ReturnType Real; ReturnType Real; ReturnType Real])
+let add_unary_vectorized name =
+  add_plain  (name, ReturnType Real, [ReturnType Int]) ;
+  add_plain  (name, ReturnType Real, [ReturnType Real]) ;
+  add_plain  (name, ReturnType Vector, [ReturnType Vector]) ;
+  add_plain  (name, ReturnType RowVector, [ReturnType RowVector]) ;
+  add_plain  (name, ReturnType Matrix, [ReturnType Matrix]) ;
+  add_plain  (name, ReturnType  (Array Real), [ReturnType  (Array Int)]) ;
+  add_plain  (name, ReturnType  (Array Real), [ReturnType  (Array Real)]) ;
+  add_plain  (name, ReturnType  (Array Vector), [ReturnType  (Array Vector)]) ;
+  add_plain  (name, ReturnType  (Array RowVector), [ReturnType  (Array RowVector)]) ;
+  add_plain  (name, ReturnType  (Array Matrix), [ReturnType  (Array Matrix)])
 
-let add_quaternary = add_plain (name, ReturnType Real, [ReturnType Real; ReturnType Real; ReturnType Real; ReturnType Real])
+let add_binary name =
+  add_plain  (name, ReturnType Real, [ReturnType Real; ReturnType Real])
 
+let add_ternary name =
+  add_plain
+     (name, ReturnType Real, [ReturnType Real; ReturnType Real; ReturnType Real])
 
-
+let add_quaternary name =
+  add_plain
+     ( name
+    , ReturnType Real
+    , [ReturnType Real; ReturnType Real; ReturnType Real; ReturnType Real] )
 
 
 Useful Regexes
 
 
 
-rng\_return\_type<([^>])*>
-\(rng\_return\_type  \1\)
+rng\_return\_type< ([^>])*>
+\ (rng\_return\_type  \1\)
 
 
-add\_nullary
 
-
-add\_unary\_vectorized
-
-
-add_unary
-
-
-add\_binary
-
-
-add\_ternary
-
-
-add
-; add_plain
+add ([^\_])
+add_plain\1
 
 
 
 
 \{
-\(
+\ (
 
 \}
 \) done
@@ -84,21 +99,24 @@ add
 
 
 
-for \(size\_t ([a-z]) = ([0-9 a-z]); ([a-z]) < ([^;]*); [^\)]*\)
-for \1 = \2 to \4 do   
+for \ (size\_t  ([a-z]) =  ([0-9 a-z]);  ([a-z]) <  ([^;]*); [^\)]*\)
+; for \1 = \2 to \4 do   
 
 
 
 ;
 
 
-\(
- \(
 
-for  \(const auto\& ([a-z]) \: ([^\)]*)\)  \(
-Core\_kernel.List\.map \(\2 \(\) \)  \(fun \1 \-\> 
+add
+\; add
 
 
+\ (
+ \ (
+
+; for  \(const auto\&  ([a-z]) \:  ([^\)]*)\)  \(
+Core\_kernel.List\.map \ (\2 \ (\) \)  \ (fun \1 \-\> 
 
 
 
@@ -106,19 +124,21 @@ Core\_kernel.List\.map \(\2 \(\) \)  \(fun \1 \-\>
 
 
 
-int\_type \(\)
-\(ReturnType Int\)
 
-double\_type \(\)
+
+int\_type \ (\)
+\ (ReturnType Int\)
+
+double\_type \ (\)
 \ReturnType Real\)
 
-row\_vector\_type \(\)
-\(ReturnType RowVector\)
+row\_vector\_type \ (\)
+\ (ReturnType RowVector\)
 
-vector\_type \(\)
-\(ReturnType Vector\)
+vector\_type \ (\)
+\ (ReturnType Vector\)
 
-matrix\_type \(\)
-\(ReturnType Matrix\)
+matrix\_type \ (\)
+\ (ReturnType Matrix\)
 
 bare\_expr\_type

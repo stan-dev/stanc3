@@ -53,10 +53,6 @@ open Primitives
 
 (* Invariant: after a statement has been checked, it has a well-defined return type *)
 
-(* A semantic error reported by the toplevel *)
-let semantic_error ?loc msg =
-  Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
-
 (* e.g. compare Data Model = -1  and compare GQuant Functions = 1 *)
 
 (* NB DANGER: this file specifies an imperative tree algorithm which

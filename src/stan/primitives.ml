@@ -1,19 +1,23 @@
-(* Here, we define type checking for the Stan Math library *)
+(* Here, we define type checking ; for the Stan Math library *)
 
 (* This is ugly. An ideal treatment of function overloading works by carrying around*
-   a LAZY set of types for each expression. However, that's awkward in OCaml.
-   Perhaps an argument for Haskell after all?
-   OCaml does have lazy lists. Perhaps those could be used for this purpose?
+   a LAZY set of types ; for each expression. However, that's awkward in OCaml.
+   Perhaps an argument ; for Haskell after all?
+   OCaml does have lazy lists. Perhaps those could be used ; for this purpose?
    Or implement our own lazy sets?
    
 *)
 
-(* TODO: do appropriate checking for higher order functions here *)
+(* TODO: do appropriate checking ; for higher order functions here *)
 
 (* TODO: first load whole math library into try_get_primitive_return_type --
 we are using a predicate here because the functions are overloaded so heavily  *)
 
 open Syntax
+
+(* A semantic error reported by the toplevel *)
+let semantic_error ?loc msg =
+  Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
 let primitive_names =
   [ "abs"
@@ -553,12 +557,12 @@ let primitive_names =
   ; "prod"
   ; "prod"
   ; "prod"
-  ; "quad_form"
-  ; "quad_form"
-  ; "quad_form_sym"
-  ; "quad_form_sym"
-  ; "quad_form_diag"
-  ; "quad_form_diag"
+  ; "quad_; form"
+  ; "quad_; form"
+  ; "quad_; form_sym"
+  ; "quad_; form_sym"
+  ; "quad_; form_diag"
+  ; "quad_; form_diag"
   ; "rank"
   ; "rank"
   ; "rank"
@@ -731,22 +735,22 @@ let primitive_names =
   ; "to_vector"
   ; "to_vector"
   ; "trace"
-  ; "trace_gen_quad_form"
-  ; "trace_quad_form"
-  ; "trace_quad_form"
+  ; "trace_gen_quad_; form"
+  ; "trace_quad_; form"
+  ; "trace_quad_; form"
   ; "transpose"
   ; "transpose"
   ; "transpose"
   ; "trunc"
   ; "trigamma"
-  ; "uniform_ccdf_log"
-  ; "uniform_cdf"
-  ; "uniform_cdf_log"
-  ; "uniform_log"
-  ; "uniform_lccdf"
-  ; "uniform_lcdf"
-  ; "uniform_lpdf"
-  ; "uniform_rng"
+  ; "uni; form_ccdf_log"
+  ; "uni; form_cdf"
+  ; "uni; form_cdf_log"
+  ; "uni; form_log"
+  ; "uni; form_lccdf"
+  ; "uni; form_lcdf"
+  ; "uni; form_lpdf"
+  ; "uni; form_rng"
   ; "variance"
   ; "variance"
   ; "variance"
@@ -770,30 +774,49 @@ let primitive_names =
 
 let primitive_signatures = Hashtbl.create 3000
 
-let bare_types =
-  [ ReturnType Int
-  ; ReturnType Real
-  ; ReturnType Vector
-  ; ReturnType RowVector
-  ; ReturnType Matrix ]
+let bare_types = function
+  | 0 -> ReturnType Int
+  | 1 -> ReturnType Real
+  | 2 -> ReturnType Vector
+  | 3 -> ReturnType RowVector
+  | 4 -> ReturnType Matrix
+  | _ -> semantic_error "This should never happen. Please report a bug."
 
-let vector_types =
-  [ ReturnType Real
-  ; ReturnType (Array Real)
-  ; ReturnType Vector
-  ; ReturnType RowVector ]
+let bare_types_size = 4
 
-let int_vector_types = [ReturnType Int; ReturnType (Array Int)]
+let vector_types = function
+  | 0 -> ReturnType Real
+  | 1 -> ReturnType (Array Real)
+  | 2 -> ReturnType Vector
+  | 3 -> ReturnType RowVector
+  | _ -> semantic_error "This should never happen. Please report a bug."
 
-let primitive_types = [ReturnType Int; ReturnType Real]
+let vector_types_size = 3
 
-let all_vector_types =
-  [ ReturnType Real
-  ; ReturnType (Array Real)
-  ; ReturnType Vector
-  ; ReturnType RowVector
-  ; ReturnType Int
-  ; ReturnType (Array Int) ]
+let int_vector_types = function
+  | 0 -> ReturnType Int
+  | 1 -> ReturnType (Array Int)
+  | _ -> semantic_error "This should never happen. Please report a bug."
+
+let int_vector_types_size = 1
+
+let primitive_types = function
+  | 0 -> ReturnType Int
+  | 1 -> ReturnType Real
+  | _ -> semantic_error "This should never happen. Please report a bug."
+
+let primitive_types_size = 1
+
+let all_vector_types = function
+  | 0 -> ReturnType Real
+  | 1 -> ReturnType (Array Real)
+  | 2 -> ReturnType Vector
+  | 3 -> ReturnType RowVector
+  | 4 -> ReturnType Int
+  | 5 -> ReturnType (Array Int)
+  | _ -> semantic_error "This should never happen. Please report a bug."
+
+let all_vector_types_size = 5
 
 let rng_return_type = function
   | ReturnType Real -> ReturnType Real
@@ -837,7 +860,95 @@ let add_quaternary name =
     , ReturnType Real
     , [ReturnType Real; ReturnType Real; ReturnType Real; ReturnType Real] )
 
+let basic_bare_array_type = function
+  | ReturnType Real -> ReturnType (Array Real)
+  | ReturnType Int -> ReturnType (Array Int)
+  | ReturnType Vector -> ReturnType (Array Vector)
+  | ReturnType RowVector -> ReturnType (Array RowVector)
+  | ReturnType Matrix -> ReturnType (Array Matrix)
+  | _ -> semantic_error "This should never happen. Please report a bug."
+
+let rec bare_array_type (t, i) = match i with 0 -> t
+                                | j -> basic_bare_array_type (bare_array_type (t, j-1))
+
 let try_get_primitive_return_type name argtypes = None
 
 (* TODO *)
 let is_primitive_name name = Hashtbl.mem primitive_signatures name
+
+let _ =
+  add_plain ("abs", ReturnType Int, [ReturnType Int]) ;
+  add_plain ("abs", ReturnType Int, [ReturnType Int]) ;
+  add_plain ("abs", ReturnType Real, [ReturnType Real]) ;
+  add_unary_vectorized "acos" ;
+  add_unary_vectorized "acosh" ;
+  for i = 0 to bare_types_size do
+    add_plain ("add", bare_types i, [bare_types i; bare_types i])
+  done ;
+  add_plain ("add", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
+  add_plain
+    ("add", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
+  add_plain ("add", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
+  add_plain ("add", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
+  add_plain
+    ("add", ReturnType RowVector, [ReturnType Real; ReturnType RowVector]) ;
+  add_plain ("add", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
+  for i = 0 to bare_types_size do
+    add_plain ("add", bare_types i, [bare_types i])
+  done ;
+  for i = 1 to 8 do
+    add_plain
+      ( "append_array"
+      , bare_array_type (ReturnType Int, i)
+      , [bare_array_type (ReturnType Int, i)
+      ; bare_array_type (ReturnType Int, i)] ) ;
+    add_plain
+      ( "append_array"
+      , bare_array_type (ReturnType Real, i)
+      , [ bare_array_type (ReturnType Real, i)
+      ; bare_array_type (ReturnType Real, i) ]) ;
+    add_plain
+      ( "append_array"
+      , bare_array_type (ReturnType Vector, i)
+      ,[ bare_array_type (ReturnType Vector, i)
+      ; bare_array_type (ReturnType Vector, i)] ) ;
+    add_plain
+      ( "append_array"
+      , bare_array_type (ReturnType RowVector, i)
+      , [bare_array_type (ReturnType RowVector, i)
+      ; bare_array_type (ReturnType RowVector, i) ]) ;
+    add_plain
+      ( "append_array"
+      , bare_array_type (ReturnType Matrix, i)
+      , [ bare_array_type (ReturnType Matrix, i)
+      ; bare_array_type (ReturnType Matrix, i) ])
+  done ;
+  add_unary_vectorized "asin" ;
+  add_unary_vectorized "asinh" ;
+  add_unary_vectorized "atan" ;
+  add_binary "atan2" ;
+  add_unary_vectorized "atanh" ;
+  for i = 0 to int_vector_types_size do
+    for j = 0 to vector_types_size do
+      add_plain
+        ( "bernoulli_ccdf_log"
+        , ReturnType Real
+        , [ int_vector_types i
+        ; vector_types j ]) ;
+      add_plain
+        ("bernoulli_cdf", ReturnType Real, [int_vector_types i; vector_types j]) ;
+      add_plain
+        ( "bernoulli_cdf_log"
+        , ReturnType Real
+        , [int_vector_types i
+        ; vector_types j ]) ;
+      add_plain
+        ("bernoulli_log", ReturnType Real, [int_vector_types i; vector_types j]) ;
+      add_plain
+        ("bernoulli_lccdf", ReturnType Real, [int_vector_types i; vector_types j]) ;
+      add_plain
+        ("bernoulli_lcdf", ReturnType Real, [int_vector_types i; vector_types j]) ;
+      add_plain
+        ("bernoulli_lpmf", ReturnType Real,[ int_vector_types i; vector_types j])
+    done
+  done
