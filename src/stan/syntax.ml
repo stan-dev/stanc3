@@ -202,3 +202,5 @@ and assignmentoperator =
   | ArrowAssign
   (* deprecated *)
 [@@deriving sexp, compare]
+
+type signaturestype = returntype * returntype list [@@deriving sexp, compare]

@@ -43,6 +43,7 @@ TODO: Test that user defined functions with probability suffixes have right type
 
 open Symbol_table
 open Syntax
+open Primitives
 
 (* Idea: we have a semantic checking function for each AST node.
    Each such calls the corresponding checking functions for its children
@@ -63,19 +64,6 @@ let semantic_error ?loc msg =
    1) a global symbol table vm
    2) some context flags context_flags, to communicate information down
       the AST   *)
-
-(* This is ugly. An ideal treatment of function overloading works by carrying around*
-   a LAZY set of types for each expression. However, that's awkward in OCaml.
-   Perhaps an argument for Haskell after all?
-   OCaml does have lazy lists. Perhaps those could be used for this purpose?
-   Or implement our own lazy sets?
-   
-*)
-(* TODO: first load whole math library into try_get_primitive_return_type -- we are using a predicate here because the functions are overloaded so heavily  *)
-let try_get_primitive_return_type name argtypes = None
-
-(* TODO *)
-let is_primitive_name name = false
 
 let vm = Symbol.initialize ()
 
