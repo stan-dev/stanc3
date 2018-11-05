@@ -765,10 +765,7 @@ and semantic_check_printable = function
 
 and semantic_check_statement s =
   match fst s with
-  (* TODO: treat assignment operators as primitives here.
-They may in fact have a different signature than you expect!  *)
-  | Assignment ((id, lindex), assop, e) ->
-      let _ = semantic_error "not correctly implemented" in
+  | Assignment ((id, lindex), assop, e) -> (
       let uid, ulindex = semantic_check_lhs (id, lindex) in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
@@ -792,11 +789,16 @@ They may in fact have a different signature than you expect!  *)
                 "Cannot assign to variable declared in previous blocks."
         | _ -> semantic_error "This should never happen. Please file a bug."
       in
-      let _ =
-        if not (check_of_same_type_mod_conv ue ue2) then
-          semantic_error "Type mismatch in assignment"
+      let opname =
+        Core_kernel.string_of_sexp (sexp_of_assignmentoperator uassop)
       in
-      (Assignment ((uid, ulindex), uassop, ue), Some Void)
+      match
+        try_get_primitive_return_type ("-operator-" ^ opname) [snd ue2; snd ue]
+      with
+      | Some Void -> (Assignment ((uid, ulindex), uassop, ue), Some Void)
+      | _ ->
+          semantic_error "Ill-typed arguments supplied to assignment operator."
+      )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
