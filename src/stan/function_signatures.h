@@ -1,101 +1,5 @@
-;
-for_all_vector_types  (  fun t -> 
-     add_plain ("bernoulli_rng",  (rng_return_type) (t), t) 
- ) 
-for_all_vector_types  (  fun t -> 
-    add_plain ("bernoulli_logit_rng",  (rng_return_type) (t), t) 
- )
-; for i = 0 to int_vector_types_size do  
-  for j = 0 to vector_types_size do    (
-      add_plain ("bernoulli_logit_log",  ((ReturnType Real)), int_vector_types i ,
-	vector_types j ) 
-      ; add_plain ("bernoulli_logit_lpmf",  ((ReturnType Real)), int_vector_types i ,
-	vector_types j ) 
-  ) done
-  ; add_plain ("bernoulli_logit_glm_lpmf",
-     ((ReturnType Real)),
-     (bare_array_type (ReturnType Int, 1)),
-     ((ReturnType Matrix)),
-     ((ReturnType Real)),
-     ((ReturnType Vector))) 
-  ; add_plain ("bernoulli_logit_glm_lpmf",
-     ((ReturnType Real)),
-     (bare_array_type (ReturnType Int, 1)),
-     ((ReturnType Matrix)),
-     ((ReturnType Vector)),
-     ((ReturnType Vector))) 
-  ; add_plain ("bessel_first_kind",  ((ReturnType Real)),  (ReturnType Int),  ((ReturnType Real))) 
-  ; add_plain ("bessel_second_kind",  ((ReturnType Real)),  (ReturnType Int),  ((ReturnType Real))) 
-; for i = 0 to int_vector_types_size do  
-  for j = 0 to int_vector_types_size do  
-     for k = 0 to vector_types_size do  
-       for l = 0 to vector_types_size do    (
-           add_plain ("beta_binomial_ccdf_log",  ((ReturnType Real)),
-            int_vector_types i , int_vector_types j ,
-	    vector_types k , vector_types l ) 
-          ; add_plain ("beta_binomial_cdf",  ((ReturnType Real)),
-            int_vector_types i , int_vector_types j ,
-	    vector_types k , vector_types l ) 
-          ; add_plain ("beta_binomial_cdf_log",  ((ReturnType Real)),
-            int_vector_types i , int_vector_types j ,
-	    vector_types k , vector_types l ) 
-          ; add_plain ("beta_binomial_log",  ((ReturnType Real)),
-            int_vector_types i , int_vector_types j ,
-	    vector_types k , vector_types l ) 
-          ; add_plain ("beta_binomial_lccdf",  ((ReturnType Real)), int_vector_types i ,
-	    int_vector_types j , vector_types k , vector_types l ) 
-          ; add_plain ("beta_binomial_lcdf",  ((ReturnType Real)),
-            int_vector_types i , int_vector_types j ,
-	    vector_types k , vector_types l ) 
-          ; add_plain ("beta_binomial_lpmf",  ((ReturnType Real)),
-            int_vector_types i , int_vector_types j ,
-	    vector_types k , vector_types l ) 
-      ) done ;
-Core_kernel.List.map  int_vector_types  (   fun t -> 
-  for_all_vector_types  (  fun u -> 
-    for_all_vector_types  (   fun v -> 
-         add_plain ("beta_binomial_rng",  (rng_return_type) (t, u, v), t, u, v) 
-    ) 
-  ) 
- ) 
-; for i = 0 to vector_types_size do    (
-  for j = 0 to vector_types_size do    (
-     for k = 0 to vector_types_size do    (
-         add_plain ("beta_ccdf_log",  ((ReturnType Real)), vector_types i ,
-	  vector_types j , vector_types k ) 
-        ; add_plain ("beta_cdf",  ((ReturnType Real)), vector_types i , vector_types j ,
-	  vector_types k ) 
-        ; add_plain ("beta_cdf_log",  ((ReturnType Real)), vector_types i ,
-	  vector_types j , vector_types k ) 
-        ; add_plain ("beta_log",  ((ReturnType Real)), vector_types i , vector_types j ,
-	  vector_types k ) 
-        ; add_plain ("beta_lccdf",  ((ReturnType Real)), vector_types i ,
-	  vector_types j , vector_types k ) 
-        ; add_plain ("beta_lcdf",  ((ReturnType Real)), vector_types i ,
-	  vector_types j , vector_types k ) 
-        ; add_plain ("beta_lpdf",  ((ReturnType Real)), vector_types i , vector_types j ,
-	  vector_types k ) 
-    ) done
-  ) done
- ) done ;
-for_all_vector_types  (   fun t -> 
-  for_all_vector_types  (   fun u -> 
-       add_plain ("beta_rng",  (rng_return_type) (t, u), t, u) 
-  ) 
- )  ;
-Core_kernel.List.map  vector_types  (   fun t -> 
-  Core_kernel.List.map  vector_types  (   fun u -> 
-    for_all_vector_types  (   fun v -> 
-         add_plain ("beta_proportion_ccdf_log",  ((ReturnType Real)), t, u, v) 
-        ; add_plain ("beta_proportion_cdf_log",  ((ReturnType Real)), t, u, v) 
-        ; add_plain ("beta_proportion_log",  ((ReturnType Real)), t, u, v) 
-        ; add_plain ("beta_proportion_lccdf",  ((ReturnType Real)), t, u, v) 
-        ; add_plain ("beta_proportion_lcdf",  ((ReturnType Real)), t, u, v) 
-        ; add_plain ("beta_proportion_lpdf",  ((ReturnType Real)), t, u, v) 
-    ) 
-  ) 
- ) ;
-Core_kernel.List.map  vector_types  (   fun t -> 
+ ;
+for_vector_types  (   fun t -> 
   for_all_vector_types  (   fun u -> 
        add_plain ("beta_proportion_rng",  (rng_return_type) (t, u), t, u) 
   ) 
@@ -121,7 +25,7 @@ Core_kernel.List.map  vector_types  (   fun t ->
     ) done
   ) done
 ) done ;
-Core_kernel.List.map  int_vector_types  (   fun t -> 
+for_int_vector_types  (   fun t -> 
   for_all_vector_types  (   fun u -> 
       add_plain ("binomial_rng",  (rng_return_type) (t, u), t, u) 
   ) 
