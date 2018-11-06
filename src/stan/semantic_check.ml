@@ -104,8 +104,6 @@ let rec unsizedtype_of_sizedtype = function
   | SMatrix (e1, e2) -> Matrix
   | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
 
-let look_block id = Core_kernel.Option.map (Symbol.look vm id) snd
-
 let rec lub_originblock = function
   | [] -> Functions
   | x :: xs ->
@@ -116,9 +114,6 @@ let lub_op_originblock l =
   lub_originblock (List.map (function None -> Functions | Some b -> b) l)
 
 let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
-
-let check_of_real_type e =
-  match snd e with Some (_, Real) -> true | _ -> false
 
 let check_of_int_or_real_type e =
   match snd e with
@@ -163,32 +158,36 @@ let rec semantic_check_program p =
     ; transformedparametersblock= ubtp
     ; modelblock= ubm
     ; generatedquantitiesblock= ubgq }
-    
 
+(* Probably nothing to do here *)
 and semantic_check_functionblock bf =
   Core_kernel.Option.map bf (List.map semantic_check_fundef)
 
+(* Probably nothing to do here *)
 and semantic_check_datablock bd =
   Core_kernel.Option.map bd (List.map semantic_check_topvardecl)
 
+(* Probably nothing to do here *)
 and semantic_check_transformeddatablock btd =
   Core_kernel.Option.map btd (List.map semantic_check_topvardecl_or_statement)
 
+(* Probably nothing to do here *)
 and semantic_check_parametersblock bp =
   Core_kernel.Option.map bp (List.map semantic_check_topvardecl)
 
+(* Probably nothing to do here *)
 and semantic_check_transformedparametersblock btp =
   Core_kernel.Option.map btp (List.map semantic_check_topvardecl_or_statement)
 
+(* Probably nothing to do here *)
 and semantic_check_modelblock bm =
   Core_kernel.Option.map bm (List.map semantic_check_vardecl_or_statement)
 
+(* Probably nothing to do here *)
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
 
-
 (* OK until here *)
-
 
 (* TODO: deal properly with recursive functions here. *)
 and semantic_check_fundef = function

@@ -2207,10 +2207,11 @@ let try_get_primitive_return_type name optargtypes =
     let namematches = Hashtbl.find_all primitive_signatures name in
     let filteredmatches =
       List.filter
-        (fun x -> (List.length (snd x)) = (List.length uts) &&
-          List.for_all
-            (fun y -> y = true)
-            (List.map2 (check_of_same_type_mod_conv name) (snd x) uts) )
+        (fun x ->
+          List.length (snd x) = List.length uts
+          && List.for_all
+               (fun y -> y = true)
+               (List.map2 (check_of_same_type_mod_conv name) (snd x) uts) )
         namematches
     in
     let _ =
@@ -2299,4 +2300,3 @@ let try_get_operator_return_type op_name optargtypes =
         | Some ut -> Some ut )
     in
     try_recursive_find (Hashtbl.find_all operator_names op_name)
-
