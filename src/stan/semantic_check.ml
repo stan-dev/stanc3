@@ -755,10 +755,10 @@ and semantic_check_printable = function
       | None -> semantic_error "Primitives cannot be printed."
       | _ -> PExpr ue )
 
-(* OK until here *)
 and semantic_check_statement s =
   match fst s with
   | Assignment ((id, lindex), assop, e) -> (
+      (* TODO: The lhs is effectively checked twice here, because I am lazy. *)
       let uid, ulindex = semantic_check_lhs (id, lindex) in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
@@ -772,7 +772,7 @@ and semantic_check_statement s =
       in
       let _ =
         match uidoblock with
-        | Some Functions -> semantic_error "Cannot assign to function."
+        | Some Functions -> semantic_error "Cannot assign to this identifier."
         | Some Data -> semantic_error "Cannot assign to data."
         | Some Param -> semantic_error "Cannot assign to parameter."
         | Some b ->
@@ -792,6 +792,7 @@ and semantic_check_statement s =
       | _ ->
           semantic_error "Ill-typed arguments supplied to assignment operator."
       )
+  (* OK until here *)
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
@@ -985,13 +986,13 @@ and semantic_check_statement s =
           ; loop_body= us }
       , snd us )
   | ForEach (id, e, s) ->
-        let uid = semantic_check_identifier id in
+      let uid = semantic_check_identifier id in
       let ue = semantic_check_expression e in
       let loop_identifier_unsizedtype =
         match snd ue with
         | Some (_, Array ut) -> ut
         | Some (_, Vector) | Some (_, RowVector) | Some (_, Matrix) -> Real
-                | _ ->
+        | _ ->
             semantic_error
               "Foreach loop must be over array, vector, row_vector or matrix"
       in

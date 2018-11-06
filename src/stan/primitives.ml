@@ -2298,7 +2298,7 @@ let _ = Hashtbl.add operator_names "EltTimesAssign" "assign_elt_times"
 let _ = Hashtbl.add operator_names "EltDivideAssign" "assign_elt_divide"
 
 let try_get_operator_return_type op_name optargtypes =
-  if op_name = "Assign" || op_name = "Arrow_Assign" then
+  if op_name = "Assign" || op_name = "ArrowAssign" then
     match optargtypes with
     | [Some (_, ut1); Some (_, ut2)] ->
         if check_of_same_type_mod_conv "" ut1 ut2 then Some Void else None
