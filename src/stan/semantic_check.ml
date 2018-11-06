@@ -569,8 +569,8 @@ and semantic_check_expression x =
                supplied."
         | None ->
             semantic_error
-              ( "A returning function was expected but an undeclared " ^ uid
-              ^ " was supplied." ) ) )
+              ( "A returning function was expected but an undeclared identifier "
+              ^ uid ^ " was supplied." ) ) )
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
@@ -621,8 +621,8 @@ and semantic_check_expression x =
                supplied."
         | None ->
             semantic_error
-              ( "A returning function was expected but an undeclared " ^ uid
-              ^ " was supplied." ) ) )
+              ( "A returning function was expected but an undeclared identifier "
+              ^ uid ^ " was supplied." ) ) )
   | GetLP ->
       let _ =
         if
@@ -834,8 +834,8 @@ and semantic_check_statement s =
                was supplied."
         | None ->
             semantic_error
-              ( "A returning function was expected but an undeclared " ^ uid
-              ^ " was supplied." ) ) )
+              ( "A returning function was expected but an undeclared identifier "
+              ^ uid ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -870,13 +870,21 @@ and semantic_check_statement s =
              of functions with the suffix _lp."
       in
       (IncrementLogProb ue, Some Void)
-      (* OK until here *)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
       let ut = semantic_check_truncation t in
-      let argumenttypes = snd ue :: List.map snd ues in
+      let optargumenttypes = snd ue :: List.map snd ues in
+      let argumenttypes =
+        List.map
+          (function
+            | Some x -> x
+            | _ ->
+                semantic_error
+                  "This should never happen. Please report a bug. Error code 6.")
+          optargumenttypes
+      in
       let _ =
         if
           not
@@ -886,28 +894,21 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      if
-        try_get_primitive_return_type (uid ^ "_lpdf") argumenttypes
-        = Some (ReturnType Real)
-        || try_get_primitive_return_type (uid ^ "_lpmf") argumenttypes
-           = Some (ReturnType Real)
-        || Symbol.look vm uid
-           = Some
-               ( Functions
-               , Fun
-                   ( List.map
-                       (function
-                         | Some x -> x
-                         | _ ->
-                             semantic_error
-                               "This should never happen. Please report a \
-                                bug. Error code 6.")
-                       argumenttypes
-                   , ReturnType Real ) )
-      then
-        ( Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
-        , Some Void )
-      else semantic_error "Ill-typed arguments to '~' statement."
+      let _ =
+        match
+          ( try_get_primitive_return_type (uid ^ "_lpdf") optargumenttypes
+          , try_get_primitive_return_type (uid ^ "_lpmf") optargumenttypes
+          , Symbol.look vm (uid ^ "_lpdf")
+          , Symbol.look vm (uid ^ "_lpmf") )
+        with
+        | Some (ReturnType Real), _, _, _ -> ()
+        | _, Some (ReturnType Real), _, _ -> ()
+        | _, _, Some (Functions, Fun (argumenttypes, ReturnType Real)), _ -> ()
+        | _, _, _, Some (Functions, Fun (argumenttypes, ReturnType Real)) -> ()
+        | _ -> semantic_error "Ill-typed arguments to '~' statement."
+      in
+      (Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}, Some Void)
+      (* OK until here *)
   | Break ->
       let _ =
         if not context_flags.in_loop then
