@@ -1624,12 +1624,12 @@ let _ =
   add_plain ("prod", ReturnType Real, [Vector]) ;
   add_plain ("prod", ReturnType Real, [RowVector]) ;
   add_plain ("prod", ReturnType Real, [Matrix]) ;
-  add_plain ("quad_; form", ReturnType Real, [Matrix; Vector]) ;
-  add_plain ("quad_; form", ReturnType Matrix, [Matrix; Matrix]) ;
-  add_plain ("quad_; form_sym", ReturnType Real, [Matrix; Vector]) ;
-  add_plain ("quad_; form_sym", ReturnType Matrix, [Matrix; Matrix]) ;
-  add_plain ("quad_; form_diag", ReturnType Matrix, [Matrix; Vector]) ;
-  add_plain ("quad_; form_diag", ReturnType Matrix, [Matrix; RowVector]) ;
+  add_plain ("quad_form", ReturnType Real, [Matrix; Vector]) ;
+  add_plain ("quad_form", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("quad_form_sym", ReturnType Real, [Matrix; Vector]) ;
+  add_plain ("quad_form_sym", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("quad_form_diag", ReturnType Matrix, [Matrix; Vector]) ;
+  add_plain ("quad_form_diag", ReturnType Matrix, [Matrix; RowVector]) ;
   add_plain ("rank", ReturnType Int, [bare_array_type (Int, 1); Int]) ;
   add_plain ("rank", ReturnType Int, [bare_array_type (Real, 1); Int]) ;
   add_plain ("rank", ReturnType Int, [Vector; Int]) ;
@@ -2017,9 +2017,9 @@ let _ =
   add_plain ("to_vector", ReturnType Vector, [bare_array_type (Real, 1)]) ;
   add_plain ("to_vector", ReturnType Vector, [bare_array_type (Int, 1)]) ;
   add_plain ("trace", ReturnType Real, [Matrix]) ;
-  add_plain ("trace_gen_quad_; form", ReturnType Real, [Matrix; Matrix; Matrix]) ;
-  add_plain ("trace_quad_; form", ReturnType Real, [Matrix; Vector]) ;
-  add_plain ("trace_quad_; form", ReturnType Real, [Matrix; Matrix]) ;
+  add_plain ("trace_gen_quad_form", ReturnType Real, [Matrix; Matrix; Matrix]) ;
+  add_plain ("trace_quad_form", ReturnType Real, [Matrix; Vector]) ;
+  add_plain ("trace_quad_form", ReturnType Real, [Matrix; Matrix]) ;
   add_plain ("transpose", ReturnType RowVector, [Vector]) ;
   add_plain ("transpose", ReturnType Vector, [RowVector]) ;
   add_plain ("transpose", ReturnType Matrix, [Matrix]) ;
@@ -2029,31 +2029,31 @@ let _ =
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
         add_plain
-          ( "uni; form_ccdf_log"
+          ( "uniform_ccdf_log"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] ) ;
         add_plain
-          ( "uni; form_cdf"
+          ( "uniform_cdf"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] ) ;
         add_plain
-          ( "uni; form_cdf_log"
+          ( "uniform_cdf_log"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] ) ;
         add_plain
-          ( "uni; form_log"
+          ( "uniform_log"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] ) ;
         add_plain
-          ( "uni; form_lccdf"
+          ( "uniform_lccdf"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] ) ;
         add_plain
-          ( "uni; form_lcdf"
+          ( "uniform_lcdf"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] ) ;
         add_plain
-          ( "uni; form_lpdf"
+          ( "uniform_lpdf"
           , ReturnType Real
           , [vector_types i; vector_types j; vector_types k] )
       done

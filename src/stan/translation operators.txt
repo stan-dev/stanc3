@@ -1,0 +1,43 @@
+Infix
+-----
+if_else  ? :
+
+logical_or ||
+logical_and &&
+logical_eq ==
+logical_neq !=
+logical_lt <
+logical_lte <=
+logical_gt >
+logical_gte >=
+
+
+multiply *
+add +   
+subtract -
+divide /
+dot_product
+elt_divide ./
+elt_multiply .*
+mdivide_left  \
+mdivide_right /
+modulus %
+
+pow ^
+
+
+
+Prefix
+-----
+minus -
+
+logical_negation !
+
+Postfix
+-----
+transpose '
+
+
+
+Assign
+-----
