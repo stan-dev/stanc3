@@ -563,10 +563,14 @@ and semantic_check_expression x =
                was supplied."
         | Some (_, Fun (_, ReturnType ut)) ->
             (FunApp (uid, ues), Some (returnblock, ut))
-        | _ ->
+        | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
-               supplied." ) )
+               supplied."
+        | None ->
+            semantic_error
+              ( "A returning function was expected but an undeclared " ^ uid
+              ^ " was supplied." ) ) )
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
@@ -611,10 +615,14 @@ and semantic_check_expression x =
                was supplied."
         | Some (_, Fun (_, ReturnType ut)) ->
             (CondFunApp (uid, ues), Some (returnblock, ut))
-        | _ ->
+        | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
-               supplied." ) )
+               supplied."
+        | None ->
+            semantic_error
+              ( "A returning function was expected but an undeclared " ^ uid
+              ^ " was supplied." ) ) )
   | GetLP ->
       let _ =
         if
@@ -792,11 +800,10 @@ and semantic_check_statement s =
       | _ ->
           semantic_error "Ill-typed arguments supplied to assignment operator."
       )
-  (* OK until here *)
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
-      let argumenttypes = List.map snd ues in
+      let optargumenttypes = List.map snd ues in
       let _ =
         if
           Filename.check_suffix uid "_lp"
@@ -808,7 +815,7 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match try_get_primitive_return_type uid argumenttypes with
+      match try_get_primitive_return_type uid optargumenttypes with
       | Some Void -> (NRFunApp (uid, ues), Some Void)
       | Some (ReturnType _) ->
           semantic_error
@@ -816,16 +823,19 @@ and semantic_check_statement s =
              was supplied."
       | _ -> (
         match Symbol.look vm uid with
-        | Some (_, Fun (argumenttypes, Void)) ->
-            (NRFunApp (uid, ues), Some Void)
-        | Some (_, Fun (argumenttypes, ReturnType _)) ->
+        | Some (_, Fun (_, Void)) -> (NRFunApp (uid, ues), Some Void)
+        | Some (_, Fun (_, ReturnType _)) ->
             semantic_error
               "A non-returning function was expected but a returning function \
                was supplied."
-        | _ ->
+        | Some _ ->
             semantic_error
               "A non-returning function was expected but a ground type value \
-               was supplied." ) )
+               was supplied."
+        | None ->
+            semantic_error
+              ( "A returning function was expected but an undeclared " ^ uid
+              ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -842,7 +852,7 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (TargetPE e, Some Void)
+      (TargetPE ue, Some Void)
   | IncrementLogProb e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -859,7 +869,8 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (IncrementLogProb e, Some Void)
+      (IncrementLogProb ue, Some Void)
+      (* OK until here *)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
