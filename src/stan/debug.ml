@@ -9,7 +9,7 @@ open Core_kernel
 let grammar_logging = false
 
 (* Controls whether the parsing operations get logged *)
-let ast_printing = true
+let ast_printing = false
 
 (* Controls whether an AST gets printed during parsing *)
 

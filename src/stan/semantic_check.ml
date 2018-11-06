@@ -163,6 +163,7 @@ let rec semantic_check_program p =
     ; transformedparametersblock= ubtp
     ; modelblock= ubm
     ; generatedquantitiesblock= ubgq }
+    
 
 and semantic_check_functionblock bf =
   Core_kernel.Option.map bf (List.map semantic_check_fundef)
@@ -184,6 +185,10 @@ and semantic_check_modelblock bm =
 
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
+
+
+(* OK until here *)
+
 
 (* TODO: deal properly with recursive functions here. *)
 and semantic_check_fundef = function

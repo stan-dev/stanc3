@@ -129,7 +129,6 @@ let for_vector_types s =
 
 let _ =
   add_plain ("abs", ReturnType Int, [Int]) ;
-  add_plain ("abs", ReturnType Int, [Int]) ;
   add_plain ("abs", ReturnType Real, [Real]) ;
   add_unary_vectorized "acos" ;
   add_unary_vectorized "acosh" ;
@@ -2301,4 +2300,3 @@ let try_get_operator_return_type op_name optargtypes =
     in
     try_recursive_find (Hashtbl.find_all operator_names op_name)
 
-(* TODO: allow for int to real conversion everywhere *)
