@@ -2208,7 +2208,7 @@ let try_get_primitive_return_type name optargtypes =
     let namematches = Hashtbl.find_all primitive_signatures name in
     let filteredmatches =
       List.filter
-        (fun x ->
+        (fun x -> (List.length (snd x)) = (List.length uts) &&
           List.for_all
             (fun y -> y = true)
             (List.map2 (check_of_same_type_mod_conv name) (snd x) uts) )
