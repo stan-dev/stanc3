@@ -32,7 +32,9 @@ let bare_types = function
   | 2 -> Vector
   | 3 -> RowVector
   | 4 -> Matrix
-  | _ -> semantic_error "This should never happen. Please report a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please report a bug. Error code 9."
 
 let bare_types_size = 5
 
@@ -41,21 +43,27 @@ let vector_types = function
   | 1 -> Array Real
   | 2 -> Vector
   | 3 -> RowVector
-  | _ -> semantic_error "This should never happen. Please report a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please report a bug. Error code 10."
 
 let vector_types_size = 4
 
 let int_vector_types = function
   | 0 -> Int
   | 1 -> Array Int
-  | _ -> semantic_error "This should never happen. Please report a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please report a bug. Error code 11."
 
 let int_vector_types_size = 2
 
 let primitive_types = function
   | 0 -> Int
   | 1 -> Real
-  | _ -> semantic_error "This should never happen. Please report a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please report a bug. Error code 12."
 
 let primitive_types_size = 2
 
@@ -66,7 +74,9 @@ let all_vector_types = function
   | 3 -> RowVector
   | 4 -> Int
   | 5 -> Array Int
-  | _ -> semantic_error "This should never happen. Please report a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please report a bug. Error code 13."
 
 let all_vector_types_size = 6
 
@@ -75,7 +85,9 @@ let eigen_vector_types = function
   | 1 -> Array Vector
   | 2 -> RowVector
   | 3 -> Array RowVector
-  | _ -> semantic_error "This should never happen. Please report a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please report a bug. Error code 14."
 
 let eigen_vector_types_size = 4
 
@@ -2200,7 +2212,8 @@ let try_get_primitive_return_type name optargtypes =
         (function
           | Some x -> x
           | None ->
-              semantic_error "This should never happen. Please report a bug.")
+              semantic_error
+                "This should never happen. Please report a bug. Error code 15.")
         optargtypes
     in
     let uts = List.map snd argtypes in
@@ -2216,7 +2229,8 @@ let try_get_primitive_return_type name optargtypes =
     in
     let _ =
       if List.length filteredmatches > 1 then
-        semantic_error "This should never happen. Please file a bug."
+        semantic_error
+          "This should never happen. Please file a bug. Error code 16."
     in
     if List.length filteredmatches = 0 then None
     else Some (fst (List.hd filteredmatches))

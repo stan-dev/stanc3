@@ -188,7 +188,6 @@ and semantic_check_modelblock bm =
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
 
-
 (* TODO: deal properly with recursive functions here. *)
 and semantic_check_fundef = function
   | {returntype= rt; name= id; arguments= args; body= b} ->
@@ -267,7 +266,6 @@ and semantic_check_returntype = function
   | Void -> Void
   | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
 
-
 (* Probably nothing to do here *)
 and semantic_check_unsizedtype = function
   | Array ut -> Array (semantic_check_unsizedtype ut)
@@ -281,13 +279,12 @@ and semantic_check_unsizedtype = function
         , semantic_check_returntype rt )
   | ut -> ut
 
-(* OK until here *)
 and semantic_check_topvardecl = function
   | st, trans, id ->
       let ust = semantic_check_sizedtype st in
       let utrans = semantic_check_transformation trans in
       let uid = semantic_check_identifier id in
-      let vt = unsizedtype_of_sizedtype st in
+      let ut = unsizedtype_of_sizedtype st in
       let _ =
         if is_primitive_name uid then
           let error_msg =
@@ -299,17 +296,17 @@ and semantic_check_topvardecl = function
         match Symbol.look vm uid with
         | Some x ->
             let error_msg =
-              String.concat " " ["Identifier "; uid; " is already in use."]
+              String.concat " " ["Identifier "; id; " is already in use."]
             in
             semantic_error error_msg
         | None -> ()
       in
-      let _ = Symbol.enter vm id (context_flags.current_block, vt) in
+      let _ = Symbol.enter vm id (context_flags.current_block, ut) in
       let _ =
         if
           ( context_flags.current_block = Param
           || context_flags.current_block = TParam )
-          && unsizedtype_contains_int vt
+          && unsizedtype_contains_int ut
         then semantic_error "(Transformed) Parameters cannot be integers."
       in
       (ust, utrans, uid)
@@ -321,35 +318,35 @@ and semantic_check_compound_topvardecl_assign = function
       match
         semantic_check_statement (Assignment ((uid, []), Assign, e), None)
       with
-      | Assignment ((uid, _), Assign, ue), Some Void ->
-          TVDeclAss
-            {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
-      | _ -> semantic_error "This should never happen. Please file a bug." )
+      | Assignment ((uid, []), Assign, ue), Some Void ->
+          {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+      | _ ->
+          semantic_error
+            "This should never happen. Please file a bug. Error code 1." )
 
-and semantic_check_vardecl vd =
-  let st = fst vd in
-  let id = snd vd in
-  let ust = semantic_check_sizedtype st in
-  let uid = semantic_check_identifier id in
-  let vt = unsizedtype_of_sizedtype st in
-  let _ =
-    if is_primitive_name uid then
-      let error_msg =
-        String.concat " " ["Identifier "; id; " clashes with primitive."]
+and semantic_check_vardecl = function
+  | st, id ->
+      let ust = semantic_check_sizedtype st in
+      let uid = semantic_check_identifier id in
+      let ut = unsizedtype_of_sizedtype st in
+      let _ =
+        if is_primitive_name uid then
+          let error_msg =
+            String.concat " " ["Identifier "; id; " clashes with primitive."]
+          in
+          semantic_error error_msg
       in
-      semantic_error error_msg
-  in
-  let _ =
-    match Symbol.look vm id with
-    | Some x ->
-        let error_msg =
-          String.concat " " ["Identifier "; id; " is already in use."]
-        in
-        semantic_error error_msg
-    | None -> ()
-  in
-  let _ = Symbol.enter vm id (context_flags.current_block, vt) in
-  (ust, uid)
+      let _ =
+        match Symbol.look vm id with
+        | Some x ->
+            let error_msg =
+              String.concat " " ["Identifier "; id; " is already in use."]
+            in
+            semantic_error error_msg
+        | None -> ()
+      in
+      let _ = Symbol.enter vm id (context_flags.current_block, ut) in
+      (ust, uid)
 
 (* Probably nothing to check here. *)
 and semantic_check_compound_vardecl_assign = function
@@ -358,24 +355,28 @@ and semantic_check_compound_vardecl_assign = function
       match
         semantic_check_statement (Assignment ((uid, []), Assign, e), None)
       with
-      | Assignment ((uid, _), Assign, ue), Some Void ->
-          VDeclAss {sizedtype= ust; identifier= uid; value= ue}
-      | _ -> semantic_error "This should never happen. Please file a bug." )
+      | Assignment ((uid, []), Assign, ue), Some Void ->
+          {sizedtype= ust; identifier= uid; value= ue}
+      | _ ->
+          semantic_error
+            "This should never happen. Please file a bug. Error code 2." )
 
 (* Probably nothing to do here *)
 and semantic_check_topvardecl_or_statement tvds =
   match tvds with
   | TVDecl tvd -> TVDecl (semantic_check_topvardecl tvd)
   | TStmt s -> TStmt (semantic_check_statement s)
-  | TVDeclAss tvda -> semantic_check_compound_topvardecl_assign tvda
+  | TVDeclAss tvda ->
+      TVDeclAss (semantic_check_compound_topvardecl_assign tvda)
 
 (* Probably nothing to do here *)
 and semantic_check_vardecl_or_statement vds =
   match vds with
   | VDecl vd -> VDecl (semantic_check_vardecl vd)
   | Stmt s -> Stmt (semantic_check_statement s)
-  | VDeclAss vda -> semantic_check_compound_vardecl_assign vda
+  | VDeclAss vda -> VDeclAss (semantic_check_compound_vardecl_assign vda)
 
+(* OK until here *)
 and semantic_check_sizedtype = function
   | SInt -> SInt
   | SReal -> SReal
@@ -639,7 +640,8 @@ and semantic_check_expression x =
           (fun y ->
             match snd y with
             | None ->
-                semantic_error "This should never happen. Please file a bug."
+                semantic_error
+                  "This should never happen. Please file a bug. Error code 3."
             | Some x -> snd x )
           ues
       in
@@ -660,7 +662,8 @@ and semantic_check_expression x =
           (fun y ->
             match snd y with
             | None ->
-                semantic_error "This should never happen. Please file a bug."
+                semantic_error
+                  "This should never happen. Please file a bug. Error code 4."
             | Some x -> snd x )
           ues
       in
@@ -768,7 +771,9 @@ and semantic_check_statement s =
             else
               semantic_error
                 "Cannot assign to variable declared in previous blocks."
-        | _ -> semantic_error "This should never happen. Please file a bug."
+        | _ ->
+            semantic_error
+              "This should never happen. Please file a bug. Error code 5."
       in
       let opname =
         Core_kernel.string_of_sexp (sexp_of_assignmentoperator uassop)
@@ -874,7 +879,8 @@ and semantic_check_statement s =
                          | Some x -> x
                          | _ ->
                              semantic_error
-                               "This should never happen. Please report a bug.")
+                               "This should never happen. Please report a \
+                                bug. Error code 6.")
                        argumenttypes
                    , ReturnType Real ) )
       then
@@ -1000,7 +1006,9 @@ and semantic_check_statement s =
                   "Branches of conditional need to have the same return type."
           | false, Some Void -> compute_ort xs
           | _ ->
-              semantic_error "This should never happen. Please report a bug." )
+              semantic_error
+                "This should never happen. Please report a bug. Error code 7."
+          )
       in
       let temp =
         List.map
@@ -1045,7 +1053,9 @@ and semantic_check_lhs (id, lindex) =
     semantic_check_expression (Indexed ((Variable id, None), lindex), None)
   with
   | Indexed ((Variable uid, _), ulindex), _ -> (uid, ulindex)
-  | _ -> semantic_error "This should never happen. Please file a bug."
+  | _ ->
+      semantic_error
+        "This should never happen. Please file a bug. Error code 8."
 
 and semantic_check_index = function
   | All -> All
