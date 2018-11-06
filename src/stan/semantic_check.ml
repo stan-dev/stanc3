@@ -41,6 +41,7 @@ Function ending in _lp only where target is available
 TODO: Test that user defined functions with probability suffixes have right type.
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
+Make sure data only arguments to functions are checked properly.
 *)
 
 open Symbol_table

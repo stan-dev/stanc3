@@ -22,104 +22,94 @@ let semantic_error ?loc msg =
 let primitive_signatures = Hashtbl.create 3000
 
 let bare_types = function
-  | 0 -> ReturnType Int
-  | 1 -> ReturnType Real
-  | 2 -> ReturnType Vector
-  | 3 -> ReturnType RowVector
-  | 4 -> ReturnType Matrix
+  | 0 -> Int
+  | 1 -> Real
+  | 2 -> Vector
+  | 3 -> RowVector
+  | 4 -> Matrix
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let bare_types_size = 5
 
 let vector_types = function
-  | 0 -> ReturnType Real
-  | 1 -> ReturnType (Array Real)
-  | 2 -> ReturnType Vector
-  | 3 -> ReturnType RowVector
+  | 0 -> Real
+  | 1 -> Array Real
+  | 2 -> Vector
+  | 3 -> RowVector
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let vector_types_size = 4
 
 let int_vector_types = function
-  | 0 -> ReturnType Int
-  | 1 -> ReturnType (Array Int)
+  | 0 -> Int
+  | 1 -> Array Int
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let int_vector_types_size = 2
 
 let primitive_types = function
-  | 0 -> ReturnType Int
-  | 1 -> ReturnType Real
+  | 0 -> Int
+  | 1 -> Real
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let primitive_types_size = 2
 
 let all_vector_types = function
-  | 0 -> ReturnType Real
-  | 1 -> ReturnType (Array Real)
-  | 2 -> ReturnType Vector
-  | 3 -> ReturnType RowVector
-  | 4 -> ReturnType Int
-  | 5 -> ReturnType (Array Int)
+  | 0 -> Real
+  | 1 -> Array Real
+  | 2 -> Vector
+  | 3 -> RowVector
+  | 4 -> Int
+  | 5 -> Array Int
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let all_vector_types_size = 6
 
 let eigen_vector_types = function
-  | 0 -> ReturnType Vector
-  | 1 -> ReturnType (Array Vector)
-  | 2 -> ReturnType RowVector
-  | 3 -> ReturnType (Array RowVector)
+  | 0 -> Vector
+  | 1 -> Array Vector
+  | 2 -> RowVector
+  | 3 -> Array RowVector
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let eigen_vector_types_size = 4
 
-let is_primitive = function
-  | ReturnType Real -> true
-  | ReturnType Int -> true
-  | _ -> false
+let is_primitive = function Real -> true | Int -> true | _ -> false
 
-let rng_return_type t lt =
-  if List.for_all is_primitive lt then ReturnType t else ReturnType (Array t)
+let rng_return_type t lt = if List.for_all is_primitive lt then t else Array t
 
 let add_plain (name, rt, argts) =
   Hashtbl.add primitive_signatures name (rt, argts)
 
 let add_nullary name = add_plain (name, ReturnType Real, [])
 
-let add_unary name = add_plain (name, ReturnType Real, [ReturnType Real])
+let add_unary name = add_plain (name, ReturnType Real, [Real])
 
 let add_unary_vectorized name =
-  add_plain (name, ReturnType Real, [ReturnType Int]) ;
-  add_plain (name, ReturnType Real, [ReturnType Real]) ;
-  add_plain (name, ReturnType Vector, [ReturnType Vector]) ;
-  add_plain (name, ReturnType RowVector, [ReturnType RowVector]) ;
-  add_plain (name, ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain (name, ReturnType (Array Real), [ReturnType (Array Int)]) ;
-  add_plain (name, ReturnType (Array Real), [ReturnType (Array Real)]) ;
-  add_plain (name, ReturnType (Array Vector), [ReturnType (Array Vector)]) ;
-  add_plain (name, ReturnType (Array RowVector), [ReturnType (Array RowVector)]) ;
-  add_plain (name, ReturnType (Array Matrix), [ReturnType (Array Matrix)])
+  add_plain (name, ReturnType Real, [Int]) ;
+  add_plain (name, ReturnType Real, [Real]) ;
+  add_plain (name, ReturnType Vector, [Vector]) ;
+  add_plain (name, ReturnType RowVector, [RowVector]) ;
+  add_plain (name, ReturnType Matrix, [Matrix]) ;
+  add_plain (name, ReturnType (Array Real), [Array Int]) ;
+  add_plain (name, ReturnType (Array Real), [Array Real]) ;
+  add_plain (name, ReturnType (Array Vector), [Array Vector]) ;
+  add_plain (name, ReturnType (Array RowVector), [Array RowVector]) ;
+  add_plain (name, ReturnType (Array Matrix), [Array Matrix])
 
-let add_binary name =
-  add_plain (name, ReturnType Real, [ReturnType Real; ReturnType Real])
+let add_binary name = add_plain (name, ReturnType Real, [Real; Real])
 
-let add_ternary name =
-  add_plain
-    (name, ReturnType Real, [ReturnType Real; ReturnType Real; ReturnType Real])
+let add_ternary name = add_plain (name, ReturnType Real, [Real; Real; Real])
 
 let add_quaternary name =
-  add_plain
-    ( name
-    , ReturnType Real
-    , [ReturnType Real; ReturnType Real; ReturnType Real; ReturnType Real] )
+  add_plain (name, ReturnType Real, [Real; Real; Real; Real])
 
 let basic_bare_array_type = function
-  | ReturnType Real -> ReturnType (Array Real)
-  | ReturnType Int -> ReturnType (Array Int)
-  | ReturnType Vector -> ReturnType (Array Vector)
-  | ReturnType RowVector -> ReturnType (Array RowVector)
-  | ReturnType Matrix -> ReturnType (Array Matrix)
+  | Real -> Array Real
+  | Int -> Array Int
+  | Vector -> Array Vector
+  | RowVector -> Array RowVector
+  | Matrix -> Array Matrix
   | _ -> semantic_error "This should never happen. Please report a bug."
 
 let rec bare_array_type (t, i) =
@@ -143,51 +133,44 @@ let for_vector_types s =
   done
 
 let _ =
-  add_plain ("abs", ReturnType Int, [ReturnType Int]) ;
-  add_plain ("abs", ReturnType Int, [ReturnType Int]) ;
-  add_plain ("abs", ReturnType Real, [ReturnType Real]) ;
+  add_plain ("abs", ReturnType Int, [Int]) ;
+  add_plain ("abs", ReturnType Int, [Int]) ;
+  add_plain ("abs", ReturnType Real, [Real]) ;
   add_unary_vectorized "acos" ;
   add_unary_vectorized "acosh" ;
   for i = 0 to bare_types_size - 1 do
-    add_plain ("add", bare_types i, [bare_types i; bare_types i])
+    add_plain ("add", ReturnType (bare_types i), [bare_types i; bare_types i])
   done ;
-  add_plain ("add", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
-  add_plain
-    ("add", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
-  add_plain ("add", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain ("add", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
-  add_plain
-    ("add", ReturnType RowVector, [ReturnType Real; ReturnType RowVector]) ;
-  add_plain ("add", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
+  add_plain ("add", ReturnType Vector, [Vector; Real]) ;
+  add_plain ("add", ReturnType RowVector, [RowVector; Real]) ;
+  add_plain ("add", ReturnType Matrix, [Matrix; Real]) ;
+  add_plain ("add", ReturnType Vector, [Real; Vector]) ;
+  add_plain ("add", ReturnType RowVector, [Real; RowVector]) ;
+  add_plain ("add", ReturnType Matrix, [Real; Matrix]) ;
   for i = 0 to bare_types_size - 1 do
-    add_plain ("add", bare_types i, [bare_types i])
+    add_plain ("add", ReturnType (bare_types i), [bare_types i])
   done ;
   for i = 1 to 8 - 1 do
     add_plain
       ( "append_array"
-      , bare_array_type (ReturnType Int, i)
-      , [ bare_array_type (ReturnType Int, i)
-        ; bare_array_type (ReturnType Int, i) ] ) ;
+      , ReturnType (bare_array_type (Int, i))
+      , [bare_array_type (Int, i); bare_array_type (Int, i)] ) ;
     add_plain
       ( "append_array"
-      , bare_array_type (ReturnType Real, i)
-      , [ bare_array_type (ReturnType Real, i)
-        ; bare_array_type (ReturnType Real, i) ] ) ;
+      , ReturnType (bare_array_type (Real, i))
+      , [bare_array_type (Real, i); bare_array_type (Real, i)] ) ;
     add_plain
       ( "append_array"
-      , bare_array_type (ReturnType Vector, i)
-      , [ bare_array_type (ReturnType Vector, i)
-        ; bare_array_type (ReturnType Vector, i) ] ) ;
+      , ReturnType (bare_array_type (Vector, i))
+      , [bare_array_type (Vector, i); bare_array_type (Vector, i)] ) ;
     add_plain
       ( "append_array"
-      , bare_array_type (ReturnType RowVector, i)
-      , [ bare_array_type (ReturnType RowVector, i)
-        ; bare_array_type (ReturnType RowVector, i) ] ) ;
+      , ReturnType (bare_array_type (RowVector, i))
+      , [bare_array_type (RowVector, i); bare_array_type (RowVector, i)] ) ;
     add_plain
       ( "append_array"
-      , bare_array_type (ReturnType Matrix, i)
-      , [ bare_array_type (ReturnType Matrix, i)
-        ; bare_array_type (ReturnType Matrix, i) ] )
+      , ReturnType (bare_array_type (Matrix, i))
+      , [bare_array_type (Matrix, i); bare_array_type (Matrix, i)] )
   done ;
   add_unary_vectorized "asin" ;
   add_unary_vectorized "asinh" ;
@@ -223,9 +206,10 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("bernoulli_rng", rng_return_type Int [t], [t]) ) ;
+      add_plain ("bernoulli_rng", ReturnType (rng_return_type Int [t]), [t]) ) ;
   for_all_vector_types (fun t ->
-      add_plain ("bernoulli_logit_rng", rng_return_type Int [t], [t]) ) ;
+      add_plain
+        ("bernoulli_logit_rng", ReturnType (rng_return_type Int [t]), [t]) ) ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       add_plain
@@ -241,21 +225,13 @@ let _ =
   add_plain
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Matrix
-      ; ReturnType Real
-      ; ReturnType Vector ] ) ;
+    , [bare_array_type (Int, 1); Matrix; Real; Vector] ) ;
   add_plain
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Vector ] ) ;
-  add_plain
-    ("bessel_first_kind", ReturnType Real, [ReturnType Int; ReturnType Real]) ;
-  add_plain
-    ("bessel_second_kind", ReturnType Real, [ReturnType Int; ReturnType Real]) ;
+    , [bare_array_type (Int, 1); Matrix; Vector; Vector] ) ;
+  add_plain ("bessel_first_kind", ReturnType Real, [Int; Real]) ;
+  add_plain ("bessel_second_kind", ReturnType Real, [Int; Real]) ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to int_vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -317,8 +293,9 @@ let _ =
       for_all_vector_types (fun u ->
           for_all_vector_types (fun v ->
               add_plain
-                ("beta_binomial_rng", rng_return_type Int [t; u; v], [t; u; v])
-          ) ) ) ;
+                ( "beta_binomial_rng"
+                , ReturnType (rng_return_type Int [t; u; v])
+                , [t; u; v] ) ) ) ) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -355,7 +332,8 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("beta_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("beta_rng", ReturnType (rng_return_type Real [t; u]), [t; u]) ) ) ;
   for_vector_types (fun t ->
       for_vector_types (fun u ->
           for_all_vector_types (fun v ->
@@ -369,10 +347,11 @@ let _ =
   (* TODO: from here!! *)
   for_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("beta_proportion_rng", rng_return_type Real [t; u], [t; u])
-      ) ) ;
-  add_plain
-    ("binary_log_loss", ReturnType Real, [ReturnType Int; ReturnType Real]) ;
+          add_plain
+            ( "beta_proportion_rng"
+            , ReturnType (rng_return_type Real [t; u])
+            , [t; u] ) ) ) ;
+  add_plain ("binary_log_loss", ReturnType Real, [Int; Real]) ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to int_vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -409,7 +388,9 @@ let _ =
   done ;
   for_int_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("binomial_rng", rng_return_type Int [t; u], [t; u]) ) ) ;
+          add_plain
+            ("binomial_rng", ReturnType (rng_return_type Int [t; u]), [t; u])
+      ) ) ;
   add_binary "binomial_coefficient_log" ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to int_vector_types_size - 1 do
@@ -425,34 +406,18 @@ let _ =
       done
     done
   done ;
-  add_plain
-    ( "block"
-    , ReturnType Matrix
-    , [ ReturnType Matrix
-      ; ReturnType Int
-      ; ReturnType Int
-      ; ReturnType Int
-      ; ReturnType Int ] ) ;
+  add_plain ("block", ReturnType Matrix, [Matrix; Int; Int; Int; Int]) ;
   for i = 0 to int_vector_types_size - 1 do
+    add_plain ("categorical_log", ReturnType Real, [int_vector_types i; Vector]) ;
     add_plain
-      ( "categorical_log"
-      , ReturnType Real
-      , [int_vector_types i; ReturnType Vector] ) ;
+      ("categorical_logit_log", ReturnType Real, [int_vector_types i; Vector]) ;
     add_plain
-      ( "categorical_logit_log"
-      , ReturnType Real
-      , [int_vector_types i; ReturnType Vector] ) ;
+      ("categorical_lpmf", ReturnType Real, [int_vector_types i; Vector]) ;
     add_plain
-      ( "categorical_lpmf"
-      , ReturnType Real
-      , [int_vector_types i; ReturnType Vector] ) ;
-    add_plain
-      ( "categorical_logit_lpmf"
-      , ReturnType Real
-      , [int_vector_types i; ReturnType Vector] )
+      ("categorical_logit_lpmf", ReturnType Real, [int_vector_types i; Vector])
   done ;
-  add_plain ("categorical_rng", ReturnType Int, [ReturnType Vector]) ;
-  add_plain ("categorical_logit_rng", ReturnType Int, [ReturnType Vector]) ;
+  add_plain ("categorical_rng", ReturnType Int, [Vector]) ;
+  add_plain ("categorical_logit_rng", ReturnType Int, [Vector]) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -489,27 +454,16 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("cauchy_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
-  add_plain
-    ("append_col", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ("append_col", ReturnType Matrix, [ReturnType Vector; ReturnType Matrix]) ;
-  add_plain
-    ("append_col", ReturnType Matrix, [ReturnType Matrix; ReturnType Vector]) ;
-  add_plain
-    ("append_col", ReturnType Matrix, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ( "append_col"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ( "append_col"
-    , ReturnType RowVector
-    , [ReturnType Real; ReturnType RowVector] ) ;
-  add_plain
-    ( "append_col"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Real] ) ;
+          add_plain
+            ("cauchy_rng", ReturnType (rng_return_type Real [t; u]), [t; u]) )
+  ) ;
+  add_plain ("append_col", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("append_col", ReturnType Matrix, [Vector; Matrix]) ;
+  add_plain ("append_col", ReturnType Matrix, [Matrix; Vector]) ;
+  add_plain ("append_col", ReturnType Matrix, [Vector; Vector]) ;
+  add_plain ("append_col", ReturnType RowVector, [RowVector; RowVector]) ;
+  add_plain ("append_col", ReturnType RowVector, [Real; RowVector]) ;
+  add_plain ("append_col", ReturnType RowVector, [RowVector; Real]) ;
   add_unary_vectorized "cbrt" ;
   add_unary_vectorized "ceil" ;
   for i = 0 to vector_types_size - 1 do
@@ -535,180 +489,128 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("chi_square_rng", rng_return_type Real [t], [t]) ) ;
-  add_plain ("cholesky_decompose", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("choose", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
-  add_plain ("col", ReturnType Vector, [ReturnType Matrix; ReturnType Int]) ;
-  add_plain ("cols", ReturnType Int, [ReturnType Vector]) ;
-  add_plain ("cols", ReturnType Int, [ReturnType RowVector]) ;
-  add_plain ("cols", ReturnType Int, [ReturnType Matrix]) ;
+      add_plain ("chi_square_rng", ReturnType (rng_return_type Real [t]), [t])
+  ) ;
+  add_plain ("cholesky_decompose", ReturnType Matrix, [Matrix]) ;
+  add_plain ("choose", ReturnType Int, [Int; Int]) ;
+  add_plain ("col", ReturnType Vector, [Matrix; Int]) ;
+  add_plain ("cols", ReturnType Int, [Vector]) ;
+  add_plain ("cols", ReturnType Int, [RowVector]) ;
+  add_plain ("cols", ReturnType Int, [Matrix]) ;
+  add_plain ("columns_dot_product", ReturnType RowVector, [Vector; Vector]) ;
   add_plain
-    ( "columns_dot_product"
-    , ReturnType RowVector
-    , [ReturnType Vector; ReturnType Vector] ) ;
-  add_plain
-    ( "columns_dot_product"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ( "columns_dot_product"
-    , ReturnType RowVector
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain ("columns_dot_self", ReturnType RowVector, [ReturnType Vector]) ;
-  add_plain ("columns_dot_self", ReturnType RowVector, [ReturnType RowVector]) ;
-  add_plain ("columns_dot_self", ReturnType RowVector, [ReturnType Matrix]) ;
+    ("columns_dot_product", ReturnType RowVector, [RowVector; RowVector]) ;
+  add_plain ("columns_dot_product", ReturnType RowVector, [Matrix; Matrix]) ;
+  add_plain ("columns_dot_self", ReturnType RowVector, [Vector]) ;
+  add_plain ("columns_dot_self", ReturnType RowVector, [RowVector]) ;
+  add_plain ("columns_dot_self", ReturnType RowVector, [Matrix]) ;
   add_unary_vectorized "cos" ;
   add_unary_vectorized "cosh" ;
   add_plain
-    ( "cov_exp_quad"
-    , ReturnType Matrix
-    , [bare_array_type (ReturnType Real, 1); ReturnType Real; ReturnType Real]
-    ) ;
+    ("cov_exp_quad", ReturnType Matrix, [bare_array_type (Real, 1); Real; Real]) ;
   add_plain
     ( "cov_exp_quad"
     , ReturnType Matrix
-    , [bare_array_type (ReturnType Vector, 1); ReturnType Real; ReturnType Real]
-    ) ;
+    , [bare_array_type (Vector, 1); Real; Real] ) ;
   add_plain
     ( "cov_exp_quad"
     , ReturnType Matrix
-    , [ bare_array_type (ReturnType RowVector, 1)
-      ; ReturnType Real
-      ; ReturnType Real ] ) ;
+    , [bare_array_type (RowVector, 1); Real; Real] ) ;
   add_plain
     ( "cov_exp_quad"
     , ReturnType Matrix
-    , [ bare_array_type (ReturnType Real, 1)
-      ; bare_array_type (ReturnType Real, 1)
-      ; ReturnType Real
-      ; ReturnType Real ] ) ;
+    , [bare_array_type (Real, 1); bare_array_type (Real, 1); Real; Real] ) ;
   add_plain
     ( "cov_exp_quad"
     , ReturnType Matrix
-    , [ bare_array_type (ReturnType Vector, 1)
-      ; bare_array_type (ReturnType Vector, 1)
-      ; ReturnType Real
-      ; ReturnType Real ] ) ;
+    , [bare_array_type (Vector, 1); bare_array_type (Vector, 1); Real; Real] ) ;
   add_plain
     ( "cov_exp_quad"
     , ReturnType Matrix
-    , [ bare_array_type (ReturnType RowVector, 1)
-      ; bare_array_type (ReturnType RowVector, 1)
-      ; ReturnType Real
-      ; ReturnType Real ] ) ;
-  add_plain ("crossprod", ReturnType Matrix, [ReturnType Matrix]) ;
+    , [ bare_array_type (RowVector, 1)
+      ; bare_array_type (RowVector, 1)
+      ; Real
+      ; Real ] ) ;
+  add_plain ("crossprod", ReturnType Matrix, [Matrix]) ;
   add_plain
     ( "csr_matrix_times_vector"
     , ReturnType Vector
-    , [ ReturnType Int
-      ; ReturnType Int
-      ; ReturnType Vector
-      ; bare_array_type (ReturnType Int, 1)
-      ; bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector ] ) ;
+    , [ Int
+      ; Int
+      ; Vector
+      ; bare_array_type (Int, 1)
+      ; bare_array_type (Int, 1)
+      ; Vector ] ) ;
   add_plain
     ( "csr_to_dense_matrix"
     , ReturnType Matrix
-    , [ ReturnType Int
-      ; ReturnType Int
-      ; ReturnType Vector
-      ; bare_array_type (ReturnType Int, 1)
-      ; bare_array_type (ReturnType Int, 1) ] ) ;
-  add_plain ("csr_extract_w", ReturnType Vector, [ReturnType Matrix]) ;
-  add_plain
-    ("csr_extract_v", bare_array_type (ReturnType Int, 1), [ReturnType Matrix]) ;
-  add_plain
-    ("csr_extract_u", bare_array_type (ReturnType Int, 1), [ReturnType Matrix]) ;
+    , [Int; Int; Vector; bare_array_type (Int, 1); bare_array_type (Int, 1)] ) ;
+  add_plain ("csr_extract_w", ReturnType Vector, [Matrix]) ;
+  add_plain ("csr_extract_v", ReturnType (bare_array_type (Int, 1)), [Matrix]) ;
+  add_plain ("csr_extract_u", ReturnType (bare_array_type (Int, 1)), [Matrix]) ;
   add_plain
     ( "cumulative_sum"
-    , bare_array_type (ReturnType Real, 1)
-    , [bare_array_type (ReturnType Real, 1)] ) ;
-  add_plain ("cumulative_sum", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain ("cumulative_sum", ReturnType RowVector, [ReturnType RowVector]) ;
-  add_plain ("determinant", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain ("diag_matrix", ReturnType Matrix, [ReturnType Vector]) ;
-  add_plain
-    ( "diag_post_multiply"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "diag_post_multiply"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType RowVector] ) ;
-  add_plain
-    ( "diag_pre_multiply"
-    , ReturnType Matrix
-    , [ReturnType Vector; ReturnType Matrix] ) ;
-  add_plain
-    ( "diag_pre_multiply"
-    , ReturnType Matrix
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain ("diagonal", ReturnType Vector, [ReturnType Matrix]) ;
+    , ReturnType (bare_array_type (Real, 1))
+    , [bare_array_type (Real, 1)] ) ;
+  add_plain ("cumulative_sum", ReturnType Vector, [Vector]) ;
+  add_plain ("cumulative_sum", ReturnType RowVector, [RowVector]) ;
+  add_plain ("determinant", ReturnType Real, [Matrix]) ;
+  add_plain ("diag_matrix", ReturnType Matrix, [Vector]) ;
+  add_plain ("diag_post_multiply", ReturnType Matrix, [Matrix; Vector]) ;
+  add_plain ("diag_post_multiply", ReturnType Matrix, [Matrix; RowVector]) ;
+  add_plain ("diag_pre_multiply", ReturnType Matrix, [Vector; Matrix]) ;
+  add_plain ("diag_pre_multiply", ReturnType Matrix, [RowVector; Matrix]) ;
+  add_plain ("diagonal", ReturnType Vector, [Matrix]) ;
   add_unary_vectorized "digamma" ;
-  add_plain ("dims", bare_array_type (ReturnType Int, 1), [ReturnType Int]) ;
-  add_plain ("dims", bare_array_type (ReturnType Int, 1), [ReturnType Real]) ;
-  add_plain ("dims", bare_array_type (ReturnType Int, 1), [ReturnType Vector]) ;
-  add_plain
-    ("dims", bare_array_type (ReturnType Int, 1), [ReturnType RowVector]) ;
-  add_plain ("dims", bare_array_type (ReturnType Int, 1), [ReturnType Matrix]) ;
+  add_plain ("dims", ReturnType (bare_array_type (Int, 1)), [Int]) ;
+  add_plain ("dims", ReturnType (bare_array_type (Int, 1)), [Real]) ;
+  add_plain ("dims", ReturnType (bare_array_type (Int, 1)), [Vector]) ;
+  add_plain ("dims", ReturnType (bare_array_type (Int, 1)), [RowVector]) ;
+  add_plain ("dims", ReturnType (bare_array_type (Int, 1)), [Matrix]) ;
   for i = 0 to 8 - 1 do
     add_plain
       ( "dims"
-      , bare_array_type (ReturnType Int, 1)
-      , [bare_array_type (ReturnType Int, i + 1)] ) ;
+      , ReturnType (bare_array_type (Int, 1))
+      , [bare_array_type (Int, i + 1)] ) ;
     add_plain
       ( "dims"
-      , bare_array_type (ReturnType Int, 1)
-      , [bare_array_type (ReturnType Real, i + 1)] ) ;
+      , ReturnType (bare_array_type (Int, 1))
+      , [bare_array_type (Real, i + 1)] ) ;
     add_plain
       ( "dims"
-      , bare_array_type (ReturnType Int, 1)
-      , [bare_array_type (ReturnType Vector, i + 1)] ) ;
+      , ReturnType (bare_array_type (Int, 1))
+      , [bare_array_type (Vector, i + 1)] ) ;
     add_plain
       ( "dims"
-      , bare_array_type (ReturnType Int, 1)
-      , [bare_array_type (ReturnType RowVector, i + 1)] ) ;
+      , ReturnType (bare_array_type (Int, 1))
+      , [bare_array_type (RowVector, i + 1)] ) ;
     add_plain
       ( "dims"
-      , bare_array_type (ReturnType Int, 1)
-      , [bare_array_type (ReturnType Matrix, i + 1)] )
+      , ReturnType (bare_array_type (Int, 1))
+      , [bare_array_type (Matrix, i + 1)] )
   done ;
-  add_plain
-    ("dirichlet_log", ReturnType Real, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ("dirichlet_lpdf", ReturnType Real, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain ("dirichlet_rng", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain
-    ("distance", ReturnType Real, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ("distance", ReturnType Real, [ReturnType RowVector; ReturnType RowVector]) ;
-  add_plain
-    ("distance", ReturnType Real, [ReturnType Vector; ReturnType RowVector]) ;
-  add_plain
-    ("distance", ReturnType Real, [ReturnType RowVector; ReturnType Vector]) ;
-  add_plain ("divide", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
-  add_plain ("divide", ReturnType Real, [ReturnType Real; ReturnType Real]) ;
-  add_plain ("divide", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
-  add_plain
-    ("divide", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
-  add_plain ("divide", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain
-    ("dot_product", ReturnType Real, [ReturnType Vector; ReturnType Vector]) ;
+  add_plain ("dirichlet_log", ReturnType Real, [Vector; Vector]) ;
+  add_plain ("dirichlet_lpdf", ReturnType Real, [Vector; Vector]) ;
+  add_plain ("dirichlet_rng", ReturnType Vector, [Vector]) ;
+  add_plain ("distance", ReturnType Real, [Vector; Vector]) ;
+  add_plain ("distance", ReturnType Real, [RowVector; RowVector]) ;
+  add_plain ("distance", ReturnType Real, [Vector; RowVector]) ;
+  add_plain ("distance", ReturnType Real, [RowVector; Vector]) ;
+  add_plain ("divide", ReturnType Int, [Int; Int]) ;
+  add_plain ("divide", ReturnType Real, [Real; Real]) ;
+  add_plain ("divide", ReturnType Vector, [Vector; Real]) ;
+  add_plain ("divide", ReturnType RowVector, [RowVector; Real]) ;
+  add_plain ("divide", ReturnType Matrix, [Matrix; Real]) ;
+  add_plain ("dot_product", ReturnType Real, [Vector; Vector]) ;
+  add_plain ("dot_product", ReturnType Real, [RowVector; RowVector]) ;
+  add_plain ("dot_product", ReturnType Real, [Vector; RowVector]) ;
+  add_plain ("dot_product", ReturnType Real, [RowVector; Vector]) ;
   add_plain
     ( "dot_product"
     , ReturnType Real
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ("dot_product", ReturnType Real, [ReturnType Vector; ReturnType RowVector]) ;
-  add_plain
-    ("dot_product", ReturnType Real, [ReturnType RowVector; ReturnType Vector]) ;
-  add_plain
-    ( "dot_product"
-    , ReturnType Real
-    , [ bare_array_type (ReturnType Real, 1)
-      ; bare_array_type (ReturnType Real, 1) ] ) ;
-  add_plain ("dot_self", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("dot_self", ReturnType Real, [ReturnType RowVector]) ;
+    , [bare_array_type (Real, 1); bare_array_type (Real, 1)] ) ;
+  add_plain ("dot_self", ReturnType Real, [Vector]) ;
+  add_plain ("dot_self", ReturnType Real, [RowVector]) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -746,47 +648,28 @@ let _ =
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
           add_plain
-            ("double_exponential_rng", rng_return_type Real [t; u], [t; u]) )
-  ) ;
+            ( "double_exponential_rng"
+            , ReturnType (rng_return_type Real [t; u])
+            , [t; u] ) ) ) ;
   add_nullary "e" ;
-  add_plain ("eigenvalues_sym", ReturnType Vector, [ReturnType Matrix]) ;
-  add_plain ("eigenvectors_sym", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("qr_Q", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("qr_R", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("qr_thin_Q", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("qr_thin_R", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain
-    ("elt_divide", ReturnType Vector, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ( "elt_divide"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ("elt_divide", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ("elt_divide", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
-  add_plain
-    ( "elt_divide"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Real] ) ;
-  add_plain
-    ("elt_divide", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain
-    ("elt_divide", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
-  add_plain
-    ( "elt_divide"
-    , ReturnType RowVector
-    , [ReturnType Real; ReturnType RowVector] ) ;
-  add_plain
-    ("elt_divide", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
-  add_plain
-    ("elt_multiply", ReturnType Vector, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ( "elt_multiply"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ("elt_multiply", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
+  add_plain ("eigenvalues_sym", ReturnType Vector, [Matrix]) ;
+  add_plain ("eigenvectors_sym", ReturnType Matrix, [Matrix]) ;
+  add_plain ("qr_Q", ReturnType Matrix, [Matrix]) ;
+  add_plain ("qr_R", ReturnType Matrix, [Matrix]) ;
+  add_plain ("qr_thin_Q", ReturnType Matrix, [Matrix]) ;
+  add_plain ("qr_thin_R", ReturnType Matrix, [Matrix]) ;
+  add_plain ("elt_divide", ReturnType Vector, [Vector; Vector]) ;
+  add_plain ("elt_divide", ReturnType RowVector, [RowVector; RowVector]) ;
+  add_plain ("elt_divide", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("elt_divide", ReturnType Vector, [Vector; Real]) ;
+  add_plain ("elt_divide", ReturnType RowVector, [RowVector; Real]) ;
+  add_plain ("elt_divide", ReturnType Matrix, [Matrix; Real]) ;
+  add_plain ("elt_divide", ReturnType Vector, [Real; Vector]) ;
+  add_plain ("elt_divide", ReturnType RowVector, [Real; RowVector]) ;
+  add_plain ("elt_divide", ReturnType Matrix, [Real; Matrix]) ;
+  add_plain ("elt_multiply", ReturnType Vector, [Vector; Vector]) ;
+  add_plain ("elt_multiply", ReturnType RowVector, [RowVector; RowVector]) ;
+  add_plain ("elt_multiply", ReturnType Matrix, [Matrix; Matrix]) ;
   add_unary_vectorized "erf" ;
   add_unary_vectorized "erfc" ;
   add_unary_vectorized "exp" ;
@@ -839,7 +722,7 @@ let _ =
           for_all_vector_types (fun v ->
               add_plain
                 ( "exp_mod_normal_rng"
-                , rng_return_type Real [t; u; v]
+                , ReturnType (rng_return_type Real [t; u; v])
                 , [t; u; v] ) ) ) ) ;
   add_unary_vectorized "expm1" ;
   for i = 0 to vector_types_size - 1 do
@@ -865,12 +748,11 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("exponential_rng", rng_return_type Real [t], [t]) ) ;
+      add_plain ("exponential_rng", ReturnType (rng_return_type Real [t]), [t])
+  ) ;
   add_unary_vectorized "fabs" ;
-  add_plain
-    ("falling_factorial", ReturnType Real, [ReturnType Real; ReturnType Int]) ;
-  add_plain
-    ("falling_factorial", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
+  add_plain ("falling_factorial", ReturnType Real, [Real; Int]) ;
+  add_plain ("falling_factorial", ReturnType Int, [Int; Int]) ;
   add_binary "fdim" ;
   add_unary_vectorized "floor" ;
   add_ternary "fma" ;
@@ -913,7 +795,9 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("frechet_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("frechet_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -952,47 +836,25 @@ let _ =
   add_binary "gamma_q" ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("gamma_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("gamma_rng", ReturnType (rng_return_type Real [t; u]), [t; u]) )
+  ) ;
   add_plain
     ( "gaussian_dlm_obs_log"
     , ReturnType Real
-    , [ ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Matrix ] ) ;
+    , [Matrix; Matrix; Matrix; Matrix; Matrix; Vector; Matrix] ) ;
   add_plain
     ( "gaussian_dlm_obs_log"
     , ReturnType Real
-    , [ ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Matrix ] ) ;
+    , [Matrix; Matrix; Matrix; Vector; Matrix; Vector; Matrix] ) ;
   add_plain
     ( "gaussian_dlm_obs_lpdf"
     , ReturnType Real
-    , [ ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Matrix ] ) ;
+    , [Matrix; Matrix; Matrix; Matrix; Matrix; Vector; Matrix] ) ;
   add_plain
     ( "gaussian_dlm_obs_lpdf"
     , ReturnType Real
-    , [ ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Matrix ] )
+    , [Matrix; Matrix; Matrix; Vector; Matrix; Vector; Matrix] )
   (* ; add_nullary ("get_lp")   *) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1030,47 +892,33 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("gumbel_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
-  add_plain
-    ("head", ReturnType RowVector, [ReturnType RowVector; ReturnType Int]) ;
-  add_plain ("head", ReturnType Vector, [ReturnType Vector; ReturnType Int]) ;
+          add_plain
+            ("gumbel_rng", ReturnType (rng_return_type Real [t; u]), [t; u]) )
+  ) ;
+  add_plain ("head", ReturnType RowVector, [RowVector; Int]) ;
+  add_plain ("head", ReturnType Vector, [Vector; Int]) ;
   for i = 0 to bare_types_size - 1 do
     add_plain
       ( "head"
-      , bare_array_type (bare_types i, 1)
-      , [bare_array_type (bare_types i, 1); ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 1))
+      , [bare_array_type (bare_types i, 1); Int] ) ;
     add_plain
       ( "head"
-      , bare_array_type (bare_types i, 2)
-      , [bare_array_type (bare_types i, 2); ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 2))
+      , [bare_array_type (bare_types i, 2); Int] ) ;
     add_plain
       ( "head"
-      , bare_array_type (bare_types i, 3)
-      , [bare_array_type (bare_types i, 3); ReturnType Int] )
+      , ReturnType (bare_array_type (bare_types i, 3))
+      , [bare_array_type (bare_types i, 3); Int] )
   done ;
-  add_plain
-    ( "hypergeometric_log"
-    , ReturnType Real
-    , [ReturnType Int; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "hypergeometric_lpmf"
-    , ReturnType Real
-    , [ReturnType Int; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "hypergeometric_rng"
-    , ReturnType Int
-    , [ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+  add_plain ("hypergeometric_log", ReturnType Real, [Int; Int; Int; Int]) ;
+  add_plain ("hypergeometric_lpmf", ReturnType Real, [Int; Int; Int; Int]) ;
+  add_plain ("hypergeometric_rng", ReturnType Int, [Int; Int; Int]) ;
   add_binary "hypot" ;
-  add_plain
-    ( "if_else"
-    , ReturnType Real
-    , [ReturnType Int; ReturnType Real; ReturnType Real] ) ;
-  add_plain
-    ( "inc_beta"
-    , ReturnType Real
-    , [ReturnType Real; ReturnType Real; ReturnType Real] ) ;
-  add_plain ("int_step", ReturnType Int, [ReturnType Real]) ;
-  add_plain ("int_step", ReturnType Int, [ReturnType Int]) ;
+  add_plain ("if_else", ReturnType Real, [Int; Real; Real]) ;
+  add_plain ("inc_beta", ReturnType Real, [Real; Real; Real]) ;
+  add_plain ("int_step", ReturnType Int, [Real]) ;
+  add_plain ("int_step", ReturnType Int, [Int]) ;
   add_unary_vectorized "inv" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1105,7 +953,8 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("inv_chi_square_rng", rng_return_type Real [t], [t]) ) ;
+      add_plain
+        ("inv_chi_square_rng", ReturnType (rng_return_type Real [t]), [t]) ) ;
   add_unary_vectorized "inv_cloglog" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1143,52 +992,31 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("inv_gamma_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("inv_gamma_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
   add_unary_vectorized "inv_logit" ;
   add_unary_vectorized "inv_Phi" ;
   add_unary_vectorized "inv_sqrt" ;
   add_unary_vectorized "inv_square" ;
-  add_plain
-    ( "inv_wishart_log"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Real; ReturnType Matrix] ) ;
-  add_plain
-    ( "inv_wishart_lpdf"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Real; ReturnType Matrix] ) ;
-  add_plain
-    ("inv_wishart_rng", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
-  add_plain ("inverse", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("inverse_spd", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain ("is_inf", ReturnType Int, [ReturnType Real]) ;
-  add_plain ("is_nan", ReturnType Int, [ReturnType Real]) ;
+  add_plain ("inv_wishart_log", ReturnType Real, [Matrix; Real; Matrix]) ;
+  add_plain ("inv_wishart_lpdf", ReturnType Real, [Matrix; Real; Matrix]) ;
+  add_plain ("inv_wishart_rng", ReturnType Matrix, [Real; Matrix]) ;
+  add_plain ("inverse", ReturnType Matrix, [Matrix]) ;
+  add_plain ("inverse_spd", ReturnType Matrix, [Matrix]) ;
+  add_plain ("is_inf", ReturnType Int, [Real]) ;
+  add_plain ("is_nan", ReturnType Int, [Real]) ;
   add_binary "lbeta" ;
   add_binary "lchoose" ;
   add_unary_vectorized "lgamma" ;
-  add_plain
-    ( "lkj_corr_cholesky_log"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Real] ) ;
-  add_plain
-    ( "lkj_corr_cholesky_lpdf"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Real] ) ;
-  add_plain
-    ( "lkj_corr_cholesky_rng"
-    , ReturnType Matrix
-    , [ReturnType Int; ReturnType Real] ) ;
-  add_plain
-    ("lkj_corr_log", ReturnType Real, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain
-    ("lkj_corr_lpdf", ReturnType Real, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain
-    ("lkj_corr_rng", ReturnType Matrix, [ReturnType Int; ReturnType Real]) ;
-  add_plain
-    ( "lkj_cov_log"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Vector; ReturnType Vector; ReturnType Real]
-    ) ;
-  add_plain ("lmgamma", ReturnType Real, [ReturnType Int; ReturnType Real]) ;
+  add_plain ("lkj_corr_cholesky_log", ReturnType Real, [Matrix; Real]) ;
+  add_plain ("lkj_corr_cholesky_lpdf", ReturnType Real, [Matrix; Real]) ;
+  add_plain ("lkj_corr_cholesky_rng", ReturnType Matrix, [Int; Real]) ;
+  add_plain ("lkj_corr_log", ReturnType Real, [Matrix; Real]) ;
+  add_plain ("lkj_corr_lpdf", ReturnType Real, [Matrix; Real]) ;
+  add_plain ("lkj_corr_rng", ReturnType Matrix, [Int; Real]) ;
+  add_plain ("lkj_cov_log", ReturnType Real, [Matrix; Vector; Vector; Real]) ;
+  add_plain ("lmgamma", ReturnType Real, [Int; Real]) ;
   add_binary "lmultiply" ;
   add_unary_vectorized "log" ;
   add_nullary "log10" ;
@@ -1200,7 +1028,7 @@ let _ =
   add_unary_vectorized "log1p_exp" ;
   add_nullary "log2" ;
   add_unary_vectorized "log2" ;
-  add_plain ("log_determinant", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain ("log_determinant", ReturnType Real, [Matrix]) ;
   add_binary "log_diff_exp" ;
   add_binary "log_falling_factorial" ;
   add_ternary "log_mix" ;
@@ -1211,20 +1039,19 @@ let _ =
     add_plain
       ( "log_mix"
       , ReturnType Real
-      , [vector_types i; bare_array_type (ReturnType Vector, 1)] ) ;
+      , [vector_types i; bare_array_type (Vector, 1)] ) ;
     add_plain
       ( "log_mix"
       , ReturnType Real
-      , [vector_types i; bare_array_type (ReturnType RowVector, 1)] )
+      , [vector_types i; bare_array_type (RowVector, 1)] )
   done ;
   add_binary "log_rising_factorial" ;
   add_unary_vectorized "log_inv_logit" ;
-  add_plain ("log_softmax", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain
-    ("log_sum_exp", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("log_sum_exp", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("log_sum_exp", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("log_sum_exp", ReturnType Real, [ReturnType Matrix]) ;
+  add_plain ("log_softmax", ReturnType Vector, [Vector]) ;
+  add_plain ("log_sum_exp", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("log_sum_exp", ReturnType Real, [Vector]) ;
+  add_plain ("log_sum_exp", ReturnType Real, [RowVector]) ;
+  add_plain ("log_sum_exp", ReturnType Real, [Matrix]) ;
   add_binary "log_sum_exp" ;
   for i = 0 to primitive_types_size - 1 do
     add_plain ("logical_negation", ReturnType Int, [primitive_types i]) ;
@@ -1283,7 +1110,9 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("logistic_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("logistic_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
   add_unary_vectorized "logit" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1321,236 +1150,140 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("lognormal_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("lognormal_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
   add_nullary "machine_precision" ;
-  add_plain ("matrix_exp", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_plain ("matrix_exp", ReturnType Matrix, [Matrix]) ;
+  add_plain ("matrix_exp_multiply", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("max", ReturnType Int, [bare_array_type (Int, 1)]) ;
+  add_plain ("max", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("max", ReturnType Real, [Vector]) ;
+  add_plain ("max", ReturnType Real, [RowVector]) ;
+  add_plain ("max", ReturnType Real, [Matrix]) ;
+  add_plain ("max", ReturnType Int, [Int; Int]) ;
+  add_plain ("mdivide_left", ReturnType Vector, [Matrix; Vector]) ;
+  add_plain ("mdivide_left", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("mdivide_left_spd", ReturnType Vector, [Matrix; Vector]) ;
+  add_plain ("mdivide_left_spd", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("mdivide_left_tri_low", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("mdivide_left_tri_low", ReturnType Vector, [Matrix; Vector]) ;
+  add_plain ("mdivide_right", ReturnType RowVector, [RowVector; Matrix]) ;
+  add_plain ("mdivide_right_spd", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("mdivide_right_spd", ReturnType RowVector, [RowVector; Matrix]) ;
+  add_plain ("mdivide_right", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("mdivide_right_tri_low", ReturnType RowVector, [RowVector; Matrix]) ;
+  add_plain ("mdivide_right_tri_low", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("mean", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("mean", ReturnType Real, [Vector]) ;
+  add_plain ("mean", ReturnType Real, [RowVector]) ;
+  add_plain ("mean", ReturnType Real, [Matrix]) ;
+  add_plain ("min", ReturnType Int, [bare_array_type (Int, 1)]) ;
+  add_plain ("min", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("min", ReturnType Real, [Vector]) ;
+  add_plain ("min", ReturnType Real, [RowVector]) ;
+  add_plain ("min", ReturnType Real, [Matrix]) ;
+  add_plain ("min", ReturnType Int, [Int; Int]) ;
+  add_plain ("minus", ReturnType Real, [Real]) ;
+  add_plain ("minus", ReturnType Vector, [Vector]) ;
+  add_plain ("minus", ReturnType RowVector, [RowVector]) ;
+  add_plain ("minus", ReturnType Matrix, [Matrix]) ;
+  add_plain ("modified_bessel_first_kind", ReturnType Real, [Int; Real]) ;
+  add_plain ("modified_bessel_second_kind", ReturnType Real, [Int; Real]) ;
+  add_plain ("modulus", ReturnType Int, [Int; Int]) ;
+  add_plain ("multi_gp_log", ReturnType Real, [Matrix; Matrix; Vector]) ;
+  add_plain ("multi_gp_lpdf", ReturnType Real, [Matrix; Matrix; Vector]) ;
+  add_plain ("multi_gp_cholesky_log", ReturnType Real, [Matrix; Matrix; Vector]) ;
   add_plain
-    ( "matrix_exp_multiply"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain ("max", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
-  add_plain ("max", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("max", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("max", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("max", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain ("max", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
-  add_plain
-    ("mdivide_left", ReturnType Vector, [ReturnType Matrix; ReturnType Vector]) ;
-  add_plain
-    ("mdivide_left", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ( "mdivide_left_spd"
-    , ReturnType Vector
-    , [ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "mdivide_left_spd"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain
-    ( "mdivide_left_tri_low"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain
-    ( "mdivide_left_tri_low"
-    , ReturnType Vector
-    , [ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "mdivide_right"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain
-    ( "mdivide_right_spd"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain
-    ( "mdivide_right_spd"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain
-    ("mdivide_right", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ( "mdivide_right_tri_low"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain
-    ( "mdivide_right_tri_low"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain ("mean", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("mean", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("mean", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("mean", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain ("min", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
-  add_plain ("min", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("min", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("min", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("min", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain ("min", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
-  add_plain ("minus", ReturnType Real, [ReturnType Real]) ;
-  add_plain ("minus", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain ("minus", ReturnType RowVector, [ReturnType RowVector]) ;
-  add_plain ("minus", ReturnType Matrix, [ReturnType Matrix]) ;
-  add_plain
-    ( "modified_bessel_first_kind"
-    , ReturnType Real
-    , [ReturnType Int; ReturnType Real] ) ;
-  add_plain
-    ( "modified_bessel_second_kind"
-    , ReturnType Real
-    , [ReturnType Int; ReturnType Real] ) ;
-  add_plain ("modulus", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
-  add_plain
-    ( "multi_gp_log"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "multi_gp_lpdf"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "multi_gp_cholesky_log"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "multi_gp_cholesky_lpdf"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Matrix; ReturnType Vector] ) ;
+    ("multi_gp_cholesky_lpdf", ReturnType Real, [Matrix; Matrix; Vector]) ;
   for k = 0 to 4 - 1 do
     for l = 0 to 4 - 1 do
       add_plain
         ( "multi_normal_cholesky_log"
         , ReturnType Real
-        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+        , [eigen_vector_types k; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_normal_cholesky_lpdf"
         , ReturnType Real
-        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+        , [eigen_vector_types k; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_normal_log"
         , ReturnType Real
-        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+        , [eigen_vector_types k; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_normal_lpdf"
         , ReturnType Real
-        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+        , [eigen_vector_types k; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_normal_prec_log"
         , ReturnType Real
-        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+        , [eigen_vector_types k; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_normal_prec_lpdf"
         , ReturnType Real
-        , [eigen_vector_types k; eigen_vector_types l; ReturnType Matrix] ) ;
+        , [eigen_vector_types k; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_student_t_log"
         , ReturnType Real
-        , [ eigen_vector_types k
-          ; ReturnType Real
-          ; eigen_vector_types l
-          ; ReturnType Matrix ] ) ;
+        , [eigen_vector_types k; Real; eigen_vector_types l; Matrix] ) ;
       add_plain
         ( "multi_student_t_lpdf"
         , ReturnType Real
-        , [ eigen_vector_types k
-          ; ReturnType Real
-          ; eigen_vector_types l
-          ; ReturnType Matrix ] )
+        , [eigen_vector_types k; Real; eigen_vector_types l; Matrix] )
     done
   done ;
+  add_plain ("multi_normal_rng", ReturnType Vector, [Vector; Matrix]) ;
   add_plain
     ( "multi_normal_rng"
-    , ReturnType Vector
-    , [ReturnType Vector; ReturnType Matrix] ) ;
+    , ReturnType (bare_array_type (Vector, 1))
+    , [bare_array_type (Vector, 1); Matrix] ) ;
+  add_plain ("multi_normal_rng", ReturnType Vector, [RowVector; Matrix]) ;
   add_plain
     ( "multi_normal_rng"
-    , bare_array_type (ReturnType Vector, 1)
-    , [bare_array_type (ReturnType Vector, 1); ReturnType Matrix] ) ;
-  add_plain
-    ( "multi_normal_rng"
-    , ReturnType Vector
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain
-    ( "multi_normal_rng"
-    , bare_array_type (ReturnType Vector, 1)
-    , [bare_array_type (ReturnType RowVector, 1); ReturnType Matrix] ) ;
+    , ReturnType (bare_array_type (Vector, 1))
+    , [bare_array_type (RowVector, 1); Matrix] ) ;
+  add_plain ("multi_normal_cholesky_rng", ReturnType Vector, [Vector; Matrix]) ;
   add_plain
     ( "multi_normal_cholesky_rng"
-    , ReturnType Vector
-    , [ReturnType Vector; ReturnType Matrix] ) ;
+    , ReturnType (bare_array_type (Vector, 1))
+    , [bare_array_type (Vector, 1); Matrix] ) ;
+  add_plain
+    ("multi_normal_cholesky_rng", ReturnType Vector, [RowVector; Matrix]) ;
   add_plain
     ( "multi_normal_cholesky_rng"
-    , bare_array_type (ReturnType Vector, 1)
-    , [bare_array_type (ReturnType Vector, 1); ReturnType Matrix] ) ;
-  add_plain
-    ( "multi_normal_cholesky_rng"
-    , ReturnType Vector
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain
-    ( "multi_normal_cholesky_rng"
-    , bare_array_type (ReturnType Vector, 1)
-    , [bare_array_type (ReturnType RowVector, 1); ReturnType Matrix] ) ;
+    , ReturnType (bare_array_type (Vector, 1))
+    , [bare_array_type (RowVector, 1); Matrix] ) ;
+  add_plain ("multi_student_t_rng", ReturnType Vector, [Real; Vector; Matrix]) ;
   add_plain
     ( "multi_student_t_rng"
-    , ReturnType Vector
-    , [ReturnType Real; ReturnType Vector; ReturnType Matrix] ) ;
+    , ReturnType (bare_array_type (Vector, 1))
+    , [Real; bare_array_type (Vector, 1); Matrix] ) ;
+  add_plain
+    ("multi_student_t_rng", ReturnType Vector, [Real; RowVector; Matrix]) ;
   add_plain
     ( "multi_student_t_rng"
-    , bare_array_type (ReturnType Vector, 1)
-    , [ ReturnType Real
-      ; bare_array_type (ReturnType Vector, 1)
-      ; ReturnType Matrix ] ) ;
+    , ReturnType (bare_array_type (Vector, 1))
+    , [Real; bare_array_type (RowVector, 1); Matrix] ) ;
   add_plain
-    ( "multi_student_t_rng"
-    , ReturnType Vector
-    , [ReturnType Real; ReturnType RowVector; ReturnType Matrix] ) ;
+    ("multinomial_log", ReturnType Real, [bare_array_type (Int, 1); Vector]) ;
   add_plain
-    ( "multi_student_t_rng"
-    , bare_array_type (ReturnType Vector, 1)
-    , [ ReturnType Real
-      ; bare_array_type (ReturnType RowVector, 1)
-      ; ReturnType Matrix ] ) ;
+    ("multinomial_lpmf", ReturnType Real, [bare_array_type (Int, 1); Vector]) ;
   add_plain
-    ( "multinomial_log"
-    , ReturnType Real
-    , [bare_array_type (ReturnType Int, 1); ReturnType Vector] ) ;
-  add_plain
-    ( "multinomial_lpmf"
-    , ReturnType Real
-    , [bare_array_type (ReturnType Int, 1); ReturnType Vector] ) ;
-  add_plain
-    ( "multinomial_rng"
-    , bare_array_type (ReturnType Int, 1)
-    , [ReturnType Vector; ReturnType Int] ) ;
-  add_plain ("multiply", ReturnType Real, [ReturnType Real; ReturnType Real]) ;
-  add_plain
-    ("multiply", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
-  add_plain
-    ("multiply", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
-  add_plain
-    ("multiply", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain
-    ("multiply", ReturnType Real, [ReturnType RowVector; ReturnType Vector]) ;
-  add_plain
-    ("multiply", ReturnType Matrix, [ReturnType Vector; ReturnType RowVector]) ;
-  add_plain
-    ("multiply", ReturnType Vector, [ReturnType Matrix; ReturnType Vector]) ;
-  add_plain
-    ( "multiply"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Matrix] ) ;
-  add_plain
-    ("multiply", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ("multiply", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
-  add_plain
-    ("multiply", ReturnType RowVector, [ReturnType Real; ReturnType RowVector]) ;
-  add_plain
-    ("multiply", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
+    ("multinomial_rng", ReturnType (bare_array_type (Int, 1)), [Vector; Int]) ;
+  add_plain ("multiply", ReturnType Real, [Real; Real]) ;
+  add_plain ("multiply", ReturnType Vector, [Vector; Real]) ;
+  add_plain ("multiply", ReturnType RowVector, [RowVector; Real]) ;
+  add_plain ("multiply", ReturnType Matrix, [Matrix; Real]) ;
+  add_plain ("multiply", ReturnType Real, [RowVector; Vector]) ;
+  add_plain ("multiply", ReturnType Matrix, [Vector; RowVector]) ;
+  add_plain ("multiply", ReturnType Vector, [Matrix; Vector]) ;
+  add_plain ("multiply", ReturnType RowVector, [RowVector; Matrix]) ;
+  add_plain ("multiply", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("multiply", ReturnType Vector, [Real; Vector]) ;
+  add_plain ("multiply", ReturnType RowVector, [Real; RowVector]) ;
+  add_plain ("multiply", ReturnType Matrix, [Real; Matrix]) ;
   add_binary "multiply_log" ;
-  add_plain
-    ( "multiply_lower_tri_self_transpose"
-    , ReturnType Matrix
-    , [ReturnType Matrix] ) ;
+  add_plain ("multiply_lower_tri_self_transpose", ReturnType Matrix, [Matrix]) ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -1623,32 +1356,30 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("neg_binomial_rng", rng_return_type Int [t; u], [t; u]) )
-  ) ;
-  for_all_vector_types (fun t ->
-      for_all_vector_types (fun u ->
-          add_plain ("neg_binomial_2_rng", rng_return_type Int [t; u], [t; u])
-      ) ) ;
+          add_plain
+            ( "neg_binomial_rng"
+            , ReturnType (rng_return_type Int [t; u])
+            , [t; u] ) ) ) ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
           add_plain
-            ("neg_binomial_2_log_rng", rng_return_type Int [t; u], [t; u]) ) ) ;
+            ( "neg_binomial_2_rng"
+            , ReturnType (rng_return_type Int [t; u])
+            , [t; u] ) ) ) ;
+  for_all_vector_types (fun t ->
+      for_all_vector_types (fun u ->
+          add_plain
+            ( "neg_binomial_2_log_rng"
+            , ReturnType (rng_return_type Int [t; u])
+            , [t; u] ) ) ) ;
   add_plain
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Matrix
-      ; ReturnType Real
-      ; ReturnType Vector
-      ; ReturnType Real ] ) ;
+    , [bare_array_type (Int, 1); Matrix; Real; Vector; Real] ) ;
   add_plain
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Vector
-      ; ReturnType Real ] ) ;
+    , [bare_array_type (Int, 1); Matrix; Vector; Vector; Real] ) ;
   add_nullary "negative_infinity" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1686,110 +1417,66 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("normal_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("normal_rng", ReturnType (rng_return_type Real [t; u]), [t; u]) )
+  ) ;
   add_plain
     ( "normal_id_glm_lpdf"
     , ReturnType Real
-    , [ ReturnType Vector
-      ; ReturnType Matrix
-      ; ReturnType Real
-      ; ReturnType Vector
-      ; ReturnType Real ] ) ;
+    , [Vector; Matrix; Real; Vector; Real] ) ;
   add_plain
     ( "normal_id_glm_lpdf"
     , ReturnType Real
-    , [ ReturnType Vector
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Vector
-      ; ReturnType Real ] ) ;
+    , [Vector; Matrix; Vector; Vector; Real] ) ;
   add_nullary "not_a_number" ;
-  add_plain ("num_elements", ReturnType Int, [ReturnType Matrix]) ;
-  add_plain ("num_elements", ReturnType Int, [ReturnType Vector]) ;
-  add_plain ("num_elements", ReturnType Int, [ReturnType RowVector]) ;
+  add_plain ("num_elements", ReturnType Int, [Matrix]) ;
+  add_plain ("num_elements", ReturnType Int, [Vector]) ;
+  add_plain ("num_elements", ReturnType Int, [RowVector]) ;
   for i = 1 to 10 - 1 do
-    add_plain
-      ("num_elements", ReturnType Int, [bare_array_type (ReturnType Int, i)]) ;
-    add_plain
-      ("num_elements", ReturnType Int, [bare_array_type (ReturnType Real, i)]) ;
-    add_plain
-      ("num_elements", ReturnType Int, [bare_array_type (ReturnType Matrix, i)]) ;
-    add_plain
-      ( "num_elements"
-      , ReturnType Int
-      , [bare_array_type (ReturnType RowVector, i)] ) ;
-    add_plain
-      ("num_elements", ReturnType Int, [bare_array_type (ReturnType Vector, i)])
+    add_plain ("num_elements", ReturnType Int, [bare_array_type (Int, i)]) ;
+    add_plain ("num_elements", ReturnType Int, [bare_array_type (Real, i)]) ;
+    add_plain ("num_elements", ReturnType Int, [bare_array_type (Matrix, i)]) ;
+    add_plain ("num_elements", ReturnType Int, [bare_array_type (RowVector, i)]) ;
+    add_plain ("num_elements", ReturnType Int, [bare_array_type (Vector, i)])
   done ;
+  add_plain ("ordered_logistic_log", ReturnType Real, [Int; Real; Vector]) ;
   add_plain
     ( "ordered_logistic_log"
     , ReturnType Real
-    , [ReturnType Int; ReturnType Real; ReturnType Vector] ) ;
+    , [bare_array_type (Int, 1); Vector; Vector] ) ;
   add_plain
     ( "ordered_logistic_log"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector
-      ; ReturnType Vector ] ) ;
-  add_plain
-    ( "ordered_logistic_log"
-    , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector
-      ; bare_array_type (ReturnType Vector, 1) ] ) ;
+    , [bare_array_type (Int, 1); Vector; bare_array_type (Vector, 1)] ) ;
+  add_plain ("ordered_logistic_lpmf", ReturnType Real, [Int; Real; Vector]) ;
   add_plain
     ( "ordered_logistic_lpmf"
     , ReturnType Real
-    , [ReturnType Int; ReturnType Real; ReturnType Vector] ) ;
+    , [bare_array_type (Int, 1); Vector; Vector] ) ;
   add_plain
     ( "ordered_logistic_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector
-      ; ReturnType Vector ] ) ;
-  add_plain
-    ( "ordered_logistic_lpmf"
-    , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector
-      ; bare_array_type (ReturnType Vector, 1) ] ) ;
-  add_plain
-    ( "ordered_logistic_rng"
-    , ReturnType Int
-    , [ReturnType Real; ReturnType Vector] ) ;
+    , [bare_array_type (Int, 1); Vector; bare_array_type (Vector, 1)] ) ;
+  add_plain ("ordered_logistic_rng", ReturnType Int, [Real; Vector]) ;
+  add_plain ("ordered_probit_log", ReturnType Real, [Int; Real; Vector]) ;
   add_plain
     ( "ordered_probit_log"
     , ReturnType Real
-    , [ReturnType Int; ReturnType Real; ReturnType Vector] ) ;
+    , [bare_array_type (Int, 1); Vector; Vector] ) ;
   add_plain
     ( "ordered_probit_log"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector
-      ; ReturnType Vector ] ) ;
-  add_plain
-    ( "ordered_probit_log"
-    , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Vector
-      ; bare_array_type (ReturnType Vector, 1) ] ) ;
+    , [bare_array_type (Int, 1); Vector; bare_array_type (Vector, 1)] ) ;
+  add_plain ("ordered_probit_lpmf", ReturnType Real, [Int; Real; Vector]) ;
   add_plain
     ( "ordered_probit_lpmf"
     , ReturnType Real
-    , [ReturnType Int; ReturnType Real; ReturnType Vector] ) ;
+    , [bare_array_type (Int, 1); Real; Vector] ) ;
   add_plain
     ( "ordered_probit_lpmf"
     , ReturnType Real
-    , [bare_array_type (ReturnType Int, 1); ReturnType Real; ReturnType Vector]
-    ) ;
-  add_plain
-    ( "ordered_probit_lpmf"
-    , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Real
-      ; bare_array_type (ReturnType Vector, 1) ] ) ;
-  add_plain
-    ("ordered_probit_rng", ReturnType Int, [ReturnType Real; ReturnType Vector]) ;
+    , [bare_array_type (Int, 1); Real; bare_array_type (Vector, 1)] ) ;
+  add_plain ("ordered_probit_rng", ReturnType Int, [Real; Vector]) ;
   add_binary "owens_t" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1827,7 +1514,9 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("pareto_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("pareto_rng", ReturnType (rng_return_type Real [t; u]), [t; u]) )
+  ) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -1875,8 +1564,9 @@ let _ =
       for_all_vector_types (fun u ->
           for_all_vector_types (fun v ->
               add_plain
-                ("pareto_type_2_rng", rng_return_type Real [t; u; v], [t; u; v])
-          ) ) ) ;
+                ( "pareto_type_2_rng"
+                , ReturnType (rng_return_type Real [t; u; v])
+                , [t; u; v] ) ) ) ) ;
   add_unary_vectorized "Phi" ;
   add_unary_vectorized "Phi_approx" ;
   add_nullary "pi" ;
@@ -1903,7 +1593,7 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("poisson_rng", rng_return_type Int [t], [t]) ) ;
+      add_plain ("poisson_rng", ReturnType (rng_return_type Int [t]), [t]) ) ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       add_plain
@@ -1917,56 +1607,33 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("poisson_log_rng", rng_return_type Int [t], [t]) ) ;
+      add_plain ("poisson_log_rng", ReturnType (rng_return_type Int [t]), [t])
+  ) ;
   add_plain
     ( "poisson_log_glm_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Matrix
-      ; ReturnType Real
-      ; ReturnType Vector ] ) ;
+    , [bare_array_type (Int, 1); Matrix; Real; Vector] ) ;
   add_plain
     ( "poisson_log_glm_lpmf"
     , ReturnType Real
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Matrix
-      ; ReturnType Vector
-      ; ReturnType Vector ] ) ;
+    , [bare_array_type (Int, 1); Matrix; Vector; Vector] ) ;
   add_nullary "positive_infinity" ;
   add_binary "pow" ;
-  add_plain ("prod", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
-  add_plain ("prod", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("prod", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("prod", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("prod", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain
-    ("quad_; form", ReturnType Real, [ReturnType Matrix; ReturnType Vector]) ;
-  add_plain
-    ("quad_; form", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ("quad_; form_sym", ReturnType Real, [ReturnType Matrix; ReturnType Vector]) ;
-  add_plain
-    ( "quad_; form_sym"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain
-    ( "quad_; form_diag"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "quad_; form_diag"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType RowVector] ) ;
-  add_plain
-    ( "rank"
-    , ReturnType Int
-    , [bare_array_type (ReturnType Int, 1); ReturnType Int] ) ;
-  add_plain
-    ( "rank"
-    , ReturnType Int
-    , [bare_array_type (ReturnType Real, 1); ReturnType Int] ) ;
-  add_plain ("rank", ReturnType Int, [ReturnType Vector; ReturnType Int]) ;
-  add_plain ("rank", ReturnType Int, [ReturnType RowVector; ReturnType Int]) ;
+  add_plain ("prod", ReturnType Int, [bare_array_type (Int, 1)]) ;
+  add_plain ("prod", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("prod", ReturnType Real, [Vector]) ;
+  add_plain ("prod", ReturnType Real, [RowVector]) ;
+  add_plain ("prod", ReturnType Real, [Matrix]) ;
+  add_plain ("quad_; form", ReturnType Real, [Matrix; Vector]) ;
+  add_plain ("quad_; form", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("quad_; form_sym", ReturnType Real, [Matrix; Vector]) ;
+  add_plain ("quad_; form_sym", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("quad_; form_diag", ReturnType Matrix, [Matrix; Vector]) ;
+  add_plain ("quad_; form_diag", ReturnType Matrix, [Matrix; RowVector]) ;
+  add_plain ("rank", ReturnType Int, [bare_array_type (Int, 1); Int]) ;
+  add_plain ("rank", ReturnType Int, [bare_array_type (Real, 1); Int]) ;
+  add_plain ("rank", ReturnType Int, [Vector; Int]) ;
+  add_plain ("rank", ReturnType Int, [RowVector; Int]) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       add_plain
@@ -1986,94 +1653,62 @@ let _ =
     done
   done ;
   for_all_vector_types (fun t ->
-      add_plain ("rayleigh_rng", rng_return_type Real [t], [t]) ) ;
-  add_plain
-    ("append_row", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ("append_row", ReturnType Matrix, [ReturnType RowVector; ReturnType Matrix]) ;
-  add_plain
-    ("append_row", ReturnType Matrix, [ReturnType Matrix; ReturnType RowVector]) ;
-  add_plain
-    ( "append_row"
-    , ReturnType Matrix
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ("append_row", ReturnType Vector, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ("append_row", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
-  add_plain
-    ("append_row", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
+      add_plain ("rayleigh_rng", ReturnType (rng_return_type Real [t]), [t]) ) ;
+  add_plain ("append_row", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("append_row", ReturnType Matrix, [RowVector; Matrix]) ;
+  add_plain ("append_row", ReturnType Matrix, [Matrix; RowVector]) ;
+  add_plain ("append_row", ReturnType Matrix, [RowVector; RowVector]) ;
+  add_plain ("append_row", ReturnType Vector, [Vector; Vector]) ;
+  add_plain ("append_row", ReturnType Vector, [Real; Vector]) ;
+  add_plain ("append_row", ReturnType Vector, [Vector; Real]) ;
   for i = 0 to bare_types_size - 1 do
     add_plain
       ( "rep_array"
-      , bare_array_type (bare_types i, 1)
-      , [bare_types i; ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 1))
+      , [bare_types i; Int] ) ;
     add_plain
       ( "rep_array"
-      , bare_array_type (bare_types i, 2)
-      , [bare_types i; ReturnType Int; ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 2))
+      , [bare_types i; Int; Int] ) ;
     add_plain
       ( "rep_array"
-      , bare_array_type (bare_types i, 3)
-      , [bare_types i; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 3))
+      , [bare_types i; Int; Int; Int] ) ;
     for j = 1 to 3 - 1 do
       add_plain
         ( "rep_array"
-        , bare_array_type (bare_types i, j + 1)
-        , [bare_array_type (bare_types i, j); ReturnType Int] ) ;
+        , ReturnType (bare_array_type (bare_types i, j + 1))
+        , [bare_array_type (bare_types i, j); Int] ) ;
       add_plain
         ( "rep_array"
-        , bare_array_type (bare_types i, j + 2)
-        , [bare_array_type (bare_types i, j); ReturnType Int; ReturnType Int]
-        ) ;
+        , ReturnType (bare_array_type (bare_types i, j + 2))
+        , [bare_array_type (bare_types i, j); Int; Int] ) ;
       add_plain
         ( "rep_array"
-        , bare_array_type (bare_types i, j + 3)
-        , [ bare_array_type (bare_types i, j)
-          ; ReturnType Int
-          ; ReturnType Int
-          ; ReturnType Int ] )
+        , ReturnType (bare_array_type (bare_types i, j + 3))
+        , [bare_array_type (bare_types i, j); Int; Int; Int] )
     done
   done ;
-  add_plain
-    ( "rep_matrix"
-    , ReturnType Matrix
-    , [ReturnType Real; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ("rep_matrix", ReturnType Matrix, [ReturnType Vector; ReturnType Int]) ;
-  add_plain
-    ("rep_matrix", ReturnType Matrix, [ReturnType RowVector; ReturnType Int]) ;
-  add_plain
-    ("rep_row_vector", ReturnType RowVector, [ReturnType Real; ReturnType Int]) ;
-  add_plain ("rep_vector", ReturnType Vector, [ReturnType Real; ReturnType Int]) ;
-  add_plain
-    ("rising_factorial", ReturnType Real, [ReturnType Real; ReturnType Int]) ;
-  add_plain
-    ("rising_factorial", ReturnType Int, [ReturnType Int; ReturnType Int]) ;
+  add_plain ("rep_matrix", ReturnType Matrix, [Real; Int; Int]) ;
+  add_plain ("rep_matrix", ReturnType Matrix, [Vector; Int]) ;
+  add_plain ("rep_matrix", ReturnType Matrix, [RowVector; Int]) ;
+  add_plain ("rep_row_vector", ReturnType RowVector, [Real; Int]) ;
+  add_plain ("rep_vector", ReturnType Vector, [Real; Int]) ;
+  add_plain ("rising_factorial", ReturnType Real, [Real; Int]) ;
+  add_plain ("rising_factorial", ReturnType Int, [Int; Int]) ;
   add_unary_vectorized "round" ;
-  add_plain ("row", ReturnType RowVector, [ReturnType Matrix; ReturnType Int]) ;
-  add_plain ("rows", ReturnType Int, [ReturnType Vector]) ;
-  add_plain ("rows", ReturnType Int, [ReturnType RowVector]) ;
-  add_plain ("rows", ReturnType Int, [ReturnType Matrix]) ;
+  add_plain ("row", ReturnType RowVector, [Matrix; Int]) ;
+  add_plain ("rows", ReturnType Int, [Vector]) ;
+  add_plain ("rows", ReturnType Int, [RowVector]) ;
+  add_plain ("rows", ReturnType Int, [Matrix]) ;
+  add_plain ("rows_dot_product", ReturnType Vector, [Vector; Vector]) ;
+  add_plain ("rows_dot_product", ReturnType Vector, [RowVector; RowVector]) ;
+  add_plain ("rows_dot_product", ReturnType Vector, [Matrix; Matrix]) ;
+  add_plain ("rows_dot_self", ReturnType Vector, [Vector]) ;
+  add_plain ("rows_dot_self", ReturnType Vector, [RowVector]) ;
+  add_plain ("rows_dot_self", ReturnType Vector, [Matrix]) ;
   add_plain
-    ( "rows_dot_product"
-    , ReturnType Vector
-    , [ReturnType Vector; ReturnType Vector] ) ;
-  add_plain
-    ( "rows_dot_product"
-    , ReturnType Vector
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ( "rows_dot_product"
-    , ReturnType Vector
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain ("rows_dot_self", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain ("rows_dot_self", ReturnType Vector, [ReturnType RowVector]) ;
-  add_plain ("rows_dot_self", ReturnType Vector, [ReturnType Matrix]) ;
-  add_plain
-    ( "scale_matrix_exp_multiply"
-    , ReturnType Matrix
-    , [ReturnType Real; ReturnType Matrix; ReturnType Matrix] ) ;
+    ("scale_matrix_exp_multiply", ReturnType Matrix, [Real; Matrix; Matrix]) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -2111,44 +1746,38 @@ let _ =
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
           add_plain
-            ("scaled_inv_chi_square_rng", rng_return_type Real [t; u], [t; u])
-      ) ) ;
-  add_plain ("sd", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("sd", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("sd", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("sd", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain
-    ( "segment"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "segment"
-    , ReturnType Vector
-    , [ReturnType Vector; ReturnType Int; ReturnType Int] ) ;
+            ( "scaled_inv_chi_square_rng"
+            , ReturnType (rng_return_type Real [t; u])
+            , [t; u] ) ) ) ;
+  add_plain ("sd", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("sd", ReturnType Real, [Vector]) ;
+  add_plain ("sd", ReturnType Real, [RowVector]) ;
+  add_plain ("sd", ReturnType Real, [Matrix]) ;
+  add_plain ("segment", ReturnType RowVector, [RowVector; Int; Int]) ;
+  add_plain ("segment", ReturnType Vector, [Vector; Int; Int]) ;
   for i = 0 to bare_types_size - 1 do
     add_plain
       ( "segment"
-      , bare_array_type (bare_types i, 1)
-      , [bare_array_type (bare_types i, 1); ReturnType Int; ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 1))
+      , [bare_array_type (bare_types i, 1); Int; Int] ) ;
     add_plain
       ( "segment"
-      , bare_array_type (bare_types i, 2)
-      , [bare_array_type (bare_types i, 2); ReturnType Int; ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 2))
+      , [bare_array_type (bare_types i, 2); Int; Int] ) ;
     add_plain
       ( "segment"
-      , bare_array_type (bare_types i, 3)
-      , [bare_array_type (bare_types i, 3); ReturnType Int; ReturnType Int] )
+      , ReturnType (bare_array_type (bare_types i, 3))
+      , [bare_array_type (bare_types i, 3); Int; Int] )
   done ;
   add_unary_vectorized "sin" ;
-  add_plain ("singular_values", ReturnType Vector, [ReturnType Matrix]) ;
+  add_plain ("singular_values", ReturnType Vector, [Matrix]) ;
   add_unary_vectorized "sinh" ;
   for i = 1 to 8 - 1 do
-    add_plain ("size", ReturnType Int, [bare_array_type (ReturnType Int, i)]) ;
-    add_plain ("size", ReturnType Int, [bare_array_type (ReturnType Real, i)]) ;
-    add_plain ("size", ReturnType Int, [bare_array_type (ReturnType Vector, i)]) ;
-    add_plain
-      ("size", ReturnType Int, [bare_array_type (ReturnType RowVector, i)]) ;
-    add_plain ("size", ReturnType Int, [bare_array_type (ReturnType Matrix, i)])
+    add_plain ("size", ReturnType Int, [bare_array_type (Int, i)]) ;
+    add_plain ("size", ReturnType Int, [bare_array_type (Real, i)]) ;
+    add_plain ("size", ReturnType Int, [bare_array_type (Vector, i)]) ;
+    add_plain ("size", ReturnType Int, [bare_array_type (RowVector, i)]) ;
+    add_plain ("size", ReturnType Int, [bare_array_type (Matrix, i)])
   done ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -2197,79 +1826,59 @@ let _ =
       for_all_vector_types (fun u ->
           for_all_vector_types (fun v ->
               add_plain
-                ("skew_normal_rng", rng_return_type Real [t; u; v], [t; u; v])
-          ) ) ) ;
-  add_plain ("softmax", ReturnType Vector, [ReturnType Vector]) ;
+                ( "skew_normal_rng"
+                , ReturnType (rng_return_type Real [t; u; v])
+                , [t; u; v] ) ) ) ) ;
+  add_plain ("softmax", ReturnType Vector, [Vector]) ;
   add_plain
     ( "sort_asc"
-    , bare_array_type (ReturnType Int, 1)
-    , [bare_array_type (ReturnType Int, 1)] ) ;
+    , ReturnType (bare_array_type (Int, 1))
+    , [bare_array_type (Int, 1)] ) ;
   add_plain
     ( "sort_asc"
-    , bare_array_type (ReturnType Real, 1)
-    , [bare_array_type (ReturnType Real, 1)] ) ;
-  add_plain ("sort_asc", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain ("sort_asc", ReturnType RowVector, [ReturnType RowVector]) ;
+    , ReturnType (bare_array_type (Real, 1))
+    , [bare_array_type (Real, 1)] ) ;
+  add_plain ("sort_asc", ReturnType Vector, [Vector]) ;
+  add_plain ("sort_asc", ReturnType RowVector, [RowVector]) ;
   add_plain
     ( "sort_desc"
-    , bare_array_type (ReturnType Int, 1)
-    , [bare_array_type (ReturnType Int, 1)] ) ;
+    , ReturnType (bare_array_type (Int, 1))
+    , [bare_array_type (Int, 1)] ) ;
   add_plain
     ( "sort_desc"
-    , bare_array_type (ReturnType Real, 1)
-    , [bare_array_type (ReturnType Real, 1)] ) ;
-  add_plain ("sort_desc", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain ("sort_desc", ReturnType RowVector, [ReturnType RowVector]) ;
+    , ReturnType (bare_array_type (Real, 1))
+    , [bare_array_type (Real, 1)] ) ;
+  add_plain ("sort_desc", ReturnType Vector, [Vector]) ;
+  add_plain ("sort_desc", ReturnType RowVector, [RowVector]) ;
   add_plain
     ( "sort_indices_asc"
-    , bare_array_type (ReturnType Int, 1)
-    , [bare_array_type (ReturnType Int, 1)] ) ;
+    , ReturnType (bare_array_type (Int, 1))
+    , [bare_array_type (Int, 1)] ) ;
   add_plain
     ( "sort_indices_asc"
-    , bare_array_type (ReturnType Int, 1)
-    , [bare_array_type (ReturnType Real, 1)] ) ;
+    , ReturnType (bare_array_type (Int, 1))
+    , [bare_array_type (Real, 1)] ) ;
   add_plain
-    ( "sort_indices_asc"
-    , bare_array_type (ReturnType Int, 1)
-    , [ReturnType Vector] ) ;
+    ("sort_indices_asc", ReturnType (bare_array_type (Int, 1)), [Vector]) ;
   add_plain
-    ( "sort_indices_asc"
-    , bare_array_type (ReturnType Int, 1)
-    , [ReturnType RowVector] ) ;
+    ("sort_indices_asc", ReturnType (bare_array_type (Int, 1)), [RowVector]) ;
   add_plain
     ( "sort_indices_desc"
-    , bare_array_type (ReturnType Int, 1)
-    , [bare_array_type (ReturnType Int, 1)] ) ;
+    , ReturnType (bare_array_type (Int, 1))
+    , [bare_array_type (Int, 1)] ) ;
   add_plain
     ( "sort_indices_desc"
-    , bare_array_type (ReturnType Int, 1)
-    , [bare_array_type (ReturnType Real, 1)] ) ;
+    , ReturnType (bare_array_type (Int, 1))
+    , [bare_array_type (Real, 1)] ) ;
   add_plain
-    ( "sort_indices_desc"
-    , bare_array_type (ReturnType Int, 1)
-    , [ReturnType Vector] ) ;
+    ("sort_indices_desc", ReturnType (bare_array_type (Int, 1)), [Vector]) ;
   add_plain
-    ( "sort_indices_desc"
-    , bare_array_type (ReturnType Int, 1)
-    , [ReturnType RowVector] ) ;
-  add_plain
-    ("squared_distance", ReturnType Real, [ReturnType Real; ReturnType Real]) ;
-  add_plain
-    ( "squared_distance"
-    , ReturnType Real
-    , [ReturnType Vector; ReturnType Vector] ) ;
-  add_plain
-    ( "squared_distance"
-    , ReturnType Real
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ( "squared_distance"
-    , ReturnType Real
-    , [ReturnType Vector; ReturnType RowVector] ) ;
-  add_plain
-    ( "squared_distance"
-    , ReturnType Real
-    , [ReturnType RowVector; ReturnType Vector] ) ;
+    ("sort_indices_desc", ReturnType (bare_array_type (Int, 1)), [RowVector]) ;
+  add_plain ("squared_distance", ReturnType Real, [Real; Real]) ;
+  add_plain ("squared_distance", ReturnType Real, [Vector; Vector]) ;
+  add_plain ("squared_distance", ReturnType Real, [RowVector; RowVector]) ;
+  add_plain ("squared_distance", ReturnType Real, [Vector; RowVector]) ;
+  add_plain ("squared_distance", ReturnType Real, [RowVector; Vector]) ;
   add_unary_vectorized "sqrt" ;
   add_nullary "sqrt2" ;
   add_unary_vectorized "square" ;
@@ -2325,169 +1934,95 @@ let _ =
       for_all_vector_types (fun u ->
           for_all_vector_types (fun v ->
               add_plain
-                ("student_t_rng", rng_return_type Real [t; u; v], [t; u; v]) )
-      ) ) ;
-  add_plain
-    ( "sub_col"
-    , ReturnType Vector
-    , [ReturnType Matrix; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "sub_row"
-    , ReturnType RowVector
-    , [ReturnType Matrix; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ("subtract", ReturnType Vector, [ReturnType Vector; ReturnType Vector]) ;
-  add_plain
-    ( "subtract"
-    , ReturnType RowVector
-    , [ReturnType RowVector; ReturnType RowVector] ) ;
-  add_plain
-    ("subtract", ReturnType Matrix, [ReturnType Matrix; ReturnType Matrix]) ;
-  add_plain
-    ("subtract", ReturnType Vector, [ReturnType Vector; ReturnType Real]) ;
-  add_plain
-    ("subtract", ReturnType RowVector, [ReturnType RowVector; ReturnType Real]) ;
-  add_plain
-    ("subtract", ReturnType Matrix, [ReturnType Matrix; ReturnType Real]) ;
-  add_plain
-    ("subtract", ReturnType Vector, [ReturnType Real; ReturnType Vector]) ;
-  add_plain
-    ("subtract", ReturnType RowVector, [ReturnType Real; ReturnType RowVector]) ;
-  add_plain
-    ("subtract", ReturnType Matrix, [ReturnType Real; ReturnType Matrix]) ;
-  add_plain ("sum", ReturnType Int, [bare_array_type (ReturnType Int, 1)]) ;
-  add_plain ("sum", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("sum", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("sum", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("sum", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain
-    ("tail", ReturnType RowVector, [ReturnType RowVector; ReturnType Int]) ;
-  add_plain ("tail", ReturnType Vector, [ReturnType Vector; ReturnType Int]) ;
+                ( "student_t_rng"
+                , ReturnType (rng_return_type Real [t; u; v])
+                , [t; u; v] ) ) ) ) ;
+  add_plain ("sub_col", ReturnType Vector, [Matrix; Int; Int; Int]) ;
+  add_plain ("sub_row", ReturnType RowVector, [Matrix; Int; Int; Int]) ;
+  add_plain ("subtract", ReturnType Vector, [Vector; Vector]) ;
+  add_plain ("subtract", ReturnType RowVector, [RowVector; RowVector]) ;
+  add_plain ("subtract", ReturnType Matrix, [Matrix; Matrix]) ;
+  add_plain ("subtract", ReturnType Vector, [Vector; Real]) ;
+  add_plain ("subtract", ReturnType RowVector, [RowVector; Real]) ;
+  add_plain ("subtract", ReturnType Matrix, [Matrix; Real]) ;
+  add_plain ("subtract", ReturnType Vector, [Real; Vector]) ;
+  add_plain ("subtract", ReturnType RowVector, [Real; RowVector]) ;
+  add_plain ("subtract", ReturnType Matrix, [Real; Matrix]) ;
+  add_plain ("sum", ReturnType Int, [bare_array_type (Int, 1)]) ;
+  add_plain ("sum", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("sum", ReturnType Real, [Vector]) ;
+  add_plain ("sum", ReturnType Real, [RowVector]) ;
+  add_plain ("sum", ReturnType Real, [Matrix]) ;
+  add_plain ("tail", ReturnType RowVector, [RowVector; Int]) ;
+  add_plain ("tail", ReturnType Vector, [Vector; Int]) ;
   for i = 0 to bare_types_size - 1 do
     add_plain
       ( "tail"
-      , bare_array_type (bare_types i, 1)
-      , [bare_array_type (bare_types i, 1); ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 1))
+      , [bare_array_type (bare_types i, 1); Int] ) ;
     add_plain
       ( "tail"
-      , bare_array_type (bare_types i, 2)
-      , [bare_array_type (bare_types i, 2); ReturnType Int] ) ;
+      , ReturnType (bare_array_type (bare_types i, 2))
+      , [bare_array_type (bare_types i, 2); Int] ) ;
     add_plain
       ( "tail"
-      , bare_array_type (bare_types i, 3)
-      , [bare_array_type (bare_types i, 3); ReturnType Int] )
+      , ReturnType (bare_array_type (bare_types i, 3))
+      , [bare_array_type (bare_types i, 3); Int] )
   done ;
   add_unary_vectorized "tan" ;
   add_unary_vectorized "tanh" (* ; add_nullary ("target") *) ;
-  add_plain ("tcrossprod", ReturnType Matrix, [ReturnType Matrix]) ;
+  add_plain ("tcrossprod", ReturnType Matrix, [Matrix]) ;
   add_unary_vectorized "tgamma" ;
-  add_plain
-    ("to_array_1d", bare_array_type (ReturnType Real, 1), [ReturnType Matrix]) ;
-  add_plain
-    ("to_array_1d", bare_array_type (ReturnType Real, 1), [ReturnType Vector]) ;
-  add_plain
-    ( "to_array_1d"
-    , bare_array_type (ReturnType Real, 1)
-    , [ReturnType RowVector] ) ;
+  add_plain ("to_array_1d", ReturnType (bare_array_type (Real, 1)), [Matrix]) ;
+  add_plain ("to_array_1d", ReturnType (bare_array_type (Real, 1)), [Vector]) ;
+  add_plain ("to_array_1d", ReturnType (bare_array_type (Real, 1)), [RowVector]) ;
   for i = 1 to 10 - 1 do
     add_plain
       ( "to_array_1d"
-      , bare_array_type (ReturnType Real, 1)
-      , [bare_array_type (ReturnType Real, i)] ) ;
+      , ReturnType (bare_array_type (Real, 1))
+      , [bare_array_type (Real, i)] ) ;
     add_plain
       ( "to_array_1d"
-      , bare_array_type (ReturnType Int, 1)
-      , [bare_array_type (ReturnType Int, i)] )
+      , ReturnType (bare_array_type (Int, 1))
+      , [bare_array_type (Int, i)] )
   done ;
+  add_plain ("to_array_2d", ReturnType (bare_array_type (Real, 2)), [Matrix]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [Matrix]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [Matrix; Int; Int]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [Matrix; Int; Int; Int]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [Vector]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [Vector; Int; Int]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [Vector; Int; Int; Int]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [RowVector]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [RowVector; Int; Int]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [RowVector; Int; Int; Int]) ;
   add_plain
-    ("to_array_2d", bare_array_type (ReturnType Real, 2), [ReturnType Matrix]) ;
-  add_plain ("to_matrix", ReturnType Matrix, [ReturnType Matrix]) ;
+    ("to_matrix", ReturnType Matrix, [bare_array_type (Real, 1); Int; Int]) ;
   add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Int; ReturnType Int] ) ;
+    ("to_matrix", ReturnType Matrix, [bare_array_type (Real, 1); Int; Int; Int]) ;
   add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ReturnType Matrix; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain ("to_matrix", ReturnType Matrix, [ReturnType Vector]) ;
+    ("to_matrix", ReturnType Matrix, [bare_array_type (Int, 1); Int; Int]) ;
   add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ReturnType Vector; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ReturnType Vector; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain ("to_matrix", ReturnType Matrix, [ReturnType RowVector]) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ReturnType RowVector; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ReturnType RowVector; ReturnType Int; ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [bare_array_type (ReturnType Real, 1); ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ bare_array_type (ReturnType Real, 1)
-      ; ReturnType Int
-      ; ReturnType Int
-      ; ReturnType Int ] ) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [bare_array_type (ReturnType Int, 1); ReturnType Int; ReturnType Int] ) ;
-  add_plain
-    ( "to_matrix"
-    , ReturnType Matrix
-    , [ bare_array_type (ReturnType Int, 1)
-      ; ReturnType Int
-      ; ReturnType Int
-      ; ReturnType Int ] ) ;
-  add_plain
-    ("to_matrix", ReturnType Matrix, [bare_array_type (ReturnType Real, 2)]) ;
-  add_plain
-    ("to_matrix", ReturnType Matrix, [bare_array_type (ReturnType Int, 2)]) ;
-  add_plain ("to_row_vector", ReturnType RowVector, [ReturnType Matrix]) ;
-  add_plain ("to_row_vector", ReturnType RowVector, [ReturnType Vector]) ;
-  add_plain ("to_row_vector", ReturnType RowVector, [ReturnType RowVector]) ;
-  add_plain
-    ( "to_row_vector"
-    , ReturnType RowVector
-    , [bare_array_type (ReturnType Real, 1)] ) ;
-  add_plain
-    ( "to_row_vector"
-    , ReturnType RowVector
-    , [bare_array_type (ReturnType Int, 1)] ) ;
-  add_plain ("to_vector", ReturnType Vector, [ReturnType Matrix]) ;
-  add_plain ("to_vector", ReturnType Vector, [ReturnType Vector]) ;
-  add_plain ("to_vector", ReturnType Vector, [ReturnType RowVector]) ;
-  add_plain
-    ("to_vector", ReturnType Vector, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain
-    ("to_vector", ReturnType Vector, [bare_array_type (ReturnType Int, 1)]) ;
-  add_plain ("trace", ReturnType Real, [ReturnType Matrix]) ;
-  add_plain
-    ( "trace_gen_quad_; form"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain
-    ( "trace_quad_; form"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Vector] ) ;
-  add_plain
-    ( "trace_quad_; form"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Matrix] ) ;
-  add_plain ("transpose", ReturnType RowVector, [ReturnType Vector]) ;
-  add_plain ("transpose", ReturnType Vector, [ReturnType RowVector]) ;
-  add_plain ("transpose", ReturnType Matrix, [ReturnType Matrix]) ;
+    ("to_matrix", ReturnType Matrix, [bare_array_type (Int, 1); Int; Int; Int]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [bare_array_type (Real, 2)]) ;
+  add_plain ("to_matrix", ReturnType Matrix, [bare_array_type (Int, 2)]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [Matrix]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [Vector]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [RowVector]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [bare_array_type (Real, 1)]) ;
+  add_plain ("to_row_vector", ReturnType RowVector, [bare_array_type (Int, 1)]) ;
+  add_plain ("to_vector", ReturnType Vector, [Matrix]) ;
+  add_plain ("to_vector", ReturnType Vector, [Vector]) ;
+  add_plain ("to_vector", ReturnType Vector, [RowVector]) ;
+  add_plain ("to_vector", ReturnType Vector, [bare_array_type (Real, 1)]) ;
+  add_plain ("to_vector", ReturnType Vector, [bare_array_type (Int, 1)]) ;
+  add_plain ("trace", ReturnType Real, [Matrix]) ;
+  add_plain ("trace_gen_quad_; form", ReturnType Real, [Matrix; Matrix; Matrix]) ;
+  add_plain ("trace_quad_; form", ReturnType Real, [Matrix; Vector]) ;
+  add_plain ("trace_quad_; form", ReturnType Real, [Matrix; Matrix]) ;
+  add_plain ("transpose", ReturnType RowVector, [Vector]) ;
+  add_plain ("transpose", ReturnType Vector, [RowVector]) ;
+  add_plain ("transpose", ReturnType Matrix, [Matrix]) ;
   add_unary_vectorized "trunc" ;
   add_unary_vectorized "trigamma" ;
   for i = 0 to vector_types_size - 1 do
@@ -2526,12 +2061,13 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("uniform_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
-  add_plain
-    ("variance", ReturnType Real, [bare_array_type (ReturnType Real, 1)]) ;
-  add_plain ("variance", ReturnType Real, [ReturnType Vector]) ;
-  add_plain ("variance", ReturnType Real, [ReturnType RowVector]) ;
-  add_plain ("variance", ReturnType Real, [ReturnType Matrix]) ;
+          add_plain
+            ("uniform_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
+  add_plain ("variance", ReturnType Real, [bare_array_type (Real, 1)]) ;
+  add_plain ("variance", ReturnType Real, [Vector]) ;
+  add_plain ("variance", ReturnType Real, [RowVector]) ;
+  add_plain ("variance", ReturnType Real, [Matrix]) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -2548,7 +2084,9 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("von_mises_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("von_mises_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -2585,7 +2123,9 @@ let _ =
   done ;
   for_all_vector_types (fun t ->
       for_all_vector_types (fun u ->
-          add_plain ("weibull_rng", rng_return_type Real [t; u], [t; u]) ) ) ;
+          add_plain
+            ("weibull_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
+      ) ) ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       for k = 0 to vector_types_size - 1 do
@@ -2612,16 +2152,9 @@ let _ =
       done
     done
   done ;
-  add_plain
-    ( "wishart_log"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Real; ReturnType Matrix] ) ;
-  add_plain
-    ( "wishart_lpdf"
-    , ReturnType Real
-    , [ReturnType Matrix; ReturnType Real; ReturnType Matrix] ) ;
-  add_plain
-    ("wishart_rng", ReturnType Matrix, [ReturnType Real; ReturnType Matrix])
+  add_plain ("wishart_log", ReturnType Real, [Matrix; Real; Matrix]) ;
+  add_plain ("wishart_lpdf", ReturnType Real, [Matrix; Real; Matrix]) ;
+  add_plain ("wishart_rng", ReturnType Matrix, [Real; Matrix])
 
 (* TODO *)
 let try_get_primitive_return_type name argtypes = None
