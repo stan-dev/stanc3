@@ -41,3 +41,9 @@ transpose '
 
 Assign
 -----
+assign_plus
+assign_minus
+assign_times
+assign_divide
+assign_elt_times
+assign_elt_divide

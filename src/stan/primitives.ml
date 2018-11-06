@@ -19,6 +19,11 @@ open Syntax
 let semantic_error ?loc msg =
   Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
+(* We allow implicit conversion from int to real, except for assignment operators *)
+let check_of_same_type_mod_conv name t1 t2 =
+  if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
+  else t1 = t2 || (t1 = Real && t1 = Int)
+
 let primitive_signatures = Hashtbl.create 3000
 
 let bare_types = function
@@ -104,18 +109,8 @@ let add_ternary name = add_plain (name, ReturnType Real, [Real; Real; Real])
 let add_quaternary name =
   add_plain (name, ReturnType Real, [Real; Real; Real; Real])
 
-let basic_bare_array_type = function
-  | Real -> Array Real
-  | Int -> Array Int
-  | Vector -> Array Vector
-  | RowVector -> Array RowVector
-  | Matrix -> Array Matrix
-  | _ -> semantic_error "This should never happen. Please report a bug."
-
 let rec bare_array_type (t, i) =
-  match i with
-  | 0 -> t
-  | j -> basic_bare_array_type (bare_array_type (t, j - 1))
+  match i with 0 -> t | j -> Array (bare_array_type (t, j - 1))
 
 let for_all_vector_types s =
   for i = 0 to all_vector_types_size - 1 do
@@ -174,6 +169,43 @@ let _ =
   done ;
   add_unary_vectorized "asin" ;
   add_unary_vectorized "asinh" ;
+  add_plain ("assign_multiply", Void, [Int; Int]) ;
+  add_plain ("assign_multiply", Void, [Matrix; Matrix]) ;
+  add_plain ("assign_multiply", Void, [Matrix; Real]) ;
+  add_plain ("assign_multiply", Void, [Real; Real]) ;
+  add_plain ("assign_multiply", Void, [RowVector; Real]) ;
+  add_plain ("assign_multiply", Void, [RowVector; Matrix]) ;
+  add_plain ("assign_multiply", Void, [Vector; Real]) ;
+  add_plain ("assign_add", Void, [Int; Int]) ;
+  add_plain ("assign_add", Void, [Matrix; Matrix]) ;
+  add_plain ("assign_add", Void, [Matrix; Real]) ;
+  add_plain ("assign_add", Void, [Real; Real]) ;
+  add_plain ("assign_add", Void, [RowVector; Real]) ;
+  add_plain ("assign_add", Void, [RowVector; RowVector]) ;
+  add_plain ("assign_add", Void, [Vector; Real]) ;
+  add_plain ("assign_add", Void, [Vector; Vector]) ;
+  add_plain ("assign_subtract", Void, [Int; Int]) ;
+  add_plain ("assign_subtract", Void, [Matrix; Matrix]) ;
+  add_plain ("assign_subtract", Void, [Matrix; Real]) ;
+  add_plain ("assign_subtract", Void, [Real; Real]) ;
+  add_plain ("assign_subtract", Void, [RowVector; Real]) ;
+  add_plain ("assign_subtract", Void, [RowVector; RowVector]) ;
+  add_plain ("assign_subtract", Void, [Vector; Real]) ;
+  add_plain ("assign_subtract", Void, [Vector; Vector]) ;
+  add_plain ("assign_elt_times", Void, [Matrix; Matrix]) ;
+  add_plain ("assign_elt_times", Void, [RowVector; RowVector]) ;
+  add_plain ("assign_elt_times", Void, [Vector; Vector]) ;
+  add_plain ("assign_elt_divide", Void, [Matrix; Matrix]) ;
+  add_plain ("assign_elt_divide", Void, [Matrix; Real]) ;
+  add_plain ("assign_elt_divide", Void, [RowVector; Real]) ;
+  add_plain ("assign_elt_divide", Void, [RowVector; RowVector]) ;
+  add_plain ("assign_elt_divide", Void, [Vector; Real]) ;
+  add_plain ("assign_elt_divide", Void, [Vector; Vector]) ;
+  add_plain ("assign_divide", Void, [Int; Int]) ;
+  add_plain ("assign_divide", Void, [Matrix; Real]) ;
+  add_plain ("assign_divide", Void, [Real; Real]) ;
+  add_plain ("assign_divide", Void, [RowVector; Real]) ;
+  add_plain ("assign_divide", Void, [Vector; Real]) ;
   add_unary_vectorized "atan" ;
   add_binary "atan2" ;
   add_unary_vectorized "atanh" ;
@@ -1570,6 +1602,10 @@ let _ =
   add_unary_vectorized "Phi" ;
   add_unary_vectorized "Phi_approx" ;
   add_nullary "pi" ;
+  add_plain ("plus", ReturnType Real, [Real]) ;
+  add_plain ("plus", ReturnType Vector, [Vector]) ;
+  add_plain ("plus", ReturnType RowVector, [RowVector]) ;
+  add_plain ("plus", ReturnType Matrix, [Matrix]) ;
   for i = 0 to int_vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
       add_plain
@@ -2157,7 +2193,112 @@ let _ =
   add_plain ("wishart_rng", ReturnType Matrix, [Real; Matrix])
 
 (* TODO *)
-let try_get_primitive_return_type name argtypes = None
+let try_get_primitive_return_type name optargtypes =
+  if List.exists (fun x -> x = None) optargtypes then None
+  else
+    let argtypes =
+      List.map
+        (function
+          | Some x -> x
+          | None ->
+              semantic_error "This should never happen. Please report a bug.")
+        optargtypes
+    in
+    let uts = List.map snd argtypes in
+    let namematches = Hashtbl.find_all primitive_signatures name in
+    let filteredmatches =
+      List.filter
+        (fun x ->
+          List.for_all
+            (fun y -> y = true)
+            (List.map2 (check_of_same_type_mod_conv name) (snd x) uts) )
+        namematches
+    in
+    let _ =
+      if List.length filteredmatches > 1 then
+        semantic_error "This should never happen. Please file a bug."
+    in
+    if List.length filteredmatches = 0 then None
+    else Some (fst (List.hd filteredmatches))
 
-(* TODO *)
+(* TODO: deal with data only arguments *)
+
 let is_primitive_name name = Hashtbl.mem primitive_signatures name
+
+let operator_names = Hashtbl.create 50
+
+let _ = Hashtbl.add operator_names "Plus" "add"
+
+let _ = Hashtbl.add operator_names "Minus" "subtract"
+
+let _ = Hashtbl.add operator_names "Times" "multiply"
+
+let _ = Hashtbl.add operator_names "Divide" "divide"
+
+let _ = Hashtbl.add operator_names "Divide" "mdivide_right"
+
+let _ = Hashtbl.add operator_names "Modulo" "modulus"
+
+let _ = Hashtbl.add operator_names "LDivide" "mdivide_left"
+
+let _ = Hashtbl.add operator_names "EltTimes" "elt_multiply"
+
+let _ = Hashtbl.add operator_names "EltDivide" "elt_divide"
+
+let _ = Hashtbl.add operator_names "Exp" "pow"
+
+let _ = Hashtbl.add operator_names "Or" "logical_or"
+
+let _ = Hashtbl.add operator_names "And" "logical_and"
+
+let _ = Hashtbl.add operator_names "Equals" "logical_eq"
+
+let _ = Hashtbl.add operator_names "NEquals" "logical_neq"
+
+let _ = Hashtbl.add operator_names "Less" "logical_lt"
+
+let _ = Hashtbl.add operator_names "Leq" "logical_lte"
+
+let _ = Hashtbl.add operator_names "Greater" "logical_gt"
+
+let _ = Hashtbl.add operator_names "Geq" "logical_gte"
+
+let _ = Hashtbl.add operator_names "Not" "logical_negation"
+
+let _ = Hashtbl.add operator_names "UMinus" "minus"
+
+let _ = Hashtbl.add operator_names "Uplus" "plus"
+
+let _ = Hashtbl.add operator_names "Transpose" "transpose"
+
+let _ = Hashtbl.add operator_names "Conditional" "if_else"
+
+let _ = Hashtbl.add operator_names "PlusAssign" "assign_add"
+
+let _ = Hashtbl.add operator_names "MinusAssign" "assign_subtract"
+
+let _ = Hashtbl.add operator_names "TimesAssign" "assign_multiply"
+
+let _ = Hashtbl.add operator_names "DivideAssign" "assign_divide"
+
+let _ = Hashtbl.add operator_names "EltTimesAssign" "assign_elt_times"
+
+let _ = Hashtbl.add operator_names "EltDivideAssign" "assign_elt_divide"
+
+let try_get_operator_return_type op_name optargtypes =
+  if op_name = "Assign" || op_name = "Arrow_Assign" then
+    match optargtypes with
+    | [Some (_, ut1); Some (_, ut2)] ->
+        if check_of_same_type_mod_conv "" ut1 ut2 then Some Void else None
+    | _ -> None
+  else
+    let rec try_recursive_find = function
+      | [] -> None
+      | name :: names -> (
+        match try_get_primitive_return_type name optargtypes with
+        | None -> try_recursive_find names
+        | Some ut -> Some ut )
+    in
+    try_recursive_find (Hashtbl.find_all operator_names op_name)
+
+(* TODO: allow for int to real conversion everywhere *)

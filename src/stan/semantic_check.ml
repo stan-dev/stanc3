@@ -126,15 +126,6 @@ let check_of_int_or_real_type e =
   | Some (_, Real) -> true
   | _ -> false
 
-let check_of_same_type_mod_conv e1 e2 =
-  match snd e1 with
-  | Some (_, t1) -> (
-    match snd e2 with
-    | Some (_, t2) ->
-        t1 = t2 || (t1 = Real && t1 = Int) || (t1 = Int && t1 = Real)
-    | _ -> false )
-  | _ -> false
-
 (* TODO: insert positions into semantic errors! *)
 
 (* The actual semantic checks for all AST nodes! *)
@@ -468,8 +459,7 @@ and semantic_check_expression x =
              (List.map snd [ue1; ue2; ue3]))
       in
       match
-        try_get_primitive_return_type "-operator-Conditional"
-          [snd ue1; snd ue2; snd ue3]
+        try_get_operator_return_type "Conditional" [snd ue1; snd ue2; snd ue3]
       with
       | Some (ReturnType ut) ->
           (Conditional (ue1, ue2, ue3), Some (returnblock, ut))
@@ -487,9 +477,7 @@ and semantic_check_expression x =
              (List.map snd [ue1; ue2]))
       in
       let opname = Core_kernel.string_of_sexp (sexp_of_infixop uop) in
-      match
-        try_get_primitive_return_type ("-operator-" ^ opname) [snd ue1; snd ue2]
-      with
+      match try_get_operator_return_type opname [snd ue1; snd ue2] with
       | Some (ReturnType ut) ->
           (InfixOp (ue1, uop, ue2), Some (returnblock, ut))
       | _ ->
@@ -503,7 +491,7 @@ and semantic_check_expression x =
           (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
       in
       let opname = Core_kernel.string_of_sexp (sexp_of_prefixop uop) in
-      match try_get_primitive_return_type ("-operator-" ^ opname) [snd ue] with
+      match try_get_operator_return_type opname [snd ue] with
       | Some (ReturnType ut) -> (PrefixOp (uop, ue), Some (returnblock, ut))
       | _ ->
           semantic_error
@@ -516,7 +504,7 @@ and semantic_check_expression x =
       in
       let uop = semantic_check_postfixop op in
       let opname = Core_kernel.string_of_sexp (sexp_of_postfixop uop) in
-      match try_get_primitive_return_type ("-operator-" ^ opname) [snd ue] with
+      match try_get_operator_return_type opname [snd ue] with
       | Some (ReturnType ut) -> (PostfixOp (ue, uop), Some (returnblock, ut))
       | _ ->
           semantic_error
@@ -779,9 +767,7 @@ and semantic_check_statement s =
       let opname =
         Core_kernel.string_of_sexp (sexp_of_assignmentoperator uassop)
       in
-      match
-        try_get_primitive_return_type ("-operator-" ^ opname) [snd ue2; snd ue]
-      with
+      match try_get_operator_return_type opname [snd ue2; snd ue] with
       | Some Void -> (Assignment ((uid, ulindex), uassop, ue), Some Void)
       | _ ->
           semantic_error "Ill-typed arguments supplied to assignment operator."
@@ -869,9 +855,10 @@ and semantic_check_statement s =
              of functions with the suffix _lp."
       in
       if
-        try_get_primitive_return_type (uid ^ "_lpdf") argumenttypes = Some Real
+        try_get_primitive_return_type (uid ^ "_lpdf") argumenttypes
+        = Some (ReturnType Real)
         || try_get_primitive_return_type (uid ^ "_lpmf") argumenttypes
-           = Some Real
+           = Some (ReturnType Real)
         || Symbol.look vm uid
            = Some
                ( Functions
