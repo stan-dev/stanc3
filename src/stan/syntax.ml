@@ -38,7 +38,9 @@ and fundef =
 
 and identifier = string
 
-(* TODO: could consider adding a primitive origin here for the Math Library *)
+(* TODO: could consider adding a primitive origin here for the Math Library;
+could consider adding a fun_arg origin here to ensure that function arguments
+cannot be written to *)
 and originblock = Functions | Data | TData | Param | TParam | Model | GQuant
 
 and argdecl = originblock * unsizedtype * identifier

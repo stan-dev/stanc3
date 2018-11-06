@@ -42,6 +42,7 @@ TODO: Test that user defined functions with probability suffixes have right type
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
+TODO: we cannot assign to function arguments.
 TODO: Allow math library functions to clash with variable names as long as signatures/types differ. I.e. users can overload library functions.
 *)
 
@@ -209,18 +210,17 @@ and semantic_check_fundef = function
             semantic_error error_msg
         | None -> ()
       in
+      let uargs = List.map semantic_check_argdecl args in
+      let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
       let _ =
-        Symbol.enter vm uid
-          ( context_flags.current_block
-          , Fun (List.map (function w, y, z -> (w, y)) args, urt) )
+        Symbol.enter vm uid (context_flags.current_block, Fun (uarg_types, urt))
       in
-      let arg_names = List.map (function w, y, z -> z) args in
+      let uarg_names = List.map (function w, y, z -> z) uargs in
       let _ =
-        if dup_exists arg_names then
+        if dup_exists uarg_names then
           semantic_error
             "All function arguments should be distinct identifiers."
       in
-      let uargs = List.map semantic_check_argdecl args in
       let _ = context_flags.in_fun_def <- true in
       let _ =
         if Filename.check_suffix id "_rng" then
@@ -232,6 +232,11 @@ and semantic_check_fundef = function
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
       let _ = Symbol.begin_scope vm in
+      (* This is a bit of a hack to make sure that function arguments cannot be assigned to. *)
+      let _ =
+        List.map2 (Symbol.enter vm) uarg_names
+          (List.map (function w, y -> (Functions, y)) uarg_types)
+      in
       let ub = semantic_check_statement b in
       let _ =
         if snd ub <> Some urt then
@@ -683,7 +688,6 @@ and semantic_check_expression x =
   | Paren e ->
       let ue = semantic_check_expression e in
       (Paren ue, snd ue)
-      (* OK until here *)
   | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
@@ -751,6 +755,7 @@ and semantic_check_printable = function
       | None -> semantic_error "Primitives cannot be printed."
       | _ -> PExpr ue )
 
+(* OK until here *)
 and semantic_check_statement s =
   match fst s with
   | Assignment ((id, lindex), assop, e) -> (
@@ -966,9 +971,13 @@ and semantic_check_statement s =
         if not (check_of_int_or_real_type ue2) then
           semantic_error "Upper bound of for-loop needs to be of type int."
       in
+      let _ = Symbol.begin_scope vm in
+      (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
+      let _ = Symbol.enter vm uid (Functions, Int) in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
+      let _ = Symbol.end_scope vm in
       ( For
           { loop_variable= uid
           ; lower_bound= ue1
@@ -976,23 +985,23 @@ and semantic_check_statement s =
           ; loop_body= us }
       , snd us )
   | ForEach (id, e, s) ->
+        let uid = semantic_check_identifier id in
       let ue = semantic_check_expression e in
-      let _ =
+      let loop_identifier_unsizedtype =
         match snd ue with
-        | Some (_, Int) ->
+        | Some (_, Array ut) -> ut
+        | Some (_, Vector) | Some (_, RowVector) | Some (_, Matrix) -> Real
+                | _ ->
             semantic_error
               "Foreach loop must be over array, vector, row_vector or matrix"
-        | Some (_, Real) ->
-            semantic_error
-              "Foreach loop must be over array, vector, row_vector or matrix"
-        | Some (_, Fun _) ->
-            semantic_error
-              "Foreach loop must be over array, vector, row_vector or matrix"
-        | _ -> ()
       in
+      let _ = Symbol.begin_scope vm in
+      (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
+      let _ = Symbol.enter vm uid (Functions, loop_identifier_unsizedtype) in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
+      let _ = Symbol.end_scope vm in
       (While (ue, us), snd us)
   | Block vdsl ->
       let _ = Symbol.begin_scope vm in
