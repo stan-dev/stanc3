@@ -38,6 +38,7 @@ and fundef =
 
 and identifier = string
 
+(* TODO: could consider adding a primitive origin here for the Math Library *)
 and originblock = Functions | Data | TData | Param | TParam | Model | GQuant
 
 and argdecl = originblock * unsizedtype * identifier

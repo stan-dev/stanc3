@@ -42,6 +42,7 @@ TODO: Test that user defined functions with probability suffixes have right type
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
+TODO: Allow math library functions to clash with variable names as long as signatures/types differ. I.e. users can overload library functions.
 *)
 
 open Symbol_table
@@ -187,7 +188,6 @@ and semantic_check_modelblock bm =
 and semantic_check_generatedquantitiesblock bgq =
   Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
 
-(* OK until here *)
 
 (* TODO: deal properly with recursive functions here. *)
 and semantic_check_fundef = function
@@ -253,12 +253,12 @@ and semantic_check_identifier id = id
 (* TODO: This could be one place where we check for reserved variable names. Though it would be nicer to just do it in the lexer. *)
 
 (* Probably nothing to do here *)
-and semantic_check_argblock isdata = isdata
+and semantic_check_originblock ob = ob
 
 (* Probably nothing to do here *)
 and semantic_check_argdecl = function
-  | isdata, ut, id ->
-      ( semantic_check_argblock isdata
+  | ob, ut, id ->
+      ( semantic_check_originblock ob
       , semantic_check_unsizedtype ut
       , semantic_check_identifier id )
 
@@ -267,19 +267,21 @@ and semantic_check_returntype = function
   | Void -> Void
   | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
 
+
 (* Probably nothing to do here *)
 and semantic_check_unsizedtype = function
-  | Array ut -> semantic_check_unsizedtype ut
+  | Array ut -> Array (semantic_check_unsizedtype ut)
   | Fun (l, rt) ->
       Fun
         ( List.map
             (function
-              | ab, ut ->
-                  (semantic_check_argblock ab, semantic_check_unsizedtype ut))
+              | ob, ut ->
+                  (semantic_check_originblock ob, semantic_check_unsizedtype ut))
             l
         , semantic_check_returntype rt )
   | ut -> ut
 
+(* OK until here *)
 and semantic_check_topvardecl = function
   | st, trans, id ->
       let ust = semantic_check_sizedtype st in
