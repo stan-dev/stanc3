@@ -153,9 +153,6 @@ let _ =
   add_plain ("add", ReturnType Vector, [Real; Vector]) ;
   add_plain ("add", ReturnType RowVector, [Real; RowVector]) ;
   add_plain ("add", ReturnType Matrix, [Real; Matrix]) ;
-  for i = 0 to bare_types_size - 1 do
-    add_plain ("add", ReturnType (bare_types i), [bare_types i])
-  done ;
   for i = 1 to 8 - 1 do
     add_plain
       ( "append_array"
@@ -1986,9 +1983,10 @@ let _ =
                 , [t; u; v] ) ) ) ) ;
   add_plain ("sub_col", ReturnType Vector, [Matrix; Int; Int; Int]) ;
   add_plain ("sub_row", ReturnType RowVector, [Matrix; Int; Int; Int]) ;
-  add_plain ("subtract", ReturnType Vector, [Vector; Vector]) ;
-  add_plain ("subtract", ReturnType RowVector, [RowVector; RowVector]) ;
-  add_plain ("subtract", ReturnType Matrix, [Matrix; Matrix]) ;
+  for i = 0 to bare_types_size - 1 do
+    add_plain
+      ("subtract", ReturnType (bare_types i), [bare_types i; bare_types i])
+  done ;
   add_plain ("subtract", ReturnType Vector, [Vector; Real]) ;
   add_plain ("subtract", ReturnType RowVector, [RowVector; Real]) ;
   add_plain ("subtract", ReturnType Matrix, [Matrix; Real]) ;

@@ -472,7 +472,6 @@ and semantic_check_expression x =
       | _ ->
           semantic_error
             "Ill-typed arguments supplied to Conditional operator." )
-  (* OK until here *)
   | InfixOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
@@ -529,7 +528,7 @@ and semantic_check_expression x =
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
-      let argumenttypes = List.map snd ues in
+      let optargumenttypes = List.map snd ues in
       let _ =
         if
           Filename.check_suffix uid "_lp"
@@ -545,7 +544,7 @@ and semantic_check_expression x =
         lub_op_originblock
           (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
       in
-      match try_get_primitive_return_type uid argumenttypes with
+      match try_get_primitive_return_type uid optargumenttypes with
       | Some Void ->
           semantic_error
             "A returning function was expected but a non-returning function \
@@ -553,11 +552,11 @@ and semantic_check_expression x =
       | Some (ReturnType ut) -> (FunApp (uid, ues), Some (returnblock, ut))
       | _ -> (
         match Symbol.look vm uid with
-        | Some (_, Fun (argumenttypes, Void)) ->
+        | Some (_, Fun (_, Void)) ->
             semantic_error
               "A returning function was expected but a non-returning function \
                was supplied."
-        | Some (_, Fun (argumenttypes, ReturnType ut)) ->
+        | Some (_, Fun (_, ReturnType ut)) ->
             (FunApp (uid, ues), Some (returnblock, ut))
         | _ ->
             semantic_error
@@ -577,7 +576,7 @@ and semantic_check_expression x =
              can make use of conditional notation."
       in
       let ues = List.map semantic_check_expression es in
-      let argumenttypes = List.map snd ues in
+      let optargumenttypes = List.map snd ues in
       let _ =
         if
           Filename.check_suffix uid "_lp"
@@ -593,7 +592,7 @@ and semantic_check_expression x =
         lub_op_originblock
           (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
       in
-      match try_get_primitive_return_type uid argumenttypes with
+      match try_get_primitive_return_type uid optargumenttypes with
       | Some Void ->
           semantic_error
             "A returning function was expected but a non-returning function \
@@ -601,16 +600,17 @@ and semantic_check_expression x =
       | Some (ReturnType ut) -> (CondFunApp (uid, ues), Some (returnblock, ut))
       | _ -> (
         match Symbol.look vm uid with
-        | Some (_, Fun (argumenttypes, Void)) ->
+        | Some (_, Fun (_, Void)) ->
             semantic_error
               "A returning function was expected but a non-returning function \
                was supplied."
-        | Some (_, Fun (argumenttypes, ReturnType ut)) ->
+        | Some (_, Fun (_, ReturnType ut)) ->
             (CondFunApp (uid, ues), Some (returnblock, ut))
         | _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
-               supplied." ) )
+               supplied." )
+      (* OK until here *) )
   | GetLP ->
       let _ =
         if
