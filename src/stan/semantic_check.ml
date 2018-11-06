@@ -609,8 +609,7 @@ and semantic_check_expression x =
         | _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
-               supplied." )
-      (* OK until here *) )
+               supplied." ) )
   | GetLP ->
       let _ =
         if
@@ -667,19 +666,24 @@ and semantic_check_expression x =
             | Some x -> snd x )
           ues
       in
-      let _ =
-        if List.exists (fun x -> not (x = Real || x = Int)) elementtypes then
+      let ut =
+        if List.for_all (fun x -> x = Real || x = Int) elementtypes then
+          RowVector
+        else if List.for_all (fun x -> x = RowVector) elementtypes then Matrix
+        else
           semantic_error
-            "Row_vector expression should have int or real entries."
+            "Row_vector expression should have all int and real entries or \
+             all row_vector entries."
       in
       let returnblock =
         lub_op_originblock
           (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
       in
-      (RowVectorExpr ues, Some (returnblock, Array (List.hd elementtypes)))
+      (RowVectorExpr ues, Some (returnblock, ut))
   | Paren e ->
       let ue = semantic_check_expression e in
       (Paren ue, snd ue)
+      (* OK until here *)
   | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
