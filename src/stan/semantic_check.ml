@@ -376,7 +376,6 @@ and semantic_check_vardecl_or_statement vds =
   | Stmt s -> Stmt (semantic_check_statement s)
   | VDeclAss vda -> VDeclAss (semantic_check_compound_vardecl_assign vda)
 
-(* OK until here *)
 and semantic_check_sizedtype = function
   | SInt -> SInt
   | SReal -> SReal
@@ -473,6 +472,7 @@ and semantic_check_expression x =
       | _ ->
           semantic_error
             "Ill-typed arguments supplied to Conditional operator." )
+  (* OK until here *)
   | InfixOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
