@@ -1,0 +1,14 @@
+
+add (mutually) recursive functions
+
+add higher order functions
+
+fix error code 16
+
+fix array sizes type bug 
+
+fix assignment operator type bug
+
+fix tilde statement type bug
+
+sort out clashes between math library and user identifiers

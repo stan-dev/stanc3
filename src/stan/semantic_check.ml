@@ -546,11 +546,12 @@ and semantic_check_expression x =
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
-        if not (
-          Filename.check_suffix uid "_lpdf"
-          || Filename.check_suffix uid "_lcdf"
-          || Filename.check_suffix uid "_lpmf"
-          || Filename.check_suffix uid "_lccdf")
+        if
+          not
+            ( Filename.check_suffix uid "_lpdf"
+            || Filename.check_suffix uid "_lcdf"
+            || Filename.check_suffix uid "_lpmf"
+            || Filename.check_suffix uid "_lccdf" )
         then
           semantic_error
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
@@ -599,7 +600,9 @@ and semantic_check_expression x =
       let _ =
         if
           not
-            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+            ( context_flags.in_lp_fun_def
+            || context_flags.current_block = Model
+            || context_flags.current_block = TParam )
         then
           semantic_error
             "Target can only be accessed in the model block or in definitions \
@@ -610,7 +613,9 @@ and semantic_check_expression x =
       let _ =
         if
           not
-            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
+            ( context_flags.in_lp_fun_def
+            || context_flags.current_block = Model
+            || context_flags.current_block = TParam )
         then
           semantic_error
             "Target can only be accessed in the model block or in definitions \
@@ -752,7 +757,9 @@ and semantic_check_statement s =
       in
       let _ =
         match uidoblock with
-        | Some FunArg -> semantic_error "Cannot assign to this identifier."
+        | Some FunArg ->
+            semantic_error
+              "Cannot assign to function arguments or loop identifiers."
         | Some Data -> semantic_error "Cannot assign to data."
         | Some Param -> semantic_error "Cannot assign to parameter."
         | Some b ->
