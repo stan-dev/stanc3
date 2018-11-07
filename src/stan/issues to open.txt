@@ -3,4 +3,3 @@ keyword for truncation not reserved.
 
 function arguments can shadow.
 
-user declared identifiers can clash with math library functions unless types are precisely the same.

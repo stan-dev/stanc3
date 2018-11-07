@@ -13,8 +13,16 @@ fix assignment operator type bug
 
 fix tilde statement type bug
 
-sort out clashes between math library and user identifiers
+sort out clashes between math library and user identifiers:
+Variable names will conflict with the names of predefined functions other than constants.
+Thus a variable may not be named logit or add, but it may be named pi or
+e.
+Variable names will also conflict with the names of distributions suffixed with
+_lpdf, _lpmf, _lcdf, and _lccdf, _cdf, and _ccdf, such as normal_lcdf_log; this
+also holds for the deprecated forms _log, _cdf_log, and _ccdf_log,
+Using any of these variable names causes the stanc translator to halt and report
+the name and location of the variable causing the conflict.
 
 check data only arguments
 
-go through all bad examples to make sure they all fail
+go through all bad examples to make sure they all fail (including ones that are currently not in folder)
