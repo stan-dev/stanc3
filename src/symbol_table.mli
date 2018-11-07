@@ -13,4 +13,8 @@ module type SYMBOL = sig
 
   val end_scope : 'a state -> unit
   
+  val set_read_only : 'a state -> string -> unit
+  
+  val get_read_only : 'a state -> string -> bool
+  
 end

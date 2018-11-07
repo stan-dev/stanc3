@@ -42,9 +42,10 @@ TODO: Test that user defined functions with probability suffixes have right type
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
-TODO: we cannot assign to function arguments.
 TODO: Allow math library functions to clash with variable names as long as signatures/types differ. I.e. users can overload library functions.
 *)
+
+(* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
 
 open Symbol_table
 open Syntax
@@ -107,13 +108,13 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
-  | [] -> FunArg
+  | [] -> Functions
   | x :: xs ->
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
 
 let lub_op_originblock l =
-  lub_originblock (List.map (function None -> FunArg | Some b -> b) l)
+  lub_originblock (List.map (function None -> Functions | Some b -> b) l)
 
 let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
 
@@ -236,7 +237,7 @@ and semantic_check_fundef = function
       let _ = List.map check_fresh_variable uarg_names in
       let _ =
         List.map2 (Symbol.enter vm) uarg_names
-          (List.map (function w, y -> (FunArg, y)) uarg_types)
+          (List.map (function w, y -> (Functions, y)) uarg_types)
       in
       let ub = semantic_check_statement b in
       let _ =
@@ -756,10 +757,12 @@ and semantic_check_statement s =
         else Core_kernel.Option.map (Symbol.look vm uid) fst
       in
       let _ =
+        if Symbol.get_read_only vm uid then
+          semantic_error
+            "Cannot assign to function argument or loop identifier."
+      in
+      let _ =
         match uidoblock with
-        | Some FunArg ->
-            semantic_error
-              "Cannot assign to function arguments or loop identifiers."
         | Some Data -> semantic_error "Cannot assign to data."
         | Some Param -> semantic_error "Cannot assign to parameter."
         | Some b ->
@@ -970,8 +973,11 @@ and semantic_check_statement s =
       in
       let _ = Symbol.begin_scope vm in
       let _ = check_fresh_variable uid in
-      (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
-      let _ = Symbol.enter vm uid (FunArg, Int) in
+      let oindexblock =
+        lub_op_originblock
+          (List.map (fun x -> Core_kernel.Option.map x fst) [snd ue1; snd ue2])
+      in
+      let _ = Symbol.enter vm uid (oindexblock, Int) in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
@@ -995,8 +1001,10 @@ and semantic_check_statement s =
       in
       let _ = Symbol.begin_scope vm in
       let _ = check_fresh_variable uid in
-      (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
-      let _ = Symbol.enter vm uid (FunArg, loop_identifier_unsizedtype) in
+      let oindexblock =
+        (function None -> Functions | Some x -> fst x) (snd ue)
+      in
+      let _ = Symbol.enter vm uid (oindexblock, loop_identifier_unsizedtype) in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in

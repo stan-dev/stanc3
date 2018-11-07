@@ -12,14 +12,24 @@ module type SYMBOL = sig
   val begin_scope : 'a state -> unit
 
   val end_scope : 'a state -> unit
+
+  val set_read_only : 'a state -> string -> unit
+
+  val get_read_only : 'a state -> string -> bool
 end
 
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.
 We could just keep track of the count of the entry into the hash table and use that for comparison. *)
 module Symbol : SYMBOL = struct
-  type 'a state = {table: (string, 'a) Hashtbl.t; stack: string Stack.t}
+  type 'a state =
+    { table: (string, 'a) Hashtbl.t
+    ; stack: string Stack.t
+    ; readonly: (string, bool) Hashtbl.t }
 
-  let initialize () = {table= Hashtbl.create 123456; stack= Stack.create ()}
+  let initialize () =
+    { table= Hashtbl.create 123456
+    ; stack= Stack.create ()
+    ; readonly= Hashtbl.create 123456 }
 
   (* We just pick some initial size. Hash tables get resized dynamically if necessary, so it doesn't hugely matter. *)
   let enter s str ty = Hashtbl.add s.table str ty ; Stack.push str s.stack
@@ -34,9 +44,15 @@ module Symbol : SYMBOL = struct
     while Stack.top s.stack <> "-sentinel-new-scope-" do
       (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
       Hashtbl.remove s.table (Stack.top s.stack) ;
+      Hashtbl.remove s.readonly (Stack.top s.stack) ;
       let _ = Stack.pop s.stack in
       ()
     done ;
     let _ = Stack.pop s.stack in
     ()
+
+  let set_read_only s str = Hashtbl.add s.readonly str true
+
+  let get_read_only s str =
+    match Hashtbl.find_opt s.readonly str with Some true -> true | _ -> false
 end

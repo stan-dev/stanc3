@@ -1,4 +1,6 @@
 
+fix error with primitives not being recognized: problem with add_unary_vectorized?
+
 add (mutually) recursive functions
 
 add higher order functions

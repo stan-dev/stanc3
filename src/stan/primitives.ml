@@ -15,6 +15,8 @@ we are using a predicate here because the functions are overloaded so heavily  *
 
 (* TODO: deal with higher order functions here *)
 
+(* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
+
 open Syntax
 
 (* A semantic error reported by the toplevel *)
