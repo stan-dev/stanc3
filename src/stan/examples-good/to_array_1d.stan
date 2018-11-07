@@ -35,7 +35,7 @@ transformed parameters {
   transformed_param_real_array <- to_array_1d(d_vector);
   transformed_param_real_array <- to_array_1d(d_row_vector);
   transformed_param_real_array <- to_array_1d(d_real_array_2);
-  transformed_param_real_array <- to_array_1d(d_int_array_2);
+  //transformed_param_real_array <- to_array_1d(d_int_array_2);
   transformed_param_real_array <- to_array_1d(d_real_array_3);
   transformed_param_real_array <- to_array_1d(d_int_array_3);
 

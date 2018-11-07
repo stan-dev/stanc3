@@ -24,9 +24,12 @@ let semantic_error ?loc msg =
   Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
 (* We allow implicit conversion from int to real, except for assignment operators *)
-let check_of_same_type_mod_conv name t1 t2 =
+let rec check_of_same_type_mod_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
-  else t1 = t2 || (t1 = Real && t2 = Int)
+  else
+    match (t1, t2) with
+    | Array t1elt, Array t2elt -> check_of_same_type_mod_conv name t1elt t2elt
+    | _ -> t1 = t2 || (t1 = Real && t2 = Int)
 
 let primitive_signatures = Hashtbl.create 3000
 
