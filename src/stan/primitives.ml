@@ -31,6 +31,25 @@ let rec check_of_same_type_mod_conv name t1 t2 =
     | Array t1elt, Array t2elt -> check_of_same_type_mod_conv name t1elt t2elt
     | _ -> t1 = t2 || (t1 = Real && t2 = Int)
 
+let check_compatible_arguments_mod_conv name args1 optargs2 =
+  let args2 =
+    List.map
+      (function
+        | Some x -> x
+        | None ->
+            semantic_error
+              "This should never happen. Please report a bug. Error code 15.")
+      optargs2
+  in
+  List.length args1 = List.length args2
+  && List.for_all
+       (fun y -> y = true)
+       (List.map2
+          (fun w1 w2 ->
+            check_of_same_type_mod_conv name (snd w1) (snd w2)
+            && compare_originblock (fst w1) (fst w2) > -1 )
+          args1 args2)
+
 let primitive_signatures = Hashtbl.create 3000
 
 let rec bare_array_type (t, i) =
@@ -2241,28 +2260,17 @@ let _ =
   add_plain ("wishart_lpdf", ReturnType Real, [Matrix; Real; Matrix]) ;
   add_plain ("wishart_rng", ReturnType Matrix, [Real; Matrix])
 
-(* TODO *)
 let try_get_primitive_return_type name optargtypes =
   if List.exists (fun x -> x = None) optargtypes then None
   else
-    let argtypes =
-      List.map
-        (function
-          | Some x -> x
-          | None ->
-              semantic_error
-                "This should never happen. Please report a bug. Error code 15.")
-        optargtypes
-    in
-    let uts = List.map snd argtypes in
     let namematches = Hashtbl.find_all primitive_signatures name in
+    (* TODO: deal with data only arguments. Get rid of the placeholder GQuant here. *)
     let filteredmatches =
       List.filter
         (fun x ->
-          List.length (snd x) = List.length uts
-          && List.for_all
-               (fun y -> y = true)
-               (List.map2 (check_of_same_type_mod_conv name) (snd x) uts) )
+          check_compatible_arguments_mod_conv name
+            (List.map (fun y -> (GQuant, y)) (snd x))
+            optargtypes )
         namematches
     in
     if List.length filteredmatches = 0 then None

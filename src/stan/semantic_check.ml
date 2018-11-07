@@ -664,8 +664,18 @@ and semantic_check_expression x =
             semantic_error
               "A returning function was expected but a non-returning function \
                was supplied."
-        | Some (_, Fun (_, ReturnType ut)) ->
+        | Some (_, Fun (listedtypes, ReturnType ut)) ->
+            let _ =
+              if
+                not
+                  (check_compatible_arguments_mod_conv uid listedtypes
+                     optargumenttypes)
+              then
+                semantic_error
+                  ("Ill-typed arguments supplied to function " ^ uid)
+            in
             (FunApp (uid, ues), Some (returnblock, ut))
+            (* TODO: insert type checking here *)
         | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
@@ -717,8 +727,18 @@ and semantic_check_expression x =
             semantic_error
               "A returning function was expected but a non-returning function \
                was supplied."
-        | Some (_, Fun (_, ReturnType ut)) ->
+        | Some (_, Fun (listedtypes, ReturnType ut)) ->
+            let _ =
+              if
+                not
+                  (check_compatible_arguments_mod_conv uid listedtypes
+                     optargumenttypes)
+              then
+                semantic_error
+                  ("Ill-typed arguments supplied to function " ^ uid)
+            in
             (CondFunApp (uid, ues), Some (returnblock, ut))
+            (* TODO: insert type checking here *)
         | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
@@ -943,7 +963,18 @@ and semantic_check_statement s =
              was supplied."
       | _ -> (
         match Symbol.look vm uid with
-        | Some (_, Fun (_, Void)) -> (NRFunApp (uid, ues), Some Void)
+        | Some (_, Fun (listedtypes, Void)) ->
+            let _ =
+              if
+                not
+                  (check_compatible_arguments_mod_conv uid listedtypes
+                     optargumenttypes)
+              then
+                semantic_error
+                  ( "Ill-typed arguments supplied to non-returning function "
+                  ^ uid )
+            in
+            (NRFunApp (uid, ues), Some Void)
         | Some (_, Fun (_, ReturnType _)) ->
             semantic_error
               "A non-returning function was expected but a returning function \
@@ -1026,9 +1057,13 @@ and semantic_check_statement s =
           = Some (ReturnType Real)
           || try_get_primitive_return_type (uid ^ "_lpmf") optargumenttypes
              = Some (ReturnType Real)
+          || try_get_primitive_return_type (uid ^ "_log") optargumenttypes
+             = Some (ReturnType Real)
           || Symbol.look vm (uid ^ "_lpdf")
              = Some (Functions, Fun (argumenttypes, ReturnType Real))
           || Symbol.look vm (uid ^ "_lpmf")
+             = Some (Functions, Fun (argumenttypes, ReturnType Real))
+          || Symbol.look vm (uid ^ "_log")
              = Some (Functions, Fun (argumenttypes, ReturnType Real))
         then ()
         else semantic_error "Ill-typed arguments to '~' statement."
