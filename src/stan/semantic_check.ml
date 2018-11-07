@@ -42,6 +42,7 @@ TODO: Test that user defined functions with probability suffixes have right type
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
+Sizes should be of level at most data.
 TODO: Allow math library functions to clash with variable names as long as signatures/types differ. I.e. users can overload library functions.
 *)
 
@@ -217,6 +218,7 @@ and semantic_check_fundef = function
       let _ =
         Symbol.enter vm uid (context_flags.current_block, Fun (uarg_types, urt))
       in
+      let _ = Symbol.set_read_only vm uid in
       let uarg_names = List.map (function w, y, z -> z) uargs in
       let _ = context_flags.in_fun_def <- true in
       let _ =
@@ -289,6 +291,33 @@ and semantic_check_unsizedtype = function
 and semantic_check_topvardecl = function
   | st, trans, id ->
       let ust = semantic_check_sizedtype st in
+      let rec check_sizes_below_param_level = function
+        | SVector e -> (
+          match snd e with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> true )
+        | SRowVector e -> (
+          match snd e with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> true )
+        | SMatrix (e1, e2) -> (
+          match snd e1 with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> (
+            match snd e2 with
+            | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+            | _ -> true ) )
+        | SArray (st2, e) -> (
+          match snd e with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> check_sizes_below_param_level st2 )
+        | _ -> true
+      in
+      let _ =
+        if not (check_sizes_below_param_level ust) then
+          semantic_error
+            "Non-data variables are not allowed in top level size declarations."
+      in
       let utrans = semantic_check_transformation trans in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
@@ -978,6 +1007,7 @@ and semantic_check_statement s =
           (List.map (fun x -> Core_kernel.Option.map x fst) [snd ue1; snd ue2])
       in
       let _ = Symbol.enter vm uid (oindexblock, Int) in
+      let _ = Symbol.set_read_only vm uid in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
@@ -1005,6 +1035,7 @@ and semantic_check_statement s =
         (function None -> Functions | Some x -> fst x) (snd ue)
       in
       let _ = Symbol.enter vm uid (oindexblock, loop_identifier_unsizedtype) in
+      let _ = Symbol.set_read_only vm uid in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in

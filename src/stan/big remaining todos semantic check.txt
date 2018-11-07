@@ -14,3 +14,7 @@ fix assignment operator type bug
 fix tilde statement type bug
 
 sort out clashes between math library and user identifiers
+
+check data only arguments
+
+go through all bad examples to make sure they all fail

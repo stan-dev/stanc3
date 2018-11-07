@@ -246,10 +246,12 @@ top_var_type:
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
       (SMatrix (e, e), CholeskyCorr)
     }
-  | CHOLESKYFACTORCOV LBRACK e=expression option(pair(COMMA, expression)) RBRACK
+  | CHOLESKYFACTORCOV LBRACK e1=expression oe2=option(pair(COMMA, expression))
+    RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      (SMatrix (e, e), CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SMatrix (e1, e2), CholeskyCov)
+                   | _           ->  (SMatrix (e1, e1),  CholeskyCov)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
     { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (e, e), Correlation) }
