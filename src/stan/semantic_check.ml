@@ -210,18 +210,13 @@ and semantic_check_fundef = function
   | {returntype= rt; name= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
-      let _ = check_fresh_variable uid in
       let uargs = List.map semantic_check_argdecl args in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
+      let _ = check_fresh_variable uid in
       let _ =
         Symbol.enter vm uid (context_flags.current_block, Fun (uarg_types, urt))
       in
       let uarg_names = List.map (function w, y, z -> z) uargs in
-      let _ =
-        if dup_exists uarg_names then
-          semantic_error
-            "All function arguments should be distinct identifiers."
-      in
       let _ = context_flags.in_fun_def <- true in
       let _ =
         if Filename.check_suffix id "_rng" then
@@ -234,6 +229,12 @@ and semantic_check_fundef = function
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
       let _ = Symbol.begin_scope vm in
       (* This is a bit of a hack to make sure that function arguments cannot be assigned to. *)
+      let _ =
+        if dup_exists uarg_names then
+          semantic_error
+            "All function arguments should be distinct identifiers."
+      in
+      let _ = List.map check_fresh_variable uarg_names in
       let _ =
         List.map2 (Symbol.enter vm) uarg_names
           (List.map (function w, y -> (Functions, y)) uarg_types)
@@ -501,6 +502,7 @@ and semantic_check_expression x =
       (Variable uid, ort)
   | IntNumeral s -> (IntNumeral s, Some (Data, Int))
   | RealNumeral s -> (RealNumeral s, Some (Data, Real))
+  (* TODO: deal with higher order functions here *)
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
@@ -942,7 +944,6 @@ and semantic_check_statement s =
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
       (While (ue, us), snd us)
-      (* OK until here *)
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       let uid = semantic_check_identifier id in
       let ue1 = semantic_check_expression e1 in
@@ -969,6 +970,7 @@ and semantic_check_statement s =
           ; upper_bound= ue2
           ; loop_body= us }
       , snd us )
+      (* OK until here *)
   | ForEach (id, e, s) ->
       let uid = semantic_check_identifier id in
       let ue = semantic_check_expression e in
