@@ -5,7 +5,7 @@ add higher order functions
 
 fix array sizes type bug 
 
-fix tilde statement type bug
+array expression sizes bug
 
 sort out clashes between math library and user identifiers:
 Variable names will conflict with the names of predefined functions other than constants.

@@ -786,7 +786,14 @@ and semantic_check_expression x =
           ues
       in
       let _ =
-        if List.exists (fun x -> x <> List.hd elementtypes) elementtypes then
+        if
+          List.exists
+            (fun x ->
+              not
+                ( check_of_same_type_mod_conv "" x (List.hd elementtypes)
+                || check_of_same_type_mod_conv "" (List.hd elementtypes) x ) )
+            elementtypes
+        then
           semantic_error
             "Array expression should have entries of consistent type."
       in
