@@ -30,6 +30,9 @@ let check_of_same_type_mod_conv name t1 t2 =
 
 let primitive_signatures = Hashtbl.create 3000
 
+let rec bare_array_type (t, i) =
+  match i with 0 -> t | j -> Array (bare_array_type (t, j - 1))
+
 let bare_types = function
   | 0 -> Int
   | 1 -> Real
@@ -107,16 +110,26 @@ let add_nullary name = add_plain (name, ReturnType Real, [])
 let add_unary name = add_plain (name, ReturnType Real, [Real])
 
 let add_unary_vectorized name =
-  add_plain (name, ReturnType Real, [Int]) ;
-  add_plain (name, ReturnType Real, [Real]) ;
-  add_plain (name, ReturnType Vector, [Vector]) ;
-  add_plain (name, ReturnType RowVector, [RowVector]) ;
-  add_plain (name, ReturnType Matrix, [Matrix]) ;
-  add_plain (name, ReturnType (Array Real), [Array Int]) ;
-  add_plain (name, ReturnType (Array Real), [Array Real]) ;
-  add_plain (name, ReturnType (Array Vector), [Array Vector]) ;
-  add_plain (name, ReturnType (Array RowVector), [Array RowVector]) ;
-  add_plain (name, ReturnType (Array Matrix), [Array Matrix])
+  for j = 0 to 8 - 1 do
+    add_plain
+      (name, ReturnType (bare_array_type (Real, j)), [bare_array_type (Int, j)]) ;
+    add_plain
+      ( name
+      , ReturnType (bare_array_type (Real, j))
+      , [bare_array_type (Real, j)] ) ;
+    add_plain
+      ( name
+      , ReturnType (bare_array_type (Vector, j))
+      , [bare_array_type (Vector, j)] ) ;
+    add_plain
+      ( name
+      , ReturnType (bare_array_type (RowVector, j))
+      , [bare_array_type (RowVector, j)] ) ;
+    add_plain
+      ( name
+      , ReturnType (bare_array_type (Matrix, j))
+      , [bare_array_type (Matrix, j)] )
+  done
 
 let add_binary name = add_plain (name, ReturnType Real, [Real; Real])
 
@@ -124,9 +137,6 @@ let add_ternary name = add_plain (name, ReturnType Real, [Real; Real; Real])
 
 let add_quaternary name =
   add_plain (name, ReturnType Real, [Real; Real; Real; Real])
-
-let rec bare_array_type (t, i) =
-  match i with 0 -> t | j -> Array (bare_array_type (t, j - 1))
 
 let for_all_vector_types s =
   for i = 0 to all_vector_types_size - 1 do

@@ -1,6 +1,4 @@
 
-fix error with primitives not being recognized: problem with add_unary_vectorized?
-
 add (mutually) recursive functions
 
 add higher order functions
@@ -22,6 +20,10 @@ _lpdf, _lpmf, _lcdf, and _lccdf, _cdf, and _ccdf, such as normal_lcdf_log; this
 also holds for the deprecated forms _log, _cdf_log, and _ccdf_log,
 Using any of these variable names causes the stanc translator to halt and report
 the name and location of the variable causing the conflict.
+i.e. when calling a function/dereferencing an identifier, we first try the user defined ones; only then the primitives
+conversely, when adding an identifier to the var map, we first check that it does not clash with a non-constant primitive; then that it does not clash with something that's already in the var map.
+note that redefining the function e() with precisely the same signature is still not allowed.
+add in the clashes with the suffixes above.
 
 check data only arguments
 
