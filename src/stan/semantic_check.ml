@@ -895,17 +895,17 @@ and semantic_check_statement s =
              of functions with the suffix _lp."
       in
       let _ =
-        match
-          ( try_get_primitive_return_type (uid ^ "_lpdf") optargumenttypes
-          , try_get_primitive_return_type (uid ^ "_lpmf") optargumenttypes
-          , Symbol.look vm (uid ^ "_lpdf")
-          , Symbol.look vm (uid ^ "_lpmf") )
-        with
-        | Some (ReturnType Real), _, _, _ -> ()
-        | _, Some (ReturnType Real), _, _ -> ()
-        | _, _, Some (Functions, Fun (argumenttypes, ReturnType Real)), _ -> ()
-        | _, _, _, Some (Functions, Fun (argumenttypes, ReturnType Real)) -> ()
-        | _ -> semantic_error "Ill-typed arguments to '~' statement."
+        if
+          try_get_primitive_return_type (uid ^ "_lpdf") optargumenttypes
+          = Some (ReturnType Real)
+          || try_get_primitive_return_type (uid ^ "_lpmf") optargumenttypes
+             = Some (ReturnType Real)
+          || Symbol.look vm (uid ^ "_lpdf")
+             = Some (Functions, Fun (argumenttypes, ReturnType Real))
+          || Symbol.look vm (uid ^ "_lpmf")
+             = Some (Functions, Fun (argumenttypes, ReturnType Real))
+        then ()
+        else semantic_error "Ill-typed arguments to '~' statement."
       in
       (Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}, Some Void)
       (* OK until here *)
