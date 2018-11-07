@@ -125,6 +125,22 @@ let check_of_int_or_real_type e =
 
 (* TODO: insert positions into semantic errors! *)
 
+let check_fresh_variable id =
+  let _ =
+    if is_primitive_name id then
+      let error_msg =
+        String.concat " " ["Identifier "; id; " clashes with primitive."]
+      in
+      semantic_error error_msg
+  in
+  match Symbol.look vm id with
+  | Some x ->
+      let error_msg =
+        String.concat " " ["Identifier "; id; " is already in use."]
+      in
+      semantic_error error_msg
+  | None -> ()
+
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
   match p
@@ -194,22 +210,7 @@ and semantic_check_fundef = function
   | {returntype= rt; name= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
-      let _ =
-        if is_primitive_name uid then
-          let error_msg =
-            String.concat " " ["Identifier "; id; " clashes with primitive."]
-          in
-          semantic_error error_msg
-      in
-      let _ =
-        match Symbol.look vm uid with
-        | Some x ->
-            let error_msg =
-              String.concat " " ["Identifier "; id; " is already in use."]
-            in
-            semantic_error error_msg
-        | None -> ()
-      in
+      let _ = check_fresh_variable uid in
       let uargs = List.map semantic_check_argdecl args in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
       let _ =
@@ -290,22 +291,7 @@ and semantic_check_topvardecl = function
       let utrans = semantic_check_transformation trans in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
-      let _ =
-        if is_primitive_name uid then
-          let error_msg =
-            String.concat " " ["Identifier "; id; " clashes with primitive."]
-          in
-          semantic_error error_msg
-      in
-      let _ =
-        match Symbol.look vm uid with
-        | Some x ->
-            let error_msg =
-              String.concat " " ["Identifier "; id; " is already in use."]
-            in
-            semantic_error error_msg
-        | None -> ()
-      in
+      let _ = check_fresh_variable uid in
       let _ = Symbol.enter vm id (context_flags.current_block, ut) in
       let _ =
         if
@@ -334,22 +320,7 @@ and semantic_check_vardecl = function
       let ust = semantic_check_sizedtype st in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
-      let _ =
-        if is_primitive_name uid then
-          let error_msg =
-            String.concat " " ["Identifier "; id; " clashes with primitive."]
-          in
-          semantic_error error_msg
-      in
-      let _ =
-        match Symbol.look vm id with
-        | Some x ->
-            let error_msg =
-              String.concat " " ["Identifier "; id; " is already in use."]
-            in
-            semantic_error error_msg
-        | None -> ()
-      in
+      let _ = check_fresh_variable uid in
       let _ = Symbol.enter vm id (context_flags.current_block, ut) in
       (ust, uid)
 
@@ -936,7 +907,6 @@ and semantic_check_statement s =
       let ups = List.map semantic_check_printable ps in
       (Reject ups, Some Void)
   | Skip -> (Skip, Some Void)
-               (* OK until here *)
   | IfThen (e, s) ->
       let ue = semantic_check_expression e in
       let _ =
@@ -972,6 +942,7 @@ and semantic_check_statement s =
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
       (While (ue, us), snd us)
+      (* OK until here *)
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       let uid = semantic_check_identifier id in
       let ue1 = semantic_check_expression e1 in
@@ -985,6 +956,7 @@ and semantic_check_statement s =
           semantic_error "Upper bound of for-loop needs to be of type int."
       in
       let _ = Symbol.begin_scope vm in
+      let _ = check_fresh_variable uid in
       (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
       let _ = Symbol.enter vm uid (Functions, Int) in
       let _ = context_flags.in_loop <- true in
@@ -1009,6 +981,7 @@ and semantic_check_statement s =
               "Foreach loop must be over array, vector, row_vector or matrix"
       in
       let _ = Symbol.begin_scope vm in
+      let _ = check_fresh_variable uid in
       (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
       let _ = Symbol.enter vm uid (Functions, loop_identifier_unsizedtype) in
       let _ = context_flags.in_loop <- true in
