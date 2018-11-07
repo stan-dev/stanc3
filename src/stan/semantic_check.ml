@@ -807,6 +807,15 @@ and semantic_check_expression x =
   | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
+      (* We correct for the unusual behaviour that Stan has for
+      matrices under range indexing in the first
+      index and single indexing in the second *)
+      let correct_for_matrix_with_two_indices_second_single =
+        match (snd ue, uindices) with
+        | Some (_, Matrix), [_; Single _] -> (
+            function Some (b, RowVector) -> Some (b, Vector) | x -> x )
+        | _ -> fun x -> x
+      in
       let infer_type_of_indexed etype index =
         let originaltype, reducedtype =
           match etype with
@@ -851,7 +860,8 @@ and semantic_check_expression x =
             Some (originblock, originaltype)
       in
       ( Indexed (ue, uindices)
-      , List.fold_left infer_type_of_indexed (snd ue) uindices )
+      , correct_for_matrix_with_two_indices_second_single
+          (List.fold_left infer_type_of_indexed (snd ue) uindices) )
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i

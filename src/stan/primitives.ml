@@ -992,6 +992,7 @@ let _ =
   add_plain ("hypergeometric_rng", ReturnType Int, [Int; Int; Int]) ;
   add_binary "hypot" ;
   add_plain ("if_else", ReturnType Real, [Int; Real; Real]) ;
+  add_plain ("if_else", ReturnType Int, [Int; Int; Int]) ;
   add_plain ("inc_beta", ReturnType Real, [Real; Real; Real]) ;
   add_plain ("int_step", ReturnType Int, [Real]) ;
   add_plain ("int_step", ReturnType Int, [Int]) ;
@@ -1260,6 +1261,7 @@ let _ =
   add_plain ("min", ReturnType Real, [RowVector]) ;
   add_plain ("min", ReturnType Real, [Matrix]) ;
   add_plain ("min", ReturnType Int, [Int; Int]) ;
+  add_plain ("minus", ReturnType Int, [Int]) ;
   add_plain ("minus", ReturnType Real, [Real]) ;
   add_plain ("minus", ReturnType Vector, [Vector]) ;
   add_plain ("minus", ReturnType RowVector, [RowVector]) ;
@@ -1346,6 +1348,7 @@ let _ =
     ("multinomial_lpmf", ReturnType Real, [bare_array_type (Int, 1); Vector]) ;
   add_plain
     ("multinomial_rng", ReturnType (bare_array_type (Int, 1)), [Vector; Int]) ;
+  add_plain ("multiply", ReturnType Int, [Int; Int]) ;
   add_plain ("multiply", ReturnType Real, [Real; Real]) ;
   add_plain ("multiply", ReturnType Vector, [Vector; Real]) ;
   add_plain ("multiply", ReturnType RowVector, [RowVector; Real]) ;
@@ -1646,6 +1649,7 @@ let _ =
   add_unary_vectorized "Phi" ;
   add_unary_vectorized "Phi_approx" ;
   add_nullary "pi" ;
+  add_plain ("plus", ReturnType Int, [Int]) ;
   add_plain ("plus", ReturnType Real, [Real]) ;
   add_plain ("plus", ReturnType Vector, [Vector]) ;
   add_plain ("plus", ReturnType RowVector, [RowVector]) ;
@@ -2261,13 +2265,11 @@ let try_get_primitive_return_type name optargtypes =
                (List.map2 (check_of_same_type_mod_conv name) (snd x) uts) )
         namematches
     in
-    let _ =
-      if List.length filteredmatches > 1 then
-        semantic_error
-          "This should never happen. Please file a bug. Error code 16."
-    in
     if List.length filteredmatches = 0 then None
-    else Some (fst (List.hd filteredmatches))
+      (* We return the least return type in case there are multiple options (due to implicit Int-Real conversion), where Int<Real *)
+    else
+      Some
+        (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
 
 (* TODO: deal with data only arguments *)
 
@@ -2315,7 +2317,7 @@ let _ = Hashtbl.add operator_names "Not" "logical_negation"
 
 let _ = Hashtbl.add operator_names "UMinus" "minus"
 
-let _ = Hashtbl.add operator_names "Uplus" "plus"
+let _ = Hashtbl.add operator_names "UPlus" "plus"
 
 let _ = Hashtbl.add operator_names "Transpose" "transpose"
 
