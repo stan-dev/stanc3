@@ -818,9 +818,12 @@ and semantic_check_statement s =
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error
-            "A real or int needs to be supplied to increment target."
+        match snd ue with
+        | Some (_, Fun _) | None ->
+            semantic_error
+              "A (container of) reals or ints needs to be supplied to \
+               increment target."
+        | _ -> ()
       in
       let _ =
         if
@@ -835,9 +838,12 @@ and semantic_check_statement s =
   | IncrementLogProb e ->
       let ue = semantic_check_expression e in
       let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error
-            "A real or int needs to be supplied to increment LogProb."
+        match snd ue with
+        | Some (_, Fun _) | None ->
+            semantic_error
+              "A (container of) reals or ints needs to be supplied to \
+               increment target."
+        | _ -> ()
       in
       let _ =
         if
