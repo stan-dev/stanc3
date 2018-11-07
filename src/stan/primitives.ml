@@ -195,6 +195,35 @@ let _ =
   add_unqualified ("add", ReturnType Vector, [Real; Vector]) ;
   add_unqualified ("add", ReturnType RowVector, [Real; RowVector]) ;
   add_unqualified ("add", ReturnType Matrix, [Real; Matrix]) ;
+  add_unqualified
+    ( "algebra_solver"
+    , ReturnType Vector
+    , [ Fun
+          ( [ (GQuant, Vector)
+            ; (GQuant, Vector)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType Vector )
+      ; Vector
+      ; Vector
+      ; Array Real
+      ; Array Int ] ) ;
+  add_unqualified
+    ( "algebra_solver"
+    , ReturnType Vector
+    , [ Fun
+          ( [ (GQuant, Vector)
+            ; (GQuant, Vector)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int)
+            ; (GQuant, Real)
+            ; (GQuant, Real)
+            ; (GQuant, Int) ]
+          , ReturnType Vector )
+      ; Vector
+      ; Vector
+      ; Array Real
+      ; Array Int ] ) ;
   for i = 1 to 8 - 1 do
     add_unqualified
       ( "append_array"
@@ -1032,6 +1061,94 @@ let _ =
   add_unqualified ("inc_beta", ReturnType Real, [Real; Real; Real]) ;
   add_unqualified ("int_step", ReturnType Int, [Real]) ;
   add_unqualified ("int_step", ReturnType Int, [Int]) ;
+  add_unqualified
+    ( "integrate_ode"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int ] ) ;
+  (* TODO: add adams solver *)
+  (* TODO: deal with data qualifiers on arguments *)
+  add_unqualified
+    ( "integrate_bdf"
+    , ReturnType (Array Real)
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int ] ) ;
+  add_unqualified
+    ( "integrate_bdf"
+    , ReturnType (Array Real)
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int
+      ; Real
+      ; Real
+      ; Int ] ) ;
+  add_unqualified
+    ( "integrate_rk45"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int ] ) ;
+  add_unqualified
+    ( "integrate_rk45"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int
+      ; Real
+      ; Real
+      ; Int ] ) ;
   add_unary_vectorized "inv" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1269,6 +1386,19 @@ let _ =
             ("lognormal_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
       ) ) ;
   add_nullary "machine_precision" ;
+  add_unqualified
+    ( "map_rect"
+    , ReturnType Vector
+    , [ Fun
+          ( [ (GQuant, Vector)
+            ; (GQuant, Vector)
+            ; (TData, Array Real)
+            ; (TData, Array Int) ]
+          , ReturnType Vector )
+      ; Vector
+      ; Array Vector
+      ; Array (Array Real)
+      ; Array (Array Int) ] ) ;
   add_unqualified ("matrix_exp", ReturnType Matrix, [Matrix]) ;
   add_unqualified ("matrix_exp_multiply", ReturnType Matrix, [Matrix; Matrix]) ;
   add_unqualified ("max", ReturnType Int, [bare_array_type (Int, 1)]) ;
