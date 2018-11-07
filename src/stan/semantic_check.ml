@@ -893,8 +893,6 @@ and semantic_check_statement s =
       in
       let _ =
         match uidoblock with
-        | Some Data -> semantic_error "Cannot assign to data."
-        | Some Param -> semantic_error "Cannot assign to parameter."
         | Some b ->
             if b = context_flags.current_block then ()
             else
