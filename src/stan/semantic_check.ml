@@ -119,6 +119,9 @@ let lub_op_originblock l =
 
 let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
 
+let check_of_int_array_type e =
+  match snd e with Some (_, Array Int) -> true | _ -> false
+
 let check_of_int_or_real_type e =
   match snd e with
   | Some (_, Int) -> true
@@ -885,6 +888,15 @@ and semantic_check_expression x =
                    [etype; e1type; e2type])
             in
             Some (originblock, originaltype)
+        | Multiple e1 ->
+            let e1type = snd e1 in
+            let originblock =
+              lub_op_originblock
+                (List.map
+                   (fun x -> Core_kernel.Option.map x fst)
+                   [etype; e1type])
+            in
+            Some (originblock, originaltype)
       in
       ( Indexed (ue, uindices)
       , correct_for_matrix_with_two_indices_second_single
@@ -1286,23 +1298,23 @@ and semantic_check_index = function
   | All -> All
   | Single e ->
       let ue = semantic_check_expression e in
-      let _ =
-        if not (check_of_int_type ue) then
-          semantic_error "Index should be of type int."
-      in
-      Single ue
+      if check_of_int_type ue then Single ue
+      else if check_of_int_array_type ue then Multiple ue
+      else
+        semantic_error
+          "Index should be of type int or int[] or should be a range."
   | Upfrom e ->
       let ue = semantic_check_expression e in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Index should be of type int."
+          semantic_error "Range bound should be of type int."
       in
       Upfrom ue
   | Downfrom e ->
       let ue = semantic_check_expression e in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Index should be of type int."
+          semantic_error "Range bound should be of type int."
       in
       Downfrom ue
   | Between (e1, e2) ->
@@ -1310,9 +1322,17 @@ and semantic_check_index = function
       let ue2 = semantic_check_expression e2 in
       let _ =
         if not (check_of_int_type ue1 && check_of_int_type ue2) then
-          semantic_error "Index should be of type int."
+          semantic_error "Range bound should be of type int."
       in
       Between (ue1, ue2)
+  | Multiple e ->
+      let ue = semantic_check_expression e in
+      let _ =
+        if not (check_of_int_array_type ue) then
+          semantic_error
+            "This should never happen. Please file a bug. Error code 17."
+      in
+      Multiple ue
 
 (* Probably nothing to do here *)
 and semantic_check_assignmentoperator op = op

@@ -3,9 +3,7 @@ add (mutually) recursive functions
 
 add higher order functions
 
-fix array sizes type bug 
-
-array expression sizes bug
+add multiple indexing
 
 sort out clashes between math library and user identifiers:
 Variable names will conflict with the names of predefined functions other than constants.

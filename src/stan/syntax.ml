@@ -191,6 +191,7 @@ and index =
   | Upfrom of expression
   | Downfrom of expression
   | Between of expression * expression
+  | Multiple of expression
 
 and assignmentoperator =
   | Assign
