@@ -13,8 +13,7 @@
 (* TODO: first load whole math library into try_get_primitive_return_type --
 we are using a predicate here because the functions are overloaded so heavily  *)
 
-
-  (* TODO: deal with higher order functions here *)
+(* TODO: deal with higher order functions here *)
 
 open Syntax
 

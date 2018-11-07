@@ -107,13 +107,13 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
-  | [] -> Functions
+  | [] -> FunArg
   | x :: xs ->
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
 
 let lub_op_originblock l =
-  lub_originblock (List.map (function None -> Functions | Some b -> b) l)
+  lub_originblock (List.map (function None -> FunArg | Some b -> b) l)
 
 let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
 
@@ -228,7 +228,6 @@ and semantic_check_fundef = function
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
       let _ = Symbol.begin_scope vm in
-      (* This is a bit of a hack to make sure that function arguments cannot be assigned to. *)
       let _ =
         if dup_exists uarg_names then
           semantic_error
@@ -237,7 +236,7 @@ and semantic_check_fundef = function
       let _ = List.map check_fresh_variable uarg_names in
       let _ =
         List.map2 (Symbol.enter vm) uarg_names
-          (List.map (function w, y -> (Functions, y)) uarg_types)
+          (List.map (function w, y -> (FunArg, y)) uarg_types)
       in
       let ub = semantic_check_statement b in
       let _ =
@@ -547,11 +546,11 @@ and semantic_check_expression x =
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
-        if
+        if not (
           Filename.check_suffix uid "_lpdf"
           || Filename.check_suffix uid "_lcdf"
           || Filename.check_suffix uid "_lpmf"
-          || Filename.check_suffix uid "_lccdf"
+          || Filename.check_suffix uid "_lccdf")
         then
           semantic_error
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
@@ -753,7 +752,7 @@ and semantic_check_statement s =
       in
       let _ =
         match uidoblock with
-        | Some Functions -> semantic_error "Cannot assign to this identifier."
+        | Some FunArg -> semantic_error "Cannot assign to this identifier."
         | Some Data -> semantic_error "Cannot assign to data."
         | Some Param -> semantic_error "Cannot assign to parameter."
         | Some b ->
@@ -959,7 +958,7 @@ and semantic_check_statement s =
       let _ = Symbol.begin_scope vm in
       let _ = check_fresh_variable uid in
       (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
-      let _ = Symbol.enter vm uid (Functions, Int) in
+      let _ = Symbol.enter vm uid (FunArg, Int) in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
@@ -970,7 +969,6 @@ and semantic_check_statement s =
           ; upper_bound= ue2
           ; loop_body= us }
       , snd us )
-      (* OK until here *)
   | ForEach (id, e, s) ->
       let uid = semantic_check_identifier id in
       let ue = semantic_check_expression e in
@@ -985,45 +983,58 @@ and semantic_check_statement s =
       let _ = Symbol.begin_scope vm in
       let _ = check_fresh_variable uid in
       (* This is a bit of a hack to ensure that loop identifiers cannot get assigned to. *)
-      let _ = Symbol.enter vm uid (Functions, loop_identifier_unsizedtype) in
+      let _ = Symbol.enter vm uid (FunArg, loop_identifier_unsizedtype) in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
       let _ = Symbol.end_scope vm in
-      (While (ue, us), snd us)
+      (ForEach (uid, ue, us), snd us)
   | Block vdsl ->
       let _ = Symbol.begin_scope vm in
       let uvdsl = List.map semantic_check_vardecl_or_statement vdsl in
       let _ = Symbol.end_scope vm in
-      let rec compute_ort = function
-        | [] -> Some Void
-        | x :: xs -> (
-          match x with
-          | false, Some (ReturnType x) -> Some (ReturnType x)
-          | true, y ->
-              if compute_ort xs = y then y
-              else
+      (* Any statements after a break or continue do not count for the return
+      type. *)
+      let rec list_until_breakcontinue = function
+        | [] -> []
+        | [x] -> [x]
+        | x1 :: Stmt (Break, _) :: xs -> [x1]
+        | x1 :: Stmt (Continue, _) :: xs -> [x1]
+        | x1 :: x2 :: xs -> x1 :: list_until_breakcontinue (x2 :: xs)
+      in
+      (* We make sure that for an if-then statement, everything after the then
+      block has the same return type as the then block. This could probably
+      be done in a prettier way. *)
+      let compute_ort_and_check_if_then_branches_agree vdsl2 =
+        let rec helper = function
+          | [] -> Some Void
+          | x :: xs -> (
+            match x with
+            | false, Some (ReturnType x) -> Some (ReturnType x)
+            | true, y ->
+                if helper xs = y then y
+                else
+                  semantic_error
+                    "Branches of conditional need to have the same return type."
+            | false, Some Void -> helper xs
+            | _ ->
                 semantic_error
-                  "Branches of conditional need to have the same return type."
-          | false, Some Void -> compute_ort xs
-          | _ ->
-              semantic_error
-                "This should never happen. Please report a bug. Error code 7."
-          )
+                  "This should never happen. Please report a bug. Error code 7."
+            )
+        in
+        helper
+          (List.map
+             (function
+               | VDecl x -> (false, Some Void)
+               | VDeclAss x -> (false, Some Void)
+               | Stmt (IfThen _, ort) -> (true, ort)
+               | Stmt (_, ort) -> (false, ort))
+             vdsl2)
       in
-      let temp =
-        List.map
-          (function
-            | VDecl x -> (false, Some Void)
-            | VDeclAss x -> (false, Some Void)
-            | Stmt (IfThen _, ort) -> (true, ort)
-            | Stmt (_, ort) -> (false, ort))
-          uvdsl
-      in
-      (Block uvdsl, compute_ort temp)
+      ( Block uvdsl
+      , compute_ort_and_check_if_then_branches_agree
+          (list_until_breakcontinue uvdsl) )
 
-(* TODO: this is still not doing the correct thing in case a statement
-         has dead code due to break or continue statements      *)
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
   | TruncateUpFrom e ->
@@ -1092,5 +1103,3 @@ and semantic_check_index = function
 
 (* Probably nothing to do here *)
 and semantic_check_assignmentoperator op = op
-
-(* OK up until here except expressions and statements *)
