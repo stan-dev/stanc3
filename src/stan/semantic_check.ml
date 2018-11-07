@@ -908,7 +908,6 @@ and semantic_check_statement s =
         else semantic_error "Ill-typed arguments to '~' statement."
       in
       (Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}, Some Void)
-      (* OK until here *)
   | Break ->
       let _ =
         if not context_flags.in_loop then
@@ -932,11 +931,12 @@ and semantic_check_statement s =
       (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType (snd x)))
   | Print ps ->
       let ups = List.map semantic_check_printable ps in
-      (Print ps, Some Void)
+      (Print ups, Some Void)
   | Reject ps ->
       let ups = List.map semantic_check_printable ps in
-      (Reject ps, Some Void)
+      (Reject ups, Some Void)
   | Skip -> (Skip, Some Void)
+               (* OK until here *)
   | IfThen (e, s) ->
       let ue = semantic_check_expression e in
       let _ =
