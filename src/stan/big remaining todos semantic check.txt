@@ -3,8 +3,6 @@ add (mutually) recursive functions
 
 add higher order functions
 
-add multiple indexing
-
 sort out clashes between math library and user identifiers:
 Variable names will conflict with the names of predefined functions other than constants.
 Thus a variable may not be named logit or add, but it may be named pi or
