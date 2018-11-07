@@ -54,19 +54,16 @@ and statement =
   | Break
   | Continue
   | Return of expr
-  | Print of expr list
-  | Reject of expr list
   | Skip
-  | IfElse of expr * statement * statement
+  | IfElse of expr * statement * statement option
   | While of expr * statement
-  | For of
-      { loop_variable: string
-      ; lower_bound: expr
-      ; upper_bound: expr
-      ; loop_body: statement }
-  | ForEach of string * expr * statement
+  | For of {
+      init: statement;
+      cond: expr;
+      step: statement;
+      body: statement}
   | Block of statement list
-  | Decl of vardecl * (expr option)
+  | Decl of vardecl * expr option
 
 and stantype =
   | SInt
@@ -74,7 +71,7 @@ and stantype =
   | SVector of expr option
   | SRowVector of expr option
   | SMatrix of expr * expr option
-  | SArray of stantype * (expr option)
+  | SArray of stantype * expr option
 
 and transformation =
   | Identity

@@ -40,21 +40,22 @@ and emit_expr = function
 
 and emit_vardecl (st, name) = emit_stantype st @ [" "; name]
 
-and emit_assign_op op = [" "; begin match op with
-  | Plus -> "+"
-  | Minus -> "-"
-  | Times -> "*"
-  | Divide -> "/"
-  | Modulo -> "%"
-  | LDivide -> "\\"
-  | EltTimes -> ".*"
-  | EltDivide -> "./"
-  | Exp -> "^"
-  | Or -> "|"
-  | And -> "&" end;
-   "= "]
+and emit_assign_op op =
+  let sym = match op with
+    | Plus -> "+"
+    | Minus -> "-"
+    | Times -> "*"
+    | Divide -> "/"
+    | Modulo -> "%"
+    | LDivide -> "\\"
+    | EltTimes -> ".*"
+    | EltDivide -> "./"
+    | Exp -> "^"
+    | Or -> "|"
+    | And -> "&" in
+  [" "; sym ; "= "]
 
-and emit_statement s = begin match s with
+and emit_statement s = match s with
   | Assignment({assignee; indices; op; rhs}) ->
     [assignee]
     @ List.(flatten (map emit_index indices))
@@ -67,18 +68,28 @@ and emit_statement s = begin match s with
   | Return(e) -> "return " :: emit_expr e
   | Skip -> [""]
   | IfElse(cond, ifbranch, elsebranch) ->
-    "if (" :: emit_expr cond
-      @ [") {\n"]
-  | While of expr * statement
-  | For of
-      { loop_variable: string
-      ; lower_bound: expr
-      ; upper_bound: expr
-      ; loop_body: statement }
-  | ForEach of string * expr * statement
-  | Block of statement list
-  | Decl of vardecl * (expr option)
-  end @ [";"]
+    let wrap_else x = [" else {\n"] @ emit_statement x @ ["\n}"] in
+    "if (" :: emit_expr cond @ [") {\n"]
+    @ emit_statement ifbranch @ ["\n}"]
+    @ Core_kernel.Option.(value (map ~f:wrap_else elsebranch)
+                          ~default: [""])
+    @ ["\n"]
+  | While(cond, body) ->
+    "while (" :: emit_expr cond
+    @ [") {\n"] @ emit_statement body
+  | For({init; cond; step; body}) ->
+    "for (" :: emit_statement init @ ["; "]
+    @ emit_expr cond @ [";"]
+    @ emit_statement step @ [") {\n"]
+    @ emit_statement body @ [";\n}\n"]
+  | Block(s) ->
+    List.(flatten
+            (map (fun s -> s @ [";\n"])
+               (map emit_statement s)))
+  | Decl((st, ident), rhs) ->
+    emit_stantype st @ [" "; ident]
+    @ List.(flatten (map emit_expr (Core_kernel.Option.to_list rhs))) @ [";\n"]
+  @ [";"]
 
 and emit_fndef {returntype; name; arguments; body} =
   let rt = match returntype with
@@ -86,7 +97,7 @@ and emit_fndef {returntype; name; arguments; body} =
     | Some(st) -> emit_stantype st in
   let args = List.(flatten (map emit_vardecl arguments)) in
   rt @ [" "; name] @ args
-  @ List.(flatten (map emit_statement body))
+  @ emit_statement body
 
 and indent level s =
   indent (level - 1) "  " ^ s
@@ -94,4 +105,4 @@ and indent level s =
 let emit_class name super fields methods =
   ["class "; name; " : "; super; " {\nprivate:"]
   @ List.(flatten (map emit_vardecl fields))
-  @ List.(flatten (map emit_fndef methods)
+  @ List.(flatten (map emit_fndef methods))
