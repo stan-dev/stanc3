@@ -1,3 +1,3 @@
 functions {
-void foo() {return;}
+void foo(int x) {return;}
 }

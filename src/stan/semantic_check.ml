@@ -1059,12 +1059,22 @@ and semantic_check_statement s =
              = Some (ReturnType Real)
           || try_get_primitive_return_type (uid ^ "_log") optargumenttypes
              = Some (ReturnType Real)
-          || Symbol.look vm (uid ^ "_lpdf")
-             = Some (Functions, Fun (argumenttypes, ReturnType Real))
-          || Symbol.look vm (uid ^ "_lpmf")
-             = Some (Functions, Fun (argumenttypes, ReturnType Real))
-          || Symbol.look vm (uid ^ "_log")
-             = Some (Functions, Fun (argumenttypes, ReturnType Real))
+          || ( match Symbol.look vm (uid ^ "_lpdf") with
+             | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+                 check_compatible_arguments_mod_conv uid listedtypes
+                   optargumenttypes
+             | _ -> false )
+          || ( match Symbol.look vm (uid ^ "_lpmf") with
+             | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+                 check_compatible_arguments_mod_conv uid listedtypes
+                   optargumenttypes
+             | _ -> false )
+          ||
+          match Symbol.look vm (uid ^ "_log") with
+          | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+              check_compatible_arguments_mod_conv uid listedtypes
+                optargumenttypes
+          | _ -> false
         then ()
         else semantic_error "Ill-typed arguments to '~' statement."
       in
