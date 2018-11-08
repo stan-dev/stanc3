@@ -3,3 +3,8 @@ keyword for truncation not reserved.
 
 function arguments can shadow.
 
+manual entry for integrate_ode_bdf has wrong signature.
+
+manual entry for integrate_ode_rk45 has wrong signature.
+
+manual entry for integrate_ode_adams missing

@@ -37,7 +37,7 @@ let construct_unsized_type bt ud =
   reparray size bt
 
 let construct_arg_decl od ut id =
-  match od with None -> (GQuant, ut, id) | _ -> (Data, ut, id)
+  match od with None -> (GQuant, ut, id) | _ -> (TData, ut, id)
 
 let construct_var_decl sbt id d ae =
   let sizes = match d with None -> [] | Some l -> l in

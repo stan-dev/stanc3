@@ -1077,45 +1077,44 @@ let _ =
       ; Array Real
       ; Array Real
       ; Array Int ] ) ;
-  (* TODO: add adams solver *)
+  add_unqualified
+    ( "integrate_ode_adams"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int ] ) ;
+  add_unqualified
+    ( "integrate_ode_adams"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int
+      ; Real
+      ; Real
+      ; Real ] ) ;
   (* TODO: deal with data qualifiers on arguments *)
   add_unqualified
-    ( "integrate_bdf"
-    , ReturnType (Array Real)
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int ] ) ;
-  add_unqualified
-    ( "integrate_bdf"
-    , ReturnType (Array Real)
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int
-      ; Real
-      ; Real
-      ; Int ] ) ;
-  add_unqualified
-    ( "integrate_rk45"
+    ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
     , [ Fun
           ( [ (GQuant, Real)
@@ -1131,7 +1130,7 @@ let _ =
       ; Array Real
       ; Array Int ] ) ;
   add_unqualified
-    ( "integrate_rk45"
+    ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
     , [ Fun
           ( [ (GQuant, Real)
@@ -1148,7 +1147,42 @@ let _ =
       ; Array Int
       ; Real
       ; Real
-      ; Int ] ) ;
+      ; Real ] ) ;
+  add_unqualified
+    ( "integrate_ode_rk45"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int ] ) ;
+  add_unqualified
+    ( "integrate_ode_rk45"
+    , ReturnType (Array (Array Real))
+    , [ Fun
+          ( [ (GQuant, Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
+          , ReturnType (Array Real) )
+      ; Array Real
+      ; Real
+      ; Array Real
+      ; Array Real
+      ; Array Real
+      ; Array Int
+      ; Real
+      ; Real
+      ; Real ] ) ;
   add_unary_vectorized "inv" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1392,8 +1426,8 @@ let _ =
     , [ Fun
           ( [ (GQuant, Vector)
             ; (GQuant, Vector)
-            ; (TData, Array Real)
-            ; (TData, Array Int) ]
+            ; (GQuant, Array Real)
+            ; (GQuant, Array Int) ]
           , ReturnType Vector )
       ; Vector
       ; Array Vector
