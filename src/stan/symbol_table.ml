@@ -16,6 +16,14 @@ module type SYMBOL = sig
   val set_read_only : 'a state -> string -> unit
 
   val get_read_only : 'a state -> string -> bool
+
+  val set_global : 'a state -> string -> unit
+
+  val get_global : 'a state -> string -> bool
+
+  val unsafe_remove : 'a state -> string -> unit
+
+  val unsafe_add : 'a state -> string -> 'a -> unit
 end
 
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.
@@ -24,12 +32,14 @@ module Symbol : SYMBOL = struct
   type 'a state =
     { table: (string, 'a) Hashtbl.t
     ; stack: string Stack.t
-    ; readonly: (string, bool) Hashtbl.t }
+    ; readonly: (string, bool) Hashtbl.t
+    ; global: (string, bool) Hashtbl.t }
 
   let initialize () =
     { table= Hashtbl.create 123456
     ; stack= Stack.create ()
-    ; readonly= Hashtbl.create 123456 }
+    ; readonly= Hashtbl.create 123456
+    ; global= Hashtbl.create 123456 }
 
   (* We just pick some initial size. Hash tables get resized dynamically if necessary, so it doesn't hugely matter. *)
   let enter s str ty = Hashtbl.add s.table str ty ; Stack.push str s.stack
@@ -55,4 +65,13 @@ module Symbol : SYMBOL = struct
 
   let get_read_only s str =
     match Hashtbl.find_opt s.readonly str with Some true -> true | _ -> false
+
+  let set_global s str = Hashtbl.add s.global str true
+
+  let get_global s str =
+    match Hashtbl.find_opt s.global str with Some true -> true | _ -> false
+
+  let unsafe_remove s str = Hashtbl.remove s.table str
+
+  let unsafe_add s str ty = Hashtbl.add s.table str ty
 end

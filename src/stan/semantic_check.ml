@@ -146,6 +146,16 @@ let check_fresh_variable id =
       semantic_error error_msg
   | None -> ()
 
+let update_originblock name ob =
+  match Symbol.look vm name with
+  | Some (old_ob, ut) ->
+      let new_ob = lub_originblock [ob; old_ob] in
+      Symbol.unsafe_remove vm name ;
+      Symbol.unsafe_add vm name (new_ob, ut)
+  | _ ->
+      semantic_error
+        "This should never happen. Please file a bug. Error code 18."
+
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
   match p
@@ -218,9 +228,7 @@ and semantic_check_fundef = function
       let uargs = List.map semantic_check_argdecl args in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
       let _ = check_fresh_variable uid in
-      let _ =
-        Symbol.enter vm uid (context_flags.current_block, Fun (uarg_types, urt))
-      in
+      let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
       let _ = Symbol.set_read_only vm uid in
       let uarg_names = List.map (function w, y, z -> z) uargs in
       let _ = context_flags.in_fun_def <- true in
@@ -426,7 +434,8 @@ and semantic_check_topvardecl = function
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
       let _ = check_fresh_variable uid in
-      let _ = Symbol.enter vm id (context_flags.current_block, ut) in
+      let _ = Symbol.enter vm uid (context_flags.current_block, ut) in
+      let _ = Symbol.set_global vm uid in
       let _ =
         if
           ( context_flags.current_block = Param
@@ -455,7 +464,7 @@ and semantic_check_vardecl = function
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
       let _ = check_fresh_variable uid in
-      let _ = Symbol.enter vm id (context_flags.current_block, ut) in
+      let _ = Symbol.enter vm id (Functions, ut) in
       (ust, uid)
 
 (* Probably nothing to check here. *)
@@ -940,13 +949,23 @@ and semantic_check_statement s =
       let _ =
         match uidoblock with
         | Some b ->
-            if b = context_flags.current_block then ()
+            if
+              (not (Symbol.get_global vm uid))
+              || b = context_flags.current_block
+            then ()
             else
               semantic_error
-                "Cannot assign to variable declared in previous blocks."
+                "Cannot assign to global variable declared in previous blocks."
         | _ ->
             semantic_error
               "This should never happen. Please file a bug. Error code 5."
+      in
+      let _ =
+        match snd ue with
+        | Some (rhs_ob, _) -> update_originblock uid rhs_ob
+        | _ ->
+            semantic_error
+              "Ill-typed arguments supplied to assignment operator."
       in
       let opname =
         Core_kernel.string_of_sexp (sexp_of_assignmentoperator uassop)

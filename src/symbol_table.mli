@@ -17,4 +17,12 @@ module type SYMBOL = sig
   
   val get_read_only : 'a state -> string -> bool
   
+    val set_global : 'a state -> string -> unit
+  
+  val get_global : 'a state -> string -> bool
+  
+  val unsafe_remove : 'a state -> string -> unit
+  
+  val unsafe_add :  'a state-> string -> 'a -> unit
+  
 end
