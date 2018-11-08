@@ -63,42 +63,6 @@ open Debug
 
 %%
 
-(* Helpers *)
-
-(* [option(X)] represents a choice between nothing and [X].
-   [option(X)] is the same thing, but is inlined at its use site,
-   which in some cases is necessary in order to avoid a conflict.
-   By convention, [X?] is syntactic sugar for [option(X)]. *)
-
-%inline ioption(X):
-  | (* nothing *)
-    { None }
-  | x=X
-    { Some x }
-
-option(X):
-  | o = ioption(X)
-    { o }
-
-list(X):
-  | (* nothing *)
-    { [] }
-  | x=X xs=list(X)
-    { x::xs }
-
-pair(X, Y):
-  | x=X y=Y
-    { (x,y) }
-
-sep_list(X, Y):
-  | (* nothing *)
-    { [] }
-  | x=X xys=list(pair(Y, X))
-    { x :: List.map snd xys }
-
-nonempty_sep_list(X, Y):
-  | x=X xys=list(pair(Y, X))
-    { x :: List.map snd xys }
 
 (* Grammar *)
 
@@ -152,8 +116,8 @@ generated_quantities_block:
 
 (* function definitions *)
 function_def:
-  | rt=return_type name=IDENTIFIER LPAREN args=sep_list(arg_decl, COMMA) RPAREN
-    b=statement
+  | rt=return_type name=IDENTIFIER LPAREN args=separated_list(COMMA, arg_decl)
+    RPAREN b=statement
     { 
       grammar_logger "function_def" ;
       {returntype = rt; name = name; arguments = args; body=b;}
@@ -287,7 +251,7 @@ loc_scale:
     { grammar_logger "scale" ; LocationScale ((RealNumeral "0.", None), e) }
 
 dims:
-  | LBRACK l=sep_list(expression, COMMA) RBRACK
+  | LBRACK l=separated_list(COMMA, expression) RBRACK
     { grammar_logger "dims" ; l  }
 
 (* expressions *)
@@ -337,17 +301,17 @@ common_expression:
     {  grammar_logger "intnumeral" ; IntNumeral i }
   | r=REALNUMERAL 
     {  grammar_logger "realnumeral" ; RealNumeral r }
-  | LBRACE xs=nonempty_sep_list(expression, COMMA) RBRACE 
+  | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE 
     {  grammar_logger "array_expression" ; ArrayExpr xs  } (* potential shift/reduce conflict with blocks *)
-  | LBRACK xs=nonempty_sep_list(expression, COMMA) RBRACK 
+  | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK 
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs } (* potential shift/reduce conflict with indexing *)
-  | id=IDENTIFIER LPAREN args=sep_list(expression, COMMA) RPAREN 
+  | id=IDENTIFIER LPAREN args=separated_list(COMMA, expression) RPAREN 
     {  grammar_logger "fun_app" ; FunApp (id, args) }
   | TARGET LPAREN RPAREN 
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN 
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
-  | id=IDENTIFIER LPAREN e=expression BAR args=sep_list(expression, COMMA)
+  | id=IDENTIFIER LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN 
     {  grammar_logger "conditional_dist_app" ; CondFunApp (id, e :: args) }
   | LPAREN e=expression RPAREN 
@@ -450,11 +414,11 @@ statement:
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  
     {  grammar_logger "assignment_statement" ; Assignment (l, op, e) }
-  | id=IDENTIFIER LPAREN args=sep_list(expression, COMMA) RPAREN SEMICOLON 
+  | id=IDENTIFIER LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON 
     {  grammar_logger "funapp_statement" ; NRFunApp (id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON 
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
-  | e=expression TILDE id=IDENTIFIER LPAREN es=sep_list(expression, COMMA)
+  | e=expression TILDE id=IDENTIFIER LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON 
     {  grammar_logger "tilde_statement" ; construct_tilde_statement e id es ot }
   | TARGET PLUSASSIGN e=expression SEMICOLON 

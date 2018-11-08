@@ -1,5 +1,4 @@
 
-add (mutually) recursive functions
 
 sort out clashes between math library and user identifiers:
 Variable names will conflict with the names of predefined functions other than constants.
