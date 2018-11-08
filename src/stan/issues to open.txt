@@ -7,4 +7,9 @@ manual entry for integrate_ode_bdf has wrong signature.
 
 manual entry for integrate_ode_rk45 has wrong signature.
 
+
+manual entry for algebra_solver has wrong signature.
+
 manual entry for integrate_ode_adams missing
+
+data only arguments not enforced for higher order functions.

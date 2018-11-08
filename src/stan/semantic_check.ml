@@ -635,7 +635,6 @@ and semantic_check_expression x =
       (Variable uid, ort)
   | IntNumeral s -> (IntNumeral s, Some (Data, Int))
   | RealNumeral s -> (RealNumeral s, Some (Data, Real))
-  (* TODO: deal with higher order functions here *)
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
@@ -678,7 +677,6 @@ and semantic_check_expression x =
                   ("Ill-typed arguments supplied to function " ^ uid)
             in
             (FunApp (uid, ues), Some (returnblock, ut))
-            (* TODO: insert type checking here *)
         | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
@@ -741,7 +739,6 @@ and semantic_check_expression x =
                   ("Ill-typed arguments supplied to function " ^ uid)
             in
             (CondFunApp (uid, ues), Some (returnblock, ut))
-            (* TODO: insert type checking here *)
         | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \

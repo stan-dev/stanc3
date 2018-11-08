@@ -8,13 +8,6 @@
    
 *)
 
-(* TODO: do appropriate checking ; for higher order functions here *)
-
-(* TODO: first load whole math library into try_get_primitive_return_type --
-we are using a predicate here because the functions are overloaded so heavily  *)
-
-(* TODO: deal with higher order functions here *)
-
 (* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
 
 open Syntax
@@ -195,35 +188,37 @@ let _ =
   add_unqualified ("add", ReturnType Vector, [Real; Vector]) ;
   add_unqualified ("add", ReturnType RowVector, [Real; RowVector]) ;
   add_unqualified ("add", ReturnType Matrix, [Real; Matrix]) ;
-  add_unqualified
+  add_qualified
     ( "algebra_solver"
     , ReturnType Vector
-    , [ Fun
-          ( [ (GQuant, Vector)
-            ; (GQuant, Vector)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType Vector )
-      ; Vector
-      ; Vector
-      ; Array Real
-      ; Array Int ] ) ;
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Vector)
+              ; (GQuant, Vector)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType Vector ) )
+      ; (GQuant, Vector)
+      ; (GQuant, Vector)
+      ; (TData, Array Real)
+      ; (TData, Array Int) ] ) ;
+  add_qualified
     ( "algebra_solver"
     , ReturnType Vector
-    , [ Fun
-          ( [ (GQuant, Vector)
-            ; (GQuant, Vector)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int)
-            ; (GQuant, Real)
-            ; (GQuant, Real)
-            ; (GQuant, Int) ]
-          , ReturnType Vector )
-      ; Vector
-      ; Vector
-      ; Array Real
-      ; Array Int ] ) ;
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Vector)
+              ; (GQuant, Vector)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType Vector ) )
+      ; (GQuant, Vector)
+      ; (GQuant, Vector)
+      ; (TData, Array Real)
+      ; (TData, Array Int)
+      ; (TData, Real)
+      ; (TData, Real)
+      ; (TData, Real) ] ) ;
   for i = 1 to 8 - 1 do
     add_unqualified
       ( "append_array"
@@ -480,7 +475,6 @@ let _ =
                 ("beta_proportion_lcdf", ReturnType Real, [t; u; v]) ;
               add_unqualified
                 ("beta_proportion_lpdf", ReturnType Real, [t; u; v]) ) ) ) ;
-  (* TODO: from here!! *)
   for_vector_types (fun t ->
       for_all_vector_types (fun u ->
           add_unqualified
@@ -1061,128 +1055,134 @@ let _ =
   add_unqualified ("inc_beta", ReturnType Real, [Real; Real; Real]) ;
   add_unqualified ("int_step", ReturnType Int, [Real]) ;
   add_unqualified ("int_step", ReturnType Int, [Int]) ;
-  add_unqualified
+  add_qualified
     ( "integrate_ode"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int ] ) ;
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int) ] ) ;
+  add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int ] ) ;
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int) ] ) ;
+  add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int
-      ; Real
-      ; Real
-      ; Real ] ) ;
-  (* TODO: deal with data qualifiers on arguments *)
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int)
+      ; (TData, Real)
+      ; (TData, Real)
+      ; (TData, Real) ] ) ;
+  add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int ] ) ;
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int) ] ) ;
+  add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int
-      ; Real
-      ; Real
-      ; Real ] ) ;
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int)
+      ; (TData, Real)
+      ; (TData, Real)
+      ; (TData, Real) ] ) ;
+  add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int ] ) ;
-  add_unqualified
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int) ] ) ;
+  add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
-    , [ Fun
-          ( [ (GQuant, Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType (Array Real) )
-      ; Array Real
-      ; Real
-      ; Array Real
-      ; Array Real
-      ; Array Real
-      ; Array Int
-      ; Real
-      ; Real
-      ; Real ] ) ;
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType (Array Real) ) )
+      ; (GQuant, Array Real)
+      ; (TData, Real)
+      ; (TData, Array Real)
+      ; (GQuant, Array Real)
+      ; (TData, Array Real)
+      ; (TData, Array Int)
+      ; (TData, Real)
+      ; (TData, Real)
+      ; (TData, Real) ] ) ;
   add_unary_vectorized "inv" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1420,19 +1420,20 @@ let _ =
             ("lognormal_rng", ReturnType (rng_return_type Real [t; u]), [t; u])
       ) ) ;
   add_nullary "machine_precision" ;
-  add_unqualified
+  add_qualified
     ( "map_rect"
     , ReturnType Vector
-    , [ Fun
-          ( [ (GQuant, Vector)
-            ; (GQuant, Vector)
-            ; (GQuant, Array Real)
-            ; (GQuant, Array Int) ]
-          , ReturnType Vector )
-      ; Vector
-      ; Array Vector
-      ; Array (Array Real)
-      ; Array (Array Int) ] ) ;
+    , [ ( GQuant
+        , Fun
+            ( [ (GQuant, Vector)
+              ; (GQuant, Vector)
+              ; (GQuant, Array Real)
+              ; (GQuant, Array Int) ]
+            , ReturnType Vector ) )
+      ; (GQuant, Vector)
+      ; (GQuant, Array Vector)
+      ; (TData, Array (Array Real))
+      ; (TData, Array (Array Int)) ] ) ;
   add_unqualified ("matrix_exp", ReturnType Matrix, [Matrix]) ;
   add_unqualified ("matrix_exp_multiply", ReturnType Matrix, [Matrix; Matrix]) ;
   add_unqualified ("max", ReturnType Int, [bare_array_type (Int, 1)]) ;
@@ -2478,8 +2479,6 @@ let try_get_primitive_return_type name optargtypes =
     else
       Some
         (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
-
-(* TODO: deal with data only arguments *)
 
 let is_primitive_name name = Hashtbl.mem primitive_signatures name
 
