@@ -149,7 +149,9 @@ let check_fresh_variable id =
 (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
    have a block level that is determined by what has been assigned to them
-   rather than by where they were declared. *)
+   rather than by where they were declared. I'm not sure that behaviour makes
+   sense unless we use static analysis as well to make sure these assignments
+   actually get evaluated in that phase. *)
 let update_originblock name ob =
   match Symbol.look vm name with
   | Some (old_ob, ut) ->
@@ -967,7 +969,9 @@ and semantic_check_statement s =
       (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
    have a block level that is determined by what has been assigned to them
-   rather than by where they were declared. *)
+   rather than by where they were declared. I'm not sure that behaviour makes
+   sense unless we use static analysis as well to make sure these assignments
+   actually get evaluated in that phase. *)
       let _ =
         match snd ue with
         | Some (rhs_ob, _) -> update_originblock uid rhs_ob

@@ -20,9 +20,9 @@
 let string_literal = '"' [^'"']* '"' (* TODO: We should probably expand the alphabet *)
 let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']* (* TODO: put in constraints on variable names *)
 
-let integer_constant = ['+' '-']? ['0'-'9']+
+let integer_constant =  ['0'-'9']+
 
-let exp_literal = ['e' 'E'] integer_constant
+let exp_literal = ['e' 'E'] ['+' '-']? integer_constant
 let real_constant1 = integer_constant? '.' ['0'-'9']* exp_literal? 
 let real_constant2 = '.' ['0'-'9']+ exp_literal?
 let real_constant3 = integer_constant exp_literal 
