@@ -47,11 +47,11 @@ be parsed).
 - Debugging flags for writing out parsing operations and resulting AST as s-expression in case of a successful parse
 - tested on all models in `stan/src/test/test-models/good`
 - Ported all function signatures from Stan Math
+- Prototype semantic check
 
 # TODO
 - Generate better error messages during parsing (use menhir --list-errors to systematically list all paths to a parse error which should get a custom error message)
-- Thread line number and position (span) through to AST, as that'll help us with informative error messages during the semantic checking phase
-- Create semantic checking phase to operate on AST, building up var-map and doing type checking
+- Thread line number and position (span) through to AST and produce informative error messages during the semantic checking phase
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Create code generation phase from IRs
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
