@@ -140,10 +140,12 @@ let check_fresh_variable id =
   in
   match Symbol.look vm id with
   | Some x ->
-      let error_msg =
-        String.concat " " ["Identifier "; id; " is already in use."]
-      in
-      semantic_error error_msg
+      if Symbol.is_missing_fun_def vm id then ()
+      else
+        let error_msg =
+          String.concat " " ["Identifier "; id; " is already in use."]
+        in
+        semantic_error error_msg
   | None -> ()
 
 (* TODO: the following is very ugly, but we seem to need something like it to
@@ -176,6 +178,11 @@ let rec semantic_check_program p =
   ->
     let _ = context_flags.current_block <- Functions in
     let ubf = semantic_check_functionblock bf in
+    let _ =
+      if Symbol.some_fun_is_missing_def vm then
+        semantic_error
+          "Some function is declared without specifying a definition."
+    in
     let _ = context_flags.current_block <- Data in
     let ubd = semantic_check_datablock bd in
     let _ = context_flags.current_block <- TData in
@@ -198,7 +205,6 @@ let rec semantic_check_program p =
     ; modelblock= ubm
     ; generatedquantitiesblock= ubgq }
 
-(* Probably nothing to do here *)
 and semantic_check_functionblock bf =
   Core_kernel.Option.map bf (List.map semantic_check_fundef)
 
@@ -234,6 +240,11 @@ and semantic_check_fundef = function
       let uargs = List.map semantic_check_argdecl args in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
       let _ = check_fresh_variable uid in
+      let _ =
+        match b with
+        | Skip, _ -> Symbol.add_is_missing_fun_def vm uid
+        | _ -> Symbol.remove_is_missing_fun_def vm uid
+      in
       let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
       let _ = Symbol.set_read_only vm uid in
       let uarg_names = List.map (function w, y, z -> z) uargs in
@@ -260,7 +271,11 @@ and semantic_check_fundef = function
       in
       let ub = semantic_check_statement b in
       let _ =
-        if snd ub <> Some urt then
+        if
+          Symbol.is_missing_fun_def vm uid
+          || check_of_compatible_return_type (Some urt) (snd ub)
+        then ()
+        else
           semantic_error
             "Function bodies must contain a return statement of correct type \
              in every branch."

@@ -17,6 +17,14 @@ module type SYMBOL = sig
 
   val get_read_only : 'a state -> string -> bool
 
+  val add_is_missing_fun_def : 'a state -> string -> unit
+
+  val remove_is_missing_fun_def : 'a state -> string -> unit
+
+  val is_missing_fun_def : 'a state -> string -> bool
+
+  val some_fun_is_missing_def : 'a state -> bool
+
   val set_global : 'a state -> string -> unit
 
   val get_global : 'a state -> string -> bool
@@ -33,12 +41,14 @@ module Symbol : SYMBOL = struct
     { table: (string, 'a) Hashtbl.t
     ; stack: string Stack.t
     ; readonly: (string, bool) Hashtbl.t
+    ; ismissingfundef: (string, unit) Hashtbl.t
     ; global: (string, bool) Hashtbl.t }
 
   let initialize () =
     { table= Hashtbl.create 123456
     ; stack= Stack.create ()
     ; readonly= Hashtbl.create 123456
+    ; ismissingfundef= Hashtbl.create 123456
     ; global= Hashtbl.create 123456 }
 
   (* We just pick some initial size. Hash tables get resized dynamically if necessary, so it doesn't hugely matter. *)
@@ -55,6 +65,7 @@ module Symbol : SYMBOL = struct
       (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
       Hashtbl.remove s.table (Stack.top s.stack) ;
       Hashtbl.remove s.readonly (Stack.top s.stack) ;
+      Hashtbl.remove s.ismissingfundef (Stack.top s.stack) ;
       let _ = Stack.pop s.stack in
       ()
     done ;
@@ -65,6 +76,16 @@ module Symbol : SYMBOL = struct
 
   let get_read_only s str =
     match Hashtbl.find_opt s.readonly str with Some true -> true | _ -> false
+
+  let add_is_missing_fun_def s str =
+    if Hashtbl.mem s.ismissingfundef str then ()
+    else Hashtbl.add s.ismissingfundef str ()
+
+  let remove_is_missing_fun_def s str = Hashtbl.remove s.ismissingfundef str
+
+  let is_missing_fun_def s str = Hashtbl.mem s.ismissingfundef str
+
+  let some_fun_is_missing_def s = not (Hashtbl.length s.ismissingfundef = 0)
 
   (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables

@@ -17,6 +17,14 @@ module type SYMBOL = sig
   
   val get_read_only : 'a state -> string -> bool
 
+  val add_is_missing_fun_def : 'a state -> string -> unit
+  
+  val remove_is_missing_fun_def : 'a state -> string -> unit
+  
+  val is_missing_fun_def : 'a state -> string -> bool
+  
+  val some_fun_is_missing_def : 'a state -> bool
+
   (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
    have a block level that is determined by what has been assigned to them
