@@ -66,6 +66,10 @@ module Symbol : SYMBOL = struct
   let get_read_only s str =
     match Hashtbl.find_opt s.readonly str with Some true -> true | _ -> false
 
+  (* TODO: the following is very ugly, but we seem to need something like it to
+   reproduce the (strange) behaviour in the current Stan that local variables
+   have a block level that is determined by what has been assigned to them
+   rather than by where they were declared. *)
   let set_global s str = Hashtbl.add s.global str true
 
   let get_global s str =

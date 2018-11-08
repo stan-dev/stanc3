@@ -13,3 +13,5 @@ manual entry for algebra_solver has wrong signature.
 manual entry for integrate_ode_adams missing
 
 data only arguments not enforced for higher order functions.
+
+target should be protected key word, as far get_lp.

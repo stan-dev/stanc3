@@ -16,8 +16,12 @@ module type SYMBOL = sig
   val set_read_only : 'a state -> string -> unit
   
   val get_read_only : 'a state -> string -> bool
-  
-    val set_global : 'a state -> string -> unit
+
+  (* TODO: the following is very ugly, but we seem to need something like it to
+   reproduce the (strange) behaviour in the current Stan that local variables
+   have a block level that is determined by what has been assigned to them
+   rather than by where they were declared. *)  
+  val set_global : 'a state -> string -> unit
   
   val get_global : 'a state -> string -> bool
   

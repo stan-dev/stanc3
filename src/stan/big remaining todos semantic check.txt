@@ -15,6 +15,4 @@ conversely, when adding an identifier to the var map, we first check that it doe
 note that redefining the function e() with precisely the same signature is still not allowed.
 add in the clashes with the suffixes above.
 
-check data only arguments
-
 go through all bad examples to make sure they all fail (including ones that are currently not in folder)

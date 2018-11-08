@@ -146,6 +146,10 @@ let check_fresh_variable id =
       semantic_error error_msg
   | None -> ()
 
+(* TODO: the following is very ugly, but we seem to need something like it to
+   reproduce the (strange) behaviour in the current Stan that local variables
+   have a block level that is determined by what has been assigned to them
+   rather than by where they were declared. *)
 let update_originblock name ob =
   match Symbol.look vm name with
   | Some (old_ob, ut) ->
@@ -960,6 +964,10 @@ and semantic_check_statement s =
             semantic_error
               "This should never happen. Please file a bug. Error code 5."
       in
+      (* TODO: the following is very ugly, but we seem to need something like it to
+   reproduce the (strange) behaviour in the current Stan that local variables
+   have a block level that is determined by what has been assigned to them
+   rather than by where they were declared. *)
       let _ =
         match snd ue with
         | Some (rhs_ob, _) -> update_originblock uid rhs_ob
