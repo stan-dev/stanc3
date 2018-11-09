@@ -137,8 +137,23 @@ let emit_class ppf name super fields methods =
     (emit_list emit_vardecl ";\n") fields
     (emit_list emit_fndef "\n") methods
 
-(*
 let%expect_test "class" =
   emit_class str_formatter "bernoulli_model" "log_prob"
-    [(Real, "x"); (SMatrix "y")]
-*)
+    [(SMatrix None, "x"); (SVector None, "y")]
+    [{returntype = Some SReal; name = "log_prob";
+      arguments = [(SVector None), "params"];
+      body = Block [
+          Assignment ({assignee = "target"; op = Plus; indices = [];
+                       rhs = FnApp("normal",
+                                   [FnApp("multiply", [Var "x"; Var "params"]);
+                                    Lit(Real, "1.0")])})]}];
+  flush_str_formatter () |> print_endline;
+  [%expect {|
+    class bernoulli_model : log_prob {
+     private:
+      x;
+     y
+     public:
+     double log_prob( params) {
+      target += normal(multiply(x, params), 1.0)
+    }} |}];

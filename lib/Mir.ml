@@ -70,7 +70,7 @@ and stantype =
   | SReal
   | SVector of expr option
   | SRowVector of expr option
-  | SMatrix of expr * expr option
+  | SMatrix of (expr * expr) option
   | SArray of stantype * expr option
 
 and transformation =
