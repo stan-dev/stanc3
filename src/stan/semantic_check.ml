@@ -147,12 +147,10 @@ let check_fresh_variable id is_nullary_function =
   in
   match Symbol.look vm id with
   | Some x ->
-      if Symbol.is_missing_fun_def vm id then ()
-      else
-        let error_msg =
-          String.concat " " ["Identifier "; id; " is already in use."]
-        in
-        semantic_error error_msg
+      let error_msg =
+        String.concat " " ["Identifier "; id; " is already in use."]
+      in
+      semantic_error error_msg
   | None -> ()
 
 (* TODO: the following is very ugly, but we seem to need something like it to
@@ -246,22 +244,47 @@ and semantic_check_fundef = function
       let uid = semantic_check_identifier id in
       let uargs = List.map semantic_check_argdecl args in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
-      let _ = check_fresh_variable uid (List.length uarg_types = 0) in
+      let _ =
+        if Symbol.is_missing_fun_def vm uid then (
+          if Symbol.look vm uid <> Some (Functions, Fun (uarg_types, urt)) then
+            semantic_error
+              ( "Function " ^ uid ^ " has already been declared to have type "
+              ^ string_of_expressiontype (Symbol.look vm uid) ) )
+        else check_fresh_variable uid (List.length uarg_types = 0)
+      in
       let _ =
         match b with
-        | Skip, _ -> Symbol.add_is_missing_fun_def vm uid
+        | Skip, _ ->
+            if Symbol.is_missing_fun_def vm uid then
+              semantic_error
+                ( "Function " ^ uid
+                ^ " has already been declared. A definition is expected." )
+            else Symbol.add_is_missing_fun_def vm uid
         | _ -> Symbol.remove_is_missing_fun_def vm uid
       in
       let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
       let uarg_names = List.map (function w, y, z -> z) uargs in
       let _ = List.map (Symbol.set_read_only vm) uarg_names in
+      let _ =
+        if
+          urt <> ReturnType Real
+          && ( Filename.check_suffix uid "_log"
+             || Filename.check_suffix uid "_lpdf"
+             || Filename.check_suffix uid "_lpmf"
+             || Filename.check_suffix uid "_lcdf"
+             || Filename.check_suffix uid "_lccdf" )
+        then
+          semantic_error
+            "Real return type required for probability functions ending in \
+             _log, _lpdf, _lpmf, _lcdf, or _lccdf."
+      in
       let _ = context_flags.in_fun_def <- true in
       let _ =
-        if Filename.check_suffix id "_rng" then
+        if Filename.check_suffix uid "_rng" then
           context_flags.in_rng_fun_def <- true
       in
       let _ =
-        if Filename.check_suffix id "_lp" then
+        if Filename.check_suffix uid "_lp" then
           context_flags.in_lp_fun_def <- true
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
@@ -1152,6 +1175,15 @@ and semantic_check_statement s =
           semantic_error
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
+      in
+      let _ =
+        if
+          Filename.check_suffix uid "_cdf" || Filename.check_suffix uid "_ccdf"
+        then
+          semantic_error
+            ( "CDF and CCDF functions may not be used with sampling \
+               notation.Use increment_log_prob(" ^ uid ^ "_log(...)) instead."
+            )
       in
       let _ =
         if
