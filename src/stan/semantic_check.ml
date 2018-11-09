@@ -325,6 +325,7 @@ and semantic_check_identifier id =
            ; "false"
            ; "repeat"
            ; "until"
+           ; "then"
            ; "var"
            ; "fvar"
            ; "STAN_MAJOR"
@@ -485,6 +486,24 @@ and semantic_check_topvardecl = function
       let _ = check_fresh_variable uid false in
       let _ = Symbol.enter vm uid (context_flags.current_block, ut) in
       let _ = Symbol.set_global vm uid in
+      let _ =
+        if
+          (ust = SInt)
+          &&
+          (match utrans with
+          | Lower ue1 -> (
+            match snd ue1 with Some (_, Real) -> true | _ -> false )
+          | Upper ue1 -> (
+            match snd ue1 with Some (_, Real) -> true | _ -> false )
+          | LowerUpper (ue1, ue2) -> (
+            match snd ue1 with
+            | Some (_, Real) -> true
+            | _ -> ( match snd ue2 with Some (_, Real) -> true | _ -> false ) )
+          | _ -> false )
+        then
+          semantic_error
+            "Bounds of integer variable should be of type int. Found type real."
+      in
       let _ =
         if
           ( context_flags.current_block = Param
@@ -1191,6 +1210,7 @@ and semantic_check_statement s =
           || try_get_primitive_return_type (uid ^ "_log") optargumenttypes
              = Some (ReturnType Real)
              && uid <> "binomial_coefficient"
+             && uid <> "multiply"
           || ( match Symbol.look vm (uid ^ "_lpdf") with
              | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
                  check_compatible_arguments_mod_conv uid listedtypes
@@ -1279,11 +1299,11 @@ and semantic_check_statement s =
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let _ =
-        if not (check_of_int_or_real_type ue1) then
+        if not (check_of_int_type ue1) then
           semantic_error "Lower bound of for-loop needs to be of type int."
       in
       let _ =
-        if not (check_of_int_or_real_type ue2) then
+        if not (check_of_int_type ue2) then
           semantic_error "Upper bound of for-loop needs to be of type int."
       in
       let _ = Symbol.begin_scope vm in
