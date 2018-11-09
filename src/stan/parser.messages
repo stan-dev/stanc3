@@ -1,0 +1,3202 @@
+program: WHILE
+##
+## Ends in an error in state: 387.
+##
+## program' -> . program [ # ]
+##
+## The known suffix of the stack is as follows:
+## 
+##
+
+"Hello!"
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 333.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> CHOLESKYFACTORCORR LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CHOLESKYFACTORCORR LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK WHILE
+##
+## Ends in an error in state: 332.
+##
+## top_var_type -> CHOLESKYFACTORCORR LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CHOLESKYFACTORCORR LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
+##
+## Ends in an error in state: 331.
+##
+## top_var_type -> CHOLESKYFACTORCORR . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CHOLESKYFACTORCORR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL COMMA REALNUMERAL TILDE
+##
+## Ends in an error in state: 328.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## option(pair(COMMA,expression)) -> COMMA expression . [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## COMMA expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL COMMA WHILE
+##
+## Ends in an error in state: 327.
+##
+## option(pair(COMMA,expression)) -> COMMA . expression [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 326.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## top_var_type -> CHOLESKYFACTORCOV LBRACK expression . option(pair(COMMA,expression)) RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CHOLESKYFACTORCOV LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
+##
+## Ends in an error in state: 325.
+##
+## top_var_type -> CHOLESKYFACTORCOV LBRACK . expression option(pair(COMMA,expression)) RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CHOLESKYFACTORCOV LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CHOLESKYFACTORCOV WHILE
+##
+## Ends in an error in state: 324.
+##
+## top_var_type -> CHOLESKYFACTORCOV . LBRACK expression option(pair(COMMA,expression)) RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CHOLESKYFACTORCOV 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CORRMATRIX LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 322.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> CORRMATRIX LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CORRMATRIX LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CORRMATRIX LBRACK WHILE
+##
+## Ends in an error in state: 321.
+##
+## top_var_type -> CORRMATRIX LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CORRMATRIX LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE CORRMATRIX WHILE
+##
+## Ends in an error in state: 320.
+##
+## top_var_type -> CORRMATRIX . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## CORRMATRIX 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE COVMATRIX LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 318.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> COVMATRIX LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## COVMATRIX LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE COVMATRIX LBRACK WHILE
+##
+## Ends in an error in state: 317.
+##
+## top_var_type -> COVMATRIX LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## COVMATRIX LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE COVMATRIX WHILE
+##
+## Ends in an error in state: 316.
+##
+## top_var_type -> COVMATRIX . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## COVMATRIX 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE INT LABRACK WHILE
+##
+## Ends in an error in state: 314.
+##
+## range_constraint -> LABRACK . range RABRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## LABRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE INT WHILE
+##
+## Ends in an error in state: 313.
+##
+## top_var_type -> INT . range_constraint [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## INT 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+##
+## Ends in an error in state: 307.
+##
+## top_var_type -> MATRIX type_constraint . LBRACK expression COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX type_constraint 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL TILDE
+##
+## Ends in an error in state: 311.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> MATRIX type_constraint LBRACK expression COMMA expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX type_constraint LBRACK expression COMMA expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
+##
+## Ends in an error in state: 310.
+##
+## top_var_type -> MATRIX type_constraint LBRACK expression COMMA . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX type_constraint LBRACK expression COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 309.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## top_var_type -> MATRIX type_constraint LBRACK expression . COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX type_constraint LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE MATRIX LBRACK WHILE
+##
+## Ends in an error in state: 308.
+##
+## top_var_type -> MATRIX type_constraint LBRACK . expression COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX type_constraint LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE MATRIX WHILE
+##
+## Ends in an error in state: 306.
+##
+## top_var_type -> MATRIX . type_constraint LBRACK expression COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 304.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> ORDERED LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ORDERED LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ORDERED LBRACK WHILE
+##
+## Ends in an error in state: 303.
+##
+## top_var_type -> ORDERED LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ORDERED LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ORDERED WHILE
+##
+## Ends in an error in state: 302.
+##
+## top_var_type -> ORDERED . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ORDERED 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 300.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> POSITIVEORDERED LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## POSITIVEORDERED LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE POSITIVEORDERED LBRACK WHILE
+##
+## Ends in an error in state: 299.
+##
+## top_var_type -> POSITIVEORDERED LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## POSITIVEORDERED LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE POSITIVEORDERED WHILE
+##
+## Ends in an error in state: 298.
+##
+## top_var_type -> POSITIVEORDERED . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## POSITIVEORDERED 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE RBRACE WHILE
+##
+## Ends in an error in state: 343.
+##
+## program -> option(function_block) option(data_block) . option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE REAL IDENTIFIER LBRACK RBRACK WHILE
+##
+## Ends in an error in state: 337.
+##
+## top_var_decl_no_assign -> top_var_type IDENTIFIER option(dims) . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type IDENTIFIER option(dims) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
+##
+## Ends in an error in state: 339.
+##
+## list(top_var_decl_no_assign) -> top_var_decl_no_assign . list(top_var_decl_no_assign) [ RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## top_var_decl_no_assign 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE REAL IDENTIFIER WHILE
+##
+## Ends in an error in state: 336.
+##
+## top_var_decl_no_assign -> top_var_type IDENTIFIER . option(dims) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE REAL WHILE
+##
+## Ends in an error in state: 296.
+##
+## top_var_type -> REAL . type_constraint [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## REAL 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+##
+## Ends in an error in state: 292.
+##
+## top_var_type -> ROWVECTOR type_constraint . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR type_constraint 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 294.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> ROWVECTOR type_constraint LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR type_constraint LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
+##
+## Ends in an error in state: 293.
+##
+## top_var_type -> ROWVECTOR type_constraint LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR type_constraint LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE ROWVECTOR WHILE
+##
+## Ends in an error in state: 291.
+##
+## top_var_type -> ROWVECTOR . type_constraint LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 289.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> SIMPLEX LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## SIMPLEX LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE SIMPLEX LBRACK WHILE
+##
+## Ends in an error in state: 288.
+##
+## top_var_type -> SIMPLEX LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## SIMPLEX LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE SIMPLEX WHILE
+##
+## Ends in an error in state: 287.
+##
+## top_var_type -> SIMPLEX . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## SIMPLEX 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE UNITVECTOR LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 285.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> UNITVECTOR LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## UNITVECTOR LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE UNITVECTOR LBRACK WHILE
+##
+## Ends in an error in state: 284.
+##
+## top_var_type -> UNITVECTOR LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## UNITVECTOR LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE UNITVECTOR WHILE
+##
+## Ends in an error in state: 283.
+##
+## top_var_type -> UNITVECTOR . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## UNITVECTOR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL COMMA SCALE ASSIGN REALNUMERAL WHILE
+##
+## Ends in an error in state: 273.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## loc_scale -> LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL COMMA SCALE ASSIGN WHILE
+##
+## Ends in an error in state: 272.
+##
+## loc_scale -> LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL COMMA SCALE WHILE
+##
+## Ends in an error in state: 271.
+##
+## loc_scale -> LOCATION ASSIGN constr_expression COMMA SCALE . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION ASSIGN constr_expression COMMA SCALE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL COMMA WHILE
+##
+## Ends in an error in state: 270.
+##
+## loc_scale -> LOCATION ASSIGN constr_expression COMMA . SCALE ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION ASSIGN constr_expression COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
+##
+## Ends in an error in state: 269.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## loc_scale -> LOCATION ASSIGN constr_expression . COMMA SCALE ASSIGN constr_expression [ RABRACK ]
+## loc_scale -> LOCATION ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION ASSIGN constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
+##
+## Ends in an error in state: 268.
+##
+## loc_scale -> LOCATION ASSIGN . constr_expression COMMA SCALE ASSIGN constr_expression [ RABRACK ]
+## loc_scale -> LOCATION ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
+##
+## Ends in an error in state: 267.
+##
+## loc_scale -> LOCATION . ASSIGN constr_expression COMMA SCALE ASSIGN constr_expression [ RABRACK ]
+## loc_scale -> LOCATION . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOCATION 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL COMMA UPPER ASSIGN REALNUMERAL WHILE
+##
+## Ends in an error in state: 266.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## range -> LOWER ASSIGN constr_expression COMMA UPPER ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER ASSIGN constr_expression COMMA UPPER ASSIGN constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL COMMA UPPER ASSIGN WHILE
+##
+## Ends in an error in state: 265.
+##
+## range -> LOWER ASSIGN constr_expression COMMA UPPER ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER ASSIGN constr_expression COMMA UPPER ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL COMMA UPPER WHILE
+##
+## Ends in an error in state: 264.
+##
+## range -> LOWER ASSIGN constr_expression COMMA UPPER . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER ASSIGN constr_expression COMMA UPPER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL COMMA WHILE
+##
+## Ends in an error in state: 263.
+##
+## range -> LOWER ASSIGN constr_expression COMMA . UPPER ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER ASSIGN constr_expression COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
+##
+## Ends in an error in state: 262.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## range -> LOWER ASSIGN constr_expression . COMMA UPPER ASSIGN constr_expression [ RABRACK ]
+## range -> LOWER ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER ASSIGN constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
+##
+## Ends in an error in state: 261.
+##
+## range -> LOWER ASSIGN . constr_expression COMMA UPPER ASSIGN constr_expression [ RABRACK ]
+## range -> LOWER ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
+##
+## Ends in an error in state: 260.
+##
+## range -> LOWER . ASSIGN constr_expression COMMA UPPER ASSIGN constr_expression [ RABRACK ]
+## range -> LOWER . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## LOWER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+##
+## Ends in an error in state: 278.
+##
+## top_var_type -> VECTOR type_constraint . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR type_constraint 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN REALNUMERAL WHILE
+##
+## Ends in an error in state: 259.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## loc_scale -> SCALE ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## SCALE ASSIGN constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
+##
+## Ends in an error in state: 258.
+##
+## loc_scale -> SCALE ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## SCALE ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
+##
+## Ends in an error in state: 257.
+##
+## loc_scale -> SCALE . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## SCALE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN IDENTIFIER WHILE
+##
+## Ends in an error in state: 246.
+##
+## common_expression -> IDENTIFIER . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## common_expression -> IDENTIFIER . LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> IDENTIFIER . [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS REALNUMERAL WHILE
+##
+## Ends in an error in state: 248.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> prefixOp constr_expression . [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## prefixOp constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
+##
+## Ends in an error in state: 247.
+##
+## constr_expression -> prefixOp . constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## prefixOp 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN REALNUMERAL LBRACK WHILE
+##
+## Ends in an error in state: 252.
+##
+## constr_expression -> constr_expression LBRACK . indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## constr_expression LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN REALNUMERAL TIMES REALNUMERAL WHILE
+##
+## Ends in an error in state: 251.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression arithmeticInfixOp constr_expression . [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## constr_expression arithmeticInfixOp constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN REALNUMERAL TIMES WHILE
+##
+## Ends in an error in state: 250.
+##
+## constr_expression -> constr_expression arithmeticInfixOp . constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
+##
+## The known suffix of the stack is as follows:
+## constr_expression arithmeticInfixOp 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN REALNUMERAL WHILE
+##
+## Ends in an error in state: 256.
+##
+## constr_expression -> constr_expression . arithmeticInfixOp constr_expression [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . postfixOp [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TIMES RABRACK QR PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
+## range -> UPPER ASSIGN constr_expression . [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## UPPER ASSIGN constr_expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
+##
+## Ends in an error in state: 245.
+##
+## range -> UPPER ASSIGN . constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## UPPER ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
+##
+## Ends in an error in state: 244.
+##
+## range -> UPPER . ASSIGN constr_expression [ RABRACK ]
+##
+## The known suffix of the stack is as follows:
+## UPPER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LABRACK WHILE
+##
+## Ends in an error in state: 243.
+##
+## range_constraint -> LABRACK . range RABRACK [ LBRACK IDENTIFIER ]
+## type_constraint -> LABRACK . loc_scale RABRACK [ LBRACK IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## LABRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LBRACK IDENTIFIER RBRACK HAT
+##
+## Ends in an error in state: 335.
+##
+## top_var_decl_no_assign -> top_var_type . IDENTIFIER option(dims) SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 280.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## top_var_type -> VECTOR type_constraint LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR type_constraint LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR LBRACK WHILE
+##
+## Ends in an error in state: 279.
+##
+## top_var_type -> VECTOR type_constraint LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR type_constraint LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE VECTOR WHILE
+##
+## Ends in an error in state: 242.
+##
+## top_var_type -> VECTOR . type_constraint LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK LBRACE WHILE
+##
+## Ends in an error in state: 241.
+##
+## data_block -> DATABLOCK LBRACE . list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## DATABLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: DATABLOCK WHILE
+##
+## Ends in an error in state: 240.
+##
+## data_block -> DATABLOCK . LBRACE list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## DATABLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
+##
+## Ends in an error in state: 239.
+##
+## program -> option(function_block) . option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VECTOR LBRACK COMMA WHILE
+##
+## Ends in an error in state: 20.
+##
+## list(COMMA) -> COMMA . list(COMMA) [ RBRACK ]
+##
+## The known suffix of the stack is as follows:
+## COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VECTOR LBRACK WHILE
+##
+## Ends in an error in state: 19.
+##
+## unsized_dims -> LBRACK . list(COMMA) RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VECTOR WHILE
+##
+## Ends in an error in state: 18.
+##
+## unsized_type -> basic_type . option(unsized_dims) [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## basic_type 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN DATABLOCK WHILE
+##
+## Ends in an error in state: 15.
+##
+## arg_decl -> option(DATABLOCK) . unsized_type IDENTIFIER [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## option(DATABLOCK) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
+##
+## Ends in an error in state: 236.
+##
+## list(function_def) -> function_def . list(function_def) [ RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## function_def 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN VOID
+##
+## Ends in an error in state: 27.
+##
+## function_def -> return_type IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN . statement [ VOID VECTOR ROWVECTOR REAL RBRACE MATRIX INT ]
+##
+## The known suffix of the stack is as follows:
+## return_type IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER COMMA WHILE
+##
+## Ends in an error in state: 232.
+##
+## separated_nonempty_list(COMMA,arg_decl) -> arg_decl COMMA . separated_nonempty_list(COMMA,arg_decl) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## arg_decl COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR IDENTIFIER WHILE
+##
+## Ends in an error in state: 231.
+##
+## separated_nonempty_list(COMMA,arg_decl) -> arg_decl . [ RPAREN ]
+## separated_nonempty_list(COMMA,arg_decl) -> arg_decl . COMMA separated_nonempty_list(COMMA,arg_decl) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## arg_decl 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN VECTOR LBRACK RBRACK WHILE
+##
+## Ends in an error in state: 16.
+##
+## arg_decl -> option(DATABLOCK) unsized_type . IDENTIFIER [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## option(DATABLOCK) unsized_type 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN WHILE
+##
+## Ends in an error in state: 12.
+##
+## function_def -> return_type IDENTIFIER LPAREN . loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR ROWVECTOR REAL RBRACE MATRIX INT ]
+##
+## The known suffix of the stack is as follows:
+## return_type IDENTIFIER LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER WHILE
+##
+## Ends in an error in state: 11.
+##
+## function_def -> return_type IDENTIFIER . LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR ROWVECTOR REAL RBRACE MATRIX INT ]
+##
+## The known suffix of the stack is as follows:
+## return_type IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE VOID WHILE
+##
+## Ends in an error in state: 10.
+##
+## function_def -> return_type . IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN statement [ VOID VECTOR ROWVECTOR REAL RBRACE MATRIX INT ]
+##
+## The known suffix of the stack is as follows:
+## return_type 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK LBRACE WHILE
+##
+## Ends in an error in state: 2.
+##
+## function_block -> FUNCTIONBLOCK LBRACE . list(function_def) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF DATABLOCK ]
+##
+## The known suffix of the stack is as follows:
+## FUNCTIONBLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: FUNCTIONBLOCK WHILE
+##
+## Ends in an error in state: 1.
+##
+## function_block -> FUNCTIONBLOCK . LBRACE list(function_def) RBRACE [ TRANSFORMEDPARAMETERSBLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF DATABLOCK ]
+##
+## The known suffix of the stack is as follows:
+## FUNCTIONBLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Ends in an error in state: 380.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) . EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: GENERATEDQUANTITIESBLOCK LBRACE VOID
+##
+## Ends in an error in state: 377.
+##
+## generated_quantities_block -> GENERATEDQUANTITIESBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## GENERATEDQUANTITIESBLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: GENERATEDQUANTITIESBLOCK WHILE
+##
+## Ends in an error in state: 376.
+##
+## generated_quantities_block -> GENERATEDQUANTITIESBLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## GENERATEDQUANTITIESBLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL TILDE
+##
+## Ends in an error in state: 147.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## sized_basic_type -> MATRIX LBRACK expression COMMA expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX LBRACK expression COMMA expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
+##
+## Ends in an error in state: 146.
+##
+## sized_basic_type -> MATRIX LBRACK expression COMMA . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX LBRACK expression COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 145.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## sized_basic_type -> MATRIX LBRACK expression . COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE MATRIX LBRACK WHILE
+##
+## Ends in an error in state: 144.
+##
+## sized_basic_type -> MATRIX LBRACK . expression COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE MATRIX WHILE
+##
+## Ends in an error in state: 143.
+##
+## sized_basic_type -> MATRIX . LBRACK expression COMMA expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## MATRIX 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Ends in an error in state: 375.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) . option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) option(model_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN REALNUMERAL TILDE
+##
+## Ends in an error in state: 221.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## option(pair(ASSIGN,expression)) -> ASSIGN expression . [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## ASSIGN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL IDENTIFIER ASSIGN WHILE
+##
+## Ends in an error in state: 220.
+##
+## option(pair(ASSIGN,expression)) -> ASSIGN . expression [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## ASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK RBRACK WHILE
+##
+## Ends in an error in state: 219.
+##
+## var_decl -> sized_basic_type IDENTIFIER option(dims) . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type IDENTIFIER option(dims) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK REALNUMERAL RBRACE
+##
+## Ends in an error in state: 217.
+##
+## dims -> LBRACK loption(separated_nonempty_list(COMMA,expression)) . RBRACK [ SEMICOLON ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK loption(separated_nonempty_list(COMMA,expression)) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+## In state 46, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL IDENTIFIER LBRACK WHILE
+##
+## Ends in an error in state: 216.
+##
+## dims -> LBRACK . loption(separated_nonempty_list(COMMA,expression)) RBRACK [ SEMICOLON ASSIGN ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL IDENTIFIER WHILE
+##
+## Ends in an error in state: 215.
+##
+## var_decl -> sized_basic_type IDENTIFIER . option(dims) option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL WHILE
+##
+## Ends in an error in state: 214.
+##
+## var_decl -> sized_basic_type . IDENTIFIER option(dims) option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 140.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## sized_basic_type -> ROWVECTOR LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
+##
+## Ends in an error in state: 139.
+##
+## sized_basic_type -> ROWVECTOR LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE ROWVECTOR WHILE
+##
+## Ends in an error in state: 138.
+##
+## sized_basic_type -> ROWVECTOR . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## ROWVECTOR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE SEMICOLON VOID
+##
+## Ends in an error in state: 211.
+##
+## list(vardecl_or_statement) -> vardecl_or_statement . list(vardecl_or_statement) [ RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## vardecl_or_statement 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 136.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## sized_basic_type -> VECTOR LBRACK expression . RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR LBRACK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE VECTOR LBRACK WHILE
+##
+## Ends in an error in state: 135.
+##
+## sized_basic_type -> VECTOR LBRACK . expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE VECTOR WHILE
+##
+## Ends in an error in state: 134.
+##
+## sized_basic_type -> VECTOR . LBRACK expression RBRACK [ IDENTIFIER ]
+##
+## The known suffix of the stack is as follows:
+## VECTOR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE VOID
+##
+## Ends in an error in state: 372.
+##
+## model_block -> MODELBLOCK LBRACE . list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## MODELBLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK WHILE
+##
+## Ends in an error in state: 371.
+##
+## model_block -> MODELBLOCK . LBRACE list(vardecl_or_statement) RBRACE [ GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## MODELBLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Ends in an error in state: 364.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) . option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: PARAMETERSBLOCK LBRACE WHILE
+##
+## Ends in an error in state: 360.
+##
+## parameters_block -> PARAMETERSBLOCK LBRACE . list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## PARAMETERSBLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: PARAMETERSBLOCK WHILE
+##
+## Ends in an error in state: 359.
+##
+## parameters_block -> PARAMETERSBLOCK . LBRACE list(top_var_decl_no_assign) RBRACE [ TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## PARAMETERSBLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
+##
+## Ends in an error in state: 172.
+##
+## atomic_statement -> BREAK . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## BREAK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
+##
+## Ends in an error in state: 170.
+##
+## atomic_statement -> CONTINUE . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## CONTINUE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON REALNUMERAL RPAREN VOID
+##
+## Ends in an error in state: 206.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER IN expression COLON expression RPAREN . statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER IN expression COLON expression RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON REALNUMERAL TILDE
+##
+## Ends in an error in state: 205.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER IN expression COLON expression . RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER IN expression COLON expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL COLON WHILE
+##
+## Ends in an error in state: 204.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER IN expression COLON . expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER IN expression COLON 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL RPAREN VOID
+##
+## Ends in an error in state: 169.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER IN expression RPAREN . statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER IN expression RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN REALNUMERAL TILDE
+##
+## Ends in an error in state: 168.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER IN expression . COLON expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> FOR LPAREN IDENTIFIER IN expression . RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COLON AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COLON AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COLON AND ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER IN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER IN WHILE
+##
+## Ends in an error in state: 167.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER IN . expression COLON expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> FOR LPAREN IDENTIFIER IN . expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER IN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN IDENTIFIER WHILE
+##
+## Ends in an error in state: 166.
+##
+## nested_statement -> FOR LPAREN IDENTIFIER . IN expression COLON expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> FOR LPAREN IDENTIFIER . IN expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
+##
+## Ends in an error in state: 165.
+##
+## nested_statement -> FOR LPAREN . IDENTIFIER IN expression COLON expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> FOR LPAREN . IDENTIFIER IN expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
+##
+## Ends in an error in state: 164.
+##
+## nested_statement -> FOR . LPAREN IDENTIFIER IN expression COLON expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> FOR . LPAREN IDENTIFIER IN expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## FOR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE GETLP LPAREN WHILE
+##
+## Ends in an error in state: 43.
+##
+## common_expression -> GETLP LPAREN . RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## GETLP LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE GETLP WHILE
+##
+## Ends in an error in state: 42.
+##
+## common_expression -> GETLP . LPAREN RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## GETLP 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK RBRACK WHILE
+##
+## Ends in an error in state: 176.
+##
+## atomic_statement -> lhs . assignment_op expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## expression -> lhs . [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## lhs -> lhs . LBRACK indexes RBRACK [ TIMESASSIGN TIMES TILDE RBRACE RABRACK QR QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTDIVIDEASSIGN ELTDIVIDE DIVIDEASSIGN DIVIDE COMMA ASSIGN ARROWASSIGN AND ]
+##
+## The known suffix of the stack is as follows:
+## lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LBRACK WHILE
+##
+## Ends in an error in state: 52.
+##
+## lhs -> lhs LBRACK . indexes RBRACK [ TIMESASSIGN TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTDIVIDEASSIGN ELTDIVIDE DIVIDEASSIGN DIVIDE COMMA COLON BAR ASSIGN ARROWASSIGN AND ]
+##
+## The known suffix of the stack is as follows:
+## lhs LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR REALNUMERAL RBRACK
+##
+## Ends in an error in state: 99.
+##
+## common_expression -> IDENTIFIER LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+## In state 46, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL BAR WHILE
+##
+## Ends in an error in state: 98.
+##
+## common_expression -> IDENTIFIER LPAREN expression BAR . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN expression BAR 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL COMMA IDENTIFIER RBRACK
+##
+## Ends in an error in state: 161.
+##
+## atomic_statement -> IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## common_expression -> IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 40, spurious reduction of production lhs -> IDENTIFIER 
+## In state 51, spurious reduction of production expression -> lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+## In state 96, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression) 
+## In state 46, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN REALNUMERAL TILDE
+##
+## Ends in an error in state: 94.
+##
+## common_expression -> IDENTIFIER LPAREN expression . BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA BAR AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA BAR AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA BAR AND ]
+## separated_nonempty_list(COMMA,expression) -> expression . [ RPAREN ]
+## separated_nonempty_list(COMMA,expression) -> expression . COMMA separated_nonempty_list(COMMA,expression) [ RPAREN ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN RPAREN WHILE
+##
+## Ends in an error in state: 162.
+##
+## atomic_statement -> IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## common_expression -> IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER LPAREN WHILE
+##
+## Ends in an error in state: 160.
+##
+## atomic_statement -> IDENTIFIER LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## common_expression -> IDENTIFIER LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## common_expression -> IDENTIFIER LPAREN . expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN REALNUMERAL TILDE
+##
+## Ends in an error in state: 186.
+##
+## atomic_statement -> lhs assignment_op expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## lhs assignment_op expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER TIMESASSIGN WHILE
+##
+## Ends in an error in state: 185.
+##
+## atomic_statement -> lhs assignment_op . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## lhs assignment_op 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER WHILE
+##
+## Ends in an error in state: 159.
+##
+## atomic_statement -> IDENTIFIER . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## common_expression -> IDENTIFIER . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## common_expression -> IDENTIFIER . LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## lhs -> IDENTIFIER . [ TIMESASSIGN TIMES TILDE RBRACE RABRACK QR QMARK PLUSASSIGN PLUS OR NEQUALS MODULO MINUSASSIGN MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMESASSIGN ELTTIMES ELTDIVIDEASSIGN ELTDIVIDE DIVIDEASSIGN DIVIDE COMMA ASSIGN ARROWASSIGN AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON ELSE VOID
+##
+## Ends in an error in state: 209.
+##
+## nested_statement -> IF LPAREN expression RPAREN statement ELSE . statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expression RPAREN statement ELSE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON UPPER
+##
+## Ends in an error in state: 208.
+##
+## nested_statement -> IF LPAREN expression RPAREN statement . ELSE statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> IF LPAREN expression RPAREN statement . [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expression RPAREN statement 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
+##
+## Ends in an error in state: 158.
+##
+## nested_statement -> IF LPAREN expression RPAREN . statement ELSE statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> IF LPAREN expression RPAREN . statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expression RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL TILDE
+##
+## Ends in an error in state: 157.
+##
+## nested_statement -> IF LPAREN expression . RPAREN statement ELSE statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> IF LPAREN expression . RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
+##
+## Ends in an error in state: 156.
+##
+## nested_statement -> IF LPAREN . expression RPAREN statement ELSE statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> IF LPAREN . expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## IF LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE IF WHILE
+##
+## Ends in an error in state: 155.
+##
+## nested_statement -> IF . LPAREN expression RPAREN statement ELSE statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## nested_statement -> IF . LPAREN expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## IF 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL RPAREN WHILE
+##
+## Ends in an error in state: 153.
+##
+## atomic_statement -> INCREMENTLOGPROB LPAREN expression RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## INCREMENTLOGPROB LPAREN expression RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL TILDE
+##
+## Ends in an error in state: 152.
+##
+## atomic_statement -> INCREMENTLOGPROB LPAREN expression . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## INCREMENTLOGPROB LPAREN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN WHILE
+##
+## Ends in an error in state: 151.
+##
+## atomic_statement -> INCREMENTLOGPROB LPAREN . expression RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## INCREMENTLOGPROB LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB WHILE
+##
+## Ends in an error in state: 150.
+##
+## atomic_statement -> INCREMENTLOGPROB . LPAREN expression RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## INCREMENTLOGPROB 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL COMMA WHILE
+##
+## Ends in an error in state: 95.
+##
+## separated_nonempty_list(COMMA,expression) -> expression COMMA . separated_nonempty_list(COMMA,expression) [ RPAREN RBRACK RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## expression COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL SEMICOLON
+##
+## Ends in an error in state: 228.
+##
+## atomic_statement -> expression . TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VECTOR TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## separated_nonempty_list(COMMA,expression) -> expression . [ RBRACE ]
+## separated_nonempty_list(COMMA,expression) -> expression . COMMA separated_nonempty_list(COMMA,expression) [ RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
+##
+## Ends in an error in state: 133.
+##
+## common_expression -> LBRACE . separated_nonempty_list(COMMA,expression) RBRACE [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## nested_statement -> LBRACE . list(vardecl_or_statement) RBRACE [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL RPAREN
+##
+## Ends in an error in state: 103.
+##
+## common_expression -> LBRACK separated_nonempty_list(COMMA,expression) . RBRACK [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK separated_nonempty_list(COMMA,expression) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 97.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## separated_nonempty_list(COMMA,expression) -> expression . [ RPAREN RBRACK RBRACE ]
+## separated_nonempty_list(COMMA,expression) -> expression . COMMA separated_nonempty_list(COMMA,expression) [ RPAREN RBRACK RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
+##
+## Ends in an error in state: 37.
+##
+## common_expression -> LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL TILDE
+##
+## Ends in an error in state: 105.
+##
+## common_expression -> LPAREN expression . RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE LPAREN WHILE
+##
+## Ends in an error in state: 36.
+##
+## common_expression -> LPAREN . expression RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
+##
+## Ends in an error in state: 47.
+##
+## non_lhs -> prefixOp . expression [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## prefixOp 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL RPAREN WHILE
+##
+## Ends in an error in state: 131.
+##
+## atomic_statement -> PRINT LPAREN printables RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## PRINT LPAREN printables RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
+##
+## Ends in an error in state: 130.
+##
+## atomic_statement -> PRINT LPAREN printables . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## printables -> printables . COMMA printables [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## PRINT LPAREN printables 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
+##
+## Ends in an error in state: 129.
+##
+## atomic_statement -> PRINT LPAREN . printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## PRINT LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
+##
+## Ends in an error in state: 128.
+##
+## atomic_statement -> PRINT . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## PRINT 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Ends in an error in state: 358.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) . option(parameters_block) option(transformed_parameters_block) option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER LBRACK RBRACK ARROWASSIGN
+##
+## Ends in an error in state: 349.
+##
+## top_var_decl -> top_var_type IDENTIFIER option(dims) . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type IDENTIFIER option(dims) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REAL IDENTIFIER WHILE
+##
+## Ends in an error in state: 348.
+##
+## top_var_decl -> top_var_type IDENTIFIER . option(dims) option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON REALNUMERAL TILDE
+##
+## Ends in an error in state: 88.
+##
+## indexes -> COLON expression . [ RBRACK COMMA ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+##
+## The known suffix of the stack is as follows:
+## COLON expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
+##
+## Ends in an error in state: 50.
+##
+## indexes -> COLON . [ RBRACK COMMA ]
+## indexes -> COLON . expression [ RBRACK COMMA ]
+##
+## The known suffix of the stack is as follows:
+## COLON 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
+##
+## Ends in an error in state: 55.
+##
+## indexes -> indexes COMMA . indexes [ RBRACK COMMA ]
+##
+## The known suffix of the stack is as follows:
+## indexes COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON REALNUMERAL TILDE
+##
+## Ends in an error in state: 87.
+##
+## indexes -> expression COLON expression . [ RBRACK COMMA ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+##
+## The known suffix of the stack is as follows:
+## expression COLON expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON WHILE
+##
+## Ends in an error in state: 86.
+##
+## indexes -> expression COLON . [ RBRACK COMMA ]
+## indexes -> expression COLON . expression [ RBRACK COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expression COLON 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL TILDE
+##
+## Ends in an error in state: 57.
+##
+## indexes -> expression . [ RBRACK COMMA ]
+## indexes -> expression . COLON [ RBRACK COMMA ]
+## indexes -> expression . COLON expression [ RBRACK COMMA ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON AND ]
+##
+## The known suffix of the stack is as follows:
+## expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
+##
+## Ends in an error in state: 49.
+##
+## non_lhs -> non_lhs LBRACK . indexes RBRACK [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## non_lhs LBRACK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON WHILE
+##
+## Ends in an error in state: 77.
+##
+## non_lhs -> expression QMARK expression COLON . expression [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## expression QMARK expression COLON 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL TILDE
+##
+## Ends in an error in state: 62.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COLON AND ]
+## non_lhs -> expression QMARK expression . COLON expression [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COLON AND ]
+## non_lhs -> expression . postfixOp [ TIMES RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COLON AND ]
+##
+## The known suffix of the stack is as follows:
+## expression QMARK expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK WHILE
+##
+## Ends in an error in state: 61.
+##
+## non_lhs -> expression QMARK . expression COLON expression [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## expression QMARK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL SEMICOLON
+##
+## Ends in an error in state: 188.
+##
+## atomic_statement -> expression . TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES TILDE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES TILDE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES TILDE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN REALNUMERAL RBRACK
+##
+## Ends in an error in state: 192.
+##
+## atomic_statement -> expression TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## expression TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+## In state 46, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE COMMA RBRACK SCALE
+##
+## Ends in an error in state: 201.
+##
+## atomic_statement -> expression TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## expression TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE COMMA REALNUMERAL COMMA
+##
+## Ends in an error in state: 197.
+##
+## truncation -> TRUNCATE option(expression) COMMA option(expression) . RBRACK [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## TRUNCATE option(expression) COMMA option(expression) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 199, spurious reduction of production option(expression) -> expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE COMMA WHILE
+##
+## Ends in an error in state: 196.
+##
+## truncation -> TRUNCATE option(expression) COMMA . option(expression) RBRACK [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## TRUNCATE option(expression) COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE REALNUMERAL RBRACK
+##
+## Ends in an error in state: 195.
+##
+## truncation -> TRUNCATE option(expression) . COMMA option(expression) RBRACK [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## TRUNCATE option(expression) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 199, spurious reduction of production option(expression) -> expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE REALNUMERAL TILDE
+##
+## Ends in an error in state: 199.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RBRACK RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## option(expression) -> expression . [ RBRACK COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN TRUNCATE WHILE
+##
+## Ends in an error in state: 194.
+##
+## truncation -> TRUNCATE . option(expression) COMMA option(expression) RBRACK [ SEMICOLON ]
+##
+## The known suffix of the stack is as follows:
+## TRUNCATE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN RPAREN WHILE
+##
+## Ends in an error in state: 193.
+##
+## atomic_statement -> expression TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN . option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## expression TILDE IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER LPAREN WHILE
+##
+## Ends in an error in state: 191.
+##
+## atomic_statement -> expression TILDE IDENTIFIER LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## expression TILDE IDENTIFIER LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE IDENTIFIER WHILE
+##
+## Ends in an error in state: 190.
+##
+## atomic_statement -> expression TILDE IDENTIFIER . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## expression TILDE IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
+##
+## Ends in an error in state: 189.
+##
+## atomic_statement -> expression TILDE . IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation) SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## expression TILDE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
+##
+## Ends in an error in state: 81.
+##
+## non_lhs -> expression infixOp . expression [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## expression infixOp 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
+##
+## Ends in an error in state: 48.
+##
+## expression -> non_lhs . [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## non_lhs -> non_lhs . LBRACK indexes RBRACK [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL TILDE
+##
+## Ends in an error in state: 127.
+##
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+## printables -> expression . [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL COMMA STRINGLITERAL WHILE
+##
+## Ends in an error in state: 126.
+##
+## printables -> printables . COMMA printables [ RPAREN COMMA ]
+## printables -> printables COMMA printables . [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## printables COMMA printables 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL COMMA WHILE
+##
+## Ends in an error in state: 125.
+##
+## printables -> printables COMMA . printables [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## printables COMMA 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL RPAREN WHILE
+##
+## Ends in an error in state: 123.
+##
+## atomic_statement -> REJECT LPAREN printables RPAREN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## REJECT LPAREN printables RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
+##
+## Ends in an error in state: 122.
+##
+## atomic_statement -> REJECT LPAREN printables . RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## printables -> printables . COMMA printables [ RPAREN COMMA ]
+##
+## The known suffix of the stack is as follows:
+## REJECT LPAREN printables 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
+##
+## Ends in an error in state: 119.
+##
+## atomic_statement -> REJECT LPAREN . printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## REJECT LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
+##
+## Ends in an error in state: 118.
+##
+## atomic_statement -> REJECT . LPAREN printables RPAREN SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## REJECT 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LBRACK RBRACK WHILE
+##
+## Ends in an error in state: 51.
+##
+## expression -> lhs . [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## lhs -> lhs . LBRACK indexes RBRACK [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN REALNUMERAL COMMA IDENTIFIER RBRACK
+##
+## Ends in an error in state: 92.
+##
+## common_expression -> IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) . RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN loption(separated_nonempty_list(COMMA,expression)) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 40, spurious reduction of production lhs -> IDENTIFIER 
+## In state 51, spurious reduction of production expression -> lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+## In state 96, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression COMMA separated_nonempty_list(COMMA,expression) 
+## In state 46, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER LPAREN WHILE
+##
+## Ends in an error in state: 41.
+##
+## common_expression -> IDENTIFIER LPAREN . loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## common_expression -> IDENTIFIER LPAREN . expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN IDENTIFIER WHILE
+##
+## Ends in an error in state: 40.
+##
+## common_expression -> IDENTIFIER . LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## common_expression -> IDENTIFIER . LPAREN expression BAR loption(separated_nonempty_list(COMMA,expression)) RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+## lhs -> IDENTIFIER . [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## IDENTIFIER 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE REALNUMERAL RPAREN
+##
+## Ends in an error in state: 101.
+##
+## common_expression -> LBRACE separated_nonempty_list(COMMA,expression) . RBRACE [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## LBRACE separated_nonempty_list(COMMA,expression) 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+## In state 97, spurious reduction of production separated_nonempty_list(COMMA,expression) -> expression 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
+##
+## Ends in an error in state: 38.
+##
+## common_expression -> LBRACE . separated_nonempty_list(COMMA,expression) RBRACE [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN REALNUMERAL TILDE
+##
+## Ends in an error in state: 116.
+##
+## atomic_statement -> RETURN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## RETURN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
+##
+## Ends in an error in state: 30.
+##
+## common_expression -> TARGET . LPAREN RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## TARGET 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
+##
+## Ends in an error in state: 114.
+##
+## atomic_statement -> RETURN . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## atomic_statement -> RETURN . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## RETURN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
+##
+## Ends in an error in state: 346.
+##
+## list(top_vardecl_or_statement) -> top_vardecl_or_statement . list(top_vardecl_or_statement) [ RBRACE ]
+##
+## The known suffix of the stack is as follows:
+## top_vardecl_or_statement 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
+##
+## Ends in an error in state: 31.
+##
+## common_expression -> TARGET LPAREN . RPAREN [ TIMES TILDE SEMICOLON RPAREN RBRACK RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA COLON BAR AND ]
+##
+## The known suffix of the stack is as follows:
+## TARGET LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL TILDE
+##
+## Ends in an error in state: 111.
+##
+## atomic_statement -> TARGET PLUSASSIGN expression . SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES SEMICOLON RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## TARGET PLUSASSIGN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
+##
+## Ends in an error in state: 110.
+##
+## atomic_statement -> TARGET PLUSASSIGN . expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## TARGET PLUSASSIGN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
+##
+## Ends in an error in state: 109.
+##
+## atomic_statement -> TARGET . PLUSASSIGN expression SEMICOLON [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## common_expression -> TARGET . LPAREN RPAREN [ TIMES TILDE RBRACE RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE COMMA AND ]
+##
+## The known suffix of the stack is as follows:
+## TARGET 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK IDENTIFIER RBRACK HAT
+##
+## Ends in an error in state: 347.
+##
+## top_var_decl -> top_var_type . IDENTIFIER option(dims) option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE VOID
+##
+## Ends in an error in state: 345.
+##
+## transformed_data_block -> TRANSFORMEDDATABLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## TRANSFORMEDDATABLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL RPAREN VOID
+##
+## Ends in an error in state: 108.
+##
+## nested_statement -> WHILE LPAREN expression RPAREN . statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## WHILE LPAREN expression RPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL TILDE
+##
+## Ends in an error in state: 107.
+##
+## nested_statement -> WHILE LPAREN expression . RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+## non_lhs -> expression . QMARK expression COLON expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . infixOp expression [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+## non_lhs -> expression . postfixOp [ TIMES RPAREN RABRACK QR QMARK PLUS OR NEQUALS MODULO MINUS LEQ LDIVIDE LBRACK LABRACK HAT GEQ EQUALS ELTTIMES ELTDIVIDE DIVIDE AND ]
+##
+## The known suffix of the stack is as follows:
+## WHILE LPAREN expression 
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 48, spurious reduction of production expression -> non_lhs 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
+##
+## Ends in an error in state: 29.
+##
+## nested_statement -> WHILE LPAREN . expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## WHILE LPAREN 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
+##
+## Ends in an error in state: 28.
+##
+## nested_statement -> WHILE . LPAREN expression RPAREN statement [ WHILE VOID VECTOR UNITVECTOR TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR ELSE COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## WHILE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDDATABLOCK WHILE
+##
+## Ends in an error in state: 344.
+##
+## transformed_data_block -> TRANSFORMEDDATABLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ TRANSFORMEDPARAMETERSBLOCK PARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## TRANSFORMEDDATABLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
+##
+## Ends in an error in state: 370.
+##
+## program -> option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) . option(model_block) option(generated_quantities_block) EOF [ # ]
+##
+## The known suffix of the stack is as follows:
+## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block) 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
+##
+## Ends in an error in state: 366.
+##
+## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK LBRACE . list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## TRANSFORMEDPARAMETERSBLOCK LBRACE 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: TRANSFORMEDPARAMETERSBLOCK WHILE
+##
+## Ends in an error in state: 365.
+##
+## transformed_parameters_block -> TRANSFORMEDPARAMETERSBLOCK . LBRACE list(top_vardecl_or_statement) RBRACE [ MODELBLOCK GENERATEDQUANTITIESBLOCK EOF ]
+##
+## The known suffix of the stack is as follows:
+## TRANSFORMEDPARAMETERSBLOCK 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: WHILE
+##
+## Ends in an error in state: 0.
+##
+## file' -> . file [ # ]
+##
+## The known suffix of the stack is as follows:
+## 
+##
+
+<YOUR SYNTAX ERROR MESSAGE HERE>
+

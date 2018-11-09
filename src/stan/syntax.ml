@@ -3,6 +3,9 @@ open Core_kernel
 
 (* for auto generating s-exp *)
 
+(* TODO: change tuples into records. *)
+(* TODO: add line numbers into metadata for expressions and statements *)
+
 (* Programs. *)
 type program =
   { functionblock: functionblock
@@ -206,3 +209,7 @@ and assignmentoperator =
 [@@deriving sexp, compare]
 
 type signaturestype = returntype * returntype list [@@deriving sexp, compare]
+
+let string_of_expressiontype = function
+  | None -> "unknown"
+  | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)

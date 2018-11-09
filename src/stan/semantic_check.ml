@@ -130,9 +130,16 @@ let check_of_int_or_real_type e =
 
 (* TODO: insert positions into semantic errors! *)
 
-let check_fresh_variable id =
+let check_fresh_variable id is_nullary_function =
+  (* For some strange reason, Stan allows user declared identifiers that are
+   not of nullary function types to clash with nullary library functions.
+   No other name clashes are tolerated. Here's the logic to
+   achieve that. *)
   let _ =
-    if is_primitive_name id then
+    if
+      is_primitive_name id
+      && (is_nullary_function || try_get_primitive_return_type id [] = None)
+    then
       let error_msg =
         String.concat " " ["Identifier "; id; " clashes with primitive."]
       in
@@ -239,7 +246,7 @@ and semantic_check_fundef = function
       let uid = semantic_check_identifier id in
       let uargs = List.map semantic_check_argdecl args in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
-      let _ = check_fresh_variable uid in
+      let _ = check_fresh_variable uid (List.length uarg_types = 0) in
       let _ =
         match b with
         | Skip, _ -> Symbol.add_is_missing_fun_def vm uid
@@ -264,7 +271,7 @@ and semantic_check_fundef = function
           semantic_error
             "All function arguments should be distinct identifiers."
       in
-      let _ = List.map check_fresh_variable uarg_names in
+      let _ = List.map (fun x -> check_fresh_variable x false) uarg_names in
       let _ =
         List.map2 (Symbol.enter vm) uarg_names
           (List.map (function w, y -> (Functions, y)) uarg_types)
@@ -454,7 +461,7 @@ and semantic_check_topvardecl = function
       let utrans = semantic_check_transformation trans in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable uid in
+      let _ = check_fresh_variable uid false in
       let _ = Symbol.enter vm uid (context_flags.current_block, ut) in
       let _ = Symbol.set_global vm uid in
       let _ =
@@ -484,7 +491,7 @@ and semantic_check_vardecl = function
       let ust = semantic_check_sizedtype st in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable uid in
+      let _ = check_fresh_variable uid false in
       let _ = Symbol.enter vm id (Functions, ut) in
       (ust, uid)
 
@@ -622,7 +629,7 @@ and semantic_check_expression x =
              (fun y -> Core_kernel.Option.map y fst)
              (List.map snd [ue1; ue2]))
       in
-      let opname = Core_kernel.string_of_sexp (sexp_of_infixop uop) in
+      let opname = Core_kernel.Sexp.to_string (sexp_of_infixop uop) in
       match try_get_operator_return_type opname [snd ue1; snd ue2] with
       | Some (ReturnType ut) ->
           (InfixOp (ue1, uop, ue2), Some (returnblock, ut))
@@ -636,7 +643,7 @@ and semantic_check_expression x =
         lub_op_originblock
           (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
       in
-      let opname = Core_kernel.string_of_sexp (sexp_of_prefixop uop) in
+      let opname = Core_kernel.Sexp.to_string (sexp_of_prefixop uop) in
       match try_get_operator_return_type opname [snd ue] with
       | Some (ReturnType ut) -> (PrefixOp (uop, ue), Some (returnblock, ut))
       | _ ->
@@ -649,7 +656,7 @@ and semantic_check_expression x =
           (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
       in
       let uop = semantic_check_postfixop op in
-      let opname = Core_kernel.string_of_sexp (sexp_of_postfixop uop) in
+      let opname = Core_kernel.Sexp.to_string (sexp_of_postfixop uop) in
       match try_get_operator_return_type opname [snd ue] with
       | Some (ReturnType ut) -> (PostfixOp (ue, uop), Some (returnblock, ut))
       | _ ->
@@ -861,73 +868,70 @@ and semantic_check_expression x =
   | Paren e ->
       let ue = semantic_check_expression e in
       (Paren ue, snd ue)
-  | Indexed (e, indices) ->
+  | Indexed (e, indices) -> (
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
-      (* We correct for the unusual behaviour that Stan has for
-      matrices under range indexing in the first
-      index and single indexing in the second *)
-      let correct_for_matrix_with_two_indices_second_single =
-        match (snd ue, uindices) with
-        | Some (_, Matrix), [_; Single _] -> (
-            function Some (b, RowVector) -> Some (b, Vector) | x -> x )
-        | _ -> fun x -> x
+      let inferred_originblock_of_indexed ob indices =
+        lub_originblock
+          (List.map
+             (function
+               | All -> ob
+               | Single e1 | Upfrom e1 | Downfrom e1 | Multiple e1 ->
+                   lub_op_originblock
+                     [Some ob; Core_kernel.Option.map (snd e1) fst]
+               | Between (e1, e2) ->
+                   lub_op_originblock
+                     [ Some ob
+                     ; Core_kernel.Option.map (snd e1) fst
+                     ; Core_kernel.Option.map (snd e2) fst ])
+             indices)
       in
-      let infer_type_of_indexed etype index =
-        let originaltype, reducedtype =
-          match etype with
-          | Some (_, Array ut) -> (Array ut, ut)
-          | Some (_, Vector) -> (Vector, Real)
-          | Some (_, RowVector) -> (RowVector, Real)
-          | Some (_, Matrix) -> (Matrix, RowVector)
-          | _ ->
-              semantic_error
-                "Only expressions of array, matrix, row_vector and vector \
-                 type may be indexed."
-        in
-        match index with
-        | All -> etype
-        | Single e1 ->
-            let e1type = snd e1 in
-            let originblock =
-              lub_op_originblock
-                (List.map
-                   (fun x -> Core_kernel.Option.map x fst)
-                   [etype; e1type])
+      let rec inferred_unsizedtype_of_indexed ut indexl =
+        match (ut, indexl) with
+        (* Here, we need some special logic to deal with row and column vectors
+           properly. *)
+        | Matrix, [All; Single _]
+         |Matrix, [Upfrom _; Single _]
+         |Matrix, [Downfrom _; Single _]
+         |Matrix, [Between _; Single _]
+         |Matrix, [Multiple _; Single _] ->
+            Vector
+        | ut, [] -> ut
+        | ut, index :: indices -> (
+            let reduce_type =
+              match index with
+              | Single _ -> true
+              | All | Upfrom _ | Downfrom _ | Between _ | Multiple _ -> false
             in
-            Some (originblock, reducedtype)
-        | Upfrom e1 | Downfrom e1 ->
-            let e1type = snd e1 in
-            let originblock =
-              lub_op_originblock
-                (List.map
-                   (fun x -> Core_kernel.Option.map x fst)
-                   [etype; e1type])
-            in
-            Some (originblock, originaltype)
-        | Between (e1, e2) ->
-            let e1type = snd e1 in
-            let e2type = snd e2 in
-            let originblock =
-              lub_op_originblock
-                (List.map
-                   (fun x -> Core_kernel.Option.map x fst)
-                   [etype; e1type; e2type])
-            in
-            Some (originblock, originaltype)
-        | Multiple e1 ->
-            let e1type = snd e1 in
-            let originblock =
-              lub_op_originblock
-                (List.map
-                   (fun x -> Core_kernel.Option.map x fst)
-                   [etype; e1type])
-            in
-            Some (originblock, originaltype)
+            match ut with
+            | Array ut' ->
+                if reduce_type then inferred_unsizedtype_of_indexed ut' indices
+                  (* TODO: this can easily be made tail recursive if needs be *)
+                else Array (inferred_unsizedtype_of_indexed ut' indices)
+            | Vector ->
+                if reduce_type then
+                  inferred_unsizedtype_of_indexed Real indices
+                else inferred_unsizedtype_of_indexed Vector indices
+            | RowVector ->
+                if reduce_type then
+                  inferred_unsizedtype_of_indexed Real indices
+                else inferred_unsizedtype_of_indexed RowVector indices
+            | Matrix ->
+                if reduce_type then
+                  inferred_unsizedtype_of_indexed RowVector indices
+                else inferred_unsizedtype_of_indexed Matrix indices
+            | _ ->
+                semantic_error
+                  "Only expressions of array, matrix, row_vector and vector \
+                   type may be indexed." )
       in
       ( Indexed (ue, uindices)
-      , correct_for_matrix_with_two_indices_second_single
-          (List.fold_left infer_type_of_indexed (snd ue) uindices) )
+      , match snd ue with
+        | None -> None
+        | Some (ob, ut) ->
+            Some
+              ( inferred_originblock_of_indexed ob uindices
+              , inferred_unsizedtype_of_indexed ut uindices ) ) )
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
@@ -959,8 +963,13 @@ and semantic_check_statement s =
           (Indexed ((Variable uid, None), ulindex), None)
       in
       let uidoblock =
-        if is_primitive_name uid then Some Functions
-        else Core_kernel.Option.map (Symbol.look vm uid) fst
+        (function
+          | Some ob1, Some ob2 -> Some (lub_originblock [ob1; ob2])
+          | Some ob1, _ -> Some ob1
+          | _, Some ob2 -> Some ob2
+          | _ -> None)
+          ( (if is_primitive_name uid then Some Functions else None)
+          , Core_kernel.Option.map (Symbol.look vm uid) fst )
       in
       let _ =
         if Symbol.get_read_only vm uid then
@@ -992,16 +1001,21 @@ and semantic_check_statement s =
         | Some (rhs_ob, _) -> update_originblock uid rhs_ob
         | _ ->
             semantic_error
-              "Ill-typed arguments supplied to assignment operator."
+              "Right hand side of assignment operator references undeclared \
+               variable."
       in
       let opname =
-        Core_kernel.string_of_sexp (sexp_of_assignmentoperator uassop)
+        Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
       in
       match try_get_operator_return_type opname [snd ue2; snd ue] with
       | Some Void -> (Assignment ((uid, ulindex), uassop, ue), Some Void)
       | _ ->
-          semantic_error "Ill-typed arguments supplied to assignment operator."
-      )
+          let lhs_type = string_of_expressiontype (snd ue2) in
+          let rhs_type = string_of_expressiontype (snd ue) in
+          semantic_error
+            ( "Ill-typed arguments supplied to assignment operator: lhs has\n\
+              \          type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
+            ^ "." ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
@@ -1217,7 +1231,7 @@ and semantic_check_statement s =
           semantic_error "Upper bound of for-loop needs to be of type int."
       in
       let _ = Symbol.begin_scope vm in
-      let _ = check_fresh_variable uid in
+      let _ = check_fresh_variable uid false in
       let oindexblock =
         lub_op_originblock
           (List.map (fun x -> Core_kernel.Option.map x fst) [snd ue1; snd ue2])
@@ -1246,7 +1260,7 @@ and semantic_check_statement s =
               "Foreach loop must be over array, vector, row_vector or matrix"
       in
       let _ = Symbol.begin_scope vm in
-      let _ = check_fresh_variable uid in
+      let _ = check_fresh_variable uid false in
       let oindexblock =
         (function None -> Functions | Some x -> fst x) (snd ue)
       in

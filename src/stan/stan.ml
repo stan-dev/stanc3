@@ -22,7 +22,9 @@ module CalcVar = Zoo.Main (struct
 
   (** The command that actually executes a command. *)
   let exec _ p =
-    let _ = Semantic_check.semantic_check_program p in
+    let _ =
+      Debug.decorated_ast_logger (Semantic_check.semantic_check_program p)
+    in
     ()
 end)
 
