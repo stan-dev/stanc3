@@ -40,7 +40,7 @@ module Symbol : SYMBOL = struct
   type 'a state =
     { table: (string, 'a) Hashtbl.t
     ; stack: string Stack.t
-    ; readonly: (string, bool) Hashtbl.t
+    ; readonly: (string, unit) Hashtbl.t
     ; ismissingfundef: (string, unit) Hashtbl.t
     ; global: (string, bool) Hashtbl.t }
 
@@ -72,10 +72,10 @@ module Symbol : SYMBOL = struct
     let _ = Stack.pop s.stack in
     ()
 
-  let set_read_only s str = Hashtbl.add s.readonly str true
+  let set_read_only s str = Hashtbl.add s.readonly str ()
 
   let get_read_only s str =
-    match Hashtbl.find_opt s.readonly str with Some true -> true | _ -> false
+    match Hashtbl.find_opt s.readonly str with Some () -> true | _ -> false
 
   let add_is_missing_fun_def s str =
     if Hashtbl.mem s.ismissingfundef str then ()

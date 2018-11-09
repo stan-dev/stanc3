@@ -253,8 +253,8 @@ and semantic_check_fundef = function
         | _ -> Symbol.remove_is_missing_fun_def vm uid
       in
       let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
-      let _ = Symbol.set_read_only vm uid in
       let uarg_names = List.map (function w, y, z -> z) uargs in
+      let _ = List.map (Symbol.set_read_only vm) uarg_names in
       let _ = context_flags.in_fun_def <- true in
       let _ =
         if Filename.check_suffix id "_rng" then
@@ -1161,6 +1161,7 @@ and semantic_check_statement s =
              = Some (ReturnType Real)
           || try_get_primitive_return_type (uid ^ "_log") optargumenttypes
              = Some (ReturnType Real)
+             && uid <> "binomial_coefficient"
           || ( match Symbol.look vm (uid ^ "_lpdf") with
              | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
                  check_compatible_arguments_mod_conv uid listedtypes

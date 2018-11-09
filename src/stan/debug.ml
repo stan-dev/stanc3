@@ -14,7 +14,7 @@ let grammar_logging = false
 let ast_printing = false
 
 (* Controls whether a decorated AST gets printed after the semantic check *)
-let decorated_ast_printing = false
+let decorated_ast_printing = true
 
 let grammar_logger s = if grammar_logging then print_endline s
 
