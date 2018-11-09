@@ -295,10 +295,7 @@ and semantic_check_fundef = function
             "All function arguments should be distinct identifiers."
       in
       let _ = List.map (fun x -> check_fresh_variable x false) uarg_names in
-      let _ =
-        List.map2 (Symbol.enter vm) uarg_names
-          (List.map (function w, y -> (Functions, y)) uarg_types)
-      in
+      let _ = List.map2 (Symbol.enter vm) uarg_names uarg_types in
       let ub = semantic_check_statement b in
       let _ =
         if
