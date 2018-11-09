@@ -298,104 +298,105 @@ and semantic_check_fundef = function
 and semantic_check_identifier id =
   let _ =
     if
-      List.exists
-        (fun str -> str = id)
-        [ "true"
-        ; "false"
-        ; "repeat"
-        ; "until"
-        ; "var"
-        ; "fvar"
-        ; "STAN_MAJOR"
-        ; "STAN_MINOR"
-        ; "STAN_PATCH"
-        ; "STAN_MATH_MAJOR"
-        ; "STAN_MATH_MINOR"
-        ; "STAN_MATH_PATCH"
-        ; "alignas"
-        ; "alignof"
-        ; "and"
-        ; "and_eq"
-        ; "asm"
-        ; "auto"
-        ; "bitand"
-        ; "bitor"
-        ; "bool"
-        ; "break"
-        ; "case"
-        ; "catch"
-        ; "char"
-        ; "char16_t"
-        ; "char32_t"
-        ; "class"
-        ; "compl"
-        ; "const"
-        ; "constexpr"
-        ; "const_cast"
-        ; "continue"
-        ; "decltype"
-        ; "default"
-        ; "delete"
-        ; "do"
-        ; "double"
-        ; "dynamic_cast"
-        ; "else"
-        ; "enum"
-        ; "explicit"
-        ; "export"
-        ; "extern"
-        ; "false"
-        ; "float"
-        ; "for"
-        ; "friend"
-        ; "goto"
-        ; "if"
-        ; "inline"
-        ; "int"
-        ; "long"
-        ; "mutable"
-        ; "namespace"
-        ; "new"
-        ; "noexcept"
-        ; "not"
-        ; "not_eq"
-        ; "nullptr"
-        ; "operator"
-        ; "or"
-        ; "or_eq"
-        ; "private"
-        ; "protected"
-        ; "public"
-        ; "register"
-        ; "reinterpret_cast"
-        ; "return"
-        ; "short"
-        ; "signed"
-        ; "sizeof"
-        ; "static"
-        ; "static_assert"
-        ; "static_cast"
-        ; "struct"
-        ; "switch"
-        ; "template"
-        ; "this"
-        ; "thread_local"
-        ; "throw"
-        ; "true"
-        ; "try"
-        ; "typedef"
-        ; "typeid"
-        ; "typename"
-        ; "union"
-        ; "unsigned"
-        ; "using"
-        ; "virtual"
-        ; "void"
-        ; "volatile"
-        ; "wchar_t"
-        ; "while"
-        ; "xor"
-        ; "xor_eq" ]
+      Filename.check_suffix id "__"
+      || List.exists
+           (fun str -> str = id)
+           [ "true"
+           ; "false"
+           ; "repeat"
+           ; "until"
+           ; "var"
+           ; "fvar"
+           ; "STAN_MAJOR"
+           ; "STAN_MINOR"
+           ; "STAN_PATCH"
+           ; "STAN_MATH_MAJOR"
+           ; "STAN_MATH_MINOR"
+           ; "STAN_MATH_PATCH"
+           ; "alignas"
+           ; "alignof"
+           ; "and"
+           ; "and_eq"
+           ; "asm"
+           ; "auto"
+           ; "bitand"
+           ; "bitor"
+           ; "bool"
+           ; "break"
+           ; "case"
+           ; "catch"
+           ; "char"
+           ; "char16_t"
+           ; "char32_t"
+           ; "class"
+           ; "compl"
+           ; "const"
+           ; "constexpr"
+           ; "const_cast"
+           ; "continue"
+           ; "decltype"
+           ; "default"
+           ; "delete"
+           ; "do"
+           ; "double"
+           ; "dynamic_cast"
+           ; "else"
+           ; "enum"
+           ; "explicit"
+           ; "export"
+           ; "extern"
+           ; "false"
+           ; "float"
+           ; "for"
+           ; "friend"
+           ; "goto"
+           ; "if"
+           ; "inline"
+           ; "int"
+           ; "long"
+           ; "mutable"
+           ; "namespace"
+           ; "new"
+           ; "noexcept"
+           ; "not"
+           ; "not_eq"
+           ; "nullptr"
+           ; "operator"
+           ; "or"
+           ; "or_eq"
+           ; "private"
+           ; "protected"
+           ; "public"
+           ; "register"
+           ; "reinterpret_cast"
+           ; "return"
+           ; "short"
+           ; "signed"
+           ; "sizeof"
+           ; "static"
+           ; "static_assert"
+           ; "static_cast"
+           ; "struct"
+           ; "switch"
+           ; "template"
+           ; "this"
+           ; "thread_local"
+           ; "throw"
+           ; "true"
+           ; "try"
+           ; "typedef"
+           ; "typeid"
+           ; "typename"
+           ; "union"
+           ; "unsigned"
+           ; "using"
+           ; "virtual"
+           ; "void"
+           ; "volatile"
+           ; "wchar_t"
+           ; "while"
+           ; "xor"
+           ; "xor_eq" ]
     then semantic_error ("Identifier " ^ id ^ " clashes with reserved keyword.")
   in
   id
@@ -677,6 +678,19 @@ and semantic_check_expression x =
       let ues = List.map semantic_check_expression es in
       let optargumenttypes = List.map snd ues in
       let _ =
+        if uid = "map_rect" then
+          match ues with
+          | (Indexed ((Variable arg1_name, _), []), _) :: _ ->
+              if
+                Filename.check_suffix arg1_name "_lp"
+                or Filename.check_suffix arg1_name "_rng"
+              then
+                semantic_error
+                  ( "Mapped function cannot be an _rng or _lp function, found \
+                     function name: " ^ arg1_name )
+          | _ -> ()
+      in
+      let _ =
         if
           Filename.check_suffix uid "_lp"
           && not
@@ -686,6 +700,16 @@ and semantic_check_expression x =
           semantic_error
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
+      in
+      let _ =
+        if
+          Filename.check_suffix uid "_rng"
+          && context_flags.in_fun_def
+          && not context_flags.in_rng_fun_def
+        then
+          semantic_error
+            "Rng functions can only be called in function definitions in case \
+             function name ends in _rng."
       in
       let returnblock =
         lub_op_originblock
@@ -827,8 +851,9 @@ and semantic_check_expression x =
           List.exists
             (fun x ->
               not
-                ( check_of_same_type_mod_conv "" x (List.hd elementtypes)
-                || check_of_same_type_mod_conv "" (List.hd elementtypes) x ) )
+                ( check_of_same_type_mod_array_conv "" x (List.hd elementtypes)
+                || check_of_same_type_mod_array_conv "" (List.hd elementtypes)
+                     x ) )
             elementtypes
         then
           semantic_error
@@ -873,18 +898,19 @@ and semantic_check_expression x =
       let uindices = List.map semantic_check_index indices in
       let inferred_originblock_of_indexed ob indices =
         lub_originblock
-          (List.map
-             (function
-               | All -> ob
-               | Single e1 | Upfrom e1 | Downfrom e1 | Multiple e1 ->
-                   lub_op_originblock
-                     [Some ob; Core_kernel.Option.map (snd e1) fst]
-               | Between (e1, e2) ->
-                   lub_op_originblock
-                     [ Some ob
-                     ; Core_kernel.Option.map (snd e1) fst
-                     ; Core_kernel.Option.map (snd e2) fst ])
-             indices)
+          ( ob
+          :: List.map
+               (function
+                 | All -> Functions
+                 | Single e1 | Upfrom e1 | Downfrom e1 | Multiple e1 ->
+                     lub_op_originblock
+                       [Some ob; Core_kernel.Option.map (snd e1) fst]
+                 | Between (e1, e2) ->
+                     lub_op_originblock
+                       [ Some ob
+                       ; Core_kernel.Option.map (snd e1) fst
+                       ; Core_kernel.Option.map (snd e2) fst ])
+               indices )
       in
       let rec inferred_unsizedtype_of_indexed ut indexl =
         match (ut, indexl) with

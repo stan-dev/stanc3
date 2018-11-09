@@ -17,7 +17,11 @@ let semantic_error ?loc msg =
   Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
 (* We allow implicit conversion from int to real, except for assignment operators *)
-let rec check_of_same_type_mod_conv name t1 t2 =
+let check_of_same_type_mod_conv name t1 t2 =
+  if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
+  else t1 = t2 || (t1 = Real && t2 = Int)
+
+let rec check_of_same_type_mod_array_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
     match (t1, t2) with
@@ -2552,7 +2556,8 @@ let try_get_operator_return_type op_name optargtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
     match optargtypes with
     | [Some (_, ut1); Some (_, ut2)] ->
-        if check_of_same_type_mod_conv "" ut1 ut2 then Some Void else None
+        if check_of_same_type_mod_array_conv "" ut1 ut2 then Some Void
+        else None
     | _ -> None
   else
     let rec try_recursive_find = function
