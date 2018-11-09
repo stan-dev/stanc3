@@ -12,33 +12,7 @@ let rec translate_fn_names = function
   | x -> x
 
 exception ShouldNeverHappen
-
-let rec emit_cpp = function
-  | FnApp(f, args) ->
-    let args = List.map ~f:emit_cpp args in
-    begin match f with
-      (* XXX Choose one loop type!*)
-      | "if" | "for" | "while" ->
-        begin match args with
-          | fst :: snd :: thrd ->
-            (sprintf "%s (%s) {\n  %s;\n}%s"
-               f fst snd (List.fold ~init:""
-                            ~f:(fun _ e -> sprintf " else {\n  %s;\n}\n" e)
-                            thrd))
-      (* XXX Is this non-typesafety too ugly? Alternative here is probably to
-         just have the MIR have a separate variant for loop, if, and ifelse.
-         ... that seems better...
-      *)
-          | _ -> raise ShouldNeverHappen
-        end
-      | f -> String.concat [f; "("; (String.concat ~sep:", " args); ")"]
-    end
-  | Var(v) -> v
-  | Lit(Str, s) -> String.concat ["\""; s; "\""]
-  | Lit(_, v) -> v
-  | ExprList(l) -> String.concat ~sep:"; " (List.map ~f:emit_cpp l)
-  | AssignExpr(rhs, lhs) -> String.concat [rhs; " = "; emit_cpp lhs]
-
+(*
 let prog_reader_call path =
   (* open the file and see how long it is and shit *)
   let
@@ -99,3 +73,4 @@ let%expect_test "emitifelse" =
     } else {
       44.3;
     } |}]
+*)

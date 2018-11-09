@@ -1,5 +1,6 @@
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
+(*
 open Mir
 open Core_kernel
 
@@ -76,6 +77,7 @@ let%expect_test _ =
                 FnApp("log", [FnApp("minus", [Lit(Int, "1"); (Var "hi")])])])))
      : expr)];
   [%expect{|
-    (ExprList
-     ((AssignExpr sym1 (FnApp log1m ((Var hi))))
-      (FnApp plus ((Var sym1) (Var sym1))))) |}]
+      (ExprList
+       ((AssignExpr sym1 (FnApp log1m ((Var hi))))
+        (FnApp plus ((Var sym1) (Var sym1))))) |}]
+*)
