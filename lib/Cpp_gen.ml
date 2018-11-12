@@ -1,23 +1,14 @@
 open Mir
 open Format
 
+let comma ppf () = fprintf ppf ", "
+let semi_new ppf () = fprintf ppf ";@ "
+let new_block ppf () = fprintf ppf "@[<v>@ @]"
 let emit_str ppf s = fprintf ppf "%s" s
 
 let emit_option ?default:(d="") emitter ppf opt = match opt with
   | Some(x) -> fprintf ppf "%a" emitter x
   | None -> emit_str ppf d
-
-let rec emit_list emitter sep ppf coll = match coll with
-  | [] -> ()
-  | hd::[] -> fprintf ppf "%a" emitter hd
-  | hd::tl -> fprintf ppf "%a%s%a" emitter hd sep (emit_list emitter sep) tl
-
-let%expect_test "emitlist" =
-  fprintf str_formatter "%a" (emit_list emit_str "; ") ["hi"; "there"];
-  flush_str_formatter () |> print_endline;
-  [%expect {| hi; there |}]
-
-(* XXX Make the above test style much cleaner! *)
 
 let emit_cond_op ppf c = emit_str ppf begin match c with
     | Equals -> "=="
@@ -62,15 +53,15 @@ and emit_expr ppf s = match s with
   | Lit(Str, s) -> fprintf ppf "\"%s\"" s
   | Lit(_, s) -> emit_str ppf s
   | FnApp(fname, args) ->
-    fprintf ppf "%s(%a)" fname (emit_list emit_expr ", ") args
+    fprintf ppf "%s(%a)" fname (pp_print_list ~pp_sep:comma emit_expr) args
   | Cond(e1, op, e2) ->
     emit_expr ppf e1;
     emit_cond_op ppf op;
     emit_expr ppf e2
   | ArrayExpr(es) ->
-    fprintf ppf "{%a}" (emit_list emit_expr ", ") es
+    fprintf ppf "{%a}" (pp_print_list ~pp_sep:comma emit_expr) es
   | Indexed(e, idcs) -> (* totally guessing here*)
-    fprintf ppf "%a%a" emit_expr e (emit_list emit_index ", ") idcs
+    fprintf ppf "%a%a" emit_expr e (pp_print_list ~pp_sep:comma emit_index) idcs
 
 let%expect_test "expr" =
   FnApp("sassy", [ArrayExpr([Lit(Int, "4"); Lit(Int, "2")]);
@@ -79,13 +70,14 @@ let%expect_test "expr" =
   flush_str_formatter () |> print_endline;
   [%expect {| sassy({4, 2}, 27.0) |}]
 
+(* XXX Make the above test style cleaner! *)
 
 let rec emit_statement ppf s = match s with
   | Assignment({assignee; indices; op; rhs}) ->
-    fprintf ppf "%s%a%a%a" assignee (emit_list emit_index ", ") indices
+    fprintf ppf "%s%a%a%a" assignee (pp_print_list ~pp_sep:comma emit_index) indices
       emit_assign_op op emit_expr rhs
   | NRFunApp(fname, args) ->
-    fprintf ppf "%s(%a)" fname (emit_list emit_expr ", ") args
+    fprintf ppf "%s(%a)" fname (pp_print_list ~pp_sep:comma emit_expr) args
   | Break -> emit_str ppf "break"
   | Continue -> emit_str ppf "continue"
   | Return(e) -> fprintf ppf "%s%a" "return " emit_expr e
@@ -99,8 +91,7 @@ let rec emit_statement ppf s = match s with
   | For({init; cond; step; body}) ->
     fprintf ppf "for (%a; %a; %a) {\n  %a\n}\n" emit_statement init
       emit_expr cond emit_statement step emit_statement body
-  | Block(s) ->
-    emit_list emit_statement ";\n" ppf s
+  | Block(s) -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
   | Decl((st, ident), rhs) ->
     let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
     fprintf ppf "%a %s%a" emit_stantype st ident (emit_option emit_assignment) rhs
@@ -129,19 +120,26 @@ let emit_fndef ppf {returntype; name; arguments; body} =
       fprintf ppf "@[<v>%a %s(%a) {@ @[<v 2>  %a;@]@ }@]"
         (emit_option ~default:"void" emit_stantype) returntype
         name
-        (emit_list emit_vardecl ", ") arguments
+        (pp_print_list ~pp_sep:comma emit_vardecl) arguments
         emit_statement body
 
 let emit_class ppf name super fields methods =
-  fprintf ppf "@[<v 1>class %s : %s {@ private:@ @[<v 1> %a;@]@ public:@ @[<v 1> %a@]}@."
+  fprintf ppf "@[<v 1>class %s : %s {@ private:@ @[<v 1> %a;@]@ @ public:@ @[<v 1> %a@]}@."
     name super
-    (emit_list emit_vardecl ";\n ") fields
-    (emit_list emit_fndef "@[<v>@ ]") methods
+    (pp_print_list ~pp_sep:semi_new emit_vardecl) fields
+    (pp_print_list ~pp_sep:new_block emit_fndef) methods
 
 let%expect_test "class" =
   emit_class str_formatter "bernoulli_model" "log_prob"
     [(SMatrix None, "x"); (SVector None, "y")]
     [{returntype = Some SReal; name = "log_prob";
+      arguments = [(SVector None), "params"];
+      body = Block [
+          Assignment ({assignee = "target"; op = Plus; indices = [];
+                       rhs = FnApp("normal",
+                                   [FnApp("multiply", [Var "x"; Var "params"]);
+                                    Lit(Real, "1.0")])})]};
+     {returntype = Some SReal; name = "grad_log_prob";
       arguments = [(SVector None), "params"];
       body = Block [
           Assignment ({assignee = "target"; op = Plus; indices = [];
@@ -153,8 +151,12 @@ let%expect_test "class" =
     class bernoulli_model : log_prob {
      private:
       Eigen::Matrix<var, -1, -1> x;
-     Eigen::Matrix<var, -1, 1> y;
+      Eigen::Matrix<var, -1, 1> y;
+
      public:
       double log_prob(Eigen::Matrix<var, -1, 1> params) {
         target += normal(multiply(x, params), 1.0);
-      }} |}];
+      }
+       double grad_log_prob(Eigen::Matrix<var, -1, 1> params) {
+         target += normal(multiply(x, params), 1.0);
+       }} |}];
