@@ -3,9 +3,9 @@ open Format
 
 let emit_str ppf s = fprintf ppf "%s" s
 
-let emit_option emitter ppf = function
+let emit_option ?default:(d="") emitter ppf opt = match opt with
   | Some(x) -> fprintf ppf "%a" emitter x
-  | None -> ()
+  | None -> emit_str ppf d
 
 let rec emit_list emitter sep ppf coll = match coll with
   | [] -> ()
@@ -51,9 +51,9 @@ let rec emit_stantype ppf = function
       | Some(e) -> emit_index ppf e
       | None -> emit_str ppf "[]"
     end
-  | SMatrix(_) -> ()
-  | SRowVector(_) -> ()
-  | SVector(_) -> ()
+  | SMatrix(_) -> emit_str ppf "Eigen::Matrix<var, -1, -1>" (* XXX *)
+  | SRowVector(_) -> emit_str ppf "Eigen::Matrix<var, 1, -1>" (* XXX *)
+  | SVector(_) -> emit_str ppf "Eigen::Matrix<var, -1, 1>" (* XXX *)
 
 and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
 
@@ -126,16 +126,17 @@ let%expect_test "statement" =
 let emit_vardecl ppf (st, name) = fprintf ppf "%a %s" emit_stantype st name
 
 let emit_fndef ppf {returntype; name; arguments; body} =
-  match returntype with
-    | None -> emit_str ppf "void"
-    | Some(st) -> emit_stantype ppf st;
-      fprintf ppf " %s(%a) {\n  %a\n}" name (emit_list emit_vardecl ", ") arguments
+      fprintf ppf "@[<v>%a %s(%a) {@ @[<v 2>  %a;@]@ }@]"
+        (emit_option ~default:"void" emit_stantype) returntype
+        name
+        (emit_list emit_vardecl ", ") arguments
         emit_statement body
 
 let emit_class ppf name super fields methods =
-  fprintf ppf "class %s : %s {\n private:\n %a\n public:\n %a}" name super
-    (emit_list emit_vardecl ";\n") fields
-    (emit_list emit_fndef "\n") methods
+  fprintf ppf "@[<v 1>class %s : %s {@ private:@ @[<v 1> %a;@]@ public:@ @[<v 1> %a@]}@."
+    name super
+    (emit_list emit_vardecl ";\n ") fields
+    (emit_list emit_fndef "@[<v>@ ]") methods
 
 let%expect_test "class" =
   emit_class str_formatter "bernoulli_model" "log_prob"
@@ -151,9 +152,9 @@ let%expect_test "class" =
   [%expect {|
     class bernoulli_model : log_prob {
      private:
-      x;
-     y
+      Eigen::Matrix<var, -1, -1> x;
+     Eigen::Matrix<var, -1, 1> y;
      public:
-     double log_prob( params) {
-      target += normal(multiply(x, params), 1.0)
-    }} |}];
+      double log_prob(Eigen::Matrix<var, -1, 1> params) {
+        target += normal(multiply(x, params), 1.0);
+      }} |}];
