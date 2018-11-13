@@ -109,13 +109,13 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
-  | [] -> Functions
+  | [] -> Primitives
   | x :: xs ->
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
 
 let lub_op_originblock l =
-  lub_originblock (List.map (function None -> Functions | Some b -> b) l)
+  lub_originblock (List.map (function None -> Primitives | Some b -> b) l)
 
 let check_of_int_type e =
   match (snd e).expr_meta_origintype with Some (_, Int) -> true | _ -> false
@@ -510,7 +510,11 @@ and semantic_check_expression x =
         if ort = None && not (is_primitive_name uid) then
           semantic_error "Identifier not in scope."
       in
-      (Variable uid, {expr_meta_origintype= ort})
+      ( Variable uid
+      , { expr_meta_origintype=
+            (function
+              | None -> Some (Primitives, PrimitiveFunction) | Some x -> Some x)
+              ort } )
   | IntNumeral s -> (IntNumeral s, {expr_meta_origintype= Some (Data, Int)})
   | RealNumeral s -> (RealNumeral s, {expr_meta_origintype= Some (Data, Real)})
   | FunApp (id, es) -> (
@@ -771,7 +775,7 @@ and semantic_check_expression x =
           ( ob
           :: List.map
                (function
-                 | All -> Functions
+                 | All -> Primitives
                  | Single e1 | Upfrom e1 | Downfrom e1 | Multiple e1 ->
                      lub_op_originblock
                        [ Some ob
@@ -828,7 +832,9 @@ and semantic_check_expression x =
       ( Indexed (ue, uindices)
       , { expr_meta_origintype=
             ( match (snd ue).expr_meta_origintype with
-            | None -> None
+            | None ->
+                semantic_error
+                  "This should never happen. Please file a bug. Error code 21."
             | Some (ob, ut) ->
                 Some
                   ( inferred_originblock_of_indexed ob uindices
@@ -848,8 +854,11 @@ and semantic_check_printable = function
   | PExpr e -> (
       let ue = semantic_check_expression e in
       match (snd ue).expr_meta_origintype with
-      | Some (_, Fun _) -> semantic_error "Functions cannot be printed."
-      | None -> semantic_error "Primitives cannot be printed."
+      | Some (_, Fun _) | Some (_, PrimitiveFunction) ->
+          semantic_error "Functions cannot be printed."
+      | None ->
+          semantic_error
+            "This should never happen. Please file a bug. Error code 18."
       | _ -> PExpr ue )
 
 and semantic_check_statement s =
@@ -884,7 +893,7 @@ and semantic_check_statement s =
           | Some ob1, _ -> Some ob1
           | _, Some ob2 -> Some ob2
           | _ -> None)
-          ( (if is_primitive_name uid then Some Functions else None)
+          ( (if is_primitive_name uid then Some Primitives else None)
           , Core_kernel.Option.map (Symbol.look vm uid) fst )
       in
       let _ =
@@ -998,10 +1007,13 @@ and semantic_check_statement s =
       let ue = semantic_check_expression e in
       let _ =
         match (snd ue).expr_meta_origintype with
-        | Some (_, Fun _) | None ->
+        | Some (_, Fun _) | Some (_, PrimitiveFunction) ->
             semantic_error
               "A (container of) reals or ints needs to be supplied to \
                increment target."
+        | None ->
+            semantic_error
+              "This should never happen. Please file a bug. Error code 19."
         | _ -> ()
       in
       let _ =
@@ -1018,10 +1030,13 @@ and semantic_check_statement s =
       let ue = semantic_check_expression e in
       let _ =
         match (snd ue).expr_meta_origintype with
-        | Some (_, Fun _) | None ->
+        | Some (_, Fun _) | Some (_, PrimitiveFunction) ->
             semantic_error
               "A (container of) reals or ints needs to be supplied to \
                increment target."
+        | None ->
+            semantic_error
+              "This should never happen. Please file a bug. Error code 20."
         | _ -> ()
       in
       let _ =
@@ -1258,7 +1273,11 @@ and semantic_check_statement s =
       let _ = Symbol.begin_scope vm in
       let _ = check_fresh_variable uid false in
       let oindexblock =
-        (function None -> Functions | Some x -> fst x)
+        (function
+          | None ->
+              semantic_err
+                "This should never happen. Please file a bug. Error code 23."
+          | Some x -> fst x)
           (snd ue).expr_meta_origintype
       in
       let _ = Symbol.enter vm uid (oindexblock, loop_identifier_unsizedtype) in

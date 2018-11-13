@@ -7,7 +7,15 @@ open Core_kernel
 
 (* == Unsized types == *)
 (* TODO: add primitive origin here, so everything has an origin *)
-type originblock = Functions | Data | TData | Param | TParam | Model | GQuant
+type originblock =
+  | Primitives
+  | Functions
+  | Data
+  | TData
+  | Param
+  | TParam
+  | Model
+  | GQuant
 
 (* TODO: Add primitive function type here, for type checking higher order functions later.
    That way, every expression can have an unsizedtype *)
@@ -19,7 +27,9 @@ and unsizedtype =
   | Matrix
   | Array of unsizedtype
   | Fun of (originblock * unsizedtype) list * returntype
+  | PrimitiveFunction
 
+(* TODO: set up semantic check such that types are always defined. *)
 and returntype = Void | ReturnType of unsizedtype
 
 (* == Expressions == *)
@@ -172,11 +182,7 @@ and bare_statement =
 
 and statement_metadata = {stmt_meta_type: returntype option}
 
-(* TODO: add vardecl/topvardecl/fundef/compound vardecl/compound topvardecl here?
-   then we only need to add metadata to statements and expressions *)
 and statement = bare_statement * statement_metadata
-
-(* TODO: Decorate fundef with optional marker like RNG, LP, PLAIN *)
 
 (* == Programs == *)
 and program =
@@ -199,3 +205,5 @@ let string_of_expressiontype = function
   | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
 
 (* TODO: implement more pretty printing functions for generating error messages *)
+
+(* TODO: get rid of the Some's and None's *)
