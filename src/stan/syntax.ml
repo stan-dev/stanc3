@@ -213,9 +213,4 @@ let string_of_expressiontype = function
   | None -> "unknown"
   | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
 
-let string_of_expr_meta_data = function
-  | {expr_meta_origintype= None; _} -> "unknown"
-  | {expr_meta_origintype= Some (_, ut); _} ->
-      Sexp.to_string (sexp_of_unsizedtype ut)
-
 (* TODO: implement more pretty printing functions for generating error messages *)

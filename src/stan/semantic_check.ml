@@ -264,6 +264,24 @@ and semantic_check_fundef = function
             "Real return type required for probability functions ending in \
              _log, _lpdf, _lpmf, _lcdf, or _lccdf."
       in
+      let _ =
+        if
+          Filename.check_suffix uid "_lpdf"
+          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
+        then
+          semantic_error
+            "Probability density functions require real variates (first \
+             argument)."
+      in
+      let _ =
+        if
+          Filename.check_suffix uid "_lpmf"
+          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
+        then
+          semantic_error
+            "Probability mass functions require integer variates (first \
+             argument)."
+      in
       let _ = context_flags.in_fun_def <- true in
       let _ =
         if Filename.check_suffix uid "_rng" then
@@ -767,6 +785,19 @@ and semantic_check_expression x =
       in
       let _ =
         if
+          Filename.check_suffix uid "_lpdf"
+          || Filename.check_suffix uid "_lpdf"
+          || Filename.check_suffix uid "_lpmf"
+          || Filename.check_suffix uid "_lcdf"
+          || Filename.check_suffix uid "_lccdf"
+        then
+          semantic_error
+            "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
+             _lccdf, require a vertical bar (|) between the first two \
+             arguments."
+      in
+      let _ =
+        if
           Filename.check_suffix uid "_lp"
           && not
                ( context_flags.in_lp_fun_def
@@ -779,12 +810,14 @@ and semantic_check_expression x =
       let _ =
         if
           Filename.check_suffix uid "_rng"
-          && context_flags.in_fun_def
-          && not context_flags.in_rng_fun_def
+          && ( (context_flags.in_fun_def && not context_flags.in_rng_fun_def)
+             || context_flags.current_block = TParam
+             || context_flags.current_block = Model )
         then
           semantic_error
-            "Rng functions can only be called in function definitions in case \
-             function name ends in _rng."
+            "Random number generators only allowed in transformed data block, \
+             generated quantities block or user-defined functions with names \
+             ending in _rng."
       in
       let returnblock =
         lub_op_originblock
@@ -1315,6 +1348,52 @@ and semantic_check_statement s =
           | _ -> false
         then ()
         else semantic_error "Ill-typed arguments to '~' statement."
+      in
+      let _ =
+        if
+          ut = NoTruncate
+          || ( try_get_primitive_return_type (uid ^ "_lcdf") optargumenttypes
+               = Some (ReturnType Real)
+             ||
+             match Symbol.look vm (uid ^ "_lcdf") with
+             | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+                 check_compatible_arguments_mod_conv uid listedtypes
+                   optargumenttypes
+             | _ -> (
+                 false
+                 || try_get_primitive_return_type (uid ^ "_cdf_log")
+                      optargumenttypes
+                    = Some (ReturnType Real)
+                 ||
+                 match Symbol.look vm (uid ^ "_cdf_log") with
+                 | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+                     check_compatible_arguments_mod_conv uid listedtypes
+                       optargumenttypes
+                 | _ -> false ) )
+             && ( try_get_primitive_return_type (uid ^ "_lccdf")
+                    optargumenttypes
+                  = Some (ReturnType Real)
+                ||
+                match Symbol.look vm (uid ^ "_lccdf") with
+                | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+                    check_compatible_arguments_mod_conv uid listedtypes
+                      optargumenttypes
+                | _ -> (
+                    false
+                    || try_get_primitive_return_type (uid ^ "_ccdf_log")
+                         optargumenttypes
+                       = Some (ReturnType Real)
+                    ||
+                    match Symbol.look vm (uid ^ "_ccdf_log") with
+                    | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+                        check_compatible_arguments_mod_conv uid listedtypes
+                          optargumenttypes
+                    | _ -> false ) )
+        then ()
+        else
+          semantic_error
+            "Truncation is only defined if distribution has _lcdf and _lccdf \
+             functions implemented."
       in
       ( Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
       , {stmt_meta_type= Some Void} )
