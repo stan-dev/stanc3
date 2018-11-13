@@ -182,26 +182,37 @@ let rec semantic_check_program p =
     ; generatedquantitiesblock= bgq }
   ->
     let _ = context_flags.current_block <- Functions in
-    let ubf = semantic_check_functionblock bf in
+    let ubf = Core_kernel.Option.map bf (List.map semantic_check_fundef) in
     let _ =
       if Symbol.some_fun_is_missing_def vm then
         semantic_error
           "Some function is declared without specifying a definition."
     in
     let _ = context_flags.current_block <- Data in
-    let ubd = semantic_check_datablock bd in
+    let ubd = Core_kernel.Option.map bd (List.map semantic_check_topvardecl) in
     let _ = context_flags.current_block <- TData in
-    let ubtd = semantic_check_transformeddatablock btd in
+    let ubtd =
+      Core_kernel.Option.map btd
+        (List.map semantic_check_topvardecl_or_statement)
+    in
     let _ = context_flags.current_block <- Param in
-    let ubp = semantic_check_parametersblock bp in
+    let ubp = Core_kernel.Option.map bp (List.map semantic_check_topvardecl) in
     let _ = context_flags.current_block <- TParam in
-    let ubtp = semantic_check_transformedparametersblock btp in
+    let ubtp =
+      Core_kernel.Option.map btp
+        (List.map semantic_check_topvardecl_or_statement)
+    in
     let _ = context_flags.current_block <- Model in
     let _ = Symbol.begin_scope vm in
-    let ubm = semantic_check_modelblock bm in
+    let ubm =
+      Core_kernel.Option.map bm (List.map semantic_check_vardecl_or_statement)
+    in
     let _ = Symbol.end_scope vm in
     let _ = context_flags.current_block <- GQuant in
-    let ubgq = semantic_check_generatedquantitiesblock bgq in
+    let ubgq =
+      Core_kernel.Option.map bgq
+        (List.map semantic_check_topvardecl_or_statement)
+    in
     { functionblock= ubf
     ; datablock= ubd
     ; transformeddatablock= ubtd
@@ -210,34 +221,6 @@ let rec semantic_check_program p =
     ; modelblock= ubm
     ; generatedquantitiesblock= ubgq }
 
-and semantic_check_functionblock bf =
-  Core_kernel.Option.map bf (List.map semantic_check_fundef)
-
-(* Probably nothing to do here *)
-and semantic_check_datablock bd =
-  Core_kernel.Option.map bd (List.map semantic_check_topvardecl)
-
-(* Probably nothing to do here *)
-and semantic_check_transformeddatablock btd =
-  Core_kernel.Option.map btd (List.map semantic_check_topvardecl_or_statement)
-
-(* Probably nothing to do here *)
-and semantic_check_parametersblock bp =
-  Core_kernel.Option.map bp (List.map semantic_check_topvardecl)
-
-(* Probably nothing to do here *)
-and semantic_check_transformedparametersblock btp =
-  Core_kernel.Option.map btp (List.map semantic_check_topvardecl_or_statement)
-
-(* Probably nothing to do here *)
-and semantic_check_modelblock bm =
-  Core_kernel.Option.map bm (List.map semantic_check_vardecl_or_statement)
-
-(* Probably nothing to do here *)
-and semantic_check_generatedquantitiesblock bgq =
-  Core_kernel.Option.map bgq (List.map semantic_check_topvardecl_or_statement)
-
-(* TODO: deal properly with recursive functions here. *)
 and semantic_check_fundef = function
   | {returntype= rt; name= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in

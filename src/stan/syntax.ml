@@ -8,29 +8,13 @@ open Core_kernel
 
 (* Programs. *)
 type program =
-  { functionblock: functionblock
-  ; datablock: datablock
-  ; transformeddatablock: transformeddatablock
-  ; parametersblock: parametersblock
-  ; transformedparametersblock: transformedparametersblock
-  ; modelblock: modelblock
-  ; generatedquantitiesblock: generatedquantitiesblock }
-
-(* Blocks. *)
-and functionblock = fundef list option
-
-(* TODO: inline these *)
-and datablock = topvardecl list option
-
-and transformeddatablock = topvardecl_or_statement list option
-
-and parametersblock = topvardecl list option
-
-and transformedparametersblock = topvardecl_or_statement list option
-
-and modelblock = vardecl_or_statement list option
-
-and generatedquantitiesblock = topvardecl_or_statement list option
+  { functionblock: fundef list option
+  ; datablock: topvardecl list option
+  ; transformeddatablock: topvardecl_or_statement list option
+  ; parametersblock: topvardecl list option
+  ; transformedparametersblock: topvardecl_or_statement list option
+  ; modelblock: vardecl_or_statement list option
+  ; generatedquantitiesblock: topvardecl_or_statement list option }
 
 (* Declarations and definitions *)
 (* TODO: Decorate fundef with optional marker like RNG, LP, PLAIN *)
