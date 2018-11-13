@@ -74,25 +74,27 @@ and 'em expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of identifier * ('em list)
-  | CondFunApp of identifier * ('em list)
+  | FunApp of identifier * 'em list
+  | CondFunApp of identifier * 'em list
   | GetLP
   (* deprecated *)
   | GetTarget
   | ArrayExpr of 'em list
   | RowVectorExpr of 'em list
   | Paren of 'em
-  | Indexed of 'em * ('em index) list
+  | Indexed of 'em * 'em index list
 
 and expression_untyped_metadata =
   {expr_meta_none: (originblock * unsizedtype) option}
-  
+
 and expression_typed_metadata =
   {expr_meta_origintype: (originblock * unsizedtype) option}
 
-and untyped_expression = UntypedExpr of ((untyped_expression expression) * expression_untyped_metadata)
+and untyped_expression =
+  | UntypedExpr of (untyped_expression expression * expression_untyped_metadata)
 
-and typed_expression = TypedExpr of ((typed_expression expression) * expression_typed_metadata)
+and typed_expression =
+  | TypedExpr of (typed_expression expression * expression_typed_metadata)
 
 (* == Statements == *)
 and assignmentoperator =
@@ -120,7 +122,7 @@ and 'em sizedtype =
   | SVector of 'em
   | SRowVector of 'em
   | SMatrix of 'em * 'em
-  | SArray of ('em sizedtype ) * 'em
+  | SArray of 'em sizedtype * 'em
 
 and 'em transformation =
   | Identity
@@ -140,7 +142,7 @@ and 'em transformation =
 and ('em, 'sm) statement =
   | Assignment of
       { assign_identifier: identifier
-      ; assign_indices: ('em index) list
+      ; assign_indices: 'em index list
       ; assign_op: assignmentoperator
       ; assign_rhs: 'em }
   | NRFunApp of identifier * 'em list
@@ -168,15 +170,12 @@ and ('em, 'sm) statement =
       ; loop_body: 'sm }
   | ForEach of identifier * 'em * 'sm
   | Block of 'sm list
-  | VDecl of ('em sizedtype) * identifier
-  | VDeclAss of
-      { sizedtype: ('em sizedtype)
-      ; identifier: identifier
-      ; value: 'em }
-  | TVDecl of ('em sizedtype) * ('em transformation) * identifier
+  | VDecl of 'em sizedtype * identifier
+  | VDeclAss of {sizedtype: 'em sizedtype; identifier: identifier; value: 'em}
+  | TVDecl of 'em sizedtype * 'em transformation * identifier
   | TVDeclAss of
-      { tsizedtype: ('em sizedtype)
-      ; transformation: ('em transformation)
+      { tsizedtype: 'em sizedtype
+      ; transformation: 'em transformation
       ; tidentifier: identifier
       ; tvalue: 'em }
   | FunDef of
@@ -189,24 +188,28 @@ and statement_untyped_metadata = {stmt_meta_none: returntype option}
 
 and statement_typed_metadata = {stmt_meta_type: returntype option}
 
-and untyped_statement = UntypedStmt of (((untyped_expression, untyped_statement) statement) * statement_untyped_metadata)
+and untyped_statement =
+  | UntypedStmt of
+      ( (untyped_expression, untyped_statement) statement
+      * statement_untyped_metadata )
 
-and typed_statement = TypedStmt of (((typed_expression, typed_statement) statement) * statement_typed_metadata)
+and typed_statement =
+  | TypedStmt of
+      ((typed_expression, typed_statement) statement * statement_typed_metadata)
 
 (* == Programs == *)
 and 'sm program =
   { functionblock: 'sm list option
   ; datablock: 'sm list option
-  ; transformeddatablock: 'sm  list option
+  ; transformeddatablock: 'sm list option
   ; parametersblock: 'sm list option
   ; transformedparametersblock: 'sm list option
   ; modelblock: 'sm list option
   ; generatedquantitiesblock: 'sm list option }
 
-and untyped_program = untyped_statement program  
+and untyped_program = untyped_statement program
 
-and typed_program = typed_statement program
-[@@deriving sexp, compare]
+and typed_program = typed_statement program [@@deriving sexp, compare]
 
 (* == Stuff that probably should be moved to another file == *)
 type signaturestype = returntype * returntype list [@@deriving sexp, compare]
