@@ -43,28 +43,28 @@ let construct_var_decl sbt id d ae =
   let sizes = match d with None -> [] | Some l -> l in
   match ae with
   | Some a ->
-     TypedStmt ( VDeclAss
+     UntypedStmt ( VDeclAss
           {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
-      , {stmt_meta_type= None} )
-  | _ -> TypedStmt (VDecl (reducearray (sbt, sizes), id), {stmt_meta_type= None})
+      , {stmt_meta_none= None} )
+  | _ -> UntypedStmt (VDecl (reducearray (sbt, sizes), id), {stmt_meta_none= None})
 
 let construct_top_var_decl_no_assign tvt id d =
   let sizes = match d with None -> [] | Some l -> l in
-  TypedStmt (TVDecl (reducearray (fst tvt, sizes), snd tvt, id), {stmt_meta_type= None})
+  UntypedStmt (TVDecl (reducearray (fst tvt, sizes), snd tvt, id), {stmt_meta_none= None})
 
 let construct_top_var_decl tvt id d ass =
   let sizes = match d with None -> [] | Some l -> l in
   match ass with
   | Some a ->
-      TypedStmt ( TVDeclAss
+      UntypedStmt ( TVDeclAss
           { tsizedtype= reducearray (fst tvt, sizes)
           ; transformation= snd tvt
           ; tidentifier= id
           ; tvalue= snd a }
-      , {stmt_meta_type= None} )
+      , {stmt_meta_none= None} )
   | _ ->
-      TypedStmt ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
-      , {stmt_meta_type= None} )
+      UntypedStmt ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+      , {stmt_meta_none= None} )
 
 let construct_truncation e1 e2 =
   match (e1, e2) with
@@ -77,4 +77,4 @@ let construct_tilde_statement e id es ot =
   let t = match ot with Some tt -> tt | _ -> NoTruncate in
   Tilde {arg= e; distribution= id; args= es; truncation= t}
 
-let empty_expr_meta = {expr_meta_origintype= None}
+let empty_expr_meta = {expr_meta_none= None}

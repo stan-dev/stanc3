@@ -85,10 +85,12 @@ and 'em expression =
   | Indexed of 'em * ('em index) list
 
 and expression_untyped_metadata =
-  {expr_meta_none: unit}
+  {expr_meta_none: (originblock * unsizedtype) option}
   
 and expression_typed_metadata =
   {expr_meta_origintype: (originblock * unsizedtype) option}
+
+and untyped_expression = UntypedExpr of ((untyped_expression expression) * expression_untyped_metadata)
 
 and typed_expression = TypedExpr of ((typed_expression expression) * expression_typed_metadata)
 
@@ -183,7 +185,11 @@ and ('em, 'sm) statement =
       ; arguments: (originblock * unsizedtype * identifier) list
       ; body: 'sm }
 
+and statement_untyped_metadata = {stmt_meta_none: returntype option}
+
 and statement_typed_metadata = {stmt_meta_type: returntype option}
+
+and untyped_statement = UntypedStmt of (((untyped_expression, untyped_statement) statement) * statement_untyped_metadata)
 
 and typed_statement = TypedStmt of (((typed_expression, typed_statement) statement) * statement_typed_metadata)
 
@@ -196,6 +202,8 @@ and 'sm program =
   ; transformedparametersblock: 'sm list option
   ; modelblock: 'sm list option
   ; generatedquantitiesblock: 'sm list option }
+
+and untyped_program = untyped_statement program  
 
 and typed_program = typed_statement program
 [@@deriving sexp, compare]
