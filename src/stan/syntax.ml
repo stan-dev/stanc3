@@ -56,7 +56,7 @@ and index =
   | Between of expression * expression
   | Multiple of expression
 
-and untypedexpression =
+and bare_expression =
   | Conditional of expression * expression * expression
   | InfixOp of expression * infixop * expression
   | PrefixOp of prefixop * expression
@@ -77,7 +77,7 @@ and untypedexpression =
 and expression_metadata =
   {expr_meta_origintype: (originblock * unsizedtype) option}
 
-and expression = untypedexpression * expression_metadata
+and expression = bare_expression * expression_metadata
 
 (* == Statements == *)
 and assignmentoperator =
@@ -122,7 +122,7 @@ and transformation =
   | Correlation
   | Covariance
 
-and untypedstatement =
+and bare_statement =
   | Assignment of
       { assign_identifier: identifier
       ; assign_indices: index list
@@ -174,7 +174,7 @@ and statement_metadata = {stmt_meta_type: returntype option}
 
 (* TODO: add vardecl/topvardecl/fundef/compound vardecl/compound topvardecl here?
    then we only need to add metadata to statements and expressions *)
-and statement = untypedstatement * statement_metadata
+and statement = bare_statement * statement_metadata
 
 (* TODO: Decorate fundef with optional marker like RNG, LP, PLAIN *)
 
