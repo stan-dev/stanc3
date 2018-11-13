@@ -498,7 +498,7 @@ and semantic_check_topvardecl = function
 
 (* Probably nothing to check here. *)
 and semantic_check_compound_topvardecl_assign = function
-  | {sizedtype= st; transformation= trans; identifier= id; value= e} -> (
+  | {tsizedtype= st; transformation= trans; identifier= id; value= e} -> (
       let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
       match
         semantic_check_statement
@@ -515,7 +515,7 @@ and semantic_check_compound_topvardecl_assign = function
             ; assign_op= Assign
             ; assign_rhs= ue }
         , Some Void ) ->
-          {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+          {tsizedtype= ust; transformation= utrans; identifier= uid; value= ue}
       | _ ->
           semantic_error
             "This should never happen. Please file a bug. Error code 1." )

@@ -56,7 +56,7 @@ let construct_top_var_decl tvt id d ass =
   match ass with
   | Some a ->
       TVDeclAss
-        { sizedtype= reducearray (fst tvt, sizes)
+        { tsizedtype= reducearray (fst tvt, sizes)
         ; transformation= snd tvt
         ; identifier= id
         ; value= snd a }
