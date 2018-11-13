@@ -17,7 +17,7 @@ type program =
   ; generatedquantitiesblock: generatedquantitiesblock }
 
 (* Blocks. *)
-and functionblock = fundef list option
+and functionblock = fundef list option (* TODO: inline these *)
 
 and datablock = topvardecl list option
 
@@ -41,13 +41,15 @@ and fundef =
 
 and identifier = string
 
-(* TODO: could consider adding a primitive origin here for the Math Library; *)
+(* TODO: add primitive origin here, so everything has an origin *)
 and originblock = Functions | Data | TData | Param | TParam | Model | GQuant
 
 and argdecl = originblock * unsizedtype * identifier
 
 and returntype = Void | ReturnType of unsizedtype
 
+(* TODO: Add primitive function type here, for type checking higher order functions later.
+   That way, every expression can have an unsizedtype *)
 and unsizedtype =
   | Int
   | Real
@@ -179,6 +181,8 @@ and untypedstatement =
       ; loop_body: statement }
   | ForEach of identifier * expression * statement
   | Block of vardecl_or_statement list
+(* TODO: add vardecl/topvardecl/fundef/compound vardecl/compound topvardecl here;
+   then we only need to add metadata to statements and expressions *)
 
 and truncation =
   | NoTruncate
@@ -186,7 +190,7 @@ and truncation =
   | TruncateDownFrom of expression
   | TruncateBetween of expression * expression
 
-and lhs = identifier * index list
+and lhs = identifier * index list (* TODO: inline this *)
 
 and index =
   | All
@@ -209,7 +213,9 @@ and assignmentoperator =
 [@@deriving sexp, compare]
 
 type signaturestype = returntype * returntype list [@@deriving sexp, compare]
+(* TODO: maybe move these to primitives file, as that's where they're used *) 
 
 let string_of_expressiontype = function
   | None -> "unknown"
   | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
+(* TODO: implement more pretty printing functions for generating error messages *)
