@@ -117,15 +117,16 @@ let rec lub_originblock = function
 let lub_op_originblock l =
   lub_originblock (List.map (function None -> Functions | Some b -> b) l)
 
-let check_of_int_type e = match snd e with Some (_, Int) -> true | _ -> false
+let check_of_int_type e =
+  match snd e with Some {expr_meta_type= Int; _} -> true | _ -> false
 
 let check_of_int_array_type e =
-  match snd e with Some (_, Array Int) -> true | _ -> false
+  match snd e with Some {expr_meta_type= Array Int; _} -> true | _ -> false
 
 let check_of_int_or_real_type e =
   match snd e with
-  | Some (_, Int) -> true
-  | Some (_, Real) -> true
+  | Some {expr_meta_type= Int; _} -> true
+  | Some {expr_meta_type= Real; _} -> true
   | _ -> false
 
 (* TODO: insert positions into semantic errors! *)
@@ -283,7 +284,7 @@ and semantic_check_fundef = function
       let _ =
         if
           Symbol.is_missing_fun_def vm uid
-          || check_of_compatible_return_type (Some urt) (snd ub)
+          || check_of_compatible_return_type (Some urt) (snd ub).stmt_meta_type
         then ()
         else
           semantic_error
@@ -437,24 +438,32 @@ and semantic_check_topvardecl = function
   | st, trans, id ->
       let ust = semantic_check_sizedtype st in
       let rec check_sizes_below_param_level = function
-        | SVector e -> (
+        | SVector e | SRowVector e -> (
           match snd e with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
-          | _ -> true )
-        | SRowVector e -> (
-          match snd e with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | Some {expr_meta_origin= Param; _}
+           |Some {expr_meta_origin= TParam; _}
+           |Some {expr_meta_origin= GQuant; _} ->
+              false
           | _ -> true )
         | SMatrix (e1, e2) -> (
           match snd e1 with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | Some {expr_meta_origin= Param; _}
+           |Some {expr_meta_origin= TParam; _}
+           |Some {expr_meta_origin= GQuant; _} ->
+              false
           | _ -> (
             match snd e2 with
-            | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+            | Some {expr_meta_origin= Param; _}
+             |Some {expr_meta_origin= TParam; _}
+             |Some {expr_meta_origin= GQuant; _} ->
+                false
             | _ -> true ) )
         | SArray (st2, e) -> (
           match snd e with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | Some {expr_meta_origin= Param; _}
+           |Some {expr_meta_origin= TParam; _}
+           |Some {expr_meta_origin= GQuant; _} ->
+              false
           | _ -> check_sizes_below_param_level st2 )
         | _ -> true
       in
@@ -475,13 +484,20 @@ and semantic_check_topvardecl = function
           &&
           match utrans with
           | Lower ue1 -> (
-            match snd ue1 with Some (_, Real) -> true | _ -> false )
+            match snd ue1 with
+            | Some {expr_meta_type= Real; _} -> true
+            | _ -> false )
           | Upper ue1 -> (
-            match snd ue1 with Some (_, Real) -> true | _ -> false )
+            match snd ue1 with
+            | Some {expr_meta_type= Real; _} -> true
+            | _ -> false )
           | LowerUpper (ue1, ue2) -> (
             match snd ue1 with
-            | Some (_, Real) -> true
-            | _ -> ( match snd ue2 with Some (_, Real) -> true | _ -> false ) )
+            | Some {expr_meta_type= Real; _} -> true
+            | _ -> (
+              match snd ue2 with
+              | Some {expr_meta_type= Real; _} -> true
+              | _ -> false ) )
           | _ -> false
         then
           semantic_error
@@ -498,7 +514,7 @@ and semantic_check_topvardecl = function
 
 (* Probably nothing to check here. *)
 and semantic_check_compound_topvardecl_assign = function
-  | {tsizedtype= st; transformation= trans; identifier= id; value= e} -> (
+  | {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} -> (
       let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
       match
         semantic_check_statement
@@ -507,15 +523,18 @@ and semantic_check_compound_topvardecl_assign = function
               ; assign_indices= []
               ; assign_op= Assign
               ; assign_rhs= e }
-          , None )
+          , {stmt_meta_type= None} )
       with
       | ( Assignment
             { assign_identifier= uid
             ; assign_indices= []
             ; assign_op= Assign
             ; assign_rhs= ue }
-        , Some Void ) ->
-          {tsizedtype= ust; transformation= utrans; identifier= uid; value= ue}
+        , {stmt_meta_type= Some Void} ) ->
+          { tsizedtype= ust
+          ; transformation= utrans
+          ; tidentifier= uid
+          ; tvalue= ue }
       | _ ->
           semantic_error
             "This should never happen. Please file a bug. Error code 1." )
@@ -540,14 +559,14 @@ and semantic_check_compound_vardecl_assign = function
               ; assign_indices= []
               ; assign_op= Assign
               ; assign_rhs= e }
-          , None )
+          , {stmt_meta_type= None} )
       with
       | ( Assignment
             { assign_identifier= uid
             ; assign_indices= []
             ; assign_op= Assign
             ; assign_rhs= ue }
-        , Some Void ) ->
+        , {stmt_meta_type= Some Void} ) ->
           {sizedtype= ust; identifier= uid; value= ue}
       | _ ->
           semantic_error
@@ -650,17 +669,21 @@ and semantic_check_expression x =
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let ue3 = semantic_check_expression e3 in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          [snd ue1; snd ue2; snd ue3]
+      in
       let returnblock =
         lub_op_originblock
-          (List.map
-             (fun y -> Core_kernel.Option.map y fst)
-             (List.map snd [ue1; ue2; ue3]))
+          (List.map (fun y -> Core_kernel.Option.map y fst) optargtypes)
       in
-      match
-        try_get_operator_return_type "Conditional" [snd ue1; snd ue2; snd ue3]
-      with
+      match try_get_operator_return_type "Conditional" optargtypes with
       | Some (ReturnType ut) ->
-          (Conditional (ue1, ue2, ue3), Some (returnblock, ut))
+          ( Conditional (ue1, ue2, ue3)
+          , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
       | _ ->
           semantic_error
             "Ill-typed arguments supplied to Conditional operator." )
@@ -668,66 +691,101 @@ and semantic_check_expression x =
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
       let ue2 = semantic_check_expression e2 in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          [snd ue1; snd ue2]
+      in
       let returnblock =
         lub_op_originblock
-          (List.map
-             (fun y -> Core_kernel.Option.map y fst)
-             (List.map snd [ue1; ue2]))
+          (List.map (fun y -> Core_kernel.Option.map y fst) optargtypes)
       in
       let opname = Core_kernel.Sexp.to_string (sexp_of_infixop uop) in
-      match try_get_operator_return_type opname [snd ue1; snd ue2] with
+      match try_get_operator_return_type opname optargtypes with
       | Some (ReturnType ut) ->
-          (InfixOp (ue1, uop, ue2), Some (returnblock, ut))
+          ( InfixOp (ue1, uop, ue2)
+          , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_prefixop op in
       let ue = semantic_check_expression e in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          [snd ue]
+      in
       let returnblock =
         lub_op_originblock
-          (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
+          (List.map (fun y -> Core_kernel.Option.map y fst) optargtypes)
       in
       let opname = Core_kernel.Sexp.to_string (sexp_of_prefixop uop) in
-      match try_get_operator_return_type opname [snd ue] with
-      | Some (ReturnType ut) -> (PrefixOp (uop, ue), Some (returnblock, ut))
+      match try_get_operator_return_type opname optargtypes with
+      | Some (ReturnType ut) ->
+          ( PrefixOp (uop, ue)
+          , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          [snd ue]
+      in
       let returnblock =
         lub_op_originblock
-          (List.map (fun y -> Core_kernel.Option.map y fst) (List.map snd [ue]))
+          (List.map (fun y -> Core_kernel.Option.map y fst) optargtypes)
       in
       let uop = semantic_check_postfixop op in
       let opname = Core_kernel.Sexp.to_string (sexp_of_postfixop uop) in
-      match try_get_operator_return_type opname [snd ue] with
-      | Some (ReturnType ut) -> (PostfixOp (ue, uop), Some (returnblock, ut))
+      match try_get_operator_return_type opname optargtypes with
+      | Some (ReturnType ut) ->
+          ( PostfixOp (ue, uop)
+          , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
       | _ ->
           semantic_error
             ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | Variable id ->
       let uid = semantic_check_identifier id in
-      let ort = Symbol.look vm id in
+      let ort =
+        Core_kernel.Option.map (Symbol.look vm id) (function x, y ->
+            {expr_meta_origin= x; expr_meta_type= y} )
+      in
       let _ =
         if ort = None && not (is_primitive_name uid) then
           semantic_error "Identifier not in scope."
       in
       (Variable uid, ort)
-  | IntNumeral s -> (IntNumeral s, Some (Data, Int))
-  | RealNumeral s -> (RealNumeral s, Some (Data, Real))
+  | IntNumeral s ->
+      (IntNumeral s, Some {expr_meta_origin= TData; expr_meta_type= Int})
+  | RealNumeral s ->
+      (RealNumeral s, Some {expr_meta_origin= TData; expr_meta_type= Real})
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
-      let optargumenttypes = List.map snd ues in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          (List.map snd ues)
+      in
       let _ =
         if uid = "map_rect" then
           match ues with
           | (Indexed ((Variable arg1_name, _), []), _) :: _ ->
               if
                 Filename.check_suffix arg1_name "_lp"
-                or Filename.check_suffix arg1_name "_rng"
+                || Filename.check_suffix arg1_name "_rng"
               then
                 semantic_error
                   ( "Mapped function cannot be an _rng or _lp function, found \
@@ -757,14 +815,18 @@ and semantic_check_expression x =
       in
       let returnblock =
         lub_op_originblock
-          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+          (List.map
+             (fun x -> Core_kernel.Option.map x (fun z -> z.expr_meta_origin))
+             (List.map snd ues))
       in
-      match try_get_primitive_return_type uid optargumenttypes with
+      match try_get_primitive_return_type uid optargtypes with
       | Some Void ->
           semantic_error
             "A returning function was expected but a non-returning function \
              was supplied."
-      | Some (ReturnType ut) -> (FunApp (uid, ues), Some (returnblock, ut))
+      | Some (ReturnType ut) ->
+          ( FunApp (uid, ues)
+          , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
       | _ -> (
         match Symbol.look vm uid with
         | Some (_, Fun (_, Void)) ->
@@ -776,12 +838,13 @@ and semantic_check_expression x =
               if
                 not
                   (check_compatible_arguments_mod_conv uid listedtypes
-                     optargumenttypes)
+                     optargtypes)
               then
                 semantic_error
                   ("Ill-typed arguments supplied to function " ^ uid)
             in
-            (FunApp (uid, ues), Some (returnblock, ut))
+            ( FunApp (uid, ues)
+            , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
         | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
@@ -805,7 +868,13 @@ and semantic_check_expression x =
              can make use of conditional notation."
       in
       let ues = List.map semantic_check_expression es in
-      let optargumenttypes = List.map snd ues in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          (List.map snd ues)
+      in
       let _ =
         if
           Filename.check_suffix uid "_lp"
@@ -819,14 +888,16 @@ and semantic_check_expression x =
       in
       let returnblock =
         lub_op_originblock
-          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+          (List.map (fun x -> Core_kernel.Option.map x fst) optargtypes)
       in
-      match try_get_primitive_return_type uid optargumenttypes with
+      match try_get_primitive_return_type uid optargtypes with
       | Some Void ->
           semantic_error
             "A returning function was expected but a non-returning function \
              was supplied."
-      | Some (ReturnType ut) -> (CondFunApp (uid, ues), Some (returnblock, ut))
+      | Some (ReturnType ut) ->
+          ( CondFunApp (uid, ues)
+          , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
       | _ -> (
         match Symbol.look vm uid with
         | Some (_, Fun (_, Void)) ->
@@ -838,12 +909,13 @@ and semantic_check_expression x =
               if
                 not
                   (check_compatible_arguments_mod_conv uid listedtypes
-                     optargumenttypes)
+                     optargtypes)
               then
                 semantic_error
                   ("Ill-typed arguments supplied to function " ^ uid)
             in
-            (CondFunApp (uid, ues), Some (returnblock, ut))
+            ( CondFunApp (uid, ues)
+            , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
         | Some _ ->
             semantic_error
               "A returning function was expected but a ground type value was \
@@ -864,7 +936,10 @@ and semantic_check_expression x =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (GetLP, Some (context_flags.current_block, Real))
+      ( GetLP
+      , Some
+          {expr_meta_origin= context_flags.current_block; expr_meta_type= Real}
+      )
   | GetTarget ->
       let _ =
         if
@@ -877,7 +952,10 @@ and semantic_check_expression x =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (GetTarget, Some (context_flags.current_block, Real))
+      ( GetTarget
+      , Some
+          {expr_meta_origin= context_flags.current_block; expr_meta_type= Real}
+      )
   | ArrayExpr es ->
       let ues = List.map semantic_check_expression es in
       let elementtypes =
@@ -887,7 +965,7 @@ and semantic_check_expression x =
             | None ->
                 semantic_error
                   "This should never happen. Please file a bug. Error code 3."
-            | Some x -> snd x )
+            | Some x -> x.expr_meta_type )
           ues
       in
       let _ =
@@ -905,9 +983,14 @@ and semantic_check_expression x =
       in
       let returnblock =
         lub_op_originblock
-          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+          (List.map
+             (fun x -> Core_kernel.Option.map x (fun z -> z.expr_meta_origin))
+             (List.map snd ues))
       in
-      (ArrayExpr ues, Some (returnblock, Array (List.hd elementtypes)))
+      ( ArrayExpr ues
+      , Some
+          { expr_meta_origin= returnblock
+          ; expr_meta_type= Array (List.hd elementtypes) } )
   | RowVectorExpr es ->
       let ues = List.map semantic_check_expression es in
       let elementtypes =
@@ -917,7 +1000,7 @@ and semantic_check_expression x =
             | None ->
                 semantic_error
                   "This should never happen. Please file a bug. Error code 4."
-            | Some x -> snd x )
+            | Some x -> x.expr_meta_type )
           ues
       in
       let ut =
@@ -931,9 +1014,12 @@ and semantic_check_expression x =
       in
       let returnblock =
         lub_op_originblock
-          (List.map (fun x -> Core_kernel.Option.map x fst) (List.map snd ues))
+          (List.map
+             (fun x -> Core_kernel.Option.map x (fun z -> z.expr_meta_origin))
+             (List.map snd ues))
       in
-      (RowVectorExpr ues, Some (returnblock, ut))
+      ( RowVectorExpr ues
+      , Some {expr_meta_origin= returnblock; expr_meta_type= ut} )
   | Paren e ->
       let ue = semantic_check_expression e in
       (Paren ue, snd ue)
@@ -948,12 +1034,16 @@ and semantic_check_expression x =
                  | All -> Functions
                  | Single e1 | Upfrom e1 | Downfrom e1 | Multiple e1 ->
                      lub_op_originblock
-                       [Some ob; Core_kernel.Option.map (snd e1) fst]
+                       [ Some ob
+                       ; Core_kernel.Option.map (snd e1) (fun z ->
+                             z.expr_meta_origin ) ]
                  | Between (e1, e2) ->
                      lub_op_originblock
                        [ Some ob
-                       ; Core_kernel.Option.map (snd e1) fst
-                       ; Core_kernel.Option.map (snd e2) fst ])
+                       ; Core_kernel.Option.map (snd e1) (fun z ->
+                             z.expr_meta_origin )
+                       ; Core_kernel.Option.map (snd e2) (fun z ->
+                             z.expr_meta_origin ) ])
                indices )
       in
       let rec inferred_unsizedtype_of_indexed ut indexl =
@@ -998,10 +1088,11 @@ and semantic_check_expression x =
       ( Indexed (ue, uindices)
       , match snd ue with
         | None -> None
-        | Some (ob, ut) ->
+        | Some {expr_meta_origin= ob; expr_meta_type= ut} ->
             Some
-              ( inferred_originblock_of_indexed ob uindices
-              , inferred_unsizedtype_of_indexed ut uindices ) ) )
+              { expr_meta_origin= inferred_originblock_of_indexed ob uindices
+              ; expr_meta_type= inferred_unsizedtype_of_indexed ut uindices }
+      ) )
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
@@ -1017,7 +1108,8 @@ and semantic_check_printable = function
   | PExpr e -> (
       let ue = semantic_check_expression e in
       match snd ue with
-      | Some (_, Fun _) -> semantic_error "Functions cannot be printed."
+      | Some {expr_meta_type= Fun _; _} ->
+          semantic_error "Functions cannot be printed."
       | None -> semantic_error "Primitives cannot be printed."
       | _ -> PExpr ue )
 
@@ -1081,26 +1173,33 @@ and semantic_check_statement s =
    actually get evaluated in that phase. *)
       let _ =
         match snd ue with
-        | Some (rhs_ob, _) -> update_originblock uid rhs_ob
+        | Some {expr_meta_origin= rhs_ob; _} -> update_originblock uid rhs_ob
         | _ ->
             semantic_error
               "Right hand side of assignment operator references undeclared \
                variable."
       in
+      let optargtypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          [snd ue2; snd ue]
+      in
       let opname =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
       in
-      match try_get_operator_return_type opname [snd ue2; snd ue] with
+      match try_get_operator_return_type opname optargtypes with
       | Some Void ->
           ( Assignment
               { assign_identifier= uid
               ; assign_indices= ulindex
               ; assign_op= uassop
               ; assign_rhs= ue }
-          , Some Void )
+          , {stmt_meta_type= Some Void} )
       | _ ->
-          let lhs_type = string_of_expressiontype (snd ue2) in
-          let rhs_type = string_of_expressiontype (snd ue) in
+          let lhs_type = string_of_expr_meta_data (snd ue2) in
+          let rhs_type = string_of_expr_meta_data (snd ue) in
           semantic_error
             ( "Ill-typed arguments supplied to assignment operator: lhs has\n\
               \          type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
@@ -1108,7 +1207,13 @@ and semantic_check_statement s =
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
-      let optargumenttypes = List.map snd ues in
+      let optargumenttypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          (List.map snd ues)
+      in
       let _ =
         if
           Filename.check_suffix uid "_lp"
@@ -1121,7 +1226,7 @@ and semantic_check_statement s =
              of functions with the suffix _lp."
       in
       match try_get_primitive_return_type uid optargumenttypes with
-      | Some Void -> (NRFunApp (uid, ues), Some Void)
+      | Some Void -> (NRFunApp (uid, ues), {stmt_meta_type= Some Void})
       | Some (ReturnType _) ->
           semantic_error
             "A non-returning function was expected but a returning function \
@@ -1139,7 +1244,7 @@ and semantic_check_statement s =
                   ( "Ill-typed arguments supplied to non-returning function "
                   ^ uid )
             in
-            (NRFunApp (uid, ues), Some Void)
+            (NRFunApp (uid, ues), {stmt_meta_type= Some Void})
         | Some (_, Fun (_, ReturnType _)) ->
             semantic_error
               "A non-returning function was expected but a returning function \
@@ -1156,7 +1261,7 @@ and semantic_check_statement s =
       let ue = semantic_check_expression e in
       let _ =
         match snd ue with
-        | Some (_, Fun _) | None ->
+        | Some {expr_meta_type= Fun _; _} | None ->
             semantic_error
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1171,12 +1276,12 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (TargetPE ue, Some Void)
+      (TargetPE ue, {stmt_meta_type= Some Void})
   | IncrementLogProb e ->
       let ue = semantic_check_expression e in
       let _ =
         match snd ue with
-        | Some (_, Fun _) | None ->
+        | Some {expr_meta_type= Fun _; _} | None ->
             semantic_error
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1191,13 +1296,19 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      (IncrementLogProb ue, Some Void)
+      (IncrementLogProb ue, {stmt_meta_type= Some Void})
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
       let ut = semantic_check_truncation t in
-      let optargumenttypes = snd ue :: List.map snd ues in
+      let optargumenttypes =
+        List.map
+          (function
+            | Some {expr_meta_origin= x; expr_meta_type= y} -> Some (x, y)
+            | None -> None)
+          (snd ue :: List.map snd ues)
+      in
       let argumenttypes =
         List.map
           (function
@@ -1254,19 +1365,20 @@ and semantic_check_statement s =
         then ()
         else semantic_error "Ill-typed arguments to '~' statement."
       in
-      (Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}, Some Void)
+      ( Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
+      , {stmt_meta_type= Some Void} )
   | Break ->
       let _ =
         if not context_flags.in_loop then
           semantic_error "Break statements may only be used in loops."
       in
-      (Break, Some Void)
+      (Break, {stmt_meta_type= Some Void})
   | Continue ->
       let _ =
         if not context_flags.in_loop then
           semantic_error "Continue statements may only be used in loops."
       in
-      (Continue, Some Void)
+      (Continue, {stmt_meta_type= Some Void})
   | Return e ->
       let _ =
         if not context_flags.in_returning_fun_def then
@@ -1275,14 +1387,17 @@ and semantic_check_statement s =
              definitions."
       in
       let ue = semantic_check_expression e in
-      (Return ue, Core_kernel.Option.map (snd ue) (fun x -> ReturnType (snd x)))
+      ( Return ue
+      , { stmt_meta_type=
+            Core_kernel.Option.map (snd ue) (fun x ->
+                ReturnType x.expr_meta_type ) } )
   | Print ps ->
       let ups = List.map semantic_check_printable ps in
-      (Print ups, Some Void)
+      (Print ups, {stmt_meta_type= Some Void})
   | Reject ps ->
       let ups = List.map semantic_check_printable ps in
-      (Reject ups, Some Void)
-  | Skip -> (Skip, Some Void)
+      (Reject ups, {stmt_meta_type= Some Void})
+  | Skip -> (Skip, {stmt_meta_type= Some Void})
   | IfThen (e, s) ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1334,7 +1449,9 @@ and semantic_check_statement s =
       let _ = check_fresh_variable uid false in
       let oindexblock =
         lub_op_originblock
-          (List.map (fun x -> Core_kernel.Option.map x fst) [snd ue1; snd ue2])
+          (List.map
+             (fun x -> Core_kernel.Option.map x (fun z -> z.expr_meta_origin))
+             [snd ue1; snd ue2])
       in
       let _ = Symbol.enter vm uid (oindexblock, Int) in
       let _ = Symbol.set_read_only vm uid in
@@ -1353,8 +1470,11 @@ and semantic_check_statement s =
       let ue = semantic_check_expression e in
       let loop_identifier_unsizedtype =
         match snd ue with
-        | Some (_, Array ut) -> ut
-        | Some (_, Vector) | Some (_, RowVector) | Some (_, Matrix) -> Real
+        | Some {expr_meta_type= Array ut; _} -> ut
+        | Some {expr_meta_type= Vector; _}
+         |Some {expr_meta_type= RowVector; _}
+         |Some {expr_meta_type= Matrix; _} ->
+            Real
         | _ ->
             semantic_error
               "Foreach loop must be over array, vector, row_vector or matrix"
@@ -1362,7 +1482,7 @@ and semantic_check_statement s =
       let _ = Symbol.begin_scope vm in
       let _ = check_fresh_variable uid false in
       let oindexblock =
-        (function None -> Functions | Some x -> fst x) (snd ue)
+        (function None -> Functions | Some x -> x.expr_meta_origin) (snd ue)
       in
       let _ = Symbol.enter vm uid (oindexblock, loop_identifier_unsizedtype) in
       let _ = Symbol.set_read_only vm uid in
@@ -1409,13 +1529,14 @@ and semantic_check_statement s =
              (function
                | VDecl x -> (false, Some Void)
                | VDeclAss x -> (false, Some Void)
-               | Stmt (IfThen _, ort) -> (true, ort)
-               | Stmt (_, ort) -> (false, ort))
+               | Stmt (IfThen _, {stmt_meta_type= ort}) -> (true, ort)
+               | Stmt (_, {stmt_meta_type= ort}) -> (false, ort))
              vdsl2)
       in
       ( Block uvdsl
-      , compute_ort_and_check_if_then_branches_agree
-          (list_until_breakcontinue uvdsl) )
+      , { stmt_meta_type=
+            compute_ort_and_check_if_then_branches_agree
+              (list_until_breakcontinue uvdsl) } )
 
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate

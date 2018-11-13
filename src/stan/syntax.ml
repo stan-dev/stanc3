@@ -74,7 +74,10 @@ and untypedexpression =
   | Paren of expression
   | Indexed of expression * index list
 
-and expression = untypedexpression * (originblock * unsizedtype) option
+and expression_metadata =
+  {expr_meta_origin: originblock; expr_meta_type: unsizedtype}
+
+and expression = untypedexpression * expression_metadata option
 
 (* == Statements == *)
 and assignmentoperator =
@@ -87,6 +90,7 @@ and assignmentoperator =
   | EltDivideAssign
   | ArrowAssign
 
+(* deprecated *)
 and truncation =
   | NoTruncate
   | TruncateUpFrom of expression
@@ -127,9 +131,11 @@ and untypedstatement =
   | ForEach of identifier * expression * statement
   | Block of vardecl_or_statement list
 
+and statement_metadata = {stmt_meta_type: returntype option}
+
 (* TODO: add vardecl/topvardecl/fundef/compound vardecl/compound topvardecl here?
    then we only need to add metadata to statements and expressions *)
-and statement = untypedstatement * returntype option
+and statement = untypedstatement * statement_metadata
 
 and compound_vardecl_assign =
   {sizedtype: sizedtype; identifier: identifier; value: expression}
@@ -177,8 +183,8 @@ and transformation =
 and compound_topvardecl_assign =
   { tsizedtype: sizedtype
   ; transformation: transformation
-  ; identifier: identifier
-  ; value: expression }
+  ; tidentifier: identifier
+  ; tvalue: expression }
 
 and topvardecl = sizedtype * transformation * identifier
 
@@ -196,9 +202,9 @@ and program =
   ; transformedparametersblock: topvardecl_or_statement list option
   ; modelblock: vardecl_or_statement list option
   ; generatedquantitiesblock: topvardecl_or_statement list option }
-[@@(* deprecated *)
-  deriving sexp, compare]
+[@@deriving sexp, compare]
 
+(* == Stuff that probably should be moved to another file == *)
 type signaturestype = returntype * returntype list [@@deriving sexp, compare]
 
 (* TODO: maybe move these to primitives file, as that's where they're used *)
@@ -206,5 +212,9 @@ type signaturestype = returntype * returntype list [@@deriving sexp, compare]
 let string_of_expressiontype = function
   | None -> "unknown"
   | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
+
+let string_of_expr_meta_data = function
+  | None -> "unknown"
+  | Some {expr_meta_type= ut; _} -> Sexp.to_string (sexp_of_unsizedtype ut)
 
 (* TODO: implement more pretty printing functions for generating error messages *)

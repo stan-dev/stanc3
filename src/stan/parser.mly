@@ -407,9 +407,9 @@ lhs:
 (* statements *)
 statement:
   | s=atomic_statement   
-    {  grammar_logger "atomic_statement" ; (s, None) }
+    {  grammar_logger "atomic_statement" ; (s, {stmt_meta_type=None}) }
   | s=nested_statement 
-    {  grammar_logger "nested_statement" ; (s, None) }
+    {  grammar_logger "nested_statement" ; (s, {stmt_meta_type=None}) }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  
