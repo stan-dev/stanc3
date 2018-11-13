@@ -488,9 +488,9 @@ and semantic_check_topvardecl = function
       let _ = Symbol.set_global vm uid in
       let _ =
         if
-          (ust = SInt)
+          ust = SInt
           &&
-          (match utrans with
+          match utrans with
           | Lower ue1 -> (
             match snd ue1 with Some (_, Real) -> true | _ -> false )
           | Upper ue1 -> (
@@ -499,7 +499,7 @@ and semantic_check_topvardecl = function
             match snd ue1 with
             | Some (_, Real) -> true
             | _ -> ( match snd ue2 with Some (_, Real) -> true | _ -> false ) )
-          | _ -> false )
+          | _ -> false
         then
           semantic_error
             "Bounds of integer variable should be of type int. Found type real."
@@ -518,9 +518,20 @@ and semantic_check_compound_topvardecl_assign = function
   | {sizedtype= st; transformation= trans; identifier= id; value= e} -> (
       let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
       match
-        semantic_check_statement (Assignment ((uid, []), Assign, e), None)
+        semantic_check_statement
+          ( Assignment
+              { assign_identifier= uid
+              ; assign_indices= []
+              ; assign_op= Assign
+              ; assign_rhs= e }
+          , None )
       with
-      | Assignment ((uid, []), Assign, ue), Some Void ->
+      | ( Assignment
+            { assign_identifier= uid
+            ; assign_indices= []
+            ; assign_op= Assign
+            ; assign_rhs= ue }
+        , Some Void ) ->
           {sizedtype= ust; transformation= utrans; identifier= uid; value= ue}
       | _ ->
           semantic_error
@@ -540,9 +551,20 @@ and semantic_check_compound_vardecl_assign = function
   | {sizedtype= st; identifier= id; value= e} -> (
       let ust, uid = semantic_check_vardecl (st, id) in
       match
-        semantic_check_statement (Assignment ((uid, []), Assign, e), None)
+        semantic_check_statement
+          ( Assignment
+              { assign_identifier= uid
+              ; assign_indices= []
+              ; assign_op= Assign
+              ; assign_rhs= e }
+          , None )
       with
-      | Assignment ((uid, []), Assign, ue), Some Void ->
+      | ( Assignment
+            { assign_identifier= uid
+            ; assign_indices= []
+            ; assign_op= Assign
+            ; assign_rhs= ue }
+        , Some Void ) ->
           {sizedtype= ust; identifier= uid; value= ue}
       | _ ->
           semantic_error
@@ -1018,9 +1040,22 @@ and semantic_check_printable = function
 
 and semantic_check_statement s =
   match fst s with
-  | Assignment ((id, lindex), assop, e) -> (
+  | Assignment
+      { assign_identifier= id
+      ; assign_indices= lindex
+      ; assign_op= assop
+      ; assign_rhs= e } -> (
       (* TODO: The lhs is effectively checked twice here, because I am lazy. *)
-      let uid, ulindex = semantic_check_lhs (id, lindex) in
+      let uid, ulindex =
+        match
+          semantic_check_expression
+            (Indexed ((Variable id, None), lindex), None)
+        with
+        | Indexed ((Variable uid, _), ulindex), _ -> (uid, ulindex)
+        | _ ->
+            semantic_error
+              "This should never happen. Please file a bug. Error code 8."
+      in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
       let ue2 =
@@ -1073,7 +1108,13 @@ and semantic_check_statement s =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
       in
       match try_get_operator_return_type opname [snd ue2; snd ue] with
-      | Some Void -> (Assignment ((uid, ulindex), uassop, ue), Some Void)
+      | Some Void ->
+          ( Assignment
+              { assign_identifier= uid
+              ; assign_indices= ulindex
+              ; assign_op= uassop
+              ; assign_rhs= ue }
+          , Some Void )
       | _ ->
           let lhs_type = string_of_expressiontype (snd ue2) in
           let rhs_type = string_of_expressiontype (snd ue) in
@@ -1417,15 +1458,6 @@ and semantic_check_truncation = function
         then semantic_error "Truncation bound should be of type int or real."
       in
       TruncateBetween (ue1, ue2)
-
-and semantic_check_lhs (id, lindex) =
-  match
-    semantic_check_expression (Indexed ((Variable id, None), lindex), None)
-  with
-  | Indexed ((Variable uid, _), ulindex), _ -> (uid, ulindex)
-  | _ ->
-      semantic_error
-        "This should never happen. Please file a bug. Error code 8."
 
 and semantic_check_index = function
   | All -> All

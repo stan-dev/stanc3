@@ -17,8 +17,9 @@ type program =
   ; generatedquantitiesblock: generatedquantitiesblock }
 
 (* Blocks. *)
-and functionblock = fundef list option (* TODO: inline these *)
+and functionblock = fundef list option
 
+(* TODO: inline these *)
 and datablock = topvardecl list option
 
 and transformeddatablock = topvardecl_or_statement list option
@@ -155,7 +156,11 @@ and printable = PString of string | PExpr of expression
 and statement = untypedstatement * returntype option
 
 and untypedstatement =
-  | Assignment of lhs * assignmentoperator * expression
+  | Assignment of
+      { assign_identifier: identifier
+      ; assign_indices: index list
+      ; assign_op: assignmentoperator
+      ; assign_rhs: expression }
   | NRFunApp of identifier * expression list
   | TargetPE of expression
   | IncrementLogProb of expression
@@ -181,16 +186,14 @@ and untypedstatement =
       ; loop_body: statement }
   | ForEach of identifier * expression * statement
   | Block of vardecl_or_statement list
+
 (* TODO: add vardecl/topvardecl/fundef/compound vardecl/compound topvardecl here;
    then we only need to add metadata to statements and expressions *)
-
 and truncation =
   | NoTruncate
   | TruncateUpFrom of expression
   | TruncateDownFrom of expression
   | TruncateBetween of expression * expression
-
-and lhs = identifier * index list (* TODO: inline this *)
 
 and index =
   | All
@@ -213,9 +216,11 @@ and assignmentoperator =
 [@@deriving sexp, compare]
 
 type signaturestype = returntype * returntype list [@@deriving sexp, compare]
-(* TODO: maybe move these to primitives file, as that's where they're used *) 
+
+(* TODO: maybe move these to primitives file, as that's where they're used *)
 
 let string_of_expressiontype = function
   | None -> "unknown"
   | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
+
 (* TODO: implement more pretty printing functions for generating error messages *)

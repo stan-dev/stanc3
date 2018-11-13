@@ -413,7 +413,11 @@ statement:
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  
-    {  grammar_logger "assignment_statement" ; Assignment (l, op, e) }
+    {  grammar_logger "assignment_statement" ; match l with (id, indices) ->
+       Assignment {assign_identifier=id;
+                   assign_indices=indices;
+                   assign_op=op;
+                   assign_rhs=e} }
   | id=IDENTIFIER LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON 
     {  grammar_logger "funapp_statement" ; NRFunApp (id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON 
