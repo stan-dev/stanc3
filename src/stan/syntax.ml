@@ -99,6 +99,29 @@ and truncation =
 
 and printable = PString of string | PExpr of expression
 
+and sizedtype =
+  | SInt
+  | SReal
+  | SVector of expression
+  | SRowVector of expression
+  | SMatrix of expression * expression
+  | SArray of sizedtype * expression
+
+and transformation =
+  | Identity
+  | Lower of expression
+  | Upper of expression
+  | LowerUpper of expression * expression
+  | LocationScale of expression * expression
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+
 and untypedstatement =
   | Assignment of
       { assign_identifier: identifier
@@ -129,7 +152,23 @@ and untypedstatement =
       ; upper_bound: expression
       ; loop_body: statement }
   | ForEach of identifier * expression * statement
-  | Block of vardecl_or_statement list
+  | Block of statement list
+  | VDecl of sizedtype * identifier
+  | VDeclAss of
+      { sizedtype: sizedtype
+      ; identifier: identifier
+      ; value: expression }
+  | TVDecl of sizedtype * transformation * identifier
+  | TVDeclAss of
+      { tsizedtype: sizedtype
+      ; transformation: transformation
+      ; tidentifier: identifier
+      ; tvalue: expression }
+  | FunDef of
+      { returntype: returntype
+      ; name: identifier
+      ; arguments: (originblock * unsizedtype * identifier) list
+      ; body: statement }
 
 and statement_metadata = {stmt_meta_type: returntype option}
 
@@ -137,71 +176,17 @@ and statement_metadata = {stmt_meta_type: returntype option}
    then we only need to add metadata to statements and expressions *)
 and statement = untypedstatement * statement_metadata
 
-and compound_vardecl_assign =
-  {sizedtype: sizedtype; identifier: identifier; value: expression}
-
-and vardecl = sizedtype * identifier
-
-and vardecl_or_statement =
-  | VDecl of vardecl
-  | Stmt of statement
-  | VDeclAss of compound_vardecl_assign
-
-(* == Top level variable and function declarations and definitions == *)
-and argdecl = originblock * unsizedtype * identifier
-
 (* TODO: Decorate fundef with optional marker like RNG, LP, PLAIN *)
-and fundef =
-  { returntype: returntype
-  ; name: identifier
-  ; arguments: argdecl list
-  ; body: statement }
-
-and sizedtype =
-  | SInt
-  | SReal
-  | SVector of expression
-  | SRowVector of expression
-  | SMatrix of expression * expression
-  | SArray of sizedtype * expression
-
-and transformation =
-  | Identity
-  | Lower of expression
-  | Upper of expression
-  | LowerUpper of expression * expression
-  | LocationScale of expression * expression
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-
-and compound_topvardecl_assign =
-  { tsizedtype: sizedtype
-  ; transformation: transformation
-  ; tidentifier: identifier
-  ; tvalue: expression }
-
-and topvardecl = sizedtype * transformation * identifier
-
-and topvardecl_or_statement =
-  | TVDecl of topvardecl
-  | TStmt of statement
-  | TVDeclAss of compound_topvardecl_assign
 
 (* == Programs == *)
 and program =
-  { functionblock: fundef list option
-  ; datablock: topvardecl list option
-  ; transformeddatablock: topvardecl_or_statement list option
-  ; parametersblock: topvardecl list option
-  ; transformedparametersblock: topvardecl_or_statement list option
-  ; modelblock: vardecl_or_statement list option
-  ; generatedquantitiesblock: topvardecl_or_statement list option }
+  { functionblock: statement list option
+  ; datablock: statement list option
+  ; transformeddatablock: statement list option
+  ; parametersblock: statement list option
+  ; transformedparametersblock: statement list option
+  ; modelblock: statement list option
+  ; generatedquantitiesblock: statement list option }
 [@@deriving sexp, compare]
 
 (* == Stuff that probably should be moved to another file == *)

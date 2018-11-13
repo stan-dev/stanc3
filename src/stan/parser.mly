@@ -120,7 +120,8 @@ function_def:
     RPAREN b=statement
     { 
       grammar_logger "function_def" ;
-      {returntype = rt; name = name; arguments = args; body=b;}
+      (FunDef {returntype = rt; name = name; arguments = args; body=b;},
+       {stmt_meta_type=None})
     }
 
 return_type:
@@ -513,12 +514,12 @@ nested_statement:
 (* statement or var decls *)
 vardecl_or_statement:
   | s=statement 
-    { grammar_logger "vardecl_or_statement_statement" ; Stmt s }
+    { grammar_logger "vardecl_or_statement_statement" ; s }
   | v=var_decl 
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
   | s=statement 
-    { grammar_logger "top_vardecl_or_statement_statement" ; TStmt s }
+    { grammar_logger "top_vardecl_or_statement_statement" ;  s }
   | v=top_var_decl 
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }

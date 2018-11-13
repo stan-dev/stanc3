@@ -185,36 +185,31 @@ let rec semantic_check_program p =
     ; generatedquantitiesblock= bgq }
   ->
     let _ = context_flags.current_block <- Functions in
-    let ubf = Core_kernel.Option.map bf (List.map semantic_check_fundef) in
+    let ubf = Core_kernel.Option.map bf (List.map semantic_check_statement) in
     let _ =
       if Symbol.some_fun_is_missing_def vm then
         semantic_error
           "Some function is declared without specifying a definition."
     in
     let _ = context_flags.current_block <- Data in
-    let ubd = Core_kernel.Option.map bd (List.map semantic_check_topvardecl) in
+    let ubd = Core_kernel.Option.map bd (List.map semantic_check_statement) in
     let _ = context_flags.current_block <- TData in
     let ubtd =
-      Core_kernel.Option.map btd
-        (List.map semantic_check_topvardecl_or_statement)
+      Core_kernel.Option.map btd (List.map semantic_check_statement)
     in
     let _ = context_flags.current_block <- Param in
-    let ubp = Core_kernel.Option.map bp (List.map semantic_check_topvardecl) in
+    let ubp = Core_kernel.Option.map bp (List.map semantic_check_statement) in
     let _ = context_flags.current_block <- TParam in
     let ubtp =
-      Core_kernel.Option.map btp
-        (List.map semantic_check_topvardecl_or_statement)
+      Core_kernel.Option.map btp (List.map semantic_check_statement)
     in
     let _ = context_flags.current_block <- Model in
     let _ = Symbol.begin_scope vm in
-    let ubm =
-      Core_kernel.Option.map bm (List.map semantic_check_vardecl_or_statement)
-    in
+    let ubm = Core_kernel.Option.map bm (List.map semantic_check_statement) in
     let _ = Symbol.end_scope vm in
     let _ = context_flags.current_block <- GQuant in
     let ubgq =
-      Core_kernel.Option.map bgq
-        (List.map semantic_check_topvardecl_or_statement)
+      Core_kernel.Option.map bgq (List.map semantic_check_statement)
     in
     { functionblock= ubf
     ; datablock= ubd
@@ -223,100 +218,6 @@ let rec semantic_check_program p =
     ; transformedparametersblock= ubtp
     ; modelblock= ubm
     ; generatedquantitiesblock= ubgq }
-
-and semantic_check_fundef = function
-  | {returntype= rt; name= id; arguments= args; body= b} ->
-      let urt = semantic_check_returntype rt in
-      let uid = semantic_check_identifier id in
-      let uargs = List.map semantic_check_argdecl args in
-      let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
-      let _ =
-        if Symbol.is_missing_fun_def vm uid then (
-          if Symbol.look vm uid <> Some (Functions, Fun (uarg_types, urt)) then
-            semantic_error
-              ( "Function " ^ uid ^ " has already been declared to have type "
-              ^ string_of_expressiontype (Symbol.look vm uid) ) )
-        else check_fresh_variable uid (List.length uarg_types = 0)
-      in
-      let _ =
-        match b with
-        | Skip, _ ->
-            if Symbol.is_missing_fun_def vm uid then
-              semantic_error
-                ( "Function " ^ uid
-                ^ " has already been declared. A definition is expected." )
-            else Symbol.add_is_missing_fun_def vm uid
-        | _ -> Symbol.remove_is_missing_fun_def vm uid
-      in
-      let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
-      let uarg_names = List.map (function w, y, z -> z) uargs in
-      let _ = List.map (Symbol.set_read_only vm) uarg_names in
-      let _ =
-        if
-          urt <> ReturnType Real
-          && ( Filename.check_suffix uid "_log"
-             || Filename.check_suffix uid "_lpdf"
-             || Filename.check_suffix uid "_lpmf"
-             || Filename.check_suffix uid "_lcdf"
-             || Filename.check_suffix uid "_lccdf" )
-        then
-          semantic_error
-            "Real return type required for probability functions ending in \
-             _log, _lpdf, _lpmf, _lcdf, or _lccdf."
-      in
-      let _ =
-        if
-          Filename.check_suffix uid "_lpdf"
-          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
-        then
-          semantic_error
-            "Probability density functions require real variates (first \
-             argument)."
-      in
-      let _ =
-        if
-          Filename.check_suffix uid "_lpmf"
-          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
-        then
-          semantic_error
-            "Probability mass functions require integer variates (first \
-             argument)."
-      in
-      let _ = context_flags.in_fun_def <- true in
-      let _ =
-        if Filename.check_suffix uid "_rng" then
-          context_flags.in_rng_fun_def <- true
-      in
-      let _ =
-        if Filename.check_suffix uid "_lp" then
-          context_flags.in_lp_fun_def <- true
-      in
-      let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
-      let _ = Symbol.begin_scope vm in
-      let _ =
-        if dup_exists uarg_names then
-          semantic_error
-            "All function arguments should be distinct identifiers."
-      in
-      let _ = List.map (fun x -> check_fresh_variable x false) uarg_names in
-      let _ = List.map2 (Symbol.enter vm) uarg_names uarg_types in
-      let ub = semantic_check_statement b in
-      let _ =
-        if
-          Symbol.is_missing_fun_def vm uid
-          || check_of_compatible_return_type (Some urt) (snd ub).stmt_meta_type
-        then ()
-        else
-          semantic_error
-            "Function bodies must contain a return statement of correct type \
-             in every branch."
-      in
-      let _ = Symbol.end_scope vm in
-      let _ = context_flags.in_fun_def <- false in
-      let _ = context_flags.in_returning_fun_def <- false in
-      let _ = context_flags.in_lp_fun_def <- false in
-      let _ = context_flags.in_rng_fun_def <- false in
-      {returntype= urt; name= uid; arguments= uargs; body= ub}
 
 (* This could also be dealt with during lexing. That would probably be more efficient. *)
 and semantic_check_identifier id =
@@ -430,13 +331,6 @@ and semantic_check_identifier id =
 and semantic_check_originblock ob = ob
 
 (* Probably nothing to do here *)
-and semantic_check_argdecl = function
-  | ob, ut, id ->
-      ( semantic_check_originblock ob
-      , semantic_check_unsizedtype ut
-      , semantic_check_identifier id )
-
-(* Probably nothing to do here *)
 and semantic_check_returntype = function
   | Void -> Void
   | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
@@ -453,151 +347,6 @@ and semantic_check_unsizedtype = function
             l
         , semantic_check_returntype rt )
   | ut -> ut
-
-and semantic_check_topvardecl = function
-  | st, trans, id ->
-      let ust = semantic_check_sizedtype st in
-      let rec check_sizes_below_param_level = function
-        | SVector e -> (
-          match (snd e).expr_meta_origintype with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
-          | _ -> true )
-        | SRowVector e -> (
-          match (snd e).expr_meta_origintype with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
-          | _ -> true )
-        | SMatrix (e1, e2) -> (
-          match (snd e1).expr_meta_origintype with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
-          | _ -> (
-            match (snd e2).expr_meta_origintype with
-            | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
-            | _ -> true ) )
-        | SArray (st2, e) -> (
-          match (snd e).expr_meta_origintype with
-          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
-          | _ -> check_sizes_below_param_level st2 )
-        | _ -> true
-      in
-      let _ =
-        if not (check_sizes_below_param_level ust) then
-          semantic_error
-            "Non-data variables are not allowed in top level size declarations."
-      in
-      let utrans = semantic_check_transformation trans in
-      let uid = semantic_check_identifier id in
-      let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable uid false in
-      let _ = Symbol.enter vm uid (context_flags.current_block, ut) in
-      let _ = Symbol.set_global vm uid in
-      let _ =
-        if
-          ust = SInt
-          &&
-          match utrans with
-          | Lower ue1 -> (
-            match (snd ue1).expr_meta_origintype with
-            | Some (_, Real) -> true
-            | _ -> false )
-          | Upper ue1 -> (
-            match (snd ue1).expr_meta_origintype with
-            | Some (_, Real) -> true
-            | _ -> false )
-          | LowerUpper (ue1, ue2) -> (
-            match (snd ue1).expr_meta_origintype with
-            | Some (_, Real) -> true
-            | _ -> (
-              match (snd ue2).expr_meta_origintype with
-              | Some (_, Real) -> true
-              | _ -> false ) )
-          | _ -> false
-        then
-          semantic_error
-            "Bounds of integer variable should be of type int. Found type real."
-      in
-      let _ =
-        if
-          ( context_flags.current_block = Param
-          || context_flags.current_block = TParam )
-          && unsizedtype_contains_int ut
-        then semantic_error "(Transformed) Parameters cannot be integers."
-      in
-      (ust, utrans, uid)
-
-(* Probably nothing to check here. *)
-and semantic_check_compound_topvardecl_assign = function
-  | {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} -> (
-      let ust, utrans, uid = semantic_check_topvardecl (st, trans, id) in
-      match
-        semantic_check_statement
-          ( Assignment
-              { assign_identifier= uid
-              ; assign_indices= []
-              ; assign_op= Assign
-              ; assign_rhs= e }
-          , {stmt_meta_type= None} )
-      with
-      | ( Assignment
-            { assign_identifier= uid
-            ; assign_indices= []
-            ; assign_op= Assign
-            ; assign_rhs= ue }
-        , {stmt_meta_type= Some Void} ) ->
-          { tsizedtype= ust
-          ; transformation= utrans
-          ; tidentifier= uid
-          ; tvalue= ue }
-      | _ ->
-          semantic_error
-            "This should never happen. Please file a bug. Error code 1." )
-
-and semantic_check_vardecl = function
-  | st, id ->
-      let ust = semantic_check_sizedtype st in
-      let uid = semantic_check_identifier id in
-      let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable uid false in
-      let _ = Symbol.enter vm id (Functions, ut) in
-      (ust, uid)
-
-(* Probably nothing to check here. *)
-and semantic_check_compound_vardecl_assign = function
-  | {sizedtype= st; identifier= id; value= e} -> (
-      let ust, uid = semantic_check_vardecl (st, id) in
-      match
-        semantic_check_statement
-          ( Assignment
-              { assign_identifier= uid
-              ; assign_indices= []
-              ; assign_op= Assign
-              ; assign_rhs= e }
-          , {stmt_meta_type= None} )
-      with
-      | ( Assignment
-            { assign_identifier= uid
-            ; assign_indices= []
-            ; assign_op= Assign
-            ; assign_rhs= ue }
-        , {stmt_meta_type= Some Void} ) ->
-          {sizedtype= ust; identifier= uid; value= ue}
-      | _ ->
-          semantic_error
-            "This should never happen. Please file a bug. Error code 2." )
-
-(* Probably nothing to do here *)
-and semantic_check_topvardecl_or_statement tvds =
-  match tvds with
-  | TVDecl tvd -> TVDecl (semantic_check_topvardecl tvd)
-  | TStmt s -> TStmt (semantic_check_statement s)
-  | TVDeclAss tvda ->
-      TVDeclAss (semantic_check_compound_topvardecl_assign tvda)
-
-(* Probably nothing to do here *)
-and semantic_check_vardecl_or_statement vds =
-  match vds with
-  | VDecl vd -> VDecl (semantic_check_vardecl vd)
-  | Stmt s -> Stmt (semantic_check_statement s)
-  | VDeclAss vda -> VDeclAss (semantic_check_compound_vardecl_assign vda)
 
 and semantic_check_sizedtype = function
   | SInt -> SInt
@@ -776,7 +525,7 @@ and semantic_check_expression x =
           | (Indexed ((Variable arg1_name, _), []), _) :: _ ->
               if
                 Filename.check_suffix arg1_name "_lp"
-                or Filename.check_suffix arg1_name "_rng"
+                || Filename.check_suffix arg1_name "_rng"
               then
                 semantic_error
                   ( "Mapped function cannot be an _rng or _lp function, found \
@@ -1521,15 +1270,15 @@ and semantic_check_statement s =
       (ForEach (uid, ue, us), snd us)
   | Block vdsl ->
       let _ = Symbol.begin_scope vm in
-      let uvdsl = List.map semantic_check_vardecl_or_statement vdsl in
+      let uvdsl = List.map semantic_check_statement vdsl in
       let _ = Symbol.end_scope vm in
       (* Any statements after a break or continue do not count for the return
       type. *)
       let rec list_until_breakcontinue = function
         | [] -> []
         | [x] -> [x]
-        | x1 :: Stmt (Break, _) :: xs -> [x1]
-        | x1 :: Stmt (Continue, _) :: xs -> [x1]
+        | x1 :: (Break, _) :: xs -> [x1]
+        | x1 :: (Continue, _) :: xs -> [x1]
         | x1 :: x2 :: xs -> x1 :: list_until_breakcontinue (x2 :: xs)
       in
       (* We make sure that for an if-then statement, everything after the then
@@ -1555,16 +1304,242 @@ and semantic_check_statement s =
         helper
           (List.map
              (function
-               | VDecl x -> (false, Some Void)
-               | VDeclAss x -> (false, Some Void)
-               | Stmt (IfThen _, {stmt_meta_type= ort}) -> (true, ort)
-               | Stmt (_, {stmt_meta_type= ort}) -> (false, ort))
+               | IfThen _, {stmt_meta_type= ort} -> (true, ort)
+               | _, {stmt_meta_type= ort} -> (false, ort))
              vdsl2)
       in
       ( Block uvdsl
       , { stmt_meta_type=
             compute_ort_and_check_if_then_branches_agree
               (list_until_breakcontinue uvdsl) } )
+  | VDecl (st, id) ->
+      let ust = semantic_check_sizedtype st in
+      let uid = semantic_check_identifier id in
+      let ut = unsizedtype_of_sizedtype st in
+      let _ = check_fresh_variable uid false in
+      let _ = Symbol.enter vm id (Functions, ut) in
+      (VDecl (ust, uid), {stmt_meta_type= Some Void})
+  | VDeclAss {sizedtype= st; identifier= id; value= e} -> (
+    match
+      ( semantic_check_statement (VDecl (st, id), {stmt_meta_type= None})
+      , semantic_check_statement
+          ( Assignment
+              { assign_identifier= id
+              ; assign_indices= []
+              ; assign_op= Assign
+              ; assign_rhs= e }
+          , {stmt_meta_type= None} ) )
+    with
+    | ( (VDecl (ust, uid), _)
+      , ( Assignment
+            { assign_identifier= id
+            ; assign_indices= []
+            ; assign_op= Assign
+            ; assign_rhs= ue }
+        , {stmt_meta_type= Some Void} ) ) ->
+        ( VDeclAss {sizedtype= ust; identifier= uid; value= ue}
+        , {stmt_meta_type= Some Void} )
+    | _ ->
+        semantic_error
+          "This should never happen. Please file a bug. Error code 2." )
+  | TVDecl (st, trans, id) ->
+      let ust = semantic_check_sizedtype st in
+      let rec check_sizes_below_param_level = function
+        | SVector e -> (
+          match (snd e).expr_meta_origintype with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> true )
+        | SRowVector e -> (
+          match (snd e).expr_meta_origintype with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> true )
+        | SMatrix (e1, e2) -> (
+          match (snd e1).expr_meta_origintype with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> (
+            match (snd e2).expr_meta_origintype with
+            | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+            | _ -> true ) )
+        | SArray (st2, e) -> (
+          match (snd e).expr_meta_origintype with
+          | Some (Param, _) | Some (TParam, _) | Some (GQuant, _) -> false
+          | _ -> check_sizes_below_param_level st2 )
+        | _ -> true
+      in
+      let _ =
+        if not (check_sizes_below_param_level ust) then
+          semantic_error
+            "Non-data variables are not allowed in top level size declarations."
+      in
+      let utrans = semantic_check_transformation trans in
+      let uid = semantic_check_identifier id in
+      let ut = unsizedtype_of_sizedtype st in
+      let _ = check_fresh_variable uid false in
+      let _ = Symbol.enter vm uid (context_flags.current_block, ut) in
+      let _ = Symbol.set_global vm uid in
+      let _ =
+        if
+          ust = SInt
+          &&
+          match utrans with
+          | Lower ue1 -> (
+            match (snd ue1).expr_meta_origintype with
+            | Some (_, Real) -> true
+            | _ -> false )
+          | Upper ue1 -> (
+            match (snd ue1).expr_meta_origintype with
+            | Some (_, Real) -> true
+            | _ -> false )
+          | LowerUpper (ue1, ue2) -> (
+            match (snd ue1).expr_meta_origintype with
+            | Some (_, Real) -> true
+            | _ -> (
+              match (snd ue2).expr_meta_origintype with
+              | Some (_, Real) -> true
+              | _ -> false ) )
+          | _ -> false
+        then
+          semantic_error
+            "Bounds of integer variable should be of type int. Found type real."
+      in
+      let _ =
+        if
+          ( context_flags.current_block = Param
+          || context_flags.current_block = TParam )
+          && unsizedtype_contains_int ut
+        then semantic_error "(Transformed) Parameters cannot be integers."
+      in
+      (TVDecl (ust, utrans, uid), {stmt_meta_type= Some Void})
+  | TVDeclAss
+      {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} -> (
+    match
+      ( semantic_check_statement
+          (TVDecl (st, trans, id), {stmt_meta_type= None})
+      , semantic_check_statement
+          ( Assignment
+              { assign_identifier= id
+              ; assign_indices= []
+              ; assign_op= Assign
+              ; assign_rhs= e }
+          , {stmt_meta_type= None} ) )
+    with
+    | ( (TVDecl (ust, utrans, uid), _)
+      , ( Assignment
+            { assign_identifier= id
+            ; assign_indices= []
+            ; assign_op= Assign
+            ; assign_rhs= ue }
+        , {stmt_meta_type= Some Void} ) ) ->
+        ( TVDeclAss
+            { tsizedtype= ust
+            ; transformation= utrans
+            ; tidentifier= uid
+            ; tvalue= ue }
+        , {stmt_meta_type= Some Void} )
+    | _ ->
+        semantic_error
+          "This should never happen. Please file a bug. Error code 1." )
+  | FunDef {returntype= rt; name= id; arguments= args; body= b} ->
+      let urt = semantic_check_returntype rt in
+      let uid = semantic_check_identifier id in
+      let uargs =
+        List.map
+          (function
+            | ob, ut, id ->
+                ( semantic_check_originblock ob
+                , semantic_check_unsizedtype ut
+                , semantic_check_identifier id ))
+          args
+      in
+      let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
+      let _ =
+        if Symbol.is_missing_fun_def vm uid then (
+          if Symbol.look vm uid <> Some (Functions, Fun (uarg_types, urt)) then
+            semantic_error
+              ( "Function " ^ uid ^ " has already been declared to have type "
+              ^ string_of_expressiontype (Symbol.look vm uid) ) )
+        else check_fresh_variable uid (List.length uarg_types = 0)
+      in
+      let _ =
+        match b with
+        | Skip, _ ->
+            if Symbol.is_missing_fun_def vm uid then
+              semantic_error
+                ( "Function " ^ uid
+                ^ " has already been declared. A definition is expected." )
+            else Symbol.add_is_missing_fun_def vm uid
+        | _ -> Symbol.remove_is_missing_fun_def vm uid
+      in
+      let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
+      let uarg_names = List.map (function w, y, z -> z) uargs in
+      let _ = List.map (Symbol.set_read_only vm) uarg_names in
+      let _ =
+        if
+          urt <> ReturnType Real
+          && ( Filename.check_suffix uid "_log"
+             || Filename.check_suffix uid "_lpdf"
+             || Filename.check_suffix uid "_lpmf"
+             || Filename.check_suffix uid "_lcdf"
+             || Filename.check_suffix uid "_lccdf" )
+        then
+          semantic_error
+            "Real return type required for probability functions ending in \
+             _log, _lpdf, _lpmf, _lcdf, or _lccdf."
+      in
+      let _ =
+        if
+          Filename.check_suffix uid "_lpdf"
+          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
+        then
+          semantic_error
+            "Probability density functions require real variates (first \
+             argument)."
+      in
+      let _ =
+        if
+          Filename.check_suffix uid "_lpmf"
+          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
+        then
+          semantic_error
+            "Probability mass functions require integer variates (first \
+             argument)."
+      in
+      let _ = context_flags.in_fun_def <- true in
+      let _ =
+        if Filename.check_suffix uid "_rng" then
+          context_flags.in_rng_fun_def <- true
+      in
+      let _ =
+        if Filename.check_suffix uid "_lp" then
+          context_flags.in_lp_fun_def <- true
+      in
+      let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
+      let _ = Symbol.begin_scope vm in
+      let _ =
+        if dup_exists uarg_names then
+          semantic_error
+            "All function arguments should be distinct identifiers."
+      in
+      let _ = List.map (fun x -> check_fresh_variable x false) uarg_names in
+      let _ = List.map2 (Symbol.enter vm) uarg_names uarg_types in
+      let ub = semantic_check_statement b in
+      let _ =
+        if
+          Symbol.is_missing_fun_def vm uid
+          || check_of_compatible_return_type (Some urt) (snd ub).stmt_meta_type
+        then ()
+        else
+          semantic_error
+            "Function bodies must contain a return statement of correct type \
+             in every branch."
+      in
+      let _ = Symbol.end_scope vm in
+      let _ = context_flags.in_fun_def <- false in
+      let _ = context_flags.in_returning_fun_def <- false in
+      let _ = context_flags.in_lp_fun_def <- false in
+      let _ = context_flags.in_rng_fun_def <- false in
+      ( FunDef {returntype= urt; name= uid; arguments= uargs; body= ub}
+      , {stmt_meta_type= Some Void} )
 
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate

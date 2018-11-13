@@ -43,24 +43,28 @@ let construct_var_decl sbt id d ae =
   let sizes = match d with None -> [] | Some l -> l in
   match ae with
   | Some a ->
-      VDeclAss
-        {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
-  | _ -> VDecl (reducearray (sbt, sizes), id)
+      ( VDeclAss
+          {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
+      , {stmt_meta_type= None} )
+  | _ -> (VDecl (reducearray (sbt, sizes), id), {stmt_meta_type= None})
 
 let construct_top_var_decl_no_assign tvt id d =
   let sizes = match d with None -> [] | Some l -> l in
-  (reducearray (fst tvt, sizes), snd tvt, id)
+  (TVDecl (reducearray (fst tvt, sizes), snd tvt, id), {stmt_meta_type= None})
 
 let construct_top_var_decl tvt id d ass =
   let sizes = match d with None -> [] | Some l -> l in
   match ass with
   | Some a ->
-      TVDeclAss
-        { tsizedtype= reducearray (fst tvt, sizes)
-        ; transformation= snd tvt
-        ; tidentifier= id
-        ; tvalue= snd a }
-  | _ -> TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+      ( TVDeclAss
+          { tsizedtype= reducearray (fst tvt, sizes)
+          ; transformation= snd tvt
+          ; tidentifier= id
+          ; tvalue= snd a }
+      , {stmt_meta_type= None} )
+  | _ ->
+      ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+      , {stmt_meta_type= None} )
 
 let construct_truncation e1 e2 =
   match (e1, e2) with
