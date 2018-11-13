@@ -246,9 +246,15 @@ loc_scale:
   | LOCATION ASSIGN e1=constr_expression COMMA SCALE ASSIGN e2=constr_expression
     { grammar_logger "loc_scale" ; LocationScale (e1, e2) }
   | LOCATION ASSIGN e=constr_expression
-    {  grammar_logger "loc" ; LocationScale (e, (RealNumeral "1.", None)) }
+    {
+      grammar_logger "loc" ;
+      LocationScale (e, (RealNumeral "1.", empty_expr_meta))
+    }
   | SCALE ASSIGN e=constr_expression
-    { grammar_logger "scale" ; LocationScale ((RealNumeral "0.", None), e) }
+    {
+      grammar_logger "scale" ;
+      LocationScale ((RealNumeral "0.", empty_expr_meta), e)
+    }
 
 dims:
   | LBRACK l=separated_list(COMMA, expression) RBRACK
@@ -259,10 +265,10 @@ expression:
   | l=lhs
     { 
       grammar_logger "lhs_expression" ;
-      (Indexed ((Variable (fst l), None), snd l), None)
+      (Indexed ((Variable (fst l), empty_expr_meta), snd l), empty_expr_meta)
     }
   | e=non_lhs
-    { grammar_logger "non_lhs_expression" ; (e, None)}
+    { grammar_logger "non_lhs_expression" ; (e, empty_expr_meta)}
 
 non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e1=expression QMARK e2=expression COLON e3=expression 
@@ -274,7 +280,7 @@ non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e=expression op=postfixOp 
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
   | ue=non_lhs LBRACK i=indexes RBRACK 
-    {  grammar_logger "expression_indexed" ; Indexed ((ue, None), i)}
+    {  grammar_logger "expression_indexed" ; Indexed ((ue, empty_expr_meta), i)}
   | e=common_expression 
     { grammar_logger "common_expr" ; e }
 
@@ -283,18 +289,33 @@ constr_expression:
   | e1=constr_expression op=arithmeticInfixOp e2=constr_expression 
     { 
       grammar_logger "constr_expression_arithmetic" ;
-      (InfixOp (e1, op, e2), None)
+      (InfixOp (e1, op, e2), empty_expr_meta)
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary 
-    {  grammar_logger "constr_expression_prefixOp" ; (PrefixOp (op, e), None) }
+    {
+      grammar_logger "constr_expression_prefixOp" ;
+      (PrefixOp (op, e), empty_expr_meta) 
+    }
   | e=constr_expression op=postfixOp 
-    {  grammar_logger "constr_expression_postfix" ; (PostfixOp (e, op), None) }
+    {
+      grammar_logger "constr_expression_postfix" ; 
+      (PostfixOp (e, op), empty_expr_meta) 
+    }
   | e=constr_expression LBRACK i=indexes RBRACK 
-    {  grammar_logger "constr_expression_indexed" ; (Indexed (e, i), None) }
+    {
+      grammar_logger "constr_expression_indexed" ; 
+      (Indexed (e, i), empty_expr_meta) 
+    }
   | e=common_expression 
-    {  grammar_logger "constr_expression_common_expr" ; (e, None) }
+    {
+      grammar_logger "constr_expression_common_expr" ;
+      (e, empty_expr_meta) 
+    }
   | id=IDENTIFIER 
-    { grammar_logger "constr_expression_identifier" ; (Variable id, None) }
+    {
+      grammar_logger "constr_expression_identifier" ; 
+      (Variable id, empty_expr_meta) 
+    }
 
 common_expression:
   | i=INTNUMERAL 

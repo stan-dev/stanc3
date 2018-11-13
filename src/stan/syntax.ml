@@ -75,9 +75,9 @@ and untypedexpression =
   | Indexed of expression * index list
 
 and expression_metadata =
-  {expr_meta_origin: originblock; expr_meta_type: unsizedtype}
+  {expr_meta_origintype: (originblock * unsizedtype) option}
 
-and expression = untypedexpression * expression_metadata option
+and expression = untypedexpression * expression_metadata
 
 (* == Statements == *)
 and assignmentoperator =
@@ -214,7 +214,8 @@ let string_of_expressiontype = function
   | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
 
 let string_of_expr_meta_data = function
-  | None -> "unknown"
-  | Some {expr_meta_type= ut; _} -> Sexp.to_string (sexp_of_unsizedtype ut)
+  | {expr_meta_origintype= None; _} -> "unknown"
+  | {expr_meta_origintype= Some (_, ut); _} ->
+      Sexp.to_string (sexp_of_unsizedtype ut)
 
 (* TODO: implement more pretty printing functions for generating error messages *)

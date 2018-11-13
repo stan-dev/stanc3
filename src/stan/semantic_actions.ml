@@ -73,4 +73,4 @@ let construct_tilde_statement e id es ot =
   let t = match ot with Some tt -> tt | _ -> NoTruncate in
   Tilde {arg= e; distribution= id; args= es; truncation= t}
 
-let empty_expr_meta = None
+let empty_expr_meta = {expr_meta_origintype= None}
