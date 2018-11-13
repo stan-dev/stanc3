@@ -58,36 +58,39 @@ and prefixop = Not | UMinus | UPlus
 
 and postfixop = Transpose
 
-and index =
+and 'em index =
   | All
-  | Single of expression
-  | Upfrom of expression
-  | Downfrom of expression
-  | Between of expression * expression
-  | Multiple of expression
+  | Single of 'em
+  | Upfrom of 'em
+  | Downfrom of 'em
+  | Between of 'em * 'em
+  | Multiple of 'em
 
-and bare_expression =
-  | Conditional of expression * expression * expression
-  | InfixOp of expression * infixop * expression
-  | PrefixOp of prefixop * expression
-  | PostfixOp of expression * postfixop
+and 'em expression =
+  | Conditional of 'em * 'em * 'em
+  | InfixOp of 'em * infixop * 'em
+  | PrefixOp of prefixop * 'em
+  | PostfixOp of 'em * postfixop
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of identifier * expression list
-  | CondFunApp of identifier * expression list
+  | FunApp of identifier * ('em list)
+  | CondFunApp of identifier * ('em list)
   | GetLP
   (* deprecated *)
   | GetTarget
-  | ArrayExpr of expression list
-  | RowVectorExpr of expression list
-  | Paren of expression
-  | Indexed of expression * index list
+  | ArrayExpr of 'em list
+  | RowVectorExpr of 'em list
+  | Paren of 'em
+  | Indexed of 'em * ('em index) list
 
-and expression_metadata =
+and expression_untyped_metadata =
+  {expr_meta_none: unit}
+  
+and expression_typed_metadata =
   {expr_meta_origintype: (originblock * unsizedtype) option}
 
-and expression = bare_expression * expression_metadata
+and typed_expression = TypedExpr of ((typed_expression expression) * expression_typed_metadata)
 
 (* == Statements == *)
 and assignmentoperator =
@@ -101,28 +104,28 @@ and assignmentoperator =
   | ArrowAssign
 
 (* deprecated *)
-and truncation =
+and 'em truncation =
   | NoTruncate
-  | TruncateUpFrom of expression
-  | TruncateDownFrom of expression
-  | TruncateBetween of expression * expression
+  | TruncateUpFrom of 'em
+  | TruncateDownFrom of 'em
+  | TruncateBetween of 'em * 'em
 
-and printable = PString of string | PExpr of expression
+and 'em printable = PString of string | PExpr of 'em
 
-and sizedtype =
+and 'em sizedtype =
   | SInt
   | SReal
-  | SVector of expression
-  | SRowVector of expression
-  | SMatrix of expression * expression
-  | SArray of sizedtype * expression
+  | SVector of 'em
+  | SRowVector of 'em
+  | SMatrix of 'em * 'em
+  | SArray of ('em sizedtype ) * 'em
 
-and transformation =
+and 'em transformation =
   | Identity
-  | Lower of expression
-  | Upper of expression
-  | LowerUpper of expression * expression
-  | LocationScale of expression * expression
+  | Lower of 'em
+  | Upper of 'em
+  | LowerUpper of 'em * 'em
+  | LocationScale of 'em * 'em
   | Ordered
   | PositiveOrdered
   | Simplex
@@ -132,67 +135,69 @@ and transformation =
   | Correlation
   | Covariance
 
-and bare_statement =
+and ('em, 'sm) statement =
   | Assignment of
       { assign_identifier: identifier
-      ; assign_indices: index list
+      ; assign_indices: ('em index) list
       ; assign_op: assignmentoperator
-      ; assign_rhs: expression }
-  | NRFunApp of identifier * expression list
-  | TargetPE of expression
-  | IncrementLogProb of expression
+      ; assign_rhs: 'em }
+  | NRFunApp of identifier * 'em list
+  | TargetPE of 'em
+  | IncrementLogProb of 'em
   (* deprecated *)
   | Tilde of
-      { arg: expression
+      { arg: 'em
       ; distribution: identifier
-      ; args: expression list
-      ; truncation: truncation }
+      ; args: 'em list
+      ; truncation: 'em truncation }
   | Break
   | Continue
-  | Return of expression
-  | Print of printable list
-  | Reject of printable list
+  | Return of 'em
+  | Print of 'em printable list
+  | Reject of 'em printable list
   | Skip
-  | IfThenElse of expression * statement * statement
-  | IfThen of expression * statement
-  | While of expression * statement
+  | IfThenElse of 'em * 'sm * 'sm
+  | IfThen of 'em * 'sm
+  | While of 'em * 'sm
   | For of
       { loop_variable: identifier
-      ; lower_bound: expression
-      ; upper_bound: expression
-      ; loop_body: statement }
-  | ForEach of identifier * expression * statement
-  | Block of statement list
-  | VDecl of sizedtype * identifier
+      ; lower_bound: 'em
+      ; upper_bound: 'em
+      ; loop_body: 'sm }
+  | ForEach of identifier * 'em * 'sm
+  | Block of 'sm list
+  | VDecl of ('em sizedtype) * identifier
   | VDeclAss of
-      { sizedtype: sizedtype
+      { sizedtype: ('em sizedtype)
       ; identifier: identifier
-      ; value: expression }
-  | TVDecl of sizedtype * transformation * identifier
+      ; value: 'em }
+  | TVDecl of ('em sizedtype) * ('em transformation) * identifier
   | TVDeclAss of
-      { tsizedtype: sizedtype
-      ; transformation: transformation
+      { tsizedtype: ('em sizedtype)
+      ; transformation: ('em transformation)
       ; tidentifier: identifier
-      ; tvalue: expression }
+      ; tvalue: 'em }
   | FunDef of
       { returntype: returntype
       ; name: identifier
       ; arguments: (originblock * unsizedtype * identifier) list
-      ; body: statement }
+      ; body: 'sm }
 
-and statement_metadata = {stmt_meta_type: returntype option}
+and statement_typed_metadata = {stmt_meta_type: returntype option}
 
-and statement = bare_statement * statement_metadata
+and typed_statement = TypedStmt of (((typed_expression, typed_statement) statement) * statement_typed_metadata)
 
 (* == Programs == *)
-and program =
-  { functionblock: statement list option
-  ; datablock: statement list option
-  ; transformeddatablock: statement list option
-  ; parametersblock: statement list option
-  ; transformedparametersblock: statement list option
-  ; modelblock: statement list option
-  ; generatedquantitiesblock: statement list option }
+and 'sm program =
+  { functionblock: 'sm list option
+  ; datablock: 'sm list option
+  ; transformeddatablock: 'sm  list option
+  ; parametersblock: 'sm list option
+  ; transformedparametersblock: 'sm list option
+  ; modelblock: 'sm list option
+  ; generatedquantitiesblock: 'sm list option }
+
+and typed_program = typed_statement program
 [@@deriving sexp, compare]
 
 (* == Stuff that probably should be moved to another file == *)

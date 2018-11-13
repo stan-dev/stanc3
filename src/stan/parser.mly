@@ -58,8 +58,8 @@ open Debug
 
 (* Top level rule *)
 %start program file
-%type <Syntax.program> program
-%type <Syntax.program list> file (* TODO: fix that a Stan file can only contain one program *)
+%type <Syntax.typed_program> program
+%type <Syntax.typed_program list> file (* TODO: fix that a Stan file can only contain one program *)
 
 %%
 
@@ -120,7 +120,7 @@ function_def:
     RPAREN b=statement
     { 
       grammar_logger "function_def" ;
-      (FunDef {returntype = rt; name = name; arguments = args; body=b;},
+      TypedStmt (FunDef {returntype = rt; name = name; arguments = args; body=b;},
        {stmt_meta_type=None})
     }
 
@@ -249,12 +249,12 @@ loc_scale:
   | LOCATION ASSIGN e=constr_expression
     {
       grammar_logger "loc" ;
-      LocationScale (e, (RealNumeral "1.", empty_expr_meta))
+      LocationScale (e, TypedExpr (RealNumeral "1.", empty_expr_meta))
     }
   | SCALE ASSIGN e=constr_expression
     {
       grammar_logger "scale" ;
-      LocationScale ((RealNumeral "0.", empty_expr_meta), e)
+      LocationScale (TypedExpr (RealNumeral "0.", empty_expr_meta), e)
     }
 
 dims:
@@ -266,10 +266,10 @@ expression:
   | l=lhs
     { 
       grammar_logger "lhs_expression" ;
-      (Indexed ((Variable (fst l), empty_expr_meta), snd l), empty_expr_meta)
+      TypedExpr (Indexed (TypedExpr (Variable (fst l), empty_expr_meta), snd l), empty_expr_meta)
     }
   | e=non_lhs
-    { grammar_logger "non_lhs_expression" ; (e, empty_expr_meta)}
+    { grammar_logger "non_lhs_expression" ; TypedExpr (e, empty_expr_meta)}
 
 non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e1=expression QMARK e2=expression COLON e3=expression 
@@ -281,7 +281,7 @@ non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e=expression op=postfixOp 
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
   | ue=non_lhs LBRACK i=indexes RBRACK 
-    {  grammar_logger "expression_indexed" ; Indexed ((ue, empty_expr_meta), i)}
+    {  grammar_logger "expression_indexed" ; Indexed (TypedExpr (ue, empty_expr_meta), i)}
   | e=common_expression 
     { grammar_logger "common_expr" ; e }
 
@@ -290,32 +290,32 @@ constr_expression:
   | e1=constr_expression op=arithmeticInfixOp e2=constr_expression 
     { 
       grammar_logger "constr_expression_arithmetic" ;
-      (InfixOp (e1, op, e2), empty_expr_meta)
+      TypedExpr (InfixOp (e1, op, e2), empty_expr_meta)
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary 
     {
       grammar_logger "constr_expression_prefixOp" ;
-      (PrefixOp (op, e), empty_expr_meta) 
+      TypedExpr (PrefixOp (op, e), empty_expr_meta) 
     }
   | e=constr_expression op=postfixOp 
     {
       grammar_logger "constr_expression_postfix" ; 
-      (PostfixOp (e, op), empty_expr_meta) 
+      TypedExpr (PostfixOp (e, op), empty_expr_meta) 
     }
   | e=constr_expression LBRACK i=indexes RBRACK 
     {
       grammar_logger "constr_expression_indexed" ; 
-      (Indexed (e, i), empty_expr_meta) 
+      TypedExpr (Indexed (e, i), empty_expr_meta) 
     }
   | e=common_expression 
     {
       grammar_logger "constr_expression_common_expr" ;
-      (e, empty_expr_meta) 
+      TypedExpr (e, empty_expr_meta) 
     }
   | id=IDENTIFIER 
     {
       grammar_logger "constr_expression_identifier" ; 
-      (Variable id, empty_expr_meta) 
+      TypedExpr (Variable id, empty_expr_meta) 
     }
 
 common_expression:
@@ -429,9 +429,9 @@ lhs:
 (* statements *)
 statement:
   | s=atomic_statement   
-    {  grammar_logger "atomic_statement" ; (s, {stmt_meta_type=None}) }
+    {  grammar_logger "atomic_statement" ; TypedStmt (s, {stmt_meta_type=None}) }
   | s=nested_statement 
-    {  grammar_logger "nested_statement" ; (s, {stmt_meta_type=None}) }
+    {  grammar_logger "nested_statement" ; TypedStmt (s, {stmt_meta_type=None}) }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  
