@@ -48,10 +48,11 @@ be parsed).
 - tested on all models in `stan/src/test/test-models/good`
 - Ported all function signatures from Stan Math
 - Prototype semantic check
+- Lexical position printed in syntactic and semantic error messages
 
 # TODO
-- Generate better error messages during parsing (use menhir --list-errors to systematically list all paths to a parse error which should get a custom error message)
-- Thread line number and position (span) through to AST and produce informative error messages during the semantic checking phase
+- Generate better syntax error messages during parsing (use menhir --list-errors to systematically list all paths to a parse error which should get a custom error message)
+- Improve quality of semantic error messages
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Create code generation phase from IRs
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
