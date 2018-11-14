@@ -3,9 +3,13 @@
 
 open Syntax
 
-let empty_expr_meta = {expr_meta_none= ()}
+let empty_expr_meta =
+  {expr_untyped_meta_pos= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}
 
-let empty_stmt_meta = {stmt_meta_none= ()}
+let empty_stmt_meta =
+  {stmt_untyped_meta_pos= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}
+
+let pos_stmt_meta pos = {stmt_untyped_meta_pos= pos}
 
 let construct_program obf obd obtd obp obtp obm obg =
   let rbf = match obf with Some bf -> bf | _ -> None in

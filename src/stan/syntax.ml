@@ -80,10 +80,12 @@ and 'e expression =
   | Paren of 'e
   | Indexed of 'e * 'e index list
 
-and expression_untyped_metadata = {expr_meta_none: unit}
+and expression_untyped_metadata =
+  {expr_untyped_meta_pos: Zoo.location sexp_opaque [@compare.ignore]}
 
 and expression_typed_metadata =
-  {expr_meta_origintype: originblock * unsizedtype}
+  { expr_typed_meta_origin_type: originblock * unsizedtype
+  ; expr_typed_meta_pos: Zoo.location sexp_opaque [@compare.ignore] }
 
 and untyped_expression =
   | UntypedExpr of (untyped_expression expression * expression_untyped_metadata)
@@ -179,9 +181,12 @@ and ('e, 's) statement =
       ; arguments: (originblock * unsizedtype * identifier) list
       ; body: 's }
 
-and statement_untyped_metadata = {stmt_meta_none: unit}
+and statement_untyped_metadata =
+  {stmt_untyped_meta_pos: Zoo.location sexp_opaque [@compare.ignore]}
 
-and statement_typed_metadata = {stmt_meta_type: returntype}
+and statement_typed_metadata =
+  { stmt_typed_meta_type: returntype
+  ; stmt_typed_meta_pos: Zoo.location sexp_opaque [@compare.ignore] }
 
 and untyped_statement =
   | UntypedStmt of
