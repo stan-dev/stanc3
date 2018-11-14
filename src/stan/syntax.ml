@@ -58,31 +58,31 @@ and prefixop = Not | UMinus | UPlus
 
 and postfixop = Transpose
 
-and 'em index =
+and 'e index =
   | All
-  | Single of 'em
-  | Upfrom of 'em
-  | Downfrom of 'em
-  | Between of 'em * 'em
-  | Multiple of 'em
+  | Single of 'e
+  | Upfrom of 'e
+  | Downfrom of 'e
+  | Between of 'e * 'e
+  | Multiple of 'e
 
-and 'em expression =
-  | Conditional of 'em * 'em * 'em
-  | InfixOp of 'em * infixop * 'em
-  | PrefixOp of prefixop * 'em
-  | PostfixOp of 'em * postfixop
+and 'e expression =
+  | Conditional of 'e * 'e * 'e
+  | InfixOp of 'e * infixop * 'e
+  | PrefixOp of prefixop * 'e
+  | PostfixOp of 'e * postfixop
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of identifier * 'em list
-  | CondFunApp of identifier * 'em list
+  | FunApp of identifier * 'e list
+  | CondFunApp of identifier * 'e list
   | GetLP
   (* deprecated *)
   | GetTarget
-  | ArrayExpr of 'em list
-  | RowVectorExpr of 'em list
-  | Paren of 'em
-  | Indexed of 'em * 'em index list
+  | ArrayExpr of 'e list
+  | RowVectorExpr of 'e list
+  | Paren of 'e
+  | Indexed of 'e * 'e index list
 
 and expression_untyped_metadata = {expr_meta_none: unit}
 
@@ -107,28 +107,28 @@ and assignmentoperator =
   | ArrowAssign
 
 (* deprecated *)
-and 'em truncation =
+and 'e truncation =
   | NoTruncate
-  | TruncateUpFrom of 'em
-  | TruncateDownFrom of 'em
-  | TruncateBetween of 'em * 'em
+  | TruncateUpFrom of 'e
+  | TruncateDownFrom of 'e
+  | TruncateBetween of 'e * 'e
 
-and 'em printable = PString of string | PExpr of 'em
+and 'e printable = PString of string | PExpr of 'e
 
-and 'em sizedtype =
+and 'e sizedtype =
   | SInt
   | SReal
-  | SVector of 'em
-  | SRowVector of 'em
-  | SMatrix of 'em * 'em
-  | SArray of 'em sizedtype * 'em
+  | SVector of 'e
+  | SRowVector of 'e
+  | SMatrix of 'e * 'e
+  | SArray of 'e sizedtype * 'e
 
-and 'em transformation =
+and 'e transformation =
   | Identity
-  | Lower of 'em
-  | Upper of 'em
-  | LowerUpper of 'em * 'em
-  | LocationScale of 'em * 'em
+  | Lower of 'e
+  | Upper of 'e
+  | LowerUpper of 'e * 'e
+  | LocationScale of 'e * 'e
   | Ordered
   | PositiveOrdered
   | Simplex
@@ -138,50 +138,50 @@ and 'em transformation =
   | Correlation
   | Covariance
 
-and ('em, 'sm) statement =
+and ('e, 's) statement =
   | Assignment of
       { assign_identifier: identifier
-      ; assign_indices: 'em index list
+      ; assign_indices: 'e index list
       ; assign_op: assignmentoperator
-      ; assign_rhs: 'em }
-  | NRFunApp of identifier * 'em list
-  | TargetPE of 'em
-  | IncrementLogProb of 'em
+      ; assign_rhs: 'e }
+  | NRFunApp of identifier * 'e list
+  | TargetPE of 'e
+  | IncrementLogProb of 'e
   (* deprecated *)
   | Tilde of
-      { arg: 'em
+      { arg: 'e
       ; distribution: identifier
-      ; args: 'em list
-      ; truncation: 'em truncation }
+      ; args: 'e list
+      ; truncation: 'e truncation }
   | Break
   | Continue
-  | Return of 'em
-  | Print of 'em printable list
-  | Reject of 'em printable list
+  | Return of 'e
+  | Print of 'e printable list
+  | Reject of 'e printable list
   | Skip
-  | IfThenElse of 'em * 'sm * 'sm
-  | IfThen of 'em * 'sm
-  | While of 'em * 'sm
+  | IfThenElse of 'e * 's * 's
+  | IfThen of 'e * 's
+  | While of 'e * 's
   | For of
       { loop_variable: identifier
-      ; lower_bound: 'em
-      ; upper_bound: 'em
-      ; loop_body: 'sm }
-  | ForEach of identifier * 'em * 'sm
-  | Block of 'sm list
-  | VDecl of 'em sizedtype * identifier
-  | VDeclAss of {sizedtype: 'em sizedtype; identifier: identifier; value: 'em}
-  | TVDecl of 'em sizedtype * 'em transformation * identifier
+      ; lower_bound: 'e
+      ; upper_bound: 'e
+      ; loop_body: 's }
+  | ForEach of identifier * 'e * 's
+  | Block of 's list
+  | VDecl of 'e sizedtype * identifier
+  | VDeclAss of {sizedtype: 'e sizedtype; identifier: identifier; value: 'e}
+  | TVDecl of 'e sizedtype * 'e transformation * identifier
   | TVDeclAss of
-      { tsizedtype: 'em sizedtype
-      ; transformation: 'em transformation
+      { tsizedtype: 'e sizedtype
+      ; transformation: 'e transformation
       ; tidentifier: identifier
-      ; tvalue: 'em }
+      ; tvalue: 'e }
   | FunDef of
       { returntype: returntype
       ; name: identifier
       ; arguments: (originblock * unsizedtype * identifier) list
-      ; body: 'sm }
+      ; body: 's }
 
 and statement_untyped_metadata = {stmt_meta_none: unit}
 
@@ -197,14 +197,14 @@ and typed_statement =
       ((typed_expression, typed_statement) statement * statement_typed_metadata)
 
 (* == Programs == *)
-and 'sm program =
-  { functionblock: 'sm list option
-  ; datablock: 'sm list option
-  ; transformeddatablock: 'sm list option
-  ; parametersblock: 'sm list option
-  ; transformedparametersblock: 'sm list option
-  ; modelblock: 'sm list option
-  ; generatedquantitiesblock: 'sm list option }
+and 's program =
+  { functionblock: 's list option
+  ; datablock: 's list option
+  ; transformeddatablock: 's list option
+  ; parametersblock: 's list option
+  ; transformedparametersblock: 's list option
+  ; modelblock: 's list option
+  ; generatedquantitiesblock: 's list option }
 
 and untyped_program = untyped_statement program
 
