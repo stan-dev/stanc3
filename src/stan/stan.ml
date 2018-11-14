@@ -4,7 +4,7 @@ open Syntax
 module CalcVar = Zoo.Main (struct
   let name = "stan"
 
-  type command = Syntax.program
+  type command = Syntax.untyped_program
 
   (** There is no top-level environment as all variables are local *)
   type environment = unit
@@ -22,9 +22,7 @@ module CalcVar = Zoo.Main (struct
 
   (** The command that actually executes a command. *)
   let exec _ p =
-    let _ =
-      Debug.decorated_ast_logger (Semantic_check.semantic_check_program p)
-    in
+    let _ = Debug.typed_ast_logger (Semantic_check.semantic_check_program p) in
     ()
 end)
 

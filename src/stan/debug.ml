@@ -14,14 +14,17 @@ let grammar_logging = false
 let ast_printing = false
 
 (* Controls whether a decorated AST gets printed after the semantic check *)
-let decorated_ast_printing = false
+let typed_ast_printing = false
 
 let grammar_logger s = if grammar_logging then print_endline s
 
 let ast_to_string x =
   [%sexp (x : Syntax.untyped_program)] |> Sexp.to_string_hum
 
+let typed_ast_to_string x =
+  [%sexp (x : Syntax.typed_program)] |> Sexp.to_string_hum
+
 let ast_logger t = if ast_printing then print_endline (ast_to_string t)
 
-let decorated_ast_logger t =
-  if decorated_ast_printing then print_endline (ast_to_string t)
+let typed_ast_logger t =
+  if typed_ast_printing then print_endline (typed_ast_to_string t)
