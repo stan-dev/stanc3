@@ -120,8 +120,9 @@ function_def:
     RPAREN b=statement
     { 
       grammar_logger "function_def" ;
-      UntypedStmt (FunDef {returntype = rt; name = name; arguments = args; body=b;},
-       empty_stmt_meta)
+      UntypedStmt (FunDef {returntype = rt; name = name;
+                           arguments = args; body=b;},
+      initialize_stmt_meta $startpos $endpos)
     }
 
 return_type:
@@ -158,7 +159,8 @@ unsized_dims:
 var_decl:
   | sbt=sized_basic_type id=IDENTIFIER d=option(dims)
     ae=option(pair(ASSIGN, expression)) SEMICOLON
-    { grammar_logger "var_decl" ; construct_var_decl sbt id d ae  }
+    { grammar_logger "var_decl" ;
+      construct_var_decl sbt id d ae $startpos $endpos }
 
 sized_basic_type:
   | INT
@@ -176,13 +178,14 @@ top_var_decl_no_assign:
   | tvt=top_var_type id=IDENTIFIER d=option(dims) SEMICOLON
     {
       grammar_logger "top_var_decl" ;
-      construct_top_var_decl_no_assign tvt id d
+      construct_top_var_decl_no_assign tvt id d $startpos $endpos
     }
 
 top_var_decl:
   | tvt=top_var_type id=IDENTIFIER d=option(dims)
     ass=option(pair(ASSIGN, expression)) SEMICOLON
-    { grammar_logger "top_var_decl"  ; construct_top_var_decl tvt id d ass }
+    { grammar_logger "top_var_decl" ;
+      construct_top_var_decl tvt id d ass $startpos $endpos}
 
 top_var_type:
   | INT r=range_constraint
@@ -249,12 +252,16 @@ loc_scale:
   | LOCATION ASSIGN e=constr_expression
     {
       grammar_logger "loc" ;
-      LocationScale (e, UntypedExpr (RealNumeral "1.", empty_expr_meta))
+      LocationScale (e, UntypedExpr (RealNumeral "1.",
+                                     initialize_expr_meta $startpos(e)
+                                                          $endpos(e)))
     }
   | SCALE ASSIGN e=constr_expression
     {
       grammar_logger "scale" ;
-      LocationScale (UntypedExpr (RealNumeral "0.", empty_expr_meta), e)
+      LocationScale (UntypedExpr (RealNumeral "0.",
+                                  initialize_expr_meta $startpos(e)
+                                                       $endpos(e)), e)
     }
 
 dims:
@@ -266,10 +273,13 @@ expression:
   | l=lhs
     { 
       grammar_logger "lhs_expression" ;
-      UntypedExpr (Indexed (UntypedExpr (Variable (fst l), empty_expr_meta), snd l), empty_expr_meta)
+      UntypedExpr (Indexed (UntypedExpr (Variable (fst l), initialize_expr_meta
+                   $startpos $endpos), snd l),
+                   initialize_expr_meta $startpos $endpos)
     }
   | e=non_lhs
-    { grammar_logger "non_lhs_expression" ; UntypedExpr (e, empty_expr_meta)}
+    { grammar_logger "non_lhs_expression" ;
+      UntypedExpr (e, initialize_expr_meta $startpos $endpos)}
 
 non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e1=expression QMARK e2=expression COLON e3=expression 
@@ -281,7 +291,9 @@ non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
   | e=expression op=postfixOp 
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
   | ue=non_lhs LBRACK i=indexes RBRACK 
-    {  grammar_logger "expression_indexed" ; Indexed (UntypedExpr (ue, empty_expr_meta), i)}
+    {  grammar_logger "expression_indexed" ;
+       Indexed (UntypedExpr (ue, initialize_expr_meta $startpos(ue)
+                                                      $endpos(ue)), i)}
   | e=common_expression 
     { grammar_logger "common_expr" ; e }
 
@@ -290,32 +302,32 @@ constr_expression:
   | e1=constr_expression op=arithmeticInfixOp e2=constr_expression 
     { 
       grammar_logger "constr_expression_arithmetic" ;
-      UntypedExpr (InfixOp (e1, op, e2), empty_expr_meta)
+      UntypedExpr (InfixOp (e1, op, e2), initialize_expr_meta $startpos $endpos)
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary 
     {
       grammar_logger "constr_expression_prefixOp" ;
-      UntypedExpr (PrefixOp (op, e), empty_expr_meta) 
+      UntypedExpr (PrefixOp (op, e), initialize_expr_meta $startpos $endpos) 
     }
   | e=constr_expression op=postfixOp 
     {
       grammar_logger "constr_expression_postfix" ; 
-      UntypedExpr (PostfixOp (e, op), empty_expr_meta) 
+      UntypedExpr (PostfixOp (e, op), initialize_expr_meta $startpos $endpos) 
     }
   | e=constr_expression LBRACK i=indexes RBRACK 
     {
       grammar_logger "constr_expression_indexed" ; 
-      UntypedExpr (Indexed (e, i), empty_expr_meta) 
+      UntypedExpr (Indexed (e, i), initialize_expr_meta $startpos $endpos) 
     }
   | e=common_expression 
     {
       grammar_logger "constr_expression_common_expr" ;
-      UntypedExpr (e, empty_expr_meta) 
+      UntypedExpr (e, initialize_expr_meta $startpos $endpos) 
     }
   | id=IDENTIFIER 
     {
       grammar_logger "constr_expression_identifier" ; 
-      UntypedExpr (Variable id, empty_expr_meta) 
+      UntypedExpr (Variable id, initialize_expr_meta $startpos $endpos) 
     }
 
 common_expression:
@@ -429,9 +441,11 @@ lhs:
 (* statements *)
 statement:
   | s=atomic_statement   
-    {  grammar_logger "atomic_statement" ; UntypedStmt (s, empty_stmt_meta) }
+    {  grammar_logger "atomic_statement" ;
+       UntypedStmt (s, initialize_stmt_meta $startpos $endpos) }
   | s=nested_statement 
-    {  grammar_logger "nested_statement" ; UntypedStmt (s, empty_stmt_meta) }
+    {  grammar_logger "nested_statement" ;
+       UntypedStmt (s, initialize_stmt_meta $startpos $endpos) }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  

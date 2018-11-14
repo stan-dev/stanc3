@@ -81,11 +81,11 @@ and 'e expression =
   | Indexed of 'e * 'e index list
 
 and expression_untyped_metadata =
-  {expr_untyped_meta_pos: Zoo.location sexp_opaque [@compare.ignore]}
+  {expr_untyped_meta_loc: Zoo.location sexp_opaque [@compare.ignore]}
 
 and expression_typed_metadata =
   { expr_typed_meta_origin_type: originblock * unsizedtype
-  ; expr_typed_meta_pos: Zoo.location sexp_opaque [@compare.ignore] }
+  ; expr_typed_meta_loc: Zoo.location sexp_opaque [@compare.ignore] }
 
 and untyped_expression =
   | UntypedExpr of (untyped_expression expression * expression_untyped_metadata)
@@ -182,11 +182,11 @@ and ('e, 's) statement =
       ; body: 's }
 
 and statement_untyped_metadata =
-  {stmt_untyped_meta_pos: Zoo.location sexp_opaque [@compare.ignore]}
+  {stmt_untyped_meta_loc: Zoo.location sexp_opaque [@compare.ignore]}
 
 and statement_typed_metadata =
   { stmt_typed_meta_type: returntype
-  ; stmt_typed_meta_pos: Zoo.location sexp_opaque [@compare.ignore] }
+  ; stmt_typed_meta_loc: Zoo.location sexp_opaque [@compare.ignore] }
 
 and untyped_statement =
   | UntypedStmt of

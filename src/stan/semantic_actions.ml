@@ -4,12 +4,18 @@
 open Syntax
 
 let empty_expr_meta =
-  {expr_untyped_meta_pos= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}
+  {expr_untyped_meta_loc= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}
+
+let initialize_expr_meta startpos endpos =
+  {expr_untyped_meta_loc= Zoo.make_location startpos endpos}
 
 let empty_stmt_meta =
-  {stmt_untyped_meta_pos= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}
+  {stmt_untyped_meta_loc= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}
 
-let pos_stmt_meta pos = {stmt_untyped_meta_pos= pos}
+let initialize_stmt_meta startpos endpos =
+  {stmt_untyped_meta_loc= Zoo.make_location startpos endpos}
+
+let pos_stmt_meta loc = {stmt_untyped_meta_loc= loc}
 
 let construct_program obf obd obtd obp obtp obm obg =
   let rbf = match obf with Some bf -> bf | _ -> None in
@@ -46,22 +52,26 @@ let construct_unsized_type bt ud =
 let construct_arg_decl od ut id =
   match od with None -> (GQuant, ut, id) | _ -> (TData, ut, id)
 
-let construct_var_decl sbt id d ae =
+let construct_var_decl sbt id d ae startpos endpos =
   let sizes = match d with None -> [] | Some l -> l in
   match ae with
   | Some a ->
       UntypedStmt
         ( VDeclAss
             {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
-        , empty_stmt_meta )
-  | _ -> UntypedStmt (VDecl (reducearray (sbt, sizes), id), empty_stmt_meta)
+        , initialize_stmt_meta startpos endpos )
+  | _ ->
+      UntypedStmt
+        ( VDecl (reducearray (sbt, sizes), id)
+        , initialize_stmt_meta startpos endpos )
 
-let construct_top_var_decl_no_assign tvt id d =
+let construct_top_var_decl_no_assign tvt id d startpos endpos =
   let sizes = match d with None -> [] | Some l -> l in
   UntypedStmt
-    (TVDecl (reducearray (fst tvt, sizes), snd tvt, id), empty_stmt_meta)
+    ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+    , initialize_stmt_meta startpos endpos )
 
-let construct_top_var_decl tvt id d ass =
+let construct_top_var_decl tvt id d ass startpos endpos =
   let sizes = match d with None -> [] | Some l -> l in
   match ass with
   | Some a ->
@@ -71,10 +81,11 @@ let construct_top_var_decl tvt id d ass =
             ; transformation= snd tvt
             ; tidentifier= id
             ; tvalue= snd a }
-        , empty_stmt_meta )
+        , initialize_stmt_meta startpos endpos )
   | _ ->
       UntypedStmt
-        (TVDecl (reducearray (fst tvt, sizes), snd tvt, id), empty_stmt_meta)
+        ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+        , initialize_stmt_meta startpos endpos )
 
 let construct_truncation e1 e2 =
   match (e1, e2) with
