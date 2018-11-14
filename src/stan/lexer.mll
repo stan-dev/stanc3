@@ -12,13 +12,9 @@
     }
 }
 
-(* TODO: Add restriction that identifiers cannot be key words.  *)
-
-(* TODO: capture source span properly wherever we need it. I think I'm currently misreporting the position by one. *)
-
 (* Some auxiliary definition for variables and constants *)
 let string_literal = '"' [^'"']* '"' (* TODO: We should probably expand the alphabet *)
-let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']* (* TODO: put in constraints on variable names *)
+let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']* 
 
 let integer_constant =  ['0'-'9']+
 

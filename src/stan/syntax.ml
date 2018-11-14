@@ -3,8 +3,6 @@ open Core_kernel
 
 (* for auto generating s-exp *)
 
-(* TODO: add line numbers into metadata for expressions and statements *)
-
 (* == Unsized types == *)
 type originblock =
   | Primitives

@@ -52,8 +52,6 @@ open Debug
 
 (* TODO: deal properly with multi-file model *)
 
-(* TODO: propagate line numbers through properly for reporting semantic errors *)
-
 (* TODO: create decent parsing error messages: use menhir --list-errors to get overview of all possible errors to write custom messages for *)
 
 (* Top level rule *)

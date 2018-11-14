@@ -8,8 +8,6 @@
    
 *)
 
-(* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
-
 open Syntax
 
 (* A semantic error reported by the toplevel *)
