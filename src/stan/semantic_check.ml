@@ -195,6 +195,18 @@ let rec semantic_check_program p =
     let _ =
       if Symbol.some_fun_is_missing_def vm then
         semantic_error
+          ~loc:
+            (snd
+               (typed_statement_unroll
+                  (List.hd
+                     ((function
+                        | Some x -> x
+                        | _ ->
+                            semantic_error
+                              "This should never happen. Please file a bug. \
+                               Eror code 24.")
+                        ubf))))
+              .stmt_typed_meta_loc
           "Some function is declared without specifying a definition."
     in
     let _ = context_flags.current_block <- Data in
@@ -226,7 +238,7 @@ let rec semantic_check_program p =
     ; generatedquantitiesblock= ubgq }
 
 (* This could also be dealt with during lexing. That would probably be more efficient. *)
-and semantic_check_identifier id =
+and semantic_check_identifier loc id =
   let _ =
     if
       Filename.check_suffix id "__"
@@ -329,7 +341,7 @@ and semantic_check_identifier id =
            ; "while"
            ; "xor"
            ; "xor_eq" ]
-    then semantic_error ("Identifier " ^ id ^ " clashes with reserved keyword.")
+    then semantic_error ~loc ("Identifier " ^ id ^ " clashes with reserved keyword.")
   in
   id
 
@@ -359,32 +371,41 @@ and semantic_check_sizedtype = function
   | SReal -> SReal
   | SVector e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Vector sizes should be of type int."
+          semantic_error ~loc "Vector sizes should be of type int."
       in
       SVector ue
   | SRowVector e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Row vector sizes should be of type int."
+          semantic_error ~loc "Row vector sizes should be of type int."
       in
       SRowVector ue
   | SMatrix (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
+      let loc1 = (snd (typed_expression_unroll ue1)).expr_typed_meta_loc in
+      let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
-        if not (check_of_int_type ue1 && check_of_int_type ue2) then
-          semantic_error "Matrix sizes should be of type int."
+        if not (check_of_int_type ue1) then
+          semantic_error ~loc:loc1 "Matrix sizes should be of type int."
+      in
+      let _ =
+        if not (check_of_int_type ue2) then
+          semantic_error ~loc:loc2 "Matrix sizes should be of type int."
       in
       SMatrix (ue1, ue2)
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype st in
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Array sizes should be of type int."
+          semantic_error ~loc "Array sizes should be of type int."
       in
       SArray (ust, ue)
 
@@ -392,33 +413,50 @@ and semantic_check_transformation = function
   | Identity -> Identity
   | Lower e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error "Lower bound should be of int or real type."
+          semantic_error ~loc "Lower bound should be of int or real type."
       in
       Lower ue
   | Upper e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error "Upper bound should be of int or real type."
+          semantic_error ~loc "Upper bound should be of int or real type."
       in
       Upper ue
   | LowerUpper (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
+      let loc1 = (snd (typed_expression_unroll ue1)).expr_typed_meta_loc in
+      let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
-        if not (check_of_int_or_real_type ue1 && check_of_int_or_real_type ue2)
-        then
-          semantic_error "Lower and upper bound should be of int or real type."
+        if not (check_of_int_or_real_type ue1) then
+          semantic_error ~loc:loc1
+            "Lower and upper bound should be of int or real type."
+      in
+      let _ =
+        if not (check_of_int_or_real_type ue2) then
+          semantic_error ~loc:loc2
+            "Lower and upper bound should be of int or real type."
       in
       LowerUpper (ue1, ue2)
   | LocationScale (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
+      let loc1 = (snd (typed_expression_unroll ue1)).expr_typed_meta_loc in
+      let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
-        if not (check_of_int_or_real_type ue1 && check_of_int_or_real_type ue2)
-        then semantic_error "Location and scale should be of int or real type."
+        if not (check_of_int_or_real_type ue1) then
+          semantic_error ~loc:loc1
+            "Location and scale should be of int or real type."
+      in
+      let _ =
+        if not (check_of_int_or_real_type ue2) then
+          semantic_error ~loc:loc2
+            "Location and scale should be of int or real type."
       in
       LocationScale (ue1, ue2)
   | Ordered -> Ordered
@@ -533,7 +571,7 @@ and semantic_check_expression x =
           semantic_error ~loc
             ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | Variable id ->
-      let uid = semantic_check_identifier id in
+      let uid = semantic_check_identifier loc id in
       let ort = Symbol.look vm id in
       let _ =
         if ort = None && not (is_primitive_name uid) then
@@ -779,11 +817,10 @@ and semantic_check_expression x =
           semantic_error ~loc
             "Array expression should have entries of consistent type."
       in
-      let array_type = if
-          List.exists
-            (fun x ->
-               (List.hd elementtypes <> x ) )
-            elementtypes then Array Real else Array (List.hd elementtypes)
+      let array_type =
+        if List.exists (fun x -> List.hd elementtypes <> x) elementtypes then
+          Array Real
+        else Array (List.hd elementtypes)
       in
       let returnblock =
         lub_originblock
@@ -796,8 +833,7 @@ and semantic_check_expression x =
       in
       TypedExpr
         ( ArrayExpr ues
-        , { expr_typed_meta_origin_type=
-              (returnblock, array_type)
+        , { expr_typed_meta_origin_type= (returnblock, array_type)
           ; expr_typed_meta_loc= loc } )
   | RowVectorExpr es ->
       let ues = List.map semantic_check_expression es in
@@ -922,9 +958,10 @@ and semantic_check_printable = function
   | PString s -> PString s
   | PExpr e -> (
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       match (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type with
       | _, Fun _ | _, PrimitiveFunction ->
-          semantic_error "Functions cannot be printed."
+          semantic_error ~loc "Functions cannot be printed."
       | _ -> PExpr ue )
 
 and semantic_check_statement s =
@@ -1692,24 +1729,34 @@ and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
   | TruncateUpFrom e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error "Truncation bound should be of type int or real."
+          semantic_error ~loc "Truncation bound should be of type int or real."
       in
       TruncateUpFrom ue
   | TruncateDownFrom e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error "Truncation bound should be of type int or real."
+          semantic_error ~loc "Truncation bound should be of type int or real."
       in
       TruncateDownFrom ue
   | TruncateBetween (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
+      let loc1 = (snd (typed_expression_unroll ue1)).expr_typed_meta_loc in
+      let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
-        if not (check_of_int_or_real_type ue1 && check_of_int_or_real_type ue2)
-        then semantic_error "Truncation bound should be of type int or real."
+        if not (check_of_int_or_real_type ue1) then
+          semantic_error ~loc:loc1
+            "Truncation bound should be of type int or real."
+      in
+      let _ =
+        if not (check_of_int_or_real_type ue2) then
+          semantic_error ~loc:loc2
+            "Truncation bound should be of type int or real."
       in
       TruncateBetween (ue1, ue2)
 
