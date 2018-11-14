@@ -97,3 +97,4 @@ let construct_truncation e1 e2 =
 let construct_tilde_statement e id es ot =
   let t = match ot with Some tt -> tt | _ -> NoTruncate in
   Tilde {arg= e; distribution= id; args= es; truncation= t}
+  

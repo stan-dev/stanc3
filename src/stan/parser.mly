@@ -117,7 +117,19 @@ identifier:
   | id=IDENTIFIER
     {
       grammar_logger "identifier" ;
-      {name=id; id_loc=Zoo.make_location $startpos(id) $endpos(id)}
+      let modelname = (List.hd
+                        (List.rev
+                          (Core_kernel.String.split
+                            $startpos.pos_fname ~on:'/'
+                          )
+                        )
+                      ) in
+      let _ = if Core_kernel.String.is_suffix id "_model"
+                 && (Core_kernel.String.drop_suffix id 6) ^ ".stan"
+                      = modelname then 
+      Primitives.semantic_error ~loc:(Zoo.make_location $startpos $endpos)
+      ("Identifier " ^ id ^ " clashes with model name.") in
+      {name=id; id_loc=Zoo.make_location $startpos $endpos}
     }
 
 function_def:
