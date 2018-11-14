@@ -45,7 +45,7 @@ be parsed).
 - Prototype parser with semantic actions
 - Prototype AST
 - Debugging flags for writing out parsing operations and resulting AST as s-expression in case of a successful parse
-- tested on all models in `stan/src/test/test-models/good`
+- Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 - Ported all function signatures from Stan Math
 - Prototype semantic check
 - Lexical position printed in syntactic and semantic error messages
