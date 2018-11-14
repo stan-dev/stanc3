@@ -1643,7 +1643,7 @@ and semantic_check_index = function
       let _ =
         if not (check_of_int_array_type ue) then
           semantic_error
-            "This should never happen. Please file a bug. Error code 17."
+            "Multiple index should be of type int[]."
       in
       Multiple ue
 
