@@ -1288,14 +1288,14 @@ and semantic_check_statement s =
       in
       let us1 = semantic_check_statement s1 in
       let us2 = semantic_check_statement s2 in
+      let t1 = (snd (typed_statement_unroll us1)).stmt_typed_meta_type in
+      let t2 = (snd (typed_statement_unroll us2)).stmt_typed_meta_type in
       let _ =
-        if
-          not
-            ( snd (typed_statement_unroll us1)
-            = snd (typed_statement_unroll us2) )
-        then
+        if  t1 <> t2 then
           semantic_error ~loc
-            "Branches of conditional need to have the same return type."
+            ( "Branches of conditional need to have the same return type. \
+               Instead, found return types " ^ (string_of_returntype t1)
+            ^ " and " ^ (string_of_returntype t2) ^ "." )
       in
       TypedStmt (IfThenElse (ue, us1, us2), snd (typed_statement_unroll us1))
   | While (e, s) ->
@@ -1422,6 +1422,9 @@ and semantic_check_statement s =
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
       let _ = check_fresh_variable loc uid false in
+      (* Note: this origin block here is a bit of a curiosity to get Stan
+         to treat the level of local variables in the right way. It will get
+         modified (can be elevated) based on assignments.*)
       let _ = Symbol.enter vm id (Functions, ut) in
       TypedStmt
         ( VDecl (ust, uid)
