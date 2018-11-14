@@ -84,8 +84,7 @@ and 'em expression =
   | Paren of 'em
   | Indexed of 'em * 'em index list
 
-and expression_untyped_metadata =
-  {expr_meta_none: (originblock * unsizedtype) option}
+and expression_untyped_metadata = {expr_meta_none: unit}
 
 and expression_typed_metadata =
   {expr_meta_origintype: (originblock * unsizedtype) option}
@@ -184,7 +183,7 @@ and ('em, 'sm) statement =
       ; arguments: (originblock * unsizedtype * identifier) list
       ; body: 'sm }
 
-and statement_untyped_metadata = {stmt_meta_none: returntype option}
+and statement_untyped_metadata = {stmt_meta_none: unit}
 
 and statement_typed_metadata = {stmt_meta_type: returntype option}
 

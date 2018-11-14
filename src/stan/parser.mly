@@ -121,7 +121,7 @@ function_def:
     { 
       grammar_logger "function_def" ;
       UntypedStmt (FunDef {returntype = rt; name = name; arguments = args; body=b;},
-       {stmt_meta_none=None})
+       empty_stmt_meta)
     }
 
 return_type:
@@ -429,9 +429,9 @@ lhs:
 (* statements *)
 statement:
   | s=atomic_statement   
-    {  grammar_logger "atomic_statement" ; UntypedStmt (s, {stmt_meta_none=None}) }
+    {  grammar_logger "atomic_statement" ; UntypedStmt (s, empty_stmt_meta) }
   | s=nested_statement 
-    {  grammar_logger "nested_statement" ; UntypedStmt (s, {stmt_meta_none=None}) }
+    {  grammar_logger "nested_statement" ; UntypedStmt (s, empty_stmt_meta) }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON  

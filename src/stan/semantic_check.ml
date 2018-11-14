@@ -931,8 +931,9 @@ and semantic_check_statement s =
         semantic_check_expression
           (UntypedExpr
              ( Indexed
-                 (UntypedExpr (Variable id, {expr_meta_none= None}), lindex)
-             , {expr_meta_none= None} ))
+                 ( UntypedExpr (Variable id, Semantic_actions.empty_expr_meta)
+                 , lindex )
+             , Semantic_actions.empty_expr_meta ))
       in
       let uid, ulindex =
         match ue2 with
@@ -1419,7 +1420,7 @@ and semantic_check_statement s =
   | VDeclAss {sizedtype= st; identifier= id; value= e} -> (
     match
       ( semantic_check_statement
-          (UntypedStmt (VDecl (st, id), {stmt_meta_none= None}))
+          (UntypedStmt (VDecl (st, id), Semantic_actions.empty_stmt_meta))
       , semantic_check_statement
           (UntypedStmt
              ( Assignment
@@ -1427,7 +1428,7 @@ and semantic_check_statement s =
                  ; assign_indices= []
                  ; assign_op= Assign
                  ; assign_rhs= e }
-             , {stmt_meta_none= None} )) )
+             , Semantic_actions.empty_stmt_meta )) )
     with
     | ( TypedStmt (VDecl (ust, uid), _)
       , TypedStmt
@@ -1517,7 +1518,8 @@ and semantic_check_statement s =
       {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} -> (
     match
       ( semantic_check_statement
-          (UntypedStmt (TVDecl (st, trans, id), {stmt_meta_none= None}))
+          (UntypedStmt
+             (TVDecl (st, trans, id), Semantic_actions.empty_stmt_meta))
       , semantic_check_statement
           (UntypedStmt
              ( Assignment
@@ -1525,7 +1527,7 @@ and semantic_check_statement s =
                  ; assign_indices= []
                  ; assign_op= Assign
                  ; assign_rhs= e }
-             , {stmt_meta_none= None} )) )
+             , Semantic_actions.empty_stmt_meta )) )
     with
     | ( TypedStmt (TVDecl (ust, utrans, uid), _)
       , TypedStmt
