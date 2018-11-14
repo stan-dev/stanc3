@@ -29,9 +29,7 @@ module type SYMBOL = sig
 
   val get_global : 'a state -> string -> bool
 
-  val unsafe_remove : 'a state -> string -> unit
-
-  val unsafe_add : 'a state -> string -> 'a -> unit
+  val unsafe_replace : 'a state -> string -> 'a -> unit
 end
 
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.
@@ -98,7 +96,6 @@ module Symbol : SYMBOL = struct
   let get_global s str =
     match Hashtbl.find_opt s.global str with Some true -> true | _ -> false
 
-  let unsafe_remove s str = Hashtbl.remove s.table str
-
-  let unsafe_add s str ty = Hashtbl.add s.table str ty
+  let unsafe_replace s str ty =
+    Hashtbl.remove s.table str ; Hashtbl.add s.table str ty
 end

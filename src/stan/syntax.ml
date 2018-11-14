@@ -6,7 +6,6 @@ open Core_kernel
 (* TODO: add line numbers into metadata for expressions and statements *)
 
 (* == Unsized types == *)
-(* TODO: add primitive origin here, so everything has an origin *)
 type originblock =
   | Primitives
   | Functions
@@ -17,8 +16,6 @@ type originblock =
   | Model
   | GQuant
 
-(* TODO: Add primitive function type here, for type checking higher order functions later.
-   That way, every expression can have an unsizedtype *)
 and unsizedtype =
   | Int
   | Real
@@ -29,7 +26,6 @@ and unsizedtype =
   | Fun of (originblock * unsizedtype) list * returntype
   | PrimitiveFunction
 
-(* TODO: set up semantic check such that types are always defined. *)
 and returntype = Void | ReturnType of unsizedtype
 
 (* == Expressions == *)
@@ -223,5 +219,3 @@ let string_of_opt_expressiontype = function
   | Some x -> string_of_expressiontype x
 
 (* TODO: implement more pretty printing functions for generating error messages *)
-
-(* TODO: get rid of the Some's and None's *)

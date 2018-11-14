@@ -173,8 +173,7 @@ let update_originblock name ob =
   match Symbol.look vm name with
   | Some (old_ob, ut) ->
       let new_ob = lub_originblock [ob; old_ob] in
-      Symbol.unsafe_remove vm name ;
-      Symbol.unsafe_add vm name (new_ob, ut)
+      Symbol.unsafe_replace vm name (new_ob, ut)
   | _ ->
       semantic_error
         "This should never happen. Please file a bug. Error code 18."

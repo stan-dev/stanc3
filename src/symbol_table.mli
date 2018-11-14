@@ -35,8 +35,6 @@ module type SYMBOL = sig
   
   val get_global : 'a state -> string -> bool
   
-  val unsafe_remove : 'a state -> string -> unit
-  
-  val unsafe_add :  'a state-> string -> 'a -> unit
+  val unsafe_replace :  'a state-> string -> 'a -> unit
   
 end
