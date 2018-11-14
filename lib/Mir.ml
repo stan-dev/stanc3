@@ -2,15 +2,6 @@ open Core_kernel
 
 type litType = Int | Real | Str
 
-and sourceMap = {
-  file: string;
-  line_start: int;
-  line_end: int;
-  col_start: int;
-  col_end: int;
-}
-
-
 (* Probably need a way to go from something like a sourcemap to
    current_statement_begin__?*)
 and cond_op =
@@ -65,48 +56,20 @@ and statement =
   | Block of statement list
   | Decl of vardecl * expr option
 
-and stantype =
-  | SInt
-  | SReal
-  | SVector of expr option
-  | SRowVector of expr option
-  | SMatrix of (expr * expr) option
-  | SArray of stantype * expr option
-
-and transformation =
-  | Identity
-  | Lower of expr
-  | Upper of expr
-  | LowerUpper of expr * expr
-  | LocationScale of expr * expr
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-
-and argmod = Data | ANone
-
 and fndef = {
-  returntype: stantype option;
+  returntype: string;
   name: string;
   arguments: vardecl list;
   body: statement;
 }
 
-and vardecl = stantype * string
-
-and block = (vardecl list) * (statement list)
+and vardecl = string * string
 
 and mir = {
   functions: fndef list;
   datafields: vardecl list;
   params: vardecl list;
-  transformations: string * transformation list;
-  ctor: statement list;
-  gq: block;
+  methods: fndef list;
+  ctor: (vardecl list) * statement list;
 }
 [@@deriving sexp, hash]

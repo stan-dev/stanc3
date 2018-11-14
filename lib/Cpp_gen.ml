@@ -33,19 +33,6 @@ let emit_assign_op ppf op = fprintf ppf " %s= " begin match op with
     | And -> "&"
   end
 
-let rec emit_stantype ppf = function
-  | SInt -> emit_str ppf "int"
-  | SReal -> emit_str ppf "double"
-  | SArray(t, size) ->
-    emit_stantype ppf t;
-    begin match size with
-      | Some(e) -> emit_index ppf e
-      | None -> emit_str ppf "[]"
-    end
-  | SMatrix(_) -> emit_str ppf "Eigen::Matrix<var, -1, -1>" (* XXX *)
-  | SRowVector(_) -> emit_str ppf "Eigen::Matrix<var, 1, -1>" (* XXX *)
-  | SVector(_) -> emit_str ppf "Eigen::Matrix<var, -1, 1>" (* XXX *)
-
 and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
 
 and emit_expr ppf s = match s with
@@ -94,15 +81,15 @@ let rec emit_statement ppf s = match s with
   | Block(s) -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
   | Decl((st, ident), rhs) ->
     let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-    fprintf ppf "%a %s%a" emit_stantype st ident (emit_option emit_assignment) rhs
+    fprintf ppf "%s %s%a" st ident (emit_option emit_assignment) rhs
 
 let%expect_test "decl" =
-  Decl((SInt, "i"), Some(Lit(Int, "0"))) |> emit_statement str_formatter;
+  Decl(("int", "i"), Some(Lit(Int, "0"))) |> emit_statement str_formatter;
   flush_str_formatter () |> print_endline;
   [%expect {| int i = 0 |}]
 
 let%expect_test "statement" =
-  For({init = Decl((SInt, "i"), Some(Lit(Int, "0")));
+  For({init = Decl(("int", "i"), Some(Lit(Int, "0")));
        cond = Cond(Var "i", Geq, Lit(Int, "10"));
        step = Assignment({assignee = "i"; op = Plus; rhs = Lit(Int, "1");
                           indices = []});
@@ -114,12 +101,11 @@ let%expect_test "statement" =
       print(i)
     } |}]
 
-let emit_vardecl ppf (st, name) = fprintf ppf "%a %s" emit_stantype st name
+let emit_vardecl ppf (st, name) = fprintf ppf "%s %s" st name
 
 let emit_fndef ppf {returntype; name; arguments; body} =
-      fprintf ppf "@[<v>%a %s(%a) {@ @[<v 2>  %a;@]@ }@]"
-        (emit_option ~default:"void" emit_stantype) returntype
-        name
+      fprintf ppf "@[<v>%s %s(%a) {@ @[<v 2>  %a;@]@ }@]"
+        returntype name
         (pp_print_list ~pp_sep:comma emit_vardecl) arguments
         emit_statement body
 
