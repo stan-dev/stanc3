@@ -30,20 +30,11 @@ let rec check_of_same_type_mod_array_conv name t1 t2 =
 
 let check_of_compatible_return_type rt1 rt2 =
   match (rt1, rt2) with
-  | Some Void, Some Void -> true
-  | Some (ReturnType Real), Some (ReturnType Int) -> true
+  | Void, Void -> true
+  | ReturnType Real, ReturnType Int -> true
   | _ -> rt1 = rt2
 
-let check_compatible_arguments_mod_conv name args1 optargs2 =
-  let args2 =
-    List.map
-      (function
-        | Some x -> x
-        | None ->
-            semantic_error
-              "This should never happen. Please report a bug. Error code 15.")
-      optargs2
-  in
+let check_compatible_arguments_mod_conv name args1 args2 =
   List.length args1 = List.length args2
   && List.for_all
        (fun y -> y = true)
@@ -2475,20 +2466,18 @@ let _ =
   add_unqualified ("wishart_lpdf", ReturnType Real, [Matrix; Real; Matrix]) ;
   add_unqualified ("wishart_rng", ReturnType Matrix, [Real; Matrix])
 
-let try_get_primitive_return_type name optargtypes =
-  if List.exists (fun x -> x = None) optargtypes then None
+let try_get_primitive_return_type name argtypes =
+  let namematches = Hashtbl.find_all primitive_signatures name in
+  let filteredmatches =
+    List.filter
+      (fun x -> check_compatible_arguments_mod_conv name (snd x) argtypes)
+      namematches
+  in
+  if List.length filteredmatches = 0 then None
+    (* We return the least return type in case there are multiple options (due to implicit Int-Real conversion), where Int<Real *)
   else
-    let namematches = Hashtbl.find_all primitive_signatures name in
-    let filteredmatches =
-      List.filter
-        (fun x -> check_compatible_arguments_mod_conv name (snd x) optargtypes)
-        namematches
-    in
-    if List.length filteredmatches = 0 then None
-      (* We return the least return type in case there are multiple options (due to implicit Int-Real conversion), where Int<Real *)
-    else
-      Some
-        (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
+    Some
+      (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
 
 let is_primitive_name name = Hashtbl.mem primitive_signatures name
 
@@ -2552,10 +2541,10 @@ let _ = Hashtbl.add operator_names "EltTimesAssign" "assign_elt_times"
 
 let _ = Hashtbl.add operator_names "EltDivideAssign" "assign_elt_divide"
 
-let try_get_operator_return_type op_name optargtypes =
+let try_get_operator_return_type op_name argtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
-    match optargtypes with
-    | [Some (_, ut1); Some (_, ut2)] ->
+    match argtypes with
+    | [(_, ut1); (_, ut2)] ->
         if check_of_same_type_mod_array_conv "" ut1 ut2 then Some Void
         else None
     | _ -> None
@@ -2563,7 +2552,7 @@ let try_get_operator_return_type op_name optargtypes =
     let rec try_recursive_find = function
       | [] -> None
       | name :: names -> (
-        match try_get_primitive_return_type name optargtypes with
+        match try_get_primitive_return_type name argtypes with
         | None -> try_recursive_find names
         | Some ut -> Some ut )
     in

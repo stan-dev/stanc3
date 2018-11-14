@@ -87,7 +87,7 @@ and 'em expression =
 and expression_untyped_metadata = {expr_meta_none: unit}
 
 and expression_typed_metadata =
-  {expr_meta_origintype: (originblock * unsizedtype) option}
+  {expr_meta_origintype: originblock * unsizedtype}
 
 and untyped_expression =
   | UntypedExpr of (untyped_expression expression * expression_untyped_metadata)
@@ -185,7 +185,7 @@ and ('em, 'sm) statement =
 
 and statement_untyped_metadata = {stmt_meta_none: unit}
 
-and statement_typed_metadata = {stmt_meta_type: returntype option}
+and statement_typed_metadata = {stmt_meta_type: returntype}
 
 and untyped_statement =
   | UntypedStmt of
@@ -216,8 +216,11 @@ type signaturestype = returntype * returntype list [@@deriving sexp, compare]
 (* TODO: maybe move these to primitives file, as that's where they're used *)
 
 let string_of_expressiontype = function
+  | _, ut -> Sexp.to_string (sexp_of_unsizedtype ut)
+
+let string_of_opt_expressiontype = function
   | None -> "unknown"
-  | Some (_, ut) -> Sexp.to_string (sexp_of_unsizedtype ut)
+  | Some x -> string_of_expressiontype x
 
 (* TODO: implement more pretty printing functions for generating error messages *)
 
