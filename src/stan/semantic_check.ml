@@ -779,6 +779,12 @@ and semantic_check_expression x =
           semantic_error ~loc
             "Array expression should have entries of consistent type."
       in
+      let array_type = if
+          List.exists
+            (fun x ->
+               (List.hd elementtypes <> x ) )
+            elementtypes then Array Real else Array (List.hd elementtypes)
+      in
       let returnblock =
         lub_originblock
           (List.map fst
@@ -791,7 +797,7 @@ and semantic_check_expression x =
       TypedExpr
         ( ArrayExpr ues
         , { expr_typed_meta_origin_type=
-              (returnblock, Array (List.hd elementtypes))
+              (returnblock, array_type)
           ; expr_typed_meta_loc= loc } )
   | RowVectorExpr es ->
       let ues = List.map semantic_check_expression es in
@@ -1291,11 +1297,11 @@ and semantic_check_statement s =
       let t1 = (snd (typed_statement_unroll us1)).stmt_typed_meta_type in
       let t2 = (snd (typed_statement_unroll us2)).stmt_typed_meta_type in
       let _ =
-        if  t1 <> t2 then
+        if t1 <> t2 then
           semantic_error ~loc
             ( "Branches of conditional need to have the same return type. \
-               Instead, found return types " ^ (string_of_returntype t1)
-            ^ " and " ^ (string_of_returntype t2) ^ "." )
+               Instead, found return types " ^ string_of_returntype t1
+            ^ " and " ^ string_of_returntype t2 ^ "." )
       in
       TypedStmt (IfThenElse (ue, us1, us2), snd (typed_statement_unroll us1))
   | While (e, s) ->
@@ -1711,38 +1717,48 @@ and semantic_check_index = function
   | All -> All
   | Single e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       if check_of_int_type ue then Single ue
       else if check_of_int_array_type ue then Multiple ue
       else
-        semantic_error
+        semantic_error ~loc
           "Index should be of type int or int[] or should be a range."
   | Upfrom e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Range bound should be of type int."
+          semantic_error ~loc "Range bound should be of type int."
       in
       Upfrom ue
   | Downfrom e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error "Range bound should be of type int."
+          semantic_error ~loc "Range bound should be of type int."
       in
       Downfrom ue
   | Between (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
+      let loc1 = (snd (typed_expression_unroll ue1)).expr_typed_meta_loc in
+      let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
-        if not (check_of_int_type ue1 && check_of_int_type ue2) then
-          semantic_error "Range bound should be of type int."
+        if not (check_of_int_type ue1) then
+          semantic_error ~loc:loc1 "Range bound should be of type int."
+      in
+      let _ =
+        if not (check_of_int_type ue2) then
+          semantic_error ~loc:loc2 "Range bound should be of type int."
       in
       Between (ue1, ue2)
   | Multiple e ->
       let ue = semantic_check_expression e in
+      let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_array_type ue) then
-          semantic_error "Multiple index should be of type int[]."
+          semantic_error ~loc "Multiple index should be of type int[]."
       in
       Multiple ue
 
