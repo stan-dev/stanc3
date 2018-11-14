@@ -115,12 +115,19 @@ generated_quantities_block:
     { grammar_logger "generated_quantities_block" ; Some  tvds }
 
 (* function definitions *)
+identifier:
+  | id=IDENTIFIER
+    {
+      grammar_logger "identifier" ;
+      {name=id; id_loc=Zoo.make_location $startpos(id) $endpos(id)}
+    }
+
 function_def:
-  | rt=return_type name=IDENTIFIER LPAREN args=separated_list(COMMA, arg_decl)
+  | rt=return_type name=identifier LPAREN args=separated_list(COMMA, arg_decl)
     RPAREN b=statement
     { 
       grammar_logger "function_def" ;
-      UntypedStmt (FunDef {returntype = rt; name = name;
+      UntypedStmt (FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;},
       initialize_stmt_meta $startpos $endpos)
     }
@@ -132,7 +139,7 @@ return_type:
     {  grammar_logger "return_type unsized_type" ; ReturnType ut }
 
 arg_decl:
-  | od=option(DATABLOCK) ut=unsized_type id=IDENTIFIER
+  | od=option(DATABLOCK) ut=unsized_type id=identifier
     {  grammar_logger "arg_decl" ; construct_arg_decl od ut id }
 
 unsized_type:
@@ -157,7 +164,7 @@ unsized_dims:
 
 (* declarations *)
 var_decl:
-  | sbt=sized_basic_type id=IDENTIFIER d=option(dims)
+  | sbt=sized_basic_type id=identifier d=option(dims)
     ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
       construct_var_decl sbt id d ae $startpos $endpos }
@@ -175,14 +182,14 @@ sized_basic_type:
     { grammar_logger "MATRIX_var_type" ; SMatrix (e1, e2) }
 
 top_var_decl_no_assign:
-  | tvt=top_var_type id=IDENTIFIER d=option(dims) SEMICOLON
+  | tvt=top_var_type id=identifier d=option(dims) SEMICOLON
     {
       grammar_logger "top_var_decl" ;
       construct_top_var_decl_no_assign tvt id d $startpos $endpos
     }
 
 top_var_decl:
-  | tvt=top_var_type id=IDENTIFIER d=option(dims)
+  | tvt=top_var_type id=identifier d=option(dims)
     ass=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "top_var_decl" ;
       construct_top_var_decl tvt id d ass $startpos $endpos}
@@ -324,7 +331,7 @@ constr_expression:
       grammar_logger "constr_expression_common_expr" ;
       UntypedExpr (e, initialize_expr_meta $startpos $endpos) 
     }
-  | id=IDENTIFIER 
+  | id=identifier 
     {
       grammar_logger "constr_expression_identifier" ; 
       UntypedExpr (Variable id, initialize_expr_meta $startpos $endpos) 
@@ -339,13 +346,13 @@ common_expression:
     {  grammar_logger "array_expression" ; ArrayExpr xs  } (* potential shift/reduce conflict with blocks *)
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK 
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs } (* potential shift/reduce conflict with indexing *)
-  | id=IDENTIFIER LPAREN args=separated_list(COMMA, expression) RPAREN 
+  | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN 
     {  grammar_logger "fun_app" ; FunApp (id, args) }
   | TARGET LPAREN RPAREN 
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN 
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
-  | id=IDENTIFIER LPAREN e=expression BAR args=separated_list(COMMA, expression)
+  | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN 
     {  grammar_logger "conditional_dist_app" ; CondFunApp (id, e :: args) }
   | LPAREN e=expression RPAREN 
@@ -433,7 +440,7 @@ printables:
 
 (* L-values *)
 lhs:
-  | id=IDENTIFIER   
+  | id=identifier   
     {  grammar_logger "lhs_identifier" ; (id, []) }
   | l=lhs LBRACK id=indexes RBRACK 
     {  grammar_logger "lhs_index" ; (fst l, (snd l)@id) }
@@ -454,11 +461,11 @@ atomic_statement:
                    assign_indices=indices;
                    assign_op=op;
                    assign_rhs=e} }
-  | id=IDENTIFIER LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON 
+  | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON 
     {  grammar_logger "funapp_statement" ; NRFunApp (id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON 
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
-  | e=expression TILDE id=IDENTIFIER LPAREN es=separated_list(COMMA, expression)
+  | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON 
     {  grammar_logger "tilde_statement" ; construct_tilde_statement e id es ot }
   | TARGET PLUSASSIGN e=expression SEMICOLON 
@@ -511,7 +518,7 @@ nested_statement:
     {  grammar_logger "if_statement" ; IfThen (e, s) }
   | WHILE LPAREN e=expression RPAREN s=statement 
     {  grammar_logger "while_statement" ; While (e, s) }
-  | FOR LPAREN id=IDENTIFIER IN e1=expression COLON e2=expression RPAREN
+  | FOR LPAREN id=identifier IN e1=expression COLON e2=expression RPAREN
     s=statement 
     {
       grammar_logger "for_statement" ;
@@ -520,7 +527,7 @@ nested_statement:
            upper_bound =  e2;
            loop_body = s;}
     }
-  | FOR LPAREN id=IDENTIFIER IN e=expression RPAREN s=statement 
+  | FOR LPAREN id=identifier IN e=expression RPAREN s=statement 
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE  
     {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)

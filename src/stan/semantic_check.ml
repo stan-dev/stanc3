@@ -140,27 +140,28 @@ let check_of_int_or_real_type ue =
 
 (* TODO: insert locations into remaining semantic errors *)
 
-let check_fresh_variable loc id is_nullary_function =
+let check_fresh_variable id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
    not of nullary function types to clash with nullary library functions.
    No other name clashes are tolerated. Here's the logic to
    achieve that. *)
   let _ =
     if
-      is_primitive_name id
-      && (is_nullary_function || try_get_primitive_return_type id [] = None)
+      is_primitive_name id.name
+      && ( is_nullary_function
+         || try_get_primitive_return_type id.name [] = None )
     then
       let error_msg =
-        String.concat " " ["Identifier "; id; " clashes with primitive."]
+        String.concat " " ["Identifier "; id.name; " clashes with primitive."]
       in
-      semantic_error ~loc error_msg
+      semantic_error ~loc:id.id_loc error_msg
   in
-  match Symbol.look vm id with
+  match Symbol.look vm id.name with
   | Some x ->
       let error_msg =
-        String.concat " " ["Identifier "; id; " is already in use."]
+        String.concat " " ["Identifier "; id.name; " is already in use."]
       in
-      semantic_error ~loc error_msg
+      semantic_error ~loc:id.id_loc error_msg
   | None -> ()
 
 (* TODO: the following is very ugly, but we seem to need something like it to
@@ -238,12 +239,12 @@ let rec semantic_check_program p =
     ; generatedquantitiesblock= ubgq }
 
 (* This could also be dealt with during lexing. That would probably be more efficient. *)
-and semantic_check_identifier loc id =
+and semantic_check_identifier id =
   let _ =
     if
-      Filename.check_suffix id "__"
+      Filename.check_suffix id.name "__"
       || List.exists
-           (fun str -> str = id)
+           (fun str -> str = id.name)
            [ "true"
            ; "false"
            ; "repeat"
@@ -341,7 +342,9 @@ and semantic_check_identifier loc id =
            ; "while"
            ; "xor"
            ; "xor_eq" ]
-    then semantic_error ~loc ("Identifier " ^ id ^ " clashes with reserved keyword.")
+    then
+      semantic_error ~loc:id.id_loc
+        ("Identifier " ^ id.name ^ " clashes with reserved keyword.")
   in
   id
 
@@ -571,10 +574,10 @@ and semantic_check_expression x =
           semantic_error ~loc
             ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
   | Variable id ->
-      let uid = semantic_check_identifier loc id in
-      let ort = Symbol.look vm id in
+      let uid = semantic_check_identifier id in
+      let ort = Symbol.look vm id.name in
       let _ =
-        if ort = None && not (is_primitive_name uid) then
+        if ort = None && not (is_primitive_name uid.name) then
           semantic_error ~loc "Identifier not in scope."
       in
       TypedExpr
@@ -604,26 +607,26 @@ and semantic_check_expression x =
           ues
       in
       let _ =
-        if uid = "map_rect" then
+        if uid.name = "map_rect" then
           match ues with
           | TypedExpr (Indexed (TypedExpr (Variable arg1_name, _), []), _) :: _
             ->
               if
-                Filename.check_suffix arg1_name "_lp"
-                || Filename.check_suffix arg1_name "_rng"
+                Filename.check_suffix arg1_name.name "_lp"
+                || Filename.check_suffix arg1_name.name "_rng"
               then
                 semantic_error ~loc
                   ( "Mapped function cannot be an _rng or _lp function, found \
-                     function name: " ^ arg1_name )
+                     function name: " ^ arg1_name.name )
           | _ -> ()
       in
       let _ =
         if
-          Filename.check_suffix uid "_lpdf"
-          || Filename.check_suffix uid "_lpdf"
-          || Filename.check_suffix uid "_lpmf"
-          || Filename.check_suffix uid "_lcdf"
-          || Filename.check_suffix uid "_lccdf"
+          Filename.check_suffix uid.name "_lpdf"
+          || Filename.check_suffix uid.name "_lpdf"
+          || Filename.check_suffix uid.name "_lpmf"
+          || Filename.check_suffix uid.name "_lcdf"
+          || Filename.check_suffix uid.name "_lccdf"
         then
           semantic_error ~loc
             "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
@@ -632,7 +635,7 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid "_lp"
+          Filename.check_suffix uid.name "_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -643,7 +646,7 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid "_rng"
+          Filename.check_suffix uid.name "_rng"
           && ( (context_flags.in_fun_def && not context_flags.in_rng_fun_def)
              || context_flags.current_block = TParam
              || context_flags.current_block = Model )
@@ -654,7 +657,7 @@ and semantic_check_expression x =
              ending in _rng."
       in
       let returnblock = lub_originblock (List.map fst argumenttypes) in
-      match try_get_primitive_return_type uid argumenttypes with
+      match try_get_primitive_return_type uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
             "A returning function was expected but a non-returning function \
@@ -665,7 +668,7 @@ and semantic_check_expression x =
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | _ -> (
-        match Symbol.look vm uid with
+        match Symbol.look vm uid.name with
         | Some (_, Fun (_, Void)) ->
             semantic_error ~loc
               "A returning function was expected but a non-returning function \
@@ -674,11 +677,11 @@ and semantic_check_expression x =
             let _ =
               if
                 not
-                  (check_compatible_arguments_mod_conv uid listedtypes
+                  (check_compatible_arguments_mod_conv uid.name listedtypes
                      argumenttypes)
               then
                 semantic_error ~loc
-                  ("Ill-typed arguments supplied to function " ^ uid)
+                  ("Ill-typed arguments supplied to function " ^ uid.name)
             in
             TypedExpr
               ( FunApp (uid, ues)
@@ -691,16 +694,16 @@ and semantic_check_expression x =
         | None ->
             semantic_error ~loc
               ( "A returning function was expected but an undeclared identifier "
-              ^ uid ^ " was supplied." ) ) )
+              ^ uid.name ^ " was supplied." ) ) )
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
         if
           not
-            ( Filename.check_suffix uid "_lpdf"
-            || Filename.check_suffix uid "_lcdf"
-            || Filename.check_suffix uid "_lpmf"
-            || Filename.check_suffix uid "_lccdf" )
+            ( Filename.check_suffix uid.name "_lpdf"
+            || Filename.check_suffix uid.name "_lcdf"
+            || Filename.check_suffix uid.name "_lpmf"
+            || Filename.check_suffix uid.name "_lccdf" )
         then
           semantic_error ~loc
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
@@ -715,7 +718,7 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid "_lp"
+          Filename.check_suffix uid.name "_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -725,7 +728,7 @@ and semantic_check_expression x =
              of functions with the suffix _lp."
       in
       let returnblock = lub_originblock (List.map fst argumenttypes) in
-      match try_get_primitive_return_type uid argumenttypes with
+      match try_get_primitive_return_type uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
             "A returning function was expected but a non-returning function \
@@ -736,7 +739,7 @@ and semantic_check_expression x =
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | _ -> (
-        match Symbol.look vm uid with
+        match Symbol.look vm uid.name with
         | Some (_, Fun (_, Void)) ->
             semantic_error ~loc
               "A returning function was expected but a non-returning function \
@@ -745,11 +748,11 @@ and semantic_check_expression x =
             let _ =
               if
                 not
-                  (check_compatible_arguments_mod_conv uid listedtypes
+                  (check_compatible_arguments_mod_conv uid.name listedtypes
                      argumenttypes)
               then
                 semantic_error ~loc
-                  ("Ill-typed arguments supplied to function " ^ uid)
+                  ("Ill-typed arguments supplied to function " ^ uid.name)
             in
             TypedExpr
               ( CondFunApp (uid, ues)
@@ -762,7 +765,7 @@ and semantic_check_expression x =
         | None ->
             semantic_error ~loc
               ( "A returning function was expected but an undeclared identifier "
-              ^ uid ^ " was supplied." ) ) )
+              ^ uid.name ^ " was supplied." ) ) )
   | GetLP ->
       let _ =
         if
@@ -996,11 +999,11 @@ and semantic_check_statement s =
           | Some ob1, _ -> Some ob1
           | _, Some ob2 -> Some ob2
           | _ -> None)
-          ( (if is_primitive_name uid then Some Primitives else None)
-          , Core_kernel.Option.map (Symbol.look vm uid) fst )
+          ( (if is_primitive_name uid.name then Some Primitives else None)
+          , Core_kernel.Option.map (Symbol.look vm uid.name) fst )
       in
       let _ =
-        if Symbol.get_read_only vm uid then
+        if Symbol.get_read_only vm uid.name then
           semantic_error ~loc
             "Cannot assign to function argument or loop identifier."
       in
@@ -1008,7 +1011,7 @@ and semantic_check_statement s =
         match uidoblock with
         | Some b ->
             if
-              (not (Symbol.get_global vm uid))
+              (not (Symbol.get_global vm uid.name))
               || b = context_flags.current_block
             then ()
             else
@@ -1028,7 +1031,7 @@ and semantic_check_statement s =
         match
           (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
         with
-        | rhs_ob, _ -> update_originblock uid rhs_ob
+        | rhs_ob, _ -> update_originblock uid.name rhs_ob
         | _ ->
             semantic_error ~loc
               "Right hand side of assignment operator references undeclared \
@@ -1076,7 +1079,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid "_lp"
+          Filename.check_suffix uid.name "_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -1085,7 +1088,7 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match try_get_primitive_return_type uid argumenttypes with
+      match try_get_primitive_return_type uid.name argumenttypes with
       | Some Void ->
           TypedStmt
             ( NRFunApp (uid, ues)
@@ -1095,17 +1098,17 @@ and semantic_check_statement s =
             "A non-returning function was expected but a returning function \
              was supplied."
       | _ -> (
-        match Symbol.look vm uid with
+        match Symbol.look vm uid.name with
         | Some (_, Fun (listedtypes, Void)) ->
             let _ =
               if
                 not
-                  (check_compatible_arguments_mod_conv uid listedtypes
+                  (check_compatible_arguments_mod_conv uid.name listedtypes
                      argumenttypes)
               then
                 semantic_error ~loc
                   ( "Ill-typed arguments supplied to non-returning function "
-                  ^ uid )
+                  ^ uid.name )
             in
             TypedStmt
               ( NRFunApp (uid, ues)
@@ -1121,7 +1124,7 @@ and semantic_check_statement s =
         | None ->
             semantic_error ~loc
               ( "A returning function was expected but an undeclared identifier "
-              ^ uid ^ " was supplied." ) ) )
+              ^ uid.name ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1191,37 +1194,39 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid "_cdf" || Filename.check_suffix uid "_ccdf"
+          Filename.check_suffix uid.name "_cdf"
+          || Filename.check_suffix uid.name "_ccdf"
         then
           semantic_error ~loc
             ( "CDF and CCDF functions may not be used with sampling \
-               notation.Use increment_log_prob(" ^ uid ^ "_log(...)) instead."
-            )
+               notation.Use increment_log_prob(" ^ uid.name
+            ^ "_log(...)) instead." )
       in
       let _ =
         if
-          try_get_primitive_return_type (uid ^ "_lpdf") argumenttypes
+          try_get_primitive_return_type (uid.name ^ "_lpdf") argumenttypes
           = Some (ReturnType Real)
-          || try_get_primitive_return_type (uid ^ "_lpmf") argumenttypes
+          || try_get_primitive_return_type (uid.name ^ "_lpmf") argumenttypes
              = Some (ReturnType Real)
-          || try_get_primitive_return_type (uid ^ "_log") argumenttypes
+          || try_get_primitive_return_type (uid.name ^ "_log") argumenttypes
              = Some (ReturnType Real)
-             && uid <> "binomial_coefficient"
-             && uid <> "multiply"
-          || ( match Symbol.look vm (uid ^ "_lpdf") with
+             && uid.name <> "binomial_coefficient"
+             && uid.name <> "multiply"
+          || ( match Symbol.look vm (uid.name ^ "_lpdf") with
              | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                 check_compatible_arguments_mod_conv uid listedtypes
+                 check_compatible_arguments_mod_conv uid.name listedtypes
                    argumenttypes
              | _ -> false )
-          || ( match Symbol.look vm (uid ^ "_lpmf") with
+          || ( match Symbol.look vm (uid.name ^ "_lpmf") with
              | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                 check_compatible_arguments_mod_conv uid listedtypes
+                 check_compatible_arguments_mod_conv uid.name listedtypes
                    argumenttypes
              | _ -> false )
           ||
-          match Symbol.look vm (uid ^ "_log") with
+          match Symbol.look vm (uid.name ^ "_log") with
           | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-              check_compatible_arguments_mod_conv uid listedtypes argumenttypes
+              check_compatible_arguments_mod_conv uid.name listedtypes
+                argumenttypes
           | _ -> false
         then ()
         else semantic_error ~loc "Ill-typed arguments to '~' statement."
@@ -1229,41 +1234,42 @@ and semantic_check_statement s =
       let _ =
         if
           ut = NoTruncate
-          || ( try_get_primitive_return_type (uid ^ "_lcdf") argumenttypes
+          || ( try_get_primitive_return_type (uid.name ^ "_lcdf") argumenttypes
                = Some (ReturnType Real)
              ||
-             match Symbol.look vm (uid ^ "_lcdf") with
+             match Symbol.look vm (uid.name ^ "_lcdf") with
              | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                 check_compatible_arguments_mod_conv uid listedtypes
+                 check_compatible_arguments_mod_conv uid.name listedtypes
                    argumenttypes
              | _ -> (
                  false
-                 || try_get_primitive_return_type (uid ^ "_cdf_log")
+                 || try_get_primitive_return_type (uid.name ^ "_cdf_log")
                       argumenttypes
                     = Some (ReturnType Real)
                  ||
-                 match Symbol.look vm (uid ^ "_cdf_log") with
+                 match Symbol.look vm (uid.name ^ "_cdf_log") with
                  | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                     check_compatible_arguments_mod_conv uid listedtypes
+                     check_compatible_arguments_mod_conv uid.name listedtypes
                        argumenttypes
                  | _ -> false ) )
-             && ( try_get_primitive_return_type (uid ^ "_lccdf") argumenttypes
+             && ( try_get_primitive_return_type (uid.name ^ "_lccdf")
+                    argumenttypes
                   = Some (ReturnType Real)
                 ||
-                match Symbol.look vm (uid ^ "_lccdf") with
+                match Symbol.look vm (uid.name ^ "_lccdf") with
                 | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                    check_compatible_arguments_mod_conv uid listedtypes
+                    check_compatible_arguments_mod_conv uid.name listedtypes
                       argumenttypes
                 | _ -> (
                     false
-                    || try_get_primitive_return_type (uid ^ "_ccdf_log")
+                    || try_get_primitive_return_type (uid.name ^ "_ccdf_log")
                          argumenttypes
                        = Some (ReturnType Real)
                     ||
-                    match Symbol.look vm (uid ^ "_ccdf_log") with
+                    match Symbol.look vm (uid.name ^ "_ccdf_log") with
                     | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                        check_compatible_arguments_mod_conv uid listedtypes
-                          argumenttypes
+                        check_compatible_arguments_mod_conv uid.name
+                          listedtypes argumenttypes
                     | _ -> false ) )
         then ()
         else
@@ -1367,7 +1373,7 @@ and semantic_check_statement s =
             "Upper bound of for-loop needs to be of type int."
       in
       let _ = Symbol.begin_scope vm in
-      let _ = check_fresh_variable loc uid false in
+      let _ = check_fresh_variable uid false in
       let oindexblock =
         lub_originblock
           (List.map fst
@@ -1375,8 +1381,8 @@ and semantic_check_statement s =
              ; (snd (typed_expression_unroll ue2)).expr_typed_meta_origin_type
              ])
       in
-      let _ = Symbol.enter vm uid (oindexblock, Int) in
-      let _ = Symbol.set_read_only vm uid in
+      let _ = Symbol.enter vm uid.name (oindexblock, Int) in
+      let _ = Symbol.set_read_only vm uid.name in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
@@ -1402,12 +1408,14 @@ and semantic_check_statement s =
               "Foreach loop must be over array, vector, row_vector or matrix"
       in
       let _ = Symbol.begin_scope vm in
-      let _ = check_fresh_variable loc uid false in
+      let _ = check_fresh_variable uid false in
       let oindexblock =
         fst (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
       in
-      let _ = Symbol.enter vm uid (oindexblock, loop_identifier_unsizedtype) in
-      let _ = Symbol.set_read_only vm uid in
+      let _ =
+        Symbol.enter vm uid.name (oindexblock, loop_identifier_unsizedtype)
+      in
+      let _ = Symbol.set_read_only vm uid.name in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
@@ -1464,11 +1472,11 @@ and semantic_check_statement s =
       let ust = semantic_check_sizedtype st in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable loc uid false in
+      let _ = check_fresh_variable uid false in
       (* Note: this origin block here is a bit of a curiosity to get Stan
          to treat the level of local variables in the right way. It will get
          modified (can be elevated) based on assignments.*)
-      let _ = Symbol.enter vm id (Functions, ut) in
+      let _ = Symbol.enter vm id.name (Functions, ut) in
       TypedStmt
         ( VDecl (ust, uid)
         , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
@@ -1541,9 +1549,9 @@ and semantic_check_statement s =
       let utrans = semantic_check_transformation trans in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable loc uid false in
-      let _ = Symbol.enter vm uid (context_flags.current_block, ut) in
-      let _ = Symbol.set_global vm uid in
+      let _ = check_fresh_variable uid false in
+      let _ = Symbol.enter vm uid.name (context_flags.current_block, ut) in
+      let _ = Symbol.set_global vm uid.name in
       let _ =
         if
           ust = SInt
@@ -1619,7 +1627,7 @@ and semantic_check_statement s =
     | _ ->
         semantic_error ~loc
           "This should never happen. Please file a bug. Error code 1." )
-  | FunDef {returntype= rt; name= id; arguments= args; body= b} ->
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
       let uargs =
@@ -1633,34 +1641,37 @@ and semantic_check_statement s =
       in
       let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
       let _ =
-        if Symbol.is_missing_fun_def vm uid then (
-          if Symbol.look vm uid <> Some (Functions, Fun (uarg_types, urt)) then
+        if Symbol.is_missing_fun_def vm uid.name then (
+          if Symbol.look vm uid.name <> Some (Functions, Fun (uarg_types, urt))
+          then
             semantic_error ~loc
-              ( "Function " ^ uid ^ " has already been declared to have type "
-              ^ string_of_opt_expressiontype (Symbol.look vm uid) ) )
-        else check_fresh_variable loc uid (List.length uarg_types = 0)
+              ( "Function " ^ uid.name
+              ^ " has already been declared to have type "
+              ^ string_of_opt_expressiontype (Symbol.look vm uid.name) ) )
+        else check_fresh_variable uid (List.length uarg_types = 0)
       in
       let _ =
         match b with
         | UntypedStmt (Skip, _) ->
-            if Symbol.is_missing_fun_def vm uid then
+            if Symbol.is_missing_fun_def vm uid.name then
               semantic_error ~loc
-                ( "Function " ^ uid
+                ( "Function " ^ uid.name
                 ^ " has already been declared. A definition is expected." )
-            else Symbol.add_is_missing_fun_def vm uid
-        | _ -> Symbol.remove_is_missing_fun_def vm uid
+            else Symbol.add_is_missing_fun_def vm uid.name
+        | _ -> Symbol.remove_is_missing_fun_def vm uid.name
       in
-      let _ = Symbol.enter vm uid (Functions, Fun (uarg_types, urt)) in
-      let uarg_names = List.map (function w, y, z -> z) uargs in
+      let _ = Symbol.enter vm uid.name (Functions, Fun (uarg_types, urt)) in
+      let uarg_identifiers = List.map (function w, y, z -> z) uargs in
+      let uarg_names = List.map (fun x -> x.name) uarg_identifiers in
       let _ = List.map (Symbol.set_read_only vm) uarg_names in
       let _ =
         if
           urt <> ReturnType Real
-          && ( Filename.check_suffix uid "_log"
-             || Filename.check_suffix uid "_lpdf"
-             || Filename.check_suffix uid "_lpmf"
-             || Filename.check_suffix uid "_lcdf"
-             || Filename.check_suffix uid "_lccdf" )
+          && ( Filename.check_suffix uid.name "_log"
+             || Filename.check_suffix uid.name "_lpdf"
+             || Filename.check_suffix uid.name "_lpmf"
+             || Filename.check_suffix uid.name "_lcdf"
+             || Filename.check_suffix uid.name "_lccdf" )
         then
           semantic_error ~loc
             "Real return type required for probability functions ending in \
@@ -1668,7 +1679,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid "_lpdf"
+          Filename.check_suffix uid.name "_lpdf"
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
         then
           semantic_error ~loc
@@ -1677,7 +1688,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid "_lpmf"
+          Filename.check_suffix uid.name "_lpmf"
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
         then
           semantic_error ~loc
@@ -1686,11 +1697,11 @@ and semantic_check_statement s =
       in
       let _ = context_flags.in_fun_def <- true in
       let _ =
-        if Filename.check_suffix uid "_rng" then
+        if Filename.check_suffix uid.name "_rng" then
           context_flags.in_rng_fun_def <- true
       in
       let _ =
-        if Filename.check_suffix uid "_lp" then
+        if Filename.check_suffix uid.name "_lp" then
           context_flags.in_lp_fun_def <- true
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
@@ -1701,13 +1712,13 @@ and semantic_check_statement s =
             "All function arguments should be distinct identifiers."
       in
       let _ =
-        List.map (fun x -> check_fresh_variable loc x false) uarg_names
+        List.map (fun x -> check_fresh_variable x false) uarg_identifiers
       in
       let _ = List.map2 (Symbol.enter vm) uarg_names uarg_types in
       let ub = semantic_check_statement b in
       let _ =
         if
-          Symbol.is_missing_fun_def vm uid
+          Symbol.is_missing_fun_def vm uid.name
           || check_of_compatible_return_type urt
                (snd (typed_statement_unroll ub)).stmt_typed_meta_type
         then ()
@@ -1722,7 +1733,7 @@ and semantic_check_statement s =
       let _ = context_flags.in_lp_fun_def <- false in
       let _ = context_flags.in_rng_fun_def <- false in
       TypedStmt
-        ( FunDef {returntype= urt; name= uid; arguments= uargs; body= ub}
+        ( FunDef {returntype= urt; funname= uid; arguments= uargs; body= ub}
         , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
 
 and semantic_check_truncation = function

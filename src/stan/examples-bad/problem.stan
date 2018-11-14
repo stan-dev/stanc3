@@ -1,4 +1,7 @@
+functions{
+  void foo__(int x) print(x);
+}
 model {
-  int x[2];
-  print(x[{2.1,1}]);
+  int a[2];
+  food(2);
 }

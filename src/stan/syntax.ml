@@ -29,7 +29,8 @@ and unsizedtype =
 and returntype = Void | ReturnType of unsizedtype
 
 (* == Expressions == *)
-and identifier = string
+and identifier =
+  {name: string; id_loc: Zoo.location sexp_opaque [@compare.ignore]}
 
 and infixop =
   | Plus
@@ -177,7 +178,7 @@ and ('e, 's) statement =
       ; tvalue: 'e }
   | FunDef of
       { returntype: returntype
-      ; name: identifier
+      ; funname: identifier
       ; arguments: (originblock * unsizedtype * identifier) list
       ; body: 's }
 
