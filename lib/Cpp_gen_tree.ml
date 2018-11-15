@@ -2,8 +2,6 @@ open Core_kernel
 
 type litType = Int | Real | Str
 
-(* Probably need a way to go from something like a sourcemap to
-   current_statement_begin__?*)
 and cond_op =
   | Equals
   | NEquals
@@ -19,7 +17,6 @@ and expr =
   | Cond of expr * cond_op * expr
   | ArrayExpr of expr list (* array literal? *)
   | Indexed of expr * expr list
-  (* Do we need RowVector? CondFunApp?*)
 
 and infixop =
   | Plus

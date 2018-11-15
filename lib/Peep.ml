@@ -1,3 +1,4 @@
+(*
 open Mir
 
 let rec log1m = function
@@ -7,3 +8,5 @@ let rec log1m = function
 
 let run_peephole_opts prog =
   prog |> log1m
+
+*)

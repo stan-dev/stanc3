@@ -1,4 +1,4 @@
-open Mir
+(*open Mir
 open Core_kernel
 
 let stan_math_map =
@@ -12,7 +12,7 @@ let rec translate_fn_names = function
   | x -> x
 
 exception ShouldNeverHappen
-(*
+
 let prog_reader_call path =
   (* open the file and see how long it is and shit *)
   let

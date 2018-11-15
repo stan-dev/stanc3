@@ -1,9 +1,9 @@
-open Mir
+open Cpp_gen_tree
 open Format
 
 let comma ppf () = fprintf ppf ", "
 let semi_new ppf () = fprintf ppf ";@ "
-let new_block ppf () = fprintf ppf "@[<v>@ @]"
+let new_block ppf () = fprintf ppf "@ " (* "@[<v>@ @]"*)
 let emit_str ppf s = fprintf ppf "%s" s
 
 let emit_option ?default:(d="") emitter ppf opt = match opt with
@@ -178,7 +178,7 @@ let%expect_test "class" =
       T__ log_prob(Eigen::Matrix<T__, -1, 1> params) {
         target += normal(multiply(x, params), 1.0);
       }
-       template <typename T__>
-       T__ grad_log_prob(Eigen::Matrix<T__, -1, 1> params) {
-         target += normal(multiply(x, params), 1.0);
-       }} |}];
+      template <typename T__>
+      T__ grad_log_prob(Eigen::Matrix<T__, -1, 1> params) {
+        target += normal(multiply(x, params), 1.0);
+      }} |}];
