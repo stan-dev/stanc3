@@ -85,17 +85,17 @@ module Symbol : SYMBOL = struct
 
   let some_fun_is_missing_def s = not (Hashtbl.length s.ismissingfundef = 0)
 
+  let set_global s str = Hashtbl.add s.global str true
+
+  let get_global s str =
+    match Hashtbl.find_opt s.global str with Some true -> true | _ -> false
+
   (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
    have a block level that is determined by what has been assigned to them
    rather than by where they were declared. I'm not sure that behaviour makes
    sense unless we use static analysis as well to make sure these assignments
    actually get evaluated in that phase. *)
-  let set_global s str = Hashtbl.add s.global str true
-
-  let get_global s str =
-    match Hashtbl.find_opt s.global str with Some true -> true | _ -> false
-
   let unsafe_replace s str ty =
     Hashtbl.remove s.table str ; Hashtbl.add s.table str ty
 end

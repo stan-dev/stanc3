@@ -1,7 +1,5 @@
 
-keyword for truncation not reserved.
 
-function arguments can shadow.
 
 manual entry for integrate_ode_bdf has wrong signature.
 
@@ -14,6 +12,4 @@ manual entry for integrate_ode_adams missing
 
 data only arguments not enforced for higher order functions.
 
-target should be protected key word, as far get_lp.
 
-inconsistent behaviour wrt _log and ~ between library functions and user defined functions

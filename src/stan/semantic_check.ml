@@ -43,7 +43,6 @@ TODO: Test that user defined functions with probability suffixes have right type
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
 Sizes should be of level at most data.
-TODO: Allow math library functions to clash with variable names as long as signatures/types differ. I.e. users can overload library functions.
 *)
 
 (* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
@@ -138,7 +137,14 @@ let check_of_int_or_real_type ue =
   | _, Real -> true
   | _ -> false
 
-(* TODO: insert locations into remaining semantic errors *)
+(* TODO: write function that pretty prints all signatures for defined function
+   and call that in the appropriate error messages. *)
+   
+(* TODO: write function that pretty prints the location of the error messages
+   in the way the existing parser does it: print a phrase surrounding the error
+   together with a tick to indicate the precise location. *)
+   
+(* TODO: improve locations in semantic errors with encapsulated identifiers *)
 
 let check_fresh_variable id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
