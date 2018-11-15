@@ -3,21 +3,21 @@
   . ((eval
       . (progn
           ;; root directory (ending with slash)
-          (let ((plzoo-root-directory
+          (let ((stan-root-directory
                  (when buffer-file-name
                    (locate-dominating-file buffer-file-name ".dir-locals.el")))
-                (plzoo-project-find-file
-                 (and (boundp 'plzoo-project-find-file) plzoo-project-find-file)))
+                (stan-project-find-file
+                 (and (boundp 'stan-project-find-file) stan-project-find-file)))
 
-            ;; plzoo tags file
-            (when plzoo-root-directory
-              (setq tags-file-name (concat plzoo-root-directory "TAGS"))
-              (add-to-list 'compilation-search-path plzoo-root-directory)
-              ;; Setting the compilation directory to plzoo root. This is
+            ;; stan tags file
+            (when stan-root-directory
+              (setq tags-file-name (concat stan-root-directory "TAGS"))
+              (add-to-list 'compilation-search-path stan-root-directory)
+              ;; Setting the compilation directory to stan root. This is
               ;; mutually exclusive with the setting of default-directory
               ;; below.
-              (if (not plzoo-project-find-file)
-                  (setq compile-command (concat "make -C " plzoo-root-directory)))
+              (if (not stan-project-find-file)
+                  (setq compile-command (concat "make -C " stan-root-directory)))
               )
-            (setq plzoo-executable (concat plzoo-root-directory "all")))))))
+            (setq stan-executable (concat stan-root-directory "all")))))))
 )
