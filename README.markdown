@@ -1,7 +1,7 @@
 # A Starting Point for a New Stan Compiler
 This repo contains some initial work on a new compiler for Stan, written in OCaml. We gratefully make use on some command line scripting borrowed from Andrej Bauer and Matija Pretnar's PLZoo: http://plzoo.andrej.com/ .
 
-# To Get Started
+## To Get Started
 The project has the following prerequisites:
 - GNU Make, which you probably have already
 - OCaml programming language, version 4 or later,
@@ -31,7 +31,7 @@ To auto-format the OCaml-code (sadly, this does not work for the two ocamllex an
 ./ocamlformat-stan.sh
 `
 
-# Done, so far
+## Done, so far
 - Prototype lexer
 - Prototype parser with semantic actions
 - Prototype AST
@@ -41,7 +41,7 @@ To auto-format the OCaml-code (sadly, this does not work for the two ocamllex an
 - Lexical position printed in syntactic and semantic error messages
 - Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 
-# TODO
+## TODO
 - Generate better syntax error messages during parsing (use menhir --list-errors to systematically list all paths to a parse error which should get a custom error message)
 - Improve quality of semantic error messages
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
