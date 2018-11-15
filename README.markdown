@@ -13,26 +13,33 @@ To build, run
 make stan
 `
 
-To test the parser on all good models in stan/src/test/test-models/good, run
+To test the compiler on all good models in stan/src/test/test-models/good, run
 `
 ./run-stan-examples-good.sh
 `
+
+To test the compiler on all bad models in stan/src/test/test-models/bad, run
+`
+./run-stan-examples-bad.sh
+`
 This will produce an output file (containing logging info, presuming that
 logging is turned on in `debug.ml`, which should let you reproduce the parse and/or should
-print the AST as an s-expression)
-as well as an error file (which should be empty, unless some files could not
-be parsed).
+print the decorated/undecorated AST as an s-expression).
 
+To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
+`
+./ocamlformat-stan.sh
+`
 
 # Done, so far
 - Prototype lexer
 - Prototype parser with semantic actions
 - Prototype AST
 - Debugging flags for writing out parsing operations and resulting AST as s-expression in case of a successful parse
-- Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 - Ported all function signatures from Stan Math
 - Prototype semantic check
 - Lexical position printed in syntactic and semantic error messages
+- Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 
 # TODO
 - Generate better syntax error messages during parsing (use menhir --list-errors to systematically list all paths to a parse error which should get a custom error message)
