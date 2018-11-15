@@ -56,14 +56,29 @@ and statement =
   | Block of statement list
   | Decl of vardecl * expr option
 
+and stantype =
+  | SInt
+  | SReal
+  | SArray of stantype
+  | SVector
+  | SRowVector
+  | SMatrix
+
+and autodiff_type =
+  | AVar of stantype
+  | AData of stantype
+
 and fndef = {
-  returntype: string;
+  returntype: autodiff_type option;
   name: string;
-  arguments: vardecl list;
+  arguments: ad_vardecl list;
   body: statement;
+  templates: string list;
 }
 
-and vardecl = string * string
+and ad_vardecl = autodiff_type * string
+
+and vardecl = stantype * string
 
 and mir = {
   functions: fndef list;

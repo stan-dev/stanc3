@@ -33,6 +33,13 @@ let emit_assign_op ppf op = fprintf ppf " %s= " begin match op with
     | And -> "&"
   end
 
+let rec emit_stantype ad ppf = function
+  | SInt | SReal -> emit_str ppf ad
+  | SArray(t) -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
+  | SMatrix -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
+  | SRowVector -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
+  | SVector -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
+
 and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
 
 and emit_expr ppf s = match s with
@@ -59,6 +66,14 @@ let%expect_test "expr" =
 
 (* XXX Make the above test style cleaner! *)
 
+let emit_vanilla_stantype ppf st =
+  let rec ad_str = function
+    | SInt -> "int"
+    | SArray(t) -> ad_str t
+    | _ -> "double"
+  in
+  emit_stantype (ad_str st) ppf st
+
 let rec emit_statement ppf s = match s with
   | Assignment({assignee; indices; op; rhs}) ->
     fprintf ppf "%s%a%a%a" assignee (pp_print_list ~pp_sep:comma emit_index) indices
@@ -81,15 +96,16 @@ let rec emit_statement ppf s = match s with
   | Block(s) -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
   | Decl((st, ident), rhs) ->
     let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-    fprintf ppf "%s %s%a" st ident (emit_option emit_assignment) rhs
+    fprintf ppf "%a %s%a" emit_vanilla_stantype st ident
+      (emit_option emit_assignment) rhs
 
 let%expect_test "decl" =
-  Decl(("int", "i"), Some(Lit(Int, "0"))) |> emit_statement str_formatter;
+  Decl((SInt, "i"), Some(Lit(Int, "0"))) |> emit_statement str_formatter;
   flush_str_formatter () |> print_endline;
   [%expect {| int i = 0 |}]
 
 let%expect_test "statement" =
-  For({init = Decl(("int", "i"), Some(Lit(Int, "0")));
+  For({init = Decl((SInt, "i"), Some(Lit(Int, "0")));
        cond = Cond(Var "i", Geq, Lit(Int, "10"));
        step = Assignment({assignee = "i"; op = Plus; rhs = Lit(Int, "1");
                           indices = []});
@@ -101,13 +117,31 @@ let%expect_test "statement" =
       print(i)
     } |}]
 
-let emit_vardecl ppf (st, name) = fprintf ppf "%s %s" st name
+let emit_ad_stantype ppf = function
+  | AVar(st) -> emit_stantype "T__" ppf st
+  | AData(st) -> emit_vanilla_stantype ppf st
 
-let emit_fndef ppf {returntype; name; arguments; body} =
-      fprintf ppf "@[<v>%s %s(%a) {@ @[<v 2>  %a;@]@ }@]"
-        returntype name
-        (pp_print_list ~pp_sep:comma emit_vardecl) arguments
-        emit_statement body
+(* XXX this pattern below is annoying... *)
+let emit_vardecl ppf (st, name) = fprintf ppf "%a %s" emit_vanilla_stantype st name
+
+let emit_ad_vardecl ppf (st, name) = fprintf ppf "%a %s" emit_ad_stantype st name
+
+let emit_templates ppf templates = if List.length templates > 0 then
+    let emit_template ppf t = fprintf ppf "typename %s" t in
+    fprintf ppf "template <%a>@ "
+      (pp_print_list ~pp_sep:comma emit_template) templates
+
+let emit_fndef ppf {returntype; name; arguments; body; templates} =
+  let templated =
+    List.exists (fun (ad, _) -> match ad with | AData _ -> false | AVar _ -> true)
+      arguments in
+  let templates = if templated then "T__" :: templates else templates in
+  fprintf ppf "@[<v>%a%a %s(%a) {@ @[<v 2>  %a;@]@ }@]"
+    emit_templates templates
+    (emit_option ~default:"void" emit_ad_stantype) returntype
+    name
+    (pp_print_list ~pp_sep:comma emit_ad_vardecl) arguments
+    emit_statement body
 
 let emit_class ppf name super fields methods =
   fprintf ppf "@[<v 1>class %s : %s {@ private:@ @[<v 1> %a;@]@ @ public:@ @[<v 1> %a@]}@."
@@ -117,16 +151,16 @@ let emit_class ppf name super fields methods =
 
 let%expect_test "class" =
   emit_class str_formatter "bernoulli_model" "log_prob"
-    [(SMatrix None, "x"); (SVector None, "y")]
-    [{returntype = Some SReal; name = "log_prob";
-      arguments = [(SVector None), "params"];
+    [(SMatrix, "x"); (SVector, "y")]
+    [{returntype = Some (AVar SReal); name = "log_prob";
+      arguments = [(AVar SVector), "params"]; templates = [];
       body = Block [
           Assignment ({assignee = "target"; op = Plus; indices = [];
                        rhs = FnApp("normal",
                                    [FnApp("multiply", [Var "x"; Var "params"]);
                                     Lit(Real, "1.0")])})]};
-     {returntype = Some SReal; name = "grad_log_prob";
-      arguments = [(SVector None), "params"];
+     {returntype = Some (AVar SReal); name = "grad_log_prob";
+      arguments = [(AVar SVector), "params"]; templates = [];
       body = Block [
           Assignment ({assignee = "target"; op = Plus; indices = [];
                        rhs = FnApp("normal",
@@ -136,13 +170,15 @@ let%expect_test "class" =
   [%expect {|
     class bernoulli_model : log_prob {
      private:
-      Eigen::Matrix<var, -1, -1> x;
-      Eigen::Matrix<var, -1, 1> y;
+      Eigen::Matrix<double, -1, -1> x;
+      Eigen::Matrix<double, -1, 1> y;
 
      public:
-      double log_prob(Eigen::Matrix<var, -1, 1> params) {
+      template <typename T__>
+      T__ log_prob(Eigen::Matrix<T__, -1, 1> params) {
         target += normal(multiply(x, params), 1.0);
       }
-       double grad_log_prob(Eigen::Matrix<var, -1, 1> params) {
+       template <typename T__>
+       T__ grad_log_prob(Eigen::Matrix<T__, -1, 1> params) {
          target += normal(multiply(x, params), 1.0);
        }} |}];
