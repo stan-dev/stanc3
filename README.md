@@ -1,2 +1,0 @@
-# OCamlStan
-# OCamlStan
