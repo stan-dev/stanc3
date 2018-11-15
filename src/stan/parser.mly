@@ -19,7 +19,7 @@ open Debug
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
-%token QMARK COLON BANG MINUS PLUS HAT QR TIMES DIVIDE MODULO LDIVIDE ELTTIMES
+%token QMARK COLON BANG MINUS PLUS HAT TRANSPOSE TIMES DIVIDE MODULO LDIVIDE ELTTIMES
        ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
 %token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN ELTTIMESASSIGN
        ELTDIVIDEASSIGN
@@ -30,7 +30,7 @@ open Debug
 
 (* TODO: Resolve remaining ambiguities in the grammar *)
 %left LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
-%left QR
+%left TRANSPOSE
 %right HAT
 %nonassoc unary_over_binary BANG
 %left ELTTIMES ELTDIVIDE
@@ -380,7 +380,7 @@ prefixOp:
     {   grammar_logger "prefix_plus" ; UPlus }
 
 postfixOp:
-  | QR 
+  | TRANSPOSE 
     {  grammar_logger "postfix_transpose" ; Transpose }
 
 infixOp:

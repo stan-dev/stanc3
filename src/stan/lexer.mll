@@ -26,11 +26,11 @@ let real_constant = real_constant1 | real_constant2 | real_constant3
 
 rule token = parse
 (* Line numbers for error reporting *)
-    "#" [^'\n']* '\n'         { incr_linenum lexbuf; token lexbuf }
-  | '\n'                      { incr_linenum lexbuf; token lexbuf }
+    '\n'                      { incr_linenum lexbuf; token lexbuf }
   | [' ' '\t' '\012' '\r']    { token lexbuf }
   | "/*"                      { multiline_comment lexbuf; token lexbuf }
   | "//"                      { singleline_comment lexbuf; token lexbuf }
+  | "#"                       { singleline_comment lexbuf; token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { Parser.FUNCTIONBLOCK }
   | "data"                    { Parser.DATABLOCK }
@@ -87,7 +87,7 @@ rule token = parse
   | '-'                       { Parser.MINUS }
   | '+'                       { Parser.PLUS }
   | '^'                       { Parser.HAT }
-  | '\''                      { Parser.QR }
+  | '\''                      { Parser.TRANSPOSE }
   | '*'                       { Parser.TIMES }
   | '/'                       { Parser.DIVIDE }
   | '%'                       { Parser.MODULO }
