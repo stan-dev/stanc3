@@ -1,5 +1,5 @@
 # A Starting Point for a New Stan Compiler
-This repo contains some initial work on a new compiler for Stan, written in OCaml.
+This repo contains some initial work on a new compiler for Stan, written in OCaml. We gratefully make use on some command line scripting borrowed from Andrej Bauer and Matija Pretnar's PLZoo: http://plzoo.andrej.com/ .
 
 # To Get Started
 The project has the following prerequisites:
