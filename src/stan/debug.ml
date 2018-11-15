@@ -18,8 +18,7 @@ let typed_ast_printing = false
 
 let grammar_logger s = if grammar_logging then print_endline s
 
-let ast_to_string x =
-  [%sexp (x : Ast.untyped_program)] |> Sexp.to_string_hum
+let ast_to_string x = [%sexp (x : Ast.untyped_program)] |> Sexp.to_string_hum
 
 let typed_ast_to_string x =
   [%sexp (x : Ast.typed_program)] |> Sexp.to_string_hum

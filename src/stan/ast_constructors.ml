@@ -4,13 +4,15 @@
 open Ast
 
 let empty_expr_meta =
-  {expr_untyped_meta_loc= Command_line_app.make_location Lexing.dummy_pos Lexing.dummy_pos}
+  { expr_untyped_meta_loc=
+      Command_line_app.make_location Lexing.dummy_pos Lexing.dummy_pos }
 
 let initialize_expr_meta startpos endpos =
   {expr_untyped_meta_loc= Command_line_app.make_location startpos endpos}
 
 let empty_stmt_meta =
-  {stmt_untyped_meta_loc= Command_line_app.make_location Lexing.dummy_pos Lexing.dummy_pos}
+  { stmt_untyped_meta_loc=
+      Command_line_app.make_location Lexing.dummy_pos Lexing.dummy_pos }
 
 let initialize_stmt_meta startpos endpos =
   {stmt_untyped_meta_loc= Command_line_app.make_location startpos endpos}
@@ -97,4 +99,3 @@ let construct_truncation e1 e2 =
 let construct_tilde_statement e id es ot =
   let t = match ot with Some tt -> tt | _ -> NoTruncate in
   Tilde {arg= e; distribution= id; args= es; truncation= t}
-  
