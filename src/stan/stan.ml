@@ -1,7 +1,7 @@
 (** The main program. *)
 open Ast
 
-module CalcVar = Zoo.Main (struct
+module Stan = Command_line_app.Main (struct
   let name = "stan"
 
   type command = Ast.untyped_program
@@ -14,8 +14,6 @@ module CalcVar = Zoo.Main (struct
   (** At the beginning no variables are defined. *)
   let initial_environment = ()
 
-  let read_more _ = false
-
   let file_parser = Some (Parser.file Lexer.token)
 
   let toplevel_parser = Some (Parser.program Lexer.token)
@@ -27,4 +25,4 @@ module CalcVar = Zoo.Main (struct
 end)
 
 ;;
-CalcVar.main ()
+Stan.main ()

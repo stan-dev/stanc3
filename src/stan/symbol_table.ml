@@ -25,7 +25,7 @@ module type SYMBOL = sig
 
   val some_fun_is_missing_def : 'a state -> bool
 
-  val set_global : 'a state -> string -> unit
+  val set_global : 'a state -> string -> unit (* TODO: can we implement this automatically, by keeping track of when we are in global scope? That would probably be a bit safer. *)
 
   val get_global : 'a state -> string -> bool
 

@@ -12,7 +12,7 @@ open Ast
 
 (* A semantic error reported by the toplevel *)
 let semantic_error ?loc msg =
-  Zoo.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
+  Command_line_app.error ~kind:"Semantic error" ?loc (Scanf.format_from_string msg "")
 
 (* We allow implicit conversion from int to real, except for assignment operators *)
 let check_of_same_type_mod_conv name t1 t2 =

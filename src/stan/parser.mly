@@ -130,9 +130,9 @@ identifier:
       let _ = if Core_kernel.String.is_suffix id "_model"
                  && (Core_kernel.String.drop_suffix id 6) ^ ".stan"
                       = modelname then 
-      Stan_math_signatures.semantic_error ~loc:(Zoo.make_location $startpos $endpos)
+      Stan_math_signatures.semantic_error ~loc:(Command_line_app.make_location $startpos $endpos)
       ("Identifier " ^ id ^ " clashes with model name.") in
-      {name=id; id_loc=Zoo.make_location $startpos $endpos}
+      {name=id; id_loc=Command_line_app.make_location $startpos $endpos}
     }
 
 function_def:
