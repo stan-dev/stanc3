@@ -48,8 +48,8 @@ Sizes should be of level at most data.
 (* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
 
 open Symbol_table
-open Syntax
-open Primitives
+open Ast
+open Stan_math_signatures
 
 (* Idea: we have a semantic checking function for each AST node.
    Each such calls the corresponding checking functions for its children

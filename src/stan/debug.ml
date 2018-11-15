@@ -1,6 +1,6 @@
 (* some helpers for debugging *)
 
-open Syntax
+open Ast
 open Core_kernel
 
 (* For s-expression support *)
@@ -19,10 +19,10 @@ let typed_ast_printing = false
 let grammar_logger s = if grammar_logging then print_endline s
 
 let ast_to_string x =
-  [%sexp (x : Syntax.untyped_program)] |> Sexp.to_string_hum
+  [%sexp (x : Ast.untyped_program)] |> Sexp.to_string_hum
 
 let typed_ast_to_string x =
-  [%sexp (x : Syntax.typed_program)] |> Sexp.to_string_hum
+  [%sexp (x : Ast.typed_program)] |> Sexp.to_string_hum
 
 let ast_logger t = if ast_printing then print_endline (ast_to_string t)
 

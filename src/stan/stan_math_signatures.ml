@@ -8,7 +8,7 @@
    
 *)
 
-open Syntax
+open Ast
 
 (* A semantic error reported by the toplevel *)
 let semantic_error ?loc msg =

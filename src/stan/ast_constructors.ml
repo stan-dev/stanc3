@@ -1,7 +1,7 @@
 (* Semantic actions for constructing AST nodes, to aid legibility of the
    grammar *)
 
-open Syntax
+open Ast
 
 let empty_expr_meta =
   {expr_untyped_meta_loc= Zoo.make_location Lexing.dummy_pos Lexing.dummy_pos}

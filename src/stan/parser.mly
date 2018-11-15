@@ -1,8 +1,8 @@
 (* The parser for Stan *)
 
 %{
-open Semantic_actions
-open Syntax
+open Ast_constructors
+open Ast
 open Debug
 %}
 
@@ -50,14 +50,14 @@ open Debug
 
 
 
-(* TODO: deal properly with multi-file model *)
+(* TODO: deal properly with multi-file model and includes *)
 
 (* TODO: create decent parsing error messages: use menhir --list-errors to get overview of all possible errors to write custom messages for *)
 
 (* Top level rule *)
 %start program file
-%type <Syntax.untyped_program> program
-%type <Syntax.untyped_program list> file (* TODO: fix that a Stan file can only contain one program *)
+%type <Ast.untyped_program> program
+%type <Ast.untyped_program list> file
 
 %%
 
@@ -130,7 +130,7 @@ identifier:
       let _ = if Core_kernel.String.is_suffix id "_model"
                  && (Core_kernel.String.drop_suffix id 6) ^ ".stan"
                       = modelname then 
-      Primitives.semantic_error ~loc:(Zoo.make_location $startpos $endpos)
+      Stan_math_signatures.semantic_error ~loc:(Zoo.make_location $startpos $endpos)
       ("Identifier " ^ id ^ " clashes with model name.") in
       {name=id; id_loc=Zoo.make_location $startpos $endpos}
     }

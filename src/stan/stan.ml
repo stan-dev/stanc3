@@ -1,10 +1,10 @@
 (** The main program. *)
-open Syntax
+open Ast
 
 module CalcVar = Zoo.Main (struct
   let name = "stan"
 
-  type command = Syntax.untyped_program
+  type command = Ast.untyped_program
 
   (** There is no top-level environment as all variables are local *)
   type environment = unit
