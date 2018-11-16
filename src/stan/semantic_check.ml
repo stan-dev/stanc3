@@ -56,12 +56,6 @@ open Errors
    Each such calls the corresponding checking functions for its children
    left-to-right. *)
 
-(* Invariant: after an expression has been checked, it has a well-defined type *)
-
-(* Invariant: after a statement has been checked, it has a well-defined return type *)
-
-(* e.g. compare Data Model = -1  and compare GQuant Functions = 1 *)
-
 (* NB DANGER: this file specifies an imperative tree algorithm which
    decorates the AST while operating on two bits of state:
    1) a global symbol table vm

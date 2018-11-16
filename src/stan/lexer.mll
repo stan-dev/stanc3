@@ -10,6 +10,8 @@
       pos_lnum = pos.pos_lnum + 1;
       pos_bol = pos.pos_cnum;
     }
+
+exception Error of string * Lexing.position
 }
 
 (* Some auxiliary definition for variables and constants *)

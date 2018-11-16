@@ -21,7 +21,7 @@ all: $(LANGS)
 
 
 $(LANGS): % :
-	$(OCAMLBUILD)  -use-menhir -menhir "menhir --explain"  -I $(SRCDIR) src/$@/$@.$(BUILD)
+	$(OCAMLBUILD)  -package menhirLib -use-menhir  -menhir "menhir --table"  -I $(SRCDIR) src/$@/$@.$(BUILD)
 
 clean:
 	$(OCAMLBUILD) -clean
