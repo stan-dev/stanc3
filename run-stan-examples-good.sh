@@ -1,8 +1,6 @@
 #!/bin/bash
-for foldername in folder/*; do
-  cd "src/stan/examples-good";
-  for filename in *.stan; do
-    printf "\n\n $filename \n ---------\n"; ./../../../stan.native "$filename" ;
-  done  &> ../../../"stan-examples-good-out.log" ;
-  cd ../..;
-done
+shopt -s globstar
+
+for filename in src/stan/examples-good/**/*.stan; do
+  printf "\n\n $filename \n ---------\n"; ./stan.native "$filename" ;
+done  &> "stan-examples-good-out.log" ;
