@@ -145,8 +145,6 @@ let check_of_int_or_real_type ue =
    in the way the existing parser does it: print a phrase surrounding the error
    together with a tick to indicate the precise location. *)
 
-(* TODO: improve locations in semantic errors with encapsulated identifiers *)
-
 let check_fresh_variable id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
    not of nullary function types to clash with nullary library functions.
@@ -986,7 +984,7 @@ and semantic_check_statement s =
         semantic_check_expression
           (UntypedExpr
              ( Indexed
-                 ( UntypedExpr (Variable id, {expr_untyped_meta_loc= loc})
+                 ( UntypedExpr (Variable id, {expr_untyped_meta_loc= id.id_loc})
                  , lindex )
              , {expr_untyped_meta_loc= loc} ))
       in
