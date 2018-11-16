@@ -118,22 +118,6 @@ identifier:
   | id=IDENTIFIER
     {
       grammar_logger "identifier" ;
-      (* TODO: This error message should be moved to the semantic check.
-         It just means that we have to make the file name visible in that
-         phase. *)
-      let modelname = (List.hd
-                        (List.rev
-                          (Core_kernel.String.split
-                            $startpos.pos_fname ~on:'/'
-                          )
-                        )
-                      ) in
-      let _ = if Core_kernel.String.is_suffix id "_model"
-                 && (Core_kernel.String.drop_suffix id 6) ^ ".stan"
-                      = modelname then 
-      Errors.semantic_error ~loc:(Errors.make_location
-                                                 $startpos $endpos)
-      ("Identifier " ^ id ^ " clashes with model name.") in
       {name=id; id_loc=Errors.make_location $startpos $endpos}
     }
 

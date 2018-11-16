@@ -246,6 +246,23 @@ let rec semantic_check_program p =
 (* This could also be dealt with during lexing. That would probably be more efficient. *)
 and semantic_check_identifier id =
   let _ =
+    match id.id_loc with
+    | Nowhere ->
+        semantic_error
+          "This should never happen. Please file a bug. Error code 25."
+    | Errors.Location (startpos, endpos) ->
+        let modelname =
+          List.hd
+            (List.rev (Core_kernel.String.split startpos.pos_fname ~on:'/'))
+        in
+        if
+          Core_kernel.String.is_suffix id.name "_model"
+          && Core_kernel.String.drop_suffix id.name 6 ^ ".stan" = modelname
+        then
+          Errors.semantic_error ~loc:id.id_loc
+            ("Identifier " ^ id.name ^ " clashes with model name.")
+  in
+  let _ =
     if
       Filename.check_suffix id.name "__"
       || List.exists
