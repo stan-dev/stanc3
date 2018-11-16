@@ -1448,6 +1448,7 @@ and semantic_check_statement s =
         | [x] -> [x]
         | x1 :: (Break, _) :: xs -> [x1]
         | x1 :: (Continue, _) :: xs -> [x1]
+        | x1 :: (ReturnVoid, _) :: xs -> [x1]
         | x1 :: x2 :: xs -> x1 :: list_until_breakcontinue (x2 :: xs)
       in
       (* We make sure that for an if-then statement, everything after the then

@@ -28,23 +28,26 @@ open Debug
 %token TRUNCATE
 %token EOF
 
-(* TODO: Resolve remaining ambiguities in the grammar *)
-%left LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
-%left TRANSPOSE
-%right HAT
-%nonassoc unary_over_binary BANG
-%left ELTTIMES ELTDIVIDE
-%left LDIVIDE
-%left TIMES DIVIDE MODULO
-%left PLUS MINUS
-%left LEQ LABRACK GEQ RABRACK
-%left EQUALS NEQUALS
-%left AND
-%left OR
-%right QMARK COLON
+
+
+%right COMMA
 %right TILDE ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
        ELTTIMESASSIGN ELTDIVIDEASSIGN ARROWASSIGN
-%right COMMA
+%right QMARK COLON
+%nonassoc below_COLON
+%left OR
+%left AND
+%left EQUALS NEQUALS
+%left LEQ LABRACK GEQ RABRACK
+%left PLUS MINUS
+%left TIMES DIVIDE MODULO
+%left LDIVIDE
+%left ELTTIMES ELTDIVIDE
+%nonassoc unary_over_binary BANG
+%right HAT
+%left TRANSPOSE
+%left LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
+(* TODO: Resolve remaining ambiguities in the grammar *)
 %nonassoc below_ELSE
 %nonassoc ELSE
 
@@ -303,19 +306,19 @@ expression:
       UntypedExpr (e, initialize_expr_meta $startpos $endpos)}
 
 non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
-  | e1=expression QMARK e2=expression COLON e3=expression 
+  | e1=expression  QMARK e2=expression COLON e3=expression %prec COLON
     { grammar_logger "ifthenelse_expr" ; Conditional (e1, e2, e3) }
-  | e1=expression op=infixOp e2=expression 
+  | e1=expression op=infixOp e2=expression %prec below_COLON
     { grammar_logger "infix_expr" ; InfixOp (e1, op, e2)  }
-  | op=prefixOp e=expression %prec unary_over_binary 
+  | op=prefixOp e=expression %prec unary_over_binary
     { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
-  | e=expression op=postfixOp 
+  | e=expression op=postfixOp
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
   | ue=non_lhs LBRACK i=indexes RBRACK 
     {  grammar_logger "expression_indexed" ;
        Indexed (UntypedExpr (ue, initialize_expr_meta $startpos(ue)
                                                       $endpos(ue)), i)}
-  | e=common_expression 
+  | e=common_expression
     { grammar_logger "common_expr" ; e }
 
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)

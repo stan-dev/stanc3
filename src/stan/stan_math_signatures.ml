@@ -1046,8 +1046,29 @@ let _ =
   add_unqualified ("hypergeometric_lpmf", ReturnType Real, [Int; Int; Int; Int]) ;
   add_unqualified ("hypergeometric_rng", ReturnType Int, [Int; Int; Int]) ;
   add_binary "hypot" ;
-  add_unqualified ("if_else", ReturnType Real, [Int; Real; Real]) ;
-  add_unqualified ("if_else", ReturnType Int, [Int; Int; Int]) ;
+  for j = 0 to 8 - 1 do
+    add_unqualified
+      ( "if_else"
+      , ReturnType (bare_array_type (Real, j))
+      , [Int; bare_array_type (Real, j); bare_array_type (Real, j)] ) ;
+    add_unqualified
+      ( "if_else"
+      , ReturnType (bare_array_type (Int, j))
+      , [Int; bare_array_type (Int, j); bare_array_type (Int, j)] ) ;
+    add_unqualified
+      ( "if_else"
+      , ReturnType (bare_array_type (Vector, j))
+      , [Int; bare_array_type (Vector, j); bare_array_type (Vector, j)] ) ;
+    add_unqualified
+      ( "if_else"
+      , ReturnType (bare_array_type (RowVector, j))
+      , [Int; bare_array_type (RowVector, j); bare_array_type (RowVector, j)]
+      ) ;
+    add_unqualified
+      ( "if_else"
+      , ReturnType (bare_array_type (Matrix, j))
+      , [Int; bare_array_type (Matrix, j); bare_array_type (Matrix, j)] )
+  done ;
   add_unqualified ("inc_beta", ReturnType Real, [Real; Real; Real]) ;
   add_unqualified ("int_step", ReturnType Int, [Real]) ;
   add_unqualified ("int_step", ReturnType Int, [Int]) ;
