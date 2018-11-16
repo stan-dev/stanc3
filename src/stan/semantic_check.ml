@@ -1302,8 +1302,8 @@ and semantic_check_statement s =
       let _ =
         if not context_flags.in_returning_fun_def then
           semantic_error ~loc
-            "Return statements may only be used inside returning function \
-             definitions."
+            "Expression return statements may only be used inside returning \
+             function definitions."
       in
       let ue = semantic_check_expression e in
       TypedStmt
@@ -1314,6 +1314,16 @@ and semantic_check_statement s =
                    (snd (typed_expression_unroll ue))
                      .expr_typed_meta_origin_type)
           ; stmt_typed_meta_loc= loc } )
+  | ReturnVoid ->
+      let _ =
+        if (not context_flags.in_fun_def) || context_flags.in_returning_fun_def
+        then
+          semantic_error ~loc
+            "Void return statements may only be used inside non-returning \
+             function definitions."
+      in
+      TypedStmt
+        (ReturnVoid, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
   | Print ps ->
       let ups = List.map semantic_check_printable ps in
       TypedStmt

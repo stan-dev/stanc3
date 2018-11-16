@@ -153,6 +153,7 @@ and ('e, 's) statement =
   | Break
   | Continue
   | Return of 'e
+  | ReturnVoid
   | Print of 'e printable list
   | Reject of 'e printable list
   | Skip

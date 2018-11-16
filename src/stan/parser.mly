@@ -495,7 +495,7 @@ atomic_statement:
   | RETURN e=expression SEMICOLON 
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON 
-    {  grammar_logger "return_nothing_statement" ; Skip }
+    {  grammar_logger "return_nothing_statement" ; ReturnVoid }
   | SEMICOLON 
     {  grammar_logger "skip" ; Skip }
 
