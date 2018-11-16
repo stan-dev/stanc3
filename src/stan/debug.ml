@@ -1,4 +1,4 @@
-(* some helpers for debugging *)
+(** Some helpers for debugging *)
 
 open Ast
 open Core_kernel

@@ -1,1 +1,1 @@
-(* Code generation goes here *)
+(** Code generation goes here *)

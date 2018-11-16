@@ -1,4 +1,4 @@
-(* Here, we define type checking ; for the Stan Math library *)
+(** The signatures of the Stan Math library, which are used for type checking *)
 
 (* This is ugly. An ideal treatment of function overloading works by carrying around*
    a LAZY set of types ; for each expression. However, that's awkward in OCaml.
@@ -9,11 +9,7 @@
 *)
 
 open Ast
-
-(* A semantic error reported by the toplevel *)
-let semantic_error ?loc msg =
-  Command_line_app.error ~kind:"Semantic error" ?loc
-    (Scanf.format_from_string msg "")
+open Errors
 
 (* We allow implicit conversion from int to real, except for assignment operators *)
 let check_of_same_type_mod_conv name t1 t2 =

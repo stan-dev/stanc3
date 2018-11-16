@@ -1,53 +1,33 @@
-(** Source code locations. *)
-type location
-
-
-(** Convert a [Lexing.lexbuf] location to a [location] *)
-val location_of_lex : Lexing.lexbuf -> location
-
-(** [make_location p1 p2] creates a location which starts at [p1] and ends at [p2]. *)
-val make_location : Lexing.position -> Lexing.position -> location
-
-(** Print a location *)
-val print_location : location -> Format.formatter -> unit
-
-(** [error ~kind ~loc msg] raises an exception which is caught by the toplevel and
-    prints the given message. *)
-val error :
-   ?kind:string -> ?loc:location -> ('a, Format.formatter, unit, 'b) format4 -> 'a
-
 (** The definition of a programming language *)
-module type LANGUAGE =
-  sig
-    (** The name of the language (used for prompt) *)
-    val name : string
+module type LANGUAGE = sig
+  val name : string
+  (** The name of the language (used for prompt) *)
 
-    (** The type of top-level commands *)
-    type command
+  (** The type of top-level commands *)
+  type command
 
-    (** The runtime environment *)
-    type environment
+  (** The runtime environment *)
+  type environment
 
-    (** Additional command-line options *)
-    val options : (Arg.key * Arg.spec * Arg.doc) list
+  val options : (Arg.key * Arg.spec * Arg.doc) list
+  (** Additional command-line options *)
 
-    (** The initial runtime environment *)
-    val initial_environment : environment
+  val initial_environment : environment
+  (** The initial runtime environment *)
 
-    (** A parser for parsing entire files *)
-    val file_parser : (Lexing.lexbuf -> command list) option
+  val file_parser : (Lexing.lexbuf -> command list) option
+  (** A parser for parsing entire files *)
 
-    (** A parser for parsing one toplevel command *)
-    val toplevel_parser : (Lexing.lexbuf -> command) option
+  val toplevel_parser : (Lexing.lexbuf -> command) option
+  (** A parser for parsing one toplevel command *)
 
-    (** Execute a toplevel command in the given environment and
+  val exec : environment -> command -> environment
+  (** Execute a toplevel command in the given environment and
         return the new environment. *)
-    val exec : environment -> command -> environment
-  end
+end
 
 (** Create a language from its definition. *)
-module Main : functor (L : LANGUAGE) ->
-                      sig
-                        (** The main program *)
-                        val main : unit -> unit
-                      end
+module Main (L : LANGUAGE) : sig
+  val main : unit -> unit
+  (** The main program *)
+end

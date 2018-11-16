@@ -1,1 +1,1 @@
-(* Optimization passes go here *)
+(** Optimization passes go here *)
