@@ -31,6 +31,8 @@ To auto-format the OCaml-code (sadly, this does not work for the two ocamllex an
 ./ocamlformat-stan.sh
 `
 
+Run `./stan.native` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
+
 ## Done, so far
 - A lexer
 - A LR(1) parser (without any shift/reduce conflicts), constructing an AST
