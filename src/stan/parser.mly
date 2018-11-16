@@ -34,7 +34,6 @@ open Debug
 %right TILDE ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
        ELTTIMESASSIGN ELTDIVIDEASSIGN ARROWASSIGN
 %right QMARK COLON
-%nonassoc below_COLON
 %left OR
 %left AND
 %left EQUALS NEQUALS
@@ -306,9 +305,9 @@ expression:
       UntypedExpr (e, initialize_expr_meta $startpos $endpos)}
 
 non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
-  | e1=expression  QMARK e2=expression COLON e3=expression %prec COLON
+  | e1=expression  QMARK e2=expression COLON e3=expression
     { grammar_logger "ifthenelse_expr" ; Conditional (e1, e2, e3) }
-  | e1=expression op=infixOp e2=expression %prec below_COLON
+  | e1=expression op=infixOp e2=expression
     { grammar_logger "infix_expr" ; InfixOp (e1, op, e2)  }
   | op=prefixOp e=expression %prec unary_over_binary
     { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
@@ -375,7 +374,7 @@ common_expression:
   | LPAREN e=expression RPAREN 
     { grammar_logger "extra_paren" ; Paren e }
 
-prefixOp:
+%inline prefixOp:
   | BANG 
     {   grammar_logger "prefix_bang" ; Not }
   | MINUS 
@@ -383,17 +382,17 @@ prefixOp:
   | PLUS 
     {   grammar_logger "prefix_plus" ; UPlus }
 
-postfixOp:
+%inline postfixOp:
   | TRANSPOSE 
     {  grammar_logger "postfix_transpose" ; Transpose }
 
-infixOp:
+%inline infixOp:
   | a=arithmeticInfixOp 
     {   grammar_logger "infix_arithmetic" ; a }
   | l=logicalInfixOp 
     {  grammar_logger "infix_logical" ; l }
 
-arithmeticInfixOp:
+%inline arithmeticInfixOp:
   | PLUS 
     {  grammar_logger "infix_plus" ; Plus }
   | MINUS 
@@ -413,7 +412,7 @@ arithmeticInfixOp:
   | HAT 
     {  grammar_logger "infix_hat" ; Exp }
 
-logicalInfixOp:
+%inline logicalInfixOp:
   | OR 
     {   grammar_logger "infix_or" ; Or }
   | AND 
@@ -502,7 +501,7 @@ atomic_statement:
   | SEMICOLON 
     {  grammar_logger "skip" ; Skip }
 
-assignment_op:
+%inline assignment_op:
   | ASSIGN 
     {  grammar_logger "assign_plain" ; Assign }
   | PLUSASSIGN 
