@@ -40,22 +40,23 @@ module Main (L : LANGUAGE) = struct
   (** Some example command-line options here *)
   let options =
     Arg.align
-      ( [ ( "--wrapper"
-          , Arg.String (fun str -> wrapper := Some [str])
-          , "<program> Specify a command-line wrapper to be used (such as \
-             rlwrap or ledit)" )
-        ; ( "--no-wrapper"
-          , Arg.Unit (fun () -> wrapper := None)
-          , " Do not use a command-line wrapper" )
+      ( [ ( "--debug-parse"
+          , Arg.Unit (fun () -> Debug.grammar_logging := true)
+          , " For debugging purposes: print the parser actions" )
+        ; ( "--debug-ast"
+          , Arg.Unit (fun () -> Debug.ast_printing := true)
+          , " For debugging purposes: print the undecorated AST, before \
+             semantic checking" )
+        ; ( "--debug-decorated-ast"
+          , Arg.Unit (fun () -> Debug.typed_ast_printing := true)
+          , " For debugging purposes: print the decorated AST, after semantic \
+             checking" )
         ; ( "-v"
           , Arg.Unit
               (fun () ->
                 print_endline (L.name ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
                 exit 0 )
-          , " Print language information and exit" )
-        ; ( "-l"
-          , Arg.String (fun str -> add_file false str)
-          , "<file> Load <file> into the initial environment" ) ]
+          , " Print language information and exit" ) ]
       @ L.options )
 
   (** Treat anonymous arguments as files to be run. *)
