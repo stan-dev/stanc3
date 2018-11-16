@@ -33,6 +33,8 @@ To auto-format the OCaml-code (sadly, this does not work for the two ocamllex an
 
 Run `./stan.native` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
 
+Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have added any in the `src/stan/parser.messages` file.
+
 ## Done, so far
 - A lexer
 - A LR(1) parser (without any shift/reduce conflicts), constructing an AST
@@ -42,9 +44,11 @@ Run `./stan.native` on individual .stan file to compile it. Use `-?` to get comm
 - Prototype semantic check
 - Lexical position printed in syntactic and semantic error messages
 - Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
+- Basic custom syntax errors implemented using Menhir's Incremental API
 
 ## TODO
-- Generate better syntax error messages during parsing (use menhir --list-errors to systematically list all paths to a parse error which should get a custom error message)
+- Clean up top level
+- Improve quality of syntax error messages by inserting them in the `src/stan/parser.messages` file.
 - Improve quality of semantic error messages
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Create code generation phase from IRs
