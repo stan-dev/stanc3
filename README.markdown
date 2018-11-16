@@ -32,9 +32,9 @@ To auto-format the OCaml-code (sadly, this does not work for the two ocamllex an
 `
 
 ## Done, so far
-- Prototype lexer
-- Prototype parser with semantic actions
-- Prototype AST
+- A lexer
+- A LR(1) parser (without any shift/reduce conflicts), constructing an AST
+- A typed and untyped AST
 - Debugging flags for writing out parsing operations and resulting AST as s-expression in case of a successful parse
 - Ported all function signatures from Stan Math
 - Prototype semantic check
