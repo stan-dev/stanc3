@@ -49,39 +49,49 @@ and statement =
       init: statement;
       cond: expr;
       step: statement;
-      body: statement}
+      body: statement;
+    }
   | Block of statement list
   | Decl of vardecl * expr option
 
-and stantype =
+and cpptype =
   | SInt
   | SReal
-  | SArray of stantype
+  | SArray of cpptype
   | SVector
   | SRowVector
   | SMatrix
+  | SSize_t
+  | SString
 
-and autodiff_type =
-  | AVar of stantype
-  | AData of stantype
+and autodiff =
+  | AVar
+  | AData
+
+and mutability =
+  | Mutable
+  | Immutable
+  | ByValue
+
+and argdecl = autodiff * mutability * cpptype * string
+
+and vardecl = cpptype * string
 
 and fndef = {
-  returntype: autodiff_type option;
+  returntype: (autodiff * cpptype) option;
   name: string;
-  arguments: ad_vardecl list;
+  arguments: argdecl list;
   body: statement;
   templates: string list;
 }
 
-and ad_vardecl = autodiff_type * string
+and cppclass = {classname: string; super: string;
+                fields: vardecl list;
+                methods: fndef list;
+                ctor: (vardecl list) * statement}
 
-and vardecl = stantype * string
-
-and mir = {
+and prog = {
+  cppclass: cppclass;
   functions: fndef list;
-  datafields: vardecl list;
-  params: vardecl list;
-  methods: fndef list;
-  ctor: (vardecl list) * statement list;
 }
 [@@deriving sexp, hash]
