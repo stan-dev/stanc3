@@ -1,3 +1,5 @@
+#!/bin/bash
+
 shopt -s nullglob
 cd "src/stan";
 for filename in *.ml; do
