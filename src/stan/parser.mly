@@ -46,7 +46,6 @@ open Debug
 %right HAT
 %left TRANSPOSE
 %left LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
-(* TODO: Resolve remaining ambiguities in the grammar *)
 %nonassoc below_ELSE
 %nonassoc ELSE
 
@@ -292,7 +291,7 @@ dims:
     { grammar_logger "dims" ; l  }
 
 (* expressions *)
-expression:
+%inline expression:
   | l=lhs
     { 
       grammar_logger "lhs_expression" ;
@@ -304,7 +303,7 @@ expression:
     { grammar_logger "non_lhs_expression" ;
       UntypedExpr (e, initialize_expr_meta $startpos $endpos)}
 
-non_lhs: (* to avoid shift/reduce conflict with lhs when doing assignments *)
+non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
     { grammar_logger "ifthenelse_expr" ; Conditional (e1, e2, e3) }
   | e1=expression op=infixOp e2=expression
