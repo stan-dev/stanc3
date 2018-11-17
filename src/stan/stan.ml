@@ -42,9 +42,6 @@ let options =
             exit 0 )
       , " Print language information and exit" ) ]
 
-(** Treat anonymous arguments as files to be run. *)
-let anonymous str = add_file true str
-
 (** Parser wrapper that catches syntax-related errors and converts them to errors. *)
 let wrap_syntax_errors parser lex =
   try parser lex with
@@ -142,19 +139,20 @@ let parse_file parse_fun path =
     lexbuf
   in
   try parse parse_fun lexbuf with SyntaxError err as exn ->
-    report_error lexbuf err ; raise exn
+    report_error lexbuf err ; exit 1
 
 (** ad directives from the given file. *)
 let use_file ctx (filename, interactive) =
   let cmds = parse_file Parser.Incremental.file filename in
   List.fold_left exec ctx cmds
 
+
 (** Main program *)
 let main () =
   (* Intercept Ctrl-C by the user *)
   Sys.catch_break true ;
   (* Parse the arguments. *)
-  Arg.parse options anonymous usage ;
+  Arg.parse options (add_file true) usage ;
   (* Files were listed in the wrong order, so we reverse them *)
   files := List.rev !files ;
   (* Set the maximum depth of pretty-printing, after which it prints ellipsis. *)

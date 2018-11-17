@@ -8,7 +8,7 @@ program: WHILE
 ## 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected a program block keyword, but found a non-block keyword.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK IDENTIFIER TILDE
 ##
@@ -66,7 +66,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK IDENTIFIER TILDE
 ## In state 72, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression is expected for index.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
 ##
