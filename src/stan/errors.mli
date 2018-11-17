@@ -13,6 +13,16 @@ val make_location : Lexing.position -> Lexing.position -> location
     [msg], occurring at location [loc]. *)
 exception Error of (location * string * string)
 
+(** Our two kinds of syntax errors *)
+type parse_error =
+  | Lexing of string * Lexing.position
+  | Parsing of string option * Lexing.position * Lexing.position
+
+exception SyntaxError of parse_error
+
+val report_error : Lexing.lexbuf -> parse_error -> unit
+(** A pretty printer for syntax errors *)
+
 val fatal_error : ('a, Format.formatter, unit, 'b) format4 -> 'a
 (** A fatal error reported by the toplevel. *)
 
