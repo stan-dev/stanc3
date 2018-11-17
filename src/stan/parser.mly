@@ -120,6 +120,11 @@ identifier:
       grammar_logger "identifier" ;
       {name=id; id_loc=Errors.make_location $startpos $endpos}
     }
+  | id=TRUNCATE
+    {
+      grammar_logger "identifier" ;
+      {name="T"; id_loc=Errors.make_location $startpos $endpos}
+    }
 
 function_def:
   | rt=return_type name=identifier LPAREN args=separated_list(COMMA, arg_decl)
@@ -507,7 +512,8 @@ string_literal:
     {  grammar_logger "string_literal" ; s }
 
 truncation:
-  | TRUNCATE e1=option(expression) COMMA e2=option(expression) RBRACK 
+  | TRUNCATE LBRACK e1=option(expression) COMMA e2=option(expression)
+    RBRACK 
     {  grammar_logger "truncation" ; construct_truncation e1 e2 }
 
 nested_statement:

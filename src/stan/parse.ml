@@ -20,7 +20,12 @@ let parse parse_fun lexbuf =
     | (lazy Nil) -> assert false
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
-          try Some (Parsing_errors.message (Interp.number state))
+          try
+            Some
+              ( Parsing_errors.message (Interp.number state)
+              ^ "(Parse error state "
+              ^ string_of_int (Interp.number state)
+              ^ ")" )
           with Not_found -> None
         in
         raise (SyntaxError (Parsing (message, start_pos, end_pos)))
