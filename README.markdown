@@ -22,9 +22,7 @@ To test the compiler on all bad models in stan/src/test/test-models/bad, run
 `
 ./run-stan-examples-bad.sh
 `
-This will produce an output file (containing logging info, presuming that
-logging is turned on in `debug.ml`, which should let you reproduce the parse and/or should
-print the decorated/undecorated AST as an s-expression).
+This will produce an output file which will show any errors.
 
 To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
 `
