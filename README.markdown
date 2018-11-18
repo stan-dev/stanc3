@@ -45,7 +45,6 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - Basic custom syntax errors implemented using Menhir's Incremental API
 
 ## TODO
-- Clean up top level
 - Improve quality of syntax error messages by inserting them in the `src/stan/parser.messages` file.
 - Improve quality of semantic error messages
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
