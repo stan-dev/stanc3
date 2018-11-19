@@ -710,7 +710,9 @@ and semantic_check_expression x =
         | None ->
             semantic_error ~loc
               ( "A returning function was expected but an undeclared identifier "
-              ^ uid.name ^ " was supplied." ) ) )
+              ^ uid.name ^ " was supplied." ) )
+      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
+      )
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
@@ -781,7 +783,9 @@ and semantic_check_expression x =
         | None ->
             semantic_error ~loc
               ( "A returning function was expected but an undeclared identifier "
-              ^ uid.name ^ " was supplied." ) ) )
+              ^ uid.name ^ " was supplied." ) )
+      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
+      )
   | GetLP ->
       let _ =
         if
@@ -1140,7 +1144,9 @@ and semantic_check_statement s =
         | None ->
             semantic_error ~loc
               ( "A returning function was expected but an undeclared identifier "
-              ^ uid.name ^ " was supplied." ) ) )
+              ^ uid.name ^ " was supplied." ) )
+      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
+      )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1214,9 +1220,8 @@ and semantic_check_statement s =
           || Filename.check_suffix uid.name "_ccdf"
         then
           semantic_error ~loc
-            ( "CDF and CCDF functions may not be used with sampling \
-               notation.Use increment_log_prob(" ^ uid.name
-            ^ "_log(...)) instead." )
+            ( "CDF and CCDF functions may not be used with sampling notation. \
+               Use increment_log_prob(" ^ uid.name ^ "_log(...)) instead." )
       in
       let _ =
         if

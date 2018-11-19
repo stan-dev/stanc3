@@ -1422,7 +1422,7 @@ file: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ## top_var_type identifier
 ##
 
-";" or plain assignment expected after variable declaration.
+Only top-level variable declarations are allowed in data and parameter blocks.
 
 file: DATABLOCK LBRACE REAL WHILE
 ##
