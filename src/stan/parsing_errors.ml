@@ -639,21 +639,21 @@ let message =
     | 266 ->
         "\"[\" expression \",\" expression \"]\" expected after \"matrix\" in local (or model block) variable declaration. (No transformations/constraints allowed.)\n"
     | 267 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 274 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 275 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 278 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 276 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 268 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 269 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 272 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 270 ->
         "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 621 ->

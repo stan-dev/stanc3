@@ -3152,7 +3152,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 ##
@@ -3165,7 +3165,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 ## MATRIX LBRACK non_lhs COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ##
@@ -3218,7 +3218,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ## MATRIX LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
@@ -3270,7 +3270,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ## MATRIX LBRACK lhs COMMA non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
@@ -3328,7 +3328,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 ##
@@ -3341,7 +3341,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 ## MATRIX LBRACK lhs COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 ##
@@ -3400,7 +3400,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX LBRACK WHILE
 ##
@@ -3415,7 +3415,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK WHILE
 ## MATRIX LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix sizes.
 
 file: MODELBLOCK LBRACE MATRIX WHILE
 ##
@@ -3494,7 +3494,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN REALNUMERAL WHILE
 ## ASSIGN non_lhs
 ##
 
-Expression ";" expected after assignment.
+Ill-formed expression. Expression followed by ";" expected after "=".
 
 file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
 ##
