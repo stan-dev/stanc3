@@ -689,7 +689,7 @@ let message =
     | 22 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 434 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"data {\" or \"transformed data {\" or \"parameters {\" or \"transformed parameters {\" or \"model {\" or \"generated quantities {\".\n"
     | 435 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 436 ->
@@ -831,27 +831,27 @@ let message =
     | 581 ->
         "Only top-level variable declarations are allowed in data and parameter blocks.\n"
     | 582 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for array size.\n"
     | 584 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Only variable declarations allowed in data and parameters blocks.\n"
     | 588 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"transformed data {\" or \"parameters {\" or \"transformed parameters {\" or \"model {\" or \"generated quantities {\".\n"
     | 521 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of positive_ordered.\n"
     | 522 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of positive_ordered.\n"
     | 525 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of positive_ordered.\n"
     | 523 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of positive_ordered.\n"
     | 527 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of ordered.\n"
     | 528 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of ordered.\n"
     | 531 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of ordered.\n"
     | 529 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of ordered.\n"
     | 533 ->
         "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 535 ->
@@ -917,6 +917,6 @@ let message =
     | 576 ->
         "Expected \"[\" expression \"]\" for size of cholesky_factor_corr.\n"
     | 632 ->
-        "Expected \\\"functions {\\\" or \\\"data {\\\" or \\\"transformed data {\\\" or \\\"parameters {\\\" or \\\"transformed parameters {\\\" or \\\"model {\\\" or \\\"generated quantities {\\\".\n"
+        "Expected \"functions {\" or \"data {\" or \"transformed data {\" or \"parameters {\" or \"transformed parameters {\" or \"model {\" or \"generated quantities {\".\n"
     | _ ->
         raise Not_found

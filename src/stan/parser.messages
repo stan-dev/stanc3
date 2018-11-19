@@ -8,7 +8,7 @@ program: WHILE
 ##
 ##
 
-Expected \"functions {\" or \"data {\" or \"transformed data {\" or \"parameters {\" or \"transformed parameters {\" or \"model {\" or \"generated quantities {\".
+Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
 ##
@@ -1155,7 +1155,7 @@ file: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
 ## ORDERED LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of ordered.
 
 file: DATABLOCK LBRACE ORDERED LBRACK TRUNCATE TILDE
 ##
@@ -1213,7 +1213,7 @@ file: DATABLOCK LBRACE ORDERED LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of ordered.
 
 file: DATABLOCK LBRACE ORDERED LBRACK WHILE
 ##
@@ -1226,7 +1226,7 @@ file: DATABLOCK LBRACE ORDERED LBRACK WHILE
 ## ORDERED LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of ordered.
 
 file: DATABLOCK LBRACE ORDERED WHILE
 ##
@@ -1239,7 +1239,7 @@ file: DATABLOCK LBRACE ORDERED WHILE
 ## ORDERED
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of ordered.
 
 file: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL WHILE
 ##
@@ -1291,7 +1291,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL WHILE
 ## POSITIVEORDERED LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of positive_ordered.
 
 file: DATABLOCK LBRACE POSITIVEORDERED LBRACK TRUNCATE TILDE
 ##
@@ -1349,7 +1349,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of positive_ordered.
 
 file: DATABLOCK LBRACE POSITIVEORDERED LBRACK WHILE
 ##
@@ -1362,7 +1362,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED LBRACK WHILE
 ## POSITIVEORDERED LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of positive_ordered.
 
 file: DATABLOCK LBRACE POSITIVEORDERED WHILE
 ##
@@ -1375,7 +1375,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED WHILE
 ## POSITIVEORDERED
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of positive_ordered.
 
 file: DATABLOCK LBRACE RBRACE WHILE
 ##
@@ -1387,7 +1387,7 @@ file: DATABLOCK LBRACE RBRACE WHILE
 ## option(function_block) option(data_block)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ##
@@ -1399,7 +1399,7 @@ file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ## top_var_decl_no_assign
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Only variable declarations allowed in data and parameters blocks.
 
 file: DATABLOCK LBRACE REAL TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -1411,7 +1411,7 @@ file: DATABLOCK LBRACE REAL TRUNCATE LBRACK RBRACK WHILE
 ## top_var_type identifier option(dims)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for array size.
 
 file: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
@@ -2849,7 +2849,7 @@ file: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ## option(function_block)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 file: FUNCTIONBLOCK LBRACE VECTOR LBRACK COMMA WHILE
 ##
