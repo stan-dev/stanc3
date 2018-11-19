@@ -34,20 +34,20 @@ let exec p =
   ()
 
 (** ad directives from the given file. *)
-let use_file (filename, interactive) =
+let use_file filename =
   let cmds = Parse.parse_file Parser.Incremental.file filename in
   List.map exec cmds
 
 (** Add a file to the list of files to be loaded, and record whether it should
       be processed in interactive mode. *)
-let add_file interactive filename = files := (filename, interactive) :: !files
+let add_file filename = files := filename :: !files
 
 (** Main program *)
 let main () =
   (* Intercept Ctrl-C by the user *)
   Sys.catch_break true ;
   (* Parse the arguments. *)
-  Arg.parse options (add_file true) usage ;
+  Arg.parse options add_file usage ;
   (* Files were listed in the wrong order, so we reverse them *)
   files := List.rev !files ;
   (* Set the maximum depth of pretty-printing, after which it prints ellipsis. *)

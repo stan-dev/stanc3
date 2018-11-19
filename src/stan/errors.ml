@@ -15,14 +15,14 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 let nth_line file line =
   try
     let input = open_in file in
-    for i = 1 to line - 1 do
+    for _ = 1 to line - 1 do
       ignore (input_line input)
     done ;
     let result = input_line input in
     close_in input ; Some result
   with _ -> None
 
-let report_syntax_error lexbuf = function
+let report_syntax_error = function
   | Parsing (message, start_pos, end_pos) -> (
       let file, start_line, start_character = position start_pos in
       let _, curr_line, curr_character = position end_pos in

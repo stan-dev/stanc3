@@ -112,7 +112,7 @@ identifier:
       grammar_logger "identifier" ;
       {name=id; id_loc=Errors.make_location $startpos $endpos}
     }
-  | id=TRUNCATE
+  | TRUNCATE
     {
       grammar_logger "identifier" ;
       {name="T"; id_loc=Errors.make_location $startpos $endpos}

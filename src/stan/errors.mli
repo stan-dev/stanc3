@@ -6,7 +6,7 @@ type parse_error =
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
-val report_syntax_error : Lexing.lexbuf -> parse_error -> unit
+val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
 (** Source code locations for semantic errors. *)

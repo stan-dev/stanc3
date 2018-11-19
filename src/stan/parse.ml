@@ -46,5 +46,4 @@ let parse_file parse_fun path =
     lexbuf
   in
   try parse parse_fun lexbuf with SyntaxError err ->
-    report_syntax_error lexbuf err ;
-    exit 1
+    report_syntax_error err ; exit 1

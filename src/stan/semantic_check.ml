@@ -107,10 +107,10 @@ let rec unsizedtype_contains_int ut =
 let rec unsizedtype_of_sizedtype = function
   | SInt -> Int
   | SReal -> Real
-  | SVector e -> Vector
-  | SRowVector e -> RowVector
-  | SMatrix (e1, e2) -> Matrix
-  | SArray (st, e) -> Array (unsizedtype_of_sizedtype st)
+  | SVector _ -> Vector
+  | SRowVector _ -> RowVector
+  | SMatrix (_, _) -> Matrix
+  | SArray (st, _) -> Array (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
   | [] -> Primitives
@@ -158,7 +158,7 @@ let check_fresh_variable id is_nullary_function =
       semantic_error ~loc:id.id_loc error_msg
   in
   match Symbol_table.look vm id.name with
-  | Some x ->
+  | Some _ ->
       let error_msg =
         String.concat " " ["Identifier "; id.name; " is already in use."]
       in
@@ -196,7 +196,9 @@ let rec semantic_check_program p =
        we are processing multiple files in one run. *)
     let _ = unsafe_clear_symbol_table vm in
     let _ = context_flags.current_block <- Functions in
-    let ubf = Core_kernel.Option.map bf (List.map semantic_check_statement) in
+    let ubf =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bf
+    in
     let _ =
       if Symbol_table.some_fun_is_missing_def vm then
         semantic_error
@@ -215,24 +217,30 @@ let rec semantic_check_program p =
           "Some function is declared without specifying a definition."
     in
     let _ = context_flags.current_block <- Data in
-    let ubd = Core_kernel.Option.map bd (List.map semantic_check_statement) in
+    let ubd =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bd
+    in
     let _ = context_flags.current_block <- TData in
     let ubtd =
-      Core_kernel.Option.map btd (List.map semantic_check_statement)
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) btd
     in
     let _ = context_flags.current_block <- Param in
-    let ubp = Core_kernel.Option.map bp (List.map semantic_check_statement) in
+    let ubp =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bp
+    in
     let _ = context_flags.current_block <- TParam in
     let ubtp =
-      Core_kernel.Option.map btp (List.map semantic_check_statement)
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) btp
     in
     let _ = context_flags.current_block <- Model in
     let _ = Symbol_table.begin_scope vm in
-    let ubm = Core_kernel.Option.map bm (List.map semantic_check_statement) in
+    let ubm =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bm
+    in
     let _ = Symbol_table.end_scope vm in
     let _ = context_flags.current_block <- GQuant in
     let ubgq =
-      Core_kernel.Option.map bgq (List.map semantic_check_statement)
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bgq
     in
     { functionblock= ubf
     ; datablock= ubd
@@ -249,13 +257,13 @@ and semantic_check_identifier id =
     | Nowhere ->
         semantic_error
           "This should never happen. Please file a bug. Error code 25."
-    | Errors.Location (startpos, endpos) ->
+    | Errors.Location (startpos, _) ->
         let modelname =
           List.hd
             (List.rev (Core_kernel.String.split startpos.pos_fname ~on:'/'))
         in
         if
-          Core_kernel.String.is_suffix id.name "_model"
+          Core_kernel.String.is_suffix id.name ~suffix:"_model"
           && Core_kernel.String.drop_suffix id.name 6 ^ ".stan" = modelname
         then
           Errors.semantic_error ~loc:id.id_loc
@@ -263,7 +271,7 @@ and semantic_check_identifier id =
   in
   let _ =
     if
-      Filename.check_suffix id.name "__"
+      Core_kernel.String.is_suffix id.name ~suffix:"__"
       || List.exists
            (fun str -> str = id.name)
            [ "true"
@@ -633,8 +641,8 @@ and semantic_check_expression x =
           | TypedExpr (Indexed (TypedExpr (Variable arg1_name, _), []), _) :: _
             ->
               if
-                Filename.check_suffix arg1_name.name "_lp"
-                || Filename.check_suffix arg1_name.name "_rng"
+                Core_kernel.String.is_suffix arg1_name.name ~suffix:"_lp"
+                || Core_kernel.String.is_suffix arg1_name.name ~suffix:"_rng"
               then
                 semantic_error ~loc
                   ( "Mapped function cannot be an _rng or _lp function, found \
@@ -643,11 +651,11 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_lpdf"
-          || Filename.check_suffix uid.name "_lpdf"
-          || Filename.check_suffix uid.name "_lpmf"
-          || Filename.check_suffix uid.name "_lcdf"
-          || Filename.check_suffix uid.name "_lccdf"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+          || Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+          || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
+          || Core_kernel.String.is_suffix uid.name ~suffix:"_lcdf"
+          || Core_kernel.String.is_suffix uid.name ~suffix:"_lccdf"
         then
           semantic_error ~loc
             "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
@@ -656,7 +664,7 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_lp"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -667,7 +675,7 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_rng"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_rng"
           && ( (context_flags.in_fun_def && not context_flags.in_rng_fun_def)
              || context_flags.current_block = TParam
              || context_flags.current_block = Model )
@@ -723,10 +731,10 @@ and semantic_check_expression x =
       let _ =
         if
           not
-            ( Filename.check_suffix uid.name "_lpdf"
-            || Filename.check_suffix uid.name "_lcdf"
-            || Filename.check_suffix uid.name "_lpmf"
-            || Filename.check_suffix uid.name "_lccdf" )
+            ( Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+            || Core_kernel.String.is_suffix uid.name ~suffix:"_lcdf"
+            || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
+            || Core_kernel.String.is_suffix uid.name ~suffix:"_lccdf" )
         then
           semantic_error ~loc
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
@@ -741,7 +749,7 @@ and semantic_check_expression x =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_lp"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -1025,7 +1033,7 @@ and semantic_check_statement s =
           | _, Some ob2 -> Some ob2
           | _ -> None)
           ( (if is_primitive_name uid.name then Some Primitives else None)
-          , Core_kernel.Option.map (Symbol_table.look vm uid.name) fst )
+          , Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name) )
       in
       let _ =
         if Symbol_table.get_read_only vm uid.name then
@@ -1053,14 +1061,8 @@ and semantic_check_statement s =
    sense unless we use static analysis as well to make sure these assignments
    actually get evaluated in that phase. *)
       let _ =
-        match
-          (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
-        with
-        | rhs_ob, _ -> update_originblock uid.name rhs_ob
-        | _ ->
-            semantic_error ~loc
-              "Right hand side of assignment operator references undeclared \
-               variable."
+        match (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
+        with rhs_ob, _ -> update_originblock uid.name rhs_ob
       in
       let opname =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
@@ -1104,7 +1106,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_lp"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -1221,8 +1223,8 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_cdf"
-          || Filename.check_suffix uid.name "_ccdf"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_cdf"
+          || Core_kernel.String.is_suffix uid.name ~suffix:"_ccdf"
         then
           semantic_error ~loc
             ( "CDF and CCDF functions may not be used with sampling notation. \
@@ -1467,9 +1469,9 @@ and semantic_check_statement s =
       let rec list_until_breakcontinue = function
         | [] -> []
         | [x] -> [x]
-        | x1 :: (Break, _) :: xs -> [x1]
-        | x1 :: (Continue, _) :: xs -> [x1]
-        | x1 :: (ReturnVoid, _) :: xs -> [x1]
+        | x1 :: (Break, _) :: _ -> [x1]
+        | x1 :: (Continue, _) :: _ -> [x1]
+        | x1 :: (ReturnVoid, _) :: _ -> [x1]
         | x1 :: x2 :: xs -> x1 :: list_until_breakcontinue (x2 :: xs)
       in
       (* We make sure that for an if-then statement, everything after the then
@@ -1486,11 +1488,7 @@ and semantic_check_statement s =
                 else
                   semantic_error ~loc
                     "Branches of conditional need to have the same return type."
-            | false, Void -> helper xs
-            | _ ->
-                semantic_error ~loc
-                  "This should never happen. Please report a bug. Error code 7."
-            )
+            | false, Void -> helper xs )
         in
         helper
           (List.map
@@ -1534,7 +1532,7 @@ and semantic_check_statement s =
     | ( TypedStmt (VDecl (ust, uid), _)
       , TypedStmt
           ( Assignment
-              { assign_identifier= id
+              { assign_identifier= _
               ; assign_indices= []
               ; assign_op= Assign
               ; assign_rhs= ue }
@@ -1652,7 +1650,7 @@ and semantic_check_statement s =
     | ( TypedStmt (TVDecl (ust, utrans, uid), _)
       , TypedStmt
           ( Assignment
-              { assign_identifier= id
+              { assign_identifier= _
               ; assign_indices= []
               ; assign_op= Assign
               ; assign_rhs= ue }
@@ -1679,7 +1677,7 @@ and semantic_check_statement s =
                 , semantic_check_identifier id ))
           args
       in
-      let uarg_types = List.map (function w, y, z -> (w, y)) uargs in
+      let uarg_types = List.map (function w, y, _ -> (w, y)) uargs in
       let _ =
         if Symbol_table.is_missing_fun_def vm uid.name then (
           if
@@ -1705,17 +1703,17 @@ and semantic_check_statement s =
       let _ =
         Symbol_table.enter vm uid.name (Functions, Fun (uarg_types, urt))
       in
-      let uarg_identifiers = List.map (function w, y, z -> z) uargs in
+      let uarg_identifiers = List.map (function _, _, z -> z) uargs in
       let uarg_names = List.map (fun x -> x.name) uarg_identifiers in
       let _ = List.map (Symbol_table.set_read_only vm) uarg_names in
       let _ =
         if
           urt <> ReturnType Real
-          && ( Filename.check_suffix uid.name "_log"
-             || Filename.check_suffix uid.name "_lpdf"
-             || Filename.check_suffix uid.name "_lpmf"
-             || Filename.check_suffix uid.name "_lcdf"
-             || Filename.check_suffix uid.name "_lccdf" )
+          && ( Core_kernel.String.is_suffix uid.name ~suffix:"_log"
+             || Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+             || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
+             || Core_kernel.String.is_suffix uid.name ~suffix:"_lcdf"
+             || Core_kernel.String.is_suffix uid.name ~suffix:"_lccdf" )
         then
           semantic_error ~loc
             "Real return type required for probability functions ending in \
@@ -1723,7 +1721,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_lpdf"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
         then
           semantic_error ~loc
@@ -1732,7 +1730,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Filename.check_suffix uid.name "_lpmf"
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
         then
           semantic_error ~loc
@@ -1741,11 +1739,11 @@ and semantic_check_statement s =
       in
       let _ = context_flags.in_fun_def <- true in
       let _ =
-        if Filename.check_suffix uid.name "_rng" then
+        if Core_kernel.String.is_suffix uid.name ~suffix:"_rng" then
           context_flags.in_rng_fun_def <- true
       in
       let _ =
-        if Filename.check_suffix uid.name "_lp" then
+        if Core_kernel.String.is_suffix uid.name ~suffix:"_lp" then
           context_flags.in_lp_fun_def <- true
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
