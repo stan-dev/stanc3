@@ -4745,7 +4745,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON UPPER
 ## IF LPAREN lhs RPAREN statement
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement. Expected statement or variable declaration or "}" after conditional true branch.
 
 file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
 ##
@@ -4758,7 +4758,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
 ## IF LPAREN lhs RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement. Expected statement after ")" for true branch of conditional.
 
 file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE TILDE
 ##
