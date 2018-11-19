@@ -2059,7 +2059,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
 ## LOWER ASSIGN constr_expression COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"upper =" expression ">" expected after "<lower =" expression "," in variable declaration.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 ##
@@ -9170,7 +9170,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ## LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression expected after "{" in array expression.
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN REALNUMERAL WHILE
 ##
