@@ -223,7 +223,7 @@ let message =
     | 110 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 109 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression.\n"
     | 360 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 363 ->
@@ -501,7 +501,7 @@ let message =
     | 178 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 176 ->
-        "Ill-placed \"[\".\n"
+        "Ill-formed expression.\n"
     | 252 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 420 ->
@@ -677,7 +677,7 @@ let message =
     | 426 ->
         "\",\" or \")\" expected after function argument declaration.\n"
     | 427 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "An argument declaration (unsized type followed by identifier) is expected.\n"
     | 29 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 17 ->
@@ -735,41 +735,41 @@ let message =
     | 459 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 447 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression followed by \"]\".\n"
     | 450 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 451 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 460 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 461 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 462 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 463 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 468 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 469 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 455 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected expression \">\" after \"upper =\".\n"
     | 441 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 454 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 442 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 453 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 443 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 445 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 472 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"=\" expression \">\" after \"scale\".\n"
     | 473 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected expression after \"scale =\".\n"
     | 474 ->
         "Expected \">\" after \"scale =\" expression.\n"
     | 493 ->
@@ -901,11 +901,11 @@ let message =
     | 571 ->
         "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 566 ->
-        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
+        "Expected comma separated list of expressions. Ill-formed expression.\n"
     | 568 ->
-        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
+        "Expected comma separated list of expressions. Ill-formed expression.\n"
     | 567 ->
-        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
+        "Expected comma separated list of expressions. Ill-formed expression.\n"
     | 565 ->
         "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 574 ->

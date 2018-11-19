@@ -248,7 +248,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ## COMMA non_lhs
 ##
 
-Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
+Expected comma separated list of expressions. Ill-formed expression.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
@@ -306,7 +306,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
+Expected comma separated list of expressions. Ill-formed expression.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 ##
@@ -319,7 +319,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 ## COMMA
 ##
 
-Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
+Expected comma separated list of expressions. Ill-formed expression.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
 ##
@@ -2128,7 +2128,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
 ## SCALE ASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected expression after "scale =".
 
 file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
 ##
@@ -2140,7 +2140,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
 ## SCALE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "=" expression ">" after "scale".
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
 ##
@@ -2163,7 +2163,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
 ## BANG constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
 ##
@@ -2175,7 +2175,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
 ## BANG
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS REALNUMERAL WHILE
 ##
@@ -2198,7 +2198,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS REALNUMERAL WHILE
 ## MINUS constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
 ##
@@ -2210,7 +2210,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
 ## MINUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS REALNUMERAL WHILE
 ##
@@ -2233,7 +2233,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS REALNUMERAL WHILE
 ## PLUS constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
 ##
@@ -2245,7 +2245,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
 ## PLUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA
 ##
@@ -2274,7 +2274,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA
 ## In state 444, spurious reduction of production constr_expression -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected expression ">" after "upper =".
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL WHILE
 ##
@@ -2297,7 +2297,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL W
 ## constr_expression DIVIDE constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
 ##
@@ -2309,7 +2309,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
 ## constr_expression DIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 ##
@@ -2332,7 +2332,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUMERA
 ## constr_expression ELTDIVIDE constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
 ##
@@ -2344,7 +2344,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
 ## constr_expression ELTDIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUMERAL WHILE
 ##
@@ -2367,7 +2367,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUMERAL
 ## constr_expression ELTTIMES constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
 ##
@@ -2379,7 +2379,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
 ## constr_expression ELTTIMES
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL WHILE
 ##
@@ -2402,7 +2402,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL WHIL
 ## constr_expression HAT constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
 ##
@@ -2414,7 +2414,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
 ## constr_expression HAT
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
 ##
@@ -2426,7 +2426,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
 ## constr_expression LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression followed by "]".
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMERAL WHILE
 ##
@@ -2921,7 +2921,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 ## arg_decl COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An argument declaration (unsized type followed by identifier) is expected.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
 ##
@@ -5209,7 +5209,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
 ## non_lhs
 ##
 
-Ill-placed "[".
+Ill-formed expression.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 ##
@@ -9896,7 +9896,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
 ## lhs DIVIDE non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
