@@ -39,7 +39,7 @@ let message =
     | 592 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 370 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed statement or expression. A statement or expression could be expected here.\n"
     | 323 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 326 ->
@@ -655,61 +655,61 @@ let message =
     | 272 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 270 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "<YOUR SYNTAX ERROR MESSAGE HERE: ok until here>\n"
     | 621 ->
         "Expected \"{\" after block keyword.\n"
     | 622 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Variable declaration or statement or \"}\" expected in generated quantities block.\n"
     | 625 ->
         "Expected end of file after end of generated quantities block.\n"
     | 1 ->
         "\"{\" expected after \"functions\".\n"
     | 2 ->
-        "Function declaration, definition or \"}\" expected after \"functions {\".\n"
+        "Function forward declaration, definition or \"}\" expected after \"functions {\".\n"
     | 10 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "An identifier is expected as a function name.\n"
     | 13 ->
         "\"(\" expected after function name.\n"
     | 14 ->
-        "(Non-void) type followed by expression expected for function argument declaration.\n"
+        "(Non-void) type expected function argument declaration.\n"
     | 18 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "An identifier is expected as a function argument name.\n"
     | 426 ->
         "\",\" or \")\" expected after function argument declaration.\n"
     | 427 ->
         "An argument declaration (unsized type followed by identifier) is expected.\n"
     | 29 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Either \"{\" statement \"}\" is expected for a function definition or \";\" for a function forward declaration.\n"
     | 17 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "An identifier is expected as a function argument name.\n"
     | 431 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "A \"}\" or a function definition/declaration is expected.\n"
     | 20 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.\n"
     | 21 ->
-        "An unsized type is expected as a function return type.\n"
+        "\"[\" (list of commas) \"]\" expected in unsized return type of function definition.\n"
     | 22 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "List of commas expected.\n"
     | 434 ->
         "Expected \"data {\" or \"transformed data {\" or \"parameters {\" or \"transformed parameters {\" or \"model {\" or \"generated quantities {\".\n"
     | 435 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"{\" followed by a list of variable declarations is expected after seeing \"data\".\n"
     | 436 ->
-        "Only top-level variable declarations are allowed in data and parameter blocks.\n"
+        "Only top-level variable declarations are allowed in data block.\n"
     | 437 ->
         "\"[\" expression \"]\" expected for vector size.\n"
     | 494 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \"]\" expected for vector size.\n"
     | 497 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \"]\" expected for vector size.\n"
     | 495 ->
         "\"[\" expression \"]\" expected for vector size.\n"
     | 580 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "We expect to see an identifier after a sized type.\n"
     | 438 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "We expect to see \"lower =\", \"upper =\", \"location =\" or \"scale =\" followed by an expression after \"<\". \n"
     | 439 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE: Up to here, done>\n"
+        "Expect \"=\" expression \">\" after seeing \"upper\".\n"
     | 440 ->
         "Expression (not containing binary logical operators) expected after \"upper =\". Ill-formed expression.\n"
     | 444 ->

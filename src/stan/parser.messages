@@ -2640,7 +2640,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ## UPPER
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE: Up to here, done>
+Expect "=" expression ">" after seeing "upper".
 
 file: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##
@@ -2653,7 +2653,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ## LABRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+We expect to see "lower =", "upper =", "location =" or "scale =" followed by an expression after "<". 
 
 file: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
@@ -2665,7 +2665,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ## top_var_type
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+We expect to see an identifier after a sized type.
 
 file: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 ##
@@ -2775,7 +2775,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for vector size.
 
 file: DATABLOCK LBRACE VECTOR LBRACK WHILE
 ##
@@ -2788,7 +2788,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK WHILE
 ## VECTOR type_constraint LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for vector size.
 
 file: DATABLOCK LBRACE VECTOR WHILE
 ##
@@ -2813,7 +2813,7 @@ file: DATABLOCK LBRACE WHILE
 ## DATABLOCK LBRACE
 ##
 
-Only top-level variable declarations are allowed in data and parameter blocks.
+Only top-level variable declarations are allowed in data block.
 
 file: DATABLOCK WHILE
 ##
@@ -2825,7 +2825,7 @@ file: DATABLOCK WHILE
 ## DATABLOCK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"{" followed by a list of variable declarations is expected after seeing "data".
 
 file: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ##
@@ -2849,7 +2849,7 @@ file: FUNCTIONBLOCK LBRACE VECTOR LBRACK COMMA WHILE
 ## COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+List of commas expected.
 
 file: FUNCTIONBLOCK LBRACE VECTOR LBRACK WHILE
 ##
@@ -2861,7 +2861,7 @@ file: FUNCTIONBLOCK LBRACE VECTOR LBRACK WHILE
 ## LBRACK
 ##
 
-An unsized type is expected as a function return type.
+"[" (list of commas) "]" expected in unsized return type of function definition.
 
 file: FUNCTIONBLOCK LBRACE VECTOR WHILE
 ##
@@ -2873,7 +2873,7 @@ file: FUNCTIONBLOCK LBRACE VECTOR WHILE
 ## basic_type
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.
 
 file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
@@ -2885,7 +2885,7 @@ file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ## function_def
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+A "}" or a function definition/declaration is expected.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
 ##
@@ -2897,7 +2897,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
 ## option(DATABLOCK)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An identifier is expected as a function argument name.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 ##
@@ -2909,7 +2909,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 ## return_type identifier LPAREN loption(separated_nonempty_list(COMMA,arg_decl)) RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 ##
@@ -2946,7 +2946,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK WHILE
 ## option(DATABLOCK) unsized_type
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An identifier is expected as a function argument name.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 ##
@@ -2958,7 +2958,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 ## return_type identifier LPAREN
 ##
 
-(Non-void) type followed by expression expected for function argument declaration.
+(Non-void) type expected function argument declaration.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 ##
@@ -2982,7 +2982,7 @@ file: FUNCTIONBLOCK LBRACE VOID WHILE
 ## return_type
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+An identifier is expected as a function name.
 
 file: FUNCTIONBLOCK LBRACE WHILE
 ##
@@ -2994,7 +2994,7 @@ file: FUNCTIONBLOCK LBRACE WHILE
 ## FUNCTIONBLOCK LBRACE
 ##
 
-Function declaration, definition or "}" expected after "functions {".
+Function forward declaration, definition or "}" expected after "functions {".
 
 file: FUNCTIONBLOCK WHILE
 ##
@@ -3030,7 +3030,7 @@ file: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ## GENERATEDQUANTITIESBLOCK LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Variable declaration or statement or "}" expected in generated quantities block.
 
 file: GENERATEDQUANTITIESBLOCK WHILE
 ##
@@ -3094,7 +3094,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 ## MATRIX LBRACK non_lhs COMMA non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+<YOUR SYNTAX ERROR MESSAGE HERE: ok until here>
 
 file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 ##
@@ -13225,7 +13225,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE WHILE
 ## identifier
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement or expression. A statement or expression could be expected here.
 
 file: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
