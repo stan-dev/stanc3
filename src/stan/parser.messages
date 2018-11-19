@@ -60,7 +60,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
 ## CHOLESKYFACTORCORR LBRACK non_lhs
 ##
 
-An expression is expected for a type size.
+Expected "[" expression "]" for size of cholesky_factor_corr.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK TRUNCATE TILDE
 ##
@@ -118,7 +118,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-An expression is expected for a type size.
+Expected "[" expression "]" for size of cholesky_factor_corr.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK WHILE
 ##
@@ -131,7 +131,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK WHILE
 ## CHOLESKYFACTORCORR LBRACK
 ##
 
-An expression is expected for a type size.
+Expected "[" expression "]" for size of cholesky_factor_corr.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 ##
@@ -144,7 +144,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 ## CHOLESKYFACTORCORR
 ##
 
-A size is expected after a variable declaration.
+Expected "[" expression "]" for size of cholesky_factor_corr.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL WHILE
 ##
@@ -196,7 +196,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL WHILE
 ## CHOLESKYFACTORCOV LBRACK non_lhs
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
@@ -248,7 +248,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ## COMMA non_lhs
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
@@ -306,7 +306,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 ##
@@ -319,7 +319,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 ## COMMA
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
 ##
@@ -377,7 +377,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 ##
@@ -390,7 +390,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 ## CHOLESKYFACTORCOV LBRACK
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
 file: DATABLOCK LBRACE CHOLESKYFACTORCOV WHILE
 ##
@@ -455,7 +455,7 @@ file: DATABLOCK LBRACE CORRMATRIX LBRACK REALNUMERAL WHILE
 ## CORRMATRIX LBRACK non_lhs
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" for size of corr_matrix.
 
 file: DATABLOCK LBRACE CORRMATRIX LBRACK TRUNCATE TILDE
 ##
@@ -513,7 +513,7 @@ file: DATABLOCK LBRACE CORRMATRIX LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" for size of corr_matrix.
 
 file: DATABLOCK LBRACE CORRMATRIX LBRACK WHILE
 ##
@@ -526,7 +526,7 @@ file: DATABLOCK LBRACE CORRMATRIX LBRACK WHILE
 ## CORRMATRIX LBRACK
 ##
 
-Expression expected for type size.
+Expected "[" expression "]" for size of corr_matrix.
 
 file: DATABLOCK LBRACE CORRMATRIX WHILE
 ##
@@ -591,7 +591,7 @@ file: DATABLOCK LBRACE COVMATRIX LBRACK REALNUMERAL WHILE
 ## COVMATRIX LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of cov_matrix.
 
 file: DATABLOCK LBRACE COVMATRIX LBRACK TRUNCATE TILDE
 ##
@@ -649,7 +649,7 @@ file: DATABLOCK LBRACE COVMATRIX LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of cov_matrix.
 
 file: DATABLOCK LBRACE COVMATRIX LBRACK WHILE
 ##
@@ -662,7 +662,7 @@ file: DATABLOCK LBRACE COVMATRIX LBRACK WHILE
 ## COVMATRIX LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of cov_matrix.
 
 file: DATABLOCK LBRACE COVMATRIX WHILE
 ##
@@ -675,7 +675,7 @@ file: DATABLOCK LBRACE COVMATRIX WHILE
 ## COVMATRIX
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size of cov_matrix.
 
 file: DATABLOCK LBRACE INT LABRACK WHILE
 ##

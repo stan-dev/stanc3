@@ -879,43 +879,43 @@ let message =
     | 549 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 551 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of cov_matrix.\n"
     | 552 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of cov_matrix.\n"
     | 555 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of cov_matrix.\n"
     | 553 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size of cov_matrix.\n"
     | 557 ->
         "Expected \"[\" expression \"]\" for size of corr_matrix.\n"
     | 558 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" for size of corr_matrix.\n"
     | 561 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" for size of corr_matrix.\n"
     | 559 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" for size of corr_matrix.\n"
     | 563 ->
         "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 564 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 571 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 566 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 568 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 567 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 565 ->
-        "Expression expected for type size.\n"
+        "Expected \"[\" expression \"]\" or \"[\" expression \",\" expression \"]\" for size of cholesky_factor_cov.\n"
     | 574 ->
-        "A size is expected after a variable declaration.\n"
+        "Expected \"[\" expression \"]\" for size of cholesky_factor_corr.\n"
     | 575 ->
-        "An expression is expected for a type size.\n"
+        "Expected \"[\" expression \"]\" for size of cholesky_factor_corr.\n"
     | 578 ->
-        "An expression is expected for a type size.\n"
+        "Expected \"[\" expression \"]\" for size of cholesky_factor_corr.\n"
     | 576 ->
-        "An expression is expected for a type size.\n"
+        "Expected \"[\" expression \"]\" for size of cholesky_factor_corr.\n"
     | 632 ->
         "Expected \\\"functions {\\\" or \\\"data {\\\" or \\\"transformed data {\\\" or \\\"parameters {\\\" or \\\"transformed parameters {\\\" or \\\"model {\\\" or \\\"generated quantities {\\\".\n"
     | _ ->
