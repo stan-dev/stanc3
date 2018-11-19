@@ -873,11 +873,11 @@ let message =
     | 538 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 534 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected identifier as part of variable declaration.\n"
     | 548 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected identifier as part of variable declaration.\n"
     | 549 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"lower = \" expression or \"upper = \" expression for integer bounds.\n"
     | 551 ->
         "Expected \"[\" expression \"]\" for size of cov_matrix.\n"
     | 552 ->

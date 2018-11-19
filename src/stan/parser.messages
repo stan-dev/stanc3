@@ -687,7 +687,7 @@ file: DATABLOCK LBRACE INT LABRACK WHILE
 ## LABRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "lower = " expression or "upper = " expression for integer bounds.
 
 file: DATABLOCK LBRACE INT WHILE
 ##
@@ -699,7 +699,7 @@ file: DATABLOCK LBRACE INT WHILE
 ## INT
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected identifier as part of variable declaration.
 
 file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
@@ -714,7 +714,7 @@ file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ## MATRIX type_constraint
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected identifier as part of variable declaration.
 
 file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 ##
