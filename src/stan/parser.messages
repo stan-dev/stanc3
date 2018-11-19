@@ -3552,7 +3552,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expression followed by ";" expected after "=".
 
 file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 ##
@@ -3565,7 +3565,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 ## ASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expression followed by ";" expected after "=".
 
 file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 ##
@@ -3584,7 +3584,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 ## In state 177, spurious reduction of production separated_nonempty_list(COMMA,expression) -> lhs 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
 
 file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 ##
@@ -3596,7 +3596,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 ## LBRACK
 ##
 
-Expression expected for array size.
+Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
 
 file: MODELBLOCK LBRACE REAL TRUNCATE WHILE
 ##
@@ -3620,7 +3620,7 @@ file: MODELBLOCK LBRACE REAL WHILE
 ## sized_basic_type
 ##
 
-Identifier expected after "real" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 file: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ##
@@ -3672,7 +3672,7 @@ file: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ## ROWVECTOR LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for row_vector sizes.
 
 file: MODELBLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 ##
@@ -3730,7 +3730,7 @@ file: MODELBLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for row_vector sizes.
 
 file: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ##
@@ -3743,7 +3743,7 @@ file: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## ROWVECTOR LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for row_vector sizes.
 
 file: MODELBLOCK LBRACE ROWVECTOR WHILE
 ##
@@ -3820,7 +3820,7 @@ file: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 ## VECTOR LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for vector sizes.
 
 file: MODELBLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 ##
@@ -3878,7 +3878,7 @@ file: MODELBLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for vector sizes.
 
 file: MODELBLOCK LBRACE VECTOR LBRACK WHILE
 ##
@@ -3891,7 +3891,7 @@ file: MODELBLOCK LBRACE VECTOR LBRACK WHILE
 ## VECTOR LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "]" expected for vector sizes.
 
 file: MODELBLOCK LBRACE VECTOR WHILE
 ##

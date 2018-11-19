@@ -1,0 +1,1 @@
+model { real T = T ~ normal(0,1);}
