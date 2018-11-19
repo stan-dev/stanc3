@@ -1868,7 +1868,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
 ## LOCATION ASSIGN constr_expression
 ##
 
-Expected "location = " expression.
+Expected "location = " expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN TRUNCATE COMMA
 ##
@@ -1909,7 +1909,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIG
 ## LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN
 ##
 
-Expected "scale = " expression.
+Expected "scale = " expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE WHILE
 ##
@@ -1921,7 +1921,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE WHILE
 ## LOCATION ASSIGN constr_expression COMMA SCALE
 ##
 
-Expected "scale = " expression.
+Expected "scale = " expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA WHILE
 ##
@@ -1933,7 +1933,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA WHILE
 ## LOCATION ASSIGN constr_expression COMMA
 ##
 
-Expected ">" or ", scale = " expression ">" after "location = " expression.
+Expected ">" or ", scale = " expression (not containing binary logical operators) ">" after "location = " expression.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
 ##
@@ -1946,7 +1946,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
 ## LOCATION ASSIGN
 ##
 
-Expected "location = " expression.
+Expected "location = " expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
 ##
@@ -1959,7 +1959,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
 ## LOCATION
 ##
 
-Expected "location = " expression.
+Expected "location = " expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 ##
@@ -1983,7 +1983,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 ## LOWER ASSIGN constr_expression
 ##
 
-">" or ", upper = expression ">" expected after specifying lower bound for type.
+">" or ", upper = expression (not containing binary logical operators) ">" expected after specifying lower bound for type.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN TRUNCATE COMMA
 ##
@@ -2024,7 +2024,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN W
 ## LOWER ASSIGN constr_expression COMMA UPPER ASSIGN
 ##
 
-Expected expression after "upper = ".
+Expected expression (not containing binary logical operators) after "upper = ".
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
 ##
@@ -2036,7 +2036,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
 ## LOWER ASSIGN constr_expression COMMA UPPER
 ##
 
-Expected "=" expression after "upper".
+Expected "=" expression (not containing binary logical operators) after "upper".
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
 ##
@@ -2048,7 +2048,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
 ## LOWER ASSIGN constr_expression COMMA
 ##
 
-"upper =" expression ">" expected after "<lower =" expression "," in variable declaration.
+"upper =" expression (not containing binary logical operators) ">" expected after "<lower =" expression "," in variable declaration.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 ##
@@ -2061,7 +2061,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 ## LOWER ASSIGN
 ##
 
-An expression is expected for type lower bound.
+An expression (not containing binary logical operators) is expected for type lower bound.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ##
@@ -2074,7 +2074,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ## LOWER
 ##
 
-Expected "=" expression, after "lower".
+Expected "=" expression (not containing binary logical operators), after "lower".
 
 file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
@@ -2128,7 +2128,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
 ## SCALE ASSIGN
 ##
 
-Expected expression after "scale =".
+Expected expression (not containing binary logical operators) after "scale =".
 
 file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
 ##
@@ -2140,7 +2140,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
 ## SCALE
 ##
 
-Expected "=" expression ">" after "scale".
+Expected "=" expression (not containing binary logical operators) ">" after "scale".
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
 ##
@@ -2274,7 +2274,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA
 ## In state 444, spurious reduction of production constr_expression -> identifier 
 ##
 
-Expected expression ">" after "upper =".
+Expected expression (not containing binary logical operators) ">" after "upper =".
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL WHILE
 ##
@@ -2449,7 +2449,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMERAL 
 ## constr_expression LDIVIDE constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
 ##
@@ -2461,7 +2461,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
 ## constr_expression LDIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL WHILE
 ##
@@ -2484,7 +2484,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL WH
 ## constr_expression MINUS constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
 ##
@@ -2496,7 +2496,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
 ## constr_expression MINUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERAL WHILE
 ##
@@ -2519,7 +2519,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERAL W
 ## constr_expression MODULO constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
 ##
@@ -2531,7 +2531,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
 ## constr_expression MODULO
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL WHILE
 ##
@@ -2554,7 +2554,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL WHI
 ## constr_expression PLUS constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
 ##
@@ -2566,7 +2566,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
 ## constr_expression PLUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL WHILE
 ##
@@ -2589,7 +2589,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL WH
 ## constr_expression TIMES constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
 ##
@@ -2601,7 +2601,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
 ## constr_expression TIMES
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression (not containing binary logical operators).
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE WHILE
 ##
@@ -2616,7 +2616,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE WHILE
 ## identifier
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression expected. Ill-formed expression. Suggested alternatives: a standalone identifier, a function application, an identifier followed by an operator or an identifier followed by an index.
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ##
@@ -2628,7 +2628,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ## UPPER ASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression (not containing binary logical operators) expected after "upper =". Ill-formed expression.
 
 file: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ##
@@ -2640,7 +2640,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ## UPPER
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+<YOUR SYNTAX ERROR MESSAGE HERE: Up to here, done>
 
 file: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##

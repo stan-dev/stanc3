@@ -709,31 +709,31 @@ let message =
     | 438 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 439 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "<YOUR SYNTAX ERROR MESSAGE HERE: Up to here, done>\n"
     | 440 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expression (not containing binary logical operators) expected after \"upper =\". Ill-formed expression.\n"
     | 444 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expression expected. Ill-formed expression. Suggested alternatives: a standalone identifier, a function application, an identifier followed by an operator or an identifier followed by an index.\n"
     | 456 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 457 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 464 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 465 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 466 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 467 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 470 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 471 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 458 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 459 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 447 ->
         "Ill-formed expression. Expected expression followed by \"]\".\n"
     | 450 ->
@@ -753,7 +753,7 @@ let message =
     | 469 ->
         "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 455 ->
-        "Expected expression \">\" after \"upper =\".\n"
+        "Expected expression (not containing binary logical operators) \">\" after \"upper =\".\n"
     | 441 ->
         "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 454 ->
@@ -767,41 +767,41 @@ let message =
     | 445 ->
         "Ill-formed expression. Expected expression (not containing binary logical operators).\n"
     | 472 ->
-        "Expected \"=\" expression \">\" after \"scale\".\n"
+        "Expected \"=\" expression (not containing binary logical operators) \">\" after \"scale\".\n"
     | 473 ->
-        "Expected expression after \"scale =\".\n"
+        "Expected expression (not containing binary logical operators) after \"scale =\".\n"
     | 474 ->
         "Expected \">\" after \"scale =\" expression.\n"
     | 493 ->
         "Expected \"[\" expression \"]\" for vector size.\n"
     | 475 ->
-        "Expected \"=\" expression, after \"lower\".\n"
+        "Expected \"=\" expression (not containing binary logical operators), after \"lower\".\n"
     | 476 ->
-        "An expression is expected for type lower bound.\n"
+        "An expression (not containing binary logical operators) is expected for type lower bound.\n"
     | 478 ->
-        "\"upper =\" expression \">\" expected after \"<lower =\" expression \",\" in variable declaration.\n"
+        "\"upper =\" expression (not containing binary logical operators) \">\" expected after \"<lower =\" expression \",\" in variable declaration.\n"
     | 479 ->
-        "Expected \"=\" expression after \"upper\".\n"
+        "Expected \"=\" expression (not containing binary logical operators) after \"upper\".\n"
     | 480 ->
-        "Expected expression after \"upper = \".\n"
+        "Expected expression (not containing binary logical operators) after \"upper = \".\n"
     | 481 ->
         "Expected \">\" after \"upper = \" expression.\n"
     | 477 ->
-        "\">\" or \", upper = expression \">\" expected after specifying lower bound for type.\n"
+        "\">\" or \", upper = expression (not containing binary logical operators) \">\" expected after specifying lower bound for type.\n"
     | 482 ->
-        "Expected \"location = \" expression.\n"
+        "Expected \"location = \" expression (not containing binary logical operators).\n"
     | 483 ->
-        "Expected \"location = \" expression.\n"
+        "Expected \"location = \" expression (not containing binary logical operators).\n"
     | 485 ->
-        "Expected \">\" or \", scale = \" expression \">\" after \"location = \" expression.\n"
+        "Expected \">\" or \", scale = \" expression (not containing binary logical operators) \">\" after \"location = \" expression.\n"
     | 486 ->
-        "Expected \"scale = \" expression.\n"
+        "Expected \"scale = \" expression (not containing binary logical operators).\n"
     | 487 ->
-        "Expected \"scale = \" expression.\n"
+        "Expected \"scale = \" expression (not containing binary logical operators).\n"
     | 488 ->
         "Expected \">\" after \"scale = \" expression.\n"
     | 484 ->
-        "Expected \"location = \" expression.\n"
+        "Expected \"location = \" expression (not containing binary logical operators).\n"
     | 500 ->
         "Expected \"[\" expression \"]\" for size declaration of unit_vector.\n"
     | 501 ->
