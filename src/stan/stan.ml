@@ -29,14 +29,14 @@ let options =
       , " Print language information and exit" ) ]
 
 (** The command that actually executes a command. *)
-let exec _ p =
+let exec p =
   let _ = Debug.typed_ast_logger (Semantic_check.semantic_check_program p) in
   ()
 
 (** ad directives from the given file. *)
-let use_file ctx (filename, interactive) =
+let use_file (filename, interactive) =
   let cmds = Parse.parse_file Parser.Incremental.file filename in
-  List.fold_left exec ctx cmds
+  List.map exec cmds
 
 (** Add a file to the list of files to be loaded, and record whether it should
       be processed in interactive mode. *)
@@ -55,7 +55,7 @@ let main () =
   Format.set_ellipsis_text "..." ;
   try
     (* Run and load all the specified files. *)
-    let _ = List.fold_left use_file () !files in
+    let _ = List.map use_file !files in
     ()
   with Errors.SemanticError err ->
     Errors.report_semantic_error err ;

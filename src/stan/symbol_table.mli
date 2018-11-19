@@ -35,3 +35,5 @@ val set_global : 'a state -> string -> unit
 val get_global : 'a state -> string -> bool
 
 val unsafe_replace : 'a state -> string -> 'a -> unit
+
+val unsafe_clear_symbol_table : 'a state -> unit

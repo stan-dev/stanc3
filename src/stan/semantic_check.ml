@@ -64,6 +64,8 @@ open Errors
 
 let vm = Symbol_table.initialize ()
 
+(* Some imperative context flags that mainly serve to throw semantic errors in a more
+   informative location than would be natural if we treated these functionally. *)
 type context_flags_record =
   { mutable current_block: originblock
   ; mutable in_fun_def: bool
@@ -190,6 +192,9 @@ let rec semantic_check_program p =
     ; modelblock= bm
     ; generatedquantitiesblock= bgq }
   ->
+    (* We always want to make sure we start with an empty symbol table, in case
+       we are processing multiple files in one run. *)
+    let _ = unsafe_clear_symbol_table vm in
     let _ = context_flags.current_block <- Functions in
     let ubf = Core_kernel.Option.map bf (List.map semantic_check_statement) in
     let _ =

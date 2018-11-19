@@ -65,3 +65,10 @@ let get_global s str =
  actually get evaluated in that phase. *)
 let unsafe_replace s str ty =
   Hashtbl.remove s.table str ; Hashtbl.add s.table str ty
+
+let unsafe_clear_symbol_table s =
+  Hashtbl.clear s.table ;
+  Stack.clear s.stack ;
+  Hashtbl.clear s.readonly ;
+  Hashtbl.clear s.ismissingfundef ;
+  Hashtbl.clear s.global

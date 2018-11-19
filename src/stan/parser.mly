@@ -28,8 +28,6 @@ open Debug
 %token TRUNCATE
 %token EOF
 
-
-
 %right COMMA
 %right TILDE ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
        ELTTIMESASSIGN ELTDIVIDEASSIGN ARROWASSIGN
@@ -48,12 +46,6 @@ open Debug
 %left LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
 %nonassoc below_ELSE
 %nonassoc ELSE
-
-
-
-(* TODO: deal properly with multi-file model and includes *)
-
-(* TODO: create decent parsing error messages: use menhir --list-errors to get overview of all possible errors to write custom messages for *)
 
 (* Top level rule *)
 %start program file
@@ -347,9 +339,9 @@ common_expression:
   | r=REALNUMERAL 
     {  grammar_logger "realnumeral" ; RealNumeral r }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE 
-    {  grammar_logger "array_expression" ; ArrayExpr xs  } (* potential shift/reduce conflict with blocks *)
+    {  grammar_logger "array_expression" ; ArrayExpr xs  }
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK 
-    {  grammar_logger "row_vector_expression" ; RowVectorExpr xs } (* potential shift/reduce conflict with indexing *)
+    {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN 
     {  grammar_logger "fun_app" ; FunApp (id, args) }
   | TARGET LPAREN RPAREN 
