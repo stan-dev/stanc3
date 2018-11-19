@@ -1044,7 +1044,7 @@ and semantic_check_statement s =
         match uidoblock with
         | Some b ->
             if
-              (not (Symbol_table.get_global vm uid.name))
+              (not (Symbol_table.is_global vm uid.name))
               || b = context_flags.current_block
             then ()
             else
@@ -1589,7 +1589,6 @@ and semantic_check_statement s =
       let _ =
         Symbol_table.enter vm uid.name (context_flags.current_block, ut)
       in
-      let _ = Symbol_table.set_global vm uid.name in
       let _ =
         if
           ust = SInt
