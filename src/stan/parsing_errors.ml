@@ -265,12 +265,16 @@ let message s =
   | 282 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 286 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 287 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 283 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 284 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 283 ->
+      "Ill-formed statement. Expected expression followed by \");\" after \
+       \"(\".\n"
+  | 284 -> "Ill-formed statement. Expected \";\" after \")\".\n"
   | 289 -> "\"(\" expression \")\" expected after \"if\".\n"
   | 290 ->
       "Expected expression for test of conditional control flow construct.\n"
-  | 396 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 396 ->
+      "Ill-formed expression. Expression expected after \"(\", for test of \
+       conditional control flow construct.\n"
   | 397 ->
       "Ill-formed statement. Expected statement after \")\" for true branch \
        of conditional.\n"
