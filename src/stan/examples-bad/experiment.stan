@@ -1,1 +1,1 @@
-transformed data { for ( T in T : 25) void}
+transformed data { if ( T) ; else real x;
