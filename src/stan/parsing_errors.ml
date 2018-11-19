@@ -771,47 +771,47 @@ let message =
     | 473 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 474 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \">\" after \"scale =\" expression.\n"
     | 493 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for vector size.\n"
     | 475 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"=\" expression, after \"lower\".\n"
     | 476 ->
         "An expression is expected for type lower bound.\n"
     | 478 ->
         "\"upper =\" expression \">\" expected after \"<lower =\" expression \",\" in variable declaration.\n"
     | 479 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"=\" expression after \"upper\".\n"
     | 480 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected expression after \"upper = \".\n"
     | 481 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \">\" after \"upper = \" expression.\n"
     | 477 ->
         "\">\" or \", upper = expression \">\" expected after specifying lower bound for type.\n"
     | 482 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"location = \" expression.\n"
     | 483 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"location = \" expression.\n"
     | 485 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \">\" or \", scale = \" expression \">\" after \"location = \" expression.\n"
     | 486 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"scale = \" expression.\n"
     | 487 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"scale = \" expression.\n"
     | 488 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \">\" after \"scale = \" expression.\n"
     | 484 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"location = \" expression.\n"
     | 500 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of unit_vector.\n"
     | 501 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of unit_vector.\n"
     | 504 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of unit_vector.\n"
     | 502 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of unit_vector.\n"
     | 506 ->
-        "Expected identifier as part of variable declaration.\n"
+        "Expected \"[\" expression \"]\" for size declaration of simplex.\n"
     | 507 ->
         "Expected \"[\" expression \"]\" for size declaration of simplex.\n"
     | 510 ->
@@ -819,7 +819,7 @@ let message =
     | 508 ->
         "Expected \"[\" expression \"]\" for size declaration of simplex.\n"
     | 512 ->
-        "Expected identifier as part of variable declaration.\n"
+        "Expected \"[\" expression \"]\" for size declaration of row_vector.\n"
     | 514 ->
         "Expected \"[\" expression \"]\" for size declaration of row_vector.\n"
     | 517 ->

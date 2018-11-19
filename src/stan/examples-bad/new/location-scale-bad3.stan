@@ -1,0 +1,1 @@
+data { vector<location = T, scale = while> x;}
