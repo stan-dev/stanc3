@@ -13,7 +13,7 @@ let message =
     | 611 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 615 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"model {\" or \"generated quantities {\" expected after end of transformed parameters block.\n"
     | 589 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 30 ->
@@ -59,7 +59,7 @@ let message =
     | 333 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 322 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Statement, variable declaration or \"}\" expected.\n"
     | 127 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 129 ->
@@ -247,13 +247,13 @@ let message =
     | 33 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 591 ->
-        "Expected variable declaration or statement.\n"
+        "Expected variable declaration, statement or \"}\".\n"
     | 230 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expression or \";\" expected after \"return\".\n"
     | 73 ->
-        "Statement or variable declaration expected.\n"
+        "Statement, variable declaration or \"}\" expected.\n"
     | 234 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\";\" expected after a return statement.\n"
     | 74 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 183 ->
@@ -347,7 +347,7 @@ let message =
     | 64 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 79 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expression expected after \"||\".\n"
     | 151 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 80 ->
@@ -457,7 +457,7 @@ let message =
     | 143 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 593 ->
-        "A semi-colon or plain assignment is expected after a variable declaration.\n"
+        "\";\" or plain assignment is expected after a variable declaration.\n"
     | 594 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 603 ->
@@ -593,13 +593,13 @@ let message =
     | 605 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 609 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"transformed parameters {\", \"model {\" or \"generated quantities {\" expected after end of parameters block.\n"
     | 616 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 617 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Variable declaration, statement or \"}\" expected.\n"
     | 253 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression  \"]\" expected after \"vector\" in local (or model block) variable declaration. (No transformations/constraints allowed.)\n"
     | 254 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 257 ->
@@ -607,9 +607,9 @@ let message =
     | 255 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 401 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Variable declaration, statement or \"}\" expected.\n"
     | 259 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression\"]\" expected after \"row_vector\" in local (or model block) variable declaration. (No transformations/constraints allowed.)\n"
     | 260 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 263 ->
@@ -617,9 +617,9 @@ let message =
     | 261 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 404 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Identifier expected after \"real\" in local (or model block) variable declaration. (No transformations/constraints allowed.)\n"
     | 405 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\";\" or plain assignment expected after variable declaration.\n"
     | 406 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 407 ->
@@ -635,7 +635,7 @@ let message =
     | 620 ->
         "Expected \"generated quantities {\" or end of file after end of model block.\n"
     | 266 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected after \"matrix\" in local (or model block) variable declaration. (No transformations/constraints allowed.)\n"
     | 267 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 274 ->
@@ -663,17 +663,17 @@ let message =
     | 1 ->
         "\"{\" expected after \"functions\".\n"
     | 2 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Function declaration, definition or \"}\" expected after \"functions {\".\n"
     | 10 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 13 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"(\" expected after function name.\n"
     | 14 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "(Non-void) type followed by expression expected for function argument declaration.\n"
     | 18 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 426 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\",\" or \")\" expected after function argument declaration.\n"
     | 427 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 29 ->
@@ -695,13 +695,13 @@ let message =
     | 436 ->
         "Only top-level variable declarations are allowed in data and parameter blocks.\n"
     | 437 ->
-        "Vector type expects a single expression to specify size.\n"
+        "\"[\" expression \"]\" expected for vector size.\n"
     | 494 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 497 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 495 ->
-        "Vector type expects a single expression to specify size.\n"
+        "\"[\" expression \"]\" expected for vector size.\n"
     | 580 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 438 ->
@@ -785,7 +785,7 @@ let message =
     | 481 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 477 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\">\" or \", upper = expression \">\" expected after specifying lower bound for type.\n"
     | 482 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 483 ->
@@ -829,7 +829,7 @@ let message =
     | 519 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 581 ->
-        "Only top-level variable declarations (without assignments) are allowed in data and parameter blocks.\n"
+        "\";\" or plain assignment expected after variable declaration.\n"
     | 582 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 584 ->
@@ -853,7 +853,7 @@ let message =
     | 529 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 533 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix size.\n"
     | 535 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 542 ->
@@ -865,7 +865,7 @@ let message =
     | 544 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 536 ->
-        "A pair of expressions is expected as sizes of matrix type.\n"
+        "\"[\" expression \",\" expression \"]\"  is expected as sizes of matrix type.\n"
     | 537 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 540 ->

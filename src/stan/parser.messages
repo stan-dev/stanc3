@@ -890,7 +890,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ## MATRIX type_constraint LBRACK non_lhs
 ##
 
-A pair of expressions is expected as sizes of matrix type.
+"[" expression "," expression "]"  is expected as sizes of matrix type.
 
 file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
@@ -1102,7 +1102,7 @@ file: DATABLOCK LBRACE MATRIX WHILE
 ## MATRIX
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected for matrix size.
 
 file: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
 ##
@@ -1422,7 +1422,7 @@ file: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ## top_var_type identifier
 ##
 
-Only top-level variable declarations (without assignments) are allowed in data and parameter blocks.
+";" or plain assignment expected after variable declaration.
 
 file: DATABLOCK LBRACE REAL WHILE
 ##
@@ -1994,7 +1994,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 ## LOWER ASSIGN constr_expression
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+">" or ", upper = expression ">" expected after specifying lower bound for type.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN TRUNCATE COMMA
 ##
@@ -2728,7 +2728,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 ## VECTOR type_constraint LBRACK non_lhs
 ##
 
-Vector type expects a single expression to specify size.
+"[" expression "]" expected for vector size.
 
 file: DATABLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 ##
@@ -2812,7 +2812,7 @@ file: DATABLOCK LBRACE VECTOR WHILE
 ## VECTOR
 ##
 
-Vector type expects a single expression to specify size.
+"[" expression "]" expected for vector size.
 
 file: DATABLOCK LBRACE WHILE
 ##
@@ -2945,7 +2945,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
 ## arg_decl
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"," or ")" expected after function argument declaration.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK WHILE
 ##
@@ -2969,7 +2969,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 ## return_type identifier LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+(Non-void) type followed by expression expected for function argument declaration.
 
 file: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 ##
@@ -2981,7 +2981,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 ## return_type identifier
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"(" expected after function name.
 
 file: FUNCTIONBLOCK LBRACE VOID WHILE
 ##
@@ -3005,7 +3005,7 @@ file: FUNCTIONBLOCK LBRACE WHILE
 ## FUNCTIONBLOCK LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Function declaration, definition or "}" expected after "functions {".
 
 file: FUNCTIONBLOCK WHILE
 ##
@@ -3441,7 +3441,7 @@ file: MODELBLOCK LBRACE MATRIX WHILE
 ## MATRIX
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression "," expression "]" expected after "matrix" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 file: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -3632,7 +3632,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE WHILE
 ## sized_basic_type identifier
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+";" or plain assignment expected after variable declaration.
 
 file: MODELBLOCK LBRACE REAL WHILE
 ##
@@ -3644,7 +3644,7 @@ file: MODELBLOCK LBRACE REAL WHILE
 ## sized_basic_type
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Identifier expected after "real" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 file: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ##
@@ -3780,7 +3780,7 @@ file: MODELBLOCK LBRACE ROWVECTOR WHILE
 ## ROWVECTOR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression"]" expected after "row_vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 file: MODELBLOCK LBRACE SEMICOLON VOID
 ##
@@ -3792,7 +3792,7 @@ file: MODELBLOCK LBRACE SEMICOLON VOID
 ## vardecl_or_statement
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Variable declaration, statement or "}" expected.
 
 file: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 ##
@@ -3928,7 +3928,7 @@ file: MODELBLOCK LBRACE VECTOR WHILE
 ## VECTOR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 file: MODELBLOCK LBRACE VOID
 ##
@@ -3940,7 +3940,7 @@ file: MODELBLOCK LBRACE VOID
 ## MODELBLOCK LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Variable declaration, statement or "}" expected.
 
 file: MODELBLOCK WHILE
 ##
@@ -3964,7 +3964,7 @@ file: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
 
 file: PARAMETERSBLOCK LBRACE WHILE
 ##
@@ -5777,7 +5777,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 ## top_var_type identifier
 ##
 
-A semi-colon or plain assignment is expected after a variable declaration.
+";" or plain assignment is expected after a variable declaration.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
 ##
@@ -7927,7 +7927,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR WHILE
 ## non_lhs OR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression expected after "||".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS REALNUMERAL WHILE
 ##
@@ -9327,7 +9327,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+";" expected after a return statement.
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 ##
@@ -9342,7 +9342,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 ## identifier
 ##
 
-Statement or variable declaration expected.
+Statement, variable declaration or "}" expected.
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ##
@@ -9356,7 +9356,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ## RETURN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression or ";" expected after "return".
 
 file: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ##
@@ -9368,7 +9368,7 @@ file: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ## top_vardecl_or_statement
 ##
 
-Expected variable declaration or statement.
+Expected variable declaration, statement or "}".
 
 file: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ##
@@ -12925,7 +12925,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 ## In state 370, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Statement, variable declaration or "}" expected.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
 ##
@@ -13469,7 +13469,7 @@ file: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block) option(parameters_block) option(transformed_parameters_block)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+"model {" or "generated quantities {" expected after end of transformed parameters block.
 
 file: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ##
