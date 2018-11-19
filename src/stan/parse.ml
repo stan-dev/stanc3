@@ -17,7 +17,16 @@ let parse parse_fun lexbuf =
       | _ -> assert false
     in
     match Interp.stack env with
-    | (lazy Nil) -> assert false
+    (* TODO: insert position here. *)
+    | (lazy Nil) ->
+        let message =
+          Some
+            "Expected \"functions {\" or \"data {\" or \"transformed data {\" \
+             or \"parameters {\" or \"transformed parameters {\" or \"model \
+             {\" or \"generated quantities {\"."
+        in
+        raise
+          (SyntaxError (Parsing (message, Lexing.dummy_pos, Lexing.dummy_pos)))
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
