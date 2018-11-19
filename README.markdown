@@ -43,7 +43,7 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - Lexical position printed in syntactic and semantic error messages
 - Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 - Good custom syntax errors implemented using Menhir's Incremental API
-- Added lots of extra bad Stan models to test errors
+- Added lots of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`)
 
 ## TODO
 - Perfect quality of syntax error messages by inserting them in the `src/stan/parser.messages` file.
