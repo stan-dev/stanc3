@@ -766,7 +766,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 ## MATRIX type_constraint LBRACK non_lhs COMMA non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 ##
@@ -824,7 +824,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 ##
@@ -837,7 +837,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 ## MATRIX type_constraint LBRACK non_lhs COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ##
@@ -890,7 +890,8 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ## MATRIX type_constraint LBRACK non_lhs
 ##
 
-"[" expression "," expression "]"  is expected as sizes of matrix type.
+
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
@@ -942,7 +943,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ## MATRIX type_constraint LBRACK lhs COMMA non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
@@ -1000,7 +1001,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 ##
@@ -1013,7 +1014,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 ## MATRIX type_constraint LBRACK lhs COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 ##
@@ -1072,7 +1073,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX LBRACK WHILE
 ##
@@ -1087,7 +1088,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK WHILE
 ## MATRIX type_constraint LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE MATRIX WHILE
 ##
@@ -1102,7 +1103,7 @@ file: DATABLOCK LBRACE MATRIX WHILE
 ## MATRIX
 ##
 
-"[" expression "," expression "]" expected for matrix size.
+Expected "[" expression "," expression "]" for sizes of matrix.
 
 file: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
 ##

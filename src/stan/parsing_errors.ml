@@ -853,25 +853,25 @@ let message =
     | 529 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 533 ->
-        "\"[\" expression \",\" expression \"]\" expected for matrix size.\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 535 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 542 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 543 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 546 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 544 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 536 ->
-        "\"[\" expression \",\" expression \"]\"  is expected as sizes of matrix type.\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 537 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 540 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 538 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \",\" expression \"]\" for sizes of matrix.\n"
     | 534 ->
         "Expected identifier as part of variable declaration.\n"
     | 548 ->
