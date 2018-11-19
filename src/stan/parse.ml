@@ -40,6 +40,7 @@ let parse parse_fun lexbuf =
               ( "(Parse error state "
               ^ string_of_int (Interp.number state)
               ^ ")" )
+              (* TODO: state number should only be printed in debug mode *)
         in
         raise (SyntaxError (Parsing (message, start_pos, end_pos)))
   in

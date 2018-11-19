@@ -655,7 +655,7 @@ let message =
     | 272 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 270 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE: ok until here>\n"
+        "\"[\" expression \",\" expression \"]\" expected for matrix sizes.\n"
     | 621 ->
         "Expected \"{\" after block keyword.\n"
     | 622 ->

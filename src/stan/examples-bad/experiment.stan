@@ -1,1 +1,2 @@
-generated quantities { void foo(); }
+model {
+generated quantities {
