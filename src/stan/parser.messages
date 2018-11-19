@@ -1436,7 +1436,7 @@ file: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ## ROWVECTOR type_constraint
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected identifier as part of variable declaration.
 
 file: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ##
@@ -1488,7 +1488,7 @@ file: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ## ROWVECTOR type_constraint LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size declaration of row_vector.
 
 file: DATABLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 ##
@@ -1546,7 +1546,7 @@ file: DATABLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size declaration of row_vector.
 
 file: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 ##
@@ -1559,7 +1559,7 @@ file: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 ## ROWVECTOR type_constraint LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size declaration of row_vector.
 
 file: DATABLOCK LBRACE ROWVECTOR WHILE
 ##
@@ -1572,7 +1572,7 @@ file: DATABLOCK LBRACE ROWVECTOR WHILE
 ## ROWVECTOR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected identifier as part of variable declaration.
 
 file: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL WHILE
 ##
@@ -1624,7 +1624,7 @@ file: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL WHILE
 ## SIMPLEX LBRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size declaration of simplex.
 
 file: DATABLOCK LBRACE SIMPLEX LBRACK TRUNCATE TILDE
 ##
@@ -1682,7 +1682,7 @@ file: DATABLOCK LBRACE SIMPLEX LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size declaration of simplex.
 
 file: DATABLOCK LBRACE SIMPLEX LBRACK WHILE
 ##
@@ -1695,7 +1695,7 @@ file: DATABLOCK LBRACE SIMPLEX LBRACK WHILE
 ## SIMPLEX LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "[" expression "]" for size declaration of simplex.
 
 file: DATABLOCK LBRACE SIMPLEX WHILE
 ##
@@ -1708,7 +1708,7 @@ file: DATABLOCK LBRACE SIMPLEX WHILE
 ## SIMPLEX
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected identifier as part of variable declaration.
 
 file: DATABLOCK LBRACE UNITVECTOR LBRACK REALNUMERAL WHILE
 ##

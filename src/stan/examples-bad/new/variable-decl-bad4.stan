@@ -1,0 +1,1 @@
+data { row_vector<scale=x> print(0);}

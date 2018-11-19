@@ -811,23 +811,23 @@ let message =
     | 502 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 506 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected identifier as part of variable declaration.\n"
     | 507 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of simplex.\n"
     | 510 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of simplex.\n"
     | 508 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of simplex.\n"
     | 512 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected identifier as part of variable declaration.\n"
     | 514 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of row_vector.\n"
     | 517 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of row_vector.\n"
     | 515 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \"[\" expression \"]\" for size declaration of row_vector.\n"
     | 513 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected identifier as part of variable declaration.\n"
     | 519 ->
         "Identifier expected after type in variable declaration.\n"
     | 581 ->
