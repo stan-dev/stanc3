@@ -35,7 +35,11 @@ let parse parse_fun lexbuf =
               ^ "(Parse error state "
               ^ string_of_int (Interp.number state)
               ^ ")" )
-          with Not_found -> None
+          with Not_found ->
+            Some
+              ( "(Parse error state "
+              ^ string_of_int (Interp.number state)
+              ^ ")" )
         in
         raise (SyntaxError (Parsing (message, start_pos, end_pos)))
   in

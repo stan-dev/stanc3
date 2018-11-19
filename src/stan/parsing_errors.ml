@@ -6,6 +6,12 @@
 let message =
   fun s ->
     match s with
+    | 594 ->
+        "Compound declare define only allowed with assignment operator =.\n"
+    | 582 ->
+        "Expected \";\" or \"=\" expression \";\".\n"
+    | 409 ->
+        "Compound declare define only allowed with assignment operator =.\n"
     | 0 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 610 ->
@@ -458,8 +464,6 @@ let message =
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 593 ->
         "\";\" or plain assignment is expected after a variable declaration.\n"
-    | 594 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 603 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 247 ->
@@ -621,10 +625,8 @@ let message =
     | 405 ->
         "\";\" or plain assignment expected after variable declaration.\n"
     | 406 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expression expected for array size.\n"
     | 407 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-    | 409 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 410 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
@@ -830,8 +832,6 @@ let message =
         "Identifier expected after type in variable declaration.\n"
     | 581 ->
         "Only top-level variable declarations are allowed in data and parameter blocks.\n"
-    | 582 ->
-        "Expected \"[\" expression \"]\" for array size.\n"
     | 584 ->
         "Only variable declarations allowed in data and parameters blocks.\n"
     | 588 ->

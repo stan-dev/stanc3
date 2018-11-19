@@ -1401,18 +1401,6 @@ file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 
 Only variable declarations allowed in data and parameters blocks.
 
-file: DATABLOCK LBRACE REAL TRUNCATE LBRACK RBRACK WHILE
-##
-## Ends in an error in state: 582.
-##
-## top_var_decl_no_assign -> top_var_type identifier option(dims) . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type identifier option(dims)
-##
-
-Expected "[" expression "]" for array size.
-
 file: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
 ## Ends in an error in state: 581.
@@ -3579,26 +3567,14 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
 
-file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK RBRACK WHILE
-##
-## Ends in an error in state: 409.
-##
-## var_decl -> sized_basic_type identifier option(dims) . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
-##
-## The known suffix of the stack is as follows:
-## sized_basic_type identifier option(dims)
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
 file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 ##
 ## Ends in an error in state: 407.
 ##
-## dims -> LBRACK loption(separated_nonempty_list(COMMA,expression)) . RBRACK [ SEMICOLON ASSIGN ]
+## dims -> LBRACK separated_nonempty_list(COMMA,expression) . RBRACK [ SEMICOLON ASSIGN ]
 ##
 ## The known suffix of the stack is as follows:
-## LBRACK loption(separated_nonempty_list(COMMA,expression))
+## LBRACK separated_nonempty_list(COMMA,expression)
 ##
 ## WARNING: This example involves spurious reductions.
 ## This implies that, although the LR(1) items shown above provide an
@@ -3606,7 +3582,6 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 ## may provide an INCOMPLETE view of the future (what was expected next).
 ## In state 73, spurious reduction of production lhs -> identifier 
 ## In state 177, spurious reduction of production separated_nonempty_list(COMMA,expression) -> lhs 
-## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
@@ -3615,13 +3590,13 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 ##
 ## Ends in an error in state: 406.
 ##
-## dims -> LBRACK . loption(separated_nonempty_list(COMMA,expression)) RBRACK [ SEMICOLON ASSIGN ]
+## dims -> LBRACK . separated_nonempty_list(COMMA,expression) RBRACK [ SEMICOLON ASSIGN ]
 ##
 ## The known suffix of the stack is as follows:
 ## LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expression expected for array size.
 
 file: MODELBLOCK LBRACE REAL TRUNCATE WHILE
 ##
@@ -5752,18 +5727,6 @@ file: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## The known suffix of the stack is as follows:
 ## option(function_block) option(data_block) option(transformed_data_block)
-##
-
-<YOUR SYNTAX ERROR MESSAGE HERE>
-
-file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK RBRACK ARROWASSIGN
-##
-## Ends in an error in state: 594.
-##
-## top_var_decl -> top_var_type identifier option(dims) . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
-##
-## The known suffix of the stack is as follows:
-## top_var_type identifier option(dims)
 ##
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
@@ -13507,4 +13470,40 @@ file: WHILE
 ##
 
 <YOUR SYNTAX ERROR MESSAGE HERE>
+
+file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
+##
+## Ends in an error in state: 409.
+##
+## var_decl -> sized_basic_type identifier option(dims) . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR TRUNCATE TARGET SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT PLUS MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR CONTINUE BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## sized_basic_type identifier option(dims)
+##
+
+Compound declare define only allowed with assignment operator =.
+
+file: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
+##
+## Ends in an error in state: 582.
+##
+## top_var_decl_no_assign -> top_var_type identifier option(dims) . SEMICOLON [ VECTOR UNITVECTOR SIMPLEX ROWVECTOR REAL RBRACE POSITIVEORDERED ORDERED MATRIX INT COVMATRIX CORRMATRIX CHOLESKYFACTORCOV CHOLESKYFACTORCORR ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type identifier option(dims)
+##
+
+Expected ";" or "=" expression ";".
+
+file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWASSIGN
+##
+## Ends in an error in state: 594.
+##
+## top_var_decl -> top_var_type identifier option(dims) . option(pair(ASSIGN,expression)) SEMICOLON [ WHILE VECTOR UNITVECTOR TRUNCATE TARGET SIMPLEX SEMICOLON ROWVECTOR RETURN REJECT REALNUMERAL REAL RBRACE PRINT POSITIVEORDERED PLUS ORDERED MINUS MATRIX LPAREN LBRACK LBRACE INTNUMERAL INT INCREMENTLOGPROB IF IDENTIFIER GETLP FOR COVMATRIX CORRMATRIX CONTINUE CHOLESKYFACTORCOV CHOLESKYFACTORCORR BREAK BANG ]
+##
+## The known suffix of the stack is as follows:
+## top_var_type identifier option(dims)
+##
+
+Compound declare define only allowed with assignment operator =.
 

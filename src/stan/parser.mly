@@ -268,7 +268,7 @@ loc_scale:
     }
 
 dims:
-  | LBRACK l=separated_list(COMMA, expression) RBRACK
+  | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
     { grammar_logger "dims" ; l  }
 
 (* expressions *)
