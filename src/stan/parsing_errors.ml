@@ -292,25 +292,41 @@ let message s =
   | 390 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 391 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 387 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 388 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 297 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 298 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 376 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 380 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 381 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 377 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 378 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 299 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 301 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 45 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 208 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 46 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 604 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 605 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 388 ->
+      "Ill-formed statement. Expected statement after \")\" for the loop body \
+       of the for loop.\n"
+  | 297 ->
+      "Ill-formed expression. Expected expression after \"for (\" identifier \
+       \"in\".\n"
+  | 298 ->
+      "Ill-formed statement. Expected statement after \")\" for the loop body \
+       of the foreach loop.\n"
+  | 376 ->
+      "Ill-formed expression. Expected expression followed by \")\" after \
+       \"for (\" identifier \"in\" expression \":\".\n"
+  | 380 ->
+      "Ill-formed expression. Expected expression followed by \")\" after \
+       \"for (\" identifier \"in\" expression \":\".\n"
+  | 381 ->
+      "Ill-formed statement. Expected statement after \")\"  for the loop \
+       body of the for loop.\n"
+  | 377 ->
+      "Ill-formed expression. Expected expression followed by \")\" after \
+       \"for (\" identifier \"in\" expression \":\".\n"
+  | 378 ->
+      "Ill-formed statement. Expected statement after \")\"  for the loop \
+       body of the for loop..\n"
+  | 299 -> "Expected \";\" after \"continue\". \n"
+  | 301 -> "Expected \";\" after \"break\". \n"
+  | 45 -> "Ill-formed expression. Expression expected after \"!\".\n"
+  | 208 -> "Ill-formed expression. Expression expected after \"!\".\n"
+  | 46 -> "Ill-formed expression. Expression expected after \"!\". \n"
+  | 604 -> "Expected \"{\" after \"parameters\".\n"
+  | 605 -> "Expected statement or variable declaration or \"}\".\n"
   | 609 ->
       "\"transformed parameters {\", \"model {\" or \"generated quantities \
        {\" expected after end of parameters block.\n"
-  | 616 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 616 -> "Expected \"{\" after \"model\".\n"
   | 617 -> "Variable declaration, statement or \"}\" expected.\n"
   | 253 ->
       "\"[\" expression  \"]\" expected after \"vector\" in local (or model \

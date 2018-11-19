@@ -1,0 +1,1 @@
+transformed data { for ( T in 1 : T~normal(0,1))}
