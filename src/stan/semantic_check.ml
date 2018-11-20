@@ -1000,7 +1000,11 @@ and semantic_check_expression x =
           ; expr_typed_meta_loc= loc } )
   | Paren e ->
       let ue = semantic_check_expression e in
-      TypedExpr (Paren ue, snd (typed_expression_unroll ue))
+      TypedExpr
+        ( Paren ue
+        , { expr_typed_meta_origin_type=
+              (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
+          ; expr_typed_meta_loc= loc } )
   | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
@@ -1506,7 +1510,11 @@ and semantic_check_statement s =
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
-      TypedStmt (While (ue, us), snd (typed_statement_unroll us))
+      TypedStmt
+        ( While (ue, us)
+        , { stmt_typed_meta_type=
+              (snd (typed_statement_unroll us)).stmt_typed_meta_type
+          ; stmt_typed_meta_loc= loc } )
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       let uid = semantic_check_identifier id in
       let ue1 = semantic_check_expression e1 in
@@ -1542,7 +1550,9 @@ and semantic_check_statement s =
             ; lower_bound= ue1
             ; upper_bound= ue2
             ; loop_body= us }
-        , snd (typed_statement_unroll us) )
+        , { stmt_typed_meta_type=
+              (snd (typed_statement_unroll us)).stmt_typed_meta_type
+          ; stmt_typed_meta_loc= loc } )
   | ForEach (id, e, s) ->
       let uid = semantic_check_identifier id in
       let ue = semantic_check_expression e in
@@ -1570,7 +1580,11 @@ and semantic_check_statement s =
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
       let _ = Symbol_table.end_scope vm in
-      TypedStmt (ForEach (uid, ue, us), snd (typed_statement_unroll us))
+      TypedStmt
+        ( ForEach (uid, ue, us)
+        , { stmt_typed_meta_type=
+              (snd (typed_statement_unroll us)).stmt_typed_meta_type
+          ; stmt_typed_meta_loc= loc } )
   | Block vdsl ->
       let _ = Symbol_table.begin_scope vm in
       let uvdsl = List.map semantic_check_statement vdsl in
