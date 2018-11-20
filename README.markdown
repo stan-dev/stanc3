@@ -42,11 +42,10 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - Prototype semantic check
 - Lexical position printed in syntactic and semantic error messages
 - Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
-- Good custom syntax errors implemented using Menhir's Incremental API
-- Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`)
+- 100% coverage of parse errors with informative custom syntax errors implemented using Menhir's Incremental API
+- Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
 
 ## TODO
-- Perfect quality of syntax error messages by inserting them in the `src/stan/parser.messages` file.
 - Improve quality of semantic error messages
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Create code generation phase from IRs
