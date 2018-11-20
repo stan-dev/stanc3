@@ -4994,7 +4994,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN WHILE
 ## INCREMENTLOGPROB LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement. Expected expression followed by ");" after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB WHILE
 ##
@@ -5007,7 +5007,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB WHILE
 ## INCREMENTLOGPROB
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement. Expected "(" followed by an expression and ");", after "increment_log_prob".
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL COMMA WHILE
 ##
@@ -5019,7 +5019,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL COMMA WHILE
 ## non_lhs COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected a comma-separated list of expressions.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL WHILE
 ##
@@ -5073,7 +5073,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL WHILE
 ## non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found an expression. This can be followed by a "~", a ",", a "}", a "[" or an infix or postfix operator.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -5143,7 +5143,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE LBRACK RBRACK WHILE
 ## lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found an L-value. This can be followed by a "~", a ",", a "}", a "[" or an infix or postfix operator or an assignment operator.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ##
@@ -5156,7 +5156,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ## LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. "{" should be followed by a statement, variable declaration or expression.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
 ##
@@ -5209,7 +5209,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
 ## non_lhs
 ##
 
-Ill-formed expression.
+Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 ##
@@ -5221,7 +5221,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 ## lhs COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. We expect a comma separated list of expressions.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 ##
@@ -5240,7 +5240,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 ## In state 177, spurious reduction of production separated_nonempty_list(COMMA,expression) -> lhs 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE TILDE
 ##
@@ -5299,7 +5299,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. We found an L-value. Parse failed on token after the L-value.
 
 file: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ##
@@ -5311,7 +5311,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ## LBRACK
 ##
 
-Expression expected after "[".
+Comma separated list of expressions followed by "]" expected after "[".
 
 file: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL WHILE
 ##
@@ -5363,7 +5363,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL WHILE
 ## LPAREN non_lhs
 ##
 
-Expression followed by ")" expected after "(".
+Expression or range of expressions followed by ")" expected after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE LPAREN TRUNCATE TILDE
 ##
@@ -5421,7 +5421,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LPAREN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator. 
 
 file: TRANSFORMEDDATABLOCK LBRACE LPAREN WHILE
 ##
@@ -5486,7 +5486,7 @@ file: TRANSFORMEDDATABLOCK LBRACE MINUS REALNUMERAL WHILE
 ## MINUS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found an expression. Expect an infix or postfix operator or "["
 
 file: TRANSFORMEDDATABLOCK LBRACE MINUS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -5538,7 +5538,7 @@ file: TRANSFORMEDDATABLOCK LBRACE MINUS TRUNCATE LBRACK RBRACK WHILE
 ## MINUS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
 file: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ##
@@ -5551,7 +5551,7 @@ file: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ## MINUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expect an expression after "-".
 
 file: TRANSFORMEDDATABLOCK LBRACE PLUS REALNUMERAL WHILE
 ##
@@ -5603,7 +5603,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PLUS REALNUMERAL WHILE
 ## PLUS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
 file: TRANSFORMEDDATABLOCK LBRACE PLUS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -5655,7 +5655,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PLUS TRUNCATE LBRACK RBRACK WHILE
 ## PLUS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
 file: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ##
@@ -5668,7 +5668,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ## PLUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expect an expression after "+".
 
 file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 ##
