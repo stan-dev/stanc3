@@ -273,29 +273,29 @@ let message =
     | 209 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 236 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed reject statement. After \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 237 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed reject statement. After \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 246 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression. There are many options to continue the phrase after this.\n"
     | 241 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed reject statement. After \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 243 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed printable. After \"print(\" and \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 244 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed printable. After \"print(\" and \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 240 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed printable. After \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 245 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression. There are many options to continue the phrase after this.\n"
     | 304 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression. There are many options to continue the phrase after this: \"~\", \"[\", \"]\" or an infix or postfix operator.\n"
     | 51 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"*\" expression. Expect an expression next.\n"
     | 204 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"*\" expression. There are many options to continue the phrase after this.\n"
     | 52 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"*\" expression. There are many options to continue the phrase after this.\n"
     | 305 ->
         "Ill-formed \"~\"-statement. Expect an distribution name after \"~\".\n"
     | 306 ->

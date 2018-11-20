@@ -8802,7 +8802,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
 ## non_lhs TIMES non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "*" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -8854,7 +8854,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
 ## non_lhs TIMES lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "*" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
 ##
@@ -8867,7 +8867,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
 ## non_lhs TIMES
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "*" expression. Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
 ##
@@ -8919,7 +8919,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
 ## non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression. There are many options to continue the phrase after this: "~", "[", "]" or an infix or postfix operator.
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
 ##
@@ -8971,7 +8971,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
 ## non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
 ##
@@ -8984,7 +8984,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
 ## REJECT LPAREN printables
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed printable. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL WHILE
 ##
@@ -8997,7 +8997,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL WHI
 ## printables COMMA printables
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
 ##
@@ -9009,7 +9009,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
 ## printables COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE RPAREN WHILE
 ##
@@ -9021,7 +9021,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE RPAREN WHILE
 ## REJECT LPAREN printables RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
 ##
@@ -9079,7 +9079,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ##
@@ -9091,7 +9091,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ## REJECT LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
 file: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ##
@@ -9103,7 +9103,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ## REJECT
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE TRUNCATE RPAREN
 ##

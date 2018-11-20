@@ -1471,6 +1471,7 @@ and semantic_check_statement s =
         | [x] -> [x]
         | x1 :: (Break, _) :: _ -> [x1]
         | x1 :: (Continue, _) :: _ -> [x1]
+        (* TODO: deal with reject that can be of any type *)
         | x1 :: (ReturnVoid, _) :: _ -> [x1]
         | x1 :: x2 :: xs -> x1 :: list_until_breakcontinue (x2 :: xs)
       in
