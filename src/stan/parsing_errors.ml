@@ -225,23 +225,23 @@ let message =
     | 109 ->
         "Ill-formed expression.\n"
     | 360 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found L-value \"=\". Expect an expression followed by \";\"next.\n"
     | 363 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 361 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 365 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found L-value \"<-\". Expect an expression followed by \";\"next.\n"
     | 368 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"<-\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 366 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"<-\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 152 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"&&\". Expect an expression next.\n"
     | 154 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"&&\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 153 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"&&\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 223 ->
         "Ill-formed phrase. Expect either \"+=\" or \"()\" after \"target\".\n"
     | 224 ->
