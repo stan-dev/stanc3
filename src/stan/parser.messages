@@ -9896,7 +9896,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
 ## lhs DIVIDE non_lhs
 ##
 
-Ill-formed expression.
+Ill-formed phrase. Found expression "/" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -9948,7 +9948,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
 ## lhs DIVIDE lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "/" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
 ##
@@ -9961,7 +9961,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
 ## lhs DIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "/". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
 ##
@@ -10013,7 +10013,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
 ## lhs DIVIDEASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
 ##
@@ -10071,7 +10071,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
 ##
@@ -10084,7 +10084,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
 ## lhs DIVIDEASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found L-value "/=". Expect an expression followed by ";"next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 ##
@@ -10136,7 +10136,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 ## lhs ELTDIVIDE non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "./" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -10188,7 +10188,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHIL
 ## lhs ELTDIVIDE lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "./" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
 ##
@@ -10201,7 +10201,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
 ## lhs ELTDIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "./". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
 ##
