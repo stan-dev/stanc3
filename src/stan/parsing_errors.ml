@@ -323,21 +323,21 @@ let message =
     | 319 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 61 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \">\". Expect an expression next.\n"
     | 191 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \">\" expression. There are many options to continue the phrase after this.\n"
     | 62 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \">\" expression. There are many options to continue the phrase after this.\n"
     | 77 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\". Expect an expression next followed by \":\" expression.\n"
     | 170 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\" expression. Expect an infix or postfix operator or \"[\" or \":\" next.\n"
     | 171 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\" expression \":\". Expect an expression next.\n"
     | 173 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many options to continue the phrase after this.\n"
     | 172 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many options to continue the phrase after this.\n"
     | 78 ->
         "Ill-formed expression. Found expression \"?\" expression. Expect an infix or postfix operator or \"[\" or \":\" next.\n"
     | 155 ->
