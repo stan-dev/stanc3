@@ -73,23 +73,23 @@ let message =
     | 128 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 158 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\". Expect an expression next.\n"
     | 166 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\". Expect an expression next.\n"
     | 167 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\" expression \":\". Expect an expression next.\n"
     | 169 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 168 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 159 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\". Expect an expression next.\n"
     | 160 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\" expression \":\". Expect an expression next.\n"
     | 162 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 161 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 335 ->
         "Ill-formed expression. Found L-value \"+=\". Expect an expression followed by \";\" next.\n"
     | 338 ->

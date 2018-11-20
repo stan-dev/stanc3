@@ -12389,7 +12389,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL W
 ## lhs QMARK non_lhs COLON non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -12441,7 +12441,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRA
 ## lhs QMARK non_lhs COLON lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
 ##
@@ -12454,7 +12454,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
 ## lhs QMARK non_lhs COLON
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "?" expression ":". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
 ##
@@ -12507,7 +12507,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
 ## lhs QMARK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "?". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHILE
 ##
@@ -12559,7 +12559,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHIL
 ## lhs QMARK lhs COLON non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -12611,7 +12611,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK 
 ## lhs QMARK lhs COLON lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
 ##
@@ -12624,7 +12624,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
 ## lhs QMARK lhs COLON
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "?" expression ":". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
 ##
@@ -12683,7 +12683,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "?". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
 ##
@@ -12698,7 +12698,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
 ## lhs QMARK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "?". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
 ##
