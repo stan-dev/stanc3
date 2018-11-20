@@ -1589,7 +1589,7 @@ and semantic_check_statement s =
       let _ = Symbol_table.begin_scope vm in
       let uvdsl = List.map semantic_check_statement vdsl in
       let _ = Symbol_table.end_scope vm in
-      (* Any statements after a break or continue do not count for the return
+      (* Any statements after a break or continue or return or retject do not count for the return
       type. *)
       let rec list_until_escape = function
         | [] -> []
