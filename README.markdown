@@ -48,6 +48,6 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 ## TODO
 - Improve quality of semantic error messages
 - Write code generation phase
-- Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Macro pre-processor with correct mapping of error locations
+- Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
