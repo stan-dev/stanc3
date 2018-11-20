@@ -133,23 +133,23 @@ let message =
     | 118 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 371 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed function application. Expect comma-separated list of expressions followed by \")\" after \"(\".\n"
     | 185 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed function application. Expect comma-separated list of expressions followed by \")\" after \"(\".\n"
     | 372 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed function application. Expect comma-separated list of expressions followed by \")\" after \"(\".\n"
     | 186 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by \")\" after \"|\".\n"
     | 187 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by \")\" after \"|\".\n"
     | 373 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.\n"
     | 76 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed function application. Expect comma-separated list of expressions followed by \")\" after \"(\".\n"
     | 180 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by \")\" after \"|\".\n"
     | 181 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by \")\" after \"|\".\n"
     | 130 ->
         "Ill-formed expression. Found expression \"<=\". Expect an expression next.\n"
     | 132 ->

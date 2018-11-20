@@ -11298,7 +11298,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RBRAC
 ## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
 ##
@@ -11310,7 +11310,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
 ## identifier LPAREN non_lhs BAR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
 ##
@@ -11364,7 +11364,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
 ## identifier LPAREN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
 ##
@@ -11377,7 +11377,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
 ## identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRACK
 ##
@@ -11397,7 +11397,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRACK
 ## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
 ##
@@ -11409,7 +11409,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
 ## identifier LPAREN lhs BAR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
 ##
@@ -11431,7 +11431,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRA
 ## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
 ##
@@ -11491,7 +11491,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
 ##
@@ -11506,7 +11506,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
 ## identifier LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
 ##
