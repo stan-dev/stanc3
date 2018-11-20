@@ -699,7 +699,7 @@ file: DATABLOCK LBRACE INT WHILE
 ## INT
 ##
 
-Expected identifier as part of variable declaration.
+Expected range constraint or identifier as part of top-level variable declaration.
 
 file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
@@ -714,7 +714,7 @@ file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ## MATRIX type_constraint
 ##
 
-Expected identifier as part of variable declaration.
+Expected "[" expression "," expression "]" for matrix sizes as part of top-level variable declaration.
 
 file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 ##
@@ -1399,7 +1399,7 @@ file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ## top_var_decl_no_assign
 ##
 
-Only variable declarations allowed in data and parameters blocks.
+Only top-level variable declarations allowed in data and parameters blocks.
 
 file: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
@@ -1423,7 +1423,7 @@ file: DATABLOCK LBRACE REAL WHILE
 ## REAL
 ##
 
-Identifier expected after type in variable declaration.
+Identifier expected after type in top-level variable declaration.
 
 file: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
@@ -1436,7 +1436,7 @@ file: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ## ROWVECTOR type_constraint
 ##
 
-Expected identifier as part of variable declaration.
+Expected identifier as part of top-level variable declaration.
 
 file: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ##
@@ -2048,7 +2048,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
 ## LOWER ASSIGN constr_expression COMMA
 ##
 
-"upper =" expression (not containing binary logical operators) ">" expected after "<lower =" expression "," in variable declaration.
+"upper =" expression (not containing binary logical operators) ">" expected after "<lower =" expression "," in top-level variable declaration.
 
 file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 ##
@@ -2813,7 +2813,7 @@ file: DATABLOCK LBRACE WHILE
 ## DATABLOCK LBRACE
 ##
 
-Only top-level variable declarations are allowed in data block.
+Expected top-level variable declaration or "}".
 
 file: DATABLOCK WHILE
 ##
@@ -2825,7 +2825,7 @@ file: DATABLOCK WHILE
 ## DATABLOCK
 ##
 
-"{" followed by a list of variable declarations is expected after seeing "data".
+"{" followed by a list of top-level variable declarations is expected after seeing "data".
 
 file: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ##
@@ -3952,7 +3952,7 @@ file: PARAMETERSBLOCK LBRACE WHILE
 ## PARAMETERSBLOCK LBRACE
 ##
 
-Expected statement or variable declaration or "}".
+Expected top-level variable declaration or "}".
 
 file: PARAMETERSBLOCK WHILE
 ##
@@ -4654,7 +4654,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON UPPER
 ## IF LPAREN non_lhs RPAREN statement
 ##
 
-Ill-formed statement. Expected statement or variable declaration or "}".
+Ill-formed statement. Expected "else"  or statement or variable declaration or "}".
 
 file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ##
@@ -4745,7 +4745,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON UPPER
 ## IF LPAREN lhs RPAREN statement
 ##
 
-Ill-formed statement. Expected statement or variable declaration or "}" after conditional true branch.
+Ill-formed statement. Expected "else" or statement or variable declaration or "}" after conditional true branch.
 
 file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
 ##
@@ -5741,7 +5741,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 ## top_var_type identifier
 ##
 
-";" or plain assignment is expected after a variable declaration.
+";" or plain assignment is expected after a top-level variable declaration.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
 ##
@@ -9332,7 +9332,7 @@ file: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ## top_vardecl_or_statement
 ##
 
-Expected variable declaration, statement or "}".
+Expected top-level variable declaration, statement or "}".
 
 file: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ##
@@ -13237,7 +13237,7 @@ file: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ## top_var_type
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed top-level variable declaration. Expect an identifier next.
 
 file: TRANSFORMEDDATABLOCK LBRACE VOID
 ##
@@ -13249,7 +13249,7 @@ file: TRANSFORMEDDATABLOCK LBRACE VOID
 ## TRANSFORMEDDATABLOCK LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expect a statement or top-level variable declaration.
 
 file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL RPAREN VOID
 ##
@@ -13261,7 +13261,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL RPAREN VOID
 ## WHILE LPAREN non_lhs RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement. We expect a statement after ")", for the body of the while-loop.
 
 file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL WHILE
 ##
@@ -13313,7 +13313,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL WHILE
 ## WHILE LPAREN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
 file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
 ##
@@ -13325,7 +13325,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
 ## WHILE LPAREN lhs RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed statement. We expect a statement after ")", for the body of the while-loop.
 
 file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE TILDE
 ##
@@ -13383,7 +13383,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
 file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ##
@@ -13396,7 +13396,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ## WHILE LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
 file: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ##
@@ -13409,7 +13409,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ## WHILE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+After "while", we expect "(" expression ")" statement.
 
 file: TRANSFORMEDDATABLOCK WHILE
 ##
@@ -13421,7 +13421,7 @@ file: TRANSFORMEDDATABLOCK WHILE
 ## TRANSFORMEDDATABLOCK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+We expect "{" after "transfored data".
 
 file: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -13445,7 +13445,7 @@ file: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ## TRANSFORMEDPARAMETERSBLOCK LBRACE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expect a statement or top-level variable declaration.
 
 file: TRANSFORMEDPARAMETERSBLOCK WHILE
 ##
@@ -13457,7 +13457,7 @@ file: TRANSFORMEDPARAMETERSBLOCK WHILE
 ## TRANSFORMEDPARAMETERSBLOCK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+We expect "{" after "transfored parameters".
 
 file: WHILE
 ##
@@ -13469,7 +13469,7 @@ file: WHILE
 ##
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
 file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
 ##
@@ -13481,7 +13481,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
 ## sized_basic_type identifier option(dims)
 ##
 
-Compound declare define only allowed with assignment operator =.
+Expected  ";" or "=" expression ";".
 
 file: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
 ##
@@ -13493,7 +13493,7 @@ file: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
 ## top_var_type identifier option(dims)
 ##
 
-Expected ";" or "=" expression ";".
+Expected ";".
 
 file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWASSIGN
 ##
@@ -13505,5 +13505,5 @@ file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWAS
 ## top_var_type identifier option(dims)
 ##
 
-Compound declare define only allowed with assignment operator =.
+Expected  ";" or "=" expression ";".
 
