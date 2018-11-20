@@ -41,17 +41,17 @@ let message =
     | 370 ->
         "Ill-formed statement or expression. A statement or expression could be expected here.\n"
     | 323 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found L-value \"*=\". Expect an expression followed by \";\" next.\n"
     | 326 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"*=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 324 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"*=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 102 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"*\". Expect an expression next.\n"
     | 104 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"*\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 103 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"*\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 328 ->
         "Ill-formed \"~\"-statement. Expected identifier for distribution name after \"~\".\n"
     | 329 ->

@@ -13021,7 +13021,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
 ## lhs TIMES non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "*" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -13073,7 +13073,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
 ## lhs TIMES lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "*" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
 ##
@@ -13086,7 +13086,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
 ## lhs TIMES
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "*". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
 ##
@@ -13138,7 +13138,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
 ## lhs TIMESASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
 ##
@@ -13196,7 +13196,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
 ##
@@ -13209,7 +13209,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
 ## lhs TIMESASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found L-value "*=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE WHILE
 ##
