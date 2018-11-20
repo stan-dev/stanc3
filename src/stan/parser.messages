@@ -10616,7 +10616,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
 ## lhs EQUALS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "==" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -10668,7 +10668,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
 ## lhs EQUALS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "==" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
 ##
@@ -10681,7 +10681,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
 ## lhs EQUALS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "==". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
 ##
@@ -10733,7 +10733,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
 ## lhs GEQ non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression ">=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -10785,7 +10785,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
 ## lhs GEQ lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression ">=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
 ##
@@ -10798,7 +10798,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
 ## lhs GEQ
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression ">=". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
 ##
@@ -11213,7 +11213,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
 ## lhs LEQ non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "<=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -11265,7 +11265,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
 ## lhs LEQ lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "<=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
 ##
@@ -11278,7 +11278,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
 ## lhs LEQ
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "<=". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RBRACK
 ##
