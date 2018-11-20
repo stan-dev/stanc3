@@ -8726,7 +8726,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
 ## non_lhs TILDE identifier LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE WHILE
 ##
@@ -8738,7 +8738,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE WHILE
 ## non_lhs TILDE identifier
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expect "(" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ")".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ##
@@ -8750,7 +8750,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ## non_lhs TILDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expect an distribution name after "~".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
 ##

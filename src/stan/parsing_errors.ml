@@ -297,11 +297,11 @@ let message =
     | 52 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 305 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expect an distribution name after \"~\".\n"
     | 306 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expect \"(\" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by \")\".\n"
     | 307 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by \")\".\n"
     | 308 ->
         "Ill-formed \"~\"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by \")\".\n"
     | 309 ->
