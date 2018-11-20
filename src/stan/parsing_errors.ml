@@ -91,47 +91,47 @@ let message =
     | 161 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 335 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found L-value \"+=\". Expect an expression followed by \";\" next.\n"
     | 338 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"+=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 336 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"+=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 114 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"+\". Expect an expression next.\n"
     | 116 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"+\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 115 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"+\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 163 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"||\". Expect an expression next.\n"
     | 165 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"||\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 164 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"||\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 145 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"!=\". Expect an expression next.\n"
     | 147 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"!=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 146 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"!=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 105 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"%\". Expect an expression next.\n"
     | 107 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"%\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 106 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"%\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 340 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found L-value \"-=\". Expect an expression followed by \";\" next.\n"
     | 343 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"-=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 341 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found L-value \"-=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 117 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"-\". Expect an expression next.\n"
     | 119 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"-\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 118 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"-\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 371 ->
         "Ill-formed function application. Expect comma-separated list of expressions followed by \")\" after \"(\".\n"
     | 185 ->

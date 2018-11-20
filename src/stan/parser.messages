@@ -11558,7 +11558,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
 ## lhs MINUS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "-" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -11610,7 +11610,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
 ## lhs MINUS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "-" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
 ##
@@ -11623,7 +11623,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
 ## lhs MINUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "-". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
 ##
@@ -11675,7 +11675,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
 ## lhs MINUSASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
 ##
@@ -11733,7 +11733,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
 ##
@@ -11746,7 +11746,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
 ## lhs MINUSASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found L-value "-=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
 ##
@@ -11798,7 +11798,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
 ## lhs MODULO non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "%" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -11850,7 +11850,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
 ## lhs MODULO lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "%" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
 ##
@@ -11863,7 +11863,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
 ## lhs MODULO
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "%". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
 ##
@@ -11915,7 +11915,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
 ## lhs NEQUALS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "!=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -11967,7 +11967,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
 ## lhs NEQUALS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "!=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
 ##
@@ -11980,7 +11980,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
 ## lhs NEQUALS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "!=". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
 ##
@@ -12032,7 +12032,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
 ## lhs OR non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "||" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -12084,7 +12084,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
 ## lhs OR lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "||" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
 ##
@@ -12097,7 +12097,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
 ## lhs OR
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "||". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
 ##
@@ -12149,7 +12149,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
 ## lhs PLUS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "+" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -12201,7 +12201,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
 ## lhs PLUS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "+" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
 ##
@@ -12214,7 +12214,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
 ## lhs PLUS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "+". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
 ##
@@ -12266,7 +12266,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
 ## lhs PLUSASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
 ##
@@ -12324,7 +12324,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
 ##
@@ -12337,7 +12337,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
 ## lhs PLUSASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found L-value "+=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL WHILE
 ##
