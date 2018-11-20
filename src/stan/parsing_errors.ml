@@ -53,25 +53,25 @@ let message =
     | 103 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 328 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expected identifier for distribution name after \"~\".\n"
     | 329 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expected \"(\" followed by a comma-separated list of expressions followed by \")\" after distribution name.\n"
     | 330 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expected comma-separated list of expressions followed by \")\".\n"
     | 331 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expected \",\" or \")\".\n"
     | 332 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expected \";\" or \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 333 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expected \";\".\n"
     | 322 ->
-        "Statement, variable declaration or \"}\" expected.\n"
+        "Ill-formed phrase. Found L-value. This can be completed in many ways.\n"
     | 127 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \">\". Expect an expression next.\n"
     | 129 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \">\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 128 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \">\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 158 ->
         "Ill-formed expression. Found expression \"?\". Expect an expression next.\n"
     | 166 ->

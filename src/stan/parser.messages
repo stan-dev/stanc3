@@ -12750,7 +12750,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
 ## lhs RABRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression ">" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -12802,7 +12802,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
 ## lhs RABRACK lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression ">" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
 ##
@@ -12815,7 +12815,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
 ## lhs RABRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression ">". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 ##
@@ -12889,7 +12889,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 ## In state 370, spurious reduction of production lhs -> identifier 
 ##
 
-Statement, variable declaration or "}" expected.
+Ill-formed phrase. Found L-value. This can be completed in many ways.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
 ##
@@ -12901,7 +12901,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE
 ## lhs TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expected ";".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
 ##
@@ -12913,7 +12913,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
 ## lhs TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expected ";" or "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBRACK
 ##
@@ -12933,7 +12933,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBRACK
 ## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expected "," or ")".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
 ##
@@ -12945,7 +12945,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
 ## lhs TILDE identifier LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expected comma-separated list of expressions followed by ")".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
 ##
@@ -12957,7 +12957,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
 ## lhs TILDE identifier
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expected "(" followed by a comma-separated list of expressions followed by ")" after distribution name.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
 ##
@@ -12969,7 +12969,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
 ## lhs TILDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expected identifier for distribution name after "~".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
 ##
