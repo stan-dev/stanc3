@@ -9122,7 +9122,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE TRUNCATE RPAREN
 ## In state 177, spurious reduction of production separated_nonempty_list(COMMA,expression) -> lhs 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected either "," followed by expression or "}" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
@@ -9186,7 +9186,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN REALNUMERAL WHILE
 ## RETURN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill formed expression followed by ";". Expect expression after "return".
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ##
@@ -9198,7 +9198,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ## TARGET
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill formed expression. After "target", we expect "()".
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
 ##
@@ -9219,7 +9219,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENTIFI
 ## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
 ##
@@ -9233,7 +9233,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
 ## identifier LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 ##
@@ -9291,7 +9291,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-";" expected after a return statement.
+Ill-formed expression. Expression or ";" expected after "return".
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 ##
@@ -9306,7 +9306,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 ## identifier
 ##
 
-Statement, variable declaration or "}" expected.
+Ill-formed expression. Found identifier. There are many ways to complete this to a well-formed expression.
 
 file: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ##
@@ -9344,7 +9344,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ## TARGET LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected ")" after "target(".
 
 file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL WHILE
 ##
@@ -9396,7 +9396,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL WHILE
 ## TARGET PLUSASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expression followed by ";" expected after "target +=".
 
 file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN TRUNCATE TILDE
 ##
@@ -9454,7 +9454,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expression followed by ";" expected after "target +=".
 
 file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 ##
@@ -9481,7 +9481,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ## TARGET
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Expect either "+=" or "()" after "target".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND REALNUMERAL WHILE
 ##

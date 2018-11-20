@@ -243,35 +243,35 @@ let message =
     | 153 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 223 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Expect either \"+=\" or \"()\" after \"target\".\n"
     | 224 ->
         "Expected an expression followed by a \";\", after \"target +=\".\n"
     | 227 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expression followed by \";\" expected after \"target +=\".\n"
     | 225 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expression followed by \";\" expected after \"target +=\".\n"
     | 33 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Expected \")\" after \"target(\".\n"
     | 591 ->
         "Expected variable declaration, statement or \"}\".\n"
     | 230 ->
         "Expression or \";\" expected after \"return\".\n"
     | 73 ->
-        "Statement, variable declaration or \"}\" expected.\n"
+        "Ill-formed expression. Found identifier. There are many ways to complete this to a well-formed expression.\n"
     | 234 ->
-        "\";\" expected after a return statement.\n"
+        "Ill-formed expression. Expression or \";\" expected after \"return\".\n"
     | 74 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. In function application, expect comma-separated list of expressions followed by \")\", after \"(\".\n"
     | 183 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. In function application, expect comma-separated list of expressions followed by \")\", after \"(\".\n"
     | 32 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill formed expression. After \"target\", we expect \"()\".\n"
     | 232 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill formed expression followed by \";\". Expect expression after \"return\".\n"
     | 40 ->
         "Expression expected after \"{\" in array expression.\n"
     | 209 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected either \",\" followed by expression or \"}\" next.\n"
     | 236 ->
         "Ill-formed reject statement. After \"reject(\", we expect a comma separated list of either expressions or strings, followed by \");\".\n"
     | 237 ->
