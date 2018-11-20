@@ -127,7 +127,7 @@ let message s =
   | 154 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 153 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 223 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 224 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 224 -> "Expected an expression followed by a \";\", after \"target +=\".\n"
   | 227 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 225 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 33 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
@@ -221,28 +221,67 @@ let message s =
   | 123 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 125 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
   | 124 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 139 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 141 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 140 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 67 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 69 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 68 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 85 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 87 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 86 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 89 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 91 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 90 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 142 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 144 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 143 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 139 ->
+      "Ill-formed expression. Expected expression after expression followed \
+       by \"==\".\n"
+  | 141 ->
+      "Ill-formed phrase. Found a expression \"==\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 140 ->
+      "Ill-formed phrase. Found a expression \"==\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 67 ->
+      "Ill-formed expression. Expected expression after expression followed \
+       by \".*\".\n"
+  | 69 ->
+      "Ill-formed phrase. Found a expression \".*\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 68 ->
+      "Ill-formed phrase. Found a expression \".*\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 85 ->
+      "Ill-formed expression. Expected expression after expression followed \
+       by \"./\".\n"
+  | 87 ->
+      "Ill-formed phrase. Found a expression \"./\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 86 ->
+      "Ill-formed phrase. Found a expression \"./\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 89 ->
+      "Ill-formed expression. Expected expression after expression followed \
+       by \"/\".\n"
+  | 91 ->
+      "Ill-formed phrase. Found a expression \"/\" expression. There are many \
+       options to continue the phrase after this.\n"
+  | 90 ->
+      "Ill-formed phrase. Found a expression \"/\" expression. There are many \
+       options to continue the phrase after this.\n"
+  | 142 ->
+      "Ill-formed expression. Expected expression after expression followed \
+       by \"&&\".\n"
+  | 144 ->
+      "Ill-formed phrase. Found a expression \"&&\" expression. There are \
+       many options to continue the phrase after this.\n"
+  | 143 ->
+      "Ill-formed phrase. Found a expression \"&&\" expression. There are \
+       many options to continue the phrase after this.\n"
   | 593 ->
       "\";\" or plain assignment is expected after a variable declaration.\n"
-  | 603 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 247 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 248 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 250 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
-  | 249 -> "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+  | 603 ->
+      "Expected \"parameters {\", \"transformed parameters {\", \"model {\", \
+       \"generated quantities {\" or end-of-file after end of transformed \
+       data block.\n"
+  | 247 ->
+      "Expected \"(\" followed by a comma-separated list of expressions or \
+       strings followed by \");\" after \"print\".\n"
+  | 248 ->
+      "Expected a comma-separated list of expressions or strings followed by \
+       \");\" after \"print(\".\n"
+  | 250 -> "Expected a \";\" after \"print(...)\".\n"
+  | 249 ->
+      "Expected a comma-separated list of expressions or strings followed by \
+       \");\" after \"print(\".\n"
   | 36 -> "Ill-formed expression. Expect an expression after \"+\".\n"
   | 220 ->
       "Ill-formed expression. Found an expression. Expect an infix or postfix \

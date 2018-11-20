@@ -5681,7 +5681,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 ## PRINT LPAREN printables
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected a comma-separated list of expressions or strings followed by ");" after "print(".
 
 file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN TRUNCATE RPAREN WHILE
 ##
@@ -5693,7 +5693,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN TRUNCATE RPAREN WHILE
 ## PRINT LPAREN printables RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected a ";" after "print(...)".
 
 file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ##
@@ -5705,7 +5705,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ## PRINT LPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected a comma-separated list of expressions or strings followed by ");" after "print(".
 
 file: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ##
@@ -5717,7 +5717,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ## PRINT
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "(" followed by a comma-separated list of expressions or strings followed by ");" after "print".
 
 file: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -5729,7 +5729,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ## option(function_block) option(data_block) option(transformed_data_block)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected "parameters {", "transformed parameters {", "model {", "generated quantities {" or end-of-file after end of transformed data block.
 
 file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
@@ -5793,7 +5793,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
 ## non_lhs AND non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "&&" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -5845,7 +5845,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
 ## non_lhs AND lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "&&" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND WHILE
 ##
@@ -5858,7 +5858,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND WHILE
 ## non_lhs AND
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression after expression followed by "&&".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
 ##
@@ -5910,7 +5910,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
 ## non_lhs DIVIDE non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "/" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -5962,7 +5962,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHIL
 ## non_lhs DIVIDE lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "/" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE WHILE
 ##
@@ -5975,7 +5975,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE WHILE
 ## non_lhs DIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression after expression followed by "/".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
 ##
@@ -6027,7 +6027,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
 ## non_lhs ELTDIVIDE non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "./" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -6079,7 +6079,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK W
 ## non_lhs ELTDIVIDE lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "./" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE WHILE
 ##
@@ -6092,7 +6092,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE WHILE
 ## non_lhs ELTDIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression after expression followed by "./".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
 ##
@@ -6144,7 +6144,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
 ## non_lhs ELTTIMES non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression ".*" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -6196,7 +6196,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WH
 ## non_lhs ELTTIMES lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression ".*" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES WHILE
 ##
@@ -6209,7 +6209,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES WHILE
 ## non_lhs ELTTIMES
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression after expression followed by ".*".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
 ##
@@ -6261,7 +6261,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
 ## non_lhs EQUALS non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "==" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -6313,7 +6313,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHIL
 ## non_lhs EQUALS lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found a expression "==" expression. There are many options to continue the phrase after this.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS WHILE
 ##
@@ -6326,7 +6326,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS WHILE
 ## non_lhs EQUALS
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Expected expression after expression followed by "==".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ REALNUMERAL WHILE
 ##
@@ -9467,7 +9467,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 ## TARGET PLUSASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected an expression followed by a ";", after "target +=".
 
 file: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ##
