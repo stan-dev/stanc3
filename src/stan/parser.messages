@@ -8498,7 +8498,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## non_lhs TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN option(truncation)
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Expected ";" after "~"-statement (with optional truncation).
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA TRUNCATE COMMA
 ##
@@ -8517,7 +8517,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## In state 317, spurious reduction of production option(expression) -> lhs 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
 ##
@@ -8529,7 +8529,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## TRUNCATE LBRACK option(expression) COMMA
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK REALNUMERAL WHILE
 ##
@@ -8581,7 +8581,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found an expression. Expect a infix or postfix operator or "[" or "]" or "," next.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE RBRACK
 ##
@@ -8600,7 +8600,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## In state 317, spurious reduction of production option(expression) -> lhs 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE TILDE
 ##
@@ -8658,7 +8658,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found an expression. Expect a infix or postfix operator or "[" or "]" or "," next.
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK WHILE
 ##
@@ -8670,7 +8670,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## TRUNCATE LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE WHILE
 ##
@@ -8682,7 +8682,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 ## TRUNCATE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WHILE
 ##
@@ -8694,7 +8694,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WHILE
 ## non_lhs TILDE identifier LPAREN loption(separated_nonempty_list(COMMA,expression)) RPAREN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expect either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE RBRACK
 ##
@@ -8714,7 +8714,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE RBR
 ## In state 75, spurious reduction of production loption(separated_nonempty_list(COMMA,expression)) -> separated_nonempty_list(COMMA,expression) 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
 
 file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
 ##

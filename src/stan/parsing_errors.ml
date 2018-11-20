@@ -303,25 +303,25 @@ let message =
     | 307 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 308 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by \")\".\n"
     | 309 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed \"~\"-statement. Expect either \";\" or a truncation with the format \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 310 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed truncation. Expect the format \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 311 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed truncation. Expect the format \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 317 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found an expression. Expect a infix or postfix operator or \"[\" or \"]\" or \",\" next.\n"
     | 312 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed truncation. Expect the format \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 316 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found an expression. Expect a infix or postfix operator or \"[\" or \"]\" or \",\" next.\n"
     | 313 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed truncation. Expect the format \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 314 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed truncation. Expect the format \"T[\" optional expression \",\" optional expression \"];\".\n"
     | 319 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Expected \";\" after \"~\"-statement (with optional truncation).\n"
     | 61 ->
         "Ill-formed expression. Found expression \">\". Expect an expression next.\n"
     | 191 ->
