@@ -10850,7 +10850,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
 ## lhs HAT non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "^" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -10902,7 +10902,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
 ## lhs HAT lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "^" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
 ##
@@ -10915,7 +10915,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
 ## lhs HAT
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "^". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
 ##
@@ -10967,7 +10967,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
 ## lhs LABRACK non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "<" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -11019,7 +11019,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
 ## lhs LABRACK lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "<" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
 ##
@@ -11032,7 +11032,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
 ## lhs LABRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "<". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LBRACK WHILE
 ##
@@ -11044,7 +11044,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LBRACK WHILE
 ## lhs LBRACK
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed indices. Expected comma-separated set of indices followed by "]" after "[".
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
 ##
@@ -11096,7 +11096,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
 ## lhs LDIVIDE non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "\" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -11148,7 +11148,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ## lhs LDIVIDE lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression "\" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
 ##
@@ -11161,7 +11161,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
 ## lhs LDIVIDE
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression "\". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
 ##

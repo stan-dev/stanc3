@@ -157,25 +157,25 @@ let message =
     | 131 ->
         "Ill-formed phrase. Found expression \"<=\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 92 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"\\\". Expect an expression next.\n"
     | 94 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"\\\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 93 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"\\\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 59 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed indices. Expected comma-separated set of indices followed by \"]\" after \"[\".\n"
     | 133 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"<\". Expect an expression next.\n"
     | 135 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"<\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 134 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"<\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 70 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"^\". Expect an expression next.\n"
     | 72 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"^\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 71 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"^\" expression. There are many ways in which this can be completed to a valid phrase.\n"
     | 136 ->
         "Ill-formed expression. Found expression \">=\". Expect an expression next.\n"
     | 138 ->
