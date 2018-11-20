@@ -339,67 +339,67 @@ let message =
     | 172 ->
         "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
     | 78 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\" expression. Expect an infix or postfix operator or \"[\" or \":\" next.\n"
     | 155 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"?\" expression \":\". Expect an expression next.\n"
     | 157 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many options to continue the phrase after this.\n"
     | 156 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"?\" expression \":\" expression. There are many options to continue the phrase after this.\n"
     | 63 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"+\". Expect an expression next.\n"
     | 190 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"+\" expression. There are many options to continue the phrase after this.\n"
     | 64 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"+\" expression. There are many options to continue the phrase after this.\n"
     | 79 ->
-        "Expression expected after \"||\".\n"
+        "Ill-formed expression. Found expression \"||\". Expect an expression next.\n"
     | 151 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"||\" expression. There are many options to continue the phrase after this.\n"
     | 80 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"||\" expression. There are many options to continue the phrase after this.\n"
     | 81 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"!=\". Expect an expression next.\n"
     | 126 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"!=\" expression. There are many options to continue the phrase after this.\n"
     | 82 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"!=\" expression. There are many options to continue the phrase after this.\n"
     | 65 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"%\". Expect an expression next.\n"
     | 189 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"%\" expression. There are many options to continue the phrase after this.\n"
     | 66 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"%\" expression. There are many options to continue the phrase after this.\n"
     | 83 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"-\". Expect an expression next.\n"
     | 101 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"-\" expression. There are many options to continue the phrase after this.\n"
     | 84 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"-\" expression. There are many options to continue the phrase after this.\n"
     | 111 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"<=\". Expect an expression next.\n"
     | 113 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"<=\" expression. There are many options to continue the phrase after this.\n"
     | 112 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"<=\" expression. There are many options to continue the phrase after this.\n"
     | 53 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed expression. Found expression \"\\\". Expect an expression next.\n"
     | 203 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"/\" expression. There are many options to continue the phrase after this.\n"
     | 54 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \"/\" expression. There are many options to continue the phrase after this.\n"
     | 48 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Found expression \"[\". Expect comma separated list of indices next.\n"
     | 195 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression. There are many options to continue the phrase after this.\n"
     | 196 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \":\". Expect \"]\", \",\" or expression next.\n"
     | 198 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \":\" expression. There are many options to continue the phrase after this: \"[\", \"]\", \",\", \":\", an infix operator, a postfix operator.\n"
     | 197 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression \":\" expression. There are many options to continue the phrase after this: \"[\", \"]\", \",\", \":\", an infix operator, a postfix operator.\n"
     | 60 ->
-        "<YOUR SYNTAX ERROR MESSAGE HERE>\n"
+        "Ill-formed phrase. Found expression. There are many options to continue the phrase after this: \"[\", \"]\", \",\", \":\", an infix operator, a postfix operator.\n"
     | 192 ->
         "Ill-formed expression. Expected expression or \"]\" or \",\" after \":\".\n"
     | 194 ->
