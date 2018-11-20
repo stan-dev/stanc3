@@ -9721,7 +9721,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN WHILE
 ## lhs ARROWASSIGN
 ##
 
-Ill-formed expression. Found L-value "<-". Expect an expression followed by ";"next.
+Ill-formed expression. Found L-value "<-". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN REALNUMERAL WHILE
 ##
@@ -9844,7 +9844,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN WHILE
 ## lhs ASSIGN
 ##
 
-Ill-formed expression. Found L-value "=". Expect an expression followed by ";"next.
+Ill-formed expression. Found L-value "=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
 ##
@@ -10084,7 +10084,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
 ## lhs DIVIDEASSIGN
 ##
 
-Ill-formed expression. Found L-value "/=". Expect an expression followed by ";"next.
+Ill-formed expression. Found L-value "/=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 ##
@@ -10253,7 +10253,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
 ## lhs ELTDIVIDEASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
 ##
@@ -10311,7 +10311,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
 ##
@@ -10324,7 +10324,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
 ## lhs ELTDIVIDEASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found L-value "./=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
 ##
@@ -10376,7 +10376,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
 ## lhs ELTTIMES non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression ".*" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
 ##
@@ -10428,7 +10428,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
 ## lhs ELTTIMES lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found expression ".*" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
 ##
@@ -10441,7 +10441,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
 ## lhs ELTTIMES
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found expression ".*". Expect an expression next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
 ##
@@ -10493,7 +10493,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
 ## lhs ELTTIMESASSIGN non_lhs
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
 ##
@@ -10551,7 +10551,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
 ##
@@ -10564,7 +10564,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
 ## lhs ELTTIMESASSIGN
 ##
 
-<YOUR SYNTAX ERROR MESSAGE HERE>
+Ill-formed expression. Found L-value ".*=". Expect an expression followed by ";" next.
 
 file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
 ##
