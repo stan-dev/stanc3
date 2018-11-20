@@ -185,8 +185,14 @@ and ('e, 's) statement =
 and statement_untyped_metadata =
   {stmt_untyped_meta_loc: Errors.location sexp_opaque [@compare.ignore]}
 
+and statement_returntype =
+  | NoReturnType
+  | Incomplete of returntype
+  | Complete of returntype
+  | AnyReturnType
+
 and statement_typed_metadata =
-  { stmt_typed_meta_type: returntype
+  { stmt_typed_meta_type: statement_returntype
   ; stmt_typed_meta_loc: Errors.location sexp_opaque [@compare.ignore] }
 
 and untyped_statement =

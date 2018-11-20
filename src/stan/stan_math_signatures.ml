@@ -23,12 +23,6 @@ let check_of_same_type_mod_array_conv name t1 t2 =
     | Array t1elt, Array t2elt -> check_of_same_type_mod_conv name t1elt t2elt
     | _ -> t1 = t2 || (t1 = Real && t2 = Int)
 
-let check_of_compatible_return_type rt1 rt2 =
-  match (rt1, rt2) with
-  | Void, Void -> true
-  | ReturnType Real, ReturnType Int -> true
-  | _ -> rt1 = rt2
-
 let check_compatible_arguments_mod_conv name args1 args2 =
   List.length args1 = List.length args2
   && List.for_all

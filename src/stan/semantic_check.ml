@@ -134,6 +134,102 @@ let check_of_int_or_real_type ue =
   | _, Real -> true
   | _ -> false
 
+let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
+  match (srt1, srt2) with
+  | Complete (ReturnType Real), Complete (ReturnType Int)
+   |Complete (ReturnType Int), Complete (ReturnType Real) ->
+      Complete (ReturnType Real)
+  | Incomplete (ReturnType Real), Incomplete (ReturnType Int)
+   |Incomplete (ReturnType Int), Incomplete (ReturnType Real)
+   |Incomplete (ReturnType Real), Complete (ReturnType Int)
+   |Incomplete (ReturnType Int), Complete (ReturnType Real)
+   |Complete (ReturnType Real), Incomplete (ReturnType Int)
+   |Complete (ReturnType Int), Incomplete (ReturnType Real) ->
+      Incomplete (ReturnType Real)
+  | Complete rt1, Complete rt2 ->
+      if rt1 <> rt2 then
+        semantic_error ~loc
+          ( "Branches of conditional need to have the same return type. \
+             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
+          ^ string_of_returntype rt2 ^ "." )
+      else Complete rt1
+  | Incomplete rt1, Incomplete rt2
+   |Complete rt1, Incomplete rt2
+   |Incomplete rt1, Complete rt2 ->
+      if rt1 <> rt2 then
+        semantic_error ~loc
+          ( "Branches of conditional need to have the same return type. \
+             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
+          ^ string_of_returntype rt2 ^ "." )
+      else Incomplete rt1
+  | AnyReturnType, NoReturnType
+   |NoReturnType, AnyReturnType
+   |NoReturnType, NoReturnType ->
+      NoReturnType
+  | AnyReturnType, Incomplete rt
+   |Incomplete rt, AnyReturnType
+   |Complete rt, NoReturnType
+   |NoReturnType, Complete rt
+   |NoReturnType, Incomplete rt
+   |Incomplete rt, NoReturnType ->
+      Incomplete rt
+  | Complete rt, AnyReturnType | AnyReturnType, Complete rt -> Complete rt
+  | AnyReturnType, AnyReturnType -> AnyReturnType
+
+let try_compute_block_statement_returntype loc srt1 srt2 =
+  match (srt1, srt2) with
+  | Complete (ReturnType Real), Complete (ReturnType Int)
+   |Complete (ReturnType Int), Complete (ReturnType Real)
+   |Incomplete (ReturnType Real), Complete (ReturnType Int)
+   |Incomplete (ReturnType Int), Complete (ReturnType Real) ->
+      Complete (ReturnType Real)
+  | Incomplete (ReturnType Real), Incomplete (ReturnType Int)
+   |Incomplete (ReturnType Int), Incomplete (ReturnType Real)
+   |Complete (ReturnType Real), Incomplete (ReturnType Int)
+   |Complete (ReturnType Int), Incomplete (ReturnType Real) ->
+      Incomplete (ReturnType Real)
+  | Complete rt1, Complete rt2 | Incomplete rt1, Complete rt2 ->
+      if rt1 <> rt2 then
+        semantic_error ~loc
+          ( "Branches of conditional need to have the same return type. \
+             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
+          ^ string_of_returntype rt2 ^ "." )
+      else Complete rt1
+  | Incomplete rt1, Incomplete rt2 | Complete rt1, Incomplete rt2 ->
+      if rt1 <> rt2 then
+        semantic_error ~loc
+          ( "Branches of conditional need to have the same return type. \
+             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
+          ^ string_of_returntype rt2 ^ "." )
+      else Incomplete rt1
+  | AnyReturnType, NoReturnType
+   |NoReturnType, AnyReturnType
+   |NoReturnType, NoReturnType ->
+      NoReturnType
+  | AnyReturnType, Incomplete rt
+   |Complete rt, NoReturnType
+   |NoReturnType, Incomplete rt
+   |Incomplete rt, NoReturnType ->
+      Incomplete rt
+  | NoReturnType, Complete rt
+   |Complete rt, AnyReturnType
+   |Incomplete rt, AnyReturnType
+   |AnyReturnType, Complete rt ->
+      Complete rt
+  | AnyReturnType, AnyReturnType -> AnyReturnType
+
+let check_of_compatible_return_type rt1 srt2 =
+  match (rt1, srt2) with
+  | Void, NoReturnType
+   |Void, Incomplete Void
+   |Void, Complete Void
+   |Void, AnyReturnType ->
+      true
+  | ReturnType Real, Complete (ReturnType Int) -> true
+  | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
+  | ReturnType _, AnyReturnType -> true
+  | _ -> false
+
 (* TODO: write function that pretty prints all signatures for defined function
    and call that in the appropriate error messages. *)
 
@@ -1081,7 +1177,7 @@ and semantic_check_statement s =
                 ; assign_indices= ulindex
                 ; assign_op= uassop
                 ; assign_rhs= ue }
-            , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+            , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
       | _ ->
           let lhs_type =
             string_of_expressiontype
@@ -1119,7 +1215,7 @@ and semantic_check_statement s =
       | Some Void ->
           TypedStmt
             ( NRFunApp (uid, ues)
-            , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+            , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
       | Some (ReturnType _) ->
           semantic_error ~loc
             "A non-returning function was expected but a returning function \
@@ -1139,7 +1235,8 @@ and semantic_check_statement s =
             in
             TypedStmt
               ( NRFunApp (uid, ues)
-              , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+              , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc}
+              )
         | Some (_, Fun (_, ReturnType _)) ->
             semantic_error ~loc
               "A non-returning function was expected but a returning function \
@@ -1176,7 +1273,8 @@ and semantic_check_statement s =
              of functions with the suffix _lp."
       in
       TypedStmt
-        (TargetPE ue, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+        ( TargetPE ue
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | IncrementLogProb e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1200,7 +1298,7 @@ and semantic_check_statement s =
       in
       TypedStmt
         ( IncrementLogProb ue
-        , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
@@ -1307,20 +1405,22 @@ and semantic_check_statement s =
       in
       TypedStmt
         ( Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
-        , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | Break ->
       let _ =
         if not context_flags.in_loop then
           semantic_error ~loc "Break statements may only be used in loops."
       in
-      TypedStmt (Break, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+      TypedStmt
+        (Break, {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc})
   | Continue ->
       let _ =
         if not context_flags.in_loop then
           semantic_error ~loc "Continue statements may only be used in loops."
       in
       TypedStmt
-        (Continue, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+        ( Continue
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | Return e ->
       let _ =
         if not context_flags.in_returning_fun_def then
@@ -1332,10 +1432,11 @@ and semantic_check_statement s =
       TypedStmt
         ( Return ue
         , { stmt_typed_meta_type=
-              ReturnType
-                (snd
-                   (snd (typed_expression_unroll ue))
-                     .expr_typed_meta_origin_type)
+              Complete
+                (ReturnType
+                   (snd
+                      (snd (typed_expression_unroll ue))
+                        .expr_typed_meta_origin_type))
           ; stmt_typed_meta_loc= loc } )
   | ReturnVoid ->
       let _ =
@@ -1346,17 +1447,21 @@ and semantic_check_statement s =
              function definitions."
       in
       TypedStmt
-        (ReturnVoid, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+        ( ReturnVoid
+        , {stmt_typed_meta_type= Complete Void; stmt_typed_meta_loc= loc} )
   | Print ps ->
       let ups = List.map semantic_check_printable ps in
       TypedStmt
-        (Print ups, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+        ( Print ups
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | Reject ps ->
       let ups = List.map semantic_check_printable ps in
       TypedStmt
-        (Reject ups, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+        ( Reject ups
+        , {stmt_typed_meta_type= AnyReturnType; stmt_typed_meta_loc= loc} )
   | Skip ->
-      TypedStmt (Skip, {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc})
+      TypedStmt
+        (Skip, {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc})
   | IfThen (e, s) ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1365,7 +1470,15 @@ and semantic_check_statement s =
             "Condition in conditional needs to be of type int or real."
       in
       let us = semantic_check_statement s in
-      TypedStmt (IfThen (ue, us), snd (typed_statement_unroll us))
+      let us_meta = snd (typed_statement_unroll us) in
+      let srt =
+        (function
+          | Complete rt | Incomplete rt -> Incomplete rt
+          | NoReturnType | AnyReturnType -> NoReturnType)
+          us_meta.stmt_typed_meta_type
+      in
+      TypedStmt
+        (IfThen (ue, us), {stmt_typed_meta_loc= loc; stmt_typed_meta_type= srt})
   | IfThenElse (e, s1, s2) ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1375,16 +1488,14 @@ and semantic_check_statement s =
       in
       let us1 = semantic_check_statement s1 in
       let us2 = semantic_check_statement s2 in
-      let t1 = (snd (typed_statement_unroll us1)).stmt_typed_meta_type in
-      let t2 = (snd (typed_statement_unroll us2)).stmt_typed_meta_type in
-      let _ =
-        if t1 <> t2 then
-          semantic_error ~loc
-            ( "Branches of conditional need to have the same return type. \
-               Instead, found return types " ^ string_of_returntype t1
-            ^ " and " ^ string_of_returntype t2 ^ "." )
-      in
-      TypedStmt (IfThenElse (ue, us1, us2), snd (typed_statement_unroll us1))
+      let us1_meta = snd (typed_statement_unroll us1) in
+      let us2_meta = snd (typed_statement_unroll us2) in
+      let srt1 = us1_meta.stmt_typed_meta_type in
+      let srt2 = us2_meta.stmt_typed_meta_type in
+      let srt = try_compute_ifthenelse_statement_returntype loc srt1 srt2 in
+      TypedStmt
+        ( IfThenElse (ue, us1, us2)
+        , {stmt_typed_meta_loc= loc; stmt_typed_meta_type= srt} )
   | While (e, s) ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1466,44 +1577,25 @@ and semantic_check_statement s =
       let _ = Symbol_table.end_scope vm in
       (* Any statements after a break or continue do not count for the return
       type. *)
-      let rec list_until_breakcontinue = function
+      let rec list_until_escape = function
         | [] -> []
         | [x] -> [x]
-        | x1 :: (Break, _) :: _ -> [x1]
-        | x1 :: (Continue, _) :: _ -> [x1]
-        (* TODO: deal with reject that can be of any type *)
-        | x1 :: (ReturnVoid, _) :: _ -> [x1]
-        | x1 :: x2 :: xs -> x1 :: list_until_breakcontinue (x2 :: xs)
-      in
-      (* We make sure that for an if-then statement, everything after the then
-      block has the same return type as the then block. This could probably
-      be done in a prettier way. *)
-      let compute_rt_and_check_if_then_branches_agree vdsl2 =
-        let rec helper = function
-          | [] -> Void
-          | x :: xs -> (
-            match x with
-            | false, ReturnType x -> ReturnType x
-            | true, y ->
-                if helper xs = y then y
-                else
-                  semantic_error ~loc
-                    "Branches of conditional need to have the same return type."
-            | false, Void -> helper xs )
-        in
-        helper
-          (List.map
-             (function
-               | IfThen _, {stmt_typed_meta_type= rt; _} -> (true, rt)
-               | _, {stmt_typed_meta_type= rt; _} -> (false, rt))
-             vdsl2)
+        | x1 :: (Break, b) :: _ -> [x1; (Break, b)]
+        | x1 :: (Continue, b) :: _ -> [x1; (Continue, b)]
+        | x1 :: (Reject p, b) :: _ -> [x1; (Reject p, b)]
+        | x1 :: (Return e, b) :: _ -> [x1; (Return e, b)]
+        | x1 :: (ReturnVoid, b) :: _ -> [x1; (ReturnVoid, b)]
+        | x1 :: x2 :: xs -> x1 :: list_until_escape (x2 :: xs)
       in
       TypedStmt
         ( Block uvdsl
         , { stmt_typed_meta_type=
-              compute_rt_and_check_if_then_branches_agree
-                (list_until_breakcontinue
-                   (List.map typed_statement_unroll uvdsl))
+              List.fold_left
+                (try_compute_block_statement_returntype loc)
+                NoReturnType
+                (List.map
+                   (fun x -> (snd x).stmt_typed_meta_type)
+                   (list_until_escape (List.map typed_statement_unroll uvdsl)))
           ; stmt_typed_meta_loc= loc } )
   | VDecl (st, id) ->
       let ust = semantic_check_sizedtype st in
@@ -1516,7 +1608,7 @@ and semantic_check_statement s =
       let _ = Symbol_table.enter vm id.name (Functions, ut) in
       TypedStmt
         ( VDecl (ust, uid)
-        , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | VDeclAss {sizedtype= st; identifier= id; value= e} -> (
     match
       ( semantic_check_statement
@@ -1537,10 +1629,10 @@ and semantic_check_statement s =
               ; assign_indices= []
               ; assign_op= Assign
               ; assign_rhs= ue }
-          , {stmt_typed_meta_type= Void; _} ) ) ->
+          , {stmt_typed_meta_type= NoReturnType; _} ) ) ->
         TypedStmt
           ( VDeclAss {sizedtype= ust; identifier= uid; value= ue}
-          , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+          , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
     | _ ->
         semantic_error ~loc
           "This should never happen. Please file a bug. Error code 2." )
@@ -1632,7 +1724,7 @@ and semantic_check_statement s =
       in
       TypedStmt
         ( TVDecl (ust, utrans, uid)
-        , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
   | TVDeclAss
       {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} -> (
     match
@@ -1654,14 +1746,14 @@ and semantic_check_statement s =
               ; assign_indices= []
               ; assign_op= Assign
               ; assign_rhs= ue }
-          , {stmt_typed_meta_type= Void; _} ) ) ->
+          , {stmt_typed_meta_type= NoReturnType; _} ) ) ->
         TypedStmt
           ( TVDeclAss
               { tsizedtype= ust
               ; transformation= utrans
               ; tidentifier= uid
               ; tvalue= ue }
-          , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+          , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
     | _ ->
         semantic_error ~loc
           "This should never happen. Please file a bug. Error code 1." )
@@ -1776,7 +1868,7 @@ and semantic_check_statement s =
       let _ = context_flags.in_rng_fun_def <- false in
       TypedStmt
         ( FunDef {returntype= urt; funname= uid; arguments= uargs; body= ub}
-        , {stmt_typed_meta_type= Void; stmt_typed_meta_loc= loc} )
+        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
 
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate
