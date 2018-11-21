@@ -2,37 +2,38 @@
 
 open Ast
 
-let rec string_of_unsizedtype = function
+let rec pretty_print_unsizedtype = function
   | Int -> "int"
   | Real -> "real"
   | Vector -> "vector"
   | RowVector -> "row_vector"
   | Matrix -> "matrix"
-  | Array ut -> string_of_unsizedtype ut ^ "[]"
+  | Array ut -> pretty_print_unsizedtype ut ^ "[]"
   | Fun (argtypes, rt) ->
       "("
-      ^ String.concat ", " (List.map string_of_argtype argtypes)
-      ^ ") => " ^ string_of_returntype rt
+      ^ String.concat ", " (List.map pretty_print_argtype argtypes)
+      ^ ") => " ^ pretty_print_returntype rt
   | PrimitiveFunction -> "Stan Math function"
 
-and string_of_returntype = function
-  | ReturnType x -> string_of_unsizedtype x
+and pretty_print_returntype = function
+  | ReturnType x -> pretty_print_unsizedtype x
   | Void -> "void"
 
-and string_of_argtype = function
-  | ob, ut -> string_of_originblock ob ^ string_of_unsizedtype ut
+and pretty_print_argtype = function
+  | ob, ut -> pretty_print_originblock ob ^ pretty_print_unsizedtype ut
 
-and string_of_originblock = function Data | TData -> "data " | _ -> ""
+and pretty_print_originblock = function Data | TData -> "data " | _ -> ""
 
-let string_of_expressiontype = function _, ut -> string_of_unsizedtype ut
+let pretty_print_expressiontype = function
+  | _, ut -> pretty_print_unsizedtype ut
 
-let string_of_opt_expressiontype = function
+let pretty_print_opt_expressiontype = function
   | None -> "unknown"
-  | Some x -> string_of_expressiontype x
+  | Some x -> pretty_print_expressiontype x
 
 (* TODO: implement more pretty printing functions for generating error messages *)
 
-let string_of_infixop = function
+let pretty_print_infixop = function
   | Plus -> "+"
   | Minus -> "-"
   | Times -> "*"
@@ -51,11 +52,14 @@ let string_of_infixop = function
   | Greater -> ">"
   | Geq -> ">="
 
-let string_of_prefixop = function Not -> "!" | UMinus -> "-" | UPlus -> "+"
+let pretty_print_prefixop = function
+  | Not -> "!"
+  | UMinus -> "-"
+  | UPlus -> "+"
 
-let string_of_postfixop = function Transpose -> "'"
+let pretty_print_postfixop = function Transpose -> "'"
 
-let string_of_assignmentoperator = function
+let pretty_print_assignmentoperator = function
   | Assign -> "="
   | PlusAssign -> "+="
   | MinusAssign -> "-="

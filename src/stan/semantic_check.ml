@@ -152,8 +152,11 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
       if rt1 <> rt2 then
         semantic_error ~loc
           ( "Branches of conditional need to have the same return type. \
-             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
-          ^ string_of_returntype rt2 ^ "." )
+             Instead, found return types "
+          ^ pretty_print_returntype rt1
+          ^ " and "
+          ^ pretty_print_returntype rt2
+          ^ "." )
       else Complete rt1
   | Incomplete rt1, Incomplete rt2
    |Complete rt1, Incomplete rt2
@@ -161,8 +164,11 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
       if rt1 <> rt2 then
         semantic_error ~loc
           ( "Branches of conditional need to have the same return type. \
-             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
-          ^ string_of_returntype rt2 ^ "." )
+             Instead, found return types "
+          ^ pretty_print_returntype rt1
+          ^ " and "
+          ^ pretty_print_returntype rt2
+          ^ "." )
       else Incomplete rt1
   | AnyReturnType, NoReturnType
    |NoReturnType, AnyReturnType
@@ -194,15 +200,21 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
       if rt1 <> rt2 then
         semantic_error ~loc
           ( "Branches of conditional need to have the same return type. \
-             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
-          ^ string_of_returntype rt2 ^ "." )
+             Instead, found return types "
+          ^ pretty_print_returntype rt1
+          ^ " and "
+          ^ pretty_print_returntype rt2
+          ^ "." )
       else Complete rt1
   | Incomplete rt1, Incomplete rt2 | Complete rt1, Incomplete rt2 ->
       if rt1 <> rt2 then
         semantic_error ~loc
           ( "Branches of conditional need to have the same return type. \
-             Instead, found return types " ^ string_of_returntype rt1 ^ " and "
-          ^ string_of_returntype rt2 ^ "." )
+             Instead, found return types "
+          ^ pretty_print_returntype rt1
+          ^ " and "
+          ^ pretty_print_returntype rt2
+          ^ "." )
       else Incomplete rt1
   | AnyReturnType, NoReturnType
    |NoReturnType, AnyReturnType
@@ -657,7 +669,7 @@ and semantic_check_expression x =
       | _ ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
-            ^ string_of_infixop uop ^ "." ) )
+            ^ pretty_print_infixop uop ^ "." ) )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_prefixop op in
       let ue = semantic_check_expression e in
@@ -679,7 +691,7 @@ and semantic_check_expression x =
       | _ ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
-            ^ string_of_prefixop uop ^ "." ) )
+            ^ pretty_print_prefixop uop ^ "." ) )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
       let returnblock =
@@ -701,7 +713,7 @@ and semantic_check_expression x =
       | _ ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
-            ^ string_of_postfixop uop ^ "." ) )
+            ^ pretty_print_postfixop uop ^ "." ) )
   | Variable id ->
       let uid = semantic_check_identifier id in
       let ort = Symbol_table.look vm id.name in
@@ -1189,16 +1201,16 @@ and semantic_check_statement s =
             , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
       | _ ->
           let lhs_type =
-            string_of_expressiontype
+            pretty_print_expressiontype
               (snd (typed_expression_unroll ue2)).expr_typed_meta_origin_type
           in
           let rhs_type =
-            string_of_expressiontype
+            pretty_print_expressiontype
               (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
           in
           semantic_error ~loc
             ( "Ill-typed arguments supplied to assignment operator "
-            ^ string_of_assignmentoperator uassop
+            ^ pretty_print_assignmentoperator uassop
             ^ ": lhs has type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
             ^ "." ) )
   | NRFunApp (id, es) -> (
@@ -1803,7 +1815,8 @@ and semantic_check_statement s =
             semantic_error ~loc
               ( "Function " ^ uid.name
               ^ " has already been declared to have type "
-              ^ string_of_opt_expressiontype (Symbol_table.look vm uid.name) ) )
+              ^ pretty_print_opt_expressiontype (Symbol_table.look vm uid.name)
+              ) )
         else check_fresh_variable uid (List.length uarg_types = 0)
       in
       let _ =
