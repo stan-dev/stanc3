@@ -1,15 +1,30 @@
 (** Some helpers to produce nice error messages *)
 
 open Ast
-open Core_kernel
 
-type signaturestype = returntype * returntype list [@@deriving sexp, compare]
+let rec string_of_unsizedtype = function
+  | Int -> "int"
+  | Real -> "real"
+  | Vector -> "vector"
+  | RowVector -> "row_vector"
+  | Matrix -> "matrix"
+  | Array ut -> string_of_unsizedtype ut ^ "[]"
+  | Fun (argtypes, rt) ->
+      "("
+      ^ String.concat ", " (List.map string_of_argtype argtypes)
+      ^ ") => " ^ string_of_returntype rt
+  | PrimitiveFunction -> "Stan Math function"
 
-let string_of_expressiontype = function
-  | _, ut -> Sexp.to_string (sexp_of_unsizedtype ut)
+and string_of_returntype = function
+  | ReturnType x -> string_of_unsizedtype x
+  | Void -> "void"
 
-let string_of_returntype = function
-  | rt -> Sexp.to_string (sexp_of_returntype rt)
+and string_of_argtype = function
+  | ob, ut -> string_of_originblock ob ^ string_of_unsizedtype ut
+
+and string_of_originblock = function Data | TData -> "data " | _ -> ""
+
+let string_of_expressiontype = function _, ut -> string_of_unsizedtype ut
 
 let string_of_opt_expressiontype = function
   | None -> "unknown"

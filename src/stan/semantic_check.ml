@@ -45,8 +45,6 @@ Make sure data only arguments to functions are checked properly.
 Sizes should be of level at most data.
 *)
 
-(* TODO: encapsulate some of the state in this file so people don't hurt themselves *)
-
 open Symbol_table
 open Ast
 open Stan_math_signatures
@@ -290,8 +288,8 @@ let rec semantic_check_program p =
     ; modelblock= bm
     ; generatedquantitiesblock= bgq }
   ->
-    (* We always want to make sure we start with an empty symbol table, in case
-       we are processing multiple files in one run. *)
+    (* NB: We always want to make sure we start with an empty symbol table, in
+       case we are processing multiple files in one run. *)
     let _ = unsafe_clear_symbol_table vm in
     let _ = context_flags.current_block <- Functions in
     let ubf =
@@ -1195,8 +1193,8 @@ and semantic_check_statement s =
               (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
           in
           semantic_error ~loc
-            ( "Ill-typed arguments supplied to assignment operator: lhs has\n\
-              \          type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
+            ( "Ill-typed arguments supplied to assignment operator: lhs has \
+               type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
             ^ "." ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
