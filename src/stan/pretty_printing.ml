@@ -75,7 +75,7 @@ and pretty_print_prefixop = function
 and pretty_print_postfixop = function Transpose -> "'"
 
 and pretty_print_index = function
-  | All -> " "
+  | All -> " : "
   | Single e -> pretty_print_expression e
   | Upfrom e -> pretty_print_expression e ^ " : "
   | Downfrom e -> " : " ^ pretty_print_expression e
