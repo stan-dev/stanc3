@@ -17,12 +17,13 @@ To test the compiler on all good models in stan/src/test/test-models/good, run
 `
 ./run-stan-examples-good.sh
 `
+This will produce an output `stan-examples-good-out.log` file which will show any errors.
 
 To test the compiler on all bad models in stan/src/test/test-models/bad, run
 `
 ./run-stan-examples-bad.sh
 `
-This will produce an output file which will show any errors.
+This will produce an output file `stan-examples-bad-out.log` which will show any errors.
 
 To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
 `
