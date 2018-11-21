@@ -31,3 +31,36 @@ let string_of_opt_expressiontype = function
   | Some x -> string_of_expressiontype x
 
 (* TODO: implement more pretty printing functions for generating error messages *)
+
+let string_of_infixop = function
+  | Plus -> "+"
+  | Minus -> "-"
+  | Times -> "*"
+  | Divide -> "/"
+  | Modulo -> "%"
+  | LDivide -> "\\"
+  | EltTimes -> ".*"
+  | EltDivide -> "./"
+  | Exp -> "^"
+  | Or -> "||"
+  | And -> "&&"
+  | Equals -> "=="
+  | NEquals -> "!="
+  | Less -> "<"
+  | Leq -> "<="
+  | Greater -> ">"
+  | Geq -> ">="
+
+let string_of_prefixop = function Not -> "!" | UMinus -> "-" | UPlus -> "+"
+
+let string_of_postfixop = function Transpose -> "'"
+
+let string_of_assignmentoperator = function
+  | Assign -> "="
+  | PlusAssign -> "+="
+  | MinusAssign -> "-="
+  | TimesAssign -> "*="
+  | DivideAssign -> "/="
+  | EltTimesAssign -> ".*="
+  | EltDivideAssign -> "./="
+  | ArrowAssign -> "<-"

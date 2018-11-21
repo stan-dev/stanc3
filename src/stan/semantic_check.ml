@@ -45,6 +45,8 @@ Make sure data only arguments to functions are checked properly.
 Sizes should be of level at most data.
 *)
 
+(* TODO: insert some more identifiers and relevant information into semantic error messages *)
+
 open Symbol_table
 open Ast
 open Stan_math_signatures
@@ -625,8 +627,7 @@ and semantic_check_expression x =
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | _ ->
-          semantic_error ~loc
-            "Ill-typed arguments supplied to Conditional operator." )
+          semantic_error ~loc "Ill-typed arguments supplied to ? : operator." )
   | InfixOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
@@ -655,7 +656,8 @@ and semantic_check_expression x =
               ; expr_typed_meta_loc= loc } )
       | _ ->
           semantic_error ~loc
-            ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
+            ( "Ill-typed arguments supplied to infix operator "
+            ^ string_of_infixop uop ^ "." ) )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_prefixop op in
       let ue = semantic_check_expression e in
@@ -676,7 +678,8 @@ and semantic_check_expression x =
               ; expr_typed_meta_loc= loc } )
       | _ ->
           semantic_error ~loc
-            ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
+            ( "Ill-typed arguments supplied to prefix operator "
+            ^ string_of_prefixop uop ^ "." ) )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
       let returnblock =
@@ -697,7 +700,8 @@ and semantic_check_expression x =
               ; expr_typed_meta_loc= loc } )
       | _ ->
           semantic_error ~loc
-            ("Ill-typed arguments supplied to " ^ opname ^ " operator.") )
+            ( "Ill-typed arguments supplied to postfix operator "
+            ^ string_of_postfixop uop ^ "." ) )
   | Variable id ->
       let uid = semantic_check_identifier id in
       let ort = Symbol_table.look vm id.name in
@@ -1193,8 +1197,9 @@ and semantic_check_statement s =
               (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
           in
           semantic_error ~loc
-            ( "Ill-typed arguments supplied to assignment operator: lhs has \
-               type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
+            ( "Ill-typed arguments supplied to assignment operator "
+            ^ string_of_assignmentoperator uassop
+            ^ ": lhs has type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
             ^ "." ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
