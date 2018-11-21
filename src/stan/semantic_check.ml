@@ -232,18 +232,6 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
       Complete rt
   | AnyReturnType, AnyReturnType -> AnyReturnType
 
-let check_of_compatible_return_type rt1 srt2 =
-  match (rt1, srt2) with
-  | Void, NoReturnType
-   |Void, Incomplete Void
-   |Void, Complete Void
-   |Void, AnyReturnType ->
-      true
-  | ReturnType Real, Complete (ReturnType Int) -> true
-  | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
-  | ReturnType _, AnyReturnType -> true
-  | _ -> false
-
 (* TODO: write function that pretty prints all signatures for defined function
    and call that in the appropriate error messages. *)
 
