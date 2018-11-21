@@ -53,8 +53,10 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
 - A pretty printer for Stan models
 
-## TODO
+## TODO for beta release
 - Write code generation phase
 - Macro pre-processor with correct mapping of error locations
+
+## Cool stuff to do after
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
