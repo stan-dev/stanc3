@@ -32,6 +32,9 @@ and pretty_print_unsizedtype = function
       ^ ") => " ^ pretty_print_returntype rt
   | PrimitiveFunction -> "Stan Math function"
 
+and pretty_print_unsizedtypes l =
+  String.concat ", " (List.map pretty_print_unsizedtype l)
+
 and pretty_print_argtype = function
   | ob, ut -> pretty_print_originblock ob ^ pretty_print_unsizedtype ut
 

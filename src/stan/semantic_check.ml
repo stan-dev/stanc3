@@ -654,7 +654,17 @@ and semantic_check_expression x =
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | _ ->
-          semantic_error ~loc "Ill-typed arguments supplied to ? : operator." )
+          semantic_error ~loc
+            ( "Ill-typed arguments supplied to ? : operator. Available \
+               signatures: "
+            ^ pretty_print_all_operator_signatures "Conditional"
+            ^ "\nInstead supplied arguments of incompatible type: "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ ", "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ ", "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue3)
+            ^ "." ) )
   | InfixOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
@@ -684,7 +694,13 @@ and semantic_check_expression x =
       | _ ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
-            ^ pretty_print_infixop uop ^ "." ) )
+            ^ pretty_print_infixop uop ^ ". Available signatures: "
+            ^ pretty_print_all_operator_signatures opname
+            ^ "\nInstead supplied arguments of incompatible type: "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ ", "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." ) )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_prefixop op in
       let ue = semantic_check_expression e in
@@ -706,7 +722,11 @@ and semantic_check_expression x =
       | _ ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
-            ^ pretty_print_prefixop uop ^ "." ) )
+            ^ pretty_print_prefixop uop ^ ". Available signatures: "
+            ^ pretty_print_all_operator_signatures opname
+            ^ "\nInstead supplied argument of incompatible type: "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." ) )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
       let returnblock =
@@ -728,7 +748,11 @@ and semantic_check_expression x =
       | _ ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
-            ^ pretty_print_postfixop uop ^ "." ) )
+            ^ pretty_print_postfixop uop ^ ". Available signatures: "
+            ^ pretty_print_all_operator_signatures opname
+            ^ "\nInstead supplied argument of incompatible type: "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." ) )
   | Variable id ->
       let uid = semantic_check_identifier id in
       let ort = Symbol_table.look vm id.name in
@@ -824,33 +848,50 @@ and semantic_check_expression x =
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | _ -> (
-        match Symbol_table.look vm uid.name with
-        | Some (_, Fun (_, Void)) ->
-            semantic_error ~loc
-              "A returning function was expected but a non-returning function \
-               was supplied."
-        | Some (_, Fun (listedtypes, ReturnType ut)) ->
-            let _ =
-              if
-                not
-                  (check_compatible_arguments_mod_conv uid.name listedtypes
-                     argumenttypes)
-              then
-                semantic_error ~loc
-                  ("Ill-typed arguments supplied to function " ^ uid.name)
-            in
-            TypedExpr
-              ( FunApp (uid, ues)
-              , { expr_typed_meta_origin_type= (returnblock, ut)
-                ; expr_typed_meta_loc= loc } )
-        | Some _ ->
-            semantic_error ~loc
-              "A returning function was expected but a ground type value was \
-               supplied."
-        | None ->
-            semantic_error ~loc
-              ( "A returning function was expected but an undeclared identifier "
-              ^ uid.name ^ " was supplied." ) )
+          let _ =
+            if is_stan_math_function_name uid.name then
+              semantic_error ~loc
+                ( "Ill-typed arguments supplied to function " ^ uid.name
+                ^ ". Available signatures: "
+                ^ pretty_print_all_stan_math_function_signatures uid.name
+                ^ "\nInstead supplied argument of incompatible type: "
+                ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
+                ^ "." )
+          in
+          match Symbol_table.look vm uid.name with
+          | Some (_, Fun (_, Void)) ->
+              semantic_error ~loc
+                "A returning function was expected but a non-returning \
+                 function was supplied."
+          | Some (_, Fun (listedtypes, ReturnType ut)) ->
+              let _ =
+                if
+                  not
+                    (check_compatible_arguments_mod_conv uid.name listedtypes
+                       argumenttypes)
+                then
+                  semantic_error ~loc
+                    ( "Ill-typed arguments supplied to function " ^ uid.name
+                    ^ ". Available signatures:\n"
+                    ^ pretty_print_unsizedtype
+                        (Fun (listedtypes, ReturnType ut))
+                    ^ "\nInstead supplied argument of incompatible type: "
+                    ^ pretty_print_unsizedtypes
+                        (List.map type_of_typed_expr ues)
+                    ^ "." )
+              in
+              TypedExpr
+                ( FunApp (uid, ues)
+                , { expr_typed_meta_origin_type= (returnblock, ut)
+                  ; expr_typed_meta_loc= loc } )
+          | Some _ ->
+              semantic_error ~loc
+                "A returning function was expected but a ground type value \
+                 was supplied."
+          | None ->
+              semantic_error ~loc
+                ( "A returning function was expected but an undeclared \
+                   identifier " ^ uid.name ^ " was supplied." ) )
       (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
       )
   | CondFunApp (id, es) -> (
@@ -897,33 +938,50 @@ and semantic_check_expression x =
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | _ -> (
-        match Symbol_table.look vm uid.name with
-        | Some (_, Fun (_, Void)) ->
-            semantic_error ~loc
-              "A returning function was expected but a non-returning function \
-               was supplied."
-        | Some (_, Fun (listedtypes, ReturnType ut)) ->
-            let _ =
-              if
-                not
-                  (check_compatible_arguments_mod_conv uid.name listedtypes
-                     argumenttypes)
-              then
-                semantic_error ~loc
-                  ("Ill-typed arguments supplied to function " ^ uid.name)
-            in
-            TypedExpr
-              ( CondFunApp (uid, ues)
-              , { expr_typed_meta_origin_type= (returnblock, ut)
-                ; expr_typed_meta_loc= loc } )
-        | Some _ ->
-            semantic_error ~loc
-              "A returning function was expected but a ground type value was \
-               supplied."
-        | None ->
-            semantic_error ~loc
-              ( "A returning function was expected but an undeclared identifier "
-              ^ uid.name ^ " was supplied." ) )
+          let _ =
+            if is_stan_math_function_name uid.name then
+              semantic_error ~loc
+                ( "Ill-typed arguments supplied to function " ^ uid.name
+                ^ ". Available signatures: "
+                ^ pretty_print_all_stan_math_function_signatures uid.name
+                ^ "\nInstead supplied argument of incompatible type: "
+                ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
+                ^ "." )
+          in
+          match Symbol_table.look vm uid.name with
+          | Some (_, Fun (_, Void)) ->
+              semantic_error ~loc
+                "A returning function was expected but a non-returning \
+                 function was supplied."
+          | Some (_, Fun (listedtypes, ReturnType ut)) ->
+              let _ =
+                if
+                  not
+                    (check_compatible_arguments_mod_conv uid.name listedtypes
+                       argumenttypes)
+                then
+                  semantic_error ~loc
+                    ( "Ill-typed arguments supplied to function " ^ uid.name
+                    ^ ". Available signatures:\n"
+                    ^ pretty_print_unsizedtype
+                        (Fun (listedtypes, ReturnType ut))
+                    ^ "\nInstead supplied argument of incompatible type: "
+                    ^ pretty_print_unsizedtypes
+                        (List.map type_of_typed_expr ues)
+                    ^ "." )
+              in
+              TypedExpr
+                ( CondFunApp (uid, ues)
+                , { expr_typed_meta_origin_type= (returnblock, ut)
+                  ; expr_typed_meta_loc= loc } )
+          | Some _ ->
+              semantic_error ~loc
+                "A returning function was expected but a ground type value \
+                 was supplied."
+          | None ->
+              semantic_error ~loc
+                ( "A returning function was expected but an undeclared \
+                   identifier " ^ uid.name ^ " was supplied." ) )
       (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
       )
   | GetLP ->
@@ -1223,7 +1281,8 @@ and semantic_check_statement s =
             ( "Ill-typed arguments supplied to assignment operator "
             ^ pretty_print_assignmentoperator uassop
             ^ ": lhs has type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
-            ^ "." ) )
+            ^ ". Available signatures:"
+            ^ pretty_print_all_operator_signatures opname ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
@@ -1254,34 +1313,49 @@ and semantic_check_statement s =
             "A non-returning function was expected but a returning function \
              was supplied."
       | _ -> (
-        match Symbol_table.look vm uid.name with
-        | Some (_, Fun (listedtypes, Void)) ->
-            let _ =
-              if
-                not
-                  (check_compatible_arguments_mod_conv uid.name listedtypes
-                     argumenttypes)
-              then
-                semantic_error ~loc
-                  ( "Ill-typed arguments supplied to non-returning function "
-                  ^ uid.name )
-            in
-            TypedStmt
-              ( NRFunApp (uid, ues)
-              , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc}
-              )
-        | Some (_, Fun (_, ReturnType _)) ->
-            semantic_error ~loc
-              "A non-returning function was expected but a returning function \
-               was supplied."
-        | Some _ ->
-            semantic_error ~loc
-              "A non-returning function was expected but a ground type value \
-               was supplied."
-        | None ->
-            semantic_error ~loc
-              ( "A returning function was expected but an undeclared identifier "
-              ^ uid.name ^ " was supplied." ) )
+          let _ =
+            if is_stan_math_function_name uid.name then
+              semantic_error ~loc
+                ( "Ill-typed arguments supplied to function " ^ uid.name
+                ^ ". Available signatures: "
+                ^ pretty_print_all_stan_math_function_signatures uid.name
+                ^ "\nInstead supplied argument of incompatible type: "
+                ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
+                ^ "." )
+          in
+          match Symbol_table.look vm uid.name with
+          | Some (_, Fun (listedtypes, Void)) ->
+              let _ =
+                if
+                  not
+                    (check_compatible_arguments_mod_conv uid.name listedtypes
+                       argumenttypes)
+                then
+                  semantic_error ~loc
+                    ( "Ill-typed arguments supplied to function " ^ uid.name
+                    ^ ". Available signatures:\n"
+                    ^ pretty_print_unsizedtype (Fun (listedtypes, Void))
+                    ^ "\nInstead supplied argument of incompatible type: "
+                    ^ pretty_print_unsizedtypes
+                        (List.map type_of_typed_expr ues)
+                    ^ "." )
+              in
+              TypedStmt
+                ( NRFunApp (uid, ues)
+                , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc}
+                )
+          | Some (_, Fun (_, ReturnType _)) ->
+              semantic_error ~loc
+                "A non-returning function was expected but a returning \
+                 function was supplied."
+          | Some _ ->
+              semantic_error ~loc
+                "A non-returning function was expected but a ground type \
+                 value was supplied."
+          | None ->
+              semantic_error ~loc
+                ( "A returning function was expected but an undeclared \
+                   identifier " ^ uid.name ^ " was supplied." ) )
       (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
       )
   | TargetPE e ->

@@ -3,6 +3,7 @@
 open Ast
 open Errors
 open Type_conversion
+open Pretty_printing
 
 let stan_math_signatures = Hashtbl.create 3000
 
@@ -2528,3 +2529,18 @@ let try_get_operator_return_type op_name argtypes =
         | Some ut -> Some ut )
     in
     try_recursive_find (Hashtbl.find_all operator_names op_name)
+
+let pretty_print_all_stan_math_function_signatures name =
+  let namematches = Hashtbl.find_all stan_math_signatures name in
+  if List.length namematches = 0 then ""
+  else
+    "\n"
+    ^ String.concat "\n"
+        (List.map
+           (fun (x, y) -> pretty_print_unsizedtype (Fun (y, x)))
+           namematches)
+
+let pretty_print_all_operator_signatures name =
+  let all_names = Hashtbl.find_all operator_names name in
+  String.concat "\n"
+    (List.map pretty_print_all_stan_math_function_signatures all_names)
