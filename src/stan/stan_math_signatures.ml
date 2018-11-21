@@ -1,40 +1,12 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
-(* This is ugly. An ideal treatment of function overloading works by carrying around*
-   a LAZY set of types ; for each expression. However, that's awkward in OCaml.
-   Perhaps an argument ; for Haskell after all?
-   OCaml-1 does have lazy lists. Perhaps those could be used ; for this purpose?
-   Or implement our own lazy sets?
-   
-*)
-
 open Ast
 open Errors
+open Type_conversion
 
-(* We allow implicit conversion from int to real, except for assignment operators *)
-let check_of_same_type_mod_conv name t1 t2 =
-  if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
-  else t1 = t2 || (t1 = Real && t2 = Int)
+let stan_math_signatures = Hashtbl.create 3000
 
-let check_of_same_type_mod_array_conv name t1 t2 =
-  if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
-  else
-    match (t1, t2) with
-    | Array t1elt, Array t2elt -> check_of_same_type_mod_conv name t1elt t2elt
-    | _ -> t1 = t2 || (t1 = Real && t2 = Int)
-
-let check_compatible_arguments_mod_conv name args1 args2 =
-  List.length args1 = List.length args2
-  && List.for_all
-       (fun y -> y = true)
-       (List.map2
-          (fun w1 w2 ->
-            check_of_same_type_mod_conv name (snd w1) (snd w2)
-            && compare_originblock (fst w1) (fst w2) > -1 )
-          args1 args2)
-
-let primitive_signatures = Hashtbl.create 3000
-
+(* -- Some helper definitions to populate stan_math_signatures -- *)
 let rec bare_array_type (t, i) =
   match i with 0 -> t | j -> Array (bare_array_type (t, j - 1))
 
@@ -108,11 +80,11 @@ let is_primitive = function Real -> true | Int -> true | _ -> false
 let rng_return_type t lt = if List.for_all is_primitive lt then t else Array t
 
 let add_unqualified (name, rt, uqargts) =
-  Hashtbl.add primitive_signatures name
+  Hashtbl.add stan_math_signatures name
     (rt, List.map (fun x -> (GQuant, x)) uqargts)
 
 let add_qualified (name, rt, argts) =
-  Hashtbl.add primitive_signatures name (rt, argts)
+  Hashtbl.add stan_math_signatures name (rt, argts)
 
 let add_nullary name = add_unqualified (name, ReturnType Real, [])
 
@@ -163,6 +135,7 @@ let for_vector_types s =
     s (vector_types i)
   done
 
+(* -- We start populating stan_math_signaturess -- *)
 let _ =
   add_unqualified ("abs", ReturnType Int, [Int]) ;
   add_unqualified ("abs", ReturnType Real, [Real]) ;
@@ -2476,8 +2449,9 @@ let _ =
   add_unqualified ("wishart_lpdf", ReturnType Real, [Matrix; Real; Matrix]) ;
   add_unqualified ("wishart_rng", ReturnType Matrix, [Real; Matrix])
 
-let try_get_primitive_return_type name argtypes =
-  let namematches = Hashtbl.find_all primitive_signatures name in
+(** Querying stan_math_signatures *)
+let try_get_stan_math_function_return_type name argtypes =
+  let namematches = Hashtbl.find_all stan_math_signatures name in
   let filteredmatches =
     List.filter
       (fun x -> check_compatible_arguments_mod_conv name (snd x) argtypes)
@@ -2489,8 +2463,9 @@ let try_get_primitive_return_type name argtypes =
     Some
       (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
 
-let is_primitive_name name = Hashtbl.mem primitive_signatures name
+let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
 
+(* -- Helpers for treatment of operators -- *)
 let operator_names = Hashtbl.create 50
 
 let _ = Hashtbl.add operator_names "Plus" "add"
@@ -2551,6 +2526,7 @@ let _ = Hashtbl.add operator_names "EltTimesAssign" "assign_elt_times"
 
 let _ = Hashtbl.add operator_names "EltDivideAssign" "assign_elt_divide"
 
+(** Querying stan_math_signatures for operator signatures *)
 let try_get_operator_return_type op_name argtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
     match argtypes with
@@ -2562,7 +2538,7 @@ let try_get_operator_return_type op_name argtypes =
     let rec try_recursive_find = function
       | [] -> None
       | name :: names -> (
-        match try_get_primitive_return_type name argtypes with
+        match try_get_stan_math_function_return_type name argtypes with
         | None -> try_recursive_find names
         | Some ut -> Some ut )
     in

@@ -51,6 +51,8 @@ open Symbol_table
 open Ast
 open Stan_math_signatures
 open Errors
+open Type_conversion
+open Pretty_printing
 
 (* Idea: we have a semantic checking function for each AST node.
    Each such calls the corresponding checking functions for its children
@@ -244,9 +246,9 @@ let check_fresh_variable id is_nullary_function =
    achieve that. *)
   let _ =
     if
-      is_primitive_name id.name
+      is_stan_math_function_name id.name
       && ( is_nullary_function
-         || try_get_primitive_return_type id.name [] = None )
+         || try_get_stan_math_function_return_type id.name [] = None )
     then
       let error_msg =
         String.concat " " ["Identifier "; id.name; " clashes with primitive."]
@@ -702,7 +704,7 @@ and semantic_check_expression x =
       let uid = semantic_check_identifier id in
       let ort = Symbol_table.look vm id.name in
       let _ =
-        if ort = None && not (is_primitive_name uid.name) then
+        if ort = None && not (is_stan_math_function_name uid.name) then
           semantic_error ~loc "Identifier not in scope."
       in
       TypedExpr
@@ -782,7 +784,7 @@ and semantic_check_expression x =
              ending in _rng."
       in
       let returnblock = lub_originblock (List.map fst argumenttypes) in
-      match try_get_primitive_return_type uid.name argumenttypes with
+      match try_get_stan_math_function_return_type uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
             "A returning function was expected but a non-returning function \
@@ -855,7 +857,7 @@ and semantic_check_expression x =
              of functions with the suffix _lp."
       in
       let returnblock = lub_originblock (List.map fst argumenttypes) in
-      match try_get_primitive_return_type uid.name argumenttypes with
+      match try_get_stan_math_function_return_type uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
             "A returning function was expected but a non-returning function \
@@ -1132,7 +1134,8 @@ and semantic_check_statement s =
           | Some ob1, _ -> Some ob1
           | _, Some ob2 -> Some ob2
           | _ -> None)
-          ( (if is_primitive_name uid.name then Some Primitives else None)
+          ( ( if is_stan_math_function_name uid.name then Some Primitives
+            else None )
           , Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name) )
       in
       let _ =
@@ -1215,7 +1218,7 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match try_get_primitive_return_type uid.name argumenttypes with
+      match try_get_stan_math_function_return_type uid.name argumenttypes with
       | Some Void ->
           TypedStmt
             ( NRFunApp (uid, ues)
@@ -1334,11 +1337,14 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          try_get_primitive_return_type (uid.name ^ "_lpdf") argumenttypes
+          try_get_stan_math_function_return_type (uid.name ^ "_lpdf")
+            argumenttypes
           = Some (ReturnType Real)
-          || try_get_primitive_return_type (uid.name ^ "_lpmf") argumenttypes
+          || try_get_stan_math_function_return_type (uid.name ^ "_lpmf")
+               argumenttypes
              = Some (ReturnType Real)
-          || try_get_primitive_return_type (uid.name ^ "_log") argumenttypes
+          || try_get_stan_math_function_return_type (uid.name ^ "_log")
+               argumenttypes
              = Some (ReturnType Real)
              && uid.name <> "binomial_coefficient"
              && uid.name <> "multiply"
@@ -1364,7 +1370,8 @@ and semantic_check_statement s =
       let _ =
         if
           ut = NoTruncate
-          || ( try_get_primitive_return_type (uid.name ^ "_lcdf") argumenttypes
+          || ( try_get_stan_math_function_return_type (uid.name ^ "_lcdf")
+                 argumenttypes
                = Some (ReturnType Real)
              ||
              match Symbol_table.look vm (uid.name ^ "_lcdf") with
@@ -1373,8 +1380,8 @@ and semantic_check_statement s =
                    argumenttypes
              | _ -> (
                  false
-                 || try_get_primitive_return_type (uid.name ^ "_cdf_log")
-                      argumenttypes
+                 || try_get_stan_math_function_return_type
+                      (uid.name ^ "_cdf_log") argumenttypes
                     = Some (ReturnType Real)
                  ||
                  match Symbol_table.look vm (uid.name ^ "_cdf_log") with
@@ -1382,7 +1389,7 @@ and semantic_check_statement s =
                      check_compatible_arguments_mod_conv uid.name listedtypes
                        argumenttypes
                  | _ -> false ) )
-             && ( try_get_primitive_return_type (uid.name ^ "_lccdf")
+             && ( try_get_stan_math_function_return_type (uid.name ^ "_lccdf")
                     argumenttypes
                   = Some (ReturnType Real)
                 ||
@@ -1392,8 +1399,8 @@ and semantic_check_statement s =
                       argumenttypes
                 | _ -> (
                     false
-                    || try_get_primitive_return_type (uid.name ^ "_ccdf_log")
-                         argumenttypes
+                    || try_get_stan_math_function_return_type
+                         (uid.name ^ "_ccdf_log") argumenttypes
                        = Some (ReturnType Real)
                     ||
                     match Symbol_table.look vm (uid.name ^ "_ccdf_log") with
