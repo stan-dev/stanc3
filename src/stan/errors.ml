@@ -74,9 +74,9 @@ exception Error of (location * string * string)
     [msg], occurring at location [loc]. *)
 exception SemanticError of (location * string)
 
-(* TODO: add a kind of fatal error message (which should not take a location) 
-   and insert in all places where things could go wrong because of our mistakes.
-   Message could suggest to file a bug report. *)
+(** Exception [FatalError [msg]] indicates an error that should never happen with message
+    [msg]. *)
+exception FatalError of string
 
 (* A semantic error reported by the toplevel *)
 let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))

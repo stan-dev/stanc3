@@ -21,6 +21,9 @@ let options =
       , Arg.Unit (fun () -> Debug.typed_ast_printing := true)
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
+    ; ( "--auto-format"
+      , Arg.Unit (fun () -> Debug.pretty_print_program := true)
+      , " Pretty prints the program to the console" )
     ; ( "-v"
       , Arg.Unit
           (fun () ->
@@ -30,7 +33,10 @@ let options =
 
 (** The command that actually executes a command. *)
 let exec p =
-  let _ = Debug.typed_ast_logger (Semantic_check.semantic_check_program p) in
+  let _ =
+    Debug.auto_formatter p ;
+    Debug.typed_ast_logger (Semantic_check.semantic_check_program p)
+  in
   ()
 
 (** ad directives from the given file. *)

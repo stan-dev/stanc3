@@ -6,6 +6,9 @@ type parse_error =
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
+(** Exception for Fatal Errors *)
+exception FatalError of string
+
 val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
