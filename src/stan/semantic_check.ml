@@ -1869,6 +1869,7 @@ and semantic_check_statement s =
       let _ =
         List.map (fun x -> check_fresh_variable x false) uarg_identifiers
       in
+      (* TODO: Bob was suggesting that function arguments should be allowed to shadow user defined functions but not library functions. Should we allow for that? *)
       let _ = List.map2 (Symbol_table.enter vm) uarg_names uarg_types in
       let ub = semantic_check_statement b in
       let _ =

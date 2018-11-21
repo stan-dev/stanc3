@@ -1,9 +1,9 @@
-(** The lexer that will feed into the parser *)
+(** The lexer that will feed into the parser. An OCamllex file. *)
 
-(* Boilerplate for getting line numbers for errors *)
 {
   open Lexing
 
+(* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
     let pos = lexbuf.lex_curr_p in
     lexbuf.lex_curr_p <- { pos with
@@ -27,7 +27,7 @@ let real_constant3 = integer_constant exp_literal
 let real_constant = real_constant1 | real_constant2 | real_constant3
 
 rule token = parse
-(* Line numbers for error reporting *)
+(* White space, line numers and comments *)
     '\n'                      { incr_linenum lexbuf; token lexbuf }
   | [' ' '\t' '\012' '\r']    { token lexbuf }
   | "/*"                      { multiline_comment lexbuf; token lexbuf }

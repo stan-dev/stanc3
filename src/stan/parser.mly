@@ -1,4 +1,4 @@
-(** The parser for Stan *)
+(** The parser for Stan. A Menhir file. *)
 
 %{
 open Ast_constructors
