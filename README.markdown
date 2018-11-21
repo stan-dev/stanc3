@@ -46,7 +46,7 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - A typed and untyped AST
 - Command line debugging flags for writing out parsing operations and resulting (decorated or undecorated) AST as s-expression in case of a successful parse / semantic check
 - Ported all function signatures from Stan Math
-- Prototype semantic check
+- A well-tested semantic/type checker with informative semantic error messages
 - Lexical position printed in syntactic and semantic error messages
 - Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 - 100% coverage of parse errors with informative custom syntax errors implemented using Menhir's Incremental API
@@ -54,7 +54,6 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - A pretty printer for Stan models
 
 ## TODO
-- Improve quality of semantic error messages
 - Write code generation phase
 - Macro pre-processor with correct mapping of error locations
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
