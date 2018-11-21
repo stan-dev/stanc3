@@ -1281,8 +1281,11 @@ and semantic_check_statement s =
             ( "Ill-typed arguments supplied to assignment operator "
             ^ pretty_print_assignmentoperator uassop
             ^ ": lhs has type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
-            ^ ". Available signatures:"
-            ^ pretty_print_all_operator_signatures opname ) )
+            ^
+            if uassop != Assign && uassop != ArrowAssign then
+              ". Available signatures:"
+              ^ pretty_print_all_operator_signatures opname
+            else "" ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map semantic_check_expression es in
@@ -1465,7 +1468,10 @@ and semantic_check_statement s =
                 argumenttypes
           | _ -> false
         then ()
-        else semantic_error ~loc "Ill-typed arguments to '~' statement."
+        else
+          semantic_error ~loc
+            "Ill-typed arguments to '~' statement. No distribution was found \
+             with the correct signature."
       in
       let _ =
         if
@@ -1578,7 +1584,10 @@ and semantic_check_statement s =
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error ~loc
-            "Condition in conditional needs to be of type int or real."
+            ( "Condition in conditional needs to be of type int or real. \
+               Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       let us = semantic_check_statement s in
       let us_meta = snd (typed_statement_unroll us) in
@@ -1595,7 +1604,10 @@ and semantic_check_statement s =
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error ~loc
-            "Condition in conditional needs to be of type int or real."
+            ( "Condition in conditional needs to be of type int or real. \
+               Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       let us1 = semantic_check_statement s1 in
       let us2 = semantic_check_statement s2 in
@@ -1612,7 +1624,10 @@ and semantic_check_statement s =
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error ~loc
-            "Condition in while loop needs to be of type int or real."
+            ( "Condition in while loop needs to be of type int or real. \
+               Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
@@ -1629,12 +1644,18 @@ and semantic_check_statement s =
       let _ =
         if not (check_of_int_type ue1) then
           semantic_error ~loc
-            "Lower bound of for-loop needs to be of type int."
+            ( "Lower bound of for-loop needs to be of type int. Instead found \
+               type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
           semantic_error ~loc
-            "Upper bound of for-loop needs to be of type int."
+            ( "Upper bound of for-loop needs to be of type int. Instead found \
+               type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." )
       in
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
@@ -1671,7 +1692,10 @@ and semantic_check_statement s =
         | _, Vector | _, RowVector | _, Matrix -> Real
         | _ ->
             semantic_error ~loc
-              "Foreach loop must be over array, vector, row_vector or matrix"
+              ( "Foreach loop must be over array, vector, row_vector or \
+                 matrix. Instead found expression of type "
+              ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+              ^ "." )
       in
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
@@ -1935,8 +1959,10 @@ and semantic_check_statement s =
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
         then
           semantic_error ~loc
-            "Probability density functions require real variates (first \
-             argument)."
+            ( "Probability density functions require real variates (first \
+               argument). Instead found type "
+            ^ pretty_print_unsizedtype (snd (List.hd uarg_types))
+            ^ "." )
       in
       let _ =
         if
@@ -1944,8 +1970,10 @@ and semantic_check_statement s =
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
         then
           semantic_error ~loc
-            "Probability mass functions require integer variates (first \
-             argument)."
+            ( "Probability mass functions require integer variates (first \
+               argument). Instead found type "
+            ^ pretty_print_unsizedtype (snd (List.hd uarg_types))
+            ^ "." )
       in
       let _ = context_flags.in_fun_def <- true in
       let _ =
@@ -1996,7 +2024,11 @@ and semantic_check_truncation = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc "Truncation bound should be of type int or real."
+          semantic_error ~loc
+            ( "Truncation bound should be of type int or real. Instead found \
+               type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       TruncateUpFrom ue
   | TruncateDownFrom e ->
@@ -2004,7 +2036,11 @@ and semantic_check_truncation = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc "Truncation bound should be of type int or real."
+          semantic_error ~loc
+            ( "Truncation bound should be of type int or real. Instead found \
+               type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       TruncateDownFrom ue
   | TruncateBetween (e1, e2) ->
@@ -2015,12 +2051,18 @@ and semantic_check_truncation = function
       let _ =
         if not (check_of_int_or_real_type ue1) then
           semantic_error ~loc:loc1
-            "Truncation bound should be of type int or real."
+            ( "Truncation bound should be of type int or real. Instead found \
+               type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ "." )
       in
       let _ =
         if not (check_of_int_or_real_type ue2) then
           semantic_error ~loc:loc2
-            "Truncation bound should be of type int or real."
+            ( "Truncation bound should be of type int or real. Instead found \
+               type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." )
       in
       TruncateBetween (ue1, ue2)
 
@@ -2033,13 +2075,19 @@ and semantic_check_index = function
       else if check_of_int_array_type ue then Multiple ue
       else
         semantic_error ~loc
-          "Index should be of type int or int[] or should be a range."
+          ( "Index should be of type int or int[] or should be a range. \
+             Instead found type "
+          ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+          ^ "." )
   | Upfrom e ->
       let ue = semantic_check_expression e in
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error ~loc "Range bound should be of type int."
+          semantic_error ~loc
+            ( "Range bound should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       Upfrom ue
   | Downfrom e ->
@@ -2047,7 +2095,10 @@ and semantic_check_index = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error ~loc "Range bound should be of type int."
+          semantic_error ~loc
+            ( "Range bound should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       Downfrom ue
   | Between (e1, e2) ->
@@ -2057,11 +2108,17 @@ and semantic_check_index = function
       let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue1) then
-          semantic_error ~loc:loc1 "Range bound should be of type int."
+          semantic_error ~loc:loc1
+            ( "Range bound should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
-          semantic_error ~loc:loc2 "Range bound should be of type int."
+          semantic_error ~loc:loc2
+            ( "Range bound should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." )
       in
       Between (ue1, ue2)
   | Multiple e ->
@@ -2069,7 +2126,10 @@ and semantic_check_index = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_array_type ue) then
-          semantic_error ~loc "Multiple index should be of type int[]."
+          semantic_error ~loc
+            ( "Multiple index should be of type int[]. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       Multiple ue
 
