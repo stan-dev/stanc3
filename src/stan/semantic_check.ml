@@ -854,7 +854,7 @@ and semantic_check_expression x =
                 ( "Ill-typed arguments supplied to function " ^ uid.name
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
-                ^ "\nInstead supplied argument of incompatible type: "
+                ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
                 ^ "." )
           in
@@ -875,7 +875,7 @@ and semantic_check_expression x =
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype
                         (Fun (listedtypes, ReturnType ut))
-                    ^ "\nInstead supplied argument of incompatible type: "
+                    ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
                         (List.map type_of_typed_expr ues)
                     ^ "." )
@@ -944,7 +944,7 @@ and semantic_check_expression x =
                 ( "Ill-typed arguments supplied to function " ^ uid.name
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
-                ^ "\nInstead supplied argument of incompatible type: "
+                ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
                 ^ "." )
           in
@@ -965,7 +965,7 @@ and semantic_check_expression x =
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype
                         (Fun (listedtypes, ReturnType ut))
-                    ^ "\nInstead supplied argument of incompatible type: "
+                    ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
                         (List.map type_of_typed_expr ues)
                     ^ "." )
@@ -1319,7 +1319,7 @@ and semantic_check_statement s =
                 ( "Ill-typed arguments supplied to function " ^ uid.name
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
-                ^ "\nInstead supplied argument of incompatible type: "
+                ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
                 ^ "." )
           in
@@ -1335,7 +1335,7 @@ and semantic_check_statement s =
                     ( "Ill-typed arguments supplied to function " ^ uid.name
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype (Fun (listedtypes, Void))
-                    ^ "\nInstead supplied argument of incompatible type: "
+                    ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
                         (List.map type_of_typed_expr ues)
                     ^ "." )
