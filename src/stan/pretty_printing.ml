@@ -176,7 +176,7 @@ and pretty_print_transformation = function
     | UntypedExpr (RealNumeral "0.", _), _ ->
         "<scale=" ^ pretty_print_expression e2 ^ ">"
     | _, UntypedExpr (RealNumeral "1.", _) ->
-        "<location=" ^ pretty_print_expression e2 ^ ">"
+        "<location=" ^ pretty_print_expression e1 ^ ">"
     | _ ->
         "<location=" ^ pretty_print_expression e1 ^ ", scale="
         ^ pretty_print_expression e2 ^ ">" )
