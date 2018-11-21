@@ -100,6 +100,9 @@ let typed_statement_unroll = function TypedStmt x -> x
 
 let untyped_statement_unroll = function UntypedStmt x -> x
 
+let type_of_typed_expr ue =
+  snd (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
+
 let rec unsizedtype_contains_int ut =
   match ut with
   | Int -> true
@@ -302,15 +305,10 @@ let rec semantic_check_program p =
             (snd
                (typed_statement_unroll
                   (List.hd
-                     ((function
-                        | Some x -> x
-                        | _ ->
-                            fatal_error
-                              "This should never happen. Please file a bug. \
-                               Eror code 24.")
-                        ubf))))
+                     ((function Some x -> x | _ -> fatal_error "24") ubf))))
               .stmt_typed_meta_loc
           "Some function is declared without specifying a definition."
+      (* TODO: insert better location in the error above *)
     in
     let _ = context_flags.current_block <- Data in
     let ubd =
@@ -500,7 +498,10 @@ and semantic_check_sizedtype = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error ~loc "Vector sizes should be of type int."
+          semantic_error ~loc
+            ( "Vector sizes should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       SVector ue
   | SRowVector e ->
@@ -508,7 +509,10 @@ and semantic_check_sizedtype = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error ~loc "Row vector sizes should be of type int."
+          semantic_error ~loc
+            ( "Row vector sizes should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       SRowVector ue
   | SMatrix (e1, e2) ->
@@ -518,11 +522,17 @@ and semantic_check_sizedtype = function
       let loc2 = (snd (typed_expression_unroll ue2)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue1) then
-          semantic_error ~loc:loc1 "Matrix sizes should be of type int."
+          semantic_error ~loc:loc1
+            ( "Matrix sizes should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
-          semantic_error ~loc:loc2 "Matrix sizes should be of type int."
+          semantic_error ~loc:loc2
+            ( "Matrix sizes should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." )
       in
       SMatrix (ue1, ue2)
   | SArray (st, e) ->
@@ -531,7 +541,10 @@ and semantic_check_sizedtype = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_type ue) then
-          semantic_error ~loc "Array sizes should be of type int."
+          semantic_error ~loc
+            ( "Array sizes should be of type int. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       SArray (ust, ue)
 
@@ -542,7 +555,10 @@ and semantic_check_transformation = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc "Lower bound should be of int or real type."
+          semantic_error ~loc
+            ( "Lower bound should be of int or real type. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       Lower ue
   | Upper e ->
@@ -550,7 +566,10 @@ and semantic_check_transformation = function
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc "Upper bound should be of int or real type."
+          semantic_error ~loc
+            ( "Upper bound should be of int or real type. Instead found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
+            ^ "." )
       in
       Upper ue
   | LowerUpper (e1, e2) ->
@@ -561,12 +580,18 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue1) then
           semantic_error ~loc:loc1
-            "Lower and upper bound should be of int or real type."
+            ( "Lower and upper bound should be of int or real type. Instead \
+               found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ "." )
       in
       let _ =
         if not (check_of_int_or_real_type ue2) then
           semantic_error ~loc:loc2
-            "Lower and upper bound should be of int or real type."
+            ( "Lower and upper bound should be of int or real type. Instead \
+               found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." )
       in
       LowerUpper (ue1, ue2)
   | LocationScale (e1, e2) ->
@@ -577,12 +602,18 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue1) then
           semantic_error ~loc:loc1
-            "Location and scale should be of int or real type."
+            ( "Location and scale should be of int or real type. Instead \
+               found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
+            ^ "." )
       in
       let _ =
         if not (check_of_int_or_real_type ue2) then
           semantic_error ~loc:loc2
-            "Location and scale should be of int or real type."
+            ( "Location and scale should be of int or real type. Instead \
+               found type "
+            ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
+            ^ "." )
       in
       LocationScale (ue1, ue2)
   | Ordered -> Ordered
