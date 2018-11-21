@@ -9,6 +9,9 @@ exception SyntaxError of parse_error
 (** Exception for Fatal Errors *)
 exception FatalError of string
 
+val fatal_error : string -> 'a
+(** Throw a fatal error reported by the toplevel *)
+
 val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 

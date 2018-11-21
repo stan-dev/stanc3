@@ -286,9 +286,7 @@ let update_originblock name ob =
   | Some (old_ob, ut) ->
       let new_ob = lub_originblock [ob; old_ob] in
       Symbol_table.unsafe_replace vm name (new_ob, ut)
-  | _ ->
-      semantic_error
-        "This should never happen. Please file a bug. Error code 18."
+  | _ -> fatal_error "18."
 
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
@@ -319,7 +317,7 @@ let rec semantic_check_program p =
                      ((function
                         | Some x -> x
                         | _ ->
-                            semantic_error
+                            fatal_error
                               "This should never happen. Please file a bug. \
                                Eror code 24.")
                         ubf))))
@@ -364,9 +362,7 @@ let rec semantic_check_program p =
 and semantic_check_identifier id =
   let _ =
     match id.id_loc with
-    | Nowhere ->
-        semantic_error
-          "This should never happen. Please file a bug. Error code 25."
+    | Nowhere -> fatal_error "25."
     | Errors.Location (startpos, _) ->
         let modelname =
           List.hd
@@ -1136,9 +1132,7 @@ and semantic_check_statement s =
         match ue2 with
         | TypedExpr (Indexed (TypedExpr (Variable uid, _), ulindex), _) ->
             (uid, ulindex)
-        | _ ->
-            semantic_error ~loc
-              "This should never happen. Please file a bug. Error code 8."
+        | _ -> semantic_error ~loc "8."
       in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
@@ -1167,9 +1161,7 @@ and semantic_check_statement s =
             else
               semantic_error ~loc
                 "Cannot assign to global variable declared in previous blocks."
-        | _ ->
-            semantic_error ~loc
-              "This should never happen. Please file a bug. Error code 5."
+        | _ -> semantic_error ~loc "5."
       in
       (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
@@ -1669,9 +1661,7 @@ and semantic_check_statement s =
         TypedStmt
           ( VDeclAss {sizedtype= ust; identifier= uid; value= ue}
           , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ ->
-        semantic_error ~loc
-          "This should never happen. Please file a bug. Error code 2." )
+    | _ -> semantic_error ~loc "2." )
   | TVDecl (st, trans, id) ->
       let ust = semantic_check_sizedtype st in
       let rec check_sizes_below_param_level = function
@@ -1790,9 +1780,7 @@ and semantic_check_statement s =
               ; tidentifier= uid
               ; tvalue= ue }
           , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ ->
-        semantic_error ~loc
-          "This should never happen. Please file a bug. Error code 1." )
+    | _ -> semantic_error ~loc "1." )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in

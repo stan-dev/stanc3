@@ -78,6 +78,12 @@ exception SemanticError of (location * string)
     [msg]. *)
 exception FatalError of string
 
+(* A fatal error reported by the toplevel *)
+let fatal_error msg =
+  raise
+    (FatalError
+       ("This should never happen. Please file a bug. Error code " ^ msg))
+
 (* A semantic error reported by the toplevel *)
 let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))
 
