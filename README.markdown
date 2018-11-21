@@ -17,13 +17,19 @@ To test the compiler on all good models in stan/src/test/test-models/good, run
 `
 ./run-stan-examples-good.sh
 `
-This will produce an output `stan-examples-good-out.log` file which will show any errors.
+This will produce an output file `stan-examples-good-out.log` which will show any errors.
 
 To test the compiler on all bad models in stan/src/test/test-models/bad, run
 `
 ./run-stan-examples-bad.sh
 `
 This will produce an output file `stan-examples-bad-out.log` which will show any errors.
+
+To test the pretty printer on all good models in stan/src/test/test-models/good, run
+`
+./test-pretty-printer.sh
+`
+This will produce an output file `stan-examples-good-pretty-printed.log` with pretty printed versions of all programs.
 
 To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
 `
@@ -45,6 +51,7 @@ Run `./compile_menhir_errors.sh` to compile custom syntax errors if you have add
 - Tested on all models in `stan/src/test/test-models/good` and `stan/src/test/test-models/bad`
 - 100% coverage of parse errors with informative custom syntax errors implemented using Menhir's Incremental API
 - Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
+- A pretty printer for Stan models
 
 ## TODO
 - Improve quality of semantic error messages
