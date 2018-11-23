@@ -885,7 +885,7 @@ let message s =
        \"functions {\".\n"
   | 10 -> "An identifier is expected as a function name.\n"
   | 13 -> "\"(\" expected after function name.\n"
-  | 14 -> "(Non-void) type expected function argument declaration.\n"
+  | 14 -> "(Non-void) type expected in function argument declaration.\n"
   | 18 -> "An identifier is expected as a function argument name.\n"
   | 426 -> "\",\" or \")\" expected after function argument declaration.\n"
   | 427 ->
