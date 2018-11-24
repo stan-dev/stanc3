@@ -1,8 +1,9 @@
-functions {
-  void foo(void z, matrix x, real[] y) return ;
+transformed data {
+  int M =5;
 }
-
+parameters {
+  ordered[2] mu[N];
+}
 model {
-   int x;
-   x -= 42;
+  mu ~ normal(-[0.5,0.5]', 1.0);
 }

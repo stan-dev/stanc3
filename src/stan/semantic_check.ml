@@ -758,7 +758,7 @@ and semantic_check_expression x =
       let ort = Symbol_table.look vm id.name in
       let _ =
         if ort = None && not (is_stan_math_function_name uid.name) then
-          semantic_error ~loc "Identifier not in scope."
+          semantic_error ~loc ("Identifier " ^ uid.name ^ " not in scope.")
       in
       TypedExpr
         ( Variable uid
