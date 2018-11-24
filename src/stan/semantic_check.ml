@@ -1357,7 +1357,7 @@ and semantic_check_statement s =
                  value was supplied."
           | None ->
               semantic_error ~loc
-                ( "A returning function was expected but an undeclared \
+                ( "A non-returning function was expected but an undeclared \
                    identifier " ^ uid.name ^ " was supplied." ) )
       (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
       )
