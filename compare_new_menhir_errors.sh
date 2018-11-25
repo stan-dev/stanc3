@@ -1,0 +1,1 @@
+ menhir src/stan/parser.mly --compare-errors src/stan/parser_new.messages --compare-errors src/stan/parser.messages 

@@ -1,0 +1,1 @@
+data { vector<lower=T, upper=T,> x;}

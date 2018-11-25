@@ -1,0 +1,1 @@
+ menhir --list-errors src/stan/parser.mly > src/stan/parser_new.messages

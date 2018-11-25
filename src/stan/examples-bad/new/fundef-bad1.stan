@@ -1,0 +1,1 @@
+functions { vector[,while] foo(); }

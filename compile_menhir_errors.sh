@@ -1,0 +1,1 @@
+menhir --compile-errors src/stan/parser.messages src/stan/parser.mly > src/stan/parsing_errors.ml

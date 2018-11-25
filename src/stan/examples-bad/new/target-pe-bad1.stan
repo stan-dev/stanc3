@@ -1,0 +1,4 @@
+model {
+
+target += "hallo";
+}

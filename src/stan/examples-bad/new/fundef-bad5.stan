@@ -1,0 +1,1 @@
+functions { void T () void }
