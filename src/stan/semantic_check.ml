@@ -840,8 +840,8 @@ and semantic_check_expression x =
       match try_get_stan_math_function_return_type uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
-            "A returning function was expected but a non-returning function \
-             was supplied."
+            ( "A returning function was expected but a non-returning function "
+            ^ uid.name ^ " was supplied." )
       | Some (ReturnType ut) ->
           TypedExpr
             ( FunApp (uid, ues)
@@ -861,8 +861,8 @@ and semantic_check_expression x =
           match Symbol_table.look vm uid.name with
           | Some (_, Fun (_, Void)) ->
               semantic_error ~loc
-                "A returning function was expected but a non-returning \
-                 function was supplied."
+                ( "A returning function was expected but a non-returning \
+                   function " ^ uid.name ^ " was supplied." )
           | Some (_, Fun (listedtypes, ReturnType ut)) ->
               let _ =
                 if
@@ -886,8 +886,8 @@ and semantic_check_expression x =
                   ; expr_typed_meta_loc= loc } )
           | Some _ ->
               semantic_error ~loc
-                "A returning function was expected but a ground type value \
-                 was supplied."
+                ( "A returning function was expected but a non-function value "
+                ^ uid.name ^ " was supplied." )
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
@@ -930,8 +930,8 @@ and semantic_check_expression x =
       match try_get_stan_math_function_return_type uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
-            "A returning function was expected but a non-returning function \
-             was supplied."
+            ( "A returning function was expected but a non-returning function "
+            ^ uid.name ^ " was supplied." )
       | Some (ReturnType ut) ->
           TypedExpr
             ( CondFunApp (uid, ues)
@@ -951,8 +951,8 @@ and semantic_check_expression x =
           match Symbol_table.look vm uid.name with
           | Some (_, Fun (_, Void)) ->
               semantic_error ~loc
-                "A returning function was expected but a non-returning \
-                 function was supplied."
+                ( "A returning function was expected but a non-returning \
+                   function " ^ uid.name ^ " was supplied." )
           | Some (_, Fun (listedtypes, ReturnType ut)) ->
               let _ =
                 if
@@ -976,8 +976,8 @@ and semantic_check_expression x =
                   ; expr_typed_meta_loc= loc } )
           | Some _ ->
               semantic_error ~loc
-                "A returning function was expected but a ground type value \
-                 was supplied."
+                ( "A returning function was expected but a non-function value "
+                ^ uid.name ^ " was supplied." )
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
@@ -1156,8 +1156,10 @@ and semantic_check_expression x =
                 else inferred_unsizedtype_of_indexed Matrix indices
             | _ ->
                 semantic_error ~loc
-                  "Only expressions of array, matrix, row_vector and vector \
-                   type may be indexed." )
+                  ( "Only expressions of array, matrix, row_vector and vector \
+                     type may be indexed. Instead, found type "
+                  ^ pretty_print_unsizedtype ut
+                  ^ "." ) )
       in
       TypedExpr
         ( Indexed (ue, uindices)
@@ -1209,7 +1211,7 @@ and semantic_check_statement s =
         match ue2 with
         | TypedExpr (Indexed (TypedExpr (Variable uid, _), ulindex), _) ->
             (uid, ulindex)
-        | _ -> semantic_error ~loc "8."
+        | _ -> fatal_error "8."
       in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
@@ -1226,7 +1228,8 @@ and semantic_check_statement s =
       let _ =
         if Symbol_table.get_read_only vm uid.name then
           semantic_error ~loc
-            "Cannot assign to function argument or loop identifier."
+            ( "Cannot assign to function argument or loop identifier "
+            ^ uid.name ^ "." )
       in
       let _ =
         match uidoblock with
@@ -1237,8 +1240,9 @@ and semantic_check_statement s =
             then ()
             else
               semantic_error ~loc
-                "Cannot assign to global variable declared in previous blocks."
-        | _ -> semantic_error ~loc "5."
+                ( "Cannot assign to global variable " ^ uid.name
+                ^ " declared in previous blocks." )
+        | _ -> fatal_error "5."
       in
       (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
@@ -1313,8 +1317,8 @@ and semantic_check_statement s =
             , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
       | Some (ReturnType _) ->
           semantic_error ~loc
-            "A non-returning function was expected but a returning function \
-             was supplied."
+            ( "A non-returning function was expected but a returning function "
+            ^ uid.name ^ " was supplied." )
       | _ -> (
           let _ =
             if is_stan_math_function_name uid.name then
@@ -1349,12 +1353,12 @@ and semantic_check_statement s =
                 )
           | Some (_, Fun (_, ReturnType _)) ->
               semantic_error ~loc
-                "A non-returning function was expected but a returning \
-                 function was supplied."
+                ( "A non-returning function was expected but a returning \
+                   function " ^ uid.name ^ " was supplied." )
           | Some _ ->
               semantic_error ~loc
-                "A non-returning function was expected but a ground type \
-                 value was supplied."
+                ( "A non-returning function was expected but a non-function \
+                   value " ^ uid.name ^ " was supplied." )
           | None ->
               semantic_error ~loc
                 ( "A non-returning function was expected but an undeclared \
@@ -1778,7 +1782,7 @@ and semantic_check_statement s =
         TypedStmt
           ( VDeclAss {sizedtype= ust; identifier= uid; value= ue}
           , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ -> semantic_error ~loc "2." )
+    | _ -> fatal_error "2." )
   | TVDecl (st, trans, id) ->
       let ust = semantic_check_sizedtype st in
       let rec check_sizes_below_param_level = function
@@ -1897,7 +1901,7 @@ and semantic_check_statement s =
               ; tidentifier= uid
               ; tvalue= ue }
           , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ -> semantic_error ~loc "1." )
+    | _ -> fatal_error "1." )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
