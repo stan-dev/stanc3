@@ -41,7 +41,8 @@ To auto-format the OCaml-code (sadly, this does not work for the two ocamllex an
 
 Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
 
-## Done, so far
+## Timeline
+### Done, so far
 - A lexer
 - A LR(1) parser (without any shift/reduce conflicts), constructing an AST
 - A typed and untyped AST
@@ -55,26 +56,16 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 - A pretty printer for Stan models
 - Work in progress on intermediate representations and code generation
 
-## TODO for beta release
-- Write code generation phase
-- Macro pre-processor with correct mapping of error locations
+### TODO for beta release
+- Write code generation phase (~2 weeks)
+- Macro pre-processor with correct mapping of error locations (~2 days)
 
-## Cool stuff to do after
+### Cool stuff to do after
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
 
-# Timeline for a New Stanc
-1. Create skeleton end-to-end functional interpreters in both Rust an OCaml displaying a minimum non-trivial operation in each module.
-    1. We got far enough and chose OCaml for a few reasons - borrow checker, Menhir, expect tests.
-1. announce project seeking help,
-1. Agree on AST definition (2 weeks)
-1. Agree on desugared IR (1 week)
-1. Agree on something like [Middle Intermediate Representation](https://blog.rust-lang.org/2016/04/19/MIR.html) equivalent (2 weeks)
-1. extend parsing to full Stan 2 language (Matthijs said he did this in day!)
-1. type-checking (1 month)
-1. backend to emit C++ (1 month)
 
-## Important simultaneous work also needed for other reasons
+# Important simultaneous work also needed for other reasons
 1. `install_tensorflow()` style installers for R and Python that install a C++ toolchain in the user's home directory. We will need this to install the new `stanc` binary.
 1. Refactoring the model class to have a base class, and the algorithms to not be templated (speeds up compile times. @mitzimorris is working on this).
 1. Any work to compile the math library ahead of time!
