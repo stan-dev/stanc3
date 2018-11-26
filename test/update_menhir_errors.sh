@@ -1,1 +1,1 @@
- menhir src/stan/parser.mly --update-errors src/stan/parser.messages > src/stan/parser_updated.messages
+ menhir ../lib/parser.mly --update-errors ../lib/parser.messages > ../lib/parser_updated.messages
