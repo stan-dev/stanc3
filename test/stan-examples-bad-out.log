@@ -897,10 +897,6 @@ Syntax error at file "examples-bad/err-transformed-params.stan", lines 1-3, char
 (Parse error state 609)
 
 
- examples-bad/err-var-decl-after-statement.stan 
- ---------
-
-
  examples-bad/expect_statement_seq_close_brace.stan 
  ---------
 Syntax error at file "examples-bad/expect_statement_seq_close_brace.stan", line 5, characters 2-18, parsing error:
@@ -5912,10 +5908,6 @@ Truncation is only defined if distribution has _lcdf and _lccdf functions implem
  ---------
 Semantic error at file "examples-bad/prob-poisson_log-trunc-low.stan", line 11, characters 2-32:
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
-
-
- examples-bad/read_only/m1.stan 
- ---------
 
 
  examples-bad/real-pdf.stan 
