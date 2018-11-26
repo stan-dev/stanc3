@@ -10,7 +10,7 @@ The project has the following prerequisites:
 - menhir parser generator
 - Dune OCaml build system (formerly known as JBuilder)
 
-### To build and test
+### To build, test, and run
 To build, run
 `
 make
