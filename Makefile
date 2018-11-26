@@ -1,10 +1,10 @@
 all:
-	jbuilder build stanc.exe
+	dune build stanc.exe
 
 cross:
-	jbuilder build stanc.exe -x windows
+	dune build stanc.exe -x windows
 
 clean:
-	jbuilder clean
+	dune clean
 
 re: clean all
