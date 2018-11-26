@@ -1,5 +1,5 @@
-# A Starting Point for a New Stan Compiler
-This repo contains some initial work on a new compiler for Stan, written in OCaml.
+# A New Stan-to-C++ Compiler
+This repo contains work in progress on a new compiler for Stan, written in OCaml.
 
 ## To Get Started
 The project has the following prerequisites:
