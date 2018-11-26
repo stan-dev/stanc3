@@ -2,6 +2,7 @@
 This repo contains work in progress on a new compiler for Stan, written in OCaml.
 
 ## To Get Started
+### Prerequisites
 The project has the following prerequisites:
 - GNU Make, which you probably have already
 - OCaml programming language, version 4 or later,
@@ -9,6 +10,7 @@ The project has the following prerequisites:
 - menhir parser generator
 - Dune OCaml build system (formerly known as JBuilder)
 
+### To build and test
 To build, run
 `
 make
