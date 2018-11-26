@@ -7,5 +7,6 @@ math_iface/gen/*
 *.swp
 *.a
 *.merlin
+*.log
 _build
 

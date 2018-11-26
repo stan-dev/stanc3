@@ -1,24 +1,26 @@
-
 open Base_prog_tree
 open Cpp_gen_tree
 open Core_kernel
 
 let stan_math_map =
   String.Map.of_alist_exn
-    ["+", "add"; "-", "minus"; "/", "divide"; "*", "multiply"]
+    [("+", "add"); ("-", "minus"); ("/", "divide"); ("*", "multiply")]
 
 (* XXX Ask OCaml person to code review this duplication below *)
 let rec translate_fn_names_expr = function
-  | FnApp(f, args) -> FnApp(
-      String.Map.find stan_math_map f |> Option.value ~default:f,
-      List.map ~f:translate_fn_names_expr args)
+  | FnApp (f, args) ->
+      FnApp
+        ( String.Map.find stan_math_map f |> Option.value ~default:f
+        , List.map ~f:translate_fn_names_expr args )
   | e -> map_expr translate_fn_names_expr e
 
 let id x = x
+
 let rec translate_fn_names_statement = function
-  | NRFnApp(f, args) -> NRFnApp(
-      String.Map.find stan_math_map f |> Option.value ~default:f,
-      List.map ~f:translate_fn_names_expr args)
+  | NRFnApp (f, args) ->
+      NRFnApp
+        ( String.Map.find stan_math_map f |> Option.value ~default:f
+        , List.map ~f:translate_fn_names_expr args )
   | s -> map_statement id translate_fn_names_statement id s
 
 let rec translate_stantype = function
@@ -30,61 +32,76 @@ let rec translate_stantype = function
   | Mir.SArray st -> SArray (translate_stantype st)
 
 let mir_to_cpp_decl : Mir.vardecl -> vardecl =
-  fun (name, st) -> (translate_stantype st), name
+ fun (name, st) -> (translate_stantype st, name)
 
-let rec translate_statement (s: Mir.statement) : statement =
+let rec translate_statement (s : Mir.statement) : statement =
   Base_prog_tree.map_statement mir_to_cpp_decl translate_statement id s
 
-let translate_udf {Mir.returntype = rt; name; arguments; body} =
-  {returntype = begin match rt with
+let translate_udf {Mir.returntype= rt; name; arguments; body} =
+  { returntype=
+      ( match rt with
       | None -> None
-      | Some st -> Some(AVar, (translate_stantype st)) end;
-   name = name; templates = []; body = translate_statement body;
-   arguments = List.map
-       ~f:(fun (name, st) -> AVar, Immutable, (translate_stantype st), name)
-       arguments}
+      | Some st -> Some (AVar, translate_stantype st) )
+  ; name
+  ; templates= []
+  ; body= translate_statement body
+  ; arguments=
+      List.map
+        ~f:(fun (name, st) -> (AVar, Immutable, translate_stantype st, name))
+        arguments }
 
 let fncall name args =
   let is_num s = not (Str.string_match (Str.regexp "[a-zA-Z]") s 0) in
   let is_floating s = String.contains s '.' in
-  let to_arg x = if is_num x then
-      if is_floating x then Lit (Real, x) else Lit (Int, x)
-    else
-      Lit (Str, x) in
-  NRFnApp(name, List.map ~f:to_arg args)
+  let to_arg x =
+    if is_num x then if is_floating x then Lit (Real, x) else Lit (Int, x)
+    else Lit (Str, x)
+  in
+  NRFnApp (name, List.map ~f:to_arg args)
 
 let prog_reader_fn path =
   let prog_reader_type = SOther "stan::io::program_reader" in
-  {
-    returntype = Some (AData, prog_reader_type);
-    name = "prog_reader__";
-    arguments = [];
-    body = Block [
-        Decl((prog_reader_type,"reader"), None);
-        fncall "reader.add_event" ["0"; "0"; "start"; path];
-        (* XXX Fix the end numbers*)
-        fncall "reader.add_event" ["0"; "0"; "end"; path];
-        Return(Var "reader")];
-    templates = [];
-  }
+  { returntype= Some (AData, prog_reader_type)
+  ; name= "prog_reader__"
+  ; arguments= []
+  ; body=
+      Block
+        [ Decl ((prog_reader_type, "reader"), None)
+        ; fncall "reader.add_event" ["0"; "0"; "start"; path]
+        ; (* XXX Fix the end numbers*)
+          fncall "reader.add_event" ["0"; "0"; "end"; path]
+        ; Return (Var "reader") ]
+  ; templates= [] }
 
 let convert p =
-  let p = Mir.map_prog translate_fn_names_statement translate_fn_names_expr p in
-  {usings = ["std::istream"; "std::string"; "std::stringstream";
-             "std::vector"; "stan::io::dump"; "stan::math::lgamma";
-             "stan::model::prob_grad"; "namespace stan::math"];
-   namespace = [p.prog_name ^ "_model_namespace"];
-   includes = ["stan/model/model_header.hpp"];
-   functions = prog_reader_fn p.prog_path :: List.map ~f:translate_udf p.functions;
-   cppclass = {
-     classname = p.prog_name ^ "_model"; super = "prob_grad";
-     fields = List.map ~f:mir_to_cpp_decl p.data;
-     (* These will be all of the special methods like getting the param names and shit*)
-     methods = [
-       {returntype = Some(AData, SString); arguments = []; templates = [];
-        name = "model_name"; body = Return(Lit(Str, p.prog_name))
-       };
-       (* void constrained_param_names(std::vector<std::string>& param_names__,
+  let p =
+    Mir.map_prog translate_fn_names_statement translate_fn_names_expr p
+  in
+  { usings=
+      [ "std::istream"
+      ; "std::string"
+      ; "std::stringstream"
+      ; "std::vector"
+      ; "stan::io::dump"
+      ; "stan::math::lgamma"
+      ; "stan::model::prob_grad"
+      ; "namespace stan::math" ]
+  ; namespace= [p.prog_name ^ "_model_namespace"]
+  ; includes= ["stan/model/model_header.hpp"]
+  ; functions=
+      prog_reader_fn p.prog_path :: List.map ~f:translate_udf p.functions
+  ; cppclass=
+      { classname= p.prog_name ^ "_model"
+      ; super= "prob_grad"
+      ; fields= List.map ~f:mir_to_cpp_decl p.data
+      ; (* These will be all of the special methods like getting the param names and shit*)
+        methods=
+          [ { returntype= Some (AData, SString)
+            ; arguments= []
+            ; templates= []
+            ; name= "model_name"
+            ; body= Return (Lit (Str, p.prog_name)) }
+          ; (* void constrained_param_names(std::vector<std::string>& param_names__,
                                  bool include_tparams__ = true,
                                  bool include_gqs__ = true) const {
         std::stringstream param_name_stream__;
@@ -98,21 +115,26 @@ let convert p =
         }
 
         if (!include_gqs__) return;} *)
-       {name = "constrained_param_names"; returntype = None; templates = [];
-        arguments = [AData, Mutable, SArray SString, "param_names__"];
-        body = Block [
-            Decl((SOther "std::stringstream", "param_name_stream__"), None);
-            NRFnApp("param_name_stream__.str", [FnApp("std::string", [])]);
-            (* XXX need to figure out strm << "" *)
-            NRFnApp("param_names__.push_back",
-                    [FnApp("param_name_stream__.str", [])]);
-            (* XXX Is any of this a good idea?
+            { name= "constrained_param_names"
+            ; returntype= None
+            ; templates= []
+            ; arguments= [(AData, Mutable, SArray SString, "param_names__")]
+            ; body=
+                Block
+                  [ Decl
+                      ( (SOther "std::stringstream", "param_name_stream__")
+                      , None )
+                  ; NRFnApp
+                      ("param_name_stream__.str", [FnApp ("std::string", [])])
+                  ; (* XXX need to figure out strm << "" *)
+                    NRFnApp
+                      ( "param_names__.push_back"
+                      , [FnApp ("param_name_stream__.str", [])] )
+                  (* XXX Is any of this a good idea?
                here i would like to put a blank line...*)
-            (* XXX And here I would like to use && *)
-          ];
-       };
-
-       (*
+                  (* XXX And here I would like to use && *)
+                   ] }
+          (*
     void transform_inits(const stan::io::var_context& context__,
                          std::vector<int>& params_i__,
                          std::vector<double>& params_r__,
@@ -296,10 +318,9 @@ let convert p =
         if (!include_gqs__) return;
     }
         *)
-
-     ];
-     ctor = [
-       (*
+           ]
+      ; ctor=
+          ( [ (*
               bernoulli_model(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
@@ -378,9 +399,8 @@ let convert p =
     }
 
 
-        *)
-
-     ], Skip;}}
+        *) ]
+          , Skip ) } }
 
 (*
 let emit_prelude ppf = fprintf ppf {|
