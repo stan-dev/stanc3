@@ -57,8 +57,9 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 - Work in progress on intermediate representations and code generation
 
 ### TODO for beta release
-- Write code generation phase (~2 weeks)
+- Write code generation phase with tests (~2 weeks)
 - Macro pre-processor with correct mapping of error locations (~2 days)
+- Rework existing tests from a shell script into a real testing framework
 
 ### Cool stuff to do after
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
