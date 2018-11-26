@@ -1,0 +1,31 @@
+(library
+  (name stanclib)
+  (libraries core_kernel str menhirLib)
+  (inline_tests)
+  (preprocess (pps ppx_jane)))
+
+(ocamllex lexer)
+
+(rule
+ (targets parsing_errors.ml)
+ (deps parser.mly parser.messages)
+ (action
+  (with-stdout-to %{targets}
+   (run menhir
+;;    --explain
+    --strict
+    --unused-tokens parser.mly --compile-errors parser.messages))))
+
+;; (rule
+;;  (targets parser.ml parser.mli)
+;;  (deps parser.mly parser.messages Ast_constructors.ml Ast.ml Debug.ml)
+;;  (action
+;;   (run menhir --strict
+;;    --unused-tokens
+;;    --fixed-exception
+;;    --table
+;;    parser.mly)))
+
+(menhir
+ (modules parser)
+ (flags :standard --table ))

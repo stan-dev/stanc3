@@ -5,7 +5,34 @@ open Errors
 open Type_conversion
 open Pretty_printing
 
+(** The signatures hash table *)
 let stan_math_signatures = Hashtbl.create 3000
+
+(* -- Querying stan_math_signatures -- *)
+let get_stan_math_function_return_type_opt name argtypes =
+  let namematches = Hashtbl.find_all stan_math_signatures name in
+  let filteredmatches =
+    List.filter
+      (fun x -> check_compatible_arguments_mod_conv name (snd x) argtypes)
+      namematches
+  in
+  if List.length filteredmatches = 0 then None
+    (* We return the least return type in case there are multiple options (due to implicit Int-Real conversion), where Int<Real *)
+  else
+    Some
+      (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
+
+let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
+
+let pretty_print_all_stan_math_function_signatures name =
+  let namematches = Hashtbl.find_all stan_math_signatures name in
+  if List.length namematches = 0 then ""
+  else
+    "\n"
+    ^ String.concat "\n"
+        (List.map
+           (fun (x, y) -> pretty_print_unsizedtype (Fun (y, x)))
+           namematches)
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let rec bare_array_type (t, i) =
@@ -67,7 +94,7 @@ let rng_return_type t lt = if List.for_all is_primitive lt then t else Array t
 
 let add_unqualified (name, rt, uqargts) =
   Hashtbl.add stan_math_signatures name
-    (rt, List.map (fun x -> (GQuant, x)) uqargts)
+    (rt, List.map (fun x -> (TParam, x)) uqargts)
 
 let add_qualified (name, rt, argts) =
   Hashtbl.add stan_math_signatures name (rt, argts)
@@ -103,9 +130,6 @@ let add_binary name = add_unqualified (name, ReturnType Real, [Real; Real])
 let add_ternary name =
   add_unqualified (name, ReturnType Real, [Real; Real; Real])
 
-let add_quaternary name =
-  add_unqualified (name, ReturnType Real, [Real; Real; Real; Real])
-
 let for_all_vector_types s =
   for i = 0 to all_vector_types_size - 1 do
     s (all_vector_types i)
@@ -140,29 +164,29 @@ let _ =
   add_qualified
     ( "algebra_solver"
     , ReturnType Vector
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Vector)
-              ; (GQuant, Vector)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Vector)
+              ; (TParam, Vector)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType Vector ) )
-      ; (GQuant, Vector)
-      ; (GQuant, Vector)
+      ; (TParam, Vector)
+      ; (TParam, Vector)
       ; (TData, Array Real)
       ; (TData, Array Int) ] ) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType Vector
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Vector)
-              ; (GQuant, Vector)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Vector)
+              ; (TParam, Vector)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType Vector ) )
-      ; (GQuant, Vector)
-      ; (GQuant, Vector)
+      ; (TParam, Vector)
+      ; (TParam, Vector)
       ; (TData, Array Real)
       ; (TData, Array Int)
       ; (TData, Real)
@@ -1028,52 +1052,52 @@ let _ =
   add_qualified
     ( "integrate_ode"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int)
       ; (TData, Real)
@@ -1082,35 +1106,35 @@ let _ =
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int)
       ; (TData, Real)
@@ -1119,35 +1143,35 @@ let _ =
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Real)
+              ; (TParam, Array Real)
+              ; (TParam, Array Real)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Real)
       ; (TData, Array Real)
-      ; (GQuant, Array Real)
+      ; (TParam, Array Real)
       ; (TData, Array Real)
       ; (TData, Array Int)
       ; (TData, Real)
@@ -1393,15 +1417,15 @@ let _ =
   add_qualified
     ( "map_rect"
     , ReturnType Vector
-    , [ ( GQuant
+    , [ ( TParam
         , Fun
-            ( [ (GQuant, Vector)
-              ; (GQuant, Vector)
-              ; (GQuant, Array Real)
-              ; (GQuant, Array Int) ]
+            ( [ (TParam, Vector)
+              ; (TParam, Vector)
+              ; (TData, Array Real)
+              ; (TData, Array Int) ]
             , ReturnType Vector ) )
-      ; (GQuant, Vector)
-      ; (GQuant, Array Vector)
+      ; (TParam, Vector)
+      ; (TParam, Array Vector)
       ; (TData, Array (Array Real))
       ; (TData, Array (Array Int)) ] ) ;
   add_unqualified ("matrix_exp", ReturnType Matrix, [Matrix]) ;
@@ -1450,8 +1474,8 @@ let _ =
     ("multi_gp_cholesky_log", ReturnType Real, [Matrix; Matrix; Vector]) ;
   add_unqualified
     ("multi_gp_cholesky_lpdf", ReturnType Real, [Matrix; Matrix; Vector]) ;
-  for k = 0 to 4 - 1 do
-    for l = 0 to 4 - 1 do
+  for k = 0 to eigen_vector_types_size - 1 do
+    for l = 0 to eigen_vector_types_size - 1 do
       add_unqualified
         ( "multi_normal_cholesky_log"
         , ReturnType Real
@@ -2434,113 +2458,3 @@ let _ =
   add_unqualified ("wishart_log", ReturnType Real, [Matrix; Real; Matrix]) ;
   add_unqualified ("wishart_lpdf", ReturnType Real, [Matrix; Real; Matrix]) ;
   add_unqualified ("wishart_rng", ReturnType Matrix, [Real; Matrix])
-
-(** Querying stan_math_signatures *)
-let try_get_stan_math_function_return_type name argtypes =
-  let namematches = Hashtbl.find_all stan_math_signatures name in
-  let filteredmatches =
-    List.filter
-      (fun x -> check_compatible_arguments_mod_conv name (snd x) argtypes)
-      namematches
-  in
-  if List.length filteredmatches = 0 then None
-    (* We return the least return type in case there are multiple options (due to implicit Int-Real conversion), where Int<Real *)
-  else
-    Some
-      (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
-
-let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
-
-(* -- Helpers for treatment of operators -- *)
-let operator_names = Hashtbl.create 50
-
-let _ = Hashtbl.add operator_names "Plus" "add"
-
-let _ = Hashtbl.add operator_names "Minus" "subtract"
-
-let _ = Hashtbl.add operator_names "Times" "multiply"
-
-let _ = Hashtbl.add operator_names "Divide" "divide"
-
-let _ = Hashtbl.add operator_names "Divide" "mdivide_right"
-
-let _ = Hashtbl.add operator_names "Modulo" "modulus"
-
-let _ = Hashtbl.add operator_names "LDivide" "mdivide_left"
-
-let _ = Hashtbl.add operator_names "EltTimes" "elt_multiply"
-
-let _ = Hashtbl.add operator_names "EltDivide" "elt_divide"
-
-let _ = Hashtbl.add operator_names "Exp" "pow"
-
-let _ = Hashtbl.add operator_names "Or" "logical_or"
-
-let _ = Hashtbl.add operator_names "And" "logical_and"
-
-let _ = Hashtbl.add operator_names "Equals" "logical_eq"
-
-let _ = Hashtbl.add operator_names "NEquals" "logical_neq"
-
-let _ = Hashtbl.add operator_names "Less" "logical_lt"
-
-let _ = Hashtbl.add operator_names "Leq" "logical_lte"
-
-let _ = Hashtbl.add operator_names "Greater" "logical_gt"
-
-let _ = Hashtbl.add operator_names "Geq" "logical_gte"
-
-let _ = Hashtbl.add operator_names "Not" "logical_negation"
-
-let _ = Hashtbl.add operator_names "UMinus" "minus"
-
-let _ = Hashtbl.add operator_names "UPlus" "plus"
-
-let _ = Hashtbl.add operator_names "Transpose" "transpose"
-
-let _ = Hashtbl.add operator_names "Conditional" "if_else"
-
-let _ = Hashtbl.add operator_names "PlusAssign" "assign_add"
-
-let _ = Hashtbl.add operator_names "MinusAssign" "assign_subtract"
-
-let _ = Hashtbl.add operator_names "TimesAssign" "assign_multiply"
-
-let _ = Hashtbl.add operator_names "DivideAssign" "assign_divide"
-
-let _ = Hashtbl.add operator_names "EltTimesAssign" "assign_elt_times"
-
-let _ = Hashtbl.add operator_names "EltDivideAssign" "assign_elt_divide"
-
-(** Querying stan_math_signatures for operator signatures *)
-let try_get_operator_return_type op_name argtypes =
-  if op_name = "Assign" || op_name = "ArrowAssign" then
-    match argtypes with
-    | [(_, ut1); (_, ut2)] ->
-        if check_of_same_type_mod_array_conv "" ut1 ut2 then Some Void
-        else None
-    | _ -> None
-  else
-    let rec try_recursive_find = function
-      | [] -> None
-      | name :: names -> (
-        match try_get_stan_math_function_return_type name argtypes with
-        | None -> try_recursive_find names
-        | Some ut -> Some ut )
-    in
-    try_recursive_find (Hashtbl.find_all operator_names op_name)
-
-let pretty_print_all_stan_math_function_signatures name =
-  let namematches = Hashtbl.find_all stan_math_signatures name in
-  if List.length namematches = 0 then ""
-  else
-    "\n"
-    ^ String.concat "\n"
-        (List.map
-           (fun (x, y) -> pretty_print_unsizedtype (Fun (y, x)))
-           namematches)
-
-let pretty_print_all_operator_signatures name =
-  let all_names = Hashtbl.find_all operator_names name in
-  String.concat "\n"
-    (List.map pretty_print_all_stan_math_function_signatures all_names)

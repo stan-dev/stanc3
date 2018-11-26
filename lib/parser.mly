@@ -21,16 +21,14 @@ open Debug
 %token TARGET
 %token QMARK COLON BANG MINUS PLUS HAT TRANSPOSE TIMES DIVIDE MODULO LDIVIDE
        ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
-%token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN ELTTIMESASSIGN
-       ELTDIVIDEASSIGN
+%token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
+   ELTDIVIDEASSIGN ELTTIMESASSIGN
 %token ARROWASSIGN INCREMENTLOGPROB GETLP (* deprecated *)
 %token PRINT REJECT
 %token TRUNCATE
 %token EOF
 
 %right COMMA
-%right TILDE ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
-       ELTTIMESASSIGN ELTDIVIDEASSIGN ARROWASSIGN
 %right QMARK COLON
 %left OR
 %left AND
@@ -40,18 +38,21 @@ open Debug
 %left TIMES DIVIDE MODULO
 %left LDIVIDE
 %left ELTTIMES ELTDIVIDE
-%nonassoc unary_over_binary BANG
+%nonassoc unary_over_binary
 %right HAT
 %left TRANSPOSE
-%left LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE
+%left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
 
 (* Top level rule *)
-%start program file
-%type <Ast.untyped_program> program
-%type <Ast.untyped_program list> file
 
+%start <Ast.untyped_program list> file
+%start <Ast.untyped_program> program
+
+(*%type <Ast.untyped_program> program
+%type <Ast.untyped_program list> file
+*)
 %%
 
 
@@ -121,7 +122,7 @@ identifier:
 function_def:
   | rt=return_type name=identifier LPAREN args=separated_list(COMMA, arg_decl)
     RPAREN b=statement
-    { 
+    {
       grammar_logger "function_def" ;
       UntypedStmt (FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;},
@@ -213,7 +214,7 @@ top_var_type:
   | UNITVECTOR LBRACK e=expression RBRACK
     { grammar_logger "UNITVECTOR_top_var_type" ; (SVector e, UnitVector) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
-    { 
+    {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
       (SMatrix (e, e), CholeskyCorr)
     }
@@ -274,7 +275,7 @@ dims:
 (* expressions *)
 %inline expression:
   | l=lhs
-    { 
+    {
       grammar_logger "lhs_expression" ;
       UntypedExpr (Indexed (UntypedExpr (Variable (fst l), initialize_expr_meta
                    $startpos $endpos), snd l),
@@ -293,7 +294,7 @@ non_lhs:
     { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
   | e=expression op=postfixOp
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
-  | ue=non_lhs LBRACK i=indexes RBRACK 
+  | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
        Indexed (UntypedExpr (ue, initialize_expr_meta $startpos(ue)
                                                       $endpos(ue)), i)}
@@ -302,221 +303,221 @@ non_lhs:
 
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
 constr_expression:
-  | e1=constr_expression op=arithmeticInfixOp e2=constr_expression 
-    { 
+  | e1=constr_expression op=arithmeticInfixOp e2=constr_expression
+    {
       grammar_logger "constr_expression_arithmetic" ;
       UntypedExpr (InfixOp (e1, op, e2), initialize_expr_meta $startpos $endpos)
     }
-  | op=prefixOp e=constr_expression %prec unary_over_binary 
+  | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
-      UntypedExpr (PrefixOp (op, e), initialize_expr_meta $startpos $endpos) 
+      UntypedExpr (PrefixOp (op, e), initialize_expr_meta $startpos $endpos)
     }
-  | e=constr_expression op=postfixOp 
+  | e=constr_expression op=postfixOp
     {
-      grammar_logger "constr_expression_postfix" ; 
-      UntypedExpr (PostfixOp (e, op), initialize_expr_meta $startpos $endpos) 
+      grammar_logger "constr_expression_postfix" ;
+      UntypedExpr (PostfixOp (e, op), initialize_expr_meta $startpos $endpos)
     }
-  | e=constr_expression LBRACK i=indexes RBRACK 
+  | e=constr_expression LBRACK i=indexes RBRACK
     {
-      grammar_logger "constr_expression_indexed" ; 
-      UntypedExpr (Indexed (e, i), initialize_expr_meta $startpos $endpos) 
+      grammar_logger "constr_expression_indexed" ;
+      UntypedExpr (Indexed (e, i), initialize_expr_meta $startpos $endpos)
     }
-  | e=common_expression 
+  | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
-      UntypedExpr (e, initialize_expr_meta $startpos $endpos) 
+      UntypedExpr (e, initialize_expr_meta $startpos $endpos)
     }
-  | id=identifier 
+  | id=identifier
     {
-      grammar_logger "constr_expression_identifier" ; 
-      UntypedExpr (Variable id, initialize_expr_meta $startpos $endpos) 
+      grammar_logger "constr_expression_identifier" ;
+      UntypedExpr (Variable id, initialize_expr_meta $startpos $endpos)
     }
 
 common_expression:
-  | i=INTNUMERAL 
+  | i=INTNUMERAL
     {  grammar_logger "intnumeral" ; IntNumeral i }
-  | r=REALNUMERAL 
+  | r=REALNUMERAL
     {  grammar_logger "realnumeral" ; RealNumeral r }
-  | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE 
+  | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
-  | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK 
+  | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
-  | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN 
+  | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
     {  grammar_logger "fun_app" ; FunApp (id, args) }
-  | TARGET LPAREN RPAREN 
+  | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
-  | GETLP LPAREN RPAREN 
+  | GETLP LPAREN RPAREN
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
-    RPAREN 
+    RPAREN
     {  grammar_logger "conditional_dist_app" ; CondFunApp (id, e :: args) }
-  | LPAREN e=expression RPAREN 
+  | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
 
 %inline prefixOp:
-  | BANG 
+  | BANG
     {   grammar_logger "prefix_bang" ; Not }
-  | MINUS 
+  | MINUS
     {  grammar_logger "prefix_minus" ; UMinus }
-  | PLUS 
+  | PLUS
     {   grammar_logger "prefix_plus" ; UPlus }
 
 %inline postfixOp:
-  | TRANSPOSE 
+  | TRANSPOSE
     {  grammar_logger "postfix_transpose" ; Transpose }
 
 %inline infixOp:
-  | a=arithmeticInfixOp 
+  | a=arithmeticInfixOp
     {   grammar_logger "infix_arithmetic" ; a }
-  | l=logicalInfixOp 
+  | l=logicalInfixOp
     {  grammar_logger "infix_logical" ; l }
 
 %inline arithmeticInfixOp:
-  | PLUS 
+  | PLUS
     {  grammar_logger "infix_plus" ; Plus }
-  | MINUS 
+  | MINUS
     {   grammar_logger "infix_minus" ; Minus }
-  | TIMES 
+  | TIMES
     {  grammar_logger "infix_times" ; Times }
-  | DIVIDE 
+  | DIVIDE
     {  grammar_logger "infix_divide" ; Divide }
-  | MODULO 
+  | MODULO
     {  grammar_logger "infix_modulo" ; Modulo }
-  | LDIVIDE 
+  | LDIVIDE
     {  grammar_logger "infix_ldivide" ; LDivide }
-  | ELTTIMES 
+  | ELTTIMES
     {  grammar_logger "infix_elttimes" ; EltTimes }
-  | ELTDIVIDE 
+  | ELTDIVIDE
     {   grammar_logger "infix_eltdivide" ; EltDivide }
-  | HAT 
+  | HAT
     {  grammar_logger "infix_hat" ; Exp }
 
 %inline logicalInfixOp:
-  | OR 
+  | OR
     {   grammar_logger "infix_or" ; Or }
-  | AND 
+  | AND
     {   grammar_logger "infix_and" ; And }
-  | EQUALS 
+  | EQUALS
     {   grammar_logger "infix_equals" ; Equals }
-  | NEQUALS 
+  | NEQUALS
     {   grammar_logger "infix_nequals" ; NEquals}
-  | LABRACK 
+  | LABRACK
     {   grammar_logger "infix_less" ; Less }
-  | LEQ 
+  | LEQ
     {   grammar_logger "infix_leq" ; Leq }
-  | RABRACK 
+  | RABRACK
     {   grammar_logger "infix_greater" ; Greater }
-  | GEQ 
+  | GEQ
     {   grammar_logger "infix_geq" ; Geq }
 
 indexes:
-  | (* nothing *) 
+  | (* nothing *)
     {   grammar_logger "index_nothing" ; [All] }
-  | COLON 
+  | COLON
     {   grammar_logger "index_all" ; [All] }
-  | e=expression 
+  | e=expression
     {  grammar_logger "index_single" ; [Single e] }
-  | e=expression COLON 
+  | e=expression COLON
     {  grammar_logger "index_upper" ; [Upfrom e] }
-  | COLON e=expression 
+  | COLON e=expression
     {   grammar_logger "index_lower" ; [Downfrom e] }
   | e1=expression COLON e2=expression
     {  grammar_logger "index_twosided" ; [Between (e1, e2)] }
-  | i1=indexes COMMA i2=indexes 
+  | i1=indexes COMMA i2=indexes
     {  grammar_logger "indexes" ; i1 @ i2 }
 
 printables:
-  | e=expression 
+  | e=expression
     {  grammar_logger "printable expression" ; [PExpr e] }
-  | s=string_literal 
+  | s=string_literal
     {  grammar_logger "printable string" ; [PString s] }
-  | p1=printables COMMA p2=printables 
+  | p1=printables COMMA p2=printables
     { grammar_logger "printables" ; p1 @ p2 }
 
 (* L-values *)
 lhs:
-  | id=identifier   
+  | id=identifier
     {  grammar_logger "lhs_identifier" ; (id, []) }
-  | l=lhs LBRACK id=indexes RBRACK 
+  | l=lhs LBRACK id=indexes RBRACK
     {  grammar_logger "lhs_index" ; (fst l, (snd l)@id) }
 
 (* statements *)
 statement:
-  | s=atomic_statement   
+  | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        UntypedStmt (s, initialize_stmt_meta $startpos $endpos) }
-  | s=nested_statement 
+  | s=nested_statement
     {  grammar_logger "nested_statement" ;
        UntypedStmt (s, initialize_stmt_meta $startpos $endpos) }
 
 atomic_statement:
-  | l=lhs op=assignment_op e=expression SEMICOLON  
+  | l=lhs op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ; match l with (id, indices) ->
        Assignment {assign_identifier=id;
                    assign_indices=indices;
                    assign_op=op;
                    assign_rhs=e} }
-  | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON 
+  | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
     {  grammar_logger "funapp_statement" ; NRFunApp (id, args)  }
-  | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON 
+  | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
-    RPAREN ot=option(truncation) SEMICOLON 
+    RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ; construct_tilde_statement e id es ot }
-  | TARGET PLUSASSIGN e=expression SEMICOLON 
+  | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
-  | BREAK SEMICOLON 
+  | BREAK SEMICOLON
     {  grammar_logger "break_statement" ; Break }
-  | CONTINUE SEMICOLON 
+  | CONTINUE SEMICOLON
     {  grammar_logger "continue_statement" ; Continue }
-  | PRINT LPAREN l=printables RPAREN SEMICOLON 
+  | PRINT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "print_statement" ; Print l }
-  | REJECT LPAREN l=printables RPAREN SEMICOLON 
+  | REJECT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "reject_statement" ; Reject l  }
-  | RETURN e=expression SEMICOLON 
+  | RETURN e=expression SEMICOLON
     {  grammar_logger "return_statement" ; Return e }
-  | RETURN SEMICOLON 
+  | RETURN SEMICOLON
     {  grammar_logger "return_nothing_statement" ; ReturnVoid }
-  | SEMICOLON 
+  | SEMICOLON
     {  grammar_logger "skip" ; Skip }
 
 %inline assignment_op:
-  | ASSIGN 
+  | ASSIGN
     {  grammar_logger "assign_plain" ; Assign }
-  | PLUSASSIGN 
+  | PLUSASSIGN
     { grammar_logger "assign_plus" ; PlusAssign }
-  | MINUSASSIGN 
+  | MINUSASSIGN
     { grammar_logger "assign_minus" ; MinusAssign }
-  | TIMESASSIGN 
+  | TIMESASSIGN
     { grammar_logger "assign_times"  ; TimesAssign }
-  | DIVIDEASSIGN 
+  | DIVIDEASSIGN
     { grammar_logger "assign_divide" ; DivideAssign }
-  | ELTTIMESASSIGN 
+  | ELTTIMESASSIGN
     { grammar_logger "assign_elttimes"  ; EltTimesAssign }
-  | ELTDIVIDEASSIGN 
+  | ELTDIVIDEASSIGN
     { grammar_logger "assign_eltdivide" ; EltDivideAssign  }
-  | ARROWASSIGN 
+  | ARROWASSIGN
     { grammar_logger "assign_arrow" ; ArrowAssign  } (* deprecated *)
 
 string_literal:
-  | s=STRINGLITERAL 
+  | s=STRINGLITERAL
     {  grammar_logger "string_literal" ; s }
 
 truncation:
   | TRUNCATE LBRACK e1=option(expression) COMMA e2=option(expression)
-    RBRACK 
+    RBRACK
     {  grammar_logger "truncation" ; construct_truncation e1 e2 }
 
 nested_statement:
-  | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement 
+  | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement
     {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, s2) }
-  | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE 
+  | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE
     {  grammar_logger "if_statement" ; IfThen (e, s) }
-  | WHILE LPAREN e=expression RPAREN s=statement 
+  | WHILE LPAREN e=expression RPAREN s=statement
     {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=identifier IN e1=expression COLON e2=expression RPAREN
-    s=statement 
+    s=statement
     {
       grammar_logger "for_statement" ;
       For {loop_variable = id;
@@ -524,20 +525,20 @@ nested_statement:
            upper_bound =  e2;
            loop_body = s;}
     }
-  | FOR LPAREN id=identifier IN e=expression RPAREN s=statement 
+  | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
-  | LBRACE l=list(vardecl_or_statement)  RBRACE  
+  | LBRACE l=list(vardecl_or_statement)  RBRACE
     {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 
 (* statement or var decls *)
 vardecl_or_statement:
-  | s=statement 
+  | s=statement
     { grammar_logger "vardecl_or_statement_statement" ; s }
-  | v=var_decl 
+  | v=var_decl
     { grammar_logger "vardecl_or_statement_vardecl" ; v }
 
 top_vardecl_or_statement:
-  | s=statement 
+  | s=statement
     { grammar_logger "top_vardecl_or_statement_statement" ;  s }
-  | v=top_var_decl 
+  | v=top_var_decl
     { grammar_logger "top_vardecl_or_statement_top_vardecl" ; v }

@@ -1,0 +1,5 @@
+(executable
+ (name stanc)
+ (libraries stanclib)
+ (preprocess (pps ppx_jane))
+)

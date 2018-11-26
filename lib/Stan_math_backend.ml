@@ -1,3 +1,4 @@
+
 open Base_prog_tree
 open Cpp_gen_tree
 open Core_kernel
@@ -43,18 +44,26 @@ let translate_udf {Mir.returntype = rt; name; arguments; body} =
        ~f:(fun (name, st) -> AVar, Immutable, (translate_stantype st), name)
        arguments}
 
+let fncall name args =
+  let is_num s = not (Str.string_match (Str.regexp "[a-zA-Z]") s 0) in
+  let is_floating s = String.contains s '.' in
+  let to_arg x = if is_num x then
+      if is_floating x then Lit (Real, x) else Lit (Int, x)
+    else
+      Lit (Str, x) in
+  NRFnApp(name, List.map ~f:to_arg args)
+
 let prog_reader_fn path =
   let prog_reader_type = SOther "stan::io::program_reader" in
-  let zero = Lit(Int, "0") in
   {
     returntype = Some (AData, prog_reader_type);
     name = "prog_reader__";
     arguments = [];
     body = Block [
         Decl((prog_reader_type,"reader"), None);
-        NRFnApp("reader.add_event", [zero; zero; Lit(Str, "start"); Lit(Str, path)]);
+        fncall "reader.add_event" ["0"; "0"; "start"; path];
         (* XXX Fix the end numbers*)
-        NRFnApp("reader.add_event", [zero; zero; Lit(Str, "end"); Lit(Str, path)]);
+        fncall "reader.add_event" ["0"; "0"; "end"; path];
         Return(Var "reader")];
     templates = [];
   }
@@ -75,9 +84,7 @@ let convert p =
        {returntype = Some(AData, SString); arguments = []; templates = [];
         name = "model_name"; body = Return(Lit(Str, p.prog_name))
        };
-
-       (*
-    void constrained_param_names(std::vector<std::string>& param_names__,
+       (* void constrained_param_names(std::vector<std::string>& param_names__,
                                  bool include_tparams__ = true,
                                  bool include_gqs__ = true) const {
         std::stringstream param_name_stream__;
@@ -90,8 +97,7 @@ let convert p =
         if (include_tparams__) {
         }
 
-        if (!include_gqs__) return;
-    } *)
+        if (!include_gqs__) return;} *)
        {name = "constrained_param_names"; returntype = None; templates = [];
         arguments = [AData, Mutable, SArray SString, "param_names__"];
         body = Block [
@@ -381,4 +387,26 @@ let emit_prelude ppf = fprintf ppf {|
 static int current_statement_begin__;
 
 |} (* XXX fix end position*)
+*)
+
+(*
+
+   Okay. when outputting strings, the true unit of shit is strings to add together.
+   We can parameterize these using the emit_* ppf pattern.
+   Then if we want to emit a program, we take in a bunch of other emitters
+  (and their arguments?) and use them appropriately? So like "%a" emit_functions funcs
+   And we want to basically hardcode ~6 functions or something. So those will each
+   depend on some aspect of the program (param
+   names or whatever). We essentially want to procedurally generate only a
+   few functions
+   (ctor with transformed data, transformed inits for transformed parameters,
+    generated quantities)
+   using something like the Cpp_gen interface, and then the rest we want to construct
+   in some custom way using little bits of information we have about the program.
+   For the non-procedural ones, we'd like to do custom formatting and generally
+   have easier facility to output straight C++ instead of translating by hand a bunch
+   of mostly hardcoded shenanigans. So what is the right layer to mingle these two? We
+   need to know about all of the functions for e.g. a class at once. There's some kind
+   of monad implied by the format ppf thingies, I'm sure of it.
+
 *)

@@ -1,6 +1,5 @@
 (** Some helpers for debugging *)
 
-open Ast
 open Core_kernel
 
 (* For s-expression support *)

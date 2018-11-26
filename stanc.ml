@@ -1,3 +1,5 @@
+open Stanclib
+
 (** The main program. *)
 let name = "stan"
 

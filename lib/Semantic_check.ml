@@ -50,6 +50,7 @@ Sizes should be of level at most data.
 open Symbol_table
 open Ast
 open Stan_math_signatures
+open Operators
 open Errors
 open Type_conversion
 open Pretty_printing
@@ -138,6 +139,33 @@ let check_of_int_or_real_type ue =
   | _, Int -> true
   | _, Real -> true
   | _ -> false
+
+let probability_distribution_name_variants id =
+  let name = id.name in
+  List.map
+    (fun n -> {name= n; id_loc= id.id_loc})
+    ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
+    else if Core_kernel.String.is_suffix ~suffix:"_lpmf" name then
+      [ name
+      ; Core_kernel.String.drop_suffix name 5 ^ "_lpdf"
+      ; Core_kernel.String.drop_suffix name 5 ^ "_log" ]
+    else if Core_kernel.String.is_suffix ~suffix:"_lpdf" name then
+      [ name
+      ; Core_kernel.String.drop_suffix name 5 ^ "_lpmf"
+      ; Core_kernel.String.drop_suffix name 5 ^ "_log" ]
+    else if Core_kernel.String.is_suffix ~suffix:"_lcdf" name then
+      [name; Core_kernel.String.drop_suffix name 5 ^ "_cdf_log"]
+    else if Core_kernel.String.is_suffix ~suffix:"_lccdf" name then
+      [name; Core_kernel.String.drop_suffix name 6 ^ "_ccdf_log"]
+    else if Core_kernel.String.is_suffix ~suffix:"_cdf_log" name then
+      [name; Core_kernel.String.drop_suffix name 8 ^ "_lcdf"]
+    else if Core_kernel.String.is_suffix ~suffix:"_ccdf_log" name then
+      [name; Core_kernel.String.drop_suffix name 9 ^ "_lccdf"]
+    else if Core_kernel.String.is_suffix ~suffix:"_log" name then
+      [ name
+      ; Core_kernel.String.drop_suffix name 4 ^ "_lpmf"
+      ; Core_kernel.String.drop_suffix name 4 ^ "_lpdf" ]
+    else [name] )
 
 let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
@@ -242,7 +270,7 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
    in the way the existing parser does it: print a phrase surrounding the error
    together with a tick to indicate the precise location. *)
 
-let check_fresh_variable id is_nullary_function =
+let check_fresh_variable_basic id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
    not of nullary function types to clash with nullary library functions.
    No other name clashes are tolerated. Here's the logic to
@@ -251,7 +279,7 @@ let check_fresh_variable id is_nullary_function =
     if
       is_stan_math_function_name id.name
       && ( is_nullary_function
-         || try_get_stan_math_function_return_type id.name [] = None )
+         || get_stan_math_function_return_type_opt id.name [] = None )
     then
       let error_msg =
         String.concat " " ["Identifier "; id.name; " clashes with primitive."]
@@ -265,6 +293,11 @@ let check_fresh_variable id is_nullary_function =
       in
       semantic_error ~loc:id.id_loc error_msg
   | None -> ()
+
+let check_fresh_variable id is_nullary_function =
+  List.iter
+    (fun name -> check_fresh_variable_basic name is_nullary_function)
+    (probability_distribution_name_variants id)
 
 (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
@@ -642,7 +675,7 @@ and semantic_check_expression x =
                 [ue1; ue2; ue3]))
       in
       match
-        try_get_operator_return_type "Conditional"
+        get_operator_return_type_opt "Conditional"
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -680,7 +713,7 @@ and semantic_check_expression x =
       in
       let opname = Core_kernel.Sexp.to_string (sexp_of_infixop uop) in
       match
-        try_get_operator_return_type opname
+        get_operator_return_type_opt opname
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -711,7 +744,7 @@ and semantic_check_expression x =
       in
       let opname = Core_kernel.Sexp.to_string (sexp_of_prefixop uop) in
       match
-        try_get_operator_return_type opname
+        get_operator_return_type_opt opname
           [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type]
       with
       | Some (ReturnType ut) ->
@@ -737,7 +770,7 @@ and semantic_check_expression x =
       let uop = semantic_check_postfixop op in
       let opname = Core_kernel.Sexp.to_string (sexp_of_postfixop uop) in
       match
-        try_get_operator_return_type opname
+        get_operator_return_type_opt opname
           [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type]
       with
       | Some (ReturnType ut) ->
@@ -837,7 +870,7 @@ and semantic_check_expression x =
              ending in _rng."
       in
       let returnblock = lub_originblock (List.map fst argumenttypes) in
-      match try_get_stan_math_function_return_type uid.name argumenttypes with
+      match get_stan_math_function_return_type_opt uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -927,7 +960,7 @@ and semantic_check_expression x =
              of functions with the suffix _lp."
       in
       let returnblock = lub_originblock (List.map fst argumenttypes) in
-      match try_get_stan_math_function_return_type uid.name argumenttypes with
+      match get_stan_math_function_return_type_opt uid.name argumenttypes with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -1258,7 +1291,7 @@ and semantic_check_statement s =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
       in
       match
-        try_get_operator_return_type opname
+        get_operator_return_type_opt opname
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -1310,7 +1343,7 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match try_get_stan_math_function_return_type uid.name argumenttypes with
+      match get_stan_math_function_return_type_opt uid.name argumenttypes with
       | Some Void ->
           TypedStmt
             ( NRFunApp (uid, ues)
@@ -1444,13 +1477,13 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          try_get_stan_math_function_return_type (uid.name ^ "_lpdf")
+          get_stan_math_function_return_type_opt (uid.name ^ "_lpdf")
             argumenttypes
           = Some (ReturnType Real)
-          || try_get_stan_math_function_return_type (uid.name ^ "_lpmf")
+          || get_stan_math_function_return_type_opt (uid.name ^ "_lpmf")
                argumenttypes
              = Some (ReturnType Real)
-          || try_get_stan_math_function_return_type (uid.name ^ "_log")
+          || get_stan_math_function_return_type_opt (uid.name ^ "_log")
                argumenttypes
              = Some (ReturnType Real)
              && uid.name <> "binomial_coefficient"
@@ -1480,7 +1513,7 @@ and semantic_check_statement s =
       let _ =
         if
           ut = NoTruncate
-          || ( try_get_stan_math_function_return_type (uid.name ^ "_lcdf")
+          || ( get_stan_math_function_return_type_opt (uid.name ^ "_lcdf")
                  argumenttypes
                = Some (ReturnType Real)
              ||
@@ -1490,7 +1523,7 @@ and semantic_check_statement s =
                    argumenttypes
              | _ -> (
                  false
-                 || try_get_stan_math_function_return_type
+                 || get_stan_math_function_return_type_opt
                       (uid.name ^ "_cdf_log") argumenttypes
                     = Some (ReturnType Real)
                  ||
@@ -1499,7 +1532,7 @@ and semantic_check_statement s =
                      check_compatible_arguments_mod_conv uid.name listedtypes
                        argumenttypes
                  | _ -> false ) )
-             && ( try_get_stan_math_function_return_type (uid.name ^ "_lccdf")
+             && ( get_stan_math_function_return_type_opt (uid.name ^ "_lccdf")
                     argumenttypes
                   = Some (ReturnType Real)
                 ||
@@ -1509,7 +1542,7 @@ and semantic_check_statement s =
                       argumenttypes
                 | _ -> (
                     false
-                    || try_get_stan_math_function_return_type
+                    || get_stan_math_function_return_type_opt
                          (uid.name ^ "_ccdf_log") argumenttypes
                        = Some (ReturnType Real)
                     ||

@@ -1,5 +1,0 @@
-S src
-S src/stan
-B _build/src
-B _build/src/stan
-PKG menhirLib

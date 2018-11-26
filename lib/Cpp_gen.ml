@@ -66,8 +66,6 @@ let%expect_test "expr" =
   flush_str_formatter () |> print_endline;
   [%expect {| sassy({4, 2}, 27.0) |}]
 
-(* XXX Make the above test style cleaner! *)
-
 let emit_vanilla_stantype ppf st =
   let rec ad_str = function
     | SInt -> "int"

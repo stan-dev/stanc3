@@ -1,9 +1,23 @@
 (** Some functions for checking whether conversions between types are allowed *)
 open Ast
 
+let originblock_can_convert ob1 ob2 =
+  ob2 = GQuant || compare_originblock ob1 ob2 > -1
+
 let check_of_same_type_mod_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
-  else t1 = t2 || (t1 = Real && t2 = Int)
+  else
+    match (t1, t2) with
+    | Real, Int -> true
+    | Fun (l1, rt1), Fun (l2, rt2) ->
+        rt1 = rt2
+        && List.for_all
+             (fun x -> x = true)
+             (List.map2
+                (fun (ob1, ut1) (ob2, ut2) ->
+                  ut1 = ut2 && originblock_can_convert ob2 ob1 )
+                l1 l2)
+    | _ -> t1 = t2
 
 let check_of_same_type_mod_array_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
@@ -19,7 +33,7 @@ let check_compatible_arguments_mod_conv name args1 args2 =
        (List.map2
           (fun w1 w2 ->
             check_of_same_type_mod_conv name (snd w1) (snd w2)
-            && compare_originblock (fst w1) (fst w2) > -1 )
+            && originblock_can_convert (fst w1) (fst w2) )
           args1 args2)
 
 let check_of_compatible_return_type rt1 srt2 =

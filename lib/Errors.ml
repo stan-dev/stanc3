@@ -66,10 +66,6 @@ let make_location loc1 loc2 = Location (loc1, loc2)
 let location_of_lex lex =
   Location (Lexing.lexeme_start_p lex, Lexing.lexeme_end_p lex)
 
-(** Exception [Error (loc, err, msg)] indicates an error of type [err] with error message
-    [msg], occurring at location [loc]. *)
-exception Error of (location * string * string)
-
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
 exception SemanticError of (location * string)
