@@ -5,21 +5,13 @@ This repo contains work in progress on a new compiler for Stan, written in OCaml
 
 ### To build, test, and run
 Check out `setup_dev_env.sh` to see how we recommend installing our pre-reqs.
-To build `stanc`, run
-`
-make
-`.
+
+To build `stanc`, run `make`.
 
 To run tests, run `dune runtest` and use `dune promote` to accept changes.
 
-To run the pretty printer on all good models in `test/examples-good` and write the output to `test/stan-examples-good-pretty-printed.log`, run
-`
-./test/run-stan-examples-good-pretty-printer.sh
-
-To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run
-`
-dune build @fmt
-`
+To auto-format the OCaml code (sadly, this does not work for the two ocamllex
+and menhir files), run ` dune build @fmt ` or  `make format`.
 To accept the changes proposed by ocamlformat, run `dune promote`.
 
 Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
@@ -33,15 +25,16 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 - Ported all function signatures from Stan Math
 - A well-tested semantic/type checker with informative semantic error messages
 - Lexical position printed in syntactic and semantic error messages
-- Tests for all models in `stan/src/test/test-models/good` (including the pretty printing functionality) and `stan/src/test/test-models/bad`, using Mercurials Cram testing framework
+- Tests for all models in `stan/src/test/test-models/good` (including the pretty printing functionality) and `stan/src/test/test-models/bad`
 - 100% coverage of parse errors with informative custom syntax errors implemented using Menhir's Incremental API
 - Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
 - A pretty printer for Stan models
 - Work in progress on intermediate representations and code generation
 
 ### TODO for beta release
-- Write code generation phase with tests (~2 weeks)
-- Macro pre-processor with correct mapping of error locations (~2 days)
+- End-to-end model compilation test framework
+- Write code generation phase with tests
+- Macro pre-processor with correct mapping of error locations
 
 ### Cool stuff to do after
 - Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
