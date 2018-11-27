@@ -2,41 +2,25 @@
 This repo contains work in progress on a new compiler for Stan, written in OCaml.
 
 ## To Get Started
-### Prerequisites
-The project has the following prerequisites:
-- GNU Make, which you probably have already
-- OCaml programming language, version 4 or later,
-- Core(kernel) library
-- menhir parser generator
-- Dune OCaml build system (formerly known as JBuilder)
-- cram (https://bitheap.org/cram/), to run tests
 
 ### To build, test, and run
-To build, run
+Check out `setup_dev_env.sh` to see how we recommend installing our pre-reqs.
+To build `stanc`, run
 `
 make
 `.
 
-To run tests, run `./test/run-tests.sh`.
-
-To run the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
-`
-./test/run-stan-examples-good.sh
-`
-
-To run the compiler on all bad models in `test/examples-bad` and write the output to `test/stan-examples-bad-out.log`, run
-`
-./test/run-stan-examples-bad.sh
-`
+To run tests, run `dune runtest` and use `dune promote` to accept changes.
 
 To run the pretty printer on all good models in `test/examples-good` and write the output to `test/stan-examples-good-pretty-printed.log`, run
 `
 ./test/run-stan-examples-good-pretty-printer.sh
 
-To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
+To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run
 `
-./ocamlformat-stan.sh
+dune build @fmt
 `
+To accept the changes proposed by ocamlformat, run `dune promote`.
 
 Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
 
