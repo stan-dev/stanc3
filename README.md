@@ -9,30 +9,28 @@ The project has the following prerequisites:
 - Core(kernel) library
 - menhir parser generator
 - Dune OCaml build system (formerly known as JBuilder)
+- cram (https://bitheap.org/cram/), to run tests
 
 ### To build, test, and run
 To build, run
 `
 make
 `
+To run tests. Run `./test/run_tests.sh`.
 
-To test the compiler on all good models in stan/src/test/test-models/good, run (in folder `test`)
+To test the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
 `
-./run-stan-examples-good.sh
+./test/run-stan-examples-good.sh
 `
-This will produce an output file `stan-examples-good-out.log` which will show any errors.
 
-To test the compiler on all bad models in stan/src/test/test-models/bad, run (in folder `test`)
+Alternatively, to test the compiler on all bad models in `test/examples-bad` and write the output to `test/stan-examples-bad-out.log`, run
 `
-./run-stan-examples-bad.sh
+./test/run-stan-examples-bad.sh
 `
-This will produce an output file `stan-examples-bad-out.log` which will show any errors.
 
-To test the pretty printer on all good models in stan/src/test/test-models/good, run (in folder `test`)
+To test the pretty printer on all good models in `test/examples-good` and write the output to `test/stan-examples-good-pretty-printed.log`, run
 `
-./test-pretty-printer.sh
-`
-This will produce an output file `stan-examples-good-pretty-printed.log` with pretty printed versions of all programs.
+./test/run-stan-examples-good-pretty-printer.sh
 
 To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
 `
