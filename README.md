@@ -19,17 +19,17 @@ make
 
 To run tests, run `./test/run-tests.sh`.
 
-To test the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
+To run the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
 `
 ./test/run-stan-examples-good.sh
 `
 
-Alternatively, to test the compiler on all bad models in `test/examples-bad` and write the output to `test/stan-examples-bad-out.log`, run
+To run the compiler on all bad models in `test/examples-bad` and write the output to `test/stan-examples-bad-out.log`, run
 `
 ./test/run-stan-examples-bad.sh
 `
 
-To test the pretty printer on all good models in `test/examples-good` and write the output to `test/stan-examples-good-pretty-printed.log`, run
+To run the pretty printer on all good models in `test/examples-good` and write the output to `test/stan-examples-good-pretty-printed.log`, run
 `
 ./test/run-stan-examples-good-pretty-printer.sh
 
