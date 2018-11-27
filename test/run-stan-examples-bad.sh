@@ -1,6 +1,3 @@
-#!/bin/bash
-shopt -s globstar
-
-for filename in examples-bad/**/*.stan; do
+for filename in $(find examples-bad -name '*.stan'); do
   printf "\n\n $filename \n ---------\n"; ./../_build/default/stanc.exe "$filename" ;
 done  &> "stan-examples-bad-out.log" ;
