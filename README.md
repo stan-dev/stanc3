@@ -15,9 +15,9 @@ The project has the following prerequisites:
 To build, run
 `
 make
-`
+`.
 
-To run tests, run `./test/run_tests.sh`.
+To run tests, run `./test/run-tests.sh`.
 
 To test the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
 `
