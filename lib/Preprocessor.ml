@@ -23,7 +23,7 @@ let create top_filename lexer_function =
 (*
 ** The the next token. Need to accept an unused dummy lexbuf so that
 ** a closure consisting of the function and a lexstack can be passed
-** to the ocamlyacc generated parser.
+** to the menhir generated parser.
 *)
 let rec get_token ls dummy_lexbuf =
   match ls.lexfunc ls.lexbuf with
