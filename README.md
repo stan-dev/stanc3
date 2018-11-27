@@ -19,7 +19,7 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
 
 ## Project Timeline
-### Done, so far
+### Code has been written for the following components:
 - A lexer
 - A LR(1) parser (without any shift/reduce conflicts), constructing an AST
 - A typed and untyped AST
@@ -33,21 +33,25 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - A pretty printer for Stan models
 - Work in progress on intermediate representations and code generation
 
-### TODO for beta release
-- End-to-end model compilation test framework
-- Write code generation phase with tests
+### TODO for initial release
+- Decide on final tree representation used for AST and IRs, some inspirational ideas:
+    - [polymorphic variants](https://github.com/links-lang/links/blob/master/core/types.ml)
+    - currently using [Neel's "two-level types" pattern](http://lambda-the-ultimate.org/node/4170#comment-63836)
+- End-to-end model test framework
+    - Could show generated C++ code matches stanc2 or that the same results are achieved at runtime
+- Unit or expect tests at a decent granularity
+- Code review
+- Write code generation phase
 - Macro pre-processor with correct mapping of error locations
 
-### Cool stuff to do after
-- Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
+### The bright road ahead
+- Traditional compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
 
 
 ## Important simultaneous work also needed for other reasons
 1. `install_tensorflow()` style installers for R and Python that install a C++ toolchain in the user's home directory. We will need this to install the new `stanc` binary.
-1. Refactoring the model class to have a base class, and the algorithms to not be templated (speeds up compile times. @mitzimorris is working on this).
-1. Any work to compile the math library ahead of time!
-
+1. Work needed to compile the math library ahead of time!
 
 ## Architectural goals for the new compiler
 * **Multiple phases**, each with human-readable intermediate representations for easy debugging and optimization design.

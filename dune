@@ -12,9 +12,7 @@
 (rule
  (targets examples-bad.output)
  (deps test_executable.exe stanc.exe (glob_files test/examples-bad/*.stan))
- (action
-  (with-stdout-to %{targets}
-   (run %{deps}))))
+ (action (with-stdout-to %{targets} (run %{deps}))))
 
 (rule
  (targets examples-good-pretty.output)
