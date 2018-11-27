@@ -1,4 +1,4 @@
-  $ $TESTDIR/..//../../_build/default/stanc.exe "$TESTDIR/..//new/lexing_error.stan"
+  $ $TESTDIR//../../_build/default/stanc.exe "$TESTDIR//pound-comment-deprecated.stan"
   Uncaught exception:
     
     (Failure "lexing: empty token")

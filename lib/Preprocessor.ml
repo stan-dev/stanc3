@@ -14,10 +14,15 @@ type 'a lexstack =
 *)
 let create top_filename lexer_function =
   let chan = open_in top_filename in
+  let open Lexing in
+  let lexbuf = from_channel chan in
+  lexbuf.lex_start_p
+  <- {pos_fname= top_filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+  lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
   { stack= Stack.create ()
   ; filename= top_filename
   ; chan
-  ; lexbuf= Lexing.from_channel chan
+  ; lexbuf
   ; lexfunc= lexer_function }
 
 (*
@@ -46,11 +51,13 @@ let rec get_token ls dummy_lexbuf =
 (* Get the current lexeme. *)
 let lexeme ls = Lexing.lexeme ls.lexbuf
 
-(* Get filename, line number and column number of current lexeme. *)
+(* Get position of current lexeme. *)
 let current_pos ls =
-  let pos = Lexing.lexeme_end_p ls.lexbuf in
-  let linepos =
-    pos.Lexing.pos_cnum - pos.Lexing.pos_bol
-    - String.length (Lexing.lexeme ls.lexbuf)
-  in
-  (ls.filename, pos.Lexing.pos_lnum, linepos)
+  let open Lexing in
+  let pos = lexeme_end_p ls.lexbuf in
+  { pos_fname= ls.filename
+  ; pos_lnum= pos.pos_lnum
+  ; pos_bol= pos.pos_bol + String.length (lexeme ls.lexbuf)
+  ; pos_cnum= pos.pos_cnum }
+
+let current_lexbuf ls = ls.lexbuf

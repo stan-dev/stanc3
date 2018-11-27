@@ -6,10 +6,16 @@ open Errors
 let parse parse_fun lexbuf =
   (* see the Menhir manual for the description of
      error messages support *)
-  let _ = Preprocessor.create (Lexing.lexeme_start_p lexbuf).pos_fname Lexer.token in
+  let include_stack =
+    Preprocessor.create (Lexing.lexeme_start_p lexbuf).pos_fname Lexer.token
+  in
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let input = Interp.lexer_lexbuf_to_supplier Lexer.token lexbuf in
+  let input =
+    Interp.lexer_lexbuf_to_supplier
+      (Preprocessor.get_token include_stack)
+      (Preprocessor.current_lexbuf include_stack)
+  in
   let success prog = prog in
   let failure error_state =
     let env =
@@ -51,7 +57,7 @@ let parse parse_fun lexbuf =
   in
   try
     Interp.loop_handle success failure input
-      (parse_fun lexbuf.Lexing.lex_curr_p)
+      (parse_fun (Preprocessor.current_pos include_stack))
   with Lexer.Error (input, pos) -> raise (SyntaxError (Lexing (input, pos)))
 
 let parse_file parse_fun path =
