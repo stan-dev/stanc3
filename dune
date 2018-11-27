@@ -13,15 +13,16 @@
  (targets examples-bad.output)
  (deps test_executable.exe stanc.exe (glob_files test/examples-bad/*.stan))
  (action
-  (with-stdout-to examples-bad.output
+  (with-stdout-to %{targets}
    (run %{deps}))))
 
 (rule
- (targets examples-good.output)
- (deps test_executable.exe stanc.exe (glob_files test/examples-good/*.stan))
+ (targets examples-good-pretty.output)
+ (deps test_executable.exe stanc.exe
+  (:stanfiles (glob_files test/examples-good/*.stan)))
  (action
-  (with-stdout-to examples-good.output
-   (run %{deps}))))
+  (with-stdout-to %{targets}
+   (run %{exe:test_executable.exe} "%{exe:stanc.exe} --auto-format" %{stanfiles}))))
 
 (alias
  (name runtest)
@@ -29,4 +30,4 @@
 
 (alias
  (name runtest)
- (action (diff examples-good.expected examples-good.output)))
+ (action (diff examples-good-pretty.expected examples-good-pretty.output)))
