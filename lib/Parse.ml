@@ -6,9 +6,7 @@ open Errors
 let parse parse_fun lexbuf =
   (* see the Menhir manual for the description of
      error messages support *)
-  let include_stack =
-    Preprocessor.create (Lexing.lexeme_start_p lexbuf).pos_fname Lexer.token
-  in
+  let include_stack = Preprocessor.create lexbuf Lexer.token in
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
   let input =

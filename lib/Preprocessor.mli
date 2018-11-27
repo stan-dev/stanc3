@@ -4,10 +4,10 @@
 type 'a lexstack
 
 (*
-** Create a lexstack with an initial top level filename and the
+** Create a lexstack with an initial lexbuf and the
 ** lexer function.
 *)
-val create : string -> (Lexing.lexbuf -> 'a) -> 'a lexstack
+val create : Lexing.lexbuf -> (Lexing.lexbuf -> 'a) -> 'a lexstack
 
 (*
 ** The the next token. Need to accept an unused dummy lexbuf so that
@@ -25,4 +25,5 @@ val lexeme : 'a lexstack -> string
 (* Get position of current lexeme. *)
 val current_pos : 'a lexstack -> Lexing.position
 
+(* Get current lexbuf *)
 val current_lexbuf : 'a lexstack -> Lexing.lexbuf
