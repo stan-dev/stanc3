@@ -1,5 +1,23 @@
 (executable
  (name stanc)
  (libraries stanclib)
- (preprocess (pps ppx_jane))
-)
+ (modules stanc)
+ (preprocess (pps ppx_jane)))
+
+(executable
+ (name test_executable)
+ (modules test_executable)
+ (libraries Core_kernel))
+
+(rule
+ (targets examples-bad.output)
+ (deps test_executable.exe stanc.exe (glob_files test/examples-bad/*.stan))
+ (action
+  (with-stdout-to examples-bad.output
+   (run %{deps})
+)))
+
+(alias
+ (name runtest)
+ (action (diff examples-bad.expected examples-bad.output)
+))

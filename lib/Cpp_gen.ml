@@ -177,8 +177,15 @@ let emit_ctor classname ppf (args, body) =
 
 let emit_class ppf {classname; super; fields; methods; ctor} =
   fprintf ppf
-    "@[<v 1>class %s : %s {@ private:@ @[<v 1> %a;@]@ @ public:@ @[<v 1> %a@ \
-     %a@]@ }@."
+    {|
+@[<v 1>
+class %s : %s {
+@  private:@
+  @[<v 1> %a;@]
+@ @  public:
+@ @[<v 1> %a
+@ %a@]
+@ }@.|}
     classname super
     (pp_print_list ~pp_sep:semi_new emit_vardecl)
     fields
@@ -226,21 +233,26 @@ let%expect_test "class" =
   [%expect
     {|
     class bernoulli_model : prob_grad {
-     private:
-      Eigen::Matrix<double, -1, -1> x;
-      Eigen::Matrix<double, -1, 1> y;
 
-     public:
-      template <typename T__>
-      T__ log_prob(const Eigen::Matrix<T__, -1, 1>& params) {
-        target += normal(multiply(x, params), 1.0);
-      }
-      void get_param_names(std::string& names) {
-        target += normal(multiply(x, params), 1.0);
-      }
-      bernoulli_model() {
-      }
-     } |}]
+       private:
+         Eigen::Matrix<double, -1, -1> x;
+         Eigen::Matrix<double, -1, 1> y;
+
+
+       public:
+
+       template <typename T__>
+       T__ log_prob(const Eigen::Matrix<T__, -1, 1>& params) {
+         target += normal(multiply(x, params), 1.0);
+       }
+       void get_param_names(std::string& names) {
+         target += normal(multiply(x, params), 1.0);
+       }
+
+       bernoulli_model() {
+       }
+
+      } |}]
 
 let emit_using ppf u = fprintf ppf "using %s;" u
 
