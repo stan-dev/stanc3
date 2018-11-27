@@ -16,6 +16,8 @@ To accept the changes proposed by ocamlformat, run `dune promote`.
 
 Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
 
+Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
+
 ## Project Timeline
 ### Done, so far
 - A lexer
