@@ -40,7 +40,7 @@ let report_syntax_error = function
         lines characters ;
       ( match nth_line file curr_line with
       | None -> ()
-      | Some line -> Printf.eprintf "> %s\n" line ) ;
+      | Some line -> Printf.eprintf " > %s\n" line ) ;
       match message with
       | None -> ()
       | Some error_message -> prerr_endline error_message )
@@ -51,7 +51,7 @@ let report_syntax_error = function
         line character ;
       ( match nth_line file line with
       | None -> ()
-      | Some line -> Printf.eprintf "> %s\n" line ) ;
+      | Some line -> Printf.eprintf " > %s\n" line ) ;
       Printf.eprintf "Invalid input %S\n%!" invalid_input
 
 (** Source code locations. *)

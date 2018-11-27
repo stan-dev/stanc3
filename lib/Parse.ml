@@ -32,15 +32,19 @@ let parse parse_fun lexbuf =
           try
             Some
               ( Parsing_errors.message (Interp.number state)
-              ^ "(Parse error state "
-              ^ string_of_int (Interp.number state)
-              ^ ")" )
+              ^
+              if !Debug.grammar_logging then
+                "(Parse error state "
+                ^ string_of_int (Interp.number state)
+                ^ ")"
+              else "" )
           with Not_found ->
             Some
-              ( "(Parse error state "
-              ^ string_of_int (Interp.number state)
-              ^ ")" )
-          (* TODO: state number should only be printed in debug mode *)
+              ( if !Debug.grammar_logging then
+                "(Parse error state "
+                ^ string_of_int (Interp.number state)
+                ^ ")"
+              else "" )
         in
         raise (SyntaxError (Parsing (message, start_pos, end_pos)))
   in
