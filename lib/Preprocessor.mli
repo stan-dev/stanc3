@@ -14,7 +14,7 @@ val create : string -> (Lexing.lexbuf -> 'a) -> 'a lexstack
 ** a closure consisting of the function and a lexstack can be passed
 ** to the menhir generated parser.
 *)
-val get_token : Parser.token lexstack -> Lexing.lexbuf -> Parser.token
+val get_token : Parser.MenhirInterpreter.token lexstack -> Lexing.lexbuf -> Parser.MenhirInterpreter.token
 
 (* Get the current lexeme. *)
 val lexeme : 'a lexstack -> string
