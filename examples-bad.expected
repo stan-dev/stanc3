@@ -363,7 +363,7 @@ Semantic error at file "test/examples-bad/experiment.stan", line 12, characters 
 A non-returning function was expected but a returning function foo was supplied.
 
 $ ./stanc.exe test/examples-bad/functions-bad0.stan
-Syntax error at file "test/examples-bad/functions-bad0.stan", line 3, characters 10-11, parsing error:
+Syntax error at file "test/examples-bad/functions-bad0.stan", line 2, characters 10-11, parsing error:
  >   real foo(void x) {
 (Non-void) type expected function argument declaration.
 

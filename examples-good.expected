@@ -1,0 +1,304 @@
+$ ./stanc.exe test/examples-good/abs-deprecate.stan
+
+$ ./stanc.exe test/examples-good/algebra_solver_good.stan
+
+$ ./stanc.exe test/examples-good/assignment-new.stan
+
+$ ./stanc.exe test/examples-good/assignment-old.stan
+
+$ ./stanc.exe test/examples-good/assignment_double_index_lhs.stan
+
+$ ./stanc.exe test/examples-good/assignments.stan
+
+$ ./stanc.exe test/examples-good/assignments_double_var.stan
+
+$ ./stanc.exe test/examples-good/assignments_var.stan
+
+$ ./stanc.exe test/examples-good/bernoulli_logit_glm_old_performance.stan
+
+$ ./stanc.exe test/examples-good/bernoulli_logit_glm_performance.stan
+
+$ ./stanc.exe test/examples-good/break-continue.stan
+
+$ ./stanc.exe test/examples-good/conditional_condition_good.stan
+
+$ ./stanc.exe test/examples-good/conditional_op_fun_promote.stan
+
+$ ./stanc.exe test/examples-good/declarations.stan
+
+$ ./stanc.exe test/examples-good/declare-define-conditional-op.stan
+
+$ ./stanc.exe test/examples-good/declare-define-gq-local-rng.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-constrained-matrix.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-constrained-vector.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-double.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-int.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-matrix.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-vec-runtime-error.stan
+
+$ ./stanc.exe test/examples-good/declare-define-var-vec-types.stan
+
+$ ./stanc.exe test/examples-good/deprecate-increment-log-prob.stan
+
+$ ./stanc.exe test/examples-good/deprecate-old-prob-funs.stan
+
+$ ./stanc.exe test/examples-good/duplicate-warns.stan
+
+$ ./stanc.exe test/examples-good/fun-defs-lpdf.stan
+
+$ ./stanc.exe test/examples-good/fun-var-constraints.stan
+
+$ ./stanc.exe test/examples-good/fun_args_0.stan
+
+$ ./stanc.exe test/examples-good/fun_args_0_lp.stan
+
+$ ./stanc.exe test/examples-good/fun_args_1.stan
+
+$ ./stanc.exe test/examples-good/fun_args_4.stan
+
+$ ./stanc.exe test/examples-good/fun_args_4_lp.stan
+
+$ ./stanc.exe test/examples-good/fun_args_5.stan
+
+$ ./stanc.exe test/examples-good/fun_args_5_lp.stan
+
+$ ./stanc.exe test/examples-good/fun_args_int0.stan
+
+$ ./stanc.exe test/examples-good/fun_args_int_1_int.stan
+
+$ ./stanc.exe test/examples-good/fun_args_int_1_real.stan
+
+$ ./stanc.exe test/examples-good/fun_as_lhs_sampling.stan
+
+$ ./stanc.exe test/examples-good/fun_as_stmt.stan
+
+$ ./stanc.exe test/examples-good/fun_log_forward_decl.stan
+
+$ ./stanc.exe test/examples-good/functions-fwd-ref.stan
+
+$ ./stanc.exe test/examples-good/functions-good-void.stan
+
+$ ./stanc.exe test/examples-good/functions-good1.stan
+
+$ ./stanc.exe test/examples-good/functions-good2.stan
+
+$ ./stanc.exe test/examples-good/functions-good3.stan
+
+$ ./stanc.exe test/examples-good/functions-promote-return.stan
+
+$ ./stanc.exe test/examples-good/funs1.stan
+
+$ ./stanc.exe test/examples-good/funs2.stan
+
+$ ./stanc.exe test/examples-good/funs3.stan
+
+$ ./stanc.exe test/examples-good/funs4.stan
+
+$ ./stanc.exe test/examples-good/funs5.stan
+
+$ ./stanc.exe test/examples-good/funs6.stan
+
+$ ./stanc.exe test/examples-good/funs7.stan
+
+$ ./stanc.exe test/examples-good/get-lp-deprecate.stan
+
+$ ./stanc.exe test/examples-good/get-lp-target.stan
+
+$ ./stanc.exe test/examples-good/get_lp_good.stan
+
+$ ./stanc.exe test/examples-good/good_inf.stan
+
+$ ./stanc.exe test/examples-good/illegal_generated_quantities.stan
+
+$ ./stanc.exe test/examples-good/illegal_transformed_data.stan
+
+$ ./stanc.exe test/examples-good/illegal_transformed_parameters.stan
+
+$ ./stanc.exe test/examples-good/increment-target.stan
+
+$ ./stanc.exe test/examples-good/increment_log_prob.stan
+
+$ ./stanc.exe test/examples-good/int_div_user.stan
+
+$ ./stanc.exe test/examples-good/int_fun.stan
+
+$ ./stanc.exe test/examples-good/integrate_ode_adams.stan
+
+$ ./stanc.exe test/examples-good/integrate_ode_bdf.stan
+
+$ ./stanc.exe test/examples-good/integrate_ode_deprecation.stan
+
+$ ./stanc.exe test/examples-good/integrate_ode_rk45.stan
+
+$ ./stanc.exe test/examples-good/io_example.stan
+
+$ ./stanc.exe test/examples-good/keywords-else-if.stan
+
+$ ./stanc.exe test/examples-good/keywords-else.stan
+
+$ ./stanc.exe test/examples-good/keywords-for.stan
+
+$ ./stanc.exe test/examples-good/keywords-if.stan
+
+$ ./stanc.exe test/examples-good/keywords-increment-log-prob.stan
+
+$ ./stanc.exe test/examples-good/keywords-integrate-ode.stan
+
+$ ./stanc.exe test/examples-good/keywords-print.stan
+
+$ ./stanc.exe test/examples-good/keywords-reject.stan
+
+$ ./stanc.exe test/examples-good/keywords-return.stan
+
+$ ./stanc.exe test/examples-good/keywords-while.stan
+
+$ ./stanc.exe test/examples-good/lkj_cov_deprecation1.stan
+
+$ ./stanc.exe test/examples-good/lkj_cov_deprecation2.stan
+
+$ ./stanc.exe test/examples-good/lower-trunc-discrete.stan
+
+$ ./stanc.exe test/examples-good/lp_in_fun.stan
+
+$ ./stanc.exe test/examples-good/map_rect.stan
+
+$ ./stanc.exe test/examples-good/mat_assign.stan
+
+$ ./stanc.exe test/examples-good/min-max-types.stan
+
+$ ./stanc.exe test/examples-good/model_block_empty.stan
+
+$ ./stanc.exe test/examples-good/multiple_funs.stan
+
+$ ./stanc.exe test/examples-good/neg_binomial_2_log_glm_old_performance.stan
+
+$ ./stanc.exe test/examples-good/neg_binomial_2_log_glm_performance.stan
+
+$ ./stanc.exe test/examples-good/new-prob-fun-suffixes.stan
+
+$ ./stanc.exe test/examples-good/normal_id_glm_old_performance.stan
+
+$ ./stanc.exe test/examples-good/normal_id_glm_performance.stan
+
+$ ./stanc.exe test/examples-good/nullary-unconflicted.stan
+
+$ ./stanc.exe test/examples-good/ode-int-segments.stan
+
+$ ./stanc.exe test/examples-good/ode-nested-quotes.stan
+
+$ ./stanc.exe test/examples-good/ode_good.stan
+
+$ ./stanc.exe test/examples-good/old-log-funs.stan
+
+$ ./stanc.exe test/examples-good/poisson_log_glm_old_performance.stan
+
+$ ./stanc.exe test/examples-good/poisson_log_glm_performance.stan
+
+$ ./stanc.exe test/examples-good/pound-comment-deprecated.stan
+
+$ ./stanc.exe test/examples-good/print_chars.stan
+
+$ ./stanc.exe test/examples-good/print_indexing.stan
+
+$ ./stanc.exe test/examples-good/rng_loc.stan
+
+$ ./stanc.exe test/examples-good/rng_transformed_data.stan
+
+$ ./stanc.exe test/examples-good/stanc_helper.stan
+
+$ ./stanc.exe test/examples-good/tern_op_contains_var.stan
+
+$ ./stanc.exe test/examples-good/truncation-user-defined.stan
+
+$ ./stanc.exe test/examples-good/truncation-wild.stan
+
+$ ./stanc.exe test/examples-good/unconstrained_params_var.stan
+
+$ ./stanc.exe test/examples-good/user-defined-lpdf-fun.stan
+
+$ ./stanc.exe test/examples-good/user-distro-truncate.stan
+
+$ ./stanc.exe test/examples-good/validate_add_expression_dimss_good.stan
+
+$ ./stanc.exe test/examples-good/validate_add_var_good.stan
+
+$ ./stanc.exe test/examples-good/validate_bounds_comparison.stan
+
+$ ./stanc.exe test/examples-good/validate_conditional_op_good.stan
+
+$ ./stanc.exe test/examples-good/validate_division_good.stan
+
+$ ./stanc.exe test/examples-good/validate_division_int_warning.stan
+
+$ ./stanc.exe test/examples-good/validate_elt_division_good.stan
+
+$ ./stanc.exe test/examples-good/validate_elt_multiplication_good.stan
+
+$ ./stanc.exe test/examples-good/validate_exponentiation_good.stan
+
+$ ./stanc.exe test/examples-good/validate_exponentiation_precedence.stan
+
+$ ./stanc.exe test/examples-good/validate_functions.stan
+
+$ ./stanc.exe test/examples-good/validate_int_expr2_good.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning1.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning2.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning3.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning4.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning5.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning6.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning_good.stan
+
+$ ./stanc.exe test/examples-good/validate_jacobian_warning_user.stan
+
+$ ./stanc.exe test/examples-good/validate_left_division_good.stan
+
+$ ./stanc.exe test/examples-good/validate_logical_negate_expr_good.stan
+
+$ ./stanc.exe test/examples-good/validate_modulus_good.stan
+
+$ ./stanc.exe test/examples-good/validate_multiplication.stan
+
+$ ./stanc.exe test/examples-good/validate_negate_expr_good.stan
+
+$ ./stanc.exe test/examples-good/validate_set_double_locscale_good.stan
+
+$ ./stanc.exe test/examples-good/validate_set_double_range_lower_good.stan
+
+$ ./stanc.exe test/examples-good/validate_set_double_range_upper_good.stan
+
+$ ./stanc.exe test/examples-good/validate_set_fun_type_named_good.stan
+
+$ ./stanc.exe test/examples-good/validate_set_int_range_lower_good.stan
+
+$ ./stanc.exe test/examples-good/validate_set_int_range_upper_good.stan
+
+$ ./stanc.exe test/examples-good/validate_validate_int_expr_good.stan
+
+$ ./stanc.exe test/examples-good/var-decl-after-statement.stan
+
+$ ./stanc.exe test/examples-good/var-decls-in-functions.stan
+
+$ ./stanc.exe test/examples-good/var-ending-lpdf.stan
+
+$ ./stanc.exe test/examples-good/vars-with-type-prefixes.stan
+
+$ ./stanc.exe test/examples-good/vector-size-stmts.stan
+
+$ ./stanc.exe test/examples-good/vector-zero.stan
+
+$ ./stanc.exe test/examples-good/vector_size_lt_zero.stan
+

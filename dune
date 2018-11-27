@@ -14,10 +14,19 @@
  (deps test_executable.exe stanc.exe (glob_files test/examples-bad/*.stan))
  (action
   (with-stdout-to examples-bad.output
-   (run %{deps})
-)))
+   (run %{deps}))))
+
+(rule
+ (targets examples-good.output)
+ (deps test_executable.exe stanc.exe (glob_files test/examples-good/*.stan))
+ (action
+  (with-stdout-to examples-good.output
+   (run %{deps}))))
 
 (alias
  (name runtest)
- (action (diff examples-bad.expected examples-bad.output)
-))
+ (action (diff examples-bad.expected examples-bad.output)))
+
+(alias
+ (name runtest)
+ (action (diff examples-good.expected examples-good.output)))
