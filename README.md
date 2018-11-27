@@ -42,6 +42,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - Unit or expect tests at a decent granularity
 - Code review
 - Write code generation phase
+- Continuous integration and deployment for Windows, Linux, and Mac static binaries
 - Macro pre-processor with correct mapping of error locations
 
 ### The bright road ahead
