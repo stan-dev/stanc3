@@ -16,7 +16,8 @@ To build, run
 `
 make
 `
-To run tests. Run `./test/run_tests.sh`.
+
+To run tests, run `./test/run_tests.sh`.
 
 To test the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
 `
