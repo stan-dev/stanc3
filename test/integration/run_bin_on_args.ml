@@ -14,4 +14,4 @@ let _ =
   Array.stable_sort ~compare:String.compare dirs ;
   Array.iter dirs ~f:(fun arg ->
       let cmd = binary ^ " " ^ arg in
-      Printf.printf "  $ %s\n%s\n\n" cmd (run_capturing_output cmd) )
+      Printf.printf "  $ %s\n%s\n" cmd (run_capturing_output cmd) )
