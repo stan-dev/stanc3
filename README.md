@@ -6,9 +6,10 @@ This repo contains work in progress on a new compiler for Stan, written in OCaml
 ### To build, test, and run
 Check out `setup_dev_env.sh` to see how we recommend installing our pre-reqs.
 
-To build `stanc`, run `make`.
+To build `stanc.exe`, run `make`. The binary will be built in `_build/default`
 
 To run tests, run `dune runtest` and use `dune promote` to accept changes.
+To run e.g. only the integration tests, run `dune runtest test/integration`.
 
 To auto-format the OCaml code (sadly, this does not work for the two ocamllex
 and menhir files), run ` dune build @fmt ` or  `make format`.

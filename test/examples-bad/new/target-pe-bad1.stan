@@ -1,4 +1,0 @@
-model {
-
-target += "hallo";
-}

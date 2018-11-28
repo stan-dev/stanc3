@@ -1,31 +1,5 @@
 (executable
  (name stanc)
  (libraries stanclib)
- (modules stanc)
+ (public_name stanc)
  (preprocess (pps ppx_jane)))
-
-(executable
- (name test_executable)
- (modules test_executable)
- (libraries Core_kernel))
-
-(rule
- (targets examples-bad.output)
- (deps test_executable.exe stanc.exe (glob_files test/examples-bad/*.stan))
- (action (with-stdout-to %{targets} (run %{deps}))))
-
-(rule
- (targets examples-good-pretty.output)
- (deps test_executable.exe stanc.exe
-  (:stanfiles (glob_files test/examples-good/*.stan)))
- (action
-  (with-stdout-to %{targets}
-   (run %{exe:test_executable.exe} "%{exe:stanc.exe} --auto-format" %{stanfiles}))))
-
-(alias
- (name runtest)
- (action (diff examples-bad.expected examples-bad.output)))
-
-(alias
- (name runtest)
- (action (diff examples-good-pretty.expected examples-good-pretty.output)))
