@@ -61,7 +61,8 @@ let parse parse_fun lexbuf =
   try
     Interp.loop_handle success failure input
       (parse_fun (Preprocessor.end_pos include_stack))
-  with Lexer.Error (input, pos) -> raise (SyntaxError (Lexing (input, pos)))
+  with Lexer.Error (input, _) ->
+    raise (SyntaxError (Lexing (input, Preprocessor.end_pos include_stack)))
 
 let parse_file parse_fun path =
   let chan = open_in path in

@@ -10,7 +10,7 @@ type 'a lexstack =
 (* Get start position of current lexeme. *)
 let start_pos ls =
   let open Lexing in
-  pos = lexeme_start_p ls.lexbuf
+  lexeme_start_p ls.lexbuf
 
 (* Get end position of current lexeme. *)
 let end_pos ls =
