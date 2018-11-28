@@ -9,7 +9,6 @@ let parse parse_fun lexbuf =
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
   let _ = Stack.push lexbuf Lexer.include_stack in
-  let _ = Lexer.set_recursive_include_paths () in
   let input _ =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Stack.top Lexer.include_stack))

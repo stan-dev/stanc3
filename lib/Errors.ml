@@ -1,8 +1,6 @@
 (** Some plumbing for our compiler errors *)
 open Ast
 
-let recursive_include_paths = ref ""
-
 type parse_error =
   | Lexing of string * Lexing.position
   | Includes of string * Lexing.position
@@ -18,7 +16,10 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 
 let nth_line file line =
   try
-    let input = open_in file in
+    let bare_file =
+      List.hd (Str.split (Str.regexp "\" included from \"") file)
+    in
+    let input = open_in bare_file in
     for _ = 1 to line - 1 do
       ignore (input_line input)
     done ;
@@ -41,7 +42,7 @@ let report_syntax_error = function
         else sprintf "character %d" start_character
       in
       Printf.eprintf "Syntax error at file \"%s\", %s, %s, parsing error:\n%!"
-        !recursive_include_paths lines characters ;
+        file lines characters ;
       ( match nth_line file curr_line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
@@ -52,7 +53,7 @@ let report_syntax_error = function
       let file, line, character = position err_pos in
       Printf.eprintf
         "Syntax error at file \"%s\", line %d, character %d, lexing error:\n"
-        !recursive_include_paths line character ;
+        file line character ;
       ( match nth_line file line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
@@ -61,7 +62,7 @@ let report_syntax_error = function
       let file, line, character = position err_pos in
       Printf.eprintf
         "Syntax error at file \"%s\", line %d, character %d, includes error:\n"
-        !recursive_include_paths line character ;
+        file line character ;
       ( match nth_line file line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
@@ -95,7 +96,7 @@ let print_location loc ppf =
       let begin_line = begin_pos.Lexing.pos_lnum in
       let filename = begin_pos.Lexing.pos_fname in
       if String.length filename != 0 then
-        Format.fprintf ppf "file %S, line %d, characters %d-%d" filename
+        Format.fprintf ppf "file \"%s\", line %d, characters %d-%d" filename
           begin_line begin_char end_char
       else
         Format.fprintf ppf "line %d, characters %d-%d" (begin_line - 1)

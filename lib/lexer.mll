@@ -22,17 +22,11 @@
               (Includes (fname, lexeme_end_p
                 (Stack.top include_stack))))
     | path :: rest_of_paths ->
-    try let full_path = path ^ "/" ^ fname in
-        open_in full_path, full_path
+    try
+      let old_path = (Stack.top include_stack).lex_start_p.pos_fname in
+      let full_path = path ^ "/" ^ fname in
+        open_in full_path, full_path ^ "\" included from \"" ^ old_path
     with _ -> try_open_in rest_of_paths fname
-  let set_recursive_include_paths _ =
-    Errors.recursive_include_paths := "" ;
-    Stack.iter (fun lb -> Errors.recursive_include_paths :=
-                 (!Errors.recursive_include_paths) ^ "\" included from \""
-                  ^ (lb.lex_start_p.pos_fname)
-                ) include_stack ;
-    Errors.recursive_include_paths :=
-      Core_kernel.String.drop_prefix !Errors.recursive_include_paths 17
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -71,7 +65,6 @@ rule token = parse
                                 new_lexbuf.lex_curr_p
                                   <- new_lexbuf.lex_start_p ;
                                 Stack.push new_lexbuf include_stack ;
-                                set_recursive_include_paths () ;
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 singleline_comment lexbuf; token lexbuf } (* deprecated *)
@@ -254,7 +247,6 @@ rule token = parse
                                 then Parser.EOF
                                 else
                                   let _ = (Stack.pop include_stack) in
-                                  let _ = set_recursive_include_paths () in
                                   let old_lexbuf = (Stack.top include_stack) in
                                   token old_lexbuf }
   

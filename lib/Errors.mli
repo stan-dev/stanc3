@@ -25,5 +25,3 @@ val semantic_error : ?loc:Ast.location -> string -> 'a
 
 val report_semantic_error : Ast.location * string -> unit
 (** A semantic error message used when handling a SemanticError *)
-
-val recursive_include_paths : string ref
