@@ -102,22 +102,19 @@ let print_location loc ppf =
         Format.fprintf ppf "line %d, characters %d-%d" (begin_line - 1)
           begin_char end_char
 
-(** Print a semantic error message at a given location [loc]. *)
-let print_semantic_error_message ?(loc = Nowhere) =
-  match loc with
-  | Location _ ->
-      Format.eprintf "%s at %t:@\n" "Semantic error" (print_location loc) ;
-      Format.kfprintf (fun ppf -> Format.fprintf ppf "@.") Format.err_formatter
-  | Nowhere ->
-      Format.eprintf "%s: " "Semantic error" ;
-      Format.kfprintf (fun ppf -> Format.fprintf ppf "@.") Format.err_formatter
-
 (** Print the caught semantic error *)
 let report_semantic_error (loc, msg) =
-  print_semantic_error_message ~loc "%s" msg
-
-(* TODO: there's redundancy between the semantic and syntax error string formatting.
-   Reuse code there. *)
-
-(* TODO: quote line that triggered the error in case of semantic errors, just like*
-   we do for syntax errors. *)
+  match loc with
+  | Location ({pos_fname= file; pos_lnum= line; _}, _) ->
+      Format.eprintf "%s at %t:@\n" "Semantic error" (print_location loc) ;
+      ( match nth_line file line with
+      | None -> ()
+      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      Format.kfprintf
+        (fun ppf -> Format.fprintf ppf "@.")
+        Format.err_formatter "%s" msg
+  | Nowhere ->
+      Format.eprintf "%s: " "Semantic error" ;
+      Format.kfprintf
+        (fun ppf -> Format.fprintf ppf "@.")
+        Format.err_formatter "%s" msg
