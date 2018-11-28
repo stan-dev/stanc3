@@ -29,7 +29,7 @@ pipeline {
     }
     post {
         always {
-            utils.mailBuildResults()
+            script {utils.mailBuildResults()}
         }
     }
 
