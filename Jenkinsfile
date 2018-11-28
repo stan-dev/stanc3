@@ -23,3 +23,5 @@ pipeline {
                 sh 'dune build @install'
             }
         }
+    }
+}
