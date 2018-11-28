@@ -12,8 +12,6 @@
       pos_bol = pos.pos_cnum;
     }
 
-  exception Error of string * position
-
   let include_stack = Stack.create ()
   let include_paths : string list ref = ref []
   let rec try_open_in paths fname =
