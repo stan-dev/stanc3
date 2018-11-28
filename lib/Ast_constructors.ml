@@ -3,11 +3,18 @@
 
 open Ast
 
+(** [make_location p1 p2] creates a location which starts at [p1] and ends at [p2]. *)
+let make_location loc1 loc2 = Location (loc1, loc2)
+
+(** Convert a [Lexing.lexbuf] location to a [location] *)
+let location_of_lex lex =
+  Location (Lexing.lexeme_start_p lex, Lexing.lexeme_end_p lex)
+
 let initialize_expr_meta startpos endpos =
-  {expr_untyped_meta_loc= Errors.make_location startpos endpos}
+  {expr_untyped_meta_loc= make_location startpos endpos}
 
 let initialize_stmt_meta startpos endpos =
-  {stmt_untyped_meta_loc= Errors.make_location startpos endpos}
+  {stmt_untyped_meta_loc= make_location startpos endpos}
 
 let pos_stmt_meta loc = {stmt_untyped_meta_loc= loc}
 

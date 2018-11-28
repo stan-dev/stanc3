@@ -1,7 +1,9 @@
 (** Some plumbing for our compiler errors *)
+open Ast
 
 type parse_error =
   | Lexing of string * Lexing.position
+  | Includes of string * Lexing.position
   | Parsing of string option * Lexing.position * Lexing.position
 
 exception SyntaxError of parse_error
@@ -14,7 +16,10 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 
 let nth_line file line =
   try
-    let input = open_in file in
+    let bare_file =
+      List.hd (Str.split (Str.regexp "\" included from \"") file)
+    in
+    let input = open_in bare_file in
     for _ = 1 to line - 1 do
       ignore (input_line input)
     done ;
@@ -36,8 +41,8 @@ let report_syntax_error = function
           sprintf "characters %d-%d" start_character curr_character
         else sprintf "character %d" start_character
       in
-      Printf.eprintf "Syntax error at file %S, %s, %s, parsing error:\n%!" file
-        lines characters ;
+      Printf.eprintf "Syntax error at file \"%s\", %s, %s, parsing error:\n%!"
+        file lines characters ;
       ( match nth_line file curr_line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
@@ -47,24 +52,22 @@ let report_syntax_error = function
   | Lexing (invalid_input, err_pos) ->
       let file, line, character = position err_pos in
       Printf.eprintf
-        "Syntax error at file %S, line %d, character %d, lexing error:\n" file
-        line character ;
+        "Syntax error at file \"%s\", line %d, character %d, lexing error:\n"
+        file line character ;
       ( match nth_line file line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
       Printf.eprintf "Invalid input %S\n%!" invalid_input
-
-(** Source code locations. *)
-type location =
-  | Location of Lexing.position * Lexing.position  (** delimited location *)
-  | Nowhere  (** no location *)
-
-(** [make_location p1 p2] creates a location which starts at [p1] and ends at [p2]. *)
-let make_location loc1 loc2 = Location (loc1, loc2)
-
-(** Convert a [Lexing.lexbuf] location to a [location] *)
-let location_of_lex lex =
-  Location (Lexing.lexeme_start_p lex, Lexing.lexeme_end_p lex)
+  | Includes (filename, err_pos) ->
+      let file, line, character = position err_pos in
+      Printf.eprintf
+        "Syntax error at file \"%s\", line %d, character %d, includes error:\n"
+        file line character ;
+      ( match nth_line file line with
+      | None -> ()
+      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      Printf.eprintf
+        "Could not find include file %S in specified include paths.\n" filename
 
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
@@ -93,7 +96,7 @@ let print_location loc ppf =
       let begin_line = begin_pos.Lexing.pos_lnum in
       let filename = begin_pos.Lexing.pos_fname in
       if String.length filename != 0 then
-        Format.fprintf ppf "file %S, line %d, characters %d-%d" filename
+        Format.fprintf ppf "file \"%s\", line %d, characters %d-%d" filename
           begin_line begin_char end_char
       else
         Format.fprintf ppf "line %d, characters %d-%d" (begin_line - 1)

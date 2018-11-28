@@ -112,12 +112,12 @@ identifier:
   | id=IDENTIFIER
     {
       grammar_logger "identifier" ;
-      {name=id; id_loc=Errors.make_location $startpos $endpos}
+      {name=id; id_loc=make_location $startpos $endpos}
     }
   | TRUNCATE
     {
       grammar_logger "identifier" ;
-      {name="T"; id_loc=Errors.make_location $startpos $endpos}
+      {name="T"; id_loc=make_location $startpos $endpos}
     }
 
 function_def:
