@@ -4,7 +4,11 @@ import org.stan.Utils
 def utils = new org.stan.Utils()
 
 pipeline {
-    agent { dockerfile true}
+    agent {
+        dockerfile {
+            dir 'docker'
+        }
+    }
     stages {
         stage('Kill previous builds') {
             when {
