@@ -24,12 +24,18 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh 'eval $(opam env) && dune build @install'
+                sh """
+                      eval $(opam env)
+                      dune build @install
+                   """
             }
         }
         stage("Run all tests") {
             steps {
-                sh 'eval $(opam env) && dune runtest'
+                sh """
+                      eval $(opam env)
+                      dune runtest
+                   """
             }
         }
     }
