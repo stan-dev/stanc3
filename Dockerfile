@@ -1,3 +1,3 @@
 FROM ubuntu:bionic
 
-RUN setup_dev_env.sh
+RUN ./setup_dev_env.sh
