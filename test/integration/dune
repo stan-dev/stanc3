@@ -96,7 +96,7 @@
                                    (glob_files examples-good/array-expr/*.stan)))
  (action
   (with-stdout-to %{targets}
-   (run %{exe:run_bin_on_args.exe} "%{bin:stanc} --auto-format" %{stanfiles}))))
+   (run %{exe:test_executable.exe} "%{bin:stanc} --auto-format --include_paths=included" %{stanfiles}))))
 
 (alias
  (name runtest)

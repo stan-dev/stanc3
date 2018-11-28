@@ -25,7 +25,7 @@
       let full_path = path ^ "/" ^ fname in
         open_in full_path, full_path ^ "\" included from \"" ^ old_path
     with _ -> try_open_in rest_of_paths fname
-  (* TODO: perhaps disallow recursive includes? *)
+  (* TODO: detect recursive includes and throw error *)
 }
 
 (* Some auxiliary definition for variables and constants *)

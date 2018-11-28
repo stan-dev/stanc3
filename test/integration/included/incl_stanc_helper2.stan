@@ -1,0 +1,2 @@
+  real w;
+  real x;
