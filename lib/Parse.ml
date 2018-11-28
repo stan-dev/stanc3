@@ -8,7 +8,12 @@ let parse parse_fun lexbuf =
      error messages support *)
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let input = Interp.lexer_lexbuf_to_supplier Lexer.token lexbuf in
+  let _ = Stack.push lexbuf Lexer.include_stack in
+  let input _ =
+    (Interp.lexer_lexbuf_to_supplier Lexer.token
+       (Stack.top Lexer.include_stack))
+      ()
+  in
   let success prog = prog in
   let failure error_state =
     let env =
@@ -27,7 +32,7 @@ let parse parse_fun lexbuf =
         in
         raise
           (SyntaxError (Parsing (message, Lexing.dummy_pos, Lexing.dummy_pos)))
-    | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
+    | (lazy (Cons (Interp.Element (state, _, _, _), _))) ->
         let message =
           try
             Some
@@ -46,12 +51,26 @@ let parse parse_fun lexbuf =
                 ^ ")"
               else "" )
         in
-        raise (SyntaxError (Parsing (message, start_pos, end_pos)))
+        let current_lexbuf = Stack.top Lexer.include_stack in
+        raise
+          (SyntaxError
+             (Parsing
+                ( message
+                , Lexing.lexeme_start_p current_lexbuf
+                , Lexing.lexeme_end_p current_lexbuf )))
   in
   try
     Interp.loop_handle success failure input
       (parse_fun lexbuf.Lexing.lex_curr_p)
-  with Lexer.Error (input, pos) -> raise (SyntaxError (Lexing (input, pos)))
+  with
+  | SyntaxError (Parsing (m, p1, p2)) ->
+      raise (SyntaxError (Parsing (m, p1, p2)))
+  | _ ->
+      raise
+        (SyntaxError
+           (Lexing
+              ( Lexing.lexeme (Stack.top Lexer.include_stack)
+              , Lexing.lexeme_start_p (Stack.top Lexer.include_stack) )))
 
 let parse_file parse_fun path =
   let chan = open_in path in
