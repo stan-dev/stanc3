@@ -6,14 +6,9 @@ open Errors
 let parse parse_fun lexbuf =
   (* see the Menhir manual for the description of
      error messages support *)
-  let include_stack = Preprocessor.create lexbuf Lexer.token in
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let input =
-    Interp.lexer_lexbuf_to_supplier
-      (Preprocessor.get_token include_stack)
-      (Preprocessor.current_lexbuf include_stack)
-  in
+  let input = Interp.lexer_lexbuf_to_supplier Lexer.token lexbuf in
   let success prog = prog in
   let failure error_state =
     let env =
@@ -32,7 +27,7 @@ let parse parse_fun lexbuf =
         in
         raise
           (SyntaxError (Parsing (message, Lexing.dummy_pos, Lexing.dummy_pos)))
-    | (lazy (Cons (Interp.Element (state, _, _, _), _))) ->
+    | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
             Some
@@ -51,18 +46,12 @@ let parse parse_fun lexbuf =
                 ^ ")"
               else "" )
         in
-        raise
-          (SyntaxError
-             (Parsing
-                ( message
-                , Preprocessor.start_pos include_stack
-                , Preprocessor.end_pos include_stack )))
+        raise (SyntaxError (Parsing (message, start_pos, end_pos)))
   in
   try
     Interp.loop_handle success failure input
-      (parse_fun (Preprocessor.end_pos include_stack))
-  with Lexer.Error (input, _) ->
-    raise (SyntaxError (Lexing (input, Preprocessor.end_pos include_stack)))
+      (parse_fun lexbuf.Lexing.lex_curr_p)
+  with Lexer.Error (input, pos) -> raise (SyntaxError (Lexing (input, pos)))
 
 let parse_file parse_fun path =
   let chan = open_in path in
