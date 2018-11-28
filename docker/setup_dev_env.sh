@@ -1,9 +1,9 @@
 #!/bin/bash
 # The following command installs the latest opam on *nix systems.
-sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
+sh -x <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 
 # Once opam is installed, it has to be set up with these commands.
-opam init
+opam init $1
 opam config setup -a
 
 # Merlin, utop, ocp-indent, ocamlformat, and patdiff are all for developer assistance

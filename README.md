@@ -4,7 +4,7 @@ This repo contains work in progress on a new compiler for Stan, written in OCaml
 ## To Get Started
 
 ### To build, test, and run
-Check out `setup_dev_env.sh` to see how we recommend installing our pre-reqs.
+Check out `docker/setup_dev_env.sh` to see how we recommend installing our pre-reqs.
 
 To build `stanc.exe`, run `make`. The binary will be built in `_build/default`
 
