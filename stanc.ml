@@ -1,7 +1,9 @@
 open Stanclib
 
 (** The main program. *)
-let name = "stan"
+let version = "stanc version 3.0 alpha"
+
+let name = "stanc"
 
 (** The usage message. *)
 let usage = "Usage: " ^ name ^ " [option] ... [file] ..."
@@ -29,16 +31,37 @@ let options =
     ; ( "--auto-format"
       , Arg.Unit (fun () -> Debug.pretty_print_program := true)
       , " Pretty prints the program to the console" )
-    ; ( "-v"
+    ; ( "--version"
+      , Arg.String
+          (fun _ ->
+            print_endline "TODO: not yet implemented" ;
+            assert false )
+      , " Display stanc version number" )
+    ; ( "--name"
+      , Arg.String
+          (fun _ ->
+            print_endline "TODO: not yet implemented" ;
+            assert false )
+      , " Take a string to set the model name (default = \
+         \"$model_filename_model\")" )
+    ; ( "--o"
+      , Arg.Unit
+          (fun _ ->
+            print_endline "TODO: not yet implemented" ;
+            assert false )
+      , " Take the path to an output file for generated C++ code (default = \
+         \"$name.cpp\")" )
+    ; ( "--allow_undefined"
       , Arg.Unit
           (fun () ->
-            print_endline (name ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
+            print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
             exit 0 )
-      , " Print language information and exit" )
+      , " Do not fail if a function is declared but not defined" )
     ; ( "--include_paths"
       , Arg.String
           (fun str -> Lexer.include_paths := String.split_on_char ',' str)
-      , " For specifying a comma-separated list of include paths" ) ]
+      , " Takes a comma-separated list of directories that may contain a file \
+         in an #include directive" ) ]
 
 (** The command that actually executes a command. *)
 let exec p =
