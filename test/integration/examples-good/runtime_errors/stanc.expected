@@ -1,0 +1,49 @@
+  $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_data.stan
+transformed data {
+  matrix[2, 3] td_m23 = [[1, 2, 3, 4], [4, 5, 6, 8]];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_fun.stan
+functions {
+  real foo(real a1) {
+    matrix[2, 3] lf_m23 = [[1, 2, 3, 4], [4, 5, 6, 7]];
+    real b;
+    b += a1;
+    return b;
+  }
+}
+transformed data {
+  real a1 = 1.0;
+  real bar = foo(a1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_gq.stan
+generated quantities {
+  matrix[2, 3] z = [[1, 2, 3, 4], [4, 5, 6, 8]];
+  matrix[2, 2] ident = [[1, 0], [0, 1]];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_gq2.stan
+generated quantities {
+  matrix[2, 3] z = [[1, 2, 3], [4, 5, 6]];
+  matrix[2, 2] ident = [[1, 0], [0, 1]];
+  z += ident;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_lp_local.stan
+parameters {
+  real x;
+}
+model {
+  matrix[2, 3] z = [[1, 2, 3, 4], [4, 5, 6, 8]];
+  x ~ normal(0, 5);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_tparam.stan
+transformed data {
+  matrix[2, 3] td_m23 = [[1, 2, 3], [4, 5, 6]];
+}
+transformed parameters {
+  matrix[2, 3] tp_m23 = [[1, 2, 3, 4], [4, 5, 6, 8]];
+}
+

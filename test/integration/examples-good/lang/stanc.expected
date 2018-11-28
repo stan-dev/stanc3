@@ -1,0 +1,552 @@
+  $ ../../../../../install/default/bin/stanc --auto-format good_const.stan
+transformed data {
+  real y;
+  y = pi();
+}
+model {
+
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_cov.stan
+data {
+  vector[5] y[10];
+  vector[5] mu[10];
+}
+parameters {
+  cov_matrix[5] Sigma[10];
+}
+model {
+  for (i in 1 : 10) y[i] ~ multi_normal(mu[i], Sigma[i]);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_fun_name.stan
+parameters {
+  real e;
+  real pi;
+  real sqrt2;
+  real log2;
+  real log10;
+  real not_a_number;
+  real positive_infinity;
+  real negative_infinity;
+  real epsilon;
+  real negative_epsilon;
+}
+model {
+  e ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_funs.stan
+transformed data {
+  real x;
+  real y;
+  real z;
+  int n;
+  z = if_else(n, x, y);
+  z = binomial_coefficient_log(x, y);
+}
+model {
+
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
+data {
+  int<lower=0> m1;
+  int<lower=0> m2;
+  int<lower=0> m3;
+  int<lower=0> m4;
+}
+transformed data {
+  int intercept;
+  intercept = 5;
+}
+model {
+
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_local_var_array_size.stan
+data {
+  int M[5];
+}
+transformed data {
+  int N[2];
+  N[1] = 1;
+  N[2] = 4;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+  for (i in 1 : 10) {
+    real x[i];
+    for (j in 1 : i) x[j] = j * j;
+  }
+  for (i in 1 : 5) {
+    vector[i] v;
+    row_vector[i] rv;
+    for (j in 1 : 10) {
+      matrix[i, j] m;
+    }
+  }
+  for (i in 1 : 5) {
+    real x[M[i]];
+  }
+  for (i in 1 : 2) {
+    real x[N[i]];
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_matrix_ops.stan
+transformed data {
+  matrix[5, 5] A;
+  matrix[5, 5] B;
+  matrix[5, 5] C;
+  vector[5] b;
+  vector[5] x;
+  row_vector[5] c;
+  row_vector[5] y;
+  C = A / B;
+  C = B \ A;
+  x = A \ b;
+  y = c / A;
+  A = A ./ A;
+  A = A .* A;
+  x = x ./ x;
+  x = x .* x;
+  y = y ./ y;
+  y = y .* y;
+}
+model {
+
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_trunc.stan
+data {
+  real y;
+}
+model {
+  y ~ normal(0, 1) T[-1, 1];
+  y ~ normal(0, 1) T[0, ];
+  y ~ normal(0, 1) T[ , 0];
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_vars.stan
+data {
+  real a;
+}
+transformed data {
+  real b;
+  b = 1.0;
+  b = a + b + 1.0;
+  {
+    real b_local;
+    b = a + b + b_local;
+    b_local = a + b + b_local;
+  }
+}
+parameters {
+  real c;
+}
+transformed parameters {
+  real d;
+  d = 1.0;
+  d = a + b + c + d;
+  {
+    real d_local;
+    d = a + b + c + d + d_local;
+    d_local = a + b + c + d + d_local;
+  }
+}
+model {
+  real e_local;
+  e_local = 1.0;
+  e_local = a + b + c + d + e_local;
+  {
+    real f_local;
+    f_local = 1.0;
+    e_local = a + b + c + d + e_local + f_local;
+    f_local = a + b + c + d + e_local + f_local;
+  }
+}
+generated quantities {
+  real g;
+  g = 1.0;
+  g = a + b + c + d + g;
+  {
+    real g_local;
+    g_local = 1.0;
+    g = a + b + c + d + g + g_local;
+    g_local = a + b + c + d + g + g_local;
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format good_vec_constraints.stan
+data {
+  vector<lower=0>[2] v0;
+  vector<upper=1>[2] v1;
+  vector<lower=0, upper=1>[2] v01;
+  row_vector<lower=0>[3] rv0;
+  row_vector<upper=1>[3] rv1;
+  row_vector<lower=0, upper=1>[3] rv01;
+  matrix<lower=0>[2, 3] m0;
+  matrix<upper=1>[2, 3] m1;
+  matrix<lower=0, upper=1>[2, 3] m01;
+}
+model {
+  0 ~ bernoulli(0.5);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_gq.stan
+functions {
+  void foo(real x) {
+    print("quitting time");
+    reject("user-specified rejection");
+  }
+}
+transformed data {
+  int x;
+  print("In transformed data");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real v;
+  print("In generated quantities");
+  foo(v);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_model.stan
+functions {
+  void foo(real x) {
+    print("quitting time");
+    reject("user-specified rejection");
+  }
+}
+transformed data {
+  print("In transformed data");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+}
+model {
+  real v;
+  print("In model block.");
+  y ~ normal(0, 1);
+  foo(v);
+}
+generated quantities {
+  print("In generated quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_tdata.stan
+functions {
+  void foo(real x) {
+    print("quitting time");
+    reject("user-specified rejection");
+  }
+}
+transformed data {
+  real v;
+  print("In transformed data");
+  foo(v);
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("In generated quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_function_tparams.stan
+functions {
+  void foo(real x) {
+    print("quitting time");
+    reject("user-specified rejection");
+  }
+}
+transformed data {
+  print("In transformed data");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real v;
+  print("In transformed parameters");
+  foo(v);
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("In generated quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_gq_block.stan
+transformed data {
+  print("In transformed data");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("In generated quantities");
+  print("quitting time");
+  reject("QUIT");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_model_block.stan
+transformed data {
+  print("In transformed data");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+  print("quitting time");
+  reject("user-specified rejection");
+}
+generated quantities {
+  print("In generated quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_tdata_block.stan
+transformed data {
+  print("In transformed data");
+  print("quitting time");
+  reject("QUIT");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("In generated quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format print_reject_tparams_block.stan
+transformed data {
+  print("In transformed data");
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  print("In transformed parameters");
+  print("quitting time");
+  reject("QUIT");
+}
+model {
+  print("In model block.");
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("In generated quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_generated_quantities.stan
+functions {
+  void foo(real x) {
+    reject("user-specified rejection");
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  foo(y);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_model.stan
+functions {
+  void foo(real x) {
+    reject("user-specified rejection");
+  }
+}
+parameters {
+  real y;
+}
+model {
+  foo(y);
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_transformed_data.stan
+functions {
+  void foo(real x) {
+    reject("user-specified rejection");
+  }
+}
+transformed data {
+  real<lower=0> x;
+  foo(x);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_func_call_transformed_parameters.stan
+functions {
+  void foo_bar() {
+    reject("user-specified rejection");
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real x;
+  foo_bar();
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_generated_quantities.stan
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real<lower=0> x;
+  reject("user-specified rejection");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_model.stan
+data {
+
+}
+parameters {
+  real<lower=-10, upper=10> y[2];
+}
+transformed parameters {
+  real<lower=0> z[2];
+  z[1] <- exp(y[1]);
+  z[2] <- exp(y[2]) * exp(y[1]);
+}
+model {
+  y ~ normal(0, 1);
+  reject("user-specified rejection");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_mult_args.stan
+functions {
+  real relative_diff(real x, real y, real max_, real min_) {
+    real abs_diff;
+    real avg_scale;
+    abs_diff = fabs(x - y);
+    avg_scale = (fabs(x) + fabs(y)) / 2;
+    if ((abs_diff / avg_scale) > max_) reject("user-specified rejection, difference above ", max_, " x:", x, " y:", y);
+    if ((abs_diff / avg_scale) < min_) reject("user-specified rejection, difference below ", min_, " x:", x, " y:", y);
+    return abs_diff / avg_scale;
+  }
+}
+transformed data {
+  real a = -9.0;
+  real b = -1.0;
+  real mx = 1.2;
+  real mn = 1.1;
+}
+parameters {
+  real y;
+}
+model {
+  real c;
+  c = relative_diff(a, b, mx, mn);
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_transformed_data.stan
+transformed data {
+  real<lower=0> x;
+  reject("user-specified rejection");
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("generating quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format reject_transformed_parameters.stan
+parameters {
+  real y;
+}
+transformed parameters {
+  real<lower=0> x;
+  reject("user-specified rejection");
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  print("generating quantities");
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format test_lp.stan
+parameters {
+  real<lower=-10, upper=10> y[2];
+}
+transformed parameters {
+  real<lower=0> z[2];
+  z[1] <- exp(y[1]);
+  z[2] <- exp(y[2]) * exp(y[1]);
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  int xgq;
+  xgq <- 2713;
+}
+

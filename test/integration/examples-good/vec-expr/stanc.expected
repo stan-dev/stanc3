@@ -1,0 +1,122 @@
+  $ ../../../../../install/default/bin/stanc --auto-format index_expr.stan
+functions {
+  void foo(int N) {
+    int c[4];
+    int d[3];
+    c[2 : 10] = d;
+  }
+}
+model {
+
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format matrix_expr_terms.stan
+functions {
+  matrix foo() {
+    matrix[3, 2] result = [[1, 2], [3, 4], [5, 6]];
+    return result;
+  }
+}
+transformed data {
+  real td_d1 = 1;
+  real td_d2 = 2;
+  row_vector[2] td_rv2;
+  matrix[3, 2] td_mat32;
+  td_rv2 = [10, 100];
+  td_mat32 = [[1, 2], [3, 4], [5, 6]];
+  td_mat32 = [td_rv2, td_rv2, td_rv2];
+  td_mat32 = foo();
+}
+parameters {
+  real p_z;
+}
+transformed parameters {
+  real tp_x;
+  real tp_y;
+  row_vector[2] tp_rv2;
+  matrix[3, 2] tp_mat32;
+  tp_mat32 = [td_rv2, td_rv2];
+  tp_rv2 = [td_d1, td_d2];
+  tp_mat32 = [tp_rv2, tp_rv2];
+  tp_rv2 = [tp_x, tp_y];
+  tp_mat32 = [tp_rv2, tp_rv2];
+  tp_rv2 = [td_d1, tp_y];
+  tp_mat32 = [tp_rv2, tp_rv2];
+}
+model {
+  p_z ~ normal(0, 1);
+}
+generated quantities {
+  row_vector[2] gq_rv2;
+  matrix[3, 2] gq_mat32;
+  gq_mat32 = [td_rv2, td_rv2];
+  gq_rv2 = [td_d1, td_d2];
+  gq_mat32 = [gq_rv2, gq_rv2];
+  gq_rv2 = [tp_x, tp_y];
+  gq_mat32 = [gq_rv2, gq_rv2];
+  gq_rv2 = [td_d1, tp_y];
+  gq_mat32 = [gq_rv2, gq_rv2];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format row_vector_expr_terms.stan
+functions {
+  vector foo(int d) {
+    vector[3] result = [10.1, 11 * 3.0, d]';
+    return result;
+  }
+  row_vector bar() {
+    row_vector[2] result = [7, 8];
+    return result;
+  }
+}
+data {
+  real x;
+  real y;
+}
+transformed data {
+  vector[3] td_v1 = [21, 22, 23]';
+  row_vector[2] td_rv1 = [1, 2];
+  td_rv1 = [x, y];
+  td_rv1 = [x + y, x - y];
+  td_rv1 = [x ^ 2, y ^ 2];
+  td_v1 = foo(1);
+  td_rv1 = bar();
+}
+parameters {
+  real z;
+}
+transformed parameters {
+  vector[3] tp_v1 = [41, 42, 43]';
+  row_vector[2] tp_rv1 = [1, x];
+  tp_v1 = foo(1);
+  tp_v1 = [51, y, z]';
+  tp_rv1 = [y, z];
+  tp_rv1 = bar();
+}
+model {
+  z ~ normal(0, 1);
+}
+generated quantities {
+  vector[3] gq_v1 = [1, x, y]';
+  row_vector[3] gq_rv1 = [1, x, y];
+  row_vector[3] gq_rv2 = [1, x, z];
+  gq_v1 = foo(1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format vec_expr_big.stan
+transformed data {
+  real x = 12;
+  row_vector[100] a = [1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10];
+  vector[100] b = [1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10]';
+  matrix[1, 100] c = [[1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, x, x, x, 7, 8, 9.0, 10]];
+}
+parameters {
+  real<lower=0, upper=1> theta;
+}
+transformed parameters {
+  real y = 12;
+  row_vector[100] d = [1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10];
+  vector[100] e = [1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10]';
+  matrix[1, 100] f = [[1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10, 1.0, 2.0, 3.0, y, y, y, 7, 8, 9.0, 10]];
+}
+
