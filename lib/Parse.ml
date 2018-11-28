@@ -32,7 +32,7 @@ let parse parse_fun lexbuf =
         in
         raise
           (SyntaxError (Parsing (message, Lexing.dummy_pos, Lexing.dummy_pos)))
-    | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
+    | (lazy (Cons (Interp.Element (state, _, _, _), _))) ->
         let message =
           try
             Some
@@ -51,11 +51,16 @@ let parse parse_fun lexbuf =
                 ^ ")"
               else "" )
         in
-        raise (SyntaxError (Parsing (message, start_pos, end_pos)))
+        raise
+          (SyntaxError
+             (Parsing
+                ( message
+                , Preprocessor.start_pos include_stack
+                , Preprocessor.end_pos include_stack )))
   in
   try
     Interp.loop_handle success failure input
-      (parse_fun (Preprocessor.current_pos include_stack))
+      (parse_fun (Preprocessor.end_pos include_stack))
   with Lexer.Error (input, pos) -> raise (SyntaxError (Lexing (input, pos)))
 
 let parse_file parse_fun path =

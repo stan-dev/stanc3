@@ -7,14 +7,15 @@ type 'a lexstack =
   ; lexfunc: Lexing.lexbuf -> 'a
   ; path: string }
 
-(* Get position of current lexeme. *)
-let current_pos ls =
+(* Get start position of current lexeme. *)
+let start_pos ls =
   let open Lexing in
-  let pos = lexeme_end_p ls.lexbuf in
-  { pos_fname= pos.pos_fname
-  ; pos_lnum= pos.pos_lnum
-  ; pos_bol= pos.pos_bol + String.length (lexeme ls.lexbuf)
-  ; pos_cnum= pos.pos_cnum }
+  pos = lexeme_start_p ls.lexbuf
+
+(* Get end position of current lexeme. *)
+let end_pos ls =
+  let open Lexing in
+  lexeme_end_p ls.lexbuf
 
 (*
 ** Create a lexstack with an initial lexbuf and the
@@ -40,7 +41,10 @@ let rec get_token ls dummy_lexbuf =
       let open Lexing in
       ls.lexbuf <- from_channel chan ;
       (ls.lexbuf).lex_start_p
-      <- {pos_fname= ls.path ^ "/" ^ fname; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+      <- { pos_fname= ls.path ^ "/" ^ fname
+         ; pos_lnum= 1
+         ; pos_bol= 0
+         ; pos_cnum= 0 } ;
       (ls.lexbuf).lex_curr_p <- ls.lexbuf.lex_start_p ;
       get_token ls dummy_lexbuf
   | Parser.EOF -> (
@@ -53,4 +57,3 @@ let rec get_token ls dummy_lexbuf =
 
 (* Get current lexbuf *)
 let current_lexbuf ls = ls.lexbuf
-

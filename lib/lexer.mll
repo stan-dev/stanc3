@@ -34,7 +34,8 @@ rule token = parse
   | "//"                      { singleline_comment lexbuf; token lexbuf }
   | "#include"
   ( [' ' '\t' '\012' '\r']+)
-  ( [^'\n']* as filename)     { singleline_comment lexbuf; Parser.INCLUDE filename }
+  ( [^'\n']* as filename)     { singleline_comment lexbuf;
+                                Parser.INCLUDE filename }
   | "#"                       { singleline_comment lexbuf; token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { Parser.FUNCTIONBLOCK }
