@@ -32,7 +32,7 @@ let parse parse_fun lexbuf =
         in
         raise
           (SyntaxError (Parsing (message, Lexing.dummy_pos, Lexing.dummy_pos)))
-    | (lazy (Cons (Interp.Element (state, _, _, _), _))) ->
+    | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
             Some
@@ -51,13 +51,12 @@ let parse parse_fun lexbuf =
                 ^ ")"
               else "" )
         in
-        let current_lexbuf = Stack.top Lexer.include_stack in
         raise
           (SyntaxError
              (Parsing
                 ( message
-                , Lexing.lexeme_start_p current_lexbuf
-                , Lexing.lexeme_end_p current_lexbuf )))
+                , start_pos
+                , end_pos )))
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 

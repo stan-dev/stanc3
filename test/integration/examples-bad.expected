@@ -19,7 +19,7 @@ Semantic error at file "examples-bad/bad_var_assignment_vec_arr.stan", line 10, 
 Ill-typed arguments supplied to assignment operator <-: lhs has type real[] and rhs has type vector
 
   $ ../../../install/default/bin/stanc examples-bad/bad_while.stan
-Syntax error at file "examples-bad/bad_while.stan", line 3, characters 24-25, parsing error:
+Syntax error at file "examples-bad/bad_while.stan", line 3, characters 23-24, parsing error:
  >   cholesky_factor_corr[x~normal(0,1)] y;
 Expected "[" expression "]" for size of cholesky_factor_corr.
 
@@ -97,7 +97,7 @@ Semantic error at file "examples-bad/continue5.stan", line 4, characters 4-13:
 Continue statements may only be used in loops.
 
   $ ../../../install/default/bin/stanc examples-bad/declare-define-param-block.stan
-Syntax error at file "examples-bad/declare-define-param-block.stan", line 6, characters 9-10, parsing error:
+Syntax error at file "examples-bad/declare-define-param-block.stan", line 6, characters 7-8, parsing error:
  >   real z = d_r;
 Only top-level variable declarations are allowed in data and parameter blocks.
 
@@ -111,13 +111,13 @@ Semantic error at file "examples-bad/declare-define-var-double-2.stan", line 5, 
 Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type real[]
 
   $ ../../../install/default/bin/stanc examples-bad/declare-define-var-double-3.stan
-Syntax error at file "examples-bad/declare-define-var-double-3.stan", line 3, characters 10-11, parsing error:
+Syntax error at file "examples-bad/declare-define-var-double-3.stan", line 3, characters 7-9, parsing error:
  >   real a2 = 1.0; // cannot assign in data block
 Only top-level variable declarations are allowed in data and parameter blocks.
 
 
   $ ../../../install/default/bin/stanc examples-bad/declare-define-var-double-4.stan
-Syntax error at file "examples-bad/declare-define-var-double-4.stan", line 6, characters 10-11, parsing error:
+Syntax error at file "examples-bad/declare-define-var-double-4.stan", line 6, characters 7-9, parsing error:
  >   real a2 = 1.0; // cannot assign in parameters block
 Only top-level variable declarations are allowed in data and parameter blocks.
 
@@ -147,32 +147,32 @@ Semantic error at file "examples-bad/declare-define-var-vec-1.stan", line 6, cha
 Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type row_vector
 
   $ ../../../install/default/bin/stanc examples-bad/err-bare-type-close-square.stan
-Syntax error at file "examples-bad/err-bare-type-close-square.stan", line 2, characters 8-11, parsing error:
+Syntax error at file "examples-bad/err-bare-type-close-square.stan", line 2, characters 6-7, parsing error:
  >   real[ foo(int n) { return n; }
 "[" (list of commas) "]" expected in unsized return type of function definition.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-close-block.stan
-Syntax error at file "examples-bad/err-close-block.stan", line 3, characters 0-5, parsing error:
- > model {
+Syntax error at file "examples-bad/err-close-block.stan", line 1, characters 10-11, parsing error:
+ > functions {
 Function forward declaration, definition or "}" expected after "functions {".
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-close-function-args.stan
-Syntax error at file "examples-bad/err-close-function-args.stan", line 2, characters 18-19, parsing error:
+Syntax error at file "examples-bad/err-close-function-args.stan", line 2, characters 11-17, parsing error:
  >   real foo(real x {
 "," or ")" expected after function argument declaration.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-decl-double-params.stan
-Syntax error at file "examples-bad/err-decl-double-params.stan", line 4, characters 0-1, parsing error:
- > }
+Syntax error at file "examples-bad/err-decl-double-params.stan", line 3, characters 2-9, parsing error:
+ >   lijaflj
 Ill-formed phrase. Found L-value. This can be completed in many ways.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-decl-double.stan
-Syntax error at file "examples-bad/err-decl-double.stan", line 2, characters 2-8, parsing error:
- >   double y;
+Syntax error at file "examples-bad/err-decl-double.stan", line 1, characters 5-6, parsing error:
+ > data {
 Expected top-level variable declaration or "}".
 
 
@@ -181,25 +181,25 @@ Semantic error at file "examples-bad/err-decl-matrix-2.stan", line 2, characters
 Only expressions of array, matrix, row_vector and vector type may be indexed. Instead, found type int.
 
   $ ../../../install/default/bin/stanc examples-bad/err-decl-matrix.stan
-Syntax error at file "examples-bad/err-decl-matrix.stan", line 2, characters 10-11, parsing error:
+Syntax error at file "examples-bad/err-decl-matrix.stan", line 2, characters 9-10, parsing error:
  >   matrix[3] y;
 Expected "[" expression "," expression "]" for sizes of matrix.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-decl-no-expression.stan
-Syntax error at file "examples-bad/err-decl-no-expression.stan", line 2, characters 13-14, parsing error:
+Syntax error at file "examples-bad/err-decl-no-expression.stan", line 2, characters 12-13, parsing error:
  >   real<lower=> y;
 An expression (not containing binary logical operators) is expected for type lower bound.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-decl-vector-2.stan
-Syntax error at file "examples-bad/err-decl-vector-2.stan", line 2, characters 10-11, parsing error:
+Syntax error at file "examples-bad/err-decl-vector-2.stan", line 2, characters 9-10, parsing error:
  >   vector[3,4] y;
 "[" expression "]" expected for vector size.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-decl-vector.stan
-Syntax error at file "examples-bad/err-decl-vector.stan", line 2, characters 9-10, parsing error:
+Syntax error at file "examples-bad/err-decl-vector.stan", line 2, characters 2-8, parsing error:
  >   vector a[3];
 "[" expression "]" expected for vector size.
 
@@ -209,48 +209,49 @@ Semantic error at file "examples-bad/err-double-dims.stan", line 2, characters 9
 Array sizes should be of type int. Instead found type real.
 
   $ ../../../install/default/bin/stanc examples-bad/err-expected-bracket.stan
-Syntax error at file "examples-bad/err-expected-bracket.stan", line 4, characters 0-0, parsing error:
+Syntax error at file "examples-bad/err-expected-bracket.stan", line 3, characters 0-20, parsing error:
+ > generated quantities 
 Expected "{" after block keyword.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-expected-end-of-model.stan
-Syntax error at file "examples-bad/err-expected-end-of-model.stan", line 3, characters 0-3, parsing error:
- > foo
+Syntax error at file "examples-bad/err-expected-end-of-model.stan", lines 1-2, character 0, parsing error:
+ > }
 Expected "generated quantities {" or end of file after end of model block.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-expected-generated.stan
-Syntax error at file "examples-bad/err-expected-generated.stan", line 3, characters 0-9, parsing error:
- > generated {
+Syntax error at file "examples-bad/err-expected-generated.stan", lines 1-2, character 0, parsing error:
+ > }
 Expected "generated quantities {" or end of file after end of model block.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-expected-model.stan
-Syntax error at file "examples-bad/err-expected-model.stan", line 8, characters 0-5, parsing error:
- > model {
+Syntax error at file "examples-bad/err-expected-model.stan", lines 4-7, character 0, parsing error:
+ > }
 Expected end of file after end of generated quantities block.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-fun-bare-types-int.stan
-Syntax error at file "examples-bad/err-fun-bare-types-int.stan", line 2, characters 7-8, parsing error:
+Syntax error at file "examples-bad/err-fun-bare-types-int.stan", line 2, characters 6-7, parsing error:
  >   real[3] foo() { 
 "[" (list of commas) "]" expected in unsized return type of function definition.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-if-else-double-else.stan
-Syntax error at file "examples-bad/err-if-else-double-else.stan", line 4, characters 2-6, parsing error:
- >   else y <- 3;
+Syntax error at file "examples-bad/err-if-else-double-else.stan", line 3, characters 2-9, parsing error:
+ >   y <- 3;
 Expected top-level variable declaration, statement or "}".
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-if-else-no-cond.stan
-Syntax error at file "examples-bad/err-if-else-no-cond.stan", line 3, characters 6-7, parsing error:
+Syntax error at file "examples-bad/err-if-else-no-cond.stan", line 3, characters 5-6, parsing error:
  >   if () y <- 2;
 Expected expression for test of conditional control flow construct.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-if-else.stan
-Syntax error at file "examples-bad/err-if-else.stan", line 3, characters 8-9, parsing error:
+Syntax error at file "examples-bad/err-if-else.stan", line 3, characters 6-7, parsing error:
  >   if (1 y <- 2;
 Expected ")" after test expression of conditional control flow construct.
 
@@ -260,7 +261,7 @@ Semantic error at file "examples-bad/err-incr-log-prob-scope.stan", line 4, char
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
 
   $ ../../../install/default/bin/stanc examples-bad/err-integrate-ode-comma.stan
-Syntax error at file "examples-bad/err-integrate-ode-comma.stan", line 9, characters 46-51, parsing error:
+Syntax error at file "examples-bad/err-integrate-ode-comma.stan", line 9, characters 44-45, parsing error:
  >   y = integrate_ode_rk45(foo,y0,t0,ts,theta,x x_int);
 Ill-formed expression. Found identifier. There are many ways to complete this to a well-formed expression.
 
@@ -282,32 +283,32 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 Instead supplied arguments of incompatible type: vector, matrix.
 
   $ ../../../install/default/bin/stanc examples-bad/err-nested-parens-close.stan
-Syntax error at file "examples-bad/err-nested-parens-close.stan", line 3, characters 13-14, parsing error:
+Syntax error at file "examples-bad/err-nested-parens-close.stan", line 3, characters 8-13, parsing error:
  >   x <- (2 + 3;
 Expression or range of expressions followed by ")" expected after "(".
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-nested-parens.stan
-Syntax error at file "examples-bad/err-nested-parens.stan", line 3, characters 13-14, parsing error:
+Syntax error at file "examples-bad/err-nested-parens.stan", line 3, characters 12-13, parsing error:
  >   x <- 2 + (());
 Expression expected after "(".
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-no-cond-else-if.stan
-Syntax error at file "examples-bad/err-no-cond-else-if.stan", line 5, characters 12-13, parsing error:
+Syntax error at file "examples-bad/err-no-cond-else-if.stan", line 5, characters 9-11, parsing error:
  >   } else if {
 "(" expression ")" expected after "if".
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-no-cond.stan
-Syntax error at file "examples-bad/err-no-cond.stan", line 3, characters 6-7, parsing error:
+Syntax error at file "examples-bad/err-no-cond.stan", line 3, characters 5-6, parsing error:
  >   if ()
 Expected expression for test of conditional control flow construct.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-no-statement.stan
-Syntax error at file "examples-bad/err-no-statement.stan", line 4, characters 0-1, parsing error:
- > }
+Syntax error at file "examples-bad/err-no-statement.stan", line 3, characters 7-8, parsing error:
+ >   if (1) 
 Ill-formed statement. Statement expected for true branch of conditional. 
 
 
@@ -316,41 +317,44 @@ Semantic error at file "examples-bad/err-non-int-dims.stan", line 4, characters 
 Index should be of type int or int[] or should be a range. Instead found type real.
 
   $ ../../../install/default/bin/stanc examples-bad/err-open-block.stan
-Syntax error at file "examples-bad/err-open-block.stan", line 1, characters 10-13, parsing error:
+Syntax error at file "examples-bad/err-open-block.stan", line 1, characters 0-9, parsing error:
  > functions foo {
 "{" expected after "functions".
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-second-operand-plus.stan
-Syntax error at file "examples-bad/err-second-operand-plus.stan", line 4, characters 0-1, parsing error:
- > }
+Syntax error at file "examples-bad/err-second-operand-plus.stan", line 3, characters 9-11, parsing error:
+ >   n <- 3 ||
 Ill-formed expression. Found expression "||". Expect an expression next.
 
 
   $ ../../../install/default/bin/stanc examples-bad/err-transformed-params.stan
-Syntax error at file "examples-bad/err-transformed-params.stan", line 4, characters 0-11, parsing error:
- > transformed {
+Syntax error at file "examples-bad/err-transformed-params.stan", lines 1-3, character 0, parsing error:
+ > }
 "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
 
 
   $ ../../../install/default/bin/stanc examples-bad/expect_statement_seq_close_brace.stan
-Syntax error at file "examples-bad/expect_statement_seq_close_brace.stan", line 6, characters 0-0, parsing error:
+Syntax error at file "examples-bad/expect_statement_seq_close_brace.stan", line 5, characters 2-18, parsing error:
+ >   y ~ normal(0,1);
 Variable declaration, statement or "}" expected.
 
 
   $ ../../../install/default/bin/stanc examples-bad/expect_statement_seq_close_brace_2.stan
-Syntax error at file "examples-bad/expect_statement_seq_close_brace_2.stan", line 17, characters 0-0, parsing error:
+Syntax error at file "examples-bad/expect_statement_seq_close_brace_2.stan", line 12, characters 6-12, parsing error:
+ >       z = 3;
 Variable declaration, statement or "}" expected.
 
 
   $ ../../../install/default/bin/stanc examples-bad/expect_statement_seq_close_brace_3.stan
-Syntax error at file "examples-bad/expect_statement_seq_close_brace_3.stan", line 8, characters 0-10, parsing error:
- > parameters {
+Syntax error at file "examples-bad/expect_statement_seq_close_brace_3.stan", lines 4-6, character 2, parsing error:
+ >   }
 Expected top-level variable declaration, statement or "}".
 
 
   $ ../../../install/default/bin/stanc examples-bad/expect_statement_seq_close_brace_4.stan
-Syntax error at file "examples-bad/expect_statement_seq_close_brace_4.stan", line 10, characters 0-0, parsing error:
+Syntax error at file "examples-bad/expect_statement_seq_close_brace_4.stan", line 8, characters 2-14, parsing error:
+ >   int vs[2,3];
 Expected top-level variable declaration, statement or "}".
 
 
@@ -359,7 +363,7 @@ Semantic error at file "examples-bad/experiment.stan", line 12, characters 4-11:
 A non-returning function was expected but a returning function foo was supplied.
 
   $ ../../../install/default/bin/stanc examples-bad/functions-bad0.stan
-Syntax error at file "examples-bad/functions-bad0.stan", line 2, characters 11-15, parsing error:
+Syntax error at file "examples-bad/functions-bad0.stan", line 2, characters 10-11, parsing error:
  >   real foo(void x) {
 (Non-void) type expected function argument declaration.
 
@@ -434,19 +438,19 @@ Semantic error at file "examples-bad/functions-bad24.stan", line 3, characters 4
 Expression return statements may only be used inside returning function definitions.
 
   $ ../../../install/default/bin/stanc examples-bad/functions-bad25.stan
-Syntax error at file "examples-bad/functions-bad25.stan", line 5, characters 2-3, parsing error:
- >   }
+Syntax error at file "examples-bad/functions-bad25.stan", line 4, characters 4-10, parsing error:
+ >     return
 Expression or ";" expected after "return".
 
 
   $ ../../../install/default/bin/stanc examples-bad/functions-bad26.stan
-Syntax error at file "examples-bad/functions-bad26.stan", line 5, characters 2-3, parsing error:
- >   }
+Syntax error at file "examples-bad/functions-bad26.stan", line 4, characters 11-12, parsing error:
+ >     return y
 Ill-formed expression. Expression or ";" expected after "return".
 
 
   $ ../../../install/default/bin/stanc examples-bad/functions-bad3.stan
-Syntax error at file "examples-bad/functions-bad3.stan", line 2, characters 10-11, parsing error:
+Syntax error at file "examples-bad/functions-bad3.stan", line 2, characters 7-10, parsing error:
  >   real foo^3(real x) {
 "(" expected after function name.
 
@@ -480,25 +484,25 @@ Semantic error at file "examples-bad/get_lp_bad_scope2.stan", line 3, characters
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
 
   $ ../../../install/default/bin/stanc examples-bad/local_var_constraint.stan
-Syntax error at file "examples-bad/local_var_constraint.stan", line 5, characters 12-13, parsing error:
+Syntax error at file "examples-bad/local_var_constraint.stan", line 5, characters 2-12, parsing error:
  >   row_vector<lower=0,upper=1>[3] a[3];
 "[" expression"]" expected after "row_vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 
   $ ../../../install/default/bin/stanc examples-bad/local_var_constraint2.stan
-Syntax error at file "examples-bad/local_var_constraint2.stan", line 5, characters 8-9, parsing error:
+Syntax error at file "examples-bad/local_var_constraint2.stan", line 5, characters 2-8, parsing error:
  >   vector<lower=0,upper=1>[3] a[3];
 "[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 
   $ ../../../install/default/bin/stanc examples-bad/local_var_constraint3.stan
-Syntax error at file "examples-bad/local_var_constraint3.stan", line 5, characters 8-9, parsing error:
+Syntax error at file "examples-bad/local_var_constraint3.stan", line 5, characters 2-8, parsing error:
  >   matrix<lower=0,upper=1>[3,4] a[5];
 "[" expression "," expression "]" expected after "matrix" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
 
   $ ../../../install/default/bin/stanc examples-bad/local_var_constraint4.stan
-Syntax error at file "examples-bad/local_var_constraint4.stan", line 5, characters 6-7, parsing error:
+Syntax error at file "examples-bad/local_var_constraint4.stan", line 5, characters 2-6, parsing error:
  >   real<lower=0,upper=1> a;
 Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
@@ -516,19 +520,19 @@ Semantic error at file "examples-bad/matrix_expr_bad2.stan", line 2, characters 
 Row_vector expression should have all int and real entries or all row_vector entries.
 
   $ ../../../install/default/bin/stanc examples-bad/matrix_expr_bad3.stan
-Syntax error at file "examples-bad/matrix_expr_bad3.stan", line 2, characters 38-39, parsing error:
+Syntax error at file "examples-bad/matrix_expr_bad3.stan", line 2, characters 25-38, parsing error:
  >   matrix[3,2] td_mat32 = [ [ [ 1 ] ] ], [ [ 2 ] ] ];
 Ill-formed expression. Expression followed by ";" expected after "=".
 
 
   $ ../../../install/default/bin/stanc examples-bad/matrix_expr_bad4.stan
-Syntax error at file "examples-bad/matrix_expr_bad4.stan", line 2, characters 44-45, parsing error:
+Syntax error at file "examples-bad/matrix_expr_bad4.stan", line 2, characters 27-44, parsing error:
  >   matrix[3,2] td_mat32 = [ [ 1 , [ [ 2 ] ] ];
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
 
 
   $ ../../../install/default/bin/stanc examples-bad/matrix_expr_bad5.stan
-Syntax error at file "examples-bad/matrix_expr_bad5.stan", line 2, characters 29-30, parsing error:
+Syntax error at file "examples-bad/matrix_expr_bad5.stan", line 2, characters 27-28, parsing error:
  >   matrix[3,2] td_mat32 = [ [ ] ];
 Comma separated list of expressions followed by "]" expected after "[".
 
@@ -542,7 +546,7 @@ Semantic error at file "examples-bad/multiply_sample.stan", line 5, characters 2
 Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
 
   $ ../../../install/default/bin/stanc examples-bad/oneline-error.stan
-Syntax error at file "examples-bad/oneline-error.stan", line 1, characters 20-21, parsing error:
+Syntax error at file "examples-bad/oneline-error.stan", line 1, characters 13-19, parsing error:
  > parameters { vector y[10]; } model { }
 "[" expression "]" expected for vector size.
 
@@ -784,7 +788,7 @@ Semantic error at file "examples-bad/row_vector_expr_bad2.stan", line 5, charact
 Row_vector expression should have all int and real entries or all row_vector entries.
 
   $ ../../../install/default/bin/stanc examples-bad/row_vector_expr_bad3.stan
-Syntax error at file "examples-bad/row_vector_expr_bad3.stan", line 2, characters 22-23, parsing error:
+Syntax error at file "examples-bad/row_vector_expr_bad3.stan", line 2, characters 20-21, parsing error:
  >   row_vector[2] X = [ ];
 Comma separated list of expressions followed by "]" expected after "[".
 
@@ -819,7 +823,7 @@ Semantic error at file "examples-bad/stanc_helper.stan", line 5, characters 2-18
 Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
 
   $ ../../../install/default/bin/stanc examples-bad/target-reserved.stan
-Syntax error at file "examples-bad/target-reserved.stan", line 2, characters 7-13, parsing error:
+Syntax error at file "examples-bad/target-reserved.stan", line 2, characters 2-6, parsing error:
  >   real target;
 Identifier expected after type in top-level variable declaration.
 
@@ -857,13 +861,13 @@ Semantic error at file "examples-bad/validate_array_expr_bad2.stan", line 6, cha
 Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rhs has type int[][]
 
   $ ../../../install/default/bin/stanc examples-bad/validate_array_expr_bad3.stan
-Syntax error at file "examples-bad/validate_array_expr_bad3.stan", line 6, characters 14-15, parsing error:
+Syntax error at file "examples-bad/validate_array_expr_bad3.stan", line 6, characters 12-13, parsing error:
  >   int_1_a = { };  // cannot be empty
 Expression expected after "{" in array expression.
 
 
   $ ../../../install/default/bin/stanc examples-bad/validate_array_expr_bad3a.stan
-Syntax error at file "examples-bad/validate_array_expr_bad3a.stan", line 5, characters 30-31, parsing error:
+Syntax error at file "examples-bad/validate_array_expr_bad3a.stan", line 5, characters 29-30, parsing error:
  >   real loc_real_dim2[2,1] = {{},{}}; // cannot be empty
 Expression expected after "{" in array expression.
 
@@ -1000,7 +1004,7 @@ Semantic error at file "examples-bad/validate_set_double_locscale_bad2.stan", li
 Location and scale should be of int or real type. Instead found type vector.
 
   $ ../../../install/default/bin/stanc examples-bad/validate_set_double_locscale_bad3.stan
-Syntax error at file "examples-bad/validate_set_double_locscale_bad3.stan", line 2, characters 15-20, parsing error:
+Syntax error at file "examples-bad/validate_set_double_locscale_bad3.stan", line 2, characters 14-15, parsing error:
  >   real<lower=1,scale=-31> a;
 "upper =" expression (not containing binary logical operators) ">" expected after "<lower =" expression "," in top-level variable declaration.
 
