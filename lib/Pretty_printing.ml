@@ -1,6 +1,8 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
 
-(* TODO: this should be made tail recursive by accumulating list of strings in reverse *)
+(* TODO: this should probably be made tail recursive by accumulating list of strings in reverse *)
+(* TODO: to preserve comments during pretty printing, we should capture them during parsing and attach them to AST nodes *)
+(* TODO: we could consider cutting off lines after 80 characters *)
 
 open Ast
 

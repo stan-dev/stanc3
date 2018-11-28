@@ -12,12 +12,22 @@
       pos_bol = pos.pos_cnum;
     }
 
+  let dup_exists l =
+    let rec dup_consecutive = function
+      | [] | [_] -> false
+      | x1 :: x2 :: tl -> x1 = x2 || dup_consecutive (x2 :: tl)
+    in
+    dup_consecutive (List.sort String.compare l)    
+
   let include_stack = Stack.create ()
+
   let include_paths : string list ref = ref []
+
   let rec try_open_in paths fname =
   match paths with
     | [] -> raise (Errors.SyntaxError
-              (Includes (fname, lexeme_end_p
+              (Includes ("Could not find include file \"" ^ fname ^
+                         "\" in specified include paths.\n", lexeme_end_p
                 (Stack.top include_stack))))
     | path :: rest_of_paths ->
     try
@@ -25,6 +35,13 @@
       let full_path = path ^ "/" ^ fname in
         open_in full_path, full_path ^ "\" included from \"" ^ old_path
     with _ -> try_open_in rest_of_paths fname
+  
+  let maybe_remove_quotes str =
+    let open Core_kernel.String in
+    if is_prefix str ~prefix:"\"" &&
+       is_suffix str ~suffix:"\""
+    then drop_suffix (drop_prefix str 1) 1
+    else str
   (* TODO: detect recursive includes and throw error *)
 }
 
@@ -51,12 +68,15 @@ rule token = parse
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
-  ( [' ' '\t' '\012'
-     '\r' '\n']+)
-  ( [^ ' ' '\t' '\012'
-       '\r' '\n']* as fname)  { lexer_logger ("include " ^ fname) ;
+    ( [' ' '\t' '\012'
+       '\r' '\n']+)
+    ( '"' [^ '"']* '"'
+    |  [^ ' ' '\t' '\012'
+         '\r' '\n']* 
+   as fname)                  { lexer_logger ("include " ^ fname) ;
                                 let chan, path =
-                                try_open_in !include_paths fname in
+                                try_open_in !include_paths
+                                  (maybe_remove_quotes fname) in
                                 let new_lexbuf = from_channel chan in
                                 (new_lexbuf).lex_start_p
                                   <- { pos_fname= path
@@ -65,6 +85,13 @@ rule token = parse
                                      ; pos_cnum= 0 } ;
                                 new_lexbuf.lex_curr_p
                                   <- new_lexbuf.lex_start_p ;
+                                if dup_exists (Str.split (Str.regexp
+                                  "\" included from \"") path) then
+                                  raise (Errors.SyntaxError
+                                    (Includes (
+                                      "Found cyclical include structure.\n",
+                                      (lexeme_end_p (Stack.top include_stack)
+                                         ))))          ;
                                 Stack.push new_lexbuf include_stack ;
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
