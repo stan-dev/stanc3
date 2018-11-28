@@ -2,6 +2,7 @@
 # The following command installs the latest opam on *nix systems.
 sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 opam init $1
+eval $(opam env)
 
 # Merlin, utop, ocp-indent, ocamlformat, and patdiff are all for developer assistance
 # Menhir is our parsing library and annoyingly its module name does not match

@@ -1,6 +1,7 @@
 FROM ubuntu:bionic
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  curl ca-certificates rsync git build-essential m4 unzip pkg-config
+  curl ca-certificates \
+  rsync git build-essential m4 unzip pkg-config libpcre3-dev
 
 
 COPY ./setup_dev_env.sh ./setup_dev_env.sh
