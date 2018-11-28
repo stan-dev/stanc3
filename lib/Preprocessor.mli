@@ -19,8 +19,6 @@ val get_token :
   -> Lexing.lexbuf
   -> Parser.MenhirInterpreter.token
 
-(* Get the current lexeme. *)
-val lexeme : 'a lexstack -> string
 
 (* Get position of current lexeme. *)
 val current_pos : 'a lexstack -> Lexing.position
