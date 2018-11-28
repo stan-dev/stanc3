@@ -25,7 +25,7 @@ pipeline {
         stage("Build") {
             steps {
                 sh """
-                      eval $(opam env)
+                      eval \$(opam env)
                       dune build @install
                    """
             }
@@ -33,7 +33,7 @@ pipeline {
         stage("Run all tests") {
             steps {
                 sh """
-                      eval $(opam env)
+                      eval \$(opam env)
                       dune runtest
                    """
             }
