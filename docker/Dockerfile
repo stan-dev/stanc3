@@ -4,5 +4,6 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   rsync git build-essential m4 unzip pkg-config libpcre3-dev
 
 
-COPY ./setup_dev_env.sh ./setup_dev_env.sh
-RUN printf "\n" | bash -x setup_dev_env.sh "--disable-sandboxing -y"
+COPY ./*.sh .
+RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
+RUN bash -x install_dev_deps.sh
