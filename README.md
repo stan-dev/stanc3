@@ -2,46 +2,24 @@
 This repo contains work in progress on a new compiler for Stan, written in OCaml.
 
 ## To Get Started
-### Prerequisites
-The project has the following prerequisites:
-- GNU Make, which you probably have already
-- OCaml programming language, version 4 or later,
-- Core(kernel) library
-- menhir parser generator
-- Dune OCaml build system (formerly known as JBuilder)
-- cram (https://bitheap.org/cram/), to run tests
 
 ### To build, test, and run
-To build, run
-`
-make
-`.
+Check out `setup_dev_env.sh` to see how we recommend installing our pre-reqs.
 
-To run tests, run `./test/run-tests.sh`.
+To build `stanc`, run `make`.
 
-To run the compiler on all good models in `test/examples-good` and write the output to `test/stan-examples-good-out.log`, run
-`
-./test/run-stan-examples-good.sh
-`
+To run tests, run `dune runtest` and use `dune promote` to accept changes.
 
-To run the compiler on all bad models in `test/examples-bad` and write the output to `test/stan-examples-bad-out.log`, run
-`
-./test/run-stan-examples-bad.sh
-`
-
-To run the pretty printer on all good models in `test/examples-good` and write the output to `test/stan-examples-good-pretty-printed.log`, run
-`
-./test/run-stan-examples-good-pretty-printer.sh
-
-To auto-format the OCaml-code (sadly, this does not work for the two ocamllex and menhir files), run 
-`
-./ocamlformat-stan.sh
-`
+To auto-format the OCaml code (sadly, this does not work for the two ocamllex
+and menhir files), run ` dune build @fmt ` or  `make format`.
+To accept the changes proposed by ocamlformat, run `dune promote`.
 
 Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?` to get command line options for debugging.
 
+Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
+
 ## Project Timeline
-### Done, so far
+### Code has been written for the following components:
 - A lexer
 - A LR(1) parser (without any shift/reduce conflicts), constructing an AST
 - A typed and untyped AST
@@ -49,26 +27,32 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 - Ported all function signatures from Stan Math
 - A well-tested semantic/type checker with informative semantic error messages
 - Lexical position printed in syntactic and semantic error messages
-- Tests for all models in `stan/src/test/test-models/good` (including the pretty printing functionality) and `stan/src/test/test-models/bad`, using Mercurials Cram testing framework
+- Tests for all models in `stan/src/test/test-models/good` (including the pretty printing functionality) and `stan/src/test/test-models/bad`
 - 100% coverage of parse errors with informative custom syntax errors implemented using Menhir's Incremental API
 - Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
 - A pretty printer for Stan models
 - Work in progress on intermediate representations and code generation
 
-### TODO for beta release
-- Write code generation phase with tests (~2 weeks)
-- Macro pre-processor with correct mapping of error locations (~2 days)
+### TODO for initial release
+- Decide on final tree representation used for AST and IRs, some inspirational ideas:
+    - [polymorphic variants](https://github.com/links-lang/links/blob/master/core/types.ml)
+    - currently using [Neel's "two-level types" pattern](http://lambda-the-ultimate.org/node/4170#comment-63836)
+- End-to-end model test framework
+    - Could show generated C++ code matches stanc2 or that the same results are achieved at runtime
+- Unit or expect tests at a decent granularity
+- Code review
+- Write code generation phase
+- Continuous integration and deployment for Windows, Linux, and Mac static binaries
+- Macro pre-processor with correct mapping of error locations
 
-### Cool stuff to do after
-- Create IRs and transforms (embodying compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
+### The bright road ahead
+- Traditional compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
 - Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
 
 
 ## Important simultaneous work also needed for other reasons
 1. `install_tensorflow()` style installers for R and Python that install a C++ toolchain in the user's home directory. We will need this to install the new `stanc` binary.
-1. Refactoring the model class to have a base class, and the algorithms to not be templated (speeds up compile times. @mitzimorris is working on this).
-1. Any work to compile the math library ahead of time!
-
+1. Work needed to compile the math library ahead of time!
 
 ## Architectural goals for the new compiler
 * **Multiple phases**, each with human-readable intermediate representations for easy debugging and optimization design.

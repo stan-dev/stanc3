@@ -19,3 +19,12 @@
 (menhir
  (modules parser)
  (flags :standard --table --strict --unused-tokens --fixed-exception))
+
+(rule
+ (with-stdout-to parser_updated.messages
+  (run menhir %{dep:parser.mly} --update-errors %{dep:parser.messages}))
+)
+
+(alias
+ (name update_messages)
+  (action (diff parser.messages parser_updated.messages)))
