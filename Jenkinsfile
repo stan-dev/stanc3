@@ -7,6 +7,7 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker'
+            args '-u root --privileged' // TODO: set up a proper user in Dockerfile
         }
     }
     stages {
@@ -23,7 +24,7 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh 'dune build @install'
+                sh 'eval $(opam env) && dune build @install'
             }
         }
     }
