@@ -14,7 +14,6 @@ pipeline {
             when {
                 not { branch 'develop' }
                 not { branch 'master' }
-                not { branch 'downstream_tests' }
             }
             steps {
                 script {
@@ -28,4 +27,10 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            utils.mailBuildResults()
+        }
+    }
+
 }
