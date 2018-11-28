@@ -1,4 +1,4 @@
-$ ./stanc.exe --auto-format test/examples-good/abs-deprecate.stan
+$ ./../stanc.exe --auto-format examples-good/abs-deprecate.stan
 transformed data {
   real mu;
   mu = abs(-1.2);
@@ -11,7 +11,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/algebra_solver_good.stan
+$ ./../stanc.exe --auto-format examples-good/algebra_solver_good.stan
 functions {
   real algebra_solverfake(real x) {
     return 2 * x;
@@ -57,7 +57,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/assignment-new.stan
+$ ./../stanc.exe --auto-format examples-good/assignment-new.stan
 transformed data {
   real mu;
   real<lower=0> sigma;
@@ -72,7 +72,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/assignment-old.stan
+$ ./../stanc.exe --auto-format examples-good/assignment-old.stan
 transformed data {
   real mu;
   real<lower=0> sigma;
@@ -87,7 +87,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/assignment_double_index_lhs.stan
+$ ./../stanc.exe --auto-format examples-good/assignment_double_index_lhs.stan
 transformed data {
   real a[109, 307];
   vector[5] b[17];
@@ -132,7 +132,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/assignments.stan
+$ ./../stanc.exe --auto-format examples-good/assignments.stan
 data {
   real x;
   vector[5] y;
@@ -390,7 +390,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/assignments_double_var.stan
+$ ./../stanc.exe --auto-format examples-good/assignments_double_var.stan
 data {
   real x;
   vector[5] y;
@@ -648,7 +648,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/assignments_var.stan
+$ ./../stanc.exe --auto-format examples-good/assignments_var.stan
 parameters {
   real x;
   vector[5] y;
@@ -906,7 +906,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/bernoulli_logit_glm_old_performance.stan
+$ ./../stanc.exe --auto-format examples-good/bernoulli_logit_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -935,7 +935,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/bernoulli_logit_glm_performance.stan
+$ ./../stanc.exe --auto-format examples-good/bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -964,7 +964,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/break-continue.stan
+$ ./../stanc.exe --auto-format examples-good/break-continue.stan
 functions {
   int foo(int a) {
     while (1) break;
@@ -1078,7 +1078,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/conditional_condition_good.stan
+$ ./../stanc.exe --auto-format examples-good/conditional_condition_good.stan
 parameters {
   real y;
 }
@@ -1090,7 +1090,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/conditional_op_fun_promote.stan
+$ ./../stanc.exe --auto-format examples-good/conditional_op_fun_promote.stan
 functions {
   real foo(real y) {
     return 1 ? y : 2;
@@ -1108,7 +1108,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declarations.stan
+$ ./../stanc.exe --auto-format examples-good/declarations.stan
 data {
   int a0;
   int a1[1];
@@ -1332,7 +1332,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-conditional-op.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-conditional-op.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> y[N];
@@ -1403,7 +1403,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-gq-local-rng.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-gq-local-rng.stan
 transformed data {
   int a = categorical_rng(rep_vector(0.1, 10));
   {
@@ -1428,7 +1428,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-constrained-matrix.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-constrained-matrix.stan
 data {
   int d;
   corr_matrix[d] d_corr_matrix;
@@ -1523,7 +1523,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-constrained-vector.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-constrained-vector.stan
 data {
   int d;
   simplex[d] d_simplex;
@@ -1642,7 +1642,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-double.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-double.stan
 functions {
   real foo(real a1) {
     int lf0 = 2;
@@ -1790,7 +1790,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-int.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-int.stan
 functions {
   int foo() {
     int lf1 = 3;
@@ -1842,7 +1842,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-matrix.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-matrix.stan
 functions {
   matrix foo(int a) {
     matrix[a, a] lf0;
@@ -1910,7 +1910,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-vec-runtime-error.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-vec-runtime-error.stan
 data {
   vector[7] b0;
 }
@@ -1925,7 +1925,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/declare-define-var-vec-types.stan
+$ ./../stanc.exe --auto-format examples-good/declare-define-var-vec-types.stan
 functions {
   void foo1() {
     vector[2] lf1;
@@ -2061,7 +2061,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/deprecate-increment-log-prob.stan
+$ ./../stanc.exe --auto-format examples-good/deprecate-increment-log-prob.stan
 data {
   real a;
   vector[3] b;
@@ -2087,7 +2087,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/deprecate-old-prob-funs.stan
+$ ./../stanc.exe --auto-format examples-good/deprecate-old-prob-funs.stan
 parameters {
   real y;
 }
@@ -2096,7 +2096,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/duplicate-warns.stan
+$ ./../stanc.exe --auto-format examples-good/duplicate-warns.stan
 model {
   real foo;
   foo <- 1;
@@ -2110,7 +2110,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun-defs-lpdf.stan
+$ ./../stanc.exe --auto-format examples-good/fun-defs-lpdf.stan
 functions {
   real bar_baz_lpdf(real a, real b) {
     return a / b;
@@ -2124,7 +2124,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun-var-constraints.stan
+$ ./../stanc.exe --auto-format examples-good/fun-var-constraints.stan
 functions {
   real foo() {
     return 0;
@@ -2150,7 +2150,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_0.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_0.stan
 functions {
   real foo() {
     return 1.7;
@@ -2161,7 +2161,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_0_lp.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_0_lp.stan
 functions {
   real foo_lp() {
     return 1.0;
@@ -2172,7 +2172,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_1.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_1.stan
 functions {
   real foo(real x) {
     return x;
@@ -2183,7 +2183,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_4.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_4.stan
 functions {
   real foo(real x1, real x2, real x3, real x4) {
     return x1;
@@ -2194,7 +2194,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_4_lp.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_4_lp.stan
 functions {
   real foo_lp(real x1, real x2, real x3, real x4) {
     return x1;
@@ -2205,7 +2205,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_5.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_5.stan
 functions {
   real foo(real x1, real x2, real x3, real x4, real x5) {
     return x1;
@@ -2216,7 +2216,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_5_lp.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_5_lp.stan
 functions {
   real foo_lp(real x1, real x2, real x3, real x4, real x5) {
     return x1;
@@ -2227,7 +2227,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_int0.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_int0.stan
 functions {
   int foo() {
     return 3;
@@ -2238,7 +2238,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_int_1_int.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_int_1_int.stan
 functions {
   int foo(int x) {
     return x;
@@ -2249,7 +2249,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_args_int_1_real.stan
+$ ./../stanc.exe --auto-format examples-good/fun_args_int_1_real.stan
 functions {
   int foo(real x) {
     return 3;
@@ -2260,7 +2260,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_as_lhs_sampling.stan
+$ ./../stanc.exe --auto-format examples-good/fun_as_lhs_sampling.stan
 transformed data {
   matrix[2, 2] M = rep_matrix(0, 2, 2);
 }
@@ -2269,7 +2269,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_as_stmt.stan
+$ ./../stanc.exe --auto-format examples-good/fun_as_stmt.stan
 functions {
   void foo_lp() {
 
@@ -2280,7 +2280,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/fun_log_forward_decl.stan
+$ ./../stanc.exe --auto-format examples-good/fun_log_forward_decl.stan
 functions {
   real n_log(real y);
   real n_log(real y) {
@@ -2296,7 +2296,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/functions-fwd-ref.stan
+$ ./../stanc.exe --auto-format examples-good/functions-fwd-ref.stan
 functions {
   int foo(int n);
   int foo(int n) {
@@ -2312,7 +2312,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/functions-good-void.stan
+$ ./../stanc.exe --auto-format examples-good/functions-good-void.stan
 functions {
   void linear_regression_lp(vector x, vector y, real alpha, real beta, real sigma) {
     y ~ normal(x * alpha + beta, sigma);
@@ -2336,7 +2336,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/functions-good1.stan
+$ ./../stanc.exe --auto-format examples-good/functions-good1.stan
 functions {
   real foo0() {
     return 0.0;
@@ -2359,7 +2359,7 @@ transformed data {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/functions-good2.stan
+$ ./../stanc.exe --auto-format examples-good/functions-good2.stan
 functions {
   real foo_bar0() {
     return 0.0;
@@ -2379,7 +2379,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/functions-good3.stan
+$ ./../stanc.exe --auto-format examples-good/functions-good3.stan
 functions {
   real unit_normal_rng() {
     return normal_rng(0, 1);
@@ -2397,7 +2397,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/functions-promote-return.stan
+$ ./../stanc.exe --auto-format examples-good/functions-promote-return.stan
 functions {
   vector foo(vector x, real y) {
     if (y < 10) return log(x);
@@ -2416,7 +2416,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs1.stan
+$ ./../stanc.exe --auto-format examples-good/funs1.stan
 functions {
   void unit_normal_lp(real u) {
     increment_log_prob(normal_log(u, 0, 1));
@@ -2431,7 +2431,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs2.stan
+$ ./../stanc.exe --auto-format examples-good/funs2.stan
 functions {
   real unit_normal_rng() {
     return normal_rng(0, 1);
@@ -2449,7 +2449,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs3.stan
+$ ./../stanc.exe --auto-format examples-good/funs3.stan
 functions {
   real unit_normal_log(real y) {
     return normal_log(y, 0, 1);
@@ -2463,7 +2463,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs4.stan
+$ ./../stanc.exe --auto-format examples-good/funs4.stan
 functions {
   real unit_normal_log(real y) {
     return normal_log(y, 0, 1);
@@ -2477,7 +2477,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs5.stan
+$ ./../stanc.exe --auto-format examples-good/funs5.stan
 functions {
   void foo(real x) {
     print("x=", x);
@@ -2492,7 +2492,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs6.stan
+$ ./../stanc.exe --auto-format examples-good/funs6.stan
 functions {
   real foo(real x) {
     return x * 2;
@@ -2506,7 +2506,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/funs7.stan
+$ ./../stanc.exe --auto-format examples-good/funs7.stan
 functions {
   real foo(real z) {
     real y;
@@ -2525,7 +2525,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/get-lp-deprecate.stan
+$ ./../stanc.exe --auto-format examples-good/get-lp-deprecate.stan
 parameters {
   real<lower=0> y;
 }
@@ -2535,7 +2535,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/get-lp-target.stan
+$ ./../stanc.exe --auto-format examples-good/get-lp-target.stan
 parameters {
   real<lower=0> y;
 }
@@ -2550,7 +2550,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/get_lp_good.stan
+$ ./../stanc.exe --auto-format examples-good/get_lp_good.stan
 functions {
   real foo_lp(real x) {
     return x + get_lp();
@@ -2570,7 +2570,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/good_inf.stan
+$ ./../stanc.exe --auto-format examples-good/good_inf.stan
 data {
   real L;
   real U;
@@ -2583,7 +2583,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/illegal_generated_quantities.stan
+$ ./../stanc.exe --auto-format examples-good/illegal_generated_quantities.stan
 parameters {
   real y;
 }
@@ -2596,7 +2596,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/illegal_transformed_data.stan
+$ ./../stanc.exe --auto-format examples-good/illegal_transformed_data.stan
 transformed data {
   real<lower=0> x;
   x <- -1;
@@ -2606,7 +2606,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/illegal_transformed_parameters.stan
+$ ./../stanc.exe --auto-format examples-good/illegal_transformed_parameters.stan
 transformed parameters {
   real<lower=0> x;
   x <- -1;
@@ -2616,7 +2616,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/increment-target.stan
+$ ./../stanc.exe --auto-format examples-good/increment-target.stan
 data {
   real a;
   vector[3] b;
@@ -2643,7 +2643,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/increment_log_prob.stan
+$ ./../stanc.exe --auto-format examples-good/increment_log_prob.stan
 transformed data {
   int n;
   int nn[2];
@@ -2710,7 +2710,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/int_div_user.stan
+$ ./../stanc.exe --auto-format examples-good/int_div_user.stan
 data {
   int a[4];
   int b[3];
@@ -2724,7 +2724,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/int_fun.stan
+$ ./../stanc.exe --auto-format examples-good/int_fun.stan
 functions {
   int foo(int x) {
     return x + 1;
@@ -2742,7 +2742,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/integrate_ode_adams.stan
+$ ./../stanc.exe --auto-format examples-good/integrate_ode_adams.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -2786,7 +2786,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/integrate_ode_bdf.stan
+$ ./../stanc.exe --auto-format examples-good/integrate_ode_bdf.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -2832,7 +2832,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/integrate_ode_deprecation.stan
+$ ./../stanc.exe --auto-format examples-good/integrate_ode_deprecation.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -2865,7 +2865,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/integrate_ode_rk45.stan
+$ ./../stanc.exe --auto-format examples-good/integrate_ode_rk45.stan
 functions {
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -2903,7 +2903,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/io_example.stan
+$ ./../stanc.exe --auto-format examples-good/io_example.stan
 transformed data {
   vector[2] y;
 }
@@ -2916,7 +2916,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-else-if.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-else-if.stan
 parameters {
   real a;
   real if2;
@@ -2929,7 +2929,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-else.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-else.stan
 parameters {
   real a;
   real elseif;
@@ -2942,7 +2942,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-for.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-for.stan
 parameters {
   real force;
 }
@@ -2951,7 +2951,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-if.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-if.stan
 parameters {
   real iffy;
 }
@@ -2960,7 +2960,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-increment-log-prob.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-increment-log-prob.stan
 parameters {
   real increment_log_prob2;
 }
@@ -2969,7 +2969,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-integrate-ode.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-integrate-ode.stan
 parameters {
   real integrate_ode_foo;
 }
@@ -2978,7 +2978,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-print.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-print.stan
 parameters {
   real printer;
 }
@@ -2987,7 +2987,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-reject.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-reject.stan
 parameters {
   real rejection;
 }
@@ -2996,7 +2996,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-return.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-return.stan
 parameters {
   real returning;
 }
@@ -3005,7 +3005,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/keywords-while.stan
+$ ./../stanc.exe --auto-format examples-good/keywords-while.stan
 parameters {
   real whiley;
 }
@@ -3014,7 +3014,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/lkj_cov_deprecation1.stan
+$ ./../stanc.exe --auto-format examples-good/lkj_cov_deprecation1.stan
 parameters {
   cov_matrix[3] Sigma;
   vector[3] mu;
@@ -3026,7 +3026,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/lkj_cov_deprecation2.stan
+$ ./../stanc.exe --auto-format examples-good/lkj_cov_deprecation2.stan
 parameters {
   cov_matrix[3] Sigma;
   vector[3] mu;
@@ -3038,7 +3038,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/lower-trunc-discrete.stan
+$ ./../stanc.exe --auto-format examples-good/lower-trunc-discrete.stan
 functions {
   real foo_lpmf(int y, real lambda) {
     return 1.0;
@@ -3111,7 +3111,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/lp_in_fun.stan
+$ ./../stanc.exe --auto-format examples-good/lp_in_fun.stan
 functions {
   void foo_lp() {
     print("lp__ = ", get_lp());
@@ -3122,7 +3122,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/map_rect.stan
+$ ./../stanc.exe --auto-format examples-good/map_rect.stan
 functions {
   vector foo(vector shared_params, vector job_params, real[] data_r, int[] data_i) {
     return [1, 2, 3]';
@@ -3159,7 +3159,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/mat_assign.stan
+$ ./../stanc.exe --auto-format examples-good/mat_assign.stan
 transformed data {
   matrix[2, 2] X;
   row_vector[2] y;
@@ -3188,7 +3188,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/min-max-types.stan
+$ ./../stanc.exe --auto-format examples-good/min-max-types.stan
 parameters {
   matrix[max(1, 3), min(2, 5)] a;
 }
@@ -3204,7 +3204,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/model_block_empty.stan
+$ ./../stanc.exe --auto-format examples-good/model_block_empty.stan
 functions {
   real foo(real x) {
     return x;
@@ -3215,7 +3215,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/multiple_funs.stan
+$ ./../stanc.exe --auto-format examples-good/multiple_funs.stan
 functions {
   int foo(int a);
   int foo(int a) {
@@ -3233,7 +3233,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/neg_binomial_2_log_glm_old_performance.stan
+$ ./../stanc.exe --auto-format examples-good/neg_binomial_2_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -3263,7 +3263,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/neg_binomial_2_log_glm_performance.stan
+$ ./../stanc.exe --auto-format examples-good/neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -3293,7 +3293,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/new-prob-fun-suffixes.stan
+$ ./../stanc.exe --auto-format examples-good/new-prob-fun-suffixes.stan
 parameters {
   real y;
 }
@@ -3308,7 +3308,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/normal_id_glm_old_performance.stan
+$ ./../stanc.exe --auto-format examples-good/normal_id_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -3338,7 +3338,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/normal_id_glm_performance.stan
+$ ./../stanc.exe --auto-format examples-good/normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -3368,7 +3368,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/nullary-unconflicted.stan
+$ ./../stanc.exe --auto-format examples-good/nullary-unconflicted.stan
 parameters {
   real e;
   real pi;
@@ -3389,7 +3389,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/ode-int-segments.stan
+$ ./../stanc.exe --auto-format examples-good/ode-int-segments.stan
 functions {
   real[] ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[0];
@@ -3422,7 +3422,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/ode-nested-quotes.stan
+$ ./../stanc.exe --auto-format examples-good/ode-nested-quotes.stan
 functions {
   real[] foo(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
     return rep_array(1.0, 1);
@@ -3438,7 +3438,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/ode_good.stan
+$ ./../stanc.exe --auto-format examples-good/ode_good.stan
 functions {
   real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
@@ -3474,7 +3474,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/old-log-funs.stan
+$ ./../stanc.exe --auto-format examples-good/old-log-funs.stan
 transformed data {
   real x;
   x = multiply_log(x, x);
@@ -3490,7 +3490,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/poisson_log_glm_old_performance.stan
+$ ./../stanc.exe --auto-format examples-good/poisson_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -3519,7 +3519,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/poisson_log_glm_performance.stan
+$ ./../stanc.exe --auto-format examples-good/poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
   int<lower=0> M = 100;
@@ -3548,7 +3548,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/pound-comment-deprecated.stan
+$ ./../stanc.exe --auto-format examples-good/pound-comment-deprecated.stan
 data {
   int N;
 }
@@ -3557,7 +3557,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/print_chars.stan
+$ ./../stanc.exe --auto-format examples-good/print_chars.stan
 parameters {
   real y;
 }
@@ -3567,7 +3567,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/print_indexing.stan
+$ ./../stanc.exe --auto-format examples-good/print_indexing.stan
 data {
   int<lower=1> N[2];
   int<lower=0> y_1[N[1]];
@@ -3581,7 +3581,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/rng_loc.stan
+$ ./../stanc.exe --auto-format examples-good/rng_loc.stan
 functions {
   real foo_rng(real mu, real sigma) {
     return normal_rng(mu, sigma);
@@ -3603,7 +3603,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/rng_transformed_data.stan
+$ ./../stanc.exe --auto-format examples-good/rng_transformed_data.stan
 data {
   int<lower=0> N;
 }
@@ -3625,7 +3625,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/stanc_helper.stan
+$ ./../stanc.exe --auto-format examples-good/stanc_helper.stan
 parameters {
   real y;
 }
@@ -3634,7 +3634,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/tern_op_contains_var.stan
+$ ./../stanc.exe --auto-format examples-good/tern_op_contains_var.stan
 data {
   int N;
   int y_max;
@@ -3652,7 +3652,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/truncation-user-defined.stan
+$ ./../stanc.exe --auto-format examples-good/truncation-user-defined.stan
 functions {
   real foo_log(real y, real theta) {
     return 1;
@@ -3679,7 +3679,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/truncation-wild.stan
+$ ./../stanc.exe --auto-format examples-good/truncation-wild.stan
 model {
   real T[1, 1] = {{42.0}};
   1 ~ normal(0, 1) T[1, T[1, 1]];
@@ -3687,7 +3687,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/unconstrained_params_var.stan
+$ ./../stanc.exe --auto-format examples-good/unconstrained_params_var.stan
 parameters {
   real mu;
   real<lower=0> sigma;
@@ -3699,7 +3699,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/user-defined-lpdf-fun.stan
+$ ./../stanc.exe --auto-format examples-good/user-defined-lpdf-fun.stan
 functions {
   real bar_lpmf(int y, real z) {
     return 1.0;
@@ -3739,7 +3739,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/user-distro-truncate.stan
+$ ./../stanc.exe --auto-format examples-good/user-distro-truncate.stan
 functions {
   real foo_lpdf(real y, real mu) {
     return -(y - mu) ^ 2;
@@ -3763,7 +3763,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_add_expression_dimss_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_add_expression_dimss_good.stan
 transformed data {
   real x;
   vector[3] v;
@@ -3782,7 +3782,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_add_var_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_add_var_good.stan
 data {
   int n;
   real x;
@@ -3861,7 +3861,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_bounds_comparison.stan
+$ ./../stanc.exe --auto-format examples-good/validate_bounds_comparison.stan
 data {
   real<lower=if_else(1 < 2, -1, -2)> a;
   real<upper=if_else(1 < 2, -1, -2)> b;
@@ -3875,7 +3875,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_conditional_op_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_conditional_op_good.stan
 functions {
   real foo(real fa_x, int fa_y) {
     real fl_x;
@@ -4061,7 +4061,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_division_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_division_good.stan
 transformed data {
   real u;
   matrix[3, 3] m;
@@ -4092,7 +4092,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_division_int_warning.stan
+$ ./../stanc.exe --auto-format examples-good/validate_division_int_warning.stan
 transformed data {
   real u;
   int j;
@@ -4109,7 +4109,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_elt_division_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
   vector[3] v;
@@ -4148,7 +4148,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_elt_multiplication_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_elt_multiplication_good.stan
 transformed data {
   matrix[3, 3] m;
   vector[3] v;
@@ -4173,7 +4173,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_exponentiation_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_exponentiation_good.stan
 data {
   int i;
   int j;
@@ -4209,7 +4209,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_exponentiation_precedence.stan
+$ ./../stanc.exe --auto-format examples-good/validate_exponentiation_precedence.stan
 data {
 
 }
@@ -4241,7 +4241,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_functions.stan
+$ ./../stanc.exe --auto-format examples-good/validate_functions.stan
 functions {
   real my_fun(real x);
   real my_fun2(real x, real y);
@@ -4276,7 +4276,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_int_expr2_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_int_expr2_good.stan
 parameters {
   vector[10] y;
 }
@@ -4285,7 +4285,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning1.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning1.stan
 parameters {
   real y;
 }
@@ -4294,7 +4294,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning2.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning2.stan
 parameters {
   real y;
 }
@@ -4303,7 +4303,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning3.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning3.stan
 parameters {
   vector[5] v;
 }
@@ -4312,7 +4312,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning4.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning4.stan
 parameters {
   real y;
 }
@@ -4321,7 +4321,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning5.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning5.stan
 parameters {
   vector[10] y;
 }
@@ -4330,7 +4330,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning6.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning6.stan
 parameters {
   real y;
 }
@@ -4339,7 +4339,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning_good.stan
 data {
   int N;
   real x;
@@ -4392,7 +4392,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_jacobian_warning_user.stan
+$ ./../stanc.exe --auto-format examples-good/validate_jacobian_warning_user.stan
 parameters {
   vector[1] y;
 }
@@ -4401,7 +4401,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_left_division_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_left_division_good.stan
 transformed data {
   matrix[3, 3] m;
   vector[3] v;
@@ -4422,7 +4422,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_logical_negate_expr_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_logical_negate_expr_good.stan
 transformed data {
   int n;
   real x;
@@ -4441,7 +4441,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_modulus_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_modulus_good.stan
 data {
   int i;
   int j;
@@ -4468,7 +4468,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_multiplication.stan
+$ ./../stanc.exe --auto-format examples-good/validate_multiplication.stan
 transformed data {
   real x;
   x <- 1.3;
@@ -4483,7 +4483,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_negate_expr_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_negate_expr_good.stan
 transformed data {
   int n;
   real x;
@@ -4514,7 +4514,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_set_double_locscale_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_set_double_locscale_good.stan
 transformed data {
   real<location=2> a = 3;
 }
@@ -4537,7 +4537,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_set_double_range_lower_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_set_double_range_lower_good.stan
 data {
   real<lower=1.2> a;
   real<lower=1> b;
@@ -4554,7 +4554,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_set_double_range_upper_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_set_double_range_upper_good.stan
 data {
   real<upper=1.2> a;
   real<upper=1> b;
@@ -4571,7 +4571,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_set_fun_type_named_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_set_fun_type_named_good.stan
 transformed data {
   real x;
   x <- exp(x);
@@ -4584,7 +4584,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_set_int_range_lower_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_set_int_range_lower_good.stan
 data {
   int<lower=1> a;
   int<lower=1, upper=3> b;
@@ -4597,7 +4597,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_set_int_range_upper_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_set_int_range_upper_good.stan
 data {
   int<upper=1> a;
   int<lower=1, upper=3> b;
@@ -4610,7 +4610,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/validate_validate_int_expr_good.stan
+$ ./../stanc.exe --auto-format examples-good/validate_validate_int_expr_good.stan
 data {
   vector[3] a;
   row_vector[3] b;
@@ -4632,7 +4632,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/var-decl-after-statement.stan
+$ ./../stanc.exe --auto-format examples-good/var-decl-after-statement.stan
 transformed data {
   real y;
   y <- 3;
@@ -4644,7 +4644,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/var-decls-in-functions.stan
+$ ./../stanc.exe --auto-format examples-good/var-decls-in-functions.stan
 functions {
   real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[size(y)];
@@ -4659,7 +4659,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/var-ending-lpdf.stan
+$ ./../stanc.exe --auto-format examples-good/var-ending-lpdf.stan
 parameters {
   real mu_lpdf;
 }
@@ -4668,7 +4668,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/vars-with-type-prefixes.stan
+$ ./../stanc.exe --auto-format examples-good/vars-with-type-prefixes.stan
 parameters {
   real int_x;
   real real_x;
@@ -4701,7 +4701,7 @@ model {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/vector-size-stmts.stan
+$ ./../stanc.exe --auto-format examples-good/vector-size-stmts.stan
 functions {
   void test_vector(int vlen1, int vlen2, int arrlen) {
     vector[vlen1] lf1;
@@ -4805,7 +4805,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/vector-zero.stan
+$ ./../stanc.exe --auto-format examples-good/vector-zero.stan
 data {
   vector[0] d_v;
   row_vector[0] d_rv;
@@ -4878,7 +4878,7 @@ generated quantities {
 }
 
 
-$ ./stanc.exe --auto-format test/examples-good/vector_size_lt_zero.stan
+$ ./../stanc.exe --auto-format examples-good/vector_size_lt_zero.stan
 data {
   int d;
 }

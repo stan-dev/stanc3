@@ -1,0 +1,25 @@
+(executable
+ (name test_executable)
+ (libraries core_kernel))
+
+(rule
+ (targets examples-bad.output)
+ (deps (package stanc) (:stanfiles (glob_files examples-bad/*.stan)))
+ (action
+  (with-stdout-to %{targets}
+   (run ./test_executable.exe ../stanc.exe %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff examples-bad.expected examples-bad.output)))
+
+(rule
+ (targets examples-good-pretty.output)
+ (deps (package stanc) (:stanfiles (glob_files examples-good/*.stan)))
+ (action
+  (with-stdout-to %{targets}
+   (run %{exe:test_executable.exe} "../stanc.exe --auto-format" %{stanfiles}))))
+
+(alias
+ (name runtest)
+ (action (diff examples-good-pretty.expected examples-good-pretty.output)))
