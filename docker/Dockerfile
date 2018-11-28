@@ -4,6 +4,6 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   rsync git build-essential m4 unzip pkg-config libpcre3-dev
 
 
-COPY ./*.sh .
+# COPY ./*.sh ./
 RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 RUN bash -x install_dev_deps.sh
