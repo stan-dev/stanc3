@@ -69,7 +69,6 @@ let report_syntax_error = function
       Printf.eprintf
         "Could not find include file %S in specified include paths.\n" filename
 
-
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
 exception SemanticError of (location * string)
@@ -103,20 +102,19 @@ let print_location loc ppf =
         Format.fprintf ppf "line %d, characters %d-%d" (begin_line - 1)
           begin_char end_char
 
-
-
 (** Print the caught semantic error *)
 let report_semantic_error (loc, msg) =
   match loc with
-  | Location _ ->
+  | Location ({pos_fname= file; pos_lnum= line; _}, _) ->
       Format.eprintf "%s at %t:@\n" "Semantic error" (print_location loc) ;
-      Format.kfprintf (fun ppf -> Format.fprintf ppf "@.") Format.err_formatter "%s" msg
+      ( match nth_line file line with
+      | None -> ()
+      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      Format.kfprintf
+        (fun ppf -> Format.fprintf ppf "@.")
+        Format.err_formatter "%s" msg
   | Nowhere ->
       Format.eprintf "%s: " "Semantic error" ;
-      Format.kfprintf (fun ppf -> Format.fprintf ppf "@.") Format.err_formatter "%s" msg
-
-(* TODO: there's redundancy between the semantic and syntax error string formatting.
-   Reuse code there. *)
-
-(* TODO: quote line that triggered the error in case of semantic errors, just like*
-   we do for syntax errors. *)
+      Format.kfprintf
+        (fun ppf -> Format.fprintf ppf "@.")
+        Format.err_formatter "%s" msg

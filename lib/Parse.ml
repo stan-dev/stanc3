@@ -51,12 +51,7 @@ let parse parse_fun lexbuf =
                 ^ ")"
               else "" )
         in
-        raise
-          (SyntaxError
-             (Parsing
-                ( message
-                , start_pos
-                , end_pos )))
+        raise (SyntaxError (Parsing (message, start_pos, end_pos)))
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
