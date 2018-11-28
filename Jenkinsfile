@@ -12,26 +12,15 @@ pipeline {
     }
     stages {
         stage('Kill previous builds') {
-            when {
-                not { branch 'develop' }
-                not { branch 'master' }
-            }
-            steps {
-                script {
-                    utils.killOldBuilds()
-                }
-            }
+            when {not { branch 'develop' } not { branch 'master' }}
+            steps {script {utils.killOldBuilds()}}
         }
         stage("Build") {
-            steps {
-                sh 'eval $(opam env) && dune build @install'
-            }
+            steps {sh 'eval $(opam env) && dune build @install'}
+        }
+        stage("Run all tests") {
+            steps {sh 'eval $(opam env) && dune runtest'}
         }
     }
-    post {
-        always {
-            script {utils.mailBuildResults()}
-        }
-    }
-
+    post {always {script {utils.mailBuildResults()}}}
 }
