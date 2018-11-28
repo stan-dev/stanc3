@@ -12,7 +12,10 @@ let files = ref []
 (** Some example command-line options here *)
 let options =
   Arg.align
-    [ ( "--debug-parse"
+    [ ( "--debug-lex"
+      , Arg.Unit (fun () -> Debug.lexer_logging := true)
+      , " For debugging purposes: print the lexer actions" )
+    ; ( "--debug-parse"
       , Arg.Unit (fun () -> Debug.grammar_logging := true)
       , " For debugging purposes: print the parser actions" )
     ; ( "--debug-ast"

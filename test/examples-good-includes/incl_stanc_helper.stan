@@ -1,1 +1,2 @@
-  real y; #include incl_stanc_helper2.stan
+  real y;
+  #include incl_stanc_helper2.stan

@@ -8,7 +8,10 @@ let parse parse_fun lexbuf =
      error messages support *)
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let input = Interp.lexer_lexbuf_to_supplier Lexer.token lexbuf in
+  let _ = Stack.push lexbuf Lexer.include_stack in
+  let input _ =
+    (Interp.lexer_lexbuf_to_supplier Lexer.token (Stack.top Lexer.include_stack)) ()
+  in
   let success prog = prog in
   let failure error_state =
     let env =

@@ -6,6 +6,9 @@ open Core_kernel
 
 (* TODO - let these flags come from command line arguments *)
 
+(* Controls whether the lexing operations get logged *)
+let lexer_logging = ref false
+
 (* Controls whether the parsing operations get logged *)
 let grammar_logging = ref false
 
@@ -17,6 +20,8 @@ let typed_ast_printing = ref false
 
 (* Controls whether an auto-formatted program will be pretty printed *)
 let pretty_print_program = ref false
+
+let lexer_logger s = if !lexer_logging then print_endline s
 
 let grammar_logger s = if !grammar_logging then print_endline s
 

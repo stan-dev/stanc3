@@ -1,1 +1,1 @@
-  real w; int x;
+  real w; real x;
