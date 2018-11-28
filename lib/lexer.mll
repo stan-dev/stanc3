@@ -12,10 +12,27 @@
       pos_bol = pos.pos_cnum;
     }
 
-  exception Error of string * Lexing.position
+  exception Error of string * position
 
   let include_stack = Stack.create ()
-  let path = "test/examples-good-includes"
+  let include_paths : string list ref = ref []
+  let rec try_open_in paths fname =
+  match paths with
+    | [] -> raise (Errors.SyntaxError
+              (Includes (fname, lexeme_end_p
+                (Stack.top include_stack))))
+    | path :: rest_of_paths ->
+    try let full_path = path ^ "/" ^ fname in
+        open_in full_path, full_path
+    with _ -> try_open_in rest_of_paths fname
+  let set_recursive_include_paths _ =
+    Errors.recursive_include_paths := "" ;
+    Stack.iter (fun lb -> Errors.recursive_include_paths :=
+                 (!Errors.recursive_include_paths) ^ "\" included from \""
+                  ^ (lb.lex_start_p.pos_fname)
+                ) include_stack ;
+    Errors.recursive_include_paths :=
+      Core_kernel.String.drop_prefix !Errors.recursive_include_paths 17
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -30,8 +47,6 @@ let real_constant2 = '.' ['0'-'9']+ exp_literal?
 let real_constant3 = integer_constant exp_literal 
 let real_constant = real_constant1 | real_constant2 | real_constant3
 
-refill { fun k -> fun lb -> lexer_logger "refill" ; k lb }
-
 rule token = parse
 (* White space, line numers and comments *)
     '\n'                      { lexer_logger "newline" ;
@@ -45,17 +60,18 @@ rule token = parse
   | "#include"
   ( [' ' '\t' '\012' '\r']+)
   ( [^'\n']* as fname)        { lexer_logger ("include " ^ fname) ;
-                                let chan = open_in (path ^ "/" ^ fname) in
-                                (* TODO: here we should look through all the include paths instead *)
+                                let chan, path =
+                                try_open_in !include_paths fname in
                                 let new_lexbuf = from_channel chan in
                                 (new_lexbuf).lex_start_p
-                                  <- { pos_fname= path ^ "/" ^ fname
+                                  <- { pos_fname= path
                                      ; pos_lnum= 1
                                      ; pos_bol= 0
                                      ; pos_cnum= 0 } ;
                                 new_lexbuf.lex_curr_p
                                   <- new_lexbuf.lex_start_p ;
                                 Stack.push new_lexbuf include_stack ;
+                                set_recursive_include_paths () ;
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 singleline_comment lexbuf; token lexbuf } (* deprecated *)
@@ -238,8 +254,14 @@ rule token = parse
                                 then Parser.EOF
                                 else
                                   let _ = (Stack.pop include_stack) in
+                                  let _ = set_recursive_include_paths () in
                                   let old_lexbuf = (Stack.top include_stack) in
                                   token old_lexbuf }
+  
+  | _                         { raise (Errors.SyntaxError
+                                (Lexing (lexeme (Stack.top include_stack),
+                                         (lexeme_end_p (Stack.top include_stack)
+                                         ))))            }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment = parse

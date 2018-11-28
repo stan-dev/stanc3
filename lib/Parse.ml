@@ -9,6 +9,7 @@ let parse parse_fun lexbuf =
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
   let _ = Stack.push lexbuf Lexer.include_stack in
+  let _ = Lexer.set_recursive_include_paths () in
   let input _ =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Stack.top Lexer.include_stack))
@@ -59,18 +60,7 @@ let parse parse_fun lexbuf =
                 , Lexing.lexeme_start_p current_lexbuf
                 , Lexing.lexeme_end_p current_lexbuf )))
   in
-  try
-    Interp.loop_handle success failure input
-      (parse_fun lexbuf.Lexing.lex_curr_p)
-  with
-  | SyntaxError (Parsing (m, p1, p2)) ->
-      raise (SyntaxError (Parsing (m, p1, p2)))
-  | _ ->
-      raise
-        (SyntaxError
-           (Lexing
-              ( Lexing.lexeme (Stack.top Lexer.include_stack)
-              , Lexing.lexeme_start_p (Stack.top Lexer.include_stack) )))
+  Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
 let parse_file parse_fun path =
   let chan = open_in path in

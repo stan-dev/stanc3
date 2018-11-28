@@ -34,7 +34,11 @@ let options =
           (fun () ->
             print_endline (name ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
             exit 0 )
-      , " Print language information and exit" ) ]
+      , " Print language information and exit" )
+    ; ( "--include-paths"
+      , Arg.String
+          (fun str -> Lexer.include_paths := String.split_on_char ' ' str)
+      , " For specifying a list of include paths, separated by spaces" ) ]
 
 (** The command that actually executes a command. *)
 let exec p =

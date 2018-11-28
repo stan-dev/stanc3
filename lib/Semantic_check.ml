@@ -382,7 +382,7 @@ and semantic_check_identifier id =
   let _ =
     match id.id_loc with
     | Nowhere -> fatal_error "25."
-    | Errors.Location (startpos, _) ->
+    | Location (startpos, _) ->
         let modelname =
           List.hd
             (List.rev (Core_kernel.String.split startpos.pos_fname ~on:'/'))
