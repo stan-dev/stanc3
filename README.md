@@ -4,7 +4,7 @@ This repo contains work in progress on a new compiler for Stan, written in OCaml
 ## To Get Started
 
 ### To build, test, and run
-Check out `setup_dev_env.sh` to see how we recommend installing our pre-reqs.
+Check out `docker/setup_dev_env.sh` to see how we recommend installing our pre-reqs.
 
 To build `stanc.exe`, run `make`. The binary will be built in `_build/default`
 
@@ -32,6 +32,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - 100% coverage of parse errors with informative custom syntax errors implemented using Menhir's Incremental API
 - Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
 - A pretty printer for Stan models
+- A preprocessor for C-style #include macros with correct mapping of error locations
 - Work in progress on intermediate representations and code generation
 
 ### TODO for initial release
@@ -44,7 +45,6 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - Code review
 - Write code generation phase
 - Continuous integration and deployment for Windows, Linux, and Mac static binaries
-- Macro pre-processor with correct mapping of error locations
 
 ### The bright road ahead
 - Traditional compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
