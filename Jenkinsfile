@@ -23,7 +23,7 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh 'dune build @install'
+                sh 'eval $(opam env) && dune build @install'
             }
         }
     }
