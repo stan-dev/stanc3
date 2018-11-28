@@ -53,8 +53,10 @@ rule token = parse
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
-  ( [' ' '\t' '\012' '\r']+)
-  ( [^'\n']* as fname)        { lexer_logger ("include " ^ fname) ;
+  ( [' ' '\t' '\012'
+     '\r' '\n']+)
+  ( [^ ' ' '\t' '\012'
+       '\r' '\n']* as fname)  { lexer_logger ("include " ^ fname) ;
                                 let chan, path =
                                 try_open_in !include_paths fname in
                                 let new_lexbuf = from_channel chan in
