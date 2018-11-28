@@ -58,7 +58,7 @@ let report_syntax_error = function
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
       Printf.eprintf "Invalid input %S\n%!" invalid_input
-  | Includes (filename, err_pos) ->
+  | Includes (msg, err_pos) ->
       let file, line, character = position err_pos in
       Printf.eprintf
         "Syntax error at file \"%s\", line %d, character %d, includes error:\n"
@@ -66,8 +66,7 @@ let report_syntax_error = function
       ( match nth_line file line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
-      Printf.eprintf
-        "Could not find include file %S in specified include paths.\n" filename
+      Printf.eprintf "%s" msg
 
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
