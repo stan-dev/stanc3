@@ -6,7 +6,6 @@ def utils = new org.stan.Utils()
 pipeline {
     agent {
         dockerfile {
-            dir 'docker'
             args '-u root --privileged' // TODO: set up a proper user in Dockerfile
         }
     }
