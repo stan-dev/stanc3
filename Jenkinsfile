@@ -24,7 +24,6 @@ pipeline {
         stage("Build") {
             steps {
                 sh """
-                      find .
                       eval \$(opam env)
                       dune build @install
                    """
