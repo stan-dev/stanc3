@@ -24,17 +24,17 @@ val set_read_only : 'a state -> string -> unit
 val get_read_only : 'a state -> string -> bool
 (** Used to check for a read only label for an identifier *)
 
-val add_is_missing_fun_def : 'a state -> string -> unit
-(** Used to add a label to an identifier to say that it represents a declared identifier of function type which is missing a definition *)
+val set_is_assigned : 'a state -> string -> unit
+(** Label an identifier as having been assigned to *)
 
-val remove_is_missing_fun_def : 'a state -> string -> unit
-(** Used to remove a label to an identifier to say that it represents a declared identifier of function type which is missing a definition *)
+val set_is_unassigned : 'a state -> string -> unit
+(** Label an identifier as not having been assigned to *)
 
-val is_missing_fun_def : 'a state -> string -> bool
-(** Used to check a label to an identifier to say that it represents a declared identifier of function type which is missing a definition *)
+val check_is_unassigned : 'a state -> string -> bool
+(** Check whether an identifier is labelled as unassigned *)
 
-val some_fun_is_missing_def : 'a state -> bool
-(** Used to check that some identifier of function type is missing a definition *)
+val check_some_id_is_unassigned : 'a state -> bool
+(** Used to check whether some identifier is labelled as unassigned *)
 
 val is_global : 'a state -> string -> bool
 (** Used to check whether an identifier was declared in global scope *)
