@@ -32,10 +32,10 @@ let options =
       , Arg.Unit (fun () -> Debug.pretty_print_program := true)
       , " Pretty prints the program to the console" )
     ; ( "--version"
-      , Arg.String
+      , Arg.Unit
           (fun _ ->
             print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 0 )
+            exit 1 )
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.String
@@ -45,7 +45,7 @@ let options =
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--o"
-      , Arg.Unit
+      , Arg.String
           (fun _ ->
             print_endline "TODO: not yet implemented" ;
             assert false )
