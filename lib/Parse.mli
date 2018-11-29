@@ -2,7 +2,6 @@
     API *)
 
 val parse_file :
-     (   Lexing.position
-      -> Ast.untyped_program list Parser.MenhirInterpreter.checkpoint)
+     (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)
   -> string
-  -> Ast.untyped_program list
+  -> Ast.untyped_program

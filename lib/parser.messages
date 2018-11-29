@@ -1,6 +1,6 @@
 program: WHILE
 ##
-## Ends in an error in state: 632.
+## Ends in an error in state: 0.
 ##
 ## program' -> . program [ # ]
 ##
@@ -10,7 +10,7 @@ program: WHILE
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 576.
 ##
@@ -62,7 +62,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of cholesky_factor_corr.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 578.
 ##
@@ -120,7 +120,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size of cholesky_factor_corr.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK WHILE
 ##
 ## Ends in an error in state: 575.
 ##
@@ -133,7 +133,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR LBRACK WHILE
 
 Expected "[" expression "]" for size of cholesky_factor_corr.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 ##
 ## Ends in an error in state: 574.
 ##
@@ -146,7 +146,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCORR WHILE
 
 Expected "[" expression "]" for size of cholesky_factor_corr.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 565.
 ##
@@ -198,7 +198,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 567.
 ##
@@ -250,7 +250,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 
 Expected comma separated list of expressions. Ill-formed expression.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
 ## Ends in an error in state: 568.
 ##
@@ -308,7 +308,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA TRUNCATE TILDE
 
 Expected comma separated list of expressions. Ill-formed expression.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 566.
 ##
@@ -321,7 +321,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE COMMA WHILE
 
 Expected comma separated list of expressions. Ill-formed expression.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 571.
 ##
@@ -379,7 +379,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 ##
 ## Ends in an error in state: 564.
 ##
@@ -392,7 +392,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV LBRACK WHILE
 
 Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
-file: DATABLOCK LBRACE CHOLESKYFACTORCOV WHILE
+program: DATABLOCK LBRACE CHOLESKYFACTORCOV WHILE
 ##
 ## Ends in an error in state: 563.
 ##
@@ -405,7 +405,7 @@ file: DATABLOCK LBRACE CHOLESKYFACTORCOV WHILE
 
 Expected "[" expression "]" or "[" expression "," expression "]" for size of cholesky_factor_cov.
 
-file: DATABLOCK LBRACE CORRMATRIX LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE CORRMATRIX LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 559.
 ##
@@ -457,7 +457,7 @@ file: DATABLOCK LBRACE CORRMATRIX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of corr_matrix.
 
-file: DATABLOCK LBRACE CORRMATRIX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE CORRMATRIX LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 561.
 ##
@@ -515,7 +515,7 @@ file: DATABLOCK LBRACE CORRMATRIX LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size of corr_matrix.
 
-file: DATABLOCK LBRACE CORRMATRIX LBRACK WHILE
+program: DATABLOCK LBRACE CORRMATRIX LBRACK WHILE
 ##
 ## Ends in an error in state: 558.
 ##
@@ -528,7 +528,7 @@ file: DATABLOCK LBRACE CORRMATRIX LBRACK WHILE
 
 Expected "[" expression "]" for size of corr_matrix.
 
-file: DATABLOCK LBRACE CORRMATRIX WHILE
+program: DATABLOCK LBRACE CORRMATRIX WHILE
 ##
 ## Ends in an error in state: 557.
 ##
@@ -541,7 +541,7 @@ file: DATABLOCK LBRACE CORRMATRIX WHILE
 
 Expected "[" expression "]" for size of corr_matrix.
 
-file: DATABLOCK LBRACE COVMATRIX LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE COVMATRIX LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 553.
 ##
@@ -593,7 +593,7 @@ file: DATABLOCK LBRACE COVMATRIX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of cov_matrix.
 
-file: DATABLOCK LBRACE COVMATRIX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE COVMATRIX LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 555.
 ##
@@ -651,7 +651,7 @@ file: DATABLOCK LBRACE COVMATRIX LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size of cov_matrix.
 
-file: DATABLOCK LBRACE COVMATRIX LBRACK WHILE
+program: DATABLOCK LBRACE COVMATRIX LBRACK WHILE
 ##
 ## Ends in an error in state: 552.
 ##
@@ -664,7 +664,7 @@ file: DATABLOCK LBRACE COVMATRIX LBRACK WHILE
 
 Expected "[" expression "]" for size of cov_matrix.
 
-file: DATABLOCK LBRACE COVMATRIX WHILE
+program: DATABLOCK LBRACE COVMATRIX WHILE
 ##
 ## Ends in an error in state: 551.
 ##
@@ -677,7 +677,7 @@ file: DATABLOCK LBRACE COVMATRIX WHILE
 
 Expected "[" expression "]" for size of cov_matrix.
 
-file: DATABLOCK LBRACE INT LABRACK WHILE
+program: DATABLOCK LBRACE INT LABRACK WHILE
 ##
 ## Ends in an error in state: 549.
 ##
@@ -689,7 +689,7 @@ file: DATABLOCK LBRACE INT LABRACK WHILE
 
 Expected "lower = " expression or "upper = " expression for integer bounds.
 
-file: DATABLOCK LBRACE INT WHILE
+program: DATABLOCK LBRACE INT WHILE
 ##
 ## Ends in an error in state: 548.
 ##
@@ -701,7 +701,7 @@ file: DATABLOCK LBRACE INT WHILE
 
 Expected range constraint or identifier as part of top-level variable declaration.
 
-file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+program: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
 ## Ends in an error in state: 534.
 ##
@@ -716,7 +716,7 @@ file: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 
 Expected "[" expression "," expression "]" for matrix sizes as part of top-level variable declaration.
 
-file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 538.
 ##
@@ -768,7 +768,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
+program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 ##
 ## Ends in an error in state: 540.
 ##
@@ -826,7 +826,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 ##
 ## Ends in an error in state: 537.
 ##
@@ -839,7 +839,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 536.
 ##
@@ -893,7 +893,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 544.
 ##
@@ -945,7 +945,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
+program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
 ## Ends in an error in state: 546.
 ##
@@ -1003,7 +1003,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 543.
 ##
@@ -1016,7 +1016,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 542.
 ##
@@ -1075,7 +1075,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX LBRACK WHILE
+program: DATABLOCK LBRACE MATRIX LBRACK WHILE
 ##
 ## Ends in an error in state: 535.
 ##
@@ -1090,7 +1090,7 @@ file: DATABLOCK LBRACE MATRIX LBRACK WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE MATRIX WHILE
+program: DATABLOCK LBRACE MATRIX WHILE
 ##
 ## Ends in an error in state: 533.
 ##
@@ -1105,7 +1105,7 @@ file: DATABLOCK LBRACE MATRIX WHILE
 
 Expected "[" expression "," expression "]" for sizes of matrix.
 
-file: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 529.
 ##
@@ -1157,7 +1157,7 @@ file: DATABLOCK LBRACE ORDERED LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of ordered.
 
-file: DATABLOCK LBRACE ORDERED LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE ORDERED LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 531.
 ##
@@ -1215,7 +1215,7 @@ file: DATABLOCK LBRACE ORDERED LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size of ordered.
 
-file: DATABLOCK LBRACE ORDERED LBRACK WHILE
+program: DATABLOCK LBRACE ORDERED LBRACK WHILE
 ##
 ## Ends in an error in state: 528.
 ##
@@ -1228,7 +1228,7 @@ file: DATABLOCK LBRACE ORDERED LBRACK WHILE
 
 Expected "[" expression "]" for size of ordered.
 
-file: DATABLOCK LBRACE ORDERED WHILE
+program: DATABLOCK LBRACE ORDERED WHILE
 ##
 ## Ends in an error in state: 527.
 ##
@@ -1241,7 +1241,7 @@ file: DATABLOCK LBRACE ORDERED WHILE
 
 Expected "[" expression "]" for size of ordered.
 
-file: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 523.
 ##
@@ -1293,7 +1293,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size of positive_ordered.
 
-file: DATABLOCK LBRACE POSITIVEORDERED LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE POSITIVEORDERED LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 525.
 ##
@@ -1351,7 +1351,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size of positive_ordered.
 
-file: DATABLOCK LBRACE POSITIVEORDERED LBRACK WHILE
+program: DATABLOCK LBRACE POSITIVEORDERED LBRACK WHILE
 ##
 ## Ends in an error in state: 522.
 ##
@@ -1364,7 +1364,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED LBRACK WHILE
 
 Expected "[" expression "]" for size of positive_ordered.
 
-file: DATABLOCK LBRACE POSITIVEORDERED WHILE
+program: DATABLOCK LBRACE POSITIVEORDERED WHILE
 ##
 ## Ends in an error in state: 521.
 ##
@@ -1377,7 +1377,7 @@ file: DATABLOCK LBRACE POSITIVEORDERED WHILE
 
 Expected "[" expression "]" for size of positive_ordered.
 
-file: DATABLOCK LBRACE RBRACE WHILE
+program: DATABLOCK LBRACE RBRACE WHILE
 ##
 ## Ends in an error in state: 588.
 ##
@@ -1389,7 +1389,7 @@ file: DATABLOCK LBRACE RBRACE WHILE
 
 Expected "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
-file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
+program: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 ##
 ## Ends in an error in state: 584.
 ##
@@ -1401,7 +1401,7 @@ file: DATABLOCK LBRACE REAL IDENTIFIER SEMICOLON WHILE
 
 Only top-level variable declarations allowed in data and parameters blocks.
 
-file: DATABLOCK LBRACE REAL TRUNCATE WHILE
+program: DATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
 ## Ends in an error in state: 581.
 ##
@@ -1413,7 +1413,7 @@ file: DATABLOCK LBRACE REAL TRUNCATE WHILE
 
 Only top-level variable declarations are allowed in data and parameter blocks.
 
-file: DATABLOCK LBRACE REAL WHILE
+program: DATABLOCK LBRACE REAL WHILE
 ##
 ## Ends in an error in state: 519.
 ##
@@ -1425,7 +1425,7 @@ file: DATABLOCK LBRACE REAL WHILE
 
 Identifier expected after type in top-level variable declaration.
 
-file: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+program: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
 ## Ends in an error in state: 513.
 ##
@@ -1438,7 +1438,7 @@ file: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 
 Expected identifier as part of top-level variable declaration.
 
-file: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 515.
 ##
@@ -1490,7 +1490,7 @@ file: DATABLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size declaration of row_vector.
 
-file: DATABLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 517.
 ##
@@ -1548,7 +1548,7 @@ file: DATABLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size declaration of row_vector.
 
-file: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
+program: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 ##
 ## Ends in an error in state: 514.
 ##
@@ -1561,7 +1561,7 @@ file: DATABLOCK LBRACE ROWVECTOR LBRACK WHILE
 
 Expected "[" expression "]" for size declaration of row_vector.
 
-file: DATABLOCK LBRACE ROWVECTOR WHILE
+program: DATABLOCK LBRACE ROWVECTOR WHILE
 ##
 ## Ends in an error in state: 512.
 ##
@@ -1574,7 +1574,7 @@ file: DATABLOCK LBRACE ROWVECTOR WHILE
 
 Expected "[" expression "]" for size declaration of row_vector.
 
-file: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 508.
 ##
@@ -1626,7 +1626,7 @@ file: DATABLOCK LBRACE SIMPLEX LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size declaration of simplex.
 
-file: DATABLOCK LBRACE SIMPLEX LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE SIMPLEX LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 510.
 ##
@@ -1684,7 +1684,7 @@ file: DATABLOCK LBRACE SIMPLEX LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size declaration of simplex.
 
-file: DATABLOCK LBRACE SIMPLEX LBRACK WHILE
+program: DATABLOCK LBRACE SIMPLEX LBRACK WHILE
 ##
 ## Ends in an error in state: 507.
 ##
@@ -1697,7 +1697,7 @@ file: DATABLOCK LBRACE SIMPLEX LBRACK WHILE
 
 Expected "[" expression "]" for size declaration of simplex.
 
-file: DATABLOCK LBRACE SIMPLEX WHILE
+program: DATABLOCK LBRACE SIMPLEX WHILE
 ##
 ## Ends in an error in state: 506.
 ##
@@ -1710,7 +1710,7 @@ file: DATABLOCK LBRACE SIMPLEX WHILE
 
 Expected "[" expression "]" for size declaration of simplex.
 
-file: DATABLOCK LBRACE UNITVECTOR LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE UNITVECTOR LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 502.
 ##
@@ -1762,7 +1762,7 @@ file: DATABLOCK LBRACE UNITVECTOR LBRACK REALNUMERAL WHILE
 
 Expected "[" expression "]" for size declaration of unit_vector.
 
-file: DATABLOCK LBRACE UNITVECTOR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE UNITVECTOR LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 504.
 ##
@@ -1820,7 +1820,7 @@ file: DATABLOCK LBRACE UNITVECTOR LBRACK TRUNCATE TILDE
 
 Expected "[" expression "]" for size declaration of unit_vector.
 
-file: DATABLOCK LBRACE UNITVECTOR LBRACK WHILE
+program: DATABLOCK LBRACE UNITVECTOR LBRACK WHILE
 ##
 ## Ends in an error in state: 501.
 ##
@@ -1833,7 +1833,7 @@ file: DATABLOCK LBRACE UNITVECTOR LBRACK WHILE
 
 Expected "[" expression "]" for size declaration of unit_vector.
 
-file: DATABLOCK LBRACE UNITVECTOR WHILE
+program: DATABLOCK LBRACE UNITVECTOR WHILE
 ##
 ## Ends in an error in state: 500.
 ##
@@ -1846,7 +1846,7 @@ file: DATABLOCK LBRACE UNITVECTOR WHILE
 
 Expected "[" expression "]" for size declaration of unit_vector.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 484.
 ##
@@ -1870,7 +1870,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
 
 Expected "location = " expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN TRUNCATE COMMA
 ##
 ## Ends in an error in state: 488.
 ##
@@ -1899,7 +1899,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIG
 
 Expected ">" after "scale = " expression.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN WHILE
 ##
 ## Ends in an error in state: 487.
 ##
@@ -1911,7 +1911,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIG
 
 Expected "scale = " expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE WHILE
 ##
 ## Ends in an error in state: 486.
 ##
@@ -1923,7 +1923,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE WHILE
 
 Expected "scale = " expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 485.
 ##
@@ -1935,7 +1935,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA WHILE
 
 Expected ">" or ", scale = " expression (not containing binary logical operators) ">" after "location = " expression.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
 ##
 ## Ends in an error in state: 483.
 ##
@@ -1948,7 +1948,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
 
 Expected "location = " expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
 ##
 ## Ends in an error in state: 482.
 ##
@@ -1961,7 +1961,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
 
 Expected "location = " expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 477.
 ##
@@ -1985,7 +1985,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 
 ">" or ", upper = expression (not containing binary logical operators) ">" expected after specifying lower bound for type.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN TRUNCATE COMMA
 ##
 ## Ends in an error in state: 481.
 ##
@@ -2014,7 +2014,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN T
 
 Expected ">" after "upper = " expression.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN WHILE
 ##
 ## Ends in an error in state: 480.
 ##
@@ -2026,7 +2026,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER ASSIGN W
 
 Expected expression (not containing binary logical operators) after "upper = ".
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
 ##
 ## Ends in an error in state: 479.
 ##
@@ -2038,7 +2038,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA UPPER WHILE
 
 Expected "=" expression (not containing binary logical operators) after "upper".
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 478.
 ##
@@ -2050,7 +2050,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN TRUNCATE COMMA WHILE
 
 "upper =" expression (not containing binary logical operators) ">" expected after "<lower =" expression "," in top-level variable declaration.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 ##
 ## Ends in an error in state: 476.
 ##
@@ -2063,7 +2063,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN WHILE
 
 An expression (not containing binary logical operators) is expected for type lower bound.
 
-file: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 ##
 ## Ends in an error in state: 475.
 ##
@@ -2076,7 +2076,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 
 Expected "=" expression (not containing binary logical operators), after "lower".
 
-file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 ##
 ## Ends in an error in state: 493.
 ##
@@ -2089,7 +2089,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 
 Expected "[" expression "]" for vector size.
 
-file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN TRUNCATE COMMA
 ##
 ## Ends in an error in state: 474.
 ##
@@ -2118,7 +2118,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN TRUNCATE COMMA
 
 Expected ">" after "scale =" expression.
 
-file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
 ##
 ## Ends in an error in state: 473.
 ##
@@ -2130,7 +2130,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
 
 Expected expression (not containing binary logical operators) after "scale =".
 
-file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
 ##
 ## Ends in an error in state: 472.
 ##
@@ -2142,7 +2142,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
 
 Expected "=" expression (not containing binary logical operators) ">" after "scale".
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 445.
 ##
@@ -2165,7 +2165,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
 ##
 ## Ends in an error in state: 443.
 ##
@@ -2177,7 +2177,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 453.
 ##
@@ -2200,7 +2200,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS REALNUMERAL WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
 ##
 ## Ends in an error in state: 442.
 ##
@@ -2212,7 +2212,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN MINUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 454.
 ##
@@ -2235,7 +2235,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS REALNUMERAL WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
 ##
 ## Ends in an error in state: 441.
 ##
@@ -2247,7 +2247,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN PLUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA
 ##
 ## Ends in an error in state: 455.
 ##
@@ -2276,7 +2276,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE COMMA
 
 Expected expression (not containing binary logical operators) ">" after "upper =".
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 469.
 ##
@@ -2299,7 +2299,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE REALNUMERAL W
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
 ##
 ## Ends in an error in state: 468.
 ##
@@ -2311,7 +2311,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE DIVIDE WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 463.
 ##
@@ -2334,7 +2334,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE REALNUMERA
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
 ##
 ## Ends in an error in state: 462.
 ##
@@ -2346,7 +2346,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTDIVIDE WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 461.
 ##
@@ -2369,7 +2369,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES REALNUMERAL
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
 ##
 ## Ends in an error in state: 460.
 ##
@@ -2381,7 +2381,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE ELTTIMES WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 451.
 ##
@@ -2404,7 +2404,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT REALNUMERAL WHIL
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
 ##
 ## Ends in an error in state: 450.
 ##
@@ -2416,7 +2416,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE HAT WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
 ##
 ## Ends in an error in state: 447.
 ##
@@ -2428,7 +2428,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LBRACK WHILE
 
 Ill-formed expression. Expected expression followed by "]".
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 459.
 ##
@@ -2451,7 +2451,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE REALNUMERAL 
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
 ##
 ## Ends in an error in state: 458.
 ##
@@ -2463,7 +2463,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE LDIVIDE WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 471.
 ##
@@ -2486,7 +2486,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS REALNUMERAL WH
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
 ##
 ## Ends in an error in state: 470.
 ##
@@ -2498,7 +2498,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MINUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 467.
 ##
@@ -2521,7 +2521,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO REALNUMERAL W
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
 ##
 ## Ends in an error in state: 466.
 ##
@@ -2533,7 +2533,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE MODULO WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 465.
 ##
@@ -2556,7 +2556,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS REALNUMERAL WHI
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
 ##
 ## Ends in an error in state: 464.
 ##
@@ -2568,7 +2568,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE PLUS WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 457.
 ##
@@ -2591,7 +2591,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES REALNUMERAL WH
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
 ##
 ## Ends in an error in state: 456.
 ##
@@ -2603,7 +2603,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE TIMES WHILE
 
 Ill-formed expression. Expected expression (not containing binary logical operators).
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE WHILE
 ##
 ## Ends in an error in state: 444.
 ##
@@ -2618,7 +2618,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN TRUNCATE WHILE
 
 Expression expected. Ill-formed expression. Suggested alternatives: a standalone identifier, a function application, an identifier followed by an operator or an identifier followed by an index.
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 ##
 ## Ends in an error in state: 440.
 ##
@@ -2630,7 +2630,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN WHILE
 
 Expression (not containing binary logical operators) expected after "upper =". Ill-formed expression.
 
-file: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 ##
 ## Ends in an error in state: 439.
 ##
@@ -2642,7 +2642,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK UPPER WHILE
 
 Expect "=" expression ">" after seeing "upper".
 
-file: DATABLOCK LBRACE VECTOR LABRACK WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ##
 ## Ends in an error in state: 438.
 ##
@@ -2655,7 +2655,7 @@ file: DATABLOCK LBRACE VECTOR LABRACK WHILE
 
 We expect to see "lower =", "upper =", "location =" or "scale =" followed by an expression after "<". 
 
-file: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
+program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
 ## Ends in an error in state: 580.
 ##
@@ -2667,7 +2667,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 
 We expect to see an identifier after a sized type.
 
-file: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 495.
 ##
@@ -2719,7 +2719,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 
 "[" expression "]" expected for vector size.
 
-file: DATABLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
+program: DATABLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 497.
 ##
@@ -2777,7 +2777,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 
 "[" expression "]" expected for vector size.
 
-file: DATABLOCK LBRACE VECTOR LBRACK WHILE
+program: DATABLOCK LBRACE VECTOR LBRACK WHILE
 ##
 ## Ends in an error in state: 494.
 ##
@@ -2790,7 +2790,7 @@ file: DATABLOCK LBRACE VECTOR LBRACK WHILE
 
 "[" expression "]" expected for vector size.
 
-file: DATABLOCK LBRACE VECTOR WHILE
+program: DATABLOCK LBRACE VECTOR WHILE
 ##
 ## Ends in an error in state: 437.
 ##
@@ -2803,7 +2803,7 @@ file: DATABLOCK LBRACE VECTOR WHILE
 
 "[" expression "]" expected for vector size.
 
-file: DATABLOCK LBRACE WHILE
+program: DATABLOCK LBRACE WHILE
 ##
 ## Ends in an error in state: 436.
 ##
@@ -2815,7 +2815,7 @@ file: DATABLOCK LBRACE WHILE
 
 Expected top-level variable declaration or "}".
 
-file: DATABLOCK WHILE
+program: DATABLOCK WHILE
 ##
 ## Ends in an error in state: 435.
 ##
@@ -2827,7 +2827,7 @@ file: DATABLOCK WHILE
 
 "{" followed by a list of top-level variable declarations is expected after seeing "data".
 
-file: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
+program: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 ##
 ## Ends in an error in state: 434.
 ##
@@ -2839,7 +2839,7 @@ file: FUNCTIONBLOCK LBRACE RBRACE COVMATRIX
 
 Expected "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
-file: FUNCTIONBLOCK LBRACE VECTOR LBRACK COMMA WHILE
+program: FUNCTIONBLOCK LBRACE VECTOR LBRACK COMMA WHILE
 ##
 ## Ends in an error in state: 22.
 ##
@@ -2851,7 +2851,7 @@ file: FUNCTIONBLOCK LBRACE VECTOR LBRACK COMMA WHILE
 
 List of commas expected.
 
-file: FUNCTIONBLOCK LBRACE VECTOR LBRACK WHILE
+program: FUNCTIONBLOCK LBRACE VECTOR LBRACK WHILE
 ##
 ## Ends in an error in state: 21.
 ##
@@ -2863,7 +2863,7 @@ file: FUNCTIONBLOCK LBRACE VECTOR LBRACK WHILE
 
 "[" (list of commas) "]" expected in unsized return type of function definition.
 
-file: FUNCTIONBLOCK LBRACE VECTOR WHILE
+program: FUNCTIONBLOCK LBRACE VECTOR WHILE
 ##
 ## Ends in an error in state: 20.
 ##
@@ -2875,7 +2875,7 @@ file: FUNCTIONBLOCK LBRACE VECTOR WHILE
 
 Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.
 
-file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
+program: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 ##
 ## Ends in an error in state: 431.
 ##
@@ -2887,7 +2887,7 @@ file: FUNCTIONBLOCK LBRACE VOID IDENTIFIER LPAREN RPAREN SEMICOLON WHILE
 
 A "}" or a function definition/declaration is expected.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
 ##
 ## Ends in an error in state: 17.
 ##
@@ -2899,7 +2899,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN DATABLOCK WHILE
 
 An identifier is expected as a function argument name.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 ##
 ## Ends in an error in state: 29.
 ##
@@ -2911,7 +2911,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN RPAREN VOID
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 ##
 ## Ends in an error in state: 427.
 ##
@@ -2923,7 +2923,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER COMMA WHILE
 
 An argument declaration (unsized type followed by identifier) is expected.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
 ##
 ## Ends in an error in state: 426.
 ##
@@ -2936,7 +2936,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR IDENTIFIER WHILE
 
 "," or ")" expected after function argument declaration.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK WHILE
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 18.
 ##
@@ -2948,7 +2948,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN VECTOR LBRACK RBRACK WHILE
 
 An identifier is expected as a function argument name.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 ##
 ## Ends in an error in state: 14.
 ##
@@ -2960,7 +2960,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 
 (Non-void) type expected function argument declaration.
 
-file: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
+program: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 ##
 ## Ends in an error in state: 13.
 ##
@@ -2972,7 +2972,7 @@ file: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 
 "(" expected after function name.
 
-file: FUNCTIONBLOCK LBRACE VOID WHILE
+program: FUNCTIONBLOCK LBRACE VOID WHILE
 ##
 ## Ends in an error in state: 10.
 ##
@@ -2984,7 +2984,7 @@ file: FUNCTIONBLOCK LBRACE VOID WHILE
 
 An identifier is expected as a function name.
 
-file: FUNCTIONBLOCK LBRACE WHILE
+program: FUNCTIONBLOCK LBRACE WHILE
 ##
 ## Ends in an error in state: 2.
 ##
@@ -2996,7 +2996,7 @@ file: FUNCTIONBLOCK LBRACE WHILE
 
 Function forward declaration, definition or "}" expected after "functions {".
 
-file: FUNCTIONBLOCK WHILE
+program: FUNCTIONBLOCK WHILE
 ##
 ## Ends in an error in state: 1.
 ##
@@ -3008,7 +3008,7 @@ file: FUNCTIONBLOCK WHILE
 
 "{" expected after "functions".
 
-file: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
+program: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Ends in an error in state: 625.
 ##
@@ -3020,7 +3020,7 @@ file: GENERATEDQUANTITIESBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 Expected end of file after end of generated quantities block.
 
-file: GENERATEDQUANTITIESBLOCK LBRACE VOID
+program: GENERATEDQUANTITIESBLOCK LBRACE VOID
 ##
 ## Ends in an error in state: 622.
 ##
@@ -3032,7 +3032,7 @@ file: GENERATEDQUANTITIESBLOCK LBRACE VOID
 
 Variable declaration or statement or "}" expected in generated quantities block.
 
-file: GENERATEDQUANTITIESBLOCK WHILE
+program: GENERATEDQUANTITIESBLOCK WHILE
 ##
 ## Ends in an error in state: 621.
 ##
@@ -3044,7 +3044,7 @@ file: GENERATEDQUANTITIESBLOCK WHILE
 
 Expected "{" after block keyword.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 270.
 ##
@@ -3096,7 +3096,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA REALNUMERAL WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
+program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 ##
 ## Ends in an error in state: 272.
 ##
@@ -3154,7 +3154,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA TRUNCATE TILDE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 ##
 ## Ends in an error in state: 269.
 ##
@@ -3167,7 +3167,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL COMMA WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 268.
 ##
@@ -3220,7 +3220,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK REALNUMERAL WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 276.
 ##
@@ -3272,7 +3272,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA REALNUMERAL WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
+program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 ##
 ## Ends in an error in state: 278.
 ##
@@ -3330,7 +3330,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA TRUNCATE TILDE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 275.
 ##
@@ -3343,7 +3343,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE COMMA WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
+program: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 274.
 ##
@@ -3402,7 +3402,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK TRUNCATE TILDE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX LBRACK WHILE
+program: MODELBLOCK LBRACE MATRIX LBRACK WHILE
 ##
 ## Ends in an error in state: 267.
 ##
@@ -3417,7 +3417,7 @@ file: MODELBLOCK LBRACE MATRIX LBRACK WHILE
 
 "[" expression "," expression "]" expected for matrix sizes.
 
-file: MODELBLOCK LBRACE MATRIX WHILE
+program: MODELBLOCK LBRACE MATRIX WHILE
 ##
 ## Ends in an error in state: 266.
 ##
@@ -3432,7 +3432,7 @@ file: MODELBLOCK LBRACE MATRIX WHILE
 
 "[" expression "," expression "]" expected after "matrix" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
-file: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
+program: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Ends in an error in state: 620.
 ##
@@ -3444,7 +3444,7 @@ file: MODELBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 Expected "generated quantities {" or end of file after end of model block.
 
-file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN REALNUMERAL WHILE
+program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 411.
 ##
@@ -3496,7 +3496,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN REALNUMERAL WHILE
 
 Ill-formed expression. Expression followed by ";" expected after "=".
 
-file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
+program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 412.
 ##
@@ -3554,7 +3554,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN TRUNCATE TILDE
 
 Ill-formed expression. Expression followed by ";" expected after "=".
 
-file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
+program: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 ##
 ## Ends in an error in state: 410.
 ##
@@ -3567,7 +3567,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE ASSIGN WHILE
 
 Ill-formed expression. Expression followed by ";" expected after "=".
 
-file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
+program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 ##
 ## Ends in an error in state: 407.
 ##
@@ -3586,7 +3586,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACE
 
 Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
 
-file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
+program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 ##
 ## Ends in an error in state: 406.
 ##
@@ -3598,7 +3598,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK WHILE
 
 Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
 
-file: MODELBLOCK LBRACE REAL TRUNCATE WHILE
+program: MODELBLOCK LBRACE REAL TRUNCATE WHILE
 ##
 ## Ends in an error in state: 405.
 ##
@@ -3610,7 +3610,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE WHILE
 
 ";" or plain assignment expected after variable declaration.
 
-file: MODELBLOCK LBRACE REAL WHILE
+program: MODELBLOCK LBRACE REAL WHILE
 ##
 ## Ends in an error in state: 404.
 ##
@@ -3622,7 +3622,7 @@ file: MODELBLOCK LBRACE REAL WHILE
 
 Identifier expected after sized type in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
-file: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
+program: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 261.
 ##
@@ -3674,7 +3674,7 @@ file: MODELBLOCK LBRACE ROWVECTOR LBRACK REALNUMERAL WHILE
 
 "[" expression "]" expected for row_vector sizes.
 
-file: MODELBLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
+program: MODELBLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 263.
 ##
@@ -3732,7 +3732,7 @@ file: MODELBLOCK LBRACE ROWVECTOR LBRACK TRUNCATE TILDE
 
 "[" expression "]" expected for row_vector sizes.
 
-file: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
+program: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 ##
 ## Ends in an error in state: 260.
 ##
@@ -3745,7 +3745,7 @@ file: MODELBLOCK LBRACE ROWVECTOR LBRACK WHILE
 
 "[" expression "]" expected for row_vector sizes.
 
-file: MODELBLOCK LBRACE ROWVECTOR WHILE
+program: MODELBLOCK LBRACE ROWVECTOR WHILE
 ##
 ## Ends in an error in state: 259.
 ##
@@ -3758,7 +3758,7 @@ file: MODELBLOCK LBRACE ROWVECTOR WHILE
 
 "[" expression"]" expected after "row_vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
-file: MODELBLOCK LBRACE SEMICOLON VOID
+program: MODELBLOCK LBRACE SEMICOLON VOID
 ##
 ## Ends in an error in state: 401.
 ##
@@ -3770,7 +3770,7 @@ file: MODELBLOCK LBRACE SEMICOLON VOID
 
 Variable declaration, statement or "}" expected.
 
-file: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
+program: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 255.
 ##
@@ -3822,7 +3822,7 @@ file: MODELBLOCK LBRACE VECTOR LBRACK REALNUMERAL WHILE
 
 "[" expression "]" expected for vector sizes.
 
-file: MODELBLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
+program: MODELBLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 257.
 ##
@@ -3880,7 +3880,7 @@ file: MODELBLOCK LBRACE VECTOR LBRACK TRUNCATE TILDE
 
 "[" expression "]" expected for vector sizes.
 
-file: MODELBLOCK LBRACE VECTOR LBRACK WHILE
+program: MODELBLOCK LBRACE VECTOR LBRACK WHILE
 ##
 ## Ends in an error in state: 254.
 ##
@@ -3893,7 +3893,7 @@ file: MODELBLOCK LBRACE VECTOR LBRACK WHILE
 
 "[" expression "]" expected for vector sizes.
 
-file: MODELBLOCK LBRACE VECTOR WHILE
+program: MODELBLOCK LBRACE VECTOR WHILE
 ##
 ## Ends in an error in state: 253.
 ##
@@ -3906,7 +3906,7 @@ file: MODELBLOCK LBRACE VECTOR WHILE
 
 "[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
 
-file: MODELBLOCK LBRACE VOID
+program: MODELBLOCK LBRACE VOID
 ##
 ## Ends in an error in state: 617.
 ##
@@ -3918,7 +3918,7 @@ file: MODELBLOCK LBRACE VOID
 
 Variable declaration, statement or "}" expected.
 
-file: MODELBLOCK WHILE
+program: MODELBLOCK WHILE
 ##
 ## Ends in an error in state: 616.
 ##
@@ -3930,7 +3930,7 @@ file: MODELBLOCK WHILE
 
 Expected "{" after "model".
 
-file: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
+program: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Ends in an error in state: 609.
 ##
@@ -3942,7 +3942,7 @@ file: PARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
 
-file: PARAMETERSBLOCK LBRACE WHILE
+program: PARAMETERSBLOCK LBRACE WHILE
 ##
 ## Ends in an error in state: 605.
 ##
@@ -3954,7 +3954,7 @@ file: PARAMETERSBLOCK LBRACE WHILE
 
 Expected top-level variable declaration or "}".
 
-file: PARAMETERSBLOCK WHILE
+program: PARAMETERSBLOCK WHILE
 ##
 ## Ends in an error in state: 604.
 ##
@@ -3966,7 +3966,7 @@ file: PARAMETERSBLOCK WHILE
 
 Expected "{" after "parameters".
 
-file: TRANSFORMEDDATABLOCK LBRACE BANG REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE BANG REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 46.
 ##
@@ -4018,7 +4018,7 @@ file: TRANSFORMEDDATABLOCK LBRACE BANG REALNUMERAL WHILE
 
 Ill-formed expression. Expression expected after "!". 
 
-file: TRANSFORMEDDATABLOCK LBRACE BANG TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE BANG TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 208.
 ##
@@ -4070,7 +4070,7 @@ file: TRANSFORMEDDATABLOCK LBRACE BANG TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed expression. Expression expected after "!".
 
-file: TRANSFORMEDDATABLOCK LBRACE BANG WHILE
+program: TRANSFORMEDDATABLOCK LBRACE BANG WHILE
 ##
 ## Ends in an error in state: 45.
 ##
@@ -4083,7 +4083,7 @@ file: TRANSFORMEDDATABLOCK LBRACE BANG WHILE
 
 Ill-formed expression. Expression expected after "!".
 
-file: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 ##
 ## Ends in an error in state: 301.
 ##
@@ -4095,7 +4095,7 @@ file: TRANSFORMEDDATABLOCK LBRACE BREAK WHILE
 
 Expected ";" after "break". 
 
-file: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 ##
 ## Ends in an error in state: 299.
 ##
@@ -4107,7 +4107,7 @@ file: TRANSFORMEDDATABLOCK LBRACE CONTINUE WHILE
 
 Expected ";" after "continue". 
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALNUMERAL RPAREN VOID
 ##
 ## Ends in an error in state: 378.
 ##
@@ -4119,7 +4119,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALN
 
 Ill-formed statement. Expected statement after ")"  for the loop body of the for loop..
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 377.
 ##
@@ -4171,7 +4171,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON REALN
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNCATE RPAREN VOID
 ##
 ## Ends in an error in state: 381.
 ##
@@ -4183,7 +4183,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNC
 
 Ill-formed statement. Expected statement after ")"  for the loop body of the for loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNCATE TILDE
 ##
 ## Ends in an error in state: 380.
 ##
@@ -4241,7 +4241,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON TRUNC
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON WHILE
 ##
 ## Ends in an error in state: 376.
 ##
@@ -4254,7 +4254,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL COLON WHILE
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL RPAREN VOID
 ##
 ## Ends in an error in state: 298.
 ##
@@ -4266,7 +4266,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL RPAREN VOID
 
 Ill-formed statement. Expected statement after ")" for the loop body of the foreach loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 297.
 ##
@@ -4320,7 +4320,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN REALNUMERAL WHILE
 
 Ill-formed expression. Expected expression after "for (" identifier "in".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUMERAL RPAREN VOID
 ##
 ## Ends in an error in state: 388.
 ##
@@ -4332,7 +4332,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUME
 
 Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 387.
 ##
@@ -4384,7 +4384,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON REALNUME
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE RPAREN VOID
 ##
 ## Ends in an error in state: 391.
 ##
@@ -4396,7 +4396,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE
 
 Ill-formed statement. Expected statement after ")" for the loop body of the for loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE TILDE
 ##
 ## Ends in an error in state: 390.
 ##
@@ -4454,7 +4454,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON TRUNCATE
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON WHILE
 ##
 ## Ends in an error in state: 386.
 ##
@@ -4467,7 +4467,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE COLON WHILE
 
 Ill-formed expression. Expected expression followed by ")" after "for (" identifier "in" expression ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE RPAREN VOID
 ##
 ## Ends in an error in state: 384.
 ##
@@ -4479,7 +4479,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE RPAREN VOID
 
 Ill-formed statement. Expected statement after ")" for the loop body of the foreach loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 383.
 ##
@@ -4539,7 +4539,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN TRUNCATE TILDE
 
 Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN WHILE
 ##
 ## Ends in an error in state: 296.
 ##
@@ -4556,7 +4556,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE IN WHILE
 
 Ill-formed expression. Expected expression followed by ")" or ":" after "for (" identifier "in".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE WHILE
 ##
 ## Ends in an error in state: 295.
 ##
@@ -4573,7 +4573,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN TRUNCATE WHILE
 
 Expected "in" after loop identifier.
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 ##
 ## Ends in an error in state: 294.
 ##
@@ -4590,7 +4590,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR LPAREN WHILE
 
 Expected (loop) identifier after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 ##
 ## Ends in an error in state: 293.
 ##
@@ -4607,7 +4607,7 @@ file: TRANSFORMEDDATABLOCK LBRACE FOR WHILE
 
 Expected "(" after "for".
 
-file: TRANSFORMEDDATABLOCK LBRACE GETLP LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE GETLP LPAREN WHILE
 ##
 ## Ends in an error in state: 43.
 ##
@@ -4619,7 +4619,7 @@ file: TRANSFORMEDDATABLOCK LBRACE GETLP LPAREN WHILE
 
 Expected ")" after "get_lp(".
 
-file: TRANSFORMEDDATABLOCK LBRACE GETLP WHILE
+program: TRANSFORMEDDATABLOCK LBRACE GETLP WHILE
 ##
 ## Ends in an error in state: 42.
 ##
@@ -4631,7 +4631,7 @@ file: TRANSFORMEDDATABLOCK LBRACE GETLP WHILE
 
 Expected "()" after "get_lp".
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON ELSE VOID
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON ELSE VOID
 ##
 ## Ends in an error in state: 394.
 ##
@@ -4643,7 +4643,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON ELSE VO
 
 Ill-formed statement. Expected statement after "else".
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON UPPER
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON UPPER
 ##
 ## Ends in an error in state: 393.
 ##
@@ -4656,7 +4656,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN SEMICOLON UPPER
 
 Ill-formed statement. Expected "else"  or statement or variable declaration or "}".
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 ##
 ## Ends in an error in state: 292.
 ##
@@ -4669,7 +4669,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL RPAREN VOID
 
 Ill-formed statement. Statement expected for true branch of conditional. 
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 291.
 ##
@@ -4722,7 +4722,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN REALNUMERAL WHILE
 
 Expected ")" after test expression of conditional control flow construct.
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON ELSE VOID
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON ELSE VOID
 ##
 ## Ends in an error in state: 399.
 ##
@@ -4734,7 +4734,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON ELSE VOID
 
 Ill-formed statement. Expected statement after else.
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON UPPER
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON UPPER
 ##
 ## Ends in an error in state: 398.
 ##
@@ -4747,7 +4747,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN SEMICOLON UPPER
 
 Ill-formed statement. Expected "else" or statement or variable declaration or "}" after conditional true branch.
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
 ##
 ## Ends in an error in state: 397.
 ##
@@ -4760,7 +4760,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE RPAREN VOID
 
 Ill-formed statement. Expected statement after ")" for true branch of conditional.
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 396.
 ##
@@ -4819,7 +4819,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN TRUNCATE TILDE
 
 Ill-formed expression. Expression expected after "(", for test of conditional control flow construct.
 
-file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 ##
 ## Ends in an error in state: 290.
 ##
@@ -4834,7 +4834,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF LPAREN WHILE
 
 Expected expression for test of conditional control flow construct.
 
-file: TRANSFORMEDDATABLOCK LBRACE IF WHILE
+program: TRANSFORMEDDATABLOCK LBRACE IF WHILE
 ##
 ## Ends in an error in state: 289.
 ##
@@ -4849,7 +4849,7 @@ file: TRANSFORMEDDATABLOCK LBRACE IF WHILE
 
 "(" expression ")" expected after "if".
 
-file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL RPAREN WHILE
 ##
 ## Ends in an error in state: 284.
 ##
@@ -4861,7 +4861,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL RPAREN WHI
 
 Ill-formed statement. Expected ";" after ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 283.
 ##
@@ -4913,7 +4913,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN REALNUMERAL WHILE
 
 Ill-formed statement. Expected expression followed by ");" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE RPAREN WHILE
 ##
 ## Ends in an error in state: 287.
 ##
@@ -4925,7 +4925,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE RPAREN WHILE
 
 Ill-formed statement. Expected ";" after ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 286.
 ##
@@ -4983,7 +4983,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN TRUNCATE TILDE
 
 Ill-formed statement. Expected expression followed by ");" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN WHILE
 ##
 ## Ends in an error in state: 282.
 ##
@@ -4996,7 +4996,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB LPAREN WHILE
 
 Ill-formed statement. Expected expression followed by ");" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB WHILE
+program: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB WHILE
 ##
 ## Ends in an error in state: 281.
 ##
@@ -5009,7 +5009,7 @@ file: TRANSFORMEDDATABLOCK LBRACE INCREMENTLOGPROB WHILE
 
 Ill-formed statement. Expected "(" followed by an expression and ");", after "increment_log_prob".
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL COMMA WHILE
 ##
 ## Ends in an error in state: 174.
 ##
@@ -5021,7 +5021,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL COMMA WHILE
 
 Ill-formed expression. Expected a comma-separated list of expressions.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 417.
 ##
@@ -5075,7 +5075,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE REALNUMERAL WHILE
 
 Ill-formed phrase. Found an expression. This can be followed by a "~", a ",", a "}", a "[" or an infix or postfix operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 420.
 ##
@@ -5145,7 +5145,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found an L-value. This can be followed by a "~", a ",", a "}", a "[" or an infix or postfix operator or an assignment operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
+program: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 ##
 ## Ends in an error in state: 252.
 ##
@@ -5158,7 +5158,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACE VOID
 
 Ill-formed phrase. "{" should be followed by a statement, variable declaration or expression.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 176.
 ##
@@ -5211,7 +5211,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 178.
 ##
@@ -5223,7 +5223,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE COMMA WHILE
 
 Ill-formed expression. We expect a comma separated list of expressions.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 ##
 ## Ends in an error in state: 211.
 ##
@@ -5242,7 +5242,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE RPAREN
 
 Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 177.
 ##
@@ -5301,7 +5301,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK TRUNCATE TILDE
 
 Ill-formed phrase. We found an L-value. Parse failed on token after the L-value.
 
-file: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 ##
 ## Ends in an error in state: 39.
 ##
@@ -5313,7 +5313,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LBRACK WHILE
 
 Comma separated list of expressions followed by "]" expected after "[".
 
-file: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 213.
 ##
@@ -5365,7 +5365,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LPAREN REALNUMERAL WHILE
 
 Expression or range of expressions followed by ")" expected after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE LPAREN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 215.
 ##
@@ -5423,7 +5423,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LPAREN TRUNCATE TILDE
 
 Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator. 
 
-file: TRANSFORMEDDATABLOCK LBRACE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE LPAREN WHILE
 ##
 ## Ends in an error in state: 38.
 ##
@@ -5436,7 +5436,7 @@ file: TRANSFORMEDDATABLOCK LBRACE LPAREN WHILE
 
 Expression expected after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE MINUS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE MINUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 217.
 ##
@@ -5488,7 +5488,7 @@ file: TRANSFORMEDDATABLOCK LBRACE MINUS REALNUMERAL WHILE
 
 Ill-formed expression. Found an expression. Expect an infix or postfix operator or "["
 
-file: TRANSFORMEDDATABLOCK LBRACE MINUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE MINUS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 218.
 ##
@@ -5540,7 +5540,7 @@ file: TRANSFORMEDDATABLOCK LBRACE MINUS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
-file: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 ##
 ## Ends in an error in state: 37.
 ##
@@ -5553,7 +5553,7 @@ file: TRANSFORMEDDATABLOCK LBRACE MINUS WHILE
 
 Ill-formed expression. Expect an expression after "-".
 
-file: TRANSFORMEDDATABLOCK LBRACE PLUS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PLUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 219.
 ##
@@ -5605,7 +5605,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PLUS REALNUMERAL WHILE
 
 Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
-file: TRANSFORMEDDATABLOCK LBRACE PLUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PLUS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 220.
 ##
@@ -5657,7 +5657,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PLUS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
 
-file: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 ##
 ## Ends in an error in state: 36.
 ##
@@ -5670,7 +5670,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PLUS WHILE
 
 Ill-formed expression. Expect an expression after "+".
 
-file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 ##
 ## Ends in an error in state: 249.
 ##
@@ -5683,7 +5683,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN STRINGLITERAL WHILE
 
 Expected a comma-separated list of expressions or strings followed by ");" after "print(".
 
-file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN TRUNCATE RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN TRUNCATE RPAREN WHILE
 ##
 ## Ends in an error in state: 250.
 ##
@@ -5695,7 +5695,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN TRUNCATE RPAREN WHILE
 
 Expected a ";" after "print(...)".
 
-file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 ##
 ## Ends in an error in state: 248.
 ##
@@ -5707,7 +5707,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT LPAREN WHILE
 
 Expected a comma-separated list of expressions or strings followed by ");" after "print(".
 
-file: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
+program: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 ##
 ## Ends in an error in state: 247.
 ##
@@ -5719,7 +5719,7 @@ file: TRANSFORMEDDATABLOCK LBRACE PRINT WHILE
 
 Expected "(" followed by a comma-separated list of expressions or strings followed by ");" after "print".
 
-file: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
+program: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Ends in an error in state: 603.
 ##
@@ -5731,7 +5731,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 Expected "parameters {", "transformed parameters {", "model {", "generated quantities {" or end-of-file after end of transformed data block.
 
-file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 ##
 ## Ends in an error in state: 593.
 ##
@@ -5743,7 +5743,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE WHILE
 
 ";" or plain assignment is expected after a top-level variable declaration.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 143.
 ##
@@ -5795,7 +5795,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "&&" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 144.
 ##
@@ -5847,7 +5847,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "&&" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND WHILE
 ##
 ## Ends in an error in state: 142.
 ##
@@ -5860,7 +5860,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL AND WHILE
 
 Ill-formed expression. Expected expression after expression followed by "&&".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 90.
 ##
@@ -5912,7 +5912,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "/" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 91.
 ##
@@ -5964,7 +5964,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE TRUNCATE LBRACK RBRACK WHIL
 
 Ill-formed phrase. Found expression "/" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE WHILE
 ##
 ## Ends in an error in state: 89.
 ##
@@ -5977,7 +5977,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL DIVIDE WHILE
 
 Ill-formed expression. Expected expression after expression followed by "/".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 86.
 ##
@@ -6029,7 +6029,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "./" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 87.
 ##
@@ -6081,7 +6081,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE TRUNCATE LBRACK RBRACK W
 
 Ill-formed phrase. Found expression "./" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE WHILE
 ##
 ## Ends in an error in state: 85.
 ##
@@ -6094,7 +6094,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTDIVIDE WHILE
 
 Ill-formed expression. Expected expression after expression followed by "./".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 68.
 ##
@@ -6146,7 +6146,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression ".*" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 69.
 ##
@@ -6198,7 +6198,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES TRUNCATE LBRACK RBRACK WH
 
 Ill-formed phrase. Found expression ".*" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES WHILE
 ##
 ## Ends in an error in state: 67.
 ##
@@ -6211,7 +6211,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL ELTTIMES WHILE
 
 Ill-formed expression. Expected expression after expression followed by ".*".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 140.
 ##
@@ -6263,7 +6263,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "==" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 141.
 ##
@@ -6315,7 +6315,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS TRUNCATE LBRACK RBRACK WHIL
 
 Ill-formed phrase. Found expression "==" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS WHILE
 ##
 ## Ends in an error in state: 139.
 ##
@@ -6328,7 +6328,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL EQUALS WHILE
 
 Ill-formed expression. Expected expression after expression followed by "==".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 124.
 ##
@@ -6380,7 +6380,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression ">=" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 125.
 ##
@@ -6432,7 +6432,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression ">=" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ WHILE
 ##
 ## Ends in an error in state: 123.
 ##
@@ -6445,7 +6445,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL GEQ WHILE
 
 Ill-formed expression. Expected expression after expression followed by ">=".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 56.
 ##
@@ -6497,7 +6497,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "^" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 57.
 ##
@@ -6549,7 +6549,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "^" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT WHILE
 ##
 ## Ends in an error in state: 55.
 ##
@@ -6562,7 +6562,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL HAT WHILE
 
 Ill-formed expression. Expected expression after expression followed by "^".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 121.
 ##
@@ -6614,7 +6614,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "<" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 122.
 ##
@@ -6666,7 +6666,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK TRUNCATE LBRACK RBRACK WHI
 
 Ill-formed phrase. Found expression "<" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK WHILE
 ##
 ## Ends in an error in state: 120.
 ##
@@ -6679,7 +6679,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LABRACK WHILE
 
 Ill-formed expression. Expected expression after expression followed by "<".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 50.
 ##
@@ -6731,7 +6731,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON REALNUMERAL WHILE
 
 Ill-formed phrase. Found ":" expression. We expect either an infix or postfix operator, or "," or or "[" or "]" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON TRUNCATE TILDE
 ##
 ## Ends in an error in state: 205.
 ##
@@ -6789,7 +6789,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON TRUNCATE TILDE
 
 Ill-formed phrase. Found ":" expression. We expect either an infix or postfix operator, or "," or or "[" or "]" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 ##
 ## Ends in an error in state: 49.
 ##
@@ -6803,7 +6803,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COLON WHILE
 
 Ill-formed expression. Expected expression or "]" or "," after ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 ##
 ## Ends in an error in state: 201.
 ##
@@ -6815,7 +6815,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK COMMA WHILE
 
 Expected index after indices followed by ",".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 193.
 ##
@@ -6867,7 +6867,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON REALNUMER
 
 Ill-formed phrase. Found expression ":" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON TRUNCATE TILDE
 ##
 ## Ends in an error in state: 194.
 ##
@@ -6925,7 +6925,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON TRUNCATE 
 
 Ill-formed phrase. Found expression "<" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON WHILE
 ##
 ## Ends in an error in state: 192.
 ##
@@ -6939,7 +6939,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL COLON WHILE
 
 Ill-formed expression. Expected expression or "]" or "," after ":".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 60.
 ##
@@ -6994,7 +6994,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression. There are many options to continue the phrase after this: "[", "]", ",", ":", an infix operator, a postfix operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 197.
 ##
@@ -7046,7 +7046,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON REALNUMERAL 
 
 Ill-formed phrase. Found expression ":" expression. There are many options to continue the phrase after this: "[", "]", ",", ":", an infix operator, a postfix operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON TRUNCATE TILDE
 ##
 ## Ends in an error in state: 198.
 ##
@@ -7104,7 +7104,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON TRUNCATE TIL
 
 Ill-formed phrase. Found expression ":" expression. There are many options to continue the phrase after this: "[", "]", ",", ":", an infix operator, a postfix operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON WHILE
 ##
 ## Ends in an error in state: 196.
 ##
@@ -7118,7 +7118,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE COLON WHILE
 
 Ill-formed phrase. Found expression ":". Expect "]", "," or expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 195.
 ##
@@ -7179,7 +7179,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK TRUNCATE TILDE
 
 Ill-formed phrase. Found expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
 ##
 ## Ends in an error in state: 48.
 ##
@@ -7191,7 +7191,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LBRACK WHILE
 
 Found expression "[". Expect comma separated list of indices next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 54.
 ##
@@ -7243,7 +7243,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "/" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 203.
 ##
@@ -7295,7 +7295,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE TRUNCATE LBRACK RBRACK WHI
 
 Ill-formed phrase. Found expression "/" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
 ##
 ## Ends in an error in state: 53.
 ##
@@ -7308,7 +7308,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
 
 Ill-formed expression. Found expression "\". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 112.
 ##
@@ -7360,7 +7360,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "<=" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 113.
 ##
@@ -7412,7 +7412,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "<=" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ WHILE
 ##
 ## Ends in an error in state: 111.
 ##
@@ -7425,7 +7425,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LEQ WHILE
 
 Ill-formed expression. Found expression "<=". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 84.
 ##
@@ -7477,7 +7477,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "-" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 101.
 ##
@@ -7529,7 +7529,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "-" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS WHILE
 ##
 ## Ends in an error in state: 83.
 ##
@@ -7542,7 +7542,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MINUS WHILE
 
 Ill-formed expression. Found expression "-". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 66.
 ##
@@ -7594,7 +7594,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "%" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 189.
 ##
@@ -7646,7 +7646,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO TRUNCATE LBRACK RBRACK WHIL
 
 Ill-formed phrase. Found expression "%" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO WHILE
 ##
 ## Ends in an error in state: 65.
 ##
@@ -7659,7 +7659,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL MODULO WHILE
 
 Ill-formed expression. Found expression "%". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 82.
 ##
@@ -7711,7 +7711,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "!=" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 126.
 ##
@@ -7763,7 +7763,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS TRUNCATE LBRACK RBRACK WHI
 
 Ill-formed phrase. Found expression "!=" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS WHILE
 ##
 ## Ends in an error in state: 81.
 ##
@@ -7776,7 +7776,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL NEQUALS WHILE
 
 Ill-formed expression. Found expression "!=". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 80.
 ##
@@ -7828,7 +7828,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "||" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 151.
 ##
@@ -7880,7 +7880,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "||" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR WHILE
 ##
 ## Ends in an error in state: 79.
 ##
@@ -7893,7 +7893,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL OR WHILE
 
 Ill-formed expression. Found expression "||". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 64.
 ##
@@ -7945,7 +7945,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "+" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 190.
 ##
@@ -7997,7 +7997,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "+" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS WHILE
 ##
 ## Ends in an error in state: 63.
 ##
@@ -8010,7 +8010,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL PLUS WHILE
 
 Ill-formed expression. Found expression "+". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 156.
 ##
@@ -8062,7 +8062,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON REALNUMERA
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 157.
 ##
@@ -8114,7 +8114,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON TRUNCATE L
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON WHILE
 ##
 ## Ends in an error in state: 155.
 ##
@@ -8127,7 +8127,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL COLON WHILE
 
 Ill-formed expression. Found expression "?" expression ":". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 78.
 ##
@@ -8180,7 +8180,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK REALNUMERAL WHILE
 
 Ill-formed expression. Found expression "?" expression. Expect an infix or postfix operator or "[" or ":" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 172.
 ##
@@ -8232,7 +8232,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON REALNUMERAL W
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 173.
 ##
@@ -8284,7 +8284,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON TRUNCATE LBRA
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON WHILE
 ##
 ## Ends in an error in state: 171.
 ##
@@ -8297,7 +8297,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE COLON WHILE
 
 Ill-formed expression. Found expression "?" expression ":". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 170.
 ##
@@ -8356,7 +8356,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK TRUNCATE TILDE
 
 Ill-formed expression. Found expression "?" expression. Expect an infix or postfix operator or "[" or ":" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK WHILE
 ##
 ## Ends in an error in state: 77.
 ##
@@ -8371,7 +8371,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL QMARK WHILE
 
 Ill-formed expression. Found expression "?". Expect an expression next followed by ":" expression.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 62.
 ##
@@ -8423,7 +8423,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression ">" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 191.
 ##
@@ -8475,7 +8475,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK TRUNCATE LBRACK RBRACK WHI
 
 Ill-formed phrase. Found expression ">" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK WHILE
 ##
 ## Ends in an error in state: 61.
 ##
@@ -8488,7 +8488,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK WHILE
 
 Ill-formed expression. Found expression ">". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
 ##
 ## Ends in an error in state: 319.
 ##
@@ -8500,7 +8500,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Expected ";" after "~"-statement (with optional truncation).
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA TRUNCATE COMMA
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA TRUNCATE COMMA
 ##
 ## Ends in an error in state: 314.
 ##
@@ -8519,7 +8519,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA WHILE
 ##
 ## Ends in an error in state: 313.
 ##
@@ -8531,7 +8531,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 316.
 ##
@@ -8583,7 +8583,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed expression. Found an expression. Expect a infix or postfix operator or "[" or "]" or "," next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE RBRACK
 ##
 ## Ends in an error in state: 312.
 ##
@@ -8602,7 +8602,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 317.
 ##
@@ -8660,7 +8660,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed expression. Found an expression. Expect a infix or postfix operator or "[" or "]" or "," next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK WHILE
 ##
 ## Ends in an error in state: 311.
 ##
@@ -8672,7 +8672,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE WHILE
 ##
 ## Ends in an error in state: 310.
 ##
@@ -8684,7 +8684,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNC
 
 Ill-formed truncation. Expect the format "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WHILE
 ##
 ## Ends in an error in state: 309.
 ##
@@ -8696,7 +8696,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN WHILE
 
 Ill-formed "~"-statement. Expect either ";" or a truncation with the format "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE RBRACK
 ##
 ## Ends in an error in state: 308.
 ##
@@ -8716,7 +8716,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN TRUNCATE RBR
 
 Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
 ##
 ## Ends in an error in state: 307.
 ##
@@ -8728,7 +8728,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN WHILE
 
 Ill-formed "~"-statement. Expect a comma separated list of expressions for arguments to the distribution, followed by ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE WHILE
 ##
 ## Ends in an error in state: 306.
 ##
@@ -8740,7 +8740,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE WHILE
 
 Ill-formed "~"-statement. Expect "(" after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 ##
 ## Ends in an error in state: 305.
 ##
@@ -8752,7 +8752,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE WHILE
 
 Ill-formed "~"-statement. Expect an distribution name after "~".
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 52.
 ##
@@ -8804,7 +8804,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "*" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 204.
 ##
@@ -8856,7 +8856,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "*" expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
 ##
 ## Ends in an error in state: 51.
 ##
@@ -8869,7 +8869,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TIMES WHILE
 
 Ill-formed expression. Found expression "*" expression. Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 304.
 ##
@@ -8921,7 +8921,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression. There are many options to continue the phrase after this: "~", "[", "]" or an infix or postfix operator.
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 245.
 ##
@@ -8973,7 +8973,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
 ##
 ## Ends in an error in state: 240.
 ##
@@ -8986,7 +8986,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN STRINGLITERAL WHILE
 
 Ill-formed printable. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL WHILE
 ##
 ## Ends in an error in state: 244.
 ##
@@ -8999,7 +8999,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA STRINGLITERAL WHI
 
 Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 243.
 ##
@@ -9011,7 +9011,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE COMMA WHILE
 
 Ill-formed printable. After "print(" and "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE RPAREN WHILE
 ##
 ## Ends in an error in state: 241.
 ##
@@ -9023,7 +9023,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE RPAREN WHILE
 
 Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 246.
 ##
@@ -9081,7 +9081,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN TRUNCATE TILDE
 
 Ill-formed phrase. Found expression. There are many options to continue the phrase after this.
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 ##
 ## Ends in an error in state: 237.
 ##
@@ -9093,7 +9093,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT LPAREN WHILE
 
 Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-file: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
+program: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 ##
 ## Ends in an error in state: 236.
 ##
@@ -9105,7 +9105,7 @@ file: TRANSFORMEDDATABLOCK LBRACE REJECT WHILE
 
 Ill-formed reject statement. After "reject(", we expect a comma separated list of either expressions or strings, followed by ");".
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE TRUNCATE RPAREN
+program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE TRUNCATE RPAREN
 ##
 ## Ends in an error in state: 209.
 ##
@@ -9124,7 +9124,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE TRUNCATE RPAREN
 
 Expected either "," followed by expression or "}" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 ##
 ## Ends in an error in state: 40.
 ##
@@ -9136,7 +9136,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN LBRACE WHILE
 
 Expression expected after "{" in array expression.
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 232.
 ##
@@ -9188,7 +9188,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN REALNUMERAL WHILE
 
 Ill formed expression followed by ";". Expect expression after "return".
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 ##
 ## Ends in an error in state: 32.
 ##
@@ -9200,7 +9200,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TARGET WHILE
 
 Ill formed expression. After "target", we expect "()".
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
 ##
 ## Ends in an error in state: 183.
 ##
@@ -9221,7 +9221,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN TRUNCATE COMMA IDENTIFI
 
 Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
 ##
 ## Ends in an error in state: 74.
 ##
@@ -9235,7 +9235,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE LPAREN WHILE
 
 Ill-formed expression. In function application, expect comma-separated list of expressions followed by ")", after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 234.
 ##
@@ -9293,7 +9293,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 
 Ill-formed expression. Expression or ";" expected after "return".
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 ##
 ## Ends in an error in state: 73.
 ##
@@ -9308,7 +9308,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 
 Ill-formed expression. Found identifier. There are many ways to complete this to a well-formed expression.
 
-file: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ##
 ## Ends in an error in state: 230.
 ##
@@ -9322,7 +9322,7 @@ file: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 
 Expression or ";" expected after "return".
 
-file: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
+program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ##
 ## Ends in an error in state: 591.
 ##
@@ -9334,7 +9334,7 @@ file: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 
 Expected top-level variable declaration, statement or "}".
 
-file: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 ##
 ## Ends in an error in state: 33.
 ##
@@ -9346,7 +9346,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET LPAREN WHILE
 
 Ill-formed expression. Expected ")" after "target(".
 
-file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 225.
 ##
@@ -9398,7 +9398,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN REALNUMERAL WHILE
 
 Ill-formed expression. Expression followed by ";" expected after "target +=".
 
-file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 227.
 ##
@@ -9456,7 +9456,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN TRUNCATE TILDE
 
 Ill-formed expression. Expression followed by ";" expected after "target +=".
 
-file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 ##
 ## Ends in an error in state: 224.
 ##
@@ -9469,7 +9469,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET PLUSASSIGN WHILE
 
 Expected an expression followed by a ";", after "target +=".
 
-file: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 ##
 ## Ends in an error in state: 223.
 ##
@@ -9483,7 +9483,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TARGET WHILE
 
 Ill-formed phrase. Expect either "+=" or "()" after "target".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 153.
 ##
@@ -9535,7 +9535,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "&&" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 154.
 ##
@@ -9587,7 +9587,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "&&" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND WHILE
 ##
 ## Ends in an error in state: 152.
 ##
@@ -9600,7 +9600,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE AND WHILE
 
 Ill-formed expression. Found expression "&&". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 366.
 ##
@@ -9652,7 +9652,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "<-" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 368.
 ##
@@ -9710,7 +9710,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "<-" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN WHILE
 ##
 ## Ends in an error in state: 365.
 ##
@@ -9723,7 +9723,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ARROWASSIGN WHILE
 
 Ill-formed expression. Found L-value "<-". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 361.
 ##
@@ -9775,7 +9775,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 363.
 ##
@@ -9833,7 +9833,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN WHILE
 ##
 ## Ends in an error in state: 360.
 ##
@@ -9846,7 +9846,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ASSIGN WHILE
 
 Ill-formed expression. Found L-value "=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 109.
 ##
@@ -9898,7 +9898,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "/" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 110.
 ##
@@ -9950,7 +9950,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "/" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
 ##
 ## Ends in an error in state: 108.
 ##
@@ -9963,7 +9963,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDE WHILE
 
 Ill-formed expression. Found expression "/". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 356.
 ##
@@ -10015,7 +10015,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 358.
 ##
@@ -10073,7 +10073,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
 ##
 ## Ends in an error in state: 355.
 ##
@@ -10086,7 +10086,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE DIVIDEASSIGN WHILE
 
 Ill-formed expression. Found L-value "/=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 99.
 ##
@@ -10138,7 +10138,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "./" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 100.
 ##
@@ -10190,7 +10190,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE TRUNCATE LBRACK RBRACK WHIL
 
 Ill-formed phrase. Found expression "./" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
 ##
 ## Ends in an error in state: 98.
 ##
@@ -10203,7 +10203,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDE WHILE
 
 Ill-formed expression. Found expression "./". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 351.
 ##
@@ -10255,7 +10255,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 353.
 ##
@@ -10313,7 +10313,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
 ##
 ## Ends in an error in state: 350.
 ##
@@ -10326,7 +10326,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTDIVIDEASSIGN WHILE
 
 Ill-formed expression. Found L-value "./=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 96.
 ##
@@ -10378,7 +10378,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression ".*" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 97.
 ##
@@ -10430,7 +10430,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression ".*" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
 ##
 ## Ends in an error in state: 95.
 ##
@@ -10443,7 +10443,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMES WHILE
 
 Ill-formed expression. Found expression ".*". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 346.
 ##
@@ -10495,7 +10495,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 348.
 ##
@@ -10553,7 +10553,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
 ##
 ## Ends in an error in state: 345.
 ##
@@ -10566,7 +10566,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE ELTTIMESASSIGN WHILE
 
 Ill-formed expression. Found L-value ".*=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 149.
 ##
@@ -10618,7 +10618,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "==" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 150.
 ##
@@ -10670,7 +10670,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "==" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
 ##
 ## Ends in an error in state: 148.
 ##
@@ -10683,7 +10683,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE EQUALS WHILE
 
 Ill-formed expression. Found expression "==". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 137.
 ##
@@ -10735,7 +10735,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression ">=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 138.
 ##
@@ -10787,7 +10787,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression ">=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
 ##
 ## Ends in an error in state: 136.
 ##
@@ -10800,7 +10800,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE GEQ WHILE
 
 Ill-formed expression. Found expression ">=". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 71.
 ##
@@ -10852,7 +10852,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "^" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 72.
 ##
@@ -10904,7 +10904,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "^" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
 ##
 ## Ends in an error in state: 70.
 ##
@@ -10917,7 +10917,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE HAT WHILE
 
 Ill-formed expression. Found expression "^". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 134.
 ##
@@ -10969,7 +10969,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "<" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 135.
 ##
@@ -11021,7 +11021,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "<" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
 ##
 ## Ends in an error in state: 133.
 ##
@@ -11034,7 +11034,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LABRACK WHILE
 
 Ill-formed expression. Found expression "<". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LBRACK WHILE
 ##
 ## Ends in an error in state: 59.
 ##
@@ -11046,7 +11046,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LBRACK WHILE
 
 Ill-formed indices. Expected comma-separated set of indices followed by "]" after "[".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 93.
 ##
@@ -11098,7 +11098,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "\" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 94.
 ##
@@ -11150,7 +11150,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "\" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
 ##
 ## Ends in an error in state: 92.
 ##
@@ -11163,7 +11163,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LDIVIDE WHILE
 
 Ill-formed expression. Found expression "\". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 131.
 ##
@@ -11215,7 +11215,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "<=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 132.
 ##
@@ -11267,7 +11267,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "<=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
 ##
 ## Ends in an error in state: 130.
 ##
@@ -11280,7 +11280,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LEQ WHILE
 
 Ill-formed expression. Found expression "<=". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RBRACK
 ##
 ## Ends in an error in state: 181.
 ##
@@ -11300,7 +11300,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR TRUNCATE RBRAC
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
 ##
 ## Ends in an error in state: 180.
 ##
@@ -11312,7 +11312,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL BAR WHILE
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 76.
 ##
@@ -11366,7 +11366,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN REALNUMERAL WHILE
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
 ##
 ## Ends in an error in state: 373.
 ##
@@ -11379,7 +11379,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN RPAREN WHILE
 
 Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRACK
 ##
 ## Ends in an error in state: 187.
 ##
@@ -11399,7 +11399,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR TRUNCATE RBRACK
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
 ##
 ## Ends in an error in state: 186.
 ##
@@ -11411,7 +11411,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE BAR WHILE
 
 Ill-formed conditional distribution evaluation. Expect comma-separated list of expressions followed by ")" after "|".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRACK
 ##
 ## Ends in an error in state: 372.
 ##
@@ -11433,7 +11433,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE COMMA IDENTIFIER RBRA
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 185.
 ##
@@ -11493,7 +11493,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN TRUNCATE TILDE
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
 ##
 ## Ends in an error in state: 371.
 ##
@@ -11508,7 +11508,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE LPAREN WHILE
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 118.
 ##
@@ -11560,7 +11560,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "-" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 119.
 ##
@@ -11612,7 +11612,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "-" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
 ##
 ## Ends in an error in state: 117.
 ##
@@ -11625,7 +11625,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUS WHILE
 
 Ill-formed expression. Found expression "-". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 341.
 ##
@@ -11677,7 +11677,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 343.
 ##
@@ -11735,7 +11735,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
 ##
 ## Ends in an error in state: 340.
 ##
@@ -11748,7 +11748,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MINUSASSIGN WHILE
 
 Ill-formed expression. Found L-value "-=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 106.
 ##
@@ -11800,7 +11800,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "%" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 107.
 ##
@@ -11852,7 +11852,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "%" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
 ##
 ## Ends in an error in state: 105.
 ##
@@ -11865,7 +11865,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE MODULO WHILE
 
 Ill-formed expression. Found expression "%". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 146.
 ##
@@ -11917,7 +11917,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "!=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 147.
 ##
@@ -11969,7 +11969,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "!=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
 ##
 ## Ends in an error in state: 145.
 ##
@@ -11982,7 +11982,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE NEQUALS WHILE
 
 Ill-formed expression. Found expression "!=". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 164.
 ##
@@ -12034,7 +12034,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "||" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 165.
 ##
@@ -12086,7 +12086,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "||" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
 ##
 ## Ends in an error in state: 163.
 ##
@@ -12099,7 +12099,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE OR WHILE
 
 Ill-formed expression. Found expression "||". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 115.
 ##
@@ -12151,7 +12151,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "+" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 116.
 ##
@@ -12203,7 +12203,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "+" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
 ##
 ## Ends in an error in state: 114.
 ##
@@ -12216,7 +12216,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUS WHILE
 
 Ill-formed expression. Found expression "+". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 336.
 ##
@@ -12268,7 +12268,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 338.
 ##
@@ -12326,7 +12326,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
 ##
 ## Ends in an error in state: 335.
 ##
@@ -12339,7 +12339,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE PLUSASSIGN WHILE
 
 Ill-formed expression. Found L-value "+=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 161.
 ##
@@ -12391,7 +12391,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON REALNUMERAL W
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 162.
 ##
@@ -12443,7 +12443,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON TRUNCATE LBRA
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
 ##
 ## Ends in an error in state: 160.
 ##
@@ -12456,7 +12456,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL COLON WHILE
 
 Ill-formed expression. Found expression "?" expression ":". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 159.
 ##
@@ -12509,7 +12509,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK REALNUMERAL WHILE
 
 Ill-formed expression. Found expression "?". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 168.
 ##
@@ -12561,7 +12561,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON REALNUMERAL WHIL
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 169.
 ##
@@ -12613,7 +12613,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON TRUNCATE LBRACK 
 
 Ill-formed phrase. Found expression "?" expression ":" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
 ##
 ## Ends in an error in state: 167.
 ##
@@ -12626,7 +12626,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE COLON WHILE
 
 Ill-formed expression. Found expression "?" expression ":". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
 ##
 ## Ends in an error in state: 166.
 ##
@@ -12685,7 +12685,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK TRUNCATE TILDE
 
 Ill-formed expression. Found expression "?". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
 ##
 ## Ends in an error in state: 158.
 ##
@@ -12700,7 +12700,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE QMARK WHILE
 
 Ill-formed expression. Found expression "?". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 128.
 ##
@@ -12752,7 +12752,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression ">" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 129.
 ##
@@ -12804,7 +12804,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression ">" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
 ##
 ## Ends in an error in state: 127.
 ##
@@ -12817,7 +12817,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RABRACK WHILE
 
 Ill-formed expression. Found expression ">". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 ##
 ## Ends in an error in state: 322.
 ##
@@ -12891,7 +12891,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
 ##
 ## Ends in an error in state: 333.
 ##
@@ -12903,7 +12903,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE
 
 Ill-formed "~"-statement. Expected ";".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
 ##
 ## Ends in an error in state: 332.
 ##
@@ -12915,7 +12915,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN WHILE
 
 Ill-formed "~"-statement. Expected ";" or "T[" optional expression "," optional expression "];".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBRACK
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBRACK
 ##
 ## Ends in an error in state: 331.
 ##
@@ -12935,7 +12935,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN TRUNCATE RBRACK
 
 Ill-formed "~"-statement. Expected "," or ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
 ##
 ## Ends in an error in state: 330.
 ##
@@ -12947,7 +12947,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN WHILE
 
 Ill-formed "~"-statement. Expected comma-separated list of expressions followed by ")".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
 ##
 ## Ends in an error in state: 329.
 ##
@@ -12959,7 +12959,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE WHILE
 
 Ill-formed "~"-statement. Expected "(" followed by a comma-separated list of expressions followed by ")" after distribution name.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
 ##
 ## Ends in an error in state: 328.
 ##
@@ -12971,7 +12971,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE WHILE
 
 Ill-formed "~"-statement. Expected identifier for distribution name after "~".
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 103.
 ##
@@ -13023,7 +13023,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES REALNUMERAL WHILE
 
 Ill-formed phrase. Found expression "*" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
 ##
 ## Ends in an error in state: 104.
 ##
@@ -13075,7 +13075,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES TRUNCATE LBRACK RBRACK WHILE
 
 Ill-formed phrase. Found expression "*" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
 ##
 ## Ends in an error in state: 102.
 ##
@@ -13088,7 +13088,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMES WHILE
 
 Ill-formed expression. Found expression "*". Expect an expression next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 324.
 ##
@@ -13140,7 +13140,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN REALNUMERAL WHILE
 
 Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 326.
 ##
@@ -13198,7 +13198,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN TRUNCATE TILDE
 
 Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
 ##
 ## Ends in an error in state: 323.
 ##
@@ -13211,7 +13211,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TIMESASSIGN WHILE
 
 Ill-formed expression. Found L-value "*=". Expect an expression followed by ";" next.
 
-file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE WHILE
 ##
 ## Ends in an error in state: 370.
 ##
@@ -13227,7 +13227,7 @@ file: TRANSFORMEDDATABLOCK LBRACE TRUNCATE WHILE
 
 Ill-formed statement or expression. A statement or expression could be expected here.
 
-file: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
+program: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
 ## Ends in an error in state: 592.
 ##
@@ -13239,7 +13239,7 @@ file: TRANSFORMEDDATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 
 Ill-formed top-level variable declaration. Expect an identifier next.
 
-file: TRANSFORMEDDATABLOCK LBRACE VOID
+program: TRANSFORMEDDATABLOCK LBRACE VOID
 ##
 ## Ends in an error in state: 590.
 ##
@@ -13251,7 +13251,7 @@ file: TRANSFORMEDDATABLOCK LBRACE VOID
 
 Expect a statement or top-level variable declaration.
 
-file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL RPAREN VOID
 ##
 ## Ends in an error in state: 222.
 ##
@@ -13263,7 +13263,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL RPAREN VOID
 
 Ill-formed statement. We expect a statement after ")", for the body of the while-loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL WHILE
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 221.
 ##
@@ -13315,7 +13315,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN REALNUMERAL WHILE
 
 Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
 ##
 ## Ends in an error in state: 423.
 ##
@@ -13327,7 +13327,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE RPAREN VOID
 
 Ill-formed statement. We expect a statement after ")", for the body of the while-loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE TILDE
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE TILDE
 ##
 ## Ends in an error in state: 422.
 ##
@@ -13385,7 +13385,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN TRUNCATE TILDE
 
 Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
+program: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 ##
 ## Ends in an error in state: 31.
 ##
@@ -13398,7 +13398,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE LPAREN WHILE
 
 Ill-formed expression. We expect an expression after "(" for the test of the while-loop.
 
-file: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
+program: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 ##
 ## Ends in an error in state: 30.
 ##
@@ -13411,7 +13411,7 @@ file: TRANSFORMEDDATABLOCK LBRACE WHILE WHILE
 
 After "while", we expect "(" expression ")" statement.
 
-file: TRANSFORMEDDATABLOCK WHILE
+program: TRANSFORMEDDATABLOCK WHILE
 ##
 ## Ends in an error in state: 589.
 ##
@@ -13423,7 +13423,7 @@ file: TRANSFORMEDDATABLOCK WHILE
 
 We expect "{" after "transfored data".
 
-file: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
+program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
 ## Ends in an error in state: 615.
 ##
@@ -13435,7 +13435,7 @@ file: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
-file: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
+program: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 ##
 ## Ends in an error in state: 611.
 ##
@@ -13447,7 +13447,7 @@ file: TRANSFORMEDPARAMETERSBLOCK LBRACE VOID
 
 Expect a statement or top-level variable declaration.
 
-file: TRANSFORMEDPARAMETERSBLOCK WHILE
+program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ##
 ## Ends in an error in state: 610.
 ##
@@ -13459,19 +13459,7 @@ file: TRANSFORMEDPARAMETERSBLOCK WHILE
 
 We expect "{" after "transfored parameters".
 
-file: WHILE
-##
-## Ends in an error in state: 0.
-##
-## file' -> . file [ # ]
-##
-## The known suffix of the stack is as follows:
-##
-##
-
-Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
+program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
 ##
 ## Ends in an error in state: 409.
 ##
@@ -13483,7 +13471,7 @@ file: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
 
 Expected  ";" or "=" expression ";".
 
-file: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
+program: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
 ##
 ## Ends in an error in state: 582.
 ##
@@ -13495,7 +13483,7 @@ file: DATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK WHILE
 
 Expected ";".
 
-file: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWASSIGN
+program: TRANSFORMEDDATABLOCK LBRACE REAL TRUNCATE LBRACK IDENTIFIER RBRACK ARROWASSIGN
 ##
 ## Ends in an error in state: 594.
 ##

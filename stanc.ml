@@ -63,18 +63,15 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive" ) ]
 
-(** The command that actually executes a command. *)
-let exec p =
-  let _ =
-    Debug.auto_formatter p ;
-    Debug.typed_ast_logger (Semantic_check.semantic_check_program p)
-  in
-  ()
-
 (** ad directives from the given file. *)
 let use_file filename =
-  let cmds = Parse.parse_file Parser.Incremental.file filename in
-  List.map exec cmds
+  let cmds = Parse.parse_file Parser.Incremental.program filename in
+  let _ = Debug.auto_formatter cmds in
+  let _ =
+    try Debug.typed_ast_logger (Semantic_check.semantic_check_program cmds)
+    with Errors.SemanticError err -> Errors.report_semantic_error err
+  in
+  ()
 
 (** Add a file to the list of files to be loaded, and record whether it should
       be processed in interactive mode. *)
@@ -86,12 +83,8 @@ let main () =
   Arg.parse options add_file usage ;
   (* Files were listed in the wrong order, so we reverse them *)
   files := List.rev !files ;
-  try
-    (* Run and load all the specified files. *)
-    let _ = List.map use_file !files in
-    ()
-  with Errors.SemanticError err ->
-    Errors.report_semantic_error err ;
-    exit 1
+  (* Run and load all the specified files. *)
+  let _ = List.map use_file !files in
+  ()
 
 let _ = main ()

@@ -5,7 +5,7 @@ let run_capturing_output cmd =
   let stdout, stdin, stderr = Unix.open_process_full cmd noflags in
   let chns = [stdout; stderr] in
   let out = List.map ~f:In_channel.input_lines chns in
-  ignore (Unix.close_process_full (stdout, stdin, stderr));
+  ignore (Unix.close_process_full (stdout, stdin, stderr)) ;
   String.concat ~sep:"\n" (List.concat out)
 
 let _ =

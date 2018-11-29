@@ -6,7 +6,6 @@ open Ast
 open Debug
 %}
 
-%token <string> INCLUDE
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
        TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
@@ -48,22 +47,14 @@ open Debug
 
 (* Top level rule *)
 
-%start <Ast.untyped_program list> file
 %start <Ast.untyped_program> program
 
-(*%type <Ast.untyped_program> program
-%type <Ast.untyped_program list> file
-*)
 %%
 
 
 (* Grammar *)
 
-(* file-program *)
-file:
-  | p=program
-    { ast_logger p ; [p]}
-
+(* program *)
 program:
   | obf=option(function_block)
     obd=option(data_block)
