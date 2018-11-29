@@ -1,12 +1,22 @@
-(** Some plumbing for our compiler errors *)
+(** Setup of our compiler errors *)
 open Ast
 
+(** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * Lexing.position
   | Includes of string * Lexing.position
   | Parsing of string option * Lexing.position * Lexing.position
 
+(** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
+
+(** Exception [SemanticError (loc, msg)] indicates a semantic error with message
+    [msg], occurring at location [loc]. *)
+exception SemanticError of (location * string)
+
+(** Exception [FatalError [msg]] indicates an error that should never happen with message
+    [msg]. *)
+exception FatalError of string
 
 let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let file = pos_fname in
@@ -27,6 +37,7 @@ let nth_line file line =
     close_in input ; Some result
   with _ -> None
 
+(** A syntax error message used when handling a SyntaxError *)
 let report_syntax_error = function
   | Parsing (message, start_pos, end_pos) -> (
       let file, start_line, start_character = position start_pos in
@@ -68,23 +79,6 @@ let report_syntax_error = function
       | Some line -> Printf.eprintf " > %s\n" line ) ;
       Printf.eprintf "%s" msg
 
-(** Exception [SemanticError (loc, msg)] indicates a semantic error with message
-    [msg], occurring at location [loc]. *)
-exception SemanticError of (location * string)
-
-(** Exception [FatalError [msg]] indicates an error that should never happen with message
-    [msg]. *)
-exception FatalError of string
-
-(* A fatal error reported by the toplevel *)
-let fatal_error msg =
-  raise
-    (FatalError
-       ("This should never happen. Please file a bug. Error code " ^ msg))
-
-(* A semantic error reported by the toplevel *)
-let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))
-
 (** Print a location *)
 let print_location loc ppf =
   match loc with
@@ -101,7 +95,7 @@ let print_location loc ppf =
         Format.fprintf ppf "line %d, characters %d-%d" (begin_line - 1)
           begin_char end_char
 
-(** Print the caught semantic error *)
+(** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
   match loc with
   | Location ({pos_fname= file; pos_lnum= line; _}, _) ->
@@ -117,3 +111,12 @@ let report_semantic_error (loc, msg) =
       Format.kfprintf
         (fun ppf -> Format.fprintf ppf "@.")
         Format.err_formatter "%s" msg
+
+(* A semantic error reported by the toplevel *)
+let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))
+
+(* A fatal error reported by the toplevel *)
+let fatal_error msg =
+  raise
+    (FatalError
+       ("This should never happen. Please file a bug. Error code " ^ msg))
