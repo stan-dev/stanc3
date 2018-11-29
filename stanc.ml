@@ -66,6 +66,7 @@ let options =
 (** ad directives from the given file. *)
 let use_file filename =
   let cmds = Parse.parse_file Parser.Incremental.program filename in
+  let _ = Debug.ast_logger cmds in
   let _ = Debug.auto_formatter cmds in
   let _ =
     try Debug.typed_ast_logger (Semantic_check.semantic_check_program cmds)
