@@ -7,7 +7,7 @@ type 'a state =
   ; stack: string Stack.t
   ; scopedepth: int ref
   ; readonly: (string, unit) Hashtbl.t
-  ; ismissingfundef: (string, unit) Hashtbl.t
+  ; isunassigned: (string, unit) Hashtbl.t
   ; globals: (string, unit) Hashtbl.t }
 
 let initialize () =
@@ -15,7 +15,7 @@ let initialize () =
   ; stack= Stack.create ()
   ; scopedepth= ref 0
   ; readonly= Hashtbl.create 123456
-  ; ismissingfundef= Hashtbl.create 123456
+  ; isunassigned= Hashtbl.create 123456
   ; globals= Hashtbl.create 123456 }
 
 (* We just pick some initial size. Hash tables get resized dynamically if necessary, so it doesn't hugely matter. *)
@@ -37,7 +37,7 @@ let end_scope s =
     (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
     Hashtbl.remove s.table (Stack.top s.stack) ;
     Hashtbl.remove s.readonly (Stack.top s.stack) ;
-    Hashtbl.remove s.ismissingfundef (Stack.top s.stack) ;
+    Hashtbl.remove s.isunassigned (Stack.top s.stack) ;
     let _ = Stack.pop s.stack in
     ()
   done ;
@@ -49,15 +49,15 @@ let set_read_only s str = Hashtbl.add s.readonly str ()
 let get_read_only s str =
   match Hashtbl.find_opt s.readonly str with Some () -> true | _ -> false
 
-let add_is_missing_fun_def s str =
-  if Hashtbl.mem s.ismissingfundef str then ()
-  else Hashtbl.add s.ismissingfundef str ()
+let set_is_assigned s str = Hashtbl.remove s.isunassigned str
 
-let remove_is_missing_fun_def s str = Hashtbl.remove s.ismissingfundef str
+let set_is_unassigned s str =
+  if Hashtbl.mem s.isunassigned str then ()
+  else Hashtbl.add s.isunassigned str ()
 
-let is_missing_fun_def s str = Hashtbl.mem s.ismissingfundef str
+let check_is_unassigned s str = Hashtbl.mem s.isunassigned str
 
-let some_fun_is_missing_def s = not (Hashtbl.length s.ismissingfundef = 0)
+let check_some_id_is_unassigned s = not (Hashtbl.length s.isunassigned = 0)
 
 let is_global s str =
   match Hashtbl.find_opt s.globals str with Some _ -> true | _ -> false
@@ -67,7 +67,7 @@ let unsafe_clear_symbol_table s =
   Stack.clear s.stack ;
   s.scopedepth := 0 ;
   Hashtbl.clear s.readonly ;
-  Hashtbl.clear s.ismissingfundef ;
+  Hashtbl.clear s.isunassigned ;
   Hashtbl.clear s.globals
 
 (* TODO: the following is very ugly, but we seem to need something like it to

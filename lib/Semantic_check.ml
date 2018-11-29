@@ -332,7 +332,7 @@ let rec semantic_check_program p =
       Core_kernel.Option.map ~f:(List.map semantic_check_statement) bf
     in
     let _ =
-      if Symbol_table.some_fun_is_missing_def vm then
+      if Symbol_table.check_some_id_is_unassigned vm then
         semantic_error
           ~loc:
             (snd
@@ -1948,7 +1948,7 @@ and semantic_check_statement s =
       in
       let uarg_types = List.map (function w, y, _ -> (w, y)) uargs in
       let _ =
-        if Symbol_table.is_missing_fun_def vm uid.name then (
+        if Symbol_table.check_is_unassigned vm uid.name then (
           if
             Symbol_table.look vm uid.name
             <> Some (Functions, Fun (uarg_types, urt))
@@ -1963,12 +1963,12 @@ and semantic_check_statement s =
       let _ =
         match b with
         | UntypedStmt (Skip, _) ->
-            if Symbol_table.is_missing_fun_def vm uid.name then
+            if Symbol_table.check_is_unassigned vm uid.name then
               semantic_error ~loc
                 ( "Function " ^ uid.name
                 ^ " has already been declared. A definition is expected." )
-            else Symbol_table.add_is_missing_fun_def vm uid.name
-        | _ -> Symbol_table.remove_is_missing_fun_def vm uid.name
+            else Symbol_table.set_is_unassigned vm uid.name
+        | _ -> Symbol_table.set_is_assigned vm uid.name
       in
       let _ =
         Symbol_table.enter vm uid.name (Functions, Fun (uarg_types, urt))
@@ -2035,7 +2035,7 @@ and semantic_check_statement s =
       let ub = semantic_check_statement b in
       let _ =
         if
-          Symbol_table.is_missing_fun_def vm uid.name
+          Symbol_table.check_is_unassigned vm uid.name
           || check_of_compatible_return_type urt
                (snd (typed_statement_unroll ub)).stmt_typed_meta_type
         then ()
