@@ -17,7 +17,7 @@ clean:
 re: clean all
 
 test/integration/examples-good/%/dune: test/integration/examples-good/dune
-	ln -sf $(abspath $^) $@
+	ln -sf `echo $*/ | sed -e "s|[^/]*/|../|g"`dune $@
 
 test/integration/examples-bad/%/dune: test/integration/examples-bad/dune
-	ln -sf $(abspath $^) $@
+	ln -sf `echo $*/ | sed -e "s|[^/]*/|../|g"`dune $@
