@@ -69,21 +69,21 @@ let add_file filename = files := filename :: !files
 
 (** ad directives from the given file. *)
 let use_file filename =
-  let cmds =
+  let ast =
     try Parse.parse_file Parser.Incremental.program filename
     with Errors.SyntaxError err ->
       Errors.report_syntax_error err ;
       exit 1
   in
-  let _ = Debug.ast_logger cmds in
-  let _ = Debug.auto_formatter cmds in
-  let typed_cmds =
-    try Semantic_check.semantic_check_program cmds
+  let _ = Debug.ast_logger ast in
+  let _ = Debug.auto_formatter ast in
+  let typed_ast =
+    try Semantic_check.semantic_check_program ast
     with Errors.SemanticError err ->
       Errors.report_semantic_error err ;
       exit 1
   in
-  let _ = Debug.typed_ast_logger typed_cmds in
+  let _ = Debug.typed_ast_logger typed_ast in
   ()
 
 (** Main program *)
