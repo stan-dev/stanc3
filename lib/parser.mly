@@ -102,12 +102,12 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER
     {
-      grammar_logger "identifier" ;
+      grammar_logger ("identifier " ^ id) ;
       {name=id; id_loc=make_location $startpos $endpos}
     }
   | TRUNCATE
     {
-      grammar_logger "identifier" ;
+      grammar_logger "identifier T" ;
       {name="T"; id_loc=make_location $startpos $endpos}
     }
 
@@ -328,9 +328,9 @@ constr_expression:
 
 common_expression:
   | i=INTNUMERAL
-    {  grammar_logger "intnumeral" ; IntNumeral i }
+    {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
-    {  grammar_logger "realnumeral" ; RealNumeral r }
+    {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
@@ -494,7 +494,7 @@ atomic_statement:
 
 string_literal:
   | s=STRINGLITERAL
-    {  grammar_logger "string_literal" ; s }
+    {  grammar_logger ("string_literal " ^ s) ; s }
 
 truncation:
   | TRUNCATE LBRACK e1=option(expression) COMMA e2=option(expression)
