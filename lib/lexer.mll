@@ -12,6 +12,7 @@
       pos_bol = pos.pos_cnum;
     }
 
+(* Some definitions for handling includes correctly *)
   let dup_exists l =
     let rec dup_consecutive = function
       | [] | [_] -> false
@@ -42,7 +43,6 @@
        is_suffix str ~suffix:"\""
     then drop_suffix (drop_prefix str 1) 1
     else str
-  (* TODO: detect recursive includes and throw error *)
 }
 
 (* Some auxiliary definition for variables and constants *)

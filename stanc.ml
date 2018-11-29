@@ -69,7 +69,9 @@ let use_file filename =
   let _ = Debug.auto_formatter cmds in
   let _ =
     try Debug.typed_ast_logger (Semantic_check.semantic_check_program cmds)
-    with Errors.SemanticError err -> Errors.report_semantic_error err
+    with Errors.SemanticError err ->
+      Errors.report_semantic_error err ;
+      exit 1
   in
   ()
 
