@@ -36,6 +36,7 @@
       let full_path = path ^ "/" ^ fname in
         open_in full_path, full_path ^ "\" included from \"" ^ old_path
     with _ -> try_open_in rest_of_paths fname
+  (* TODO: Put in precise location with line number and position in the whole chain of included froms? *)
   
   let maybe_remove_quotes str =
     let open Core_kernel.String in
@@ -276,7 +277,7 @@ rule token = parse
                                 else
                                   let _ = (Stack.pop include_stack) in
                                   let old_lexbuf = (Stack.top include_stack) in
-                                  token old_lexbuf }
+                                    token old_lexbuf }
   
   | _                         { raise (Errors.SyntaxError
                                 (Lexing (lexeme (Stack.top include_stack),
