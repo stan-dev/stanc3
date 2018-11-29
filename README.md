@@ -1,6 +1,8 @@
 # A New Stan-to-C++ Compiler
 This repo contains work in progress on a new compiler for Stan, written in OCaml.
 
+[![Build Status](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/badge/icon)](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/)
+
 ## To Get Started
 
 ### To build, test, and run
