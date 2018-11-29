@@ -34,8 +34,8 @@ let options =
     ; ( "--version"
       , Arg.String
           (fun _ ->
-            print_endline "TODO: not yet implemented" ;
-            assert false )
+            print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
+            exit 0 )
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.String
@@ -54,8 +54,7 @@ let options =
     ; ( "--allow_undefined"
       , Arg.Unit
           (fun () ->
-            print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 0 )
+            Semantic_check.check_that_all_functions_have_definition := false )
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include_paths"
       , Arg.String

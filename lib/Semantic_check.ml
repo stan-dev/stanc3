@@ -65,6 +65,8 @@ open Pretty_printing
    2) some context flags context_flags, to communicate information down
       the AST   *)
 
+let check_that_all_functions_have_definition = ref true
+
 let vm = Symbol_table.initialize ()
 
 (* Some imperative context flags that mainly serve to throw semantic errors in a more
@@ -332,7 +334,10 @@ let rec semantic_check_program p =
       Core_kernel.Option.map ~f:(List.map semantic_check_statement) bf
     in
     let _ =
-      if Symbol_table.check_some_id_is_unassigned vm then
+      if
+        Symbol_table.check_some_id_is_unassigned vm
+        && !check_that_all_functions_have_definition
+      then
         semantic_error
           ~loc:
             (snd
