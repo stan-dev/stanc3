@@ -310,7 +310,7 @@ let update_originblock name ob =
   | Some (old_ob, ut) ->
       let new_ob = lub_originblock [ob; old_ob] in
       Symbol_table.unsafe_replace vm name (new_ob, ut)
-  | _ -> fatal_error "18."
+  | _ -> fatal_error ()
 
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
@@ -337,8 +337,7 @@ let rec semantic_check_program p =
           ~loc:
             (snd
                (typed_statement_unroll
-                  (List.hd
-                     ((function Some x -> x | _ -> fatal_error "24") ubf))))
+                  (List.hd ((function Some x -> x | _ -> fatal_error ()) ubf))))
               .stmt_typed_meta_loc
           "Some function is declared without specifying a definition."
       (* TODO: insert better location in the error above *)
@@ -381,7 +380,7 @@ let rec semantic_check_program p =
 and semantic_check_identifier id =
   let _ =
     match id.id_loc with
-    | Nowhere -> fatal_error "25."
+    | Nowhere -> fatal_error ()
     | Location (startpos, _) ->
         let modelname =
           List.hd
@@ -1244,7 +1243,7 @@ and semantic_check_statement s =
         match ue2 with
         | TypedExpr (Indexed (TypedExpr (Variable uid, _), ulindex), _) ->
             (uid, ulindex)
-        | _ -> fatal_error "8."
+        | _ -> fatal_error ()
       in
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
@@ -1275,7 +1274,7 @@ and semantic_check_statement s =
               semantic_error ~loc
                 ( "Cannot assign to global variable " ^ uid.name
                 ^ " declared in previous blocks." )
-        | _ -> fatal_error "5."
+        | _ -> fatal_error ()
       in
       (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
@@ -1815,7 +1814,7 @@ and semantic_check_statement s =
         TypedStmt
           ( VDeclAss {sizedtype= ust; identifier= uid; value= ue}
           , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ -> fatal_error "2." )
+    | _ -> fatal_error () )
   | TVDecl (st, trans, id) ->
       let ust = semantic_check_sizedtype st in
       let rec check_sizes_below_param_level = function
@@ -1934,7 +1933,7 @@ and semantic_check_statement s =
               ; tidentifier= uid
               ; tvalue= ue }
           , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ -> fatal_error "1." )
+    | _ -> fatal_error () )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in

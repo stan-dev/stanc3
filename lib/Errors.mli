@@ -13,7 +13,8 @@ exception SyntaxError of parse_error
     [msg], occurring at location [loc]. *)
 exception SemanticError of (Ast.location * string)
 
-(** Exception for Fatal Errors *)
+(** Exception for Fatal Errors. These should perhaps be left unhandled,
+    so we can trace their origin. *)
 exception FatalError of string
 
 val report_syntax_error : parse_error -> unit
@@ -25,6 +26,5 @@ val report_semantic_error : Ast.location * string -> unit
 val semantic_error : ?loc:Ast.location -> string -> 'a
 (** Throw a semantic error reported by the toplevel *)
 
-val fatal_error : string -> 'a
+val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
-(* TODO: Should fatal errors be handled? *)

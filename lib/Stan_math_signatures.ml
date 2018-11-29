@@ -44,7 +44,7 @@ let bare_types = function
   | 2 -> Vector
   | 3 -> RowVector
   | 4 -> Matrix
-  | _ -> fatal_error "9."
+  | _ -> fatal_error ()
 
 let bare_types_size = 5
 
@@ -53,18 +53,18 @@ let vector_types = function
   | 1 -> Array Real
   | 2 -> Vector
   | 3 -> RowVector
-  | _ -> fatal_error "10."
+  | _ -> fatal_error ()
 
 let vector_types_size = 4
 
 let int_vector_types = function
   | 0 -> Int
   | 1 -> Array Int
-  | _ -> fatal_error "11."
+  | _ -> fatal_error ()
 
 let int_vector_types_size = 2
 
-let primitive_types = function 0 -> Int | 1 -> Real | _ -> fatal_error "12."
+let primitive_types = function 0 -> Int | 1 -> Real | _ -> fatal_error ()
 
 let primitive_types_size = 2
 
@@ -75,7 +75,7 @@ let all_vector_types = function
   | 3 -> RowVector
   | 4 -> Int
   | 5 -> Array Int
-  | _ -> fatal_error "13."
+  | _ -> fatal_error ()
 
 let all_vector_types_size = 6
 
@@ -84,7 +84,7 @@ let eigen_vector_types = function
   | 1 -> Array Vector
   | 2 -> RowVector
   | 3 -> Array RowVector
-  | _ -> fatal_error "14."
+  | _ -> fatal_error ()
 
 let eigen_vector_types_size = 4
 

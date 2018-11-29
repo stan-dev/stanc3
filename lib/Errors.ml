@@ -116,7 +116,5 @@ let report_semantic_error (loc, msg) =
 let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))
 
 (* A fatal error reported by the toplevel *)
-let fatal_error msg =
-  raise
-    (FatalError
-       ("This should never happen. Please file a bug. Error code " ^ msg))
+let fatal_error ?(msg = "") _ =
+  raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
