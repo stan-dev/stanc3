@@ -45,7 +45,7 @@ Make sure data only arguments to functions are checked properly.
 Sizes should be of level at most data.
 *)
 
-(* TODO: insert some more identifiers and relevant information into semantic error messages *)
+(* TODO: check that variables are assigned to before they are used! *)
 
 open Symbol_table
 open Ast
