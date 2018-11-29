@@ -1,0 +1,4744 @@
+  $ ../../../../install/default/bin/stanc --auto-format abs-deprecate.stan
+transformed data {
+  real mu;
+  mu = abs(-1.2);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(mu, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format algebra_solver_good.stan
+functions {
+  real algebra_solverfake(real x) {
+    return 2 * x;
+  }
+  vector algebra_system(vector x, vector y, real[] dat, int[] dat_int) {
+    vector[2] f_x;
+    f_x[1] = x[1] - y[1];
+    f_x[2] = x[2] - y[2];
+    return f_x;
+  }
+}
+data {
+
+}
+transformed data {
+  vector[2] x;
+  vector[2] y;
+  real dat[0];
+  int dat_int[0];
+  vector[2] theta;
+  theta = algebra_solver(algebra_system, x, y, dat, dat_int);
+  theta = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01, 10);
+}
+parameters {
+  vector[2] x_p;
+  vector[2] y_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  real abc_tp = algebra_solverfake(2.9);
+  vector[2] theta_p;
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
+  theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01, 0.01, 10);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format assignment-new.stan
+transformed data {
+  real mu;
+  real<lower=0> sigma;
+  mu = -1;
+  sigma = 3;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(mu, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format assignment-old.stan
+transformed data {
+  real mu;
+  real<lower=0> sigma;
+  mu <- -1;
+  sigma <- 3;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(mu, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format assignment_double_index_lhs.stan
+transformed data {
+  real a[109, 307];
+  vector[5] b[17];
+  row_vector[5] c[17];
+  matrix[15, 27] d;
+  real aa[12, 12, 12];
+  vector[5] bb[12, 12];
+  row_vector[5] cc[12, 12];
+  matrix[5, 12] dd[12];
+  a[1, 1] <- 118.22;
+  b[1, 1] <- 13;
+  c[1, 1] <- 0;
+  d[1, 1] <- 12;
+  aa[1, 1, 1] <- 118.22;
+  bb[1, 1, 1] <- 13;
+  cc[1, 1, 1] <- 0;
+  dd[1, 1, 1] <- 12;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real ap[109, 307];
+  vector[5] bp[17];
+  row_vector[5] cp[17];
+  matrix[15, 27] dp;
+  real aap[12, 12, 12];
+  vector[5] bbp[12, 12];
+  row_vector[5] ccp[12, 12];
+  matrix[5, 12] ddp[12];
+  ap[1, 1] <- 118.22;
+  bp[1, 1] <- 13;
+  cp[1, 1] <- 0;
+  dp[1, 1] <- 12;
+  aap[1, 1, 1] <- 118.22;
+  bbp[1, 1, 1] <- 13;
+  ccp[1, 1, 1] <- 0;
+  ddp[1, 1, 1] <- 12;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format assignments.stan
+data {
+  real x;
+  vector[5] y;
+  row_vector[6] z;
+  matrix[5, 6] m;
+  real x1[2];
+  vector[5] y1[2];
+  row_vector[6] z1[2];
+  matrix[5, 6] m1[2];
+  real x2[2, 3];
+  vector[5] y2[2, 3];
+  row_vector[6] z2[2, 3];
+  matrix[5, 6] m2[2, 3];
+  real x3[2, 3, 4];
+  vector[5] y3[2, 3, 4];
+  row_vector[6] z3[2, 3, 4];
+  matrix[5, 6] m3[2, 3, 4];
+}
+transformed data {
+  real tx;
+  vector[5] ty;
+  row_vector[6] tz;
+  matrix[5, 6] tm;
+  real tx1[2];
+  vector[5] ty1[2];
+  row_vector[6] tz1[2];
+  matrix[5, 6] tm1[2];
+  real tx2[2, 3];
+  vector[5] ty2[2, 3];
+  row_vector[6] tz2[2, 3];
+  matrix[5, 6] tm2[2, 3];
+  real tx3[2, 3, 4];
+  vector[5] ty3[2, 3, 4];
+  row_vector[6] tz3[2, 3, 4];
+  matrix[5, 6] tm3[2, 3, 4];
+  tx <- x;
+  tx <- y[1];
+  tx <- z[1];
+  tx <- m[1, 2];
+  tx <- x1[1];
+  tx <- y1[1, 1];
+  tx <- z1[1, 1];
+  tx <- m1[1, 1, 2];
+  tx <- x2[1, 1];
+  tx <- y2[1, 1, 1];
+  tx <- z2[1, 1, 1];
+  tx <- m2[1, 1, 1, 2];
+  tx <- x3[1, 1, 1];
+  tx <- y3[1, 1, 1, 1];
+  tx <- z3[1, 1, 1, 1];
+  tx <- m3[1, 1, 1, 1, 2];
+  tx1[1] <- x;
+  tx1[1] <- y[1];
+  tx1[1] <- z[1];
+  tx1[1] <- m[1, 2];
+  tx1[1] <- x1[1];
+  tx1[1] <- y1[1, 1];
+  tx1[1] <- z1[1, 1];
+  tx1[1] <- m1[1, 1, 2];
+  tx1[1] <- x2[1, 1];
+  tx1[1] <- y2[1, 1, 1];
+  tx1[1] <- z2[1, 1, 1];
+  tx1[1] <- m2[1, 1, 1, 2];
+  tx1[1] <- x3[1, 1, 1];
+  tx1[1] <- y3[1, 1, 1, 1];
+  tx1[1] <- z3[1, 1, 1, 1];
+  tx1[1] <- m3[1, 1, 1, 1, 2];
+  tx2[1, 1] <- x;
+  tx2[1, 1] <- y[1];
+  tx2[1, 1] <- z[1];
+  tx2[1, 1] <- m[1, 2];
+  tx2[1, 1] <- x1[1];
+  tx2[1, 1] <- y1[1, 1];
+  tx2[1, 1] <- z1[1, 1];
+  tx2[1, 1] <- m1[1, 1, 2];
+  tx2[1, 1] <- x2[1, 1];
+  tx2[1, 1] <- y2[1, 1, 1];
+  tx2[1, 1] <- z2[1, 1, 1];
+  tx2[1, 1] <- m2[1, 1, 1, 2];
+  tx2[1, 1] <- x3[1, 1, 1];
+  tx2[1, 1] <- y3[1, 1, 1, 1];
+  tx2[1, 1] <- z3[1, 1, 1, 1];
+  tx2[1, 1] <- m3[1, 1, 1, 1, 2];
+  tx3[1, 1, 1] <- x;
+  tx3[1, 1, 1] <- y[1];
+  tx3[1, 1, 1] <- z[1];
+  tx3[1, 1, 1] <- m[1, 2];
+  tx3[1, 1, 1] <- x1[1];
+  tx3[1, 1, 1] <- y1[1, 1];
+  tx3[1, 1, 1] <- z1[1, 1];
+  tx3[1, 1, 1] <- m1[1, 1, 2];
+  tx3[1, 1, 1] <- x2[1, 1];
+  tx3[1, 1, 1] <- y2[1, 1, 1];
+  tx3[1, 1, 1] <- z2[1, 1, 1];
+  tx3[1, 1, 1] <- m2[1, 1, 1, 2];
+  tx3[1, 1, 1] <- x3[1, 1, 1];
+  tx3[1, 1, 1] <- y3[1, 1, 1, 1];
+  tx3[1, 1, 1] <- z3[1, 1, 1, 1];
+  tx3[1, 1, 1] <- m3[1, 1, 1, 1, 2];
+  ty <- y;
+  ty <- y1[1];
+  ty <- y2[1, 1];
+  ty <- y3[1, 1, 1];
+  ty <- col(m, 1);
+  ty <- col(m1[1], 1);
+  ty <- col(m2[1, 1], 1);
+  ty <- col(m3[1, 1, 1], 1);
+  ty1[1] <- y;
+  ty1[1] <- y1[1];
+  ty1[1] <- y2[1, 1];
+  ty1[1] <- y3[1, 1, 1];
+  ty1[1] <- col(m, 1);
+  ty1[1] <- col(m1[1], 1);
+  ty1[1] <- col(m2[1, 1], 1);
+  ty1[1] <- col(m3[1, 1, 1], 1);
+  ty2[1, 1] <- y;
+  ty2[1, 1] <- y1[1];
+  ty2[1, 1] <- y2[1, 1];
+  ty2[1, 1] <- y3[1, 1, 1];
+  ty2[1, 1] <- col(m, 1);
+  ty2[1, 1] <- col(m1[1], 1);
+  ty2[1, 1] <- col(m2[1, 1], 1);
+  ty2[1, 1] <- col(m3[1, 1, 1], 1);
+  ty3[1, 1, 1] <- y;
+  ty3[1, 1, 1] <- y1[1];
+  ty3[1, 1, 1] <- y2[1, 1];
+  ty3[1, 1, 1] <- y3[1, 1, 1];
+  ty3[1, 1, 1] <- col(m, 1);
+  ty3[1, 1, 1] <- col(m1[1], 1);
+  ty3[1, 1, 1] <- col(m2[1, 1], 1);
+  ty3[1, 1, 1] <- col(m3[1, 1, 1], 1);
+  tz <- z;
+  tz <- z1[1];
+  tz <- z2[1, 1];
+  tz <- z3[1, 1, 1];
+  tz <- row(m, 1);
+  tz <- row(m1[1], 1);
+  tz <- row(m2[1, 1], 1);
+  tz <- row(m3[1, 1, 1], 1);
+  tz <- m[1];
+  tz <- m1[1, 1];
+  tz <- m2[1, 1, 1];
+  tz <- m3[1, 1, 1, 1];
+  tz1[1] <- z;
+  tz1[1] <- z1[1];
+  tz1[1] <- z2[1, 1];
+  tz1[1] <- z3[1, 1, 1];
+  tz1[1] <- row(m, 1);
+  tz1[1] <- row(m1[1], 1);
+  tz1[1] <- row(m2[1, 1], 1);
+  tz1[1] <- row(m3[1, 1, 1], 1);
+  tz1[1] <- m[1];
+  tz1[1] <- m1[1, 1];
+  tz1[1] <- m2[1, 1, 1];
+  tz1[1] <- m3[1, 1, 1, 1];
+  tz2[1, 1] <- z;
+  tz2[1, 1] <- z1[1];
+  tz2[1, 1] <- z2[1, 1];
+  tz2[1, 1] <- z3[1, 1, 1];
+  tz2[1, 1] <- row(m, 1);
+  tz2[1, 1] <- row(m1[1], 1);
+  tz2[1, 1] <- row(m2[1, 1], 1);
+  tz2[1, 1] <- row(m3[1, 1, 1], 1);
+  tz2[1, 1] <- m[1];
+  tz2[1, 1] <- m1[1, 1];
+  tz2[1, 1] <- m2[1, 1, 1];
+  tz2[1, 1] <- m3[1, 1, 1, 1];
+  tz3[1, 1, 1] <- z;
+  tz3[1, 1, 1] <- z1[1];
+  tz3[1, 1, 1] <- z2[1, 1];
+  tz3[1, 1, 1] <- z3[1, 1, 1];
+  tz3[1, 1, 1] <- row(m, 1);
+  tz3[1, 1, 1] <- row(m1[1], 1);
+  tz3[1, 1, 1] <- row(m2[1, 1], 1);
+  tz3[1, 1, 1] <- row(m3[1, 1, 1], 1);
+  tz3[1, 1, 1] <- m[1];
+  tz3[1, 1, 1] <- m1[1, 1];
+  tz3[1, 1, 1] <- m2[1, 1, 1];
+  tz3[1, 1, 1] <- m3[1, 1, 1, 1];
+  tm <- m;
+  tm <- m1[1];
+  tm <- m2[1, 1];
+  tm <- m3[1, 1, 1];
+  tm1[1] <- m;
+  tm1[1] <- m1[1];
+  tm1[1] <- m2[1, 1];
+  tm1[1] <- m3[1, 1, 1];
+  tm2[1, 1] <- m;
+  tm2[1, 1] <- m1[1];
+  tm2[1, 1] <- m2[1, 1];
+  tm2[1, 1] <- m3[1, 1, 1];
+  tm3[1, 1, 1] <- m;
+  tm3[1, 1, 1] <- m1[1];
+  tm3[1, 1, 1] <- m2[1, 1];
+  tm3[1, 1, 1] <- m3[1, 1, 1];
+  tx1 <- x1;
+  tx1 <- x2[1];
+  tx1 <- x3[1, 1];
+  tx2[1] <- x1;
+  tx2[1] <- x2[1];
+  tx2[1] <- x3[1, 1];
+  tx3[1, 1] <- x1;
+  tx3[1, 1] <- x2[1];
+  tx3[1, 1] <- x3[1, 1];
+  ty1 <- y1;
+  ty1 <- y2[1];
+  ty1 <- y3[1, 1];
+  ty2[1] <- y1;
+  ty2[1] <- y2[1];
+  ty2[1] <- y3[1, 1];
+  ty3[1, 1] <- y1;
+  ty3[1, 1] <- y2[1];
+  ty3[1, 1] <- y3[1, 1];
+  tz1 <- z1;
+  tz1 <- z2[1];
+  tz1 <- z3[1, 1];
+  tz2[1] <- z1;
+  tz2[1] <- z2[1];
+  tz2[1] <- z3[1, 1];
+  tz3[1, 1] <- z1;
+  tz3[1, 1] <- z2[1];
+  tz3[1, 1] <- z3[1, 1];
+  tm1 <- m1;
+  tm1 <- m2[1];
+  tm1 <- m3[1, 1];
+  tm2[1] <- m1;
+  tm2[1] <- m2[1];
+  tm2[1] <- m3[1, 1];
+  tm3[1, 1] <- m1;
+  tm3[1, 1] <- m2[1];
+  tm3[1, 1] <- m3[1, 1];
+  tx2 <- x2;
+  tx2 <- x3[1];
+  tx3[1] <- x2;
+  tx3[1] <- x3[1];
+  ty2 <- y2;
+  ty2 <- y3[1];
+  ty3[1] <- y2;
+  ty3[1] <- y3[1];
+  tz2 <- z2;
+  tz2 <- z3[1];
+  tz3[1] <- z2;
+  tz3[1] <- z3[1];
+  tm2 <- m2;
+  tm2 <- m3[1];
+  tm3[1] <- m2;
+  tm3[1] <- m3[1];
+  tx3 <- x3;
+  ty3 <- y3;
+  tz3 <- z3;
+  tm3 <- m3;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format assignments_double_var.stan
+data {
+  real x;
+  vector[5] y;
+  row_vector[6] z;
+  matrix[5, 6] m;
+  real x1[2];
+  vector[5] y1[2];
+  row_vector[6] z1[2];
+  matrix[5, 6] m1[2];
+  real x2[2, 3];
+  vector[5] y2[2, 3];
+  row_vector[6] z2[2, 3];
+  matrix[5, 6] m2[2, 3];
+  real x3[2, 3, 4];
+  vector[5] y3[2, 3, 4];
+  row_vector[6] z3[2, 3, 4];
+  matrix[5, 6] m3[2, 3, 4];
+}
+transformed parameters {
+  real tx;
+  vector[5] ty;
+  row_vector[6] tz;
+  matrix[5, 6] tm;
+  real tx1[2];
+  vector[5] ty1[2];
+  row_vector[6] tz1[2];
+  matrix[5, 6] tm1[2];
+  real tx2[2, 3];
+  vector[5] ty2[2, 3];
+  row_vector[6] tz2[2, 3];
+  matrix[5, 6] tm2[2, 3];
+  real tx3[2, 3, 4];
+  vector[5] ty3[2, 3, 4];
+  row_vector[6] tz3[2, 3, 4];
+  matrix[5, 6] tm3[2, 3, 4];
+  tx <- x;
+  tx <- y[1];
+  tx <- z[1];
+  tx <- m[1, 2];
+  tx <- x1[1];
+  tx <- y1[1, 1];
+  tx <- z1[1, 1];
+  tx <- m1[1, 1, 2];
+  tx <- x2[1, 1];
+  tx <- y2[1, 1, 1];
+  tx <- z2[1, 1, 1];
+  tx <- m2[1, 1, 1, 2];
+  tx <- x3[1, 1, 1];
+  tx <- y3[1, 1, 1, 1];
+  tx <- z3[1, 1, 1, 1];
+  tx <- m3[1, 1, 1, 1, 2];
+  tx1[1] <- x;
+  tx1[1] <- y[1];
+  tx1[1] <- z[1];
+  tx1[1] <- m[1, 2];
+  tx1[1] <- x1[1];
+  tx1[1] <- y1[1, 1];
+  tx1[1] <- z1[1, 1];
+  tx1[1] <- m1[1, 1, 2];
+  tx1[1] <- x2[1, 1];
+  tx1[1] <- y2[1, 1, 1];
+  tx1[1] <- z2[1, 1, 1];
+  tx1[1] <- m2[1, 1, 1, 2];
+  tx1[1] <- x3[1, 1, 1];
+  tx1[1] <- y3[1, 1, 1, 1];
+  tx1[1] <- z3[1, 1, 1, 1];
+  tx1[1] <- m3[1, 1, 1, 1, 2];
+  tx2[1, 1] <- x;
+  tx2[1, 1] <- y[1];
+  tx2[1, 1] <- z[1];
+  tx2[1, 1] <- m[1, 2];
+  tx2[1, 1] <- x1[1];
+  tx2[1, 1] <- y1[1, 1];
+  tx2[1, 1] <- z1[1, 1];
+  tx2[1, 1] <- m1[1, 1, 2];
+  tx2[1, 1] <- x2[1, 1];
+  tx2[1, 1] <- y2[1, 1, 1];
+  tx2[1, 1] <- z2[1, 1, 1];
+  tx2[1, 1] <- m2[1, 1, 1, 2];
+  tx2[1, 1] <- x3[1, 1, 1];
+  tx2[1, 1] <- y3[1, 1, 1, 1];
+  tx2[1, 1] <- z3[1, 1, 1, 1];
+  tx2[1, 1] <- m3[1, 1, 1, 1, 2];
+  tx3[1, 1, 1] <- x;
+  tx3[1, 1, 1] <- y[1];
+  tx3[1, 1, 1] <- z[1];
+  tx3[1, 1, 1] <- m[1, 2];
+  tx3[1, 1, 1] <- x1[1];
+  tx3[1, 1, 1] <- y1[1, 1];
+  tx3[1, 1, 1] <- z1[1, 1];
+  tx3[1, 1, 1] <- m1[1, 1, 2];
+  tx3[1, 1, 1] <- x2[1, 1];
+  tx3[1, 1, 1] <- y2[1, 1, 1];
+  tx3[1, 1, 1] <- z2[1, 1, 1];
+  tx3[1, 1, 1] <- m2[1, 1, 1, 2];
+  tx3[1, 1, 1] <- x3[1, 1, 1];
+  tx3[1, 1, 1] <- y3[1, 1, 1, 1];
+  tx3[1, 1, 1] <- z3[1, 1, 1, 1];
+  tx3[1, 1, 1] <- m3[1, 1, 1, 1, 2];
+  ty <- y;
+  ty <- y1[1];
+  ty <- y2[1, 1];
+  ty <- y3[1, 1, 1];
+  ty <- col(m, 1);
+  ty <- col(m1[1], 1);
+  ty <- col(m2[1, 1], 1);
+  ty <- col(m3[1, 1, 1], 1);
+  ty1[1] <- y;
+  ty1[1] <- y1[1];
+  ty1[1] <- y2[1, 1];
+  ty1[1] <- y3[1, 1, 1];
+  ty1[1] <- col(m, 1);
+  ty1[1] <- col(m1[1], 1);
+  ty1[1] <- col(m2[1, 1], 1);
+  ty1[1] <- col(m3[1, 1, 1], 1);
+  ty2[1, 1] <- y;
+  ty2[1, 1] <- y1[1];
+  ty2[1, 1] <- y2[1, 1];
+  ty2[1, 1] <- y3[1, 1, 1];
+  ty2[1, 1] <- col(m, 1);
+  ty2[1, 1] <- col(m1[1], 1);
+  ty2[1, 1] <- col(m2[1, 1], 1);
+  ty2[1, 1] <- col(m3[1, 1, 1], 1);
+  ty3[1, 1, 1] <- y;
+  ty3[1, 1, 1] <- y1[1];
+  ty3[1, 1, 1] <- y2[1, 1];
+  ty3[1, 1, 1] <- y3[1, 1, 1];
+  ty3[1, 1, 1] <- col(m, 1);
+  ty3[1, 1, 1] <- col(m1[1], 1);
+  ty3[1, 1, 1] <- col(m2[1, 1], 1);
+  ty3[1, 1, 1] <- col(m3[1, 1, 1], 1);
+  tz <- z;
+  tz <- z1[1];
+  tz <- z2[1, 1];
+  tz <- z3[1, 1, 1];
+  tz <- row(m, 1);
+  tz <- row(m1[1], 1);
+  tz <- row(m2[1, 1], 1);
+  tz <- row(m3[1, 1, 1], 1);
+  tz <- m[1];
+  tz <- m1[1, 1];
+  tz <- m2[1, 1, 1];
+  tz <- m3[1, 1, 1, 1];
+  tz1[1] <- z;
+  tz1[1] <- z1[1];
+  tz1[1] <- z2[1, 1];
+  tz1[1] <- z3[1, 1, 1];
+  tz1[1] <- row(m, 1);
+  tz1[1] <- row(m1[1], 1);
+  tz1[1] <- row(m2[1, 1], 1);
+  tz1[1] <- row(m3[1, 1, 1], 1);
+  tz1[1] <- m[1];
+  tz1[1] <- m1[1, 1];
+  tz1[1] <- m2[1, 1, 1];
+  tz1[1] <- m3[1, 1, 1, 1];
+  tz2[1, 1] <- z;
+  tz2[1, 1] <- z1[1];
+  tz2[1, 1] <- z2[1, 1];
+  tz2[1, 1] <- z3[1, 1, 1];
+  tz2[1, 1] <- row(m, 1);
+  tz2[1, 1] <- row(m1[1], 1);
+  tz2[1, 1] <- row(m2[1, 1], 1);
+  tz2[1, 1] <- row(m3[1, 1, 1], 1);
+  tz2[1, 1] <- m[1];
+  tz2[1, 1] <- m1[1, 1];
+  tz2[1, 1] <- m2[1, 1, 1];
+  tz2[1, 1] <- m3[1, 1, 1, 1];
+  tz3[1, 1, 1] <- z;
+  tz3[1, 1, 1] <- z1[1];
+  tz3[1, 1, 1] <- z2[1, 1];
+  tz3[1, 1, 1] <- z3[1, 1, 1];
+  tz3[1, 1, 1] <- row(m, 1);
+  tz3[1, 1, 1] <- row(m1[1], 1);
+  tz3[1, 1, 1] <- row(m2[1, 1], 1);
+  tz3[1, 1, 1] <- row(m3[1, 1, 1], 1);
+  tz3[1, 1, 1] <- m[1];
+  tz3[1, 1, 1] <- m1[1, 1];
+  tz3[1, 1, 1] <- m2[1, 1, 1];
+  tz3[1, 1, 1] <- m3[1, 1, 1, 1];
+  tm <- m;
+  tm <- m1[1];
+  tm <- m2[1, 1];
+  tm <- m3[1, 1, 1];
+  tm1[1] <- m;
+  tm1[1] <- m1[1];
+  tm1[1] <- m2[1, 1];
+  tm1[1] <- m3[1, 1, 1];
+  tm2[1, 1] <- m;
+  tm2[1, 1] <- m1[1];
+  tm2[1, 1] <- m2[1, 1];
+  tm2[1, 1] <- m3[1, 1, 1];
+  tm3[1, 1, 1] <- m;
+  tm3[1, 1, 1] <- m1[1];
+  tm3[1, 1, 1] <- m2[1, 1];
+  tm3[1, 1, 1] <- m3[1, 1, 1];
+  tx1 <- x1;
+  tx1 <- x2[1];
+  tx1 <- x3[1, 1];
+  tx2[1] <- x1;
+  tx2[1] <- x2[1];
+  tx2[1] <- x3[1, 1];
+  tx3[1, 1] <- x1;
+  tx3[1, 1] <- x2[1];
+  tx3[1, 1] <- x3[1, 1];
+  ty1 <- y1;
+  ty1 <- y2[1];
+  ty1 <- y3[1, 1];
+  ty2[1] <- y1;
+  ty2[1] <- y2[1];
+  ty2[1] <- y3[1, 1];
+  ty3[1, 1] <- y1;
+  ty3[1, 1] <- y2[1];
+  ty3[1, 1] <- y3[1, 1];
+  tz1 <- z1;
+  tz1 <- z2[1];
+  tz1 <- z3[1, 1];
+  tz2[1] <- z1;
+  tz2[1] <- z2[1];
+  tz2[1] <- z3[1, 1];
+  tz3[1, 1] <- z1;
+  tz3[1, 1] <- z2[1];
+  tz3[1, 1] <- z3[1, 1];
+  tm1 <- m1;
+  tm1 <- m2[1];
+  tm1 <- m3[1, 1];
+  tm2[1] <- m1;
+  tm2[1] <- m2[1];
+  tm2[1] <- m3[1, 1];
+  tm3[1, 1] <- m1;
+  tm3[1, 1] <- m2[1];
+  tm3[1, 1] <- m3[1, 1];
+  tx2 <- x2;
+  tx2 <- x3[1];
+  tx3[1] <- x2;
+  tx3[1] <- x3[1];
+  ty2 <- y2;
+  ty2 <- y3[1];
+  ty3[1] <- y2;
+  ty3[1] <- y3[1];
+  tz2 <- z2;
+  tz2 <- z3[1];
+  tz3[1] <- z2;
+  tz3[1] <- z3[1];
+  tm2 <- m2;
+  tm2 <- m3[1];
+  tm3[1] <- m2;
+  tm3[1] <- m3[1];
+  tx3 <- x3;
+  ty3 <- y3;
+  tz3 <- z3;
+  tm3 <- m3;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format assignments_var.stan
+parameters {
+  real x;
+  vector[5] y;
+  row_vector[6] z;
+  matrix[5, 6] m;
+  real x1[2];
+  vector[5] y1[2];
+  row_vector[6] z1[2];
+  matrix[5, 6] m1[2];
+  real x2[2, 3];
+  vector[5] y2[2, 3];
+  row_vector[6] z2[2, 3];
+  matrix[5, 6] m2[2, 3];
+  real x3[2, 3, 4];
+  vector[5] y3[2, 3, 4];
+  row_vector[6] z3[2, 3, 4];
+  matrix[5, 6] m3[2, 3, 4];
+}
+transformed parameters {
+  real tx;
+  vector[5] ty;
+  row_vector[6] tz;
+  matrix[5, 6] tm;
+  real tx1[2];
+  vector[5] ty1[2];
+  row_vector[6] tz1[2];
+  matrix[5, 6] tm1[2];
+  real tx2[2, 3];
+  vector[5] ty2[2, 3];
+  row_vector[6] tz2[2, 3];
+  matrix[5, 6] tm2[2, 3];
+  real tx3[2, 3, 4];
+  vector[5] ty3[2, 3, 4];
+  row_vector[6] tz3[2, 3, 4];
+  matrix[5, 6] tm3[2, 3, 4];
+  tx <- x;
+  tx <- y[1];
+  tx <- z[1];
+  tx <- m[1, 2];
+  tx <- x1[1];
+  tx <- y1[1, 1];
+  tx <- z1[1, 1];
+  tx <- m1[1, 1, 2];
+  tx <- x2[1, 1];
+  tx <- y2[1, 1, 1];
+  tx <- z2[1, 1, 1];
+  tx <- m2[1, 1, 1, 2];
+  tx <- x3[1, 1, 1];
+  tx <- y3[1, 1, 1, 1];
+  tx <- z3[1, 1, 1, 1];
+  tx <- m3[1, 1, 1, 1, 2];
+  tx1[1] <- x;
+  tx1[1] <- y[1];
+  tx1[1] <- z[1];
+  tx1[1] <- m[1, 2];
+  tx1[1] <- x1[1];
+  tx1[1] <- y1[1, 1];
+  tx1[1] <- z1[1, 1];
+  tx1[1] <- m1[1, 1, 2];
+  tx1[1] <- x2[1, 1];
+  tx1[1] <- y2[1, 1, 1];
+  tx1[1] <- z2[1, 1, 1];
+  tx1[1] <- m2[1, 1, 1, 2];
+  tx1[1] <- x3[1, 1, 1];
+  tx1[1] <- y3[1, 1, 1, 1];
+  tx1[1] <- z3[1, 1, 1, 1];
+  tx1[1] <- m3[1, 1, 1, 1, 2];
+  tx2[1, 1] <- x;
+  tx2[1, 1] <- y[1];
+  tx2[1, 1] <- z[1];
+  tx2[1, 1] <- m[1, 2];
+  tx2[1, 1] <- x1[1];
+  tx2[1, 1] <- y1[1, 1];
+  tx2[1, 1] <- z1[1, 1];
+  tx2[1, 1] <- m1[1, 1, 2];
+  tx2[1, 1] <- x2[1, 1];
+  tx2[1, 1] <- y2[1, 1, 1];
+  tx2[1, 1] <- z2[1, 1, 1];
+  tx2[1, 1] <- m2[1, 1, 1, 2];
+  tx2[1, 1] <- x3[1, 1, 1];
+  tx2[1, 1] <- y3[1, 1, 1, 1];
+  tx2[1, 1] <- z3[1, 1, 1, 1];
+  tx2[1, 1] <- m3[1, 1, 1, 1, 2];
+  tx3[1, 1, 1] <- x;
+  tx3[1, 1, 1] <- y[1];
+  tx3[1, 1, 1] <- z[1];
+  tx3[1, 1, 1] <- m[1, 2];
+  tx3[1, 1, 1] <- x1[1];
+  tx3[1, 1, 1] <- y1[1, 1];
+  tx3[1, 1, 1] <- z1[1, 1];
+  tx3[1, 1, 1] <- m1[1, 1, 2];
+  tx3[1, 1, 1] <- x2[1, 1];
+  tx3[1, 1, 1] <- y2[1, 1, 1];
+  tx3[1, 1, 1] <- z2[1, 1, 1];
+  tx3[1, 1, 1] <- m2[1, 1, 1, 2];
+  tx3[1, 1, 1] <- x3[1, 1, 1];
+  tx3[1, 1, 1] <- y3[1, 1, 1, 1];
+  tx3[1, 1, 1] <- z3[1, 1, 1, 1];
+  tx3[1, 1, 1] <- m3[1, 1, 1, 1, 2];
+  ty <- y;
+  ty <- y1[1];
+  ty <- y2[1, 1];
+  ty <- y3[1, 1, 1];
+  ty <- col(m, 1);
+  ty <- col(m1[1], 1);
+  ty <- col(m2[1, 1], 1);
+  ty <- col(m3[1, 1, 1], 1);
+  ty1[1] <- y;
+  ty1[1] <- y1[1];
+  ty1[1] <- y2[1, 1];
+  ty1[1] <- y3[1, 1, 1];
+  ty1[1] <- col(m, 1);
+  ty1[1] <- col(m1[1], 1);
+  ty1[1] <- col(m2[1, 1], 1);
+  ty1[1] <- col(m3[1, 1, 1], 1);
+  ty2[1, 1] <- y;
+  ty2[1, 1] <- y1[1];
+  ty2[1, 1] <- y2[1, 1];
+  ty2[1, 1] <- y3[1, 1, 1];
+  ty2[1, 1] <- col(m, 1);
+  ty2[1, 1] <- col(m1[1], 1);
+  ty2[1, 1] <- col(m2[1, 1], 1);
+  ty2[1, 1] <- col(m3[1, 1, 1], 1);
+  ty3[1, 1, 1] <- y;
+  ty3[1, 1, 1] <- y1[1];
+  ty3[1, 1, 1] <- y2[1, 1];
+  ty3[1, 1, 1] <- y3[1, 1, 1];
+  ty3[1, 1, 1] <- col(m, 1);
+  ty3[1, 1, 1] <- col(m1[1], 1);
+  ty3[1, 1, 1] <- col(m2[1, 1], 1);
+  ty3[1, 1, 1] <- col(m3[1, 1, 1], 1);
+  tz <- z;
+  tz <- z1[1];
+  tz <- z2[1, 1];
+  tz <- z3[1, 1, 1];
+  tz <- row(m, 1);
+  tz <- row(m1[1], 1);
+  tz <- row(m2[1, 1], 1);
+  tz <- row(m3[1, 1, 1], 1);
+  tz <- m[1];
+  tz <- m1[1, 1];
+  tz <- m2[1, 1, 1];
+  tz <- m3[1, 1, 1, 1];
+  tz1[1] <- z;
+  tz1[1] <- z1[1];
+  tz1[1] <- z2[1, 1];
+  tz1[1] <- z3[1, 1, 1];
+  tz1[1] <- row(m, 1);
+  tz1[1] <- row(m1[1], 1);
+  tz1[1] <- row(m2[1, 1], 1);
+  tz1[1] <- row(m3[1, 1, 1], 1);
+  tz1[1] <- m[1];
+  tz1[1] <- m1[1, 1];
+  tz1[1] <- m2[1, 1, 1];
+  tz1[1] <- m3[1, 1, 1, 1];
+  tz2[1, 1] <- z;
+  tz2[1, 1] <- z1[1];
+  tz2[1, 1] <- z2[1, 1];
+  tz2[1, 1] <- z3[1, 1, 1];
+  tz2[1, 1] <- row(m, 1);
+  tz2[1, 1] <- row(m1[1], 1);
+  tz2[1, 1] <- row(m2[1, 1], 1);
+  tz2[1, 1] <- row(m3[1, 1, 1], 1);
+  tz2[1, 1] <- m[1];
+  tz2[1, 1] <- m1[1, 1];
+  tz2[1, 1] <- m2[1, 1, 1];
+  tz2[1, 1] <- m3[1, 1, 1, 1];
+  tz3[1, 1, 1] <- z;
+  tz3[1, 1, 1] <- z1[1];
+  tz3[1, 1, 1] <- z2[1, 1];
+  tz3[1, 1, 1] <- z3[1, 1, 1];
+  tz3[1, 1, 1] <- row(m, 1);
+  tz3[1, 1, 1] <- row(m1[1], 1);
+  tz3[1, 1, 1] <- row(m2[1, 1], 1);
+  tz3[1, 1, 1] <- row(m3[1, 1, 1], 1);
+  tz3[1, 1, 1] <- m[1];
+  tz3[1, 1, 1] <- m1[1, 1];
+  tz3[1, 1, 1] <- m2[1, 1, 1];
+  tz3[1, 1, 1] <- m3[1, 1, 1, 1];
+  tm <- m;
+  tm <- m1[1];
+  tm <- m2[1, 1];
+  tm <- m3[1, 1, 1];
+  tm1[1] <- m;
+  tm1[1] <- m1[1];
+  tm1[1] <- m2[1, 1];
+  tm1[1] <- m3[1, 1, 1];
+  tm2[1, 1] <- m;
+  tm2[1, 1] <- m1[1];
+  tm2[1, 1] <- m2[1, 1];
+  tm2[1, 1] <- m3[1, 1, 1];
+  tm3[1, 1, 1] <- m;
+  tm3[1, 1, 1] <- m1[1];
+  tm3[1, 1, 1] <- m2[1, 1];
+  tm3[1, 1, 1] <- m3[1, 1, 1];
+  tx1 <- x1;
+  tx1 <- x2[1];
+  tx1 <- x3[1, 1];
+  tx2[1] <- x1;
+  tx2[1] <- x2[1];
+  tx2[1] <- x3[1, 1];
+  tx3[1, 1] <- x1;
+  tx3[1, 1] <- x2[1];
+  tx3[1, 1] <- x3[1, 1];
+  ty1 <- y1;
+  ty1 <- y2[1];
+  ty1 <- y3[1, 1];
+  ty2[1] <- y1;
+  ty2[1] <- y2[1];
+  ty2[1] <- y3[1, 1];
+  ty3[1, 1] <- y1;
+  ty3[1, 1] <- y2[1];
+  ty3[1, 1] <- y3[1, 1];
+  tz1 <- z1;
+  tz1 <- z2[1];
+  tz1 <- z3[1, 1];
+  tz2[1] <- z1;
+  tz2[1] <- z2[1];
+  tz2[1] <- z3[1, 1];
+  tz3[1, 1] <- z1;
+  tz3[1, 1] <- z2[1];
+  tz3[1, 1] <- z3[1, 1];
+  tm1 <- m1;
+  tm1 <- m2[1];
+  tm1 <- m3[1, 1];
+  tm2[1] <- m1;
+  tm2[1] <- m2[1];
+  tm2[1] <- m3[1, 1];
+  tm3[1, 1] <- m1;
+  tm3[1, 1] <- m2[1];
+  tm3[1, 1] <- m3[1, 1];
+  tx2 <- x2;
+  tx2 <- x3[1];
+  tx3[1] <- x2;
+  tx3[1] <- x3[1];
+  ty2 <- y2;
+  ty2 <- y3[1];
+  ty3[1] <- y2;
+  ty3[1] <- y3[1];
+  tz2 <- z2;
+  tz2 <- z3[1];
+  tz3[1] <- z2;
+  tz3[1] <- z3[1];
+  tm2 <- m2;
+  tm2 <- m3[1];
+  tm3[1] <- m2;
+  tm3[1] <- m3[1];
+  tx3 <- x3;
+  ty3 <- y3;
+  tz3 <- z3;
+  tm3 <- m3;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_old_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  int<lower=0, upper=1> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = bernoulli_logit_rng((x * beta_true + alpha_true)[i]);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  int<lower=0, upper=1> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = bernoulli_logit_rng((x * beta_true + alpha_true)[i]);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
+functions {
+  int foo(int a) {
+    while (1) break;
+    while (0) continue;
+    for (i in 1 : 10) break;
+    for (i in 1 : 10) continue;
+    while (1) {
+      int b;
+      b = 5;
+      break;
+    }
+    while (1) {
+      if (0) break;
+      else if (1) break;
+      else break;
+    }
+    while (1) while (0) break;
+    while (1) {
+      for (i in 1 : 10) break;
+    }
+    while (1) {
+      int vs[2, 3];
+      int z;
+      for (v in vs) {
+        z = 0;
+        break;
+      }
+      for (v in vs) {
+        z = 0;
+        continue;
+      }
+      for (v in vs) {
+        for (vv in v) {
+          z = 0;
+          break;
+        }
+        z = 1;
+      }
+    }
+    while (1) {
+      real z;
+      matrix[2, 3] vs;
+      for (v in vs) {
+        z = 0;
+        break;
+      }
+      for (v in vs) {
+        z = 3.2;
+        continue;
+      }
+    }
+    while (1) {
+      real z;
+      vector[2] vs;
+      for (v in vs) {
+        z = 0;
+        break;
+      }
+      for (v in vs) {
+        z = 3.2;
+        continue;
+      }
+    }
+    while (1) {
+      real z;
+      row_vector[2] vs;
+      for (v in vs) {
+        z = 0;
+        break;
+      }
+      for (v in vs) {
+        z = 3.2;
+        continue;
+      }
+    }
+    while (1) {
+      int b;
+      b = 5;
+      {
+        int c;
+        c = 6;
+        break;
+      }
+    }
+    return 0;
+  }
+}
+transformed data {
+  int x;
+  x = 0;
+  while (0) break;
+  while (1) continue;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real z;
+  z = 1;
+  while (0) break;
+  while (1) continue;
+}
+model {
+
+}
+generated quantities {
+  real u;
+  u = 1;
+  while (1) break;
+  while (0) continue;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
+parameters {
+  real y;
+}
+model {
+  int x;
+  if (x) y ~ normal(0, 1);
+  else if (!x) y ~ normal(0, 1);
+  else y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format conditional_op_fun_promote.stan
+functions {
+  real foo(real y) {
+    return 1 ? y : 2;
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real z;
+  z = foo(y);
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declarations.stan
+data {
+  int a0;
+  int a1[1];
+  int a2[2, 3];
+  real b0;
+  real b1[4];
+  real b2[5, 6];
+  vector[7] c0;
+  vector[7] c1[8];
+  vector[7] c2[8, 9];
+  row_vector[7] d0;
+  row_vector[7] d1[8];
+  row_vector[7] d2[8, 9];
+  matrix[8, 9] e;
+  matrix[8, 9] e1[11];
+  matrix[8, 9] e2[11, 12];
+  simplex[8] f;
+  simplex[8] f1[9];
+  simplex[8] f2[9, 10];
+  ordered[9] g;
+  ordered[9] g1[11];
+  ordered[9] g2[12, 13];
+  positive_ordered[9] h;
+  positive_ordered[9] h1[11];
+  positive_ordered[9] h2[12, 13];
+  corr_matrix[10] j;
+  corr_matrix[10] j1[3];
+  corr_matrix[10] j2[5, 6];
+  cov_matrix[10] k;
+  cov_matrix[10] k1[3];
+  cov_matrix[10] k2[5, 6];
+}
+transformed data {
+  int td_a0;
+  int td_a1[1];
+  int td_a2[2, 3];
+  real td_b0;
+  real td_b1[4];
+  real td_b2[5, 6];
+  vector[7] td_c0;
+  vector[7] td_c1[8];
+  vector[7] td_c2[8, 9];
+  row_vector[7] td_d0;
+  row_vector[7] td_d1[8];
+  row_vector[7] td_d2[8, 9];
+  matrix[8, 9] td_e;
+  matrix[8, 9] td_e1[11];
+  matrix[8, 9] td_e2[11, 12];
+  simplex[8] td_f;
+  simplex[8] td_f1[9];
+  simplex[8] td_f2[9, 10];
+  ordered[9] td_g;
+  ordered[9] td_g1[11];
+  ordered[9] td_g2[12, 13];
+  positive_ordered[9] td_h;
+  positive_ordered[9] td_h1[11];
+  positive_ordered[9] td_h2[12, 13];
+  corr_matrix[10] td_j;
+  corr_matrix[10] td_j1[3];
+  corr_matrix[10] td_j2[5, 6];
+  cov_matrix[10] td_k;
+  cov_matrix[10] td_k1[3];
+  cov_matrix[10] td_k2[5, 6];
+  {
+    int loc_td_a0;
+    int loc_td_a1[1];
+    int loc_td_a2[2, 3];
+    real loc_td_b0;
+    real loc_td_b1[4];
+    real loc_td_b2[5, 6];
+    vector[7] loc_td_c0;
+    vector[7] loc_td_c1[8];
+    vector[7] loc_td_c2[8, 9];
+    row_vector[7] loc_td_d0;
+    row_vector[7] loc_td_d1[8];
+    row_vector[7] loc_td_d2[8, 9];
+    matrix[8, 9] loc_td_e;
+    matrix[8, 9] loc_td_e1[11];
+    matrix[8, 9] loc_td_e2[11, 12];
+  }
+}
+parameters {
+  real par_b0;
+  real par_b1[4];
+  real par_b2[5, 6];
+  vector[7] par_c0;
+  vector[7] par_c1[8];
+  vector[7] par_c2[8, 9];
+  row_vector[7] par_d0;
+  row_vector[7] par_d1[8];
+  row_vector[7] par_d2[8, 9];
+  matrix[8, 9] par_e;
+  matrix[8, 9] par_e1[11];
+  matrix[8, 9] par_e2[11, 12];
+  simplex[8] par_f;
+  simplex[8] par_f1[9];
+  simplex[8] par_f2[9, 10];
+  ordered[9] par_g;
+  ordered[9] par_g1[11];
+  ordered[9] par_g2[12, 13];
+  positive_ordered[9] par_h;
+  positive_ordered[9] par_h1[11];
+  positive_ordered[9] par_h2[12, 13];
+  corr_matrix[10] par_j;
+  corr_matrix[10] par_j1[3];
+  corr_matrix[10] par_j2[5, 6];
+  cov_matrix[10] par_k;
+  cov_matrix[10] par_k1[3];
+  cov_matrix[10] par_k2[5, 6];
+}
+transformed parameters {
+  real tpar_b0;
+  real tpar_b1[4];
+  real tpar_b2[5, 6];
+  vector[7] tpar_c0;
+  vector[7] tpar_c1[8];
+  vector[7] tpar_c2[8, 9];
+  row_vector[7] tpar_d0;
+  row_vector[7] tpar_d1[8];
+  row_vector[7] tpar_d2[8, 9];
+  matrix[8, 9] tpar_e;
+  matrix[8, 9] tpar_e1[11];
+  matrix[8, 9] tpar_e2[11, 12];
+  simplex[8] tpar_f;
+  simplex[8] tpar_f1[9];
+  simplex[8] tpar_f2[9, 10];
+  ordered[9] tpar_g;
+  ordered[9] tpar_g1[11];
+  ordered[9] tpar_g2[12, 13];
+  positive_ordered[9] tpar_h;
+  positive_ordered[9] tpar_h1[11];
+  positive_ordered[9] tpar_h2[12, 13];
+  corr_matrix[10] tpar_j;
+  corr_matrix[10] tpar_j1[3];
+  corr_matrix[10] tpar_j2[5, 6];
+  cov_matrix[10] tpar_k;
+  cov_matrix[10] tpar_k1[3];
+  cov_matrix[10] tpar_k2[5, 6];
+  {
+    int loc_tpar_a0;
+    int loc_tpar_a1[1];
+    int loc_tpar_a2[2, 3];
+    real loc_tpar_b0;
+    real loc_tpar_b1[4];
+    real loc_tpar_b2[5, 6];
+    vector[7] loc_tpar_c0;
+    vector[7] loc_tpar_c1[8];
+    vector[7] loc_tpar_c2[8, 9];
+    row_vector[7] loc_tpar_d0;
+    row_vector[7] loc_tpar_d1[8];
+    row_vector[7] loc_tpar_d2[8, 9];
+    matrix[8, 9] loc_tpar_e;
+    matrix[8, 9] loc_tpar_e1[11];
+    matrix[8, 9] loc_tpar_e2[11, 12];
+  }
+}
+model {
+  {
+    int loc_model_a0;
+    int loc_model_a1[1];
+    int loc_model_a2[2, 3];
+    real loc_model_b0;
+    real loc_model_b1[4];
+    real loc_model_b2[5, 6];
+    vector[7] loc_model_c0;
+    vector[7] loc_model_c1[8];
+    vector[7] loc_model_c2[8, 9];
+    row_vector[7] loc_model_d0;
+    row_vector[7] loc_model_d1[8];
+    row_vector[7] loc_model_d2[8, 9];
+    matrix[8, 9] loc_model_e;
+    matrix[8, 9] loc_model_e1[11];
+    matrix[8, 9] loc_model_e2[11, 12];
+  }
+}
+generated quantities {
+  real gq_b0;
+  real gq_b1[4];
+  real gq_b2[5, 6];
+  vector[7] gq_c0;
+  vector[7] gq_c1[8];
+  vector[7] gq_c2[8, 9];
+  row_vector[7] gq_d0;
+  row_vector[7] gq_d1[8];
+  row_vector[7] gq_d2[8, 9];
+  matrix[8, 9] gq_e;
+  matrix[8, 9] gq_e1[11];
+  matrix[8, 9] gq_e2[11, 12];
+  simplex[8] gq_f;
+  simplex[8] gq_f1[9];
+  simplex[8] gq_f2[9, 10];
+  ordered[9] gq_g;
+  ordered[9] gq_g1[11];
+  ordered[9] gq_g2[12, 13];
+  positive_ordered[9] gq_h;
+  positive_ordered[9] gq_h1[11];
+  positive_ordered[9] gq_h2[12, 13];
+  corr_matrix[10] gq_j;
+  corr_matrix[10] gq_j1[3];
+  corr_matrix[10] gq_j2[5, 6];
+  cov_matrix[10] gq_k;
+  cov_matrix[10] gq_k1[3];
+  cov_matrix[10] gq_k2[5, 6];
+  {
+    int loc_gq_a0;
+    int loc_gq_a1[1];
+    int loc_gq_a2[2, 3];
+    real loc_gq_b0;
+    real loc_gq_b1[4];
+    real loc_gq_b2[5, 6];
+    vector[7] loc_gq_c0;
+    vector[7] loc_gq_c1[8];
+    vector[7] loc_gq_c2[8, 9];
+    row_vector[7] loc_gq_d0;
+    row_vector[7] loc_gq_d1[8];
+    row_vector[7] loc_gq_d2[8, 9];
+    matrix[8, 9] loc_gq_e;
+    matrix[8, 9] loc_gq_e1[11];
+    matrix[8, 9] loc_gq_e2[11, 12];
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-conditional-op.stan
+data {
+  int<lower=0> N;
+  int<lower=0, upper=1> y[N];
+  real x;
+}
+transformed data {
+  int td_i1 = 1 ? N : N;
+  int td_i2 = 1 ? N : y[1];
+  int td_i3 = 1 ? N : -3;
+  int td_i4 = 1 ? 1 : 4;
+  real td_r1 = 1 ? 1.0 : 2.0;
+  real td_r2 = 1 ? 1.0 : x;
+  real td_r3 = 1 ? x : 2.0;
+  real td_r4 = 0 ? x : x;
+  real td_r5 = 0 ? N : x;
+}
+parameters {
+  real<lower=0, upper=1> theta;
+  real z;
+}
+transformed parameters {
+  real tp_r1 = 1 ? 1.0 : 2.0;
+  real tp_r2 = 1 ? 1.0 : x;
+  real tp_r3 = 1 ? x : 2.0;
+  real tp_r4 = 0 ? x : x;
+  real tp_r5 = 0 ? N : x;
+  real tp_r6 = 1 ? x : tp_r1;
+  real tp_r7 = 1 ? tp_r1 : tp_r2;
+  real tp_r8 = 1 ? N : tp_r1;
+  {
+    real local_r1 = 1 ? 1.0 : 2.0;
+    real local_r2 = 1 ? 1.0 : x;
+    real local_r3 = 1 ? x : 2.0;
+    real local_r4 = 0 ? x : x;
+    real local_r5 = 0 ? N : x;
+    real local_r6 = 1 ? x : tp_r1;
+    real local_r7 = 1 ? tp_r1 : tp_r2;
+    real local_r8 = 1 ? N : tp_r1;
+  }
+}
+model {
+  theta ~ beta(1, 1);
+  for (n in 1 : N) y[n] ~ bernoulli(theta);
+}
+generated quantities {
+  int gq_i1 = 1 ? N : N;
+  int gq_i2 = 1 ? N : y[1];
+  int gq_i3 = 1 ? N : -3;
+  int gq_i4 = 1 ? 1 : 4;
+  real gq_r1 = 1 ? 1.0 : 2.0;
+  real gq_r2 = 1 ? 1.0 : x;
+  real gq_r3 = 1 ? x : 2.0;
+  real gq_r4 = 0 ? x : x;
+  real gq_r5 = 0 ? N : x;
+  real gq_r6 = 1 ? x : tp_r1;
+  real gq_r7 = 1 ? tp_r1 : tp_r2;
+  real gq_r8 = 1 ? N : tp_r1;
+  {
+    real local_r1 = 1 ? 1.0 : 2.0;
+    real local_r2 = 1 ? 1.0 : x;
+    real local_r3 = 1 ? x : 2.0;
+    real local_r4 = 0 ? x : x;
+    real local_r5 = 0 ? N : x;
+    real local_r6 = 1 ? x : tp_r1;
+    real local_r7 = 1 ? tp_r1 : tp_r2;
+    real local_r8 = 1 ? N : tp_r1;
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-gq-local-rng.stan
+transformed data {
+  int a = categorical_rng(rep_vector(0.1, 10));
+  {
+    int b = categorical_rng(rep_vector(0.1, 10));
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  {
+    int k;
+  }
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  {
+    int y_tilde = categorical_rng(rep_vector(0.1, 10));
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-constrained-matrix.stan
+data {
+  int d;
+  corr_matrix[d] d_corr_matrix;
+  corr_matrix[d] d_corr_matrix_ar[1];
+  cov_matrix[d] d_cov_matrix;
+  cov_matrix[d] d_cov_matrix_ar[1];
+  cholesky_factor_corr[d] d_cholesky_factor_corr;
+  cholesky_factor_corr[d] d_cholesky_factor_corr_ar[1];
+  cholesky_factor_cov[d] d_cholesky_factor_cov;
+  cholesky_factor_cov[d] d_cholesky_factor_cov_ar[1];
+}
+transformed data {
+  corr_matrix[d] td_corr_matrix1 = d_corr_matrix;
+  corr_matrix[d] td_corr_matrix2 = d_corr_matrix_ar[1];
+  corr_matrix[d] td_corr_matrix_ar[1] = d_corr_matrix_ar;
+  cov_matrix[d] td_cov_matrix1 = d_cov_matrix;
+  cov_matrix[d] td_cov_matrix2 = d_cov_matrix_ar[1];
+  cov_matrix[d] td_cov_matrix_ar[1] = d_cov_matrix_ar;
+  cholesky_factor_corr[d] td_cholesky_factor_corr1 = d_cholesky_factor_corr;
+  cholesky_factor_corr[d] td_cholesky_factor_corr2 = d_cholesky_factor_corr_ar[1];
+  cholesky_factor_corr[d] td_cholesky_factor_corr_ar[1] = d_cholesky_factor_corr_ar;
+  cholesky_factor_cov[d] td_cholesky_factor_cov1 = d_cholesky_factor_cov;
+  cholesky_factor_cov[d] td_cholesky_factor_cov2 = d_cholesky_factor_cov_ar[1];
+  cholesky_factor_cov[d] td_cholesky_factor_cov_ar[1] = d_cholesky_factor_cov_ar;
+  print("td_corr_matrix1 = ", td_corr_matrix1);
+  print("td_corr_matrix2 = ", td_corr_matrix2);
+  print("td_corr_matrix_ar = ", td_corr_matrix_ar);
+  print("td_cov_matrix1 = ", td_cov_matrix1);
+  print("td_cov_matrix2 = ", td_cov_matrix2);
+  print("td_cov_matrix_ar = ", td_cov_matrix_ar);
+  print("td_cholesky_factor_corr1 = ", td_cholesky_factor_corr1);
+  print("td_cholesky_factor_corr2 = ", td_cholesky_factor_corr2);
+  print("td_cholesky_factor_corr_ar = ", td_cholesky_factor_corr_ar);
+  print("td_cholesky_factor_cov1 = ", td_cholesky_factor_cov1);
+  print("td_cholesky_factor_cov2 = ", td_cholesky_factor_cov2);
+  print("td_cholesky_factor_cov_ar = ", td_cholesky_factor_cov_ar);
+}
+transformed parameters {
+  corr_matrix[d] tp_corr_matrix1 = d_corr_matrix;
+  corr_matrix[d] tp_corr_matrix2 = d_corr_matrix_ar[1];
+  corr_matrix[d] tp_corr_matrix_ar[1] = d_corr_matrix_ar;
+  cov_matrix[d] tp_cov_matrix1 = d_cov_matrix;
+  cov_matrix[d] tp_cov_matrix2 = d_cov_matrix_ar[1];
+  cov_matrix[d] tp_cov_matrix_ar[1] = d_cov_matrix_ar;
+  cholesky_factor_corr[d] tp_cholesky_factor_corr1 = d_cholesky_factor_corr;
+  cholesky_factor_corr[d] tp_cholesky_factor_corr2 = d_cholesky_factor_corr_ar[1];
+  cholesky_factor_corr[d] tp_cholesky_factor_corr_ar[1] = d_cholesky_factor_corr_ar;
+  cholesky_factor_cov[d] tp_cholesky_factor_cov1 = d_cholesky_factor_cov;
+  cholesky_factor_cov[d] tp_cholesky_factor_cov2 = d_cholesky_factor_cov_ar[1];
+  cholesky_factor_cov[d] tp_cholesky_factor_cov_ar[1] = d_cholesky_factor_cov_ar;
+  print("tp_corr_matrix1 = ", tp_corr_matrix1);
+  print("tp_corr_matrix2 = ", tp_corr_matrix2);
+  print("tp_corr_matrix_ar = ", tp_corr_matrix_ar);
+  print("tp_cov_matrix1 = ", tp_cov_matrix1);
+  print("tp_cov_matrix2 = ", tp_cov_matrix2);
+  print("tp_cov_matrix_ar = ", tp_cov_matrix_ar);
+  print("tp_cholesky_factor_corr1 = ", tp_cholesky_factor_corr1);
+  print("tp_cholesky_factor_corr2 = ", tp_cholesky_factor_corr2);
+  print("tp_cholesky_factor_corr_ar = ", tp_cholesky_factor_corr_ar);
+  print("tp_cholesky_factor_cov1 = ", tp_cholesky_factor_cov1);
+  print("tp_cholesky_factor_cov2 = ", tp_cholesky_factor_cov2);
+  print("tp_cholesky_factor_cov_ar = ", tp_cholesky_factor_cov_ar);
+}
+model {
+
+}
+generated quantities {
+  corr_matrix[d] gq_corr_matrix1 = d_corr_matrix;
+  corr_matrix[d] gq_corr_matrix2 = d_corr_matrix_ar[1];
+  corr_matrix[d] gq_corr_matrix_ar[1] = d_corr_matrix_ar;
+  cov_matrix[d] gq_cov_matrix1 = d_cov_matrix;
+  cov_matrix[d] gq_cov_matrix2 = d_cov_matrix_ar[1];
+  cov_matrix[d] gq_cov_matrix_ar[1] = d_cov_matrix_ar;
+  cholesky_factor_corr[d] gq_cholesky_factor_corr1 = d_cholesky_factor_corr;
+  cholesky_factor_corr[d] gq_cholesky_factor_corr2 = d_cholesky_factor_corr_ar[1];
+  cholesky_factor_corr[d] gq_cholesky_factor_corr_ar[1] = d_cholesky_factor_corr_ar;
+  cholesky_factor_cov[d] gq_cholesky_factor_cov1 = d_cholesky_factor_cov;
+  cholesky_factor_cov[d] gq_cholesky_factor_cov2 = d_cholesky_factor_cov_ar[1];
+  cholesky_factor_cov[d] gq_cholesky_factor_cov_ar[1] = d_cholesky_factor_cov_ar;
+  print("gq_corr_matrix1 = ", gq_corr_matrix1);
+  print("gq_corr_matrix2 = ", gq_corr_matrix2);
+  print("gq_corr_matrix_ar = ", gq_corr_matrix_ar);
+  print("gq_cov_matrix1 = ", gq_cov_matrix1);
+  print("gq_cov_matrix2 = ", gq_cov_matrix2);
+  print("gq_cov_matrix_ar = ", gq_cov_matrix_ar);
+  print("gq_cholesky_factor_corr1 = ", gq_cholesky_factor_corr1);
+  print("gq_cholesky_factor_corr2 = ", gq_cholesky_factor_corr2);
+  print("gq_cholesky_factor_corr_ar = ", gq_cholesky_factor_corr_ar);
+  print("gq_cholesky_factor_cov1 = ", gq_cholesky_factor_cov1);
+  print("gq_cholesky_factor_cov2 = ", gq_cholesky_factor_cov2);
+  print("gq_cholesky_factor_cov_ar = ", gq_cholesky_factor_cov_ar);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-constrained-vector.stan
+data {
+  int d;
+  simplex[d] d_simplex;
+  simplex[d] d_simplex_ar[d];
+  unit_vector[d] d_unit_vector;
+  unit_vector[d] d_unit_vector_ar[d];
+  ordered[d] d_ordered;
+  ordered[d] d_ordered_ar[d];
+  positive_ordered[d] d_positive_ordered;
+  positive_ordered[d] d_positive_ordered_ar[d];
+}
+transformed data {
+  simplex[d] td_simplex1 = d_simplex;
+  simplex[d] td_simplex2 = d_simplex_ar[1];
+  simplex[d] td_simplex_ar[d] = d_simplex_ar;
+  unit_vector[d] td_unit_vector1 = d_unit_vector;
+  unit_vector[d] td_unit_vector2 = d_unit_vector_ar[1];
+  unit_vector[d] td_unit_vector_ar[d] = d_unit_vector_ar;
+  ordered[d] td_ordered1 = d_ordered;
+  ordered[d] td_ordered2 = d_ordered_ar[1];
+  ordered[d] td_ordered_ar[d] = d_ordered_ar;
+  positive_ordered[d] td_positive_ordered1 = d_positive_ordered;
+  positive_ordered[d] td_positive_ordered2 = d_positive_ordered_ar[1];
+  positive_ordered[d] td_positive_ordered_ar[d] = d_positive_ordered_ar;
+  print("td_simplex1 = ", td_simplex1);
+  print("td_simplex2 = ", td_simplex2);
+  print("td_simplex_ar = ", td_simplex_ar);
+  print("td_unit_vector1 = ", td_unit_vector1);
+  print("td_unit_vector2 = ", td_unit_vector2);
+  print("td_unit_vector_ar = ", td_unit_vector_ar);
+  print("td_ordered1 = ", td_ordered1);
+  print("td_ordered2 = ", td_ordered2);
+  print("td_ordered_ar = ", td_ordered_ar);
+  print("td_positive_ordered1 = ", td_positive_ordered1);
+  print("td_positive_ordered2 = ", td_positive_ordered2);
+  print("td_positive_ordered_ar = ", td_positive_ordered_ar);
+}
+transformed parameters {
+  simplex[d] tp_simplex1 = d_simplex;
+  simplex[d] tp_simplex2 = d_simplex_ar[1];
+  simplex[d] tp_simplex_ar3[d] = d_simplex_ar;
+  simplex[d] tp_simplex4 = tp_simplex1;
+  simplex[d] tp_simplex5 = d_simplex_ar[1];
+  simplex[d] tp_simplex_ar6[d] = tp_simplex_ar3;
+  unit_vector[d] tp_unit_vector1 = d_unit_vector;
+  unit_vector[d] tp_unit_vector2 = d_unit_vector_ar[1];
+  unit_vector[d] tp_unit_vector_ar3[d] = d_unit_vector_ar;
+  unit_vector[d] tp_unit_vector4 = tp_unit_vector1;
+  unit_vector[d] tp_unit_vector5 = tp_unit_vector_ar3[2];
+  unit_vector[d] tp_unit_vector_ar6[d] = tp_unit_vector_ar3;
+  ordered[d] tp_ordered1 = d_ordered;
+  ordered[d] tp_ordered2 = d_ordered_ar[1];
+  ordered[d] tp_ordered_ar3[d] = d_ordered_ar;
+  ordered[d] tp_ordered4 = tp_ordered1;
+  ordered[d] tp_ordered5 = tp_ordered_ar3[3];
+  ordered[d] tp_ordered_ar6[d] = tp_ordered_ar3;
+  positive_ordered[d] tp_positive_ordered1 = d_positive_ordered;
+  positive_ordered[d] tp_positive_ordered2 = d_positive_ordered_ar[1];
+  positive_ordered[d] tp_positive_ordered_ar3[d] = d_positive_ordered_ar;
+  positive_ordered[d] tp_positive_ordered4 = tp_positive_ordered1;
+  positive_ordered[d] tp_positive_ordered5 = tp_positive_ordered_ar3[1];
+  positive_ordered[d] tp_positive_ordered_ar6[d] = tp_positive_ordered_ar3;
+  print("tp_simplex1 = ", tp_simplex1);
+  print("tp_simplex2 = ", tp_simplex2);
+  print("tp_simplex_ar3 = ", tp_simplex_ar3);
+  print("tp_simplex4 = ", tp_simplex4);
+  print("tp_simplex5 = ", tp_simplex5);
+  print("tp_simplex_ar6 = ", tp_simplex_ar6);
+  print("tp_unit_vector1 = ", tp_unit_vector1);
+  print("tp_unit_vector2 = ", tp_unit_vector2);
+  print("tp_unit_vector_ar3 = ", tp_unit_vector_ar3);
+  print("tp_unit_vector4 = ", tp_unit_vector4);
+  print("tp_unit_vector5 = ", tp_unit_vector5);
+  print("tp_unit_vector_ar6 = ", tp_unit_vector_ar6);
+  print("tp_ordered1 = ", tp_ordered1);
+  print("tp_ordered2 = ", tp_ordered2);
+  print("tp_ordered_ar3 = ", tp_ordered_ar3);
+  print("tp_ordered4 = ", tp_ordered4);
+  print("tp_ordered5 = ", tp_ordered5);
+  print("tp_ordered_ar6 = ", tp_ordered_ar6);
+  print("tp_positive_ordered1 = ", tp_positive_ordered1);
+  print("tp_positive_ordered2 = ", tp_positive_ordered2);
+  print("tp_positive_ordered_ar3 = ", tp_positive_ordered_ar3);
+  print("tp_positive_ordered4 = ", tp_positive_ordered4);
+  print("tp_positive_ordered5 = ", tp_positive_ordered5);
+  print("tp_positive_ordered_ar6 = ", tp_positive_ordered_ar6);
+}
+model {
+
+}
+generated quantities {
+  simplex[d] gq_simplex1 = d_simplex;
+  simplex[d] gq_simplex2 = d_simplex_ar[1];
+  simplex[d] gq_simplex_ar[d] = d_simplex_ar;
+  unit_vector[d] gq_unit_vector1 = d_unit_vector;
+  unit_vector[d] gq_unit_vector2 = d_unit_vector_ar[1];
+  unit_vector[d] gq_unit_vector_ar[d] = d_unit_vector_ar;
+  ordered[d] gq_ordered1 = d_ordered;
+  ordered[d] gq_ordered2 = d_ordered_ar[1];
+  ordered[d] gq_ordered_ar[d] = d_ordered_ar;
+  positive_ordered[d] gq_positive_ordered1 = d_positive_ordered;
+  positive_ordered[d] gq_positive_ordered2 = d_positive_ordered_ar[1];
+  positive_ordered[d] gq_positive_ordered_ar[d] = d_positive_ordered_ar;
+  print("gq_simplex1 = ", gq_simplex1);
+  print("gq_simplex2 = ", gq_simplex2);
+  print("gq_simplex_ar = ", gq_simplex_ar);
+  print("gq_unit_vector1 = ", gq_unit_vector1);
+  print("gq_unit_vector2 = ", gq_unit_vector2);
+  print("gq_unit_vector_ar = ", gq_unit_vector_ar);
+  print("gq_ordered1 = ", gq_ordered1);
+  print("gq_ordered2 = ", gq_ordered2);
+  print("gq_ordered_ar = ", gq_ordered_ar);
+  print("gq_positive_ordered1 = ", gq_positive_ordered1);
+  print("gq_positive_ordered2 = ", gq_positive_ordered2);
+  print("gq_positive_ordered_ar = ", gq_positive_ordered_ar);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-double.stan
+functions {
+  real foo(real a1) {
+    int lf0 = 2;
+    real lf1 = a1;
+    real lf2 = lf1;
+    real lf3[lf0];
+    real lf4[lf0] = lf3;
+    print("foo, lf1: ", lf1);
+    print("foo, lf2: ", lf1);
+    print("foo, lf4: ", lf4);
+    lf1 = lf3[1] + lf4[1];
+    return lf1;
+  }
+}
+data {
+  int<lower=0> N;
+  int<lower=0, upper=1> y[N];
+  real d[3, 3];
+}
+transformed data {
+  int td0 = 3;
+  real td1 = 123;
+  real td2 = 2.0;
+  real td3 = td0;
+  real td4 = td3;
+  real td_a1[3];
+  real td_a2[3] = td_a1;
+  real td5 = td_a2[1];
+  real td_a3[3, 3] = d;
+  real td_a4[3] = td_a3[2];
+  print("td1: ", td1);
+  print("td2: ", td2);
+  print("td3: ", td3);
+  print("td4: ", td4);
+  print("td5: ", td5);
+  print("td_a2: ", td_a2);
+  print("td_a4: ", td_a4);
+  {
+    real ltd1 = 1;
+    real ltd2 = 2.0;
+    real ltd3 = td1;
+    real ltd4[td0];
+    real ltd5[td0] = ltd4;
+    print("ltd1: ", ltd1);
+    print("ltd2: ", ltd2);
+    print("ltd3: ", ltd3);
+    print("ltd5: ", ltd5);
+  }
+}
+parameters {
+  real<lower=0, upper=1> theta;
+}
+transformed parameters {
+  real d_tp1 = 1.0;
+  real d_tp2 = td1;
+  real d_tp3 = td0;
+  real d_tp4 = d[1, 2];
+  real d_tp_a1[3] = td_a4;
+  real d_tp_a2[3] = td_a3[1];
+  real d_tp_a3[3, 3] = d;
+  real p_tp2 = d_tp1;
+  real p_tp4 = d_tp_a1[1];
+  real p_tp_a1[3] = d_tp_a1;
+  real p_tp_a2[3] = d_tp_a3[3];
+  real tp1 = 1;
+  real tp2 = 2.0;
+  real tp3 = tp2;
+  real tp4[td0];
+  real tp5[td0] = tp4;
+  print("d_tp1 = ", d_tp1);
+  print("d_tp2 = ", d_tp2, " should be td1 = ", td1, " which should be 123");
+  print("d_tp3 = ", d_tp3);
+  print("d_tp4 = ", d_tp4);
+  print("d_tp_a1 = ", d_tp_a1);
+  print("d_tp_a2 = ", d_tp_a2);
+  print("d_tp_a3 = ", d_tp_a3);
+  print("p_tp2 = ", p_tp2);
+  print("p_tp4 = ", p_tp4);
+  print("p_tp_a1 = ", p_tp_a1);
+  print("p_tp_a2 = ", p_tp_a2);
+  print("tp1: ", tp1);
+  print("tp2: ", tp2);
+  print("tp3: ", tp3);
+  print("tp5: ", tp5);
+  tp1 = foo(tp3);
+  print("tp1: ", tp1);
+  {
+    real lp1 = td0;
+    real lp2 = 9.0;
+    real lp3 = tp2;
+    real lp4[td0];
+    real lp5[td0] = lp4;
+    print("lp1: ", lp1);
+    print("lp2: ", lp2);
+    print("lp3: ", lp3);
+    print("lp5: ", lp5);
+  }
+}
+model {
+  real lm1 = 1;
+  real lm2 = 2.0;
+  real lm3 = tp2;
+  theta ~ beta(1, 1);
+  for (n in 1 : N) y[n] ~ bernoulli(theta);
+}
+generated quantities {
+  real gq_d_tp1 = 1.0;
+  real gq_d_tp2 = td1;
+  real gq_d_tp3 = td0;
+  real gq_d_tp4 = d[1, 2];
+  real gq_d_tp_a1[3] = td_a4;
+  real gq_d_tp_a2[3] = td_a3[1];
+  real gq_d_tp_a3[3, 3] = d;
+  real gq_p_tp2 = d_tp1;
+  real gq_p_tp4 = d_tp_a1[1];
+  real gq_p_tp_a1[3] = d_tp_a1;
+  real gq_p_tp_a2[3] = d_tp_a3[3];
+  print("gq_d_tp1 = ", gq_d_tp1);
+  print("gq_d_tp2 = ", gq_d_tp2, " should be td1 = ", td1, " which should be 123");
+  print("gq_d_tp3 = ", gq_d_tp3);
+  print("gq_d_tp4 = ", gq_d_tp4);
+  print("gq_d_tp_a1 = ", gq_d_tp_a1);
+  print("gq_d_tp_a2 = ", gq_d_tp_a2);
+  print("gq_d_tp_a3 = ", gq_d_tp_a3);
+  print("gq_p_tp2 = ", gq_p_tp2);
+  print("gq_p_tp4 = ", gq_p_tp4);
+  print("gq_p_tp_a1 = ", gq_p_tp_a1);
+  print("gq_p_tp_a2 = ", gq_p_tp_a2);
+  {
+    real lgq1 = 1;
+    real lgq2 = 2.0;
+    real lqd2a = lgq2;
+    real lgq3[td0];
+    real lgq3a = lgq3[1];
+    real lgq4[td0] = lgq3;
+    real lgq5[3] = d[1];
+    print("lgq1: ", lgq1);
+    print("lgq2: ", lgq2);
+    print("lgq2a: ", lqd2a);
+    print("lgq3: ", lgq3);
+    print("lgq3a: ", lgq3a);
+    print("lgq4: ", lgq4);
+    print("lgq5: ", lgq5);
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-int.stan
+functions {
+  int foo() {
+    int lf1 = 3;
+    print("foo ", lf1);
+    return lf1;
+  }
+}
+data {
+  int n;
+  int d[n, n];
+}
+transformed data {
+  int td1 = 1;
+  int td2 = td1;
+  int td_a1[n] = d[1];
+  int td_a2[n] = td_a1;
+  int td_a3[n, n] = d;
+  int td_a4[n] = td_a3[n];
+  int td3 = td_a3[2, 2];
+  print("td1 = ", td1);
+  print("td2 = ", td2);
+  print("td3 = ", td3);
+  print("td_a3 = ", td_a3);
+  print("transformed data td2 ", td2);
+  print("transformed data td_a2 ", td_a2);
+  print("transformed data td_a4 ", td_a4);
+}
+transformed parameters {
+  real p1;
+  {
+    int lp1 = 1;
+    print("transformed param ", lp1);
+  }
+}
+model {
+  int lm1 = 4;
+  print("local int ", lm1);
+  print(foo());
+}
+generated quantities {
+  int gq1 = 1;
+  print("gq1 ", gq1);
+  gq1 = 2;
+  {
+    int lgq1 = 2;
+    print("gq2 ", lgq1);
+    lgq1 = 2;
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-matrix.stan
+functions {
+  matrix foo(int a) {
+    matrix[a, a] lf0;
+    matrix[a, a] lf1 = lf0;
+    return lf1;
+  }
+}
+data {
+  int d;
+  matrix[d, d] d_m;
+  matrix[d, d] d_m_ar[d];
+}
+transformed data {
+  matrix[d, d] td_m1 = d_m;
+  matrix[d, d] td_m2 = d_m_ar[1];
+  matrix[d, d] td_m_ar3[d] = d_m_ar;
+  print("td_m1 = ", td_m1);
+  print("td_m2 = ", td_m2);
+  print("td_m_ar3 = ", td_m_ar3);
+}
+transformed parameters {
+  matrix[d, d] tp_m1 = d_m;
+  matrix[d, d] tp_m2 = d_m_ar[1];
+  matrix[d, d] tp_m_ar3[d] = d_m_ar;
+  matrix[d, d] tp_m4 = tp_m1;
+  matrix[d, d] tp_m5 = tp_m_ar3[1];
+  matrix[d, d] tp_m_ar6[d] = tp_m_ar3;
+  print("tp_m1 = ", tp_m1);
+  print("tp_m2 = ", tp_m2);
+  print("tp_m_ar3 = ", tp_m_ar3);
+  print("tp_m4 = ", tp_m4);
+  print("tp_m5 = ", tp_m5);
+  print("tp_m_ar6 = ", tp_m_ar6);
+  {
+    matrix[d, d] local_m1 = d_m;
+    matrix[d, d] local_m2 = d_m_ar[1];
+    matrix[d, d] local_m_ar3[d] = d_m_ar;
+    matrix[d, d] local_m4 = tp_m1;
+    matrix[d, d] local_m5 = tp_m_ar3[1];
+    matrix[d, d] local_m_ar6[d] = tp_m_ar3;
+    print("local_m1 = ", local_m1);
+    print("local_m2 = ", local_m2);
+    print("local_m_ar3 = ", local_m_ar3);
+    print("local_m4 = ", local_m4);
+    print("local_m5 = ", local_m5);
+    print("local_m_ar6 = ", local_m_ar6);
+  }
+}
+model {
+
+}
+generated quantities {
+  matrix[d, d] gq_m1 = d_m;
+  matrix[d, d] gq_m2 = d_m_ar[1];
+  matrix[d, d] gq_m_ar3[d] = d_m_ar;
+  matrix[d, d] gq_m4 = tp_m1;
+  matrix[d, d] gq_m5 = tp_m_ar3[1];
+  matrix[d, d] gq_m_ar6[d] = tp_m_ar3;
+  print("gq_m1 = ", gq_m1);
+  print("gq_m2 = ", gq_m2);
+  print("gq_m_ar3 = ", gq_m_ar3);
+  print("gq_m4 = ", gq_m4);
+  print("gq_m5 = ", gq_m5);
+  print("gq_m_ar6 = ", gq_m_ar6);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-vec-runtime-error.stan
+data {
+  vector[7] b0;
+}
+transformed data {
+  vector[8] td_b2 = b0;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format declare-define-var-vec-types.stan
+functions {
+  void foo1() {
+    vector[2] lf1;
+    vector[2] lf2 = lf1;
+    print("i am void");
+  }
+  vector foo2(int x) {
+    vector[x] lf1;
+    return lf1;
+  }
+}
+data {
+  int d;
+  vector[d] d_v;
+  row_vector[d] d_rv;
+  vector[d] d_v_ar[d];
+  row_vector[d] d_rv_ar[d];
+  matrix[d, d] d_m;
+}
+transformed data {
+  vector[d] td_v1 = d_v;
+  vector[d] td_v2 = d_v_ar[1];
+  vector[d] td_v3 = d_m[ : , 1];
+  vector[d] td_v_ar[d] = d_v_ar;
+  row_vector[d] td_rv1 = d_rv;
+  row_vector[d] td_rv2 = d_rv_ar[1];
+  row_vector[d] td_rv3 = d_m[2];
+  row_vector[d] td_rv_ar[d] = d_rv_ar;
+  print("td_v1 = ", td_v1);
+  print("td_v2 = ", td_v2);
+  print("td_v3 = ", td_v3);
+  print("td_v_ar = ", td_v_ar);
+  print("td_rv1 = ", td_rv1);
+  print("td_rv2 = ", td_rv2);
+  print("td_rv3 = ", td_rv3);
+  print("td_rv_ar = ", td_rv_ar);
+  {
+    vector[d] local_v1 = d_v;
+    vector[d] local_v2 = d_v_ar[1];
+    vector[d] local_v3 = d_m[ : , 1];
+    vector[d] local_v_ar[d] = d_v_ar;
+    row_vector[d] local_rv1 = d_rv;
+    row_vector[d] local_rv2 = d_rv_ar[1];
+    row_vector[d] local_rv3 = d_m[2];
+    row_vector[d] local_rv_ar[d] = d_rv_ar;
+    print("local_v1 = ", local_v1);
+    print("local_v2 = ", local_v2);
+    print("local_v3 = ", local_v3);
+    print("local_v_ar = ", local_v_ar);
+    print("local_rv1 = ", local_rv1);
+    print("local_rv2 = ", local_rv2);
+    print("local_rv3 = ", local_rv3);
+    print("local_rv_ar = ", local_rv_ar);
+  }
+  foo1();
+}
+parameters {
+  matrix<lower=0, upper=1>[d, d] p_m;
+}
+transformed parameters {
+  vector[d] tp_v1 = d_v;
+  vector[d] tp_v2 = d_v_ar[1];
+  vector[d] tp_v3 = d_m[ : , 1];
+  vector[d] tp_v_ar4[d] = d_v_ar;
+  vector[d] tp_v5 = tp_v1;
+  vector[d] tp_v6 = tp_v_ar4[1];
+  vector[d] tp_v7 = p_m[ : , 1];
+  vector[d] tp_v_ar8[d] = tp_v_ar4;
+  row_vector[d] tp_rv1 = d_rv;
+  row_vector[d] tp_rv2 = d_rv_ar[1];
+  row_vector[d] tp_rv3 = d_m[2];
+  row_vector[d] tp_rv_ar4[d] = d_rv_ar;
+  row_vector[d] tp_rv5 = tp_rv1;
+  row_vector[d] tp_rv6 = tp_rv_ar4[1];
+  row_vector[d] tp_rv7 = p_m[2,  : ];
+  row_vector[d] tp_rv_ar8[d] = tp_rv_ar4;
+  print("tp_v1 = ", tp_v1);
+  print("tp_v2 = ", tp_v2);
+  print("tp_v3 = ", tp_v3);
+  print("tp_v_ar4 = ", tp_v_ar4);
+  print("tp_v5 = ", tp_v5);
+  print("tp_v6 = ", tp_v6);
+  print("tp_v7 = ", tp_v7);
+  print("tp_v_ar8 = ", tp_v_ar8);
+  print("tp_rv1 = ", tp_rv1);
+  print("tp_rv2 = ", tp_rv2);
+  print("tp_rv3 = ", tp_rv3);
+  print("tp_rv_ar = ", tp_rv_ar4);
+  print("tp_rv5 = ", tp_rv5);
+  print("tp_rv6 = ", tp_rv6);
+  print("tp_rv7 = ", tp_rv7);
+  print("tp_rv_ar8 = ", tp_rv_ar8);
+  {
+    vector[d] local_v1 = d_v;
+    vector[d] local_v2 = d_v_ar[1];
+    vector[d] local_v3 = d_m[ : , 1];
+    vector[d] local_v_ar4[d] = d_v_ar;
+    vector[d] local_v5 = tp_v1;
+    vector[d] local_v6 = tp_v_ar4[1];
+    vector[d] local_v7 = p_m[ : , 1];
+    vector[d] local_v_ar8[d] = tp_v_ar4;
+    row_vector[d] local_rv1 = d_rv;
+    row_vector[d] local_rv2 = d_rv_ar[1];
+    row_vector[d] local_rv3 = d_m[2];
+    row_vector[d] local_rv_ar4[d] = d_rv_ar;
+    row_vector[d] local_rv5 = tp_rv1;
+    row_vector[d] local_rv6 = tp_rv_ar4[1];
+    row_vector[d] local_rv7 = p_m[1];
+    row_vector[d] local_rv_ar8[d] = tp_rv_ar4;
+    print("local_v1 = ", local_v1);
+    print("local_v2 = ", local_v2);
+    print("local_v3 = ", local_v3);
+    print("local_v_ar4 = ", local_v_ar4);
+    print("local_v5 = ", local_v5);
+    print("local_v6 = ", local_v6);
+    print("local_v7 = ", local_v7);
+    print("local_v_ar8 = ", local_v_ar8);
+    print("local_rv1 = ", local_rv1);
+    print("local_rv2 = ", local_rv2);
+    print("local_rv3 = ", local_rv3);
+    print("local_rv_ar4 = ", local_rv_ar4);
+    print("local_rv5 = ", local_rv5);
+    print("local_rv6 = ", local_rv6);
+    print("local_rv7 = ", local_rv7);
+    print("local_rv_ar8 = ", local_rv_ar8);
+  }
+}
+model {
+
+}
+generated quantities {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format deprecate-increment-log-prob.stan
+data {
+  real a;
+  vector[3] b;
+  real c[7];
+  real d[8, 9];
+}
+parameters {
+  real e;
+  vector[3] f;
+  real g[7];
+  real h[8, 9];
+}
+model {
+  increment_log_prob(a);
+  increment_log_prob(b);
+  increment_log_prob(b);
+  increment_log_prob(c);
+  increment_log_prob(d);
+  increment_log_prob(e);
+  increment_log_prob(f);
+  increment_log_prob(g);
+  increment_log_prob(h);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format deprecate-old-prob-funs.stan
+parameters {
+  real y;
+}
+model {
+  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1) + normal_ccdf_log(3, 0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
+model {
+  real foo;
+  foo <- 1;
+  increment_log_prob(0);
+  foo = get_lp();
+  foo = multiply_log(1, 1);
+  foo = binomial_coefficient_log(1, 1);
+  foo = normal_log(0.5, 0, 1);
+  foo = normal_cdf_log(0.5, 0, 1);
+  foo = normal_ccdf_log(0.5, 0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun-defs-lpdf.stan
+functions {
+  real bar_baz_lpdf(real a, real b) {
+    return a / b;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ bar_baz(3.2);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun-var-constraints.stan
+functions {
+  real foo() {
+    return 0;
+  }
+}
+data {
+  real<lower=foo(), upper=1> b;
+}
+transformed data {
+  real<lower=-100, upper=foo()> bt;
+}
+parameters {
+  real<lower=foo(), upper=1> y;
+}
+transformed parameters {
+  real<lower=-100, upper=foo()> yt;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real<lower=-100, upper=foo()> g;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_0.stan
+functions {
+  real foo() {
+    return 1.7;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_0_lp.stan
+functions {
+  real foo_lp() {
+    return 1.0;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_1.stan
+functions {
+  real foo(real x) {
+    return x;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_4.stan
+functions {
+  real foo(real x1, real x2, real x3, real x4) {
+    return x1;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_4_lp.stan
+functions {
+  real foo_lp(real x1, real x2, real x3, real x4) {
+    return x1;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_5.stan
+functions {
+  real foo(real x1, real x2, real x3, real x4, real x5) {
+    return x1;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_5_lp.stan
+functions {
+  real foo_lp(real x1, real x2, real x3, real x4, real x5) {
+    return x1;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_int0.stan
+functions {
+  int foo() {
+    return 3;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_int_1_int.stan
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_args_int_1_real.stan
+functions {
+  int foo(real x) {
+    return 3;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_as_lhs_sampling.stan
+transformed data {
+  matrix[2, 2] M = rep_matrix(0, 2, 2);
+}
+model {
+  to_vector(M) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_as_stmt.stan
+functions {
+  void foo_lp() {
+
+  }
+}
+model {
+  foo_lp();
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
+functions {
+  real n_log(real y);
+  real n_log(real y) {
+    return -0.5 * square(y);
+  }
+}
+parameters {
+  real mu;
+}
+model {
+  mu ~ n();
+  increment_log_prob(n_log(mu));
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
+functions {
+  int foo(int n);
+  int foo(int n) {
+    if (n == 0) return 1;
+    return n * foo(n - 1);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format functions-good-void.stan
+functions {
+  void linear_regression_lp(vector x, vector y, real alpha, real beta, real sigma) {
+    y ~ normal(x * alpha + beta, sigma);
+    sigma ~ cauchy(0, 2.5);
+    alpha ~ normal(0, 10);
+    beta ~ normal(0, 10);
+  }
+}
+data {
+  int<lower=0> N;
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  real alpha;
+  real beta;
+  real<lower=0> sigma;
+}
+model {
+  linear_regression_lp(x, y, alpha, beta, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format functions-good1.stan
+functions {
+  real foo0() {
+    return 0.0;
+  }
+  real foo1(real x) {
+    return 1.0;
+  }
+  real foo2(real x, real y) {
+    return 2.0;
+  }
+}
+data {
+  int<lower=0> N[6];
+}
+transformed data {
+  real a;
+  real b;
+  real c;
+  a <- foo0();
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format functions-good2.stan
+functions {
+  real foo_bar0() {
+    return 0.0;
+  }
+  real foo_bar1(real x) {
+    return 1.0;
+  }
+  real foo_bar2(real x, real y) {
+    return 2.0;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format functions-good3.stan
+functions {
+  real unit_normal_rng() {
+    return normal_rng(0, 1);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real z;
+  z <- unit_normal_rng();
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format functions-promote-return.stan
+functions {
+  vector foo(vector x, real y) {
+    if (y < 10) return log(x);
+    else return log(y * x);
+  }
+}
+transformed data {
+  vector[3] x;
+  x <- rep_vector(0, 3);
+}
+parameters {
+  real y;
+}
+model {
+  foo(x, y) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs1.stan
+functions {
+  void unit_normal_lp(real u) {
+    increment_log_prob(normal_log(u, 0, 1));
+    u ~ uniform(-100, 100);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  unit_normal_lp(y);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs2.stan
+functions {
+  real unit_normal_rng() {
+    return normal_rng(0, 1);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real z;
+  z <- unit_normal_rng();
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs3.stan
+functions {
+  real unit_normal_log(real y) {
+    return normal_log(y, 0, 1);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ unit_normal();
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs4.stan
+functions {
+  real unit_normal_log(real y) {
+    return normal_log(y, 0, 1);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  increment_log_prob(unit_normal_log(y));
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs5.stan
+functions {
+  void foo(real x) {
+    print("x=", x);
+  }
+}
+parameters {
+  real y;
+}
+model {
+  foo(y);
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs6.stan
+functions {
+  real foo(real x) {
+    return x * 2;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  foo(y) ~ normal(0, 2);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format funs7.stan
+functions {
+  real foo(real z) {
+    real y;
+    y = 1 ? z : 1;
+    return y;
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real z = foo(y);
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
+parameters {
+  real<lower=0> y;
+}
+model {
+  print("target=", get_lp());
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
+parameters {
+  real<lower=0> y;
+}
+transformed parameters {
+  print("target = ", target());
+  print("get_lp = ", get_lp());
+}
+model {
+  print("target = ", target());
+  print("get_lp = ", get_lp());
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
+functions {
+  real foo_lp(real x) {
+    return x + get_lp();
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real z;
+  z <- get_lp();
+}
+model {
+  real w;
+  w <- get_lp();
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format good_inf.stan
+data {
+  real L;
+  real U;
+}
+parameters {
+  real<lower=L, upper=U> infty;
+}
+model {
+  infty ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real<lower=0> x;
+  x = -1;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_data.stan
+transformed data {
+  real<lower=0> x;
+  x <- -1;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_parameters.stan
+transformed parameters {
+  real<lower=0> x;
+  x <- -1;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format increment-target.stan
+data {
+  real a;
+  vector[3] b;
+  real c[7];
+  real d[8, 9];
+}
+parameters {
+  real e;
+  vector[3] f;
+  real g[7];
+  real h[8, 9];
+}
+model {
+  target += -e ^ 2 / 2;
+  target += a;
+  target += b;
+  target += b;
+  target += c;
+  target += d;
+  target += e;
+  target += f;
+  target += g;
+  target += h;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format increment_log_prob.stan
+transformed data {
+  int n;
+  int nn[2];
+  int nnn[3, 4];
+  real x;
+  real xx[5];
+  real xxx[6, 7];
+  real xxxx[8, 9, 10];
+  vector[2] v;
+  vector[3] vv[4];
+  vector[4] vvv[5, 6];
+  row_vector[2] rv;
+  row_vector[3] rvv[4];
+  row_vector[4] rvvv[5, 6];
+  matrix[7, 8] m;
+  matrix[7, 8] mm[2];
+  matrix[7, 8] mmm[3, 4];
+}
+parameters {
+  real p_x;
+  real p_xx[5];
+  real p_xxx[6, 7];
+  real p_xxxx[8, 9, 10];
+  vector[2] p_v;
+  vector[3] p_vv[4];
+  vector[4] p_vvv[5, 6];
+  row_vector[2] p_rv;
+  row_vector[3] p_rvv[4];
+  row_vector[4] p_rvvv[5, 6];
+  matrix[7, 8] p_m;
+  matrix[7, 8] p_mm[2];
+  matrix[7, 8] p_mmm[3, 4];
+}
+model {
+  increment_log_prob(n);
+  increment_log_prob(nn);
+  increment_log_prob(nnn);
+  increment_log_prob(x);
+  increment_log_prob(xx);
+  increment_log_prob(xxx);
+  increment_log_prob(xxxx);
+  increment_log_prob(v);
+  increment_log_prob(vv);
+  increment_log_prob(vvv);
+  increment_log_prob(rv);
+  increment_log_prob(rvv);
+  increment_log_prob(rvvv);
+  increment_log_prob(m);
+  increment_log_prob(mm);
+  increment_log_prob(mmm);
+  increment_log_prob(p_x);
+  increment_log_prob(p_xx);
+  increment_log_prob(p_xxx);
+  increment_log_prob(p_xxxx);
+  increment_log_prob(p_v);
+  increment_log_prob(p_vv);
+  increment_log_prob(p_vvv);
+  increment_log_prob(p_rv);
+  increment_log_prob(p_rvv);
+  increment_log_prob(p_rvvv);
+  increment_log_prob(p_m);
+  increment_log_prob(p_mm);
+  increment_log_prob(p_mmm);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format int_div_user.stan
+data {
+  int a[4];
+  int b[3];
+}
+transformed data {
+  int c;
+  c <- a[1] / b[2];
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
+functions {
+  int foo(int x) {
+    return x + 1;
+  }
+}
+transformed data {
+  int x;
+  x <- foo(2);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_adams.stan
+functions {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
+    dydt[1] = y[2];
+    dydt[2] = -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+}
+data {
+  int<lower=1> T;
+  real y0_d[2];
+  real t0;
+  real ts[T];
+  real theta_d[1];
+  real x[0];
+  int x_int[0];
+}
+parameters {
+  real y0_p[2];
+  real theta_p[1];
+}
+model {
+  real y_hat[T, 2];
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+}
+generated quantities {
+  real y_hat[T, 2];
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
+functions {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
+    dydt[1] = y[2];
+    dydt[2] = -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+}
+data {
+  int<lower=1> T;
+  real y0_d[2];
+  real t0;
+  real ts[T];
+  real theta_d[1];
+  real x[0];
+  int x_int[0];
+}
+parameters {
+  real y0_p[2];
+  real theta_p[1];
+}
+model {
+  real y_hat[T, 2];
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+}
+generated quantities {
+  real y_hat[T, 2];
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
+functions {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
+    dydt[1] = y[2];
+    dydt[2] = -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+}
+data {
+  int<lower=1> T;
+  real y0[2];
+  real t0;
+  real ts[T];
+  real theta[1];
+}
+transformed data {
+  real x[0];
+  int x_int[0];
+}
+model {
+
+}
+generated quantities {
+  real y_hat[T, 2];
+  y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
+  for (t in 1 : T) {
+    y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
+    y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
+functions {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
+    dydt[1] = y[2];
+    dydt[2] = -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+}
+data {
+  int<lower=1> T;
+  real y0_d[2];
+  real t0;
+  real ts[T];
+  real theta_d[1];
+  real x[0];
+  int x_int[0];
+}
+parameters {
+  real y0_p[2];
+  real theta_p[1];
+}
+model {
+  real y_hat[T, 2];
+  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
+}
+generated quantities {
+  real y_hat[T, 2];
+  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_rk45(sho, y0_d, t0, ts, theta_p, x, x_int);
+  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
+  y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format io_example.stan
+transformed data {
+  vector[2] y;
+}
+parameters {
+  real mu1;
+  real mu2;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-else-if.stan
+parameters {
+  real a;
+  real if2;
+}
+model {
+  if (1 > 2) {
+    a ~ normal(0, 1);
+  }
+  else if2 ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-else.stan
+parameters {
+  real a;
+  real elseif;
+}
+model {
+  if (1 > 2) {
+    a ~ normal(0, 1);
+  }
+  elseif ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-for.stan
+parameters {
+  real force;
+}
+model {
+  force ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-if.stan
+parameters {
+  real iffy;
+}
+model {
+  iffy ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-increment-log-prob.stan
+parameters {
+  real increment_log_prob2;
+}
+model {
+  increment_log_prob2 ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-integrate-ode.stan
+parameters {
+  real integrate_ode_foo;
+}
+model {
+  integrate_ode_foo ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-print.stan
+parameters {
+  real printer;
+}
+model {
+  printer ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-reject.stan
+parameters {
+  real rejection;
+}
+model {
+  rejection ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-return.stan
+parameters {
+  real returning;
+}
+model {
+  returning ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format keywords-while.stan
+parameters {
+  real whiley;
+}
+model {
+  whiley ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation1.stan
+parameters {
+  cov_matrix[3] Sigma;
+  vector[3] mu;
+  vector[3] sigma;
+  real<lower=0> eta;
+}
+model {
+  Sigma ~ lkj_cov(mu, sigma, eta);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation2.stan
+parameters {
+  cov_matrix[3] Sigma;
+  vector[3] mu;
+  vector[3] sigma;
+  real<lower=0> eta;
+}
+model {
+  increment_log_prob(lkj_cov_log(Sigma, mu, sigma, eta));
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format lower-trunc-discrete.stan
+functions {
+  real foo_lpmf(int y, real lambda) {
+    return 1.0;
+  }
+  real foo_lcdf(int y, real lambda) {
+    return 1.0;
+  }
+  real foo_lccdf(int y, real lambda) {
+    return 1.0;
+  }
+  real bar_log(int y, real lambda) {
+    return 1.0;
+  }
+  real bar_cdf_log(int y, real lambda) {
+    return 1.0;
+  }
+  real bar_ccdf_log(int y, real lambda) {
+    return 1.0;
+  }
+  real baz_lpdf(real y, real lambda) {
+    return 1.0;
+  }
+  real baz_lcdf(real y, real lambda) {
+    return 1.0;
+  }
+  real baz_lccdf(real y, real lambda) {
+    return 1.0;
+  }
+  real quux_log(real y, real lambda) {
+    return 1.0;
+  }
+  real quux_cdf_log(real y, real lambda) {
+    return 1.0;
+  }
+  real quux_ccdf_log(real y, real lambda) {
+    return 1.0;
+  }
+}
+data {
+  int N;
+  int y[N];
+  real u[N];
+  int L;
+  int U;
+}
+parameters {
+  real<lower=0> lambda;
+}
+model {
+  for (n in 1 : N) {
+    y[n] ~ poisson(lambda) T[L, ];
+    y[n] ~ poisson(lambda) T[L, U];
+    y[n] ~ poisson(lambda) T[ , U];
+    y[n] ~ foo(lambda) T[L, ];
+    y[n] ~ foo(lambda) T[L, U];
+    y[n] ~ foo(lambda) T[ , U];
+    y[n] ~ bar(lambda) T[L, ];
+    y[n] ~ bar(lambda) T[L, U];
+    y[n] ~ bar(lambda) T[ , U];
+    u[n] ~ normal(0, 1) T[L, ];
+    u[n] ~ normal(0, 1) T[ , U];
+    u[n] ~ normal(0, 1) T[L, U];
+    y[n] ~ baz(lambda) T[L, ];
+    y[n] ~ baz(lambda) T[L, U];
+    y[n] ~ baz(lambda) T[ , U];
+    y[n] ~ quux(lambda) T[L, ];
+    y[n] ~ quux(lambda) T[L, U];
+    y[n] ~ quux(lambda) T[ , U];
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format lp_in_fun.stan
+functions {
+  void foo_lp() {
+    print("lp__ = ", get_lp());
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
+functions {
+  vector foo(vector shared_params, vector job_params, real[] data_r, int[] data_i) {
+    return [1, 2, 3]';
+  }
+  real map_rectfake(real x) {
+    return 2 * x;
+  }
+}
+data {
+  vector[3] shared_params_d;
+  vector[3] job_params_d[3];
+  real data_r[3, 3];
+  int data_i[3, 3];
+}
+parameters {
+  vector[3] shared_params_p;
+  vector[3] job_params_p[3];
+}
+transformed parameters {
+  real abc1_p = 3;
+  real abc2_p = map_rectfake(abc1_p);
+  real abc3_p = map_rectfake(12);
+  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, data_r, data_i);
+  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, data_r, data_i);
+  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, data_r, data_i);
+}
+model {
+  real abc_m = map_rectfake(abc1_p);
+}
+generated quantities {
+  real abc1_gq = map_rectfake(12);
+  real abc2_gq = map_rectfake(abc1_p);
+  vector[3] y_hat_gq = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format mat_assign.stan
+transformed data {
+  matrix[2, 2] X;
+  row_vector[2] y;
+  y[1] <- 10;
+  y[2] <- 100;
+  X[1] <- y;
+  X[2] <- y;
+  print("X=", X);
+}
+parameters {
+  real z;
+}
+transformed parameters {
+  matrix[2, 2] Xvar;
+  matrix[2, 2] Xvar2;
+  row_vector[2] yvar;
+  yvar[1] <- 15.9;
+  yvar[2] <- 42.7;
+  Xvar[1] <- y;
+  Xvar[2] <- y;
+  Xvar2[1] <- yvar;
+  Xvar2[2] <- yvar;
+}
+model {
+  z ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format min-max-types.stan
+parameters {
+  matrix[max(1, 3), min(2, 5)] a;
+}
+transformed parameters {
+  real z;
+  z <- max(9, 10);
+  z <- min(9, 10);
+}
+model {
+  int b;
+  b <- max(9, 10);
+  to_vector(a) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format model_block_empty.stan
+functions {
+  real foo(real x) {
+    return x;
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format multiple_funs.stan
+functions {
+  int foo(int a);
+  int foo(int a) {
+    return a;
+  }
+  int bar(int a) {
+    return a;
+  }
+}
+parameters {
+  real theta;
+}
+model {
+  theta ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_old_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  real<lower=0> sigma = 0.5;
+  int<lower=0> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = neg_binomial_2_log_rng((x * beta_true + alpha_true)[i], sigma);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  real<lower=0> sigma = 0.5;
+  int<lower=0> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = neg_binomial_2_log_rng((x * beta_true + alpha_true)[i], sigma);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+  target += normal_lpdf(1| -1.5, 2.9);
+  target += poisson_lpmf(2| 3);
+  target += normal_lcdf(1| 2, 3);
+  target += normal_lccdf(1| 2, 3);
+  target += poisson_lcdf(1| 2);
+  target += poisson_lccdf(1| 2);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_old_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  real<lower=0> sigma = 0.5;
+  vector[N] y;
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = normal_rng((x * beta_true + alpha_true)[i], sigma);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ normal(x * beta_inferred + alpha_inferred, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  real<lower=0> sigma = 0.5;
+  vector[N] y;
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = normal_rng((x * beta_true + alpha_true)[i], sigma);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
+parameters {
+  real e;
+  real pi;
+  real log2;
+  real log10;
+  real sqrt2;
+  real not_a_number;
+  real positive_infinity;
+  real negative_infinity;
+  real machine_precision;
+}
+transformed parameters {
+  real mu;
+  mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number() + positive_infinity() + negative_infinity() + machine_precision();
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format ode-int-segments.stan
+functions {
+  real[] ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[0];
+    return dydt;
+  }
+}
+data {
+  int<lower=1> T;
+  real t0;
+  real y0[0];
+  real ts[T];
+  real y[T, 2];
+}
+transformed data {
+  real x[0];
+  int x_int[0];
+}
+parameters {
+  real theta[0];
+}
+transformed parameters {
+  real y_hat[T, 2];
+  {
+    int N = 0;
+    y_hat = integrate_ode(ode, y0, t0, segment(ts, 0, N), theta, x, x_int);
+  }
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
+functions {
+  real[] foo(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+    return rep_array(1.0, 1);
+  }
+}
+transformed data {
+  real y;
+  real t[2, 2];
+  y <- integrate_ode(foo, rep_array(1.0, 1), 1.0, t[1], rep_array(1.0, 1), rep_array(1.0, 1), rep_array(1, 1))[1, 1];
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
+functions {
+  real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[2];
+    dydt[1] <- x[1] * y[2];
+    dydt[2] <- -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+}
+data {
+  real y0[2];
+  real t0;
+  real ts[10];
+  real x[1];
+  int x_int[0];
+  real y[10, 2];
+}
+parameters {
+  real theta[1];
+  real<lower=0> sigma;
+}
+transformed parameters {
+  real y_hat[10, 2];
+  y_hat <- integrate_ode(harm_osc_ode, y0, t0, ts, theta, x, x_int);
+  y_hat <- integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int);
+  y_hat <- integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int);
+  y_hat <- integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int);
+  y_hat <- integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
+  y_hat <- integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
+  y_hat <- integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
+}
+model {
+  for (t in 1 : 10) y[t] ~ normal(y_hat[t], sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
+transformed data {
+  real x;
+  x = multiply_log(x, x);
+  x = binomial_coefficient_log(x, x);
+  x = lmultiply(x, x);
+  x = lchoose(x, x);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_old_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  int<lower=0> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = poisson_log_rng((x * beta_true + alpha_true)[i]);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ poisson_log(x * beta_inferred + alpha_inferred);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N, M] x;
+  int<lower=0> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1 : M) {
+    beta_true[j] = j / M;
+  }
+  for (i in 1 : N) {
+    for (j in 1 : M) {
+      x[i, j] = normal_rng(0, 1);
+    }
+    y[i] = poisson_log_rng((x * beta_true + alpha_true)[i]);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+}
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+  y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
+data {
+  int N;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format print_chars.stan
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+  print("a e z A R Z 0 4 9 / ~ ! @ # $ % ^ & * ( ) ` _ + - = { } | [ ] : ; ' < > ? , . / ");
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format print_indexing.stan
+data {
+  int<lower=1> N[2];
+  int<lower=0> y_1[N[1]];
+  int<lower=0> y_2[N[2]];
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
+functions {
+  real foo_rng(real mu, real sigma) {
+    return normal_rng(mu, sigma);
+  }
+}
+transformed data {
+  real y;
+  y = normal_rng(0, 1);
+}
+parameters {
+
+}
+model {
+
+}
+generated quantities {
+  real z;
+  z = normal_rng(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format rng_transformed_data.stan
+data {
+  int<lower=0> N;
+}
+transformed data {
+  vector[N] y;
+  for (n in 1 : N) y[n] = normal_rng(0, 1);
+  print(y);
+}
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+model {
+  y ~ normal(mu, sigma);
+}
+generated quantities {
+  real mean_y = mean(y);
+  real sd_y = sd(y);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format stanc_helper_with_include.stan
+Syntax error at file "stanc_helper_with_include.stan", line 2, character 31, includes error:
+ > #include incl_stanc_helper.stan
+Could not find include file "incl_stanc_helper.stan" in specified include paths.
+  $ ../../../../install/default/bin/stanc --auto-format tern_op_contains_var.stan
+data {
+  int N;
+  int y_max;
+  int<lower=0> y[N];
+  int<lower=0, upper=1> group[N];
+}
+parameters {
+  vector<lower=0, upper=1>[2] param;
+}
+model {
+  to_vector(param) ~ uniform(0, 1);
+  for (i in 1 : N) {
+    y[i] ~ binomial(y_max, group[i] == 0 ? param[1] : param[2]);
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format truncation-user-defined.stan
+functions {
+  real foo_log(real y, real theta) {
+    return 1;
+  }
+  real foo_cdf_log(real y, real theta) {
+    return 1;
+  }
+  real foo_ccdf_log(real y, real theta) {
+    return 1;
+  }
+}
+data {
+  real y;
+}
+parameters {
+  real theta;
+  real L;
+  real U;
+}
+model {
+  y ~ foo(theta) T[L, ];
+  y ~ foo(theta) T[ , U];
+  y ~ foo(theta) T[L, U];
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format truncation-wild.stan
+model {
+  real T[1, 1] = {{42.0}};
+  1 ~ normal(0, 1) T[1, T[1, 1]];
+  print(T[1, 1]);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format unconstrained_params_var.stan
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+model {
+  1 ~ normal(mu, sigma);
+  2 ~ normal(mu, sigma);
+  3 ~ normal(mu, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format user-defined-lpdf-fun.stan
+functions {
+  real bar_lpmf(int y, real z) {
+    return 1.0;
+  }
+  real bar_lcdf(int y, real z) {
+    return 1.0;
+  }
+  real bar_lccdf(int y, real z) {
+    return 1.0;
+  }
+  real foo_lpdf(real y, real sigma) {
+    return 1.0;
+  }
+  real foo_lcdf(real y, real sigma) {
+    return 1.0;
+  }
+  real foo_lccdf(real y, real sigma) {
+    return 1.0;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  target += foo_lpdf(y| 7.0);
+  target += foo_lcdf(y| 7.0);
+  target += foo_lccdf(y| 7.0);
+  target += normal_lpdf(y| 7.0, 1.0);
+  target += normal_lcdf(y| 7.0, 1.0);
+  target += normal_lccdf(y| 7.0, 1.0);
+  target += bar_lpmf(2| 7.0);
+  target += bar_lcdf(2| 7.0);
+  target += bar_lccdf(2| 7.0);
+  target += poisson_lpmf(2| 7.0);
+  target += poisson_lcdf(2| 7.0);
+  target += poisson_lccdf(2| 7.0);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format user-distro-truncate.stan
+functions {
+  real foo_lpdf(real y, real mu) {
+    return -(y - mu) ^ 2;
+  }
+  real foo_lcdf(real y, real mu) {
+    return -1.7;
+  }
+  real foo_lccdf(real y, real mu) {
+    return -0.02;
+  }
+}
+parameters {
+  real<lower=1, upper=5> y;
+  real mu;
+}
+model {
+  y ~ foo(mu);
+  y ~ foo(mu) T[1, ];
+  y ~ foo(mu) T[ , 5];
+  y ~ foo(mu) T[1, 5];
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_add_expression_dimss_good.stan
+transformed data {
+  real x;
+  vector[3] v;
+  x <- v[1];
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real xt;
+  vector[3] vt;
+  xt <- vt[1];
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_add_var_good.stan
+data {
+  int n;
+  real x;
+  int nn[3, 2];
+  real y[5, 2];
+  vector[3] v;
+  row_vector[3] rv;
+  simplex[5] sv;
+  unit_vector[7] uv;
+  ordered[3] ov;
+  matrix[4, 5] m;
+  cov_matrix[3] covm;
+  corr_matrix[3] corrm;
+}
+transformed data {
+  int n_td;
+  real x_td;
+  int nn_td[3, 2];
+  real y_td[5, 2];
+  vector[3] v_td;
+  row_vector[3] rv_td;
+  simplex[5] sv_td;
+  unit_vector[7] uv_td;
+  ordered[3] ov_td;
+  matrix[4, 5] m_td;
+  cov_matrix[3] covm_td;
+  corr_matrix[3] corrm_td;
+}
+parameters {
+  real x_p;
+  real y_p[5, 2];
+  vector[3] v_p;
+  row_vector[3] rv_p;
+  simplex[5] sv_p;
+  unit_vector[7] uv_p;
+  ordered[3] ov_p;
+  matrix[4, 5] m_p;
+  cov_matrix[3] covm_p;
+  corr_matrix[3] corrm_p;
+}
+transformed parameters {
+  real x_tp;
+  real y_tp[5, 2];
+  vector[3] v_tp;
+  row_vector[3] rv_tp;
+  simplex[5] sv_tp;
+  unit_vector[7] uv_tp;
+  ordered[3] ov_tp;
+  matrix[4, 5] m_tp;
+  cov_matrix[3] covm_tp;
+  corr_matrix[3] corrm_tp;
+}
+model {
+  int n_l;
+  real x_l;
+  int nn_l[3, 2];
+  real y_l[5, 2];
+  vector[3] v_l;
+  row_vector[3] rv_l;
+  matrix[4, 5] m_l;
+  x_p ~ normal(0, 1);
+}
+generated quantities {
+  int n_gq;
+  real x_gq;
+  int nn_gq[3, 2];
+  real y_gq[5, 2];
+  vector[3] v_gq;
+  row_vector[3] rv_gq;
+  simplex[5] sv_gq;
+  unit_vector[7] uv_gq;
+  ordered[3] ov_gq;
+  matrix[4, 5] m_gq;
+  cov_matrix[3] covm_gq;
+  corr_matrix[3] corrm_gq;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_bounds_comparison.stan
+data {
+  real<lower=if_else(1 < 2, -1, -2)> a;
+  real<upper=if_else(1 < 2, -1, -2)> b;
+  real<lower=(1 && 3), upper=if_else(1 < 2, -1, -2)> c;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_conditional_op_good.stan
+functions {
+  real foo(real fa_x, int fa_y) {
+    real fl_x;
+    int fl_y;
+    fl_x = 1 ? fl_x : fl_y;
+    fl_y = 1 ? fl_y : 0;
+    fl_x = 1 ? fa_x : fl_x;
+    fl_y = 1 ? fa_y : fl_y;
+    return 2.0;
+  }
+}
+data {
+  int x;
+  real y;
+  real ya1[2];
+  real ya2[2, 2];
+  vector[5] z;
+  vector[5] za1[2];
+  vector[5] za2[2, 2];
+  row_vector[6] w;
+  row_vector[6] wa1[2];
+  row_vector[6] wa2[2, 2];
+  matrix[5, 6] m;
+  matrix[5, 6] ma1[2];
+  matrix[5, 6] ma2[2, 2];
+}
+transformed data {
+  int tx;
+  real ty;
+  vector[5] tza;
+  vector[5] tzb;
+  vector[5] tzc;
+  row_vector[6] twa;
+  row_vector[6] twb;
+  row_vector[6] twc;
+  matrix[5, 6] tma;
+  matrix[5, 6] tmb;
+  matrix[5, 6] tmc;
+  int tx1[2];
+  real tya1[2];
+  real tyb1[2];
+  real tyc1[2];
+  vector[5] tza1[2];
+  vector[5] tzb1[2];
+  row_vector[6] twa1[2];
+  row_vector[6] twb1[2];
+  row_vector[6] twc1[2];
+  matrix[5, 6] tm1[2];
+  int txa2[2, 3];
+  int txb2[2, 3];
+  int txc2[2, 3];
+  real tya2[2, 2];
+  real tyb2[2, 2];
+  vector[5] tza2[2, 2];
+  vector[5] tzb2[2, 2];
+  vector[5] tzc2[2, 2];
+  row_vector[6] twa2[2, 2];
+  row_vector[6] twb2[2, 2];
+  matrix[5, 6] tma2[2, 2];
+  matrix[5, 6] tmb2[2, 2];
+  matrix[5, 6] tmc2[2, 2];
+  tx = 1 ? 2 : 3;
+  ty = 1 ? 2.0 : 3.0;
+  tx = x < 100 ? x : 100;
+  ty = y > 100 ? 100 : y;
+  ty = y < 100 ? y : 100;
+  ty = y < 100 ? y : ty;
+  tzc = x < 100 ? tza : tzb;
+  twc = x < 100 ? twa : twb;
+  tmc = x < 100 ? tma : tmb;
+  tx1 = x < 100 ? txa2[1] : txb2[2];
+  txc2 = x < 100 ? txa2 : txb2;
+  tyc1 = x < 100 ? tya1 : tyb1;
+  tya2 = x < 100 ? tya2 : tyb2;
+  twc1 = x < 100 ? twa1 : twb1;
+  twa2 = x < 100 ? twa2 : twb2;
+  tm1 = x < 100 ? tma2[1] : tmb2[1];
+  tma2 = x < 100 ? tma2 : tmb2;
+  {
+    real abcd;
+    abcd = 1 ? abcd : 2.0;
+  }
+}
+parameters {
+  real py;
+  vector[5] pz;
+  row_vector[6] pw;
+  matrix[5, 6] pm;
+  real pya1[2];
+  real pya2[2, 2];
+  vector[5] pza1[2];
+  vector[5] pza2[2, 2];
+  matrix[5, 6] pma1[2];
+  matrix[5, 6] pma2[2, 2];
+}
+transformed parameters {
+  real tpy;
+  vector[5] tpza;
+  vector[5] tpzb;
+  vector[5] tpzc;
+  row_vector[6] tpwa;
+  row_vector[6] tpwb;
+  row_vector[6] tpwc;
+  matrix[5, 6] tpma;
+  matrix[5, 6] tpmb;
+  matrix[5, 6] tpmc;
+  real tpya1[2];
+  real tpyb1[2];
+  real tpyc1[2];
+  vector[5] tpza1[2];
+  vector[5] tpzb1[2];
+  row_vector[6] tpwa1[2];
+  row_vector[6] tpwb1[2];
+  row_vector[6] tpwc1[2];
+  matrix[5, 6] tpm1[2];
+  real tpya2[2, 2];
+  real tpyb2[2, 2];
+  vector[5] tpza2[2, 2];
+  vector[5] tpzb2[2, 2];
+  vector[5] tpzc2[2, 2];
+  row_vector[6] tpwa2[2, 2];
+  row_vector[6] tpwb2[2, 2];
+  matrix[5, 6] tpma2[2, 2];
+  matrix[5, 6] tpmb2[2, 2];
+  matrix[5, 6] tpmc2[2, 2];
+  tpy = y < 100 ? x : y;
+  tpy = y < 100 ? y : x;
+  tpy = y < 100 ? y : py;
+  tpy = y < 100 ? x : py;
+  tpzc = x < 100 ? tpza : tpzb;
+  tpwc = x < 100 ? tpwa : tpwb;
+  tpmc = x < 100 ? tpma : tpmb;
+  tpzc = x < 100 ? z : pz;
+  tpzc = x < 100 ? pz : z;
+  tpwc = x < 100 ? w : pw;
+  tpwc = x < 100 ? pw : w;
+  tpmc = x < 100 ? m : pm;
+  tpmc = x < 100 ? pm : m;
+  tpyc1 = ya1;
+  tpyc1 = x < 100 ? tpya1 : tpyb1;
+  tpyc1 = x < 100 ? ya1 : pya1;
+  tpyc1 = x < 100 ? pya1 : ya1;
+  tpya2 = x < 100 ? tpya2 : tpyb2;
+  tpya2 = x < 100 ? ya2 : tpyb2;
+  tpya2 = x < 100 ? tpya2 : ya2;
+  tpwc1 = x < 100 ? tpwa1 : tpwb1;
+  tpwc1 = x < 100 ? wa1 : tpwb1;
+  tpwc1 = x < 100 ? tpwb1 : wa1;
+  tpwa2 = x < 100 ? tpwa2 : tpwb2;
+  tpwa2 = x < 100 ? wa2 : tpwb2;
+  tpwa2 = x < 100 ? tpwb2 : wa2;
+  tpm1 = x < 100 ? tpma2[1] : tpmb2[1];
+  tpm1 = x < 100 ? ma2[1] : tpmb2[1];
+  tpm1 = x < 100 ? tpmb2[1] : ma2[1];
+  tpma2 = x < 100 ? tpma2 : tpmb2;
+  tpma2 = x < 100 ? ma2 : pma2;
+  tpma2 = x < 100 ? pma2 : ma2;
+  {
+    real abcde;
+    abcde = 1 ? abcde : 2.0;
+  }
+}
+model {
+  py ~ normal(0, 1);
+  {
+    real abcdefg;
+    abcdefg = 1 ? abcdefg : 2.0;
+  }
+}
+generated quantities {
+  int gqx;
+  real gqy;
+  vector[5] gqza;
+  vector[5] gqzb;
+  vector[5] gqzc;
+  gqy = y < 100 ? x : y;
+  gqy = y < 100 ? y : x;
+  gqzc = x < 100 ? gqza : gqzb;
+  {
+    real abcdef;
+    abcdef = 1 ? abcdef : 2.0;
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_division_good.stan
+transformed data {
+  real u;
+  matrix[3, 3] m;
+  row_vector[3] v;
+  u <- 2.1 / 3;
+  u <- 2 / 3.1;
+  u <- 2.1 / 3.1;
+  m <- m / m;
+  v <- v / m;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real xt;
+  real ut;
+  matrix[3, 3] mt;
+  row_vector[3] vt;
+  xt <- 2 / 3;
+  ut <- 2.1 / 3;
+  ut <- 2 / 3.1;
+  ut <- 2.1 / 3.1;
+  mt <- mt / mt;
+  vt <- vt / mt;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
+transformed data {
+  real u;
+  int j;
+  int k;
+  j <- 2;
+  k <- 3;
+  u <- j / k;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
+transformed data {
+  matrix[3, 3] m;
+  vector[3] v;
+  row_vector[3] rv;
+  real c;
+  m <- m ./ m;
+  m <- m ./ c;
+  m <- c ./ m;
+  v <- v ./ v;
+  v <- c ./ v;
+  v <- v ./ c;
+  rv <- rv ./ rv;
+  rv <- c ./ rv;
+  rv <- rv ./ c;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  matrix[3, 3] mt;
+  vector[3] vt;
+  row_vector[3] rvt;
+  real ct;
+  mt <- mt ./ mt;
+  mt <- mt ./ ct;
+  mt <- ct ./ mt;
+  vt <- vt ./ vt;
+  vt <- ct ./ vt;
+  vt <- vt ./ ct;
+  rvt <- rvt ./ rvt;
+  rvt <- ct ./ rvt;
+  rvt <- rvt ./ ct;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_elt_multiplication_good.stan
+transformed data {
+  matrix[3, 3] m;
+  vector[3] v;
+  row_vector[3] rv;
+  m <- m .* m;
+  v <- v .* v;
+  rv <- rv .* rv;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  matrix[3, 3] mt;
+  vector[3] vt;
+  row_vector[3] rvt;
+  mt <- mt .* mt;
+  vt <- vt .* vt;
+  rvt <- rvt .* rvt;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_exponentiation_good.stan
+data {
+  int i;
+  int j;
+  real x;
+  real y;
+}
+transformed data {
+  real z;
+  z <- x ^ y;
+  z <- x ^ j;
+  z <- j ^ x;
+  z <- i ^ j;
+}
+parameters {
+  real a;
+  real b;
+}
+transformed parameters {
+  real z2;
+  z2 <- a * b;
+  z2 <- x ^ y;
+  z2 <- x ^ j;
+  z2 <- x ^ a;
+  z2 <- i ^ x;
+  z2 <- i ^ j;
+  z2 <- i ^ b;
+  z2 <- a ^ x;
+  z2 <- a ^ j;
+  z2 <- a ^ b;
+}
+model {
+  a ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_exponentiation_precedence.stan
+data {
+
+}
+transformed data {
+  vector[3] a;
+  vector[3] b;
+  real c;
+  int i;
+  real x;
+  a[1] <- 2.1;
+  a[2] <- 2.2;
+  a[3] <- 2.3;
+  b[1] <- 2;
+  b[2] <- 3;
+  b[3] <- 4;
+  i <- 5;
+  x <- 6.66;
+  c <- a[1] ^ b[1];
+  c <- a[1] ^ x;
+  c <- a[1] ^ i;
+  c <- i ^ a[1];
+  c <- x ^ a[1];
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_functions.stan
+functions {
+  real my_fun(real x);
+  real my_fun2(real x, real y);
+  real my_fun3(data real x);
+  real my_fun(real x) {
+    return 2 * x;
+  }
+  real my_fun2(real x, real y) {
+    return 2 * x;
+  }
+  real my_fun3(data real x) {
+    return 2 * x;
+  }
+}
+transformed data {
+  real td_d1 = 1;
+  real td_d2 = my_fun(td_d1);
+  real td_d3 = my_fun2(td_d1, td_d2);
+  td_d3 = my_fun3(my_fun2(td_d1, td_d2));
+}
+parameters {
+  real p_d1;
+}
+transformed parameters {
+  real tp_d1 = my_fun(p_d1);
+  real tp_d2 = my_fun2(p_d1, tp_d1);
+}
+generated quantities {
+  real gq_d1 = my_fun(p_d1);
+  real gq_d2 = my_fun(gq_d1);
+  gq_d2 = my_fun3(gq_d1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_int_expr2_good.stan
+parameters {
+  vector[10] y;
+}
+model {
+  for (n in 1 : 10) y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning1.stan
+parameters {
+  real y;
+}
+model {
+  log(y) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning2.stan
+parameters {
+  real y;
+}
+model {
+  (y * y) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning3.stan
+parameters {
+  vector[5] v;
+}
+model {
+  (v' * v) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning4.stan
+parameters {
+  real y;
+}
+model {
+  1 + (y * y) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning5.stan
+parameters {
+  vector[10] y;
+}
+model {
+  head((y .* y), 2) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning6.stan
+parameters {
+  real y;
+}
+model {
+  -(y * y) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_good.stan
+data {
+  int N;
+  real x;
+}
+parameters {
+  vector[3] v;
+  real a[4, 5];
+  matrix[6, 6] m;
+  real y;
+  real z;
+}
+model {
+  1 ~ normal(y, 1);
+  2.7 ~ normal(z, 1);
+  y ~ normal(0, 1);
+  m ~ lkj_corr(2.0);
+  (m + m) ~ lkj_corr(2.0);
+  (m - m) ~ lkj_corr(2.0);
+  (v + v) ~ multi_normal(v, m);
+  (v - v) ~ multi_normal(v, m);
+  block(m, 1, 1, 1, 1) ~ lkj_corr(2.0);
+  col(m, 1) ~ normal(0, 1);
+  cols(m) ~ normal(0, 1);
+  row(m, 1) ~ normal(0, 1);
+  rows(m) ~ normal(0, 1);
+  diagonal(m) ~ multi_normal(v, m);
+  head(v, 2) ~ multi_normal(v, m);
+  negative_infinity() ~ normal(0, 1);
+  not_a_number() ~ normal(0, 1);
+  rep_matrix(1, 3, 3) ~ lkj_corr(2.0);
+  (v')' ~ multi_normal(v, m);
+  positive_infinity() ~ normal(0, 1);
+  segment(v, 2, 4) ~ normal(0, 1);
+  sum(v) ~ normal(0, 1);
+  tail(v, 3) ~ normal(0, 1);
+  to_vector(m) ~ normal(0, 1);
+  v[1] ~ normal(0, 1);
+  m[1] ~ normal(0, 1);
+  m[1, 2] ~ normal(0, 1);
+  a[1, 2] ~ normal(0, 1);
+  a[1, 2] ~ normal(0, 1);
+  y + z ~ normal(0, 1);
+  y - z ~ normal(0, 1);
+  1 * z ~ normal(0, 1);
+  z * 1 ~ normal(0, 1);
+  1 / (1 / z) ~ normal(0, 1);
+  y + ((z / 2) * 3) ~ normal(0, 1);
+  2.0 * 3 ~ normal(y, 1);
+  (-y) ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
+parameters {
+  vector[1] y;
+}
+model {
+  exp(y[1]) ~ normal(0, 2);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_left_division_good.stan
+transformed data {
+  matrix[3, 3] m;
+  vector[3] v;
+  m <- m \ m;
+  v <- m \ v;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  matrix[3, 3] mt;
+  vector[3] vt;
+  mt <- mt \ mt;
+  vt <- mt \ vt;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_logical_negate_expr_good.stan
+transformed data {
+  int n;
+  real x;
+  n <- !n;
+  x <- !x;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real xt;
+  xt <- !xt;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_modulus_good.stan
+data {
+  int i;
+  int j;
+}
+transformed data {
+  int k;
+  k <- i % j;
+}
+parameters {
+  real y;
+}
+model {
+  int i2;
+  int j2;
+  int k2;
+  k2 <- i2 % j2;
+  y ~ normal(0, 1);
+}
+generated quantities {
+  int i3;
+  int j3;
+  int k3;
+  k3 <- i3 % j3;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_multiplication.stan
+transformed data {
+  real x;
+  x <- 1.3;
+  x <- x * 2.7;
+  x <- x * x * x;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(x * 3, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_negate_expr_good.stan
+transformed data {
+  int n;
+  real x;
+  matrix[3, 3] m;
+  vector[3] v;
+  row_vector[3] rv;
+  n <- -n;
+  x <- -x;
+  m <- -m;
+  v <- -v;
+  rv <- -rv;
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real xt;
+  matrix[3, 3] mt;
+  vector[3] vt;
+  row_vector[3] rvt;
+  xt <- -xt;
+  mt <- -mt;
+  vt <- -vt;
+  rvt <- -rvt;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_locscale_good.stan
+transformed data {
+  real<location=2> a = 3;
+}
+parameters {
+  matrix<location=-412, scale=3>[3, 1] theta[2];
+  real<location=1, scale=5> x;
+  real<location=42> w;
+  vector<scale=242>[3] ww;
+  row_vector<scale=242>[3] www;
+}
+transformed parameters {
+  real<location=23> y = x ^ 2;
+}
+model {
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real<location=1> z;
+  z = 3;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_range_lower_good.stan
+data {
+  real<lower=1.2> a;
+  real<lower=1> b;
+  real<lower=1.2, upper=2> c;
+  real<lower=1, upper=1.2> d;
+  real<lower=1.1, upper=1.2> e;
+  real<lower=1, upper=2> f;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_range_upper_good.stan
+data {
+  real<upper=1.2> a;
+  real<upper=1> b;
+  real<lower=1.2, upper=2> c;
+  real<lower=1, upper=1.2> d;
+  real<lower=1.1, upper=1.2> e;
+  real<lower=1, upper=2> f;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_fun_type_named_good.stan
+transformed data {
+  real x;
+  x <- exp(x);
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_int_range_lower_good.stan
+data {
+  int<lower=1> a;
+  int<lower=1, upper=3> b;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_int_range_upper_good.stan
+data {
+  int<upper=1> a;
+  int<lower=1, upper=3> b;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_validate_int_expr_good.stan
+data {
+  vector[3] a;
+  row_vector[3] b;
+  matrix[3, 3] c;
+  unit_vector[3] d;
+  simplex[3] e;
+  ordered[3] f;
+  positive_ordered[3] g;
+  cholesky_factor_cov[4, 5] h;
+  cholesky_factor_cov[3] j;
+  cov_matrix[3] k;
+  corr_matrix[3] l;
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format var-decl-after-statement.stan
+transformed data {
+  real y;
+  y <- 3;
+  real z;
+  z <- 3;
+}
+model {
+
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format var-decls-in-functions.stan
+functions {
+  real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+    real dydt[size(y)];
+    return dydt;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format var-ending-lpdf.stan
+parameters {
+  real mu_lpdf;
+}
+model {
+  target += mu_lpdf;
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format vars-with-type-prefixes.stan
+parameters {
+  real int_x;
+  real real_x;
+  real vector_x;
+  real row_vector_x;
+  real matrix_x;
+  real unit_vector_x;
+  real simplex_x;
+  real ordered_x;
+  real positive_ordered_x;
+  real cholesky_factor_cov_x;
+  real cholesky_factor_corr_x;
+  real cov_matrix_x;
+  real corr_matrix_x;
+}
+model {
+  int_x ~ normal(0, 1);
+  real_x ~ normal(0, 1);
+  vector_x ~ normal(0, 1);
+  row_vector_x ~ normal(0, 1);
+  matrix_x ~ normal(0, 1);
+  unit_vector_x ~ normal(0, 1);
+  simplex_x ~ normal(0, 1);
+  ordered_x ~ normal(0, 1);
+  positive_ordered_x ~ normal(0, 1);
+  cholesky_factor_cov_x ~ normal(0, 1);
+  cholesky_factor_corr_x ~ normal(0, 1);
+  cov_matrix_x ~ normal(0, 1);
+  corr_matrix_x ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format vector-size-stmts.stan
+functions {
+  void test_vector(int vlen1, int vlen2, int arrlen) {
+    vector[vlen1] lf1;
+    vector[vlen2] lf2[arrlen];
+  }
+  void test_row_vector(int vlen1, int vlen2, int arrlen) {
+    row_vector[vlen1] lf1;
+    row_vector[vlen2] lf2[arrlen];
+  }
+  void test_matrix(int nrow1, int ncol1, int nrow2, int ncol2, int arrlen) {
+    matrix[nrow1, ncol1] lf1;
+    matrix[nrow2, ncol2] lf2[arrlen];
+  }
+}
+data {
+  int veclen;
+  int arrlen;
+  int nrows;
+  int ncols;
+  real d_real_ar[arrlen];
+  vector[veclen] d_v;
+  vector[veclen] d_v_ar[arrlen];
+  row_vector[veclen] d_rv;
+  row_vector[veclen] d_rv_ar[arrlen];
+  matrix[nrows, ncols] d_m;
+  matrix[nrows, ncols] d_m_ar[arrlen];
+}
+transformed data {
+  real td_real_ar[arrlen] = d_real_ar;
+  vector[veclen] td_v = d_v;
+  vector[veclen] td_v_ar[arrlen] = d_v_ar;
+  row_vector[veclen] td_rv = d_rv;
+  row_vector[veclen] td_rv_ar[arrlen] = d_rv_ar;
+  matrix[nrows, ncols] td_m = d_m;
+  matrix[nrows, ncols] td_m_ar[arrlen] = d_m_ar;
+  {
+    real local_real_ar[arrlen] = d_real_ar;
+    vector[veclen] local_v = d_v;
+    vector[veclen] local_v_ar[arrlen] = d_v_ar;
+    row_vector[veclen] local_rv = d_rv;
+    row_vector[veclen] local_rv_ar[arrlen] = d_rv_ar;
+    matrix[nrows, ncols] local_m = d_m;
+    matrix[nrows, ncols] local_m_ar[arrlen] = d_m_ar;
+  }
+}
+parameters {
+  real<lower=-10, upper=10> y[2];
+  real p_real_ar[arrlen];
+  vector[veclen] p_v1;
+  vector[veclen] p_v_ar[arrlen];
+  row_vector[veclen] p_rv;
+  row_vector[veclen] p_rv_ar[arrlen];
+  matrix[nrows, ncols] p_m;
+  matrix[nrows, ncols] p_m_ar[arrlen];
+}
+transformed parameters {
+  real tp_real_ar[arrlen] = td_real_ar;
+  vector[veclen] tp_v1 = d_v;
+  vector[veclen] tp_v_ar4[arrlen] = d_v_ar;
+  row_vector[veclen] tp_rv = d_rv;
+  row_vector[veclen] tp_rv_ar[arrlen] = d_rv_ar;
+  matrix[nrows, ncols] tp_m = d_m;
+  matrix[nrows, ncols] tp_m_ar[arrlen] = d_m_ar;
+  {
+    real local2_real_ar[arrlen] = d_real_ar;
+    vector[veclen] local2_v = d_v;
+    vector[veclen] local2_v_ar[arrlen] = d_v_ar;
+    row_vector[veclen] local2_rv = d_rv;
+    row_vector[veclen] local2_rv_ar[arrlen] = d_rv_ar;
+    matrix[nrows, ncols] local2_m = d_m;
+    matrix[nrows, ncols] local2_m_ar[arrlen] = d_m_ar;
+  }
+}
+model {
+  real local3_real_ar[arrlen] = d_real_ar;
+  vector[veclen] local3_v = d_v;
+  vector[veclen] local3_v_ar[arrlen] = d_v_ar;
+  row_vector[veclen] local3_rv = d_rv;
+  row_vector[veclen] local3_rv_ar[arrlen] = d_rv_ar;
+  matrix[nrows, ncols] local3_m = d_m;
+  matrix[nrows, ncols] local3_m_ar[arrlen] = d_m_ar;
+  y ~ normal(0, 1);
+}
+generated quantities {
+  real gq_real_ar[arrlen] = td_real_ar;
+  vector[veclen] gq_v1 = d_v;
+  vector[veclen] gq_v_ar4[arrlen] = d_v_ar;
+  row_vector[veclen] gq_rv = d_rv;
+  row_vector[veclen] gq_rv_ar[arrlen] = d_rv_ar;
+  matrix[nrows, ncols] gq_m = d_m;
+  matrix[nrows, ncols] gq_m_ar[arrlen] = d_m_ar;
+  {
+    real local4_real_ar[arrlen] = d_real_ar;
+    vector[veclen] local4_v = d_v;
+    vector[veclen] local4_v_ar[arrlen] = d_v_ar;
+    row_vector[veclen] local4_rv = d_rv;
+    row_vector[veclen] local4_rv_ar[arrlen] = d_rv_ar;
+    matrix[nrows, ncols] local4_m = d_m;
+    matrix[nrows, ncols] local4_m_ar[arrlen] = d_m_ar;
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format vector-zero.stan
+data {
+  vector[0] d_v;
+  row_vector[0] d_rv;
+  matrix[0, 2] d_m1;
+  matrix[3, 0] d_m2;
+  matrix[0, 0] d_m12;
+  real d_r1[0];
+  real d_r2a[0, 4];
+  real d_r2b[2, 0];
+  real d_r2c[0, 0];
+  int d_i1[0];
+  int d_i2a[4, 0];
+  int d_i2b[0, 3];
+  int d_i2c[0, 0];
+}
+transformed data {
+  vector[0] td_v;
+  row_vector[0] td_rv;
+  matrix[0, 2] td_m1;
+  matrix[3, 0] td_m2;
+  matrix[0, 0] td_m12;
+  real td_r1[0];
+  real td_r2a[0, 4];
+  real td_r2b[2, 0];
+  real td_r2c[0, 0];
+  int td_i1[0];
+  int td_i2a[4, 0];
+  int td_i2b[0, 3];
+  int td_i2c[0, 0];
+}
+parameters {
+  vector[0] p_v;
+  row_vector[0] p_rv;
+  matrix[0, 2] p_m1;
+  matrix[3, 0] p_m2;
+  matrix[0, 0] p_m12;
+  real p_r1[0];
+  real p_r2a[0, 4];
+  real p_r2b[2, 0];
+  real p_r2c[0, 0];
+}
+transformed parameters {
+  vector[0] tp_v;
+  row_vector[0] tp_rv;
+  matrix[0, 2] tp_m1;
+  matrix[3, 0] tp_m2;
+  matrix[0, 0] tp_m12;
+  real tp_r1[0];
+  real tp_r2a[0, 4];
+  real tp_r2b[2, 0];
+  real tp_r2c[0, 0];
+}
+model {
+
+}
+generated quantities {
+  vector[0] gq_v;
+  row_vector[0] gq_rv;
+  matrix[0, 2] gq_m1;
+  matrix[3, 0] gq_m2;
+  matrix[0, 0] gq_m12;
+  real gq_r1[0];
+  real gq_r2a[0, 4];
+  real gq_r2b[2, 0];
+  real gq_r2c[0, 0];
+  int gq_i1[0];
+  int gq_i2a[4, 0];
+  int gq_i2b[0, 3];
+  int gq_i2c[0, 0];
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format vector_size_lt_zero.stan
+data {
+  int d;
+}
+parameters {
+  vector[d] p_ltzero;
+}
+model {
+
+}
+

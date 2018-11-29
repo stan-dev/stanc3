@@ -1,0 +1,1324 @@
+  $ ../../../../../install/default/bin/stanc --auto-format divide_equals_container.stan
+functions {
+  real foo(real a1) {
+    real lf_x;
+    lf_x /= a1;
+    return lf_x;
+  }
+  matrix foo_matrix(matrix a1) {
+    matrix[2, 3] lf_m1;
+    real x;
+    lf_m1 /= x;
+    return lf_m1;
+  }
+}
+transformed data {
+  real td_x;
+  vector[3] td_v1;
+  row_vector[3] td_rv1;
+  matrix[2, 3] td_m1;
+  td_v1 /= td_x;
+  td_v1 /= foo(td_x);
+  td_rv1 /= td_rv1[1];
+  td_m1[1] /= td_x;
+  td_m1[1] /= td_v1[1];
+  td_m1 /= td_x;
+  td_m1 /= foo(td_x);
+}
+transformed parameters {
+  vector[3] tp_v1;
+  row_vector[3] tp_rv1;
+  matrix[2, 3] tp_m1;
+  tp_v1 /= tp_v1[1];
+  tp_rv1 /= tp_rv1[1];
+  tp_v1 /= td_x;
+  tp_v1 /= foo(td_x);
+  tp_rv1 /= td_rv1[1];
+  tp_m1[1] /= td_x;
+  tp_m1[1] /= td_v1[1];
+  tp_m1 /= td_x;
+  tp_m1 /= foo(td_x);
+}
+generated quantities {
+  vector[3] gq_v1;
+  row_vector[3] gq_rv1;
+  matrix[2, 3] gq_m1;
+  gq_v1 /= tp_v1[1];
+  gq_rv1 /= tp_rv1[1];
+  gq_m1 /= td_x;
+  gq_m1 /= foo(td_x);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format divide_equals_manual.stan
+functions {
+  vector foo(vector a1) {
+    vector[3] lf1;
+    int lf_int_a;
+    int lf_int_b;
+    real lf_real_a;
+    real lf_real_b;
+    vector[3] lf_v3_b;
+    row_vector[3] lf_rv3_b;
+    matrix[3, 3] lf_mat33_a;
+    matrix[3, 3] lf_mat33_b;
+    lf_int_b /= lf_int_a;
+    lf_real_b /= lf_int_a;
+    lf_real_b /= lf_real_a;
+    lf_v3_b /= lf_real_a;
+    lf_rv3_b /= lf_real_a;
+    lf_mat33_b /= lf_real_a;
+    lf1 /= lf_real_a;
+    return lf1;
+  }
+}
+data {
+  int d_int_a;
+  real d_real_a;
+  vector[3] d_v3_a;
+  row_vector[3] d_rv3_a;
+  matrix[3, 3] d_mat33_a;
+}
+transformed data {
+  int td_int_b;
+  real td_real_b;
+  vector[3] td_v3_b;
+  row_vector[3] td_rv3_b;
+  matrix[3, 3] td_mat33_b;
+  td_int_b /= d_int_a;
+  td_real_b /= d_int_a;
+  td_real_b /= d_real_a;
+  td_v3_b /= d_real_a;
+  td_rv3_b /= d_real_a;
+  td_mat33_b /= d_real_a;
+}
+model {
+  int l_int_b;
+  real l_real_b;
+  vector[3] l_v3_b;
+  row_vector[3] l_rv3_b;
+  matrix[3, 3] l_mat33_b;
+  l_int_b /= d_int_a;
+  l_real_b /= d_int_a;
+  l_real_b /= d_real_a;
+  l_v3_b /= d_real_a;
+  l_rv3_b /= d_real_a;
+  l_mat33_b /= d_real_a;
+}
+generated quantities {
+  int gq_int_b;
+  real gq_real_b;
+  vector[3] gq_v3_b;
+  row_vector[3] gq_rv3_b;
+  matrix[3, 3] gq_mat33_b;
+  gq_int_b /= d_int_a;
+  gq_real_b /= d_int_a;
+  gq_real_b /= d_real_a;
+  gq_v3_b /= d_real_a;
+  gq_rv3_b /= d_real_a;
+  gq_mat33_b /= d_real_a;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format divide_equals_prim.stan
+functions {
+  real foo(real a1) {
+    real b;
+    int c;
+    b /= a1;
+    c /= c;
+    return b;
+  }
+}
+data {
+  int b;
+  int c;
+}
+transformed data {
+  int x = 10;
+  real y = 20;
+  int ax[3] = {1, 2, 3};
+  real ay[3] = {1.0, 2.0, 3.0};
+  x /= 1;
+  x /= c;
+  x /= ax[1];
+  y /= 1;
+  y /= 1.0;
+  y /= b;
+  y /= c;
+  y /= ax[1];
+  y /= ay[1];
+  y /= foo(y);
+}
+transformed parameters {
+  real w = 30;
+  w /= b;
+  w /= c;
+  w /= x;
+  w /= y;
+  w /= ax[1];
+  w /= ay[1];
+  w /= foo(w);
+}
+model {
+  real v = 7;
+  v /= b;
+  v /= c;
+  v /= ax[1];
+  v /= ay[1];
+  v /= y;
+  v /= foo(y);
+  v /= w;
+  v /= foo(w);
+  v /= v;
+  v /= foo(v);
+}
+generated quantities {
+  real z = 40;
+  z /= b;
+  z /= c;
+  z /= ax[1];
+  z /= ay[1];
+  z /= w;
+  z /= foo(w);
+  z /= y;
+  z /= foo(y);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format divide_equals_print.stan
+functions {
+  real foo(real a1) {
+    real b = a1;
+    print(" in function foo");
+    print("    b: ", b);
+    print("    a1: ", a1);
+    b /= a1 / 2;
+    print("    b /= a1: ", b);
+    return b;
+  }
+}
+transformed data {
+  int x = 10;
+  real y = 20;
+  print("in transformed data");
+  print("x: ", x);
+  x /= 1;
+  print("x /= 1: ", x);
+  print("y: ", y);
+  y /= 1;
+  print("y /= 1: ", y);
+}
+transformed parameters {
+  real w = 30;
+  print("in transformed parameters");
+  print("w: ", w);
+  w /= y;
+  print("w /= y: ", w);
+  w /= foo(w);
+  print("w /= foo(w): ", w);
+}
+model {
+  real v = 7;
+  print("in model block");
+  v /= y;
+  print("v /= y: ", v);
+  v /= foo(w);
+  print("v /= foo(w): ", v);
+  v /= foo(y);
+  print("v /= foo(y): ", v);
+}
+generated quantities {
+  real z = 40;
+  print("in generated quantities");
+  print("z: ", z);
+  print("y: ", y);
+  print("w: ", w);
+  z /= w;
+  print("z /= w: ", z);
+  z /= y;
+  print("z /= y: ", z);
+  z /= foo(y);
+  print("z /= foo(y): ", z);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format divide_equals_sliced.stan
+functions {
+  void foo_vec(real a1) {
+    int J[2];
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    bb[1 : 2, 1 : 2] /= a1;
+    aa[1, J] /= a1;
+    aa[J, 1] /= a1;
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format elt_divide_equals.stan
+functions {
+  matrix foo_matrix(matrix a1, real a2) {
+    matrix[2, 3] lf_m1 = a1;
+    lf_m1 ./= a1;
+    return lf_m1;
+  }
+}
+transformed data {
+  real td_x;
+  vector[3] td_v1;
+  row_vector[3] td_rv1;
+  matrix[2, 3] td_m1;
+  td_v1 ./= td_v1;
+  td_rv1 ./= td_rv1;
+  td_m1 ./= td_m1;
+  td_v1 ./= td_x;
+  td_rv1 ./= td_x;
+  td_m1 ./= td_x;
+}
+transformed parameters {
+  real tp_x;
+  vector[3] tp_v1;
+  row_vector[3] tp_rv1;
+  matrix[2, 3] tp_m1;
+  tp_v1 ./= tp_v1;
+  tp_rv1 ./= tp_rv1;
+  tp_m1 ./= tp_m1;
+  tp_v1 ./= td_v1;
+  tp_rv1 ./= td_rv1;
+  tp_m1 ./= td_m1;
+  tp_v1 ./= td_x;
+  tp_rv1 ./= td_x;
+  tp_m1 ./= td_x;
+  tp_v1 ./= tp_x;
+  tp_rv1 ./= tp_x;
+  tp_m1 ./= tp_x;
+}
+generated quantities {
+  vector[3] gq_v1;
+  row_vector[3] gq_rv1;
+  matrix[2, 3] gq_m1;
+  gq_v1 ./= tp_v1;
+  gq_rv1 ./= tp_rv1;
+  gq_m1 ./= tp_m1;
+  gq_v1 ./= td_v1;
+  gq_rv1 ./= td_rv1;
+  gq_m1 ./= td_m1;
+  gq_v1 ./= td_x;
+  gq_rv1 ./= td_x;
+  gq_m1 ./= td_x;
+  gq_v1 ./= tp_x;
+  gq_rv1 ./= tp_x;
+  gq_m1 ./= tp_x;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format elt_divide_equals_sliced.stan
+functions {
+  void foo_vec(real a1) {
+    int J[2];
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    row_vector[2] cc;
+    vector[2] dd;
+    bb[1 : 2, 1 : 2] ./= aa;
+    aa[1, J] ./= cc;
+    aa[J, 1] ./= dd;
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format elt_multiply_equals.stan
+functions {
+  matrix foo_matrix(matrix a1, real a2) {
+    matrix[2, 3] lf_m1 = a1;
+    lf_m1 .*= a1;
+    return lf_m1;
+  }
+}
+transformed data {
+  vector[3] td_v1;
+  row_vector[3] td_rv1;
+  matrix[2, 3] td_m1;
+  td_v1 .*= td_v1;
+  td_rv1 .*= td_rv1;
+  td_m1 .*= td_m1;
+}
+transformed parameters {
+  vector[3] tp_v1;
+  row_vector[3] tp_rv1;
+  matrix[2, 3] tp_m1;
+  tp_v1 .*= tp_v1;
+  tp_rv1 .*= tp_rv1;
+  tp_m1 .*= tp_m1;
+  tp_v1 .*= td_v1;
+  tp_rv1 .*= td_rv1;
+  tp_m1 .*= td_m1;
+}
+generated quantities {
+  vector[3] gq_v1;
+  row_vector[3] gq_rv1;
+  matrix[2, 3] gq_m1;
+  gq_v1 .*= tp_v1;
+  gq_rv1 .*= tp_rv1;
+  gq_m1 .*= tp_m1;
+  gq_v1 .*= td_v1;
+  gq_rv1 .*= td_rv1;
+  gq_m1 .*= td_m1;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format elt_multiply_equals_sliced.stan
+functions {
+  void foo_vec(real a1) {
+    int J[2];
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    row_vector[2] cc;
+    vector[2] dd;
+    bb[1 : 2, 1 : 2] .*= aa;
+    aa[1, J] .*= cc;
+    aa[J, 1] .*= dd;
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format indexed_expr_divide_equals.stan
+transformed data {
+  matrix[2, 3] a = [[1, 2, 3], [4, 5, 6]];
+  a /= 5.0;
+  print("a: ", a);
+  a[1,  : ] /= 5.0;
+  print("r1 div 5: ", a);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format matrix_compound_assigns.stan
+generated quantities {
+  real x = 3.3;
+  matrix[2, 2] z = [[1, 2], [4, 5]];
+  matrix[2, 2] ident = [[1, 0], [0, 1]];
+  print("z ", z);
+  print("x ", x);
+  print("ident ", ident);
+  z *= x;
+  print("z *= x ", z);
+  z = [[1, 2], [4, 5]];
+  z += x;
+  print("z += x ", z);
+  z = [[1, 2], [4, 5]];
+  z -= x;
+  print("z -= x ", z);
+  z = [[1, 2], [4, 5]];
+  z /= x;
+  print("z /= x ", z);
+  z = [[1, 2], [4, 5]];
+  z *= ident;
+  print("z *= ident ", z);
+  z = [[1, 2], [4, 5]];
+  z .*= ident;
+  print("z .*= ident ", z);
+  z = [[1, 2], [4, 5]];
+  z += ident;
+  print("z += ident ", z);
+  z = [[1, 2], [4, 5]];
+  z -= ident;
+  print("z -= ident ", z);
+  z = [[1, 2], [4, 5]];
+  z ./= ident;
+  print("z ./= ident ", z);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format minus_equals_container.stan
+functions {
+  vector foo_vec(vector a1) {
+    vector[3] lf_v1;
+    row_vector[3] lf_rv1;
+    lf_v1 -= a1;
+    return lf_v1;
+  }
+  row_vector foo_row_vec(row_vector a1) {
+    vector[3] lf_v1;
+    row_vector[3] lf_rv1;
+    lf_rv1 -= a1;
+    return lf_rv1;
+  }
+  matrix foo_matrix(matrix a1) {
+    matrix[2, 3] lf_m1;
+    lf_m1 -= a1;
+    return lf_m1;
+  }
+}
+transformed data {
+  vector[3] td_v1;
+  row_vector[3] td_rv1;
+  matrix[2, 3] td_m1;
+  td_v1 -= td_v1;
+  td_v1 -= foo_vec(td_v1);
+  td_rv1 -= td_rv1;
+  td_rv1 -= foo_row_vec(td_rv1);
+  td_m1[1] -= td_rv1;
+  td_m1[1] -= td_v1';
+  td_m1 -= td_m1;
+  td_m1 -= foo_matrix(td_m1);
+}
+transformed parameters {
+  vector[3] tp_v1;
+  row_vector[3] tp_rv1;
+  matrix[2, 3] tp_m1;
+  tp_v1 -= tp_v1;
+  tp_v1 -= foo_vec(tp_v1);
+  tp_rv1 -= tp_rv1;
+  tp_rv1 -= foo_row_vec(tp_rv1);
+  tp_m1[1] -= tp_rv1;
+  tp_m1 -= tp_m1;
+  tp_m1 -= foo_matrix(tp_m1);
+  tp_v1 -= td_v1;
+  tp_v1 -= foo_vec(td_v1);
+  tp_rv1 -= td_rv1;
+  tp_rv1 -= foo_row_vec(td_rv1);
+  tp_m1[1] -= td_rv1;
+  tp_m1 -= td_m1;
+  tp_m1 -= foo_matrix(td_m1);
+}
+generated quantities {
+  vector[3] gq_v1;
+  row_vector[3] gq_rv1;
+  matrix[2, 3] gq_m1;
+  gq_v1 -= td_v1;
+  gq_v1 -= foo_vec(td_v1);
+  gq_rv1 -= td_rv1;
+  gq_rv1 -= foo_row_vec(td_rv1);
+  gq_m1[1] -= td_rv1;
+  gq_m1 -= td_m1;
+  gq_m1 -= foo_matrix(td_m1);
+  gq_v1 -= tp_v1;
+  gq_v1 -= foo_vec(tp_v1);
+  gq_rv1 -= tp_rv1;
+  gq_rv1 -= foo_row_vec(tp_rv1);
+  gq_m1[1] -= tp_rv1;
+  gq_m1 -= tp_m1;
+  gq_m1 -= foo_matrix(tp_m1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format minus_equals_manual.stan
+functions {
+  vector foo(vector a1) {
+    vector[3] lf1;
+    int lf_int_a;
+    int lf_int_b;
+    real lf_real_a;
+    real lf_real_b;
+    vector[3] lf_v3_a;
+    vector[3] lf_v3_b;
+    row_vector[3] lf_rv3_a;
+    row_vector[3] lf_rv3_b;
+    matrix[3, 3] lf_mat33_a;
+    matrix[3, 3] lf_mat33_b;
+    lf_int_b -= lf_int_a;
+    lf_real_b -= lf_int_a;
+    lf_real_b -= lf_real_a;
+    lf_v3_b -= lf_real_a;
+    lf_rv3_b -= lf_real_a;
+    lf_mat33_b -= lf_real_a;
+    lf_v3_b -= a1;
+    lf_v3_b -= lf_v3_a;
+    lf_v3_b -= lf_rv3_a';
+    lf_rv3_b -= a1';
+    lf_rv3_b -= lf_rv3_a;
+    lf_rv3_b -= lf_v3_a';
+    lf_mat33_b -= lf_mat33_a;
+    lf1 -= a1;
+    return lf1;
+  }
+}
+data {
+  int d_int_a;
+  real d_real_a;
+  vector[3] d_v3_a;
+  row_vector[3] d_rv3_a;
+  matrix[3, 3] d_mat33_a;
+}
+transformed data {
+  int td_int_b;
+  real td_real_b;
+  vector[3] td_v3_b;
+  row_vector[3] td_rv3_b;
+  matrix[3, 3] td_mat33_b;
+  td_int_b -= d_int_a;
+  td_real_b -= d_int_a;
+  td_real_b -= d_real_a;
+  td_v3_b -= d_real_a;
+  td_rv3_b -= d_real_a;
+  td_mat33_b -= d_real_a;
+  td_v3_b -= d_v3_a;
+  td_v3_b -= d_rv3_a';
+  td_rv3_b -= d_rv3_a;
+  td_rv3_b -= d_v3_a';
+  td_mat33_b -= d_mat33_a;
+}
+model {
+  int l_int_b;
+  real l_real_b;
+  vector[3] l_v3_b;
+  row_vector[3] l_rv3_b;
+  matrix[3, 3] l_mat33_b;
+  l_int_b -= d_int_a;
+  l_real_b -= d_int_a;
+  l_real_b -= d_real_a;
+  l_v3_b -= d_real_a;
+  l_rv3_b -= d_real_a;
+  l_mat33_b -= d_real_a;
+  l_v3_b -= d_v3_a;
+  l_v3_b -= d_rv3_a';
+  l_rv3_b -= d_rv3_a;
+  l_rv3_b -= d_v3_a';
+  l_mat33_b -= d_mat33_a;
+}
+generated quantities {
+  int gq_int_b;
+  real gq_real_b;
+  vector[3] gq_v3_b;
+  row_vector[3] gq_rv3_b;
+  matrix[3, 3] gq_mat33_b;
+  gq_int_b -= d_int_a;
+  gq_real_b -= d_int_a;
+  gq_real_b -= d_real_a;
+  gq_v3_b -= d_real_a;
+  gq_rv3_b -= d_real_a;
+  gq_mat33_b -= d_real_a;
+  gq_v3_b -= d_v3_a;
+  gq_v3_b -= d_rv3_a';
+  gq_rv3_b -= d_rv3_a;
+  gq_rv3_b -= d_v3_a';
+  gq_mat33_b -= d_mat33_a;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format minus_equals_prim.stan
+functions {
+  real foo(real a1) {
+    real b;
+    int c;
+    b -= a1;
+    c -= c;
+    return b;
+  }
+}
+data {
+  int b;
+  int c;
+}
+transformed data {
+  int x = 10;
+  real y = 20;
+  int ax[3] = {1, 2, 3};
+  real ay[3] = {1.0, 2.0, 3.0};
+  x -= 1;
+  x -= c;
+  x -= ax[1];
+  y -= 1;
+  y -= 1.0;
+  y -= b;
+  y -= c;
+  y -= ax[1];
+  y -= ay[1];
+  y -= foo(y);
+}
+transformed parameters {
+  real w = 30;
+  w -= b;
+  w -= c;
+  w -= x;
+  w -= y;
+  w -= ax[1];
+  w -= ay[1];
+  w -= foo(w);
+}
+model {
+  real v = 7;
+  v -= b;
+  v -= c;
+  v -= ax[1];
+  v -= ay[1];
+  v -= y;
+  v -= foo(y);
+  v -= w;
+  v -= foo(w);
+  v -= v;
+  v -= foo(v);
+}
+generated quantities {
+  real z = 40;
+  z -= b;
+  z -= c;
+  z -= ax[1];
+  z -= ay[1];
+  z -= w;
+  z -= foo(w);
+  z -= y;
+  z -= foo(y);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format minus_equals_sliced.stan
+functions {
+  void foo_vec(vector a1) {
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    aa -= bb[1 : 2, 1 : 2];
+  }
+}
+data {
+  int N;
+  int J[N];
+}
+parameters {
+  vector[N] p_v1;
+}
+model {
+  vector[N] m_v1 = rep_vector(1.0, N);
+  m_v1[J] -= p_v1[J];
+}
+generated quantities {
+  matrix[N, N] gq_m1;
+  row_vector[N] gq_rv1 = rep_row_vector(1.0, N);
+  vector[N] gq_v1 = rep_vector(1.0, N);
+  gq_m1[J, 1] -= gq_v1[J];
+  gq_m1[1, J] -= gq_rv1[J];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format multiply_equals.stan
+functions {
+  real foo(real a1) {
+    real lf1 = a1;
+    print(" in function foo");
+    print("    lf1: ", lf1);
+    print("    a1: ", a1);
+    lf1 *= a1;
+    print("    lf1 *= a1: ", lf1);
+    return lf1;
+  }
+}
+data {
+  int<lower=0> N;
+  int<lower=0, upper=1> y[N];
+}
+transformed data {
+  int x1 = 1;
+  real y1 = 2;
+  print("in transformed data");
+  print("x1: ", x1, " y1: ", y1);
+  x1 *= 1;
+  y1 *= 1;
+  print("x1 *= 1: ", x1, " y1 *= 1: ", y1);
+}
+parameters {
+  real<lower=0, upper=1> theta;
+}
+model {
+  real w = 7;
+  theta ~ beta(1, 1);
+  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  print("in model block");
+  print("w: ", w);
+  w *= theta;
+  print("w *= theta: ", w);
+  w *= foo(theta);
+  print("w *= foo(theta): ", w);
+}
+generated quantities {
+  real z = 1;
+  print("in generated quantities");
+  print("theta ", theta);
+  print("z: ", z);
+  print("y1: ", y1);
+  z *= theta + y1;
+  print("z *= theta + y1: ", z);
+  z *= foo(theta) + foo(y1);
+  print("z *= foo(theta) + foo(y1): ", z);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format multiply_equals_container.stan
+functions {
+  real foo(real a1) {
+    real lf_x;
+    lf_x *= a1;
+    return lf_x;
+  }
+  matrix foo_matrix(matrix a1) {
+    matrix[2, 3] lf_m1;
+    lf_m1 *= a1;
+    return lf_m1;
+  }
+}
+transformed data {
+  real td_x;
+  vector[3] td_v1;
+  row_vector[3] td_rv1;
+  matrix[2, 3] td_m1;
+  td_v1 *= td_x;
+  td_v1 *= foo(td_x);
+  td_rv1 *= td_rv1[1];
+  td_rv1 *= td_m1;
+  td_m1[1] *= td_x;
+  td_m1[1] *= td_v1[1];
+  td_m1 *= td_m1;
+  td_m1 *= foo_matrix(td_m1);
+}
+transformed parameters {
+  vector[3] tp_v1;
+  row_vector[3] tp_rv1;
+  matrix[2, 3] tp_m1;
+  tp_v1 *= tp_v1[1];
+  tp_rv1 *= tp_rv1[1];
+  tp_rv1 *= tp_m1;
+  tp_m1 *= tp_m1;
+  tp_m1 *= foo_matrix(tp_m1);
+  tp_v1 *= td_x;
+  tp_v1 *= foo(td_x);
+  tp_rv1 *= td_rv1[1];
+  tp_rv1 *= td_m1;
+  tp_m1[1] *= td_x;
+  tp_m1[1] *= td_v1[1];
+  tp_m1 *= td_m1;
+  tp_m1 *= foo_matrix(td_m1);
+}
+generated quantities {
+  vector[3] gq_v1;
+  row_vector[3] gq_rv1;
+  matrix[2, 3] gq_m1;
+  gq_v1 *= tp_v1[1];
+  gq_rv1 *= tp_rv1[1];
+  gq_rv1 *= tp_m1;
+  gq_rv1 *= td_m1;
+  gq_m1 *= tp_m1;
+  gq_m1 *= foo_matrix(tp_m1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format multiply_equals_manual.stan
+functions {
+  vector foo(vector a1) {
+    vector[3] lf1;
+    int lf_int_a;
+    int lf_int_b;
+    real lf_real_a;
+    real lf_real_b;
+    vector[3] lf_v3_b;
+    row_vector[3] lf_rv3_b;
+    matrix[3, 3] lf_mat33_a;
+    matrix[3, 3] lf_mat33_b;
+    lf_int_b *= lf_int_a;
+    lf_real_b *= lf_int_a;
+    lf_real_b *= lf_real_a;
+    lf_v3_b *= lf_real_a;
+    lf_rv3_b *= lf_real_a;
+    lf_mat33_b *= lf_real_a;
+    lf_rv3_b *= lf_mat33_a;
+    lf_mat33_b *= lf_mat33_a;
+    lf1 *= lf_real_a;
+    return lf1;
+  }
+}
+data {
+  int d_int_a;
+  real d_real_a;
+  vector[3] d_v3_a;
+  row_vector[3] d_rv3_a;
+  matrix[3, 3] d_mat33_a;
+}
+transformed data {
+  int td_int_b;
+  real td_real_b;
+  vector[3] td_v3_b;
+  row_vector[3] td_rv3_b;
+  matrix[3, 3] td_mat33_b;
+  td_int_b *= d_int_a;
+  td_real_b *= d_int_a;
+  td_real_b *= d_real_a;
+  td_v3_b *= d_real_a;
+  td_rv3_b *= d_real_a;
+  td_mat33_b *= d_real_a;
+  td_rv3_b *= d_mat33_a;
+  td_mat33_b *= d_mat33_a;
+}
+model {
+  int l_int_b;
+  real l_real_b;
+  vector[3] l_v3_b;
+  row_vector[3] l_rv3_b;
+  matrix[3, 3] l_mat33_b;
+  l_int_b *= d_int_a;
+  l_real_b *= d_int_a;
+  l_real_b *= d_real_a;
+  l_v3_b *= d_real_a;
+  l_rv3_b *= d_real_a;
+  l_mat33_b *= d_real_a;
+  l_rv3_b *= d_mat33_a;
+  l_mat33_b *= d_mat33_a;
+}
+generated quantities {
+  int gq_int_b;
+  real gq_real_b;
+  vector[3] gq_v3_b;
+  row_vector[3] gq_rv3_b;
+  matrix[3, 3] gq_mat33_b;
+  gq_int_b *= d_int_a;
+  gq_real_b *= d_int_a;
+  gq_real_b *= d_real_a;
+  gq_v3_b *= d_real_a;
+  gq_rv3_b *= d_real_a;
+  gq_mat33_b *= d_real_a;
+  gq_rv3_b *= d_mat33_a;
+  gq_mat33_b *= d_mat33_a;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format multiply_equals_prim.stan
+functions {
+  real foo(real a1) {
+    real b;
+    int c;
+    b *= a1;
+    c *= c;
+    return b;
+  }
+}
+data {
+  int b;
+  int c;
+}
+transformed data {
+  int x = 10;
+  real y = 20;
+  int ax[3] = {1, 2, 3};
+  real ay[3] = {1.0, 2.0, 3.0};
+  x *= 1;
+  x *= c;
+  x *= ax[1];
+  y *= 1;
+  y *= 1.0;
+  y *= b;
+  y *= c;
+  y *= ax[1];
+  y *= ay[1];
+  y *= foo(y);
+}
+transformed parameters {
+  real w = 30;
+  w *= b;
+  w *= c;
+  w *= x;
+  w *= y;
+  w *= ax[1];
+  w *= ay[1];
+  w *= foo(w);
+}
+model {
+  real v = 7;
+  v *= b;
+  v *= c;
+  v *= ax[1];
+  v *= ay[1];
+  v *= y;
+  v *= foo(y);
+  v *= w;
+  v *= foo(w);
+  v *= v;
+  v *= foo(v);
+}
+generated quantities {
+  real z = 40;
+  z *= b;
+  z *= c;
+  z *= ax[1];
+  z *= ay[1];
+  z *= w;
+  z *= foo(w);
+  z *= y;
+  z *= foo(y);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format multiply_equals_sliced.stan
+functions {
+  void foo_vec(real a1) {
+    int J[2];
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    bb[1 : 2, 1 : 2] *= aa;
+    bb[1 : 2, 1 : 2] *= a1;
+    aa[1, J] *= bb[1 : 2, 1 : 2];
+    aa[1, J] *= a1;
+    aa[J, 1] *= a1;
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_container.stan
+functions {
+  vector foo_vec(vector a1) {
+    vector[3] lf_v1;
+    row_vector[3] lf_rv1;
+    lf_v1 += a1;
+    return lf_v1;
+  }
+  row_vector foo_row_vec(row_vector a1) {
+    vector[3] lf_v1;
+    row_vector[3] lf_rv1;
+    lf_rv1 += a1;
+    return lf_rv1;
+  }
+  matrix foo_matrix(matrix a1) {
+    matrix[2, 3] lf_m1;
+    lf_m1 += a1;
+    return lf_m1;
+  }
+}
+transformed data {
+  vector[3] td_v1;
+  row_vector[3] td_rv1;
+  matrix[2, 3] td_m1;
+  td_v1 += td_v1;
+  td_v1 += foo_vec(td_v1);
+  td_rv1 += td_rv1;
+  td_rv1 += foo_row_vec(td_rv1);
+  td_m1[1] += td_rv1;
+  td_m1[1] += td_v1';
+  td_m1 += td_m1;
+  td_m1 += foo_matrix(td_m1);
+}
+transformed parameters {
+  vector[3] tp_v1;
+  row_vector[3] tp_rv1;
+  matrix[2, 3] tp_m1;
+  tp_v1 += tp_v1;
+  tp_v1 += foo_vec(tp_v1);
+  tp_rv1 += tp_rv1;
+  tp_rv1 += foo_row_vec(tp_rv1);
+  tp_m1[1] += tp_rv1;
+  tp_m1 += tp_m1;
+  tp_m1 += foo_matrix(tp_m1);
+  tp_v1 += td_v1;
+  tp_v1 += foo_vec(td_v1);
+  tp_rv1 += td_rv1;
+  tp_rv1 += foo_row_vec(td_rv1);
+  tp_m1[1] += td_rv1;
+  tp_m1 += td_m1;
+  tp_m1 += foo_matrix(td_m1);
+}
+generated quantities {
+  vector[3] gq_v1;
+  row_vector[3] gq_rv1;
+  matrix[2, 3] gq_m1;
+  gq_v1 += td_v1;
+  gq_v1 += foo_vec(td_v1);
+  gq_rv1 += td_rv1;
+  gq_rv1 += foo_row_vec(td_rv1);
+  gq_m1[1] += td_rv1;
+  gq_m1 += td_m1;
+  gq_m1 += foo_matrix(td_m1);
+  gq_v1 += tp_v1;
+  gq_v1 += foo_vec(tp_v1);
+  gq_rv1 += tp_rv1;
+  gq_rv1 += foo_row_vec(tp_rv1);
+  gq_m1[1] += tp_rv1;
+  gq_m1 += tp_m1;
+  gq_m1 += foo_matrix(tp_m1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_manual.stan
+functions {
+  vector foo(vector a1) {
+    vector[3] lf1;
+    int lf_int_a;
+    int lf_int_b;
+    real lf_real_a;
+    real lf_real_b;
+    vector[3] lf_v3_a;
+    vector[3] lf_v3_b;
+    row_vector[3] lf_rv3_a;
+    row_vector[3] lf_rv3_b;
+    matrix[3, 3] lf_mat33_a;
+    matrix[3, 3] lf_mat33_b;
+    lf_int_b += lf_int_a;
+    lf_real_b += lf_int_a;
+    lf_real_b += lf_real_a;
+    lf_v3_b += lf_real_a;
+    lf_rv3_b += lf_real_a;
+    lf_mat33_b += lf_real_a;
+    lf_v3_b += a1;
+    lf_v3_b += lf_v3_a;
+    lf_v3_b += lf_rv3_a';
+    lf_rv3_b += a1';
+    lf_rv3_b += lf_rv3_a;
+    lf_rv3_b += lf_v3_a';
+    lf_mat33_b += lf_mat33_a;
+    lf1 += a1;
+    return lf1;
+  }
+}
+data {
+  int d_int_a;
+  real d_real_a;
+  vector[3] d_v3_a;
+  row_vector[3] d_rv3_a;
+  matrix[3, 3] d_mat33_a;
+}
+transformed data {
+  int td_int_b;
+  real td_real_b;
+  vector[3] td_v3_b;
+  row_vector[3] td_rv3_b;
+  matrix[3, 3] td_mat33_b;
+  td_int_b += d_int_a;
+  td_real_b += d_int_a;
+  td_real_b += d_real_a;
+  td_v3_b += d_real_a;
+  td_rv3_b += d_real_a;
+  td_mat33_b += d_real_a;
+  td_v3_b += d_v3_a;
+  td_v3_b += d_rv3_a';
+  td_rv3_b += d_rv3_a;
+  td_rv3_b += d_v3_a';
+  td_mat33_b += d_mat33_a;
+}
+model {
+  int l_int_b;
+  real l_real_b;
+  vector[3] l_v3_b;
+  row_vector[3] l_rv3_b;
+  matrix[3, 3] l_mat33_b;
+  l_int_b += d_int_a;
+  l_real_b += d_int_a;
+  l_real_b += d_real_a;
+  l_v3_b += d_real_a;
+  l_rv3_b += d_real_a;
+  l_mat33_b += d_real_a;
+  l_v3_b += d_v3_a;
+  l_v3_b += d_rv3_a';
+  l_rv3_b += d_rv3_a;
+  l_rv3_b += d_v3_a';
+  l_mat33_b += d_mat33_a;
+}
+generated quantities {
+  int gq_int_b;
+  real gq_real_b;
+  vector[3] gq_v3_b;
+  row_vector[3] gq_rv3_b;
+  matrix[3, 3] gq_mat33_b;
+  gq_int_b += d_int_a;
+  gq_real_b += d_int_a;
+  gq_real_b += d_real_a;
+  gq_v3_b += d_real_a;
+  gq_rv3_b += d_real_a;
+  gq_mat33_b += d_real_a;
+  gq_v3_b += d_v3_a;
+  gq_v3_b += d_rv3_a';
+  gq_rv3_b += d_rv3_a;
+  gq_rv3_b += d_v3_a';
+  gq_mat33_b += d_mat33_a;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_prim.stan
+functions {
+  real foo(real a1) {
+    real b;
+    int c;
+    b += a1;
+    c += c;
+    return b;
+  }
+}
+data {
+  int b;
+  int c;
+}
+transformed data {
+  int x = 10;
+  real y = 20;
+  int ax[3] = {1, 2, 3};
+  real ay[3] = {1.0, 2.0, 3.0};
+  x += 1;
+  x += c;
+  x += ax[1];
+  y += 1;
+  y += 1.0;
+  y += b;
+  y += c;
+  y += ax[1];
+  y += ay[1];
+  y += foo(y);
+}
+transformed parameters {
+  real w = 30;
+  w += b;
+  w += c;
+  w += x;
+  w += y;
+  w += ax[1];
+  w += ay[1];
+  w += foo(w);
+}
+model {
+  real v = 7;
+  v += b;
+  v += c;
+  v += ax[1];
+  v += ay[1];
+  v += y;
+  v += foo(y);
+  v += w;
+  v += foo(w);
+  v += v;
+  v += foo(v);
+}
+generated quantities {
+  real z = 40;
+  z += b;
+  z += c;
+  z += ax[1];
+  z += ay[1];
+  z += w;
+  z += foo(w);
+  z += y;
+  z += foo(y);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_prim_print.stan
+functions {
+  real foo(real a1) {
+    real b = a1;
+    print(" in function foo");
+    print("    b: ", b);
+    print("    a1: ", a1);
+    b += a1 / 2;
+    print("    b += a1: ", b);
+    return b;
+  }
+}
+transformed data {
+  int x = 10;
+  real y = 20;
+  print("in transformed data");
+  print("x: ", x);
+  x += 1;
+  print("x += 1: ", x);
+  print("y: ", y);
+  y += 1;
+  print("y += 1: ", y);
+}
+transformed parameters {
+  real w = 30;
+  print("in transformed parameters");
+  print("w: ", w);
+  w += y;
+  print("w += y: ", w);
+  w += foo(w);
+  print("w += foo(w): ", w);
+}
+model {
+  real v = 7;
+  print("in model block");
+  v += y;
+  print("v += y: ", v);
+  v += foo(w);
+  print("v += foo(w): ", v);
+  v += foo(y);
+  print("v += foo(y): ", v);
+}
+generated quantities {
+  real z = 40;
+  print("in generated quantities");
+  print("z: ", z);
+  print("y: ", y);
+  print("w: ", w);
+  z += w;
+  print("z += w: ", z);
+  z += y;
+  print("z += y: ", z);
+  z += foo(y);
+  print("z += foo(y): ", z);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_row_vector.stan
+functions {
+  vector foo(vector a1) {
+    vector[3] lf1 = a1;
+    print(" in function foo");
+    print("    lf1: ", lf1);
+    print("    a1: ", a1);
+    lf1 += a1;
+    print("    lf1 += a1: ", lf1);
+    return lf1;
+  }
+}
+generated quantities {
+  row_vector[3] z = [1, 2, 3];
+  row_vector[4] ident = [1, 1, 1, 1];
+  print("in generated quantities");
+  print("z: ", z);
+  z += ident;
+  print("z += ident ", z);
+  z[1] += 5;
+  print("z[1] += 5 ", z);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_sliced.stan
+functions {
+  void foo_vec(vector a1) {
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    aa += bb[1 : 2, 1 : 2];
+  }
+}
+data {
+  int N;
+  int J[N];
+}
+parameters {
+  vector[N] p_v1;
+}
+model {
+  vector[N] m_v1 = rep_vector(1.0, N);
+  m_v1[J] += p_v1[J];
+}
+generated quantities {
+  matrix[N, N] gq_m1;
+  row_vector[N] gq_rv1 = rep_row_vector(1.0, N);
+  vector[N] gq_v1 = rep_vector(1.0, N);
+  gq_m1[J, 1] += gq_v1[J];
+  gq_m1[1, J] += gq_rv1[J];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format plus_equals_vector.stan
+functions {
+  vector foo(vector a1) {
+    vector[3] lf1;
+    lf1 = a1;
+    print(" in function foo");
+    print("    lf1: ", lf1);
+    print("    a1: ", a1);
+    lf1 += a1;
+    print("    lf1 += a1: ", lf1);
+    return lf1;
+  }
+}
+generated quantities {
+  vector[3] z = [1, 2, 3]';
+  vector[4] ident = [1, 1, 1, 1]';
+  print("in generated quantities");
+  print("z: ", z);
+  z += ident;
+  print("z += ident ", z);
+  z += foo(ident);
+  print("z += foo(ident) ", z);
+  z[1] += 5;
+  print("z[1] += 5 ", z);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format sliced_plus_equals_container.stan
+functions {
+  void foo_vec(vector a1) {
+    matrix[2, 2] aa;
+    matrix[3, 4] bb;
+    aa += bb[1 : 2, 1 : 2];
+  }
+}
+data {
+  int N;
+  int J[N];
+}
+parameters {
+  vector[N] b;
+}
+model {
+  vector[N] mu = rep_vector(0.0, N);
+  mu[J] += b[J];
+}
+

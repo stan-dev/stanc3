@@ -1,0 +1,401 @@
+  $ ../../../../../install/default/bin/stanc --auto-format arK.stan
+data {
+  int<lower=0> K;
+  int<lower=0> T;
+  real y[T];
+}
+parameters {
+  real alpha;
+  real beta[K];
+  real<lower=0> sigma;
+}
+model {
+  alpha ~ normal(0, 10);
+  beta ~ normal(0, 10);
+  sigma ~ cauchy(0, 2.5);
+  for (t in (K + 1) : T) {
+    real mu;
+    mu = alpha;
+    for (k in 1 : K) mu = mu + beta[k] * y[t - k];
+    y[t] ~ normal(mu, sigma);
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format arma.stan
+data {
+  int<lower=1> T;
+  real y[T];
+}
+parameters {
+  real mu;
+  real phi;
+  real theta;
+  real<lower=0> sigma;
+}
+model {
+  vector[T] nu;
+  vector[T] err;
+  mu ~ normal(0, 10);
+  phi ~ normal(0, 2);
+  theta ~ normal(0, 2);
+  sigma ~ cauchy(0, 2.5);
+  nu[1] = mu + phi * mu;
+  err[1] = y[1] - nu[1];
+  for (t in 2 : T) {
+    nu[t] = mu + phi * y[t - 1] + theta * err[t - 1];
+    err[t] = y[t] - nu[t];
+  }
+  err ~ normal(0, sigma);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format eight_schools.stan
+data {
+  int<lower=0> J;
+  real y[J];
+  real<lower=0> sigma[J];
+}
+parameters {
+  real mu;
+  real<lower=0> tau;
+  real theta_tilde[J];
+}
+transformed parameters {
+  real theta[J];
+  for (j in 1 : J) theta[j] = mu + tau * theta_tilde[j];
+}
+model {
+  mu ~ normal(0, 5);
+  tau ~ cauchy(0, 5);
+  theta_tilde ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format garch.stan
+data {
+  int<lower=0> T;
+  real y[T];
+  real<lower=0> sigma1;
+}
+parameters {
+  real mu;
+  real<lower=0> alpha0;
+  real<lower=0, upper=1> alpha1;
+  real<lower=0, upper=(1 - alpha1)> beta1;
+}
+model {
+  real sigma[T];
+  sigma[1] = sigma1;
+  for (t in 2 : T) sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu) + beta1 * square(sigma[t - 1]));
+  y ~ normal(mu, sigma);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format gen_gp_data.stan
+transformed data {
+  real rho = 5.5;
+  real alpha = 3;
+  real sigma = 2;
+}
+parameters {
+
+}
+model {
+
+}
+generated quantities {
+  int<lower=1> N = 11;
+  real x[11] = {-10, -8, -6, -4, -2, 0.0, 2, 4, 6, 8, 10};
+  vector[11] y;
+  int k[11];
+  {
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(1e-10, N));
+    matrix[N, N] L_cov = cholesky_decompose(cov);
+    vector[N] f = multi_normal_cholesky_rng(rep_vector(0, N), L_cov);
+    for (n in 1 : N) {
+      y[n] = normal_rng(f[n], sigma);
+      k[n] = poisson_rng(exp(f[n]));
+    }
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
+data {
+  int<lower=1> N;
+  real x[N];
+  int k[N];
+}
+parameters {
+  real<lower=0> rho;
+  real<lower=0> alpha;
+  vector[N] f_tilde;
+}
+transformed parameters {
+  vector[N] f;
+  {
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(1e-10, N));
+    matrix[N, N] L_cov = cholesky_decompose(cov);
+    f = L_cov * f_tilde;
+  }
+}
+model {
+  rho ~ gamma(25, 4);
+  alpha ~ normal(0, 2);
+  f_tilde ~ normal(0, 1);
+  k ~ poisson_log(f);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
+data {
+  int<lower=1> N;
+  real x[N];
+  vector[N] y;
+}
+parameters {
+  real<lower=0> rho;
+  real<lower=0> alpha;
+  real<lower=0> sigma;
+}
+model {
+  matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(sigma, N));
+  matrix[N, N] L_cov = cholesky_decompose(cov);
+  rho ~ gamma(25, 4);
+  alpha ~ normal(0, 2);
+  sigma ~ normal(0, 1);
+  y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
+data {
+  int<lower=0> I;
+  int<lower=0> J;
+  int<lower=0, upper=1> y[I, J];
+}
+parameters {
+  real<lower=0> sigma_theta;
+  vector[J] theta;
+  real<lower=0> sigma_a;
+  vector<lower=0>[I] a;
+  real mu_b;
+  real<lower=0> sigma_b;
+  vector[I] b;
+}
+model {
+  sigma_theta ~ cauchy(0, 2);
+  theta ~ normal(0, sigma_theta);
+  sigma_a ~ cauchy(0, 2);
+  a ~ lognormal(0, sigma_a);
+  mu_b ~ normal(0, 5);
+  sigma_b ~ cauchy(0, 2);
+  b ~ normal(mu_b, sigma_b);
+  for (i in 1 : I) y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format low_dim_corr_gauss.stan
+transformed data {
+  vector[2] mu;
+  real sigma1;
+  real sigma2;
+  real rho;
+  matrix[2, 2] Sigma;
+  mu[1] = 0.0;
+  mu[2] = 3.0;
+  rho = 0.5;
+  sigma1 = 1.0;
+  sigma2 = 2.0;
+  Sigma[1, 1] = sigma1 * sigma1;
+  Sigma[1, 2] = rho * sigma1 * sigma2;
+  Sigma[2, 1] = rho * sigma1 * sigma2;
+  Sigma[2, 2] = sigma2 * sigma2;
+}
+parameters {
+  vector[2] z;
+}
+model {
+  z ~ multi_normal(mu, Sigma);
+}
+generated quantities {
+  real delta_var1;
+  real delta_var2;
+  real delta_corr;
+  delta_var1 = square(z[1] - mu[1]) - sigma1 * sigma1;
+  delta_var2 = square(z[2] - mu[2]) - sigma2 * sigma2;
+  delta_corr = (z[1] - mu[1]) * (z[2] - mu[2]) / (sigma1 * sigma2) - rho;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix.stan
+data {
+  int<lower=0> N;
+  vector[N] y;
+}
+parameters {
+  ordered[2] mu;
+  real<lower=0> sigma[2];
+  real<lower=0, upper=1> theta;
+}
+model {
+  sigma ~ normal(0, 2);
+  mu ~ normal(0, 2);
+  theta ~ beta(5, 5);
+  for (n in 1 : N) target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]), normal_lpdf(y[n]| mu[2], sigma[2]));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
+data {
+  int<lower=0> N;
+  vector[N] y;
+}
+parameters {
+  vector[2] mu;
+  real<lower=0> sigma[2];
+  real<lower=0, upper=1> theta;
+}
+model {
+  sigma ~ normal(0, 2);
+  mu ~ normal(0, 2);
+  theta ~ beta(5, 5);
+  for (n in 1 : N) target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]), normal_lpdf(y[n]| mu[2], sigma[2]));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
+functions {
+  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+    real dydt[1];
+    real k_a = theta[1];
+    real K_m = theta[2];
+    real V_m = theta[3];
+    real D = x_r[1];
+    real V = x_r[2];
+    real dose = 0;
+    real elim = (V_m / V) * y[1] / (K_m + y[1]);
+    if (t > 0) dose = exp(-k_a * t) * D * k_a / V;
+    dydt[1] = dose - elim;
+    return dydt;
+  }
+}
+data {
+  real t0;
+  real C0[1];
+  real D;
+  real V;
+  int<lower=1> N_t;
+  real times[N_t];
+  real C_hat[N_t];
+}
+transformed data {
+  real x_r[2] = {D, V};
+  int x_i[0];
+}
+parameters {
+  real<lower=0> k_a;
+  real<lower=0> K_m;
+  real<lower=0> V_m;
+  real<lower=0> sigma;
+}
+transformed parameters {
+  real C[N_t, 1];
+  {
+    real theta[3] = {k_a, K_m, V_m};
+    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
+  }
+}
+model {
+  k_a ~ cauchy(0, 1);
+  K_m ~ cauchy(0, 1);
+  V_m ~ cauchy(0, 1);
+  sigma ~ cauchy(0, 1);
+  for (n in 1 : N_t) C_hat[n] ~ lognormal(log(C[n, 1]), sigma);
+}
+generated quantities {
+  real C_ppc[N_t];
+  for (n in 1 : N_t) C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
+functions {
+  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+    real dydt[1];
+    real k_a = theta[1];
+    real K_m = theta[2];
+    real V_m = theta[3];
+    real D = x_r[1];
+    real V = x_r[2];
+    real dose = 0;
+    real elim = (V_m / V) * y[1] / (K_m + y[1]);
+    if (t > 0) dose = exp(-k_a * t) * D * k_a / V;
+    dydt[1] = dose - elim;
+    return dydt;
+  }
+}
+transformed data {
+  int N_t = 20;
+  real times[N_t];
+  real t0 = 0;
+  real C0[1] = {0.0};
+  real theta[3] = {0.75, 0.25, 1};
+  real sigma = 0.1;
+  real x_r[2] = {30.0, 2.0};
+  int x_i[0];
+  for (n in 1 : N_t) times[n] = 0.5 * n;
+}
+model {
+
+}
+generated quantities {
+  real t_init = t0;
+  real C_init[1] = {C0[1]};
+  real D = x_r[1];
+  real V = x_r[2];
+  real ts[N_t];
+  real C[N_t, 1];
+  real C_hat[N_t];
+  for (n in 1 : N_t) ts[n] = times[n];
+  C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
+  for (n in 1 : N_t) C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format sir.stan
+functions {
+  real[] simple_SIR(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+    real dydt[4];
+    dydt[1] = -theta[1] * y[4] / (y[4] + theta[2]) * y[1];
+    dydt[2] = theta[1] * y[4] / (y[4] + theta[2]) * y[1] - theta[3] * y[2];
+    dydt[3] = theta[3] * y[2];
+    dydt[4] = theta[4] * y[2] - theta[5] * y[4];
+    return dydt;
+  }
+}
+data {
+  int<lower=0> N_t;
+  real t[N_t];
+  real y0[4];
+  int stoi_hat[N_t];
+  real B_hat[N_t];
+}
+transformed data {
+  real t0 = 0;
+  real<lower=0> kappa = 1000000;
+  real x_r[0];
+  int x_i[0];
+}
+parameters {
+  real<lower=0> beta;
+  real<lower=0> gamma;
+  real<lower=0> xi;
+  real<lower=0> delta;
+}
+transformed parameters {
+  real<lower=0> y[N_t, 4];
+  {
+    real theta[5] = {beta, kappa, gamma, xi, delta};
+    y = integrate_ode_rk45(simple_SIR, y0, t0, t, theta, x_r, x_i);
+  }
+}
+model {
+  beta ~ cauchy(0, 2.5);
+  gamma ~ cauchy(0, 1);
+  xi ~ cauchy(0, 25);
+  delta ~ cauchy(0, 1);
+  stoi_hat[1] ~ poisson(y0[1] - y[1, 1]);
+  for (n in 2 : N_t) stoi_hat[n] ~ poisson(y[n - 1, 1] - y[n, 1]);
+  B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
+}
+

@@ -1,0 +1,16 @@
+  $ ../../../../../install/default/bin/stanc --auto-format domain_fail.stan
+parameters {
+  real<lower=0> x;
+}
+model {
+  increment_log_prob(-sqrt(-x));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format valid.stan
+parameters {
+  real x;
+}
+model {
+  increment_log_prob(-0.5 * square(x));
+}
+

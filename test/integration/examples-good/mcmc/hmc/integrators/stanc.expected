@@ -1,0 +1,19 @@
+  $ ../../../../../../../install/default/bin/stanc --auto-format command.stan
+data {
+  real y;
+}
+parameters {
+  real mu;
+}
+model {
+  y ~ normal(mu, 1);
+}
+
+  $ ../../../../../../../install/default/bin/stanc --auto-format gauss.stan
+parameters {
+  real x;
+}
+model {
+  x ~ normal(0, 1);
+}
+
