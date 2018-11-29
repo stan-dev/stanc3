@@ -65,5 +65,4 @@ let parse_file parse_fun path =
     lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
     lexbuf
   in
-  try parse parse_fun lexbuf with SyntaxError err ->
-    report_syntax_error err ; exit 1
+  parse parse_fun lexbuf

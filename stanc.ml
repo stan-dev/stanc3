@@ -63,22 +63,28 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive" ) ]
 
+(** Add a file to the list of files to be loaded, and record whether it should
+      be processed in interactive mode. *)
+let add_file filename = files := filename :: !files
+
 (** ad directives from the given file. *)
 let use_file filename =
-  let cmds = Parse.parse_file Parser.Incremental.program filename in
+  let cmds =
+    try Parse.parse_file Parser.Incremental.program filename
+    with Errors.SyntaxError err ->
+      Errors.report_syntax_error err ;
+      exit 1
+  in
   let _ = Debug.ast_logger cmds in
   let _ = Debug.auto_formatter cmds in
-  let _ =
-    try Debug.typed_ast_logger (Semantic_check.semantic_check_program cmds)
+  let typed_cmds =
+    try Semantic_check.semantic_check_program cmds
     with Errors.SemanticError err ->
       Errors.report_semantic_error err ;
       exit 1
   in
+  let _ = Debug.typed_ast_logger typed_cmds in
   ()
-
-(** Add a file to the list of files to be loaded, and record whether it should
-      be processed in interactive mode. *)
-let add_file filename = files := filename :: !files
 
 (** Main program *)
 let main () =
