@@ -82,15 +82,10 @@ let add_file filename = files := filename :: !files
 
 (** Main program *)
 let main () =
-  (* Intercept Ctrl-C by the user *)
-  Sys.catch_break true ;
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
   (* Files were listed in the wrong order, so we reverse them *)
   files := List.rev !files ;
-  (* Set the maximum depth of pretty-printing, after which it prints ellipsis. *)
-  Format.set_max_boxes 42 ;
-  Format.set_ellipsis_text "..." ;
   try
     (* Run and load all the specified files. *)
     let _ = List.map use_file !files in
