@@ -3527,10 +3527,6 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format stanc_helper_with_include.stan
-Syntax error at file "stanc_helper_with_include.stan", line 2, character 31, includes error:
- > #include incl_stanc_helper.stan
-Could not find include file "incl_stanc_helper.stan" in specified include paths.
   $ ../../../../install/default/bin/stanc --auto-format tern_op_contains_var.stan
 data {
   int N;

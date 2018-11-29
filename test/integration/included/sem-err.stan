@@ -1,0 +1,2 @@
+  real z;
+  int w;
