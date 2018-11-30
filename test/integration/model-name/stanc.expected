@@ -1,0 +1,6 @@
+  $ ../../../../install/default/bin/stanc --name=foo  bad.stan
+ >   int foo;  
+Semantic error at file "bad.stan", line 3, characters 6-9:
+Identifier foo clashes with model name.
+  $ ../../../../install/default/bin/stanc --name=foo  good.stan
+

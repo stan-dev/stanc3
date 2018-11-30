@@ -26,7 +26,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - A lexer
 - A LR(1) parser (without any shift/reduce conflicts), constructing an AST
 - A typed and untyped AST
-- Command line debugging flags for writing out parsing operations and resulting (decorated or undecorated) AST as s-expression in case of a successful parse / semantic check
+- Command line interface to mirror that of stanc2 with additional debugging flags for writing out lexing and parsing operations and resulting (decorated or undecorated) AST as s-expression in case of a successful parse / semantic check
 - Ported all function signatures from Stan Math
 - A well-tested semantic/type checker with informative semantic error messages
 - Lexical position printed in syntactic and semantic error messages
