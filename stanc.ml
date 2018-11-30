@@ -38,10 +38,7 @@ let options =
             exit 1 )
       , " Display stanc version number" )
     ; ( "--name"
-      , Arg.String
-          (fun _ ->
-            print_endline "TODO: not yet implemented" ;
-            assert false )
+      , Arg.String (fun str -> Semantic_check.model_name := str)
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--o"
@@ -68,6 +65,14 @@ let add_file filename = files := filename :: !files
 
 (** ad directives from the given file. *)
 let use_file filename =
+  let _ =
+    if !Semantic_check.model_name = "" then
+      Semantic_check.model_name :=
+        Core_kernel.String.drop_suffix
+          (List.hd (List.rev (Core_kernel.String.split filename ~on:'/')))
+          5
+        ^ "_model"
+  in
   let ast =
     try Parse.parse_file Parser.Incremental.program filename
     with Errors.SyntaxError err ->

@@ -67,6 +67,8 @@ open Pretty_printing
 
 let check_that_all_functions_have_definition = ref true
 
+let model_name = ref ""
+
 let vm = Symbol_table.initialize ()
 
 (* Some imperative context flags that mainly serve to throw semantic errors in a more
@@ -384,19 +386,9 @@ let rec semantic_check_program p =
 (* This could also be dealt with during lexing. That would probably be more efficient. *)
 and semantic_check_identifier id =
   let _ =
-    match id.id_loc with
-    | Nowhere -> fatal_error ()
-    | Location (startpos, _) ->
-        let modelname =
-          List.hd
-            (List.rev (Core_kernel.String.split startpos.pos_fname ~on:'/'))
-        in
-        if
-          Core_kernel.String.is_suffix id.name ~suffix:"_model"
-          && Core_kernel.String.drop_suffix id.name 6 ^ ".stan" = modelname
-        then
-          Errors.semantic_error ~loc:id.id_loc
-            ("Identifier " ^ id.name ^ " clashes with model name.")
+    if id.name = !model_name then
+      Errors.semantic_error ~loc:id.id_loc
+        ("Identifier " ^ id.name ^ " clashes with model name.")
   in
   let _ =
     if
