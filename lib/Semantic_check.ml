@@ -267,13 +267,6 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
       Complete rt
   | AnyReturnType, AnyReturnType -> AnyReturnType
 
-(* TODO: write function that pretty prints all signatures for defined function
-   and call that in the appropriate error messages. *)
-
-(* TODO: write function that pretty prints the location of the error messages
-   in the way the existing parser does it: print a phrase surrounding the error
-   together with a tick to indicate the precise location. *)
-
 let check_fresh_variable_basic id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
    not of nullary function types to clash with nullary library functions.
