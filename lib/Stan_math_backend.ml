@@ -15,8 +15,6 @@ let emit_option ?default:(d = "") emitter ppf opt =
   | Some x -> fprintf ppf "%a" emitter x
   | None -> emit_str ppf d
 
-(*
-
 let emit_cond_op ppf c =
   emit_str ppf
     ( match c with
@@ -70,8 +68,8 @@ let emit_vanilla_stantype ppf st =
 
 let rec emit_statement ppf s =
   match s with
-  | Assignment {assignee; indices; op; rhs} ->
-      fprintf ppf "%s%a%a" assignee
+  | Assignment {assignee; indices; rhs} ->
+      fprintf ppf "%s%a = %a" assignee
         (pp_print_list ~pp_sep:comma emit_index)
         indices emit_expr rhs
   | NRFnApp (fname, args) ->
@@ -92,53 +90,29 @@ let rec emit_statement ppf s =
   | Block s -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
   | Decl ((st, ident), rhs) ->
       let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-      fprintf ppf "%a %s%a" emit_vanilla_stantype st ident
+      fprintf ppf "%a %s%a" emit_vanilla_stantype ident st
         (emit_option emit_assignment)
         rhs
 
 let%expect_test "decl" =
-  Decl ((SInt, "i"), Some (Lit (Int, "0"))) |> emit_statement str_formatter ;
+  Decl (("i", SInt), Some (Lit (Int, "0"))) |> emit_statement str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i = 0 |}]
 
 let%expect_test "statement" =
   For
-    { init= Decl ((SInt, "i"), Some (Lit (Int, "0")))
+    { init= Decl (("i", SInt), Some (Lit (Int, "1")))
     ; cond= Cond (Var "i", Geq, Lit (Int, "10"))
     ; step=
-        Assignment {assignee= "i"; op= Plus; rhs= Lit (Int, "1"); indices= []}
+        Assignment {assignee= "i"; rhs= (FnApp("+", [Var "i"; Lit (Int, "0")])); indices= []}
     ; body= NRFnApp ("print", [Var "i"]) }
   |> emit_statement str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {|
-    for (int i = 0; i>=10; i += 1) {
+    for (int i = 1; i>=10; i = +(i, 0)) {
       print(i)
     } |}]
-
-let emit_ad_stantype ppf (ad, st) =
-  match ad with
-  | AVar -> emit_stantype "T__" ppf st
-  | AData -> emit_vanilla_stantype ppf st
-
-(* XXX this pattern below is annoying... *)
-let emit_vardecl ppf (st, name) =
-  fprintf ppf "%a %s" emit_vanilla_stantype st name
-
-let emit_mut ppf (ad, mut, st) =
-  fprintf ppf "%s%a%s"
-    (match mut with Immutable -> "const " | _ -> "")
-    emit_ad_stantype (ad, st)
-    (match mut with Immutable | Mutable -> "&" | _ -> "")
-
-let emit_ad_vardecl ppf (ad, mut, st, name) =
-  fprintf ppf "%a %s" emit_mut (ad, mut, st) name
-
-let emit_templates ppf templates =
-  if List.length templates > 0 then
-    let emit_template ppf t = fprintf ppf "typename %s" t in
-    fprintf ppf "template <%a>@ "
-      (pp_print_list ~pp_sep:comma emit_template)
-      templates
+(*
 
 let emit_fndef ppf {returntype; name; arguments; body; templates} =
   let templated =
