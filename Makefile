@@ -11,6 +11,9 @@ format:
 cross:
 	dune build stanc.exe -x windows
 
+static:
+	dune build stanc.exe --profile static
+
 clean:
 	dune clean
 
