@@ -230,11 +230,121 @@ let emit_includes ppf () = fprintf ppf "#include <stan/model/model_header.hpp>"
 let emit_udf ppf {returntype; name; arguments; body}=
   fprintf ppf "%s" (string_of_sexp [%sexp ({returntype; name; arguments; body} : Mir.udf_defn)])
 
-let emit_class ppf p =
-  fprintf ppf "XXXclass %s"  p.prog_name
+let emit_model ppf p =
+  fprintf ppf {|
+class %s_model : public prob_grad {
+@ @[<v 1>
+@ private:
+@ // Fields here from the data block of the model
+@ @<v 1>[%a@]@
+
+@ public:
+@ @<v 1>[
+@ // Constructor takes in data fields and transforms them
+@ %a
+@ @ // transform_inits takes in constrained init values for parameters and unconstrains them
+@ %a
+@ @ ~%s_model() { }
+@ @ // The log_prob function transforms the parameters from the unconstrained space
+@ // back to the constrained space and runs the model block on them.
+@ template <bool propto__, bool jacobian__, typename T__>
+@ T__ log_prob(@[<v>std::vector<T__>& params_r__,
+@ std::ostream* pstream__ = 0) const { @]
+@[<v 2>
+@ %a
+@ } // log_prob()
+@ @ void get_param_names(std::vector<std::string>& names__) const {
+@ @[<v 2>
+
+@ @ typedef T__ local_scalar_t__;
+
+@ @ local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+@ (void) DUMMY_VAR__;  // dummy to suppress unused var warning
+@ names__.resize(0);
+%a
+@ @]
+@ } // get_param_names()
+@ @ void get_dims(std::vector<std::vector<size_t> >& dimss__) const {
+@ @[<v 2>
+@ dimss__.resize(0);
+@ %a
+@ @]
+@ } // get_dims()
+@ template <typename RNG>
+@ void write_array(RNG& base_rng__,
+@                  std::vector<double>& params_r__,
+@                  std::vector<double>& vars__,
+@                  bool include_tparams__ = true,
+@                  bool include_gqs__ = true,
+@                  std::ostream* pstream__ = 0) const {
+@ static const char* function__ = "bernoulli_model_namespace::write_array";
+@ (void) function__;  // dummy to suppress unused var warning
+@ vars__.resize(0);
+@ %a
+]@
+@ } // write_array()
+
+    template <typename RNG>
+    void write_array(RNG& base_rng,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool include_tparams = true,
+                     bool include_gqs = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec, include_tparams, include_gqs, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    static std::string model_name() {
+        return "bernoulli_model";
+    }
+
+
+    void constrained_param_names(std::vector<std::string>& param_names__,
+                                 bool include_tparams__ = true,
+                                 bool include_gqs__ = true) const {
+        std::stringstream param_name_stream__;
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "theta";
+        param_names__.push_back(param_name_stream__.str());
+
+        if (!include_gqs__ && !include_tparams__) return;
+
+        if (include_tparams__) {
+        }
+
+        if (!include_gqs__) return;
+    }
+
+
+    void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                   bool include_tparams__ = true,
+                                   bool include_gqs__ = true) const {
+        std::stringstream param_name_stream__;
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "theta";
+        param_names__.push_back(param_name_stream__.str());
+
+        if (!include_gqs__ && !include_tparams__) return;
+
+        if (include_tparams__) {
+        }
+
+        if (!include_gqs__) return;
+    }
+
+}; // model
+|}  p.prog_name
 
 let emit_namespaced ppf (p: Mir.prog) =
   fprintf ppf "@[<v>@ %a@ %a@ namespace %s_model_namespace {@ %a @ %a@ }@ @]"
     emit_version () emit_includes () p.prog_name
     (pp_print_list emit_udf) p.functions
-    emit_class p
+    emit_model p
