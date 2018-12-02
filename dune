@@ -5,6 +5,6 @@
  (preprocess (pps ppx_jane))
  )
 
- (env
-  (static
-    (flags (-ccopt -static))))
+(env
+ (static
+  (flags (-ccopt -static))))
