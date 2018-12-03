@@ -35,7 +35,9 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - Added hundreds of extra bad Stan models to test errors (all the models in `stan/src/example-bad/new`) to obtain 100% coverage of all possible parse errors
 - A pretty printer for Stan models
 - A preprocessor for C-style #include macros with correct mapping of error locations
+- Builds for portable Linux, Mac and Windows binaries
 - Work in progress on intermediate representations and code generation
+
 
 ### TODO for initial release
 - Decide on final tree representation used for AST and IRs, some inspirational ideas:
