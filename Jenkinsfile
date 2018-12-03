@@ -6,7 +6,7 @@ def utils = new org.stan.Utils()
 pipeline {
     agent {
         dockerfile {
-            args '--privileged' // TODO: set up a proper user in Dockerfile
+            args '-u root --privileged' // TODO: set up a proper user in Dockerfile
         }
     }
     stages {
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh """
                       eval \$(opam env)
-                      dune build @install --profile static
+                      dune build @install
                    """
             }
         }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh """
                       eval \$(opam env)
-                      dune runtest --profile static
+                      dune runtest
                    """
             }
         }
