@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh """
                       eval \$(opam env)
-                      sudo dune build @install --profile static
+                      dune build @install --profile static
                    """
             }
         }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sh """
                       eval \$(opam env)
-                      sudo dune runtest --profile static
+                      dune runtest --profile static
                    """
             }
         }
