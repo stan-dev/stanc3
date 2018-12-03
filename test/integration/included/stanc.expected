@@ -1,5 +1,5 @@
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse1.stan
-Syntax error at file "../included/badrecurse1.stan" included from "badrecurse1.stan", line 1, character 25, includes error:
+Syntax error at file "../included/badre curse1.stan" included from "badrecurse1.stan", line 1, character 25, includes error:
  > #include badrecurse1.stan
 Found cyclical include structure.
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse2.stan
