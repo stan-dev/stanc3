@@ -79,51 +79,44 @@ program:
     EOF
     {
       grammar_logger "program" ;
-      let rbf = match obf with Some bf -> bf | _ -> None in
-      let rbd = match obd with Some bd -> bd | _ -> None in
-      let rbtd = match obtd with Some btd -> btd | _ -> None in
-      let rbp = match obp with Some bp -> bp | _ -> None in
-      let rbtp = match obtp with Some btp -> btp | _ -> None in
-      let rbm = match obm with Some bm -> bm | _ -> None in
-      let rbg = match obg with Some bg -> bg | _ -> None in
-      { functionblock= rbf
-      ; datablock= rbd
-      ; transformeddatablock= rbtd
-      ; parametersblock= rbp
-      ; transformedparametersblock= rbtp
-      ; modelblock= rbm
-      ; generatedquantitiesblock= rbg }
+      { functionblock= obf
+      ; datablock= obd
+      ; transformeddatablock= obtd
+      ; parametersblock= obp
+      ; transformedparametersblock= obtp
+      ; modelblock= obm
+      ; generatedquantitiesblock= obg }
     }
 
 (* blocks *)
 function_block:
   | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE
-    {  grammar_logger "function_block" ; Some fd}
+    {  grammar_logger "function_block" ; fd}
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "data_block" ; Some tvd }
+    { grammar_logger "data_block" ; tvd }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    {  grammar_logger "transformed_data_block" ; Some  tvds }
+    {  grammar_logger "transformed_data_block" ;  tvds }
     (* NOTE: We are choosing to allow mixing of statements and top_var_decls *)
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "parameters_block" ; Some tvd }
+    { grammar_logger "parameters_block" ; tvd }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "transformed_parameters_block" ; Some tvds }
+    { grammar_logger "transformed_parameters_block" ; tvds }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
-    { grammar_logger "model_block" ; Some vds  }
+    { grammar_logger "model_block" ; vds  }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "generated_quantities_block" ; Some  tvds }
+    { grammar_logger "generated_quantities_block" ; tvds }
 
 (* function definitions *)
 identifier:
