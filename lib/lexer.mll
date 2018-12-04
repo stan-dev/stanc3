@@ -57,24 +57,24 @@ let real_constant1 = integer_constant? '.' ['0'-'9']* exp_literal?
 let real_constant2 = '.' ['0'-'9']+ exp_literal?
 let real_constant3 = integer_constant exp_literal 
 let real_constant = real_constant1 | real_constant2 | real_constant3
+let space = ' ' | '\t' | '\012' | '\r'
+let non_space_or_newline = [^' ' '\t' '\012' '\r' '\n']
 
 rule token = parse
 (* White space, line numers and comments *)
     '\n'                      { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
-  | [' ' '\t' '\012' '\r']    { lexer_logger "space" ;
+  | space                     { lexer_logger "space" ;
                                 token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
                                 multiline_comment lexbuf ; token lexbuf }
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment lexbuf ; token lexbuf }
   | "#include"
-    ( [' ' '\t' '\012'
-       '\r' '\n']+)
+    ( ( space | '\n')+)
     ( '"' [^ '"']* '"'
-    |  [^ ' ' '\t' '\012'
-         '\r' '\n']* 
-   as fname)                  { lexer_logger ("include " ^ fname) ;
+    | non_space_or_newline* 
+    as fname)                 { lexer_logger ("include " ^ fname) ;
                                 let chan, path =
                                 try_open_in !include_paths
                                   (maybe_remove_quotes fname) in

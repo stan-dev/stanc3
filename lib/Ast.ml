@@ -9,6 +9,7 @@ type location =
   | Nowhere  (** no location *)
 
 (* == Unsized types == *)
+(** Origin blocks, to keep track of where variables are declared *)
 type originblock =
   | Primitives
   | Functions
@@ -19,6 +20,7 @@ type originblock =
   | Model
   | GQuant
 
+(** Unsized types for function arguments *)
 and unsizedtype =
   | Int
   | Real

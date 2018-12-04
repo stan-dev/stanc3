@@ -155,12 +155,10 @@ arg_decl:
 unsized_type:
   | bt=basic_type ud=option(unsized_dims)
     {  grammar_logger "unsized_type" ;
-       let reparray n x =
-         let rec repeat n f x =
-           if n <= Int64.zero then x else repeat (Int64.pred n) f (f x) in
-         repeat n (fun y -> Array y) x in
+       let rec reparray n x =
+           if n <= 0 then x else reparray (n-1) (Array x) in
        let size =
-         match ud with Some d -> Int64.succ (Int64.of_int d) | _ -> Int64.zero
+         match ud with Some d -> 1 + d | _ -> 0
        in
        reparray size bt    }
 
@@ -170,11 +168,11 @@ basic_type:
   | REAL
     {  grammar_logger "basic_type REAL"  ; Real }
   | VECTOR
-    {  grammar_logger "basic_type VECTOR" ; Vector  }
+    {  grammar_logger "basic_type VECTOR" ; Vector }
   | ROWVECTOR
-    {  grammar_logger "basic_type ROWVECTOR" ; RowVector  }
+    {  grammar_logger "basic_type ROWVECTOR" ; RowVector }
   | MATRIX
-    {  grammar_logger "basic_type MATRIX" ; Matrix  }
+    {  grammar_logger "basic_type MATRIX" ; Matrix }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
@@ -192,7 +190,7 @@ var_decl:
             ( VDeclAss
                 {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
             , initialize_stmt_meta $startpos $endpos )
-      | _ ->
+      | None ->
           UntypedStmt
             ( VDecl (reducearray (sbt, sizes), id)
             , initialize_stmt_meta $startpos $endpos ) }
