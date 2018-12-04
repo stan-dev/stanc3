@@ -1,9 +1,22 @@
 (** The parser for Stan. A Menhir file. *)
 
 %{
-open Ast_constructors
 open Ast
 open Debug
+
+let initialize_expr_meta startpos endpos =
+  {expr_untyped_meta_loc= Location (startpos, endpos)}
+
+let initialize_stmt_meta startpos endpos =
+  {stmt_untyped_meta_loc= Location (startpos, endpos)}
+
+(* Takes a sized_basic_type and a list of sizes and repeatedly applies then
+   SArray constructor, taking sizes off the list *)
+let reducearray (sbt, l) =
+  let rec reduce l f sbt =
+    if List.length l = 0 then sbt
+                         else reduce (List.tl l) f (f sbt (List.hd l)) in
+  reduce l (fun y z -> SArray (y, z)) sbt
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -65,7 +78,21 @@ program:
     obg=option(generated_quantities_block)
     EOF
     {
-      grammar_logger "program" ; construct_program obf obd obtd obp obtp obm obg
+      grammar_logger "program" ;
+      let rbf = match obf with Some bf -> bf | _ -> None in
+      let rbd = match obd with Some bd -> bd | _ -> None in
+      let rbtd = match obtd with Some btd -> btd | _ -> None in
+      let rbp = match obp with Some bp -> bp | _ -> None in
+      let rbtp = match obtp with Some btp -> btp | _ -> None in
+      let rbm = match obm with Some bm -> bm | _ -> None in
+      let rbg = match obg with Some bg -> bg | _ -> None in
+      { functionblock= rbf
+      ; datablock= rbd
+      ; transformeddatablock= rbtd
+      ; parametersblock= rbp
+      ; transformedparametersblock= rbtp
+      ; modelblock= rbm
+      ; generatedquantitiesblock= rbg }
     }
 
 (* blocks *)
@@ -103,12 +130,12 @@ identifier:
   | id=IDENTIFIER
     {
       grammar_logger ("identifier " ^ id) ;
-      {name=id; id_loc=make_location $startpos $endpos}
+      {name=id; id_loc=Location ($startpos, $endpos)}
     }
   | TRUNCATE
     {
       grammar_logger "identifier T" ;
-      {name="T"; id_loc=make_location $startpos $endpos}
+      {name="T"; id_loc=Location ($startpos, $endpos)}
     }
 
 function_def:
@@ -129,11 +156,20 @@ return_type:
 
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=identifier
-    {  grammar_logger "arg_decl" ; construct_arg_decl od ut id }
+    {  grammar_logger "arg_decl" ;
+       match od with None -> (TParam, ut, id) | _ -> (TData, ut, id)  }
 
 unsized_type:
   | bt=basic_type ud=option(unsized_dims)
-    {  grammar_logger "unsized_type" ; construct_unsized_type bt ud  }
+    {  grammar_logger "unsized_type" ;
+       let reparray n x =
+         let rec repeat n f x =
+           if n <= Int64.zero then x else repeat (Int64.pred n) f (f x) in
+         repeat n (fun y -> Array y) x in
+       let size =
+         match ud with Some d -> Int64.succ (Int64.of_int d) | _ -> Int64.zero
+       in
+       reparray size bt    }
 
 basic_type:
   | INT
@@ -156,7 +192,17 @@ var_decl:
   | sbt=sized_basic_type id=identifier d=option(dims)
     ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
-      construct_var_decl sbt id d ae $startpos $endpos }
+      let sizes = match d with None -> [] | Some l -> l in
+      match ae with
+      | Some a ->
+          UntypedStmt
+            ( VDeclAss
+                {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
+            , initialize_stmt_meta $startpos $endpos )
+      | _ ->
+          UntypedStmt
+            ( VDecl (reducearray (sbt, sizes), id)
+            , initialize_stmt_meta $startpos $endpos ) }
 
 sized_basic_type:
   | INT
@@ -173,15 +219,31 @@ sized_basic_type:
 top_var_decl_no_assign:
   | tvt=top_var_type id=identifier d=option(dims) SEMICOLON
     {
-      grammar_logger "top_var_decl" ;
-      construct_top_var_decl_no_assign tvt id d $startpos $endpos
+      grammar_logger "top_var_decl_no_assign" ;
+      let sizes = match d with None -> [] | Some l -> l in
+      UntypedStmt
+        ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+        , initialize_stmt_meta $startpos $endpos )
     }
 
 top_var_decl:
   | tvt=top_var_type id=identifier d=option(dims)
     ass=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "top_var_decl" ;
-      construct_top_var_decl tvt id d ass $startpos $endpos}
+      let sizes = match d with None -> [] | Some l -> l in
+      match ass with
+      | Some a ->
+          UntypedStmt
+            ( TVDeclAss
+                { tsizedtype= reducearray (fst tvt, sizes)
+                ; transformation= snd tvt
+                ; tidentifier= id
+                ; tvalue= snd a }
+            , initialize_stmt_meta $startpos $endpos )
+      | _ ->
+          UntypedStmt
+            ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
+            , initialize_stmt_meta $startpos $endpos ) }
 
 top_var_type:
   | INT r=range_constraint
@@ -456,7 +518,10 @@ atomic_statement:
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
-    {  grammar_logger "tilde_statement" ; construct_tilde_statement e id es ot }
+    {  grammar_logger "tilde_statement" ;
+       let t = match ot with Some tt -> tt | _ -> NoTruncate in
+       Tilde {arg= e; distribution= id; args= es; truncation= t  }
+    }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
   | BREAK SEMICOLON
@@ -499,7 +564,12 @@ string_literal:
 truncation:
   | TRUNCATE LBRACK e1=option(expression) COMMA e2=option(expression)
     RBRACK
-    {  grammar_logger "truncation" ; construct_truncation e1 e2 }
+    {  grammar_logger "truncation" ;
+       match (e1, e2) with
+       | Some tt1, Some tt2 -> TruncateBetween (tt1, tt2)
+       | Some tt1, None -> TruncateUpFrom tt1
+       | None, Some tt2 -> TruncateDownFrom tt2
+       | _ -> NoTruncate  }
 
 nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement
