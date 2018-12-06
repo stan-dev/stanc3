@@ -44,6 +44,8 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
+                    // The following is from https://issues.jenkins-ci.org/browse/JENKINS-49385?focusedCommentId=328924&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-328924
+                    args "--entrypoint=''"
                 }
             }
             steps {
