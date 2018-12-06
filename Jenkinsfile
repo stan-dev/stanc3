@@ -4,11 +4,7 @@ import org.stan.Utils
 def utils = new org.stan.Utils()
 
 pipeline {
-    agent {
-        dockerfile {
-            args '-u root --privileged' // TODO: set up a proper user in Dockerfile
-        }
-    }
+    agent none
     stages {
         stage('Kill previous builds') {
             when {
@@ -21,16 +17,36 @@ pipeline {
                 }
             }
         }
-        stage("Build") {
+        stage("Build & Test") {
+            agent {
+                dockerfile {
+                    args '-u root --privileged' // TODO: set up a proper user in Dockerfile
+                }
+            }
             steps {
+                stash 'Stanc3'
                 sh """
                       eval \$(opam env)
                       dune build @install
                    """
+                sh """
+                      eval \$(opam env)
+                      dune runtest
+                   """
             }
         }
-        stage("Run all tests") {
+        stage("Build & Test static linux binary") {
+            agent {
+                dockerfile {
+                    dir 'docker/static'
+                }
+            }
             steps {
+                unstash 'Stanc3'
+                sh """
+                      eval \$(opam env)
+                      dune build @install
+                   """
                 sh """
                       eval \$(opam env)
                       dune runtest
