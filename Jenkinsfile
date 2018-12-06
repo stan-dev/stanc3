@@ -14,6 +14,7 @@ pipeline {
             steps {
                 script {
                     utils.killOldBuilds()
+                    sh "rm -rf _build"
                 }
             }
         }
