@@ -27,10 +27,10 @@ let emit_cond_op ppf c =
 
 let rec emit_stantype ad ppf = function
   | SInt | SReal -> emit_str ppf ad
-  | SArray t -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
-  | SMatrix -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
-  | SRowVector -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
-  | SVector -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
+  | SArray(_, t) -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
+  | SMatrix(_, _) -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
+  | SRowVector _ -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
+  | SVector _ -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
 
 and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
 
@@ -58,10 +58,10 @@ let%expect_test "expr" =
   flush_str_formatter () |> print_endline ;
   [%expect {| sassy({4, 2}, 27.0) |}]
 
-let emit_vanilla_stantype ppf st =
+let emit_prim_stantype ppf st =
   let rec ad_str = function
     | SInt -> "int"
-    | SArray t -> ad_str t
+    | SArray(_, t) -> ad_str t
     | _ -> "double"
   in
   emit_stantype (ad_str st) ppf st
@@ -82,36 +82,39 @@ let rec emit_statement ppf s =
       let emit_else ppf x = fprintf ppf " else {\n %a\n}" emit_statement x in
       fprintf ppf "if (%a){\n %a\n}%a\n" emit_expr cond emit_statement ifbranch
         (emit_option emit_else) elsebranch
-  | While (cond, body) ->
+  | While (cond, body) -> (* XXX Refactor these to share with other code gen *)
       fprintf ppf "while (%a) {\n  %a\n}\n" emit_expr cond emit_statement body
   | For {init; cond; step; body} ->
       fprintf ppf "for (%a; %a; %a) {\n  %a\n}\n" emit_statement init emit_expr
         cond emit_statement step emit_statement body
   | Block s -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
-  | Decl ((st, ident), rhs) ->
+  | Decl ((ident, st, _), rhs) ->
       let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-      fprintf ppf "%a %s%a" emit_vanilla_stantype ident st
+      fprintf ppf "%a %s%a" emit_prim_stantype st ident
         (emit_option emit_assignment)
         rhs
 
 let%expect_test "decl" =
-  Decl (("i", SInt), Some (Lit (Int, "0"))) |> emit_statement str_formatter ;
+  Decl (("i", SInt, "line num"), Some (Lit (Int, "0")))
+  |> emit_statement str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i = 0 |}]
 
 let%expect_test "statement" =
-  For
-    { init= Decl (("i", SInt), Some (Lit (Int, "1")))
-    ; cond= Cond (Var "i", Geq, Lit (Int, "10"))
-    ; step=
-        Assignment {assignee= "i"; rhs= (FnApp("+", [Var "i"; Lit (Int, "0")])); indices= []}
-    ; body= NRFnApp ("print", [Var "i"]) }
+  For { init= Decl (("i", SInt, "line num"), Some (Lit (Int, "1")))
+      ; cond= Cond (Var "i", Geq, Lit (Int, "10"))
+      ; step=
+          Assignment {assignee= "i"; rhs= (FnApp("+", [Var "i"; Lit (Int, "0")])); indices= []}
+      ; body= NRFnApp ("print", [Var "i"]) }
   |> emit_statement str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {|
     for (int i = 1; i>=10; i = +(i, 0)) {
       print(i)
     } |}]
+
+let emit_vardecl ppf (name, stype) = fprintf ppf "%a %s;" emit_prim_stantype stype name
+
 (*
 
 let emit_fndef ppf {returntype; name; arguments; body; templates} =
@@ -132,103 +135,117 @@ let emit_ctor classname ppf (args, body) =
   fprintf ppf "%s(%a) {@ @[<v 2>%a@]}" classname
     (pp_print_list ~pp_sep:comma emit_vardecl)
     args emit_statement body
-
-let emit_class ppf {classname; super; fields; methods; ctor} =
-  fprintf ppf
-    {|
-@[<v 1>
-class %s : %s {
-@  private:@
-  @[<v 1> %a;@]
-@ @  public:
-@ @[<v 1> %a
-@ %a@]
-@ }@.|}
-    classname super
-    (pp_print_list ~pp_sep:semi_new emit_vardecl)
-    fields
-    (pp_print_list ~pp_sep:newline emit_fndef)
-    methods (emit_ctor classname) ctor
-
-let%expect_test "class" =
-  emit_class str_formatter
-    { classname= "bernoulli_model"
-    ; super= "prob_grad"
-    ; fields= [(SMatrix, "x"); (SVector, "y")]
-    ; ctor= ([], Skip)
-    ; methods=
-        [ { returntype= Some (AVar, SReal)
-          ; name= "log_prob"
-          ; arguments= [(AVar, Immutable, SVector, "params")]
-          ; templates= []
-          ; body=
-              Block
-                [ Assignment
-                    { assignee= "target"
-                    ; op= Plus
-                    ; indices= []
-                    ; rhs=
-                        FnApp
-                          ( "normal"
-                          , [ FnApp ("multiply", [Var "x"; Var "params"])
-                            ; Lit (Real, "1.0") ] ) } ] }
-        ; { returntype= None
-          ; name= "get_param_names"
-          ; arguments= [(AData, Mutable, SString, "names")]
-          ; templates= []
-          ; body=
-              Block
-                [ Assignment
-                    { assignee= "target"
-                    ; op= Plus
-                    ; indices= []
-                    ; rhs=
-                        FnApp
-                          ( "normal"
-                          , [ FnApp ("multiply", [Var "x"; Var "params"])
-                            ; Lit (Real, "1.0") ] ) } ] } ] } ;
-  flush_str_formatter () |> print_endline ;
-  [%expect
-    {|
-    class bernoulli_model : prob_grad {
-
-       private:
-         Eigen::Matrix<double, -1, -1> x;
-         Eigen::Matrix<double, -1, 1> y;
-
-
-       public:
-
-       template <typename T__>
-       T__ log_prob(const Eigen::Matrix<T__, -1, 1>& params) {
-         target += normal(multiply(x, params), 1.0);
-       }
-       void get_param_names(std::string& names) {
-         target += normal(multiply(x, params), 1.0);
-       }
-
-       bernoulli_model() {
-       }
-
-      } |}]
-
-let emit_prog ppf {cppclass; functions; includes; namespace; usings} =
-  fprintf ppf "@[<v>%s@ %a@ %a@ @]}" version
-    (pp_print_list ~pp_sep:newline emit_include)
-    includes
-    (emit_namespaced cppclass functions usings)
-    namespace
 *)
 
 let stan_math_map =
   String.Map.of_alist_exn
     [("+", "add"); ("-", "minus"); ("/", "divide"); ("*", "multiply")]
 
-let emit_version ppf () = fprintf ppf "// Code generated by Stan version 2.18.0"
-let emit_includes ppf () = fprintf ppf "#include <stan/model/model_header.hpp>"
+let version = "// Code generated by Stan version 2.18.0"
+let includes = "#include <stan/model/model_header.hpp>"
 
 let emit_udf ppf {returntype; name; arguments; body}=
   fprintf ppf "%s" (string_of_sexp [%sexp ({returntype; name; arguments; body} : Mir.udf_defn)])
+
+let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
+  fprintf ppf {|
+@ try {
+  @ @[<v 4> %a
+@] } catch (const std::exception& e) {
+  @ @[<v 4> stan::lang::rethrow_located(std::runtime_error(std::string("%a")
+  + e.what()), current_statement_begin__, prog_reader__());
+  @ // Next line prevents compiler griping about no return
+  @ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+@]@ }
+|} emit_contents contents_arg emit_err err_arg
+
+let rec integer_el_type = function
+  | SReal | SVector _ | SMatrix (_, _) | SRowVector _ -> false
+  | SInt -> true
+  | SArray(_, st) -> integer_el_type st
+
+let emit_for_loop ppf (loopvar, loopend, emit_body, body) =
+  fprintf ppf "for (size_t %s = 0; %s < %a; %s++) {@;@[<v 4>%a@]@;}"
+    loopvar loopvar emit_expr loopend loopvar
+    emit_body body
+
+let rec emit_run_code_per_el ?depth:(d=0) emit_code_per_element ppf (name, st) =
+  let mkloopvar d = sprintf "i_%d__" d in
+  let loopvar = mkloopvar d in
+  match st with
+  | SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
+  | SVector dim | SRowVector dim ->
+    emit_for_loop ppf ((mkloopvar d), dim, emit_code_per_element,
+                       sprintf "%s[%s]" name loopvar)
+  | SMatrix(dim1, dim2) ->
+    let loopvar2 = mkloopvar (d+1) in
+    emit_for_loop ppf (loopvar, dim1, emit_for_loop,
+                       (loopvar2, dim2, emit_code_per_element,
+                        sprintf "%s(%s, %s)" name loopvar loopvar2))
+  | SArray(dim, st) ->
+    emit_for_loop ppf (loopvar, dim,
+      (emit_run_code_per_el ~depth:(d+1) emit_code_per_element),
+      (sprintf "%s[%s]" name loopvar, st))
+
+let%expect_test "run code per element" =
+  fprintf str_formatter "@[<v 4>%a@]" (emit_run_code_per_el emit_str)
+  ("dubvec", SArray(Var "X", SArray(Var "Y", SMatrix (Var "Z", Var "W"))));
+  flush_str_formatter () |> print_endline;
+  [%expect {|
+    for (size_t i_0__ = 0; i_0__ < X; i_0__++) {
+        for (size_t i_1__ = 0; i_1__ < Y; i_1__++) {
+            for (size_t i_2__ = 0; i_2__ < Z; i_2__++) {
+                for (size_t i_3__ = 0; i_3__ < W; i_3__++) {
+                    dubvec[i_0__][i_1__](i_2__, i_3__)
+                  }
+              }
+          }
+      } |}];
+
+
+  (*
+let emit_read_field ppf (name, st, loc) idx =
+  let vals_suffix = context_suffix st in
+  fprintf ppf {|
+@ current_statement_begin__ = %s;
+@ context__.validate_dims("data initialization", "%s", "%s",
+@                         context__.to_vec());
+@ %s = %a;
+@ vals_%s__ = context.__.vals_%s("%s");
+@ pos__ = %d;
+@ %s = vals_%s__[pos_++];
+@ // Check constraints
+@ %a
+|} loc name emit_zero_val st idx name vals_suffix
+
+let emit_constructor ppf p = fprintf ppf {|
+
+@ void %s(stan::io::var_context& context__,
+@ @[<v>   unsigned int random_seed__ = 0,
+@         std::ostream* pstream__ = NULL) : prob_grad(0) {
+@] @ @[<v 4>
+@       typedef double local_scalar_t__;
+
+@       boost::ecuyer1988 base_rng__ =
+@         stan::services::util::create_rng(random_seed__, 0);
+@       (void) base_rng__;  // suppress unused var warning
+
+@       current_statement_begin__ = -1;
+
+@       static const char* function__ = "bernoulli_model_namespace::bernoulli_model";
+@       (void) function__;  // dummy to suppress unused var warning
+@       size_t pos__;
+@       (void) pos__;  // dummy to suppress unused var warning
+@       std::vector<int> vals_i__;
+@       std::vector<double> vals_r__;
+@       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+@       (void) DUMMY_VAR__;  // suppress unused var warning
+@ %a
+@ %a
+@]@ }
+|} emit_error_wrapper (emit_str, "Error while reading in data: ", p.data)
+    emit_error_wrapper (emit_str, "Error during transformed data block: ")
+
 
 let emit_model ppf p =
   fprintf ppf {|
@@ -242,109 +259,61 @@ class %s_model : public prob_grad {
 @ @<v 1>[
 @ // Constructor takes in data fields and transforms them
 @ %a
+@ @ ~%s_model() { }
+@ @ static std::string model_name() { return "%s"; }
 @ @ // transform_inits takes in constrained init values for parameters and unconstrains them
 @ %a
-@ @ ~%s_model() { }
 @ @ // The log_prob function transforms the parameters from the unconstrained space
 @ // back to the constrained space and runs the model block on them.
-@ template <bool propto__, bool jacobian__, typename T__>
-@ T__ log_prob(@[<v>std::vector<T__>& params_r__,
-@ std::ostream* pstream__ = 0) const { @]
-@[<v 2>
 @ %a
-@ } // log_prob()
-@ @ void get_param_names(std::vector<std::string>& names__) const {
-@ @[<v 2>
-
-@ @ typedef T__ local_scalar_t__;
-
-@ @ local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-@ (void) DUMMY_VAR__;  // dummy to suppress unused var warning
-@ names__.resize(0);
-%a
-@ @]
-@ } // get_param_names()
-@ @ void get_dims(std::vector<std::vector<size_t> >& dimss__) const {
-@ @[<v 2>
-@ dimss__.resize(0);
-@ %a
-@ @]
-@ } // get_dims()
-@ template <typename RNG>
-@ void write_array(RNG& base_rng__,
-@                  std::vector<double>& params_r__,
-@                  std::vector<double>& vars__,
-@                  bool include_tparams__ = true,
-@                  bool include_gqs__ = true,
-@                  std::ostream* pstream__ = 0) const {
-@ static const char* function__ = "bernoulli_model_namespace::write_array";
-@ (void) function__;  // dummy to suppress unused var warning
-@ vars__.resize(0);
-@ %a
-]@
-@ } // write_array()
-
-    template <typename RNG>
-    void write_array(RNG& base_rng,
-                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
-                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                     bool include_tparams = true,
-                     bool include_gqs = true,
-                     std::ostream* pstream = 0) const {
-      std::vector<double> params_r_vec(params_r.size());
-      for (int i = 0; i < params_r.size(); ++i)
-        params_r_vec[i] = params_r(i);
-      std::vector<double> vars_vec;
-      std::vector<int> params_i_vec;
-      write_array(base_rng, params_r_vec, params_i_vec, vars_vec, include_tparams, include_gqs, pstream);
-      vars.resize(vars_vec.size());
-      for (int i = 0; i < vars.size(); ++i)
-        vars(i) = vars_vec[i];
-    }
-
-    static std::string model_name() {
-        return "bernoulli_model";
-    }
-
-
-    void constrained_param_names(std::vector<std::string>& param_names__,
-                                 bool include_tparams__ = true,
-                                 bool include_gqs__ = true) const {
-        std::stringstream param_name_stream__;
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "theta";
-        param_names__.push_back(param_name_stream__.str());
-
-        if (!include_gqs__ && !include_tparams__) return;
-
-        if (include_tparams__) {
-        }
-
-        if (!include_gqs__) return;
-    }
-
-
-    void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                   bool include_tparams__ = true,
-                                   bool include_gqs__ = true) const {
-        std::stringstream param_name_stream__;
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "theta";
-        param_names__.push_back(param_name_stream__.str());
-
-        if (!include_gqs__ && !include_tparams__) return;
-
-        if (include_tparams__) {
-        }
-
-        if (!include_gqs__) return;
-    }
-
+@ @ %a
+@ @ %a
+@]
+@]
 }; // model
-|}  p.prog_name
+|} p.prog_name
+    (pp_print_list ~pp_sep:semi_new emit_vardecl) p.data
+    emit_constructor p
+    p.prog_name p.prog_name
+(* transform inits
+   log_prob
+   get_param_names
+   get_dims
+   write_array
+*)
 
-let emit_namespaced ppf (p: Mir.prog) =
-  fprintf ppf "@[<v>@ %a@ %a@ namespace %s_model_namespace {@ %a @ %a@ }@ @]"
-    emit_version () emit_includes () p.prog_name
+
+let globals = "static int current_statement_begin__;"
+let usings = {|
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::prob_grad;
+using namespace stan::math;
+|}
+
+
+let emit_prog ppf (p: Mir.prog) =
+  fprintf ppf "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
+    version includes p.prog_name
+    globals
+    usings
     (pp_print_list emit_udf) p.functions
     emit_model p
+
+let%expect_test "prog" =
+
+  { functions= []
+  ; params= ["theta", SReal, "line 7"]
+  ; data: ["y", SReal, "line 8"]
+  ; model: NRFnApp("print", Lit(Str, "hello world"))
+  ; gq: Skip ; tdata: Skip ; tparam: Skip
+  ; prog_name: "testmodel"
+  ; prog_path: "/testmodel.stan"}
+  |> emit_prog str_formatter ;
+  flush_str_formatter () |> print_endline ;
+  [%expect {| sassy({4, 2}, 27.0) |}]
+*)

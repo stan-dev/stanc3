@@ -1,5 +1,17 @@
 open Core_kernel
 
+(*
+   XXX Missing:
+   * sizes for containers on declarations ("sizedtypes")
+   * foreach loops - matrix vs array
+   * type of index for multi-index by int array
+   * location strings for each statement
+   * transformations for vardecls
+   * different nodes for when I know the bounds of a for loop or not
+   * somehow mark FnApps as containing print or reject
+*)
+
+
 type litType = Int | Real | Str
 
 and cond_op = Equals | NEquals | Less | Leq | Greater | Geq
@@ -16,12 +28,14 @@ and expr =
 and stantype =
   | SInt
   | SReal
-  | SArray of stantype
-  | SVector
-  | SRowVector
-  | SMatrix
+  | SArray of expr * stantype
+  | SVector of expr
+  | SRowVector of expr
+  | SMatrix of expr * expr
 
-and vardecl = string * stantype
+and loc = string
+
+and vardecl = string * stantype * loc
 
 and statement =
   | Assignment of {assignee: string; indices: expr list; rhs: expr}
