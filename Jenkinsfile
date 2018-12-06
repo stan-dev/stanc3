@@ -38,7 +38,7 @@ pipeline {
         stage("Build & Test static linux binary") {
             agent {
                 dockerfile {
-                    dir 'docker/static'
+                    filename 'docker/static/Dockerfile'
                     args '-u root --privileged' // TODO: set up a proper user in Dockerfile
                 }
             }
