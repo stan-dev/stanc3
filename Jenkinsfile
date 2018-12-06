@@ -33,6 +33,10 @@ pipeline {
                       eval \$(opam env)
                       dune runtest
                    """
+                // No idea how the build files from this docker image end
+                // up transmitting to the next docker images, so clean here
+                // (because the next image can't delete this one's files due
+                // to the root user thing)
                 sh "git clean -xffd"
             }
         }
