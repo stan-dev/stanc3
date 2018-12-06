@@ -26,26 +26,24 @@ pipeline {
             }
             steps {
                 sh """
-                      rm -rf _build
                       eval \$(opam env)
                       dune build @install
                    """
                 sh """
                       eval \$(opam env)
                       dune runtest
-                      rm -rf _build
                    """
             }
         }
         stage("Build & Test static linux binary") {
             agent {
                 dockerfile {
+                    args '-u root --privileged' // TODO: set up a proper user in Dockerfile
                     filename 'docker/static/Dockerfile'
                 }
             }
             steps {
                 sh """
-                      rm -rf _build
                       eval \$(opam env)
                       dune build @install --profile static
                    """
