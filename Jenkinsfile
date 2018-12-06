@@ -33,12 +33,12 @@ pipeline {
                       eval \$(opam env)
                       dune runtest
                    """
+                sh "git clean -xffd"
             }
         }
         stage("Build & Test static linux binary") {
             agent {
                 dockerfile {
-                    args '-u root --privileged' // TODO: set up a proper user in Dockerfile
                     filename 'docker/static/Dockerfile'
                 }
             }
