@@ -6,11 +6,6 @@ def utils = new org.stan.Utils()
 pipeline {
     agent none
     stages {
-        stage('Clean _build from workspace') {
-            steps {
-                sh "ls; rm -rf _build"
-            }
-        }
         stage('Kill previous builds') {
             when {
                 not { branch 'develop' }
@@ -38,6 +33,7 @@ pipeline {
                 sh """
                       eval \$(opam env)
                       dune runtest
+                      rm -rf _build
                    """
             }
         }
