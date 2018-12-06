@@ -51,8 +51,30 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 - Continuous integration and deployment for Windows, Linux, and Mac static binaries
 
 ### The bright road ahead
-- Traditional compiler optimisations, like loop optimisations, constant-folding, inlining, CSE, DCE, LICM, auto vectorisation/parallelisation, algebraic simplification, ...) from AST
-- Add new features to the language (like type inference, closures, higher order functions, new datatypes, new variable transforms, enumeration of discrete parameters...)
+- Traditional compiler optimisations
+    - loop unrolling
+    - constant-folding
+    - inlining
+    - common subexpression elimination
+    - dead code elimination
+    - loop invariant code motion
+- Stan or Math specific optimisations:
+    - automatic vectorization (and parallelization?)
+    - algebraic simplification
+    - algebraic derivatives
+    - more efficient data and parameters error checking
+- Exciting new language features:
+    - User-defined gradients for user-defined functions
+    - Stan-in-stan - define much of the math library as Stan functions with some additional Stan language functionality like user-defined gradients
+    - `extern` support for linking against functions defined in other C-compatible languages (FFI)
+    - take in std:vector<string> and do automatic conversion for factor variables, create indicator arrays automatically
+    - "@quiet" annotation to not spit out certain parameters or data
+    - GPU matrix annotation to indicate the data structure should be manipulated only on the GPU
+    - closures
+    - type inference
+    - higher order functions
+    - submodels / structs / records / ?
+    - some safe support for possibly inefficient discrete parameters
 
 
 ## Important simultaneous work also needed for other reasons
