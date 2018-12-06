@@ -45,11 +45,11 @@ pipeline {
                 unstash 'Stanc3'
                 sh """
                       eval \$(opam env)
-                      dune build @install
+                      dune build @install --profile static
                    """
                 sh """
                       eval \$(opam env)
-                      dune runtest
+                      dune runtest --profile static
                    """
             }
         }
