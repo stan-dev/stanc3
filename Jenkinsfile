@@ -20,11 +20,11 @@ pipeline {
         stage("Build & Test") {
             agent {
                 dockerfile {
+                    filename 'docker/dev-ubuntu/Dockerfile'
                     args '-u root --privileged' // TODO: set up a proper user in Dockerfile
                 }
             }
             steps {
-                stash 'Stanc3'
                 sh """
                       eval \$(opam env)
                       dune build @install
@@ -42,7 +42,6 @@ pipeline {
                 }
             }
             steps {
-                unstash 'Stanc3'
                 sh """
                       eval \$(opam env)
                       dune build @install --profile static
