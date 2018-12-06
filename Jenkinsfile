@@ -21,7 +21,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'docker/dev-ubuntu/Dockerfile'
-                    args '-u root --privileged' // TODO: set up a proper user in Dockerfile
+                    args "-u root --privileged --entrypoint=''" // TODO: set up a proper user in Dockerfile
                 }
             }
             steps {
