@@ -6,4 +6,4 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 COPY ./scripts/*.sh ./
 RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 RUN bash -x install_dev_deps.sh
-
+ENTRYPOINT ["/bin/bash"]
