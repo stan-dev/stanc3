@@ -39,6 +39,7 @@ pipeline {
             agent {
                 dockerfile {
                     dir 'docker/static'
+                    args '-u root --privileged' // TODO: set up a proper user in Dockerfile
                 }
             }
             steps {
