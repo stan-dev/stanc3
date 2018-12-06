@@ -26,6 +26,7 @@ pipeline {
             }
             steps {
                 sh """
+                      rm -rf _build
                       eval \$(opam env)
                       dune build @install
                    """
@@ -43,6 +44,7 @@ pipeline {
             }
             steps {
                 sh """
+                      rm -rf _build
                       eval \$(opam env)
                       dune build @install --profile static
                    """
