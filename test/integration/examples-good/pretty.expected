@@ -2117,6 +2117,18 @@ functions {
   real foo() reject("");
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ4.stan
+functions {
+  real foo() {
+    if (1) reject("");
+    else {
+      if (1) ;
+      else reject("");
+    }
+    reject("");
+  }
+}
+
   $ ../../../../install/default/bin/stanc --auto-format fun-var-constraints.stan
 functions {
   real foo() {

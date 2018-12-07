@@ -270,7 +270,7 @@ and pretty_print_statement = function
     | ReturnVoid -> "return;"
     | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
     | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
-    | Skip -> ""
+    | Skip -> ";"
     | IfThen (e, s) ->
         "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
     | IfThenElse (e, s1, s2) ->
