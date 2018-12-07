@@ -32,7 +32,7 @@ and pretty_print_unsizedtype = function
       "("
       ^ String.concat ", " (List.map pretty_print_argtype argtypes)
       ^ ") => " ^ pretty_print_returntype rt
-  | PrimitiveFunction -> "Stan Math function"
+  | MathLibraryFunction -> "Stan Math function"
 
 and pretty_print_unsizedtypes l =
   String.concat ", " (List.map pretty_print_unsizedtype l)
@@ -116,8 +116,8 @@ and pretty_print_expression = function
         ^ "| "
         ^ pretty_print_list_of_expression (List.tl es)
         ^ ")"
+    (* GetLP is deprecated *)
     | GetLP -> "get_lp()"
-    (* deprecated *)
     | GetTarget -> "target()"
     | ArrayExpr es -> "{" ^ pretty_print_list_of_expression es ^ "}"
     | RowVectorExpr es -> "[" ^ pretty_print_list_of_expression es ^ "]"

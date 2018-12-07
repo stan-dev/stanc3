@@ -12,7 +12,7 @@ type location =
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
-  | Primitives
+  | MathLibrary
   | Functions
   | Data
   | TData
@@ -30,7 +30,7 @@ and unsizedtype =
   | Matrix
   | Array of unsizedtype
   | Fun of (originblock * unsizedtype) list * returntype
-  | PrimitiveFunction
+  | MathLibraryFunction
 
 and returntype = Void | ReturnType of unsizedtype
 
@@ -78,8 +78,8 @@ and 'e expression =
   | RealNumeral of string
   | FunApp of identifier * 'e list
   | CondFunApp of identifier * 'e list
+  (* GetLP is deprecated *)
   | GetLP
-  (* deprecated *)
   | GetTarget
   | ArrayExpr of 'e list
   | RowVectorExpr of 'e list
@@ -108,9 +108,9 @@ and assignmentoperator =
   | DivideAssign
   | EltTimesAssign
   | EltDivideAssign
+  (* ArrowAssign is deprecated *)
   | ArrowAssign
 
-(* deprecated *)
 and 'e truncation =
   | NoTruncate
   | TruncateUpFrom of 'e
@@ -150,8 +150,8 @@ and ('e, 's) statement =
       ; assign_rhs: 'e }
   | NRFunApp of identifier * 'e list
   | TargetPE of 'e
+  (* IncrementLogProb is deprecated *)
   | IncrementLogProb of 'e
-  (* deprecated *)
   | Tilde of
       { arg: 'e
       ; distribution: identifier

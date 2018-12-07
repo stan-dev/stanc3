@@ -34,7 +34,7 @@ In case of void function, no return statements anywhere
 All function arguments are distinct
 Function applications are returning functions
 NRFunction applications are non-returning functions
-Primitives cannot be printed
+MathLibrary cannot be printed
 Functions cannot be printed
 User defined functions cannot be overloaded
 Function ending in _lp only where target is available
@@ -123,7 +123,7 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, _) -> Array (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
-  | [] -> Primitives
+  | [] -> MathLibrary
   | x :: xs ->
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
@@ -788,7 +788,7 @@ and semantic_check_expression x =
         ( Variable uid
         , { expr_typed_meta_origin_type=
               (function
-                | None -> (Primitives, PrimitiveFunction) | Some x -> x)
+                | None -> (MathLibrary, MathLibraryFunction) | Some x -> x)
                 ort
           ; expr_typed_meta_loc= loc } )
   | IntNumeral s ->
@@ -1126,7 +1126,7 @@ and semantic_check_expression x =
           ( ob
           :: List.map
                (function
-                 | All -> Primitives
+                 | All -> MathLibrary
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 | Multiple ue1 ->
                      lub_originblock
                        [ ob
@@ -1211,7 +1211,7 @@ and semantic_check_printable = function
       let ue = semantic_check_expression e in
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       match (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type with
-      | _, Fun _ | _, PrimitiveFunction ->
+      | _, Fun _ | _, MathLibraryFunction ->
           semantic_error ~loc "Functions cannot be printed."
       | _ -> PExpr ue )
 
@@ -1245,7 +1245,7 @@ and semantic_check_statement s =
           | Some ob1, None -> Some ob1
           | None, Some ob2 -> Some ob2
           | None, None -> None)
-          ( ( if is_stan_math_function_name uid.name then Some Primitives
+          ( ( if is_stan_math_function_name uid.name then Some MathLibrary
             else None )
           , Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name) )
       in
@@ -1395,7 +1395,7 @@ and semantic_check_statement s =
         match
           (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
         with
-        | _, Fun _ | _, PrimitiveFunction ->
+        | _, Fun _ | _, MathLibraryFunction ->
             semantic_error ~loc
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1419,7 +1419,7 @@ and semantic_check_statement s =
         match
           (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
         with
-        | _, Fun _ | _, PrimitiveFunction ->
+        | _, Fun _ | _, MathLibraryFunction ->
             semantic_error ~loc
               "A (container of) reals or ints needs to be supplied to \
                increment target."
