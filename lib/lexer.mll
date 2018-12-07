@@ -44,6 +44,21 @@
        is_suffix str ~suffix:"\""
     then drop_suffix (drop_prefix str 1) 1
     else str
+
+  let try_get_new_lexbuf fname =
+    let chan, path = try_open_in !include_paths (maybe_remove_quotes fname) in
+    let new_lexbuf = from_channel chan in
+    let _ = (new_lexbuf).lex_start_p <- { pos_fname= path
+                                        ; pos_lnum= 1
+                                        ; pos_bol= 0
+                                        ; pos_cnum= 0 } in
+    let _ = new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p in
+    let _ = if dup_exists (Str.split (Str.regexp "\" included from \"") path)
+            then raise (Errors.SyntaxError (
+              Includes ("Found cyclical include structure.\n",
+                        (lexeme_end_p (Stack.top include_stack))))) in
+    let _ = Stack.push new_lexbuf include_stack in
+    new_lexbuf
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -75,25 +90,7 @@ rule token = parse
     ( '"' [^ '"']* '"'
     | non_space_or_newline* 
     as fname)                 { lexer_logger ("include " ^ fname) ;
-                                let chan, path =
-                                try_open_in !include_paths
-                                  (maybe_remove_quotes fname) in
-                                let new_lexbuf = from_channel chan in
-                                (new_lexbuf).lex_start_p
-                                  <- { pos_fname= path
-                                     ; pos_lnum= 1
-                                     ; pos_bol= 0
-                                     ; pos_cnum= 0 } ;
-                                new_lexbuf.lex_curr_p
-                                  <- new_lexbuf.lex_start_p ;
-                                if dup_exists (Str.split (Str.regexp
-                                  "\" included from \"") path) then
-                                  raise (Errors.SyntaxError
-                                    (Includes (
-                                      "Found cyclical include structure.\n",
-                                      (lexeme_end_p (Stack.top include_stack)
-                                         ))))          ;
-                                Stack.push new_lexbuf include_stack ;
+                                let new_lexbuf = try_get_new_lexbuf fname in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 singleline_comment lexbuf; token lexbuf } (* deprecated *)
