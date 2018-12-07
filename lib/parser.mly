@@ -13,10 +13,7 @@ let initialize_stmt_meta startpos endpos =
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
-  let rec reduce l f sbt =
-    if List.length l = 0 then sbt
-                         else reduce (List.tl l) f (f sbt (List.hd l)) in
-  reduce l (fun y z -> SArray (y, z)) sbt
+  Core_kernel.List.fold l ~f:(fun y z -> SArray (y, z)) ~init:sbt
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
