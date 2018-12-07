@@ -1,161 +1,207 @@
   $ ../../../../../../install/default/bin/stanc bad_adams_control_function_return.stan
+
 Semantic error at file "bad_adams_control_function_return.stan", line 13, characters 6-153:
  >     = integrate_ode_adams(twoCptModelODE,
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real, real[], real, real[], real[], real[], int[], int, int, int.
+
   $ ../../../../../../install/default/bin/stanc bad_control_function_return.stan
+
 Semantic error at file "bad_control_function_return.stan", line 13, characters 6-153:
  >     = integrate_ode_adams(twoCptModelODE,
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real, real[], real, real[], real[], real[], int[], int, int, int.
+
   $ ../../../../../../install/default/bin/stanc bad_fun_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_fun_type.stan", line 27, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_fun_type_control.stan
+
 Semantic error at file "bad_fun_type_control.stan", line 27, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_t0_var_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_t0_var_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_t0_var_type_control.stan
+
 Semantic error at file "bad_t0_var_type_control.stan", line 26, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_t_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_t_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_t_type_control.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_t_type_control.stan", line 26, characters 11-352:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_theta_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_theta_type.stan", line 27, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_theta_type_control.stan
+
 Semantic error at file "bad_theta_type_control.stan", line 27, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_ts_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_ts_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_ts_type_control.stan
+
 Semantic error at file "bad_ts_type_control.stan", line 26, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_ts_var_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_ts_var_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_ts_var_type_control.stan
+
 Semantic error at file "bad_ts_var_type_control.stan", line 26, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_x_int_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_x_int_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][].
+
   $ ../../../../../../install/default/bin/stanc bad_x_int_type_control.stan
+
 Semantic error at file "bad_x_int_type_control.stan", line 26, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_x_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_x_type.stan", line 27, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_x_type_control.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_x_type_control.stan", line 27, characters 11-352:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_x_var_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_x_var_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_x_var_type_adams_control.stan
+
 Semantic error at file "bad_x_var_type_adams_control.stan", line 26, characters 11-352:
  >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_x_var_type_control.stan
+
 Semantic error at file "bad_x_var_type_control.stan", line 26, characters 11-350:
  >   y_hat <- integrate_ode_bdf(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
+
   $ ../../../../../../install/default/bin/stanc bad_y_type.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_y_type.stan", line 26, characters 11-336:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[].
+
   $ ../../../../../../install/default/bin/stanc bad_y_type_control.stan
- >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
+
 Semantic error at file "bad_y_type_control.stan", line 26, characters 11-352:
+ >   y_hat <- integrate_ode_adams(harm_osc_ode,  // system
 Ill-typed arguments supplied to function integrate_ode_adams. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[], real, real, int.
+

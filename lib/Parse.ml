@@ -27,7 +27,7 @@ let parse parse_fun lexbuf =
           Some
             "Expected \"functions {\" or \"data {\" or \"transformed data {\" \
              or \"parameters {\" or \"transformed parameters {\" or \"model \
-             {\" or \"generated quantities {\"."
+             {\" or \"generated quantities {\".\n"
         in
         raise
           (SyntaxError

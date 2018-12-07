@@ -52,32 +52,34 @@ let report_syntax_error = function
           sprintf "characters %d-%d" start_character curr_character
         else sprintf "character %d" start_character
       in
-      Printf.eprintf "Syntax error at file \"%s\", %s, %s, parsing error:\n%!"
-        file lines characters ;
+      Printf.eprintf
+        "\nSyntax error at file \"%s\", %s, %s, parsing error:\n%!" file lines
+        characters ;
       ( match nth_line file curr_line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
       match message with
-      | None -> ()
+      | None -> Printf.eprintf "\n"
       | Some error_message -> prerr_endline error_message )
   | Lexing (invalid_input, err_pos) ->
       let file, line, character = position err_pos in
       Printf.eprintf
-        "Syntax error at file \"%s\", line %d, character %d, lexing error:\n"
+        "\nSyntax error at file \"%s\", line %d, character %d, lexing error:\n"
         file line character ;
       ( match nth_line file line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
-      Printf.eprintf "Invalid input %S\n%!" invalid_input
+      Printf.eprintf "Invalid input %S\n%!\n" invalid_input
   | Includes (msg, err_pos) ->
       let file, line, character = position err_pos in
       Printf.eprintf
-        "Syntax error at file \"%s\", line %d, character %d, includes error:\n"
+        "\n\
+         Syntax error at file \"%s\", line %d, character %d, includes error:\n"
         file line character ;
       ( match nth_line file line with
       | None -> ()
       | Some line -> Printf.eprintf " > %s\n" line ) ;
-      Printf.eprintf "%s" msg
+      Printf.eprintf "%s\n" msg
 
 (** Print a location *)
 let print_location loc ppf =
@@ -99,18 +101,18 @@ let print_location loc ppf =
 let report_semantic_error (loc, msg) =
   match loc with
   | Location ({pos_fname= file; pos_lnum= line; _}, _) ->
-      Format.eprintf "%s at %t:@\n" "Semantic error" (print_location loc) ;
+      Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location loc) ;
       ( match nth_line file line with
       | None -> ()
-      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      | Some line -> Format.eprintf " > %s\n" line ) ;
       Format.kfprintf
         (fun ppf -> Format.fprintf ppf "@.")
-        Format.err_formatter "%s" msg
+        Format.err_formatter "%s\n" msg
   | Nowhere ->
-      Format.eprintf "%s: " "Semantic error" ;
+      Format.eprintf "\n%s: " "Semantic error" ;
       Format.kfprintf
         (fun ppf -> Format.fprintf ppf "@.")
-        Format.err_formatter "%s" msg
+        Format.err_formatter "%s\n" msg
 
 (* A semantic error reported by the toplevel *)
 let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))

@@ -1,56 +1,84 @@
   $ ../../../../../install/default/bin/stanc non_data_index1.stan
- >   real z[size(y)];
+
 Semantic error at file "non_data_index1.stan", line 6, characters 2-18:
+ >   real z[size(y)];
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index10.stan
- >   cholesky_factor_cov[size(y)] z;
+
 Semantic error at file "non_data_index10.stan", line 6, characters 2-33:
+ >   cholesky_factor_cov[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index11.stan
- >   cholesky_factor_cov[3, size(y)] z;
+
 Semantic error at file "non_data_index11.stan", line 6, characters 2-36:
+ >   cholesky_factor_cov[3, size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index12.stan
- >   cholesky_factor_corr[size(y)] z;
+
 Semantic error at file "non_data_index12.stan", line 6, characters 2-34:
+ >   cholesky_factor_corr[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index13.stan
- >   corr_matrix[size(y)] z;
+
 Semantic error at file "non_data_index13.stan", line 6, characters 2-25:
+ >   corr_matrix[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index14.stan
- >   cov_matrix[size(y)] z;
+
 Semantic error at file "non_data_index14.stan", line 6, characters 2-24:
+ >   cov_matrix[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index2.stan
- >   vector[size(y)] z;
+
 Semantic error at file "non_data_index2.stan", line 6, characters 2-20:
+ >   vector[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index3.stan
- >   row_vector[size(y)] z;
+
 Semantic error at file "non_data_index3.stan", line 6, characters 2-24:
+ >   row_vector[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index4.stan
- >   matrix[size(y), 2] m;
+
 Semantic error at file "non_data_index4.stan", line 5, characters 2-23:
+ >   matrix[size(y), 2] m;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index5.stan
- >   matrix[2, size(y)] m;
+
 Semantic error at file "non_data_index5.stan", line 6, characters 2-23:
+ >   matrix[2, size(y)] m;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index6.stan
- >   simplex[size(y)] z;
+
 Semantic error at file "non_data_index6.stan", line 6, characters 2-21:
+ >   simplex[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index7.stan
- >   ordered[size(y)] z;
+
 Semantic error at file "non_data_index7.stan", line 6, characters 2-21:
+ >   ordered[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index8.stan
- >   positive_ordered[size(y)] z;
+
 Semantic error at file "non_data_index8.stan", line 6, characters 2-30:
+ >   positive_ordered[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
   $ ../../../../../install/default/bin/stanc non_data_index9.stan
- >   unit_vector[size(y)] z;
+
 Semantic error at file "non_data_index9.stan", line 6, characters 2-25:
+ >   unit_vector[size(y)] z;
 Non-data variables are not allowed in top level size declarations.
+
