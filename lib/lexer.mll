@@ -79,8 +79,7 @@ rule token = parse
 (* White space, line numers and comments *)
     '\n'                      { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
-  | space                     { lexer_logger "space" ;
-                                token lexbuf }
+  | space                     { lexer_logger "space" ; token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
                                 multiline_comment lexbuf ; token lexbuf }
   | "//"                      { lexer_logger "single comment" ;
@@ -97,172 +96,103 @@ rule token = parse
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
-  | "data"                    { lexer_logger "data" ;
-                                Parser.DATABLOCK }
+  | "data"                    { lexer_logger "data" ; Parser.DATABLOCK }
   | "transformed data"        { lexer_logger "transformed data" ;
                                 Parser.TRANSFORMEDDATABLOCK }
   | "parameters"              { lexer_logger "parameters" ;
                                 Parser.PARAMETERSBLOCK }
   | "transformed parameters"  { lexer_logger "transformed parameters" ;
                                 Parser.TRANSFORMEDPARAMETERSBLOCK }
-  | "model"                   { lexer_logger "model" ;
-                                Parser.MODELBLOCK }
+  | "model"                   { lexer_logger "model" ; Parser.MODELBLOCK }
   | "generated quantities"    { lexer_logger "generated quantities" ;
                                 Parser.GENERATEDQUANTITIESBLOCK }
 (* Punctuation *)
-  | '{'                       { lexer_logger "{" ;
-                                Parser.LBRACE }
-  | '}'                       { lexer_logger "}" ;
-                                Parser.RBRACE }
-  | '('                       { lexer_logger "(" ;
-                                Parser.LPAREN }
-  | ')'                       { lexer_logger ")" ;
-                                Parser.RPAREN }
-  | '['                       { lexer_logger "[" ;
-                                Parser.LBRACK }
-  | ']'                       { lexer_logger "]" ;
-                                Parser.RBRACK }
-  | '<'                       { lexer_logger "<" ;
-                                Parser.LABRACK }
-  | '>'                       { lexer_logger ">" ;
-                                Parser.RABRACK }
-  | ','                       { lexer_logger "," ;
-                                Parser.COMMA }
-  | ';'                       { lexer_logger ";" ;
-                                Parser.SEMICOLON }
-  | '|'                       { lexer_logger "|" ;
-                                Parser.BAR }
+  | '{'                       { lexer_logger "{" ; Parser.LBRACE }
+  | '}'                       { lexer_logger "}" ; Parser.RBRACE }
+  | '('                       { lexer_logger "(" ; Parser.LPAREN }
+  | ')'                       { lexer_logger ")" ; Parser.RPAREN }
+  | '['                       { lexer_logger "[" ; Parser.LBRACK }
+  | ']'                       { lexer_logger "]" ; Parser.RBRACK }
+  | '<'                       { lexer_logger "<" ; Parser.LABRACK }
+  | '>'                       { lexer_logger ">" ; Parser.RABRACK }
+  | ','                       { lexer_logger "," ; Parser.COMMA }
+  | ';'                       { lexer_logger ";" ; Parser.SEMICOLON }
+  | '|'                       { lexer_logger "|" ; Parser.BAR }
 (* Control flow keywords *)
-  | "return"                  { lexer_logger "return" ;
-                                Parser.RETURN }
-  | "if"                      { lexer_logger "if" ;
-                                Parser.IF }
-  | "else"                    { lexer_logger "else" ;
-                                Parser.ELSE }
-  | "while"                   { lexer_logger "while" ;
-                                Parser.WHILE }
-  | "for"                     { lexer_logger "for" ;
-                                Parser.FOR }
-  | "in"                      { lexer_logger "in" ;
-                                Parser.IN }
-  | "break"                   { lexer_logger "break" ;
-                                Parser.BREAK }
-  | "continue"                { lexer_logger "continue" ;
-                                Parser.CONTINUE }
+  | "return"                  { lexer_logger "return" ; Parser.RETURN }
+  | "if"                      { lexer_logger "if" ; Parser.IF }
+  | "else"                    { lexer_logger "else" ; Parser.ELSE }
+  | "while"                   { lexer_logger "while" ; Parser.WHILE }
+  | "for"                     { lexer_logger "for" ; Parser.FOR }
+  | "in"                      { lexer_logger "in" ; Parser.IN }
+  | "break"                   { lexer_logger "break" ; Parser.BREAK }
+  | "continue"                { lexer_logger "continue" ; Parser.CONTINUE }
 (* Types *)
-  | "void"                    { lexer_logger "void" ;
-                                Parser.VOID }
-  | "int"                     { lexer_logger "int" ;
-                                Parser.INT }
-  | "real"                    { lexer_logger "real" ;
-                                Parser.REAL }
-  | "vector"                  { lexer_logger "vector" ;
-                                Parser.VECTOR }
-  | "row_vector"              { lexer_logger "row_vector" ;
-                                Parser.ROWVECTOR }
-  | "matrix"                  { lexer_logger "matrix" ;
-                                Parser.MATRIX }
-  | "ordered"                 { lexer_logger "ordered" ;
-                                Parser.ORDERED }
+  | "void"                    { lexer_logger "void" ; Parser.VOID }
+  | "int"                     { lexer_logger "int" ; Parser.INT }
+  | "real"                    { lexer_logger "real" ; Parser.REAL }
+  | "vector"                  { lexer_logger "vector" ; Parser.VECTOR }
+  | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
+  | "matrix"                  { lexer_logger "matrix" ; Parser.MATRIX }
+  | "ordered"                 { lexer_logger "ordered" ; Parser.ORDERED }
   | "positive_ordered"        { lexer_logger "positive_ordered" ;
                                 Parser.POSITIVEORDERED }
-  | "simplex"                 { lexer_logger "simplex" ;
-                                Parser.SIMPLEX }
-  | "unit_vector"             { lexer_logger "unit_vector" ;
-                                Parser.UNITVECTOR }
+  | "simplex"                 { lexer_logger "simplex" ; Parser.SIMPLEX }
+  | "unit_vector"             { lexer_logger "unit_vector" ; Parser.UNITVECTOR }
   | "cholesky_factor_corr"    { lexer_logger "cholesky_factor_corr" ;
                                 Parser.CHOLESKYFACTORCORR }
   | "cholesky_factor_cov"     { lexer_logger "cholesky_factor_cov" ;
                                 Parser.CHOLESKYFACTORCOV }
-  | "corr_matrix"             { lexer_logger "corr_matrix" ;
-                                Parser.CORRMATRIX }
-  | "cov_matrix"              { lexer_logger "cov_matrix" ;
-                                Parser.COVMATRIX }
+  | "corr_matrix"             { lexer_logger "corr_matrix" ; Parser.CORRMATRIX }
+  | "cov_matrix"              { lexer_logger "cov_matrix" ; Parser.COVMATRIX }
 (* Transformation keywords *)
-  | "lower"                   { lexer_logger "lower" ;
-                                Parser.LOWER }
-  | "upper"                   { lexer_logger "upper" ;
-                                Parser.UPPER }
-  | "location"                { lexer_logger "location" ;
-                                Parser.LOCATION }
-  | "scale"                   { lexer_logger "scale" ;
-                                Parser.SCALE }
+  | "lower"                   { lexer_logger "lower" ; Parser.LOWER }
+  | "upper"                   { lexer_logger "upper" ; Parser.UPPER }
+  | "location"                { lexer_logger "location" ; Parser.LOCATION }
+  | "scale"                   { lexer_logger "scale" ; Parser.SCALE }
 (* Operators *)
-  | '?'                       { lexer_logger "?" ;
-                                Parser.QMARK }
-  | ':'                       { lexer_logger ":" ;
-                                Parser.COLON }
-  | '!'                       { lexer_logger "!" ;
-                                Parser.BANG }
-  | '-'                       { lexer_logger "-" ;
-                                Parser.MINUS }
-  | '+'                       { lexer_logger "+" ;
-                                Parser.PLUS }
-  | '^'                       { lexer_logger "^" ;
-                                Parser.HAT }
-  | '\''                      { lexer_logger "\'" ;
-                                Parser.TRANSPOSE }
-  | '*'                       { lexer_logger "*" ;
-                                Parser.TIMES }
-  | '/'                       { lexer_logger "/" ;
-                                Parser.DIVIDE }
-  | '%'                       { lexer_logger "%" ;
-                                Parser.MODULO }
-  | "\\"                      { lexer_logger "\\" ;
-                                Parser.LDIVIDE }
-  | ".*"                      { lexer_logger ".*" ;
-                                Parser.ELTTIMES }
-  | "./"                      { lexer_logger "./" ;
-                                Parser.ELTDIVIDE }
-  | "||"                      { lexer_logger "||" ;
-                                Parser.OR }
-  | "&&"                      { lexer_logger "&&" ;
-                                Parser.AND }
-  | "=="                      { lexer_logger "==" ;
-                                Parser.EQUALS }
-  | "!="                      { lexer_logger "!=" ;
-                                Parser.NEQUALS }
-  | "<="                      { lexer_logger "<=" ;
-                                Parser.LEQ }
-  | ">="                      { lexer_logger ">=" ;
-                                Parser.GEQ }
-  | "~"                       { lexer_logger "~" ;
-                                Parser.TILDE }
+  | '?'                       { lexer_logger "?" ; Parser.QMARK }
+  | ':'                       { lexer_logger ":" ; Parser.COLON }
+  | '!'                       { lexer_logger "!" ; Parser.BANG }
+  | '-'                       { lexer_logger "-" ; Parser.MINUS }
+  | '+'                       { lexer_logger "+" ; Parser.PLUS }
+  | '^'                       { lexer_logger "^" ; Parser.HAT }
+  | '\''                      { lexer_logger "\'" ; Parser.TRANSPOSE }
+  | '*'                       { lexer_logger "*" ; Parser.TIMES }
+  | '/'                       { lexer_logger "/" ; Parser.DIVIDE }
+  | '%'                       { lexer_logger "%" ; Parser.MODULO }
+  | "\\"                      { lexer_logger "\\" ; Parser.LDIVIDE }
+  | ".*"                      { lexer_logger ".*" ; Parser.ELTTIMES }
+  | "./"                      { lexer_logger "./" ; Parser.ELTDIVIDE }
+  | "||"                      { lexer_logger "||" ; Parser.OR }
+  | "&&"                      { lexer_logger "&&" ; Parser.AND }
+  | "=="                      { lexer_logger "==" ; Parser.EQUALS }
+  | "!="                      { lexer_logger "!=" ; Parser.NEQUALS }
+  | "<="                      { lexer_logger "<=" ; Parser.LEQ }
+  | ">="                      { lexer_logger ">=" ; Parser.GEQ }
+  | "~"                       { lexer_logger "~" ; Parser.TILDE }
 (* Assignments *)
-  | '='                       { lexer_logger "=" ;
-                                Parser.ASSIGN }
-  | "+="                      { lexer_logger "+=" ;
-                                Parser.PLUSASSIGN }
-  | "-="                      { lexer_logger "-=" ;
-                                Parser.MINUSASSIGN }
-  | "*="                      { lexer_logger "*=" ;
-                                Parser.TIMESASSIGN }
-  | "/="                      { lexer_logger "/=" ;
-                                Parser.DIVIDEASSIGN }
-  | ".*="                     { lexer_logger ".*=" ;
-                                Parser.ELTTIMESASSIGN }
-  | "./="                     { lexer_logger "./=" ;
-                                Parser.ELTDIVIDEASSIGN }
-  | "<-"                      { lexer_logger "<-" ;
-                                Parser.ARROWASSIGN } (* deprecated *)
+  | '='                       { lexer_logger "=" ; Parser.ASSIGN }
+  | "+="                      { lexer_logger "+=" ; Parser.PLUSASSIGN }
+  | "-="                      { lexer_logger "-=" ; Parser.MINUSASSIGN }
+  | "*="                      { lexer_logger "*=" ; Parser.TIMESASSIGN }
+  | "/="                      { lexer_logger "/=" ; Parser.DIVIDEASSIGN }
+  | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
+  | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
+  | "<-"                      { lexer_logger "<-" ; Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
                                 Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
-  | "print"                   { lexer_logger "print" ;
-                                Parser.PRINT }
-  | "reject"                  { lexer_logger "reject" ;
-                                Parser.REJECT }
-  | 'T'                       { lexer_logger "T" ;
-                                Parser.TRUNCATE } (* TODO: this is a hack; we should change to something like truncate and make it a reserved keyword *)
+  | "print"                   { lexer_logger "print" ; Parser.PRINT }
+  | "reject"                  { lexer_logger "reject" ; Parser.REJECT }
+  | 'T'                       { lexer_logger "T" ; Parser.TRUNCATE } (* TODO: this is a hack; we should change to something like truncate and make it a reserved keyword *)
 (* Constants and identifiers *)
   | integer_constant as i     { lexer_logger ("int_constant " ^ i) ;
                                 Parser.INTNUMERAL (lexeme lexbuf) }
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
-  | "target"                  { lexer_logger "target" ;
-                                Parser.TARGET } (* TODO: the current parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
-  | "get_lp"                  { lexer_logger "get_lp" ;
-                                Parser.GETLP } (* deprecated *)
+  | "target"                  { lexer_logger "target" ; Parser.TARGET } (* TODO: the current parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
+  | "get_lp"                  { lexer_logger "get_lp" ;  Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;

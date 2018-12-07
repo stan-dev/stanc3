@@ -314,20 +314,20 @@ let update_originblock name ob =
 let rec semantic_check_program p =
   match p
   with
-  | { functionblock= bf
-    ; datablock= bd
-    ; transformeddatablock= btd
-    ; parametersblock= bp
-    ; transformedparametersblock= btp
-    ; modelblock= bm
-    ; generatedquantitiesblock= bgq }
+  | { functionblock= fb
+    ; datablock= db
+    ; transformeddatablock= tdb
+    ; parametersblock= pb
+    ; transformedparametersblock= tpb
+    ; modelblock= mb
+    ; generatedquantitiesblock= gb }
   ->
     (* NB: We always want to make sure we start with an empty symbol table, in
        case we are processing multiple files in one run. *)
     let _ = unsafe_clear_symbol_table vm in
     let _ = context_flags.current_block <- Functions in
-    let ubf =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bf
+    let ufb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) fb
     in
     let _ =
       if
@@ -338,44 +338,44 @@ let rec semantic_check_program p =
           ~loc:
             (snd
                (typed_statement_unroll
-                  (List.hd ((function Some x -> x | _ -> fatal_error ()) ubf))))
+                  (List.hd ((function Some x -> x | _ -> fatal_error ()) ufb))))
               .stmt_typed_meta_loc
           "Some function is declared without specifying a definition."
       (* TODO: insert better location in the error above *)
     in
     let _ = context_flags.current_block <- Data in
-    let ubd =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bd
+    let udb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) db
     in
     let _ = context_flags.current_block <- TData in
-    let ubtd =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) btd
+    let utdb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) tdb
     in
     let _ = context_flags.current_block <- Param in
-    let ubp =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bp
+    let upb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) pb
     in
     let _ = context_flags.current_block <- TParam in
-    let ubtp =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) btp
+    let utpb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) tpb
     in
     let _ = context_flags.current_block <- Model in
     let _ = Symbol_table.begin_scope vm in
-    let ubm =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bm
+    let umb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) mb
     in
     let _ = Symbol_table.end_scope vm in
     let _ = context_flags.current_block <- GQuant in
-    let ubgq =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bgq
+    let ugb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) gb
     in
-    { functionblock= ubf
-    ; datablock= ubd
-    ; transformeddatablock= ubtd
-    ; parametersblock= ubp
-    ; transformedparametersblock= ubtp
-    ; modelblock= ubm
-    ; generatedquantitiesblock= ubgq }
+    { functionblock= ufb
+    ; datablock= udb
+    ; transformeddatablock= utdb
+    ; parametersblock= upb
+    ; transformedparametersblock= utpb
+    ; modelblock= umb
+    ; generatedquantitiesblock= ugb }
 
 (* This could also be dealt with during lexing. That would probably be more efficient. *)
 and semantic_check_identifier id =
