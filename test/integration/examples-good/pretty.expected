@@ -2097,6 +2097,26 @@ model {
   y ~ bar_baz(3.2);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ1.stan
+functions {
+  real foo() {
+    reject("");
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ2.stan
+functions {
+  real foo() {
+    if (1) reject("");
+    reject("");
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format fun-return-typ3.stan
+functions {
+  real foo() reject("");
+}
+
   $ ../../../../install/default/bin/stanc --auto-format fun-var-constraints.stan
 functions {
   real foo() {

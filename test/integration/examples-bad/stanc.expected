@@ -328,6 +328,14 @@ Expected top-level variable declaration, statement or "}".
  >     foo(3);
 Semantic error at file "experiment.stan", line 12, characters 4-11:
 A non-returning function was expected but a returning function foo was supplied.
+  $ ../../../../install/default/bin/stanc fun-return-type1.stan
+ >   real foo() { if (1) reject(""); else {if (1) reject(""); return {1};}}
+Semantic error at file "fun-return-type1.stan", line 2, characters 2-72:
+Function bodies must contain a return statement of correct type in every branch.
+  $ ../../../../install/default/bin/stanc fun-return-type2.stan
+ >   real foo() { if (1) reject(""); else {if (1) return {5}; reject("");}}
+Semantic error at file "fun-return-type2.stan", line 2, characters 2-72:
+Function bodies must contain a return statement of correct type in every branch.
   $ ../../../../install/default/bin/stanc functions-bad0.stan
 Syntax error at file "functions-bad0.stan", line 2, characters 10-11, parsing error:
  >   real foo(void x) {

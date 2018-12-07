@@ -247,10 +247,7 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
           ^ pretty_print_returntype rt2
           ^ "." )
       else Incomplete rt1
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |NoReturnType, NoReturnType ->
-      NoReturnType
+  | NoReturnType, NoReturnType -> NoReturnType
   | AnyReturnType, Incomplete rt
    |Complete rt, NoReturnType
    |NoReturnType, Incomplete rt
@@ -261,7 +258,10 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
    |Incomplete rt, AnyReturnType
    |AnyReturnType, Complete rt ->
       Complete rt
-  | AnyReturnType, AnyReturnType -> AnyReturnType
+  | AnyReturnType, NoReturnType
+   |NoReturnType, AnyReturnType
+   |AnyReturnType, AnyReturnType ->
+      AnyReturnType
 
 let check_fresh_variable_basic id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
@@ -1609,7 +1609,8 @@ and semantic_check_statement s =
       let srt =
         (function
           | Complete rt | Incomplete rt -> Incomplete rt
-          | NoReturnType | AnyReturnType -> NoReturnType)
+          | NoReturnType -> NoReturnType
+          | AnyReturnType -> AnyReturnType)
           us_meta.stmt_typed_meta_type
       in
       TypedStmt
