@@ -279,7 +279,8 @@ let check_fresh_variable_basic id is_nullary_function =
          || get_stan_math_function_return_type_opt id.name [] = None )
     then
       let error_msg =
-        String.concat " " ["Identifier "; id.name; " clashes with Stan Math library function."]
+        String.concat " "
+          ["Identifier "; id.name; " clashes with Stan Math library function."]
       in
       semantic_error ~loc:id.id_loc error_msg
   in

@@ -9,6 +9,7 @@ type location =
   | Nowhere  (** no location *)
 
 (* == Unsized types == *)
+
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
   | Primitives
