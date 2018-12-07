@@ -1,61 +1,98 @@
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse1.stan
 
 Syntax error at file "../included/badrecurse1.stan" included from "badrecurse1.stan", line 1, character 25, includes error:
- > #include badrecurse1.stan
+  -------------------------------------------------
+> #include badrecurse1.stan
+  -------------------------------------------------
+
 Found cyclical include structure.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse2.stan
 
 Syntax error at file "../included/badrecurse2.stan" included from "../included/badrecurse3.stan" included from "badrecurse2.stan", line 1, character 25, includes error:
- > #include badrecurse3.stan
+  -------------------------------------------------
+> #include badrecurse3.stan
+  -------------------------------------------------
+
 Found cyclical include structure.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse3.stan
 
 Syntax error at file "../included/badrecurse3.stan" included from "../included/badrecurse2.stan" included from "badrecurse3.stan", line 1, character 25, includes error:
- > #include badrecurse2.stan
+  -------------------------------------------------
+> #include badrecurse2.stan
+  -------------------------------------------------
+
 Found cyclical include structure.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl-err.stan
 
 Syntax error at file "incl-err.stan", line 1, characters 2-6, parsing error:
- >   real z;
+  -------------------------------------------------
+>   real z;
+    #include "I'm not here.stan"
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper.stan
 
 Syntax error at file "incl_stanc_helper.stan", line 1, characters 2-6, parsing error:
- >   real y;
+  -------------------------------------------------
+>   real y;
+    #include incl_stanc_helper2.stan
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper2.stan
 
 Syntax error at file "incl_stanc_helper2.stan", line 1, characters 2-6, parsing error:
- >   real w;
+  -------------------------------------------------
+>   real w;
+    real x;
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_include_error.stan
 
 Syntax error at file "incl_stanc_helper_include_error.stan", line 1, characters 2-6, parsing error:
- >   real y;
+  -------------------------------------------------
+>   real y;
+    #include incl-err.stan
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_lex_error.stan
 
 Syntax error at file "incl_stanc_helper_lex_error.stan", line 1, characters 2-6, parsing error:
- >   real y;
+  -------------------------------------------------
+>   real y;
+    #include lex-err.stan
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_parse_error.stan
 
 Syntax error at file "incl_stanc_helper_parse_error.stan", line 1, characters 2-6, parsing error:
- >   real y;
+  -------------------------------------------------
+>   real y;
+    #include parse-err.stan
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_semantic_error.stan
 
 Syntax error at file "incl_stanc_helper_semantic_error.stan", line 1, characters 2-6, parsing error:
- >   real y;
+  -------------------------------------------------
+>   real y;
+    #include sem-err.stan
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format included-quote.stan
@@ -68,37 +105,61 @@ data {
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format lex-err.stan
 
 Syntax error at file "lex-err.stan", line 1, characters 2-6, parsing error:
- >   real z;
+  -------------------------------------------------
+>   real z;
+    real w;$
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format parse-err.stan
 
 Syntax error at file "parse-err.stan", line 1, characters 2-6, parsing error:
- >   real z;
+  -------------------------------------------------
+>   real z;
+    real w;=;
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format sem-err.stan
 
 Syntax error at file "sem-err.stan", line 1, characters 2-6, parsing error:
- >   real z;
+  -------------------------------------------------
+>   real z;
+    int w;
+  -------------------------------------------------
+
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_include_error.stan
 
 Syntax error at file "../included/incl-err.stan" included from "../included/incl_stanc_helper_include_error.stan" included from "stanc_helper_with_bad_include_include_error.stan", line 2, character 30, includes error:
- >   #include "I'm not here.stan"
+  -------------------------------------------------
+    real z;
+>   #include "I'm not here.stan"
+  -------------------------------------------------
+
 Could not find include file "I'm not here.stan" in specified include paths.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_lex_error.stan
 
 Syntax error at file "../included/lex-err.stan" included from "../included/incl_stanc_helper_lex_error.stan" included from "stanc_helper_with_bad_include_lex_error.stan", line 2, character 10, lexing error:
- >   real w;$
+  -------------------------------------------------
+    real z;
+>   real w;$
+  -------------------------------------------------
+
 Invalid input "$"
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_parse_error.stan
 
 Syntax error at file "../included/parse-err.stan" included from "../included/incl_stanc_helper_parse_error.stan" included from "stanc_helper_with_bad_include_parse_error.stan", line 2, characters 2-9, parsing error:
- >   real w;=;
+  -------------------------------------------------
+    real z;
+>   real w;=;
+  -------------------------------------------------
+
 Only top-level variable declarations allowed in data and parameters blocks.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_semantic_error.stan
@@ -113,7 +174,11 @@ model {
 
 
 Semantic error at file "../included/sem-err.stan" included from "../included/incl_stanc_helper_semantic_error.stan" included from "stanc_helper_with_bad_include_semantic_error.stan", line 2, characters 2-8:
- >   int w;
+  -------------------------------------------------
+    real z;
+>   int w;
+  -------------------------------------------------
+
 (Transformed) Parameters cannot be integers.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_good_include.stan
@@ -142,6 +207,12 @@ generated quantities {
 
 
 Semantic error at file "stanc_helper_with_good_include_err_after_incl.stan", line 9, characters 8-10:
- >   print(ww);
+  -------------------------------------------------
+  }
+  generated quantities {
+>   print(ww);
+  }
+  -------------------------------------------------
+
 Identifier ww not in scope.
 

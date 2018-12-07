@@ -24,17 +24,29 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let character = pos_cnum - pos_bol in
   (file, line, character)
 
-let nth_line file line =
+let nth_line_with_context file line =
   try
     let bare_file =
       List.hd (Str.split (Str.regexp "\" included from \"") file)
     in
     let input = open_in bare_file in
-    for _ = 1 to line - 1 do
+    for _ = 1 to line - 3 do
       ignore (input_line input)
     done ;
-    let result = input_line input in
-    close_in input ; Some result
+    let line_2_before =
+      if line > 2 then "  " ^ input_line input ^ "\n" else ""
+    in
+    let line_before =
+      if line > 1 then "  " ^ input_line input ^ "\n" else ""
+    in
+    let our_line = "> " ^ input_line input ^ "\n" in
+    let line_after = try "  " ^ input_line input ^ "\n" with _ -> "" in
+    let line_2_after = try "  " ^ input_line input ^ "\n" with _ -> "" in
+    close_in input ;
+    Some
+      ( "  -------------------------------------------------\n" ^ line_2_before
+      ^ line_before ^ our_line ^ line_after ^ line_2_after
+      ^ "  -------------------------------------------------\n" )
   with _ -> None
 
 (** A syntax error message used when handling a SyntaxError *)
@@ -55,9 +67,9 @@ let report_syntax_error = function
       Printf.eprintf
         "\nSyntax error at file \"%s\", %s, %s, parsing error:\n%!" file lines
         characters ;
-      ( match nth_line file curr_line with
+      ( match nth_line_with_context file curr_line with
       | None -> ()
-      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      | Some line -> Printf.eprintf "%s\n" line ) ;
       match message with
       | None -> Printf.eprintf "\n"
       | Some error_message -> prerr_endline error_message )
@@ -66,9 +78,9 @@ let report_syntax_error = function
       Printf.eprintf
         "\nSyntax error at file \"%s\", line %d, character %d, lexing error:\n"
         file line character ;
-      ( match nth_line file line with
+      ( match nth_line_with_context file line with
       | None -> ()
-      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "Invalid input %S\n%!\n" invalid_input
   | Includes (msg, err_pos) ->
       let file, line, character = position err_pos in
@@ -76,9 +88,9 @@ let report_syntax_error = function
         "\n\
          Syntax error at file \"%s\", line %d, character %d, includes error:\n"
         file line character ;
-      ( match nth_line file line with
+      ( match nth_line_with_context file line with
       | None -> ()
-      | Some line -> Printf.eprintf " > %s\n" line ) ;
+      | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "%s\n" msg
 
 (** Print a location *)
@@ -102,9 +114,9 @@ let report_semantic_error (loc, msg) =
   match loc with
   | Location ({pos_fname= file; pos_lnum= line; _}, _) ->
       Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location loc) ;
-      ( match nth_line file line with
+      ( match nth_line_with_context file line with
       | None -> ()
-      | Some line -> Format.eprintf " > %s\n" line ) ;
+      | Some line -> Format.eprintf "%s\n" line ) ;
       Format.kfprintf
         (fun ppf -> Format.fprintf ppf "@.")
         Format.err_formatter "%s\n" msg

@@ -1,7 +1,14 @@
   $ ../../../../install/default/bin/stanc --name=foo  bad.stan
 
 Semantic error at file "bad.stan", line 3, characters 6-9:
- >   int foo;  
+  -------------------------------------------------
+  data {
+    // declare matching model name should fail
+>   int foo;  
+  }
+  parameters {
+  -------------------------------------------------
+
 Identifier foo clashes with model name.
 
   $ ../../../../install/default/bin/stanc --name=foo  good.stan
