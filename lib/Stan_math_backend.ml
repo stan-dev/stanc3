@@ -66,6 +66,11 @@ let emit_prim_stantype ppf st =
   in
   emit_stantype (ad_str st) ppf st
 
+let emit_for_loop ppf (loopvar, lower, upper, emit_body, body) =
+  fprintf ppf "for (size_t %s = %a; %s < %a; %s++) {@;@[<v 4>%a@]@;}"
+    loopvar emit_expr lower loopvar emit_expr upper loopvar
+    emit_body body
+
 let rec emit_statement ppf s =
   match s with
   | Assignment {assignee; indices; rhs} ->
@@ -84,9 +89,9 @@ let rec emit_statement ppf s =
         (emit_option emit_else) elsebranch
   | While (cond, body) -> (* XXX Refactor these to share with other code gen *)
       fprintf ppf "while (%a) {\n  %a\n}\n" emit_expr cond emit_statement body
-  | For {init; cond; step; body} ->
-      fprintf ppf "for (%a; %a; %a) {\n  %a\n}\n" emit_statement init emit_expr
-        cond emit_statement step emit_statement body
+  | For {loopvar; lower; upper; body} ->
+    let lv = fprintf str_formatter "%a" emit_expr loopvar; flush_str_formatter () in
+    emit_for_loop ppf (lv, lower, upper, emit_statement, body)
   | Block s -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
   | Decl ((ident, st, _), rhs) ->
       let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
@@ -99,19 +104,6 @@ let%expect_test "decl" =
   |> emit_statement str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i = 0 |}]
-
-let%expect_test "statement" =
-  For { init= Decl (("i", SInt, "line num"), Some (Lit (Int, "1")))
-      ; cond= Cond (Var "i", Geq, Lit (Int, "10"))
-      ; step=
-          Assignment {assignee= "i"; rhs= (FnApp("+", [Var "i"; Lit (Int, "0")])); indices= []}
-      ; body= NRFnApp ("print", [Var "i"]) }
-  |> emit_statement str_formatter ;
-  flush_str_formatter () |> print_endline ;
-  [%expect {|
-    for (int i = 1; i>=10; i = +(i, 0)) {
-      print(i)
-    } |}]
 
 let emit_vardecl ppf (name, stype) = fprintf ppf "%a %s;" emit_prim_stantype stype name
 
@@ -164,26 +156,22 @@ let rec integer_el_type = function
   | SInt -> true
   | SArray(_, st) -> integer_el_type st
 
-let emit_for_loop ppf (loopvar, loopend, emit_body, body) =
-  fprintf ppf "for (size_t %s = 0; %s < %a; %s++) {@;@[<v 4>%a@]@;}"
-    loopvar loopvar emit_expr loopend loopvar
-    emit_body body
-
 let rec emit_run_code_per_el ?depth:(d=0) emit_code_per_element ppf (name, st) =
   let mkloopvar d = sprintf "i_%d__" d in
   let loopvar = mkloopvar d in
+  let zero = Lit(Int, "0") in
   match st with
   | SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
   | SVector dim | SRowVector dim ->
-    emit_for_loop ppf ((mkloopvar d), dim, emit_code_per_element,
+    emit_for_loop ppf ((mkloopvar d), zero, dim, emit_code_per_element,
                        sprintf "%s[%s]" name loopvar)
   | SMatrix(dim1, dim2) ->
     let loopvar2 = mkloopvar (d+1) in
-    emit_for_loop ppf (loopvar, dim1, emit_for_loop,
-                       (loopvar2, dim2, emit_code_per_element,
+    emit_for_loop ppf (loopvar, zero, dim1, emit_for_loop,
+                       (loopvar2, zero, dim2, emit_code_per_element,
                         sprintf "%s(%s, %s)" name loopvar loopvar2))
   | SArray(dim, st) ->
-    emit_for_loop ppf (loopvar, dim,
+    emit_for_loop ppf (loopvar, zero, dim,
       (emit_run_code_per_el ~depth:(d+1) emit_code_per_element),
       (sprintf "%s[%s]" name loopvar, st))
 

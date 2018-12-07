@@ -47,9 +47,9 @@ and statement =
   | IfElse of expr * statement * statement option
   | While of expr * statement
   | For of
-      { init: statement
-      ; cond: expr
-      ; step: statement
+      { loopvar: expr
+      ; lower: expr
+      ; upper: expr
       ; body: statement }
   | Block of statement list
   | Decl of vardecl * expr option
@@ -77,11 +77,11 @@ let map_statement decl_f statement_f expr_f s =
         , statement_f ifbranch
         , Option.map ~f:statement_f elsebranch )
   | While (cond, body) -> While (expr_f cond, statement_f body)
-  | For {init; cond; step; body} ->
+  | For {loopvar; lower; upper; body} ->
       For
-        { init= statement_f init
-        ; cond= expr_f cond
-        ; step= statement_f step
+        { loopvar= expr_f loopvar
+        ; lower= expr_f lower
+        ; upper= expr_f upper
         ; body= statement_f body }
   | Block statements -> Block (List.map ~f:statement_f statements)
   | Decl (d, rhs) -> Decl (decl_f d, Option.map ~f:expr_f rhs)
