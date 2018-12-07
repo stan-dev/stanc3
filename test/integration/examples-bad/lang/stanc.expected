@@ -194,7 +194,7 @@ Syntax error at file "bad_cov_exp_quad_vec_rvec_param.stan", lines 12-16, charac
   $ ../../../../../install/default/bin/stanc bad_fun_name.stan
  >   real logit; // causes error because logit is fun name
 Semantic error at file "bad_fun_name.stan", line 2, characters 7-12:
-Identifier  logit  clashes with primitive.
+Identifier  logit  clashes with Stan Math library function.
   $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
  >   int bad_model_name_var_model;  
 Semantic error at file "bad_model_name_var.stan", line 3, characters 6-30:

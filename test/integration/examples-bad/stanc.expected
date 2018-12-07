@@ -360,7 +360,7 @@ A returning function was expected but a non-returning function unit_normal_lp wa
   $ ../../../../install/default/bin/stanc functions-bad16.stan
  >   real square(real x) {
 Semantic error at file "functions-bad16.stan", line 2, characters 7-13:
-Identifier  square  clashes with primitive.
+Identifier  square  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc functions-bad17.stan
  >   vector bizbuz_log(vector x) {
 Semantic error at file "functions-bad17.stan", line 2, characters 2-54:
@@ -676,11 +676,11 @@ Index should be of type int or int[] or should be a range. Instead found type re
   $ ../../../../install/default/bin/stanc redefine-ccdf1.stan
  >   real poisson_ccdf_log(int n, real x) {
 Semantic error at file "redefine-ccdf1.stan", line 2, characters 7-23:
-Identifier  poisson_ccdf_log  clashes with primitive.
+Identifier  poisson_ccdf_log  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-ccdf2.stan
  >   real poisson_lccdf(int n, real x) {
 Semantic error at file "redefine-ccdf2.stan", line 2, characters 7-20:
-Identifier  poisson_lccdf  clashes with primitive.
+Identifier  poisson_lccdf  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
  >   real foo_ccdf_log(int n, real x) {
 Semantic error at file "redefine-ccdf3.stan", line 5, characters 7-19:
@@ -688,11 +688,11 @@ Identifier  foo_lccdf  is already in use.
   $ ../../../../install/default/bin/stanc redefine-cdf1.stan
  >   real poisson_cdf_log(int n, real x) {
 Semantic error at file "redefine-cdf1.stan", line 2, characters 7-22:
-Identifier  poisson_cdf_log  clashes with primitive.
+Identifier  poisson_cdf_log  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-cdf2.stan
  >   real poisson_lcdf(int n, real x) {
 Semantic error at file "redefine-cdf2.stan", line 2, characters 7-19:
-Identifier  poisson_lcdf  clashes with primitive.
+Identifier  poisson_lcdf  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-cdf3.stan
  >   real foo_cdf_log(int n, real x) {
 Semantic error at file "redefine-cdf3.stan", line 5, characters 7-18:
@@ -700,11 +700,11 @@ Identifier  foo_lcdf  is already in use.
   $ ../../../../install/default/bin/stanc redefine-prob1.stan
  >   real poisson_lpdf(real n, real x) {
 Semantic error at file "redefine-prob1.stan", line 2, characters 7-19:
-Identifier  poisson_lpmf  clashes with primitive.
+Identifier  poisson_lpmf  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-prob2.stan
  >   real poisson_lpmf(int n, real x) {
 Semantic error at file "redefine-prob2.stan", line 2, characters 7-19:
-Identifier  poisson_lpmf  clashes with primitive.
+Identifier  poisson_lpmf  clashes with Stan Math library function.
   $ ../../../../install/default/bin/stanc redefine-prob3.stan
  >   real foo_lpmf(int y) {
 Semantic error at file "redefine-prob3.stan", line 5, characters 7-15:

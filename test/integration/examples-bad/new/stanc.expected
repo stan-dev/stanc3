@@ -809,7 +809,8 @@ Syntax error at file "ill-formed-statement9.stan", line 1, characters 30-31, par
 Ill-formed expression. Expected expression after "for (" identifier "in".
 
   $ ../../../../../install/default/bin/stanc immediate_error.stan
-Syntax error at file "", line 0, characters -1--1, parsing error:
+Syntax error at file "immediate_error.stan", line 1, characters 0-5, parsing error:
+ > while
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
   $ ../../../../../install/default/bin/stanc indices-bad1.stan
 Syntax error at file "indices-bad1.stan", line 1, characters 25-26, parsing error:
