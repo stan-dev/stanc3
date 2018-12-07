@@ -370,6 +370,3 @@ and pretty_print_program = function
           "generated quantities {\n"
           ^ pretty_print_list_of_statements x
           ^ "}\n" )
-
-(* TODO: implement more pretty printing functions for generating error messages;
-   especially for listing function signatures *)

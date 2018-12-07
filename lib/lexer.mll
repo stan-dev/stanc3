@@ -13,12 +13,9 @@
     }
 
 (* Some definitions for handling includes correctly *)
-  let dup_exists l =
-    let rec dup_consecutive = function
-      | [] | [_] -> false
-      | x1 :: x2 :: tl -> x1 = x2 || dup_consecutive (x2 :: tl)
-    in
-    dup_consecutive (List.sort String.compare l)    
+  let dup_exists l = match Core_kernel.List.find_a_dup ~compare:String.compare l
+                     with | Some _ -> true
+                          | None -> false
 
   let include_stack = Stack.create ()
 
@@ -62,8 +59,8 @@
 }
 
 (* Some auxiliary definition for variables and constants *)
-let string_literal = '"' [^'"']* '"' (* TODO: We should probably expand the alphabet *)
-let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']* 
+let string_literal = '"' [^'"']* '"'
+let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
 let integer_constant =  ['0'-'9']+
 
@@ -191,7 +188,7 @@ rule token = parse
                                 Parser.INTNUMERAL (lexeme lexbuf) }
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
-  | "target"                  { lexer_logger "target" ; Parser.TARGET } (* TODO: the current parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
+  | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
   | "get_lp"                  { lexer_logger "get_lp" ;  Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }

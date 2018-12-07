@@ -173,7 +173,6 @@ and ('e, 's) statement =
       ; upper_bound: 'e
       ; loop_body: 's }
   | ForEach of identifier * 'e * 's
-  (* TODO: maybe make separate nodes for matrix and array foreach loops? *)
   | Block of 's list
   | VDecl of 'e sizedtype * identifier
   | VDeclAss of {sizedtype: 'e sizedtype; identifier: identifier; value: 'e}

@@ -4,8 +4,6 @@ open Core_kernel
 
 (* For s-expression support *)
 
-(* TODO - let these flags come from command line arguments *)
-
 (* Controls whether the lexing operations get logged *)
 let lexer_logging = ref false
 

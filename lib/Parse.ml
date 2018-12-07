@@ -22,7 +22,6 @@ let parse parse_fun lexbuf =
       | _ -> assert false
     in
     match Interp.stack env with
-    (* TODO: insert position here. *)
     | (lazy Nil) ->
         let message =
           Some

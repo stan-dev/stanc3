@@ -38,14 +38,12 @@ MathLibrary cannot be printed
 Functions cannot be printed
 User defined functions cannot be overloaded
 Function ending in _lp only where target is available
-TODO: Test that user defined functions with probability suffixes have right type.
+Test that user defined functions with probability suffixes have right type.
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
 Sizes should be of level at most data.
 *)
-
-(* TODO: check that variables are assigned to before they are used! *)
 
 open Symbol_table
 open Ast
@@ -91,11 +89,9 @@ let context_flags =
 
 (* Some helper functions *)
 let dup_exists l =
-  let rec dup_consecutive = function
-    | [] | [_] -> false
-    | x1 :: x2 :: tl -> x1 = x2 || dup_consecutive (x2 :: tl)
-  in
-  dup_consecutive (List.sort String.compare l)
+  match Core_kernel.List.find_a_dup ~compare:String.compare l with
+  | Some _ -> true
+  | None -> false
 
 let typed_expression_unroll = function TypedExpr x -> x
 
@@ -300,9 +296,7 @@ let check_fresh_variable id is_nullary_function =
 (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
    have a block level that is determined by what has been assigned to them
-   rather than by where they were declared. I'm not sure that behaviour makes
-   sense unless we use static analysis as well to make sure these assignments
-   actually get evaluated in that phase. *)
+   rather than by where they were declared. *)
 let update_originblock name ob =
   match Symbol_table.look vm name with
   | Some (old_ob, ut) ->
@@ -378,7 +372,6 @@ let rec semantic_check_program p =
     ; modelblock= umb
     ; generatedquantitiesblock= ugb }
 
-(* This could also be dealt with during lexing. That would probably be more efficient. *)
 and semantic_check_identifier id =
   let _ =
     if id.name = !model_name then
@@ -507,9 +500,8 @@ and semantic_check_unsizedtype = function
   | Fun (l, rt) ->
       Fun
         ( List.map
-            (function
-              | ob, ut ->
-                  (semantic_check_originblock ob, semantic_check_unsizedtype ut))
+            (fun (ob, ut) ->
+              (semantic_check_originblock ob, semantic_check_unsizedtype ut) )
             l
         , semantic_check_returntype rt )
   | ut -> ut
@@ -915,9 +907,7 @@ and semantic_check_expression x =
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
-                   identifier " ^ uid.name ^ " was supplied." ) )
-      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
-      )
+                   identifier " ^ uid.name ^ " was supplied." ) ) )
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
@@ -1005,9 +995,7 @@ and semantic_check_expression x =
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
-                   identifier " ^ uid.name ^ " was supplied." ) )
-      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
-      )
+                   identifier " ^ uid.name ^ " was supplied." ) ) )
   | GetLP ->
       let _ =
         if
@@ -1347,12 +1335,13 @@ and semantic_check_statement s =
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
-                ( "Ill-typed arguments supplied to function " ^ uid.name
-                ^ ". Available signatures: "
-                ^ pretty_print_all_stan_math_function_signatures uid.name
-                ^ "\nInstead supplied arguments of incompatible type: "
-                ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
-                ^ "." )
+                {| "Ill-typed arguments supplied to function "
+                    uid.name
+                    ". Available signatures: "
+                    pretty_print_all_stan_math_function_signatures uid.name
+                    "\nInstead supplied arguments of incompatible type: "
+                    pretty_print_unsizedtypes (List.map type_of_typed_expr ues) 
+                    "."  |}
           in
           match Symbol_table.look vm uid.name with
           | Some (_, Fun (listedtypes, Void)) ->
@@ -1386,9 +1375,7 @@ and semantic_check_statement s =
           | None ->
               semantic_error ~loc
                 ( "A non-returning function was expected but an undeclared \
-                   identifier " ^ uid.name ^ " was supplied." ) )
-      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
-      )
+                   identifier " ^ uid.name ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
