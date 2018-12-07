@@ -308,7 +308,7 @@ let update_originblock name ob =
   | Some (old_ob, ut) ->
       let new_ob = lub_originblock [ob; old_ob] in
       Symbol_table.unsafe_replace vm name (new_ob, ut)
-  | _ -> fatal_error ()
+  | None -> fatal_error ()
 
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
@@ -338,7 +338,8 @@ let rec semantic_check_program p =
           ~loc:
             (snd
                (typed_statement_unroll
-                  (List.hd ((function Some x -> x | _ -> fatal_error ()) ufb))))
+                  (List.hd
+                     ((function Some x -> x | None -> fatal_error ()) ufb))))
               .stmt_typed_meta_loc
           "Some function is declared without specifying a definition."
       (* TODO: insert better location in the error above *)
@@ -676,7 +677,7 @@ and semantic_check_expression x =
             ( Conditional (ue1, ue2, ue3)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
@@ -714,7 +715,7 @@ and semantic_check_expression x =
             ( InfixOp (ue1, uop, ue2)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_infixop uop ^ ". Available signatures: "
@@ -742,7 +743,7 @@ and semantic_check_expression x =
             ( PrefixOp (uop, ue)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_prefixop uop ^ ". Available signatures: "
@@ -768,7 +769,7 @@ and semantic_check_expression x =
             ( PostfixOp (ue, uop)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_postfixop uop ^ ". Available signatures: "
@@ -870,7 +871,7 @@ and semantic_check_expression x =
             ( FunApp (uid, ues)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ -> (
+      | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
@@ -960,7 +961,7 @@ and semantic_check_expression x =
             ( CondFunApp (uid, ues)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ -> (
+      | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
@@ -1241,9 +1242,9 @@ and semantic_check_statement s =
       let uidoblock =
         (function
           | Some ob1, Some ob2 -> Some (lub_originblock [ob1; ob2])
-          | Some ob1, _ -> Some ob1
-          | _, Some ob2 -> Some ob2
-          | _ -> None)
+          | Some ob1, None -> Some ob1
+          | None, Some ob2 -> Some ob2
+          | None, None -> None)
           ( ( if is_stan_math_function_name uid.name then Some Primitives
             else None )
           , Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name) )
@@ -1265,7 +1266,7 @@ and semantic_check_statement s =
               semantic_error ~loc
                 ( "Cannot assign to global variable " ^ uid.name
                 ^ " declared in previous blocks." )
-        | _ -> fatal_error ()
+        | None -> fatal_error ()
       in
       (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
@@ -1295,7 +1296,7 @@ and semantic_check_statement s =
                 ; assign_op= uassop
                 ; assign_rhs= ue }
             , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-      | _ ->
+      | None | Some (ReturnType _) ->
           let lhs_type =
             pretty_print_expressiontype
               (snd (typed_expression_unroll ue2)).expr_typed_meta_origin_type
@@ -1342,7 +1343,7 @@ and semantic_check_statement s =
           semantic_error ~loc
             ( "A non-returning function was expected but a returning function "
             ^ uid.name ^ " was supplied." )
-      | _ -> (
+      | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
