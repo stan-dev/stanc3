@@ -2,13 +2,11 @@ open Core_kernel
 
 (*
    XXX Missing:
-   * sizes for containers on declarations ("sizedtypes")
-   * foreach loops - matrix vs array
-   * type of index for multi-index by int array
-   * location strings for each statement
-   * transformations for vardecls
-   * different nodes for when I know the bounds of a for loop or not
-   * somehow mark FnApps as containing print or reject
+   * TODO? foreach loops - matrix vs array (fine because of get_base1?)
+   * TODO location... strings for each statement
+   * TODO during optimization:
+       - different nodes for when I know the bounds of a for loop at compile time vs. not
+       - mark FnApps as containing print or reject
 *)
 
 
@@ -21,37 +19,57 @@ and expr =
   | Lit of litType * string
   | FnApp of string * expr list
   | Cond of expr * cond_op * expr
-  | ArrayExpr of expr list
-  (* array literal? *)
+  | ArrayLiteral of expr list
   | Indexed of expr * expr list
+  (* Different type constructor for indexing by an int array *)
+  | MultiIndexed of expr * expr list
 
+(* Encode both sized and unsized this way *)
 and stantype =
   | SInt
   | SReal
-  | SArray of expr * stantype
-  | SVector of expr
-  | SRowVector of expr
-  | SMatrix of expr * expr
+  | SArray of expr option * stantype
+  | SVector of expr option
+  | SRowVector of expr option
+  | SMatrix of (expr * expr) option
 
 and loc = string
 
-and vardecl = string * stantype * loc
+and vardecl = {vident: string; st: stantype; trans: transformation; loc: loc}
 
-and statement =
+and argdecl = string * stantype
+
+and transformation =
+  | Identity
+  | Lower of expr
+  | Upper of expr
+  | LowerUpper of expr * expr
+  | LocationScale of expr * expr
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+  | NoTransformation
+
+and 'l statement =
   | Assignment of {assignee: string; indices: expr list; rhs: expr}
   | NRFnApp of string * expr list
   | Break
   | Continue
   | Return of expr
   | Skip
-  | IfElse of expr * statement * statement option
-  | While of expr * statement
+  | IfElse of expr * 'l statement * 'l statement option
+  | While of expr * 'l statement
   | For of
       { loopvar: expr
       ; lower: expr
       ; upper: expr
-      ; body: statement }
-  | Block of statement list
+      ; body: 'l statement }
+  | Block of 'l statement list
   | Decl of vardecl * expr option
 [@@deriving sexp, hash]
 
@@ -60,7 +78,7 @@ let map_expr expr_f e =
   match e with
   | FnApp (n, args) -> FnApp (n, map_expr_list args)
   | Cond (e1, cond_op, e2) -> Cond (expr_f e1, cond_op, expr_f e2)
-  | ArrayExpr es -> ArrayExpr (map_expr_list es)
+  | ArrayLiteral es -> ArrayLiteral (map_expr_list es)
   | Indexed (lhs, indices) -> Indexed (expr_f lhs, map_expr_list indices)
   | e -> e
 
@@ -87,20 +105,20 @@ let map_statement decl_f statement_f expr_f s =
   | Decl (d, rhs) -> Decl (decl_f d, Option.map ~f:expr_f rhs)
   | s -> statement_f s
 
-type udf_defn =
+type 'l udf_defn =
   { returntype: stantype option
   ; name: string
-  ; arguments: vardecl list
-  ; body: statement }
+  ; arguments: argdecl list
+  ; body: 'l statement }
 
-and prog =
-  { functions: udf_defn list
+and 'l prog =
+  { functions: 'l udf_defn list
   ; params: vardecl list
   ; data: vardecl list
-  ; model: statement
-  ; gq: statement
-  ; tdata: statement
-  ; tparam: statement
+  ; model: 'l statement
+  ; gq: 'l statement
+  ; tdata: 'l statement
+  ; tparam: 'l statement
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, hash]
