@@ -202,10 +202,10 @@ let%expect_test "run code per element" =
             for (size_t i_2__ = 0; i_2__ < Z; i_2__++) {
                 for (size_t i_3__ = 0; i_3__ < W; i_3__++) {
                     dubvec[i_0__][i_1__](i_2__, i_3__)
-                  }
-              }
-          }
-      } |}];
+                    }
+                }
+            }
+        } |}];
 
 
   (*
