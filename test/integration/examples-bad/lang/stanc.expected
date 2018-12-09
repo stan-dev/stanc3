@@ -1,75 +1,202 @@
   $ ../../../../../install/default/bin/stanc bad1.stan
+
 Syntax error at file "bad1.stan", line 1, characters 6-7, parsing error:
- > model { 
+  -------------------------------------------------
+> model { 
+  -------------------------------------------------
+
 Variable declaration, statement or "}" expected.
 
   $ ../../../../../install/default/bin/stanc bad10.stan
- >    real y__;
+
 Semantic error at file "bad10.stan", line 2, characters 8-11:
+  -------------------------------------------------
+  data {
+>    real y__;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier y__ clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc bad11.stan
- >   int theta;
+
 Semantic error at file "bad11.stan", line 2, characters 2-12:
+  -------------------------------------------------
+  parameters {
+>   int theta;
+  }
+  model {
+  -------------------------------------------------
+
 (Transformed) Parameters cannot be integers.
+
   $ ../../../../../install/default/bin/stanc bad2.stan
- > data { real a[3]; } model { a = 2.0; }
+
 Semantic error at file "bad2.stan", line 1, characters 28-36:
+  -------------------------------------------------
+> data { real a[3]; } model { a = 2.0; }
+  -------------------------------------------------
+
 Cannot assign to global variable a declared in previous blocks.
+
   $ ../../../../../install/default/bin/stanc bad3.stan
+
 Syntax error at file "bad3.stan", line 1, characters 15-21, parsing error:
- > data { real a; matrix(2,3) b; } model { a = b; }
+  -------------------------------------------------
+> data { real a; matrix(2,3) b; } model { a = b; }
+  -------------------------------------------------
+
 Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc bad4.stan
- > data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
+
 Semantic error at file "bad4.stan", line 1, characters 28-55:
+  -------------------------------------------------
+> data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
+  -------------------------------------------------
+
 Lower bound of for-loop needs to be of type int. Instead found type real.
+
   $ ../../../../../install/default/bin/stanc bad5.stan
- >   y = lp__;
+
 Semantic error at file "bad5.stan", line 3, characters 6-10:
+  -------------------------------------------------
+  transformed data {
+    real y;
+>   y = lp__;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier lp__ clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc bad6.stan
- >    y = 10.0;
+
 Semantic error at file "bad6.stan", line 7, characters 3-12:
+  -------------------------------------------------
+     real z;
+     
+>    y = 10.0;
+  }
+  model {
+  -------------------------------------------------
+
 Cannot assign to global variable y declared in previous blocks.
+
   $ ../../../../../install/default/bin/stanc bad7.stan
- >   y = 10.0;
+
 Semantic error at file "bad7.stan", line 7, characters 2-11:
+  -------------------------------------------------
+    real z;
+  
+>   y = 10.0;
+  }
+  model { 
+  -------------------------------------------------
+
 Cannot assign to global variable y declared in previous blocks.
+
   $ ../../../../../install/default/bin/stanc bad8.stan
- >     y = 10.0;
+
 Semantic error at file "bad8.stan", line 5, characters 4-13:
+  -------------------------------------------------
+  }
+  model {
+>     y = 10.0;
+  }
+  -------------------------------------------------
+
 Cannot assign to global variable y declared in previous blocks.
+
   $ ../../../../../install/default/bin/stanc bad9.stan
- >    int N;
+
 Semantic error at file "bad9.stan", line 5, characters 3-9:
+  -------------------------------------------------
+  }
+  parameters {
+>    int N;
+     real z[N];
+  }
+  -------------------------------------------------
+
 (Transformed) Parameters cannot be integers.
+
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan
+
 Syntax error at file "bad_bounds1.stan", line 2, characters 13-14, parsing error:
- >   real<lower=1 && 2> x;
+  -------------------------------------------------
+  data {
+>   real<lower=1 && 2> x;
+  }
+  parameters {
+  -------------------------------------------------
+
 ">" or ", upper = expression (not containing binary logical operators) ">" expected after specifying lower bound for type.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
+
 Semantic error at file "bad_cov_exp_quad_arr_rvec_data.stan", line 13, characters 41-48:
- >   transformed_data_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_2, N_1] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Identifier d_arr_2 not in scope.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_arr_rvec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_data.stan
+
 Semantic error at file "bad_cov_exp_quad_arr_vec_data.stan", line 13, characters 41-48:
- >   transformed_data_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_2, N_1] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Identifier d_arr_2 not in scope.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_arr_vec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_params_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_data.stan
+
 Semantic error at file "bad_cov_exp_quad_len_data.stan", line 13, characters 28-75:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_1, N_2] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Ill-typed arguments supplied to function cov_exp_quad. Available signatures: 
 (row_vector[], row_vector[], real, real) => matrix
 (vector[], vector[], real, real) => matrix
@@ -78,33 +205,83 @@ Ill-typed arguments supplied to function cov_exp_quad. Available signatures:
 (vector[], real, real) => matrix
 (real[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], vector[], real, real[].
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
+
 Syntax error at file "bad_cov_exp_quad_len_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_rvec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_len_rvec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_vec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_len_vec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_data.stan
+
 Semantic error at file "bad_cov_exp_quad_rvec_arr_data.stan", line 13, characters 50-57:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_1, N_2] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Identifier d_arr_2 not in scope.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_param.stan
+
 Syntax error at file "bad_cov_exp_quad_rvec_arr_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_data.stan
+
 Semantic error at file "bad_cov_exp_quad_rvec_data.stan", line 12, characters 28-65:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_2, N_1] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Ill-typed arguments supplied to function cov_exp_quad. Available signatures: 
 (row_vector[], row_vector[], real, real) => matrix
 (vector[], vector[], real, real) => matrix
@@ -113,9 +290,18 @@ Ill-typed arguments supplied to function cov_exp_quad. Available signatures:
 (vector[], real, real) => matrix
 (real[], real, real) => matrix
 Instead supplied arguments of incompatible type: row_vector, real, real.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_data.stan
+
 Semantic error at file "bad_cov_exp_quad_rvec_vec_data.stan", line 13, characters 28-75:
- >   transformed_data_matrix = cov_exp_quad(d_rvec_1, d_vec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_2, N_1] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_rvec_1, d_vec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Ill-typed arguments supplied to function cov_exp_quad. Available signatures: 
 (row_vector[], row_vector[], real, real) => matrix
 (vector[], vector[], real, real) => matrix
@@ -124,14 +310,31 @@ Ill-typed arguments supplied to function cov_exp_quad. Available signatures:
 (vector[], real, real) => matrix
 (real[], real, real) => matrix
 Instead supplied arguments of incompatible type: row_vector[], vector[], real, real.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_rvec_vec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_params_matrix = cov_exp_quad(d_rvec_1, d_vec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_data.stan
+
 Semantic error at file "bad_cov_exp_quad_sigma_data.stan", line 13, characters 28-75:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_1, N_2] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Ill-typed arguments supplied to function cov_exp_quad. Available signatures: 
 (row_vector[], row_vector[], real, real) => matrix
 (vector[], vector[], real, real) => matrix
@@ -140,33 +343,83 @@ Ill-typed arguments supplied to function cov_exp_quad. Available signatures:
 (vector[], real, real) => matrix
 (real[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], vector[], real[], real.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
+
 Syntax error at file "bad_cov_exp_quad_sigma_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_rvec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_sigma_rvec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_vec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_sigma_vec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_data.stan
+
 Semantic error at file "bad_cov_exp_quad_vec_arr_data.stan", line 13, characters 50-57:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_1, N_2] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Identifier d_arr_2 not in scope.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_param.stan
+
 Syntax error at file "bad_cov_exp_quad_vec_arr_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_data.stan
+
 Semantic error at file "bad_cov_exp_quad_vec_data.stan", line 12, characters 28-65:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_2, N_1] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Ill-typed arguments supplied to function cov_exp_quad. Available signatures: 
 (row_vector[], row_vector[], real, real) => matrix
 (vector[], vector[], real, real) => matrix
@@ -175,9 +428,18 @@ Ill-typed arguments supplied to function cov_exp_quad. Available signatures:
 (vector[], real, real) => matrix
 (real[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector, real, real.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_data.stan
+
 Semantic error at file "bad_cov_exp_quad_vec_rvec_data.stan", line 13, characters 28-75:
- >   transformed_data_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+  -------------------------------------------------
+    matrix[N_1, N_2] transformed_data_matrix;
+  
+>   transformed_data_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+  }
+  parameters {
+  -------------------------------------------------
+
 Ill-typed arguments supplied to function cov_exp_quad. Available signatures: 
 (row_vector[], row_vector[], real, real) => matrix
 (vector[], vector[], real, real) => matrix
@@ -186,50 +448,129 @@ Ill-typed arguments supplied to function cov_exp_quad. Available signatures:
 (vector[], real, real) => matrix
 (real[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], row_vector[], real, real.
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan
+
 Syntax error at file "bad_cov_exp_quad_vec_rvec_param.stan", lines 12-16, character 0, parsing error:
- > }
+  -------------------------------------------------
+  
+    transformed_params_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
+> }
+  parameters {
+    real y;
+  -------------------------------------------------
+
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
   $ ../../../../../install/default/bin/stanc bad_fun_name.stan
- >   real logit; // causes error because logit is fun name
+
 Semantic error at file "bad_fun_name.stan", line 2, characters 7-12:
-Identifier  logit  clashes with primitive.
+  -------------------------------------------------
+  data {
+>   real logit; // causes error because logit is fun name
+  }
+  parameters {
+  -------------------------------------------------
+
+Identifier  logit  clashes with Stan Math library function.
+
   $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
- >   int bad_model_name_var_model;  
+
 Semantic error at file "bad_model_name_var.stan", line 3, characters 6-30:
+  -------------------------------------------------
+  data {
+    // declare matching model name should fail
+>   int bad_model_name_var_model;  
+  }
+  parameters {
+  -------------------------------------------------
+
 Identifier bad_model_name_var_model clashes with model name.
+
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
+
 Syntax error at file "bad_periods_data.stan", line 2, characters 7-8, parsing error:
- >   real x.y;
+  -------------------------------------------------
+  data {
+>   real x.y;
+  }
+  parameters {
+  -------------------------------------------------
+
 Only top-level variable declarations are allowed in data and parameter blocks.
 
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
+
 Syntax error at file "bad_periods_gqs.stan", line 8, characters 7-8, parsing error:
- >   real x.y;
+  -------------------------------------------------
+  }
+  generated quantities {
+>   real x.y;
+    x.y = z * 2;
+  }
+  -------------------------------------------------
+
 ";" or plain assignment is expected after a top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
+
 Syntax error at file "bad_periods_local.stan", line 5, characters 7-8, parsing error:
- >   real x.y;
+  -------------------------------------------------
+  }
+  model {
+>   real x.y;
+    z ~ normal(x.y,1);
+  }
+  -------------------------------------------------
+
 ";" or plain assignment expected after variable declaration.
 
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
+
 Syntax error at file "bad_periods_params.stan", line 2, characters 7-8, parsing error:
- >   real x.y;
+  -------------------------------------------------
+  parameters {
+>   real x.y;
+  }
+  model {
+  -------------------------------------------------
+
 Only top-level variable declarations are allowed in data and parameter blocks.
 
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
+
 Syntax error at file "bad_periods_tdata.stan", line 2, characters 7-8, parsing error:
- >   real x.y;
+  -------------------------------------------------
+  transformed data {
+>   real x.y;
+  }
+  parameters {
+  -------------------------------------------------
+
 ";" or plain assignment is expected after a top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
+
 Syntax error at file "bad_periods_tparams.stan", line 2, characters 7-8, parsing error:
- >   real x.;
+  -------------------------------------------------
+  transformed parameters {
+>   real x.;
+    x. = 1.0;
+  }
+  -------------------------------------------------
+
 ";" or plain assignment is expected after a top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc good_all.stan
- >   m = m;
+
 Semantic error at file "good_all.stan", line 25, characters 2-8:
+  -------------------------------------------------
+  
+  model {
+>   m = m;
+    rv = m[1];
+    s = m[1,2];
+  -------------------------------------------------
+
 Cannot assign to global variable m declared in previous blocks.
+

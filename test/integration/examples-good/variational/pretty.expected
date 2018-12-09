@@ -81,7 +81,7 @@ model {
     grpi <- grp_index[i];
     p[i] ~ logistic(muGrp[grpi], sigmaGrp[grpi]);
   }
-  
+  ;
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format hier_logistic.stan

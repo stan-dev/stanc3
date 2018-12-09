@@ -56,7 +56,6 @@ let set_is_unassigned s str =
   else Hashtbl.add s.isunassigned str ()
 
 let check_is_unassigned s str = Hashtbl.mem s.isunassigned str
-
 let check_some_id_is_unassigned s = not (Hashtbl.length s.isunassigned = 0)
 
 let is_global s str =
@@ -73,8 +72,6 @@ let unsafe_clear_symbol_table s =
 (* TODO: the following is very ugly, but we seem to need something like it to
  reproduce the (strange) behaviour in the current Stan that local variables
  have a block level that is determined by what has been assigned to them
- rather than by where they were declared. I'm not sure that behaviour makes
- sense unless we use static analysis as well to make sure these assignments
- actually get evaluated in that phase. *)
+ rather than by where they were declared. *)
 let unsafe_replace s str ty =
   Hashtbl.remove s.table str ; Hashtbl.add s.table str ty

@@ -5,3 +5,5 @@ val parse_file :
      (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)
   -> string
   -> Ast.untyped_program
+(** A helper function to take a parser, a filename and produce an AST. Under the
+    hood, it takes care of Menhir's custom syntax error messages. *)

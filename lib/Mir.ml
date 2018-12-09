@@ -123,9 +123,7 @@ and 'l prog =
 [@@deriving sexp, hash]
 
 let id x = x
-
-let map_udf_defn sf ef udf =
-  {udf with body= map_statement id sf ef udf.body}
+let map_udf_defn sf ef udf = {udf with body= map_statement id sf ef udf.body}
 
 let map_prog sf ef p =
   { p with
