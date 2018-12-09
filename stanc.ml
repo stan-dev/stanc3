@@ -88,6 +88,7 @@ let use_file filename =
       exit 1
   in
   let _ = Debug.typed_ast_logger typed_ast in
+
   ()
 
 (** Main program *)

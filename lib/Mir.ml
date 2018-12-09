@@ -4,7 +4,7 @@ open Core_kernel
    XXX Missing:
    * TODO? foreach loops - matrix vs array (fine because of get_base1?)
    * TODO during optimization:
-       - different nodes for when I know the bounds of a for loop at compile time vs. not
+       - mark for loops with known bounds
        - mark FnApps as containing print or reject
 *)
 
