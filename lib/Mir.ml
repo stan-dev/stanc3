@@ -8,7 +8,6 @@ open Core_kernel
        - mark FnApps as containing print or reject
 *)
 
-
 type litType = Int | Real | Str
 
 and cond_op = Equals | NEquals | Less | Leq | Greater | Geq
@@ -63,11 +62,7 @@ and 'l statement =
   | Skip
   | IfElse of expr * 'l statement * 'l statement option
   | While of expr * 'l statement
-  | For of
-      { loopvar: expr
-      ; lower: expr
-      ; upper: expr
-      ; body: 'l statement }
+  | For of {loopvar: expr; lower: expr; upper: expr; body: 'l statement}
   | Block of 'l statement list
   | Decl of vardecl * expr option
 [@@deriving sexp, hash]

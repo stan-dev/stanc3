@@ -24,7 +24,7 @@ let emit_cond_op ppf c =
 
 let rec emit_stantype ad ppf = function
   | SInt | SReal -> emit_str ppf ad
-  | SArray(_, t) -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
+  | SArray (_, t) -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
   | SMatrix _ -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
   | SRowVector _ -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
   | SVector _ -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
@@ -46,7 +46,7 @@ and emit_expr ppf s =
       fprintf ppf "%a%a" emit_expr e
         (pp_print_list ~pp_sep:comma emit_index)
         idcs
- (* TODO: Emit something like:
+  (* TODO: Emit something like:
 stan::model::rvalue(
     eigmat, stan::model::cons_list(
       stan::model::index_multi(y),
@@ -59,7 +59,8 @@ stan::model::rvalue(
 
 let%expect_test "expr" =
   FnApp
-    ("sassy", [ArrayLiteral [Lit (Int, "4"); Lit (Int, "2")]; Lit (Real, "27.0")])
+    ( "sassy"
+    , [ArrayLiteral [Lit (Int, "4"); Lit (Int, "2")]; Lit (Real, "27.0")] )
   |> emit_expr str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| sassy({4, 2}, 27.0) |}]
@@ -67,7 +68,7 @@ let%expect_test "expr" =
 let emit_prim_stantype ppf st =
   let rec ad_str = function
     | SInt -> "int"
-    | SArray(_, t) -> ad_str t
+    | SArray (_, t) -> ad_str t
     | _ -> "double"
   in
   emit_stantype (ad_str st) ppf st
@@ -76,31 +77,44 @@ let emit_block ppf (emit_body, body) =
   fprintf ppf "{@;<0 4>@[<v>%a@]@,}" emit_body body
 
 let emit_for_loop ppf (loopvar, lower, upper, emit_body, body) =
-  fprintf ppf "for (size_t %s = %a; %s < %a; %s++) %a"
-    loopvar emit_expr lower loopvar emit_expr upper loopvar
-    emit_block (emit_body, body)
+  fprintf ppf "for (size_t %s = %a; %s < %a; %s++) %a" loopvar emit_expr lower
+    loopvar emit_expr upper loopvar emit_block (emit_body, body)
 
-let rec emit_run_code_per_el ?depth:(d=0) emit_code_per_element ppf (name, st) =
+let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
+    =
   let mkloopvar d = sprintf "i_%d__" d in
   let loopvar = mkloopvar d in
-  let zero = Lit(Int, "0") in
+  let zero = Lit (Int, "0") in
   match st with
   | SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
-  | SVector Some dim | SRowVector Some dim ->
-    emit_for_loop ppf ((mkloopvar d), zero, dim,
-                       emit_code_per_element,
-                       sprintf "%s[%s]" name loopvar)
-  | SMatrix Some (dim1, dim2) ->
-    let loopvar2 = mkloopvar (d+1) in
-    emit_for_loop ppf (loopvar, zero, dim1, emit_for_loop,
-                       (loopvar2, zero, dim2, emit_code_per_element,
-                        sprintf "%s(%s, %s)" name loopvar loopvar2))
-  | SArray(Some dim, st) ->
-    emit_for_loop ppf (loopvar, zero, dim,
-      (emit_run_code_per_el ~depth:(d+1) emit_code_per_element),
-      (sprintf "%s[%s]" name loopvar, st))
-  | SMatrix None | SVector None | SRowVector None | SArray(None, _)
-    -> raise_s [%message "Type should have dimensions" (st : stantype)]
+  | SVector (Some dim) | SRowVector (Some dim) ->
+      emit_for_loop ppf
+        ( mkloopvar d
+        , zero
+        , dim
+        , emit_code_per_element
+        , sprintf "%s[%s]" name loopvar )
+  | SMatrix (Some (dim1, dim2)) ->
+      let loopvar2 = mkloopvar (d + 1) in
+      emit_for_loop ppf
+        ( loopvar
+        , zero
+        , dim1
+        , emit_for_loop
+        , ( loopvar2
+          , zero
+          , dim2
+          , emit_code_per_element
+          , sprintf "%s(%s, %s)" name loopvar loopvar2 ) )
+  | SArray (Some dim, st) ->
+      emit_for_loop ppf
+        ( loopvar
+        , zero
+        , dim
+        , emit_run_code_per_el ~depth:(d + 1) emit_code_per_element
+        , (sprintf "%s[%s]" name loopvar, st) )
+  | SMatrix None | SVector None | SRowVector None | SArray (None, _) ->
+      raise_s [%message "Type should have dimensions" (st : stantype)]
 
 let rec emit_statement ppf s =
   match s with
@@ -118,31 +132,44 @@ let rec emit_statement ppf s =
       let emit_else ppf x = fprintf ppf " else {\n %a\n}" emit_statement x in
       fprintf ppf "if (%a){\n %a\n}%a\n" emit_expr cond emit_statement ifbranch
         (emit_option emit_else) elsebranch
-  | While (cond, body) -> (* XXX Refactor these to share with other code gen *)
+  | While (cond, body) ->
+      (* XXX Refactor these to share with other code gen *)
       fprintf ppf "while (%a) {\n  %a\n}\n" emit_expr cond emit_statement body
   | For {loopvar; lower; upper; body} ->
-    let lv = fprintf str_formatter "%a" emit_expr loopvar; flush_str_formatter () in
-    emit_for_loop ppf (lv, lower, upper, emit_statement, body)
+      let lv =
+        fprintf str_formatter "%a" emit_expr loopvar ;
+        flush_str_formatter ()
+      in
+      emit_for_loop ppf (lv, lower, upper, emit_statement, body)
   | Block s -> pp_print_list ~pp_sep:semi_new emit_statement ppf s
   | Decl ({vident; st; trans; loc}, rhs) ->
-    ignore (trans, loc);
-    let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-    fprintf ppf "%a %s%a" emit_prim_stantype st vident
-      (emit_option emit_assignment)
-      rhs
+      ignore (trans, loc) ;
+      let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
+      fprintf ppf "%a %s%a" emit_prim_stantype st vident
+        (emit_option emit_assignment)
+        rhs
 
 let%expect_test "run code per element" =
-  let assign ppf x = emit_statement ppf
-      (Block [Assignment {assignee= x; indices= [];
-                          rhs= Indexed (Var "vals_r__", [Var "pos__++"])};
-              NRFnApp("print", [Var x])]);
-    fprintf ppf ";" (* XXX when to print semis? *) in
-  fprintf str_formatter "@[<v>%a@]" (emit_run_code_per_el assign)
-    ("dubvec", SArray(Some (Var "X"),
-                      SArray(Some (Var "Y"),
-                                             SMatrix (Some (Var "Z", Var "W")))));
-  flush_str_formatter () |> print_endline;
-  [%expect {|
+  let assign ppf x =
+    emit_statement ppf
+      (Block
+         [ Assignment
+             { assignee= x
+             ; indices= []
+             ; rhs= Indexed (Var "vals_r__", [Var "pos__++"]) }
+         ; NRFnApp ("print", [Var x]) ]) ;
+    fprintf ppf ";"
+    (* XXX when to print semis? *)
+  in
+  fprintf str_formatter "@[<v>%a@]"
+    (emit_run_code_per_el assign)
+    ( "dubvec"
+    , SArray
+        ( Some (Var "X")
+        , SArray (Some (Var "Y"), SMatrix (Some (Var "Z", Var "W"))) ) ) ;
+  flush_str_formatter () |> print_endline ;
+  [%expect
+    {|
     for (size_t i_0__ = 0; i_0__ < X; i_0__++) {
         for (size_t i_1__ = 0; i_1__ < Y; i_1__++) {
             for (size_t i_2__ = 0; i_2__ < Z; i_2__++) {
@@ -154,15 +181,16 @@ let%expect_test "run code per element" =
         }
     } |}]
 
-
 let%expect_test "decl" =
-  Decl ({vident= "i"; st= SInt; loc= "line num"; trans= NoTransformation},
-        Some (Lit (Int, "0")))
+  Decl
+    ( {vident= "i"; st= SInt; loc= "line num"; trans= NoTransformation}
+    , Some (Lit (Int, "0")) )
   |> emit_statement str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i = 0 |}]
 
-let emit_vardecl ppf (name, stype) = fprintf ppf "%a %s;" emit_prim_stantype stype name
+let emit_vardecl ppf (name, stype) =
+  fprintf ppf "%a %s;" emit_prim_stantype stype name
 
 let stan_math_map =
   String.Map.of_alist_exn
@@ -172,7 +200,8 @@ let version = "// Code generated by Stan version 2.18.0"
 let includes = "#include <stan/model/model_header.hpp>"
 
 let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
-  fprintf ppf {|
+  fprintf ppf
+    {|
 @ try {
   @ @[<v 4> %a;
 @] } catch (const std::exception& e) {
@@ -181,18 +210,20 @@ let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
   @ // Next line prevents compiler griping about no return
   @ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 @]@ }
-|} emit_contents contents_arg emit_err err_arg
+|}
+    emit_contents contents_arg emit_err err_arg
 
 let rec integer_el_type = function
   | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
   | SInt -> true
-  | SArray(_, st) -> integer_el_type st
+  | SArray (_, st) -> integer_el_type st
 
 let emit_args ppf (name, st) =
   fprintf ppf "const %a& %s" (emit_stantype "T0__") st name
 
 let emit_udf ppf {returntype; name; arguments; body} =
-  fprintf ppf {|
+  fprintf ppf
+    {|
 template <typename T0__>
 %a
 %s(%a, std::ostream* pstream__) {
@@ -205,18 +236,23 @@ template <typename T0__>
     int current_statement_begin__ = -1;
     %a
     }
-} |} (emit_option ~default:"void"
-        (emit_stantype "typename boost::math::tools::promote_args<T0__>::type"))
-    returntype
-    name (pp_print_list ~pp_sep:comma emit_args)
-    arguments emit_error_wrapper (emit_str, "", emit_statement, body)
+} |}
+    (emit_option ~default:"void"
+       (emit_stantype "typename boost::math::tools::promote_args<T0__>::type"))
+    returntype name
+    (pp_print_list ~pp_sep:comma emit_args)
+    arguments emit_error_wrapper
+    (emit_str, "", emit_statement, body)
 
 let%expect_test "udf" =
   fprintf str_formatter "@[<v>%a" emit_udf
-    {returntype= None; name="sars"; arguments=["x", SMatrix None];
-     body= Return (FnApp ("add", [Var "x"; Lit(Int, "1")]))};
-   flush_str_formatter () |> print_endline;
-  [%expect {|
+    { returntype= None
+    ; name= "sars"
+    ; arguments= [("x", SMatrix None)]
+    ; body= Return (FnApp ("add", [Var "x"; Lit (Int, "1")])) } ;
+  flush_str_formatter () |> print_endline ;
+  [%expect
+    {|
     template <typename T0__>
     void
     sars(const Eigen::Matrix<T0__, -1, -1>& x, std::ostream* pstream__) {
@@ -267,7 +303,7 @@ let emit_ctor classname ppf (args, body) =
     args emit_statement body
 *)
 
-  (*
+(*
 let emit_read_field ppf (name, st, loc) idx =
   let vals_suffix = context_suffix st in
   fprintf ppf {|
