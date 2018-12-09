@@ -6,13 +6,13 @@
 
 open Ast
 
-let scope_depth = ref 1
+let indent_num = ref 1
 
-let begin_scope _ = scope_depth := 1 + !scope_depth
+let begin_indent _ = indent_num := 1 + !indent_num
 
-let exit_scope _ = scope_depth := -1 + !scope_depth
+let exit_indent _ = indent_num := -1 + !indent_num
 
-let tabs () = String.make (2 * !scope_depth) ' '
+let tabs () = String.make (2 * !indent_num) ' '
 
 let rec unwind_sized_array_type = function
   | SArray (st, e) -> (
@@ -32,7 +32,7 @@ and pretty_print_unsizedtype = function
       "("
       ^ String.concat ", " (List.map pretty_print_argtype argtypes)
       ^ ") => " ^ pretty_print_returntype rt
-  | PrimitiveFunction -> "Stan Math function"
+  | MathLibraryFunction -> "Stan Math function"
 
 and pretty_print_unsizedtypes l =
   String.concat ", " (List.map pretty_print_unsizedtype l)
@@ -116,8 +116,8 @@ and pretty_print_expression = function
         ^ "| "
         ^ pretty_print_list_of_expression (List.tl es)
         ^ ")"
+    (* GetLP is deprecated *)
     | GetLP -> "get_lp()"
-    (* deprecated *)
     | GetTarget -> "target()"
     | ArrayExpr es -> "{" ^ pretty_print_list_of_expression es ^ "}"
     | RowVectorExpr es -> "[" ^ pretty_print_list_of_expression es ^ "]"
@@ -270,7 +270,7 @@ and pretty_print_statement = function
     | ReturnVoid -> "return;"
     | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
     | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
-    | Skip -> ""
+    | Skip -> ";"
     | IfThen (e, s) ->
         "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
     | IfThenElse (e, s1, s2) ->
@@ -288,9 +288,9 @@ and pretty_print_statement = function
         ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
     | Block vdsl ->
         let s1 = "{\n" in
-        let _ = begin_scope () in
+        let _ = begin_indent () in
         let s2 = pretty_print_list_of_statements vdsl in
-        let _ = exit_scope () in
+        let _ = exit_indent () in
         let s3 = tabs () ^ "}" in
         s1 ^ s2 ^ s3
     | VDecl (st, id) ->
@@ -370,6 +370,3 @@ and pretty_print_program = function
           "generated quantities {\n"
           ^ pretty_print_list_of_statements x
           ^ "}\n" )
-
-(* TODO: implement more pretty printing functions for generating error messages;
-   especially for listing function signatures *)

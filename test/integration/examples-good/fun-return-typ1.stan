@@ -1,0 +1,3 @@
+functions {
+  real foo() { reject("");}
+}

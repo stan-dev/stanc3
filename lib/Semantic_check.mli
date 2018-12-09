@@ -9,3 +9,5 @@ val check_that_all_functions_have_definition : bool ref
 (** A switch to determine whether we check that all functions have a definition *)
 
 val model_name : string ref
+(** A reference to hold the model name. Relevant for checking variable
+    clashes and used in code generation. *)

@@ -22,16 +22,19 @@ let parse parse_fun lexbuf =
       | _ -> assert false
     in
     match Interp.stack env with
-    (* TODO: insert position here. *)
     | (lazy Nil) ->
         let message =
           Some
             "Expected \"functions {\" or \"data {\" or \"transformed data {\" \
              or \"parameters {\" or \"transformed parameters {\" or \"model \
-             {\" or \"generated quantities {\"."
+             {\" or \"generated quantities {\".\n"
         in
         raise
-          (SyntaxError (Parsing (message, Lexing.dummy_pos, Lexing.dummy_pos)))
+          (SyntaxError
+             (Parsing
+                ( message
+                , Lexing.lexeme_start_p (Stack.top Lexer.include_stack)
+                , Lexing.lexeme_end_p (Stack.top Lexer.include_stack) )))
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try

@@ -13,10 +13,7 @@ let initialize_stmt_meta startpos endpos =
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
-  let rec reduce l f sbt =
-    if List.length l = 0 then sbt
-                         else reduce (List.tl l) f (f sbt (List.hd l)) in
-  reduce l (fun y z -> SArray (y, z)) sbt
+  Core_kernel.List.fold l ~f:(fun y z -> SArray (y, z)) ~init:sbt
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -36,7 +33,7 @@ let reducearray (sbt, l) =
        ELTTIMES ELTDIVIDE OR AND EQUALS NEQUALS LEQ GEQ TILDE
 %token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
    ELTDIVIDEASSIGN ELTTIMESASSIGN
-%token ARROWASSIGN INCREMENTLOGPROB GETLP (* deprecated *)
+%token ARROWASSIGN INCREMENTLOGPROB GETLP (* all of these are deprecated *)
 %token PRINT REJECT
 %token TRUNCATE
 %token EOF
@@ -69,23 +66,23 @@ let reducearray (sbt, l) =
 
 (* program *)
 program:
-  | obf=option(function_block)
-    obd=option(data_block)
-    obtd=option(transformed_data_block)
-    obp=option(parameters_block)
-    obtp=option(transformed_parameters_block)
-    obm=option(model_block)
-    obg=option(generated_quantities_block)
+  | ofb=option(function_block)
+    odb=option(data_block)
+    otdb=option(transformed_data_block)
+    opb=option(parameters_block)
+    otpb=option(transformed_parameters_block)
+    omb=option(model_block)
+    ogb=option(generated_quantities_block)
     EOF
     {
       grammar_logger "program" ;
-      { functionblock= obf
-      ; datablock= obd
-      ; transformeddatablock= obtd
-      ; parametersblock= obp
-      ; transformedparametersblock= obtp
-      ; modelblock= obm
-      ; generatedquantitiesblock= obg }
+      { functionblock= ofb
+      ; datablock= odb
+      ; transformeddatablock= otdb
+      ; parametersblock= opb
+      ; transformedparametersblock= otpb
+      ; modelblock= omb
+      ; generatedquantitiesblock= ogb }
     }
 
 (* blocks *)
@@ -158,7 +155,7 @@ unsized_type:
        let rec reparray n x =
            if n <= 0 then x else reparray (n-1) (Array x) in
        let size =
-         match ud with Some d -> 1 + d | _ -> 0
+         match ud with Some d -> 1 + d | None -> 0
        in
        reparray size bt    }
 
@@ -231,7 +228,7 @@ top_var_decl:
                 ; tidentifier= id
                 ; tvalue= snd a }
             , initialize_stmt_meta $startpos $endpos )
-      | _ ->
+      | None ->
           UntypedStmt
             ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
             , initialize_stmt_meta $startpos $endpos ) }
@@ -510,7 +507,7 @@ atomic_statement:
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
-       let t = match ot with Some tt -> tt | _ -> NoTruncate in
+       let t = match ot with Some tt -> tt | None -> NoTruncate in
        Tilde {arg= e; distribution= id; args= es; truncation= t  }
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
@@ -560,7 +557,7 @@ truncation:
        | Some tt1, Some tt2 -> TruncateBetween (tt1, tt2)
        | Some tt1, None -> TruncateUpFrom tt1
        | None, Some tt2 -> TruncateDownFrom tt2
-       | _ -> NoTruncate  }
+       | None, None -> NoTruncate  }
 
 nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement

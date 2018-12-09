@@ -1,454 +1,1296 @@
   $ ../../../../../install/default/bin/stanc STAN_MAJOR.stan
- >   real STAN_MAJOR;
+
 Semantic error at file "STAN_MAJOR.stan", line 2, characters 7-17:
+  -------------------------------------------------
+  data {
+>   real STAN_MAJOR;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier STAN_MAJOR clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc STAN_MATH_MAJOR.stan
- >   real STAN_MATH_MAJOR;
+
 Semantic error at file "STAN_MATH_MAJOR.stan", line 2, characters 7-22:
+  -------------------------------------------------
+  data {
+>   real STAN_MATH_MAJOR;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier STAN_MATH_MAJOR clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc STAN_MATH_MINOR.stan
- >   real STAN_MATH_MINOR;
+
 Semantic error at file "STAN_MATH_MINOR.stan", line 2, characters 7-22:
+  -------------------------------------------------
+  data {
+>   real STAN_MATH_MINOR;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier STAN_MATH_MINOR clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc STAN_MATH_PATCH.stan
- >   real STAN_MATH_PATCH;
+
 Semantic error at file "STAN_MATH_PATCH.stan", line 2, characters 7-22:
+  -------------------------------------------------
+  data {
+>   real STAN_MATH_PATCH;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier STAN_MATH_PATCH clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc STAN_MINOR.stan
- >   real STAN_MINOR;
+
 Semantic error at file "STAN_MINOR.stan", line 2, characters 7-17:
+  -------------------------------------------------
+  data {
+>   real STAN_MINOR;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier STAN_MINOR clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc STAN_PATCH.stan
- >   real STAN_PATCH;
+
 Semantic error at file "STAN_PATCH.stan", line 2, characters 7-17:
+  -------------------------------------------------
+  data {
+>   real STAN_PATCH;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier STAN_PATCH clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc alignas.stan
- >   real alignas;
+
 Semantic error at file "alignas.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real alignas;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier alignas clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc alignof.stan
- >   real alignof;
+
 Semantic error at file "alignof.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real alignof;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier alignof clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc and.stan
- >   real and;
+
 Semantic error at file "and.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real and;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier and clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc and_eq.stan
- >   real and_eq;
+
 Semantic error at file "and_eq.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real and_eq;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier and_eq clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc asm.stan
- >   real asm;
+
 Semantic error at file "asm.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real asm;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier asm clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc auto.stan
- >   real auto;
+
 Semantic error at file "auto.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real auto;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier auto clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc bitand.stan
- >   real bitand;
+
 Semantic error at file "bitand.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real bitand;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier bitand clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc bitor.stan
- >   real bitor;
+
 Semantic error at file "bitor.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real bitor;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier bitor clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc bool.stan
- >   real bool;
+
 Semantic error at file "bool.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real bool;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier bool clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc break.stan
+
 Syntax error at file "break.stan", line 2, characters 2-6, parsing error:
- >   real break;
+  -------------------------------------------------
+  data {
+>   real break;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc case.stan
- >   real case;
+
 Semantic error at file "case.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real case;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier case clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc catch.stan
- >   real catch;
+
 Semantic error at file "catch.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real catch;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier catch clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc char.stan
- >   real char;
+
 Semantic error at file "char.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real char;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier char clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc char16_t.stan
- >   real char16_t;
+
 Semantic error at file "char16_t.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real char16_t;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier char16_t clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc char32_t.stan
- >   real char32_t;
+
 Semantic error at file "char32_t.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real char32_t;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier char32_t clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc cholesky_factor_corr.stan
+
 Syntax error at file "cholesky_factor_corr.stan", line 2, characters 2-6, parsing error:
- >   real cholesky_factor_corr;
+  -------------------------------------------------
+  data {
+>   real cholesky_factor_corr;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc cholesky_factor_cov.stan
+
 Syntax error at file "cholesky_factor_cov.stan", line 2, characters 2-6, parsing error:
- >   real cholesky_factor_cov;
+  -------------------------------------------------
+  data {
+>   real cholesky_factor_cov;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc class.stan
- >   real class;
+
 Semantic error at file "class.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real class;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier class clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc compl.stan
- >   real compl;
+
 Semantic error at file "compl.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real compl;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier compl clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc const.stan
- >   real const;
+
 Semantic error at file "const.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real const;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier const clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc const_cast.stan
- >   real const_cast;
+
 Semantic error at file "const_cast.stan", line 2, characters 7-17:
+  -------------------------------------------------
+  data {
+>   real const_cast;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier const_cast clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc constexpr.stan
- >   real constexpr;
+
 Semantic error at file "constexpr.stan", line 2, characters 7-16:
+  -------------------------------------------------
+  data {
+>   real constexpr;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier constexpr clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc continue.stan
+
 Syntax error at file "continue.stan", line 2, characters 2-6, parsing error:
- >   real continue;
+  -------------------------------------------------
+  data {
+>   real continue;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc corr_matrix.stan
+
 Syntax error at file "corr_matrix.stan", line 2, characters 2-6, parsing error:
- >   real corr_matrix;
+  -------------------------------------------------
+  data {
+>   real corr_matrix;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc cov_matrix.stan
+
 Syntax error at file "cov_matrix.stan", line 2, characters 2-6, parsing error:
- >   real cov_matrix;
+  -------------------------------------------------
+  data {
+>   real cov_matrix;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc decltype.stan
- >   real decltype;
+
 Semantic error at file "decltype.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real decltype;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier decltype clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc default.stan
- >   real default;
+
 Semantic error at file "default.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real default;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier default clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc delete.stan
- >   real delete;
+
 Semantic error at file "delete.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real delete;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier delete clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc do.stan
- >   real do;
+
 Semantic error at file "do.stan", line 2, characters 7-9:
+  -------------------------------------------------
+  data {
+>   real do;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier do clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc double.stan
- >   real double;
+
 Semantic error at file "double.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real double;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier double clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc dynamic_cast.stan
- >   real dynamic_cast;
+
 Semantic error at file "dynamic_cast.stan", line 2, characters 7-19:
+  -------------------------------------------------
+  data {
+>   real dynamic_cast;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier dynamic_cast clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc else.stan
+
 Syntax error at file "else.stan", line 2, characters 2-6, parsing error:
- >   real else;
+  -------------------------------------------------
+  data {
+>   real else;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc enum.stan
- >   real enum;
+
 Semantic error at file "enum.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real enum;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier enum clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc explicit.stan
- >   real explicit;
+
 Semantic error at file "explicit.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real explicit;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier explicit clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc export.stan
- >   real export;
+
 Semantic error at file "export.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real export;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier export clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc extern.stan
- >   real extern;
+
 Semantic error at file "extern.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real extern;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier extern clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc false.stan
- >   real false;
+
 Semantic error at file "false.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real false;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier false clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc float.stan
- >   real float;
+
 Semantic error at file "float.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real float;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier float clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc for.stan
+
 Syntax error at file "for.stan", line 2, characters 2-6, parsing error:
- >   real for;
+  -------------------------------------------------
+  data {
+>   real for;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc friend.stan
- >   real friend;
+
 Semantic error at file "friend.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real friend;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier friend clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc fvar.stan
- >   real fvar;
+
 Semantic error at file "fvar.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real fvar;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier fvar clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc goto.stan
- >   real goto;
+
 Semantic error at file "goto.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real goto;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier goto clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc if.stan
+
 Syntax error at file "if.stan", line 2, characters 2-6, parsing error:
- >   real if;
+  -------------------------------------------------
+  data {
+>   real if;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc in.stan
+
 Syntax error at file "in.stan", line 2, characters 2-6, parsing error:
- >   real in;
+  -------------------------------------------------
+  data {
+>   real in;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc inline.stan
- >   real inline;
+
 Semantic error at file "inline.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real inline;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier inline clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc int.stan
+
 Syntax error at file "int.stan", line 2, characters 2-6, parsing error:
- >   real int;
+  -------------------------------------------------
+  data {
+>   real int;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc long.stan
- >   real long;
+
 Semantic error at file "long.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real long;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier long clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc matrix.stan
+
 Syntax error at file "matrix.stan", line 2, characters 2-6, parsing error:
- >   real matrix;
+  -------------------------------------------------
+  data {
+>   real matrix;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc mutable.stan
- >   real mutable;
+
 Semantic error at file "mutable.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real mutable;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier mutable clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc namespace.stan
- >   real namespace;
+
 Semantic error at file "namespace.stan", line 2, characters 7-16:
+  -------------------------------------------------
+  data {
+>   real namespace;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier namespace clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc new.stan
- >   real new;
+
 Semantic error at file "new.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real new;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier new clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc noexcept.stan
- >   real noexcept;
+
 Semantic error at file "noexcept.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real noexcept;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier noexcept clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc not.stan
- >   real not;
+
 Semantic error at file "not.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real not;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier not clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc not_eq.stan
- >   real not_eq;
+
 Semantic error at file "not_eq.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real not_eq;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier not_eq clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc nullptr.stan
- >   real nullptr;
+
 Semantic error at file "nullptr.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real nullptr;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier nullptr clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc operator.stan
- >   real operator;
+
 Semantic error at file "operator.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real operator;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier operator clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc or.stan
- >   real or;
+
 Semantic error at file "or.stan", line 2, characters 7-9:
+  -------------------------------------------------
+  data {
+>   real or;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier or clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc or_eq.stan
- >   real or_eq;
+
 Semantic error at file "or_eq.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real or_eq;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier or_eq clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc ordered.stan
+
 Syntax error at file "ordered.stan", line 2, characters 2-6, parsing error:
- >   real ordered;
+  -------------------------------------------------
+  data {
+>   real ordered;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc positive_ordered.stan
+
 Syntax error at file "positive_ordered.stan", line 2, characters 2-6, parsing error:
- >   real positive_ordered;
+  -------------------------------------------------
+  data {
+>   real positive_ordered;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc private.stan
- >   real private;
+
 Semantic error at file "private.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real private;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier private clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc protected.stan
- >   real protected;
+
 Semantic error at file "protected.stan", line 2, characters 7-16:
+  -------------------------------------------------
+  data {
+>   real protected;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier protected clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc public.stan
- >   real public;
+
 Semantic error at file "public.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real public;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier public clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc real.stan
+
 Syntax error at file "real.stan", line 2, characters 2-6, parsing error:
- >   real real;
+  -------------------------------------------------
+  data {
+>   real real;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc register.stan
- >   real register;
+
 Semantic error at file "register.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real register;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier register clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc reinterpret_cast.stan
- >   real reinterpret_cast;
+
 Semantic error at file "reinterpret_cast.stan", line 2, characters 7-23:
+  -------------------------------------------------
+  data {
+>   real reinterpret_cast;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier reinterpret_cast clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc repeat.stan
- >   real repeat;
+
 Semantic error at file "repeat.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real repeat;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier repeat clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc return.stan
+
 Syntax error at file "return.stan", line 2, characters 2-6, parsing error:
- >   real return;
+  -------------------------------------------------
+  data {
+>   real return;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc row_vector.stan
+
 Syntax error at file "row_vector.stan", line 2, characters 2-6, parsing error:
- >   real row_vector;
+  -------------------------------------------------
+  data {
+>   real row_vector;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc short.stan
- >   real short;
+
 Semantic error at file "short.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real short;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier short clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc signed.stan
- >   real signed;
+
 Semantic error at file "signed.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real signed;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier signed clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc simplex.stan
+
 Syntax error at file "simplex.stan", line 2, characters 2-6, parsing error:
- >   real simplex;
+  -------------------------------------------------
+  data {
+>   real simplex;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc sizeof.stan
- >   real sizeof;
+
 Semantic error at file "sizeof.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real sizeof;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier sizeof clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc static.stan
- >   real static;
+
 Semantic error at file "static.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real static;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier static clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc static_assert.stan
- >   real static_assert;
+
 Semantic error at file "static_assert.stan", line 2, characters 7-20:
+  -------------------------------------------------
+  data {
+>   real static_assert;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier static_assert clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc static_cast.stan
- >   real static_cast;
+
 Semantic error at file "static_cast.stan", line 2, characters 7-18:
+  -------------------------------------------------
+  data {
+>   real static_cast;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier static_cast clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc struct.stan
- >   real struct;
+
 Semantic error at file "struct.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real struct;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier struct clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc switch.stan
- >   real switch;
+
 Semantic error at file "switch.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real switch;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier switch clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc template.stan
- >   real template;
+
 Semantic error at file "template.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real template;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier template clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc then.stan
- >   real then;
+
 Semantic error at file "then.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real then;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier then clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc this.stan
- >   real this;
+
 Semantic error at file "this.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real this;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier this clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc thread_local.stan
- >   real thread_local;
+
 Semantic error at file "thread_local.stan", line 2, characters 7-19:
+  -------------------------------------------------
+  data {
+>   real thread_local;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier thread_local clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc throw.stan
- >   real throw;
+
 Semantic error at file "throw.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real throw;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier throw clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc true.stan
- >   real true;
+
 Semantic error at file "true.stan", line 2, characters 7-11:
+  -------------------------------------------------
+  data {
+>   real true;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier true clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc try.stan
- >   real try;
+
 Semantic error at file "try.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real try;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier try clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc typedef.stan
- >   real typedef;
+
 Semantic error at file "typedef.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real typedef;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier typedef clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc typeid.stan
- >   real typeid;
+
 Semantic error at file "typeid.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real typeid;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier typeid clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc typename.stan
- >   real typename;
+
 Semantic error at file "typename.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real typename;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier typename clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc union.stan
- >   real union;
+
 Semantic error at file "union.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real union;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier union clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc unit_vector.stan
+
 Syntax error at file "unit_vector.stan", line 2, characters 2-6, parsing error:
- >   real unit_vector;
+  -------------------------------------------------
+  data {
+>   real unit_vector;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc unsigned.stan
- >   real unsigned;
+
 Semantic error at file "unsigned.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real unsigned;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier unsigned clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc until.stan
- >   real until;
+
 Semantic error at file "until.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real until;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier until clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc using.stan
- >   real using;
+
 Semantic error at file "using.stan", line 2, characters 7-12:
+  -------------------------------------------------
+  data {
+>   real using;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier using clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc var.stan
- >   real var;
+
 Semantic error at file "var.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real var;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier var clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc vector.stan
+
 Syntax error at file "vector.stan", line 2, characters 2-6, parsing error:
- >   real vector;
+  -------------------------------------------------
+  data {
+>   real vector;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc virtual.stan
- >   real virtual;
+
 Semantic error at file "virtual.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real virtual;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier virtual clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc void.stan
+
 Syntax error at file "void.stan", line 2, characters 2-6, parsing error:
- >   real void;
+  -------------------------------------------------
+  data {
+>   real void;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc volatile.stan
- >   real volatile;
+
 Semantic error at file "volatile.stan", line 2, characters 7-15:
+  -------------------------------------------------
+  data {
+>   real volatile;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier volatile clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc wchar_t.stan
- >   real wchar_t;
+
 Semantic error at file "wchar_t.stan", line 2, characters 7-14:
+  -------------------------------------------------
+  data {
+>   real wchar_t;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier wchar_t clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc while.stan
+
 Syntax error at file "while.stan", line 2, characters 2-6, parsing error:
- >   real while;
+  -------------------------------------------------
+  data {
+>   real while;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc xor.stan
- >   real xor;
+
 Semantic error at file "xor.stan", line 2, characters 7-10:
+  -------------------------------------------------
+  data {
+>   real xor;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier xor clashes with reserved keyword.
+
   $ ../../../../../install/default/bin/stanc xor_eq.stan
- >   real xor_eq;
+
 Semantic error at file "xor_eq.stan", line 2, characters 7-13:
+  -------------------------------------------------
+  data {
+>   real xor_eq;
+  }
+  model {
+  -------------------------------------------------
+
 Identifier xor_eq clashes with reserved keyword.
+

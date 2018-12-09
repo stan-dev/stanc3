@@ -34,18 +34,16 @@ In case of void function, no return statements anywhere
 All function arguments are distinct
 Function applications are returning functions
 NRFunction applications are non-returning functions
-Primitives cannot be printed
+MathLibrary cannot be printed
 Functions cannot be printed
 User defined functions cannot be overloaded
 Function ending in _lp only where target is available
-TODO: Test that user defined functions with probability suffixes have right type.
+Test that user defined functions with probability suffixes have right type.
 (Mutual) recursive functions have a definition
 Make sure return types of statements involving continue and break are correct.
 Make sure data only arguments to functions are checked properly.
 Sizes should be of level at most data.
 *)
-
-(* TODO: check that variables are assigned to before they are used! *)
 
 open Symbol_table
 open Ast
@@ -91,11 +89,9 @@ let context_flags =
 
 (* Some helper functions *)
 let dup_exists l =
-  let rec dup_consecutive = function
-    | [] | [_] -> false
-    | x1 :: x2 :: tl -> x1 = x2 || dup_consecutive (x2 :: tl)
-  in
-  dup_consecutive (List.sort String.compare l)
+  match Core_kernel.List.find_a_dup ~compare:String.compare l with
+  | Some _ -> true
+  | None -> false
 
 let typed_expression_unroll = function TypedExpr x -> x
 
@@ -123,7 +119,7 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, _) -> Array (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
-  | [] -> Primitives
+  | [] -> MathLibrary
   | x :: xs ->
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
@@ -251,10 +247,7 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
           ^ pretty_print_returntype rt2
           ^ "." )
       else Incomplete rt1
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |NoReturnType, NoReturnType ->
-      NoReturnType
+  | NoReturnType, NoReturnType -> NoReturnType
   | AnyReturnType, Incomplete rt
    |Complete rt, NoReturnType
    |NoReturnType, Incomplete rt
@@ -265,7 +258,10 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
    |Incomplete rt, AnyReturnType
    |AnyReturnType, Complete rt ->
       Complete rt
-  | AnyReturnType, AnyReturnType -> AnyReturnType
+  | AnyReturnType, NoReturnType
+   |NoReturnType, AnyReturnType
+   |AnyReturnType, AnyReturnType ->
+      AnyReturnType
 
 let check_fresh_variable_basic id is_nullary_function =
   (* For some strange reason, Stan allows user declared identifiers that are
@@ -279,7 +275,8 @@ let check_fresh_variable_basic id is_nullary_function =
          || get_stan_math_function_return_type_opt id.name [] = None )
     then
       let error_msg =
-        String.concat " " ["Identifier "; id.name; " clashes with primitive."]
+        String.concat " "
+          ["Identifier "; id.name; " clashes with Stan Math library function."]
       in
       semantic_error ~loc:id.id_loc error_msg
   in
@@ -299,34 +296,32 @@ let check_fresh_variable id is_nullary_function =
 (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
    have a block level that is determined by what has been assigned to them
-   rather than by where they were declared. I'm not sure that behaviour makes
-   sense unless we use static analysis as well to make sure these assignments
-   actually get evaluated in that phase. *)
+   rather than by where they were declared. *)
 let update_originblock name ob =
   match Symbol_table.look vm name with
   | Some (old_ob, ut) ->
       let new_ob = lub_originblock [ob; old_ob] in
       Symbol_table.unsafe_replace vm name (new_ob, ut)
-  | _ -> fatal_error ()
+  | None -> fatal_error ()
 
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
   match p
   with
-  | { functionblock= bf
-    ; datablock= bd
-    ; transformeddatablock= btd
-    ; parametersblock= bp
-    ; transformedparametersblock= btp
-    ; modelblock= bm
-    ; generatedquantitiesblock= bgq }
+  | { functionblock= fb
+    ; datablock= db
+    ; transformeddatablock= tdb
+    ; parametersblock= pb
+    ; transformedparametersblock= tpb
+    ; modelblock= mb
+    ; generatedquantitiesblock= gb }
   ->
     (* NB: We always want to make sure we start with an empty symbol table, in
        case we are processing multiple files in one run. *)
     let _ = unsafe_clear_symbol_table vm in
     let _ = context_flags.current_block <- Functions in
-    let ubf =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bf
+    let ufb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) fb
     in
     let _ =
       if
@@ -337,46 +332,46 @@ let rec semantic_check_program p =
           ~loc:
             (snd
                (typed_statement_unroll
-                  (List.hd ((function Some x -> x | _ -> fatal_error ()) ubf))))
+                  (List.hd
+                     ((function Some x -> x | None -> fatal_error ()) ufb))))
               .stmt_typed_meta_loc
           "Some function is declared without specifying a definition."
       (* TODO: insert better location in the error above *)
     in
     let _ = context_flags.current_block <- Data in
-    let ubd =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bd
+    let udb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) db
     in
     let _ = context_flags.current_block <- TData in
-    let ubtd =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) btd
+    let utdb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) tdb
     in
     let _ = context_flags.current_block <- Param in
-    let ubp =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bp
+    let upb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) pb
     in
     let _ = context_flags.current_block <- TParam in
-    let ubtp =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) btp
+    let utpb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) tpb
     in
     let _ = context_flags.current_block <- Model in
     let _ = Symbol_table.begin_scope vm in
-    let ubm =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bm
+    let umb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) mb
     in
     let _ = Symbol_table.end_scope vm in
     let _ = context_flags.current_block <- GQuant in
-    let ubgq =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) bgq
+    let ugb =
+      Core_kernel.Option.map ~f:(List.map semantic_check_statement) gb
     in
-    { functionblock= ubf
-    ; datablock= ubd
-    ; transformeddatablock= ubtd
-    ; parametersblock= ubp
-    ; transformedparametersblock= ubtp
-    ; modelblock= ubm
-    ; generatedquantitiesblock= ubgq }
+    { functionblock= ufb
+    ; datablock= udb
+    ; transformeddatablock= utdb
+    ; parametersblock= upb
+    ; transformedparametersblock= utpb
+    ; modelblock= umb
+    ; generatedquantitiesblock= ugb }
 
-(* This could also be dealt with during lexing. That would probably be more efficient. *)
 and semantic_check_identifier id =
   let _ =
     if id.name = !model_name then
@@ -505,9 +500,8 @@ and semantic_check_unsizedtype = function
   | Fun (l, rt) ->
       Fun
         ( List.map
-            (function
-              | ob, ut ->
-                  (semantic_check_originblock ob, semantic_check_unsizedtype ut))
+            (fun (ob, ut) ->
+              (semantic_check_originblock ob, semantic_check_unsizedtype ut) )
             l
         , semantic_check_returntype rt )
   | ut -> ut
@@ -675,7 +669,7 @@ and semantic_check_expression x =
             ( Conditional (ue1, ue2, ue3)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
@@ -713,7 +707,7 @@ and semantic_check_expression x =
             ( InfixOp (ue1, uop, ue2)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_infixop uop ^ ". Available signatures: "
@@ -741,7 +735,7 @@ and semantic_check_expression x =
             ( PrefixOp (uop, ue)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_prefixop uop ^ ". Available signatures: "
@@ -767,7 +761,7 @@ and semantic_check_expression x =
             ( PostfixOp (ue, uop)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ ->
+      | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_postfixop uop ^ ". Available signatures: "
@@ -786,7 +780,7 @@ and semantic_check_expression x =
         ( Variable uid
         , { expr_typed_meta_origin_type=
               (function
-                | None -> (Primitives, PrimitiveFunction) | Some x -> x)
+                | None -> (MathLibrary, MathLibraryFunction) | Some x -> x)
                 ort
           ; expr_typed_meta_loc= loc } )
   | IntNumeral s ->
@@ -869,7 +863,7 @@ and semantic_check_expression x =
             ( FunApp (uid, ues)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ -> (
+      | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
@@ -913,9 +907,7 @@ and semantic_check_expression x =
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
-                   identifier " ^ uid.name ^ " was supplied." ) )
-      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
-      )
+                   identifier " ^ uid.name ^ " was supplied." ) ) )
   | CondFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
@@ -959,7 +951,7 @@ and semantic_check_expression x =
             ( CondFunApp (uid, ues)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
-      | _ -> (
+      | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
@@ -1003,9 +995,7 @@ and semantic_check_expression x =
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
-                   identifier " ^ uid.name ^ " was supplied." ) )
-      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
-      )
+                   identifier " ^ uid.name ^ " was supplied." ) ) )
   | GetLP ->
       let _ =
         if
@@ -1124,7 +1114,7 @@ and semantic_check_expression x =
           ( ob
           :: List.map
                (function
-                 | All -> Primitives
+                 | All -> MathLibrary
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 | Multiple ue1 ->
                      lub_originblock
                        [ ob
@@ -1209,7 +1199,7 @@ and semantic_check_printable = function
       let ue = semantic_check_expression e in
       let loc = (snd (typed_expression_unroll ue)).expr_typed_meta_loc in
       match (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type with
-      | _, Fun _ | _, PrimitiveFunction ->
+      | _, Fun _ | _, MathLibraryFunction ->
           semantic_error ~loc "Functions cannot be printed."
       | _ -> PExpr ue )
 
@@ -1240,10 +1230,10 @@ and semantic_check_statement s =
       let uidoblock =
         (function
           | Some ob1, Some ob2 -> Some (lub_originblock [ob1; ob2])
-          | Some ob1, _ -> Some ob1
-          | _, Some ob2 -> Some ob2
-          | _ -> None)
-          ( ( if is_stan_math_function_name uid.name then Some Primitives
+          | Some ob1, None -> Some ob1
+          | None, Some ob2 -> Some ob2
+          | None, None -> None)
+          ( ( if is_stan_math_function_name uid.name then Some MathLibrary
             else None )
           , Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name) )
       in
@@ -1264,7 +1254,7 @@ and semantic_check_statement s =
               semantic_error ~loc
                 ( "Cannot assign to global variable " ^ uid.name
                 ^ " declared in previous blocks." )
-        | _ -> fatal_error ()
+        | None -> fatal_error ()
       in
       (* TODO: the following is very ugly, but we seem to need something like it to
    reproduce the (strange) behaviour in the current Stan that local variables
@@ -1294,7 +1284,7 @@ and semantic_check_statement s =
                 ; assign_op= uassop
                 ; assign_rhs= ue }
             , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-      | _ ->
+      | None | Some (ReturnType _) ->
           let lhs_type =
             pretty_print_expressiontype
               (snd (typed_expression_unroll ue2)).expr_typed_meta_origin_type
@@ -1341,16 +1331,17 @@ and semantic_check_statement s =
           semantic_error ~loc
             ( "A non-returning function was expected but a returning function "
             ^ uid.name ^ " was supplied." )
-      | _ -> (
+      | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
-                ( "Ill-typed arguments supplied to function " ^ uid.name
-                ^ ". Available signatures: "
-                ^ pretty_print_all_stan_math_function_signatures uid.name
-                ^ "\nInstead supplied arguments of incompatible type: "
-                ^ pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
-                ^ "." )
+                {| "Ill-typed arguments supplied to function "
+                    uid.name
+                    ". Available signatures: "
+                    pretty_print_all_stan_math_function_signatures uid.name
+                    "\nInstead supplied arguments of incompatible type: "
+                    pretty_print_unsizedtypes (List.map type_of_typed_expr ues) 
+                    "."  |}
           in
           match Symbol_table.look vm uid.name with
           | Some (_, Fun (listedtypes, Void)) ->
@@ -1384,16 +1375,14 @@ and semantic_check_statement s =
           | None ->
               semantic_error ~loc
                 ( "A non-returning function was expected but an undeclared \
-                   identifier " ^ uid.name ^ " was supplied." ) )
-      (* TODO: Insert informative error message in case identifier is found but not with appropriate type. *)
-      )
+                   identifier " ^ uid.name ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       let _ =
         match
           (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
         with
-        | _, Fun _ | _, PrimitiveFunction ->
+        | _, Fun _ | _, MathLibraryFunction ->
             semantic_error ~loc
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1417,7 +1406,7 @@ and semantic_check_statement s =
         match
           (snd (typed_expression_unroll ue)).expr_typed_meta_origin_type
         with
-        | _, Fun _ | _, PrimitiveFunction ->
+        | _, Fun _ | _, MathLibraryFunction ->
             semantic_error ~loc
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1620,7 +1609,8 @@ and semantic_check_statement s =
       let srt =
         (function
           | Complete rt | Incomplete rt -> Incomplete rt
-          | NoReturnType | AnyReturnType -> NoReturnType)
+          | NoReturnType -> NoReturnType
+          | AnyReturnType -> AnyReturnType)
           us_meta.stmt_typed_meta_type
       in
       TypedStmt
