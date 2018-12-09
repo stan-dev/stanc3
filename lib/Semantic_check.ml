@@ -1485,8 +1485,8 @@ and semantic_check_statement s =
         then ()
         else
           semantic_error ~loc
-            "Ill-typed arguments to '~' statement. No distribution was found \
-             with the correct signature."
+            ( "Ill-typed arguments to '~' statement. No distribution "
+            ^ uid.name ^ " was found with the correct signature." )
       in
       let _ =
         if

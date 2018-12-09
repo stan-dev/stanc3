@@ -20,7 +20,7 @@ Semantic error at file "bad_prob_fun_suffix.stan", line 10, characters 2-19:
   }
   -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution foo was found with the correct signature.
 
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
 
@@ -83,7 +83,7 @@ Semantic error at file "binomial_coefficient_sample.stan", line 5, characters 2-
   }
   -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution binomial_coefficient was found with the correct signature.
 
   $ ../../../../install/default/bin/stanc break1.stan
 
@@ -1411,7 +1411,7 @@ Semantic error at file "multiply_sample.stan", line 5, characters 2-18:
   }
   -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution multiply was found with the correct signature.
 
   $ ../../../../install/default/bin/stanc oneline-error.stan
 
@@ -2022,7 +2022,7 @@ Semantic error at file "signature_sampling_known.stan", line 8, characters 2-29:
   }
   -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution bernoulli_logit was found with the correct signature.
 
   $ ../../../../install/default/bin/stanc signature_sampling_unknown.stan
 
@@ -2034,7 +2034,7 @@ Semantic error at file "signature_sampling_unknown.stan", line 8, characters 2-2
   }
   -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution foo_whatev was found with the correct signature.
 
   $ ../../../../install/default/bin/stanc stanc_helper.stan
 
@@ -2046,7 +2046,7 @@ Semantic error at file "stanc_helper.stan", line 5, characters 2-18:
   }
   -------------------------------------------------
 
-Ill-typed arguments to '~' statement. No distribution was found with the correct signature.
+Ill-typed arguments to '~' statement. No distribution ormal was found with the correct signature.
 
   $ ../../../../install/default/bin/stanc target-reserved.stan
 
