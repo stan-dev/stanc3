@@ -56,7 +56,6 @@ let set_is_unassigned s str =
   else Hashtbl.add s.isunassigned str ()
 
 let check_is_unassigned s str = Hashtbl.mem s.isunassigned str
-
 let check_some_id_is_unassigned s = not (Hashtbl.length s.isunassigned = 0)
 
 let is_global s str =

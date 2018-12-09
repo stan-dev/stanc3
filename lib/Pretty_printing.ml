@@ -7,11 +7,8 @@
 open Ast
 
 let indent_num = ref 1
-
 let begin_indent _ = indent_num := 1 + !indent_num
-
 let exit_indent _ = indent_num := -1 + !indent_num
-
 let tabs () = String.make (2 * !indent_num) ' '
 
 let rec unwind_sized_array_type = function

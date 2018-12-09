@@ -3,11 +3,8 @@ open Core_kernel
 open Format
 
 let comma ppf () = fprintf ppf ", "
-
 let semi_new ppf () = fprintf ppf ";@ "
-
 let newline ppf () = fprintf ppf "@ "
-
 let emit_str ppf s = fprintf ppf "%s" s
 
 let emit_option ?default:(d = "") emitter ppf opt =

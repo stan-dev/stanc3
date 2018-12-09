@@ -64,9 +64,7 @@ open Pretty_printing
       the AST   *)
 
 let check_that_all_functions_have_definition = ref true
-
 let model_name = ref ""
-
 let vm = Symbol_table.initialize ()
 
 (* Some imperative context flags that mainly serve to throw semantic errors in a more
@@ -94,11 +92,8 @@ let dup_exists l =
   | None -> false
 
 let typed_expression_unroll = function TypedExpr x -> x
-
 let untyped_expression_unroll = function UntypedExpr x -> x
-
 let typed_statement_unroll = function TypedStmt x -> x
-
 let untyped_statement_unroll = function UntypedStmt x -> x
 
 let type_of_typed_expr ue =
@@ -383,102 +378,22 @@ and semantic_check_identifier id =
       Core_kernel.String.is_suffix id.name ~suffix:"__"
       || List.exists
            (fun str -> str = id.name)
-           [ "true"
-           ; "false"
-           ; "repeat"
-           ; "until"
-           ; "then"
-           ; "var"
-           ; "fvar"
-           ; "STAN_MAJOR"
-           ; "STAN_MINOR"
-           ; "STAN_PATCH"
-           ; "STAN_MATH_MAJOR"
-           ; "STAN_MATH_MINOR"
-           ; "STAN_MATH_PATCH"
-           ; "alignas"
-           ; "alignof"
-           ; "and"
-           ; "and_eq"
-           ; "asm"
-           ; "auto"
-           ; "bitand"
-           ; "bitor"
-           ; "bool"
-           ; "break"
-           ; "case"
-           ; "catch"
-           ; "char"
-           ; "char16_t"
-           ; "char32_t"
-           ; "class"
-           ; "compl"
-           ; "const"
-           ; "constexpr"
-           ; "const_cast"
-           ; "continue"
-           ; "decltype"
-           ; "default"
-           ; "delete"
-           ; "do"
-           ; "double"
-           ; "dynamic_cast"
-           ; "else"
-           ; "enum"
-           ; "explicit"
-           ; "export"
-           ; "extern"
-           ; "false"
-           ; "float"
-           ; "for"
-           ; "friend"
-           ; "goto"
-           ; "if"
-           ; "inline"
-           ; "int"
-           ; "long"
-           ; "mutable"
-           ; "namespace"
-           ; "new"
-           ; "noexcept"
-           ; "not"
-           ; "not_eq"
-           ; "nullptr"
-           ; "operator"
-           ; "or"
-           ; "or_eq"
-           ; "private"
-           ; "protected"
-           ; "public"
-           ; "register"
-           ; "reinterpret_cast"
-           ; "return"
-           ; "short"
-           ; "signed"
-           ; "sizeof"
-           ; "static"
-           ; "static_assert"
-           ; "static_cast"
-           ; "struct"
-           ; "switch"
-           ; "template"
-           ; "this"
-           ; "thread_local"
-           ; "throw"
-           ; "true"
-           ; "try"
-           ; "typedef"
-           ; "typeid"
-           ; "typename"
-           ; "union"
-           ; "unsigned"
-           ; "using"
-           ; "virtual"
-           ; "void"
-           ; "volatile"
-           ; "wchar_t"
-           ; "while"
-           ; "xor"
+           [ "true"; "false"; "repeat"; "until"; "then"; "var"; "fvar"
+           ; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
+           ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH"; "alignas"; "alignof"; "and"
+           ; "and_eq"; "asm"; "auto"; "bitand"; "bitor"; "bool"; "break"
+           ; "case"; "catch"; "char"; "char16_t"; "char32_t"; "class"; "compl"
+           ; "const"; "constexpr"; "const_cast"; "continue"; "decltype"
+           ; "default"; "delete"; "do"; "double"; "dynamic_cast"; "else"
+           ; "enum"; "explicit"; "export"; "extern"; "false"; "float"; "for"
+           ; "friend"; "goto"; "if"; "inline"; "int"; "long"; "mutable"
+           ; "namespace"; "new"; "noexcept"; "not"; "not_eq"; "nullptr"
+           ; "operator"; "or"; "or_eq"; "private"; "protected"; "public"
+           ; "register"; "reinterpret_cast"; "return"; "short"; "signed"
+           ; "sizeof"; "static"; "static_assert"; "static_cast"; "struct"
+           ; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
+           ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"
+           ; "using"; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"
            ; "xor_eq" ]
     then
       semantic_error ~loc:id.id_loc
@@ -1186,10 +1101,8 @@ and semantic_check_expression x =
 
 (* Probably nothing to do here *)
 and semantic_check_infixop i = i
-
 (* Probably nothing to do here *)
 and semantic_check_prefixop p = p
-
 (* Probably nothing to do here *)
 and semantic_check_postfixop p = p
 

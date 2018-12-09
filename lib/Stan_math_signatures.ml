@@ -63,9 +63,7 @@ let int_vector_types = function
   | _ -> fatal_error ()
 
 let int_vector_types_size = 2
-
 let primitive_types = function 0 -> Int | 1 -> Real | _ -> fatal_error ()
-
 let primitive_types_size = 2
 
 let all_vector_types = function
@@ -87,9 +85,7 @@ let eigen_vector_types = function
   | _ -> fatal_error ()
 
 let eigen_vector_types_size = 4
-
 let is_primitive = function Real -> true | Int -> true | _ -> false
-
 let rng_return_type t lt = if List.for_all is_primitive lt then t else Array t
 
 let add_unqualified (name, rt, uqargts) =
@@ -100,7 +96,6 @@ let add_qualified (name, rt, argts) =
   Hashtbl.add stan_math_signatures name (rt, argts)
 
 let add_nullary name = add_unqualified (name, ReturnType Real, [])
-
 let add_unary name = add_unqualified (name, ReturnType Real, [Real])
 
 let add_unary_vectorized name =
@@ -166,32 +161,21 @@ let _ =
     , ReturnType Vector
     , [ ( TParam
         , Fun
-            ( [ (TParam, Vector)
-              ; (TParam, Vector)
-              ; (TData, Array Real)
+            ( [ (TParam, Vector); (TParam, Vector); (TData, Array Real)
               ; (TData, Array Int) ]
             , ReturnType Vector ) )
-      ; (TParam, Vector)
-      ; (TParam, Vector)
-      ; (TData, Array Real)
+      ; (TParam, Vector); (TParam, Vector); (TData, Array Real)
       ; (TData, Array Int) ] ) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType Vector
     , [ ( TParam
         , Fun
-            ( [ (TParam, Vector)
-              ; (TParam, Vector)
-              ; (TData, Array Real)
+            ( [ (TParam, Vector); (TParam, Vector); (TData, Array Real)
               ; (TData, Array Int) ]
             , ReturnType Vector ) )
-      ; (TParam, Vector)
-      ; (TParam, Vector)
-      ; (TData, Array Real)
-      ; (TData, Array Int)
-      ; (TData, Real)
-      ; (TData, Real)
-      ; (TData, Real) ] ) ;
+      ; (TParam, Vector); (TParam, Vector); (TData, Array Real)
+      ; (TData, Array Int); (TData, Real); (TData, Real); (TData, Real) ] ) ;
   for i = 1 to 8 - 1 do
     add_unqualified
       ( "append_array"
@@ -338,51 +322,37 @@ let _ =
           add_unqualified
             ( "beta_binomial_ccdf_log"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] ) ;
           add_unqualified
             ( "beta_binomial_cdf"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] ) ;
           add_unqualified
             ( "beta_binomial_cdf_log"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] ) ;
           add_unqualified
             ( "beta_binomial_log"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] ) ;
           add_unqualified
             ( "beta_binomial_lccdf"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] ) ;
           add_unqualified
             ( "beta_binomial_lcdf"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] ) ;
           add_unqualified
             ( "beta_binomial_lpmf"
             , ReturnType Real
-            , [ int_vector_types i
-              ; int_vector_types j
-              ; vector_types k
+            , [ int_vector_types i; int_vector_types j; vector_types k
               ; vector_types l ] )
         done
       done
@@ -635,15 +605,12 @@ let _ =
     , ReturnType Matrix
     , [ bare_array_type (RowVector, 1)
       ; bare_array_type (RowVector, 1)
-      ; Real
-      ; Real ] ) ;
+      ; Real; Real ] ) ;
   add_unqualified ("crossprod", ReturnType Matrix, [Matrix]) ;
   add_unqualified
     ( "csr_matrix_times_vector"
     , ReturnType Vector
-    , [ Int
-      ; Int
-      ; Vector
+    , [ Int; Int; Vector
       ; bare_array_type (Int, 1)
       ; bare_array_type (Int, 1)
       ; Vector ] ) ;
@@ -1054,129 +1021,74 @@ let _ =
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int)
-      ; (TData, Real)
-      ; (TData, Real)
-      ; (TData, Real) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int)
+      ; (TData, Real); (TData, Real); (TData, Real) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int)
-      ; (TData, Real)
-      ; (TData, Real)
-      ; (TData, Real) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int)
+      ; (TData, Real); (TData, Real); (TData, Real) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
     , [ ( TParam
         , Fun
-            ( [ (TParam, Real)
-              ; (TParam, Array Real)
-              ; (TParam, Array Real)
-              ; (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
+              ; (TData, Array Real); (TData, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real)
-      ; (TData, Real)
-      ; (TData, Array Real)
-      ; (TParam, Array Real)
-      ; (TData, Array Real)
-      ; (TData, Array Int)
-      ; (TData, Real)
-      ; (TData, Real)
-      ; (TData, Real) ] ) ;
+      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
+      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int)
+      ; (TData, Real); (TData, Real); (TData, Real) ] ) ;
   add_unary_vectorized "inv" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1419,13 +1331,10 @@ let _ =
     , ReturnType Vector
     , [ ( TParam
         , Fun
-            ( [ (TParam, Vector)
-              ; (TParam, Vector)
-              ; (TData, Array Real)
+            ( [ (TParam, Vector); (TParam, Vector); (TData, Array Real)
               ; (TData, Array Int) ]
             , ReturnType Vector ) )
-      ; (TParam, Vector)
-      ; (TParam, Array Vector)
+      ; (TParam, Vector); (TParam, Array Vector)
       ; (TData, Array (Array Real))
       ; (TData, Array (Array Int)) ] ) ;
   add_unqualified ("matrix_exp", ReturnType Matrix, [Matrix]) ;
@@ -2437,18 +2346,12 @@ let _ =
             add_unqualified
               ( "wiener_log"
               , ReturnType Real
-              , [ vector_types i
-                ; vector_types j
-                ; vector_types k
-                ; vector_types l
+              , [ vector_types i; vector_types j; vector_types k; vector_types l
                 ; vector_types m ] ) ;
             add_unqualified
               ( "wiener_lpdf"
               , ReturnType Real
-              , [ vector_types i
-                ; vector_types j
-                ; vector_types k
-                ; vector_types l
+              , [ vector_types i; vector_types j; vector_types k; vector_types l
                 ; vector_types m ] )
           done
         done
