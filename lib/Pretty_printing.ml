@@ -276,9 +276,9 @@ and pretty_print_statement = function
     | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
     | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
     | Skip -> ";"
-    | IfThen (e, s) ->
+    | IfThenElse (e, s, None) ->
         "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
-    | IfThenElse (e, s1, s2) ->
+    | IfThenElse (e, s1, Some s2) ->
         "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s1
         ^ "\n" ^ tabs () ^ "else " ^ pretty_print_statement s2
     | While (e, s) ->

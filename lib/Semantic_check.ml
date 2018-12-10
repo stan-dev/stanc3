@@ -1497,29 +1497,7 @@ and semantic_check_statement s =
   | Skip ->
       TypedStmt
         (Skip, {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc})
-  | IfThen (e, s) ->
-      let ue = semantic_check_expression e in
-      (* For, while, for each, if constructs take expressions of valid type *)
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc
-            ( "Condition in conditional needs to be of type int or real. \
-               Instead found type "
-            ^ pretty_print_unsizedtype (type_of_typed_expr ue)
-            ^ "." )
-      in
-      let us = semantic_check_statement s in
-      let us_meta = snd (typed_statement_unroll us) in
-      let srt =
-        (function
-          | Complete rt | Incomplete rt -> Incomplete rt
-          | NoReturnType -> NoReturnType
-          | AnyReturnType -> AnyReturnType)
-          us_meta.stmt_typed_meta_type
-      in
-      TypedStmt
-        (IfThen (ue, us), {stmt_typed_meta_loc= loc; stmt_typed_meta_type= srt})
-  | IfThenElse (e, s1, s2) ->
+  | IfThenElse (e, s1, os2) ->
       let ue = semantic_check_expression e in
       (* For, while, for each, if constructs take expressions of valid type *)
       let _ =
@@ -1531,14 +1509,16 @@ and semantic_check_statement s =
             ^ "." )
       in
       let us1 = semantic_check_statement s1 in
-      let us2 = semantic_check_statement s2 in
-      let us1_meta = snd (typed_statement_unroll us1) in
-      let us2_meta = snd (typed_statement_unroll us2) in
-      let srt1 = us1_meta.stmt_typed_meta_type in
-      let srt2 = us2_meta.stmt_typed_meta_type in
+      let uos2 = Core_kernel.Option.map ~f:semantic_check_statement os2 in
+      let srt1 = (snd (typed_statement_unroll us1)).stmt_typed_meta_type in
+      let srt2 =
+        match uos2 with
+        | None -> NoReturnType
+        | Some us2 -> (snd (typed_statement_unroll us2)).stmt_typed_meta_type
+      in
       let srt = try_compute_ifthenelse_statement_returntype loc srt1 srt2 in
       TypedStmt
-        ( IfThenElse (ue, us1, us2)
+        ( IfThenElse (ue, us1, uos2)
         , {stmt_typed_meta_loc= loc; stmt_typed_meta_type= srt} )
   | While (e, s) ->
       let ue = semantic_check_expression e in

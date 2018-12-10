@@ -183,8 +183,7 @@ and ('e, 's) statement =
   | Print of 'e printable list
   | Reject of 'e printable list
   | Skip
-  | IfThenElse of 'e * 's * 's
-  | IfThen of 'e * 's
+  | IfThenElse of 'e * 's * 's option
   | While of 'e * 's
   | For of
       { loop_variable: identifier
