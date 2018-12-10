@@ -1874,7 +1874,7 @@ Semantic error at file "rng_loc1.stan", line 3, characters 11-29:
   }
   -------------------------------------------------
 
-Random number generators only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 
   $ ../../../../install/default/bin/stanc rng_loc2.stan
 
@@ -1887,7 +1887,7 @@ Semantic error at file "rng_loc2.stan", line 3, characters 11-29:
   }
   -------------------------------------------------
 
-Random number generators only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 
   $ ../../../../install/default/bin/stanc rng_loc3.stan
 
@@ -1900,7 +1900,7 @@ Semantic error at file "rng_loc3.stan", line 3, characters 11-29:
   }
   -------------------------------------------------
 
-Random number generators only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 
   $ ../../../../install/default/bin/stanc rng_loc4.stan
 
@@ -1913,7 +1913,7 @@ Semantic error at file "rng_loc4.stan", line 3, characters 11-29:
   }
   -------------------------------------------------
 
-Random number generators only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 
   $ ../../../../install/default/bin/stanc rng_loc5.stan
 
@@ -1926,7 +1926,7 @@ Semantic error at file "rng_loc5.stan", line 6, characters 6-22:
   model {
   -------------------------------------------------
 
-Random number generators only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 
   $ ../../../../install/default/bin/stanc rng_loc6.stan
 
@@ -1939,7 +1939,7 @@ Semantic error at file "rng_loc6.stan", line 6, characters 6-22:
     y ~ normal(0, 1);
   -------------------------------------------------
 
-Random number generators only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 
   $ ../../../../install/default/bin/stanc row_vector_expr_bad1.stan
 
