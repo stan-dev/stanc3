@@ -46,18 +46,29 @@ let rec emit_expr ppf s =
       fprintf ppf "%a%a" emit_expr e
         (pp_print_list ~pp_sep:comma emit_index)
         idcs
-  (* TODO: Emit something like:
-stan::model::rvalue(
-    eigmat, stan::model::cons_list(
-      stan::model::index_multi(y),
-      stan::model::cons_list(
-        stan::model::index_multi(y),
-        stan::model::nil_index_list())),
-    "eigmat"));
- *)
-  | MultiIndexed (ident, indices) -> ignore (ident, indices)
+  | MultiIndexed (ident, indices) ->
+      fprintf ppf
+        "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
+        emit_expr ident emit_intarr_idx_list indices emit_expr ident
 
 and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
+
+and emit_intarr_idx_list ppf = function
+  | [] -> fprintf ppf "stan::model::nil_index_list()"
+  | hd :: tail ->
+      fprintf ppf "stan::model::cons_list(stan::model::index_multi(%a),@ %a)"
+        emit_expr hd emit_intarr_idx_list tail
+
+let%expect_test "multi index" =
+  MultiIndexed (Var "vec", [Var "intarr1"; Var "intarr2"])
+  |> fprintf str_formatter "%a" emit_expr ;
+  flush_str_formatter () |> print_endline ;
+  [%expect
+    {|
+    stan::model::rvalue(vec,
+        stan::model::cons_list(stan::model::index_multi(intarr1),
+        stan::model::cons_list(stan::model::index_multi(intarr2),
+        stan::model::nil_index_list())), "vec"); |}]
 
 let%expect_test "expr" =
   FnApp
@@ -234,7 +245,7 @@ let emit_udf ppf {returntype; name; arguments; body} =
         (pp_print_list ~pp_sep:comma emit_args) ppf args ;
         fprintf ppf ",@ %s" extra )
     , (arguments, "std::ostream* pstream__") ) ;
-  fprintf ppf " ";
+  fprintf ppf " " ;
   emit_block ppf
     ( (fun ppf body ->
         let text = fprintf ppf "%s@;" in
@@ -371,7 +382,9 @@ class %s_model : public prob_grad {
 
 *)
 let globals = "static int current_statement_begin__;"
-let usings = {|
+
+let usings =
+  {|
 using std::istream;
 using std::string;
 using std::stringstream;
