@@ -298,24 +298,21 @@ and pretty_print_statement = function
         let _ = exit_indent () in
         let s3 = tabs () ^ "}" in
         s1 ^ s2 ^ s3
-    | VDecl (st, id) ->
+    | VarDecl
+        { sizedtype= st
+        ; transformation= trans
+        ; identifier= id
+        ; initial_value= init
+        ; is_global= _ } ->
         let st2, es = unwind_sized_array_type st in
-        pretty_print_sizedtype st2 ^ " " ^ pretty_print_identifier id
-        ^ pretty_print_array_dims es ^ ";"
-    | VDeclAss {sizedtype= st; identifier= id; value= e} ->
-        let st2, es = unwind_sized_array_type st in
-        pretty_print_sizedtype st2 ^ " " ^ pretty_print_identifier id
-        ^ pretty_print_array_dims es ^ " = " ^ pretty_print_expression e ^ ";"
-    | TVDecl (st, trans, id) ->
-        let st2, es = unwind_sized_array_type st in
+        let init_string =
+          match init with
+          | None -> ""
+          | Some e -> " = " ^ pretty_print_expression e
+        in
         pretty_print_transformed_type st2 trans
-        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es ^ ";"
-    | TVDeclAss
-        {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} ->
-        let st2, es = unwind_sized_array_type st in
-        pretty_print_transformed_type st2 trans
-        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es ^ " = "
-        ^ pretty_print_expression e ^ ";"
+        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es
+        ^ init_string ^ ";"
     | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
         pretty_print_returntype rt ^ " " ^ pretty_print_identifier id ^ "("
         ^ String.concat ", "

@@ -184,13 +184,20 @@ var_decl:
       match ae with
       | Some a ->
           UntypedStmt
-            ( VDeclAss
-                {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
-            , initialize_stmt_meta $startpos $endpos )
+            ( VarDecl {sizedtype= reducearray (sbt, sizes);
+                       transformation= Identity;
+                       identifier= id;
+                       initial_value= Some (snd a);
+                       is_global= false},
+              initialize_stmt_meta $startpos $endpos )
       | None ->
           UntypedStmt
-            ( VDecl (reducearray (sbt, sizes), id)
-            , initialize_stmt_meta $startpos $endpos ) }
+            ( VarDecl {sizedtype= reducearray (sbt, sizes);
+                       transformation= Identity;
+                       identifier= id;
+                       initial_value= None;
+                       is_global= false},
+              initialize_stmt_meta $startpos $endpos ) }
 
 sized_basic_type:
   | INT
@@ -210,8 +217,12 @@ top_var_decl_no_assign:
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
       UntypedStmt
-        ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
-        , initialize_stmt_meta $startpos $endpos )
+        ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+                   transformation=  snd tvt;
+                   identifier= id;
+                   initial_value= None;
+                   is_global= true},
+          initialize_stmt_meta $startpos $endpos )
     }
 
 top_var_decl:
@@ -222,16 +233,20 @@ top_var_decl:
       match ass with
       | Some a ->
           UntypedStmt
-            ( TVDeclAss
-                { tsizedtype= reducearray (fst tvt, sizes)
-                ; transformation= snd tvt
-                ; tidentifier= id
-                ; tvalue= snd a }
-            , initialize_stmt_meta $startpos $endpos )
+            ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+                       transformation=  snd tvt;
+                       identifier= id;
+                       initial_value= Some (snd a);
+                       is_global= true},
+              initialize_stmt_meta $startpos $endpos )
       | None ->
           UntypedStmt
-            ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
-            , initialize_stmt_meta $startpos $endpos ) }
+            ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+                       transformation=  snd tvt;
+                       identifier= id;
+                       initial_value= None;
+                       is_global= true},
+              initialize_stmt_meta $startpos $endpos ) }
 
 top_var_type:
   | INT r=range_constraint

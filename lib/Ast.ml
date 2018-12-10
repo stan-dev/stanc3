@@ -192,14 +192,12 @@ and ('e, 's) statement =
       ; loop_body: 's }
   | ForEach of identifier * 'e * 's
   | Block of 's list
-  | VDecl of 'e sizedtype * identifier
-  | VDeclAss of {sizedtype: 'e sizedtype; identifier: identifier; value: 'e}
-  | TVDecl of 'e sizedtype * 'e transformation * identifier
-  | TVDeclAss of
-      { tsizedtype: 'e sizedtype
+  | VarDecl of
+      { sizedtype: 'e sizedtype
       ; transformation: 'e transformation
-      ; tidentifier: identifier
-      ; tvalue: 'e }
+      ; identifier: identifier
+      ; initial_value: 'e option
+      ; is_global: bool }
   | FunDef of
       { returntype: returntype
       ; funname: identifier

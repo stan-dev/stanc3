@@ -1648,44 +1648,12 @@ and semantic_check_statement s =
                    (fun x -> (snd x).stmt_typed_meta_type)
                    (list_until_escape (List.map typed_statement_unroll uvdsl)))
           ; stmt_typed_meta_loc= loc } )
-  | VDecl (st, id) ->
-      let ust = semantic_check_sizedtype st in
-      let uid = semantic_check_identifier id in
-      let ut = unsizedtype_of_sizedtype st in
-      let _ = check_fresh_variable uid false in
-      (* Note: this origin block here is a bit of a curiosity to get Stan
-         to treat the level of local variables in the right way. It will get
-         modified (can be elevated) based on assignments.*)
-      let _ = Symbol_table.enter vm id.name (Functions, ut) in
-      TypedStmt
-        ( VDecl (ust, uid)
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-  | VDeclAss {sizedtype= st; identifier= id; value= e} -> (
-    match
-      ( semantic_check_statement
-          (UntypedStmt (VDecl (st, id), {stmt_untyped_meta_loc= loc}))
-      , semantic_check_statement
-          (UntypedStmt
-             ( Assignment
-                 { assign_identifier= id
-                 ; assign_indices= []
-                 ; assign_op= Assign
-                 ; assign_rhs= e }
-             , {stmt_untyped_meta_loc= loc} )) )
-    with
-    | ( TypedStmt (VDecl (ust, uid), _)
-      , TypedStmt
-          ( Assignment
-              { assign_identifier= _
-              ; assign_indices= []
-              ; assign_op= Assign
-              ; assign_rhs= ue }
-          , {stmt_typed_meta_type= NoReturnType; _} ) ) ->
-        TypedStmt
-          ( VDeclAss {sizedtype= ust; identifier= uid; value= ue}
-          , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ -> fatal_error () )
-  | TVDecl (st, trans, id) ->
+  | VarDecl
+      { sizedtype= st
+      ; transformation= trans
+      ; identifier= id
+      ; initial_value= init
+      ; is_global= glob } ->
       let ust = semantic_check_sizedtype st in
       let rec check_sizes_below_param_level = function
         | SVector ue -> (
@@ -1721,20 +1689,22 @@ and semantic_check_statement s =
       in
       (* Sizes should be of level at most data. *)
       let _ =
-        if not (check_sizes_below_param_level ust) then
+        if glob && not (check_sizes_below_param_level ust) then
           semantic_error ~loc
             "Non-data variables are not allowed in top level size declarations."
       in
       let utrans = semantic_check_transformation trans in
       let uid = semantic_check_identifier id in
-      let ut = unsizedtype_of_sizedtype st in
+      let ut = unsizedtype_of_sizedtype ust in
       let _ = check_fresh_variable uid false in
-      let _ =
-        Symbol_table.enter vm uid.name (context_flags.current_block, ut)
-      in
+      (* Note: this origin block here is a bit of a curiosity to get Stan
+         to treat the level of local variables in the right way. It will get
+         modified (can be elevated) based on assignments.*)
+      let ob = if glob then context_flags.current_block else Functions in
+      let _ = Symbol_table.enter vm id.name (ob, ut) in
       let _ =
         if
-          ust = SInt
+          glob && ust = SInt
           &&
           match utrans with
           | Lower ue1 -> (
@@ -1768,44 +1738,44 @@ and semantic_check_statement s =
       (* Parameters and transformed parameters are not int(array)  *)
       let _ =
         if
-          ( context_flags.current_block = Param
-          || context_flags.current_block = TParam )
+          glob
+          && ( context_flags.current_block = Param
+             || context_flags.current_block = TParam )
           && unsizedtype_contains_int ut
         then semantic_error ~loc "(Transformed) Parameters cannot be integers."
       in
+      let uinit =
+        match init with
+        | None -> None
+        | Some e -> (
+          match
+            semantic_check_statement
+              (UntypedStmt
+                 ( Assignment
+                     { assign_identifier= id
+                     ; assign_indices= []
+                     ; assign_op= Assign
+                     ; assign_rhs= e }
+                 , {stmt_untyped_meta_loc= loc} ))
+          with
+          | TypedStmt
+              ( Assignment
+                  { assign_identifier= _
+                  ; assign_indices= _
+                  ; assign_op= Assign
+                  ; assign_rhs= ue }
+              , {stmt_typed_meta_type= NoReturnType; _} ) ->
+              Some ue
+          | _ -> fatal_error () )
+      in
       TypedStmt
-        ( TVDecl (ust, utrans, uid)
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-  | TVDeclAss
-      {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} -> (
-    match
-      ( semantic_check_statement
-          (UntypedStmt (TVDecl (st, trans, id), {stmt_untyped_meta_loc= loc}))
-      , semantic_check_statement
-          (UntypedStmt
-             ( Assignment
-                 { assign_identifier= id
-                 ; assign_indices= []
-                 ; assign_op= Assign
-                 ; assign_rhs= e }
-             , {stmt_untyped_meta_loc= loc} )) )
-    with
-    | ( TypedStmt (TVDecl (ust, utrans, uid), _)
-      , TypedStmt
-          ( Assignment
-              { assign_identifier= _
-              ; assign_indices= []
-              ; assign_op= Assign
-              ; assign_rhs= ue }
-          , {stmt_typed_meta_type= NoReturnType; _} ) ) ->
-        TypedStmt
-          ( TVDeclAss
-              { tsizedtype= ust
-              ; transformation= utrans
-              ; tidentifier= uid
-              ; tvalue= ue }
-          , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
-    | _ -> fatal_error () )
+        ( VarDecl
+            { sizedtype= ust
+            ; transformation= utrans
+            ; identifier= uid
+            ; initial_value= uinit
+            ; is_global= glob }
+        , {stmt_typed_meta_loc= loc; stmt_typed_meta_type= NoReturnType} )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
