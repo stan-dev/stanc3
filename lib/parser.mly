@@ -147,7 +147,7 @@ return_type:
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=identifier
     {  grammar_logger "arg_decl" ;
-       match od with None -> (TParam, ut, id) | _ -> (TData, ut, id)  }
+       match od with None -> (AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
 unsized_type:
   | bt=basic_type ud=option(unsized_dims)

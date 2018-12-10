@@ -403,6 +403,8 @@ and semantic_check_identifier id =
 
 (* Probably nothing to do here *)
 and semantic_check_originblock ob = ob
+(* Probably nothing to do here *)
+and semantic_check_autodifftype at = at
 
 (* Probably nothing to do here *)
 and semantic_check_returntype = function
@@ -1833,8 +1835,8 @@ and semantic_check_statement s =
       let uargs =
         List.map
           (function
-            | ob, ut, id ->
-                ( semantic_check_originblock ob
+            | at, ut, id ->
+                ( semantic_check_autodifftype at
                 , semantic_check_unsizedtype ut
                 , semantic_check_identifier id ))
           args
@@ -1924,7 +1926,15 @@ and semantic_check_statement s =
         List.map (fun x -> check_fresh_variable x false) uarg_identifiers
       in
       (* TODO: Bob was suggesting that function arguments should be allowed to shadow user defined functions but not library functions. Should we allow for that? *)
-      let _ = List.map2 (Symbol_table.enter vm) uarg_names uarg_types in
+      (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
+         as if they are parameters, for the purposes of type checking. *)
+      let _ =
+        List.map2 (Symbol_table.enter vm) uarg_names
+          (List.map
+             (function
+               | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
+             uarg_types)
+      in
       let ub = semantic_check_statement b in
       let _ =
         if

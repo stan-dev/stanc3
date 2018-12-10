@@ -3,7 +3,7 @@ open Ast
 
 val check_compatible_arguments_mod_conv :
      string
-  -> (originblock * unsizedtype) list
+  -> (autodifftype * unsizedtype) list
   -> (originblock * unsizedtype) list
   -> bool
 (** Check that the rhs list of function argument types can be converted to the

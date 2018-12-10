@@ -16,7 +16,19 @@ let rec unwind_sized_array_type = function
     match unwind_sized_array_type st with st2, es -> (st2, e :: es) )
   | st -> (st, [])
 
-let rec pretty_print_originblock = function Data | TData -> "data " | _ -> ""
+let rec pretty_print_originblock = function
+  | MathLibrary -> "Math Library"
+  | Functions -> "functions"
+  | Data -> "data"
+  | TData -> "transformed data "
+  | Param -> "parameters"
+  | TParam -> "transformed parameters"
+  | Model -> "model"
+  | GQuant -> "generated quantities"
+
+and pretty_print_autodifftype = function
+  | DataOnly -> "data "
+  | AutoDiffable -> ""
 
 and pretty_print_unsizedtype = function
   | Int -> "int"
@@ -35,7 +47,7 @@ and pretty_print_unsizedtypes l =
   String.concat ", " (List.map pretty_print_unsizedtype l)
 
 and pretty_print_argtype = function
-  | ob, ut -> pretty_print_originblock ob ^ pretty_print_unsizedtype ut
+  | at, ut -> pretty_print_autodifftype at ^ pretty_print_unsizedtype ut
 
 and pretty_print_expressiontype = function
   | _, ut -> pretty_print_unsizedtype ut
@@ -309,8 +321,8 @@ and pretty_print_statement = function
         ^ String.concat ", "
             (List.map
                (function
-                 | ob, ut, id ->
-                     pretty_print_originblock ob
+                 | at, ut, id ->
+                     pretty_print_autodifftype at
                      ^ pretty_print_unsizedtype ut
                      ^ " " ^ pretty_print_identifier id)
                args)

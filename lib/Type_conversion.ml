@@ -1,8 +1,12 @@
 (** Some functions for checking whether conversions between types are allowed *)
 open Ast
 
-let originblock_can_convert ob1 ob2 =
-  ob2 = GQuant || compare_originblock ob1 ob2 > -1
+let autodifftype_can_convert at1 at2 =
+  match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
+
+let autodifftype_of_originblock = function
+  | Param | TParam | Model -> AutoDiffable
+  | _ -> DataOnly
 
 let check_of_same_type_mod_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
@@ -14,8 +18,8 @@ let check_of_same_type_mod_conv name t1 t2 =
         && List.for_all
              (fun x -> x = true)
              (List.map2
-                (fun (ob1, ut1) (ob2, ut2) ->
-                  ut1 = ut2 && originblock_can_convert ob2 ob1 )
+                (fun (at1, ut1) (at2, ut2) ->
+                  ut1 = ut2 && autodifftype_can_convert at2 at1 )
                 l1 l2)
     | _ -> t1 = t2
 
@@ -33,7 +37,8 @@ let check_compatible_arguments_mod_conv name args1 args2 =
        (List.map2
           (fun w1 w2 ->
             check_of_same_type_mod_conv name (snd w1) (snd w2)
-            && originblock_can_convert (fst w1) (fst w2) )
+            && autodifftype_can_convert (fst w1)
+                 (autodifftype_of_originblock (fst w2)) )
           args1 args2)
 
 let check_of_compatible_return_type rt1 srt2 =

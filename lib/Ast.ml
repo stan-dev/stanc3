@@ -19,6 +19,9 @@ type originblock =
   | Model
   | GQuant
 
+(** Flags for data only arguments to functions *)
+and autodifftype = DataOnly | AutoDiffable
+
 (** Unsized types for function arguments and for decorating expressions
     during type checking; we have a separate type here for Math library
     functions as these functions can be overloaded, so do not have a unique
@@ -31,7 +34,7 @@ and unsizedtype =
   | RowVector
   | Matrix
   | Array of unsizedtype
-  | Fun of (originblock * unsizedtype) list * returntype
+  | Fun of (autodifftype * unsizedtype) list * returntype
   | MathLibraryFunction
 
 (** Return types for functions *)
@@ -201,7 +204,7 @@ and ('e, 's) statement =
   | FunDef of
       { returntype: returntype
       ; funname: identifier
-      ; arguments: (originblock * unsizedtype * identifier) list
+      ; arguments: (autodifftype * unsizedtype * identifier) list
       ; body: 's }
 
 (** Meta data for untyped statements: locations for errors *)
