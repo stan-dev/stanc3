@@ -258,6 +258,63 @@ let update_originblock name ob =
       Symbol_table.unsafe_replace vm name (new_ob, ut)
   | None -> fatal_error ()
 
+let distribution_name_is_defined name argumenttypes =
+  get_stan_math_function_return_type_opt (name ^ "_lpdf") argumenttypes
+  = Some (ReturnType Real)
+  || get_stan_math_function_return_type_opt (name ^ "_lpmf") argumenttypes
+     = Some (ReturnType Real)
+  || get_stan_math_function_return_type_opt (name ^ "_log") argumenttypes
+     = Some (ReturnType Real)
+     && name <> "binomial_coefficient"
+     && name <> "multiply"
+  || ( match Symbol_table.look vm (name ^ "_lpdf") with
+     | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+         check_compatible_arguments_mod_conv name listedtypes argumenttypes
+     | _ -> false )
+  || ( match Symbol_table.look vm (name ^ "_lpmf") with
+     | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+         check_compatible_arguments_mod_conv name listedtypes argumenttypes
+     | _ -> false )
+  ||
+  match Symbol_table.look vm (name ^ "_log") with
+  | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+      check_compatible_arguments_mod_conv name listedtypes argumenttypes
+  | _ -> false
+
+let cumulative_density_is_defined name argumenttypes =
+  ( get_stan_math_function_return_type_opt (name ^ "_lcdf") argumenttypes
+    = Some (ReturnType Real)
+  ||
+  match Symbol_table.look vm (name ^ "_lcdf") with
+  | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+      check_compatible_arguments_mod_conv name listedtypes argumenttypes
+  | _ -> (
+      false
+      || get_stan_math_function_return_type_opt (name ^ "_cdf_log")
+           argumenttypes
+         = Some (ReturnType Real)
+      ||
+      match Symbol_table.look vm (name ^ "_cdf_log") with
+      | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+          check_compatible_arguments_mod_conv name listedtypes argumenttypes
+      | _ -> false ) )
+  && ( get_stan_math_function_return_type_opt (name ^ "_lccdf") argumenttypes
+       = Some (ReturnType Real)
+     ||
+     match Symbol_table.look vm (name ^ "_lccdf") with
+     | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+         check_compatible_arguments_mod_conv name listedtypes argumenttypes
+     | _ -> (
+         false
+         || get_stan_math_function_return_type_opt (name ^ "_ccdf_log")
+              argumenttypes
+            = Some (ReturnType Real)
+         ||
+         match Symbol_table.look vm (name ^ "_ccdf_log") with
+         | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+             check_compatible_arguments_mod_conv name listedtypes argumenttypes
+         | _ -> false ) )
+
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program p =
   match p
@@ -1354,35 +1411,7 @@ and semantic_check_statement s =
       in
       (* We check typing of ~ and target += *)
       let _ =
-        if
-          get_stan_math_function_return_type_opt (uid.name ^ "_lpdf")
-            argumenttypes
-          = Some (ReturnType Real)
-          || get_stan_math_function_return_type_opt (uid.name ^ "_lpmf")
-               argumenttypes
-             = Some (ReturnType Real)
-          || get_stan_math_function_return_type_opt (uid.name ^ "_log")
-               argumenttypes
-             = Some (ReturnType Real)
-             && uid.name <> "binomial_coefficient"
-             && uid.name <> "multiply"
-          || ( match Symbol_table.look vm (uid.name ^ "_lpdf") with
-             | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                 check_compatible_arguments_mod_conv uid.name listedtypes
-                   argumenttypes
-             | _ -> false )
-          || ( match Symbol_table.look vm (uid.name ^ "_lpmf") with
-             | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                 check_compatible_arguments_mod_conv uid.name listedtypes
-                   argumenttypes
-             | _ -> false )
-          ||
-          match Symbol_table.look vm (uid.name ^ "_log") with
-          | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-              check_compatible_arguments_mod_conv uid.name listedtypes
-                argumenttypes
-          | _ -> false
-        then ()
+        if distribution_name_is_defined uid.name argumenttypes then ()
         else
           semantic_error ~loc
             ( "Ill-typed arguments to '~' statement. No distribution "
@@ -1391,44 +1420,7 @@ and semantic_check_statement s =
       let _ =
         if
           ut = NoTruncate
-          || ( get_stan_math_function_return_type_opt (uid.name ^ "_lcdf")
-                 argumenttypes
-               = Some (ReturnType Real)
-             ||
-             match Symbol_table.look vm (uid.name ^ "_lcdf") with
-             | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                 check_compatible_arguments_mod_conv uid.name listedtypes
-                   argumenttypes
-             | _ -> (
-                 false
-                 || get_stan_math_function_return_type_opt
-                      (uid.name ^ "_cdf_log") argumenttypes
-                    = Some (ReturnType Real)
-                 ||
-                 match Symbol_table.look vm (uid.name ^ "_cdf_log") with
-                 | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                     check_compatible_arguments_mod_conv uid.name listedtypes
-                       argumenttypes
-                 | _ -> false ) )
-             && ( get_stan_math_function_return_type_opt (uid.name ^ "_lccdf")
-                    argumenttypes
-                  = Some (ReturnType Real)
-                ||
-                match Symbol_table.look vm (uid.name ^ "_lccdf") with
-                | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                    check_compatible_arguments_mod_conv uid.name listedtypes
-                      argumenttypes
-                | _ -> (
-                    false
-                    || get_stan_math_function_return_type_opt
-                         (uid.name ^ "_ccdf_log") argumenttypes
-                       = Some (ReturnType Real)
-                    ||
-                    match Symbol_table.look vm (uid.name ^ "_ccdf_log") with
-                    | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
-                        check_compatible_arguments_mod_conv uid.name
-                          listedtypes argumenttypes
-                    | _ -> false ) )
+          || cumulative_density_is_defined uid.name argumenttypes
         then ()
         else
           semantic_error ~loc
