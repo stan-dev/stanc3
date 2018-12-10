@@ -131,13 +131,9 @@ and pretty_print_list_of_expression es =
 
 and pretty_print_assignmentoperator = function
   | Assign -> "="
-  | PlusAssign -> "+="
-  | MinusAssign -> "-="
-  | TimesAssign -> "*="
-  | DivideAssign -> "/="
-  | EltTimesAssign -> ".*="
-  | EltDivideAssign -> "./="
+  (* ArrowAssign is deprecated *)
   | ArrowAssign -> "<-"
+  | OperatorAssign op -> pretty_print_infixop op ^ "="
 
 and pretty_print_truncation = function
   | NoTruncate -> ""

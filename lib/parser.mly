@@ -530,20 +530,20 @@ atomic_statement:
 %inline assignment_op:
   | ASSIGN
     {  grammar_logger "assign_plain" ; Assign }
-  | PLUSASSIGN
-    { grammar_logger "assign_plus" ; PlusAssign }
-  | MINUSASSIGN
-    { grammar_logger "assign_minus" ; MinusAssign }
-  | TIMESASSIGN
-    { grammar_logger "assign_times"  ; TimesAssign }
-  | DIVIDEASSIGN
-    { grammar_logger "assign_divide" ; DivideAssign }
-  | ELTTIMESASSIGN
-    { grammar_logger "assign_elttimes"  ; EltTimesAssign }
-  | ELTDIVIDEASSIGN
-    { grammar_logger "assign_eltdivide" ; EltDivideAssign  }
   | ARROWASSIGN
     { grammar_logger "assign_arrow" ; ArrowAssign  } (* deprecated *)
+  | PLUSASSIGN
+    { grammar_logger "assign_plus" ; OperatorAssign Plus }
+  | MINUSASSIGN
+    { grammar_logger "assign_minus" ; OperatorAssign Minus }
+  | TIMESASSIGN
+    { grammar_logger "assign_times"  ; OperatorAssign Times }
+  | DIVIDEASSIGN
+    { grammar_logger "assign_divide" ; OperatorAssign Divide }
+  | ELTTIMESASSIGN
+    { grammar_logger "assign_elttimes"  ; OperatorAssign EltTimes }
+  | ELTDIVIDEASSIGN
+    { grammar_logger "assign_eltdivide" ; OperatorAssign EltDivide  }
 
 string_literal:
   | s=STRINGLITERAL

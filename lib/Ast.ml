@@ -116,14 +116,9 @@ and typed_expression =
 (** Assignment operators *)
 and assignmentoperator =
   | Assign
-  | PlusAssign
-  | MinusAssign
-  | TimesAssign
-  | DivideAssign
-  | EltTimesAssign
-  | EltDivideAssign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
+  | OperatorAssign of infixop
 
 (** Truncations *)
 and 'e truncation =
