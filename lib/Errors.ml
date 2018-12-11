@@ -33,20 +33,28 @@ let nth_line_with_context file line =
     for _ = 1 to line - 3 do
       ignore (input_line input)
     done ;
+    let open Printf in
     let line_2_before =
-      if line > 2 then "  " ^ input_line input ^ "\n" else ""
+      if line > 2 then sprintf "%6d:  %s\n" (line - 2) (input_line input)
+      else ""
     in
     let line_before =
-      if line > 1 then "  " ^ input_line input ^ "\n" else ""
+      if line > 1 then sprintf "%6d:  %s\n" (line - 1) (input_line input)
+      else ""
     in
-    let our_line = "> " ^ input_line input ^ "\n" in
-    let line_after = try "  " ^ input_line input ^ "\n" with _ -> "" in
-    let line_2_after = try "  " ^ input_line input ^ "\n" with _ -> "" in
+    let our_line = sprintf "%6d:  %s\n" line (input_line input) in
+    let line_after =
+      try sprintf "%6d:  %s\n" (line + 1) (input_line input) with _ -> ""
+    in
+    let line_2_after =
+      try sprintf "%6d:  %s\n" (line + 2) (input_line input) with _ -> ""
+    in
     close_in input ;
     Some
-      ( "  -------------------------------------------------\n" ^ line_2_before
-      ^ line_before ^ our_line ^ line_after ^ line_2_after
-      ^ "  -------------------------------------------------\n" )
+      (sprintf
+         "  -------------------------------------------------\n\
+          %s%s%s%s%s  -------------------------------------------------\n"
+         line_2_before line_before our_line line_after line_2_after)
   with _ -> None
 
 (** A syntax error message used when handling a SyntaxError *)
