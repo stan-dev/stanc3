@@ -91,7 +91,7 @@ let use_file filename =
   let pretty2 = Pretty_printing.pretty_print_program  (Ast.untyped_program_of_typed_program typed_ast) in
   let _ =
     if pretty1 <> pretty2 then
-      print_endline pretty1; print_endline pretty2 
+      print_endline "\n***original***\n"; print_endline pretty1; print_endline "\n***transformed***\n";  print_endline pretty2 
   in
   let _ = Debug.typed_ast_logger typed_ast in
   ()
