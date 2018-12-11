@@ -140,12 +140,12 @@ Cannot assign to function argument or loop identifier v.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices3.stan
 
-Semantic error at file "for_statements_bad_indices3.stan", line 5, characters 6-29:
+Semantic error at file "for_statements_bad_indices3.stan", line 5, characters 16-18:
    -------------------------------------------------
      3:      while (1) {
      4:        int xx = 3;
      5:        for (i in xx) continue;
-               ^
+                         ^
      6:      }
      7:      return 0;
    -------------------------------------------------
@@ -154,12 +154,12 @@ Foreach loop must be over array, vector, row_vector or matrix. Instead found exp
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices4.stan
 
-Semantic error at file "for_statements_bad_indices4.stan", line 6, characters 8-30:
+Semantic error at file "for_statements_bad_indices4.stan", line 6, characters 18-19:
    -------------------------------------------------
      4:        matrix[2,3] vs;
      5:        for (v in vs) {
      6:          for (a in v) continue;
-                 ^
+                           ^
      7:        }
      8:      }
    -------------------------------------------------

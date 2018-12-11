@@ -56,10 +56,10 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc bad4.stan
 
-Semantic error at file "bad4.stan", line 1, characters 28-55:
+Semantic error at file "bad4.stan", line 1, characters 38-42:
    -------------------------------------------------
      1:  data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
-                                     ^
+                                               ^
    -------------------------------------------------
 
 Lower bound of for-loop needs to be of type int. Instead found type real.

@@ -1502,7 +1502,8 @@ and semantic_check_statement s =
       (* For, while, for each, if constructs take expressions of valid type *)
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc
+          semantic_error
+            ~loc:(snd (typed_expression_unroll ue)).expr_typed_meta_loc
             ( "Condition in conditional needs to be of type int or real. \
                Instead found type "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue)
@@ -1525,7 +1526,8 @@ and semantic_check_statement s =
       (* For, while, for each, if constructs take expressions of valid type *)
       let _ =
         if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc
+          semantic_error
+            ~loc:(snd (typed_expression_unroll ue)).expr_typed_meta_loc
             ( "Condition in while loop needs to be of type int or real. \
                Instead found type "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue)
@@ -1546,7 +1548,8 @@ and semantic_check_statement s =
       (* For, while, for each, if constructs take expressions of valid type *)
       let _ =
         if not (check_of_int_type ue1) then
-          semantic_error ~loc
+          semantic_error
+            ~loc:(snd (typed_expression_unroll ue1)).expr_typed_meta_loc
             ( "Lower bound of for-loop needs to be of type int. Instead found \
                type "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
@@ -1554,7 +1557,8 @@ and semantic_check_statement s =
       in
       let _ =
         if not (check_of_int_type ue2) then
-          semantic_error ~loc
+          semantic_error
+            ~loc:(snd (typed_expression_unroll ue2)).expr_typed_meta_loc
             ( "Upper bound of for-loop needs to be of type int. Instead found \
                type "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
@@ -1596,7 +1600,8 @@ and semantic_check_statement s =
         | _, Array ut -> ut
         | _, Vector | _, RowVector | _, Matrix -> Real
         | _ ->
-            semantic_error ~loc
+            semantic_error
+              ~loc:(snd (typed_expression_unroll ue)).expr_typed_meta_loc
               ( "Foreach loop must be over array, vector, row_vector or \
                  matrix. Instead found expression of type "
               ^ pretty_print_unsizedtype (type_of_typed_expr ue)

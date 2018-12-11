@@ -227,12 +227,12 @@ CDF and CCDF functions may not be used with sampling notation. Use increment_log
 
   $ ../../../../install/default/bin/stanc conditional_condition_bad_1.stan
 
-Semantic error at file "conditional_condition_bad_1.stan", line 6, characters 2-61:
+Semantic error at file "conditional_condition_bad_1.stan", line 6, characters 6-7:
    -------------------------------------------------
      4:  model {
      5:    vector[3] x;
      6:    if (x)                   // ERROR HERE
-           ^
+               ^
      7:      y ~ normal(0,1);
      8:  }
    -------------------------------------------------
@@ -241,12 +241,12 @@ Condition in conditional needs to be of type int or real. Instead found type vec
 
   $ ../../../../install/default/bin/stanc conditional_condition_bad_2.stan
 
-Semantic error at file "conditional_condition_bad_2.stan", line 9, characters 7-62:
+Semantic error at file "conditional_condition_bad_2.stan", line 9, characters 11-12:
    -------------------------------------------------
      7:    if (z)
      8:      y ~ normal(0,1);
      9:    else if (x)               // ERROR HERE
-                ^
+                    ^
     10:      y ~ normal(0,1);
     11:  }
    -------------------------------------------------
@@ -2495,12 +2495,12 @@ Identifier N not in scope.
 
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad2.stan
 
-Semantic error at file "validate_int_expr2_bad2.stan", line 5, characters 2-40:
+Semantic error at file "validate_int_expr2_bad2.stan", line 5, characters 14-18:
    -------------------------------------------------
      3:  }
      4:  model {
      5:    for (n in 1:10.3)
-           ^
+                       ^
      6:      y ~ normal(0,1);
      7:  }
    -------------------------------------------------
@@ -2522,12 +2522,12 @@ Vector sizes should be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad4.stan
 
-Semantic error at file "validate_int_expr2_bad4.stan", line 5, characters 2-40:
+Semantic error at file "validate_int_expr2_bad4.stan", line 5, characters 14-18:
    -------------------------------------------------
      3:  }
      4:  model {
      5:    for (n in 1:10.3)
-           ^
+                       ^
      6:      y ~ normal(0,1);
      7:  }
    -------------------------------------------------
