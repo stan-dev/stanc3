@@ -87,3 +87,4 @@ and 's prog =
 [@@deriving sexp, hash, map]
 
 type stmt_loc = {sloc: loc; stmt: stmt_loc statement}
+[@@deriving sexp, hash, map]

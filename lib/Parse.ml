@@ -58,6 +58,41 @@ let parse parse_fun lexbuf =
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
+let parse_string parse_fun str =
+  let lexbuf =
+    let open Lexing in
+    let lexbuf = from_string str in
+    lexbuf.lex_start_p
+    <- {pos_fname= "string"; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
+    lexbuf
+  in
+  parse parse_fun lexbuf
+
+let%expect_test "parse conditional" =
+  let ast = parse_string Parser.Incremental.program "model { if (1 < 2) { print(\"hi\");}}" in
+  Core_kernel.print_s [%sexp (ast: Ast.untyped_program)];
+  [%expect {|
+    ((functionblock ()) (datablock ()) (transformeddatablock ())
+     (parametersblock ()) (transformedparametersblock ())
+     (modelblock
+      (((UntypedStmt
+         ((IfThen
+           (UntypedExpr
+            ((InfixOp
+              (UntypedExpr ((IntNumeral 1) ((expr_untyped_meta_loc <opaque>))))
+              Less
+              (UntypedExpr ((IntNumeral 2) ((expr_untyped_meta_loc <opaque>)))))
+             ((expr_untyped_meta_loc <opaque>))))
+           (UntypedStmt
+            ((Block
+              ((UntypedStmt
+                ((Print ((PString "\"hi\""))) ((stmt_untyped_meta_loc <opaque>))))))
+             ((stmt_untyped_meta_loc <opaque>)))))
+          ((stmt_untyped_meta_loc <opaque>)))))))
+     (generatedquantitiesblock ())) |}]
+
+
 let parse_file parse_fun path =
   let chan = open_in path in
   let lexbuf =

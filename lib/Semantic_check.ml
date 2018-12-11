@@ -559,7 +559,7 @@ and semantic_check_transformation = function
 and semantic_check_expression x =
   let loc = (snd (untyped_expression_unroll x)).expr_untyped_meta_loc in
   match fst (untyped_expression_unroll x) with
-  | Conditional (e1, e2, e3) -> (
+  | TernaryOp (e1, e2, e3) -> (
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let ue3 = semantic_check_expression e3 in
@@ -573,7 +573,7 @@ and semantic_check_expression x =
                 [ue1; ue2; ue3]))
       in
       match
-        get_operator_return_type_opt "Conditional"
+        get_operator_return_type_opt "TernaryOp"
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -581,14 +581,14 @@ and semantic_check_expression x =
       with
       | Some (ReturnType ut) ->
           TypedExpr
-            ( Conditional (ue1, ue2, ue3)
+            ( TernaryOp (ue1, ue2, ue3)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
-            ^ pretty_print_all_operator_signatures "Conditional"
+            ^ pretty_print_all_operator_signatures "TernaryOp"
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
             ^ ", "

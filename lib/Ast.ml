@@ -78,7 +78,7 @@ and 'e index =
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
 and 'e expression =
-  | Conditional of 'e * 'e * 'e
+  | TernaryOp of 'e * 'e * 'e
   | InfixOp of 'e * infixop * 'e
   | PrefixOp of prefixop * 'e
   | PostfixOp of 'e * postfixop
@@ -112,9 +112,10 @@ and untyped_expression =
 (** Typed expressions *)
 and typed_expression =
   | TypedExpr of (typed_expression expression * expression_typed_metadata)
+[@@deriving sexp, compare, map]
 
 (** Assignment operators *)
-and assignmentoperator =
+type assignmentoperator =
   | Assign
   | PlusAssign
   | MinusAssign

@@ -58,7 +58,6 @@ let reducearray (sbt, l) =
 (* Top level rule *)
 
 %start <Ast.untyped_program> program
-
 %%
 
 
@@ -329,7 +328,7 @@ dims:
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
-    { grammar_logger "ifthenelse_expr" ; Conditional (e1, e2, e3) }
+    { grammar_logger "ifthenelse_expr" ; TernaryOp (e1, e2, e3) }
   | e1=expression op=infixOp e2=expression
     { grammar_logger "infix_expr" ; InfixOp (e1, op, e2)  }
   | op=prefixOp e=expression %prec unary_over_binary
@@ -570,10 +569,10 @@ nested_statement:
     s=statement
     {
       grammar_logger "for_statement" ;
-      For {loop_variable = id;
+      For {loop_variable= id;
            lower_bound= e1;
-           upper_bound =  e2;
-           loop_body = s;}
+           upper_bound= e2;
+           loop_body= s;}
     }
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
