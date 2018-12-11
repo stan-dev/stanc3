@@ -25,7 +25,7 @@
   match paths with
     | [] -> raise (Errors.SyntaxError
               (Includes ("Could not find include file \"" ^ fname ^
-                         "\" in specified include paths.\n", lexeme_end_p
+                         "\" in specified include paths.\n", lexeme_start_p
                 (Stack.top include_stack))))
     | path :: rest_of_paths ->
     try
@@ -53,7 +53,7 @@
     let _ = if dup_exists (Str.split (Str.regexp "\" included from \"") path)
             then raise (Errors.SyntaxError (
               Includes ("Found cyclical include structure.\n",
-                        (lexeme_end_p (Stack.top include_stack))))) in
+                        (lexeme_start_p (Stack.top include_stack))))) in
     let _ = Stack.push new_lexbuf include_stack in
     new_lexbuf
 }
@@ -205,8 +205,8 @@ rule token = parse
   
   | _                         { raise (Errors.SyntaxError
                                 (Lexing (lexeme (Stack.top include_stack),
-                                         (lexeme_end_p (Stack.top include_stack)
-                                         ))))            }
+                                        (lexeme_start_p (Stack.top include_stack
+                                        ))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment = parse

@@ -1,13 +1,14 @@
   $ ../../../../../install/default/bin/stanc falling_factorial.stan
 
 Semantic error at file "falling_factorial.stan", line 7, characters 27-60:
-  -------------------------------------------------
-  transformed data {
-    real transformed_data_real;
->   transformed_data_real <- falling_factorial(d_real, r_real);
-  }
-  
-  -------------------------------------------------
+   -------------------------------------------------
+     5:  transformed data {
+     6:    real transformed_data_real;
+     7:    transformed_data_real <- falling_factorial(d_real, r_real);
+                                    ^
+     8:  }
+     9:  
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function falling_factorial. Available signatures: 
 (int, int) => int
@@ -17,12 +18,13 @@ Instead supplied arguments of incompatible type: real, real.
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
 
 Semantic error at file "rising_factorial.stan", line 7, characters 29-61:
-  -------------------------------------------------
-  transformed parameters {
-    real transformed_param_real;
->   transformed_param_real <-  rising_factorial(d_real, r_real);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     5:  transformed parameters {
+     6:    real transformed_param_real;
+     7:    transformed_param_real <-  rising_factorial(d_real, r_real);
+                                      ^
+     8:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function rising_factorial. Available signatures: 
 (int, int) => int
