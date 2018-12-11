@@ -87,6 +87,12 @@ let use_file filename =
       Errors.report_semantic_error err ;
       exit 1
   in
+  let pretty1 = Pretty_printing.pretty_print_program ast in
+  let pretty2 = Pretty_printing.pretty_print_program  (Ast.untyped_program_of_typed_program typed_ast) in
+  let _ =
+    if pretty1 <> pretty2 then
+      print_endline pretty1; print_endline pretty2 
+  in
   let _ = Debug.typed_ast_logger typed_ast in
   ()
 

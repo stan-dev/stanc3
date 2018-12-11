@@ -254,4 +254,23 @@ and 's program =
 and untyped_program = untyped_statement program
 
 (** Typed programs (after type checking) *)
-and typed_program = typed_statement program [@@deriving sexp, compare]
+and typed_program = typed_statement program [@@deriving sexp, compare, map]
+
+(** Forgetful function from typed to untyped expressions *)
+let rec untyped_expression_of_typed_expression = function
+  | TypedExpr (e, n) ->
+      UntypedExpr
+        ( map_expression untyped_expression_of_typed_expression e
+        , {expr_untyped_meta_loc= n.expr_typed_meta_loc} )
+
+(** Forgetful function from typed to untyped statements *)
+let rec untyped_statement_of_typed_statement = function
+  | TypedStmt (s, n) ->
+      UntypedStmt
+        ( map_statement untyped_expression_of_typed_expression
+            untyped_statement_of_typed_statement s
+        , {stmt_untyped_meta_loc= n.stmt_typed_meta_loc} )
+
+(** Forgetful function from typed to untyped programs *)
+let untyped_program_of_typed_program =
+  map_program untyped_statement_of_typed_statement
