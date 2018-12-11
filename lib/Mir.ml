@@ -53,17 +53,17 @@ and transformation =
   | Covariance
   | NoTransformation
 
-and 'l statement =
+and 's statement =
   | Assignment of {assignee: string; indices: expr list; rhs: expr}
   | NRFnApp of string * expr list
   | Break
   | Continue
   | Return of expr
   | Skip
-  | IfElse of expr * 'l statement * 'l statement option
-  | While of expr * 'l statement
-  | For of {loopvar: expr; lower: expr; upper: expr; body: 'l statement}
-  | Block of 'l statement list
+  | IfElse of expr * 's * 's option
+  | While of expr * 's
+  | For of {loopvar: expr; lower: expr; upper: expr; body: 's}
+  | Block of 's list
   | Decl of vardecl * expr option
 [@@deriving sexp, hash]
 
@@ -76,7 +76,7 @@ let map_expr expr_f e =
   | Indexed (lhs, indices) -> Indexed (expr_f lhs, map_expr_list indices)
   | e -> e
 
-let map_statement decl_f statement_f expr_f s =
+let map_statement statement_f expr_f s =
   let map_expr_list = List.map ~f:expr_f in
   match s with
   | Assignment a ->
@@ -96,34 +96,37 @@ let map_statement decl_f statement_f expr_f s =
         ; upper= expr_f upper
         ; body= statement_f body }
   | Block statements -> Block (List.map ~f:statement_f statements)
-  | Decl (d, rhs) -> Decl (decl_f d, Option.map ~f:expr_f rhs)
-  | s -> statement_f s
+  | Decl (d, rhs) -> Decl (d, Option.map ~f:expr_f rhs)
+  | Break -> Break
+  | Continue -> Continue
+  | Skip -> Skip
 
-type 'l udf_defn =
+type 's udf_defn =
   { returntype: stantype option
   ; name: string
   ; arguments: argdecl list
-  ; body: 'l statement }
+  ; body: 's }
 
-and 'l prog =
-  { functions: 'l udf_defn list
+and 's prog =
+  { functions: 's udf_defn list
   ; params: vardecl list
   ; data: vardecl list
-  ; model: 'l statement
-  ; gq: 'l statement
-  ; tdata: 'l statement
-  ; tparam: 'l statement
+  ; model: 's
+  ; gq: 's
+  ; tdata: 's
+  ; tparam: 's
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, hash]
 
-let id x = x
-let map_udf_defn sf ef udf = {udf with body= map_statement id sf ef udf.body}
+type stmt_loc = {sloc: loc; stmt: stmt_loc statement}
+
+let map_udf_defn sf ef udf = {udf with body= map_statement sf ef udf.body}
 
 let map_prog sf ef p =
   { p with
     functions= List.map ~f:(map_udf_defn sf ef) p.functions
-  ; model= map_statement id sf ef p.model
-  ; gq= map_statement id sf ef p.gq
-  ; tdata= map_statement id sf ef p.tdata
-  ; tparam= map_statement id sf ef p.tparam }
+  ; model= map_statement sf ef p.model
+  ; gq= map_statement sf ef p.gq
+  ; tdata= map_statement sf ef p.tdata
+  ; tparam= map_statement sf ef p.tparam }

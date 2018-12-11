@@ -87,26 +87,27 @@ let emit_prim_stantype ppf st =
   emit_stantype (ad_str st) ppf st
 
 let emit_block ppf (emit_body, body) =
-  fprintf ppf "{@;<0 4>@[<v>%a@]@,}" emit_body body
+  fprintf ppf "{@;<1 4>@[<v>%a@]@,}" emit_body body
 
 let emit_for_loop ppf (loopvar, lower, upper, emit_body, body) =
-  fprintf ppf "for (size_t %s = %a; %s < %a; %s++) %a" loopvar emit_expr lower
-    loopvar emit_expr upper loopvar emit_block (emit_body, body)
+  fprintf ppf
+    "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])"
+    loopvar emit_expr lower loopvar emit_expr upper loopvar;
+  fprintf ppf "@;<0 4>@[<v>%a@]@]" emit_body body
 
+(* This should recursively build up a statement For loop instead...*)
 let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
     =
   let mkloopvar d = sprintf "i_%d__" d in
   let loopvar = mkloopvar d in
   let zero = Lit (Int, "0") in
+  (*let for_loop = {loopvar; lower= zero; upper=dim; body}
+*)
   match st with
   | SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
   | SVector (Some dim) | SRowVector (Some dim) ->
-      emit_for_loop ppf
-        ( mkloopvar d
-        , zero
-        , dim
-        , emit_code_per_element
-        , sprintf "%s[%s]" name loopvar )
+    emit_for_loop ppf
+      (loopvar, zero, dim, emit_code_per_element, sprintf "%s[%s]" name loopvar)
   | SMatrix (Some (dim1, dim2)) ->
       let loopvar2 = mkloopvar (d + 1) in
       emit_for_loop ppf
@@ -129,7 +130,7 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
   | SMatrix None | SVector None | SRowVector None | SArray (None, _) ->
       raise_s [%message "Type should have dimensions" (st : stantype)]
 
-let rec emit_statement ppf = function
+let rec emit_statement_prim emit_statement ppf = function
   | Assignment {assignee; indices; rhs} ->
       fprintf ppf "%s%a = %a;" assignee
         (pp_print_list ~pp_sep:comma emit_index)
@@ -142,24 +143,39 @@ let rec emit_statement ppf = function
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
       let emit_else ppf x = fprintf ppf " else {\n %a;\n}" emit_statement x in
-      fprintf ppf "if (%a){\n %a;\n}%a\n" emit_expr cond emit_statement
-        ifbranch (emit_option emit_else) elsebranch
+      fprintf ppf "if (%a) %a %a\n" emit_expr cond emit_block
+        (emit_statement, ifbranch) (emit_option emit_else) elsebranch
   | While (cond, body) ->
-      (* XXX Refactor these to share with other code gen *)
-      fprintf ppf "while (%a) {\n  %a;\n}\n" emit_expr cond emit_statement body
+      fprintf ppf "while (%a) %a" emit_expr cond emit_block (emit_statement, body)
   | For {loopvar; lower; upper; body} ->
       let lv =
         fprintf str_formatter "%a" emit_expr loopvar ;
         flush_str_formatter ()
       in
       emit_for_loop ppf (lv, lower, upper, emit_statement, body)
-  | Block s -> pp_print_list ~pp_sep:newline emit_statement ppf s
+  | Block s -> emit_block ppf (pp_print_list ~pp_sep:newline emit_statement, s)
   | Decl ({vident; st; trans; loc}, rhs) ->
       ignore (trans, loc) ;
       let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
       fprintf ppf "%a %s%a;" emit_prim_stantype st vident
         (emit_option emit_assignment)
         rhs
+
+let rec emit_statement ppf {sloc; stmt} =
+  fprintf ppf "current_statement_loc__ = \"%s\"" sloc;
+  emit_statement_prim emit_statement ppf stmt
+
+let rec fix_fn f = f (fix_fn f)
+
+(* Problems start here: *)
+let%expect_test "if" =
+  IfElse (Var "true", NRFnApp("print", [Var "x"]), None)
+  |> fprintf str_formatter "@[<v>%a@]" (fix_fn emit_statement_prim);
+  flush_str_formatter () |> print_endline;
+  [%expect {|
+    if (true) {
+        print(x);
+    } |}]
 
 let%expect_test "run code per element" =
   let assign ppf x =
@@ -180,16 +196,14 @@ let%expect_test "run code per element" =
   flush_str_formatter () |> print_endline ;
   [%expect
     {|
-    for (size_t i_0__ = 0; i_0__ < X; i_0__++) {
-        for (size_t i_1__ = 0; i_1__ < Y; i_1__++) {
-            for (size_t i_2__ = 0; i_2__ < Z; i_2__++) {
-                for (size_t i_3__ = 0; i_3__ < W; i_3__++) {
-                    dubvec[i_0__][i_1__](i_2__, i_3__) = vals_r__[pos__++];
-                    print(dubvec[i_0__][i_1__](i_2__, i_3__));
-                }
-            }
-        }
-    } |}]
+    for (size_t i_0__ = 0; i_0__ < X; i_0__++)
+        for (size_t i_1__ = 0; i_1__ < Y; i_1__++)
+            for (size_t i_2__ = 0; i_2__ < Z; i_2__++)
+                for (size_t i_3__ = 0; i_3__ < W; i_3__++)
+                    {
+                        dubvec[i_0__][i_1__](i_2__, i_3__) = vals_r__[pos__++];
+                        print(dubvec[i_0__][i_1__](i_2__, i_3__));
+                    } |}]
 
 let%expect_test "decl" =
   Decl
