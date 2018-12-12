@@ -1,13 +1,12 @@
-(*
 open Mir
 open Core_kernel
 
 let rec ast_to_mir_expr (Ast.TypedExpr (e, meta)) =
   let raise_expr msg e = raise_s [%message msg (e: Ast.typed_expression Ast.expression)]in
   match e with
-  | Ast.TernaryOp (Ast.TypedExpr (e', meta'), ifb, elseb) ->
-    let op = (match e' with
-        | Ast.InfixOp (lhs, op, rhs) ->
+  | Ast.TernaryIf (Ast.TypedExpr (cond, meta'), ifb, elseb) ->
+    let op = (match cond with
+        | Ast.BinOp (lhs, op, rhs) ->
           let
       | _ -> raise_expr "Expected conditional infix operator, got: " e
       )
@@ -25,5 +24,3 @@ let rec ast_to_mir_expr (Ast.TypedExpr (e, meta)) =
   | Ast.RowVectorExpr _ -> (??)
   | Ast.Paren _ -> (??)
   | Ast.Indexed (_, _) -> (??)
-
-*)

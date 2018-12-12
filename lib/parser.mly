@@ -343,7 +343,7 @@ dims:
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
-    { grammar_logger "ifthenelse_expr" ; TernaryOp (e1, e2, e3) }
+    { grammar_logger "ifthenelse_expr" ; TernaryIf (e1, e2, e3) }
   | e1=expression op=infixOp e2=expression
     { grammar_logger "infix_expr" ; BinOp (e1, op, e2)  }
   | op=prefixOp e=expression %prec unary_over_binary

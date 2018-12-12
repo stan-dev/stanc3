@@ -16,7 +16,8 @@ and expr =
   | Var of string
   | Lit of litType * string
   | FnApp of string * expr list
-  | Cond of expr * cond_op * expr
+  | BinOp of expr * cond_op * expr
+  | TernaryIf of expr * expr * expr
   | ArrayLiteral of expr list
   | Indexed of expr * expr list
   (* Different type constructor for indexing by an int array *)
