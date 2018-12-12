@@ -47,8 +47,7 @@ let rec emit_expr ppf s =
         (pp_print_list ~pp_sep:comma emit_index)
         idcs
   | MultiIndexed (ident, indices) ->
-      fprintf ppf
-        "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
+      fprintf ppf "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
         emit_expr ident emit_intarr_idx_list indices emit_expr ident
 
 and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
@@ -90,9 +89,8 @@ let emit_block ppf (emit_body, body) =
   fprintf ppf "{@;<1 4>@[<v>%a@]@,}" emit_body body
 
 let emit_for_loop ppf (loopvar, lower, upper, emit_body, body) =
-  fprintf ppf
-    "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])"
-    loopvar emit_expr lower loopvar emit_expr upper loopvar;
+  fprintf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
+    emit_expr lower loopvar emit_expr upper loopvar ;
   fprintf ppf "@;<0 4>@[<v>%a@]@]" emit_body body
 
 (* This should recursively build up a statement For loop instead...*)
@@ -106,8 +104,12 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
   match st with
   | SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
   | SVector (Some dim) | SRowVector (Some dim) ->
-    emit_for_loop ppf
-      (loopvar, zero, dim, emit_code_per_element, sprintf "%s[%s]" name loopvar)
+      emit_for_loop ppf
+        ( loopvar
+        , zero
+        , dim
+        , emit_code_per_element
+        , sprintf "%s[%s]" name loopvar )
   | SMatrix (Some (dim1, dim2)) ->
       let loopvar2 = mkloopvar (d + 1) in
       emit_for_loop ppf
@@ -133,46 +135,50 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
 let emit_statement emit_statement_with_meta ppf s =
   match s with
   | Assignment {assignee; indices; rhs} ->
-    fprintf ppf "%s%a = %a;" assignee
-      (pp_print_list ~pp_sep:comma emit_index)
-      indices emit_expr rhs
+      fprintf ppf "%s%a = %a;" assignee
+        (pp_print_list ~pp_sep:comma emit_index)
+        indices emit_expr rhs
   | NRFnApp (fname, args) ->
-    fprintf ppf "%s(%a);" fname (pp_print_list ~pp_sep:comma emit_expr) args
+      fprintf ppf "%s(%a);" fname (pp_print_list ~pp_sep:comma emit_expr) args
   | Break -> emit_str ppf "break;"
   | Continue -> emit_str ppf "continue;"
   | Return e -> fprintf ppf "return %a;" emit_expr e
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
-    let emit_else ppf x = fprintf ppf " else {\n %a;\n}" emit_statement_with_meta x in
-    fprintf ppf "if (%a) %a %a\n" emit_expr cond emit_block
-      (emit_statement_with_meta, ifbranch) (emit_option emit_else) elsebranch
+      let emit_else ppf x =
+        fprintf ppf " else {\n %a;\n}" emit_statement_with_meta x
+      in
+      fprintf ppf "if (%a) %a %a\n" emit_expr cond emit_block
+        (emit_statement_with_meta, ifbranch)
+        (emit_option emit_else) elsebranch
   | While (cond, body) ->
-    fprintf ppf "while (%a) %a" emit_expr cond emit_block
-      (emit_statement_with_meta, body)
+      fprintf ppf "while (%a) %a" emit_expr cond emit_block
+        (emit_statement_with_meta, body)
   | For {loopvar; lower; upper; body} ->
-    let lv =
-      fprintf str_formatter "%a" emit_expr loopvar ;
-      flush_str_formatter ()
-    in
-    emit_for_loop ppf (lv, lower, upper, emit_statement_with_meta, body)
-  | Block s -> emit_block ppf
-                 (pp_print_list ~pp_sep:newline emit_statement_with_meta, s)
+      let lv =
+        fprintf str_formatter "%a" emit_expr loopvar ;
+        flush_str_formatter ()
+      in
+      emit_for_loop ppf (lv, lower, upper, emit_statement_with_meta, body)
+  | Block s ->
+      emit_block ppf (pp_print_list ~pp_sep:newline emit_statement_with_meta, s)
   | Decl ({vident; st; trans; loc}, rhs) ->
-    ignore (trans, loc) ;
-    let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-    fprintf ppf "%a %s%a;" emit_prim_stantype st vident
-      (emit_option emit_assignment)
-      rhs
+      ignore (trans, loc) ;
+      let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
+      fprintf ppf "%a %s%a;" emit_prim_stantype st vident
+        (emit_option emit_assignment)
+        rhs
 
 let rec emit_statement_loc ppf {sloc; stmt} =
-  fprintf ppf "current_statement_loc__ = \"%s\";@;" sloc;
+  fprintf ppf "current_statement_loc__ = \"%s\";@;" sloc ;
   emit_statement emit_statement_loc ppf stmt
 
 let%expect_test "location propagates" =
-  {sloc= "hi"; stmt= Block [{stmt=Break; sloc="lo"}]}
+  {sloc= "hi"; stmt= Block [{stmt= Break; sloc= "lo"}]}
   |> fprintf str_formatter "@[<v>%a@]" emit_statement_loc ;
-  flush_str_formatter () |> print_endline;
-  [%expect {|
+  flush_str_formatter () |> print_endline ;
+  [%expect
+    {|
     current_statement_loc__ = "hi";
     {
         current_statement_loc__ = "lo";
@@ -180,13 +186,14 @@ let%expect_test "location propagates" =
     } |}]
 
 type stmt_plain = {splain: stmt_plain statement}
+
 let rec emit_statement_plain ppf {splain} =
   emit_statement emit_statement_plain ppf splain
 
 let%expect_test "if" =
-  {splain=IfElse (Var "true", {splain=NRFnApp("print", [Var "x"])}, None)}
-  |> fprintf str_formatter "@[<v>%a@]" emit_statement_plain;
-  flush_str_formatter () |> print_endline;
+  {splain= IfElse (Var "true", {splain= NRFnApp ("print", [Var "x"])}, None)}
+  |> fprintf str_formatter "@[<v>%a@]" emit_statement_plain ;
+  flush_str_formatter () |> print_endline ;
   [%expect {|
     if (true) {
         print(x);
@@ -195,12 +202,14 @@ let%expect_test "if" =
 let%expect_test "run code per element" =
   let assign ppf x =
     emit_statement_plain ppf
-      {splain=(Block
-                 [ {splain=Assignment
-                       { assignee= x
-                       ; indices= []
-                       ; rhs= Indexed (Var "vals_r__", [Var "pos__++"]) }}
-                 ; {splain=NRFnApp ("print", [Var x])}])}
+      { splain=
+          Block
+            [ { splain=
+                  Assignment
+                    { assignee= x
+                    ; indices= []
+                    ; rhs= Indexed (Var "vals_r__", [Var "pos__++"]) } }
+            ; {splain= NRFnApp ("print", [Var x])} ] }
   in
   fprintf str_formatter "@[<v>%a@]"
     (emit_run_code_per_el assign)
@@ -221,9 +230,10 @@ let%expect_test "run code per element" =
                     } |}]
 
 let%expect_test "decl" =
-  {splain=Decl
-    ( {vident= "i"; st= SInt; loc= "line num"; trans= NoTransformation}
-    , Some (Lit (Int, "0")) )}
+  { splain=
+      Decl
+        ( {vident= "i"; st= SInt; loc= "line num"; trans= NoTransformation}
+        , Some (Lit (Int, "0")) ) }
   |> emit_statement_plain str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i = 0; |}]
@@ -295,11 +305,12 @@ let emit_udf emit_statement ppf {returntype; name; arguments; body} =
     , body )
 
 let%expect_test "udf" =
-  fprintf str_formatter "@[<v>%a" (emit_udf emit_statement_plain)
+  fprintf str_formatter "@[<v>%a"
+    (emit_udf emit_statement_plain)
     { returntype= None
     ; name= "sars"
     ; arguments= [("x", SMatrix None); ("y", SRowVector None)]
-    ; body= {splain=Return (FnApp ("add", [Var "x"; Lit (Int, "1")]))} } ;
+    ; body= {splain= Return (FnApp ("add", [Var "x"; Lit (Int, "1")]))} } ;
   flush_str_formatter () |> print_endline ;
   [%expect
     {|

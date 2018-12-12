@@ -69,10 +69,7 @@ and 's statement =
 [@@deriving sexp, hash, map]
 
 type 's udf_defn =
-  { returntype: stantype option
-  ; name: string
-  ; arguments: argdecl list
-  ; body: 's }
+  {returntype: stantype option; name: string; arguments: argdecl list; body: 's}
 
 and 's prog =
   { functions: 's udf_defn list

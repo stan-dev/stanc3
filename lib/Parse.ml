@@ -70,9 +70,13 @@ let parse_string parse_fun str =
   parse parse_fun lexbuf
 
 let%expect_test "parse conditional" =
-  let ast = parse_string Parser.Incremental.program "model { if (1 < 2) { print(\"hi\");}}" in
-  Core_kernel.print_s [%sexp (ast: Ast.untyped_program)];
-  [%expect {|
+  let ast =
+    parse_string Parser.Incremental.program
+      "model { if (1 < 2) { print(\"hi\");}}"
+  in
+  Core_kernel.print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
     ((functionblock ()) (datablock ()) (transformeddatablock ())
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
@@ -92,7 +96,6 @@ let%expect_test "parse conditional" =
            ())
           ((stmt_untyped_meta_loc <opaque>)))))))
      (generatedquantitiesblock ())) |}]
-
 
 let parse_file parse_fun path =
   let chan = open_in path in
