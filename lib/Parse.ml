@@ -79,7 +79,7 @@ let%expect_test "parse conditional" =
       (((UntypedStmt
          ((IfThenElse
            (UntypedExpr
-            ((InfixOp
+            ((BinOp
               (UntypedExpr ((IntNumeral 1) ((expr_untyped_meta_loc <opaque>))))
               Less
               (UntypedExpr ((IntNumeral 2) ((expr_untyped_meta_loc <opaque>)))))

@@ -559,7 +559,7 @@ and semantic_check_expression x =
             ^ ", "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue3)
             ^ "." ) )
-  | InfixOp (e1, op, e2) -> (
+  | BinOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
       let ue2 = semantic_check_expression e2 in
@@ -582,7 +582,7 @@ and semantic_check_expression x =
       with
       | Some (ReturnType ut) ->
           TypedExpr
-            ( InfixOp (ue1, uop, ue2)
+            ( BinOp (ue1, uop, ue2)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | Some Void | None ->

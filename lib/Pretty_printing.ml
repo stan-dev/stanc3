@@ -106,7 +106,7 @@ and pretty_print_expression = function
     | TernaryOp (e1, e2, e3) ->
         pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
         ^ pretty_print_expression e3
-    | InfixOp (e1, op, e2) ->
+    | BinOp (e1, op, e2) ->
         pretty_print_expression e1 ^ " " ^ pretty_print_infixop op ^ " "
         ^ pretty_print_expression e2
     | PrefixOp (op, e) -> pretty_print_prefixop op ^ pretty_print_expression e

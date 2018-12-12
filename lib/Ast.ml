@@ -82,7 +82,7 @@ and 'e index =
     substitute untyped_expression or typed_expression for 'e *)
 and 'e expression =
   | TernaryOp of 'e * 'e * 'e
-  | InfixOp of 'e * infixop * 'e
+  | BinOp of 'e * infixop * 'e
   | PrefixOp of prefixop * 'e
   | PostfixOp of 'e * postfixop
   | Variable of identifier
