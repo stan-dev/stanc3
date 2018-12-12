@@ -77,7 +77,7 @@ let%expect_test "parse conditional" =
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
       (((UntypedStmt
-         ((IfThen
+         ((IfThenElse
            (UntypedExpr
             ((InfixOp
               (UntypedExpr ((IntNumeral 1) ((expr_untyped_meta_loc <opaque>))))
@@ -88,7 +88,8 @@ let%expect_test "parse conditional" =
             ((Block
               ((UntypedStmt
                 ((Print ((PString "\"hi\""))) ((stmt_untyped_meta_loc <opaque>))))))
-             ((stmt_untyped_meta_loc <opaque>)))))
+             ((stmt_untyped_meta_loc <opaque>))))
+           ())
           ((stmt_untyped_meta_loc <opaque>)))))))
      (generatedquantitiesblock ())) |}]
 
