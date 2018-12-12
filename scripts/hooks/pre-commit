@@ -1,0 +1,4 @@
+#!/bin/bash
+cd `git rev-parse --show-toplevel`
+dune runtest lib
+make format
