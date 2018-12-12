@@ -407,7 +407,7 @@ common_expression:
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
-    {  grammar_logger "conditional_dist_app" ; CondFunApp (id, e :: args) }
+    {  grammar_logger "conditional_dist_app" ; CondDistApp (id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
 

@@ -89,7 +89,7 @@ and 'e expression =
   | IntNumeral of string
   | RealNumeral of string
   | FunApp of identifier * 'e list
-  | CondFunApp of identifier * 'e list
+  | CondDistApp of identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget

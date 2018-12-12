@@ -119,7 +119,7 @@ and pretty_print_expression = function
         pretty_print_identifier id ^ "("
         ^ pretty_print_list_of_expression es
         ^ ")"
-    | CondFunApp (id, es) ->
+    | CondDistApp (id, es) ->
         pretty_print_identifier id ^ "("
         ^ pretty_print_expression (List.hd es)
         ^ "| "

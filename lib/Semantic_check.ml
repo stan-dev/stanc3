@@ -793,7 +793,7 @@ and semantic_check_expression x =
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
                    identifier " ^ uid.name ^ " was supplied." ) ) )
-  | CondFunApp (id, es) -> (
+  | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
         if
@@ -834,7 +834,7 @@ and semantic_check_expression x =
             ^ uid.name ^ " was supplied." )
       | Some (ReturnType ut) ->
           TypedExpr
-            ( CondFunApp (uid, ues)
+            ( CondDistApp (uid, ues)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       (* Check that function arguments match signature  *)
@@ -873,7 +873,7 @@ and semantic_check_expression x =
                     ^ "." )
               in
               TypedExpr
-                ( CondFunApp (uid, ues)
+                ( CondDistApp (uid, ues)
                 , { expr_typed_meta_origin_type= (returnblock, ut)
                   ; expr_typed_meta_loc= loc } )
           | Some _ ->
