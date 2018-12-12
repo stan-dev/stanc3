@@ -81,7 +81,7 @@ and 'e index =
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
 and 'e expression =
-  | TernaryOp of 'e * 'e * 'e
+  | TernaryIf of 'e * 'e * 'e
   | BinOp of 'e * infixop * 'e
   | PrefixOp of prefixop * 'e
   | PostfixOp of 'e * postfixop

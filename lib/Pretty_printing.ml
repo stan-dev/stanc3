@@ -103,7 +103,7 @@ and pretty_print_list_of_indices l =
 and pretty_print_expression = function
   | UntypedExpr (e_content, _) -> (
     match e_content with
-    | TernaryOp (e1, e2, e3) ->
+    | TernaryIf (e1, e2, e3) ->
         pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
         ^ pretty_print_expression e3
     | BinOp (e1, op, e2) ->
