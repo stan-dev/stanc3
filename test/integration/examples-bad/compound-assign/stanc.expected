@@ -1,12 +1,13 @@
   $ ../../../../../install/default/bin/stanc elt_divide_equals_prim.stan
 
 Semantic error at file "elt_divide_equals_prim.stan", line 4, characters 2-10:
-  -------------------------------------------------
-    real x;
-    real y;
->   x ./= y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:    real x;
+     3:    real y;
+     4:    x ./= y;
+           ^
+     5:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator ./=: lhs has type real and rhs has type real. Available signatures:
 (vector, vector) => void
@@ -22,12 +23,13 @@ Ill-typed arguments supplied to assignment operator ./=: lhs has type real and r
   $ ../../../../../install/default/bin/stanc elt_times_equals_prim.stan
 
 Semantic error at file "elt_times_equals_prim.stan", line 4, characters 2-10:
-  -------------------------------------------------
-    real x;
-    real y;
->   x .*= y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:    real x;
+     3:    real y;
+     4:    x .*= y;
+           ^
+     5:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator .*=: lhs has type real and rhs has type real. Available signatures:
 (vector, vector) => void
@@ -37,37 +39,40 @@ Ill-typed arguments supplied to assignment operator .*=: lhs has type real and r
   $ ../../../../../install/default/bin/stanc plus_equals_bad_init.stan
 
 Syntax error at file "plus_equals_bad_init.stan", line 3, characters 12-19, parsing error:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] gq_v3_a = [1, 2, 3]';
->   vector[3] gq_v3_b += gq_v3_a;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     1:  generated quantities {
+     2:    vector[3] gq_v3_a = [1, 2, 3]';
+     3:    vector[3] gq_v3_b += gq_v3_a;
+                            ^
+     4:  }
+   -------------------------------------------------
 
 ";" or plain assignment is expected after a top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 
 Semantic error at file "plus_equals_bad_lhs_idxs.stan", line 4, characters 2-14:
-  -------------------------------------------------
-    vector[3] x;
-    real y;
->   x[3,3] += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:    vector[3] x;
+     3:    real y;
+     4:    x[3,3] += y;
+           ^
+     5:  }
+   -------------------------------------------------
 
 Only expressions of array, matrix, row_vector and vector type may be indexed. Instead, found type real.
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs.stan
 
 Semantic error at file "plus_equals_bad_var_lhs.stan", line 3, characters 4-14:
-  -------------------------------------------------
-  functions {
-    real foo(real a1) {
->     foo += a1;
-      return foo;
-    }
-  -------------------------------------------------
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo(real a1) {
+     3:      foo += a1;
+             ^
+     4:      return foo;
+     5:    }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type (real) => real and rhs has type real. Available signatures:
 (vector, vector) => void
@@ -86,37 +91,40 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type (real) => r
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
 
 Semantic error at file "plus_equals_bad_var_lhs2.stan", line 6, characters 2-9:
-  -------------------------------------------------
-  generated quantities {
-    real y;
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     4:  generated quantities {
+     5:    real y;
+     6:    x += y;
+           ^
+     7:  }
+   -------------------------------------------------
 
 Cannot assign to global variable x declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_rhs.stan
 
 Semantic error at file "plus_equals_bad_var_rhs.stan", line 4, characters 11-13:
-  -------------------------------------------------
-    void foo(real a1) {
-      int lf2;
->     lf2 += a2;
-    }
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:    void foo(real a1) {
+     3:      int lf2;
+     4:      lf2 += a2;
+                    ^
+     5:    }
+     6:  }
+   -------------------------------------------------
 
 Identifier a2 not in scope.
 
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array.stan
 
 Semantic error at file "plus_equals_matrix_array.stan", line 7, characters 2-9:
-  -------------------------------------------------
-    x[3,1] += y[3,1];
-    x[3,1,1] += y[3,1,1];
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     5:    x[3,1] += y[3,1];
+     6:    x[3,1,1] += y[3,1,1];
+     7:    x += y;
+           ^
+     8:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type matrix[] and rhs has type matrix[]. Available signatures:
 (vector, vector) => void
@@ -135,12 +143,13 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type matrix[] an
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array2.stan
 
 Semantic error at file "plus_equals_matrix_array2.stan", line 7, characters 2-17:
-  -------------------------------------------------
-    x[3,1] += y[3,1];
-    x[3,1,1] += y[3,1,1];
->   x[3] += y[3,1];
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     5:    x[3,1] += y[3,1];
+     6:    x[3,1,1] += y[3,1,1];
+     7:    x[3] += y[3,1];
+           ^
+     8:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type matrix and rhs has type row_vector. Available signatures:
 (vector, vector) => void
@@ -159,25 +168,27 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type matrix and 
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
 
 Syntax error at file "plus_equals_matrix_shape_mismatch.stan", line 4, characters 9-10, parsing error:
-  -------------------------------------------------
-  generated quantities {
-    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];
->   vector[2,2] ident = [[1, 0], [0, 1]];
-    z += ident;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:  generated quantities {
+     3:    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];
+     4:    vector[2,2] ident = [[1, 0], [0, 1]];
+                   ^
+     5:    z += ident;
+     6:  }
+   -------------------------------------------------
 
 "[" expression "]" expected for vector size.
 
   $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
 
 Semantic error at file "plus_equals_prim_array.stan", line 5, characters 2-9:
-  -------------------------------------------------
-    real y[3] = {4.0, 5.0, 6.0};
-    x[1] += y[1];
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     3:    real y[3] = {4.0, 5.0, 6.0};
+     4:    x[1] += y[1];
+     5:    x += y;
+           ^
+     6:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type real[] and rhs has type real[]. Available signatures:
 (vector, vector) => void
@@ -196,12 +207,13 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type real[] and 
   $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
 
 Semantic error at file "plus_equals_row_vec_array.stan", line 5, characters 2-9:
-  -------------------------------------------------
-    row_vector[2] y[3] = {[1,2], [3,4], [5,6]};
-    x[1] += y[1];
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     3:    row_vector[2] y[3] = {[1,2], [3,4], [5,6]};
+     4:    x[1] += y[1];
+     5:    x += y;
+           ^
+     6:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type row_vector[] and rhs has type row_vector[]. Available signatures:
 (vector, vector) => void
@@ -220,13 +232,14 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type row_vector[
   $ ../../../../../install/default/bin/stanc plus_equals_sliced.stan
 
 Semantic error at file "plus_equals_sliced.stan", line 6, characters 4-27:
-  -------------------------------------------------
-      matrix[2, 2] aa;
-      matrix[3, 4] bb;
->     aa[J,1] += bb[1:2,1:2];
-    }
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     4:      matrix[2, 2] aa;
+     5:      matrix[3, 4] bb;
+     6:      aa[J,1] += bb[1:2,1:2];
+             ^
+     7:    }
+     8:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type vector and rhs has type matrix. Available signatures:
 (vector, vector) => void
@@ -245,12 +258,13 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type vector and 
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch.stan
 
 Semantic error at file "plus_equals_type_mismatch.stan", line 4, characters 2-9:
-  -------------------------------------------------
-    int x = 5;
-    real y;
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:    int x = 5;
+     3:    real y;
+     4:    x += y;
+           ^
+     5:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type int and rhs has type real. Available signatures:
 (vector, vector) => void
@@ -269,12 +283,13 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type int and rhs
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch2.stan
 
 Semantic error at file "plus_equals_type_mismatch2.stan", line 4, characters 2-9:
-  -------------------------------------------------
-    real x;
-    vector[2] y = [1.0, 2.0]';
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     2:    real x;
+     3:    vector[2] y = [1.0, 2.0]';
+     4:    x += y;
+           ^
+     5:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type real and rhs has type vector. Available signatures:
 (vector, vector) => void
@@ -293,12 +308,13 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type real and rh
   $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
 
 Semantic error at file "plus_equals_vector_array.stan", line 5, characters 2-9:
-  -------------------------------------------------
-    vector[2] y[3] = {[1,2]', [3,4]', [5,6]'};
-    x[1] += y[1];
->   x += y;
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+     3:    vector[2] y[3] = {[1,2]', [3,4]', [5,6]'};
+     4:    x[1] += y[1];
+     5:    x += y;
+           ^
+     6:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator +=: lhs has type vector[] and rhs has type vector[]. Available signatures:
 (vector, vector) => void
@@ -317,13 +333,14 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type vector[] an
   $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
 
 Semantic error at file "times_equals_matrix_array.stan", line 5, characters 2-19:
-  -------------------------------------------------
-    matrix[2,2] y[3] = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};
-    x[3] *= y[3];
->   x[3,1] *= y[3,1];
-    x[3,1,1] *= y[3,1,1];
-    x *= y;
-  -------------------------------------------------
+   -------------------------------------------------
+     3:    matrix[2,2] y[3] = {[[4, 5], [6, 7]], [[4, 5], [6, 7]], [[4, 5], [6, 7]]};
+     4:    x[3] *= y[3];
+     5:    x[3,1] *= y[3,1];
+           ^
+     6:    x[3,1,1] *= y[3,1,1];
+     7:    x *= y;
+   -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator *=: lhs has type row_vector and rhs has type row_vector. Available signatures:
 (vector, int) => void

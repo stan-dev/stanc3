@@ -24,7 +24,7 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let character = pos_cnum - pos_bol in
   (file, line, character)
 
-let nth_line_with_context file line =
+let error_context file line column =
   try
     let bare_file =
       List.hd (Str.split (Str.regexp "\" included from \"") file)
@@ -33,20 +33,29 @@ let nth_line_with_context file line =
     for _ = 1 to line - 3 do
       ignore (input_line input)
     done ;
+    let open Printf in
     let line_2_before =
-      if line > 2 then "  " ^ input_line input ^ "\n" else ""
+      if line > 2 then sprintf "%6d:  %s\n" (line - 2) (input_line input)
+      else ""
     in
     let line_before =
-      if line > 1 then "  " ^ input_line input ^ "\n" else ""
+      if line > 1 then sprintf "%6d:  %s\n" (line - 1) (input_line input)
+      else ""
     in
-    let our_line = "> " ^ input_line input ^ "\n" in
-    let line_after = try "  " ^ input_line input ^ "\n" with _ -> "" in
-    let line_2_after = try "  " ^ input_line input ^ "\n" with _ -> "" in
+    let our_line = sprintf "%6d:  %s\n" line (input_line input) in
+    let cursor_line = String.make (column + 9) ' ' ^ "^\n" in
+    let line_after =
+      try sprintf "%6d:  %s\n" (line + 1) (input_line input) with _ -> ""
+    in
+    let line_2_after =
+      try sprintf "%6d:  %s\n" (line + 2) (input_line input) with _ -> ""
+    in
     close_in input ;
     Some
-      ( "  -------------------------------------------------\n" ^ line_2_before
-      ^ line_before ^ our_line ^ line_after ^ line_2_after
-      ^ "  -------------------------------------------------\n" )
+      (sprintf
+         "   -------------------------------------------------\n\
+          %s%s%s%s%s%s   -------------------------------------------------\n"
+         line_2_before line_before our_line cursor_line line_after line_2_after)
   with _ -> None
 
 (** A syntax error message used when handling a SyntaxError *)
@@ -67,7 +76,7 @@ let report_syntax_error = function
       Printf.eprintf
         "\nSyntax error at file \"%s\", %s, %s, parsing error:\n%!" file lines
         characters ;
-      ( match nth_line_with_context file curr_line with
+      ( match error_context file curr_line curr_character with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       match message with
@@ -77,8 +86,8 @@ let report_syntax_error = function
       let file, line, character = position err_pos in
       Printf.eprintf
         "\nSyntax error at file \"%s\", line %d, character %d, lexing error:\n"
-        file line character ;
-      ( match nth_line_with_context file line with
+        file line (character - 1) ;
+      ( match error_context file line (character - 1) with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "Invalid input %S\n%!\n" invalid_input
@@ -88,7 +97,7 @@ let report_syntax_error = function
         "\n\
          Syntax error at file \"%s\", line %d, character %d, includes error:\n"
         file line character ;
-      ( match nth_line_with_context file line with
+      ( match error_context file line character with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "%s\n" msg
@@ -112,9 +121,10 @@ let print_location loc ppf =
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
   match loc with
-  | Location ({pos_fname= file; pos_lnum= line; _}, _) ->
+  | Location ({pos_fname= file; pos_lnum= line; pos_cnum= pos; pos_bol= bol}, _)
+    ->
       Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location loc) ;
-      ( match nth_line_with_context file line with
+      ( match error_context file line (pos - bol) with
       | None -> ()
       | Some line -> Format.eprintf "%s\n" line ) ;
       Format.kfprintf

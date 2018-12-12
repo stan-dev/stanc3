@@ -90,7 +90,7 @@ let rng_return_type t lt = if List.for_all is_primitive lt then t else Array t
 
 let add_unqualified (name, rt, uqargts) =
   Hashtbl.add stan_math_signatures name
-    (rt, List.map (fun x -> (TParam, x)) uqargts)
+    (rt, List.map (fun x -> (AutoDiffable, x)) uqargts)
 
 let add_qualified (name, rt, argts) =
   Hashtbl.add stan_math_signatures name (rt, argts)
@@ -159,23 +159,24 @@ let _ =
   add_qualified
     ( "algebra_solver"
     , ReturnType Vector
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Vector); (TParam, Vector); (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (AutoDiffable, Vector); (AutoDiffable, Vector)
+              ; (DataOnly, Array Real); (DataOnly, Array Int) ]
             , ReturnType Vector ) )
-      ; (TParam, Vector); (TParam, Vector); (TData, Array Real)
-      ; (TData, Array Int) ] ) ;
+      ; (AutoDiffable, Vector); (AutoDiffable, Vector); (DataOnly, Array Real)
+      ; (DataOnly, Array Int) ] ) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType Vector
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Vector); (TParam, Vector); (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (AutoDiffable, Vector); (AutoDiffable, Vector)
+              ; (DataOnly, Array Real); (DataOnly, Array Int) ]
             , ReturnType Vector ) )
-      ; (TParam, Vector); (TParam, Vector); (TData, Array Real)
-      ; (TData, Array Int); (TData, Real); (TData, Real); (TData, Real) ] ) ;
+      ; (AutoDiffable, Vector); (AutoDiffable, Vector); (DataOnly, Array Real)
+      ; (DataOnly, Array Int); (DataOnly, Real); (DataOnly, Real)
+      ; (DataOnly, Real) ] ) ;
   for i = 1 to 8 - 1 do
     add_unqualified
       ( "append_array"
@@ -1019,76 +1020,90 @@ let _ =
   add_qualified
     ( "integrate_ode"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int)
-      ; (TData, Real); (TData, Real); (TData, Real) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int); (DataOnly, Real); (DataOnly, Real)
+      ; (DataOnly, Real) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int)
-      ; (TData, Real); (TData, Real); (TData, Real) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int); (DataOnly, Real); (DataOnly, Real)
+      ; (DataOnly, Real) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (Array (Array Real))
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Real); (TParam, Array Real); (TParam, Array Real)
-              ; (TData, Array Real); (TData, Array Int) ]
+            ( [ (AutoDiffable, Real); (AutoDiffable, Array Real)
+              ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+              ; (DataOnly, Array Int) ]
             , ReturnType (Array Real) ) )
-      ; (TParam, Array Real); (TData, Real); (TData, Array Real)
-      ; (TParam, Array Real); (TData, Array Real); (TData, Array Int)
-      ; (TData, Real); (TData, Real); (TData, Real) ] ) ;
+      ; (AutoDiffable, Array Real); (DataOnly, Real); (DataOnly, Array Real)
+      ; (AutoDiffable, Array Real); (DataOnly, Array Real)
+      ; (DataOnly, Array Int); (DataOnly, Real); (DataOnly, Real)
+      ; (DataOnly, Real) ] ) ;
   add_unary_vectorized "inv" ;
   for i = 0 to vector_types_size - 1 do
     for j = 0 to vector_types_size - 1 do
@@ -1329,14 +1344,15 @@ let _ =
   add_qualified
     ( "map_rect"
     , ReturnType Vector
-    , [ ( TParam
+    , [ ( AutoDiffable
         , Fun
-            ( [ (TParam, Vector); (TParam, Vector); (TData, Array Real)
-              ; (TData, Array Int) ]
+            ( [ (AutoDiffable, Vector); (AutoDiffable, Vector)
+              ; (DataOnly, Array Real); (DataOnly, Array Int) ]
             , ReturnType Vector ) )
-      ; (TParam, Vector); (TParam, Array Vector)
-      ; (TData, Array (Array Real))
-      ; (TData, Array (Array Int)) ] ) ;
+      ; (AutoDiffable, Vector)
+      ; (AutoDiffable, Array Vector)
+      ; (DataOnly, Array (Array Real))
+      ; (DataOnly, Array (Array Int)) ] ) ;
   add_unqualified ("matrix_exp", ReturnType Matrix, [Matrix]) ;
   add_unqualified ("matrix_exp_multiply", ReturnType Matrix, [Matrix; Matrix]) ;
   add_unqualified ("max", ReturnType Int, [bare_array_type (Int, 1)]) ;

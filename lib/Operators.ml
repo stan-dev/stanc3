@@ -30,12 +30,16 @@ let _ = Hashtbl.add operator_names "UMinus" "minus"
 let _ = Hashtbl.add operator_names "UPlus" "plus"
 let _ = Hashtbl.add operator_names "Transpose" "transpose"
 let _ = Hashtbl.add operator_names "TernaryOp" "if_else"
-let _ = Hashtbl.add operator_names "PlusAssign" "assign_add"
-let _ = Hashtbl.add operator_names "MinusAssign" "assign_subtract"
-let _ = Hashtbl.add operator_names "TimesAssign" "assign_multiply"
-let _ = Hashtbl.add operator_names "DivideAssign" "assign_divide"
-let _ = Hashtbl.add operator_names "EltTimesAssign" "assign_elt_times"
-let _ = Hashtbl.add operator_names "EltDivideAssign" "assign_elt_divide"
+let _ = Hashtbl.add operator_names "(OperatorAssign Plus)" "assign_add"
+let _ = Hashtbl.add operator_names "(OperatorAssign Minus)" "assign_subtract"
+let _ = Hashtbl.add operator_names "(OperatorAssign Times)" "assign_multiply"
+let _ = Hashtbl.add operator_names "(OperatorAssign Divide)" "assign_divide"
+
+let _ =
+  Hashtbl.add operator_names "(OperatorAssign EltTimes)" "assign_elt_times"
+
+let _ =
+  Hashtbl.add operator_names "(OperatorAssign EltDivide)" "assign_elt_divide"
 
 (** Querying stan_math_signatures for operator signatures *)
 let get_operator_return_type_opt op_name argtypes =

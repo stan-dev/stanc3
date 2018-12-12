@@ -146,7 +146,7 @@ return_type:
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=identifier
     {  grammar_logger "arg_decl" ;
-       match od with None -> (TParam, ut, id) | _ -> (TData, ut, id)  }
+       match od with None -> (AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
 
 unsized_type:
   | bt=basic_type ud=option(unsized_dims)
@@ -183,13 +183,20 @@ var_decl:
       match ae with
       | Some a ->
           UntypedStmt
-            ( VDeclAss
-                {sizedtype= reducearray (sbt, sizes); identifier= id; value= snd a}
-            , initialize_stmt_meta $startpos $endpos )
+            ( VarDecl {sizedtype= reducearray (sbt, sizes);
+                       transformation= Identity;
+                       identifier= id;
+                       initial_value= Some (snd a);
+                       is_global= false},
+              initialize_stmt_meta $startpos $endpos )
       | None ->
           UntypedStmt
-            ( VDecl (reducearray (sbt, sizes), id)
-            , initialize_stmt_meta $startpos $endpos ) }
+            ( VarDecl {sizedtype= reducearray (sbt, sizes);
+                       transformation= Identity;
+                       identifier= id;
+                       initial_value= None;
+                       is_global= false},
+              initialize_stmt_meta $startpos $endpos ) }
 
 sized_basic_type:
   | INT
@@ -209,8 +216,12 @@ top_var_decl_no_assign:
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
       UntypedStmt
-        ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
-        , initialize_stmt_meta $startpos $endpos )
+        ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+                   transformation=  snd tvt;
+                   identifier= id;
+                   initial_value= None;
+                   is_global= true},
+          initialize_stmt_meta $startpos $endpos )
     }
 
 top_var_decl:
@@ -221,16 +232,20 @@ top_var_decl:
       match ass with
       | Some a ->
           UntypedStmt
-            ( TVDeclAss
-                { tsizedtype= reducearray (fst tvt, sizes)
-                ; transformation= snd tvt
-                ; tidentifier= id
-                ; tvalue= snd a }
-            , initialize_stmt_meta $startpos $endpos )
+            ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+                       transformation=  snd tvt;
+                       identifier= id;
+                       initial_value= Some (snd a);
+                       is_global= true},
+              initialize_stmt_meta $startpos $endpos )
       | None ->
           UntypedStmt
-            ( TVDecl (reducearray (fst tvt, sizes), snd tvt, id)
-            , initialize_stmt_meta $startpos $endpos ) }
+            ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+                       transformation=  snd tvt;
+                       identifier= id;
+                       initial_value= None;
+                       is_global= true},
+              initialize_stmt_meta $startpos $endpos ) }
 
 top_var_type:
   | INT r=range_constraint
@@ -529,20 +544,20 @@ atomic_statement:
 %inline assignment_op:
   | ASSIGN
     {  grammar_logger "assign_plain" ; Assign }
-  | PLUSASSIGN
-    { grammar_logger "assign_plus" ; PlusAssign }
-  | MINUSASSIGN
-    { grammar_logger "assign_minus" ; MinusAssign }
-  | TIMESASSIGN
-    { grammar_logger "assign_times"  ; TimesAssign }
-  | DIVIDEASSIGN
-    { grammar_logger "assign_divide" ; DivideAssign }
-  | ELTTIMESASSIGN
-    { grammar_logger "assign_elttimes"  ; EltTimesAssign }
-  | ELTDIVIDEASSIGN
-    { grammar_logger "assign_eltdivide" ; EltDivideAssign  }
   | ARROWASSIGN
     { grammar_logger "assign_arrow" ; ArrowAssign  } (* deprecated *)
+  | PLUSASSIGN
+    { grammar_logger "assign_plus" ; OperatorAssign Plus }
+  | MINUSASSIGN
+    { grammar_logger "assign_minus" ; OperatorAssign Minus }
+  | TIMESASSIGN
+    { grammar_logger "assign_times"  ; OperatorAssign Times }
+  | DIVIDEASSIGN
+    { grammar_logger "assign_divide" ; OperatorAssign Divide }
+  | ELTTIMESASSIGN
+    { grammar_logger "assign_elttimes"  ; OperatorAssign EltTimes }
+  | ELTDIVIDEASSIGN
+    { grammar_logger "assign_eltdivide" ; OperatorAssign EltDivide  }
 
 string_literal:
   | s=STRINGLITERAL
@@ -560,9 +575,9 @@ truncation:
 
 nested_statement:
   | IF LPAREN e=expression RPAREN s1=statement ELSE s2=statement
-    {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, s2) }
+    {  grammar_logger "ifelse_statement" ; IfThenElse (e, s1, Some s2) }
   | IF LPAREN e=expression RPAREN s=statement %prec below_ELSE
-    {  grammar_logger "if_statement" ; IfThen (e, s) }
+    {  grammar_logger "if_statement" ; IfThenElse (e, s, None) }
   | WHILE LPAREN e=expression RPAREN s=statement
     {  grammar_logger "while_statement" ; While (e, s) }
   | FOR LPAREN id=identifier IN e1=expression COLON e2=expression RPAREN

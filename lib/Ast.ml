@@ -19,6 +19,9 @@ type originblock =
   | Model
   | GQuant
 
+(** Flags for data only arguments to functions *)
+and autodifftype = DataOnly | AutoDiffable
+
 (** Unsized types for function arguments and for decorating expressions
     during type checking; we have a separate type here for Math library
     functions as these functions can be overloaded, so do not have a unique
@@ -31,7 +34,7 @@ and unsizedtype =
   | RowVector
   | Matrix
   | Array of unsizedtype
-  | Fun of (originblock * unsizedtype) list * returntype
+  | Fun of (autodifftype * unsizedtype) list * returntype
   | MathLibraryFunction
 
 (** Return types for functions *)
@@ -117,14 +120,9 @@ and typed_expression =
 (** Assignment operators *)
 type assignmentoperator =
   | Assign
-  | PlusAssign
-  | MinusAssign
-  | TimesAssign
-  | DivideAssign
-  | EltTimesAssign
-  | EltDivideAssign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
+  | OperatorAssign of infixop
 
 (** Truncations *)
 and 'e truncation =
@@ -186,8 +184,7 @@ and ('e, 's) statement =
   | Print of 'e printable list
   | Reject of 'e printable list
   | Skip
-  | IfThenElse of 'e * 's * 's
-  | IfThen of 'e * 's
+  | IfThenElse of 'e * 's * 's option
   | While of 'e * 's
   | For of
       { loop_variable: identifier
@@ -196,18 +193,16 @@ and ('e, 's) statement =
       ; loop_body: 's }
   | ForEach of identifier * 'e * 's
   | Block of 's list
-  | VDecl of 'e sizedtype * identifier
-  | VDeclAss of {sizedtype: 'e sizedtype; identifier: identifier; value: 'e}
-  | TVDecl of 'e sizedtype * 'e transformation * identifier
-  | TVDeclAss of
-      { tsizedtype: 'e sizedtype
+  | VarDecl of
+      { sizedtype: 'e sizedtype
       ; transformation: 'e transformation
-      ; tidentifier: identifier
-      ; tvalue: 'e }
+      ; identifier: identifier
+      ; initial_value: 'e option
+      ; is_global: bool }
   | FunDef of
       { returntype: returntype
       ; funname: identifier
-      ; arguments: (originblock * unsizedtype * identifier) list
+      ; arguments: (autodifftype * unsizedtype * identifier) list
       ; body: 's }
 
 (** Meta data for untyped statements: locations for errors *)
@@ -260,4 +255,23 @@ and 's program =
 and untyped_program = untyped_statement program
 
 (** Typed programs (after type checking) *)
-and typed_program = typed_statement program [@@deriving sexp, compare]
+and typed_program = typed_statement program [@@deriving sexp, compare, map]
+
+(** Forgetful function from typed to untyped expressions *)
+let rec untyped_expression_of_typed_expression = function
+  | TypedExpr (e, n) ->
+      UntypedExpr
+        ( map_expression untyped_expression_of_typed_expression e
+        , {expr_untyped_meta_loc= n.expr_typed_meta_loc} )
+
+(** Forgetful function from typed to untyped statements *)
+let rec untyped_statement_of_typed_statement = function
+  | TypedStmt (s, n) ->
+      UntypedStmt
+        ( map_statement untyped_expression_of_typed_expression
+            untyped_statement_of_typed_statement s
+        , {stmt_untyped_meta_loc= n.stmt_typed_meta_loc} )
+
+(** Forgetful function from typed to untyped programs *)
+let untyped_program_of_typed_program =
+  map_program untyped_statement_of_typed_statement

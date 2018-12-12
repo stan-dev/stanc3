@@ -16,7 +16,19 @@ let rec unwind_sized_array_type = function
     match unwind_sized_array_type st with st2, es -> (st2, e :: es) )
   | st -> (st, [])
 
-let rec pretty_print_originblock = function Data | TData -> "data " | _ -> ""
+let rec pretty_print_originblock = function
+  | MathLibrary -> "Math Library"
+  | Functions -> "functions"
+  | Data -> "data"
+  | TData -> "transformed data "
+  | Param -> "parameters"
+  | TParam -> "transformed parameters"
+  | Model -> "model"
+  | GQuant -> "generated quantities"
+
+and pretty_print_autodifftype = function
+  | DataOnly -> "data "
+  | AutoDiffable -> ""
 
 and pretty_print_unsizedtype = function
   | Int -> "int"
@@ -35,7 +47,7 @@ and pretty_print_unsizedtypes l =
   String.concat ", " (List.map pretty_print_unsizedtype l)
 
 and pretty_print_argtype = function
-  | ob, ut -> pretty_print_originblock ob ^ pretty_print_unsizedtype ut
+  | at, ut -> pretty_print_autodifftype at ^ pretty_print_unsizedtype ut
 
 and pretty_print_expressiontype = function
   | _, ut -> pretty_print_unsizedtype ut
@@ -131,13 +143,9 @@ and pretty_print_list_of_expression es =
 
 and pretty_print_assignmentoperator = function
   | Assign -> "="
-  | PlusAssign -> "+="
-  | MinusAssign -> "-="
-  | TimesAssign -> "*="
-  | DivideAssign -> "/="
-  | EltTimesAssign -> ".*="
-  | EltDivideAssign -> "./="
+  (* ArrowAssign is deprecated *)
   | ArrowAssign -> "<-"
+  | OperatorAssign op -> pretty_print_infixop op ^ "="
 
 and pretty_print_truncation = function
   | NoTruncate -> ""
@@ -268,9 +276,9 @@ and pretty_print_statement = function
     | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
     | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
     | Skip -> ";"
-    | IfThen (e, s) ->
+    | IfThenElse (e, s, None) ->
         "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
-    | IfThenElse (e, s1, s2) ->
+    | IfThenElse (e, s1, Some s2) ->
         "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s1
         ^ "\n" ^ tabs () ^ "else " ^ pretty_print_statement s2
     | While (e, s) ->
@@ -290,31 +298,28 @@ and pretty_print_statement = function
         let _ = exit_indent () in
         let s3 = tabs () ^ "}" in
         s1 ^ s2 ^ s3
-    | VDecl (st, id) ->
+    | VarDecl
+        { sizedtype= st
+        ; transformation= trans
+        ; identifier= id
+        ; initial_value= init
+        ; is_global= _ } ->
         let st2, es = unwind_sized_array_type st in
-        pretty_print_sizedtype st2 ^ " " ^ pretty_print_identifier id
-        ^ pretty_print_array_dims es ^ ";"
-    | VDeclAss {sizedtype= st; identifier= id; value= e} ->
-        let st2, es = unwind_sized_array_type st in
-        pretty_print_sizedtype st2 ^ " " ^ pretty_print_identifier id
-        ^ pretty_print_array_dims es ^ " = " ^ pretty_print_expression e ^ ";"
-    | TVDecl (st, trans, id) ->
-        let st2, es = unwind_sized_array_type st in
+        let init_string =
+          match init with
+          | None -> ""
+          | Some e -> " = " ^ pretty_print_expression e
+        in
         pretty_print_transformed_type st2 trans
-        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es ^ ";"
-    | TVDeclAss
-        {tsizedtype= st; transformation= trans; tidentifier= id; tvalue= e} ->
-        let st2, es = unwind_sized_array_type st in
-        pretty_print_transformed_type st2 trans
-        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es ^ " = "
-        ^ pretty_print_expression e ^ ";"
+        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es
+        ^ init_string ^ ";"
     | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
         pretty_print_returntype rt ^ " " ^ pretty_print_identifier id ^ "("
         ^ String.concat ", "
             (List.map
                (function
-                 | ob, ut, id ->
-                     pretty_print_originblock ob
+                 | at, ut, id ->
+                     pretty_print_autodifftype at
                      ^ pretty_print_unsizedtype ut
                      ^ " " ^ pretty_print_identifier id)
                args)

@@ -1,12 +1,13 @@
   $ ../../../../../install/default/bin/stanc bad_data_i_type.stan
 
 Semantic error at file "bad_data_i_type.stan", line 19, characters 8-68:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    17:  generated quantities {
+    18:    vector[3] y_hat_gq
+    19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+                 ^
+    20:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
@@ -15,13 +16,14 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 
 Semantic error at file "bad_data_int_const.stan", line 21, characters 8-104:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r,
-                   { { 1,  a > 2 ? 1 : 2 } });
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    19:  generated quantities {
+    20:    vector[3] y_hat_gq
+    21:        = map_rect(foo, shared_params_d, job_params_d, data_r,
+                 ^
+    22:                   { { 1,  a > 2 ? 1 : 2 } });
+    23:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
@@ -30,12 +32,13 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 
 Semantic error at file "bad_data_r_type.stan", line 19, characters 8-68:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    17:  generated quantities {
+    18:    vector[3] y_hat_gq
+    19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+                 ^
+    20:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
@@ -44,12 +47,13 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 
 Semantic error at file "bad_data_real_const.stan", line 20, characters 8-70:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r_p, data_i);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    18:  generated quantities {
+    19:    vector[3] y_hat_gq
+    20:        = map_rect(foo, shared_params_d, job_params_d, data_r_p, data_i);
+                 ^
+    21:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
@@ -58,12 +62,13 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 
 Semantic error at file "bad_fun_type.stan", line 19, characters 8-68:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    17:  generated quantities {
+    18:    vector[3] y_hat_gq
+    19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+                 ^
+    20:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
@@ -72,12 +77,13 @@ Instead supplied arguments of incompatible type: (vector, vector[], real[], int[
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 
 Semantic error at file "bad_job_params_type.stan", line 19, characters 8-68:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    17:  generated quantities {
+    18:    vector[3] y_hat_gq
+    19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+                 ^
+    20:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
@@ -86,36 +92,39 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 
 Semantic error at file "bad_lp_fn.stan", line 22, characters 16-52:
-  -------------------------------------------------
-  }
-  model {
->   target += sum(map_rect(lr_lp, beta, theta, xs, ys));
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    20:  }
+    21:  model {
+    22:    target += sum(map_rect(lr_lp, beta, theta, xs, ys));
+                         ^
+    23:  }
+   -------------------------------------------------
 
 Mapped function cannot be an _rng or _lp function, found function name: lr_lp
 
   $ ../../../../../install/default/bin/stanc bad_rng_fn.stan
 
 Semantic error at file "bad_rng_fn.stan", line 22, characters 19-56:
-  -------------------------------------------------
-  }
-  transformed parameters {
->   vector[12] bar = map_rect(lr_rng, beta, theta, xs, ys);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    20:  }
+    21:  transformed parameters {
+    22:    vector[12] bar = map_rect(lr_rng, beta, theta, xs, ys);
+                            ^
+    23:  }
+   -------------------------------------------------
 
 Mapped function cannot be an _rng or _lp function, found function name: lr_rng
 
   $ ../../../../../install/default/bin/stanc bad_shared_params_type.stan
 
 Semantic error at file "bad_shared_params_type.stan", line 19, characters 8-68:
-  -------------------------------------------------
-  generated quantities {
-    vector[3] y_hat_gq
->       = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
-  }
-  -------------------------------------------------
+   -------------------------------------------------
+    17:  generated quantities {
+    18:    vector[3] y_hat_gq
+    19:        = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+                 ^
+    20:  }
+   -------------------------------------------------
 
 Ill-typed arguments supplied to function map_rect. Available signatures: 
 ((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
