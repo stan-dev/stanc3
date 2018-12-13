@@ -230,14 +230,14 @@ let check_fresh_variable_basic id is_nullary_function =
     then
       let error_msg =
         String.concat " "
-          ["Identifier "; id.name; " clashes with Stan Math library function."]
+          ["Identifier"; id.name; "clashes with Stan Math library function."]
       in
       semantic_error ~loc:id.id_loc error_msg
   in
   match Symbol_table.look vm id.name with
   | Some _ ->
       let error_msg =
-        String.concat " " ["Identifier "; id.name; " is already in use."]
+        String.concat " " ["Identifier"; id.name; "is already in use."]
       in
       semantic_error ~loc:id.id_loc error_msg
   | None -> ()

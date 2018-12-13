@@ -507,7 +507,7 @@ Semantic error at file "bad_fun_name.stan", line 2, characters 7-12:
      4:  parameters {
    -------------------------------------------------
 
-Identifier  logit  clashes with Stan Math library function.
+Identifier logit clashes with Stan Math library function.
 
   $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
 
