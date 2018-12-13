@@ -82,7 +82,7 @@ let report_syntax_error = function
       match message with
       | None -> Printf.eprintf "\n"
       | Some error_message -> prerr_endline error_message )
-  | Lexing (invalid_input, err_pos) ->
+  | Lexing (_, err_pos) ->
       let file, line, column = position err_pos in
       Printf.eprintf
         "\nSyntax error at file \"%s\", line %d, column %d, lexing error:\n"
@@ -90,7 +90,7 @@ let report_syntax_error = function
       ( match error_context file line (column - 1) with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
-      Printf.eprintf "Invalid input %S\n%!\n" invalid_input
+      Printf.eprintf "Invalid character found. %s\n\n" ""
   | Includes (msg, err_pos) ->
       let file, line, column = position err_pos in
       Printf.eprintf

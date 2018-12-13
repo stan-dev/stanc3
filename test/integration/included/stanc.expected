@@ -165,7 +165,7 @@ Syntax error at file "../included/lex-err.stan" included from "../included/incl_
                  ^
    -------------------------------------------------
 
-Invalid input "$"
+Invalid character found. 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_parse_error.stan
 

@@ -1672,7 +1672,7 @@ Syntax error at file "lexing_error.stan", line 1, column 6, lexing error:
                ^
    -------------------------------------------------
 
-Invalid input "\194"
+Invalid character found. 
 
   $ ../../../../../install/default/bin/stanc location-scale-bad1.stan
 
