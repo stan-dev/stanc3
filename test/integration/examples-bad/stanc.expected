@@ -2228,7 +2228,7 @@ Semantic error at file "tilde-bad.stan", line 8, columns 8-19:
      9:  }
    -------------------------------------------------
 
-~-statement expects a distribution name without '_lpdf' or '_lcdf' suffix.
+~-statement expects a distribution name without '_lpdf' or '_lpmf' suffix.
 
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 
