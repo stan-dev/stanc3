@@ -2217,6 +2217,19 @@ Syntax error at file "target-reserved.stan", line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+  $ ../../../../install/default/bin/stanc tilde-bad.stan
+
+Semantic error at file "tilde-bad.stan", line 8, columns 8-19:
+   -------------------------------------------------
+     6:  }
+     7:  model {
+     8:    foo ~ normal_lpdf(0, 1);
+                 ^
+     9:  }
+   -------------------------------------------------
+
+~-statement expects a distribution name without '_lpdf' or '_lcdf' suffix.
+
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 
 Semantic error at file "validate_add_expression_dimss_bad.stan", line 4, columns 7-14:
