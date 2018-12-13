@@ -1,7 +1,5 @@
-(** Abstract syntax. *)
+(** Abstract syntax tree *)
 open Core_kernel
-
-(* for auto generating s-exp *)
 
 (** Source code locations *)
 type location =
@@ -40,11 +38,9 @@ and unsizedtype =
 (** Return types for functions *)
 and returntype = Void | ReturnType of unsizedtype
 
-(** Identifiers (variables) *)
 and identifier = {name: string; id_loc: location sexp_opaque [@compare.ignore]}
 
-(** Infix operators *)
-and infixop =
+and operator =
   | Plus
   | Minus
   | Times
@@ -62,14 +58,9 @@ and infixop =
   | Leq
   | Greater
   | Geq
+  | Not
+  | Transpose
 
-(** Prefix operators *)
-and prefixop = Not | UMinus | UPlus
-
-(** Postfix operators *)
-and postfixop = Transpose
-
-(** Indices *)
 and 'e index =
   | All
   | Single of 'e
@@ -82,9 +73,9 @@ and 'e index =
     substitute untyped_expression or typed_expression for 'e *)
 and 'e expression =
   | TernaryIf of 'e * 'e * 'e
-  | BinOp of 'e * infixop * 'e
-  | PrefixOp of prefixop * 'e
-  | PostfixOp of 'e * postfixop
+  | BinOp of 'e * operator * 'e
+  | PrefixOp of operator * 'e
+  | PostfixOp of 'e * operator
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
@@ -115,14 +106,14 @@ and untyped_expression =
 (** Typed expressions *)
 and typed_expression =
   | TypedExpr of (typed_expression expression * expression_typed_metadata)
-[@@deriving sexp, compare, map]
+[@@deriving sexp, compare, map, hash]
 
 (** Assignment operators *)
 type assignmentoperator =
   | Assign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
-  | OperatorAssign of infixop
+  | OperatorAssign of operator
 
 (** Truncations *)
 and 'e truncation =

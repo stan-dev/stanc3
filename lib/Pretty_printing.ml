@@ -62,7 +62,7 @@ and pretty_print_returntype = function
 
 and pretty_print_identifier id = id.name
 
-and pretty_print_infixop = function
+and pretty_print_operator = function
   | Plus -> "+"
   | Minus -> "-"
   | Times -> "*"
@@ -80,13 +80,8 @@ and pretty_print_infixop = function
   | Leq -> "<="
   | Greater -> ">"
   | Geq -> ">="
-
-and pretty_print_prefixop = function
   | Not -> "!"
-  | UMinus -> "-"
-  | UPlus -> "+"
-
-and pretty_print_postfixop = function Transpose -> "'"
+  | Transpose -> "'"
 
 and pretty_print_index = function
   | All -> " : "
@@ -107,11 +102,10 @@ and pretty_print_expression = function
         pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
         ^ pretty_print_expression e3
     | BinOp (e1, op, e2) ->
-        pretty_print_expression e1 ^ " " ^ pretty_print_infixop op ^ " "
+        pretty_print_expression e1 ^ " " ^ pretty_print_operator op ^ " "
         ^ pretty_print_expression e2
-    | PrefixOp (op, e) -> pretty_print_prefixop op ^ pretty_print_expression e
-    | PostfixOp (e, op) ->
-        pretty_print_expression e ^ pretty_print_postfixop op
+    | PrefixOp (op, e) -> pretty_print_operator op ^ pretty_print_expression e
+    | PostfixOp (e, op) -> pretty_print_expression e ^ pretty_print_operator op
     | Variable id -> pretty_print_identifier id
     | IntNumeral i -> i
     | RealNumeral r -> r
@@ -145,7 +139,7 @@ and pretty_print_assignmentoperator = function
   | Assign -> "="
   (* ArrowAssign is deprecated *)
   | ArrowAssign -> "<-"
-  | OperatorAssign op -> pretty_print_infixop op ^ "="
+  | OperatorAssign op -> pretty_print_operator op ^ "="
 
 and pretty_print_truncation = function
   | NoTruncate -> ""

@@ -10,13 +10,13 @@ open Core_kernel
 
 type litType = Int | Real | Str
 
-and cond_op = Equals | NEquals | Less | Leq | Greater | Geq
+and operator = Ast.operator
 
 and expr =
   | Var of string
   | Lit of litType * string
   | FnApp of string * expr list
-  | BinOp of expr * cond_op * expr
+  | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | ArrayLiteral of expr list
   | Indexed of expr * expr list

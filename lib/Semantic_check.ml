@@ -541,7 +541,7 @@ and semantic_check_expression x =
                 [ue1; ue2; ue3]))
       in
       match
-        get_operator_return_type_opt "TernaryIf"
+        operator_return_type_from_string "TernaryIf"
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -565,27 +565,26 @@ and semantic_check_expression x =
             ^ pretty_print_unsizedtype (type_of_typed_expr ue3)
             ^ "." ) )
   | BinOp (e1, op, e2) -> (
-      let ue1 = semantic_check_expression e1 in
-      let uop = semantic_check_infixop op in
-      let ue2 = semantic_check_expression e2 in
-      let returnblock =
-        lub_originblock
-          (List.map fst
-             (List.map
-                (fun z ->
-                  (snd (typed_expression_unroll z)).expr_typed_meta_origin_type
-                  )
-                [ue1; ue2]))
-      in
-      let opname = Core_kernel.Sexp.to_string (sexp_of_infixop uop) in
+      let ue1 = semantic_check_expression e1
+      and uop = semantic_check_operator op
+      and ue2 = semantic_check_expression e2 in
       match
-        get_operator_return_type_opt opname
+        operator_return_type uop
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
              [ue1; ue2])
       with
       | Some (ReturnType ut) ->
+          let returnblock =
+            lub_originblock
+              (List.map fst
+                 (List.map
+                    (fun z ->
+                      (snd (typed_expression_unroll z))
+                        .expr_typed_meta_origin_type )
+                    [ue1; ue2]))
+          in
           TypedExpr
             ( BinOp (ue1, uop, ue2)
             , { expr_typed_meta_origin_type= (returnblock, ut)
@@ -593,27 +592,27 @@ and semantic_check_expression x =
       | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
-            ^ pretty_print_infixop uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures opname
+            ^ pretty_print_operator uop ^ ". Available signatures: "
+            ^ pretty_print_all_operator_signatures (operator_name uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
             ^ ", "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue2)
             ^ "." ) )
   | PrefixOp (op, e) -> (
-      let uop = semantic_check_prefixop op in
-      let ue = semantic_check_expression e in
-      let returnblock =
-        lub_originblock
-          (List.map fst
-             [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type])
-      in
-      let opname = Core_kernel.Sexp.to_string (sexp_of_prefixop uop) in
+      let uop = semantic_check_operator op
+      and ue = semantic_check_expression e in
       match
-        get_operator_return_type_opt opname
+        operator_return_type uop
           [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type]
       with
       | Some (ReturnType ut) ->
+          let returnblock =
+            lub_originblock
+              (List.map fst
+                 [ (snd (typed_expression_unroll ue))
+                     .expr_typed_meta_origin_type ])
+          in
           TypedExpr
             ( PrefixOp (uop, ue)
             , { expr_typed_meta_origin_type= (returnblock, ut)
@@ -621,8 +620,8 @@ and semantic_check_expression x =
       | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
-            ^ pretty_print_prefixop uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures opname
+            ^ pretty_print_operator uop ^ ". Available signatures: "
+            ^ pretty_print_all_operator_signatures (operator_name uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue)
             ^ "." ) )
@@ -633,10 +632,10 @@ and semantic_check_expression x =
           (List.map fst
              [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type])
       in
-      let uop = semantic_check_postfixop op in
-      let opname = Core_kernel.Sexp.to_string (sexp_of_postfixop uop) in
+      let uop = semantic_check_operator op in
+      let opname = Core_kernel.Sexp.to_string (sexp_of_operator uop) in
       match
-        get_operator_return_type_opt opname
+        operator_return_type_from_string opname
           [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type]
       with
       | Some (ReturnType ut) ->
@@ -647,7 +646,7 @@ and semantic_check_expression x =
       | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
-            ^ pretty_print_postfixop uop ^ ". Available signatures: "
+            ^ pretty_print_operator uop ^ ". Available signatures: "
             ^ pretty_print_all_operator_signatures opname
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue)
@@ -1100,11 +1099,7 @@ and semantic_check_expression x =
           ; expr_typed_meta_loc= loc } )
 
 (* Probably nothing to do here *)
-and semantic_check_infixop i = i
-(* Probably nothing to do here *)
-and semantic_check_prefixop p = p
-(* Probably nothing to do here *)
-and semantic_check_postfixop p = p
+and semantic_check_operator i = i
 
 and semantic_check_printable = function
   | PString s -> PString s
@@ -1187,7 +1182,7 @@ and semantic_check_statement s =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
       in
       match
-        get_operator_return_type_opt opname
+        operator_return_type_from_string opname
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -1260,7 +1255,7 @@ and semantic_check_statement s =
                     ". Available signatures: "
                     pretty_print_all_stan_math_function_signatures uid.name
                     "\nInstead supplied arguments of incompatible type: "
-                    pretty_print_unsizedtypes (List.map type_of_typed_expr ues) 
+                    pretty_print_unsizedtypes (List.map type_of_typed_expr ues)
                     "."  |}
           in
           match Symbol_table.look vm uid.name with

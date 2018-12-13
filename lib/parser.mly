@@ -415,9 +415,9 @@ common_expression:
   | BANG
     {   grammar_logger "prefix_bang" ; Not }
   | MINUS
-    {  grammar_logger "prefix_minus" ; UMinus }
+    {  grammar_logger "prefix_minus" ; Minus }
   | PLUS
-    {   grammar_logger "prefix_plus" ; UPlus }
+    {   grammar_logger "prefix_plus" ; Plus }
 
 %inline postfixOp:
   | TRANSPOSE

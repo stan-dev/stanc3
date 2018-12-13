@@ -26,8 +26,6 @@ let _ = Hashtbl.add operator_names "Leq" "logical_lte"
 let _ = Hashtbl.add operator_names "Greater" "logical_gt"
 let _ = Hashtbl.add operator_names "Geq" "logical_gte"
 let _ = Hashtbl.add operator_names "Not" "logical_negation"
-let _ = Hashtbl.add operator_names "UMinus" "minus"
-let _ = Hashtbl.add operator_names "UPlus" "plus"
 let _ = Hashtbl.add operator_names "Transpose" "transpose"
 let _ = Hashtbl.add operator_names "TernaryIf" "if_else"
 let _ = Hashtbl.add operator_names "(OperatorAssign Plus)" "assign_add"
@@ -41,8 +39,8 @@ let _ =
 let _ =
   Hashtbl.add operator_names "(OperatorAssign EltDivide)" "assign_elt_divide"
 
-(** Querying stan_math_signatures for operator signatures *)
-let get_operator_return_type_opt op_name argtypes =
+(** Querying stan_math_signatures for operator signatures by string name *)
+let operator_return_type_from_string op_name argtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
     match argtypes with
     | [(_, ut1); (_, ut2)] ->
@@ -61,6 +59,13 @@ let get_operator_return_type_opt op_name argtypes =
         | Some ut -> Some ut )
     in
     try_recursive_find (Hashtbl.find_all operator_names op_name)
+
+let operator_name op =
+  let open Core_kernel in
+  Sexp.to_string_hum [%sexp (op : Ast.operator)]
+
+let operator_return_type op =
+  operator_return_type_from_string (operator_name op)
 
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
 let pretty_print_all_operator_signatures name =

@@ -11,16 +11,6 @@ let emit_option ?default:(d = "") emitter ppf opt =
   | Some x -> fprintf ppf "%a" emitter x
   | None -> emit_str ppf d
 
-let emit_cond_op ppf c =
-  emit_str ppf
-    ( match c with
-    | Equals -> "=="
-    | NEquals -> "!="
-    | Less -> "<"
-    | Leq -> "<="
-    | Greater -> ">"
-    | Geq -> ">=" )
-
 let rec emit_stantype ad ppf = function
   | SInt | SReal -> emit_str ppf ad
   | SArray (_, t) -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
@@ -38,8 +28,13 @@ let rec emit_expr ppf s =
   | Lit (_, s) -> emit_str ppf s
   | FnApp (fname, args) ->
       emit_call ppf (fname, pp_print_list ~pp_sep:comma emit_expr, args)
-  | Cond (e1, op, e2) ->
-      emit_expr ppf e1 ; emit_cond_op ppf op ; emit_expr ppf e2
+  | BinOp (e1, op, e2) ->
+      fprintf ppf "%a %s %a" emit_expr e1
+        (Operators.operator_name op)
+        emit_expr e2
+  | TernaryIf (cond, ifb, elseb) ->
+      fprintf ppf "(%a) ? (%a) : (%a)" emit_expr cond emit_expr ifb emit_expr
+        elseb
   | ArrayLiteral es ->
       fprintf ppf "{%a}" (pp_print_list ~pp_sep:comma emit_expr) es
   | Indexed (e, idcs) ->
