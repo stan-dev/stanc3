@@ -81,15 +81,15 @@ and 'e index =
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
 and 'e expression =
-  | Conditional of 'e * 'e * 'e
-  | InfixOp of 'e * infixop * 'e
+  | TernaryIf of 'e * 'e * 'e
+  | BinOp of 'e * infixop * 'e
   | PrefixOp of prefixop * 'e
   | PostfixOp of 'e * postfixop
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
   | FunApp of identifier * 'e list
-  | CondFunApp of identifier * 'e list
+  | CondDistApp of identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
@@ -115,9 +115,10 @@ and untyped_expression =
 (** Typed expressions *)
 and typed_expression =
   | TypedExpr of (typed_expression expression * expression_typed_metadata)
+[@@deriving sexp, compare, map]
 
 (** Assignment operators *)
-and assignmentoperator =
+type assignmentoperator =
   | Assign
   (* ArrowAssign is deprecated *)
   | ArrowAssign

@@ -103,10 +103,10 @@ and pretty_print_list_of_indices l =
 and pretty_print_expression = function
   | UntypedExpr (e_content, _) -> (
     match e_content with
-    | Conditional (e1, e2, e3) ->
+    | TernaryIf (e1, e2, e3) ->
         pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
         ^ pretty_print_expression e3
-    | InfixOp (e1, op, e2) ->
+    | BinOp (e1, op, e2) ->
         pretty_print_expression e1 ^ " " ^ pretty_print_infixop op ^ " "
         ^ pretty_print_expression e2
     | PrefixOp (op, e) -> pretty_print_prefixop op ^ pretty_print_expression e
@@ -119,7 +119,7 @@ and pretty_print_expression = function
         pretty_print_identifier id ^ "("
         ^ pretty_print_list_of_expression es
         ^ ")"
-    | CondFunApp (id, es) ->
+    | CondDistApp (id, es) ->
         pretty_print_identifier id ^ "("
         ^ pretty_print_expression (List.hd es)
         ^ "| "

@@ -58,7 +58,6 @@ let reducearray (sbt, l) =
 (* Top level rule *)
 
 %start <Ast.untyped_program> program
-
 %%
 
 
@@ -344,9 +343,9 @@ dims:
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
-    { grammar_logger "ifthenelse_expr" ; Conditional (e1, e2, e3) }
+    { grammar_logger "ifthenelse_expr" ; TernaryIf (e1, e2, e3) }
   | e1=expression op=infixOp e2=expression
-    { grammar_logger "infix_expr" ; InfixOp (e1, op, e2)  }
+    { grammar_logger "infix_expr" ; BinOp (e1, op, e2)  }
   | op=prefixOp e=expression %prec unary_over_binary
     { grammar_logger "prefix_expr" ; PrefixOp (op, e) }
   | e=expression op=postfixOp
@@ -360,10 +359,10 @@ non_lhs:
 
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
 constr_expression:
-  | e1=constr_expression op=arithmeticInfixOp e2=constr_expression
+  | e1=constr_expression op=arithmeticBinOp e2=constr_expression
     {
       grammar_logger "constr_expression_arithmetic" ;
-      UntypedExpr (InfixOp (e1, op, e2), initialize_expr_meta $startpos $endpos)
+      UntypedExpr (BinOp (e1, op, e2), initialize_expr_meta $startpos $endpos)
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
@@ -408,7 +407,7 @@ common_expression:
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
-    {  grammar_logger "conditional_dist_app" ; CondFunApp (id, e :: args) }
+    {  grammar_logger "conditional_dist_app" ; CondDistApp (id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
 
@@ -425,12 +424,12 @@ common_expression:
     {  grammar_logger "postfix_transpose" ; Transpose }
 
 %inline infixOp:
-  | a=arithmeticInfixOp
+  | a=arithmeticBinOp
     {   grammar_logger "infix_arithmetic" ; a }
-  | l=logicalInfixOp
+  | l=logicalBinOp
     {  grammar_logger "infix_logical" ; l }
 
-%inline arithmeticInfixOp:
+%inline arithmeticBinOp:
   | PLUS
     {  grammar_logger "infix_plus" ; Plus }
   | MINUS
@@ -450,7 +449,7 @@ common_expression:
   | HAT
     {  grammar_logger "infix_hat" ; Exp }
 
-%inline logicalInfixOp:
+%inline logicalBinOp:
   | OR
     {   grammar_logger "infix_or" ; Or }
   | AND
@@ -585,10 +584,10 @@ nested_statement:
     s=statement
     {
       grammar_logger "for_statement" ;
-      For {loop_variable = id;
+      For {loop_variable= id;
            lower_bound= e1;
-           upper_bound =  e2;
-           loop_body = s;}
+           upper_bound= e2;
+           loop_body= s;}
     }
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }

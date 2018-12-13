@@ -522,7 +522,7 @@ and semantic_check_transformation = function
 and semantic_check_expression x =
   let loc = (snd (untyped_expression_unroll x)).expr_untyped_meta_loc in
   match fst (untyped_expression_unroll x) with
-  | Conditional (e1, e2, e3) -> (
+  | TernaryIf (e1, e2, e3) -> (
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let ue3 = semantic_check_expression e3 in
@@ -536,7 +536,7 @@ and semantic_check_expression x =
                 [ue1; ue2; ue3]))
       in
       match
-        get_operator_return_type_opt "Conditional"
+        get_operator_return_type_opt "TernaryIf"
           (List.map
              (fun z ->
                (snd (typed_expression_unroll z)).expr_typed_meta_origin_type )
@@ -544,14 +544,14 @@ and semantic_check_expression x =
       with
       | Some (ReturnType ut) ->
           TypedExpr
-            ( Conditional (ue1, ue2, ue3)
+            ( TernaryIf (ue1, ue2, ue3)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | Some Void | None ->
           semantic_error ~loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
-            ^ pretty_print_all_operator_signatures "Conditional"
+            ^ pretty_print_all_operator_signatures "TernaryIf"
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue1)
             ^ ", "
@@ -559,7 +559,7 @@ and semantic_check_expression x =
             ^ ", "
             ^ pretty_print_unsizedtype (type_of_typed_expr ue3)
             ^ "." ) )
-  | InfixOp (e1, op, e2) -> (
+  | BinOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1 in
       let uop = semantic_check_infixop op in
       let ue2 = semantic_check_expression e2 in
@@ -582,7 +582,7 @@ and semantic_check_expression x =
       with
       | Some (ReturnType ut) ->
           TypedExpr
-            ( InfixOp (ue1, uop, ue2)
+            ( BinOp (ue1, uop, ue2)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       | Some Void | None ->
@@ -793,7 +793,7 @@ and semantic_check_expression x =
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
                    identifier " ^ uid.name ^ " was supplied." ) ) )
-  | CondFunApp (id, es) -> (
+  | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
         if
@@ -834,7 +834,7 @@ and semantic_check_expression x =
             ^ uid.name ^ " was supplied." )
       | Some (ReturnType ut) ->
           TypedExpr
-            ( CondFunApp (uid, ues)
+            ( CondDistApp (uid, ues)
             , { expr_typed_meta_origin_type= (returnblock, ut)
               ; expr_typed_meta_loc= loc } )
       (* Check that function arguments match signature  *)
@@ -873,7 +873,7 @@ and semantic_check_expression x =
                     ^ "." )
               in
               TypedExpr
-                ( CondFunApp (uid, ues)
+                ( CondDistApp (uid, ues)
                 , { expr_typed_meta_origin_type= (returnblock, ut)
                   ; expr_typed_meta_loc= loc } )
           | Some _ ->
