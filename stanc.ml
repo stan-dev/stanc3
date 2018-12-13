@@ -57,7 +57,7 @@ let options =
       , Arg.String
           (fun str -> Lexer.include_paths := String.split_on_char ',' str)
       , " Takes a comma-separated list of directories that may contain a file \
-         in an #include directive" ) ]
+         in an #include directive (default = \"\")" ) ]
 
 (** Add a file to the list of files to be loaded, and record whether it should
       be processed in interactive mode. *)

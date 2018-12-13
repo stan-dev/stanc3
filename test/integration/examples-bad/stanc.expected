@@ -1014,7 +1014,7 @@ Semantic error at file "functions-bad1.stan", line 6, characters 7-11:
      8:  parameters {
    -------------------------------------------------
 
-Identifier  flib  is already in use.
+Identifier flib is already in use.
 
   $ ../../../../install/default/bin/stanc functions-bad11.stan
 
@@ -1070,7 +1070,7 @@ Semantic error at file "functions-bad14.stan", line 5, characters 6-9:
      7:    }
    -------------------------------------------------
 
-Identifier  abc  is already in use.
+Identifier abc is already in use.
 
   $ ../../../../install/default/bin/stanc functions-bad15.stan
 
@@ -1096,7 +1096,7 @@ Semantic error at file "functions-bad16.stan", line 2, characters 7-13:
      4:    }
    -------------------------------------------------
 
-Identifier  square  clashes with Stan Math library function.
+Identifier square clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 
@@ -1123,7 +1123,7 @@ Semantic error at file "functions-bad18.stan", line 7, characters 7-10:
      9:  model {
    -------------------------------------------------
 
-Identifier  foo  is already in use.
+Identifier foo is already in use.
 
   $ ../../../../install/default/bin/stanc functions-bad19.stan
 
@@ -1510,7 +1510,7 @@ Semantic error at file "multi_fun.stan", line 5, characters 7-10:
      7:    }
    -------------------------------------------------
 
-Identifier  foo  is already in use.
+Identifier foo is already in use.
 
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 
@@ -1896,7 +1896,7 @@ Semantic error at file "redefine-ccdf1.stan", line 2, characters 7-23:
      4:    }
    -------------------------------------------------
 
-Identifier  poisson_ccdf_log  clashes with Stan Math library function.
+Identifier poisson_ccdf_log clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc redefine-ccdf2.stan
 
@@ -1909,7 +1909,7 @@ Semantic error at file "redefine-ccdf2.stan", line 2, characters 7-20:
      4:    }
    -------------------------------------------------
 
-Identifier  poisson_lccdf  clashes with Stan Math library function.
+Identifier poisson_lccdf clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
 
@@ -1923,7 +1923,7 @@ Semantic error at file "redefine-ccdf3.stan", line 5, characters 7-19:
      7:    }
    -------------------------------------------------
 
-Identifier  foo_lccdf  is already in use.
+Identifier foo_lccdf is already in use.
 
   $ ../../../../install/default/bin/stanc redefine-cdf1.stan
 
@@ -1936,7 +1936,7 @@ Semantic error at file "redefine-cdf1.stan", line 2, characters 7-22:
      4:    }
    -------------------------------------------------
 
-Identifier  poisson_cdf_log  clashes with Stan Math library function.
+Identifier poisson_cdf_log clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc redefine-cdf2.stan
 
@@ -1949,7 +1949,7 @@ Semantic error at file "redefine-cdf2.stan", line 2, characters 7-19:
      4:    }
    -------------------------------------------------
 
-Identifier  poisson_lcdf  clashes with Stan Math library function.
+Identifier poisson_lcdf clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc redefine-cdf3.stan
 
@@ -1963,7 +1963,7 @@ Semantic error at file "redefine-cdf3.stan", line 5, characters 7-18:
      7:    }
    -------------------------------------------------
 
-Identifier  foo_lcdf  is already in use.
+Identifier foo_lcdf is already in use.
 
   $ ../../../../install/default/bin/stanc redefine-prob1.stan
 
@@ -1976,7 +1976,7 @@ Semantic error at file "redefine-prob1.stan", line 2, characters 7-19:
      4:    }
    -------------------------------------------------
 
-Identifier  poisson_lpmf  clashes with Stan Math library function.
+Identifier poisson_lpmf clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc redefine-prob2.stan
 
@@ -1989,7 +1989,7 @@ Semantic error at file "redefine-prob2.stan", line 2, characters 7-19:
      4:    }
    -------------------------------------------------
 
-Identifier  poisson_lpmf  clashes with Stan Math library function.
+Identifier poisson_lpmf clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc redefine-prob3.stan
 
@@ -2003,7 +2003,7 @@ Semantic error at file "redefine-prob3.stan", line 5, characters 7-15:
      7:    }
    -------------------------------------------------
 
-Identifier  foo_log  is already in use.
+Identifier foo_log is already in use.
 
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 
@@ -2243,7 +2243,7 @@ Semantic error at file "validate_add_var_bad1.stan", line 3, characters 7-8:
      5:  parameters {
    -------------------------------------------------
 
-Identifier  x  is already in use.
+Identifier x is already in use.
 
   $ ../../../../install/default/bin/stanc validate_add_var_bad2.stan
 
