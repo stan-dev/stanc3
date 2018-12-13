@@ -75,6 +75,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
     - higher order functions
     - submodels / structs / records / ?
     - some safe support for possibly inefficient discrete parameters
+    - custom transforms? (like lower, upper); composable transforms?
 
 
 ## Important simultaneous work also needed for other reasons
