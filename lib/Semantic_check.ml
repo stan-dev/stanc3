@@ -230,14 +230,17 @@ let check_fresh_variable_basic id is_nullary_function =
     then
       let error_msg =
         String.concat " "
-          ["Identifier"; ("'" ^ id.name ^ "'") ; "clashes with Stan Math library function."]
+          [ "Identifier"
+          ; "'" ^ id.name ^ "'"
+          ; "clashes with Stan Math library function." ]
       in
       semantic_error ~loc:id.id_loc error_msg
   in
   match Symbol_table.look vm id.name with
   | Some _ ->
       let error_msg =
-        String.concat " " ["Identifier"; ("'" ^ id.name ^ "'") ; "is already in use."]
+        String.concat " "
+          ["Identifier"; "'" ^ id.name ^ "'"; "is already in use."]
       in
       semantic_error ~loc:id.id_loc error_msg
   | None -> ()
@@ -358,7 +361,9 @@ and semantic_check_identifier id =
            ; "xor_eq" ]
     then
       semantic_error ~loc:id.id_loc
-        ("Identifier " ^ ("'" ^ id.name ^ "'") ^ " clashes with reserved keyword.")
+        ( "Identifier "
+        ^ ("'" ^ id.name ^ "'")
+        ^ " clashes with reserved keyword." )
   in
   id
 
@@ -653,7 +658,8 @@ and semantic_check_expression x =
       (* Check that variable in scope if used  *)
       let _ =
         if ut = None && not (is_stan_math_function_name uid.name) then
-          semantic_error ~loc ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
+          semantic_error ~loc
+            ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       in
       TypedExpr
         ( Variable uid
@@ -739,7 +745,8 @@ and semantic_check_expression x =
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
-            ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+            ^ ("'" ^ uid.name ^ "'")
+            ^ " was supplied." )
       | Some (ReturnType ut) ->
           TypedExpr
             ( FunApp (uid, ues)
@@ -751,7 +758,8 @@ and semantic_check_expression x =
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
-                ( "Ill-typed arguments supplied to function " ^ ("'" ^ uid.name ^ "'")
+                ( "Ill-typed arguments supplied to function "
+                ^ ("'" ^ uid.name ^ "'")
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
@@ -762,7 +770,9 @@ and semantic_check_expression x =
           | Some (_, Fun (_, Void)) ->
               semantic_error ~loc
                 ( "A returning function was expected but a non-returning \
-                   function " ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+                   function "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." )
           | Some (_, Fun (listedtypes, ReturnType ut)) ->
               let _ =
                 if
@@ -771,7 +781,8 @@ and semantic_check_expression x =
                        argumenttypes)
                 then
                   semantic_error ~loc
-                    ( "Ill-typed arguments supplied to function " ^ ("'" ^ uid.name ^ "'")
+                    ( "Ill-typed arguments supplied to function "
+                    ^ ("'" ^ uid.name ^ "'")
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype
                         (Fun (listedtypes, ReturnType ut))
@@ -788,11 +799,14 @@ and semantic_check_expression x =
               (* Check that Funaps are actually functions *)
               semantic_error ~loc
                 ( "A returning function was expected but a non-function value "
-                ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." )
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
-                   identifier " ^ ("'" ^ uid.name ^ "'") ^ " was supplied." ) ) )
+                   identifier "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." ) ) )
   | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let _ =
@@ -831,7 +845,8 @@ and semantic_check_expression x =
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
-            ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+            ^ ("'" ^ uid.name ^ "'")
+            ^ " was supplied." )
       | Some (ReturnType ut) ->
           TypedExpr
             ( CondDistApp (uid, ues)
@@ -843,7 +858,8 @@ and semantic_check_expression x =
           let _ =
             if is_stan_math_function_name uid.name then
               semantic_error ~loc
-                ( "Ill-typed arguments supplied to function " ^ ("'" ^ uid.name ^ "'")
+                ( "Ill-typed arguments supplied to function "
+                ^ ("'" ^ uid.name ^ "'")
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
@@ -854,7 +870,9 @@ and semantic_check_expression x =
           | Some (_, Fun (_, Void)) ->
               semantic_error ~loc
                 ( "A returning function was expected but a non-returning \
-                   function " ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+                   function "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." )
           | Some (_, Fun (listedtypes, ReturnType ut)) ->
               let _ =
                 if
@@ -863,7 +881,8 @@ and semantic_check_expression x =
                        argumenttypes)
                 then
                   semantic_error ~loc
-                    ( "Ill-typed arguments supplied to function " ^ ("'" ^ uid.name ^ "'")
+                    ( "Ill-typed arguments supplied to function "
+                    ^ ("'" ^ uid.name ^ "'")
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype
                         (Fun (listedtypes, ReturnType ut))
@@ -880,11 +899,14 @@ and semantic_check_expression x =
               (* Check that Funaps are actually functions *)
               semantic_error ~loc
                 ( "A returning function was expected but a non-function value "
-                ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." )
           | None ->
               semantic_error ~loc
                 ( "A returning function was expected but an undeclared \
-                   identifier " ^ ("'" ^ uid.name ^ "'") ^ " was supplied." ) ) )
+                   identifier "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." ) ) )
   | GetLP ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
@@ -1133,7 +1155,8 @@ and semantic_check_statement s =
         if Symbol_table.get_read_only vm uid.name then
           semantic_error ~loc
             ( "Cannot assign to function argument or loop identifier "
-            ^ ("'" ^ uid.name ^ "'") ^ "." )
+            ^ ("'" ^ uid.name ^ "'")
+            ^ "." )
       in
       (* Variables from previous blocks are read-only. In particular, data and parameters never assigned to *)
       let _ =
@@ -1145,7 +1168,8 @@ and semantic_check_statement s =
             then ()
             else
               semantic_error ~loc
-                ( "Cannot assign to global variable " ^ ("'" ^ uid.name ^ "'")
+                ( "Cannot assign to global variable "
+                ^ ("'" ^ uid.name ^ "'")
                 ^ " declared in previous blocks." )
         | None -> fatal_error ()
       in
@@ -1225,7 +1249,8 @@ and semantic_check_statement s =
       | Some (ReturnType _) ->
           semantic_error ~loc
             ( "A non-returning function was expected but a returning function "
-            ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+            ^ ("'" ^ uid.name ^ "'")
+            ^ " was supplied." )
       | None -> (
           let _ =
             if is_stan_math_function_name uid.name then
@@ -1247,7 +1272,8 @@ and semantic_check_statement s =
                        argumenttypes)
                 then
                   semantic_error ~loc
-                    ( "Ill-typed arguments supplied to function " ^ ("'" ^ uid.name ^ "'")
+                    ( "Ill-typed arguments supplied to function "
+                    ^ ("'" ^ uid.name ^ "'")
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype (Fun (listedtypes, Void))
                     ^ "\nInstead supplied arguments of incompatible type: "
@@ -1262,15 +1288,21 @@ and semantic_check_statement s =
           | Some (_, Fun (_, ReturnType _)) ->
               semantic_error ~loc
                 ( "A non-returning function was expected but a returning \
-                   function " ^ ("'" ^ uid.name ^ "'")^ " was supplied." )
+                   function "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." )
           | Some _ ->
               semantic_error ~loc
                 ( "A non-returning function was expected but a non-function \
-                   value " ^ ("'" ^ uid.name ^ "'") ^ " was supplied." )
+                   value "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." )
           | None ->
               semantic_error ~loc
                 ( "A non-returning function was expected but an undeclared \
-                   identifier " ^ ("'" ^ uid.name ^ "'") ^ " was supplied." ) ) )
+                   identifier "
+                ^ ("'" ^ uid.name ^ "'")
+                ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression e in
       (* We check typing of ~ and target += *)
@@ -1325,10 +1357,15 @@ and semantic_check_statement s =
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
-      let _ = if          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+      let _ =
+        if
+          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
           || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
-          then semantic_error ~loc:uid.id_loc
-          "~-statement expects a distribution name without '_lpdf' or '_lcdf' suffix." in
+        then
+          semantic_error ~loc:uid.id_loc
+            "~-statement expects a distribution name without '_lpdf' or \
+             '_lpmf' suffix."
+      in
       let ues = List.map semantic_check_expression es in
       let ut = semantic_check_truncation t in
       let argumenttypes =
@@ -1388,7 +1425,8 @@ and semantic_check_statement s =
         else
           semantic_error ~loc
             ( "Ill-typed arguments to '~' statement. No distribution "
-            ^ ("'" ^ uid.name ^ "'") ^ " was found with the correct signature." )
+            ^ ("'" ^ uid.name ^ "'")
+            ^ " was found with the correct signature." )
       in
       let cumulative_density_is_defined name argumenttypes =
         ( get_stan_math_function_return_type_opt (name ^ "_lcdf") argumenttypes
@@ -1806,7 +1844,8 @@ and semantic_check_statement s =
             <> Some (Functions, Fun (uarg_types, urt))
           then
             semantic_error ~loc
-              ( "Function " ^ ("'" ^ uid.name ^ "'")
+              ( "Function "
+              ^ ("'" ^ uid.name ^ "'")
               ^ " has already been declared to have type "
               ^ pretty_print_opt_expressiontype (Symbol_table.look vm uid.name)
               ) )
@@ -1817,7 +1856,8 @@ and semantic_check_statement s =
         | UntypedStmt (Skip, _) ->
             if Symbol_table.check_is_unassigned vm uid.name then
               semantic_error ~loc
-                ( "Function " ^ ("'" ^ uid.name ^ "'")
+                ( "Function "
+                ^ ("'" ^ uid.name ^ "'")
                 ^ " has already been declared. A definition is expected." )
             else Symbol_table.set_is_unassigned vm uid.name
         | _ -> Symbol_table.set_is_assigned vm uid.name
