@@ -1325,6 +1325,10 @@ and semantic_check_statement s =
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
+      let _ = if          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+          || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
+          then semantic_error ~loc:uid.id_loc
+          "~-statement expects a distribution name without '_lpdf' or '_lcdf' suffix." in
       let ues = List.map semantic_check_expression es in
       let ut = semantic_check_truncation t in
       let argumenttypes =

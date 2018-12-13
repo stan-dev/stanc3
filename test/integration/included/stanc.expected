@@ -234,7 +234,3 @@ Semantic error at file "stanc_helper_with_good_include_err_after_incl.stan", lin
 
 Identifier 'ww' not in scope.
 
----------------------
-
-Identifier ww not in scope.
-
