@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc bad_bdf_control_function_return.stan
 
-Semantic error at file "bad_bdf_control_function_return.stan", line 13, characters 6-151:
+Semantic error at file "bad_bdf_control_function_return.stan", line 13, columns 6-151:
    -------------------------------------------------
     11:  model {
     12:    real x[2, 2]
@@ -10,14 +10,14 @@ Semantic error at file "bad_bdf_control_function_return.stan", line 13, characte
     15:                          10, 10, 10);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real, real[], real, real[], real[], real[], int[], int, int, int.
 
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 
-Semantic error at file "bad_fun_type.stan", line 27, characters 11-330:
+Semantic error at file "bad_fun_type.stan", line 27, columns 11-330:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -27,13 +27,13 @@ Semantic error at file "bad_fun_type.stan", line 27, characters 11-330:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf.stan
 
-Semantic error at file "bad_fun_type_bdf.stan", line 27, characters 11-334:
+Semantic error at file "bad_fun_type_bdf.stan", line 27, columns 11-334:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -43,14 +43,14 @@ Semantic error at file "bad_fun_type_bdf.stan", line 27, characters 11-334:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf_control.stan
 
-Semantic error at file "bad_fun_type_bdf_control.stan", line 27, characters 11-350:
+Semantic error at file "bad_fun_type_bdf_control.stan", line 27, columns 11-350:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -60,14 +60,14 @@ Semantic error at file "bad_fun_type_bdf_control.stan", line 27, characters 11-3
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45.stan
 
-Semantic error at file "bad_fun_type_rk45.stan", line 27, characters 11-335:
+Semantic error at file "bad_fun_type_rk45.stan", line 27, columns 11-335:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -77,14 +77,14 @@ Semantic error at file "bad_fun_type_rk45.stan", line 27, characters 11-335:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45_control.stan
 
-Semantic error at file "bad_fun_type_rk45_control.stan", line 27, characters 11-351:
+Semantic error at file "bad_fun_type_rk45_control.stan", line 27, columns 11-351:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -94,14 +94,14 @@ Semantic error at file "bad_fun_type_rk45_control.stan", line 27, characters 11-
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type.stan
 
-Semantic error at file "bad_t0_var_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_t0_var_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -111,13 +111,13 @@ Semantic error at file "bad_t0_var_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_bdf.stan
 
-Semantic error at file "bad_t0_var_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_t0_var_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -127,14 +127,14 @@ Semantic error at file "bad_t0_var_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_bdf_control.stan
 
-Semantic error at file "bad_t0_var_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_t0_var_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -144,14 +144,14 @@ Semantic error at file "bad_t0_var_type_bdf_control.stan", line 26, characters 1
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_rk45.stan
 
-Semantic error at file "bad_t0_var_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_t0_var_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -161,14 +161,14 @@ Semantic error at file "bad_t0_var_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_rk45_control.stan
 
-Semantic error at file "bad_t0_var_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_t0_var_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -178,14 +178,14 @@ Semantic error at file "bad_t0_var_type_rk45_control.stan", line 26, characters 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_t_type.stan
 
-Semantic error at file "bad_t_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_t_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -195,13 +195,13 @@ Semantic error at file "bad_t_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf.stan
 
-Semantic error at file "bad_t_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_t_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -211,14 +211,14 @@ Semantic error at file "bad_t_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf_control.stan
 
-Semantic error at file "bad_t_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_t_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -228,14 +228,14 @@ Semantic error at file "bad_t_type_bdf_control.stan", line 26, characters 11-350
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45.stan
 
-Semantic error at file "bad_t_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_t_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -245,14 +245,14 @@ Semantic error at file "bad_t_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45_control.stan
 
-Semantic error at file "bad_t_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_t_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -262,14 +262,14 @@ Semantic error at file "bad_t_type_rk45_control.stan", line 26, characters 11-35
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_theta_type.stan
 
-Semantic error at file "bad_theta_type.stan", line 27, characters 11-330:
+Semantic error at file "bad_theta_type.stan", line 27, columns 11-330:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -279,13 +279,13 @@ Semantic error at file "bad_theta_type.stan", line 27, characters 11-330:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf.stan
 
-Semantic error at file "bad_theta_type_bdf.stan", line 27, characters 11-334:
+Semantic error at file "bad_theta_type_bdf.stan", line 27, columns 11-334:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -295,14 +295,14 @@ Semantic error at file "bad_theta_type_bdf.stan", line 27, characters 11-334:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf_control.stan
 
-Semantic error at file "bad_theta_type_bdf_control.stan", line 27, characters 11-350:
+Semantic error at file "bad_theta_type_bdf_control.stan", line 27, columns 11-350:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -312,14 +312,14 @@ Semantic error at file "bad_theta_type_bdf_control.stan", line 27, characters 11
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45.stan
 
-Semantic error at file "bad_theta_type_rk45.stan", line 27, characters 11-335:
+Semantic error at file "bad_theta_type_rk45.stan", line 27, columns 11-335:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -329,14 +329,14 @@ Semantic error at file "bad_theta_type_rk45.stan", line 27, characters 11-335:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45_control.stan
 
-Semantic error at file "bad_theta_type_rk45_control.stan", line 27, characters 11-351:
+Semantic error at file "bad_theta_type_rk45_control.stan", line 27, columns 11-351:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -346,14 +346,14 @@ Semantic error at file "bad_theta_type_rk45_control.stan", line 27, characters 1
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[][], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_ts_type.stan
 
-Semantic error at file "bad_ts_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_ts_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -363,13 +363,13 @@ Semantic error at file "bad_ts_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf.stan
 
-Semantic error at file "bad_ts_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_ts_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -379,14 +379,14 @@ Semantic error at file "bad_ts_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf_control.stan
 
-Semantic error at file "bad_ts_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_ts_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -396,14 +396,14 @@ Semantic error at file "bad_ts_type_bdf_control.stan", line 26, characters 11-35
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45.stan
 
-Semantic error at file "bad_ts_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_ts_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -413,14 +413,14 @@ Semantic error at file "bad_ts_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45_control.stan
 
-Semantic error at file "bad_ts_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_ts_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -430,14 +430,14 @@ Semantic error at file "bad_ts_type_rk45_control.stan", line 26, characters 11-3
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[][], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type.stan
 
-Semantic error at file "bad_ts_var_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_ts_var_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -447,13 +447,13 @@ Semantic error at file "bad_ts_var_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_bdf.stan
 
-Semantic error at file "bad_ts_var_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_ts_var_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -463,14 +463,14 @@ Semantic error at file "bad_ts_var_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_bdf_control.stan
 
-Semantic error at file "bad_ts_var_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_ts_var_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -480,14 +480,14 @@ Semantic error at file "bad_ts_var_type_bdf_control.stan", line 26, characters 1
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_rk45.stan
 
-Semantic error at file "bad_ts_var_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_ts_var_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -497,14 +497,14 @@ Semantic error at file "bad_ts_var_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_rk45_control.stan
 
-Semantic error at file "bad_ts_var_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_ts_var_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -514,14 +514,14 @@ Semantic error at file "bad_ts_var_type_rk45_control.stan", line 26, characters 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
 
-Semantic error at file "bad_x_int_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_x_int_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -531,13 +531,13 @@ Semantic error at file "bad_x_int_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][].
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf.stan
 
-Semantic error at file "bad_x_int_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_x_int_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -547,14 +547,14 @@ Semantic error at file "bad_x_int_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][].
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf_control.stan
 
-Semantic error at file "bad_x_int_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_x_int_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -564,14 +564,14 @@ Semantic error at file "bad_x_int_type_bdf_control.stan", line 26, characters 11
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45.stan
 
-Semantic error at file "bad_x_int_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_x_int_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -581,14 +581,14 @@ Semantic error at file "bad_x_int_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][].
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45_control.stan
 
-Semantic error at file "bad_x_int_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_x_int_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -598,14 +598,14 @@ Semantic error at file "bad_x_int_type_rk45_control.stan", line 26, characters 1
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[][], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_x_type.stan
 
-Semantic error at file "bad_x_type.stan", line 27, characters 11-330:
+Semantic error at file "bad_x_type.stan", line 27, columns 11-330:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -615,13 +615,13 @@ Semantic error at file "bad_x_type.stan", line 27, characters 11-330:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf.stan
 
-Semantic error at file "bad_x_type_bdf.stan", line 27, characters 11-334:
+Semantic error at file "bad_x_type_bdf.stan", line 27, columns 11-334:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -631,14 +631,14 @@ Semantic error at file "bad_x_type_bdf.stan", line 27, characters 11-334:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf_control.stan
 
-Semantic error at file "bad_x_type_bdf_control.stan", line 27, characters 11-350:
+Semantic error at file "bad_x_type_bdf_control.stan", line 27, columns 11-350:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -648,14 +648,14 @@ Semantic error at file "bad_x_type_bdf_control.stan", line 27, characters 11-350
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45.stan
 
-Semantic error at file "bad_x_type_rk45.stan", line 27, characters 11-335:
+Semantic error at file "bad_x_type_rk45.stan", line 27, columns 11-335:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -665,14 +665,14 @@ Semantic error at file "bad_x_type_rk45.stan", line 27, characters 11-335:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45_control.stan
 
-Semantic error at file "bad_x_type_rk45_control.stan", line 27, characters 11-351:
+Semantic error at file "bad_x_type_rk45_control.stan", line 27, columns 11-351:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -682,14 +682,14 @@ Semantic error at file "bad_x_type_rk45_control.stan", line 27, characters 11-35
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type.stan
 
-Semantic error at file "bad_x_var_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_x_var_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -699,13 +699,13 @@ Semantic error at file "bad_x_var_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf.stan
 
-Semantic error at file "bad_x_var_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_x_var_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -715,14 +715,14 @@ Semantic error at file "bad_x_var_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf_control.stan
 
-Semantic error at file "bad_x_var_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_x_var_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -732,14 +732,14 @@ Semantic error at file "bad_x_var_type_bdf_control.stan", line 26, characters 11
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45.stan
 
-Semantic error at file "bad_x_var_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_x_var_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -749,14 +749,14 @@ Semantic error at file "bad_x_var_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45_control.stan
 
-Semantic error at file "bad_x_var_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_x_var_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -766,14 +766,14 @@ Semantic error at file "bad_x_var_type_rk45_control.stan", line 26, characters 1
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_y_type.stan
 
-Semantic error at file "bad_y_type.stan", line 26, characters 11-330:
+Semantic error at file "bad_y_type.stan", line 26, columns 11-330:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -783,13 +783,13 @@ Semantic error at file "bad_y_type.stan", line 26, characters 11-330:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf.stan
 
-Semantic error at file "bad_y_type_bdf.stan", line 26, characters 11-334:
+Semantic error at file "bad_y_type_bdf.stan", line 26, columns 11-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -799,14 +799,14 @@ Semantic error at file "bad_y_type_bdf.stan", line 26, characters 11-334:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf_control.stan
 
-Semantic error at file "bad_y_type_bdf_control.stan", line 26, characters 11-350:
+Semantic error at file "bad_y_type_bdf_control.stan", line 26, columns 11-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -816,14 +816,14 @@ Semantic error at file "bad_y_type_bdf_control.stan", line 26, characters 11-350
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_bdf. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[], real, real, int.
 
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45.stan
 
-Semantic error at file "bad_y_type_rk45.stan", line 26, characters 11-335:
+Semantic error at file "bad_y_type_rk45.stan", line 26, columns 11-335:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -833,14 +833,14 @@ Semantic error at file "bad_y_type_rk45.stan", line 26, characters 11-335:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[].
 
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45_control.stan
 
-Semantic error at file "bad_y_type_rk45_control.stan", line 26, characters 11-351:
+Semantic error at file "bad_y_type_rk45_control.stan", line 26, columns 11-351:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -850,7 +850,7 @@ Semantic error at file "bad_y_type_rk45_control.stan", line 26, characters 11-35
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function integrate_ode_rk45. Available signatures: 
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
 ((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[][], real, real[], real[], real[], int[], real, real, int.

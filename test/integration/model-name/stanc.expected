@@ -1,6 +1,6 @@
   $ ../../../../install/default/bin/stanc --name=foo  bad.stan
 
-Semantic error at file "bad.stan", line 3, characters 6-9:
+Semantic error at file "bad.stan", line 3, columns 6-9:
    -------------------------------------------------
      1:  data {
      2:    // declare matching model name should fail
@@ -10,7 +10,7 @@ Semantic error at file "bad.stan", line 3, characters 6-9:
      5:  parameters {
    -------------------------------------------------
 
-Identifier foo clashes with model name.
+Identifier 'foo' clashes with model name.
 
   $ ../../../../install/default/bin/stanc --name=foo  good.stan
 
