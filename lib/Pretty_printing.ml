@@ -83,7 +83,6 @@ and pretty_print_index = function
   | Downfrom e -> " : " ^ pretty_print_expression e
   | Between (e1, e2) ->
       pretty_print_expression e1 ^ " : " ^ pretty_print_expression e2
-  | Multiple e -> pretty_print_expression e
 
 and pretty_print_list_of_indices l =
   String.concat ", " (List.map pretty_print_index l)

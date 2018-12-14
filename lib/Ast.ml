@@ -67,7 +67,6 @@ and 'e index =
   | Upfrom of 'e
   | Downfrom of 'e
   | Between of 'e * 'e
-  | Multiple of 'e
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)

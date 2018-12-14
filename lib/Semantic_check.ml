@@ -901,53 +901,57 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
   | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
       let uindices = List.map semantic_check_index indices in
+      let uindices_with_types =
+        List.map
+          (function Single e as i -> (i, e.expr_typed_type) | i -> (i, Int))
+          uindices
+      in
       let inferred_originblock_of_indexed ob uindices =
         lub_originblock
           ( ob
           :: List.map
                (function
                  | All -> MathLibrary
-                 | Single ue1 | Upfrom ue1 | Downfrom ue1 | Multiple ue1 ->
+                 | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                      lub_originblock [ob; ue1.expr_typed_origin]
                  | Between (ue1, ue2) ->
                      lub_originblock
                        [ob; ue1.expr_typed_origin; ue2.expr_typed_origin])
                uindices )
       in
-      let rec inferred_unsizedtype_of_indexed ut indexl =
-        match (ut, indexl) with
+      let rec inferred_unsizedtype_of_indexed ut typed_indexl =
+        match (ut, typed_indexl) with
         (* Here, we need some special logic to deal with row and column vectors
            properly. *)
-        | Matrix, [All; Single _]
-         |Matrix, [Upfrom _; Single _]
-         |Matrix, [Downfrom _; Single _]
-         |Matrix, [Between _; Single _]
-         |Matrix, [Multiple _; Single _] ->
+        | Matrix, [(All, _); (Single _, Int)]
+         |Matrix, [(Upfrom _, _); (Single _, Int)]
+         |Matrix, [(Downfrom _, _); (Single _, Int)]
+         |Matrix, [(Between _, _); (Single _, Int)]
+         |Matrix, [(Single _, Array Int); (Single _, Int)] ->
             Vector
         | ut, [] -> ut
-        | ut, index :: indices -> (
+        | ut, typed_index :: typed_indices -> (
             let reduce_type =
-              match index with
-              | Single _ -> true
-              | All | Upfrom _ | Downfrom _ | Between _ | Multiple _ -> false
+              match typed_index with Single _, Int -> true | _ -> false
             in
             match ut with
             | Array ut' ->
-                if reduce_type then inferred_unsizedtype_of_indexed ut' indices
+                if reduce_type then
+                  inferred_unsizedtype_of_indexed ut' typed_indices
                   (* TODO: this can easily be made tail recursive if needs be *)
-                else Array (inferred_unsizedtype_of_indexed ut' indices)
+                else Array (inferred_unsizedtype_of_indexed ut' typed_indices)
             | Vector ->
                 if reduce_type then
-                  inferred_unsizedtype_of_indexed Real indices
-                else inferred_unsizedtype_of_indexed Vector indices
+                  inferred_unsizedtype_of_indexed Real typed_indices
+                else inferred_unsizedtype_of_indexed Vector typed_indices
             | RowVector ->
                 if reduce_type then
-                  inferred_unsizedtype_of_indexed Real indices
-                else inferred_unsizedtype_of_indexed RowVector indices
+                  inferred_unsizedtype_of_indexed Real typed_indices
+                else inferred_unsizedtype_of_indexed RowVector typed_indices
             | Matrix ->
                 if reduce_type then
-                  inferred_unsizedtype_of_indexed RowVector indices
-                else inferred_unsizedtype_of_indexed Matrix indices
+                  inferred_unsizedtype_of_indexed RowVector typed_indices
+                else inferred_unsizedtype_of_indexed Matrix typed_indices
             (* Check that expressions take valid number of indices (based on their matrix/array dimensions) *)
             | _ ->
                 semantic_error ~loc
@@ -957,7 +961,9 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                   ^ "." ) )
       in
       let ob = inferred_originblock_of_indexed ue.expr_typed_origin uindices
-      and ut = inferred_unsizedtype_of_indexed ue.expr_typed_type uindices in
+      and ut =
+        inferred_unsizedtype_of_indexed ue.expr_typed_type uindices_with_types
+      in
       { expr_typed= Indexed (ue, uindices)
       ; expr_typed_origin= ob
       ; expr_typed_type= ut
@@ -1781,8 +1787,7 @@ and semantic_check_index = function
   | Single e ->
       let ue = semantic_check_expression e in
       let loc = ue.expr_typed_loc in
-      if check_of_int_type ue then Single ue
-      else if check_of_int_array_type ue then Multiple ue
+      if check_of_int_type ue || check_of_int_array_type ue then Single ue
       else
         semantic_error ~loc
           ( "Index should be of type int or int[] or should be a range. \
@@ -1829,17 +1834,6 @@ and semantic_check_index = function
             ^ "." )
       in
       Between (ue1, ue2)
-  | Multiple e ->
-      let ue = semantic_check_expression e in
-      let loc = ue.expr_typed_loc in
-      let _ =
-        if not (check_of_int_array_type ue) then
-          semantic_error ~loc
-            ( "Multiple index should be of type int[]. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
-      Multiple ue
 
 (* Probably nothing to do here *)
 and semantic_check_assignmentoperator op = op
