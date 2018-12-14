@@ -234,23 +234,20 @@ and untyped_program = untyped_statement program
 (** Typed programs (after type checking) *)
 and typed_program = typed_statement program [@@deriving sexp, compare, map]
 
-(*
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression = function
-  | TypedExpr (e, n) ->
-      UntypedExpr
-        ( map_expression untyped_expression_of_typed_expression e
-        , {expr_untyped_loc= n.expr_typed_loc} )
+let rec untyped_expression_of_typed_expression {expr_typed; expr_typed_loc; _}
+    =
+  { expr_untyped=
+      map_expression untyped_expression_of_typed_expression expr_typed
+  ; expr_untyped_loc= expr_typed_loc }
 
 (** Forgetful function from typed to untyped statements *)
-let rec untyped_statement_of_typed_statement = function
-  | TypedStmt (s, n) ->
-      UntypedStmt
-        ( map_statement untyped_expression_of_typed_expression
-            untyped_statement_of_typed_statement s
-        , {stmt_untyped_meta_loc= n.stmt_typed_meta_loc} )
+let rec untyped_statement_of_typed_statement {stmt_typed; stmt_typed_loc; _} =
+  { stmt_untyped=
+      map_statement untyped_expression_of_typed_expression
+        untyped_statement_of_typed_statement stmt_typed
+  ; stmt_untyped_loc= stmt_typed_loc }
 
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
-*)

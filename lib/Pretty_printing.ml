@@ -16,6 +16,11 @@ let rec unwind_sized_array_type = function
     match unwind_sized_array_type st with st2, es -> (st2, e :: es) )
   | st -> (st, [])
 
+let rec unwind_array_type = function
+  | Array ut -> (
+    match unwind_array_type ut with ut2, d -> (ut2, d+1) )
+  | ut -> (ut, 0)
+
 let rec pretty_print_originblock = function
   | MathLibrary -> "Math Library"
   | Functions -> "functions"
@@ -36,7 +41,8 @@ and pretty_print_unsizedtype = function
   | Vector -> "vector"
   | RowVector -> "row_vector"
   | Matrix -> "matrix"
-  | Array ut -> pretty_print_unsizedtype ut ^ "[]"
+  | Array ut -> let (ut2, d) = unwind_array_type ut in
+  pretty_print_unsizedtype ut2 ^ ("[" ^String.make d ',') ^ "]"
   | Fun (argtypes, rt) ->
       "("
       ^ String.concat ", " (List.map pretty_print_argtype argtypes)

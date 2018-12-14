@@ -10,8 +10,8 @@ Semantic error at file "bad_data_i_type.stan", line 19, columns 8-68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[][], int[][][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,,].
 
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 
@@ -26,8 +26,8 @@ Semantic error at file "bad_data_int_const.stan", line 21, columns 8-104:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[][], int[][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,].
 
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 
@@ -41,8 +41,8 @@ Semantic error at file "bad_data_r_type.stan", line 19, columns 8-68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real, int[][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real, int[,].
 
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 
@@ -56,8 +56,8 @@ Semantic error at file "bad_data_real_const.stan", line 20, columns 8-70:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[][], int[][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,].
 
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 
@@ -71,8 +71,8 @@ Semantic error at file "bad_fun_type.stan", line 19, columns 8-68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector[], real[], int[]) => vector, vector, vector[], real[][], int[][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector[], real[], int[]) => vector, vector, vector[], real[,], int[,].
 
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 
@@ -86,8 +86,8 @@ Semantic error at file "bad_job_params_type.stan", line 19, columns 8-68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, matrix[], real[][], int[][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, matrix[], real[,], int[,].
 
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 
@@ -127,6 +127,6 @@ Semantic error at file "bad_shared_params_type.stan", line 19, columns 8-68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[][], data int[][]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector[], vector[], real[][], int[][].
+((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
+Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector[], vector[], real[,], int[,].
 
