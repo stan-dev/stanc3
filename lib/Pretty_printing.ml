@@ -219,90 +219,88 @@ and pretty_print_array_dims = function
   | [] -> ""
   | es -> "[" ^ pretty_print_list_of_expression (List.rev es) ^ "]"
 
-and pretty_print_statement = function
-  | {stmt_untyped= s_content; _} -> (
-    match s_content with
-    | Assignment
-        { assign_identifier= id
-        ; assign_indices= lindex
-        ; assign_op= assop
-        ; assign_rhs= e } ->
-        pretty_print_identifier id
-        ^ ( match lindex with
-          | [] -> ""
-          | l -> "[" ^ pretty_print_list_of_indices l ^ "]" )
-        ^ " "
-        ^ pretty_print_assignmentoperator assop
-        ^ " " ^ pretty_print_expression e ^ ";"
-    | NRFunApp (id, es) ->
-        pretty_print_identifier id ^ "("
-        ^ pretty_print_list_of_expression es
-        ^ ")" ^ ";"
-    | TargetPE e -> "target += " ^ pretty_print_expression e ^ ";"
-    | IncrementLogProb e ->
-        "increment_log_prob(" ^ pretty_print_expression e ^ ");"
-    | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-        pretty_print_expression e ^ " ~ " ^ pretty_print_identifier id ^ "("
-        ^ pretty_print_list_of_expression es
-        ^ ")" ^ pretty_print_truncation t ^ ";"
-    | Break -> "break;"
-    | Continue -> "continue;"
-    | Return e -> "return " ^ pretty_print_expression e ^ ";"
-    | ReturnVoid -> "return;"
-    | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
-    | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
-    | Skip -> ";"
-    | IfThenElse (e, s, None) ->
-        "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
-    | IfThenElse (e, s1, Some s2) ->
-        "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s1
-        ^ "\n" ^ tabs () ^ "else " ^ pretty_print_statement s2
-    | While (e, s) ->
-        "while (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
-    | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s}
-      ->
-        "for (" ^ pretty_print_identifier id ^ " in "
-        ^ pretty_print_expression e1 ^ " : " ^ pretty_print_expression e2
-        ^ ") " ^ pretty_print_statement s
-    | ForEach (id, e, s) ->
-        "for (" ^ pretty_print_identifier id ^ " in "
-        ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
-    | Block vdsl ->
-        let s1 = "{\n" in
-        let _ = begin_indent () in
-        let s2 = pretty_print_list_of_statements vdsl in
-        let _ = exit_indent () in
-        let s3 = tabs () ^ "}" in
-        s1 ^ s2 ^ s3
-    | VarDecl
-        { sizedtype= st
-        ; transformation= trans
-        ; identifier= id
-        ; initial_value= init
-        ; is_global= _ } ->
-        let st2, es = unwind_sized_array_type st in
-        let init_string =
-          match init with
-          | None -> ""
-          | Some e -> " = " ^ pretty_print_expression e
-        in
-        pretty_print_transformed_type st2 trans
-        ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es
-        ^ init_string ^ ";"
-    | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
-        pretty_print_returntype rt ^ " " ^ pretty_print_identifier id ^ "("
-        ^ String.concat ", "
-            (List.map
-               (function
-                 | at, ut, id ->
-                     pretty_print_autodifftype at
-                     ^ pretty_print_unsizedtype ut
-                     ^ " " ^ pretty_print_identifier id)
-               args)
-        ^
-        match b with
-        | {stmt_untyped= Skip; _} -> ");"
-        | b -> ") " ^ pretty_print_statement b ) )
+and pretty_print_statement {stmt_untyped= s_content; _} =
+  match s_content with
+  | Assignment
+      { assign_identifier= id
+      ; assign_indices= lindex
+      ; assign_op= assop
+      ; assign_rhs= e } ->
+      pretty_print_identifier id
+      ^ ( match lindex with
+        | [] -> ""
+        | l -> "[" ^ pretty_print_list_of_indices l ^ "]" )
+      ^ " "
+      ^ pretty_print_assignmentoperator assop
+      ^ " " ^ pretty_print_expression e ^ ";"
+  | NRFunApp (id, es) ->
+      pretty_print_identifier id ^ "("
+      ^ pretty_print_list_of_expression es
+      ^ ")" ^ ";"
+  | TargetPE e -> "target += " ^ pretty_print_expression e ^ ";"
+  | IncrementLogProb e ->
+      "increment_log_prob(" ^ pretty_print_expression e ^ ");"
+  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
+      pretty_print_expression e ^ " ~ " ^ pretty_print_identifier id ^ "("
+      ^ pretty_print_list_of_expression es
+      ^ ")" ^ pretty_print_truncation t ^ ";"
+  | Break -> "break;"
+  | Continue -> "continue;"
+  | Return e -> "return " ^ pretty_print_expression e ^ ";"
+  | ReturnVoid -> "return;"
+  | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
+  | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
+  | Skip -> ";"
+  | IfThenElse (e, s, None) ->
+      "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
+  | IfThenElse (e, s1, Some s2) ->
+      "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s1
+      ^ "\n" ^ tabs () ^ "else " ^ pretty_print_statement s2
+  | While (e, s) ->
+      "while (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
+  | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
+      "for (" ^ pretty_print_identifier id ^ " in "
+      ^ pretty_print_expression e1 ^ " : " ^ pretty_print_expression e2 ^ ") "
+      ^ pretty_print_statement s
+  | ForEach (id, e, s) ->
+      "for (" ^ pretty_print_identifier id ^ " in " ^ pretty_print_expression e
+      ^ ") " ^ pretty_print_statement s
+  | Block vdsl ->
+      let s1 = "{\n" in
+      let _ = begin_indent () in
+      let s2 = pretty_print_list_of_statements vdsl in
+      let _ = exit_indent () in
+      let s3 = tabs () ^ "}" in
+      s1 ^ s2 ^ s3
+  | VarDecl
+      { sizedtype= st
+      ; transformation= trans
+      ; identifier= id
+      ; initial_value= init
+      ; is_global= _ } ->
+      let st2, es = unwind_sized_array_type st in
+      let init_string =
+        match init with
+        | None -> ""
+        | Some e -> " = " ^ pretty_print_expression e
+      in
+      pretty_print_transformed_type st2 trans
+      ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es
+      ^ init_string ^ ";"
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+      pretty_print_returntype rt ^ " " ^ pretty_print_identifier id ^ "("
+      ^ String.concat ", "
+          (List.map
+             (function
+               | at, ut, id ->
+                   pretty_print_autodifftype at
+                   ^ pretty_print_unsizedtype ut
+                   ^ " " ^ pretty_print_identifier id)
+             args)
+      ^
+      match b with
+      | {stmt_untyped= Skip; _} -> ");"
+      | b -> ") " ^ pretty_print_statement b )
 
 and pretty_print_list_of_statements l =
   String.concat "\n" (List.map (fun x -> tabs () ^ pretty_print_statement x) l)
