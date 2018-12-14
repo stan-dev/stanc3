@@ -71,40 +71,33 @@ let rec lub_originblock = function
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
 
-let check_of_int_type ue =
-  match ue.expr_typed_type with Int -> true | _ -> false
-
-let check_of_int_array_type ue =
-  match ue.expr_typed_type with Array Int -> true | _ -> false
+let check_of_int_type ue = ue.expr_typed_type = Int
+let check_of_int_array_type ue = ue.expr_typed_type = Array Int
 
 let check_of_int_or_real_type ue =
   match ue.expr_typed_type with Int | Real -> true | _ -> false
 
 let probability_distribution_name_variants id =
   let name = id.name in
+  let open Core_kernel.String in
+  let open Pervasives in
   List.map
     (fun n -> {name= n; id_loc= id.id_loc})
     ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
-    else if Core_kernel.String.is_suffix ~suffix:"_lpmf" name then
-      [ name
-      ; Core_kernel.String.drop_suffix name 5 ^ "_lpdf"
-      ; Core_kernel.String.drop_suffix name 5 ^ "_log" ]
-    else if Core_kernel.String.is_suffix ~suffix:"_lpdf" name then
-      [ name
-      ; Core_kernel.String.drop_suffix name 5 ^ "_lpmf"
-      ; Core_kernel.String.drop_suffix name 5 ^ "_log" ]
-    else if Core_kernel.String.is_suffix ~suffix:"_lcdf" name then
-      [name; Core_kernel.String.drop_suffix name 5 ^ "_cdf_log"]
-    else if Core_kernel.String.is_suffix ~suffix:"_lccdf" name then
-      [name; Core_kernel.String.drop_suffix name 6 ^ "_ccdf_log"]
-    else if Core_kernel.String.is_suffix ~suffix:"_cdf_log" name then
-      [name; Core_kernel.String.drop_suffix name 8 ^ "_lcdf"]
-    else if Core_kernel.String.is_suffix ~suffix:"_ccdf_log" name then
-      [name; Core_kernel.String.drop_suffix name 9 ^ "_lccdf"]
-    else if Core_kernel.String.is_suffix ~suffix:"_log" name then
-      [ name
-      ; Core_kernel.String.drop_suffix name 4 ^ "_lpmf"
-      ; Core_kernel.String.drop_suffix name 4 ^ "_lpdf" ]
+    else if is_suffix ~suffix:"_lpmf" name then
+      [name; drop_suffix name 5 ^ "_lpdf"; drop_suffix name 5 ^ "_log"]
+    else if is_suffix ~suffix:"_lpdf" name then
+      [name; drop_suffix name 5 ^ "_lpmf"; drop_suffix name 5 ^ "_log"]
+    else if is_suffix ~suffix:"_lcdf" name then
+      [name; drop_suffix name 5 ^ "_cdf_log"]
+    else if is_suffix ~suffix:"_lccdf" name then
+      [name; drop_suffix name 6 ^ "_ccdf_log"]
+    else if is_suffix ~suffix:"_cdf_log" name then
+      [name; drop_suffix name 8 ^ "_lcdf"]
+    else if is_suffix ~suffix:"_ccdf_log" name then
+      [name; drop_suffix name 9 ^ "_lccdf"]
+    else if is_suffix ~suffix:"_log" name then
+      [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
     else [name] )
 
 let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
@@ -621,13 +614,13 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                      function name: " ^ arg1_name.name )
           | _ -> ()
       in
+      let open Core_kernel.String in
+      let open Pervasives in
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
-          || Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
-          || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
-          || Core_kernel.String.is_suffix uid.name ~suffix:"_lcdf"
-          || Core_kernel.String.is_suffix uid.name ~suffix:"_lccdf"
+          List.exists
+            (fun x -> is_suffix uid.name ~suffix:x)
+            ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
         then
           semantic_error ~loc
             "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
@@ -637,7 +630,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lp"
+          is_suffix uid.name ~suffix:"_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -649,7 +642,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       (* Rng functions cannot be used in Tp or Model and only in funciton defs with the right suffix *)
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_rng"
+          is_suffix uid.name ~suffix:"_rng"
           && ( (context_flags.in_fun_def && not context_flags.in_rng_fun_def)
              || context_flags.current_block = TParam
              || context_flags.current_block = Model )
@@ -729,13 +722,14 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                 ^ " was supplied." ) ) )
   | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
+      let open Core_kernel.String in
+      let open Pervasives in
       let _ =
         if
           not
-            ( Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
-            || Core_kernel.String.is_suffix uid.name ~suffix:"_lcdf"
-            || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
-            || Core_kernel.String.is_suffix uid.name ~suffix:"_lccdf" )
+            (List.exists
+               (fun x -> is_suffix uid.name ~suffix:x)
+               ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"])
         then
           semantic_error ~loc
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
@@ -745,7 +739,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lp"
+          is_suffix uid.name ~suffix:"_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -1647,14 +1641,14 @@ and semantic_check_statement s =
       let uarg_names = List.map (fun x -> x.name) uarg_identifiers in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = List.map (Symbol_table.set_read_only vm) uarg_names in
+      let open Core_kernel.String in
+      let open Pervasives in
       let _ =
         if
           urt <> ReturnType Real
-          && ( Core_kernel.String.is_suffix uid.name ~suffix:"_log"
-             || Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
-             || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
-             || Core_kernel.String.is_suffix uid.name ~suffix:"_lcdf"
-             || Core_kernel.String.is_suffix uid.name ~suffix:"_lccdf" )
+          && List.exists
+               (fun x -> is_suffix uid.name ~suffix:x)
+               ["_log"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
         then
           semantic_error ~loc
             "Real return type required for probability functions ending in \
@@ -1662,7 +1656,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
+          is_suffix uid.name ~suffix:"_lpdf"
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
         then
           semantic_error ~loc
@@ -1673,7 +1667,7 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
+          is_suffix uid.name ~suffix:"_lpmf"
           && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
         then
           semantic_error ~loc
@@ -1684,11 +1678,11 @@ and semantic_check_statement s =
       in
       let _ = context_flags.in_fun_def <- true in
       let _ =
-        if Core_kernel.String.is_suffix uid.name ~suffix:"_rng" then
+        if is_suffix uid.name ~suffix:"_rng" then
           context_flags.in_rng_fun_def <- true
       in
       let _ =
-        if Core_kernel.String.is_suffix uid.name ~suffix:"_lp" then
+        if is_suffix uid.name ~suffix:"_lp" then
           context_flags.in_lp_fun_def <- true
       in
       let _ = if urt <> Void then context_flags.in_returning_fun_def <- true in
