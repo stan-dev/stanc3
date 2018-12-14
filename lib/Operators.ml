@@ -10,11 +10,11 @@ let operator_names = Hashtbl.create 50
 let _ = Hashtbl.add operator_names "Plus" "add"
 
 (*XXX is there a difference in Stan math for unary plus?*)
-let _ = Hashtbl.add operator_names "UPlus" "plus"
+let _ = Hashtbl.add operator_names "PPlus" "plus"
 let _ = Hashtbl.add operator_names "Minus" "subtract"
 
 (*XXX is there a difference in Stan math for unary minus?*)
-let _ = Hashtbl.add operator_names "UMinus" "minus"
+let _ = Hashtbl.add operator_names "PMinus" "minus"
 let _ = Hashtbl.add operator_names "Times" "multiply"
 let _ = Hashtbl.add operator_names "Divide" "divide"
 let _ = Hashtbl.add operator_names "Divide" "mdivide_right"
@@ -31,7 +31,7 @@ let _ = Hashtbl.add operator_names "Less" "logical_lt"
 let _ = Hashtbl.add operator_names "Leq" "logical_lte"
 let _ = Hashtbl.add operator_names "Greater" "logical_gt"
 let _ = Hashtbl.add operator_names "Geq" "logical_gte"
-let _ = Hashtbl.add operator_names "Not" "logical_negation"
+let _ = Hashtbl.add operator_names "PNot" "logical_negation"
 let _ = Hashtbl.add operator_names "Transpose" "transpose"
 let _ = Hashtbl.add operator_names "TernaryIf" "if_else"
 let _ = Hashtbl.add operator_names "(OperatorAssign Plus)" "assign_add"
@@ -71,7 +71,7 @@ let operator_return_type op =
   operator_return_type_from_string (operator_name op)
 
 let operator_return_type_prefix op =
-  operator_return_type_from_string ("U" ^ operator_name op)
+  operator_return_type_from_string ("P" ^ operator_name op)
 
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
 let pretty_print_all_operator_signatures name =

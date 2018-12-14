@@ -1262,7 +1262,7 @@ and semantic_check_statement s =
         | _ -> false
       in
       let _ =
-        if distribution_name_is_defined uid.name ues then ()
+        if distribution_name_is_defined uid.name (ue :: ues) then ()
         else
           semantic_error ~loc
             ( "Ill-typed arguments to '~' statement. No distribution "
@@ -1308,8 +1308,8 @@ and semantic_check_statement s =
                | _ -> false ) )
       in
       let _ =
-        if ut = NoTruncate || cumulative_density_is_defined uid.name ues then
-          ()
+        if ut = NoTruncate || cumulative_density_is_defined uid.name (ue :: ues)
+        then ()
         else
           semantic_error ~loc
             "Truncation is only defined if distribution has _lcdf and _lccdf \
