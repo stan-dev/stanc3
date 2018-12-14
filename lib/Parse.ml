@@ -80,19 +80,19 @@ let%expect_test "parse conditional" =
     ((functionblock ()) (datablock ()) (transformeddatablock ())
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
-      (((UntypedStmt
-         ((IfThenElse
+      ((((stmt_untyped
+          (IfThenElse
            ((expr_untyped
              (BinOp ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
               Less ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))
             (expr_untyped_loc <opaque>))
-           (UntypedStmt
-            ((Block
-              ((UntypedStmt
-                ((Print ((PString "\"hi\""))) ((stmt_untyped_meta_loc <opaque>))))))
-             ((stmt_untyped_meta_loc <opaque>))))
-           ())
-          ((stmt_untyped_meta_loc <opaque>)))))))
+           ((stmt_untyped
+             (Block
+              (((stmt_untyped (Print ((PString "\"hi\""))))
+                (stmt_untyped_loc <opaque>)))))
+            (stmt_untyped_loc <opaque>))
+           ()))
+         (stmt_untyped_loc <opaque>)))))
      (generatedquantitiesblock ())) |}]
 
 let parse_file parse_fun path =

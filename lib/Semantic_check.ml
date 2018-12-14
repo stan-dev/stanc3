@@ -49,8 +49,6 @@ let dup_exists l =
   | Some _ -> true
   | None -> false
 
-let typed_statement_unroll = function TypedStmt x -> x
-let untyped_statement_unroll = function UntypedStmt x -> x
 let type_of_expr_typed ue = ue.expr_typed_type
 
 let rec unsizedtype_contains_int ut =
@@ -277,11 +275,8 @@ let rec semantic_check_program p =
       then
         semantic_error
           ~loc:
-            (snd
-               (typed_statement_unroll
-                  (List.hd
-                     ((function Some x -> x | None -> fatal_error ()) ufb))))
-              .stmt_typed_meta_loc
+            (List.hd ((function Some x -> x | None -> fatal_error ()) ufb))
+              .stmt_typed_loc
           "Some function is declared without specifying a definition."
       (* TODO: insert better location in the error above *)
     in
@@ -990,8 +985,8 @@ and semantic_check_printable = function
       | _ -> PExpr ue )
 
 and semantic_check_statement s =
-  let loc = (snd (untyped_statement_unroll s)).stmt_untyped_meta_loc in
-  match fst (untyped_statement_unroll s) with
+  let loc = s.stmt_untyped_loc in
+  match s.stmt_untyped with
   | Assignment
       { assign_identifier= id
       ; assign_indices= lindex
@@ -1057,13 +1052,14 @@ and semantic_check_statement s =
       in
       match operator_return_type_from_string opname [ue2; ue] with
       | Some Void ->
-          TypedStmt
-            ( Assignment
+          { stmt_typed=
+              Assignment
                 { assign_identifier= uid
                 ; assign_indices= ulindex
                 ; assign_op= uassop
                 ; assign_rhs= ue }
-            , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+          ; stmt_typed_returntype= NoReturnType
+          ; stmt_typed_loc= loc }
       (* Check that assignments are type consistent *)
       | None | Some (ReturnType _) ->
           let lhs_type = pretty_print_unsizedtype ue2.expr_typed_type
@@ -1093,9 +1089,9 @@ and semantic_check_statement s =
       in
       match get_stan_math_function_return_type_opt uid.name ues with
       | Some Void ->
-          TypedStmt
-            ( NRFunApp (uid, ues)
-            , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+          { stmt_typed= NRFunApp (uid, ues)
+          ; stmt_typed_returntype= NoReturnType
+          ; stmt_typed_loc= loc }
       (* Check that NRFunction applications are non-returning functions *)
       | Some (ReturnType _) ->
           semantic_error ~loc
@@ -1132,10 +1128,9 @@ and semantic_check_statement s =
                         (List.map type_of_expr_typed ues)
                     ^ "." )
               in
-              TypedStmt
-                ( NRFunApp (uid, ues)
-                , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc}
-                )
+              { stmt_typed= NRFunApp (uid, ues)
+              ; stmt_typed_returntype= NoReturnType
+              ; stmt_typed_loc= loc }
           | Some (_, Fun (_, ReturnType _)) ->
               semantic_error ~loc
                 ( "A non-returning function was expected but a returning \
@@ -1175,9 +1170,9 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      TypedStmt
-        ( TargetPE ue
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed= TargetPE ue
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | IncrementLogProb e ->
       let ue = semantic_check_expression e in
       let _ =
@@ -1198,9 +1193,9 @@ and semantic_check_statement s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      TypedStmt
-        ( IncrementLogProb ue
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed= IncrementLogProb ue
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression e in
       let uid = semantic_check_identifier id in
@@ -1315,26 +1310,28 @@ and semantic_check_statement s =
             "Truncation is only defined if distribution has _lcdf and _lccdf \
              functions implemented."
       in
-      TypedStmt
-        ( Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed=
+          Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | Break ->
       (* Break and continue only occur in loops. *)
       let _ =
         if not context_flags.in_loop then
           semantic_error ~loc "Break statements may only be used in loops."
       in
-      TypedStmt
-        (Break, {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc})
+      { stmt_typed= Break
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | Continue ->
       (* Break and continue only occur in loops. *)
       let _ =
         if not context_flags.in_loop then
           semantic_error ~loc "Continue statements may only be used in loops."
       in
-      TypedStmt
-        ( Continue
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed= Continue
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | Return e ->
       (* No returns outside of function definitions *)
       (* In case of void function, no return statements anywhere *)
@@ -1345,10 +1342,9 @@ and semantic_check_statement s =
              function definitions."
       in
       let ue = semantic_check_expression e in
-      TypedStmt
-        ( Return ue
-        , { stmt_typed_meta_type= Complete (ReturnType ue.expr_typed_type)
-          ; stmt_typed_meta_loc= loc } )
+      { stmt_typed= Return ue
+      ; stmt_typed_returntype= Complete (ReturnType ue.expr_typed_type)
+      ; stmt_typed_loc= loc }
   | ReturnVoid ->
       let _ =
         if (not context_flags.in_fun_def) || context_flags.in_returning_fun_def
@@ -1357,22 +1353,23 @@ and semantic_check_statement s =
             "Void return statements may only be used inside non-returning \
              function definitions."
       in
-      TypedStmt
-        ( ReturnVoid
-        , {stmt_typed_meta_type= Complete Void; stmt_typed_meta_loc= loc} )
+      { stmt_typed= ReturnVoid
+      ; stmt_typed_returntype= Complete Void
+      ; stmt_typed_loc= loc }
   | Print ps ->
       let ups = List.map semantic_check_printable ps in
-      TypedStmt
-        ( Print ups
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed= Print ups
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | Reject ps ->
       let ups = List.map semantic_check_printable ps in
-      TypedStmt
-        ( Reject ups
-        , {stmt_typed_meta_type= AnyReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed= Reject ups
+      ; stmt_typed_returntype= AnyReturnType
+      ; stmt_typed_loc= loc }
   | Skip ->
-      TypedStmt
-        (Skip, {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc})
+      { stmt_typed= Skip
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
   | IfThenElse (e, s1, os2) ->
       let ue = semantic_check_expression e in
       (* For, while, for each, if constructs take expressions of valid type *)
@@ -1386,16 +1383,16 @@ and semantic_check_statement s =
       in
       let us1 = semantic_check_statement s1 in
       let uos2 = Core_kernel.Option.map ~f:semantic_check_statement os2 in
-      let srt1 = (snd (typed_statement_unroll us1)).stmt_typed_meta_type in
+      let srt1 = us1.stmt_typed_returntype in
       let srt2 =
         match uos2 with
         | None -> NoReturnType
-        | Some us2 -> (snd (typed_statement_unroll us2)).stmt_typed_meta_type
+        | Some us2 -> us2.stmt_typed_returntype
       in
       let srt = try_compute_ifthenelse_statement_returntype loc srt1 srt2 in
-      TypedStmt
-        ( IfThenElse (ue, us1, uos2)
-        , {stmt_typed_meta_loc= loc; stmt_typed_meta_type= srt} )
+      { stmt_typed= IfThenElse (ue, us1, uos2)
+      ; stmt_typed_loc= loc
+      ; stmt_typed_returntype= srt }
   | While (e, s) ->
       let ue = semantic_check_expression e in
       (* For, while, for each, if constructs take expressions of valid type *)
@@ -1410,11 +1407,9 @@ and semantic_check_statement s =
       let _ = context_flags.in_loop <- true in
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
-      TypedStmt
-        ( While (ue, us)
-        , { stmt_typed_meta_type=
-              (snd (typed_statement_unroll us)).stmt_typed_meta_type
-          ; stmt_typed_meta_loc= loc } )
+      { stmt_typed= While (ue, us)
+      ; stmt_typed_returntype= us.stmt_typed_returntype
+      ; stmt_typed_loc= loc }
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       let uid = semantic_check_identifier id in
       let ue1 = semantic_check_expression e1 in
@@ -1446,15 +1441,14 @@ and semantic_check_statement s =
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
       let _ = Symbol_table.end_scope vm in
-      TypedStmt
-        ( For
+      { stmt_typed=
+          For
             { loop_variable= uid
             ; lower_bound= ue1
             ; upper_bound= ue2
             ; loop_body= us }
-        , { stmt_typed_meta_type=
-              (snd (typed_statement_unroll us)).stmt_typed_meta_type
-          ; stmt_typed_meta_loc= loc } )
+      ; stmt_typed_returntype= us.stmt_typed_returntype
+      ; stmt_typed_loc= loc }
   | ForEach (id, e, s) ->
       let uid = semantic_check_identifier id in
       let ue = semantic_check_expression e in
@@ -1483,11 +1477,9 @@ and semantic_check_statement s =
       let us = semantic_check_statement s in
       let _ = context_flags.in_loop <- false in
       let _ = Symbol_table.end_scope vm in
-      TypedStmt
-        ( ForEach (uid, ue, us)
-        , { stmt_typed_meta_type=
-              (snd (typed_statement_unroll us)).stmt_typed_meta_type
-          ; stmt_typed_meta_loc= loc } )
+      { stmt_typed= ForEach (uid, ue, us)
+      ; stmt_typed_returntype= us.stmt_typed_returntype
+      ; stmt_typed_loc= loc }
   | Block vdsl ->
       let _ = Symbol_table.begin_scope vm in
       let uvdsl = List.map semantic_check_statement vdsl in
@@ -1497,23 +1489,60 @@ and semantic_check_statement s =
       let rec list_until_escape = function
         | [] -> []
         | [x] -> [x]
-        | x1 :: (Break, b) :: _ -> [x1; (Break, b)]
-        | x1 :: (Continue, b) :: _ -> [x1; (Continue, b)]
-        | x1 :: (Reject p, b) :: _ -> [x1; (Reject p, b)]
-        | x1 :: (Return e, b) :: _ -> [x1; (Return e, b)]
-        | x1 :: (ReturnVoid, b) :: _ -> [x1; (ReturnVoid, b)]
+        | x1
+          :: {stmt_typed= Break; stmt_typed_returntype= rt; stmt_typed_loc= loc}
+             :: _ ->
+            [ x1
+            ; { stmt_typed= Break
+              ; stmt_typed_returntype= rt
+              ; stmt_typed_loc= loc } ]
+        | x1
+          :: { stmt_typed= Continue
+             ; stmt_typed_returntype= rt
+             ; stmt_typed_loc= loc }
+             :: _ ->
+            [ x1
+            ; { stmt_typed= Continue
+              ; stmt_typed_returntype= rt
+              ; stmt_typed_loc= loc } ]
+        | x1
+          :: { stmt_typed= Reject p
+             ; stmt_typed_returntype= rt
+             ; stmt_typed_loc= loc }
+             :: _ ->
+            [ x1
+            ; { stmt_typed= Reject p
+              ; stmt_typed_returntype= rt
+              ; stmt_typed_loc= loc } ]
+        | x1
+          :: { stmt_typed= Return e
+             ; stmt_typed_returntype= rt
+             ; stmt_typed_loc= loc }
+             :: _ ->
+            [ x1
+            ; { stmt_typed= Return e
+              ; stmt_typed_returntype= rt
+              ; stmt_typed_loc= loc } ]
+        | x1
+          :: { stmt_typed= ReturnVoid
+             ; stmt_typed_returntype= rt
+             ; stmt_typed_loc= loc }
+             :: _ ->
+            [ x1
+            ; { stmt_typed= ReturnVoid
+              ; stmt_typed_returntype= rt
+              ; stmt_typed_loc= loc } ]
         | x1 :: x2 :: xs -> x1 :: list_until_escape (x2 :: xs)
       in
-      TypedStmt
-        ( Block uvdsl
-        , { stmt_typed_meta_type=
-              List.fold_left
-                (try_compute_block_statement_returntype loc)
-                NoReturnType
-                (List.map
-                   (fun x -> (snd x).stmt_typed_meta_type)
-                   (list_until_escape (List.map typed_statement_unroll uvdsl)))
-          ; stmt_typed_meta_loc= loc } )
+      { stmt_typed= Block uvdsl
+      ; stmt_typed_returntype=
+          List.fold_left
+            (try_compute_block_statement_returntype loc)
+            NoReturnType
+            (List.map
+               (fun x -> x.stmt_typed_returntype)
+               (list_until_escape uvdsl))
+      ; stmt_typed_loc= loc }
   | VarDecl
       { sizedtype= st
       ; transformation= trans
@@ -1587,32 +1616,33 @@ and semantic_check_statement s =
         | Some e -> (
           match
             semantic_check_statement
-              (UntypedStmt
-                 ( Assignment
-                     { assign_identifier= id
-                     ; assign_indices= []
-                     ; assign_op= Assign
-                     ; assign_rhs= e }
-                 , {stmt_untyped_meta_loc= loc} ))
+              { stmt_untyped=
+                  Assignment
+                    { assign_identifier= id
+                    ; assign_indices= []
+                    ; assign_op= Assign
+                    ; assign_rhs= e }
+              ; stmt_untyped_loc= loc }
           with
-          | TypedStmt
-              ( Assignment
+          | { stmt_typed=
+                Assignment
                   { assign_identifier= _
                   ; assign_indices= _
                   ; assign_op= Assign
                   ; assign_rhs= ue }
-              , {stmt_typed_meta_type= NoReturnType; _} ) ->
+            ; stmt_typed_returntype= NoReturnType; _ } ->
               Some ue
           | _ -> fatal_error () )
       in
-      TypedStmt
-        ( VarDecl
+      { stmt_typed=
+          VarDecl
             { sizedtype= ust
             ; transformation= utrans
             ; identifier= uid
             ; initial_value= uinit
             ; is_global= glob }
-        , {stmt_typed_meta_loc= loc; stmt_typed_meta_type= NoReturnType} )
+      ; stmt_typed_loc= loc
+      ; stmt_typed_returntype= NoReturnType }
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
       let urt = semantic_check_returntype rt in
       let uid = semantic_check_identifier id in
@@ -1644,7 +1674,7 @@ and semantic_check_statement s =
       in
       let _ =
         match b with
-        | UntypedStmt (Skip, _) ->
+        | {stmt_untyped= Skip; _} ->
             if Symbol_table.check_is_unassigned vm uid.name then
               semantic_error ~loc
                 ( "Function "
@@ -1730,8 +1760,7 @@ and semantic_check_statement s =
       let _ =
         if
           Symbol_table.check_is_unassigned vm uid.name
-          || check_of_compatible_return_type urt
-               (snd (typed_statement_unroll ub)).stmt_typed_meta_type
+          || check_of_compatible_return_type urt ub.stmt_typed_returntype
         then ()
         else
           semantic_error ~loc
@@ -1743,9 +1772,10 @@ and semantic_check_statement s =
       let _ = context_flags.in_returning_fun_def <- false in
       let _ = context_flags.in_lp_fun_def <- false in
       let _ = context_flags.in_rng_fun_def <- false in
-      TypedStmt
-        ( FunDef {returntype= urt; funname= uid; arguments= uargs; body= ub}
-        , {stmt_typed_meta_type= NoReturnType; stmt_typed_meta_loc= loc} )
+      { stmt_typed=
+          FunDef {returntype= urt; funname= uid; arguments= uargs; body= ub}
+      ; stmt_typed_returntype= NoReturnType
+      ; stmt_typed_loc= loc }
 
 and semantic_check_truncation = function
   | NoTruncate -> NoTruncate

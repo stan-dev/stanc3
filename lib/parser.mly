@@ -4,9 +4,6 @@
 open Ast
 open Debug
 
-let initialize_stmt_meta startpos endpos =
-  {stmt_untyped_meta_loc= Location (startpos, endpos)}
-
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
@@ -129,9 +126,9 @@ function_def:
     RPAREN b=statement
     {
       grammar_logger "function_def" ;
-      UntypedStmt (FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;},
-      initialize_stmt_meta $startpos $endpos)
+      {stmt_untyped=FunDef {returntype = rt; funname = name;
+                           arguments = args; body=b;};
+       stmt_untyped_loc=Location ($startpos, $endpos)}
     }
 
 return_type:
@@ -179,21 +176,21 @@ var_decl:
       let sizes = match d with None -> [] | Some l -> l in
       match ae with
       | Some a ->
-          UntypedStmt
-            ( VarDecl {sizedtype= reducearray (sbt, sizes);
+          {stmt_untyped=
+              VarDecl {sizedtype= reducearray (sbt, sizes);
                        transformation= Identity;
                        identifier= id;
                        initial_value= Some (snd a);
-                       is_global= false},
-              initialize_stmt_meta $startpos $endpos )
+                       is_global= false};
+           stmt_untyped_loc= Location ($startpos, $endpos)} 
       | None ->
-          UntypedStmt
-            ( VarDecl {sizedtype= reducearray (sbt, sizes);
+          {stmt_untyped=
+              VarDecl {sizedtype= reducearray (sbt, sizes);
                        transformation= Identity;
                        identifier= id;
                        initial_value= None;
-                       is_global= false},
-              initialize_stmt_meta $startpos $endpos ) }
+                       is_global= false};
+           stmt_untyped_loc= Location ($startpos, $endpos) } }
 
 sized_basic_type:
   | INT
@@ -212,13 +209,13 @@ top_var_decl_no_assign:
     {
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
-      UntypedStmt
-        ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+      {stmt_untyped=
+          VarDecl {sizedtype= reducearray (fst tvt, sizes);
                    transformation=  snd tvt;
                    identifier= id;
                    initial_value= None;
-                   is_global= true},
-          initialize_stmt_meta $startpos $endpos )
+                   is_global= true};
+       stmt_untyped_loc= Location ($startpos, $endpos)}
     }
 
 top_var_decl:
@@ -228,21 +225,21 @@ top_var_decl:
       let sizes = match d with None -> [] | Some l -> l in
       match ass with
       | Some a ->
-          UntypedStmt
-            ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+      {stmt_untyped=
+              VarDecl {sizedtype= reducearray (fst tvt, sizes);
                        transformation=  snd tvt;
                        identifier= id;
                        initial_value= Some (snd a);
-                       is_global= true},
-              initialize_stmt_meta $startpos $endpos )
+                       is_global= true};
+       stmt_untyped_loc= Location ($startpos, $endpos)}
       | None ->
-          UntypedStmt
-            ( VarDecl {sizedtype= reducearray (fst tvt, sizes);
+      {stmt_untyped=
+              VarDecl {sizedtype= reducearray (fst tvt, sizes);
                        transformation=  snd tvt;
                        identifier= id;
                        initial_value= None;
-                       is_global= true},
-              initialize_stmt_meta $startpos $endpos ) }
+                       is_global= true};
+       stmt_untyped_loc= Location ($startpos, $endpos)} }
 
 top_var_type:
   | INT r=range_constraint
@@ -502,10 +499,10 @@ lhs:
 statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
-       UntypedStmt (s, initialize_stmt_meta $startpos $endpos) }
+       {stmt_untyped= s; stmt_untyped_loc= Location ($startpos, $endpos)} }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
-       UntypedStmt (s, initialize_stmt_meta $startpos $endpos) }
+       {stmt_untyped= s; stmt_untyped_loc= Location ($startpos, $endpos)} }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON

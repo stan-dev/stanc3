@@ -220,7 +220,7 @@ and pretty_print_array_dims = function
   | es -> "[" ^ pretty_print_list_of_expression (List.rev es) ^ "]"
 
 and pretty_print_statement = function
-  | UntypedStmt (s_content, _) -> (
+  | {stmt_untyped= s_content; _} -> (
     match s_content with
     | Assignment
         { assign_identifier= id
@@ -301,7 +301,7 @@ and pretty_print_statement = function
                args)
         ^
         match b with
-        | UntypedStmt (Skip, _) -> ");"
+        | {stmt_untyped= Skip; _} -> ");"
         | b -> ") " ^ pretty_print_statement b ) )
 
 and pretty_print_list_of_statements l =

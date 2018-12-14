@@ -89,6 +89,7 @@ and 'e expression =
   | Paren of 'e
   | Indexed of 'e * 'e index list
 
+(** Untyped expressions, which have locations as meta-data *)
 and untyped_expression =
   { expr_untyped: untyped_expression expression
   ; expr_untyped_loc: location sexp_opaque [@compare.ignore] }
@@ -208,22 +209,18 @@ and statement_returntype =
   | Complete of returntype
   | AnyReturnType
 
-(** Meta data for typed statements: locations for errors and statement returntypes
-    to check that function bodies have the right return type*)
-and statement_typed_metadata =
-  { stmt_typed_meta_type: statement_returntype
-  ; stmt_typed_meta_loc: location sexp_opaque [@compare.ignore] }
-
-(** Untyped statements *)
+(** Untyped statements, which have locations as meta-data *)
 and untyped_statement =
-  | UntypedStmt of
-      ( (untyped_expression, untyped_statement) statement
-      * statement_untyped_metadata )
+  { stmt_untyped: (untyped_expression, untyped_statement) statement
+  ; stmt_untyped_loc: location sexp_opaque [@compare.ignore] }
 
-(** Typed statements *)
+(** Typed statements also have meta-data after type checking: a location, as well as a statement returntype
+    to check that function bodies have the right return type*)
 and typed_statement =
-  | TypedStmt of
-      ((typed_expression, typed_statement) statement * statement_typed_metadata)
+  { stmt_typed: (typed_expression, typed_statement) statement
+  ; stmt_typed_loc: location sexp_opaque [@compare.ignore]
+  ; stmt_typed_returntype: statement_returntype }
+[@@deriving sexp, compare, map, hash]
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
