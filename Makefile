@@ -25,7 +25,7 @@ test/integration/examples-good/%/dune: test/integration/examples-good/dune
 test/integration/examples-bad/%/dune: test/integration/examples-bad/dune
 	echo "(include `echo "$*/" | sed -e "s|[^/]*/|../|g"`dune)" > $@
 
-OG_TEST_DUNES := test/integration/dune test/integration/examples-bad/dune test/integration/examples-good/dune test/integration/included/dune test/integration/model-name/dune
+OG_TEST_DUNES := test/integration/dune test/integration/examples-bad/dune test/integration/examples-good/dune test/integration/included/dune test/integration/model-name/dune test/integration/rstanarm/dune
 
 clean-test-dunes:
 	rm -rf $(filter-out $(OG_TEST_DUNES),$(TEST_DUNES))
