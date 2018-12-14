@@ -16,3 +16,6 @@ val operator_return_type_prefix :
 
 val pretty_print_all_operator_signatures : string -> string
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
+
+(* XXX Hacked for prefix *)
+val pretty_print_all_operator_signatures_prefix : string -> string

@@ -565,7 +565,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name uop)
+            ^ pretty_print_all_operator_signatures_prefix (operator_name uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype (type_of_expr_typed ue)
             ^ "." ) )

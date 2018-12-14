@@ -80,3 +80,7 @@ let pretty_print_all_operator_signatures name =
     (List.map
        Stan_math_signatures.pretty_print_all_stan_math_function_signatures
        all_names)
+
+(** Print all the signatures of a stan math operator, for the purposes of error messages. *)
+let pretty_print_all_operator_signatures_prefix name =
+  pretty_print_all_operator_signatures ("P" ^ name)
