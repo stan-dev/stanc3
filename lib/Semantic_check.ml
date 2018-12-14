@@ -1487,52 +1487,11 @@ and semantic_check_statement s =
       (* Any statements after a break or continue or return or reject do not count for the return
       type. *)
       let rec list_until_escape = function
-        | [] -> []
-        | [x] -> [x]
-        | x1
-          :: {stmt_typed= Break; stmt_typed_returntype= rt; stmt_typed_loc= loc}
-             :: _ ->
-            [ x1
-            ; { stmt_typed= Break
-              ; stmt_typed_returntype= rt
-              ; stmt_typed_loc= loc } ]
-        | x1
-          :: { stmt_typed= Continue
-             ; stmt_typed_returntype= rt
-             ; stmt_typed_loc= loc }
-             :: _ ->
-            [ x1
-            ; { stmt_typed= Continue
-              ; stmt_typed_returntype= rt
-              ; stmt_typed_loc= loc } ]
-        | x1
-          :: { stmt_typed= Reject p
-             ; stmt_typed_returntype= rt
-             ; stmt_typed_loc= loc }
-             :: _ ->
-            [ x1
-            ; { stmt_typed= Reject p
-              ; stmt_typed_returntype= rt
-              ; stmt_typed_loc= loc } ]
-        | x1
-          :: { stmt_typed= Return e
-             ; stmt_typed_returntype= rt
-             ; stmt_typed_loc= loc }
-             :: _ ->
-            [ x1
-            ; { stmt_typed= Return e
-              ; stmt_typed_returntype= rt
-              ; stmt_typed_loc= loc } ]
-        | x1
-          :: { stmt_typed= ReturnVoid
-             ; stmt_typed_returntype= rt
-             ; stmt_typed_loc= loc }
-             :: _ ->
-            [ x1
-            ; { stmt_typed= ReturnVoid
-              ; stmt_typed_returntype= rt
-              ; stmt_typed_loc= loc } ]
-        | x1 :: x2 :: xs -> x1 :: list_until_escape (x2 :: xs)
+        | x1 :: ({stmt_typed; _} as r) :: tl -> (
+          match stmt_typed with
+          | Break | Continue | Reject _ | Return _ | ReturnVoid -> [x1; r]
+          | _ -> x1 :: list_until_escape (r :: tl) )
+        | x -> x
       in
       { stmt_typed= Block uvdsl
       ; stmt_typed_returntype=
