@@ -416,7 +416,7 @@ and semantic_check_sizedtype = function
       in
       let _ =
         if not (check_of_int_type ue2) then
-          semantic_error_e ue1
+          semantic_error_e ue2
             ( "Matrix sizes should be of type int. Instead found type "
             ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
             ^ "." )
