@@ -1,0 +1,104 @@
+  $ ../../../../install/default/bin/stanc --include_paths="."  bernoulli.stan
+
+Semantic error at file "bernoulli.stan", line 6, columns 0-3098:
+   -------------------------------------------------
+     4:  // GLM for a Bernoulli outcome
+     5:  functions {
+     6:  #include /functions/common_functions.stan
+         ^
+     7:  #include /functions/bernoulli_likelihoods.stan
+     8:  }
+   -------------------------------------------------
+
+Some function is declared without specifying a definition.
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  binomial.stan
+
+Semantic error at file "binomial.stan", line 6, columns 0-3099:
+   -------------------------------------------------
+     4:  // GLM for a binomial outcome
+     5:  functions {
+     6:  #include /functions/common_functions.stan
+         ^
+     7:  #include /functions/binomial_likelihoods.stan
+     8:  }
+   -------------------------------------------------
+
+Some function is declared without specifying a definition.
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  continuous.stan
+
+Semantic error at file ".//functions/SSfunctions.stan" included from "continuous.stan", line 72, columns 18-102:
+   -------------------------------------------------
+    70:      real exp_lKe = exp(lKe);
+    71:      real exp_lKa = exp(lKa);
+    72:      return Dose * exp(lKe + lKa - Phi_[1,3]) .* 
+                           ^
+    73:        (exp(-exp_lKe * input) - exp(-exp_lKa * input)) / (exp_lKa - exp_lKe);
+    74:    }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to infix operator .*. Available signatures: 
+(matrix, matrix) => matrix
+(row_vector, row_vector) => row_vector
+(vector, vector) => vector
+Instead supplied arguments of incompatible type: real, vector.
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  count.stan
+
+Semantic error at file "count.stan", line 6, columns 0-3102:
+   -------------------------------------------------
+     4:  // GLM for a count outcome
+     5:  functions {
+     6:  #include /functions/common_functions.stan
+         ^
+     7:  #include /functions/count_likelihoods.stan
+     8:  }
+   -------------------------------------------------
+
+Some function is declared without specifying a definition.
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  jm.stan
+
+Semantic error at file "jm.stan", line 7, columns 0-3058:
+   -------------------------------------------------
+     5:  // Shared parameter joint model
+     6:  functions {
+     7:  #include /functions/common_functions.stan
+         ^
+     8:  #include /functions/bernoulli_likelihoods.stan
+     9:  #include /functions/binomial_likelihoods.stan
+   -------------------------------------------------
+
+Some function is declared without specifying a definition.
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  lm.stan
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  mvmer.stan
+
+Semantic error at file "mvmer.stan", line 7, columns 0-3033:
+   -------------------------------------------------
+     5:  // Multivariate GLM with correlated group-specific terms
+     6:  functions {
+     7:  #include /functions/common_functions.stan
+         ^
+     8:  #include /functions/bernoulli_likelihoods.stan
+     9:  #include /functions/binomial_likelihoods.stan
+   -------------------------------------------------
+
+Some function is declared without specifying a definition.
+
+  $ ../../../../install/default/bin/stanc --include_paths="."  polr.stan
+
+Semantic error at file "polr.stan", line 14, columns 2-459:
+   -------------------------------------------------
+    12:    * @return A scalar on (0,1)
+    13:    */
+    14:    real CDF_polr(real x, int link) {
+           ^
+    15:      // links in MASS::polr() are in a different order than binomial() 
+    16:      // logistic, probit, loglog, cloglog, cauchit
+   -------------------------------------------------
+
+Some function is declared without specifying a definition.
+

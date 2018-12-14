@@ -1,0 +1,6 @@
+  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format Brilleman_copyright.stan
+
+  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format Columbia_copyright.stan
+
+  $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format license.stan
+
