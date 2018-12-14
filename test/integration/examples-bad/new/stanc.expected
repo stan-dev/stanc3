@@ -2382,7 +2382,7 @@ Syntax error at file "mystery54.stan", line 1, columns 26-27, parsing error:
                                     ^
    -------------------------------------------------
 
-Ill-formed expression. Expression or ";" expected after "return".
+Ill-formed return statement. ";" or expression followed by ";" expected after "return".
 
   $ ../../../../../install/default/bin/stanc mystery55.stan
 

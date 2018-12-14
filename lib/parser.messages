@@ -9291,7 +9291,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE TILDE
 ## In state 73, spurious reduction of production lhs -> identifier 
 ##
 
-Ill-formed expression. Expression or ";" expected after "return".
+Ill-formed return statement. ";" or expression followed by ";" expected after "return".
 
 program: TRANSFORMEDDATABLOCK LBRACE RETURN TRUNCATE WHILE
 ##
@@ -9320,7 +9320,7 @@ program: TRANSFORMEDDATABLOCK LBRACE RETURN WHILE
 ## RETURN
 ##
 
-Expression or ";" expected after "return".
+";" or expression followed by ";" expected after "return".
 
 program: TRANSFORMEDDATABLOCK LBRACE SEMICOLON VOID
 ##

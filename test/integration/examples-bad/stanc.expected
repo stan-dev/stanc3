@@ -1239,7 +1239,7 @@ Syntax error at file "functions-bad25.stan", line 4, columns 4-10, parsing error
      6:  }
    -------------------------------------------------
 
-Expression or ";" expected after "return".
+";" or expression followed by ";" expected after "return".
 
   $ ../../../../install/default/bin/stanc functions-bad26.stan
 
@@ -1253,7 +1253,7 @@ Syntax error at file "functions-bad26.stan", line 4, columns 11-12, parsing erro
      6:  }
    -------------------------------------------------
 
-Ill-formed expression. Expression or ";" expected after "return".
+Ill-formed return statement. ";" or expression followed by ";" expected after "return".
 
   $ ../../../../install/default/bin/stanc functions-bad3.stan
 
