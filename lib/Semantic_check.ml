@@ -400,7 +400,7 @@ and semantic_check_sizedtype = function
         if not (check_of_int_type ue) then
           semantic_error_e ue
             ( "Row vector sizes should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       SRowVector ue
@@ -411,14 +411,14 @@ and semantic_check_sizedtype = function
         if not (check_of_int_type ue1) then
           semantic_error_e ue1
             ( "Matrix sizes should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
           semantic_error_e ue2
             ( "Matrix sizes should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
       SMatrix (ue1, ue2)
@@ -429,7 +429,7 @@ and semantic_check_sizedtype = function
         if not (check_of_int_type ue) then
           semantic_error_e ue
             ( "Array sizes should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       SArray (ust, ue)
@@ -442,7 +442,7 @@ and semantic_check_transformation = function
         if not (check_of_int_or_real_type ue) then
           semantic_error_e ue
             ( "Lower bound should be of int or real type. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       Lower ue
@@ -452,7 +452,7 @@ and semantic_check_transformation = function
         if not (check_of_int_or_real_type ue) then
           semantic_error_e ue
             ( "Upper bound should be of int or real type. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       Upper ue
@@ -464,7 +464,7 @@ and semantic_check_transformation = function
           semantic_error_e ue1
             ( "Lower and upper bound should be of int or real type. Instead \
                found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
@@ -472,7 +472,7 @@ and semantic_check_transformation = function
           semantic_error_e ue2
             ( "Lower and upper bound should be of int or real type. Instead \
                found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
       LowerUpper (ue1, ue2)
@@ -484,7 +484,7 @@ and semantic_check_transformation = function
           semantic_error_e ue1
             ( "Location and scale should be of int or real type. Instead \
                found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
@@ -492,7 +492,7 @@ and semantic_check_transformation = function
           semantic_error_e ue2
             ( "Location and scale should be of int or real type. Instead \
                found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
       LocationScale (ue1, ue2)
@@ -526,11 +526,11 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                signatures: "
             ^ pretty_print_all_operator_signatures "TernaryIf"
             ^ "\nInstead supplied arguments of incompatible type: "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ ", "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ ", "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue3)
+            ^ pretty_print_unsizedtype ue3.expr_typed_type
             ^ "." ) )
   | BinOp (e1, op, e2) -> (
       let ue1 = semantic_check_expression e1
@@ -548,9 +548,9 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             ^ pretty_print_operator uop ^ ". Available signatures: "
             ^ pretty_print_all_operator_signatures (operator_name uop)
             ^ "\nInstead supplied arguments of incompatible type: "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ ", "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." ) )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
@@ -567,7 +567,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             ^ pretty_print_operator uop ^ ". Available signatures: "
             ^ pretty_print_all_operator_signatures_prefix (operator_name uop)
             ^ "\nInstead supplied argument of incompatible type: "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression e in
@@ -584,7 +584,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             ^ pretty_print_operator uop ^ ". Available signatures: "
             ^ pretty_print_all_operator_signatures (operator_name op)
             ^ "\nInstead supplied argument of incompatible type: "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
   | Variable id ->
       let uid = semantic_check_identifier id in
@@ -1381,7 +1381,7 @@ and semantic_check_statement s =
           semantic_error ~loc:ue.expr_typed_loc
             ( "Condition in conditional needs to be of type int or real. \
                Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       let us1 = semantic_check_statement s1 in
@@ -1404,7 +1404,7 @@ and semantic_check_statement s =
           semantic_error ~loc:ue.expr_typed_loc
             ( "Condition in while loop needs to be of type int or real. \
                Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       let _ = context_flags.in_loop <- true in
@@ -1425,7 +1425,7 @@ and semantic_check_statement s =
           semantic_error ~loc:ue1.expr_typed_loc
             ( "Lower bound of for-loop needs to be of type int. Instead found \
                type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
@@ -1433,7 +1433,7 @@ and semantic_check_statement s =
           semantic_error ~loc:ue2.expr_typed_loc
             ( "Upper bound of for-loop needs to be of type int. Instead found \
                type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
       let _ = Symbol_table.begin_scope vm in
@@ -1467,7 +1467,7 @@ and semantic_check_statement s =
             semantic_error ~loc:ue.expr_typed_loc
               ( "Foreach loop must be over array, vector, row_vector or \
                  matrix. Instead found expression of type "
-              ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+              ^ pretty_print_unsizedtype ue.expr_typed_type
               ^ "." )
       in
       let _ = Symbol_table.begin_scope vm in
@@ -1757,7 +1757,7 @@ and semantic_check_truncation = function
           semantic_error ~loc
             ( "Truncation bound should be of type int or real. Instead found \
                type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       TruncateUpFrom ue
@@ -1769,7 +1769,7 @@ and semantic_check_truncation = function
           semantic_error ~loc
             ( "Truncation bound should be of type int or real. Instead found \
                type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       TruncateDownFrom ue
@@ -1781,7 +1781,7 @@ and semantic_check_truncation = function
           semantic_error_e ue1
             ( "Truncation bound should be of type int or real. Instead found \
                type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
@@ -1789,7 +1789,7 @@ and semantic_check_truncation = function
           semantic_error_e ue2
             ( "Truncation bound should be of type int or real. Instead found \
                type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
       TruncateBetween (ue1, ue2)
@@ -1806,7 +1806,7 @@ and semantic_check_index = function
         semantic_error ~loc
           ( "Index should be of type int or int[] or should be a range. \
              Instead found type "
-          ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+          ^ pretty_print_unsizedtype ue.expr_typed_type
           ^ "." )
   | Upfrom e ->
       let ue = semantic_check_expression e in
@@ -1815,7 +1815,7 @@ and semantic_check_index = function
         if not (check_of_int_type ue) then
           semantic_error ~loc
             ( "Range bound should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       Upfrom ue
@@ -1826,7 +1826,7 @@ and semantic_check_index = function
         if not (check_of_int_type ue) then
           semantic_error ~loc
             ( "Range bound should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       Downfrom ue
@@ -1837,14 +1837,14 @@ and semantic_check_index = function
         if not (check_of_int_type ue1) then
           semantic_error_e ue1
             ( "Range bound should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue1)
+            ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
           semantic_error_e ue2
             ( "Range bound should be of type int. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue2)
+            ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
       Between (ue1, ue2)
@@ -1855,7 +1855,7 @@ and semantic_check_index = function
         if not (check_of_int_array_type ue) then
           semantic_error ~loc
             ( "Multiple index should be of type int[]. Instead found type "
-            ^ pretty_print_unsizedtype (type_of_expr_typed ue)
+            ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
       Multiple ue
