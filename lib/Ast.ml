@@ -191,10 +191,6 @@ and ('e, 's) statement =
       ; arguments: (autodifftype * unsizedtype * identifier) list
       ; body: 's }
 
-(** Meta data for untyped statements: locations for errors *)
-and statement_untyped_metadata =
-  {stmt_untyped_meta_loc: location sexp_opaque [@compare.ignore]}
-
 (** Statement return types which we will decorate statements with during type
     checking: the purpose is to check that function bodies have the correct
     return type in every possible execution branch.
