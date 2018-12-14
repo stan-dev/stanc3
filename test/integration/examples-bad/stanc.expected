@@ -50,7 +50,7 @@ Semantic error at file "bad_var_assignment_type2.stan", line 6, columns 2-9:
      8:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator <-: lhs has type real[] and rhs has type real[][]
+Ill-typed arguments supplied to assignment operator <-: lhs has type real[] and rhs has type real[,]
 
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
 
@@ -1195,8 +1195,8 @@ Semantic error at file "functions-bad22-ode.stan", line 15, columns 11-82:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[][]
-((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[][]
+((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[], data real, data real, data real) => real[,]
+((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
   $ ../../../../install/default/bin/stanc functions-bad23.stan
@@ -2338,7 +2338,7 @@ Semantic error at file "validate_array_expr_bad2.stan", line 6, columns 2-24:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rhs has type int[][]
+Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rhs has type int[,]
 
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3.stan
 
@@ -2381,36 +2381,36 @@ Semantic error at file "validate_conditional_op_bad-1.stan", line 5, columns 7-1
    -------------------------------------------------
 
 Ill-typed arguments supplied to ? : operator. Available signatures: 
-(int, matrix[][][][][][][], matrix[][][][][][][]) => matrix[][][][][][][]
-(int, row_vector[][][][][][][], row_vector[][][][][][][]) => row_vector[][][][][][][]
-(int, vector[][][][][][][], vector[][][][][][][]) => vector[][][][][][][]
-(int, int[][][][][][][], int[][][][][][][]) => int[][][][][][][]
-(int, real[][][][][][][], real[][][][][][][]) => real[][][][][][][]
-(int, matrix[][][][][][], matrix[][][][][][]) => matrix[][][][][][]
-(int, row_vector[][][][][][], row_vector[][][][][][]) => row_vector[][][][][][]
-(int, vector[][][][][][], vector[][][][][][]) => vector[][][][][][]
-(int, int[][][][][][], int[][][][][][]) => int[][][][][][]
-(int, real[][][][][][], real[][][][][][]) => real[][][][][][]
-(int, matrix[][][][][], matrix[][][][][]) => matrix[][][][][]
-(int, row_vector[][][][][], row_vector[][][][][]) => row_vector[][][][][]
-(int, vector[][][][][], vector[][][][][]) => vector[][][][][]
-(int, int[][][][][], int[][][][][]) => int[][][][][]
-(int, real[][][][][], real[][][][][]) => real[][][][][]
-(int, matrix[][][][], matrix[][][][]) => matrix[][][][]
-(int, row_vector[][][][], row_vector[][][][]) => row_vector[][][][]
-(int, vector[][][][], vector[][][][]) => vector[][][][]
-(int, int[][][][], int[][][][]) => int[][][][]
-(int, real[][][][], real[][][][]) => real[][][][]
-(int, matrix[][][], matrix[][][]) => matrix[][][]
-(int, row_vector[][][], row_vector[][][]) => row_vector[][][]
-(int, vector[][][], vector[][][]) => vector[][][]
-(int, int[][][], int[][][]) => int[][][]
-(int, real[][][], real[][][]) => real[][][]
-(int, matrix[][], matrix[][]) => matrix[][]
-(int, row_vector[][], row_vector[][]) => row_vector[][]
-(int, vector[][], vector[][]) => vector[][]
-(int, int[][], int[][]) => int[][]
-(int, real[][], real[][]) => real[][]
+(int, matrix[,,,,,,], matrix[,,,,,,]) => matrix[,,,,,,]
+(int, row_vector[,,,,,,], row_vector[,,,,,,]) => row_vector[,,,,,,]
+(int, vector[,,,,,,], vector[,,,,,,]) => vector[,,,,,,]
+(int, int[,,,,,,], int[,,,,,,]) => int[,,,,,,]
+(int, real[,,,,,,], real[,,,,,,]) => real[,,,,,,]
+(int, matrix[,,,,,], matrix[,,,,,]) => matrix[,,,,,]
+(int, row_vector[,,,,,], row_vector[,,,,,]) => row_vector[,,,,,]
+(int, vector[,,,,,], vector[,,,,,]) => vector[,,,,,]
+(int, int[,,,,,], int[,,,,,]) => int[,,,,,]
+(int, real[,,,,,], real[,,,,,]) => real[,,,,,]
+(int, matrix[,,,,], matrix[,,,,]) => matrix[,,,,]
+(int, row_vector[,,,,], row_vector[,,,,]) => row_vector[,,,,]
+(int, vector[,,,,], vector[,,,,]) => vector[,,,,]
+(int, int[,,,,], int[,,,,]) => int[,,,,]
+(int, real[,,,,], real[,,,,]) => real[,,,,]
+(int, matrix[,,,], matrix[,,,]) => matrix[,,,]
+(int, row_vector[,,,], row_vector[,,,]) => row_vector[,,,]
+(int, vector[,,,], vector[,,,]) => vector[,,,]
+(int, int[,,,], int[,,,]) => int[,,,]
+(int, real[,,,], real[,,,]) => real[,,,]
+(int, matrix[,,], matrix[,,]) => matrix[,,]
+(int, row_vector[,,], row_vector[,,]) => row_vector[,,]
+(int, vector[,,], vector[,,]) => vector[,,]
+(int, int[,,], int[,,]) => int[,,]
+(int, real[,,], real[,,]) => real[,,]
+(int, matrix[,], matrix[,]) => matrix[,]
+(int, row_vector[,], row_vector[,]) => row_vector[,]
+(int, vector[,], vector[,]) => vector[,]
+(int, int[,], int[,]) => int[,]
+(int, real[,], real[,]) => real[,]
 (int, matrix[], matrix[]) => matrix[]
 (int, row_vector[], row_vector[]) => row_vector[]
 (int, vector[], vector[]) => vector[]
@@ -2421,7 +2421,7 @@ Ill-typed arguments supplied to ? : operator. Available signatures:
 (int, vector, vector) => vector
 (int, int, int) => int
 (int, real, real) => real
-Instead supplied arguments of incompatible type: row_vector[][], int, int.
+Instead supplied arguments of incompatible type: row_vector[,], int, int.
 
   $ ../../../../install/default/bin/stanc validate_conditional_op_bad-2.stan
 
@@ -2436,36 +2436,36 @@ Semantic error at file "validate_conditional_op_bad-2.stan", line 5, columns 7-2
    -------------------------------------------------
 
 Ill-typed arguments supplied to ? : operator. Available signatures: 
-(int, matrix[][][][][][][], matrix[][][][][][][]) => matrix[][][][][][][]
-(int, row_vector[][][][][][][], row_vector[][][][][][][]) => row_vector[][][][][][][]
-(int, vector[][][][][][][], vector[][][][][][][]) => vector[][][][][][][]
-(int, int[][][][][][][], int[][][][][][][]) => int[][][][][][][]
-(int, real[][][][][][][], real[][][][][][][]) => real[][][][][][][]
-(int, matrix[][][][][][], matrix[][][][][][]) => matrix[][][][][][]
-(int, row_vector[][][][][][], row_vector[][][][][][]) => row_vector[][][][][][]
-(int, vector[][][][][][], vector[][][][][][]) => vector[][][][][][]
-(int, int[][][][][][], int[][][][][][]) => int[][][][][][]
-(int, real[][][][][][], real[][][][][][]) => real[][][][][][]
-(int, matrix[][][][][], matrix[][][][][]) => matrix[][][][][]
-(int, row_vector[][][][][], row_vector[][][][][]) => row_vector[][][][][]
-(int, vector[][][][][], vector[][][][][]) => vector[][][][][]
-(int, int[][][][][], int[][][][][]) => int[][][][][]
-(int, real[][][][][], real[][][][][]) => real[][][][][]
-(int, matrix[][][][], matrix[][][][]) => matrix[][][][]
-(int, row_vector[][][][], row_vector[][][][]) => row_vector[][][][]
-(int, vector[][][][], vector[][][][]) => vector[][][][]
-(int, int[][][][], int[][][][]) => int[][][][]
-(int, real[][][][], real[][][][]) => real[][][][]
-(int, matrix[][][], matrix[][][]) => matrix[][][]
-(int, row_vector[][][], row_vector[][][]) => row_vector[][][]
-(int, vector[][][], vector[][][]) => vector[][][]
-(int, int[][][], int[][][]) => int[][][]
-(int, real[][][], real[][][]) => real[][][]
-(int, matrix[][], matrix[][]) => matrix[][]
-(int, row_vector[][], row_vector[][]) => row_vector[][]
-(int, vector[][], vector[][]) => vector[][]
-(int, int[][], int[][]) => int[][]
-(int, real[][], real[][]) => real[][]
+(int, matrix[,,,,,,], matrix[,,,,,,]) => matrix[,,,,,,]
+(int, row_vector[,,,,,,], row_vector[,,,,,,]) => row_vector[,,,,,,]
+(int, vector[,,,,,,], vector[,,,,,,]) => vector[,,,,,,]
+(int, int[,,,,,,], int[,,,,,,]) => int[,,,,,,]
+(int, real[,,,,,,], real[,,,,,,]) => real[,,,,,,]
+(int, matrix[,,,,,], matrix[,,,,,]) => matrix[,,,,,]
+(int, row_vector[,,,,,], row_vector[,,,,,]) => row_vector[,,,,,]
+(int, vector[,,,,,], vector[,,,,,]) => vector[,,,,,]
+(int, int[,,,,,], int[,,,,,]) => int[,,,,,]
+(int, real[,,,,,], real[,,,,,]) => real[,,,,,]
+(int, matrix[,,,,], matrix[,,,,]) => matrix[,,,,]
+(int, row_vector[,,,,], row_vector[,,,,]) => row_vector[,,,,]
+(int, vector[,,,,], vector[,,,,]) => vector[,,,,]
+(int, int[,,,,], int[,,,,]) => int[,,,,]
+(int, real[,,,,], real[,,,,]) => real[,,,,]
+(int, matrix[,,,], matrix[,,,]) => matrix[,,,]
+(int, row_vector[,,,], row_vector[,,,]) => row_vector[,,,]
+(int, vector[,,,], vector[,,,]) => vector[,,,]
+(int, int[,,,], int[,,,]) => int[,,,]
+(int, real[,,,], real[,,,]) => real[,,,]
+(int, matrix[,,], matrix[,,]) => matrix[,,]
+(int, row_vector[,,], row_vector[,,]) => row_vector[,,]
+(int, vector[,,], vector[,,]) => vector[,,]
+(int, int[,,], int[,,]) => int[,,]
+(int, real[,,], real[,,]) => real[,,]
+(int, matrix[,], matrix[,]) => matrix[,]
+(int, row_vector[,], row_vector[,]) => row_vector[,]
+(int, vector[,], vector[,]) => vector[,]
+(int, int[,], int[,]) => int[,]
+(int, real[,], real[,]) => real[,]
 (int, matrix[], matrix[]) => matrix[]
 (int, row_vector[], row_vector[]) => row_vector[]
 (int, vector[], vector[]) => vector[]
@@ -2476,7 +2476,7 @@ Ill-typed arguments supplied to ? : operator. Available signatures:
 (int, vector, vector) => vector
 (int, int, int) => int
 (int, real, real) => real
-Instead supplied arguments of incompatible type: int, real, row_vector[][].
+Instead supplied arguments of incompatible type: int, real, row_vector[,].
 
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
 
