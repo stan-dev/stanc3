@@ -13,6 +13,8 @@ To build `stanc.exe`, run `make`. The binary will be built in `_build/default`
 To run tests, run `dune runtest` and use `dune promote` to accept changes.
 To run e.g. only the integration tests, run `dune runtest test/integration`.
 
+There are some git hooks in `scripts/hooks`; install with `bash scripts/hooks/install_hooks.sh`.
+
 To auto-format the OCaml code (sadly, this does not work for the two ocamllex
 and menhir files), run ` dune build @fmt ` or  `make format`.
 To accept the changes proposed by ocamlformat, run `dune promote`.
