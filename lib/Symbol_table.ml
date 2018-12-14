@@ -30,7 +30,7 @@ let begin_scope s =
   let _ = s.scopedepth := !(s.scopedepth) + 1 in
   Stack.push "-sentinel-new-scope-" s.stack
 
-(* using a string '-' here that can never be used as an identifier to indicate that new scope is entered *)
+(* using a string "-sentinel-new-scope-" here that can never be used as an identifier to indicate that new scope is entered *)
 let end_scope s =
   let _ = s.scopedepth := !(s.scopedepth) - 1 in
   while Stack.top s.stack <> "-sentinel-new-scope-" do
