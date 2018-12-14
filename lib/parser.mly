@@ -4,9 +4,6 @@
 open Ast
 open Debug
 
-let initialize_expr_meta startpos endpos =
-  {expr_untyped_meta_loc= Location (startpos, endpos)}
-
 let initialize_stmt_meta startpos endpos =
   {stmt_untyped_meta_loc= Location (startpos, endpos)}
 
@@ -312,17 +309,14 @@ loc_scale:
   | LOCATION ASSIGN e=constr_expression
     {
       grammar_logger "loc" ;
-      LocationScale (e, UntypedExpr (RealNumeral "1.",
-                                     initialize_expr_meta $startpos(e)
-                                                          $endpos(e)))
+      LocationScale (e, {expr_untyped= RealNumeral "1.";
+                         expr_untyped_loc=Location ($startpos(e), $endpos(e))} )
     }
   | SCALE ASSIGN e=constr_expression
     {
       grammar_logger "scale" ;
-      LocationScale (UntypedExpr (RealNumeral "0.",
-                                  initialize_expr_meta $startpos(e)
-                                                       $endpos(e)), e)
-    }
+      LocationScale ({expr_untyped=RealNumeral "0.";
+                     expr_untyped_loc=Location ($startpos(e), $endpos(e))}, e)}
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
@@ -333,13 +327,13 @@ dims:
   | l=lhs
     {
       grammar_logger "lhs_expression" ;
-      UntypedExpr (Indexed (UntypedExpr (Variable (fst l), initialize_expr_meta
-                   $startpos $endpos), snd l),
-                   initialize_expr_meta $startpos $endpos)
+      {expr_untyped=Indexed ({expr_untyped=Variable (fst l);
+                              expr_untyped_loc=Location ($startpos, $endpos)}, snd l);
+       expr_untyped_loc=Location ($startpos, $endpos)}
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
-      UntypedExpr (e, initialize_expr_meta $startpos $endpos)}
+      {expr_untyped=e; expr_untyped_loc= Location ($startpos, $endpos)}}
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -352,8 +346,8 @@ non_lhs:
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
-       Indexed (UntypedExpr (ue, initialize_expr_meta $startpos(ue)
-                                                      $endpos(ue)), i)}
+       Indexed ({expr_untyped=ue;
+                 expr_untyped_loc= Location ($startpos(ue), $endpos(ue))}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -362,32 +356,38 @@ constr_expression:
   | e1=constr_expression op=arithmeticBinOp e2=constr_expression
     {
       grammar_logger "constr_expression_arithmetic" ;
-      UntypedExpr (BinOp (e1, op, e2), initialize_expr_meta $startpos $endpos)
+      {expr_untyped=BinOp (e1, op, e2);
+       expr_untyped_loc=Location ($startpos, $endpos)}
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
-      UntypedExpr (PrefixOp (op, e), initialize_expr_meta $startpos $endpos)
+      {expr_untyped=PrefixOp (op, e);
+       expr_untyped_loc=Location ($startpos, $endpos)}
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
-      UntypedExpr (PostfixOp (e, op), initialize_expr_meta $startpos $endpos)
+      {expr_untyped=PostfixOp (e, op);
+       expr_untyped_loc=Location ($startpos, $endpos)}
     }
   | e=constr_expression LBRACK i=indexes RBRACK
     {
       grammar_logger "constr_expression_indexed" ;
-      UntypedExpr (Indexed (e, i), initialize_expr_meta $startpos $endpos)
+      {expr_untyped=Indexed (e, i);
+       expr_untyped_loc=Location ($startpos, $endpos)}
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
-      UntypedExpr (e, initialize_expr_meta $startpos $endpos)
+      {expr_untyped=e;
+       expr_untyped_loc= Location ($startpos, $endpos)}
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
-      UntypedExpr (Variable id, initialize_expr_meta $startpos $endpos)
+      {expr_untyped=Variable id;
+       expr_untyped_loc=Location ($startpos, $endpos)}
     }
 
 common_expression:

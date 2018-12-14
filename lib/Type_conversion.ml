@@ -23,7 +23,8 @@ let check_of_same_type_mod_conv name t1 t2 =
                 l1 l2)
     | _ -> t1 = t2
 
-let check_of_same_type_mod_array_conv name t1 t2 =
+let check_of_same_type_mod_array_conv name {expr_typed_type= t1; _}
+    {expr_typed_type= t2; _} =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
     match (t1, t2) with
@@ -35,10 +36,10 @@ let check_compatible_arguments_mod_conv name args1 args2 =
   && List.for_all
        (fun y -> y = true)
        (List.map2
-          (fun w1 w2 ->
-            check_of_same_type_mod_conv name (snd w1) (snd w2)
-            && autodifftype_can_convert (fst w1)
-                 (autodifftype_of_originblock (fst w2)) )
+          (fun sign {expr_typed_origin= o; expr_typed_type= t; _} ->
+            check_of_same_type_mod_conv name (snd sign) t
+            && autodifftype_can_convert (fst sign)
+                 (autodifftype_of_originblock o) )
           args1 args2)
 
 let check_of_compatible_return_type rt1 srt2 =

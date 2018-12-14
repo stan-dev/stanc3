@@ -49,13 +49,6 @@ and pretty_print_unsizedtypes l =
 and pretty_print_argtype = function
   | at, ut -> pretty_print_autodifftype at ^ pretty_print_unsizedtype ut
 
-and pretty_print_expressiontype = function
-  | _, ut -> pretty_print_unsizedtype ut
-
-and pretty_print_opt_expressiontype = function
-  | None -> "unknown"
-  | Some x -> pretty_print_expressiontype x
-
 and pretty_print_returntype = function
   | ReturnType x -> pretty_print_unsizedtype x
   | Void -> "void"
@@ -95,42 +88,39 @@ and pretty_print_index = function
 and pretty_print_list_of_indices l =
   String.concat ", " (List.map pretty_print_index l)
 
-and pretty_print_expression = function
-  | UntypedExpr (e_content, _) -> (
-    match e_content with
-    | TernaryIf (e1, e2, e3) ->
-        pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
-        ^ pretty_print_expression e3
-    | BinOp (e1, op, e2) ->
-        pretty_print_expression e1 ^ " " ^ pretty_print_operator op ^ " "
-        ^ pretty_print_expression e2
-    | PrefixOp (op, e) -> pretty_print_operator op ^ pretty_print_expression e
-    | PostfixOp (e, op) -> pretty_print_expression e ^ pretty_print_operator op
-    | Variable id -> pretty_print_identifier id
-    | IntNumeral i -> i
-    | RealNumeral r -> r
-    | FunApp (id, es) ->
-        pretty_print_identifier id ^ "("
-        ^ pretty_print_list_of_expression es
-        ^ ")"
-    | CondDistApp (id, es) ->
-        pretty_print_identifier id ^ "("
-        ^ pretty_print_expression (List.hd es)
-        ^ "| "
-        ^ pretty_print_list_of_expression (List.tl es)
-        ^ ")"
-    (* GetLP is deprecated *)
-    | GetLP -> "get_lp()"
-    | GetTarget -> "target()"
-    | ArrayExpr es -> "{" ^ pretty_print_list_of_expression es ^ "}"
-    | RowVectorExpr es -> "[" ^ pretty_print_list_of_expression es ^ "]"
-    | Paren e -> "(" ^ pretty_print_expression e ^ ")"
-    | Indexed (e, l) -> (
-        pretty_print_expression e
-        ^
-        match l with
-        | [] -> ""
-        | l -> "[" ^ pretty_print_list_of_indices l ^ "]" ) )
+and pretty_print_expression {expr_untyped= e_content; _} =
+  match e_content with
+  | TernaryIf (e1, e2, e3) ->
+      pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
+      ^ pretty_print_expression e3
+  | BinOp (e1, op, e2) ->
+      pretty_print_expression e1 ^ " " ^ pretty_print_operator op ^ " "
+      ^ pretty_print_expression e2
+  | PrefixOp (op, e) -> pretty_print_operator op ^ pretty_print_expression e
+  | PostfixOp (e, op) -> pretty_print_expression e ^ pretty_print_operator op
+  | Variable id -> pretty_print_identifier id
+  | IntNumeral i -> i
+  | RealNumeral r -> r
+  | FunApp (id, es) ->
+      pretty_print_identifier id ^ "("
+      ^ pretty_print_list_of_expression es
+      ^ ")"
+  | CondDistApp (id, es) ->
+      pretty_print_identifier id ^ "("
+      ^ pretty_print_expression (List.hd es)
+      ^ "| "
+      ^ pretty_print_list_of_expression (List.tl es)
+      ^ ")"
+  (* GetLP is deprecated *)
+  | GetLP -> "get_lp()"
+  | GetTarget -> "target()"
+  | ArrayExpr es -> "{" ^ pretty_print_list_of_expression es ^ "}"
+  | RowVectorExpr es -> "[" ^ pretty_print_list_of_expression es ^ "]"
+  | Paren e -> "(" ^ pretty_print_expression e ^ ")"
+  | Indexed (e, l) -> (
+      pretty_print_expression e
+      ^
+      match l with [] -> "" | l -> "[" ^ pretty_print_list_of_indices l ^ "]" )
 
 and pretty_print_list_of_expression es =
   String.concat ", " (List.map pretty_print_expression es)
@@ -173,17 +163,9 @@ and pretty_print_transformation = function
   | LowerUpper (e1, e2) ->
       "<lower=" ^ pretty_print_expression e1 ^ ", upper="
       ^ pretty_print_expression e2 ^ ">"
-  | LocationScale (e1, e2) -> (
-    match (e1, e2) with
-    | UntypedExpr (RealNumeral "0.", _), UntypedExpr (RealNumeral "1.", _) ->
-        ""
-    | UntypedExpr (RealNumeral "0.", _), _ ->
-        "<scale=" ^ pretty_print_expression e2 ^ ">"
-    | _, UntypedExpr (RealNumeral "1.", _) ->
-        "<location=" ^ pretty_print_expression e1 ^ ">"
-    | _ ->
-        "<location=" ^ pretty_print_expression e1 ^ ", scale="
-        ^ pretty_print_expression e2 ^ ">" )
+  | LocationScale (e1, e2) ->
+      "<location=" ^ pretty_print_expression e1 ^ ", scale="
+      ^ pretty_print_expression e2 ^ ">"
   | Ordered -> ""
   | PositiveOrdered -> ""
   | Simplex -> ""

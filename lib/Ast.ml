@@ -89,23 +89,17 @@ and 'e expression =
   | Paren of 'e
   | Indexed of 'e * 'e index list
 
-(** Meta-data on expressions before type checking: a location for error messages *)
-and expression_untyped_metadata =
-  {expr_untyped_meta_loc: location sexp_opaque [@compare.ignore]}
-
-(** Meta-data on expressions after type checking: a location, as well as a type
-    and an origin block (lub of the origin blocks of the identifiers in it) *)
-and expression_typed_metadata =
-  { expr_typed_meta_origin_type: originblock * unsizedtype
-  ; expr_typed_meta_loc: location sexp_opaque [@compare.ignore] }
-
-(** Untyped expressions *)
 and untyped_expression =
-  | UntypedExpr of (untyped_expression expression * expression_untyped_metadata)
+  { expr_untyped: untyped_expression expression
+  ; expr_untyped_loc: location sexp_opaque [@compare.ignore] }
 
-(** Typed expressions *)
+(** Typed expressions also have meta-data after type checking: a location, as well as a type
+    and an origin block (lub of the origin blocks of the identifiers in it) *)
 and typed_expression =
-  | TypedExpr of (typed_expression expression * expression_typed_metadata)
+  { expr_typed: typed_expression expression
+  ; expr_typed_loc: location sexp_opaque [@compare.ignore]
+  ; expr_typed_origin: originblock
+  ; expr_typed_type: unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
 (** Assignment operators *)
@@ -248,12 +242,13 @@ and untyped_program = untyped_statement program
 (** Typed programs (after type checking) *)
 and typed_program = typed_statement program [@@deriving sexp, compare, map]
 
+(*
 (** Forgetful function from typed to untyped expressions *)
 let rec untyped_expression_of_typed_expression = function
   | TypedExpr (e, n) ->
       UntypedExpr
         ( map_expression untyped_expression_of_typed_expression e
-        , {expr_untyped_meta_loc= n.expr_typed_meta_loc} )
+        , {expr_untyped_loc= n.expr_typed_loc} )
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement = function
@@ -266,3 +261,4 @@ let rec untyped_statement_of_typed_statement = function
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
+*)

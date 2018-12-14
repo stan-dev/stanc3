@@ -82,12 +82,10 @@ let%expect_test "parse conditional" =
      (modelblock
       (((UntypedStmt
          ((IfThenElse
-           (UntypedExpr
-            ((BinOp
-              (UntypedExpr ((IntNumeral 1) ((expr_untyped_meta_loc <opaque>))))
-              Less
-              (UntypedExpr ((IntNumeral 2) ((expr_untyped_meta_loc <opaque>)))))
-             ((expr_untyped_meta_loc <opaque>))))
+           ((expr_untyped
+             (BinOp ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
+              Less ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))
+            (expr_untyped_loc <opaque>))
            (UntypedStmt
             ((Block
               ((UntypedStmt

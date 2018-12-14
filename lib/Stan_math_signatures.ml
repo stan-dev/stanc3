@@ -9,11 +9,11 @@ open Pretty_printing
 let stan_math_signatures = Hashtbl.create 3000
 
 (* -- Querying stan_math_signatures -- *)
-let get_stan_math_function_return_type_opt name argtypes =
+let get_stan_math_function_return_type_opt name args =
   let namematches = Hashtbl.find_all stan_math_signatures name in
   let filteredmatches =
     List.filter
-      (fun x -> check_compatible_arguments_mod_conv name (snd x) argtypes)
+      (fun x -> check_compatible_arguments_mod_conv name (snd x) args)
       namematches
   in
   if List.length filteredmatches = 0 then None

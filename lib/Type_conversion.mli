@@ -2,15 +2,12 @@
 open Ast
 
 val check_compatible_arguments_mod_conv :
-     string
-  -> (autodifftype * unsizedtype) list
-  -> (originblock * unsizedtype) list
-  -> bool
+  string -> (autodifftype * unsizedtype) list -> typed_expression list -> bool
 (** Check that the rhs list of function argument types can be converted to the
     lhs *)
 
 val check_of_same_type_mod_array_conv :
-  string -> unsizedtype -> unsizedtype -> bool
+  string -> typed_expression -> typed_expression -> bool
 (** Check that the rhs type can be converted to the lhs, where we allow
     conversion inside an array constructor *)
 

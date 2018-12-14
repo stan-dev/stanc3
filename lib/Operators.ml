@@ -40,20 +40,17 @@ let _ =
   Hashtbl.add operator_names "(OperatorAssign EltDivide)" "assign_elt_divide"
 
 (** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name argtypes =
+let operator_return_type_from_string op_name args =
   if op_name = "Assign" || op_name = "ArrowAssign" then
-    match argtypes with
-    | [(_, ut1); (_, ut2)] ->
-        if check_of_same_type_mod_array_conv "" ut1 ut2 then Some Void
-        else None
+    match args with
+    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 -> Some Void
     | _ -> None
   else
     let rec try_recursive_find = function
       | [] -> None
       | name :: names -> (
         match
-          Stan_math_signatures.get_stan_math_function_return_type_opt name
-            argtypes
+          Stan_math_signatures.get_stan_math_function_return_type_opt name args
         with
         | None -> try_recursive_find names
         | Some ut -> Some ut )
