@@ -274,9 +274,7 @@ let rec semantic_check_program p =
         && !check_that_all_functions_have_definition
       then
         semantic_error
-          ~loc:
-            (List.hd ((function Some x -> x | None -> fatal_error ()) ufb))
-              .stmt_typed_loc
+          ~loc:(List.hd (Core_kernel.Option.value_exn ufb)).stmt_typed_loc
           "Some function is declared without specifying a definition."
       (* TODO: insert better location in the error above *)
     in
