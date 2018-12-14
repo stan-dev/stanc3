@@ -603,7 +603,7 @@ and semantic_check_expression x =
       let uop = semantic_check_operator op
       and ue = semantic_check_expression e in
       match
-        operator_return_type uop
+        operator_return_type_prefix uop
           [(snd (typed_expression_unroll ue)).expr_typed_meta_origin_type]
       with
       | Some (ReturnType ut) ->

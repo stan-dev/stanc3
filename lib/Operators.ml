@@ -8,7 +8,13 @@ open Ast
 let operator_names = Hashtbl.create 50
 
 let _ = Hashtbl.add operator_names "Plus" "add"
+
+(*XXX is there a difference in Stan math for unary plus?*)
+let _ = Hashtbl.add operator_names "UPlus" "plus"
 let _ = Hashtbl.add operator_names "Minus" "subtract"
+
+(*XXX is there a difference in Stan math for unary minus?*)
+let _ = Hashtbl.add operator_names "UMinus" "minus"
 let _ = Hashtbl.add operator_names "Times" "multiply"
 let _ = Hashtbl.add operator_names "Divide" "divide"
 let _ = Hashtbl.add operator_names "Divide" "mdivide_right"
@@ -62,10 +68,13 @@ let operator_return_type_from_string op_name argtypes =
 
 let operator_name op =
   let open Core_kernel in
-  Sexp.to_string_hum [%sexp (op : Ast.operator)]
+  Sexp.to_string [%sexp (op : Ast.operator)]
 
 let operator_return_type op =
   operator_return_type_from_string (operator_name op)
+
+let operator_return_type_prefix op =
+  operator_return_type_from_string ("U" ^ operator_name op)
 
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
 let pretty_print_all_operator_signatures name =
