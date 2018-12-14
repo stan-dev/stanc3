@@ -555,7 +555,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
       and ue = semantic_check_expression e in
-      match operator_return_type uop [ue] with
+      match operator_return_type_prefix uop [ue] with
       | Some (ReturnType ut) ->
           { expr_typed= PrefixOp (uop, ue)
           ; expr_typed_origin= lub_origin_e [ue]
