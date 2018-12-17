@@ -35,26 +35,31 @@ let rec emit_expr ppf s =
   | TernaryIf (cond, ifb, elseb) ->
       fprintf ppf "(%a) ? (%a) : (%a)" emit_expr cond emit_expr ifb emit_expr
         elseb
-  | ArrayLiteral es ->
-      fprintf ppf "{%a}" (pp_print_list ~pp_sep:comma emit_expr) es
   | Indexed (e, idcs) ->
-      fprintf ppf "%a%a" emit_expr e
-        (pp_print_list ~pp_sep:comma emit_index)
-        idcs
-  | MultiIndexed (ident, indices) ->
       fprintf ppf "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
-        emit_expr ident emit_intarr_idx_list indices emit_expr ident
+        emit_expr e emit_indices idcs emit_expr e
 
-and emit_index ppf e = fprintf ppf "[%a]" emit_expr e
+and emit_index ppf idx =
+  let idx_phrase fmt idtype =
+    fprintf ppf fmt ("stan::model::index_" ^ idtype)
+  in
+  match idx with
+  | All -> idx_phrase "%s" "omni()"
+  | Single e -> idx_phrase "%s(%a)" "uni" emit_expr e
+  | Upfrom e -> idx_phrase "%s(%a)" "min" emit_expr e
+  | Downfrom e -> idx_phrase "%s(%a)" "max" emit_expr e
+  | Between (e1, e2) ->
+      idx_phrase "%s(%a, %a)" "min_max" emit_expr e1 emit_expr e2
+  | MultiIndex e -> idx_phrase "%s(%a)" "multi" emit_expr e
 
-and emit_intarr_idx_list ppf = function
+and emit_indices ppf = function
   | [] -> fprintf ppf "stan::model::nil_index_list()"
   | hd :: tail ->
-      fprintf ppf "stan::model::cons_list(stan::model::index_multi(%a),@ %a)"
-        emit_expr hd emit_intarr_idx_list tail
+      fprintf ppf "stan::model::cons_list(%a,@ %a)" emit_index hd emit_indices
+        tail
 
 let%expect_test "multi index" =
-  MultiIndexed (Var "vec", [Var "intarr1"; Var "intarr2"])
+  Indexed (Var "vec", [MultiIndex (Var "intarr1"); MultiIndex (Var "intarr2")])
   |> fprintf str_formatter "%a" emit_expr ;
   flush_str_formatter () |> print_endline ;
   [%expect
@@ -63,14 +68,6 @@ let%expect_test "multi index" =
         stan::model::cons_list(stan::model::index_multi(intarr1),
         stan::model::cons_list(stan::model::index_multi(intarr2),
         stan::model::nil_index_list())), "vec"); |}]
-
-let%expect_test "expr" =
-  FnApp
-    ( "sassy"
-    , [ArrayLiteral [Lit (Int, "4"); Lit (Int, "2")]; Lit (Real, "27.0")] )
-  |> emit_expr str_formatter ;
-  flush_str_formatter () |> print_endline ;
-  [%expect {| sassy({4, 2}, 27.0) |}]
 
 let emit_prim_stantype ppf st =
   let rec ad_str = function
@@ -203,7 +200,8 @@ let%expect_test "run code per element" =
                   Assignment
                     { assignee= x
                     ; indices= []
-                    ; rhs= Indexed (Var "vals_r__", [Var "pos__++"]) } }
+                    ; rhs= Indexed (Var "vals_r__", [Single (Var "pos__++")])
+                    } }
             ; {splain= NRFnApp ("print", [Var x])} ] }
   in
   fprintf str_formatter "@[<v>%a@]"
@@ -220,7 +218,10 @@ let%expect_test "run code per element" =
             for (size_t i_2__ = 0; i_2__ < Z; i_2__++)
                 for (size_t i_3__ = 0; i_3__ < W; i_3__++)
                     {
-                        dubvec[i_0__][i_1__](i_2__, i_3__) = vals_r__[pos__++];
+                        dubvec[i_0__][i_1__](i_2__, i_3__) = stan::model::rvalue(vals_r__,
+                                                                 stan::model::cons_list(stan::model::index_uni(pos__++),
+                                                                 stan::model::nil_index_list()),
+                                                                 "vals_r__");;
                         print(dubvec[i_0__][i_1__](i_2__, i_3__));
                     } |}]
 

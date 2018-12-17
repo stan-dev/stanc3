@@ -12,19 +12,24 @@ type litType = Int | Real | Str
 
 and operator = Ast.operator
 
+and index =
+  | All
+  | Single of expr
+  | Upfrom of expr
+  | Downfrom of expr
+  | Between of expr * expr
+  | MultiIndex of expr
+
 and expr =
   | Var of string
   | Lit of litType * string
   | FnApp of string * expr list
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
-  | ArrayLiteral of expr list
-  | Indexed of expr * expr list
-  (* Different type constructor for indexing by an int array *)
-  | MultiIndexed of expr * expr list
+  | Indexed of expr * index list
 [@@deriving sexp, hash, map]
 
-(* Encode both sized and unsized this way *)
+(* Encode both sized and unsized this way... effectiveness TBD*)
 type stantype =
   | SInt
   | SReal
@@ -56,7 +61,7 @@ and transformation =
   | NoTransformation
 
 and 's statement =
-  | Assignment of {assignee: string; indices: expr list; rhs: expr}
+  | Assignment of {assignee: string; indices: index list; rhs: expr}
   | NRFnApp of string * expr list
   | Break
   | Continue
