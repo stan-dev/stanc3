@@ -126,15 +126,14 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
 
 let emit_statement emit_statement_with_meta ppf s =
   match s with
-  | Assignment {assignee; indices; rhs} ->
-      fprintf ppf "%s%a = %a;" assignee
-        (pp_print_list ~pp_sep:comma emit_index)
-        indices emit_expr rhs
+  | Assignment (assignee, rhs) ->
+      (* XXX completely wrong *)
+      fprintf ppf "%a = %a;" emit_expr assignee emit_expr rhs
   | NRFnApp (fname, args) ->
       fprintf ppf "%s(%a);" fname (pp_print_list ~pp_sep:comma emit_expr) args
   | Break -> emit_str ppf "break;"
   | Continue -> emit_str ppf "continue;"
-  | Return e -> fprintf ppf "return %a;" emit_expr e
+  | Return e -> fprintf ppf "return%a;" (emit_option ~default:"" emit_expr) e
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
       let emit_else ppf x =
@@ -198,10 +197,8 @@ let%expect_test "run code per element" =
           Block
             [ { splain=
                   Assignment
-                    { assignee= x
-                    ; indices= []
-                    ; rhs= Indexed (Var "vals_r__", [Single (Var "pos__++")])
-                    } }
+                    (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
+              }
             ; {splain= NRFnApp ("print", [Var x])} ] }
   in
   fprintf str_formatter "@[<v>%a@]"
@@ -228,7 +225,7 @@ let%expect_test "run code per element" =
 let%expect_test "decl" =
   { splain=
       Decl
-        ( {vident= "i"; st= SInt; loc= "line num"; trans= NoTransformation}
+        ( {vident= "i"; st= SInt; loc= "line num"; trans= Identity}
         , Some (Lit (Int, "0")) ) }
   |> emit_statement_plain str_formatter ;
   flush_str_formatter () |> print_endline ;
@@ -306,7 +303,8 @@ let%expect_test "udf" =
     { returntype= None
     ; name= "sars"
     ; arguments= [("x", SMatrix None); ("y", SRowVector None)]
-    ; body= {splain= Return (FnApp ("add", [Var "x"; Lit (Int, "1")]))} } ;
+    ; body= {splain= Return (Some (FnApp ("add", [Var "x"; Lit (Int, "1")])))}
+    } ;
   flush_str_formatter () |> print_endline ;
   [%expect
     {|

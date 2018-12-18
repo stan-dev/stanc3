@@ -12,6 +12,10 @@ type litType = Int | Real | Str
 
 and operator = Ast.operator
 
+and truncation = expr Ast.truncation
+
+and transformation = expr Ast.transformation
+
 and index =
   | All
   | Single of expr
@@ -44,28 +48,12 @@ and vardecl = {vident: string; st: stantype; trans: transformation; loc: loc}
 
 and argdecl = string * stantype
 
-and transformation =
-  | Identity
-  | Lower of expr
-  | Upper of expr
-  | LowerUpper of expr * expr
-  | LocationScale of expr * expr
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-  | NoTransformation
-
 and 's statement =
-  | Assignment of {assignee: string; indices: index list; rhs: expr}
+  | Assignment of expr * expr
   | NRFnApp of string * expr list
   | Break
   | Continue
-  | Return of expr
+  | Return of expr option
   | Skip
   | IfElse of expr * 's * 's option
   | While of expr * 's
