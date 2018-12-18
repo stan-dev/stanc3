@@ -242,8 +242,8 @@ let update_originblock name ob =
   | None -> fatal_error ()
 
 (* The actual semantic checks for all AST nodes! *)
-let rec semantic_check_program p =
-  match p
+let rec semantic_check_program program =
+  match program
   with
   | { functionblock= fb
     ; datablock= db
@@ -375,7 +375,7 @@ and semantic_check_sizedtype = function
       let _ =
         if not (check_of_int_type ue) then
           semantic_error_e ue
-            ( "Vector sizes should be of type int. Instead found type "
+            ( "Vector sizes must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -385,7 +385,7 @@ and semantic_check_sizedtype = function
       let _ =
         if not (check_of_int_type ue) then
           semantic_error_e ue
-            ( "Row vector sizes should be of type int. Instead found type "
+            ( "Row vector sizes must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -396,14 +396,14 @@ and semantic_check_sizedtype = function
       let _ =
         if not (check_of_int_type ue1) then
           semantic_error_e ue1
-            ( "Matrix sizes should be of type int. Instead found type "
+            ( "Matrix sizes must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
           semantic_error_e ue2
-            ( "Matrix sizes should be of type int. Instead found type "
+            ( "Matrix sizes must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
@@ -414,7 +414,7 @@ and semantic_check_sizedtype = function
       let _ =
         if not (check_of_int_type ue) then
           semantic_error_e ue
-            ( "Array sizes should be of type int. Instead found type "
+            ( "Array sizes must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -427,7 +427,7 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error_e ue
-            ( "Lower bound should be of int or real type. Instead found type "
+            ( "Lower bound must be of int or real type. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -437,7 +437,7 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error_e ue
-            ( "Upper bound should be of int or real type. Instead found type "
+            ( "Upper bound must be of int or real type. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -448,7 +448,7 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue1) then
           semantic_error_e ue1
-            ( "Lower and upper bound should be of int or real type. Instead \
+            ( "Lower and upper bound must be of int or real type. Instead \
                found type "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
@@ -456,7 +456,7 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue2) then
           semantic_error_e ue2
-            ( "Lower and upper bound should be of int or real type. Instead \
+            ( "Lower and upper bound must be of int or real type. Instead \
                found type "
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
@@ -468,16 +468,16 @@ and semantic_check_transformation = function
       let _ =
         if not (check_of_int_or_real_type ue1) then
           semantic_error_e ue1
-            ( "Location and scale should be of int or real type. Instead \
-               found type "
+            ( "Location and scale must be of int or real type. Instead found \
+               type "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
         if not (check_of_int_or_real_type ue2) then
           semantic_error_e ue2
-            ( "Location and scale should be of int or real type. Instead \
-               found type "
+            ( "Location and scale must be of int or real type. Instead found \
+               type "
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
@@ -863,7 +863,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             ues
         then
           semantic_error ~loc
-            "Array expression should have entries of consistent type."
+            "Array expression must have entries of consistent type."
       in
       let array_type =
         if List.exists (fun x -> List.hd elementtypes <> x) elementtypes then
@@ -884,8 +884,8 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
         else if List.for_all (fun x -> x = RowVector) elementtypes then Matrix
         else
           semantic_error ~loc
-            "Row_vector expression should have all int and real entries or \
-             all row_vector entries."
+            "Row_vector expression must have all int and real entries or all \
+             row_vector entries."
       in
       let returnblock = lub_origin_e ues in
       { expr_typed= RowVectorExpr ues
@@ -1524,7 +1524,7 @@ and semantic_check_statement s =
             not_ptq ue (fun () -> check_sizes_below_param_level ust2)
         | _ -> true
       in
-      (* Sizes should be of level at most data. *)
+      (* Sizes must be of level at most data. *)
       let _ =
         if glob && not (check_sizes_below_param_level ust) then
           semantic_error ~loc
@@ -1556,7 +1556,7 @@ and semantic_check_statement s =
           | _ -> false
         then
           semantic_error ~loc
-            "Bounds of integer variable should be of type int. Found type real."
+            "Bounds of integer variable must be of type int. Found type real."
       in
       (* Parameters and transformed parameters are not int(array)  *)
       let _ =
@@ -1697,12 +1697,12 @@ and semantic_check_statement s =
       let _ =
         if dup_exists uarg_names then
           semantic_error ~loc
-            "All function arguments should be distinct identifiers."
+            "All function arguments must be distinct identifiers."
       in
       let _ =
         List.map (fun x -> check_fresh_variable x false) uarg_identifiers
       in
-      (* TODO: Bob was suggesting that function arguments should be allowed to shadow user defined functions but not library functions. Should we allow for that? *)
+      (* TODO: Bob was suggesting that function arguments must be allowed to shadow user defined functions but not library functions. Should we allow for that? *)
       (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
          as if they are parameters, for the purposes of type checking. *)
       let _ =
@@ -1742,8 +1742,7 @@ and semantic_check_truncation = function
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error ~loc
-            ( "Truncation bound should be of type int or real. Instead found \
-               type "
+            ( "Truncation bound must be of type int or real. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -1754,8 +1753,7 @@ and semantic_check_truncation = function
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error ~loc
-            ( "Truncation bound should be of type int or real. Instead found \
-               type "
+            ( "Truncation bound must be of type int or real. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -1766,16 +1764,14 @@ and semantic_check_truncation = function
       let _ =
         if not (check_of_int_or_real_type ue1) then
           semantic_error_e ue1
-            ( "Truncation bound should be of type int or real. Instead found \
-               type "
+            ( "Truncation bound must be of type int or real. Instead found type "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
         if not (check_of_int_or_real_type ue2) then
           semantic_error_e ue2
-            ( "Truncation bound should be of type int or real. Instead found \
-               type "
+            ( "Truncation bound must be of type int or real. Instead found type "
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
@@ -1790,8 +1786,8 @@ and semantic_check_index = function
       if check_of_int_type ue || check_of_int_array_type ue then Single ue
       else
         semantic_error ~loc
-          ( "Index should be of type int or int[] or should be a range. \
-             Instead found type "
+          ( "Index must be of type int or int[] or must be a range. Instead \
+             found type "
           ^ pretty_print_unsizedtype ue.expr_typed_type
           ^ "." )
   | Upfrom e ->
@@ -1800,7 +1796,7 @@ and semantic_check_index = function
       let _ =
         if not (check_of_int_type ue) then
           semantic_error ~loc
-            ( "Range bound should be of type int. Instead found type "
+            ( "Range bound must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -1811,7 +1807,7 @@ and semantic_check_index = function
       let _ =
         if not (check_of_int_type ue) then
           semantic_error ~loc
-            ( "Range bound should be of type int. Instead found type "
+            ( "Range bound must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
@@ -1822,14 +1818,14 @@ and semantic_check_index = function
       let _ =
         if not (check_of_int_type ue1) then
           semantic_error_e ue1
-            ( "Range bound should be of type int. Instead found type "
+            ( "Range bound must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ "." )
       in
       let _ =
         if not (check_of_int_type ue2) then
           semantic_error_e ue2
-            ( "Range bound should be of type int. Instead found type "
+            ( "Range bound must be of type int. Instead found type "
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
