@@ -59,6 +59,8 @@ and trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
   let targetpe e =
     let t = Var "target" in
     Assignment (t, BinOp (t, Plus, e))
+  and pos_inf = FnApp("positive_infinity", [])
+  and neg_inf = FnApp("negative_infinity", [])
   in
   let s =
     match stmt_typed with
@@ -81,9 +83,23 @@ and trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         NRFnApp (name, List.map ~f:trans_expr args)
     | Ast.IncrementLogProb e | Ast.TargetPE e -> targetpe (trans_expr e)
     | Ast.Tilde {arg; distribution; args; truncation} ->
-        (* XXX truncation? *)
+      let full_dist = FnApp (distribution.name, List.map ~f:trans_expr (arg :: args))
+      in
+      let full_dist = (match truncation with
+          | Ast.NoTruncate -> full_dist
+          | Ast.TruncateUpFrom _ -> (??)
+          | Ast.TruncateDownFrom _ -> (??)
+          | Ast.TruncateBetween (_, _) -> (??))
+
+
+        (* XXX truncation: add
+            if (0.5 < 0.1) lp_accum__.add(-std::numeric_limits<double>::infinity());
+            else if (0.5 > 1.1) lp_accum__.add(-std::numeric_limits<double>::infinity());
+            else lp_accum__.add(-log_diff_exp(normal_cdf_log(1.1, 0, 1), normal_cdf_log(0.1, 0, 1)));
+        *)
+        (* XXX distribution name suffix? *)
         targetpe
-          (FnApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
+
     | Ast.Print ps -> NRFnApp ("print", List.map ~f:trans_printable ps)
     | Ast.Reject ps -> NRFnApp ("reject", List.map ~f:trans_printable ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->

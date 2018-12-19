@@ -33,6 +33,7 @@ and expr =
   | Indexed of expr * index list
 [@@deriving sexp, hash, map]
 
+
 (* Encode both sized and unsized this way... effectiveness TBD*)
 type stantype =
   | SInt
