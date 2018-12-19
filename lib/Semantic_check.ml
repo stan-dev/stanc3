@@ -1301,12 +1301,21 @@ and semantic_check_statement s =
                | _ -> false ) )
       in
       let _ =
-        if ut = NoTruncate || cumulative_density_is_defined uid.name (ue :: ues)
+        if
+          match ut with
+          | NoTruncate -> true
+          | TruncateUpFrom ue ->
+              cumulative_density_is_defined uid.name (ue :: ues)
+          | TruncateDownFrom ue ->
+              cumulative_density_is_defined uid.name (ue :: ues)
+          | TruncateBetween (ue1, ue2) ->
+              cumulative_density_is_defined uid.name (ue1 :: ues)
+              && cumulative_density_is_defined uid.name (ue2 :: ues)
         then ()
         else
           semantic_error ~loc
             "Truncation is only defined if distribution has _lcdf and _lccdf \
-             functions implemented."
+             functions implemented with appropriate signature."
       in
       { stmt_typed=
           Tilde {arg= ue; distribution= uid; args= ues; truncation= ut}

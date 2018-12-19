@@ -1817,7 +1817,7 @@ Semantic error at file "prob-poisson_log-trunc-both.stan", line 11, columns 2-33
     12:  }
    -------------------------------------------------
 
-Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-high.stan
 
@@ -1830,7 +1830,7 @@ Semantic error at file "prob-poisson_log-trunc-high.stan", line 11, columns 2-32
     12:  }
    -------------------------------------------------
 
-Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-low.stan
 
@@ -1843,7 +1843,7 @@ Semantic error at file "prob-poisson_log-trunc-low.stan", line 11, columns 2-32:
     12:  }
    -------------------------------------------------
 
-Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc real-pdf.stan
 
@@ -2229,6 +2229,46 @@ Semantic error at file "tilde-bad.stan", line 8, columns 8-19:
    -------------------------------------------------
 
 ~-statement expects a distribution name without '_lpdf' or '_lpmf' suffix.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
+
+Semantic error at file "truncation-bad-type1.stan", line 1, columns 8-37:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[1, 1.0]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type2.stan
+
+Semantic error at file "truncation-bad-type2.stan", line 1, columns 8-37:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[0.0, 1]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type3.stan
+
+Semantic error at file "truncation-bad-type3.stan", line 1, columns 8-36:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[, 1.0]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type4.stan
+
+Semantic error at file "truncation-bad-type4.stan", line 1, columns 8-36:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[0.0, ]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 
