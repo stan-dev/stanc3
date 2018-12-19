@@ -82,6 +82,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
     - submodels / structs / records / ?
     - some safe support for possibly inefficient discrete parameters
     - custom transforms? (like lower, upper); composable transforms?
+    - statically deriving graphical model/conditional independence properties of model
 
 
 ## Important simultaneous work also needed for other reasons
