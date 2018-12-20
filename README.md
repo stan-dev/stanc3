@@ -105,6 +105,8 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 * Conditionally independent code-motion
 * `target+=` is commutative
 * Pattern rewrites; `exp(x) - 1` -> `exp1m(x)`
+* In most Stan models, almost everything is immutable: variables are initialized when they are declared and never changed again. We should exploit this. We can consider implementing optimizations that only work properly on the commutative sublanguage which does not have non-commutative side effects, as most programs can be written in that language.
+* It could be worth getting rid of the continue and break statements in our loops when translating to the IR as those are non-commutative effects, but they can be eliminated by translating to while-loops.
 
 ### AST and IR design considerations
 * The AST should have different variant types for each different type of syntax, and thus follow closely. Think about how a pretty-printer would want to deal with an AST (thanks @jimtla!)
