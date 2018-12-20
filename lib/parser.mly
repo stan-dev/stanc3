@@ -324,9 +324,13 @@ dims:
   | l=lhs
     {
       grammar_logger "lhs_expression" ;
-      {expr_untyped=Indexed ({expr_untyped=Variable (fst l);
-                              expr_untyped_loc=Location ($startpos, $endpos)}, snd l);
-       expr_untyped_loc=Location ($startpos, $endpos)}
+      match snd l with
+        | [] -> {expr_untyped=Variable (fst l);
+                 expr_untyped_loc=Location ($startpos, $endpos)}
+        | i -> {expr_untyped=
+                  Indexed ({expr_untyped=Variable (fst l);
+                            expr_untyped_loc=Location ($startpos, $endpos)}, i);
+                expr_untyped_loc=Location ($startpos, $endpos)}
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;

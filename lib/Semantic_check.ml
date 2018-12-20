@@ -603,8 +603,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       let _ =
         if uid.name = "map_rect" then
           match ues with
-          | {expr_typed= Indexed ({expr_typed= Variable arg1_name; _}, _); _}
-            :: _ ->
+          | {expr_typed= Variable arg1_name; _} :: _ ->
               if
                 Core_kernel.String.is_suffix arg1_name.name ~suffix:"_lp"
                 || Core_kernel.String.is_suffix arg1_name.name ~suffix:"_rng"
