@@ -614,7 +614,7 @@ Semantic error at file "err-double-dims.stan", line 2, columns 9-12:
      4:  model {
    -------------------------------------------------
 
-Array sizes should be of type int. Instead found type real.
+Array sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc err-expected-bracket.stan
 
@@ -856,7 +856,7 @@ Semantic error at file "err-non-int-dims.stan", line 4, columns 11-14:
      6:  model {
    -------------------------------------------------
 
-Index should be of type int or int[] or should be a range. Instead found type real.
+Index must be of type int or int[] or must be a range. Instead found type real.
 
   $ ../../../../install/default/bin/stanc err-open-block.stan
 
@@ -1457,7 +1457,7 @@ Semantic error at file "matrix_expr_bad2.stan", line 2, columns 25-37:
      4:  model {
    -------------------------------------------------
 
-Row_vector expression should have all int and real entries or all row_vector entries.
+Row_vector expression must have all int and real entries or all row_vector entries.
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad3.stan
 
@@ -1817,7 +1817,7 @@ Semantic error at file "prob-poisson_log-trunc-both.stan", line 11, columns 2-33
     12:  }
    -------------------------------------------------
 
-Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-high.stan
 
@@ -1830,7 +1830,7 @@ Semantic error at file "prob-poisson_log-trunc-high.stan", line 11, columns 2-32
     12:  }
    -------------------------------------------------
 
-Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-low.stan
 
@@ -1843,7 +1843,7 @@ Semantic error at file "prob-poisson_log-trunc-low.stan", line 11, columns 2-32:
     12:  }
    -------------------------------------------------
 
-Truncation is only defined if distribution has _lcdf and _lccdf functions implemented.
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc real-pdf.stan
 
@@ -1883,7 +1883,7 @@ Semantic error at file "real_idx.stan", line 3, columns 4-7:
      5:  model {
    -------------------------------------------------
 
-Index should be of type int or int[] or should be a range. Instead found type real.
+Index must be of type int or int[] or must be a range. Instead found type real.
 
   $ ../../../../install/default/bin/stanc redefine-ccdf1.stan
 
@@ -2115,7 +2115,7 @@ Semantic error at file "row_vector_expr_bad2.stan", line 5, columns 20-28:
      7:  model {
    -------------------------------------------------
 
-Row_vector expression should have all int and real entries or all row_vector entries.
+Row_vector expression must have all int and real entries or all row_vector entries.
 
   $ ../../../../install/default/bin/stanc row_vector_expr_bad3.stan
 
@@ -2229,6 +2229,46 @@ Semantic error at file "tilde-bad.stan", line 8, columns 8-19:
    -------------------------------------------------
 
 ~-statement expects a distribution name without '_lpdf' or '_lpmf' suffix.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
+
+Semantic error at file "truncation-bad-type1.stan", line 1, columns 8-37:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[1, 1.0]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type2.stan
+
+Semantic error at file "truncation-bad-type2.stan", line 1, columns 8-37:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[0.0, 1]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type3.stan
+
+Semantic error at file "truncation-bad-type3.stan", line 1, columns 8-36:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[, 1.0]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+
+  $ ../../../../install/default/bin/stanc truncation-bad-type4.stan
+
+Semantic error at file "truncation-bad-type4.stan", line 1, columns 8-36:
+   -------------------------------------------------
+     1:  model { 1 ~ bernoulli(0.2) T[0.0, ]; }
+                 ^
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 
@@ -2531,7 +2571,7 @@ Semantic error at file "validate_int_expr2_bad3.stan", line 2, columns 9-13:
      4:  model {
    -------------------------------------------------
 
-Vector sizes should be of type int. Instead found type real.
+Vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad4.stan
 
@@ -2592,7 +2632,7 @@ Semantic error at file "validate_set_double_locscale_bad1.stan", line 3, columns
      5:  }
    -------------------------------------------------
 
-Location and scale should be of int or real type. Instead found type vector.
+Location and scale must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_locscale_bad2.stan
 
@@ -2606,7 +2646,7 @@ Semantic error at file "validate_set_double_locscale_bad2.stan", line 3, columns
      5:  }
    -------------------------------------------------
 
-Location and scale should be of int or real type. Instead found type vector.
+Location and scale must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_locscale_bad3.stan
 
@@ -2633,7 +2673,7 @@ Semantic error at file "validate_set_double_range_lower_bad1.stan", line 3, colu
      5:  parameters {
    -------------------------------------------------
 
-Lower bound should be of int or real type. Instead found type vector.
+Lower bound must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_lower_bad2.stan
 
@@ -2647,7 +2687,7 @@ Semantic error at file "validate_set_double_range_lower_bad2.stan", line 3, colu
      5:  parameters {
    -------------------------------------------------
 
-Lower and upper bound should be of int or real type. Instead found type vector.
+Lower and upper bound must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad1.stan
 
@@ -2661,7 +2701,7 @@ Semantic error at file "validate_set_double_range_upper_bad1.stan", line 3, colu
      5:  parameters {
    -------------------------------------------------
 
-Upper bound should be of int or real type. Instead found type vector.
+Upper bound must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad2.stan
 
@@ -2675,7 +2715,7 @@ Semantic error at file "validate_set_double_range_upper_bad2.stan", line 3, colu
      5:  parameters {
    -------------------------------------------------
 
-Lower and upper bound should be of int or real type. Instead found type vector.
+Lower and upper bound must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_lower_bad1.stan
 
@@ -2688,7 +2728,7 @@ Semantic error at file "validate_set_int_range_lower_bad1.stan", line 2, columns
      4:  }
    -------------------------------------------------
 
-Bounds of integer variable should be of type int. Found type real.
+Bounds of integer variable must be of type int. Found type real.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_lower_bad2.stan
 
@@ -2702,7 +2742,7 @@ Semantic error at file "validate_set_int_range_lower_bad2.stan", line 3, columns
      5:  parameters {
    -------------------------------------------------
 
-Bounds of integer variable should be of type int. Found type real.
+Bounds of integer variable must be of type int. Found type real.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_lower_bad3.stan
 
@@ -2716,7 +2756,7 @@ Semantic error at file "validate_set_int_range_lower_bad3.stan", line 3, columns
      5:  parameters {
    -------------------------------------------------
 
-Bounds of integer variable should be of type int. Found type real.
+Bounds of integer variable must be of type int. Found type real.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_upper_bad1.stan
 
@@ -2729,7 +2769,7 @@ Semantic error at file "validate_set_int_range_upper_bad1.stan", line 2, columns
      4:  }
    -------------------------------------------------
 
-Bounds of integer variable should be of type int. Found type real.
+Bounds of integer variable must be of type int. Found type real.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_upper_bad2.stan
 
@@ -2743,7 +2783,7 @@ Semantic error at file "validate_set_int_range_upper_bad2.stan", line 3, columns
      5:  parameters {
    -------------------------------------------------
 
-Bounds of integer variable should be of type int. Found type real.
+Bounds of integer variable must be of type int. Found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad1.stan
 
@@ -2756,7 +2796,7 @@ Semantic error at file "validate_validate_int_expr_bad1.stan", line 2, columns 9
      4:    matrix[3,3] c;
    -------------------------------------------------
 
-Vector sizes should be of type int. Instead found type real.
+Vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad10.stan
 
@@ -2770,7 +2810,7 @@ Semantic error at file "validate_validate_int_expr_bad10.stan", line 9, columns 
     11:    cov_matrix[3] k;
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad11.stan
 
@@ -2784,7 +2824,7 @@ Semantic error at file "validate_validate_int_expr_bad11.stan", line 10, columns
     12:    corr_matrix[3] l;
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad12.stan
 
@@ -2798,7 +2838,7 @@ Semantic error at file "validate_validate_int_expr_bad12.stan", line 11, columns
     13:  }
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad13.stan
 
@@ -2812,7 +2852,7 @@ Semantic error at file "validate_validate_int_expr_bad13.stan", line 12, columns
     14:  parameters {
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad2.stan
 
@@ -2826,7 +2866,7 @@ Semantic error at file "validate_validate_int_expr_bad2.stan", line 3, columns 1
      5:    unit_vector[3] d;
    -------------------------------------------------
 
-Row vector sizes should be of type int. Instead found type real.
+Row vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad3.stan
 
@@ -2840,7 +2880,7 @@ Semantic error at file "validate_validate_int_expr_bad3.stan", line 4, columns 9
      6:    simplex[3] e;
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad4.stan
 
@@ -2854,7 +2894,7 @@ Semantic error at file "validate_validate_int_expr_bad4.stan", line 4, columns 1
      6:    simplex[3] e;
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad5.stan
 
@@ -2868,7 +2908,7 @@ Semantic error at file "validate_validate_int_expr_bad5.stan", line 5, columns 1
      7:    ordered[3] f;
    -------------------------------------------------
 
-Vector sizes should be of type int. Instead found type real.
+Vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad6.stan
 
@@ -2882,7 +2922,7 @@ Semantic error at file "validate_validate_int_expr_bad6.stan", line 6, columns 1
      8:    positive_ordered[3] g;
    -------------------------------------------------
 
-Vector sizes should be of type int. Instead found type real.
+Vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad7.stan
 
@@ -2896,7 +2936,7 @@ Semantic error at file "validate_validate_int_expr_bad7.stan", line 7, columns 1
      9:    cholesky_factor_cov[4,5] h;
    -------------------------------------------------
 
-Vector sizes should be of type int. Instead found type real.
+Vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad8.stan
 
@@ -2910,7 +2950,7 @@ Semantic error at file "validate_validate_int_expr_bad8.stan", line 8, columns 1
     10:    cholesky_factor_cov[3] j;
    -------------------------------------------------
 
-Vector sizes should be of type int. Instead found type real.
+Vector sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_validate_int_expr_bad9.stan
 
@@ -2924,7 +2964,7 @@ Semantic error at file "validate_validate_int_expr_bad9.stan", line 9, columns 2
     11:    cov_matrix[3] k;
    -------------------------------------------------
 
-Matrix sizes should be of type int. Instead found type real.
+Matrix sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc var-decl-bad-1.stan
 

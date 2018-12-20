@@ -95,6 +95,272 @@ let%expect_test "parse conditional" =
          (stmt_untyped_loc <opaque>)))))
      (generatedquantitiesblock ())) |}]
 
+let%expect_test "operator precedence" =
+  let ast =
+    parse_string Parser.Incremental.program
+      "model { \n\
+      \         \
+       print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q\\r.*s./t^u[v]'});\n\
+      \      }"
+  in
+  Core_kernel.print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+      ((functionblock ()) (datablock ()) (transformeddatablock ())
+       (parametersblock ()) (transformedparametersblock ())
+       (modelblock
+        ((((stmt_untyped
+            (Print
+             ((PExpr
+               ((expr_untyped
+                 (ArrayExpr
+                  (((expr_untyped
+                     (Indexed
+                      ((expr_untyped (Variable ((name a) (id_loc <opaque>))))
+                       (expr_untyped_loc <opaque>))
+                      ()))
+                    (expr_untyped_loc <opaque>))
+                   ((expr_untyped
+                     (TernaryIf
+                      ((expr_untyped
+                        (Indexed
+                         ((expr_untyped (Variable ((name b) (id_loc <opaque>))))
+                          (expr_untyped_loc <opaque>))
+                         ()))
+                       (expr_untyped_loc <opaque>))
+                      ((expr_untyped
+                        (Indexed
+                         ((expr_untyped (Variable ((name c) (id_loc <opaque>))))
+                          (expr_untyped_loc <opaque>))
+                         ()))
+                       (expr_untyped_loc <opaque>))
+                      ((expr_untyped
+                        (BinOp
+                         ((expr_untyped
+                           (Indexed
+                            ((expr_untyped (Variable ((name d) (id_loc <opaque>))))
+                             (expr_untyped_loc <opaque>))
+                            ()))
+                          (expr_untyped_loc <opaque>))
+                         Or
+                         ((expr_untyped
+                           (BinOp
+                            ((expr_untyped
+                              (Indexed
+                               ((expr_untyped
+                                 (Variable ((name e) (id_loc <opaque>))))
+                                (expr_untyped_loc <opaque>))
+                               ()))
+                             (expr_untyped_loc <opaque>))
+                            And
+                            ((expr_untyped
+                              (BinOp
+                               ((expr_untyped
+                                 (BinOp
+                                  ((expr_untyped
+                                    (Indexed
+                                     ((expr_untyped
+                                       (Variable ((name f) (id_loc <opaque>))))
+                                      (expr_untyped_loc <opaque>))
+                                     ()))
+                                   (expr_untyped_loc <opaque>))
+                                  Equals
+                                  ((expr_untyped
+                                    (Indexed
+                                     ((expr_untyped
+                                       (Variable ((name g) (id_loc <opaque>))))
+                                      (expr_untyped_loc <opaque>))
+                                     ()))
+                                   (expr_untyped_loc <opaque>))))
+                                (expr_untyped_loc <opaque>))
+                               NEquals
+                               ((expr_untyped
+                                 (BinOp
+                                  ((expr_untyped
+                                    (BinOp
+                                     ((expr_untyped
+                                       (BinOp
+                                        ((expr_untyped
+                                          (BinOp
+                                           ((expr_untyped
+                                             (Indexed
+                                              ((expr_untyped
+                                                (Variable
+                                                 ((name h) (id_loc <opaque>))))
+                                               (expr_untyped_loc <opaque>))
+                                              ()))
+                                            (expr_untyped_loc <opaque>))
+                                           Leq
+                                           ((expr_untyped
+                                             (Indexed
+                                              ((expr_untyped
+                                                (Variable
+                                                 ((name i) (id_loc <opaque>))))
+                                               (expr_untyped_loc <opaque>))
+                                              ()))
+                                            (expr_untyped_loc <opaque>))))
+                                         (expr_untyped_loc <opaque>))
+                                        Less
+                                        ((expr_untyped
+                                          (Indexed
+                                           ((expr_untyped
+                                             (Variable
+                                              ((name j) (id_loc <opaque>))))
+                                            (expr_untyped_loc <opaque>))
+                                           ()))
+                                         (expr_untyped_loc <opaque>))))
+                                      (expr_untyped_loc <opaque>))
+                                     Geq
+                                     ((expr_untyped
+                                       (Indexed
+                                        ((expr_untyped
+                                          (Variable ((name k) (id_loc <opaque>))))
+                                         (expr_untyped_loc <opaque>))
+                                        ()))
+                                      (expr_untyped_loc <opaque>))))
+                                   (expr_untyped_loc <opaque>))
+                                  Greater
+                                  ((expr_untyped
+                                    (BinOp
+                                     ((expr_untyped
+                                       (BinOp
+                                        ((expr_untyped
+                                          (Indexed
+                                           ((expr_untyped
+                                             (Variable
+                                              ((name l) (id_loc <opaque>))))
+                                            (expr_untyped_loc <opaque>))
+                                           ()))
+                                         (expr_untyped_loc <opaque>))
+                                        Plus
+                                        ((expr_untyped
+                                          (Indexed
+                                           ((expr_untyped
+                                             (Variable
+                                              ((name m) (id_loc <opaque>))))
+                                            (expr_untyped_loc <opaque>))
+                                           ()))
+                                         (expr_untyped_loc <opaque>))))
+                                      (expr_untyped_loc <opaque>))
+                                     Minus
+                                     ((expr_untyped
+                                       (BinOp
+                                        ((expr_untyped
+                                          (BinOp
+                                           ((expr_untyped
+                                             (BinOp
+                                              ((expr_untyped
+                                                (Indexed
+                                                 ((expr_untyped
+                                                   (Variable
+                                                    ((name n) (id_loc <opaque>))))
+                                                  (expr_untyped_loc <opaque>))
+                                                 ()))
+                                               (expr_untyped_loc <opaque>))
+                                              Times
+                                              ((expr_untyped
+                                                (Indexed
+                                                 ((expr_untyped
+                                                   (Variable
+                                                    ((name o) (id_loc <opaque>))))
+                                                  (expr_untyped_loc <opaque>))
+                                                 ()))
+                                               (expr_untyped_loc <opaque>))))
+                                            (expr_untyped_loc <opaque>))
+                                           Divide
+                                           ((expr_untyped
+                                             (Indexed
+                                              ((expr_untyped
+                                                (Variable
+                                                 ((name p) (id_loc <opaque>))))
+                                               (expr_untyped_loc <opaque>))
+                                              ()))
+                                            (expr_untyped_loc <opaque>))))
+                                         (expr_untyped_loc <opaque>))
+                                        Modulo
+                                        ((expr_untyped
+                                          (BinOp
+                                           ((expr_untyped
+                                             (Indexed
+                                              ((expr_untyped
+                                                (Variable
+                                                 ((name q) (id_loc <opaque>))))
+                                               (expr_untyped_loc <opaque>))
+                                              ()))
+                                            (expr_untyped_loc <opaque>))
+                                           LDivide
+                                           ((expr_untyped
+                                             (BinOp
+                                              ((expr_untyped
+                                                (BinOp
+                                                 ((expr_untyped
+                                                   (Indexed
+                                                    ((expr_untyped
+                                                      (Variable
+                                                       ((name r) (id_loc <opaque>))))
+                                                     (expr_untyped_loc <opaque>))
+                                                    ()))
+                                                  (expr_untyped_loc <opaque>))
+                                                 EltTimes
+                                                 ((expr_untyped
+                                                   (Indexed
+                                                    ((expr_untyped
+                                                      (Variable
+                                                       ((name s) (id_loc <opaque>))))
+                                                     (expr_untyped_loc <opaque>))
+                                                    ()))
+                                                  (expr_untyped_loc <opaque>))))
+                                               (expr_untyped_loc <opaque>))
+                                              EltDivide
+                                              ((expr_untyped
+                                                (BinOp
+                                                 ((expr_untyped
+                                                   (Indexed
+                                                    ((expr_untyped
+                                                      (Variable
+                                                       ((name t) (id_loc <opaque>))))
+                                                     (expr_untyped_loc <opaque>))
+                                                    ()))
+                                                  (expr_untyped_loc <opaque>))
+                                                 Exp
+                                                 ((expr_untyped
+                                                   (PostfixOp
+                                                    ((expr_untyped
+                                                      (Indexed
+                                                       ((expr_untyped
+                                                         (Variable
+                                                          ((name u)
+                                                           (id_loc <opaque>))))
+                                                        (expr_untyped_loc <opaque>))
+                                                       ((Single
+                                                         ((expr_untyped
+                                                           (Indexed
+                                                            ((expr_untyped
+                                                              (Variable
+                                                               ((name v)
+                                                                (id_loc <opaque>))))
+                                                             (expr_untyped_loc
+                                                              <opaque>))
+                                                            ()))
+                                                          (expr_untyped_loc
+                                                           <opaque>))))))
+                                                     (expr_untyped_loc <opaque>))
+                                                    Transpose))
+                                                  (expr_untyped_loc <opaque>))))
+                                               (expr_untyped_loc <opaque>))))
+                                            (expr_untyped_loc <opaque>))))
+                                         (expr_untyped_loc <opaque>))))
+                                      (expr_untyped_loc <opaque>))))
+                                   (expr_untyped_loc <opaque>))))
+                                (expr_untyped_loc <opaque>))))
+                             (expr_untyped_loc <opaque>))))
+                          (expr_untyped_loc <opaque>))))
+                       (expr_untyped_loc <opaque>))))
+                    (expr_untyped_loc <opaque>)))))
+                (expr_untyped_loc <opaque>))))))
+           (stmt_untyped_loc <opaque>)))))
+       (generatedquantitiesblock ())) |}]
+
 let parse_file parse_fun path =
   let chan = open_in path in
   let lexbuf =
