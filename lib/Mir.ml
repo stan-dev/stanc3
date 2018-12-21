@@ -49,7 +49,7 @@ and transformation =
   | Lower of expr
   | Upper of expr
   | LowerUpper of expr * expr
-  | LocationScale of expr * expr
+  | OffsetMultiplier of expr * expr
   | Ordered
   | PositiveOrdered
   | Simplex

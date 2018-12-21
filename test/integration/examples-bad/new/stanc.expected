@@ -1676,113 +1676,113 @@ Invalid character found.
 
   $ ../../../../../install/default/bin/stanc location-scale-bad1.stan
 
-Syntax error at file "location-scale-bad1.stan", line 1, columns 25-28, parsing error:
+Syntax error at file "location-scale-bad1.stan", line 1, columns 23-26, parsing error:
    -------------------------------------------------
-     1:  data { vector<location = 0.0 while> x;}
-                                     ^
+     1:  data { vector<offset = 0.0 while> x;}
+                                   ^
    -------------------------------------------------
 
-Expected "location = " expression (not containing binary logical operators).
+Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad10.stan
 
-Syntax error at file "location-scale-bad10.stan", line 1, columns 20-21, parsing error:
+Syntax error at file "location-scale-bad10.stan", line 1, columns 25-26, parsing error:
    -------------------------------------------------
-     1:  data { vector<scale = while> x;}
-                              ^
+     1:  data { vector<multiplier = while> x;}
+                                   ^
    -------------------------------------------------
 
-Expected expression (not containing binary logical operators) after "scale =".
+Expected expression (not containing binary logical operators) after "multiplier =".
 
   $ ../../../../../install/default/bin/stanc location-scale-bad11.stan
 
-Syntax error at file "location-scale-bad11.stan", line 1, columns 14-19, parsing error:
+Syntax error at file "location-scale-bad11.stan", line 1, columns 14-24, parsing error:
    -------------------------------------------------
-     1:  data { vector<scale while> x;}
-                            ^
+     1:  data { vector<multiplier while> x;}
+                                 ^
    -------------------------------------------------
 
-Expected "=" expression (not containing binary logical operators) ">" after "scale".
+Expected "=" expression (not containing binary logical operators) ">" after "multiplier".
 
   $ ../../../../../install/default/bin/stanc location-scale-bad2.stan
 
-Syntax error at file "location-scale-bad2.stan", line 1, columns 36-37, parsing error:
+Syntax error at file "location-scale-bad2.stan", line 1, columns 39-40, parsing error:
    -------------------------------------------------
-     1:  data { vector<location = T, scale = T,> x;}
-                                              ^
+     1:  data { vector<offset = T, multiplier = T,> x;}
+                                                 ^
    -------------------------------------------------
 
-Expected ">" after "scale = " expression.
+Expected ">" after "multiplier = " expression.
 
   $ ../../../../../install/default/bin/stanc location-scale-bad3.stan
 
-Syntax error at file "location-scale-bad3.stan", line 1, columns 34-35, parsing error:
+Syntax error at file "location-scale-bad3.stan", line 1, columns 37-38, parsing error:
    -------------------------------------------------
-     1:  data { vector<location = T, scale = while> x;}
-                                            ^
+     1:  data { vector<offset = T, multiplier = while> x;}
+                                               ^
    -------------------------------------------------
 
-Expected "scale = " expression (not containing binary logical operators).
+Expected "multiplier = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad4.stan
 
-Syntax error at file "location-scale-bad4.stan", line 1, columns 28-33, parsing error:
+Syntax error at file "location-scale-bad4.stan", line 1, columns 26-36, parsing error:
    -------------------------------------------------
-     1:  data { vector<location = T, scale  while> x;}
-                                          ^
+     1:  data { vector<offset = T, multiplier  while> x;}
+                                             ^
    -------------------------------------------------
 
-Expected "scale = " expression (not containing binary logical operators).
+Expected "multiplier = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad5.stan
 
-Syntax error at file "location-scale-bad5.stan", line 1, columns 26-27, parsing error:
+Syntax error at file "location-scale-bad5.stan", line 1, columns 24-25, parsing error:
    -------------------------------------------------
-     1:  data { vector<location = T,   while> x;}
-                                    ^
+     1:  data { vector<offset = T,   while> x;}
+                                  ^
    -------------------------------------------------
 
-Expected ">" or ", scale = " expression (not containing binary logical operators) ">" after "location = " expression.
+Expected ">" or ", multiplier = " expression (not containing binary logical operators) ">" after "offset = " expression.
 
   $ ../../../../../install/default/bin/stanc location-scale-bad6.stan
 
-Syntax error at file "location-scale-bad6.stan", line 1, columns 23-24, parsing error:
+Syntax error at file "location-scale-bad6.stan", line 1, columns 21-22, parsing error:
    -------------------------------------------------
-     1:  data { vector<location =  while> x;}
-                                 ^
-   -------------------------------------------------
-
-Expected "location = " expression (not containing binary logical operators).
-
-  $ ../../../../../install/default/bin/stanc location-scale-bad7.stan
-
-Syntax error at file "location-scale-bad7.stan", line 1, columns 23-24, parsing error:
-   -------------------------------------------------
-     1:  data { vector<location =  while> x;}
-                                 ^
-   -------------------------------------------------
-
-Expected "location = " expression (not containing binary logical operators).
-
-  $ ../../../../../install/default/bin/stanc location-scale-bad8.stan
-
-Syntax error at file "location-scale-bad8.stan", line 1, columns 14-22, parsing error:
-   -------------------------------------------------
-     1:  data { vector<location  while> x;}
+     1:  data { vector<offset =  while> x;}
                                ^
    -------------------------------------------------
 
-Expected "location = " expression (not containing binary logical operators).
+Expected "offset = " expression (not containing binary logical operators).
+
+  $ ../../../../../install/default/bin/stanc location-scale-bad7.stan
+
+Syntax error at file "location-scale-bad7.stan", line 1, columns 21-22, parsing error:
+   -------------------------------------------------
+     1:  data { vector<offset =  while> x;}
+                               ^
+   -------------------------------------------------
+
+Expected "offset = " expression (not containing binary logical operators).
+
+  $ ../../../../../install/default/bin/stanc location-scale-bad8.stan
+
+Syntax error at file "location-scale-bad8.stan", line 1, columns 14-20, parsing error:
+   -------------------------------------------------
+     1:  data { vector<offset  while> x;}
+                             ^
+   -------------------------------------------------
+
+Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad9.stan
 
-Syntax error at file "location-scale-bad9.stan", line 1, columns 22-23, parsing error:
+Syntax error at file "location-scale-bad9.stan", line 1, columns 27-28, parsing error:
    -------------------------------------------------
-     1:  data { vector<scale = y,> x;}
-                                ^
+     1:  data { vector<multiplier = y,> x;}
+                                     ^
    -------------------------------------------------
 
-Expected ">" after "scale =" expression.
+Expected ">" after "multiplier =" expression.
 
   $ ../../../../../install/default/bin/stanc mystery1.stan
 
@@ -3091,7 +3091,7 @@ Expected an expression followed by a ";", after "target +=".
 
 Syntax error at file "tilde-bad1.stan", line 1, columns 37-42, parsing error:
    -------------------------------------------------
-     1:  transformed data { 1.0 ~ normal(0,1) T [,] scale
+     1:  transformed data { 1.0 ~ normal(0,1) T [,] multiplier
                                                    ^
    -------------------------------------------------
 
@@ -3141,7 +3141,7 @@ Ill-formed "~"-statement. Expect an distribution name after "~".
 
 Syntax error at file "tilde-bad14.stan", line 1, columns 25-29, parsing error:
    -------------------------------------------------
-     1:  transformed data { T~T() T[,] scale
+     1:  transformed data { T~T() T[,] multiplier
                                       ^
    -------------------------------------------------
 
@@ -3366,7 +3366,7 @@ Syntax error at file "transformations-bad17.stan", line 1, columns 13-14, parsin
                        ^
    -------------------------------------------------
 
-We expect to see "lower =", "upper =", "location =" or "scale =" followed by an expression after "<". 
+We expect to see "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<". 
 
   $ ../../../../../install/default/bin/stanc transformations-bad2.stan
 
@@ -3853,10 +3853,10 @@ Expected "[" expression "]" for size declaration of unit_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad44.stan
 
-Syntax error at file "type-size-bad44.stan", line 1, columns 13-24, parsing error:
+Syntax error at file "type-size-bad44.stan", line 1, columns 13-29, parsing error:
    -------------------------------------------------
-     1:  data { vector<scale = y> while;}
-                                 ^
+     1:  data { vector<multiplier = y> while;}
+                                      ^
    -------------------------------------------------
 
 Expected "[" expression "]" for vector size.
@@ -4099,10 +4099,10 @@ Expected range constraint or identifier as part of top-level variable declaratio
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad2.stan
 
-Syntax error at file "variable-decl-bad2.stan", line 1, columns 13-22, parsing error:
+Syntax error at file "variable-decl-bad2.stan", line 1, columns 13-27, parsing error:
    -------------------------------------------------
-     1:  data { matrix<scale=5>;
-                               ^
+     1:  data { matrix<multiplier=5>;
+                                    ^
      2:  }
    -------------------------------------------------
 
@@ -4120,10 +4120,10 @@ Expected ";".
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad4.stan
 
-Syntax error at file "variable-decl-bad4.stan", line 1, columns 17-26, parsing error:
+Syntax error at file "variable-decl-bad4.stan", line 1, columns 17-31, parsing error:
    -------------------------------------------------
-     1:  data { row_vector<scale=x> print(0);}
-                                   ^
+     1:  data { row_vector<multiplier=x> print(0);}
+                                        ^
    -------------------------------------------------
 
 Expected identifier as part of top-level variable declaration.

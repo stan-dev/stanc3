@@ -22,10 +22,10 @@ data {
   //   y_prior_dist{_for_intercept,_for_aux,_for_cov}, prior_PD
 #include /data/data_mvmer.stan
   
-  // declares: y_prior_{mean,scale_,df}{1,2,3,_for_intercept,_for_aux}, 
-  //   y_global_prior_{df,scale_}, len_{concentration,regularization},
-  //   b_prior_{shape,scale_,concentration,regularization},
-  //   b{1,2}_prior_{scale_,df,regularization}
+  // declares: y_prior_{mean,scale,df}{1,2,3,_for_intercept,_for_aux}, 
+  //   y_global_prior_{df,scale}, len_{concentration,regularization},
+  //   b_prior_{shape,scale,concentration,regularization},
+  //   b{1,2}_prior_{scale,df,regularization}
 #include /data/hyperparameters_mvmer.stan
 }
 transformed data {

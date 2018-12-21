@@ -33,11 +33,11 @@ data {
   int<lower=1,upper=4> family; // 1 gaussian, 2 gamma, 3 inv-gaussian, 4 beta
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
 #include /data/data_glm.stan
-  // declares has_weights, weights, has_offset, offset
+  // declares has_weights, weights, has_offset, offset_
 #include /data/weights_offset.stan
-  // declares prior_{mean, scale_, df}, prior_{mean, scale_, df}_for_intercept, prior_{mean, scale_, df}_for_aux
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
 #include /data/hyperparameters.stan
-  // declares t, p[t], l[t], q, len_theta_L, shape, scale_, {len_}concentration, {len_}regularization
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
 #include /data/glmer_stuff.stan
   // declares num_not_zero, w, v, u
 #include /data/glmer_stuff2.stan
@@ -93,7 +93,7 @@ transformed parameters {
   if (t > 0) {
     if (special_case == 1) {
       int start = 1;
-      theta_L = scale_ .* tau * aux;
+      theta_L = scale .* tau * aux;
       if (t == 1) b = theta_L[1] * z_b;
       else for (i in 1:t) {
         int end = start + l[i] - 1;
@@ -103,7 +103,7 @@ transformed parameters {
     }
     else {
       theta_L = make_theta_L(len_theta_L, p, 
-                             aux, tau, scale_, zeta, rho, z_T);
+                             aux, tau, scale, zeta, rho, z_T);
       b = make_b(z_b, theta_L, p, l);
     }
   }

@@ -17,7 +17,7 @@ let reducearray (sbt, l) =
 %token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE
 %token VOID INT REAL VECTOR ROWVECTOR MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
-%token LOWER UPPER LOCATION SCALE
+%token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
 %token <string> REALNUMERAL
 %token <string> STRINGLITERAL
@@ -283,8 +283,8 @@ top_var_type:
 type_constraint:
   | r=range_constraint
     {  grammar_logger "type_constraint_range" ; r }
-  | LABRACK l=loc_scale RABRACK
-    {  grammar_logger "type_constraint_loc_scale" ; l }
+  | LABRACK l=offset_mult RABRACK
+    {  grammar_logger "type_constraint_offset_mult" ; l }
 
 range_constraint:
   | (* nothing *)
@@ -300,19 +300,19 @@ range:
   | UPPER ASSIGN e=constr_expression
     { grammar_logger "upper_range" ; Upper e }
 
-loc_scale:
-  | LOCATION ASSIGN e1=constr_expression COMMA SCALE ASSIGN e2=constr_expression
-    { grammar_logger "loc_scale" ; LocationScale (e1, e2) }
-  | LOCATION ASSIGN e=constr_expression
+offset_mult:
+  | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
+    { grammar_logger "offset_mult" ; OffsetMultiplier (e1, e2) }
+  | OFFSET ASSIGN e=constr_expression
     {
       grammar_logger "loc" ;
-      LocationScale (e, {expr_untyped= RealNumeral "1.";
+      OffsetMultiplier (e, {expr_untyped= RealNumeral "1.";
                          expr_untyped_loc=Location ($startpos(e), $endpos(e))} )
     }
-  | SCALE ASSIGN e=constr_expression
+  | MULTIPLIER ASSIGN e=constr_expression
     {
       grammar_logger "scale" ;
-      LocationScale ({expr_untyped=RealNumeral "0.";
+      OffsetMultiplier ({expr_untyped=RealNumeral "0.";
                      expr_untyped_loc=Location ($startpos(e), $endpos(e))}, e)}
 
 dims:

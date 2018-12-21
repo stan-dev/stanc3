@@ -1,1 +1,1 @@
-data { row_vector<scale=x> print(0);}
+data { row_vector<multiplier=x> print(0);}

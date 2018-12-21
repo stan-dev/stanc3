@@ -1,1 +1,1 @@
-transformed data { T~T() T[,] scale
+transformed data { T~T() T[,] multiplier

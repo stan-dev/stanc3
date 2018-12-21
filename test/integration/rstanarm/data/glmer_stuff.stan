@@ -8,7 +8,7 @@
 
   // hyperparameters for glmer stuff; if t > 0 priors are mandatory
   vector<lower=0>[t] shape; 
-  vector<lower=0>[t] scale_;
+  vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
   real<lower=0> concentration[len_concentration];
   int<lower=0> len_regularization;

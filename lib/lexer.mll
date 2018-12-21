@@ -145,8 +145,8 @@ rule token = parse
 (* Transformation keywords *)
   | "lower"                   { lexer_logger "lower" ; Parser.LOWER }
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }
-  | "location"                { lexer_logger "location" ; Parser.LOCATION }
-  | "scale"                   { lexer_logger "scale" ; Parser.SCALE }
+  | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
+  | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
 (* Operators *)
   | '?'                       { lexer_logger "?" ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }

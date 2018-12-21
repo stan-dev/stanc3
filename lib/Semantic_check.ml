@@ -462,7 +462,7 @@ and semantic_check_transformation = function
             ^ "." )
       in
       LowerUpper (ue1, ue2)
-  | LocationScale (e1, e2) ->
+  | OffsetMultiplier (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let _ =
@@ -481,7 +481,7 @@ and semantic_check_transformation = function
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
-      LocationScale (ue1, ue2)
+      OffsetMultiplier (ue1, ue2)
   | Ordered -> Ordered
   | PositiveOrdered -> PositiveOrdered
   | Simplex -> Simplex
