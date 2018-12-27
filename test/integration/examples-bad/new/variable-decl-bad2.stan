@@ -1,2 +1,2 @@
-data { matrix<scale=5>;
+data { matrix<multiplier=5>;
 }

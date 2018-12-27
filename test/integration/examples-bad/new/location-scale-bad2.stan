@@ -1,1 +1,1 @@
-data { vector<location = T, scale = T,> x;}
+data { vector<offset = T, multiplier = T,> x;}

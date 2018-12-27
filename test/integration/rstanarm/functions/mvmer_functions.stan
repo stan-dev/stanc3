@@ -54,7 +54,7 @@
   *
   * @param aux_unscaled A real, the unscaled auxiliary parameter
   * @param prior_dist Integer, the type of prior distribution
-  * @param prior_mean,prior_scale Real scalars, the mean_ and scale_
+  * @param prior_mean,prior_scale Real scalars, the mean_ and scale
   *   of the prior distribution
   * @return A real, corresponding to the scaled auxiliary parameter
   */
@@ -76,7 +76,7 @@
   *
   * @param z_beta A vector of primitive parameters
   * @param prior_dist Integer, the type of prior distribution
-  * @param prior_mean,prior_scale Vectors of mean_ and scale_ parameters
+  * @param prior_mean,prior_scale Vectors of mean_ and scale parameters
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
@@ -240,7 +240,7 @@
   *
   * @param z_beta A vector of primitive parameters
   * @param prior_dist Integer, the type of prior distribution
-  * @param prior_mean,prior_scale Vectors of mean_ and scale_ parameters
+  * @param prior_mean,prior_scale Vectors of mean_ and scale parameters
   *   for the prior distributions
   * @return A vector containing the population level parameters (coefficients)
   */
@@ -281,7 +281,7 @@
   *
   * @param z_beta Vector of primative coefficients
   * @param prior_dist Integer, the type of prior distribution
-  * @param prior_scale Real, scale_ for the prior distribution
+  * @param prior_scale Real, scale for the prior distribution
   * @param prior_df Real, df for the prior distribution
   * @param global_prior_df Real, df for the prior for the global hs parameter
   * @param local Vector of hs local parameters
@@ -336,15 +336,15 @@
   * @param gamma Real, the intercept parameter
   * @param dist Integer, the type of prior distribution
   * @param mean_ Real, mean_ of prior distribution
-  * @param scale_ Real, scale_ for the prior distribution
+  * @param scale Real, scale for the prior distribution
   * @param df Real, df for the prior distribution
   * @return nothing
   */
-  void gamma_lp(real gamma, int dist, real mean_, real scale_, real df) {
+  void gamma_lp(real gamma, int dist, real mean_, real scale, real df) {
     if (dist == 1)  // normal
-      target += normal_lpdf(gamma | mean_, scale_);
+      target += normal_lpdf(gamma | mean_, scale);
     else if (dist == 2)  // student_t
-      target += student_t_lpdf(gamma | df, mean_, scale_);
+      target += student_t_lpdf(gamma | df, mean_, scale);
     /* else dist is 0 and nothing is added */
   }
 
@@ -354,12 +354,12 @@
   * @param aux_unscaled Vector (potentially of length 1) of unscaled
   *   auxiliary parameter(s)
   * @param dist Integer specifying the type of prior distribution
-  * @param scale_ Real specifying the scale_ for the prior distribution
+  * @param scale Real specifying the scale for the prior distribution
   * @param df Real specifying the df for the prior distribution
   * @return nothing
   */
-  void aux_lp(real aux_unscaled, int dist, real scale_, real df) {
-    if (dist > 0 && scale_ > 0) {
+  void aux_lp(real aux_unscaled, int dist, real scale, real df) {
+    if (dist > 0 && scale > 0) {
       if (dist == 1)
         target += normal_lpdf(aux_unscaled | 0, 1);
       else if (dist == 2)

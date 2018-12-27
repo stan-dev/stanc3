@@ -462,7 +462,7 @@ and semantic_check_transformation = function
             ^ "." )
       in
       LowerUpper (ue1, ue2)
-  | LocationScale (e1, e2) ->
+  | OffsetMultiplier (e1, e2) ->
       let ue1 = semantic_check_expression e1 in
       let ue2 = semantic_check_expression e2 in
       let _ =
@@ -481,7 +481,7 @@ and semantic_check_transformation = function
             ^ pretty_print_unsizedtype ue2.expr_typed_type
             ^ "." )
       in
-      LocationScale (ue1, ue2)
+      OffsetMultiplier (ue1, ue2)
   | Ordered -> Ordered
   | PositiveOrdered -> PositiveOrdered
   | Simplex -> Simplex
@@ -603,8 +603,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       let _ =
         if uid.name = "map_rect" then
           match ues with
-          | {expr_typed= Indexed ({expr_typed= Variable arg1_name; _}, _); _}
-            :: _ ->
+          | {expr_typed= Variable arg1_name; _} :: _ ->
               if
                 Core_kernel.String.is_suffix arg1_name.name ~suffix:"_lp"
                 || Core_kernel.String.is_suffix arg1_name.name ~suffix:"_rng"

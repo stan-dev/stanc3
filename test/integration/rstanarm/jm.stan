@@ -38,11 +38,11 @@ data {
   //   y{1,2,3}_z{1,2}q_id_{eta,eps,auc}
 #include /data/data_assoc.stan
 
-  // declares: e_prior_{mean,scale_,df}{_for_intercept,for_aux},
-  //   e_global_prior_{scale_,df}
+  // declares: e_prior_{mean,scale,df}{_for_intercept,for_aux},
+  //   e_global_prior_{scale,df}
 #include /data/hyperparameters_mvmer.stan
 #include /data/hyperparameters_event.stan
-  // declares: a_prior_{mean,scale_,df}, a_global_prior_{scale_,df}
+  // declares: a_prior_{mean,scale,df}, a_global_prior_{scale,df}
 #include /data/hyperparameters_assoc.stan
 }
 transformed data {

@@ -134,7 +134,7 @@ and 'e transformation =
   | Lower of 'e
   | Upper of 'e
   | LowerUpper of 'e * 'e
-  | LocationScale of 'e * 'e
+  | OffsetMultiplier of 'e * 'e
   | Ordered
   | PositiveOrdered
   | Simplex

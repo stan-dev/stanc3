@@ -1,1 +1,1 @@
-data { vector<location = 0.0 while> x;}
+data { vector<offset = 0.0 while> x;}

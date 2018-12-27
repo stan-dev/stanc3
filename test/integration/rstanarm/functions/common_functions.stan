@@ -7,9 +7,9 @@
    *   which lme4 denotes as m
    * @param p An integer array with the number variables on the LHS of each |
    * @param dispersion Scalar standard deviation of the errors, calles sigma by lme4
-   * @param tau Vector of scale_ parameters whose squares are proportional to the 
+   * @param tau Vector of scale parameters whose squares are proportional to the 
    *   traces of the relative covariance matrices of the group-specific terms
-   * @param scale_ Vector of prior scales that are multiplied by elements of tau
+   * @param scale Vector of prior scales that are multiplied by elements of tau
    * @param zeta Vector of positive parameters that are normalized into simplexes
    *   and multiplied by the trace of the covariance matrix to produce variances
    * @param rho Vector of radii in the onion method for creating Cholesky factors
@@ -17,7 +17,7 @@
    * @return A vector that corresponds to theta in lme4
    */
   vector make_theta_L(int len_theta_L, int[] p, real dispersion,
-                      vector tau, vector scale_, vector zeta,
+                      vector tau, vector scale, vector zeta,
                       vector rho, vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
@@ -29,7 +29,7 @@
     for (i in 1:size(p)) { 
       int nc = p[i];
       if (nc == 1) { // "block" is just a standard deviation
-        theta_L[theta_L_mark] = tau[i] * scale_[i] * dispersion;
+        theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
         // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       }
@@ -37,7 +37,7 @@
         matrix[nc,nc] T_i; 
         real std_dev;
         real T21;
-        real trace_T_i = square(tau[i] * scale_[i] * dispersion) * nc;
+        real trace_T_i = square(tau[i] * scale[i] * dispersion) * nc;
         vector[nc] pi = segment(zeta, zeta_mark, nc); // gamma(zeta | shape, 1)
         pi /= sum(pi);                            // thus dirichlet(pi | shape)
         
@@ -46,7 +46,7 @@
         std_dev = sqrt(pi[1] * trace_T_i);
         T_i[1,1] = std_dev;
         
-        // Put a correlation into T_i[2,1] and scale_ by std_dev
+        // Put a correlation into T_i[2,1] and scale by std_dev
         std_dev = sqrt(pi[2] * trace_T_i);
         T21 = 2.0 * rho[rho_mark] - 1.0;
         rho_mark += 1;
@@ -126,7 +126,7 @@
    * @param z_T A vector of primitives for the unit vectors in the onion method
    * @param rho A vector radii for the onion method
    * @param zeta A vector of primitives for the simplexes
-   * @param tau A vector of scale_ parameters
+   * @param tau A vector of scale parameters
    * @param regularization A real array of LKJ hyperparameters
    * @param delta A real array of concentration paramters
    * @param shape A vector of shape parameters

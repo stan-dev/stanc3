@@ -58,11 +58,11 @@ functions {
   * Map from conditional probabilities to cutpoints
   *
   * @param probabilities A J-simplex
-  * @param scale_ A positive scalar
+  * @param scale A positive scalar
   * @param link An integer indicating the link function
   * @return A vector of length J - 1 whose elements are in increasing order
   */
-  vector make_cutpoints(vector probabilities, real scale_, int link) {
+  vector make_cutpoints(vector probabilities, real scale, int link) {
     int C = rows(probabilities) - 1; 
     vector[C] cutpoints;
     real running_sum = 0;
@@ -89,7 +89,7 @@ functions {
       cutpoints[c] = tan(pi() * (running_sum - 0.5));
     }
     else reject("invalid link");
-    return scale_ * cutpoints;
+    return scale * cutpoints;
   }
   
   /**
@@ -144,7 +144,7 @@ data {
   int<lower=1,upper=J> y[N];  // ordinal outcome
   // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
 #include /data/data_glm.stan
-  // declares has_weights, weights, has_offset, offset
+  // declares has_weights, weights, has_offset, offset_
 #include /data/weights_offset.stan
 
   // hyperparameter values

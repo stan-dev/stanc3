@@ -4408,25 +4408,25 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_locscale_good.stan
+  $ ../../../../install/default/bin/stanc --auto-format validate_set_double_offset_multiplier_good.stan
 transformed data {
-  real<location=2, scale=1.> a = 3;
+  real<offset=2, multiplier=1.> a = 3;
 }
 parameters {
-  matrix<location=-412, scale=3>[3, 1] theta[2];
-  real<location=1, scale=5> x;
-  real<location=42, scale=1.> w;
-  vector<location=0., scale=242>[3] ww;
-  row_vector<location=0., scale=242>[3] www;
+  matrix<offset=-412, multiplier=3>[3, 1] theta[2];
+  real<offset=1, multiplier=5> x;
+  real<offset=42, multiplier=1.> w;
+  vector<offset=0., multiplier=242>[3] ww;
+  row_vector<offset=0., multiplier=242>[3] www;
 }
 transformed parameters {
-  real<location=23, scale=1.> y = x ^ 2;
+  real<offset=23, multiplier=1.> y = x ^ 2;
 }
 model {
   y ~ normal(0, 1);
 }
 generated quantities {
-  real<location=1, scale=1.> z;
+  real<offset=1, multiplier=1.> z;
   z = 3;
 }
 

@@ -1,1 +1,1 @@
-data { vector<scale = y,> x;}
+data { vector<multiplier = y,> x;}

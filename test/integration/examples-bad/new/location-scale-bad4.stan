@@ -1,1 +1,1 @@
-data { vector<location = T, scale  while> x;}
+data { vector<offset = T, multiplier  while> x;}

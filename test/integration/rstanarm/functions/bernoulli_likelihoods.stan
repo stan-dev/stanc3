@@ -79,7 +79,7 @@
    * @param N_j Integer number of observations in the j-th group
    * @param D_j Integer number of successes in the j-th group
    * @param eta_j Vector of linear predictions in the j-th group
-   * @return A scalar that normalizes the probabilities on the log-scale_
+   * @return A scalar that normalizes the probabilities on the log-scale
    */
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
   real log_clogit_denom(int N_j, int D_j, vector eta_j) {

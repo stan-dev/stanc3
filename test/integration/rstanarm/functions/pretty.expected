@@ -46,7 +46,7 @@ Syntax error at file "common_functions.stan", line 19, columns 2-8, parsing erro
     18:     */
     19:    vector make_theta_L(int len_theta_L, int[] p, real dispersion,
                  ^
-    20:                        vector tau, vector scale_, vector zeta,
+    20:                        vector tau, vector scale, vector zeta,
     21:                        vector rho, vector z_T) {
    -------------------------------------------------
 

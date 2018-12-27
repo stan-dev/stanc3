@@ -2620,40 +2620,40 @@ Ill-typed arguments supplied to infix operator %. Available signatures:
 (int, int) => int
 Instead supplied arguments of incompatible type: real, real.
 
-  $ ../../../../install/default/bin/stanc validate_set_double_locscale_bad1.stan
+  $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad1.stan
 
-Semantic error at file "validate_set_double_locscale_bad1.stan", line 3, columns 16-19:
+Semantic error at file "validate_set_double_offset_multiplier_bad1.stan", line 3, columns 14-17:
    -------------------------------------------------
      1:  parameters {
      2:    vector[3] vvv;
-     3:    real<location=vvv> a;
-                         ^
+     3:    real<offset=vvv> a;
+                       ^
      4:    real y;
      5:  }
    -------------------------------------------------
 
 Location and scale must be of int or real type. Instead found type vector.
 
-  $ ../../../../install/default/bin/stanc validate_set_double_locscale_bad2.stan
+  $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad2.stan
 
-Semantic error at file "validate_set_double_locscale_bad2.stan", line 3, columns 13-16:
+Semantic error at file "validate_set_double_offset_multiplier_bad2.stan", line 3, columns 18-21:
    -------------------------------------------------
      1:  parameters {
      2:    vector[3] vvv;
-     3:    real<scale=vvv> a;
-                      ^
+     3:    real<multiplier=vvv> a;
+                           ^
      4:    real y;
      5:  }
    -------------------------------------------------
 
 Location and scale must be of int or real type. Instead found type vector.
 
-  $ ../../../../install/default/bin/stanc validate_set_double_locscale_bad3.stan
+  $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad3.stan
 
-Syntax error at file "validate_set_double_locscale_bad3.stan", line 2, columns 14-15, parsing error:
+Syntax error at file "validate_set_double_offset_multiplier_bad3.stan", line 2, columns 14-15, parsing error:
    -------------------------------------------------
      1:  parameters {
-     2:    real<lower=1,scale=-31> a;
+     2:    real<lower=1,multiplier=-31> a;
                         ^
      3:    real y;
      4:  }

@@ -168,8 +168,8 @@ and pretty_print_transformation = function
   | LowerUpper (e1, e2) ->
       "<lower=" ^ pretty_print_expression e1 ^ ", upper="
       ^ pretty_print_expression e2 ^ ">"
-  | LocationScale (e1, e2) ->
-      "<location=" ^ pretty_print_expression e1 ^ ", scale="
+  | OffsetMultiplier (e1, e2) ->
+      "<offset=" ^ pretty_print_expression e1 ^ ", multiplier="
       ^ pretty_print_expression e2 ^ ">"
   | Ordered -> ""
   | PositiveOrdered -> ""
@@ -209,7 +209,7 @@ and pretty_print_transformed_type st trans =
   in
   match trans with
   | Identity -> pretty_print_sizedtype st
-  | Lower _ | Upper _ | LowerUpper _ | LocationScale _ ->
+  | Lower _ | Upper _ | LowerUpper _ | OffsetMultiplier _ ->
       unsizedtype_string ^ pretty_print_transformation trans ^ sizes_string
   | Ordered -> "ordered" ^ sizes_string
   | PositiveOrdered -> "positive_ordered" ^ sizes_string

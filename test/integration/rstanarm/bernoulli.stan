@@ -45,14 +45,14 @@ data {
   vector[has_weights ? N[1] : 0] weights0;
   vector[has_weights ? N[2] : 0] weights1;
   
-  // offset
+  // offset_
   int<lower=0,upper=1> has_offset;  // 0 = No, 1 = Yes
   vector[has_offset ? N[1] : 0] offset0;
   vector[has_offset ? N[2] : 0] offset1;
   
-  // declares prior_{mean, scale_, df}, prior_{mean, scale_, df}_for_intercept, prior_{mean, scale_, df}_for_aux
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
 #include /data/hyperparameters.stan
-  // declares t, p[t], l[t], q, len_theta_L, shape, scale_, {len_}concentration, {len_}regularization
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
 #include /data/glmer_stuff.stan
 
   // more glmer stuff
@@ -96,7 +96,7 @@ transformed parameters {
   if (t > 0) {
     if (special_case) {
       int start = 1;
-      theta_L = scale_ .* tau;
+      theta_L = scale .* tau;
       if (t == 1) b = theta_L[1] * z_b;
       else for (i in 1:t) {
         int end = start + l[i] - 1;
@@ -106,7 +106,7 @@ transformed parameters {
     }
     else {
       theta_L = make_theta_L(len_theta_L, p, 
-                             1.0, tau, scale_, zeta, rho, z_T);
+                             1.0, tau, scale, zeta, rho, z_T);
       b = make_b(z_b, theta_L, p, l);
     }
   }

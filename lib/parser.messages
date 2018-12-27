@@ -701,7 +701,7 @@ program: DATABLOCK LBRACE INT WHILE
 
 Expected range constraint or identifier as part of top-level variable declaration.
 
-program: DATABLOCK LBRACE MATRIX LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+program: DATABLOCK LBRACE MATRIX LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
 ##
 ## Ends in an error in state: 534.
 ##
@@ -1425,7 +1425,7 @@ program: DATABLOCK LBRACE REAL WHILE
 
 Identifier expected after type in top-level variable declaration.
 
-program: DATABLOCK LBRACE ROWVECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+program: DATABLOCK LBRACE ROWVECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
 ##
 ## Ends in an error in state: 513.
 ##
@@ -1846,7 +1846,7 @@ program: DATABLOCK LBRACE UNITVECTOR WHILE
 
 Expected "[" expression "]" for size declaration of unit_vector.
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN REALNUMERAL WHILE
 ##
 ## Ends in an error in state: 484.
 ##
@@ -1861,16 +1861,16 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN REALNUMERAL WHILE
 ## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
 ## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
 ## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE COMMA ]
-## loc_scale -> LOCATION ASSIGN constr_expression . COMMA SCALE ASSIGN constr_expression [ RABRACK ]
-## loc_scale -> LOCATION ASSIGN constr_expression . [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN constr_expression . COMMA MULTIPLIER ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN constr_expression . [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION ASSIGN constr_expression
+## OFFSET ASSIGN constr_expression
 ##
 
-Expected "location = " expression (not containing binary logical operators).
+Expected "offset = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER ASSIGN TRUNCATE COMMA
 ##
 ## Ends in an error in state: 488.
 ##
@@ -1885,10 +1885,10 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE AS
 ## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
-## loc_scale -> LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN constr_expression . [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN constr_expression . [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN constr_expression
+## OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN constr_expression
 ##
 ## WARNING: This example involves spurious reductions.
 ## This implies that, although the LR(1) items shown above provide an
@@ -1897,69 +1897,69 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE AS
 ## In state 444, spurious reduction of production constr_expression -> identifier 
 ##
 
-Expected ">" after "scale = " expression.
+Expected ">" after "multiplier = " expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER ASSIGN WHILE
 ##
 ## Ends in an error in state: 487.
 ##
-## loc_scale -> LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN . constr_expression [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN . constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION ASSIGN constr_expression COMMA SCALE ASSIGN
+## OFFSET ASSIGN constr_expression COMMA MULTIPLIER ASSIGN
 ##
 
-Expected "scale = " expression (not containing binary logical operators).
+Expected "multiplier = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA SCALE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA MULTIPLIER WHILE
 ##
 ## Ends in an error in state: 486.
 ##
-## loc_scale -> LOCATION ASSIGN constr_expression COMMA SCALE . ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN constr_expression COMMA MULTIPLIER . ASSIGN constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION ASSIGN constr_expression COMMA SCALE
+## OFFSET ASSIGN constr_expression COMMA MULTIPLIER
 ##
 
-Expected "scale = " expression (not containing binary logical operators).
+Expected "multiplier = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN TRUNCATE COMMA WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN TRUNCATE COMMA WHILE
 ##
 ## Ends in an error in state: 485.
 ##
-## loc_scale -> LOCATION ASSIGN constr_expression COMMA . SCALE ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN constr_expression COMMA . MULTIPLIER ASSIGN constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION ASSIGN constr_expression COMMA
+## OFFSET ASSIGN constr_expression COMMA
 ##
 
-Expected ">" or ", scale = " expression (not containing binary logical operators) ">" after "location = " expression.
+Expected ">" or ", multiplier = " expression (not containing binary logical operators) ">" after "offset = " expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET ASSIGN WHILE
 ##
 ## Ends in an error in state: 483.
 ##
-## loc_scale -> LOCATION ASSIGN . constr_expression COMMA SCALE ASSIGN constr_expression [ RABRACK ]
-## loc_scale -> LOCATION ASSIGN . constr_expression [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN . constr_expression COMMA MULTIPLIER ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> OFFSET ASSIGN . constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION ASSIGN
+## OFFSET ASSIGN
 ##
 
-Expected "location = " expression (not containing binary logical operators).
+Expected "offset = " expression (not containing binary logical operators).
 
-program: DATABLOCK LBRACE VECTOR LABRACK LOCATION WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK OFFSET WHILE
 ##
 ## Ends in an error in state: 482.
 ##
-## loc_scale -> LOCATION . ASSIGN constr_expression COMMA SCALE ASSIGN constr_expression [ RABRACK ]
-## loc_scale -> LOCATION . ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> OFFSET . ASSIGN constr_expression COMMA MULTIPLIER ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> OFFSET . ASSIGN constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## LOCATION
+## OFFSET
 ##
 
-Expected "location = " expression (not containing binary logical operators).
+Expected "offset = " expression (not containing binary logical operators).
 
 program: DATABLOCK LBRACE VECTOR LABRACK LOWER ASSIGN REALNUMERAL WHILE
 ##
@@ -2076,7 +2076,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK LOWER WHILE
 
 Expected "=" expression (not containing binary logical operators), after "lower".
 
-program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN IDENTIFIER RABRACK WHILE
 ##
 ## Ends in an error in state: 493.
 ##
@@ -2089,7 +2089,7 @@ program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN IDENTIFIER RABRACK WHILE
 
 Expected "[" expression "]" for vector size.
 
-program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN TRUNCATE COMMA
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN TRUNCATE COMMA
 ##
 ## Ends in an error in state: 474.
 ##
@@ -2104,10 +2104,10 @@ program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN TRUNCATE COMMA
 ## constr_expression -> constr_expression . HAT constr_expression [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . TRANSPOSE [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
 ## constr_expression -> constr_expression . LBRACK indexes RBRACK [ TRANSPOSE TIMES RABRACK PLUS MODULO MINUS LDIVIDE LBRACK HAT ELTTIMES ELTDIVIDE DIVIDE ]
-## loc_scale -> SCALE ASSIGN constr_expression . [ RABRACK ]
+## offset_mult -> MULTIPLIER ASSIGN constr_expression . [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## SCALE ASSIGN constr_expression
+## MULTIPLIER ASSIGN constr_expression
 ##
 ## WARNING: This example involves spurious reductions.
 ## This implies that, although the LR(1) items shown above provide an
@@ -2116,31 +2116,31 @@ program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN TRUNCATE COMMA
 ## In state 444, spurious reduction of production constr_expression -> identifier 
 ##
 
-Expected ">" after "scale =" expression.
+Expected ">" after "multiplier =" expression.
 
-program: DATABLOCK LBRACE VECTOR LABRACK SCALE ASSIGN WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER ASSIGN WHILE
 ##
 ## Ends in an error in state: 473.
 ##
-## loc_scale -> SCALE ASSIGN . constr_expression [ RABRACK ]
+## offset_mult -> MULTIPLIER ASSIGN . constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## SCALE ASSIGN
+## MULTIPLIER ASSIGN
 ##
 
-Expected expression (not containing binary logical operators) after "scale =".
+Expected expression (not containing binary logical operators) after "multiplier =".
 
-program: DATABLOCK LBRACE VECTOR LABRACK SCALE WHILE
+program: DATABLOCK LBRACE VECTOR LABRACK MULTIPLIER WHILE
 ##
 ## Ends in an error in state: 472.
 ##
-## loc_scale -> SCALE . ASSIGN constr_expression [ RABRACK ]
+## offset_mult -> MULTIPLIER . ASSIGN constr_expression [ RABRACK ]
 ##
 ## The known suffix of the stack is as follows:
-## SCALE
+## MULTIPLIER
 ##
 
-Expected "=" expression (not containing binary logical operators) ">" after "scale".
+Expected "=" expression (not containing binary logical operators) ">" after "multiplier".
 
 program: DATABLOCK LBRACE VECTOR LABRACK UPPER ASSIGN BANG REALNUMERAL WHILE
 ##
@@ -2647,13 +2647,13 @@ program: DATABLOCK LBRACE VECTOR LABRACK WHILE
 ## Ends in an error in state: 438.
 ##
 ## range_constraint -> LABRACK . range RABRACK [ TRUNCATE LBRACK IDENTIFIER ]
-## type_constraint -> LABRACK . loc_scale RABRACK [ TRUNCATE LBRACK IDENTIFIER ]
+## type_constraint -> LABRACK . offset_mult RABRACK [ TRUNCATE LBRACK IDENTIFIER ]
 ##
 ## The known suffix of the stack is as follows:
 ## LABRACK
 ##
 
-We expect to see "lower =", "upper =", "location =" or "scale =" followed by an expression after "<". 
+We expect to see "lower =", "upper =", "offset =" or "multiplier =" followed by an expression after "<". 
 
 program: DATABLOCK LBRACE VECTOR LBRACK INTNUMERAL RBRACK HAT
 ##
@@ -8488,7 +8488,7 @@ program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL RABRACK WHILE
 
 Ill-formed expression. Found expression ">". Expect an expression next.
 
-program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
+program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
 ## Ends in an error in state: 319.
 ##
@@ -12891,7 +12891,7 @@ program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE RBRACE
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
 
-program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK SCALE
+program: TRANSFORMEDDATABLOCK LBRACE TRUNCATE TILDE TRUNCATE LPAREN RPAREN TRUNCATE LBRACK COMMA RBRACK MULTIPLIER
 ##
 ## Ends in an error in state: 333.
 ##

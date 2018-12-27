@@ -1,1 +1,1 @@
-data { vector<scale = y> while;}
+data { vector<multiplier = y> while;}
