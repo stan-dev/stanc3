@@ -12,8 +12,6 @@ type litType = Int | Real | Str
 
 and operator = Ast.operator
 
-and truncation = expr Ast.truncation
-
 and transformation = expr Ast.transformation
 
 and index =
@@ -31,8 +29,8 @@ and expr =
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
-[@@deriving sexp, hash, map]
 
+and adtype = Ast.autodifftype [@@deriving sexp, hash, map]
 
 (* Encode both sized and unsized this way... effectiveness TBD*)
 type stantype =
@@ -45,10 +43,6 @@ type stantype =
 
 and loc = string
 
-and vardecl = {vident: string; st: stantype; trans: transformation; loc: loc}
-
-and argdecl = string * stantype
-
 and 's statement =
   | Assignment of expr * expr
   | NRFnApp of string * expr list
@@ -58,22 +52,29 @@ and 's statement =
   | Skip
   | IfElse of expr * 's * 's option
   | While of expr * 's
+  (* XXX Collapse with For?*)
   | For of {loopvar: expr; lower: expr; upper: expr; body: 's}
+  (* A Block for now corresponds tightly with a C++ block:
+     variables declared within it have local scope and are garbage collected
+     when the block ends.*)
   | Block of 's list
-  | Decl of vardecl * expr option
+  (* An SList does not share any of Block's semantics - it is just multiple
+     (ordered!) statements*)
+  | SList of 's list
+  | Decl of {vident: string; st: stantype; trans: transformation}
+  | FunDef of
+      { returntype: stantype option
+      ; name: string
+      ; arguments: (adtype * string * stantype) list
+      ; body: 's }
 [@@deriving sexp, hash, map]
 
-type 's udf_defn =
-  {returntype: stantype option; name: string; arguments: argdecl list; body: 's}
-
 and 's prog =
-  { functions: 's udf_defn list
-  ; params: vardecl list
-  ; data: vardecl list
+  { functions: 's
+  ; params: (string * stantype) list
+  ; data: 's
   ; model: 's
   ; gq: 's
-  ; tdata: 's
-  ; tparam: 's
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, hash, map]

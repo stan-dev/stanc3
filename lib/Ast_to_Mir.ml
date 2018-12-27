@@ -1,7 +1,7 @@
 open Mir
 open Core_kernel
 
-let rec trans_expr {Ast.expr_typed; expr_typed_type= t; _} =
+let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with
   | Ast.TernaryIf (cond, ifb, elseb) ->
       TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
@@ -34,7 +34,7 @@ and trans_idx = function
           [%message
             "Expecting int or array" (e.expr_typed_type : Ast.unsizedtype)] )
 
-and trans_unsizedtype = function
+let rec trans_unsizedtype = function
   | Ast.Int -> SInt
   | Ast.Real -> SReal
   | Ast.Vector -> SVector None
@@ -46,7 +46,7 @@ and trans_unsizedtype = function
   | Ast.MathLibraryFunction ->
       raise_s [%message "Shouldn't need to convert Math library function type"]
 
-and trans_sizedtype = function
+let rec trans_sizedtype = function
   | Ast.SInt -> SInt
   | Ast.SReal -> SReal
   | Ast.SVector s -> SVector (Some (trans_expr s))
@@ -55,13 +55,41 @@ and trans_sizedtype = function
       SMatrix (Some (trans_expr rows, trans_expr cols))
   | Ast.SArray (st, s) -> SArray (Some (trans_expr s), trans_sizedtype st)
 
-and trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
-  let targetpe e =
-    let t = Var "target" in
-    Assignment (t, BinOp (t, Plus, e))
-  and pos_inf = FnApp("positive_infinity", [])
-  and neg_inf = FnApp("negative_infinity", [])
+let neg_inf = FnApp ("negative_infinity", [])
+
+let targetpe e =
+  let t = Var "target" in
+  Assignment (t, BinOp (t, Plus, e))
+
+let trans_loc = function
+  | Ast.Nowhere -> ""
+  | Ast.Location (start, end_) ->
+      (* XXX hack *)
+      let open Lexing in
+      sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
+
+let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
+let trans_trans = Ast.map_transformation trans_expr
+
+let trans_arg (adtype, ut, ident) =
+  (adtype, ident.Ast.name, trans_unsizedtype ut)
+
+let truncate_dist ast_obs t =
+  let add_inf = targetpe neg_inf and obs = trans_expr ast_obs in
+  let trunc cond x y =
+    bind_loc x.Ast.expr_typed_loc
+      (IfElse
+         (BinOp (obs, cond, trans_expr x), bind_loc x.expr_typed_loc add_inf, y))
   in
+  match t with
+  | Ast.NoTruncate -> None
+  | Ast.TruncateUpFrom lb -> Some (trunc Less lb None)
+  | Ast.TruncateDownFrom ub -> Some (trunc Greater ub None)
+  | Ast.TruncateBetween (lb, ub) ->
+      Some (trunc Less lb (Some (trunc Greater ub None)))
+
+let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
+  let or_skip o = Option.value ~default:Skip o in
   let s =
     match stmt_typed with
     | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
@@ -83,47 +111,63 @@ and trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         NRFnApp (name, List.map ~f:trans_expr args)
     | Ast.IncrementLogProb e | Ast.TargetPE e -> targetpe (trans_expr e)
     | Ast.Tilde {arg; distribution; args; truncation} ->
-      let full_dist = FnApp (distribution.name, List.map ~f:trans_expr (arg :: args))
-      in
-      let full_dist = (match truncation with
-          | Ast.NoTruncate -> full_dist
-          | Ast.TruncateUpFrom _ -> (??)
-          | Ast.TruncateDownFrom _ -> (??)
-          | Ast.TruncateBetween (_, _) -> (??))
-
-
-        (* XXX truncation: add
-            if (0.5 < 0.1) lp_accum__.add(-std::numeric_limits<double>::infinity());
-            else if (0.5 > 1.1) lp_accum__.add(-std::numeric_limits<double>::infinity());
-            else lp_accum__.add(-log_diff_exp(normal_cdf_log(1.1, 0, 1), normal_cdf_log(0.1, 0, 1)));
-        *)
-        (* XXX distribution name suffix? *)
-        targetpe
-
+        let add_dist =
+          (* XXX distribution name suffix? *)
+          targetpe
+            (FnApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
+        in
+        Block
+          [ Option.value
+              ~default:(bind_loc stmt_typed_loc Skip)
+              (truncate_dist arg truncation)
+          ; bind_loc stmt_typed_loc add_dist ]
     | Ast.Print ps -> NRFnApp ("print", List.map ~f:trans_printable ps)
     | Ast.Reject ps -> NRFnApp ("reject", List.map ~f:trans_printable ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
         IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
-    | Ast.While (_, _) -> ( ?? )
-    | Ast.For _ -> ( ?? )
-    | Ast.ForEach (_, _, _) -> ( ?? )
-    | Ast.Block _ -> ( ?? )
-    | Ast.VarDecl _ -> ( ?? )
-    | Ast.FunDef _ -> ( ?? )
+    | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
+    | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
+        For
+          { loopvar= Var loop_variable.Ast.name
+          ; lower= trans_expr lower_bound
+          ; upper= trans_expr upper_bound
+          ; body= trans_stmt loop_body }
+    | Ast.ForEach (loopvar, iteratee, body) ->
+        For
+          { loopvar= Var loopvar.Ast.name
+          ; lower= Lit (Int, "0")
+          ; upper= FnApp ("length", [trans_expr iteratee])
+          ; body= trans_stmt body }
+    | Ast.FunDef {returntype; funname; arguments; body} ->
+        FunDef
+          { returntype=
+              ( match returntype with
+              | Ast.Void -> None
+              | ReturnType ut -> Some (trans_unsizedtype ut) )
+          ; name= funname.name
+          ; arguments= List.map ~f:trans_arg arguments
+          ; body= trans_stmt body }
+    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _}
+    (* XXX Deal with global vs unglobal *) ->
+        let name = identifier.name in
+        SList
+          (List.map ~f:(bind_loc stmt_typed_loc)
+             [ Decl
+                 { vident= name
+                 ; st= trans_sizedtype sizedtype
+                 ; trans= trans_trans transformation }
+             ; Option.map
+                 ~f:(fun x -> Assignment (Var name, trans_expr x))
+                 initial_value
+               |> or_skip ])
+    | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
     | Ast.Return e -> Return (Some (trans_expr e))
     | Ast.ReturnVoid -> Return None
     | Ast.Break -> Break
     | Ast.Continue -> Continue
     | Ast.Skip -> Skip
   in
-  {Mir.stmt= s; sloc= trans_loc stmt_typed_loc}
+  bind_loc stmt_typed_loc s
 
 and trans_printable (p : Ast.typed_expression Ast.printable) =
   match p with Ast.PString s -> Lit (Str, s) | Ast.PExpr e -> trans_expr e
-
-and trans_loc = function
-  | Ast.Nowhere -> ""
-  | Ast.Location (start, end_) ->
-      (* XXX hack *)
-      let open Lexing in
-      sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum

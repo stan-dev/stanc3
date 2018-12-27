@@ -4,6 +4,7 @@ open Format
 
 let comma ppf () = fprintf ppf ",@ "
 let newline ppf () = fprintf ppf "@;"
+let semi_new ppf () = fprintf ppf "@;"
 let emit_str ppf s = fprintf ppf "%s" s
 
 let emit_option ?default:(d = "") emitter ppf opt =
@@ -69,13 +70,12 @@ let%expect_test "multi index" =
         stan::model::cons_list(stan::model::index_multi(intarr2),
         stan::model::nil_index_list())), "vec"); |}]
 
-let emit_prim_stantype ppf st =
-  let rec ad_str = function
-    | SInt -> "int"
-    | SArray (_, t) -> ad_str t
-    | _ -> "double"
-  in
-  emit_stantype (ad_str st) ppf st
+let rec stantype_prim_str = function
+  | SInt -> "int"
+  | SArray (_, t) -> stantype_prim_str t
+  | _ -> "double"
+
+let emit_prim_stantype ppf st = emit_stantype (stantype_prim_str st) ppf st
 
 let emit_block ppf (emit_body, body) =
   fprintf ppf "{@;<1 4>@[<v>%a@]@,}" emit_body body
@@ -124,7 +124,36 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
   | SMatrix None | SVector None | SRowVector None | SArray (None, _) ->
       raise_s [%message "Type should have dimensions" (st : stantype)]
 
+let rec integer_el_type = function
+  | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
+  | SInt -> true
+  | SArray (_, st) -> integer_el_type st
+
+let emit_arg ppf ((adtype, name, st), idx) =
+  let adstr =
+    match adtype with
+    | Ast.DataOnly -> stantype_prim_str st
+    | Ast.AutoDiffable -> sprintf "T%d__" idx
+  in
+  fprintf ppf "const %a& %s" (emit_stantype adstr) st name
+
+let emit_template_decls ppf ts =
+  fprintf ppf "@[<hov>template <%a>@]@ "
+    (pp_print_list ~pp_sep:comma (fun ppf t -> fprintf ppf "typename %s" t))
+    ts
+
+let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
+
+let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
+  emit_str ppf "try " ;
+  emit_block ppf (emit_contents, contents_arg) ;
+  emit_str ppf " catch const std::exception& e) " ;
+  emit_block ppf (emit_err, err_arg)
+
 let emit_statement emit_statement_with_meta ppf s =
+  let emit_stmt_list =
+    pp_print_list ~pp_sep:newline emit_statement_with_meta
+  in
   match s with
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
@@ -133,7 +162,7 @@ let emit_statement emit_statement_with_meta ppf s =
       fprintf ppf "%s(%a);" fname (pp_print_list ~pp_sep:comma emit_expr) args
   | Break -> emit_str ppf "break;"
   | Continue -> emit_str ppf "continue;"
-  | Return e -> fprintf ppf "return%a;" (emit_option ~default:"" emit_expr) e
+  | Return e -> fprintf ppf "return %a;" (emit_option ~default:"" emit_expr) e
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
       let emit_else ppf x =
@@ -151,14 +180,48 @@ let emit_statement emit_statement_with_meta ppf s =
         flush_str_formatter ()
       in
       emit_for_loop ppf (lv, lower, upper, emit_statement_with_meta, body)
-  | Block s ->
-      emit_block ppf (pp_print_list ~pp_sep:newline emit_statement_with_meta, s)
-  | Decl ({vident; st; trans; loc}, rhs) ->
-      ignore (trans, loc) ;
-      let emit_assignment ppf rhs = fprintf ppf " = %a" emit_expr rhs in
-      fprintf ppf "%a %s%a;" emit_prim_stantype st vident
-        (emit_option emit_assignment)
-        rhs
+  | Block ls -> emit_block ppf (emit_stmt_list, ls)
+  | SList ls -> emit_stmt_list ppf ls
+  | Decl {vident; st; trans} ->
+      ignore trans ;
+      fprintf ppf "%a %s;" emit_prim_stantype st vident
+  | FunDef {returntype; name; arguments; body} ->
+      let argtypetemplates =
+        List.mapi ~f:(fun i _ -> sprintf "T%d__" i) arguments
+      in
+      emit_template_decls ppf argtypetemplates ;
+      fprintf ppf "%a@ "
+        (emit_option ~default:"void"
+           (emit_stantype "typename boost::math::tools::promote_args<>::type"))
+        returntype ;
+      (* XXX this is all so ugly: *)
+      emit_call ppf
+        ( name
+        , (fun ppf (args, extra_arg) ->
+            (pp_print_list ~pp_sep:comma emit_arg) ppf (with_idx args) ;
+            fprintf ppf ",@ %s" extra_arg )
+        , (arguments, "std::ostream* pstream__") ) ;
+      fprintf ppf " " ;
+      emit_block ppf
+        ( (fun ppf body ->
+            let text = fprintf ppf "%s@;" in
+            fprintf ppf
+              "@[<hv 8>typedef typename \
+               boost::math::tools::promote_args<%a>::type \
+               local_scalar_t__;@]@ "
+              (pp_print_list ~pp_sep:comma emit_str)
+              argtypetemplates ;
+            text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
+            text "const static bool propto__ = true;" ;
+            text "(void) propto__;" ;
+            text
+              "local_scalar_t__ \
+               DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+            text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
+            text "int current_statement_begin__ = -1;" ;
+            emit_error_wrapper ppf
+              (emit_str, "", emit_statement_with_meta, body) )
+        , body )
 
 let rec emit_statement_loc ppf {sloc; stmt} =
   fprintf ppf "current_statement_loc__ = \"%s\";@;" sloc ;
@@ -223,13 +286,10 @@ let%expect_test "run code per element" =
                     } |}]
 
 let%expect_test "decl" =
-  { splain=
-      Decl
-        ( {vident= "i"; st= SInt; loc= "line num"; trans= Identity}
-        , Some (Lit (Int, "0")) ) }
+  {splain= Decl {vident= "i"; st= SInt; trans= Identity}}
   |> emit_statement_plain str_formatter ;
   flush_str_formatter () |> print_endline ;
-  [%expect {| int i = 0; |}]
+  [%expect {| int i; |}]
 
 let emit_vardecl ppf (name, stype) =
   fprintf ppf "%a %s" emit_prim_stantype stype name
@@ -241,77 +301,25 @@ let stan_math_map =
 let version = "// Code generated by Stan version 2.18.0"
 let includes = "#include <stan/model/model_header.hpp>"
 
-let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
-  emit_str ppf "try " ;
-  emit_block ppf (emit_contents, contents_arg) ;
-  emit_str ppf " catch const std::exception& e) " ;
-  emit_block ppf (emit_err, err_arg)
-
-let rec integer_el_type = function
-  | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
-  | SInt -> true
-  | SArray (_, st) -> integer_el_type st
-
-let emit_args ppf (name, st) =
-  fprintf ppf "const %a& %s" (emit_stantype "T0__") st name
-
-let emit_template_decls ppf ts =
-  fprintf ppf "@[<hov>template <%a>@]@ "
-    (pp_print_list ~pp_sep:comma (fun ppf t -> fprintf ppf "typename %s" t))
-    ts
-
-(* This whole thing seems way uglier now*)
-let emit_udf emit_statement ppf {returntype; name; arguments; body} =
-  let argtypetemplates =
-    List.mapi ~f:(fun i _ -> sprintf "T%d__" i) arguments
-  in
-  emit_template_decls ppf argtypetemplates ;
-  fprintf ppf "%a@ "
-    (emit_option ~default:"void"
-       (emit_stantype "typename boost::math::tools::promote_args<>::type"))
-    returntype ;
-  (* XXX this is all so ugly: *)
-  emit_call ppf
-    ( name
-    , (fun ppf (args, extra) ->
-        (pp_print_list ~pp_sep:comma emit_args) ppf args ;
-        fprintf ppf ",@ %s" extra )
-    , (arguments, "std::ostream* pstream__") ) ;
-  fprintf ppf " " ;
-  emit_block ppf
-    ( (fun ppf body ->
-        let text = fprintf ppf "%s@;" in
-        fprintf ppf
-          "@[<hv 8>typedef typename \
-           boost::math::tools::promote_args<%a>::type local_scalar_t__;@]@ "
-          (pp_print_list ~pp_sep:comma emit_str)
-          argtypetemplates ;
-        text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
-        text "const static bool propto__ = true;" ;
-        text "(void) propto__;" ;
-        text
-          "local_scalar_t__ \
-           DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-        text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
-        text "int current_statement_begin__ = -1;" ;
-        emit_error_wrapper ppf (emit_str, "", emit_statement, body) )
-    , body )
-
 let%expect_test "udf" =
   fprintf str_formatter "@[<v>%a"
-    (emit_udf emit_statement_plain)
-    { returntype= None
-    ; name= "sars"
-    ; arguments= [("x", SMatrix None); ("y", SRowVector None)]
-    ; body= {splain= Return (Some (FnApp ("add", [Var "x"; Lit (Int, "1")])))}
-    } ;
+    (emit_statement emit_statement_plain)
+    (FunDef
+       { returntype= None
+       ; name= "sars"
+       ; arguments=
+           [ (Ast.DataOnly, "x", SMatrix None)
+           ; (Ast.AutoDiffable, "y", SRowVector None) ]
+       ; body=
+           {splain= Return (Some (FnApp ("add", [Var "x"; Lit (Int, "1")])))}
+       }) ;
   flush_str_formatter () |> print_endline ;
   [%expect
     {|
     template <typename T0__, typename T1__>
     void
-    sars(const Eigen::Matrix<T0__, -1, -1>& x,
-         const Eigen::Matrix<T0__, 1, -1>& y, std::ostream* pstream__) {
+    sars(const Eigen::Matrix<double, -1, -1>& x,
+         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
         typedef typename boost::math::tools::promote_args<T0__,
                 T1__>::type local_scalar_t__;
         typedef local_scalar_t__ fun_return_scalar_t__;
