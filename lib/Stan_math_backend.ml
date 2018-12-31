@@ -182,8 +182,8 @@ let emit_statement emit_statement_with_meta ppf s =
       emit_for_loop ppf (lv, lower, upper, emit_statement_with_meta, body)
   | Block ls -> emit_block ppf (emit_stmt_list, ls)
   | SList ls -> emit_stmt_list ppf ls
-  | Decl {vident; st; trans} ->
-      ignore trans ;
+  | Decl {adtype; vident; st; trans} ->
+      ignore (trans, adtype) ;
       fprintf ppf "%a %s;" emit_prim_stantype st vident
   | FunDef {returntype; name; arguments; body} ->
       let argtypetemplates =
@@ -286,7 +286,7 @@ let%expect_test "run code per element" =
                     } |}]
 
 let%expect_test "decl" =
-  {splain= Decl {vident= "i"; st= SInt; trans= Identity}}
+  {splain= Decl {adtype= AutoDiffable; vident= "i"; st= SInt; trans= Identity}}
   |> emit_statement_plain str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i; |}]

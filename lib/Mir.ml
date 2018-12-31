@@ -52,7 +52,7 @@ and 's statement =
   | Skip
   | IfElse of expr * 's * 's option
   | While of expr * 's
-  (* XXX Collapse with For?*)
+  (* XXX Collapse with For? *)
   | For of {loopvar: expr; lower: expr; upper: expr; body: 's}
   (* A Block for now corresponds tightly with a C++ block:
      variables declared within it have local scope and are garbage collected
@@ -61,7 +61,11 @@ and 's statement =
   (* An SList does not share any of Block's semantics - it is just multiple
      (ordered!) statements*)
   | SList of 's list
-  | Decl of {vident: string; st: stantype; trans: transformation}
+  | Decl of
+      { adtype: adtype
+      ; vident: string
+      ; st: stantype
+      ; trans: transformation }
   | FunDef of
       { returntype: stantype option
       ; name: string
@@ -70,11 +74,11 @@ and 's statement =
 [@@deriving sexp, hash, map]
 
 and 's prog =
-  { functions: 's
-  ; params: (string * stantype) list
-  ; data: 's
-  ; model: 's
-  ; gq: 's
+  { functionsb: 's
+  ; paramsb: 's
+  ; datab: 's
+  ; modelb: 's
+  ; gqb: 's
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, hash, map]

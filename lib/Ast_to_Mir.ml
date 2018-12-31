@@ -69,6 +69,8 @@ let trans_loc = function
       sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
 
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
+let no_loc = ""
+let with_no_loc s = {stmt= s; sloc= no_loc}
 let trans_trans = Ast.map_transformation trans_expr
 
 let trans_arg (adtype, ut, ident) =
@@ -89,7 +91,7 @@ let truncate_dist ast_obs t =
       Some (trunc Less lb (Some (trunc Greater ub None)))
 
 let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
-  let or_skip o = Option.value ~default:Skip o in
+  let or_skip = Option.value ~default:Skip in
   let s =
     match stmt_typed with
     | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
@@ -147,13 +149,14 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           ; name= funname.name
           ; arguments= List.map ~f:trans_arg arguments
           ; body= trans_stmt body }
-    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _}
-    (* XXX Deal with global vs unglobal *) ->
+    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _} ->
         let name = identifier.name in
+        (* XXX Deal with global vs unglobal *)
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
-                 { vident= name
+                 { adtype= AutoDiffable
+                 ; vident= name
                  ; st= trans_sizedtype sizedtype
                  ; trans= trans_trans transformation }
              ; Option.map
@@ -171,3 +174,36 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
 
 and trans_printable (p : Ast.typed_expression Ast.printable) =
   match p with Ast.PString s -> Lit (Str, s) | Ast.PExpr e -> trans_expr e
+
+let trans_prog
+    { Ast.functionblock
+    ; datablock
+    ; transformeddatablock
+    ; parametersblock
+    ; transformedparametersblock
+    ; modelblock
+    ; generatedquantitiesblock } =
+  let trans_or_skip lst_option =
+    with_no_loc
+      ( match lst_option with
+      | None | Some [] -> Skip
+      | Some lst -> SList (List.map ~f:trans_stmt lst) )
+  in
+  let lbind s = match s.stmt with SList ls -> ls | Skip -> [] | _ -> [s] in
+  let coalesce stmts =
+    let flattened = List.(concat (map ~f:lbind stmts)) in
+    with_no_loc (match flattened with [] -> Skip | _ :: _ -> SList flattened)
+  in
+  (* XXX probably a weird place to keep the name*)
+  { prog_name= !Semantic_check.model_name
+  ; prog_path= " TODO "
+  ; functionsb= trans_or_skip functionblock
+  ; datab=
+      coalesce (List.map ~f:trans_or_skip [datablock; transformeddatablock])
+  ; paramsb=
+      trans_or_skip parametersblock
+      (* XXX save transformed parameters to disk *)
+  ; modelb=
+      coalesce
+        (List.map ~f:trans_or_skip [transformedparametersblock; modelblock])
+  ; gqb= trans_or_skip generatedquantitiesblock }
