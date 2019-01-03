@@ -6,6 +6,8 @@ This repo contains work in progress on a new compiler for Stan, written in OCaml
 ## To Get Started
 
 ### To build, test, and run
+To be able to build the project, make sure you have GNU make installed.
+
 If you do not have OCaml and Opam installed already, run `scripts/install_ocaml.sh` to set up your OCaml environment.
 
 To install the required OCaml libraries, run `scripts/install_dev_deps.sh`.
