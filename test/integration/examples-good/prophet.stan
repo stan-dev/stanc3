@@ -1,3 +1,4 @@
+// Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
 functions {
   real[ , ] get_changepoint_matrix(real[] t, real[] t_change, int T, int S) {
     // Assumes t and t_change are sorted.
