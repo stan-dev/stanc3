@@ -10,8 +10,6 @@ If you do not have OCaml and Opam installed already, run `scripts/install_ocaml.
 
 To install the required OCaml libraries, run `scripts/install_dev_deps.sh`.
 
-Check out `scripts/setup_dev_env.sh` to see how we recommend installing our pre-reqs.
-
 To build `stanc.exe`, run `make`. The binary will be built in `_build/default`
 
 To run tests, run `dune runtest` and use `dune promote` to accept changes.
