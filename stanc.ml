@@ -88,7 +88,10 @@ let use_file filename =
       exit 1
   in
   let _ = Debug.typed_ast_logger typed_ast in
-  ()
+  let mir = Ast_to_Mir.trans_prog filename typed_ast in
+  let _ = Stan_math_backend.emit_prog Format.str_formatter mir in
+  let cpp = Format.flush_str_formatter () in
+  print_string cpp
 
 (** Main program *)
 let main () =

@@ -30,9 +30,12 @@ and expr =
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
 
-and adtype = Ast.autodifftype [@@deriving sexp, hash, map]
+and adtype = Ast.autodifftype [@@deriving sexp, hash]
 
 (* Encode both sized and unsized this way... effectiveness TBD*)
+(* Actually probably just use unsizedtype from AST directly;
+   maybe also sizedtype with our own expr?
+*)
 type stantype =
   | SInt
   | SReal
@@ -46,6 +49,7 @@ and loc = string
 and 's statement =
   | Assignment of expr * expr
   | NRFnApp of string * expr list
+  | Check of string * expr list
   | Break
   | Continue
   | Return of expr option
@@ -71,7 +75,7 @@ and 's statement =
       ; name: string
       ; arguments: (adtype * string * stantype) list
       ; body: 's }
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash]
 
 and 's prog =
   { functionsb: 's
@@ -83,5 +87,4 @@ and 's prog =
   ; prog_path: string }
 [@@deriving sexp, hash, map]
 
-type stmt_loc = {sloc: loc; stmt: stmt_loc statement}
-[@@deriving sexp, hash, map]
+type stmt_loc = {sloc: loc; stmt: stmt_loc statement} [@@deriving sexp, hash]

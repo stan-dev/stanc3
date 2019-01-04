@@ -115,6 +115,8 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.Tilde {arg; distribution; args; truncation} ->
         let add_dist =
           (* XXX distribution name suffix? *)
+          (* XXX Reminder to differentiate between tilde, which drops constants, and
+             vanilla target +=, which doesn't. Can use _unnormalized or something.*)
           targetpe
             (FnApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
         in
@@ -152,6 +154,10 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _} ->
         let name = identifier.name in
         (* XXX Deal with global vs unglobal *)
+        (* XXX Should also generate the statements that will read the data in
+           and validate it... Then a CSE pass will automatically fulfill one of our
+           Stanc3 promises to do data checking only once and at the appropriate level
+        *)
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
@@ -175,7 +181,51 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
 and trans_printable (p : Ast.typed_expression Ast.printable) =
   match p with Ast.PString s -> Lit (Str, s) | Ast.PExpr e -> trans_expr e
 
-let trans_prog
+(* XXX Write a function that generates MIR to execute once on each thing in some nested
+   arrays (but not elements within a matrix or vector) *)
+
+let mir_for_each_in_array (st : stantype) (s : expr -> stmt_loc) = match st with
+  | SInt -> s
+  | SReal -> (??)
+  | SArray (_, _) -> (??)
+  | SVector _ -> (??)
+  | SRowVector _ -> (??)
+  | SMatrix _ -> (??)
+
+let rec trans_trans vident = function
+  | Ast.Identity -> []
+  | Ast.Lower lb -> [Check("check_greater_or_equal", [Var vident; lb])]
+  | Ast.Upper ub -> [Check("check_less_or_equal", [Var vident; ub])]
+  | Ast.LowerUpper (lb, ub) -> [Ast.Lower lb; Upper ub]
+                               |> List.map ~f:(trans_trans vident)
+                               |> List.concat
+  | Ast.Ordered -> (??)
+  | Ast.PositiveOrdered -> (??)
+  | Ast.Simplex -> (??)
+  | Ast.UnitVector -> (??)
+  | Ast.CholeskyCorr -> (??)
+  | Ast.CholeskyCov -> (??)
+  | Ast.Correlation -> (??)
+  | Ast.Covariance -> (??)
+  | Ast.OffsetMultiplier (_, _) -> [] (* XXX FIXME ETC*)
+
+
+(** Adds Mir statements that validate and read in the variable*)
+let add_data_read_field {stmt; sloc} =
+  let s = {sloc; stmt} in
+  match stmt with
+  | Decl { vident; trans; _} ->
+    {sloc; stmt=SList (s :: List.map ~f:(fun stmt -> {sloc; stmt})
+                         (trans_trans vident trans))}
+  | _ -> {stmt; sloc}
+
+
+(* XXX To add validation logic to MIR
+   We can add validate_non_negative_index, context__.validate_dims,
+*)
+
+
+let trans_prog filename
     { Ast.functionblock
     ; datablock
     ; transformeddatablock
@@ -196,14 +246,16 @@ let trans_prog
   in
   (* XXX probably a weird place to keep the name*)
   { prog_name= !Semantic_check.model_name
-  ; prog_path= " TODO "
+  ; prog_path= filename
   ; functionsb= trans_or_skip functionblock
   ; datab=
-      coalesce (List.map ~f:trans_or_skip [datablock; transformeddatablock])
+      coalesce [datablock |> trans_or_skip |> ;
+               ]
+        trans_or_skip [datablock; transformeddatablock])
   ; paramsb=
       trans_or_skip parametersblock
-      (* XXX save transformed parameters to disk *)
   ; modelb=
       coalesce
+      (* XXX save transformed parameters *)
         (List.map ~f:trans_or_skip [transformedparametersblock; modelblock])
   ; gqb= trans_or_skip generatedquantitiesblock }

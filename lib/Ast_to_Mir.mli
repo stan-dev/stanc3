@@ -1,1 +1,1 @@
-val trans_prog : Ast.typed_program -> Mir.stmt_loc Mir.prog
+val trans_prog : string -> Ast.typed_program -> Mir.stmt_loc Mir.prog

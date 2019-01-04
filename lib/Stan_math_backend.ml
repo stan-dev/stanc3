@@ -7,10 +7,10 @@ let newline ppf () = fprintf ppf "@;"
 let semi_new ppf () = fprintf ppf "@;"
 let emit_str ppf s = fprintf ppf "%s" s
 
-let emit_option ?default:(d = "") emitter ppf opt =
+let emit_option ppf (emitter, opt, default) =
   match opt with
   | Some x -> fprintf ppf "%a" emitter x
-  | None -> emit_str ppf d
+  | None -> emit_str ppf default
 
 let rec emit_stantype ad ppf = function
   | SInt | SReal -> emit_str ppf ad
@@ -150,6 +150,19 @@ let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
   emit_str ppf " catch const std::exception& e) " ;
   emit_block ppf (emit_err, err_arg)
 
+let emit_runtime_exception ppf =
+  fprintf ppf "std::runtime_error(std::string(%s) + e.what())"
+
+let emit_located_error ppf (emit_contents, contents_arg, msg) =
+  let emit_located_msg ppf msg =
+    fprintf ppf {|stan::lang::rethrow_located(%a, current_statement__);
+@ // Next line prevents compiler griping about no return
+@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+|}
+      emit_option (emit_runtime_exception, msg, "e")
+  in
+  emit_error_wrapper ppf (emit_contents, contents_arg, emit_located_msg, msg)
+
 let emit_statement emit_statement_with_meta ppf s =
   let emit_stmt_list =
     pp_print_list ~pp_sep:newline emit_statement_with_meta
@@ -162,7 +175,7 @@ let emit_statement emit_statement_with_meta ppf s =
       fprintf ppf "%s(%a);" fname (pp_print_list ~pp_sep:comma emit_expr) args
   | Break -> emit_str ppf "break;"
   | Continue -> emit_str ppf "continue;"
-  | Return e -> fprintf ppf "return %a;" (emit_option ~default:"" emit_expr) e
+  | Return e -> fprintf ppf "return %a;" emit_option (emit_expr, e, "")
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
       let emit_else ppf x =
@@ -170,7 +183,7 @@ let emit_statement emit_statement_with_meta ppf s =
       in
       fprintf ppf "if (%a) %a %a\n" emit_expr cond emit_block
         (emit_statement_with_meta, ifbranch)
-        (emit_option emit_else) elsebranch
+        emit_option (emit_else, elsebranch, "")
   | While (cond, body) ->
       fprintf ppf "while (%a) %a" emit_expr cond emit_block
         (emit_statement_with_meta, body)
@@ -191,9 +204,10 @@ let emit_statement emit_statement_with_meta ppf s =
       in
       emit_template_decls ppf argtypetemplates ;
       fprintf ppf "%a@ "
-        (emit_option ~default:"void"
-           (emit_stantype "typename boost::math::tools::promote_args<>::type"))
-        returntype ;
+        emit_option
+        ((emit_stantype "typename boost::math::tools::promote_args<>::type"),
+         returntype, "void")
+      ;
       (* XXX this is all so ugly: *)
       emit_call ppf
         ( name
@@ -214,13 +228,11 @@ let emit_statement emit_statement_with_meta ppf s =
             text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
             text "const static bool propto__ = true;" ;
             text "(void) propto__;" ;
-            text
-              "local_scalar_t__ \
-               DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+            text "local_scalar_t__ \
+                  DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
             text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
             text "int current_statement_begin__ = -1;" ;
-            emit_error_wrapper ppf
-              (emit_str, "", emit_statement_with_meta, body) )
+            emit_located_error ppf (emit_statement_with_meta, body, None) )
         , body )
 
 let rec emit_statement_loc ppf {sloc; stmt} =
@@ -261,8 +273,7 @@ let%expect_test "run code per element" =
             [ { splain=
                   Assignment
                     (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
-              }
-            ; {splain= NRFnApp ("print", [Var x])} ] }
+              } ; {splain= NRFnApp ("print", [Var x])} ] }
   in
   fprintf str_formatter "@[<v>%a@]"
     (emit_run_code_per_el assign)
@@ -335,20 +346,40 @@ let%expect_test "udf" =
         }
     } |}]
 
-(*
+let rec emit_stantype_basetype ppf = function
+  | SInt -> emit_str ppf "int"
+  | SReal -> emit_str ppf "double"
+  | SArray (_, t) -> emit_stantype_basetype ppf t
+  | SMatrix _ -> emit_str ppf "matrix_d"
+  | SRowVector _ -> emit_str ppf "row_vector_d"
+  | SVector _ -> emit_str ppf "vector_d"
 
-let emit_ctor classname ppf (args, body) =
-  fprintf ppf "%s(%a) {@ @[<v 2>%a@]}" classname
-    (pp_print_list ~pp_sep:comma emit_vardecl)
-    args emit_statement body
-*)
+(* XXX Serious TODO: translate all of this shit during AST_to_MIR stage!
+Because in generated code often see the same statement repeated 3x *)
+let rec emit_zeroing_ctor_call ppf st = match st with
+  | SInt | SReal -> emit_str ppf "0"
+  | SArray (Some dim, t) -> fprintf ppf "%a, %a" emit_expr dim emit_zeroing_ctor_call t
+  | SRowVector (Some dim) | SVector (Some dim)
+    -> fprintf ppf "%"
+  | SMatrix (Some (dim1, dim2)) ->
+  | _ -> raise_s [%message "Expected stantype with dimensions, got " (st: stantype)]
 
-(*
-let emit_read_field ppf (name, st, loc) idx =
-  let vals_suffix = context_suffix st in
+
+let emit_zero ppf (name, st) =
+  fprintf ppf "%s = %a(%a);" name emit_stantype st
+
+  | SInt -> emit_str ppf "int"
+  | SReal -> emit_str ppf "double"
+  | SArray (_, t) -> emit_stantype_basetype ppf t
+  | SMatrix _ -> emit_str ppf "matrix_d"
+  | SRowVector _ -> emit_str ppf "row_vector_d"
+  | SVector _ -> emit_str ppf "vector_d"
+
+let emit_read_field ppf ((Decl { adtype; vident; st; trans}), idx) =
+  let vals_suffix = if integer_el_type st then "i" else "r" in
   fprintf ppf {|
-@ current_statement_begin__ = %s;
-@ context__.validate_dims("data initialization", "%s", "%s",
+@ // begin reading %s
+@ context__.validate_dims("data initialization", "%s", "%a",
 @                         context__.to_vec());
 @ %s = %a;
 @ vals_%s__ = context.__.vals_%s("%s");
@@ -356,11 +387,12 @@ let emit_read_field ppf (name, st, loc) idx =
 @ %s = vals_%s__[pos_++];
 @ // Check constraints
 @ %a
-|} loc name emit_zero_val st idx name vals_suffix
+|} vident vident emit_stantype_basetype st
+    emit_zero_val st
+    idx vident vals_suffix
 
 let emit_constructor ppf p = fprintf ppf {|
-
-@ void %s(stan::io::var_context& context__,
+@ %s(stan::io::var_context& context__,
 @ @[<v>   unsigned int random_seed__ = 0,
 @         std::ostream* pstream__ = NULL) : prob_grad(0) {
 @] @ @[<v 4>
@@ -383,11 +415,14 @@ let emit_constructor ppf p = fprintf ppf {|
 @ %a
 @ %a
 @]@ }
-|} emit_error_wrapper (emit_str, "Error while reading in data: ", p.data)
-    emit_error_wrapper (emit_str, "Error during transformed data block: ")
+|}
+    p.prog_name
+    emit_located_error ((pp_print_list ~pp_sep:newline emit_read_field),
+                        p.datab, Some "Error while reading in data: ")
+    emit_located_error ((pp_print_list ~pp_sep:newline emit_transform),
+                        p.datab, Some "Error during transformed data block: ")
 
-
-let emit_model ppf p =
+let emit_model ppf (p: stmt_loc prog) =
   fprintf ppf {|
 class %s_model : public prob_grad {
 @ @[<v 1>
@@ -412,7 +447,7 @@ class %s_model : public prob_grad {
 @]
 }; // model
 |} p.prog_name
-    (pp_print_list ~pp_sep:semi_new emit_vardecl) p.data
+    emit_statement_loc p.datab
     emit_constructor p
     p.prog_name p.prog_name
 (* transform inits
@@ -422,7 +457,7 @@ class %s_model : public prob_grad {
    write_array
 *)
 
-*)
+(*
 let globals = "static int current_statement_begin__;"
 
 let usings =
@@ -437,19 +472,17 @@ using stan::model::prob_grad;
 using namespace stan::math;
 |}
 
-(*
-let emit_prog ppf (p: Mir.prog) =
+let emit_prog ppf (p: stmt_loc prog) =
   fprintf ppf "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name
     globals
     usings
-    (pp_print_list emit_udf) p.functions
+    emit_statement_loc p.functionsb
     emit_model p
 
 let%expect_test "prog" =
-
-  { functions= []
-  ; params= ["theta", SReal, "line 7"]
+  { functionsb= Skip
+  ; params= Decl (AutoDiffable, "theta", SReal)
   ; data: ["y", SReal, "line 8"]
   ; model: NRFnApp("print", Lit(Str, "hello world"))
   ; gq: Skip ; tdata: Skip ; tparam: Skip
