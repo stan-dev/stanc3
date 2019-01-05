@@ -17,7 +17,7 @@ let rec unwind_sized_array_type = function
   | st -> (st, [])
 
 let rec unwind_array_type = function
-  | Array ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
+  | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
 let rec pretty_print_originblock = function
@@ -35,19 +35,19 @@ and pretty_print_autodifftype = function
   | AutoDiffable -> ""
 
 and pretty_print_unsizedtype = function
-  | Int -> "int"
-  | Real -> "real"
-  | Vector -> "vector"
-  | RowVector -> "row_vector"
-  | Matrix -> "matrix"
-  | Array ut ->
+  | UInt -> "int"
+  | UReal -> "real"
+  | UVector -> "vector"
+  | URowVector -> "row_vector"
+  | UMatrix -> "matrix"
+  | UArray ut ->
       let ut2, d = unwind_array_type ut in
       pretty_print_unsizedtype ut2 ^ ("[" ^ String.make d ',') ^ "]"
-  | Fun (argtypes, rt) ->
+  | UFun (argtypes, rt) ->
       "("
       ^ String.concat ", " (List.map pretty_print_argtype argtypes)
       ^ ") => " ^ pretty_print_returntype rt
-  | MathLibraryFunction -> "Stan Math function"
+  | UMathLibraryFunction -> "Stan Math function"
 
 and pretty_print_unsizedtypes l =
   String.concat ", " (List.map pretty_print_unsizedtype l)
@@ -183,15 +183,16 @@ and pretty_print_transformation = function
 and pretty_print_transformed_type st trans =
   let unsizedtype_string, sizes_string =
     match st with
-    | SInt -> (pretty_print_unsizedtype Int, "")
-    | SReal -> (pretty_print_unsizedtype Real, "")
+    | SInt -> (pretty_print_unsizedtype UInt, "")
+    | SReal -> (pretty_print_unsizedtype UReal, "")
     | SVector e ->
-        (pretty_print_unsizedtype Vector, "[" ^ pretty_print_expression e ^ "]")
+        ( pretty_print_unsizedtype UVector
+        , "[" ^ pretty_print_expression e ^ "]" )
     | SRowVector e ->
-        ( pretty_print_unsizedtype RowVector
+        ( pretty_print_unsizedtype URowVector
         , "[" ^ pretty_print_expression e ^ "]" )
     | SMatrix (e1, e2) ->
-        ( pretty_print_unsizedtype Matrix
+        ( pretty_print_unsizedtype UMatrix
         , "[" ^ pretty_print_expression e1 ^ ", " ^ pretty_print_expression e2
           ^ "]" )
     | SArray _ -> (

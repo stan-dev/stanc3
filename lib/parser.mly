@@ -146,7 +146,7 @@ unsized_type:
   | bt=basic_type ud=option(unsized_dims)
     {  grammar_logger "unsized_type" ;
        let rec reparray n x =
-           if n <= 0 then x else reparray (n-1) (Array x) in
+           if n <= 0 then x else reparray (n-1) (UArray x) in
        let size =
          match ud with Some d -> 1 + d | None -> 0
        in
@@ -154,15 +154,15 @@ unsized_type:
 
 basic_type:
   | INT
-    {  grammar_logger "basic_type INT" ; Int  }
+    {  grammar_logger "basic_type INT" ; UInt  }
   | REAL
-    {  grammar_logger "basic_type REAL"  ; Real }
+    {  grammar_logger "basic_type REAL"  ; UReal }
   | VECTOR
-    {  grammar_logger "basic_type VECTOR" ; Vector }
+    {  grammar_logger "basic_type VECTOR" ; UVector }
   | ROWVECTOR
-    {  grammar_logger "basic_type ROWVECTOR" ; RowVector }
+    {  grammar_logger "basic_type ROWVECTOR" ; URowVector }
   | MATRIX
-    {  grammar_logger "basic_type MATRIX" ; Matrix }
+    {  grammar_logger "basic_type MATRIX" ; UMatrix }
 
 unsized_dims:
   | LBRACK cs=list(COMMA) RBRACK
@@ -182,7 +182,7 @@ var_decl:
                        identifier= id;
                        initial_value= Some (snd a);
                        is_global= false};
-           stmt_untyped_loc= Location ($startpos, $endpos)} 
+           stmt_untyped_loc= Location ($startpos, $endpos)}
       | None ->
           {stmt_untyped=
               VarDecl {sizedtype= reducearray (sbt, sizes);

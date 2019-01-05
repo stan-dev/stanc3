@@ -26,14 +26,14 @@ and autodifftype = DataOnly | AutoDiffable
     type in the usual sense. Still, we want to assign a unique type to every
     expression during type checking.  *)
 and unsizedtype =
-  | Int
-  | Real
-  | Vector
-  | RowVector
-  | Matrix
-  | Array of unsizedtype
-  | Fun of (autodifftype * unsizedtype) list * returntype
-  | MathLibraryFunction
+  | UInt
+  | UReal
+  | UVector
+  | URowVector
+  | UMatrix
+  | UArray of unsizedtype
+  | UFun of (autodifftype * unsizedtype) list * returntype
+  | UMathLibraryFunction
 
 (** Return types for functions *)
 and returntype = Void | ReturnType of unsizedtype

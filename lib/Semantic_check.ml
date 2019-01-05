@@ -53,17 +53,17 @@ let type_of_expr_typed ue = ue.expr_typed_type
 
 let rec unsizedtype_contains_int ut =
   match ut with
-  | Int -> true
-  | Array ut -> unsizedtype_contains_int ut
+  | UInt -> true
+  | UArray ut -> unsizedtype_contains_int ut
   | _ -> false
 
 let rec unsizedtype_of_sizedtype = function
-  | SInt -> Int
-  | SReal -> Real
-  | SVector _ -> Vector
-  | SRowVector _ -> RowVector
-  | SMatrix (_, _) -> Matrix
-  | SArray (st, _) -> Array (unsizedtype_of_sizedtype st)
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix (_, _) -> UMatrix
+  | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_originblock = function
   | [] -> MathLibrary
@@ -71,11 +71,11 @@ let rec lub_originblock = function
       let y = lub_originblock xs in
       if compare_originblock x y < 0 then y else x
 
-let check_of_int_type ue = ue.expr_typed_type = Int
-let check_of_int_array_type ue = ue.expr_typed_type = Array Int
+let check_of_int_type ue = ue.expr_typed_type = UInt
+let check_of_int_array_type ue = ue.expr_typed_type = UArray UInt
 
 let check_of_int_or_real_type ue =
-  match ue.expr_typed_type with Int | Real -> true | _ -> false
+  match ue.expr_typed_type with UInt | UReal -> true | _ -> false
 
 let probability_distribution_name_variants id =
   let name = id.name in
@@ -102,16 +102,16 @@ let probability_distribution_name_variants id =
 
 let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
-  | Complete (ReturnType Real), Complete (ReturnType Int)
-   |Complete (ReturnType Int), Complete (ReturnType Real) ->
-      Complete (ReturnType Real)
-  | Incomplete (ReturnType Real), Incomplete (ReturnType Int)
-   |Incomplete (ReturnType Int), Incomplete (ReturnType Real)
-   |Incomplete (ReturnType Real), Complete (ReturnType Int)
-   |Incomplete (ReturnType Int), Complete (ReturnType Real)
-   |Complete (ReturnType Real), Incomplete (ReturnType Int)
-   |Complete (ReturnType Int), Incomplete (ReturnType Real) ->
-      Incomplete (ReturnType Real)
+  | Complete (ReturnType UReal), Complete (ReturnType UInt)
+   |Complete (ReturnType UInt), Complete (ReturnType UReal) ->
+      Complete (ReturnType UReal)
+  | Incomplete (ReturnType UReal), Incomplete (ReturnType UInt)
+   |Incomplete (ReturnType UInt), Incomplete (ReturnType UReal)
+   |Incomplete (ReturnType UReal), Complete (ReturnType UInt)
+   |Incomplete (ReturnType UInt), Complete (ReturnType UReal)
+   |Complete (ReturnType UReal), Incomplete (ReturnType UInt)
+   |Complete (ReturnType UInt), Incomplete (ReturnType UReal) ->
+      Incomplete (ReturnType UReal)
   | Complete rt1, Complete rt2 ->
       if rt1 <> rt2 then
         semantic_error ~loc
@@ -150,16 +150,16 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
 
 let try_compute_block_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
-  | Complete (ReturnType Real), Complete (ReturnType Int)
-   |Complete (ReturnType Int), Complete (ReturnType Real)
-   |Incomplete (ReturnType Real), Complete (ReturnType Int)
-   |Incomplete (ReturnType Int), Complete (ReturnType Real) ->
-      Complete (ReturnType Real)
-  | Incomplete (ReturnType Real), Incomplete (ReturnType Int)
-   |Incomplete (ReturnType Int), Incomplete (ReturnType Real)
-   |Complete (ReturnType Real), Incomplete (ReturnType Int)
-   |Complete (ReturnType Int), Incomplete (ReturnType Real) ->
-      Incomplete (ReturnType Real)
+  | Complete (ReturnType UReal), Complete (ReturnType UInt)
+   |Complete (ReturnType UInt), Complete (ReturnType UReal)
+   |Incomplete (ReturnType UReal), Complete (ReturnType UInt)
+   |Incomplete (ReturnType UInt), Complete (ReturnType UReal) ->
+      Complete (ReturnType UReal)
+  | Incomplete (ReturnType UReal), Incomplete (ReturnType UInt)
+   |Incomplete (ReturnType UInt), Incomplete (ReturnType UReal)
+   |Complete (ReturnType UReal), Incomplete (ReturnType UInt)
+   |Complete (ReturnType UInt), Incomplete (ReturnType UReal) ->
+      Incomplete (ReturnType UReal)
   | Complete rt1, Complete rt2 | Incomplete rt1, Complete rt2 ->
       if rt1 <> rt2 then
         semantic_error ~loc
@@ -354,9 +354,9 @@ and semantic_check_returntype = function
 
 (* Probably nothing to do here *)
 and semantic_check_unsizedtype = function
-  | Array ut -> Array (semantic_check_unsizedtype ut)
-  | Fun (l, rt) ->
-      Fun
+  | UArray ut -> UArray (semantic_check_unsizedtype ut)
+  | UFun (l, rt) ->
+      UFun
         ( List.map
             (fun (ob, ut) ->
               (semantic_check_originblock ob, semantic_check_unsizedtype ut) )
@@ -581,7 +581,9 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       and originblock, type_ =
-        Core_kernel.Option.value ~default:(MathLibrary, MathLibraryFunction) ut
+        Core_kernel.Option.value
+          ~default:(MathLibrary, UMathLibraryFunction)
+          ut
       in
       { expr_typed= Variable uid
       ; expr_typed_origin= originblock
@@ -590,12 +592,12 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
   | IntNumeral s ->
       { expr_typed= IntNumeral s
       ; expr_typed_origin= Data
-      ; expr_typed_type= Int
+      ; expr_typed_type= UInt
       ; expr_typed_loc= loc }
   | RealNumeral s ->
       { expr_typed= RealNumeral s
       ; expr_typed_origin= Data
-      ; expr_typed_type= Real
+      ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id
@@ -679,13 +681,13 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                 ^ "." )
           in
           match Symbol_table.look vm uid.name with
-          | Some (_, Fun (_, Void)) ->
+          | Some (_, UFun (_, Void)) ->
               semantic_error ~loc
                 ( "A returning function was expected but a non-returning \
                    function "
                 ^ ("'" ^ uid.name ^ "'")
                 ^ " was supplied." )
-          | Some (_, Fun (listedtypes, ReturnType ut)) ->
+          | Some (_, UFun (listedtypes, ReturnType ut)) ->
               let _ =
                 if
                   not
@@ -697,7 +699,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                     ^ ("'" ^ uid.name ^ "'")
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype
-                        (Fun (listedtypes, ReturnType ut))
+                        (UFun (listedtypes, ReturnType ut))
                     ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
                         (List.map type_of_expr_typed ues)
@@ -774,13 +776,13 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                 ^ "." )
           in
           match Symbol_table.look vm uid.name with
-          | Some (_, Fun (_, Void)) ->
+          | Some (_, UFun (_, Void)) ->
               semantic_error ~loc
                 ( "A returning function was expected but a non-returning \
                    function "
                 ^ ("'" ^ uid.name ^ "'")
                 ^ " was supplied." )
-          | Some (_, Fun (listedtypes, ReturnType ut)) ->
+          | Some (_, UFun (listedtypes, ReturnType ut)) ->
               let _ =
                 if
                   not
@@ -792,7 +794,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                     ^ ("'" ^ uid.name ^ "'")
                     ^ ". Available signatures:\n"
                     ^ pretty_print_unsizedtype
-                        (Fun (listedtypes, ReturnType ut))
+                        (UFun (listedtypes, ReturnType ut))
                     ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
                         (List.map type_of_expr_typed ues)
@@ -829,7 +831,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       in
       { expr_typed= GetLP
       ; expr_typed_origin= context_flags.current_block
-      ; expr_typed_type= Real
+      ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | GetTarget ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
@@ -846,7 +848,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       in
       { expr_typed= GetTarget
       ; expr_typed_origin= context_flags.current_block
-      ; expr_typed_type= Real
+      ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | ArrayExpr es ->
       let ues = List.map semantic_check_expression es in
@@ -866,8 +868,8 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       in
       let array_type =
         if List.exists (fun x -> List.hd elementtypes <> x) elementtypes then
-          Array Real
-        else Array (List.hd elementtypes)
+          UArray UReal
+        else UArray (List.hd elementtypes)
       in
       let returnblock = lub_origin_e ues in
       { expr_typed= ArrayExpr ues
@@ -878,9 +880,10 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       let ues = List.map semantic_check_expression es in
       let elementtypes = List.map (fun y -> y.expr_typed_type) ues in
       let ut =
-        if List.for_all (fun x -> x = Real || x = Int) elementtypes then
-          RowVector
-        else if List.for_all (fun x -> x = RowVector) elementtypes then Matrix
+        if List.for_all (fun x -> x = UReal || x = UInt) elementtypes then
+          URowVector
+        else if List.for_all (fun x -> x = URowVector) elementtypes then
+          UMatrix
         else
           semantic_error ~loc
             "Row_vector expression must have all int and real entries or all \
@@ -902,7 +905,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       let uindices = List.map semantic_check_index indices in
       let uindices_with_types =
         List.map
-          (function Single e as i -> (i, e.expr_typed_type) | i -> (i, Int))
+          (function Single e as i -> (i, e.expr_typed_type) | i -> (i, UInt))
           uindices
       in
       let inferred_originblock_of_indexed ob uindices =
@@ -922,35 +925,35 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
         match (ut, typed_indexl) with
         (* Here, we need some special logic to deal with row and column vectors
            properly. *)
-        | Matrix, [(All, _); (Single _, Int)]
-         |Matrix, [(Upfrom _, _); (Single _, Int)]
-         |Matrix, [(Downfrom _, _); (Single _, Int)]
-         |Matrix, [(Between _, _); (Single _, Int)]
-         |Matrix, [(Single _, Array Int); (Single _, Int)] ->
-            Vector
+        | UMatrix, [(All, _); (Single _, UInt)]
+         |UMatrix, [(Upfrom _, _); (Single _, UInt)]
+         |UMatrix, [(Downfrom _, _); (Single _, UInt)]
+         |UMatrix, [(Between _, _); (Single _, UInt)]
+         |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
+            UVector
         | ut, [] -> ut
         | ut, typed_index :: typed_indices -> (
             let reduce_type =
-              match typed_index with Single _, Int -> true | _ -> false
+              match typed_index with Single _, UInt -> true | _ -> false
             in
             match ut with
-            | Array ut' ->
+            | UArray ut' ->
                 if reduce_type then
                   inferred_unsizedtype_of_indexed ut' typed_indices
                   (* TODO: this can easily be made tail recursive if needs be *)
-                else Array (inferred_unsizedtype_of_indexed ut' typed_indices)
-            | Vector ->
+                else UArray (inferred_unsizedtype_of_indexed ut' typed_indices)
+            | UVector ->
                 if reduce_type then
-                  inferred_unsizedtype_of_indexed Real typed_indices
-                else inferred_unsizedtype_of_indexed Vector typed_indices
-            | RowVector ->
+                  inferred_unsizedtype_of_indexed UReal typed_indices
+                else inferred_unsizedtype_of_indexed UVector typed_indices
+            | URowVector ->
                 if reduce_type then
-                  inferred_unsizedtype_of_indexed Real typed_indices
-                else inferred_unsizedtype_of_indexed RowVector typed_indices
-            | Matrix ->
+                  inferred_unsizedtype_of_indexed UReal typed_indices
+                else inferred_unsizedtype_of_indexed URowVector typed_indices
+            | UMatrix ->
                 if reduce_type then
-                  inferred_unsizedtype_of_indexed RowVector typed_indices
-                else inferred_unsizedtype_of_indexed Matrix typed_indices
+                  inferred_unsizedtype_of_indexed URowVector typed_indices
+                else inferred_unsizedtype_of_indexed UMatrix typed_indices
             (* Check that expressions take valid number of indices (based on their matrix/array dimensions) *)
             | _ ->
                 semantic_error ~loc
@@ -977,7 +980,7 @@ and semantic_check_printable = function
   | PExpr e -> (
       let ue = semantic_check_expression e in
       match ue.expr_typed_type with
-      | Fun _ | MathLibraryFunction ->
+      | UFun _ | UMathLibraryFunction ->
           semantic_error ~loc:ue.expr_typed_loc "Functions cannot be printed."
       | _ -> PExpr ue )
 
@@ -1108,7 +1111,7 @@ and semantic_check_statement s =
                     "."  |}
           in
           match Symbol_table.look vm uid.name with
-          | Some (_, Fun (listedtypes, Void)) ->
+          | Some (_, UFun (listedtypes, Void)) ->
               let _ =
                 if
                   not
@@ -1119,7 +1122,7 @@ and semantic_check_statement s =
                     ( "Ill-typed arguments supplied to function "
                     ^ ("'" ^ uid.name ^ "'")
                     ^ ". Available signatures:\n"
-                    ^ pretty_print_unsizedtype (Fun (listedtypes, Void))
+                    ^ pretty_print_unsizedtype (UFun (listedtypes, Void))
                     ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
                         (List.map type_of_expr_typed ues)
@@ -1128,7 +1131,7 @@ and semantic_check_statement s =
               { stmt_typed= NRFunApp (uid, ues)
               ; stmt_typed_returntype= NoReturnType
               ; stmt_typed_loc= loc }
-          | Some (_, Fun (_, ReturnType _)) ->
+          | Some (_, UFun (_, ReturnType _)) ->
               semantic_error ~loc
                 ( "A non-returning function was expected but a returning \
                    function "
@@ -1151,7 +1154,7 @@ and semantic_check_statement s =
       (* We check typing of ~ and target += *)
       let _ =
         match ue.expr_typed_type with
-        | Fun _ | MathLibraryFunction ->
+        | UFun _ | UMathLibraryFunction ->
             semantic_error ~loc
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1174,7 +1177,7 @@ and semantic_check_statement s =
       let ue = semantic_check_expression e in
       let _ =
         match ue.expr_typed_type with
-        | Fun _ | MathLibraryFunction ->
+        | UFun _ | UMathLibraryFunction ->
             semantic_error ~loc
               "A (container of) reals or ints needs to be supplied to \
                increment target."
@@ -1229,27 +1232,27 @@ and semantic_check_statement s =
       (* We check typing of ~ and target += *)
       let distribution_name_is_defined name argumenttypes =
         get_stan_math_function_return_type_opt (name ^ "_lpdf") argumenttypes
-        = Some (ReturnType Real)
+        = Some (ReturnType UReal)
         || get_stan_math_function_return_type_opt (name ^ "_lpmf")
              argumenttypes
-           = Some (ReturnType Real)
+           = Some (ReturnType UReal)
         || get_stan_math_function_return_type_opt (name ^ "_log") argumenttypes
-           = Some (ReturnType Real)
+           = Some (ReturnType UReal)
            && name <> "binomial_coefficient"
            && name <> "multiply"
         || ( match Symbol_table.look vm (name ^ "_lpdf") with
-           | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+           | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
                check_compatible_arguments_mod_conv name listedtypes
                  argumenttypes
            | _ -> false )
         || ( match Symbol_table.look vm (name ^ "_lpmf") with
-           | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+           | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
                check_compatible_arguments_mod_conv name listedtypes
                  argumenttypes
            | _ -> false )
         ||
         match Symbol_table.look vm (name ^ "_log") with
-        | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+        | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
             check_compatible_arguments_mod_conv name listedtypes argumenttypes
         | _ -> false
       in
@@ -1263,38 +1266,38 @@ and semantic_check_statement s =
       in
       let cumulative_density_is_defined name argumenttypes =
         ( get_stan_math_function_return_type_opt (name ^ "_lcdf") argumenttypes
-          = Some (ReturnType Real)
+          = Some (ReturnType UReal)
         ||
         match Symbol_table.look vm (name ^ "_lcdf") with
-        | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+        | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
             check_compatible_arguments_mod_conv name listedtypes argumenttypes
         | _ -> (
             false
             || get_stan_math_function_return_type_opt (name ^ "_cdf_log")
                  argumenttypes
-               = Some (ReturnType Real)
+               = Some (ReturnType UReal)
             ||
             match Symbol_table.look vm (name ^ "_cdf_log") with
-            | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+            | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
                 check_compatible_arguments_mod_conv name listedtypes
                   argumenttypes
             | _ -> false ) )
         && ( get_stan_math_function_return_type_opt (name ^ "_lccdf")
                argumenttypes
-             = Some (ReturnType Real)
+             = Some (ReturnType UReal)
            ||
            match Symbol_table.look vm (name ^ "_lccdf") with
-           | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+           | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
                check_compatible_arguments_mod_conv name listedtypes
                  argumenttypes
            | _ -> (
                false
                || get_stan_math_function_return_type_opt (name ^ "_ccdf_log")
                     argumenttypes
-                  = Some (ReturnType Real)
+                  = Some (ReturnType UReal)
                ||
                match Symbol_table.look vm (name ^ "_ccdf_log") with
-               | Some (Functions, Fun (listedtypes, ReturnType Real)) ->
+               | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
                    check_compatible_arguments_mod_conv name listedtypes
                      argumenttypes
                | _ -> false ) )
@@ -1440,7 +1443,7 @@ and semantic_check_statement s =
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
       let oindexblock = lub_origin_e [ue1; ue2] in
-      let _ = Symbol_table.enter vm uid.name (oindexblock, Int) in
+      let _ = Symbol_table.enter vm uid.name (oindexblock, UInt) in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
       let _ = context_flags.in_loop <- true in
@@ -1461,8 +1464,8 @@ and semantic_check_statement s =
       (* For, while, for each, if constructs take expressions of valid type *)
       let loop_identifier_unsizedtype =
         match ue.expr_typed_type with
-        | Array ut -> ut
-        | Vector | RowVector | Matrix -> Real
+        | UArray ut -> ut
+        | UVector | URowVector | UMatrix -> UReal
         | _ ->
             semantic_error ~loc:ue.expr_typed_loc
               ( "Foreach loop must be over array, vector, row_vector or \
@@ -1553,14 +1556,14 @@ and semantic_check_statement s =
           &&
           match utrans with
           | Lower ue1 -> (
-            match ue1.expr_typed_type with Real -> true | _ -> false )
+            match ue1.expr_typed_type with UReal -> true | _ -> false )
           | Upper ue1 -> (
-            match ue1.expr_typed_type with Real -> true | _ -> false )
+            match ue1.expr_typed_type with UReal -> true | _ -> false )
           | LowerUpper (ue1, ue2) -> (
             match ue1.expr_typed_type with
-            | Real -> true
+            | UReal -> true
             | _ -> (
-              match ue2.expr_typed_type with Real -> true | _ -> false ) )
+              match ue2.expr_typed_type with UReal -> true | _ -> false ) )
           | _ -> false
         then
           semantic_error ~loc
@@ -1626,7 +1629,7 @@ and semantic_check_statement s =
         if Symbol_table.check_is_unassigned vm uid.name then (
           if
             Symbol_table.look vm uid.name
-            <> Some (Functions, Fun (uarg_types, urt))
+            <> Some (Functions, UFun (uarg_types, urt))
           then
             semantic_error ~loc
               ( "Function "
@@ -1649,7 +1652,7 @@ and semantic_check_statement s =
         | _ -> Symbol_table.set_is_assigned vm uid.name
       in
       let _ =
-        Symbol_table.enter vm uid.name (Functions, Fun (uarg_types, urt))
+        Symbol_table.enter vm uid.name (Functions, UFun (uarg_types, urt))
       in
       let uarg_identifiers = List.map (function _, _, z -> z) uargs in
       let uarg_names = List.map (fun x -> x.name) uarg_identifiers in
@@ -1659,7 +1662,7 @@ and semantic_check_statement s =
       let open Pervasives in
       let _ =
         if
-          urt <> ReturnType Real
+          urt <> ReturnType UReal
           && List.exists
                (fun x -> is_suffix uid.name ~suffix:x)
                ["_log"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
@@ -1671,7 +1674,7 @@ and semantic_check_statement s =
       let _ =
         if
           is_suffix uid.name ~suffix:"_lpdf"
-          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Real)
+          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> UReal)
         then
           semantic_error ~loc
             ( "Probability density functions require real variates (first \
@@ -1682,7 +1685,7 @@ and semantic_check_statement s =
       let _ =
         if
           is_suffix uid.name ~suffix:"_lpmf"
-          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> Int)
+          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> UInt)
         then
           semantic_error ~loc
             ( "Probability mass functions require integer variates (first \
