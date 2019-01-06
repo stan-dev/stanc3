@@ -7,7 +7,7 @@ val check_compatible_arguments_mod_conv :
     lhs *)
 
 val check_of_same_type_mod_array_conv :
-  string -> typed_expression -> typed_expression -> bool
+  string -> unsizedtype -> unsizedtype -> bool
 (** Check that the rhs type can be converted to the lhs, where we allow
     conversion inside an array constructor *)
 

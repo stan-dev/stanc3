@@ -844,8 +844,10 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           List.exists
             (fun x ->
               not
-                ( check_of_same_type_mod_array_conv "" x (List.hd ues)
-                || check_of_same_type_mod_array_conv "" (List.hd ues) x ) )
+                ( check_of_same_type_mod_array_conv "" x.expr_typed_type
+                    (List.hd ues).expr_typed_type
+                || check_of_same_type_mod_array_conv ""
+                     (List.hd ues).expr_typed_type x.expr_typed_type ) )
             ues
         then
           semantic_error ~loc

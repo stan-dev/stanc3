@@ -6,11 +6,11 @@ This repo contains work in progress on a new compiler for Stan, written in OCaml
 ## To Get Started
 
 ### To build, test, and run
+To be able to build the project, make sure you have GNU make installed.
+
 If you do not have OCaml and Opam installed already, run `scripts/install_ocaml.sh` to set up your OCaml environment.
 
 To install the required OCaml libraries, run `scripts/install_dev_deps.sh`.
-
-Check out `scripts/setup_dev_env.sh` to see how we recommend installing our pre-reqs.
 
 To build `stanc.exe`, run `make`. The binary will be built in `_build/default`
 
@@ -107,6 +107,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 * Pattern rewrites; `exp(x) - 1` -> `exp1m(x)`
 * In most Stan models, almost everything is immutable: variables are initialized when they are declared and never changed again. We should exploit this. We can consider implementing optimizations that only work properly on the commutative sublanguage which does not have non-commutative side effects, as most programs can be written in that language.
 * We should be careful with continue, break and early return statements as they are non-commutative effects as well. I guess you wouldn't need most of the time, but some models do use them.
+* Move code to `transformed data` if possible, if not, then try to move it to `generated quantities` (c.f. SlicStan).
 
 ### AST and IR design considerations
 * The AST should have different variant types for each different type of syntax, and thus follow closely. Think about how a pretty-printer would want to deal with an AST (thanks @jimtla!)

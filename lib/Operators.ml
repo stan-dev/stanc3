@@ -49,7 +49,9 @@ let _ =
 let operator_return_type_from_string op_name args =
   if op_name = "Assign" || op_name = "ArrowAssign" then
     match args with
-    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 -> Some Void
+    | [{expr_typed_type= ut1; _}; {expr_typed_type= ut2; _}]
+      when check_of_same_type_mod_array_conv "" ut1 ut2 ->
+        Some Void
     | _ -> None
   else
     let rec try_recursive_find = function
