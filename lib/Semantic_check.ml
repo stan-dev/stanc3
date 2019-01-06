@@ -242,69 +242,54 @@ let update_originblock name ob =
   | None -> fatal_error ()
 
 (* The actual semantic checks for all AST nodes! *)
-let rec semantic_check_program program =
-  match program
-  with
-  | { functionblock= fb
+let rec semantic_check_program
+    { functionblock= fb
     ; datablock= db
     ; transformeddatablock= tdb
     ; parametersblock= pb
     ; transformedparametersblock= tpb
     ; modelblock= mb
-    ; generatedquantitiesblock= gb }
-  ->
-    (* NB: We always want to make sure we start with an empty symbol table, in
-       case we are processing multiple files in one run. *)
-    let _ = unsafe_clear_symbol_table vm in
-    let _ = context_flags.current_block <- Functions in
-    let ufb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) fb
-    in
-    (* Check that all declared functions have a definition *)
-    let _ =
-      if
-        Symbol_table.check_some_id_is_unassigned vm
-        && !check_that_all_functions_have_definition
-      then
-        semantic_error
-          ~loc:(List.hd (Core_kernel.Option.value_exn ufb)).stmt_typed_loc
-          "Some function is declared without specifying a definition."
-      (* TODO: insert better location in the error above *)
-    in
-    let _ = context_flags.current_block <- Data in
-    let udb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) db
-    in
-    let _ = context_flags.current_block <- TData in
-    let utdb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) tdb
-    in
-    let _ = context_flags.current_block <- Param in
-    let upb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) pb
-    in
-    let _ = context_flags.current_block <- TParam in
-    let utpb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) tpb
-    in
-    let _ = context_flags.current_block <- Model in
-    (* Model top level variables only assigned and read in model  *)
-    let _ = Symbol_table.begin_scope vm in
-    let umb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) mb
-    in
-    let _ = Symbol_table.end_scope vm in
-    let _ = context_flags.current_block <- GQuant in
-    let ugb =
-      Core_kernel.Option.map ~f:(List.map semantic_check_statement) gb
-    in
-    { functionblock= ufb
-    ; datablock= udb
-    ; transformeddatablock= utdb
-    ; parametersblock= upb
-    ; transformedparametersblock= utpb
-    ; modelblock= umb
-    ; generatedquantitiesblock= ugb }
+    ; generatedquantitiesblock= gb } =
+  (* NB: We always want to make sure we start with an empty symbol table, in
+     case we are processing multiple files in one run. *)
+  let _ = unsafe_clear_symbol_table vm in
+  let _ = context_flags.current_block <- Functions in
+  let semantic_check_statements = List.map semantic_check_statement in
+  let open Core_kernel.Option.Monad_infix in
+  let ufb = Core_kernel.Option.map ~f:(List.map semantic_check_statement) fb in
+  (* Check that all declared functions have a definition *)
+  let _ =
+    if
+      Symbol_table.check_some_id_is_unassigned vm
+      && !check_that_all_functions_have_definition
+    then
+      semantic_error
+        ~loc:(List.hd (Core_kernel.Option.value_exn ufb)).stmt_typed_loc
+        "Some function is declared without specifying a definition."
+    (* TODO: insert better location in the error above *)
+  in
+  let _ = context_flags.current_block <- Data in
+  let udb = db >>| semantic_check_statements in
+  let _ = context_flags.current_block <- TData in
+  let utdb = tdb >>| semantic_check_statements in
+  let _ = context_flags.current_block <- Param in
+  let upb = pb >>| semantic_check_statements in
+  let _ = context_flags.current_block <- TParam in
+  let utpb = tpb >>| semantic_check_statements in
+  let _ = context_flags.current_block <- Model in
+  (* Model top level variables only assigned and read in model  *)
+  let _ = Symbol_table.begin_scope vm in
+  let umb = mb >>| semantic_check_statements in
+  let _ = Symbol_table.end_scope vm in
+  let _ = context_flags.current_block <- GQuant in
+  let ugb = gb >>| semantic_check_statements in
+  { functionblock= ufb
+  ; datablock= udb
+  ; transformeddatablock= utdb
+  ; parametersblock= upb
+  ; transformedparametersblock= utpb
+  ; modelblock= umb
+  ; generatedquantitiesblock= ugb }
 
 and semantic_check_identifier id =
   let _ =
