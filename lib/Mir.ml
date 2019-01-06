@@ -29,24 +29,16 @@ and expr =
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
+[@@deriving sexp, hash]
 
-and adtype = Ast.autodifftype [@@deriving sexp, hash]
+type adtype = Ast.autodifftype [@@deriving sexp, hash]
+type sizedtype = expr Ast.sizedtype [@@deriving sexp, hash]
+type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 
-(* Encode both sized and unsized this way... effectiveness TBD*)
-(* Actually probably just use unsizedtype from AST directly;
-   maybe also sizedtype with our own expr?
-*)
-type stantype =
-  | SInt
-  | SReal
-  | SArray of expr option * stantype
-  | SVector of expr option
-  | SRowVector of expr option
-  | SMatrix of (expr * expr) option
+(* This directive silences some spurious warnings from ppx_deriving *)
+[@@@ocaml.warning "-A"]
 
-and loc = string
-
-and 's statement =
+type 's statement =
   | Assignment of expr * expr
   | NRFnApp of string * expr list
   | Check of string * expr list
@@ -68,14 +60,13 @@ and 's statement =
   | Decl of
       { adtype: adtype
       ; vident: string
-      ; st: stantype
+      ; st: sizedtype
       ; trans: transformation }
   | FunDef of
-      { returntype: stantype option
+      { returntype: unsizedtype option
       ; name: string
-      ; arguments: (adtype * string * stantype) list
+      ; arguments: (adtype * string * unsizedtype) list
       ; body: 's }
-[@@deriving sexp, hash]
 
 and 's prog =
   { functionsb: 's
@@ -85,6 +76,7 @@ and 's prog =
   ; gqb: 's
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash]
 
-type stmt_loc = {sloc: loc; stmt: stmt_loc statement} [@@deriving sexp, hash]
+type stmt_loc = {sloc: string; stmt: stmt_loc statement}
+[@@deriving sexp, hash]

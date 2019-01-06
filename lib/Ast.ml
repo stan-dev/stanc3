@@ -102,6 +102,9 @@ and typed_expression =
   ; expr_typed_type: unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
+(* This directive silences some spurious warnings from ppx_deriving *)
+[@@@ocaml.warning "-A"]
+
 (** Assignment operators *)
 type assignmentoperator =
   | Assign
@@ -118,18 +121,28 @@ and 'e truncation =
 
 (** Things that can be printed *)
 and 'e printable = PString of string | PExpr of 'e
+[@@deriving sexp, compare, map, hash]
 
 (** Sized types, for variable declarations *)
-and 'e sizedtype =
+type 'e sizedtype =
   | SInt
   | SReal
   | SVector of 'e
   | SRowVector of 'e
   | SMatrix of 'e * 'e
   | SArray of 'e sizedtype * 'e
+[@@deriving sexp, compare, map, hash]
+
+let rec remove_size = function
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix _ -> UMatrix
+  | SArray (t, _) -> UArray (remove_size t)
 
 (** Transformations (constraints) for global variable declarations *)
-and 'e transformation =
+type 'e transformation =
   | Identity
   | Lower of 'e
   | Upper of 'e
@@ -144,6 +157,7 @@ and 'e transformation =
   | CholeskyCov
   | Correlation
   | Covariance
+[@@deriving sexp, compare, map, hash]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
@@ -220,7 +234,7 @@ and typed_statement =
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
-and 's program =
+type 's program =
   { functionblock: 's list option
   ; datablock: 's list option
   ; transformeddatablock: 's list option

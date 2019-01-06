@@ -12,12 +12,19 @@ let emit_option ppf (emitter, opt, default) =
   | Some x -> fprintf ppf "%a" emitter x
   | None -> emit_str ppf default
 
-let rec emit_stantype ad ppf = function
-  | SInt | SReal -> emit_str ppf ad
-  | SArray (_, t) -> fprintf ppf "std::vector<%a>" (emit_stantype ad) t
-  | SMatrix _ -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
-  | SRowVector _ -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
-  | SVector _ -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
+let rec emit_unsizedtype ad ppf = function
+  | Ast.UInt | UReal -> emit_str ppf ad
+  | UArray t -> fprintf ppf "std::vector<%a>" (emit_unsizedtype ad) t
+  | UMatrix -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
+  | URowVector -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
+  | UVector -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
+  | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
+
+let%expect_test "emit function type raises" =
+  ( match emit_unsizedtype "sars" str_formatter Ast.UMathLibraryFunction with
+  | () -> print_endline (flush_str_formatter ())
+  | exception e -> print_s [%sexp (e : exn)] ) ;
+  [%expect {| ((x UMathLibraryFunction) "not implemented yet") |}]
 
 let emit_call ppf (name, emit_args, args) =
   fprintf ppf "%s(@[<hov>%a@])" name emit_args args
@@ -71,11 +78,11 @@ let%expect_test "multi index" =
         stan::model::nil_index_list())), "vec"); |}]
 
 let rec stantype_prim_str = function
-  | SInt -> "int"
-  | SArray (_, t) -> stantype_prim_str t
+  | Ast.UInt -> "int"
+  | UArray t -> stantype_prim_str t
   | _ -> "double"
 
-let emit_prim_stantype ppf st = emit_stantype (stantype_prim_str st) ppf st
+let emit_prim_stantype ppf st = emit_unsizedtype (stantype_prim_str st) ppf st
 
 let emit_block ppf (emit_body, body) =
   fprintf ppf "{@;<1 4>@[<v>%a@]@,}" emit_body body
@@ -94,15 +101,15 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
   (*let for_loop = {loopvar; lower= zero; upper=dim; body}
 *)
   match st with
-  | SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
-  | SVector (Some dim) | SRowVector (Some dim) ->
+  | Ast.SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
+  | SVector dim | SRowVector dim ->
       emit_for_loop ppf
         ( loopvar
         , zero
         , dim
         , emit_code_per_element
         , sprintf "%s[%s]" name loopvar )
-  | SMatrix (Some (dim1, dim2)) ->
+  | SMatrix (dim1, dim2) ->
       let loopvar2 = mkloopvar (d + 1) in
       emit_for_loop ppf
         ( loopvar
@@ -114,20 +121,18 @@ let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
           , dim2
           , emit_code_per_element
           , sprintf "%s(%s, %s)" name loopvar loopvar2 ) )
-  | SArray (Some dim, st) ->
+  | SArray (st, dim) ->
       emit_for_loop ppf
         ( loopvar
         , zero
         , dim
         , emit_run_code_per_el ~depth:(d + 1) emit_code_per_element
         , (sprintf "%s[%s]" name loopvar, st) )
-  | SMatrix None | SVector None | SRowVector None | SArray (None, _) ->
-      raise_s [%message "Type should have dimensions" (st : stantype)]
 
 let rec integer_el_type = function
-  | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
+  | Ast.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
   | SInt -> true
-  | SArray (_, st) -> integer_el_type st
+  | SArray (st, _) -> integer_el_type st
 
 let emit_arg ppf ((adtype, name, st), idx) =
   let adstr =
@@ -135,7 +140,7 @@ let emit_arg ppf ((adtype, name, st), idx) =
     | Ast.DataOnly -> stantype_prim_str st
     | Ast.AutoDiffable -> sprintf "T%d__" idx
   in
-  fprintf ppf "const %a& %s" (emit_stantype adstr) st name
+  fprintf ppf "const %a& %s" (emit_unsizedtype adstr) st name
 
 let emit_template_decls ppf ts =
   fprintf ppf "@[<hov>template <%a>@]@ "
@@ -155,11 +160,13 @@ let emit_runtime_exception ppf =
 
 let emit_located_error ppf (emit_contents, contents_arg, msg) =
   let emit_located_msg ppf msg =
-    fprintf ppf {|stan::lang::rethrow_located(%a, current_statement__);
+    fprintf ppf
+      {|stan::lang::rethrow_located(%a, current_statement__);
 @ // Next line prevents compiler griping about no return
 @ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
-      emit_option (emit_runtime_exception, msg, "e")
+      emit_option
+      (emit_runtime_exception, msg, "e")
   in
   emit_error_wrapper ppf (emit_contents, contents_arg, emit_located_msg, msg)
 
@@ -177,13 +184,15 @@ let emit_statement emit_statement_with_meta ppf s =
   | Continue -> emit_str ppf "continue;"
   | Return e -> fprintf ppf "return %a;" emit_option (emit_expr, e, "")
   | Skip -> ()
+  | Check _ -> () (* XXX *)
   | IfElse (cond, ifbranch, elsebranch) ->
       let emit_else ppf x =
         fprintf ppf " else {\n %a;\n}" emit_statement_with_meta x
       in
       fprintf ppf "if (%a) %a %a\n" emit_expr cond emit_block
         (emit_statement_with_meta, ifbranch)
-        emit_option (emit_else, elsebranch, "")
+        emit_option
+        (emit_else, elsebranch, "")
   | While (cond, body) ->
       fprintf ppf "while (%a) %a" emit_expr cond emit_block
         (emit_statement_with_meta, body)
@@ -197,17 +206,16 @@ let emit_statement emit_statement_with_meta ppf s =
   | SList ls -> emit_stmt_list ppf ls
   | Decl {adtype; vident; st; trans} ->
       ignore (trans, adtype) ;
-      fprintf ppf "%a %s;" emit_prim_stantype st vident
+      fprintf ppf "%a %s;" emit_prim_stantype (Ast.remove_size st) vident
   | FunDef {returntype; name; arguments; body} ->
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) arguments
       in
       emit_template_decls ppf argtypetemplates ;
-      fprintf ppf "%a@ "
-        emit_option
-        ((emit_stantype "typename boost::math::tools::promote_args<>::type"),
-         returntype, "void")
-      ;
+      fprintf ppf "%a@ " emit_option
+        ( emit_unsizedtype "typename boost::math::tools::promote_args<>::type"
+        , returntype
+        , "void" ) ;
       (* XXX this is all so ugly: *)
       emit_call ppf
         ( name
@@ -228,8 +236,9 @@ let emit_statement emit_statement_with_meta ppf s =
             text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
             text "const static bool propto__ = true;" ;
             text "(void) propto__;" ;
-            text "local_scalar_t__ \
-                  DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+            text
+              "local_scalar_t__ \
+               DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
             text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
             text "int current_statement_begin__ = -1;" ;
             emit_located_error ppf (emit_statement_with_meta, body, None) )
@@ -273,21 +282,19 @@ let%expect_test "run code per element" =
             [ { splain=
                   Assignment
                     (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
-              } ; {splain= NRFnApp ("print", [Var x])} ] }
+              }
+            ; {splain= NRFnApp ("print", [Var x])} ] }
   in
   fprintf str_formatter "@[<v>%a@]"
     (emit_run_code_per_el assign)
-    ( "dubvec"
-    , SArray
-        ( Some (Var "X")
-        , SArray (Some (Var "Y"), SMatrix (Some (Var "Z", Var "W"))) ) ) ;
+    ("dubvec", SArray (SArray (SMatrix (Var "Y", Var "Z"), Var "X"), Var "W")) ;
   flush_str_formatter () |> print_endline ;
   [%expect
     {|
-    for (size_t i_0__ = 0; i_0__ < X; i_0__++)
-        for (size_t i_1__ = 0; i_1__ < Y; i_1__++)
-            for (size_t i_2__ = 0; i_2__ < Z; i_2__++)
-                for (size_t i_3__ = 0; i_3__ < W; i_3__++)
+    for (size_t i_0__ = 0; i_0__ < W; i_0__++)
+        for (size_t i_1__ = 0; i_1__ < X; i_1__++)
+            for (size_t i_2__ = 0; i_2__ < Y; i_2__++)
+                for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
                     {
                         dubvec[i_0__][i_1__](i_2__, i_3__) = stan::model::rvalue(vals_r__,
                                                                  stan::model::cons_list(stan::model::index_uni(pos__++),
@@ -301,9 +308,6 @@ let%expect_test "decl" =
   |> emit_statement_plain str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i; |}]
-
-let emit_vardecl ppf (name, stype) =
-  fprintf ppf "%a %s" emit_prim_stantype stype name
 
 let stan_math_map =
   String.Map.of_alist_exn
@@ -319,8 +323,7 @@ let%expect_test "udf" =
        { returntype= None
        ; name= "sars"
        ; arguments=
-           [ (Ast.DataOnly, "x", SMatrix None)
-           ; (Ast.AutoDiffable, "y", SRowVector None) ]
+           [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
        ; body=
            {splain= Return (Some (FnApp ("add", [Var "x"; Lit (Int, "1")])))}
        }) ;
@@ -340,40 +343,38 @@ let%expect_test "udf" =
         (void) DUMMY_VAR__;  // suppress unused var warning
         int current_statement_begin__ = -1;
         try {
-            return add(x, 1);
-        } catch const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement__);
 
+            // Next line prevents compiler griping about no return
+
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+
+        } catch const std::exception& e) {
+            return add(x, 1);
         }
     } |}]
 
-let rec emit_stantype_basetype ppf = function
-  | SInt -> emit_str ppf "int"
-  | SReal -> emit_str ppf "double"
-  | SArray (_, t) -> emit_stantype_basetype ppf t
-  | SMatrix _ -> emit_str ppf "matrix_d"
-  | SRowVector _ -> emit_str ppf "row_vector_d"
-  | SVector _ -> emit_str ppf "vector_d"
+let rec emit_basetype ppf = function
+  | Ast.UInt -> emit_str ppf "int"
+  | UReal -> emit_str ppf "double"
+  | UArray t -> emit_basetype ppf t
+  | UMatrix -> emit_str ppf "matrix_d"
+  | URowVector -> emit_str ppf "row_vector_d"
+  | UVector -> emit_str ppf "vector_d"
+  | x -> raise_s [%message "basetype not defined for " (x : unsizedtype)]
 
+(*
 (* XXX Serious TODO: translate all of this shit during AST_to_MIR stage!
 Because in generated code often see the same statement repeated 3x *)
 let rec emit_zeroing_ctor_call ppf st = match st with
-  | SInt | SReal -> emit_str ppf "0"
-  | SArray (Some dim, t) -> fprintf ppf "%a, %a" emit_expr dim emit_zeroing_ctor_call t
-  | SRowVector (Some dim) | SVector (Some dim)
-    -> fprintf ppf "%"
-  | SMatrix (Some (dim1, dim2)) ->
-  | _ -> raise_s [%message "Expected stantype with dimensions, got " (st: stantype)]
+  | Ast.SInt | SReal -> emit_str ppf "0"
+  | SArray (t, dim) -> fprintf ppf "%a, %a" emit_expr dim emit_zeroing_ctor_call t
+  | SRowVector dim | SVector dim -> ignore(dim); fprintf ppf "%s" "XXX todo"
+  | SMatrix (dim1, dim2) -> ignore(dim1, dim2) (* XXX *)
 
 
 let emit_zero ppf (name, st) =
-  fprintf ppf "%s = %a(%a);" name emit_stantype st
-
-  | SInt -> emit_str ppf "int"
-  | SReal -> emit_str ppf "double"
-  | SArray (_, t) -> emit_stantype_basetype ppf t
-  | SMatrix _ -> emit_str ppf "matrix_d"
-  | SRowVector _ -> emit_str ppf "row_vector_d"
-  | SVector _ -> emit_str ppf "vector_d"
+  fprintf ppf "%s = %a(%a);" name (emit_unsizedtype "") st emit_zeroing_ctor_call st
 
 let emit_read_field ppf ((Decl { adtype; vident; st; trans}), idx) =
   let vals_suffix = if integer_el_type st then "i" else "r" in
@@ -387,7 +388,7 @@ let emit_read_field ppf ((Decl { adtype; vident; st; trans}), idx) =
 @ %s = vals_%s__[pos_++];
 @ // Check constraints
 @ %a
-|} vident vident emit_stantype_basetype st
+|} vident vident emit_basetype st
     emit_zero_val st
     idx vident vals_suffix
 
@@ -455,6 +456,8 @@ class %s_model : public prob_grad {
    get_param_names
    get_dims
    write_array
+*)
+
 *)
 
 (*
