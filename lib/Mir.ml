@@ -38,10 +38,13 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
-type 's statement =
+type constraint_check =
+  {cfname: string; cvarname: string; ctype: sizedtype; cargs: expr list}
+
+and 's statement =
   | Assignment of expr * expr
   | NRFnApp of string * expr list
-  | Check of string * expr list
+  | Check of constraint_check
   | Break
   | Continue
   | Return of expr option

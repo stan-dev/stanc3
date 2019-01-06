@@ -171,44 +171,43 @@ let mir_for_each_in_array (st : sizedtype) (s : expr -> stmt_loc) =
   | SVector _ -> ( ?? )
   | SRowVector _ -> ( ?? )
   | SMatrix _ -> ( ?? )
-
-let rec trans_checks vident = function
+*)
+let rec trans_checks cvarname ctype t =
+  let check = {cvarname; ctype; cargs= []; cfname= ""} in
+  match t with
   | Ast.Identity -> []
-  | Ast.Lower lb -> [Check ("check_greater_or_equal", [Var vident; lb])]
-  | Ast.Upper ub -> [Check ("check_less_or_equal", [Var vident; ub])]
+  | Ast.Lower lb -> [Check {check with cargs= [lb]; cfname= "greater_or_equal"}]
+  | Ast.Upper ub -> [Check {check with cargs= [ub]; cfname= "less_or_equal"}]
   | Ast.LowerUpper (lb, ub) ->
       [Ast.Lower lb; Upper ub]
-      |> List.map ~f:(trans_trans vident)
+      |> List.map ~f:(trans_checks cvarname ctype)
       |> List.concat
-  | Ast.Ordered -> ( ?? )
-  | Ast.PositiveOrdered -> ( ?? )
-  | Ast.Simplex -> ( ?? )
-  | Ast.UnitVector -> ( ?? )
-  | Ast.CholeskyCorr -> ( ?? )
-  | Ast.CholeskyCov -> ( ?? )
-  | Ast.Correlation -> ( ?? )
-  | Ast.Covariance -> ( ?? )
-  | Ast.OffsetMultiplier (_, _) -> []
-*)
+  | Ast.OffsetMultiplier (_, _) ->
+      raise_s
+        [%message
+          "offset multiplier not yet implemented in the Stan Math library"]
+  | Ast.Ordered -> [Check {check with cfname= "ordered"}]
+  | Ast.PositiveOrdered -> [Check {check with cfname= "positive_ordered"}]
+  | Ast.Simplex -> [Check {check with cfname= "simplex"}]
+  | Ast.UnitVector -> [Check {check with cfname= "unit_vector"}]
+  | Ast.CholeskyCorr -> [Check {check with cfname= "cholesky_factor_corr"}]
+  | Ast.CholeskyCov -> [Check {check with cfname= "cholesky_factor"}]
+  | Ast.Correlation -> [Check {check with cfname= "corr_matrix"}]
+  | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
 
-(* XXX FIXME ETC*)
-
-(*
 (** Adds Mir statements that validate and read in the variable*)
 let add_data_read_field {stmt; sloc} =
   let s = {sloc; stmt} in
   match stmt with
-  | Decl {vident; trans; _} ->
+  | Decl {vident; trans; st; _} ->
       { sloc
       ; stmt=
           SList
             ( s
             :: List.map
                  ~f:(fun stmt -> {sloc; stmt})
-                 [trans_checks vident trans] ) }
+                 (trans_checks vident st trans) ) }
   | _ -> {stmt; sloc}
-
-*)
 
 (* XXX To add validation logic to MIR
    We can add validate_non_negative_index, context__.validate_dims,
@@ -239,8 +238,8 @@ let trans_prog filename
   ; functionsb= trans_or_skip functionblock
   ; datab=
       coalesce
-        [ datablock |> trans_or_skip
-          (* |> add_data_read_field |> add_check_constraints *)
+        [ datablock |> trans_or_skip |> add_data_read_field
+          (* |> add_check_constraints *)
         ; transformeddatablock |> trans_or_skip ]
   ; paramsb= trans_or_skip parametersblock
   ; modelb=
