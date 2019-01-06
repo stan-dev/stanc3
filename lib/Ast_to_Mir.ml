@@ -197,17 +197,12 @@ let rec trans_checks cvarname ctype t =
 
 (** Adds Mir statements that validate and read in the variable*)
 let add_data_read_field {stmt; sloc} =
-  let s = {sloc; stmt} in
+  let with_sloc stmt = {sloc; stmt} in
   match stmt with
   | Decl {vident; trans; st; _} ->
-      { sloc
-      ; stmt=
-          SList
-            ( s
-            :: List.map
-                 ~f:(fun stmt -> {sloc; stmt})
-                 (trans_checks vident st trans) ) }
-  | _ -> {stmt; sloc}
+      let check_stmts = List.map ~f:with_sloc (trans_checks vident st trans) in
+      with_sloc (SList (with_sloc stmt :: check_stmts))
+  | _ -> with_sloc stmt
 
 (* XXX To add validation logic to MIR
    We can add validate_non_negative_index, context__.validate_dims,
