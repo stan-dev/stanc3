@@ -104,6 +104,7 @@ Use `dune build @update_messages` to see if your additions to the parser have ad
 * Data and parameters are never modified
 * Conditionally independent code-motion
 * `target+=` is commutative
+* error checks are idempotent
 * Pattern rewrites; `exp(x) - 1` -> `exp1m(x)`
 * In most Stan models, almost everything is immutable: variables are initialized when they are declared and never changed again. We should exploit this. We can consider implementing optimizations that only work properly on the commutative sublanguage which does not have non-commutative side effects, as most programs can be written in that language.
 * We should be careful with continue, break and early return statements as they are non-commutative effects as well. I guess you wouldn't need most of the time, but some models do use them.
