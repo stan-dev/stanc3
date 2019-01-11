@@ -39,7 +39,7 @@ pipeline {
             }
             steps {
                 sh """
-                      eval \$(sudo opam init)
+                      opam init
                       eval \$(opam env)
                       dune build @install --profile static
                    """
