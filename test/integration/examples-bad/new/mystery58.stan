@@ -1,1 +1,1 @@
-transformed data { T <- T[] while
+transformed data { T = T[] while
