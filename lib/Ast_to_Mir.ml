@@ -27,34 +27,14 @@ and trans_idx = function
   | Ast.Between (lb, ub) -> Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
     match e.expr_typed_type with
-    | Ast.Int -> Single (trans_expr e)
-    | Ast.Array _ -> MultiIndex (trans_expr e)
+    | Ast.UInt -> Single (trans_expr e)
+    | Ast.UArray _ -> MultiIndex (trans_expr e)
     | _ ->
         raise_s
           [%message
             "Expecting int or array" (e.expr_typed_type : Ast.unsizedtype)] )
 
-let rec trans_unsizedtype = function
-  | Ast.Int -> SInt
-  | Ast.Real -> SReal
-  | Ast.Vector -> SVector None
-  | Ast.RowVector -> SRowVector None
-  | Ast.Matrix -> SMatrix None
-  | Ast.Array st -> SArray (None, trans_unsizedtype st)
-  | Ast.Fun (_, _) ->
-      raise_s [%message "Shouldn't need to convert function type"]
-  | Ast.MathLibraryFunction ->
-      raise_s [%message "Shouldn't need to convert Math library function type"]
-
-let rec trans_sizedtype = function
-  | Ast.SInt -> SInt
-  | Ast.SReal -> SReal
-  | Ast.SVector s -> SVector (Some (trans_expr s))
-  | Ast.SRowVector s -> SRowVector (Some (trans_expr s))
-  | Ast.SMatrix (rows, cols) ->
-      SMatrix (Some (trans_expr rows, trans_expr cols))
-  | Ast.SArray (st, s) -> SArray (Some (trans_expr s), trans_sizedtype st)
-
+let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf = FnApp ("negative_infinity", [])
 
 let targetpe e =
@@ -69,10 +49,10 @@ let trans_loc = function
       sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
 
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
+let no_loc = ""
+let with_no_loc s = {stmt= s; sloc= no_loc}
 let trans_trans = Ast.map_transformation trans_expr
-
-let trans_arg (adtype, ut, ident) =
-  (adtype, ident.Ast.name, trans_unsizedtype ut)
+let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
   let add_inf = targetpe neg_inf and obs = trans_expr ast_obs in
@@ -89,7 +69,7 @@ let truncate_dist ast_obs t =
       Some (trunc Less lb (Some (trunc Greater ub None)))
 
 let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
-  let or_skip o = Option.value ~default:Skip o in
+  let or_skip = Option.value ~default:Skip in
   let s =
     match stmt_typed with
     | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
@@ -113,6 +93,8 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.Tilde {arg; distribution; args; truncation} ->
         let add_dist =
           (* XXX distribution name suffix? *)
+          (* XXX Reminder to differentiate between tilde, which drops constants, and
+             vanilla target +=, which doesn't. Can use _unnormalized or something.*)
           targetpe
             (FnApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
         in
@@ -143,17 +125,22 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           { returntype=
               ( match returntype with
               | Ast.Void -> None
-              | ReturnType ut -> Some (trans_unsizedtype ut) )
+              | ReturnType ut -> Some ut )
           ; name= funname.name
           ; arguments= List.map ~f:trans_arg arguments
           ; body= trans_stmt body }
-    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _}
-    (* XXX Deal with global vs unglobal *) ->
+    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _} ->
         let name = identifier.name in
+        (* XXX Deal with global vs unglobal *)
+        (* XXX Should also generate the statements that will read the data in
+           and validate it... Then a CSE pass will automatically fulfill one of our
+           Stanc3 promises to do data checking only once and at the appropriate level
+        *)
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
-                 { vident= name
+                 { adtype= AutoDiffable
+                 ; vident= name
                  ; st= trans_sizedtype sizedtype
                  ; trans= trans_trans transformation }
              ; Option.map
@@ -171,3 +158,93 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
 
 and trans_printable (p : Ast.typed_expression Ast.printable) =
   match p with Ast.PString s -> Lit (Str, s) | Ast.PExpr e -> trans_expr e
+
+(* XXX Write a function that generates MIR to execute once on each thing in some nested
+   arrays (but not elements within a matrix or vector) *)
+
+(*
+let mir_for_each_in_array (st : sizedtype) (s : expr -> stmt_loc) =
+  match st with
+  | SInt -> s
+  | SReal -> ( ?? )
+  | SArray (_, _) -> ( ?? )
+  | SVector _ -> ( ?? )
+  | SRowVector _ -> ( ?? )
+  | SMatrix _ -> ( ?? )
+
+let rec trans_checks vident = function
+  | Ast.Identity -> []
+  | Ast.Lower lb -> [Check ("check_greater_or_equal", [Var vident; lb])]
+  | Ast.Upper ub -> [Check ("check_less_or_equal", [Var vident; ub])]
+  | Ast.LowerUpper (lb, ub) ->
+      [Ast.Lower lb; Upper ub]
+      |> List.map ~f:(trans_trans vident)
+      |> List.concat
+  | Ast.Ordered -> ( ?? )
+  | Ast.PositiveOrdered -> ( ?? )
+  | Ast.Simplex -> ( ?? )
+  | Ast.UnitVector -> ( ?? )
+  | Ast.CholeskyCorr -> ( ?? )
+  | Ast.CholeskyCov -> ( ?? )
+  | Ast.Correlation -> ( ?? )
+  | Ast.Covariance -> ( ?? )
+  | Ast.OffsetMultiplier (_, _) -> []
+*)
+
+(* XXX FIXME ETC*)
+
+(*
+(** Adds Mir statements that validate and read in the variable*)
+let add_data_read_field {stmt; sloc} =
+  let s = {sloc; stmt} in
+  match stmt with
+  | Decl {vident; trans; _} ->
+      { sloc
+      ; stmt=
+          SList
+            ( s
+            :: List.map
+                 ~f:(fun stmt -> {sloc; stmt})
+                 [trans_checks vident trans] ) }
+  | _ -> {stmt; sloc}
+
+*)
+
+(* XXX To add validation logic to MIR
+   We can add validate_non_negative_index, context__.validate_dims,
+*)
+
+let trans_prog filename
+    { Ast.functionblock
+    ; datablock
+    ; transformeddatablock
+    ; parametersblock
+    ; transformedparametersblock
+    ; modelblock
+    ; generatedquantitiesblock } =
+  let trans_or_skip lst_option =
+    with_no_loc
+      ( match lst_option with
+      | None | Some [] -> Skip
+      | Some lst -> SList (List.map ~f:trans_stmt lst) )
+  in
+  let lbind s = match s.stmt with SList ls -> ls | Skip -> [] | _ -> [s] in
+  let coalesce stmts =
+    let flattened = List.(concat (map ~f:lbind stmts)) in
+    with_no_loc (match flattened with [] -> Skip | _ :: _ -> SList flattened)
+  in
+  (* XXX probably a weird place to keep the name*)
+  { prog_name= !Semantic_check.model_name
+  ; prog_path= filename
+  ; functionsb= trans_or_skip functionblock
+  ; datab=
+      coalesce
+        [ datablock |> trans_or_skip
+          (* |> add_data_read_field |> add_check_constraints *)
+        ; transformeddatablock |> trans_or_skip ]
+  ; paramsb= trans_or_skip parametersblock
+  ; modelb=
+      coalesce
+        (* XXX save transformed parameters *)
+        (List.map ~f:trans_or_skip [transformedparametersblock; modelblock])
+  ; gqb= trans_or_skip generatedquantitiesblock }

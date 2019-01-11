@@ -81,3 +81,10 @@ let%expect_test _ =
        ((AssignExpr sym1 (FnApp log1m ((Var hi))))
         (FnApp plus ((Var sym1) (Var sym1))))) |}]
 *)
+
+(* XXX
+   Todos to make code gen as good as Stan 2 codegen
+   1. Turn all autodiff types on vardecls in data block to data type
+   2. CSE
+   3. loop-invariant code motion
+*)

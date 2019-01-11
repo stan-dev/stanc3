@@ -12,8 +12,8 @@ let check_of_same_type_mod_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
     match (t1, t2) with
-    | Real, Int -> true
-    | Fun (l1, rt1), Fun (l2, rt2) ->
+    | UReal, UInt -> true
+    | UFun (l1, rt1), UFun (l2, rt2) ->
         rt1 = rt2
         && List.for_all
              (fun x -> x = true)
@@ -25,7 +25,7 @@ let check_of_same_type_mod_conv name t1 t2 =
 
 let rec check_of_same_type_mod_array_conv name t1 t2 =
   match (t1, t2) with
-  | Array t1elt, Array t2elt ->
+  | UArray t1elt, UArray t2elt ->
       check_of_same_type_mod_array_conv name t1elt t2elt
   | _ -> check_of_same_type_mod_conv name t1 t2
 
@@ -47,7 +47,7 @@ let check_of_compatible_return_type rt1 srt2 =
    |Void, Complete Void
    |Void, AnyReturnType ->
       true
-  | ReturnType Real, Complete (ReturnType Int) -> true
+  | ReturnType UReal, Complete (ReturnType UInt) -> true
   | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
   | ReturnType _, AnyReturnType -> true
   | _ -> false
