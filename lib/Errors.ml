@@ -141,3 +141,16 @@ let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
+
+(* Warn that a language feature is deprecated *)
+let warn_deprecated (pos, msg) =
+  let file, line, column = position pos in
+  Printf.eprintf
+    "\n\
+     Warning: deprecated language construct used at file \"%s\", line %d, \
+     column %d:\n"
+    file line (column - 1) ;
+  ( match error_context file line (column - 1) with
+  | None -> ()
+  | Some line -> Printf.eprintf "%s\n" line ) ;
+  Printf.eprintf "%s\n\n" msg

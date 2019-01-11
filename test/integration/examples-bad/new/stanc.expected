@@ -1390,6 +1390,15 @@ Expected "(" after "for".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement21.stan
 
+Warning: deprecated language construct used at file "ill-formed-statement21.stan", line 1, column 24:
+   -------------------------------------------------
+     1:  transformed data { get_lp ( while
+                                 ^
+   -------------------------------------------------
+
+get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+
+
 Syntax error at file "ill-formed-statement21.stan", line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp ( while
@@ -1399,6 +1408,15 @@ Syntax error at file "ill-formed-statement21.stan", line 1, columns 26-27, parsi
 Expected ")" after "get_lp(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement22.stan
+
+Warning: deprecated language construct used at file "ill-formed-statement22.stan", line 1, column 24:
+   -------------------------------------------------
+     1:  transformed data { get_lp while
+                                 ^
+   -------------------------------------------------
+
+get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+
 
 Syntax error at file "ill-formed-statement22.stan", line 1, columns 19-25, parsing error:
    -------------------------------------------------
@@ -1470,6 +1488,15 @@ Ill-formed expression. Expression expected after "(", for test of conditional co
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement29.stan
 
+Warning: deprecated language construct used at file "ill-formed-statement29.stan", line 1, column 36:
+   -------------------------------------------------
+     1:  transformed data { increment_log_prob ( 1) while}
+                                             ^
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
+
 Syntax error at file "ill-formed-statement29.stan", line 1, columns 41-42, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1) while}
@@ -1490,6 +1517,15 @@ Ill-formed statement. Expected statement after ")"  for the loop body of the for
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement30.stan
 
+Warning: deprecated language construct used at file "ill-formed-statement30.stan", line 1, column 36:
+   -------------------------------------------------
+     1:  transformed data { increment_log_prob ( 1 while}
+                                             ^
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
+
 Syntax error at file "ill-formed-statement30.stan", line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1 while}
@@ -1499,6 +1535,15 @@ Syntax error at file "ill-formed-statement30.stan", line 1, columns 40-41, parsi
 Ill-formed statement. Expected expression followed by ");" after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement31.stan
+
+Warning: deprecated language construct used at file "ill-formed-statement31.stan", line 1, column 36:
+   -------------------------------------------------
+     1:  transformed data { increment_log_prob ( T ) while
+                                             ^
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
 
 Syntax error at file "ill-formed-statement31.stan", line 1, columns 42-43, parsing error:
    -------------------------------------------------
@@ -1510,6 +1555,15 @@ Ill-formed statement. Expected ";" after ")".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement32.stan
 
+Warning: deprecated language construct used at file "ill-formed-statement32.stan", line 1, column 36:
+   -------------------------------------------------
+     1:  transformed data { increment_log_prob ( T ~
+                                             ^
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
+
 Syntax error at file "ill-formed-statement32.stan", line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ~
@@ -1520,6 +1574,15 @@ Ill-formed statement. Expected expression followed by ");" after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement33.stan
 
+Warning: deprecated language construct used at file "ill-formed-statement33.stan", line 1, column 36:
+   -------------------------------------------------
+     1:  transformed data { increment_log_prob ( while
+                                             ^
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
+
 Syntax error at file "ill-formed-statement33.stan", line 1, columns 38-39, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( while
@@ -1529,6 +1592,15 @@ Syntax error at file "ill-formed-statement33.stan", line 1, columns 38-39, parsi
 Ill-formed statement. Expected expression followed by ");" after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement34.stan
+
+Warning: deprecated language construct used at file "ill-formed-statement34.stan", line 1, column 36:
+   -------------------------------------------------
+     1:  transformed data { increment_log_prob  while
+                                             ^
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
 
 Syntax error at file "ill-formed-statement34.stan", line 1, columns 19-37, parsing error:
    -------------------------------------------------

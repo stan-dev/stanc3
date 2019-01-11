@@ -6,6 +6,18 @@ model {
   increment_log_prob(-sqrt(-x));
 }
 
+
+Warning: deprecated language construct used at file "domain_fail.stan", line 6, column 19:
+   -------------------------------------------------
+     4:  
+     5:  model {
+     6:    increment_log_prob(-sqrt(-x));
+                            ^
+     7:  }
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+
   $ ../../../../../install/default/bin/stanc --auto-format valid.stan
 parameters {
   real x;
@@ -13,4 +25,16 @@ parameters {
 model {
   increment_log_prob(-0.5 * square(x));
 }
+
+
+Warning: deprecated language construct used at file "valid.stan", line 6, column 19:
+   -------------------------------------------------
+     4:  
+     5:  model {
+     6:    increment_log_prob(-0.5 * square(x));
+                            ^
+     7:  }
+   -------------------------------------------------
+
+increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 

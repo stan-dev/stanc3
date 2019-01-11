@@ -28,3 +28,6 @@ val semantic_error : ?loc:Ast.location -> string -> 'a
 
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
+
+val warn_deprecated : Lexing.position * string -> unit
+(** Warn that a language construct is deprecated *)
