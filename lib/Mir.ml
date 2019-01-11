@@ -8,6 +8,12 @@ open Core_kernel
        - mark FnApps as containing print or reject
 *)
 
+let _counter = ref 0
+
+let gensym () =
+  _counter := !_counter + 1 ;
+  sprintf "sym%d" !_counter
+
 type litType = Int | Real | Str
 
 and operator = Ast.operator
@@ -83,3 +89,13 @@ and 's prog =
 
 type stmt_loc = {sloc: string; stmt: stmt_loc statement}
 [@@deriving sexp, hash]
+
+(* Some helper functions *)
+
+(** Dives into any number of nested blocks and lists, but will not recurse other
+    places statements occur in the MIR (e.g. loop bodies) *)
+let rec map_toplevel_stmts f {sloc; stmt} =
+  match stmt with
+  | Block ls -> {stmt= Block (List.map ~f:(map_toplevel_stmts f) ls); sloc}
+  | SList ls -> {stmt= SList (List.map ~f:(map_toplevel_stmts f) ls); sloc}
+  | _ -> f {sloc; stmt}

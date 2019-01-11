@@ -44,7 +44,7 @@ let targetpe e =
 let trans_loc = function
   | Ast.Nowhere -> ""
   | Ast.Location (start, end_) ->
-      (* XXX hack *)
+      (* XXX hack hack *)
       let open Lexing in
       sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
 
@@ -172,6 +172,7 @@ let mir_for_each_in_array (st : sizedtype) (s : expr -> stmt_loc) =
   | SRowVector _ -> ( ?? )
   | SMatrix _ -> ( ?? )
 *)
+
 let rec trans_checks cvarname ctype t =
   let check = {cvarname; ctype; cargs= []; cfname= ""} in
   match t with
@@ -182,10 +183,6 @@ let rec trans_checks cvarname ctype t =
       [Ast.Lower lb; Upper ub]
       |> List.map ~f:(trans_checks cvarname ctype)
       |> List.concat
-  | Ast.OffsetMultiplier (_, _) ->
-      raise_s
-        [%message
-          "offset multiplier not yet implemented in the Stan Math library"]
   | Ast.Ordered -> [Check {check with cfname= "ordered"}]
   | Ast.PositiveOrdered -> [Check {check with cfname= "positive_ordered"}]
   | Ast.Simplex -> [Check {check with cfname= "simplex"}]
@@ -194,19 +191,20 @@ let rec trans_checks cvarname ctype t =
   | Ast.CholeskyCov -> [Check {check with cfname= "cholesky_factor"}]
   | Ast.Correlation -> [Check {check with cfname= "corr_matrix"}]
   | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
+  | Ast.OffsetMultiplier (_, _) -> []
 
-(** Adds Mir statements that validate and read in the variable*)
-let add_data_read_field {stmt; sloc} =
+(** Adds Mir statements that validate the variable once it has been read.
+    The code to read it in is emitted in the backend.contents
+    Here we intentionally only check declarations at the top level, i.e.
+    we only recurse into blocks and lists as we don't care about other declarations.
+*)
+let add_data_checks {stmt; sloc} =
   let with_sloc stmt = {sloc; stmt} in
   match stmt with
   | Decl {vident; trans; st; _} ->
       let check_stmts = List.map ~f:with_sloc (trans_checks vident st trans) in
       with_sloc (SList (with_sloc stmt :: check_stmts))
   | _ -> with_sloc stmt
-
-(* XXX To add validation logic to MIR
-   We can add validate_non_negative_index, context__.validate_dims,
-*)
 
 let trans_prog filename
     { Ast.functionblock
@@ -233,10 +231,9 @@ let trans_prog filename
   ; functionsb= trans_or_skip functionblock
   ; datab=
       coalesce
-        [ datablock |> trans_or_skip |> add_data_read_field
-          (* |> add_check_constraints *)
+        [ datablock |> trans_or_skip |> map_toplevel_stmts add_data_checks
         ; transformeddatablock |> trans_or_skip ]
-  ; paramsb= trans_or_skip parametersblock
+  ; paramsb= trans_or_skip parametersblock (* XXX add_param_transforms *)
   ; modelb=
       coalesce
         (* XXX save transformed parameters *)
