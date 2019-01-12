@@ -31,7 +31,7 @@
     try
       let old_path = (Stack.top include_stack).lex_start_p.pos_fname in
       let full_path = path ^ "/" ^ fname in
-        open_in full_path, full_path ^ "\" included from \"" ^ old_path
+        open_in full_path, full_path ^ "\" included from\n\"" ^ old_path
     with _ -> try_open_in rest_of_paths fname
   (* TODO: Put in precise location with line number and position in the whole chain of included froms? *)
   
@@ -50,7 +50,7 @@
                                         ; pos_bol= 0
                                         ; pos_cnum= 0 } in
     let _ = new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p in
-    let _ = if dup_exists (Str.split (Str.regexp "\" included from \"") path)
+    let _ = if dup_exists (Str.split (Str.regexp "\" included from\n\"") path)
             then raise (Errors.SyntaxError (
               Includes ("Found cyclical include structure.\n",
                         (lexeme_start_p (Stack.top include_stack))))) in

@@ -27,7 +27,7 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 let error_context file line column =
   try
     let bare_file =
-      List.hd (Str.split (Str.regexp "\" included from \"") file)
+      List.hd (Str.split (Str.regexp "\" included from\n\"") file)
     in
     let input = open_in bare_file in
     for _ = 1 to line - 3 do
