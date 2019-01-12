@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc arg-decl-bad1.stan
 
-Syntax error at file "arg-decl-bad1.stan", line 2, columns 14-15, parsing error:
+Syntax error at file arg-decl-bad1.stan, line 2, columns 14-15, parsing error:
    -------------------------------------------------
      1:  functions {
      2:  void foo(int x, while);
@@ -12,7 +12,7 @@ An argument declaration (unsized type followed by identifier) is expected.
 
   $ ../../../../../install/default/bin/stanc blocks-bad1.stan
 
-Syntax error at file "blocks-bad1.stan", line 1, columns 0-4, parsing error:
+Syntax error at file blocks-bad1.stan, line 1, columns 0-4, parsing error:
    -------------------------------------------------
      1:  data while
              ^
@@ -22,7 +22,7 @@ Syntax error at file "blocks-bad1.stan", line 1, columns 0-4, parsing error:
 
   $ ../../../../../install/default/bin/stanc blocks-bad10.stan
 
-Syntax error at file "blocks-bad10.stan", line 1, columns 0-16, parsing error:
+Syntax error at file blocks-bad10.stan, line 1, columns 0-16, parsing error:
    -------------------------------------------------
      1:  transformed data  while
                          ^
@@ -32,7 +32,7 @@ We expect "{" after "transfored data".
 
   $ ../../../../../install/default/bin/stanc blocks-bad11.stan
 
-Syntax error at file "blocks-bad11.stan", line 1, columns 23-24, parsing error:
+Syntax error at file blocks-bad11.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed parameters { void
                                  ^
@@ -42,7 +42,7 @@ Expect a statement or top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc blocks-bad12.stan
 
-Syntax error at file "blocks-bad12.stan", line 1, columns 0-22, parsing error:
+Syntax error at file blocks-bad12.stan, line 1, columns 0-22, parsing error:
    -------------------------------------------------
      1:  transformed parameters while
                                ^
@@ -52,7 +52,7 @@ We expect "{" after "transfored parameters".
 
   $ ../../../../../install/default/bin/stanc blocks-bad2.stan
 
-Syntax error at file "blocks-bad2.stan", line 1, columns 0-12, parsing error:
+Syntax error at file blocks-bad2.stan, line 1, columns 0-12, parsing error:
    -------------------------------------------------
      1:  functions {} cov_matrix
                      ^
@@ -62,7 +62,7 @@ Expected "data {" or "transformed data {" or "parameters {" or "transformed para
 
   $ ../../../../../install/default/bin/stanc blocks-bad3.stan
 
-Syntax error at file "blocks-bad3.stan", line 1, columns 0-5, parsing error:
+Syntax error at file blocks-bad3.stan, line 1, columns 0-5, parsing error:
    -------------------------------------------------
      1:  model while
               ^
@@ -72,7 +72,7 @@ Expected "{" after "model".
 
   $ ../../../../../install/default/bin/stanc blocks-bad4.stan
 
-Syntax error at file "blocks-bad4.stan", line 1, columns 11-12, parsing error:
+Syntax error at file blocks-bad4.stan, line 1, columns 11-12, parsing error:
    -------------------------------------------------
      1:  parameters { while  }
                      ^
@@ -82,7 +82,7 @@ Expected top-level variable declaration or "}".
 
   $ ../../../../../install/default/bin/stanc blocks-bad5.stan
 
-Syntax error at file "blocks-bad5.stan", line 1, columns 0-10, parsing error:
+Syntax error at file blocks-bad5.stan, line 1, columns 0-10, parsing error:
    -------------------------------------------------
      1:  parameters while
                    ^
@@ -92,7 +92,7 @@ Expected "{" after "parameters".
 
   $ ../../../../../install/default/bin/stanc blocks-bad6.stan
 
-Syntax error at file "blocks-bad6.stan", line 1, columns 21-24, parsing error:
+Syntax error at file blocks-bad6.stan, line 1, columns 21-24, parsing error:
    -------------------------------------------------
      1:  transformed data { ! 1.0 while }
                                  ^
@@ -102,7 +102,7 @@ Ill-formed expression. Expression expected after "!".
 
   $ ../../../../../install/default/bin/stanc blocks-bad7.stan
 
-Syntax error at file "blocks-bad7.stan", line 1, columns 0-20, parsing error:
+Syntax error at file blocks-bad7.stan, line 1, columns 0-20, parsing error:
    -------------------------------------------------
      1:  transformed data { } .*=
                              ^
@@ -112,7 +112,7 @@ Expected "parameters {", "transformed parameters {", "model {", "generated quant
 
   $ ../../../../../install/default/bin/stanc blocks-bad8.stan
 
-Syntax error at file "blocks-bad8.stan", line 1, columns 19-20, parsing error:
+Syntax error at file blocks-bad8.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  transformed data { T }
                              ^
@@ -122,7 +122,7 @@ Ill-formed phrase. Found L-value. This can be completed in many ways.
 
   $ ../../../../../install/default/bin/stanc blocks-bad9.stan
 
-Syntax error at file "blocks-bad9.stan", line 1, columns 17-18, parsing error:
+Syntax error at file blocks-bad9.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  transformed data { void
                            ^
@@ -136,7 +136,7 @@ Expect a statement or top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc fun-app-bad1.stan
 
-Syntax error at file "fun-app-bad1.stan", line 1, columns 29-30, parsing error:
+Syntax error at file fun-app-bad1.stan, line 1, columns 29-30, parsing error:
    -------------------------------------------------
      1:  transformed data { T ( 1.0 | T]
                                        ^
@@ -146,7 +146,7 @@ Ill-formed conditional distribution evaluation. Expect comma-separated list of e
 
   $ ../../../../../install/default/bin/stanc fun-app-bad2.stan
 
-Syntax error at file "fun-app-bad2.stan", line 1, columns 27-28, parsing error:
+Syntax error at file fun-app-bad2.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { T ( 1.0 | while
                                      ^
@@ -156,7 +156,7 @@ Ill-formed conditional distribution evaluation. Expect comma-separated list of e
 
   $ ../../../../../install/default/bin/stanc fun-app-bad3.stan
 
-Syntax error at file "fun-app-bad3.stan", line 1, columns 23-26, parsing error:
+Syntax error at file fun-app-bad3.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T ( 1.0 while
                                    ^
@@ -166,7 +166,7 @@ Ill-formed function application. Expect comma-separated list of expressions foll
 
   $ ../../../../../install/default/bin/stanc fun-app-bad4.stan
 
-Syntax error at file "fun-app-bad4.stan", line 1, columns 22-23, parsing error:
+Syntax error at file fun-app-bad4.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T () while
                                 ^
@@ -176,7 +176,7 @@ Ill-formed phrase. Found a well-formed function application. After this, there a
 
   $ ../../../../../install/default/bin/stanc fun-app-bad5.stan
 
-Syntax error at file "fun-app-bad5.stan", line 1, columns 25-26, parsing error:
+Syntax error at file fun-app-bad5.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T (T| T]
                                    ^
@@ -186,7 +186,7 @@ Ill-formed conditional distribution evaluation. Expect comma-separated list of e
 
   $ ../../../../../install/default/bin/stanc fun-app-bad6.stan
 
-Syntax error at file "fun-app-bad6.stan", line 1, columns 23-24, parsing error:
+Syntax error at file fun-app-bad6.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { T (T| while
                                  ^
@@ -196,7 +196,7 @@ Ill-formed conditional distribution evaluation. Expect comma-separated list of e
 
   $ ../../../../../install/default/bin/stanc fun-app-bad7.stan
 
-Syntax error at file "fun-app-bad7.stan", line 1, columns 22-27, parsing error:
+Syntax error at file fun-app-bad7.stan, line 1, columns 22-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T (T, id]
                                     ^
@@ -206,7 +206,7 @@ Ill-formed function application. Expect comma-separated list of expressions foll
 
   $ ../../../../../install/default/bin/stanc fun-app-bad8.stan
 
-Syntax error at file "fun-app-bad8.stan", line 1, columns 22-23, parsing error:
+Syntax error at file fun-app-bad8.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T (T~
                                 ^
@@ -216,7 +216,7 @@ Ill-formed function application. Expect comma-separated list of expressions foll
 
   $ ../../../../../install/default/bin/stanc fun-app-bad9.stan
 
-Syntax error at file "fun-app-bad9.stan", line 1, columns 21-22, parsing error:
+Syntax error at file fun-app-bad9.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T (while
                                ^
@@ -226,7 +226,7 @@ Ill-formed function application. Expect comma-separated list of expressions foll
 
   $ ../../../../../install/default/bin/stanc fundef-bad1.stan
 
-Syntax error at file "fundef-bad1.stan", line 1, columns 19-20, parsing error:
+Syntax error at file fundef-bad1.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  functions { vector[,while] foo(); }
                              ^
@@ -236,7 +236,7 @@ List of commas expected.
 
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
 
-Syntax error at file "fundef-bad2.stan", line 1, columns 12-18, parsing error:
+Syntax error at file fundef-bad2.stan, line 1, columns 12-18, parsing error:
    -------------------------------------------------
      1:  functions { vector while }
                            ^
@@ -246,7 +246,7 @@ Either a number of unsized dimensions is expected as part of a function return t
 
   $ ../../../../../install/default/bin/stanc fundef-bad3.stan
 
-Syntax error at file "fundef-bad3.stan", line 1, columns 12-22, parsing error:
+Syntax error at file fundef-bad3.stan, line 1, columns 12-22, parsing error:
    -------------------------------------------------
      1:  functions { void id(); while }
                                ^
@@ -256,7 +256,7 @@ A "}" or a function definition/declaration is expected.
 
   $ ../../../../../install/default/bin/stanc fundef-bad4.stan
 
-Syntax error at file "fundef-bad4.stan", line 1, columns 19-23, parsing error:
+Syntax error at file fundef-bad4.stan, line 1, columns 19-23, parsing error:
    -------------------------------------------------
      1:  functions { void T(data while); }
                                 ^
@@ -266,7 +266,7 @@ An identifier is expected as a function argument name.
 
   $ ../../../../../install/default/bin/stanc fundef-bad5.stan
 
-Syntax error at file "fundef-bad5.stan", line 1, columns 20-21, parsing error:
+Syntax error at file fundef-bad5.stan, line 1, columns 20-21, parsing error:
    -------------------------------------------------
      1:  functions { void T () void }
                               ^
@@ -276,7 +276,7 @@ Either "{" statement "}" is expected for a function definition or ";" for a func
 
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
 
-Syntax error at file "fundef-bad6.stan", line 1, columns 21-30, parsing error:
+Syntax error at file fundef-bad6.stan, line 1, columns 21-30, parsing error:
    -------------------------------------------------
      1:  functions { void T ( vector [] while);}
                                        ^
@@ -286,7 +286,7 @@ An identifier is expected as a function argument name.
 
   $ ../../../../../install/default/bin/stanc fundef-bad7.stan
 
-Syntax error at file "fundef-bad7.stan", line 1, columns 19-20, parsing error:
+Syntax error at file fundef-bad7.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  functions { void T ( while x);}
                              ^
@@ -296,7 +296,7 @@ Syntax error at file "fundef-bad7.stan", line 1, columns 19-20, parsing error:
 
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
 
-Syntax error at file "fundef-bad8.stan", line 1, columns 12-16, parsing error:
+Syntax error at file fundef-bad8.stan, line 1, columns 12-16, parsing error:
    -------------------------------------------------
      1:  functions { void while();}
                          ^
@@ -306,7 +306,7 @@ An identifier is expected as a function name.
 
   $ ../../../../../install/default/bin/stanc fundef-bad9.stan
 
-Syntax error at file "fundef-bad9.stan", line 1, columns 21-22, parsing error:
+Syntax error at file fundef-bad9.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  generated quantities { void foo(); }
                                ^
@@ -316,7 +316,7 @@ Variable declaration or statement or "}" expected in generated quantities block.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression1.stan
 
-Syntax error at file "ill-formed-expression1.stan", line 1, columns 30-33, parsing error:
+Syntax error at file ill-formed-expression1.stan, line 1, columns 30-33, parsing error:
    -------------------------------------------------
      1:  transformed data { real x = T/0.0 while;}
                                           ^
@@ -326,7 +326,7 @@ Ill-formed phrase. Found expression "/" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression10.stan
 
-Syntax error at file "ill-formed-expression10.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression10.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T[while> x;}
                                ^
@@ -336,7 +336,7 @@ Ill-formed expression. Expected expression followed by "]".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression11.stan
 
-Syntax error at file "ill-formed-expression11.stan", line 1, columns 23-26, parsing error:
+Syntax error at file ill-formed-expression11.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T\ 0.0 while> x;}
                                    ^
@@ -346,7 +346,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression12.stan
 
-Syntax error at file "ill-formed-expression12.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression12.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T\  while> x;}
                                ^
@@ -356,7 +356,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression13.stan
 
-Syntax error at file "ill-formed-expression13.stan", line 1, columns 23-26, parsing error:
+Syntax error at file ill-formed-expression13.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T- 0.0  while> x;}
                                    ^
@@ -366,7 +366,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression14.stan
 
-Syntax error at file "ill-formed-expression14.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression14.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T-   while> x;}
                                ^
@@ -376,7 +376,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression15.stan
 
-Syntax error at file "ill-formed-expression15.stan", line 1, columns 22-25, parsing error:
+Syntax error at file ill-formed-expression15.stan, line 1, columns 22-25, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T%0.0   while> x;}
                                   ^
@@ -386,7 +386,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression16.stan
 
-Syntax error at file "ill-formed-expression16.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression16.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T%  while> x;}
                                ^
@@ -396,7 +396,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression17.stan
 
-Syntax error at file "ill-formed-expression17.stan", line 1, columns 24-27, parsing error:
+Syntax error at file ill-formed-expression17.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T + 0.0  while> x;}
                                     ^
@@ -406,7 +406,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression18.stan
 
-Syntax error at file "ill-formed-expression18.stan", line 1, columns 22-23, parsing error:
+Syntax error at file ill-formed-expression18.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T + while> x;}
                                 ^
@@ -416,7 +416,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression19.stan
 
-Syntax error at file "ill-formed-expression19.stan", line 1, columns 24-27, parsing error:
+Syntax error at file ill-formed-expression19.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T * 0.0 while> x;}
                                     ^
@@ -426,7 +426,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression2.stan
 
-Syntax error at file "ill-formed-expression2.stan", line 2, columns 10-13, parsing error:
+Syntax error at file ill-formed-expression2.stan, line 2, columns 10-13, parsing error:
    -------------------------------------------------
      1:  model {
      2:  normal(0, 1.0 while);
@@ -438,7 +438,7 @@ Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression20.stan
 
-Syntax error at file "ill-formed-expression20.stan", line 1, columns 22-23, parsing error:
+Syntax error at file ill-formed-expression20.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T * while> x;}
                                 ^
@@ -448,7 +448,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression21.stan
 
-Syntax error at file "ill-formed-expression21.stan", line 1, columns 20-21, parsing error:
+Syntax error at file ill-formed-expression21.stan, line 1, columns 20-21, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T while> x;}
                               ^
@@ -458,7 +458,7 @@ Expression expected. Ill-formed expression. Suggested alternatives: a standalone
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression22.stan
 
-Syntax error at file "ill-formed-expression22.stan", line 2, columns 9-13, parsing error:
+Syntax error at file ill-formed-expression22.stan, line 2, columns 9-13, parsing error:
    -------------------------------------------------
      1:  model {
      2:    if (2) then {print (0);}
@@ -470,7 +470,7 @@ Ill-formed statement or expression. A statement or expression could be expected 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression23.stan
 
-Syntax error at file "ill-formed-expression23.stan", line 1, columns 17-20, parsing error:
+Syntax error at file ill-formed-expression23.stan, line 1, columns 17-20, parsing error:
    -------------------------------------------------
      1:  model { real T = 0.0 while;}
                              ^
@@ -480,7 +480,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression24.stan
 
-Syntax error at file "ill-formed-expression24.stan", line 1, columns 17-18, parsing error:
+Syntax error at file ill-formed-expression24.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  model { real T = T ~ normal(0,1);}
                            ^
@@ -490,7 +490,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression25.stan
 
-Syntax error at file "ill-formed-expression25.stan", line 1, columns 15-16, parsing error:
+Syntax error at file ill-formed-expression25.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  model { real T = while ;}
                          ^
@@ -500,7 +500,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression26.stan
 
-Syntax error at file "ill-formed-expression26.stan", line 1, columns 16-17, parsing error:
+Syntax error at file ill-formed-expression26.stan, line 1, columns 16-17, parsing error:
    -------------------------------------------------
      1:  model { real T [T}
                           ^
@@ -510,7 +510,7 @@ Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression27.stan
 
-Syntax error at file "ill-formed-expression27.stan", line 1, columns 21-25, parsing error:
+Syntax error at file ill-formed-expression27.stan, line 1, columns 21-25, parsing error:
    -------------------------------------------------
      1:  transformed data { ! T [] while}
                                   ^
@@ -520,7 +520,7 @@ Ill-formed expression. Expression expected after "!".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression28.stan
 
-Syntax error at file "ill-formed-expression28.stan", line 1, columns 19-20, parsing error:
+Syntax error at file ill-formed-expression28.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  transformed data { ! while}
                              ^
@@ -530,7 +530,7 @@ Ill-formed expression. Expression expected after "!".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression29.stan
 
-Syntax error at file "ill-formed-expression29.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression29.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { {1.0, while}}
                                  ^
@@ -540,7 +540,7 @@ Ill-formed expression. Expected a comma-separated list of expressions.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression3.stan
 
-Syntax error at file "ill-formed-expression3.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression3.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T/while> x;}
                                ^
@@ -550,7 +550,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression30.stan
 
-Syntax error at file "ill-formed-expression30.stan", line 1, columns 20-23, parsing error:
+Syntax error at file ill-formed-expression30.stan, line 1, columns 20-23, parsing error:
    -------------------------------------------------
      1:  transformed data { {1.0 while
                                 ^
@@ -560,7 +560,7 @@ Ill-formed phrase. Found an expression. This can be followed by a "~", a ",", a 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression31.stan
 
-Syntax error at file "ill-formed-expression31.stan", line 1, columns 19-20, parsing error:
+Syntax error at file ill-formed-expression31.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  transformed data { {void
                              ^
@@ -570,7 +570,7 @@ Ill-formed phrase. "{" should be followed by a statement, variable declaration o
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression32.stan
 
-Syntax error at file "ill-formed-expression32.stan", line 1, columns 20-23, parsing error:
+Syntax error at file ill-formed-expression32.stan, line 1, columns 20-23, parsing error:
    -------------------------------------------------
      1:  transformed data { {T[] while
                                 ^
@@ -580,7 +580,7 @@ Ill-formed phrase. Found an L-value. This can be followed by a "~", a ",", a "}"
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression33.stan
 
-Syntax error at file "ill-formed-expression33.stan", line 1, columns 21-24, parsing error:
+Syntax error at file ill-formed-expression33.stan, line 1, columns 21-24, parsing error:
    -------------------------------------------------
      1:  transformed data { [ 1.0 while
                                  ^
@@ -590,7 +590,7 @@ Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression34.stan
 
-Syntax error at file "ill-formed-expression34.stan", line 1, columns 22-23, parsing error:
+Syntax error at file ill-formed-expression34.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  transformed data { [ T, while
                                 ^
@@ -600,7 +600,7 @@ Ill-formed expression. We expect a comma separated list of expressions.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression35.stan
 
-Syntax error at file "ill-formed-expression35.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression35.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { [ T)
                                ^
@@ -610,7 +610,7 @@ Ill-formed expression. We expect a comma separated list of expressions, followed
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression36.stan
 
-Syntax error at file "ill-formed-expression36.stan", line 1, columns 20-25, parsing error:
+Syntax error at file ill-formed-expression36.stan, line 1, columns 20-25, parsing error:
    -------------------------------------------------
      1:  transformed data { -T [ ] while
                                   ^
@@ -620,7 +620,7 @@ Ill-formed expression. Found an expression. Expect an infix or postfix operator 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression37.stan
 
-Syntax error at file "ill-formed-expression37.stan", line 1, columns 21-24, parsing error:
+Syntax error at file ill-formed-expression37.stan, line 1, columns 21-24, parsing error:
    -------------------------------------------------
      1:  transformed data { + 0.1 while
                                  ^
@@ -630,7 +630,7 @@ Ill-formed expression. Found an expression. Expect an infix or postfix operator 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression38.stan
 
-Syntax error at file "ill-formed-expression38.stan", line 1, columns 19-20, parsing error:
+Syntax error at file ill-formed-expression38.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  transformed data { - while
                              ^
@@ -640,7 +640,7 @@ Ill-formed expression. Expect an expression after "-".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression39.stan
 
-Syntax error at file "ill-formed-expression39.stan", line 1, columns 21-25, parsing error:
+Syntax error at file ill-formed-expression39.stan, line 1, columns 21-25, parsing error:
    -------------------------------------------------
      1:  transformed data { + T [] while
                                   ^
@@ -650,7 +650,7 @@ Ill-formed expression. Found an expression. Expect an infix or postfix operator 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression4.stan
 
-Syntax error at file "ill-formed-expression4.stan", line 1, columns 23-26, parsing error:
+Syntax error at file ill-formed-expression4.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T./0.0 while> x;}
                                    ^
@@ -660,7 +660,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression40.stan
 
-Syntax error at file "ill-formed-expression40.stan", line 1, columns 19-20, parsing error:
+Syntax error at file ill-formed-expression40.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  transformed data { + while
                              ^
@@ -670,7 +670,7 @@ Ill-formed expression. Expect an expression after "+".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression41.stan
 
-Syntax error at file "ill-formed-expression41.stan", line 1, columns 24-26, parsing error:
+Syntax error at file ill-formed-expression41.stan, line 1, columns 24-26, parsing error:
    -------------------------------------------------
      1:  transformed data { x= 1 && while
                                    ^
@@ -680,7 +680,7 @@ Ill-formed expression. Expected expression after expression followed by "&&".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression42.stan
 
-Syntax error at file "ill-formed-expression42.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression42.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 / while
                                ^
@@ -690,7 +690,7 @@ Ill-formed expression. Expected expression after expression followed by "/".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression43.stan
 
-Syntax error at file "ill-formed-expression43.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression43.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ./ while
                                 ^
@@ -700,7 +700,7 @@ Ill-formed expression. Expected expression after expression followed by "./".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression44.stan
 
-Syntax error at file "ill-formed-expression44.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression44.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 .*  while
                                 ^
@@ -710,7 +710,7 @@ Ill-formed expression. Expected expression after expression followed by ".*".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression45.stan
 
-Syntax error at file "ill-formed-expression45.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression45.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ==   while
                                 ^
@@ -720,7 +720,7 @@ Ill-formed expression. Expected expression after expression followed by "==".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression46.stan
 
-Syntax error at file "ill-formed-expression46.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression46.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 >= while
                                 ^
@@ -730,7 +730,7 @@ Ill-formed expression. Expected expression after expression followed by ">=".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression47.stan
 
-Syntax error at file "ill-formed-expression47.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression47.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ^  while
                                ^
@@ -740,7 +740,7 @@ Ill-formed expression. Expected expression after expression followed by "^".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression48.stan
 
-Syntax error at file "ill-formed-expression48.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression48.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 <  while
                                ^
@@ -750,7 +750,7 @@ Ill-formed expression. Expected expression after expression followed by "<".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression49.stan
 
-Syntax error at file "ill-formed-expression49.stan", line 1, columns 22-23, parsing error:
+Syntax error at file ill-formed-expression49.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  transformed data { x[ : while
                                 ^
@@ -760,7 +760,7 @@ Ill-formed expression. Expected expression or "]" or "," after ":".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression5.stan
 
-Syntax error at file "ill-formed-expression5.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression5.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T./ while> x;}
                                 ^
@@ -770,7 +770,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression50.stan
 
-Syntax error at file "ill-formed-expression50.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression50.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { x[32:while
                                  ^
@@ -780,7 +780,7 @@ Ill-formed expression. Expected expression or "]" or "," after ":".
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression51.stan
 
-Syntax error at file "ill-formed-expression51.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression51.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { x[T :while
                                  ^
@@ -790,7 +790,7 @@ Ill-formed phrase. Found expression ":". Expect "]", "," or expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression52.stan
 
-Syntax error at file "ill-formed-expression52.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression52.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 \ while
                                  ^
@@ -800,7 +800,7 @@ Ill-formed expression. Found expression "\". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression53.stan
 
-Syntax error at file "ill-formed-expression53.stan", line 1, columns 23-25, parsing error:
+Syntax error at file ill-formed-expression53.stan, line 1, columns 23-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 <=  while
                                   ^
@@ -810,7 +810,7 @@ Ill-formed expression. Found expression "<=". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression54.stan
 
-Syntax error at file "ill-formed-expression54.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression54.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 - while
                                  ^
@@ -820,7 +820,7 @@ Ill-formed expression. Found expression "-". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression55.stan
 
-Syntax error at file "ill-formed-expression55.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression55.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 %  while
                                  ^
@@ -830,7 +830,7 @@ Ill-formed expression. Found expression "%". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression56.stan
 
-Syntax error at file "ill-formed-expression56.stan", line 1, columns 23-25, parsing error:
+Syntax error at file ill-formed-expression56.stan, line 1, columns 23-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 !=  while
                                   ^
@@ -840,7 +840,7 @@ Ill-formed expression. Found expression "!=". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression57.stan
 
-Syntax error at file "ill-formed-expression57.stan", line 1, columns 23-25, parsing error:
+Syntax error at file ill-formed-expression57.stan, line 1, columns 23-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ||   while
                                   ^
@@ -850,7 +850,7 @@ Ill-formed expression. Found expression "||". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression58.stan
 
-Syntax error at file "ill-formed-expression58.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression58.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 +    while
                                  ^
@@ -860,7 +860,7 @@ Ill-formed expression. Found expression "+". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression59.stan
 
-Syntax error at file "ill-formed-expression59.stan", line 1, columns 29-30, parsing error:
+Syntax error at file ill-formed-expression59.stan, line 1, columns 29-30, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? 1.0 :     while
                                        ^
@@ -870,7 +870,7 @@ Ill-formed expression. Found expression "?" expression ":". Expect an expression
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression6.stan
 
-Syntax error at file "ill-formed-expression6.stan", line 1, columns 24-27, parsing error:
+Syntax error at file ill-formed-expression6.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T.* 0.0 while> x;}
                                     ^
@@ -880,7 +880,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression60.stan
 
-Syntax error at file "ill-formed-expression60.stan", line 1, columns 25-28, parsing error:
+Syntax error at file ill-formed-expression60.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? 1.0      while
                                      ^
@@ -890,7 +890,7 @@ Ill-formed expression. Found expression "?" expression. Expect an infix or postf
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression61.stan
 
-Syntax error at file "ill-formed-expression61.stan", line 1, columns 27-28, parsing error:
+Syntax error at file ill-formed-expression61.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? T :  while
                                      ^
@@ -900,7 +900,7 @@ Ill-formed expression. Found expression "?" expression ":". Expect an expression
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression62.stan
 
-Syntax error at file "ill-formed-expression62.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression62.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? while
                                  ^
@@ -910,7 +910,7 @@ Ill-formed expression. Found expression "?". Expect an expression next followed 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression63.stan
 
-Syntax error at file "ill-formed-expression63.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-expression63.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 > while
                                  ^
@@ -920,7 +920,7 @@ Ill-formed expression. Found expression ">". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression64.stan
 
-Syntax error at file "ill-formed-expression64.stan", line 1, columns 12-13, parsing error:
+Syntax error at file ill-formed-expression64.stan, line 1, columns 12-13, parsing error:
    -------------------------------------------------
      1:  model { 1.0 * while
                       ^
@@ -930,7 +930,7 @@ Ill-formed expression. Found expression "*" expression. Expect an expression nex
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression65.stan
 
-Syntax error at file "ill-formed-expression65.stan", line 1, columns 28-31, parsing error:
+Syntax error at file ill-formed-expression65.stan, line 1, columns 28-31, parsing error:
    -------------------------------------------------
      1:  transformed data { return T(T,x]
                                         ^
@@ -940,7 +940,7 @@ Ill-formed expression. In function application, expect comma-separated list of e
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression66.stan
 
-Syntax error at file "ill-formed-expression66.stan", line 1, columns 27-28, parsing error:
+Syntax error at file ill-formed-expression66.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { return T(while
                                      ^
@@ -950,7 +950,7 @@ Ill-formed expression. In function application, expect comma-separated list of e
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression67.stan
 
-Syntax error at file "ill-formed-expression67.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression67.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T && while
                                 ^
@@ -960,7 +960,7 @@ Ill-formed expression. Found expression "&&". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression68.stan
 
-Syntax error at file "ill-formed-expression68.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression68.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T =  while
                                ^
@@ -970,7 +970,7 @@ Ill-formed expression. Found L-value "=". Expect an expression followed by ";" n
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression69.stan
 
-Syntax error at file "ill-formed-expression69.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression69.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T =  while
                                ^
@@ -980,7 +980,7 @@ Ill-formed expression. Found L-value "=". Expect an expression followed by ";" n
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression7.stan
 
-Syntax error at file "ill-formed-expression7.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression7.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T.* while> x;}
                                 ^
@@ -990,7 +990,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression70.stan
 
-Syntax error at file "ill-formed-expression70.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression70.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T / while
                                ^
@@ -1000,7 +1000,7 @@ Ill-formed expression. Found expression "/". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression71.stan
 
-Syntax error at file "ill-formed-expression71.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression71.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T /= while
                                 ^
@@ -1010,7 +1010,7 @@ Ill-formed expression. Found L-value "/=". Expect an expression followed by ";" 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression72.stan
 
-Syntax error at file "ill-formed-expression72.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression72.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T ./ while
                                 ^
@@ -1020,7 +1020,7 @@ Ill-formed expression. Found expression "./". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression73.stan
 
-Syntax error at file "ill-formed-expression73.stan", line 1, columns 21-24, parsing error:
+Syntax error at file ill-formed-expression73.stan, line 1, columns 21-24, parsing error:
    -------------------------------------------------
      1:  transformed data { T ./= while
                                  ^
@@ -1030,7 +1030,7 @@ Ill-formed expression. Found L-value "./=". Expect an expression followed by ";"
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression74.stan
 
-Syntax error at file "ill-formed-expression74.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression74.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T .*  while
                                 ^
@@ -1040,7 +1040,7 @@ Ill-formed expression. Found expression ".*". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression75.stan
 
-Syntax error at file "ill-formed-expression75.stan", line 1, columns 21-24, parsing error:
+Syntax error at file ill-formed-expression75.stan, line 1, columns 21-24, parsing error:
    -------------------------------------------------
      1:  transformed data { T .*=   while
                                  ^
@@ -1050,7 +1050,7 @@ Ill-formed expression. Found L-value ".*=". Expect an expression followed by ";"
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression76.stan
 
-Syntax error at file "ill-formed-expression76.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression76.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T ==   while
                                 ^
@@ -1060,7 +1060,7 @@ Ill-formed expression. Found expression "==". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression77.stan
 
-Syntax error at file "ill-formed-expression77.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression77.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T <=   while
                                 ^
@@ -1070,7 +1070,7 @@ Ill-formed expression. Found expression "<=". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression78.stan
 
-Syntax error at file "ill-formed-expression78.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression78.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T >=    while
                                 ^
@@ -1080,7 +1080,7 @@ Ill-formed expression. Found expression ">=". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression79.stan
 
-Syntax error at file "ill-formed-expression79.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression79.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T ^    while
                                ^
@@ -1090,7 +1090,7 @@ Ill-formed expression. Found expression "^". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression8.stan
 
-Syntax error at file "ill-formed-expression8.stan", line 1, columns 22-25, parsing error:
+Syntax error at file ill-formed-expression8.stan, line 1, columns 22-25, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T^0.0 while> x;}
                                   ^
@@ -1100,7 +1100,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression80.stan
 
-Syntax error at file "ill-formed-expression80.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression80.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T <    while
                                ^
@@ -1110,7 +1110,7 @@ Ill-formed expression. Found expression "<". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression81.stan
 
-Syntax error at file "ill-formed-expression81.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression81.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T \  while
                                ^
@@ -1120,7 +1120,7 @@ Ill-formed expression. Found expression "\". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression82.stan
 
-Syntax error at file "ill-formed-expression82.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression82.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T - while
                                ^
@@ -1130,7 +1130,7 @@ Ill-formed expression. Found expression "-". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression83.stan
 
-Syntax error at file "ill-formed-expression83.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression83.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T % while
                                ^
@@ -1140,7 +1140,7 @@ Ill-formed expression. Found expression "%". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression84.stan
 
-Syntax error at file "ill-formed-expression84.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression84.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T != while
                                 ^
@@ -1150,7 +1150,7 @@ Ill-formed expression. Found expression "!=". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression85.stan
 
-Syntax error at file "ill-formed-expression85.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression85.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T ||  while
                                 ^
@@ -1160,7 +1160,7 @@ Ill-formed expression. Found expression "||". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression86.stan
 
-Syntax error at file "ill-formed-expression86.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression86.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T +  while
                                ^
@@ -1170,7 +1170,7 @@ Ill-formed expression. Found expression "+". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression87.stan
 
-Syntax error at file "ill-formed-expression87.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression87.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T +=   while
                                 ^
@@ -1180,7 +1180,7 @@ Ill-formed expression. Found L-value "+=". Expect an expression followed by ";" 
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression88.stan
 
-Syntax error at file "ill-formed-expression88.stan", line 1, columns 27-28, parsing error:
+Syntax error at file ill-formed-expression88.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { T ? 1.0 :  while
                                      ^
@@ -1190,7 +1190,7 @@ Ill-formed expression. Found expression "?" expression ":". Expect an expression
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression89.stan
 
-Syntax error at file "ill-formed-expression89.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression89.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T ?  while
                                ^
@@ -1200,7 +1200,7 @@ Ill-formed expression. Found expression "?". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression9.stan
 
-Syntax error at file "ill-formed-expression9.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression9.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=T^while> x;}
                                ^
@@ -1210,7 +1210,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression90.stan
 
-Syntax error at file "ill-formed-expression90.stan", line 1, columns 24-25, parsing error:
+Syntax error at file ill-formed-expression90.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { T ?  T~
                                   ^
@@ -1220,7 +1220,7 @@ Ill-formed expression. Found expression "?". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression91.stan
 
-Syntax error at file "ill-formed-expression91.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression91.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T ?  while
                                ^
@@ -1230,7 +1230,7 @@ Ill-formed expression. Found expression "?". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression92.stan
 
-Syntax error at file "ill-formed-expression92.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression92.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T > while
                                ^
@@ -1240,7 +1240,7 @@ Ill-formed expression. Found expression ">". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression93.stan
 
-Syntax error at file "ill-formed-expression93.stan", line 1, columns 21-22, parsing error:
+Syntax error at file ill-formed-expression93.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T * while
                                ^
@@ -1250,7 +1250,7 @@ Ill-formed expression. Found expression "*". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc ill-formed-expression94.stan
 
-Syntax error at file "ill-formed-expression94.stan", line 1, columns 21-23, parsing error:
+Syntax error at file ill-formed-expression94.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T *= while
                                 ^
@@ -1260,7 +1260,7 @@ Ill-formed expression. Found L-value "*=". Expect an expression followed by ";" 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement1.stan
 
-Syntax error at file "ill-formed-statement1.stan", line 1, columns 19-24, parsing error:
+Syntax error at file ill-formed-statement1.stan, line 1, columns 19-24, parsing error:
    -------------------------------------------------
      1:  transformed data { break while}
                                  ^
@@ -1270,7 +1270,7 @@ Expected ";" after "break".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement10.stan
 
-Syntax error at file "ill-formed-statement10.stan", line 1, columns 36-37, parsing error:
+Syntax error at file ill-formed-statement10.stan, line 1, columns 36-37, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T : 25) void}
                                               ^
@@ -1280,7 +1280,7 @@ Ill-formed statement. Expected statement after ")" for the loop body of the for 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement11.stan
 
-Syntax error at file "ill-formed-statement11.stan", line 1, columns 34-36, parsing error:
+Syntax error at file ill-formed-statement11.stan, line 1, columns 34-36, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T : 42 while
                                              ^
@@ -1290,7 +1290,7 @@ Ill-formed expression. Expected expression followed by ")" after "for (" identif
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement12.stan
 
-Syntax error at file "ill-formed-statement12.stan", line 1, columns 36-37, parsing error:
+Syntax error at file ill-formed-statement12.stan, line 1, columns 36-37, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T : T ) void
                                               ^
@@ -1300,7 +1300,7 @@ Ill-formed statement. Expected statement after ")" for the loop body of the for 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement13.stan
 
-Syntax error at file "ill-formed-statement13.stan", line 1, columns 33-34, parsing error:
+Syntax error at file ill-formed-statement13.stan, line 1, columns 33-34, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T: T ~normal(0,1)) }
                                            ^
@@ -1310,7 +1310,7 @@ Ill-formed expression. Expected expression followed by ")" after "for (" identif
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement14.stan
 
-Syntax error at file "ill-formed-statement14.stan", line 1, columns 31-32, parsing error:
+Syntax error at file ill-formed-statement14.stan, line 1, columns 31-32, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T: while)}
                                          ^
@@ -1320,7 +1320,7 @@ Ill-formed expression. Expected expression followed by ")" after "for (" identif
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement15.stan
 
-Syntax error at file "ill-formed-statement15.stan", line 1, columns 32-33, parsing error:
+Syntax error at file ill-formed-statement15.stan, line 1, columns 32-33, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T ) void }
                                           ^
@@ -1330,7 +1330,7 @@ Ill-formed statement. Expected statement after ")" for the loop body of the fore
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement16.stan
 
-Syntax error at file "ill-formed-statement16.stan", line 1, columns 30-31, parsing error:
+Syntax error at file ill-formed-statement16.stan, line 1, columns 30-31, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in T ~normal(0,1))}
                                         ^
@@ -1340,7 +1340,7 @@ Ill-formed expression. Expected expression followed by ")" or ":" after "for (" 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement17.stan
 
-Syntax error at file "ill-formed-statement17.stan", line 1, columns 27-29, parsing error:
+Syntax error at file ill-formed-statement17.stan, line 1, columns 27-29, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in while
                                       ^
@@ -1350,7 +1350,7 @@ Ill-formed expression. Expected expression followed by ")" or ":" after "for (" 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement18.stan
 
-Syntax error at file "ill-formed-statement18.stan", line 1, columns 25-26, parsing error:
+Syntax error at file ill-formed-statement18.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T while
                                    ^
@@ -1360,7 +1360,7 @@ Expected "in" after loop identifier.
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement19.stan
 
-Syntax error at file "ill-formed-statement19.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-statement19.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( while
                                  ^
@@ -1370,7 +1370,7 @@ Expected (loop) identifier after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement2.stan
 
-Syntax error at file "ill-formed-statement2.stan", line 1, columns 19-27, parsing error:
+Syntax error at file ill-formed-statement2.stan, line 1, columns 19-27, parsing error:
    -------------------------------------------------
      1:  transformed data { continue while}
                                     ^
@@ -1380,7 +1380,7 @@ Expected ";" after "continue".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement20.stan
 
-Syntax error at file "ill-formed-statement20.stan", line 1, columns 19-22, parsing error:
+Syntax error at file ill-formed-statement20.stan, line 1, columns 19-22, parsing error:
    -------------------------------------------------
      1:  transformed data { for while
                                ^
@@ -1390,7 +1390,7 @@ Expected "(" after "for".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement21.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement21.stan", line 1, column 24:
+Warning: deprecated language construct used at file ill-formed-statement21.stan, line 1, column 24:
    -------------------------------------------------
      1:  transformed data { get_lp ( while
                                  ^
@@ -1399,7 +1399,7 @@ Warning: deprecated language construct used at file "ill-formed-statement21.stan
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Syntax error at file "ill-formed-statement21.stan", line 1, columns 26-27, parsing error:
+Syntax error at file ill-formed-statement21.stan, line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp ( while
                                     ^
@@ -1409,7 +1409,7 @@ Expected ")" after "get_lp(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement22.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement22.stan", line 1, column 24:
+Warning: deprecated language construct used at file ill-formed-statement22.stan, line 1, column 24:
    -------------------------------------------------
      1:  transformed data { get_lp while
                                  ^
@@ -1418,7 +1418,7 @@ Warning: deprecated language construct used at file "ill-formed-statement22.stan
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Syntax error at file "ill-formed-statement22.stan", line 1, columns 19-25, parsing error:
+Syntax error at file ill-formed-statement22.stan, line 1, columns 19-25, parsing error:
    -------------------------------------------------
      1:  transformed data { get_lp while
                                   ^
@@ -1428,7 +1428,7 @@ Expected "()" after "get_lp".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement23.stan
 
-Syntax error at file "ill-formed-statement23.stan", line 1, columns 30-34, parsing error:
+Syntax error at file ill-formed-statement23.stan, line 1, columns 30-34, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( 1 ) ; else void}
                                            ^
@@ -1438,7 +1438,7 @@ Ill-formed statement. Expected statement after "else".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement24.stan
 
-Syntax error at file "ill-formed-statement24.stan", line 1, columns 28-29, parsing error:
+Syntax error at file ill-formed-statement24.stan, line 1, columns 28-29, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( 1 ) ; upper}
                                       ^
@@ -1448,7 +1448,7 @@ Ill-formed statement. Expected "else"  or statement or variable declaration or "
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement25.stan
 
-Syntax error at file "ill-formed-statement25.stan", line 1, columns 29-33, parsing error:
+Syntax error at file ill-formed-statement25.stan, line 1, columns 29-33, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; else void
                                           ^
@@ -1458,7 +1458,7 @@ Ill-formed statement. Expected statement after else.
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement26.stan
 
-Syntax error at file "ill-formed-statement26.stan", line 1, columns 27-28, parsing error:
+Syntax error at file ill-formed-statement26.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T) ; upper
                                      ^
@@ -1468,7 +1468,7 @@ Ill-formed statement. Expected "else" or statement or variable declaration or "}
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
 
-Syntax error at file "ill-formed-statement27.stan", line 1, columns 26-27, parsing error:
+Syntax error at file ill-formed-statement27.stan, line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  transformed data { if ( T ) void
                                     ^
@@ -1478,7 +1478,7 @@ Ill-formed statement. Expected statement after ")" for true branch of conditiona
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement28.stan
 
-Syntax error at file "ill-formed-statement28.stan", line 1, columns 23-24, parsing error:
+Syntax error at file ill-formed-statement28.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { if (T ~ normal(0,1))}
                                  ^
@@ -1488,7 +1488,7 @@ Ill-formed expression. Expression expected after "(", for test of conditional co
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement29.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement29.stan", line 1, column 36:
+Warning: deprecated language construct used at file ill-formed-statement29.stan, line 1, column 36:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1) while}
                                              ^
@@ -1497,7 +1497,7 @@ Warning: deprecated language construct used at file "ill-formed-statement29.stan
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Syntax error at file "ill-formed-statement29.stan", line 1, columns 41-42, parsing error:
+Syntax error at file ill-formed-statement29.stan, line 1, columns 41-42, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1) while}
                                                    ^
@@ -1507,7 +1507,7 @@ Ill-formed statement. Expected ";" after ")".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement3.stan
 
-Syntax error at file "ill-formed-statement3.stan", line 1, columns 34-35, parsing error:
+Syntax error at file ill-formed-statement3.stan, line 1, columns 34-35, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1:42) void}
                                             ^
@@ -1517,7 +1517,7 @@ Ill-formed statement. Expected statement after ")"  for the loop body of the for
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement30.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement30.stan", line 1, column 36:
+Warning: deprecated language construct used at file ill-formed-statement30.stan, line 1, column 36:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1 while}
                                              ^
@@ -1526,7 +1526,7 @@ Warning: deprecated language construct used at file "ill-formed-statement30.stan
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Syntax error at file "ill-formed-statement30.stan", line 1, columns 40-41, parsing error:
+Syntax error at file ill-formed-statement30.stan, line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( 1 while}
                                                   ^
@@ -1536,7 +1536,7 @@ Ill-formed statement. Expected expression followed by ");" after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement31.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement31.stan", line 1, column 36:
+Warning: deprecated language construct used at file ill-formed-statement31.stan, line 1, column 36:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ) while
                                              ^
@@ -1545,7 +1545,7 @@ Warning: deprecated language construct used at file "ill-formed-statement31.stan
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Syntax error at file "ill-formed-statement31.stan", line 1, columns 42-43, parsing error:
+Syntax error at file ill-formed-statement31.stan, line 1, columns 42-43, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ) while
                                                     ^
@@ -1555,7 +1555,7 @@ Ill-formed statement. Expected ";" after ")".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement32.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement32.stan", line 1, column 36:
+Warning: deprecated language construct used at file ill-formed-statement32.stan, line 1, column 36:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ~
                                              ^
@@ -1564,7 +1564,7 @@ Warning: deprecated language construct used at file "ill-formed-statement32.stan
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Syntax error at file "ill-formed-statement32.stan", line 1, columns 40-41, parsing error:
+Syntax error at file ill-formed-statement32.stan, line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( T ~
                                                   ^
@@ -1574,7 +1574,7 @@ Ill-formed statement. Expected expression followed by ");" after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement33.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement33.stan", line 1, column 36:
+Warning: deprecated language construct used at file ill-formed-statement33.stan, line 1, column 36:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( while
                                              ^
@@ -1583,7 +1583,7 @@ Warning: deprecated language construct used at file "ill-formed-statement33.stan
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Syntax error at file "ill-formed-statement33.stan", line 1, columns 38-39, parsing error:
+Syntax error at file ill-formed-statement33.stan, line 1, columns 38-39, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob ( while
                                                 ^
@@ -1593,7 +1593,7 @@ Ill-formed statement. Expected expression followed by ");" after "(".
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement34.stan
 
-Warning: deprecated language construct used at file "ill-formed-statement34.stan", line 1, column 36:
+Warning: deprecated language construct used at file ill-formed-statement34.stan, line 1, column 36:
    -------------------------------------------------
      1:  transformed data { increment_log_prob  while
                                              ^
@@ -1602,7 +1602,7 @@ Warning: deprecated language construct used at file "ill-formed-statement34.stan
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Syntax error at file "ill-formed-statement34.stan", line 1, columns 19-37, parsing error:
+Syntax error at file ill-formed-statement34.stan, line 1, columns 19-37, parsing error:
    -------------------------------------------------
      1:  transformed data { increment_log_prob  while
                                               ^
@@ -1612,7 +1612,7 @@ Ill-formed statement. Expected "(" followed by an expression and ");", after "in
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement35.stan
 
-Syntax error at file "ill-formed-statement35.stan", line 1, columns 20-23, parsing error:
+Syntax error at file ill-formed-statement35.stan, line 1, columns 20-23, parsing error:
    -------------------------------------------------
      1:  transformed data { -1.0 while
                                 ^
@@ -1622,7 +1622,7 @@ Ill-formed expression. Found an expression. Expect an infix or postfix operator 
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement4.stan
 
-Syntax error at file "ill-formed-statement4.stan", line 1, columns 32-34, parsing error:
+Syntax error at file ill-formed-statement4.stan, line 1, columns 32-34, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1:24 while}
                                            ^
@@ -1632,7 +1632,7 @@ Ill-formed expression. Expected expression followed by ")" after "for (" identif
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement5.stan
 
-Syntax error at file "ill-formed-statement5.stan", line 1, columns 33-34, parsing error:
+Syntax error at file ill-formed-statement5.stan, line 1, columns 33-34, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1:T)void
                                            ^
@@ -1642,7 +1642,7 @@ Ill-formed statement. Expected statement after ")"  for the loop body of the for
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement6.stan
 
-Syntax error at file "ill-formed-statement6.stan", line 1, columns 34-35, parsing error:
+Syntax error at file ill-formed-statement6.stan, line 1, columns 34-35, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1 : T~normal(0,1))}
                                             ^
@@ -1652,7 +1652,7 @@ Ill-formed expression. Expected expression followed by ")" after "for (" identif
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement7.stan
 
-Syntax error at file "ill-formed-statement7.stan", line 1, columns 31-32, parsing error:
+Syntax error at file ill-formed-statement7.stan, line 1, columns 31-32, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1: while)}
                                          ^
@@ -1662,7 +1662,7 @@ Ill-formed expression. Expected expression followed by ")" after "for (" identif
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement8.stan
 
-Syntax error at file "ill-formed-statement8.stan", line 1, columns 31-32, parsing error:
+Syntax error at file ill-formed-statement8.stan, line 1, columns 31-32, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1) void }
                                          ^
@@ -1672,7 +1672,7 @@ Ill-formed statement. Expected statement after ")" for the loop body of the fore
 
   $ ../../../../../install/default/bin/stanc ill-formed-statement9.stan
 
-Syntax error at file "ill-formed-statement9.stan", line 1, columns 30-31, parsing error:
+Syntax error at file ill-formed-statement9.stan, line 1, columns 30-31, parsing error:
    -------------------------------------------------
      1:  transformed data { for ( T in 1 while)}
                                         ^
@@ -1682,7 +1682,7 @@ Ill-formed expression. Expected expression after "for (" identifier "in".
 
   $ ../../../../../install/default/bin/stanc immediate_error.stan
 
-Syntax error at file "immediate_error.stan", line 1, columns 0-5, parsing error:
+Syntax error at file immediate_error.stan, line 1, columns 0-5, parsing error:
    -------------------------------------------------
      1:  while
               ^
@@ -1692,7 +1692,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc indices-bad1.stan
 
-Syntax error at file "indices-bad1.stan", line 1, columns 25-26, parsing error:
+Syntax error at file indices-bad1.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 [ , while
                                    ^
@@ -1702,7 +1702,7 @@ Expected index after indices followed by ",".
 
   $ ../../../../../install/default/bin/stanc indices-bad2.stan
 
-Syntax error at file "indices-bad2.stan", line 1, columns 22-23, parsing error:
+Syntax error at file indices-bad2.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0[ while
                                 ^
@@ -1712,7 +1712,7 @@ Found expression "[". Expect comma separated list of indices next.
 
   $ ../../../../../install/default/bin/stanc indices-bad3.stan
 
-Syntax error at file "indices-bad3.stan", line 1, columns 21-22, parsing error:
+Syntax error at file indices-bad3.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T [while
                                ^
@@ -1722,7 +1722,7 @@ Ill-formed indices. Expected comma-separated set of indices followed by "]" afte
 
   $ ../../../../../install/default/bin/stanc lexing_error.stan
 
-Syntax error at file "lexing_error.stan", line 1, column 6, lexing error:
+Syntax error at file lexing_error.stan, line 1, column 6, lexing error:
    -------------------------------------------------
      1:  model {½ }
                ^
@@ -1732,7 +1732,7 @@ Invalid character found.
 
   $ ../../../../../install/default/bin/stanc location-scale-bad1.stan
 
-Syntax error at file "location-scale-bad1.stan", line 1, columns 23-26, parsing error:
+Syntax error at file location-scale-bad1.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  data { vector<offset = 0.0 while> x;}
                                    ^
@@ -1742,7 +1742,7 @@ Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad10.stan
 
-Syntax error at file "location-scale-bad10.stan", line 1, columns 25-26, parsing error:
+Syntax error at file location-scale-bad10.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  data { vector<multiplier = while> x;}
                                    ^
@@ -1752,7 +1752,7 @@ Expected expression (not containing binary logical operators) after "multiplier 
 
   $ ../../../../../install/default/bin/stanc location-scale-bad11.stan
 
-Syntax error at file "location-scale-bad11.stan", line 1, columns 14-24, parsing error:
+Syntax error at file location-scale-bad11.stan, line 1, columns 14-24, parsing error:
    -------------------------------------------------
      1:  data { vector<multiplier while> x;}
                                  ^
@@ -1762,7 +1762,7 @@ Expected "=" expression (not containing binary logical operators) ">" after "mul
 
   $ ../../../../../install/default/bin/stanc location-scale-bad2.stan
 
-Syntax error at file "location-scale-bad2.stan", line 1, columns 39-40, parsing error:
+Syntax error at file location-scale-bad2.stan, line 1, columns 39-40, parsing error:
    -------------------------------------------------
      1:  data { vector<offset = T, multiplier = T,> x;}
                                                  ^
@@ -1772,7 +1772,7 @@ Expected ">" after "multiplier = " expression.
 
   $ ../../../../../install/default/bin/stanc location-scale-bad3.stan
 
-Syntax error at file "location-scale-bad3.stan", line 1, columns 37-38, parsing error:
+Syntax error at file location-scale-bad3.stan, line 1, columns 37-38, parsing error:
    -------------------------------------------------
      1:  data { vector<offset = T, multiplier = while> x;}
                                                ^
@@ -1782,7 +1782,7 @@ Expected "multiplier = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad4.stan
 
-Syntax error at file "location-scale-bad4.stan", line 1, columns 26-36, parsing error:
+Syntax error at file location-scale-bad4.stan, line 1, columns 26-36, parsing error:
    -------------------------------------------------
      1:  data { vector<offset = T, multiplier  while> x;}
                                              ^
@@ -1792,7 +1792,7 @@ Expected "multiplier = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad5.stan
 
-Syntax error at file "location-scale-bad5.stan", line 1, columns 24-25, parsing error:
+Syntax error at file location-scale-bad5.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  data { vector<offset = T,   while> x;}
                                   ^
@@ -1802,7 +1802,7 @@ Expected ">" or ", multiplier = " expression (not containing binary logical oper
 
   $ ../../../../../install/default/bin/stanc location-scale-bad6.stan
 
-Syntax error at file "location-scale-bad6.stan", line 1, columns 21-22, parsing error:
+Syntax error at file location-scale-bad6.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<offset =  while> x;}
                                ^
@@ -1812,7 +1812,7 @@ Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad7.stan
 
-Syntax error at file "location-scale-bad7.stan", line 1, columns 21-22, parsing error:
+Syntax error at file location-scale-bad7.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<offset =  while> x;}
                                ^
@@ -1822,7 +1822,7 @@ Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad8.stan
 
-Syntax error at file "location-scale-bad8.stan", line 1, columns 14-20, parsing error:
+Syntax error at file location-scale-bad8.stan, line 1, columns 14-20, parsing error:
    -------------------------------------------------
      1:  data { vector<offset  while> x;}
                              ^
@@ -1832,7 +1832,7 @@ Expected "offset = " expression (not containing binary logical operators).
 
   $ ../../../../../install/default/bin/stanc location-scale-bad9.stan
 
-Syntax error at file "location-scale-bad9.stan", line 1, columns 27-28, parsing error:
+Syntax error at file location-scale-bad9.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  data { vector<multiplier = y,> x;}
                                      ^
@@ -1842,7 +1842,7 @@ Expected ">" after "multiplier =" expression.
 
   $ ../../../../../install/default/bin/stanc mystery1.stan
 
-Syntax error at file "mystery1.stan", line 1, columns 21-22, parsing error:
+Syntax error at file mystery1.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { [ T~
                                ^
@@ -1852,7 +1852,7 @@ Ill-formed phrase. We found an L-value. Parse failed on token after the L-value.
 
   $ ../../../../../install/default/bin/stanc mystery10.stan
 
-Syntax error at file "mystery10.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery10.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 .* T[] while
                                     ^
@@ -1862,7 +1862,7 @@ Ill-formed phrase. Found expression ".*" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery100.stan
 
-Syntax error at file "mystery100.stan", line 1, columns 29-32, parsing error:
+Syntax error at file mystery100.stan, line 1, columns 29-32, parsing error:
    -------------------------------------------------
      1:  transformed data { T ? 1.0 : T[] while
                                          ^
@@ -1872,7 +1872,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc mystery101.stan
 
-Syntax error at file "mystery101.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery101.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T ? 1.0 while
                                    ^
@@ -1882,7 +1882,7 @@ Ill-formed expression. Found expression "?". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc mystery102.stan
 
-Syntax error at file "mystery102.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery102.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T ? T[] while
                                    ^
@@ -1892,7 +1892,7 @@ Ill-formed expression. Found expression "?". Expect an expression next.
 
   $ ../../../../../install/default/bin/stanc mystery103.stan
 
-Syntax error at file "mystery103.stan", line 1, columns 30-33, parsing error:
+Syntax error at file mystery103.stan, line 1, columns 30-33, parsing error:
    -------------------------------------------------
      1:  transformed data { T ?  1.0 : 1.0 while
                                           ^
@@ -1902,7 +1902,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc mystery104.stan
 
-Syntax error at file "mystery104.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery104.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T > 1.0 while
                                    ^
@@ -1912,7 +1912,7 @@ Ill-formed phrase. Found expression ">" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery105.stan
 
-Syntax error at file "mystery105.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery105.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T > T[] while
                                    ^
@@ -1922,7 +1922,7 @@ Ill-formed phrase. Found expression ">" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery106.stan
 
-Syntax error at file "mystery106.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery106.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T * 1.0 while
                                    ^
@@ -1932,7 +1932,7 @@ Ill-formed phrase. Found expression "*" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery107.stan
 
-Syntax error at file "mystery107.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery107.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T * T[] while
                                    ^
@@ -1942,7 +1942,7 @@ Ill-formed phrase. Found expression "*" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery108.stan
 
-Syntax error at file "mystery108.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery108.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T *= T[] while
                                     ^
@@ -1952,7 +1952,7 @@ Ill-formed phrase. Found L-value "*=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery109.stan
 
-Syntax error at file "mystery109.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery109.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T *= 1.0 while
                                     ^
@@ -1962,7 +1962,7 @@ Ill-formed phrase. Found L-value "*=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery11.stan
 
-Syntax error at file "mystery11.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery11.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 == 1  while
                                   ^
@@ -1972,7 +1972,7 @@ Ill-formed phrase. Found expression "==" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery12.stan
 
-Syntax error at file "mystery12.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery12.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 == T[]  while
                                     ^
@@ -1982,7 +1982,7 @@ Ill-formed phrase. Found expression "==" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery13.stan
 
-Syntax error at file "mystery13.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery13.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 >= 1 while
                                   ^
@@ -1992,7 +1992,7 @@ Ill-formed phrase. Found expression ">=" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery14.stan
 
-Syntax error at file "mystery14.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery14.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 >= T[] while
                                     ^
@@ -2002,7 +2002,7 @@ Ill-formed phrase. Found expression ">=" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery15.stan
 
-Syntax error at file "mystery15.stan", line 1, columns 23-24, parsing error:
+Syntax error at file mystery15.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ^ 1 while
                                  ^
@@ -2012,7 +2012,7 @@ Ill-formed phrase. Found expression "^" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery16.stan
 
-Syntax error at file "mystery16.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery16.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ^ T[] while
                                    ^
@@ -2022,7 +2022,7 @@ Ill-formed phrase. Found expression "^" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery17.stan
 
-Syntax error at file "mystery17.stan", line 1, columns 23-24, parsing error:
+Syntax error at file mystery17.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 < 1  while
                                  ^
@@ -2032,7 +2032,7 @@ Ill-formed phrase. Found expression "<" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery18.stan
 
-Syntax error at file "mystery18.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery18.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 < T[]  while
                                    ^
@@ -2042,7 +2042,7 @@ Ill-formed phrase. Found expression "<" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery19.stan
 
-Syntax error at file "mystery19.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery19.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { x[ : 242 while
                                     ^
@@ -2052,7 +2052,7 @@ Ill-formed phrase. Found ":" expression. We expect either an infix or postfix op
 
   $ ../../../../../install/default/bin/stanc mystery2.stan
 
-Syntax error at file "mystery2.stan", line 1, columns 21-22, parsing error:
+Syntax error at file mystery2.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { ( T ~
                                ^
@@ -2062,7 +2062,7 @@ Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or
 
   $ ../../../../../install/default/bin/stanc mystery20.stan
 
-Syntax error at file "mystery20.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery20.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { x[ : T ~
                                   ^
@@ -2072,7 +2072,7 @@ Ill-formed phrase. Found ":" expression. We expect either an infix or postfix op
 
   $ ../../../../../install/default/bin/stanc mystery21.stan
 
-Syntax error at file "mystery21.stan", line 1, columns 31-34, parsing error:
+Syntax error at file mystery21.stan, line 1, columns 31-34, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 [ 1.0 : 1.0 while
                                            ^
@@ -2082,7 +2082,7 @@ Ill-formed phrase. Found expression ":" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery22.stan
 
-Syntax error at file "mystery22.stan", line 1, columns 31-32, parsing error:
+Syntax error at file mystery22.stan, line 1, columns 31-32, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 [ 1.0 : T~
                                          ^
@@ -2092,7 +2092,7 @@ Ill-formed phrase. Found expression "<" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery23.stan
 
-Syntax error at file "mystery23.stan", line 1, columns 21-23, parsing error:
+Syntax error at file mystery23.stan, line 1, columns 21-23, parsing error:
    -------------------------------------------------
      1:  transformed data { x[32 while
                                 ^
@@ -2102,7 +2102,7 @@ Ill-formed phrase. Found expression. There are many options to continue the phra
 
   $ ../../../../../install/default/bin/stanc mystery24.stan
 
-Syntax error at file "mystery24.stan", line 1, columns 23-24, parsing error:
+Syntax error at file mystery24.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { x[T:1 while
                                  ^
@@ -2112,7 +2112,7 @@ Ill-formed phrase. Found expression ":" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery25.stan
 
-Syntax error at file "mystery25.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery25.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { x[T :T~
                                   ^
@@ -2122,7 +2122,7 @@ Ill-formed phrase. Found expression ":" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery26.stan
 
-Syntax error at file "mystery26.stan", line 1, columns 21-22, parsing error:
+Syntax error at file mystery26.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { x[T ~
                                ^
@@ -2132,7 +2132,7 @@ Ill-formed phrase. Found expression. There are many options to continue the phra
 
   $ ../../../../../install/default/bin/stanc mystery27.stan
 
-Syntax error at file "mystery27.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery27.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 \ 1.0 while
                                      ^
@@ -2142,7 +2142,7 @@ Ill-formed phrase. Found expression "/" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery28.stan
 
-Syntax error at file "mystery28.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery28.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 \ T[] while
                                      ^
@@ -2152,7 +2152,7 @@ Ill-formed phrase. Found expression "/" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery29.stan
 
-Syntax error at file "mystery29.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery29.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 <= 1.0 while
                                       ^
@@ -2162,7 +2162,7 @@ Ill-formed phrase. Found expression "<=" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery3.stan
 
-Syntax error at file "mystery3.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery3.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 && 1 while }
                                   ^
@@ -2172,7 +2172,7 @@ Ill-formed phrase. Found expression "&&" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery30.stan
 
-Syntax error at file "mystery30.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery30.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 <= T[] while
                                       ^
@@ -2182,7 +2182,7 @@ Ill-formed phrase. Found expression "<=" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery31.stan
 
-Syntax error at file "mystery31.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery31.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 - 1.0 while
                                      ^
@@ -2192,7 +2192,7 @@ Ill-formed phrase. Found expression "-" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery32.stan
 
-Syntax error at file "mystery32.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery32.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 - T[] while
                                      ^
@@ -2202,7 +2202,7 @@ Ill-formed phrase. Found expression "-" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery33.stan
 
-Syntax error at file "mystery33.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery33.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 % 1.0 while
                                      ^
@@ -2212,7 +2212,7 @@ Ill-formed phrase. Found expression "%" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery34.stan
 
-Syntax error at file "mystery34.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery34.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 % T[] while
                                      ^
@@ -2222,7 +2222,7 @@ Ill-formed phrase. Found expression "%" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery35.stan
 
-Syntax error at file "mystery35.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery35.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 != 1.0  while
                                       ^
@@ -2232,7 +2232,7 @@ Ill-formed phrase. Found expression "!=" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery36.stan
 
-Syntax error at file "mystery36.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery36.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 != T[] while
                                       ^
@@ -2242,7 +2242,7 @@ Ill-formed phrase. Found expression "!=" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery37.stan
 
-Syntax error at file "mystery37.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery37.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 || 1.0  while
                                       ^
@@ -2252,7 +2252,7 @@ Ill-formed phrase. Found expression "||" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery38.stan
 
-Syntax error at file "mystery38.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery38.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 || T[]  while
                                       ^
@@ -2262,7 +2262,7 @@ Ill-formed phrase. Found expression "||" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery39.stan
 
-Syntax error at file "mystery39.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery39.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 + 1.0   while
                                      ^
@@ -2272,7 +2272,7 @@ Ill-formed phrase. Found expression "+" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery4.stan
 
-Syntax error at file "mystery4.stan", line 1, columns 27-31, parsing error:
+Syntax error at file mystery4.stan, line 1, columns 27-31, parsing error:
    -------------------------------------------------
      1:  transformed data { x= 1 && T [] while
                                         ^
@@ -2282,7 +2282,7 @@ Ill-formed phrase. Found expression "&&" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery40.stan
 
-Syntax error at file "mystery40.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery40.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 + T[]   while
                                      ^
@@ -2292,7 +2292,7 @@ Ill-formed phrase. Found expression "+" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery41.stan
 
-Syntax error at file "mystery41.stan", line 1, columns 31-34, parsing error:
+Syntax error at file mystery41.stan, line 1, columns 31-34, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? 1.0 : 1.0    while
                                            ^
@@ -2302,7 +2302,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc mystery42.stan
 
-Syntax error at file "mystery42.stan", line 1, columns 31-34, parsing error:
+Syntax error at file mystery42.stan, line 1, columns 31-34, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? 1.0 : T[]    while
                                            ^
@@ -2312,7 +2312,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc mystery43.stan
 
-Syntax error at file "mystery43.stan", line 1, columns 29-32, parsing error:
+Syntax error at file mystery43.stan, line 1, columns 29-32, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? T : 1.0 while
                                          ^
@@ -2322,7 +2322,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc mystery44.stan
 
-Syntax error at file "mystery44.stan", line 1, columns 29-32, parsing error:
+Syntax error at file mystery44.stan, line 1, columns 29-32, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? T : T[] while
                                          ^
@@ -2332,7 +2332,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc mystery45.stan
 
-Syntax error at file "mystery45.stan", line 1, columns 25-26, parsing error:
+Syntax error at file mystery45.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ? T ~
                                    ^
@@ -2342,7 +2342,7 @@ Ill-formed expression. Found expression "?" expression. Expect an infix or postf
 
   $ ../../../../../install/default/bin/stanc mystery46.stan
 
-Syntax error at file "mystery46.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery46.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 > 1.0 while
                                      ^
@@ -2352,7 +2352,7 @@ Ill-formed phrase. Found expression ">" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery47.stan
 
-Syntax error at file "mystery47.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery47.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 > T[] while
                                      ^
@@ -2362,7 +2362,7 @@ Ill-formed phrase. Found expression ">" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery48.stan
 
-Syntax error at file "mystery48.stan", line 1, columns 14-17, parsing error:
+Syntax error at file mystery48.stan, line 1, columns 14-17, parsing error:
    -------------------------------------------------
      1:  model { 1.0 * 1.0 while
                           ^
@@ -2372,7 +2372,7 @@ Ill-formed phrase. Found expression "*" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery49.stan
 
-Syntax error at file "mystery49.stan", line 1, columns 14-17, parsing error:
+Syntax error at file mystery49.stan, line 1, columns 14-17, parsing error:
    -------------------------------------------------
      1:  model { 1.0 * T[] while
                           ^
@@ -2382,7 +2382,7 @@ Ill-formed phrase. Found expression "*" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery5.stan
 
-Syntax error at file "mystery5.stan", line 1, columns 23-24, parsing error:
+Syntax error at file mystery5.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 / 1 while
                                  ^
@@ -2392,7 +2392,7 @@ Ill-formed phrase. Found expression "/" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery50.stan
 
-Syntax error at file "mystery50.stan", line 1, columns 8-11, parsing error:
+Syntax error at file mystery50.stan, line 1, columns 8-11, parsing error:
    -------------------------------------------------
      1:  model { 1.0 while
                     ^
@@ -2402,7 +2402,7 @@ Ill-formed phrase. Found expression. There are many options to continue the phra
 
   $ ../../../../../install/default/bin/stanc mystery51.stan
 
-Syntax error at file "mystery51.stan", line 1, columns 27-28, parsing error:
+Syntax error at file mystery51.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( T ~
                                      ^
@@ -2412,7 +2412,7 @@ Ill-formed phrase. Found expression. There are many options to continue the phra
 
   $ ../../../../../install/default/bin/stanc mystery52.stan
 
-Syntax error at file "mystery52.stan", line 1, columns 28-29, parsing error:
+Syntax error at file mystery52.stan, line 1, columns 28-29, parsing error:
    -------------------------------------------------
      1:  transformed data { return { T)
                                       ^
@@ -2422,7 +2422,7 @@ Expected either "," followed by expression or "}" next.
 
   $ ../../../../../install/default/bin/stanc mystery53.stan
 
-Syntax error at file "mystery53.stan", line 1, columns 26-29, parsing error:
+Syntax error at file mystery53.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { return 1.0 while
                                       ^
@@ -2432,7 +2432,7 @@ Ill formed expression followed by ";". Expect expression after "return".
 
   $ ../../../../../install/default/bin/stanc mystery54.stan
 
-Syntax error at file "mystery54.stan", line 1, columns 26-27, parsing error:
+Syntax error at file mystery54.stan, line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  transformed data { return T ~
                                     ^
@@ -2442,7 +2442,7 @@ Ill-formed return statement. ";" or expression followed by ";" expected after "r
 
   $ ../../../../../install/default/bin/stanc mystery55.stan
 
-Syntax error at file "mystery55.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery55.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T && 1.0 while
                                     ^
@@ -2452,7 +2452,7 @@ Ill-formed phrase. Found expression "&&" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery56.stan
 
-Syntax error at file "mystery56.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery56.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T && T[] while
                                     ^
@@ -2462,7 +2462,7 @@ Ill-formed phrase. Found expression "&&" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery57.stan
 
-Syntax error at file "mystery57.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery57.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T = 1.0 while
                                    ^
@@ -2472,7 +2472,7 @@ Ill-formed phrase. Found L-value "=" expression. There are many ways in which th
 
   $ ../../../../../install/default/bin/stanc mystery58.stan
 
-Syntax error at file "mystery58.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery58.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T = T[] while
                                    ^
@@ -2482,7 +2482,7 @@ Ill-formed phrase. Found L-value "=" expression. There are many ways in which th
 
   $ ../../../../../install/default/bin/stanc mystery59.stan
 
-Syntax error at file "mystery59.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery59.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T = 1.0 while
                                    ^
@@ -2492,7 +2492,7 @@ Ill-formed phrase. Found L-value "=" expression. There are many ways in which th
 
   $ ../../../../../install/default/bin/stanc mystery6.stan
 
-Syntax error at file "mystery6.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery6.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 / T[] while
                                    ^
@@ -2502,7 +2502,7 @@ Ill-formed phrase. Found expression "/" expression. There are many options to co
 
   $ ../../../../../install/default/bin/stanc mystery60.stan
 
-Syntax error at file "mystery60.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery60.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T = T[] while
                                    ^
@@ -2512,7 +2512,7 @@ Ill-formed phrase. Found L-value "=" expression. There are many ways in which th
 
   $ ../../../../../install/default/bin/stanc mystery61.stan
 
-Syntax error at file "mystery61.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery61.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T / 1.0 while
                                    ^
@@ -2522,7 +2522,7 @@ Ill-formed phrase. Found expression "/" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery62.stan
 
-Syntax error at file "mystery62.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery62.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T / T[] while
                                    ^
@@ -2532,7 +2532,7 @@ Ill-formed phrase. Found expression "/" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery63.stan
 
-Syntax error at file "mystery63.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery63.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T /= 1.0 while
                                     ^
@@ -2542,7 +2542,7 @@ Ill-formed phrase. Found L-value "/=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery64.stan
 
-Syntax error at file "mystery64.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery64.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T /= T[] while
                                     ^
@@ -2552,7 +2552,7 @@ Ill-formed phrase. Found L-value "/=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery65.stan
 
-Syntax error at file "mystery65.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery65.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T ./ 1.0 while
                                     ^
@@ -2562,7 +2562,7 @@ Ill-formed phrase. Found expression "./" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery66.stan
 
-Syntax error at file "mystery66.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery66.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T ./ T[] while
                                     ^
@@ -2572,7 +2572,7 @@ Ill-formed phrase. Found expression "./" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery67.stan
 
-Syntax error at file "mystery67.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery67.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { T ./= 1.0 while
                                      ^
@@ -2582,7 +2582,7 @@ Ill-formed phrase. Found L-value "./=" expression. There are many ways in which 
 
   $ ../../../../../install/default/bin/stanc mystery68.stan
 
-Syntax error at file "mystery68.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery68.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { T ./= T[] while
                                      ^
@@ -2592,7 +2592,7 @@ Ill-formed phrase. Found L-value "./=" expression. There are many ways in which 
 
   $ ../../../../../install/default/bin/stanc mystery69.stan
 
-Syntax error at file "mystery69.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery69.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T .* 1.0 while
                                     ^
@@ -2602,7 +2602,7 @@ Ill-formed phrase. Found expression ".*" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery7.stan
 
-Syntax error at file "mystery7.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery7.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ./ 1 while
                                   ^
@@ -2612,7 +2612,7 @@ Ill-formed phrase. Found expression "./" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery70.stan
 
-Syntax error at file "mystery70.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery70.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T .* T[] while
                                     ^
@@ -2622,7 +2622,7 @@ Ill-formed phrase. Found expression ".*" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery71.stan
 
-Syntax error at file "mystery71.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery71.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { T .*= 1.0  while
                                      ^
@@ -2632,7 +2632,7 @@ Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which 
 
   $ ../../../../../install/default/bin/stanc mystery72.stan
 
-Syntax error at file "mystery72.stan", line 1, columns 25-28, parsing error:
+Syntax error at file mystery72.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { T .*= T[]  while
                                      ^
@@ -2642,7 +2642,7 @@ Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which 
 
   $ ../../../../../install/default/bin/stanc mystery73.stan
 
-Syntax error at file "mystery73.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery73.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T == 1.0  while
                                     ^
@@ -2652,7 +2652,7 @@ Ill-formed phrase. Found expression "==" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery74.stan
 
-Syntax error at file "mystery74.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery74.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T == T[]  while
                                     ^
@@ -2662,7 +2662,7 @@ Ill-formed phrase. Found expression "==" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery75.stan
 
-Syntax error at file "mystery75.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery75.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T <= 1.0   while
                                     ^
@@ -2672,7 +2672,7 @@ Ill-formed phrase. Found expression "<=" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery76.stan
 
-Syntax error at file "mystery76.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery76.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T <= T[]   while
                                     ^
@@ -2682,7 +2682,7 @@ Ill-formed phrase. Found expression "<=" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery77.stan
 
-Syntax error at file "mystery77.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery77.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T >= T[]   while
                                     ^
@@ -2692,7 +2692,7 @@ Ill-formed phrase. Found expression ">=" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery78.stan
 
-Syntax error at file "mystery78.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery78.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T >= 1.0   while
                                     ^
@@ -2702,7 +2702,7 @@ Ill-formed phrase. Found expression ">=" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery79.stan
 
-Syntax error at file "mystery79.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery79.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T ^ 1.0    while
                                    ^
@@ -2712,7 +2712,7 @@ Ill-formed phrase. Found expression "^" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery8.stan
 
-Syntax error at file "mystery8.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery8.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 ./ T[] while
                                     ^
@@ -2722,7 +2722,7 @@ Ill-formed phrase. Found expression "./" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery80.stan
 
-Syntax error at file "mystery80.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery80.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T ^ T[]    while
                                    ^
@@ -2732,7 +2732,7 @@ Ill-formed phrase. Found expression "^" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery81.stan
 
-Syntax error at file "mystery81.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery81.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T < 1.0    while
                                    ^
@@ -2742,7 +2742,7 @@ Ill-formed phrase. Found expression "<" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery82.stan
 
-Syntax error at file "mystery82.stan", line 1, columns 22-25, parsing error:
+Syntax error at file mystery82.stan, line 1, columns 22-25, parsing error:
    -------------------------------------------------
      1:  transformed data { T <T[]    while
                                   ^
@@ -2752,7 +2752,7 @@ Ill-formed phrase. Found expression "<" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery83.stan
 
-Syntax error at file "mystery83.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery83.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T \ 1.0 while
                                    ^
@@ -2762,7 +2762,7 @@ Ill-formed phrase. Found expression "\" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery84.stan
 
-Syntax error at file "mystery84.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery84.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T \ T[] while
                                    ^
@@ -2772,7 +2772,7 @@ Ill-formed phrase. Found expression "\" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery85.stan
 
-Syntax error at file "mystery85.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery85.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T - 0.0 while
                                    ^
@@ -2782,7 +2782,7 @@ Ill-formed phrase. Found expression "-" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery86.stan
 
-Syntax error at file "mystery86.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery86.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T - T[] while
                                    ^
@@ -2792,7 +2792,7 @@ Ill-formed phrase. Found expression "-" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery87.stan
 
-Syntax error at file "mystery87.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery87.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T -= 0.0 while
                                     ^
@@ -2802,7 +2802,7 @@ Ill-formed phrase. Found L-value "-=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery88.stan
 
-Syntax error at file "mystery88.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery88.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T -= T[] while
                                     ^
@@ -2812,7 +2812,7 @@ Ill-formed phrase. Found L-value "-=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery89.stan
 
-Syntax error at file "mystery89.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery89.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T % 1.0 while
                                    ^
@@ -2822,7 +2822,7 @@ Ill-formed phrase. Found expression "%" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery9.stan
 
-Syntax error at file "mystery9.stan", line 1, columns 24-25, parsing error:
+Syntax error at file mystery9.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { 1 .* 1 while
                                   ^
@@ -2832,7 +2832,7 @@ Ill-formed phrase. Found expression ".*" expression. There are many options to c
 
   $ ../../../../../install/default/bin/stanc mystery90.stan
 
-Syntax error at file "mystery90.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery90.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T % T[] while
                                    ^
@@ -2842,7 +2842,7 @@ Ill-formed phrase. Found expression "%" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery91.stan
 
-Syntax error at file "mystery91.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery91.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T != T[] while
                                     ^
@@ -2852,7 +2852,7 @@ Ill-formed phrase. Found expression "!=" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery92.stan
 
-Syntax error at file "mystery92.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery92.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T != 1.0 while
                                     ^
@@ -2862,7 +2862,7 @@ Ill-formed phrase. Found expression "!=" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery93.stan
 
-Syntax error at file "mystery93.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery93.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T || 1.0 while
                                     ^
@@ -2872,7 +2872,7 @@ Ill-formed phrase. Found expression "||" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery94.stan
 
-Syntax error at file "mystery94.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery94.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T || T[] while
                                     ^
@@ -2882,7 +2882,7 @@ Ill-formed phrase. Found expression "||" expression. There are many ways in whic
 
   $ ../../../../../install/default/bin/stanc mystery95.stan
 
-Syntax error at file "mystery95.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery95.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T + 1.0  while
                                    ^
@@ -2892,7 +2892,7 @@ Ill-formed phrase. Found expression "+" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery96.stan
 
-Syntax error at file "mystery96.stan", line 1, columns 23-26, parsing error:
+Syntax error at file mystery96.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  transformed data { T + T[]  while
                                    ^
@@ -2902,7 +2902,7 @@ Ill-formed phrase. Found expression "+" expression. There are many ways in which
 
   $ ../../../../../install/default/bin/stanc mystery97.stan
 
-Syntax error at file "mystery97.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery97.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T += T[]  while
                                     ^
@@ -2912,7 +2912,7 @@ Ill-formed phrase. Found L-value "+=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery98.stan
 
-Syntax error at file "mystery98.stan", line 1, columns 24-27, parsing error:
+Syntax error at file mystery98.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  transformed data { T += 1.0  while
                                     ^
@@ -2922,7 +2922,7 @@ Ill-formed phrase. Found L-value "+=" expression. There are many ways in which t
 
   $ ../../../../../install/default/bin/stanc mystery99.stan
 
-Syntax error at file "mystery99.stan", line 1, columns 29-32, parsing error:
+Syntax error at file mystery99.stan, line 1, columns 29-32, parsing error:
    -------------------------------------------------
      1:  transformed data { T ? 1.0 : 1.0 while
                                          ^
@@ -2932,7 +2932,7 @@ Ill-formed phrase. Found expression "?" expression ":" expression. There are man
 
   $ ../../../../../install/default/bin/stanc print-bad1.stan
 
-Syntax error at file "print-bad1.stan", line 1, columns 25-28, parsing error:
+Syntax error at file print-bad1.stan, line 1, columns 25-28, parsing error:
    -------------------------------------------------
      1:  transformed data { print("a" while);}
                                      ^
@@ -2942,7 +2942,7 @@ Expected a comma-separated list of expressions or strings followed by ");" after
 
   $ ../../../../../install/default/bin/stanc print-bad2.stan
 
-Syntax error at file "print-bad2.stan", line 1, columns 26-27, parsing error:
+Syntax error at file print-bad2.stan, line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  transformed data { print(T)while;}
                                     ^
@@ -2952,7 +2952,7 @@ Expected a ";" after "print(...)".
 
   $ ../../../../../install/default/bin/stanc print-bad3.stan
 
-Syntax error at file "print-bad3.stan", line 1, columns 24-25, parsing error:
+Syntax error at file print-bad3.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  transformed data { print(while);}
                                   ^
@@ -2962,7 +2962,7 @@ Expected a comma-separated list of expressions or strings followed by ");" after
 
   $ ../../../../../install/default/bin/stanc print-bad4.stan
 
-Syntax error at file "print-bad4.stan", line 1, columns 19-24, parsing error:
+Syntax error at file print-bad4.stan, line 1, columns 19-24, parsing error:
    -------------------------------------------------
      1:  transformed data { print while;}
                                  ^
@@ -2972,7 +2972,7 @@ Expected "(" followed by a comma-separated list of expressions or strings follow
 
   $ ../../../../../install/default/bin/stanc reject-bad1.stan
 
-Syntax error at file "reject-bad1.stan", line 1, columns 27-30, parsing error:
+Syntax error at file reject-bad1.stan, line 1, columns 27-30, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( 1.0 while
                                        ^
@@ -2982,7 +2982,7 @@ Ill-formed phrase. Found expression. There are many options to continue the phra
 
   $ ../../../../../install/default/bin/stanc reject-bad2.stan
 
-Syntax error at file "reject-bad2.stan", line 1, columns 27-30, parsing error:
+Syntax error at file reject-bad2.stan, line 1, columns 27-30, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( "a" while
                                        ^
@@ -2992,7 +2992,7 @@ Ill-formed printable. After "reject(", we expect a comma separated list of eithe
 
   $ ../../../../../install/default/bin/stanc reject-bad3.stan
 
-Syntax error at file "reject-bad3.stan", line 1, columns 30-33, parsing error:
+Syntax error at file reject-bad3.stan, line 1, columns 30-33, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( T, "a" while
                                           ^
@@ -3002,7 +3002,7 @@ Ill-formed printable. After "print(" and "reject(", we expect a comma separated 
 
   $ ../../../../../install/default/bin/stanc reject-bad4.stan
 
-Syntax error at file "reject-bad4.stan", line 1, columns 28-29, parsing error:
+Syntax error at file reject-bad4.stan, line 1, columns 28-29, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( T,while
                                       ^
@@ -3012,7 +3012,7 @@ Ill-formed printable. After "print(" and "reject(", we expect a comma separated 
 
   $ ../../../../../install/default/bin/stanc reject-bad5.stan
 
-Syntax error at file "reject-bad5.stan", line 1, columns 28-29, parsing error:
+Syntax error at file reject-bad5.stan, line 1, columns 28-29, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( T)while
                                       ^
@@ -3022,7 +3022,7 @@ Ill-formed reject statement. After "reject(", we expect a comma separated list o
 
   $ ../../../../../install/default/bin/stanc reject-bad6.stan
 
-Syntax error at file "reject-bad6.stan", line 1, columns 25-26, parsing error:
+Syntax error at file reject-bad6.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { reject( while
                                    ^
@@ -3032,7 +3032,7 @@ Ill-formed reject statement. After "reject(", we expect a comma separated list o
 
   $ ../../../../../install/default/bin/stanc reject-bad7.stan
 
-Syntax error at file "reject-bad7.stan", line 1, columns 19-25, parsing error:
+Syntax error at file reject-bad7.stan, line 1, columns 19-25, parsing error:
    -------------------------------------------------
      1:  transformed data { reject while
                                   ^
@@ -3042,7 +3042,7 @@ Ill-formed reject statement. After "reject(", we expect a comma separated list o
 
   $ ../../../../../install/default/bin/stanc return-bad1.stan
 
-Syntax error at file "return-bad1.stan", line 1, columns 26-32, parsing error:
+Syntax error at file return-bad1.stan, line 1, columns 26-32, parsing error:
    -------------------------------------------------
      1:  transformed data { return target while
                                          ^
@@ -3052,7 +3052,7 @@ Ill formed expression. After "target", we expect "()".
 
   $ ../../../../../install/default/bin/stanc statement-in-data-block-bad.stan
 
-Syntax error at file "statement-in-data-block-bad.stan", line 1, columns 7-14, parsing error:
+Syntax error at file statement-in-data-block-bad.stan, line 1, columns 7-14, parsing error:
    -------------------------------------------------
      1:  data { real T; print(0);}
                        ^
@@ -3062,7 +3062,7 @@ Only top-level variable declarations allowed in data and parameters blocks.
 
   $ ../../../../../install/default/bin/stanc statement-outside-of-block-bad1.stan
 
-Syntax error at file "statement-outside-of-block-bad1.stan", line 1, columns 0-8, parsing error:
+Syntax error at file statement-outside-of-block-bad1.stan, line 1, columns 0-8, parsing error:
    -------------------------------------------------
      1:  data { } while
                  ^
@@ -3072,7 +3072,7 @@ Expected "transformed data {" or "parameters {" or "transformed parameters {" or
 
   $ ../../../../../install/default/bin/stanc statement-outside-of-block-bad2.stan
 
-Syntax error at file "statement-outside-of-block-bad2.stan", line 1, columns 0-13, parsing error:
+Syntax error at file statement-outside-of-block-bad2.stan, line 1, columns 0-13, parsing error:
    -------------------------------------------------
      1:  functions { } while
                       ^
@@ -3082,7 +3082,7 @@ Expected "data {" or "transformed data {" or "parameters {" or "transformed para
 
   $ ../../../../../install/default/bin/stanc target-bad1.stan
 
-Syntax error at file "target-bad1.stan", line 1, columns 25-26, parsing error:
+Syntax error at file target-bad1.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { target( while
                                    ^
@@ -3092,7 +3092,7 @@ Ill-formed expression. Expected ")" after "target(".
 
   $ ../../../../../install/default/bin/stanc target-bad2.stan
 
-Syntax error at file "target-bad2.stan", line 1, columns 19-25, parsing error:
+Syntax error at file target-bad2.stan, line 1, columns 19-25, parsing error:
    -------------------------------------------------
      1:  transformed data { target  while
                                   ^
@@ -3102,7 +3102,7 @@ Ill-formed phrase. Expect either "+=" or "()" after "target".
 
   $ ../../../../../install/default/bin/stanc target-pe-bad1.stan
 
-Syntax error at file "target-pe-bad1.stan", line 3, columns 7-9, parsing error:
+Syntax error at file target-pe-bad1.stan, line 3, columns 7-9, parsing error:
    -------------------------------------------------
      1:  model {
      2:  
@@ -3115,7 +3115,7 @@ Expected an expression followed by a ";", after "target +=".
 
   $ ../../../../../install/default/bin/stanc target-pe-bad2.stan
 
-Syntax error at file "target-pe-bad2.stan", line 1, columns 29-32, parsing error:
+Syntax error at file target-pe-bad2.stan, line 1, columns 29-32, parsing error:
    -------------------------------------------------
      1:  transformed data { target += 1.0 while
                                          ^
@@ -3125,7 +3125,7 @@ Ill-formed expression. Expression followed by ";" expected after "target +=".
 
   $ ../../../../../install/default/bin/stanc target-pe-bad3.stan
 
-Syntax error at file "target-pe-bad3.stan", line 1, columns 29-30, parsing error:
+Syntax error at file target-pe-bad3.stan, line 1, columns 29-30, parsing error:
    -------------------------------------------------
      1:  transformed data { target += T~
                                        ^
@@ -3135,7 +3135,7 @@ Ill-formed expression. Expression followed by ";" expected after "target +=".
 
   $ ../../../../../install/default/bin/stanc target-pe-bad4.stan
 
-Syntax error at file "target-pe-bad4.stan", line 1, columns 26-28, parsing error:
+Syntax error at file target-pe-bad4.stan, line 1, columns 26-28, parsing error:
    -------------------------------------------------
      1:  transformed data { target += while
                                      ^
@@ -3145,7 +3145,7 @@ Expected an expression followed by a ";", after "target +=".
 
   $ ../../../../../install/default/bin/stanc tilde-bad1.stan
 
-Syntax error at file "tilde-bad1.stan", line 1, columns 37-42, parsing error:
+Syntax error at file tilde-bad1.stan, line 1, columns 37-42, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [,] multiplier
                                                    ^
@@ -3155,7 +3155,7 @@ Expected ";" after "~"-statement (with optional truncation).
 
   $ ../../../../../install/default/bin/stanc tilde-bad10.stan
 
-Syntax error at file "tilde-bad10.stan", line 1, columns 32-33, parsing error:
+Syntax error at file tilde-bad10.stan, line 1, columns 32-33, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(x]
                                           ^
@@ -3165,7 +3165,7 @@ Ill-formed "~"-statement. Expect a comma separated list of expressions for argum
 
   $ ../../../../../install/default/bin/stanc tilde-bad11.stan
 
-Syntax error at file "tilde-bad11.stan", line 1, columns 20-21, parsing error:
+Syntax error at file tilde-bad11.stan, line 1, columns 20-21, parsing error:
    -------------------------------------------------
      1:  model { 1.0 ~ normal(while
                               ^
@@ -3175,7 +3175,7 @@ Ill-formed "~"-statement. Expect a comma separated list of expressions for argum
 
   $ ../../../../../install/default/bin/stanc tilde-bad12.stan
 
-Syntax error at file "tilde-bad12.stan", line 1, columns 14-20, parsing error:
+Syntax error at file tilde-bad12.stan, line 1, columns 14-20, parsing error:
    -------------------------------------------------
      1:  model { 1.0 ~ normal while
                              ^
@@ -3185,7 +3185,7 @@ Ill-formed "~"-statement. Expect "(" after distribution name, followed by a comm
 
   $ ../../../../../install/default/bin/stanc tilde-bad13.stan
 
-Syntax error at file "tilde-bad13.stan", line 1, columns 12-13, parsing error:
+Syntax error at file tilde-bad13.stan, line 1, columns 12-13, parsing error:
    -------------------------------------------------
      1:  model { 1.0 ~  while
                       ^
@@ -3195,7 +3195,7 @@ Ill-formed "~"-statement. Expect an distribution name after "~".
 
   $ ../../../../../install/default/bin/stanc tilde-bad14.stan
 
-Syntax error at file "tilde-bad14.stan", line 1, columns 25-29, parsing error:
+Syntax error at file tilde-bad14.stan, line 1, columns 25-29, parsing error:
    -------------------------------------------------
      1:  transformed data { T~T() T[,] multiplier
                                       ^
@@ -3205,7 +3205,7 @@ Ill-formed "~"-statement. Expected ";".
 
   $ ../../../../../install/default/bin/stanc tilde-bad15.stan
 
-Syntax error at file "tilde-bad15.stan", line 1, columns 23-24, parsing error:
+Syntax error at file tilde-bad15.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { T~T() while
                                  ^
@@ -3215,7 +3215,7 @@ Ill-formed "~"-statement. Expected ";" or "T[" optional expression "," optional 
 
   $ ../../../../../install/default/bin/stanc tilde-bad16.stan
 
-Syntax error at file "tilde-bad16.stan", line 1, columns 23-24, parsing error:
+Syntax error at file tilde-bad16.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  transformed data { T~T(T]
                                  ^
@@ -3225,7 +3225,7 @@ Ill-formed "~"-statement. Expected "," or ")".
 
   $ ../../../../../install/default/bin/stanc tilde-bad17.stan
 
-Syntax error at file "tilde-bad17.stan", line 1, columns 22-23, parsing error:
+Syntax error at file tilde-bad17.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  transformed data { T~T(while
                                 ^
@@ -3235,7 +3235,7 @@ Ill-formed "~"-statement. Expected comma-separated list of expressions followed 
 
   $ ../../../../../install/default/bin/stanc tilde-bad18.stan
 
-Syntax error at file "tilde-bad18.stan", line 1, columns 21-22, parsing error:
+Syntax error at file tilde-bad18.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  transformed data { T~T while
                                ^
@@ -3245,7 +3245,7 @@ Ill-formed "~"-statement. Expected "(" followed by a comma-separated list of exp
 
   $ ../../../../../install/default/bin/stanc tilde-bad19.stan
 
-Syntax error at file "tilde-bad19.stan", line 1, columns 20-21, parsing error:
+Syntax error at file tilde-bad19.stan, line 1, columns 20-21, parsing error:
    -------------------------------------------------
      1:  transformed data { T~while
                               ^
@@ -3255,7 +3255,7 @@ Ill-formed "~"-statement. Expected identifier for distribution name after "~".
 
   $ ../../../../../install/default/bin/stanc tilde-bad2.stan
 
-Syntax error at file "tilde-bad2.stan", line 1, columns 41-43, parsing error:
+Syntax error at file tilde-bad2.stan, line 1, columns 41-43, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [,35,
                                                     ^
@@ -3265,7 +3265,7 @@ Ill-formed truncation. Expect the format "T[" optional expression "," optional e
 
   $ ../../../../../install/default/bin/stanc tilde-bad3.stan
 
-Syntax error at file "tilde-bad3.stan", line 1, columns 40-41, parsing error:
+Syntax error at file tilde-bad3.stan, line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [,while
                                                   ^
@@ -3275,7 +3275,7 @@ Ill-formed truncation. Expect the format "T[" optional expression "," optional e
 
   $ ../../../../../install/default/bin/stanc tilde-bad4.stan
 
-Syntax error at file "tilde-bad4.stan", line 1, columns 41-44, parsing error:
+Syntax error at file tilde-bad4.stan, line 1, columns 41-44, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [,1.0 while
                                                      ^
@@ -3285,7 +3285,7 @@ Ill-formed expression. Found an expression. Expect a infix or postfix operator o
 
   $ ../../../../../install/default/bin/stanc tilde-bad5.stan
 
-Syntax error at file "tilde-bad5.stan", line 1, columns 40-41, parsing error:
+Syntax error at file tilde-bad5.stan, line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [x~
                                                   ^
@@ -3295,7 +3295,7 @@ Ill-formed expression. Found an expression. Expect a infix or postfix operator o
 
   $ ../../../../../install/default/bin/stanc tilde-bad6.stan
 
-Syntax error at file "tilde-bad6.stan", line 1, columns 40-41, parsing error:
+Syntax error at file tilde-bad6.stan, line 1, columns 40-41, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [x]
                                                   ^
@@ -3305,7 +3305,7 @@ Ill-formed truncation. Expect the format "T[" optional expression "," optional e
 
   $ ../../../../../install/default/bin/stanc tilde-bad7.stan
 
-Syntax error at file "tilde-bad7.stan", line 1, columns 39-40, parsing error:
+Syntax error at file tilde-bad7.stan, line 1, columns 39-40, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T [while
                                                  ^
@@ -3315,7 +3315,7 @@ Ill-formed truncation. Expect the format "T[" optional expression "," optional e
 
   $ ../../../../../install/default/bin/stanc tilde-bad8.stan
 
-Syntax error at file "tilde-bad8.stan", line 1, columns 37-38, parsing error:
+Syntax error at file tilde-bad8.stan, line 1, columns 37-38, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1) T while
                                                ^
@@ -3325,7 +3325,7 @@ Ill-formed truncation. Expect the format "T[" optional expression "," optional e
 
   $ ../../../../../install/default/bin/stanc tilde-bad9.stan
 
-Syntax error at file "tilde-bad9.stan", line 1, columns 35-36, parsing error:
+Syntax error at file tilde-bad9.stan, line 1, columns 35-36, parsing error:
    -------------------------------------------------
      1:  transformed data { 1.0 ~ normal(0,1)  while
                                              ^
@@ -3335,7 +3335,7 @@ Ill-formed "~"-statement. Expect either ";" or a truncation with the format "T["
 
   $ ../../../../../install/default/bin/stanc transformations-bad1.stan
 
-Syntax error at file "transformations-bad1.stan", line 1, columns 10-11, parsing error:
+Syntax error at file transformations-bad1.stan, line 1, columns 10-11, parsing error:
    -------------------------------------------------
      1:  data { int<x=5> x;
                     ^
@@ -3346,7 +3346,7 @@ Expected "lower = " expression or "upper = " expression for integer bounds.
 
   $ ../../../../../install/default/bin/stanc transformations-bad10.stan
 
-Syntax error at file "transformations-bad10.stan", line 1, columns 22-23, parsing error:
+Syntax error at file transformations-bad10.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = - while> x;}
                                 ^
@@ -3356,7 +3356,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad11.stan
 
-Syntax error at file "transformations-bad11.stan", line 1, columns 24-27, parsing error:
+Syntax error at file transformations-bad11.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = + 0.0 while> x;}
                                     ^
@@ -3366,7 +3366,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad12.stan
 
-Syntax error at file "transformations-bad12.stan", line 1, columns 22-23, parsing error:
+Syntax error at file transformations-bad12.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = + while> x;}
                                 ^
@@ -3376,7 +3376,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad13.stan
 
-Syntax error at file "transformations-bad13.stan", line 1, columns 22-23, parsing error:
+Syntax error at file transformations-bad13.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = T,> x;}
                                 ^
@@ -3386,7 +3386,7 @@ Expected expression (not containing binary logical operators) ">" after "upper =
 
   $ ../../../../../install/default/bin/stanc transformations-bad14.stan
 
-Syntax error at file "transformations-bad14.stan", line 1, columns 24-27, parsing error:
+Syntax error at file transformations-bad14.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = T/0.0 while> x;}
                                     ^
@@ -3396,7 +3396,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad15.stan
 
-Syntax error at file "transformations-bad15.stan", line 1, columns 19-20, parsing error:
+Syntax error at file transformations-bad15.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  data { vector<upper=while> x;}
                              ^
@@ -3406,7 +3406,7 @@ Expression (not containing binary logical operators) expected after "upper =". I
 
   $ ../../../../../install/default/bin/stanc transformations-bad16.stan
 
-Syntax error at file "transformations-bad16.stan", line 1, columns 14-19, parsing error:
+Syntax error at file transformations-bad16.stan, line 1, columns 14-19, parsing error:
    -------------------------------------------------
      1:  data { vector<upper while> x;}
                             ^
@@ -3416,7 +3416,7 @@ Expect "=" expression ">" after seeing "upper".
 
   $ ../../../../../install/default/bin/stanc transformations-bad17.stan
 
-Syntax error at file "transformations-bad17.stan", line 1, columns 13-14, parsing error:
+Syntax error at file transformations-bad17.stan, line 1, columns 13-14, parsing error:
    -------------------------------------------------
      1:  data { vector<while> x;}
                        ^
@@ -3426,7 +3426,7 @@ We expect to see "lower =", "upper =", "offset =" or "multiplier =" followed by 
 
   $ ../../../../../install/default/bin/stanc transformations-bad2.stan
 
-Syntax error at file "transformations-bad2.stan", line 1, columns 29-30, parsing error:
+Syntax error at file transformations-bad2.stan, line 1, columns 29-30, parsing error:
    -------------------------------------------------
      1:  data { vector<lower=T, upper=T,> x;}
                                        ^
@@ -3436,7 +3436,7 @@ Expected ">" after "upper = " expression.
 
   $ ../../../../../install/default/bin/stanc transformations-bad3.stan
 
-Syntax error at file "transformations-bad3.stan", line 1, columns 28-29, parsing error:
+Syntax error at file transformations-bad3.stan, line 1, columns 28-29, parsing error:
    -------------------------------------------------
      1:  data { vector<lower=T, upper=while> x;}
                                       ^
@@ -3446,7 +3446,7 @@ Expected expression (not containing binary logical operators) after "upper = ".
 
   $ ../../../../../install/default/bin/stanc transformations-bad4.stan
 
-Syntax error at file "transformations-bad4.stan", line 1, columns 23-28, parsing error:
+Syntax error at file transformations-bad4.stan, line 1, columns 23-28, parsing error:
    -------------------------------------------------
      1:  data { vector<lower=T, upper while> x;}
                                      ^
@@ -3456,7 +3456,7 @@ Expected "=" expression (not containing binary logical operators) after "upper".
 
   $ ../../../../../install/default/bin/stanc transformations-bad5.stan
 
-Syntax error at file "transformations-bad5.stan", line 1, columns 21-22, parsing error:
+Syntax error at file transformations-bad5.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  data { vector<lower=T,  while> x;}
                                ^
@@ -3466,7 +3466,7 @@ Syntax error at file "transformations-bad5.stan", line 1, columns 21-22, parsing
 
   $ ../../../../../install/default/bin/stanc transformations-bad6.stan
 
-Syntax error at file "transformations-bad6.stan", line 1, columns 14-19, parsing error:
+Syntax error at file transformations-bad6.stan, line 1, columns 14-19, parsing error:
    -------------------------------------------------
      1:  data { vector<lower  while> x;}
                             ^
@@ -3476,7 +3476,7 @@ Expected "=" expression (not containing binary logical operators), after "lower"
 
   $ ../../../../../install/default/bin/stanc transformations-bad7.stan
 
-Syntax error at file "transformations-bad7.stan", line 1, columns 23-26, parsing error:
+Syntax error at file transformations-bad7.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = !0.0 while> x;}
                                    ^
@@ -3486,7 +3486,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad8.stan
 
-Syntax error at file "transformations-bad8.stan", line 1, columns 22-23, parsing error:
+Syntax error at file transformations-bad8.stan, line 1, columns 22-23, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = ! while> x;}
                                 ^
@@ -3496,7 +3496,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc transformations-bad9.stan
 
-Syntax error at file "transformations-bad9.stan", line 1, columns 23-26, parsing error:
+Syntax error at file transformations-bad9.stan, line 1, columns 23-26, parsing error:
    -------------------------------------------------
      1:  data { vector<upper = -0.0 while> x;}
                                    ^
@@ -3506,7 +3506,7 @@ Ill-formed expression. Expected expression (not containing binary logical operat
 
   $ ../../../../../install/default/bin/stanc type-bad1.stan
 
-Syntax error at file "type-bad1.stan", line 1, columns 7-16, parsing error:
+Syntax error at file type-bad1.stan, line 1, columns 7-16, parsing error:
    -------------------------------------------------
      1:  data { vector[1]^}
                          ^
@@ -3516,7 +3516,7 @@ We expect to see an identifier after a sized type.
 
   $ ../../../../../install/default/bin/stanc type-size-bad1.stan
 
-Syntax error at file "type-size-bad1.stan", line 1, columns 27-30, parsing error:
+Syntax error at file type-size-bad1.stan, line 1, columns 27-30, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov[0.0 while] x;
                                        ^
@@ -3527,7 +3527,7 @@ Expected "[" expression "]" or "[" expression "," expression "]" for size of cho
 
   $ ../../../../../install/default/bin/stanc type-size-bad10.stan
 
-Syntax error at file "type-size-bad10.stan", line 1, columns 18-19, parsing error:
+Syntax error at file type-size-bad10.stan, line 1, columns 18-19, parsing error:
    -------------------------------------------------
      1:  data { corr_matrix[while] x;
                             ^
@@ -3538,7 +3538,7 @@ Expected "[" expression "]" for size of corr_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad11.stan
 
-Syntax error at file "type-size-bad11.stan", line 1, columns 7-18, parsing error:
+Syntax error at file type-size-bad11.stan, line 1, columns 7-18, parsing error:
    -------------------------------------------------
      1:  data { corr_matrix x;
                            ^
@@ -3549,7 +3549,7 @@ Expected "[" expression "]" for size of corr_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad12.stan
 
-Syntax error at file "type-size-bad12.stan", line 1, columns 18-21, parsing error:
+Syntax error at file type-size-bad12.stan, line 1, columns 18-21, parsing error:
    -------------------------------------------------
      1:  data { cov_matrix[0.0 while] x;
                               ^
@@ -3560,7 +3560,7 @@ Expected "[" expression "]" for size of cov_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad13.stan
 
-Syntax error at file "type-size-bad13.stan", line 1, columns 18-19, parsing error:
+Syntax error at file type-size-bad13.stan, line 1, columns 18-19, parsing error:
    -------------------------------------------------
      1:  data { cov_matrix[T ~ normal(0,1)] x;
                             ^
@@ -3571,7 +3571,7 @@ Expected "[" expression "]" for size of cov_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad14.stan
 
-Syntax error at file "type-size-bad14.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad14.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  data { cov_matrix[while] x;
                            ^
@@ -3582,7 +3582,7 @@ Expected "[" expression "]" for size of cov_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad15.stan
 
-Syntax error at file "type-size-bad15.stan", line 1, columns 7-17, parsing error:
+Syntax error at file type-size-bad15.stan, line 1, columns 7-17, parsing error:
    -------------------------------------------------
      1:  data { cov_matrix x;
                           ^
@@ -3593,7 +3593,7 @@ Expected "[" expression "]" for size of cov_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad16.stan
 
-Syntax error at file "type-size-bad16.stan", line 1, columns 19-22, parsing error:
+Syntax error at file type-size-bad16.stan, line 1, columns 19-22, parsing error:
    -------------------------------------------------
      1:  data { matrix[0.0, 0.0 while] x;
                                ^
@@ -3604,7 +3604,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad17.stan
 
-Syntax error at file "type-size-bad17.stan", line 1, columns 19-20, parsing error:
+Syntax error at file type-size-bad17.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  data { matrix[0.0, T~normal(0,1)] x;
                              ^
@@ -3615,7 +3615,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad18.stan
 
-Syntax error at file "type-size-bad18.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad18.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  data { matrix[0.0, print(0)] x;
                            ^
@@ -3626,7 +3626,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad19.stan
 
-Syntax error at file "type-size-bad19.stan", line 1, columns 17-20, parsing error:
+Syntax error at file type-size-bad19.stan, line 1, columns 17-20, parsing error:
    -------------------------------------------------
      1:  data { matrix[T, 0.0 while] x}
                              ^
@@ -3636,7 +3636,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad2.stan
 
-Syntax error at file "type-size-bad2.stan", line 1, columns 26-27, parsing error:
+Syntax error at file type-size-bad2.stan, line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov[while]x;
                                     ^
@@ -3647,7 +3647,7 @@ Expected "[" expression "]" or "[" expression "," expression "]" for size of cho
 
   $ ../../../../../install/default/bin/stanc type-size-bad20.stan
 
-Syntax error at file "type-size-bad20.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad20.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  data { matrix[T, T~normal(0,1)] x}
                            ^
@@ -3657,7 +3657,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad21.stan
 
-Syntax error at file "type-size-bad21.stan", line 1, columns 15-16, parsing error:
+Syntax error at file type-size-bad21.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  data { matrix[T, print(0)] x;}
                          ^
@@ -3667,7 +3667,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad22.stan
 
-Syntax error at file "type-size-bad22.stan", line 1, columns 14-15, parsing error:
+Syntax error at file type-size-bad22.stan, line 1, columns 14-15, parsing error:
    -------------------------------------------------
      1:  data { matrix[T ~ normal(0,1), 1] x;}
                         ^
@@ -3677,7 +3677,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad23.stan
 
-Syntax error at file "type-size-bad23.stan", line 1, columns 13-14, parsing error:
+Syntax error at file type-size-bad23.stan, line 1, columns 13-14, parsing error:
    -------------------------------------------------
      1:  data { matrix[print(0), 1] x;}
                        ^
@@ -3687,7 +3687,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad24.stan
 
-Syntax error at file "type-size-bad24.stan", line 1, columns 15-18, parsing error:
+Syntax error at file type-size-bad24.stan, line 1, columns 15-18, parsing error:
    -------------------------------------------------
      1:  data { ordered[0.0 while] x;}
                            ^
@@ -3697,7 +3697,7 @@ Expected "[" expression "]" for size of ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad25.stan
 
-Syntax error at file "type-size-bad25.stan", line 1, columns 15-16, parsing error:
+Syntax error at file type-size-bad25.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  data { ordered[T ~ normal(0,1)] x;}
                          ^
@@ -3707,7 +3707,7 @@ Expected "[" expression "]" for size of ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad26.stan
 
-Syntax error at file "type-size-bad26.stan", line 1, columns 7-14, parsing error:
+Syntax error at file type-size-bad26.stan, line 1, columns 7-14, parsing error:
    -------------------------------------------------
      1:  data { ordered x;}
                        ^
@@ -3717,7 +3717,7 @@ Expected "[" expression "]" for size of ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad27.stan
 
-Syntax error at file "type-size-bad27.stan", line 1, columns 24-27, parsing error:
+Syntax error at file type-size-bad27.stan, line 1, columns 24-27, parsing error:
    -------------------------------------------------
      1:  data { positive_ordered[0.0 while] x;}
                                     ^
@@ -3727,7 +3727,7 @@ Expected "[" expression "]" for size of positive_ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad28.stan
 
-Syntax error at file "type-size-bad28.stan", line 1, columns 24-25, parsing error:
+Syntax error at file type-size-bad28.stan, line 1, columns 24-25, parsing error:
    -------------------------------------------------
      1:  data { positive_ordered[T~normal(0,1)] x;}
                                   ^
@@ -3737,7 +3737,7 @@ Expected "[" expression "]" for size of positive_ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad29.stan
 
-Syntax error at file "type-size-bad29.stan", line 1, columns 23-24, parsing error:
+Syntax error at file type-size-bad29.stan, line 1, columns 23-24, parsing error:
    -------------------------------------------------
      1:  data { positive_ordered[while] x;}
                                  ^
@@ -3747,7 +3747,7 @@ Expected "[" expression "]" for size of positive_ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad3.stan
 
-Syntax error at file "type-size-bad3.stan", line 1, columns 29-32, parsing error:
+Syntax error at file type-size-bad3.stan, line 1, columns 29-32, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov[T,0.0 while]x;
                                          ^
@@ -3758,7 +3758,7 @@ Expected comma separated list of expressions. Ill-formed expression.
 
   $ ../../../../../install/default/bin/stanc type-size-bad30.stan
 
-Syntax error at file "type-size-bad30.stan", line 1, columns 7-23, parsing error:
+Syntax error at file type-size-bad30.stan, line 1, columns 7-23, parsing error:
    -------------------------------------------------
      1:  data { positive_ordered x;}
                                 ^
@@ -3768,7 +3768,7 @@ Expected "[" expression "]" for size of positive_ordered.
 
   $ ../../../../../install/default/bin/stanc type-size-bad31.stan
 
-Syntax error at file "type-size-bad31.stan", line 1, columns 13-14, parsing error:
+Syntax error at file type-size-bad31.stan, line 1, columns 13-14, parsing error:
    -------------------------------------------------
      1:  data { real T[] x;}
                        ^
@@ -3778,7 +3778,7 @@ Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" 
 
   $ ../../../../../install/default/bin/stanc type-size-bad32.stan
 
-Syntax error at file "type-size-bad32.stan", line 1, columns 13-14, parsing error:
+Syntax error at file type-size-bad32.stan, line 1, columns 13-14, parsing error:
    -------------------------------------------------
      1:  data { real T[];}
                        ^
@@ -3788,7 +3788,7 @@ Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" 
 
   $ ../../../../../install/default/bin/stanc type-size-bad33.stan
 
-Syntax error at file "type-size-bad33.stan", line 1, columns 13-14, parsing error:
+Syntax error at file type-size-bad33.stan, line 1, columns 13-14, parsing error:
    -------------------------------------------------
      1:  data { real T[] while}
                        ^
@@ -3798,7 +3798,7 @@ Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" 
 
   $ ../../../../../install/default/bin/stanc type-size-bad34.stan
 
-Syntax error at file "type-size-bad34.stan", line 1, columns 18-21, parsing error:
+Syntax error at file type-size-bad34.stan, line 1, columns 18-21, parsing error:
    -------------------------------------------------
      1:  data { row_vector[0.0 while] x;}
                               ^
@@ -3808,7 +3808,7 @@ Expected "[" expression "]" for size declaration of row_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad35.stan
 
-Syntax error at file "type-size-bad35.stan", line 1, columns 18-19, parsing error:
+Syntax error at file type-size-bad35.stan, line 1, columns 18-19, parsing error:
    -------------------------------------------------
      1:  data { row_vector[T~normal(0,1)] x;}
                             ^
@@ -3818,7 +3818,7 @@ Expected "[" expression "]" for size declaration of row_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad36.stan
 
-Syntax error at file "type-size-bad36.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad36.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  data { row_vector[while] x;}
                            ^
@@ -3828,7 +3828,7 @@ Expected "[" expression "]" for size declaration of row_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad37.stan
 
-Syntax error at file "type-size-bad37.stan", line 1, columns 15-18, parsing error:
+Syntax error at file type-size-bad37.stan, line 1, columns 15-18, parsing error:
    -------------------------------------------------
      1:  data { simplex[0.0 while] x;}
                            ^
@@ -3838,7 +3838,7 @@ Expected "[" expression "]" for size declaration of simplex.
 
   $ ../../../../../install/default/bin/stanc type-size-bad38.stan
 
-Syntax error at file "type-size-bad38.stan", line 1, columns 15-16, parsing error:
+Syntax error at file type-size-bad38.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  data { simplex[T ~ normal(0,1)] x;}
                          ^
@@ -3848,7 +3848,7 @@ Expected "[" expression "]" for size declaration of simplex.
 
   $ ../../../../../install/default/bin/stanc type-size-bad39.stan
 
-Syntax error at file "type-size-bad39.stan", line 1, columns 14-15, parsing error:
+Syntax error at file type-size-bad39.stan, line 1, columns 14-15, parsing error:
    -------------------------------------------------
      1:  data { simplex[while] x;}
                         ^
@@ -3858,7 +3858,7 @@ Expected "[" expression "]" for size declaration of simplex.
 
   $ ../../../../../install/default/bin/stanc type-size-bad4.stan
 
-Syntax error at file "type-size-bad4.stan", line 1, columns 28-29, parsing error:
+Syntax error at file type-size-bad4.stan, line 1, columns 28-29, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov[T,while]x;
                                       ^
@@ -3869,7 +3869,7 @@ Expected comma separated list of expressions. Ill-formed expression.
 
   $ ../../../../../install/default/bin/stanc type-size-bad40.stan
 
-Syntax error at file "type-size-bad40.stan", line 1, columns 20-23, parsing error:
+Syntax error at file type-size-bad40.stan, line 1, columns 20-23, parsing error:
    -------------------------------------------------
      1:  data { unit_vector[ 0.0 while] x;}
                                 ^
@@ -3879,7 +3879,7 @@ Expected "[" expression "]" for size declaration of unit_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad41.stan
 
-Syntax error at file "type-size-bad41.stan", line 1, columns 20-21, parsing error:
+Syntax error at file type-size-bad41.stan, line 1, columns 20-21, parsing error:
    -------------------------------------------------
      1:  data { unit_vector[ T~normal(0,1)] x;}
                               ^
@@ -3889,7 +3889,7 @@ Expected "[" expression "]" for size declaration of unit_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad42.stan
 
-Syntax error at file "type-size-bad42.stan", line 1, columns 18-19, parsing error:
+Syntax error at file type-size-bad42.stan, line 1, columns 18-19, parsing error:
    -------------------------------------------------
      1:  data { unit_vector[ while] x;}
                             ^
@@ -3899,7 +3899,7 @@ Expected "[" expression "]" for size declaration of unit_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad43.stan
 
-Syntax error at file "type-size-bad43.stan", line 1, columns 7-18, parsing error:
+Syntax error at file type-size-bad43.stan, line 1, columns 7-18, parsing error:
    -------------------------------------------------
      1:  data { unit_vector while;}
                            ^
@@ -3909,7 +3909,7 @@ Expected "[" expression "]" for size declaration of unit_vector.
 
   $ ../../../../../install/default/bin/stanc type-size-bad44.stan
 
-Syntax error at file "type-size-bad44.stan", line 1, columns 13-29, parsing error:
+Syntax error at file type-size-bad44.stan, line 1, columns 13-29, parsing error:
    -------------------------------------------------
      1:  data { vector<multiplier = y> while;}
                                       ^
@@ -3919,7 +3919,7 @@ Expected "[" expression "]" for vector size.
 
   $ ../../../../../install/default/bin/stanc type-size-bad45.stan
 
-Syntax error at file "type-size-bad45.stan", line 1, columns 14-15, parsing error:
+Syntax error at file type-size-bad45.stan, line 1, columns 14-15, parsing error:
    -------------------------------------------------
      1:  data { vector[T~normal(0,1)] x;}
                         ^
@@ -3929,7 +3929,7 @@ Syntax error at file "type-size-bad45.stan", line 1, columns 14-15, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad46.stan
 
-Syntax error at file "type-size-bad46.stan", line 1, columns 13-14, parsing error:
+Syntax error at file type-size-bad46.stan, line 1, columns 13-14, parsing error:
    -------------------------------------------------
      1:  data { vector[while] x;}
                        ^
@@ -3939,7 +3939,7 @@ Syntax error at file "type-size-bad46.stan", line 1, columns 13-14, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad47.stan
 
-Syntax error at file "type-size-bad47.stan", line 1, columns 18-19, parsing error:
+Syntax error at file type-size-bad47.stan, line 1, columns 18-19, parsing error:
    -------------------------------------------------
      1:  model { matrix[1, 1 while] x;}
                             ^
@@ -3949,7 +3949,7 @@ Syntax error at file "type-size-bad47.stan", line 1, columns 18-19, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad48.stan
 
-Syntax error at file "type-size-bad48.stan", line 1, columns 18-19, parsing error:
+Syntax error at file type-size-bad48.stan, line 1, columns 18-19, parsing error:
    -------------------------------------------------
      1:  model { matrix[0, T~normal(0,1)] x;}
                             ^
@@ -3959,7 +3959,7 @@ Syntax error at file "type-size-bad48.stan", line 1, columns 18-19, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad49.stan
 
-Syntax error at file "type-size-bad49.stan", line 1, columns 16-17, parsing error:
+Syntax error at file type-size-bad49.stan, line 1, columns 16-17, parsing error:
    -------------------------------------------------
      1:  model { matrix[0, while] x;}
                           ^
@@ -3969,7 +3969,7 @@ Syntax error at file "type-size-bad49.stan", line 1, columns 16-17, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad5.stan
 
-Syntax error at file "type-size-bad5.stan", line 1, columns 29-30, parsing error:
+Syntax error at file type-size-bad5.stan, line 1, columns 29-30, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov[T,T ~]x;
                                        ^
@@ -3980,7 +3980,7 @@ Expected comma separated list of expressions. Ill-formed expression.
 
   $ ../../../../../install/default/bin/stanc type-size-bad50.stan
 
-Syntax error at file "type-size-bad50.stan", line 1, columns 15-16, parsing error:
+Syntax error at file type-size-bad50.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  model { matrix[1 while,1] x;}
                          ^
@@ -3990,7 +3990,7 @@ Syntax error at file "type-size-bad50.stan", line 1, columns 15-16, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad51.stan
 
-Syntax error at file "type-size-bad51.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad51.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  model { matrix[T,0 while] x;}
                            ^
@@ -4000,7 +4000,7 @@ Syntax error at file "type-size-bad51.stan", line 1, columns 17-18, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad52.stan
 
-Syntax error at file "type-size-bad52.stan", line 1, columns 19-20, parsing error:
+Syntax error at file type-size-bad52.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  model { matrix[ T, T ~normal(0,1)] x;}
                              ^
@@ -4010,7 +4010,7 @@ Syntax error at file "type-size-bad52.stan", line 1, columns 19-20, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad53.stan
 
-Syntax error at file "type-size-bad53.stan", line 1, columns 16-17, parsing error:
+Syntax error at file type-size-bad53.stan, line 1, columns 16-17, parsing error:
    -------------------------------------------------
      1:  model { matrix[T, while] x;}
                           ^
@@ -4020,7 +4020,7 @@ Syntax error at file "type-size-bad53.stan", line 1, columns 16-17, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad54.stan
 
-Syntax error at file "type-size-bad54.stan", line 1, columns 15-16, parsing error:
+Syntax error at file type-size-bad54.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  model { matrix[T~normal(0,1),1] x;}
                          ^
@@ -4030,7 +4030,7 @@ Syntax error at file "type-size-bad54.stan", line 1, columns 15-16, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad55.stan
 
-Syntax error at file "type-size-bad55.stan", line 1, columns 15-16, parsing error:
+Syntax error at file type-size-bad55.stan, line 1, columns 15-16, parsing error:
    -------------------------------------------------
      1:  model { matrix [ while, 1] x;}
                          ^
@@ -4040,7 +4040,7 @@ Syntax error at file "type-size-bad55.stan", line 1, columns 15-16, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad56.stan
 
-Syntax error at file "type-size-bad56.stan", line 1, columns 21-22, parsing error:
+Syntax error at file type-size-bad56.stan, line 1, columns 21-22, parsing error:
    -------------------------------------------------
      1:  model { row_vector [ 1 while] x;}
                                ^
@@ -4050,7 +4050,7 @@ Syntax error at file "type-size-bad56.stan", line 1, columns 21-22, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad57.stan
 
-Syntax error at file "type-size-bad57.stan", line 1, columns 20-21, parsing error:
+Syntax error at file type-size-bad57.stan, line 1, columns 20-21, parsing error:
    -------------------------------------------------
      1:  model { row_vector[ T~normal(0,1)] x;}
                               ^
@@ -4060,7 +4060,7 @@ Syntax error at file "type-size-bad57.stan", line 1, columns 20-21, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad58.stan
 
-Syntax error at file "type-size-bad58.stan", line 1, columns 19-20, parsing error:
+Syntax error at file type-size-bad58.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  model { row_vector [ while] x;}
                              ^
@@ -4070,7 +4070,7 @@ Syntax error at file "type-size-bad58.stan", line 1, columns 19-20, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad59.stan
 
-Syntax error at file "type-size-bad59.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad59.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  model { vector [ 1 while ] x;}
                            ^
@@ -4080,7 +4080,7 @@ Syntax error at file "type-size-bad59.stan", line 1, columns 17-18, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad6.stan
 
-Syntax error at file "type-size-bad6.stan", line 1, columns 27-28, parsing error:
+Syntax error at file type-size-bad6.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov[T ~]x;
                                      ^
@@ -4091,7 +4091,7 @@ Expected "[" expression "]" or "[" expression "," expression "]" for size of cho
 
   $ ../../../../../install/default/bin/stanc type-size-bad60.stan
 
-Syntax error at file "type-size-bad60.stan", line 1, columns 17-18, parsing error:
+Syntax error at file type-size-bad60.stan, line 1, columns 17-18, parsing error:
    -------------------------------------------------
      1:  model { vector [ T~normal(0,1)] x;}
                            ^
@@ -4101,7 +4101,7 @@ Syntax error at file "type-size-bad60.stan", line 1, columns 17-18, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad61.stan
 
-Syntax error at file "type-size-bad61.stan", line 1, columns 14-15, parsing error:
+Syntax error at file type-size-bad61.stan, line 1, columns 14-15, parsing error:
    -------------------------------------------------
      1:  model { vector[ while] x;}
                         ^
@@ -4111,7 +4111,7 @@ Syntax error at file "type-size-bad61.stan", line 1, columns 14-15, parsing erro
 
   $ ../../../../../install/default/bin/stanc type-size-bad7.stan
 
-Syntax error at file "type-size-bad7.stan", line 1, columns 7-26, parsing error:
+Syntax error at file type-size-bad7.stan, line 1, columns 7-26, parsing error:
    -------------------------------------------------
      1:  data { cholesky_factor_cov x;
                                    ^
@@ -4122,7 +4122,7 @@ Expected "[" expression "]" or "[" expression "," expression "]" for size of cho
 
   $ ../../../../../install/default/bin/stanc type-size-bad8.stan
 
-Syntax error at file "type-size-bad8.stan", line 1, columns 19-22, parsing error:
+Syntax error at file type-size-bad8.stan, line 1, columns 19-22, parsing error:
    -------------------------------------------------
      1:  data { corr_matrix[0.0 while] x;
                                ^
@@ -4133,7 +4133,7 @@ Expected "[" expression "]" for size of corr_matrix.
 
   $ ../../../../../install/default/bin/stanc type-size-bad9.stan
 
-Syntax error at file "type-size-bad9.stan", line 1, columns 19-20, parsing error:
+Syntax error at file type-size-bad9.stan, line 1, columns 19-20, parsing error:
    -------------------------------------------------
      1:  data { corr_matrix[T ~ normal(0,1)] x;
                              ^
@@ -4144,7 +4144,7 @@ Expected "[" expression "]" for size of corr_matrix.
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad1.stan
 
-Syntax error at file "variable-decl-bad1.stan", line 1, columns 7-10, parsing error:
+Syntax error at file variable-decl-bad1.stan, line 1, columns 7-10, parsing error:
    -------------------------------------------------
      1:  data { int;
                    ^
@@ -4155,7 +4155,7 @@ Expected range constraint or identifier as part of top-level variable declaratio
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad2.stan
 
-Syntax error at file "variable-decl-bad2.stan", line 1, columns 13-27, parsing error:
+Syntax error at file variable-decl-bad2.stan, line 1, columns 13-27, parsing error:
    -------------------------------------------------
      1:  data { matrix<multiplier=5>;
                                     ^
@@ -4166,7 +4166,7 @@ Expected "[" expression "," expression "]" for matrix sizes as part of top-level
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad3.stan
 
-Syntax error at file "variable-decl-bad3.stan", line 1, columns 13-16, parsing error:
+Syntax error at file variable-decl-bad3.stan, line 1, columns 13-16, parsing error:
    -------------------------------------------------
      1:  data { real T[x] while}
                          ^
@@ -4176,7 +4176,7 @@ Expected ";".
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad4.stan
 
-Syntax error at file "variable-decl-bad4.stan", line 1, columns 17-31, parsing error:
+Syntax error at file variable-decl-bad4.stan, line 1, columns 17-31, parsing error:
    -------------------------------------------------
      1:  data { row_vector<multiplier=x> print(0);}
                                         ^
@@ -4186,7 +4186,7 @@ Expected identifier as part of top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad5.stan
 
-Syntax error at file "variable-decl-bad5.stan", line 1, columns 7-17, parsing error:
+Syntax error at file variable-decl-bad5.stan, line 1, columns 7-17, parsing error:
    -------------------------------------------------
      1:  data { row_vector while;}
                           ^
@@ -4196,7 +4196,7 @@ Expected "[" expression "]" for size declaration of row_vector.
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad6.stan
 
-Syntax error at file "variable-decl-bad6.stan", line 1, columns 7-14, parsing error:
+Syntax error at file variable-decl-bad6.stan, line 1, columns 7-14, parsing error:
    -------------------------------------------------
      1:  data { simplex while;}
                        ^
@@ -4206,7 +4206,7 @@ Expected "[" expression "]" for size declaration of simplex.
 
   $ ../../../../../install/default/bin/stanc variable-decl-bad7.stan
 
-Syntax error at file "variable-decl-bad7.stan", line 1, columns 19-28, parsing error:
+Syntax error at file variable-decl-bad7.stan, line 1, columns 19-28, parsing error:
    -------------------------------------------------
      1:  transformed data { vector[1]^
                                      ^
@@ -4216,7 +4216,7 @@ Ill-formed top-level variable declaration. Expect an identifier next.
 
   $ ../../../../../install/default/bin/stanc while-bad1.stan
 
-Syntax error at file "while-bad1.stan", line 1, columns 29-30, parsing error:
+Syntax error at file while-bad1.stan, line 1, columns 29-30, parsing error:
    -------------------------------------------------
      1:  transformed data { while (1.0) void
                                        ^
@@ -4226,7 +4226,7 @@ Ill-formed statement. We expect a statement after ")", for the body of the while
 
   $ ../../../../../install/default/bin/stanc while-bad2.stan
 
-Syntax error at file "while-bad2.stan", line 1, columns 26-29, parsing error:
+Syntax error at file while-bad2.stan, line 1, columns 26-29, parsing error:
    -------------------------------------------------
      1:  transformed data { while (1.0 while
                                       ^
@@ -4236,7 +4236,7 @@ Ill-formed expression. We expect an expression after "(" for the test of the whi
 
   $ ../../../../../install/default/bin/stanc while-bad3.stan
 
-Syntax error at file "while-bad3.stan", line 1, columns 27-28, parsing error:
+Syntax error at file while-bad3.stan, line 1, columns 27-28, parsing error:
    -------------------------------------------------
      1:  transformed data { while (T) void
                                      ^
@@ -4246,7 +4246,7 @@ Ill-formed statement. We expect a statement after ")", for the body of the while
 
   $ ../../../../../install/default/bin/stanc while-bad4.stan
 
-Syntax error at file "while-bad4.stan", line 1, columns 26-27, parsing error:
+Syntax error at file while-bad4.stan, line 1, columns 26-27, parsing error:
    -------------------------------------------------
      1:  transformed data { while (T~
                                     ^
@@ -4256,7 +4256,7 @@ Ill-formed expression. We expect an expression after "(" for the test of the whi
 
   $ ../../../../../install/default/bin/stanc while-bad5.stan
 
-Syntax error at file "while-bad5.stan", line 1, columns 25-26, parsing error:
+Syntax error at file while-bad5.stan, line 1, columns 25-26, parsing error:
    -------------------------------------------------
      1:  transformed data { while (while
                                    ^
@@ -4266,7 +4266,7 @@ Ill-formed expression. We expect an expression after "(" for the test of the whi
 
   $ ../../../../../install/default/bin/stanc while-bad6.stan
 
-Syntax error at file "while-bad6.stan", line 1, columns 19-24, parsing error:
+Syntax error at file while-bad6.stan, line 1, columns 19-24, parsing error:
    -------------------------------------------------
      1:  transformed data { while while
                                  ^
