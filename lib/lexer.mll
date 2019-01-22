@@ -34,7 +34,7 @@
         open_in full_path, full_path ^ "\" included from \"" ^ old_path
     with _ -> try_open_in rest_of_paths fname
   (* TODO: Put in precise location with line number and position in the whole chain of included froms? *)
-  
+
   let maybe_remove_quotes str =
     let open Core_kernel.String in
     if is_prefix str ~prefix:"\"" &&
@@ -65,9 +65,9 @@ let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO:
 let integer_constant =  ['0'-'9']+
 
 let exp_literal = ['e' 'E'] ['+' '-']? integer_constant
-let real_constant1 = integer_constant? '.' ['0'-'9']* exp_literal? 
+let real_constant1 = integer_constant? '.' ['0'-'9']* exp_literal?
 let real_constant2 = '.' ['0'-'9']+ exp_literal?
-let real_constant3 = integer_constant exp_literal 
+let real_constant3 = integer_constant exp_literal
 let real_constant = real_constant1 | real_constant2 | real_constant3
 let space = ' ' | '\t' | '\012' | '\r'
 let non_space_or_newline = [^' ' '\t' '\012' '\r' '\n']
@@ -84,7 +84,7 @@ rule token = parse
   | "#include"
     ( ( space | '\n')+)
     ( '"' [^ '"']* '"'
-    | non_space_or_newline* 
+    | non_space_or_newline*
     as fname)                 { lexer_logger ("include " ^ fname) ;
                                 let new_lexbuf = try_get_new_lexbuf fname in
                                 token new_lexbuf }
@@ -202,7 +202,7 @@ rule token = parse
                                   let _ = (Stack.pop include_stack) in
                                   let old_lexbuf = (Stack.top include_stack) in
                                     token old_lexbuf }
-  
+
   | _                         { raise (Errors.SyntaxError
                                 (Lexing (lexeme (Stack.top include_stack),
                                         (lexeme_start_p (Stack.top include_stack

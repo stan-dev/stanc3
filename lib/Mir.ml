@@ -44,6 +44,7 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
+
 type constraint_check =
   {cfname: string; cvarname: string; ctype: sizedtype; cargs: expr list}
 
@@ -69,28 +70,33 @@ and 's statement =
   | Decl of
       { adtype: adtype
       ; vident: string
-      ; st: sizedtype
-      ; trans: transformation }
+      ; st: sizedtype}
   | FunDef of
       { returntype: unsizedtype option
       ; name: string
       ; arguments: (adtype * string * unsizedtype) list
       ; body: 's }
+[@@deriving sexp, hash]
 
-and 's prog =
+type tvdecl = {tvident: string; tvtype: sizedtype; tvtrans: transformation; tvloc: string}
+[@@deriving sexp]
+
+type tvtable = (string, tvdecl) Map.Poly.t
+[@@deriving sexp]
+
+type 's prog =
   { functionsb: 's
-  ; paramsb: 's
-  ; datab: 's
-  ; modelb: 's
-  ; gqb: 's
+  ; datab: tvtable * 's
+  ; modelb: tvtable * 's
+  ; gqb: tvtable * 's
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp, hash]
+[@@deriving sexp]
 
 type stmt_loc = {sloc: string; stmt: stmt_loc statement}
 [@@deriving sexp, hash]
 
-(* Some helper functions *)
+(* ===================== Some helper functions ====================== *)
 
 (** Dives into any number of nested blocks and lists, but will not recurse other
     places statements occur in the MIR (e.g. loop bodies) *)
