@@ -52,7 +52,6 @@ and 's statement =
   | NRFnApp of string * expr list
   | Check of constraint_check
   | MarkLocation of string
-  | ZeroInit of string * sizedtype
   | Break
   | Continue
   | Return of expr option

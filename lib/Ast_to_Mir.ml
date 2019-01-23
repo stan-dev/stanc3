@@ -302,8 +302,8 @@ let trans_prog filename
   ; functionsb= trans_or_skip functionblock
   ; datab= pull_tvdecls_multi [datablock; transformeddatablock]
   ; modelb=
-      (let tvtables, stmts =
+      (let tvtables, stmt =
          pull_tvdecls_multi [parametersblock; transformedparametersblock]
        in
-       (tvtables, coalesce [stmts; trans_or_skip modelblock]))
+       (tvtables, coalesce [stmt; trans_or_skip modelblock]))
   ; gqb= pull_tvdecls_multi [generatedquantitiesblock] }

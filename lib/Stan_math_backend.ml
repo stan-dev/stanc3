@@ -190,7 +190,6 @@ let emit_statement emit_statement_with_meta ppf s =
   | Continue -> emit_str ppf "continue;"
   | Return e -> fprintf ppf "return %a;" emit_option (emit_expr, e, "")
   | Skip -> ()
-  | ZeroInit _ -> () (* XXX *)
   | MarkLocation _ -> () (* XXX *)
   | Check _ -> () (* XXX *)
   | IfElse (cond, ifbranch, elsebranch) ->
