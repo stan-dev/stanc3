@@ -44,7 +44,6 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
-
 type constraint_check =
   {cfname: string; cvarname: string; ctype: sizedtype; cargs: expr list}
 
@@ -52,6 +51,8 @@ and 's statement =
   | Assignment of expr * expr
   | NRFnApp of string * expr list
   | Check of constraint_check
+  | MarkLocation of string
+  | ZeroInit of string * sizedtype
   | Break
   | Continue
   | Return of expr option
@@ -67,10 +68,7 @@ and 's statement =
   (* An SList does not share any of Block's semantics - it is just multiple
      (ordered!) statements*)
   | SList of 's list
-  | Decl of
-      { adtype: adtype
-      ; vident: string
-      ; st: sizedtype}
+  | Decl of {adtype: adtype; vident: string; st: sizedtype}
   | FunDef of
       { returntype: unsizedtype option
       ; name: string
@@ -78,11 +76,11 @@ and 's statement =
       ; body: 's }
 [@@deriving sexp, hash]
 
-type tvdecl = {tvident: string; tvtype: sizedtype; tvtrans: transformation; tvloc: string}
+type tvdecl =
+  {tvident: string; tvtype: sizedtype; tvtrans: transformation; tvloc: string}
 [@@deriving sexp]
 
-type tvtable = (string, tvdecl) Map.Poly.t
-[@@deriving sexp]
+type tvtable = (string, tvdecl) Map.Poly.t [@@deriving sexp]
 
 type 's prog =
   { functionsb: 's

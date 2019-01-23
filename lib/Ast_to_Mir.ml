@@ -129,25 +129,26 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           ; name= funname.name
           ; arguments= List.map ~f:trans_arg arguments
           ; body= trans_stmt body }
-    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; is_global} ->
-      (* Should have already taken care of global and trans stuff. *)
-      ignore (transformation, is_global);
-      let name = identifier.name in
-      (* XXX Deal with global vs unglobal *)
-      (* XXX Should also generate the statements that will read the data in
+    | Ast.VarDecl
+        {sizedtype; transformation; identifier; initial_value; is_global} ->
+        (* Should have already taken care of global and trans stuff. *)
+        ignore (transformation, is_global) ;
+        let name = identifier.name in
+        (* XXX Deal with global vs unglobal *)
+        (* XXX Should also generate the statements that will read the data in
          and validate it... Then a CSE pass will automatically fulfill one of our
          Stanc3 promises to do data checking only once and at the appropriate level
       *)
-      SList
-        (List.map ~f:(bind_loc stmt_typed_loc)
-           [ Decl
-               { adtype= AutoDiffable
-               ; vident= name
-               ; st= trans_sizedtype sizedtype}
-           ; Option.map
-               ~f:(fun x -> Assignment (Var name, trans_expr x))
-               initial_value
-             |> or_skip ])
+        SList
+          (List.map ~f:(bind_loc stmt_typed_loc)
+             [ Decl
+                 { adtype= AutoDiffable
+                 ; vident= name
+                 ; st= trans_sizedtype sizedtype }
+             ; Option.map
+                 ~f:(fun x -> Assignment (Var name, trans_expr x))
+                 initial_value
+               |> or_skip ])
     | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
     | Ast.Return e -> Return (Some (trans_expr e))
     | Ast.ReturnVoid -> Return None
@@ -200,26 +201,41 @@ let rec trans_checks cvarname ctype t =
     we only recurse into blocks and lists as we don't care about other declarations.
 *)
 let tvdecl_checks {tvident; tvtrans; tvtype; tvloc} =
-  let with_sloc stmt = {sloc=tvloc; stmt} in
-  let check_stmts = List.map ~f:with_sloc (trans_checks tvident tvtype tvtrans) in
+  let with_sloc stmt = {sloc= tvloc; stmt} in
+  let check_stmts =
+    List.map ~f:with_sloc (trans_checks tvident tvtype tvtrans)
+  in
   with_sloc (SList check_stmts)
 
-let mktvtable s =
+let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
+  match stmt_typed with
+  | Ast.VarDecl
+      {sizedtype; transformation; identifier; initial_value; is_global} ->
+      ignore (initial_value, is_global) ;
+      Some
+        { tvident= identifier.name
+        ; tvtype= trans_sizedtype sizedtype
+        ; tvtrans= trans_trans transformation
+        ; tvloc= trans_loc stmt_typed_loc }
+  | _ -> None
+
+let mktvtable lst =
   (* Someday we may support "topvars" below the "top" level, but for now
      we only deal with ones that are in a list at the top of the
   *)
-  let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} = match stmt_typed with
-    | Ast.VarDecl { sizedtype; transformation; identifier; initial_value; is_global } ->
-      ignore (initial_value, is_global);
-      Some {tvident= identifier.name; tvtype= trans_sizedtype sizedtype;
-            tvtrans= trans_trans transformation; tvloc= trans_loc stmt_typed_loc}
-    | _ -> None
-  in
-  let tvdecls = match s with
-    | Some lst -> List.(filter_opt (map ~f:trans_tvdecl lst))
-    | None -> []
-  in
-  Map.Poly.of_alist_exn (List.map ~f:(fun t -> t.tvident, t) tvdecls)
+  List.(filter_opt (map ~f:trans_tvdecl lst))
+  |> List.map ~f:(fun t -> (t.tvident, t))
+  |> Map.Poly.of_alist_exn
+
+let pull_tvdecls = function
+  | None -> (Map.Poly.empty, [])
+  | Some lst ->
+      let tvdecls, other_statements =
+        List.partition_tf ~f:(Fn.compose Option.is_some trans_tvdecl) lst
+      in
+      let tvtable = mktvtable tvdecls in
+      let checks = Map.Poly.map ~f:tvdecl_checks tvtable |> Map.Poly.data in
+      (tvtable, checks @ List.map ~f:trans_stmt other_statements)
 
 (* We represent the data and parameter blocks as maps from a variable's identifier
    to a tvdecl containing a little more information about it that we need to
@@ -234,7 +250,24 @@ let mktvtable s =
    * model -> no constraints allowed (not even corr_matrix et al); not visible
    * gq -> declared and checked in write_array, shows up as param in some methods
 
-   so we can essentially ignore declarations in the model block.
+   So there are "local" (i.e. not top-level; not read in or written out anywhere) variable
+   declarations that do not allow transformations. These are the only kind allowed in
+   the model block. There are also then top-level ones, which are the only thing you can
+   write in both the parameters and data block. The generated quantities block allows both
+   types of variable declarations and, worse, mixes in top-level ones with normal ones.
+   We'll need to scan the list of declarations for top-level ones and essentially remove them
+   from the block.
+*)
+
+(*
+   There are at least three places where we currently generate redundant code:
+   - checks and validation of data and bounds
+   - assignment of newly initialized stuff to 0, which may immediately be filled
+   - setting the current line number
+
+   I think in general we'd like to try reifying these things in the MIR. The hope here
+   is that the optimization pass can easily and correctly determine dependencies
+   and purity for reordering, hoisting, and elimination.
 *)
 
 let trans_prog filename
@@ -256,16 +289,21 @@ let trans_prog filename
     let flattened = List.(concat (map ~f:lbind stmts)) in
     with_no_loc (match flattened with [] -> Skip | _ :: _ -> SList flattened)
   in
+  let pull_tvdecls_multi blocks =
+    let merge_maps maps =
+      List.map ~f:Map.Poly.to_alist maps
+      |> List.concat |> Map.Poly.of_alist_exn
+    and tvtables, stmts = List.map ~f:pull_tvdecls blocks |> List.unzip in
+    (merge_maps tvtables, coalesce (List.concat stmts))
+  in
   (* XXX probably a weird place to keep the name*)
   { prog_name= !Semantic_check.model_name
   ; prog_path= filename
   ; functionsb= trans_or_skip functionblock
-  ; datab= (mktvtable datablock,
-            coalesce [datablock |> trans_or_skip;
-                      transformeddatablock |> trans_or_skip])
-  ; modelb= (mktvtable parametersblock,
-             coalesce
-               (* XXX save transformed parameters *)
-               (List.map ~f:trans_or_skip [transformedparametersblock; modelblock]))
-  ; gqb= (mktvtable generatedquantitiesblock,
-          trans_or_skip generatedquantitiesblock) }
+  ; datab= pull_tvdecls_multi [datablock; transformeddatablock]
+  ; modelb=
+      (let tvtables, stmts =
+         pull_tvdecls_multi [parametersblock; transformedparametersblock]
+       in
+       (tvtables, coalesce [stmts; trans_or_skip modelblock]))
+  ; gqb= pull_tvdecls_multi [generatedquantitiesblock] }

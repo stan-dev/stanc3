@@ -190,6 +190,8 @@ let emit_statement emit_statement_with_meta ppf s =
   | Continue -> emit_str ppf "continue;"
   | Return e -> fprintf ppf "return %a;" emit_option (emit_expr, e, "")
   | Skip -> ()
+  | ZeroInit _ -> () (* XXX *)
+  | MarkLocation _ -> () (* XXX *)
   | Check _ -> () (* XXX *)
   | IfElse (cond, ifbranch, elsebranch) ->
       let emit_else ppf x =
@@ -210,8 +212,8 @@ let emit_statement emit_statement_with_meta ppf s =
       emit_for_loop ppf (lv, lower, upper, emit_statement_with_meta, body)
   | Block ls -> emit_block ppf (emit_stmt_list, ls)
   | SList ls -> emit_stmt_list ppf ls
-  | Decl {adtype; vident; st; trans} ->
-      ignore (trans, adtype) ;
+  | Decl {adtype; vident; st} ->
+      ignore adtype ;
       fprintf ppf "%a %s;" emit_prim_stantype (Ast.remove_size st) vident
   | FunDef {returntype; name; arguments; body} ->
       let argtypetemplates =
@@ -310,7 +312,7 @@ let%expect_test "run code per element" =
                     } |}]
 
 let%expect_test "decl" =
-  {splain= Decl {adtype= AutoDiffable; vident= "i"; st= SInt; trans= Identity}}
+  {splain= Decl {adtype= AutoDiffable; vident= "i"; st= SInt}}
   |> emit_statement_plain str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| int i; |}]
@@ -500,9 +502,7 @@ let rec array_to_for sloc (ident, st) bodyfn =
   match st with
   | Ast.SArray (t, dim) ->
       let loopvar = Mir.gensym () in
-      let decl =
-        Decl {adtype= Ast.DataOnly; vident= loopvar; st; trans= Identity}
-      in
+      let decl = Decl {adtype= Ast.DataOnly; vident= loopvar; st} in
       let body = array_to_for sloc (loopvar, t) bodyfn in
       let sfor = For {loopvar= Var loopvar; lower= zero; upper= dim; body} in
       let stmts = List.map ~f:(fun stmt -> {stmt; sloc}) [decl; sfor] in
@@ -545,8 +545,10 @@ using namespace stan::math;
 |}
 
 let emit_prog ppf (p : stmt_loc prog) =
-  let datab = add_data_read_mir p.datab in
+  let tvtable, datab = p.datab in
+  let datab = add_data_read_mir datab in
   let datab = (Mir.map_toplevel_stmts trans_checks) datab in
+  let datab = (tvtable, datab) in
   fprintf ppf
     "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name globals usings emit_statement_loc p.functionsb
