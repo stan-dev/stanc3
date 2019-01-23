@@ -1,5 +1,9 @@
 (** Some plumbing for our compiler errors *)
 
+val append_position_to_filename : string -> string -> string
+(** Insert the line and column number string in a filename string before the first
+    include, after the first filename *)
+
 (** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * Lexing.position
@@ -28,3 +32,6 @@ val semantic_error : ?loc:Ast.location -> string -> 'a
 
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
+
+val warn_deprecated : Lexing.position * string -> unit
+(** Warn that a language construct is deprecated *)

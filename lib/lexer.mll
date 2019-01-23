@@ -21,19 +21,23 @@
 
   let include_paths : string list ref = ref []
 
-  let rec try_open_in paths fname =
+  let rec try_open_in paths fname pos =
   match paths with
     | [] -> raise (Errors.SyntaxError
-              (Includes ("Could not find include file \"" ^ fname ^
-                         "\" in specified include paths.\n", lexeme_start_p
+              (Includes ("Could not find include file " ^ fname ^
+                         " in specified include paths.\n", lexeme_start_p
                 (Stack.top include_stack))))
     | path :: rest_of_paths ->
     try
       let old_path = (Stack.top include_stack).lex_start_p.pos_fname in
+      let open Printf in
       let full_path = path ^ "/" ^ fname in
-        open_in full_path, full_path ^ "\" included from \"" ^ old_path
-    with _ -> try_open_in rest_of_paths fname
-  (* TODO: Put in precise location with line number and position in the whole chain of included froms? *)
+        open_in full_path, sprintf "%s, included from\nfile %s" full_path
+          (Errors.append_position_to_filename old_path
+            (sprintf ", line %d, column %d"
+                     pos.pos_lnum
+                     (pos.pos_cnum - pos.pos_bol)))
+    with _ -> try_open_in rest_of_paths fname pos
 
   let maybe_remove_quotes str =
     let open Core_kernel.String in
@@ -42,15 +46,15 @@
     then drop_suffix (drop_prefix str 1) 1
     else str
 
-  let try_get_new_lexbuf fname =
-    let chan, path = try_open_in !include_paths (maybe_remove_quotes fname) in
+  let try_get_new_lexbuf fname pos =
+    let chan, path = try_open_in !include_paths (maybe_remove_quotes fname) pos in
     let new_lexbuf = from_channel chan in
     let _ = (new_lexbuf).lex_start_p <- { pos_fname= path
                                         ; pos_lnum= 1
                                         ; pos_bol= 0
                                         ; pos_cnum= 0 } in
     let _ = new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p in
-    let _ = if dup_exists (Str.split (Str.regexp "\" included from \"") path)
+    let _ = if dup_exists (Str.split (Str.regexp ", included from\nfile ") path)
             then raise (Errors.SyntaxError (
               Includes ("Found cyclical include structure.\n",
                         (lexeme_start_p (Stack.top include_stack))))) in
@@ -86,9 +90,15 @@ rule token = parse
     ( '"' [^ '"']* '"'
     | non_space_or_newline*
     as fname)                 { lexer_logger ("include " ^ fname) ;
-                                let new_lexbuf = try_get_new_lexbuf fname in
+                                let new_lexbuf = try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
+                                Errors.warn_deprecated
+                                  (lexbuf.lex_curr_p, "Comments beginning with \
+                                                       # are deprecated. \
+                                                       Please use // in place \
+                                                       of # for line \
+                                                       comments.") ;
                                 singleline_comment lexbuf; token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
@@ -176,8 +186,20 @@ rule token = parse
   | "/="                      { lexer_logger "/=" ; Parser.DIVIDEASSIGN }
   | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
   | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
-  | "<-"                      { lexer_logger "<-" ; Parser.ARROWASSIGN } (* deprecated *)
+  | "<-"                      { lexer_logger "<-" ;
+                                Errors.warn_deprecated
+                                  (lexbuf.lex_curr_p, "assignment operator <- \
+                                                       is deprecated in the \
+                                                       Stan language; use = \
+                                                       instead.") ;
+                                Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
+                                Errors.warn_deprecated
+                                  (lexbuf.lex_curr_p, "increment_log_prob(...)\
+                                                       ; is deprecated and \
+                                                       will be removed in the \
+                                                       future. Use target \
+                                                       += ...; instead.") ;
                                 Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
@@ -189,7 +211,14 @@ rule token = parse
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
-  | "get_lp"                  { lexer_logger "get_lp" ;  Parser.GETLP } (* deprecated *)
+  | "get_lp"                  { lexer_logger "get_lp" ;
+                                Errors.warn_deprecated
+                                  (lexbuf.lex_curr_p, "get_lp() function is \
+                                                       deprecated. It will be \
+                                                       removed in a future \
+                                                       release. Use target() \
+                                                       instead.") ;
+                                Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;

@@ -256,7 +256,7 @@ let rec semantic_check_program
   let _ = context_flags.current_block <- Functions in
   let semantic_check_statements = List.map semantic_check_statement in
   let open Core_kernel.Option.Monad_infix in
-  let ufb = Core_kernel.Option.map ~f:(List.map semantic_check_statement) fb in
+  let ufb = fb >>| List.map semantic_check_statement in
   (* Check that all declared functions have a definition *)
   let _ =
     if
