@@ -75,19 +75,6 @@ generated quantities {
   mean_abundance = exp(alpha_lam);
 }
 
-
-Semantic error at file Nmix0.stan, line 21, columns 2-541:
-   -------------------------------------------------
-    19:     * return Log probability
-    20:    */
-    21:    real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
-           ^
-    22:      real s[min(n) + 1];
-    23:      real log_theta_1 = log_lambda + log(p) + log1m(p);
-   -------------------------------------------------
-
-Probability mass functions require integer variates (first argument). Instead found type int[].
-
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix1.stan
 functions {
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
@@ -192,19 +179,6 @@ generated quantities {
   }
   mean_abundance = exp(alpha_lam);
 }
-
-
-Semantic error at file Nmix1.stan, line 21, columns 2-541:
-   -------------------------------------------------
-    19:     * return Log probability
-    20:     */
-    21:    real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
-           ^
-    22:      real s[min(n) + 1];
-    23:      real log_theta_1 = log_lambda + log(p) + log1m(p);
-   -------------------------------------------------
-
-Probability mass functions require integer variates (first argument). Instead found type int[].
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix2.stan
 functions {
@@ -311,19 +285,6 @@ generated quantities {
     }
   }
 }
-
-
-Semantic error at file Nmix2.stan, line 21, columns 2-529:
-   -------------------------------------------------
-    19:     * return Log probability
-    20:    */
-    21:    real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
-           ^
-    22:      real s[min(n) + 1];
-    23:  
-   -------------------------------------------------
-
-Probability mass functions require integer variates (first argument). Instead found type int[].
 
   $ ../../../../../../install/default/bin/stanc --auto-format binmix.stan
 data {

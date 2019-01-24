@@ -1659,26 +1659,38 @@ and semantic_check_statement s =
              _log, _lpdf, _lpmf, _lcdf, or _lccdf."
       in
       let _ =
-        if
-          is_suffix uid.name ~suffix:"_lpdf"
-          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> UReal)
-        then
-          semantic_error ~loc
-            ( "Probability density functions require real variates (first \
-               argument). Instead found type "
-            ^ pretty_print_unsizedtype (snd (List.hd uarg_types))
-            ^ "." )
+        if is_suffix uid.name ~suffix:"_lpdf" then
+          let error_string =
+            "Probability density functions require real variates (first \
+             argument)."
+          in
+          match
+            Core_kernel.Option.map ~f:snd (Core_kernel.List.hd uarg_types)
+          with
+          | None -> semantic_error ~loc error_string
+          | Some UReal | Some UVector | Some URowVector | Some (UArray UReal)
+            ->
+              ()
+          | Some x ->
+              semantic_error ~loc
+                ( error_string ^ " Instead found type "
+                ^ pretty_print_unsizedtype x ^ "." )
       in
       let _ =
-        if
-          is_suffix uid.name ~suffix:"_lpmf"
-          && (List.length uarg_types = 0 || snd (List.hd uarg_types) <> UInt)
-        then
-          semantic_error ~loc
-            ( "Probability mass functions require integer variates (first \
-               argument). Instead found type "
-            ^ pretty_print_unsizedtype (snd (List.hd uarg_types))
-            ^ "." )
+        if is_suffix uid.name ~suffix:"_lpmf" then
+          let error_string =
+            "Probability mass functions require integer variates (first \
+             argument)."
+          in
+          match
+            Core_kernel.Option.map ~f:snd (Core_kernel.List.hd uarg_types)
+          with
+          | None -> semantic_error ~loc error_string
+          | Some UInt | Some (UArray UInt) -> ()
+          | Some x ->
+              semantic_error ~loc
+                ( error_string ^ " Instead found type "
+                ^ pretty_print_unsizedtype x ^ "." )
       in
       let _ = context_flags.in_fun_def <- true in
       let _ =
