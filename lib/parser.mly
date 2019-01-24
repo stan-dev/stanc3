@@ -3,11 +3,12 @@
 %{
 open Ast
 open Debug
-
+module Option = Core_kernel.Option
+module List = Core_kernel.List
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
-  Core_kernel.List.fold l ~f:(fun y z -> SArray (y, z)) ~init:sbt
+  List.fold l ~f:(fun y z -> SArray (y, z)) ~init:sbt
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -174,23 +175,13 @@ var_decl:
     ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
-      match ae with
-      | Some a ->
-          {stmt_untyped=
-              VarDecl {sizedtype= reducearray (sbt, sizes);
-                       transformation= Identity;
-                       identifier= id;
-                       initial_value= Some (snd a);
-                       is_global= false};
-           stmt_untyped_loc= Location ($startpos, $endpos)}
-      | None ->
-          {stmt_untyped=
-              VarDecl {sizedtype= reducearray (sbt, sizes);
-                       transformation= Identity;
-                       identifier= id;
-                       initial_value= None;
-                       is_global= false};
-           stmt_untyped_loc= Location ($startpos, $endpos) } }
+      {stmt_untyped=
+         VarDecl {sizedtype= reducearray (sbt, sizes);
+                  transformation= Identity;
+                  identifier= id;
+                  initial_value=Option.map ~f:snd ae;
+                  is_global= false};
+       stmt_untyped_loc= Location ($startpos, $endpos)}}
 
 sized_basic_type:
   | INT
@@ -223,23 +214,13 @@ top_var_decl:
     ass=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "top_var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
-      match ass with
-      | Some a ->
       {stmt_untyped=
               VarDecl {sizedtype= reducearray (fst tvt, sizes);
                        transformation=  snd tvt;
                        identifier= id;
-                       initial_value= Some (snd a);
+                       initial_value= Option.map ~f:snd ass;
                        is_global= true};
-       stmt_untyped_loc= Location ($startpos, $endpos)}
-      | None ->
-      {stmt_untyped=
-              VarDecl {sizedtype= reducearray (fst tvt, sizes);
-                       transformation=  snd tvt;
-                       identifier= id;
-                       initial_value= None;
-                       is_global= true};
-       stmt_untyped_loc= Location ($startpos, $endpos)} }
+       stmt_untyped_loc= Location ($startpos, $endpos)}}
 
 top_var_type:
   | INT r=range_constraint

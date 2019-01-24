@@ -44,7 +44,7 @@ let targetpe e =
 let trans_loc = function
   | Ast.Nowhere -> ""
   | Ast.Location (start, end_) ->
-      (* XXX hack *)
+      (* XXX hack hack *)
       let open Lexing in
       sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
 
@@ -129,20 +129,22 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           ; name= funname.name
           ; arguments= List.map ~f:trans_arg arguments
           ; body= trans_stmt body }
-    | Ast.VarDecl {sizedtype; transformation; identifier; initial_value; _} ->
+    | Ast.VarDecl
+        {sizedtype; transformation; identifier; initial_value; is_global} ->
+        (* Should have already taken care of global and trans stuff. *)
+        ignore (transformation, is_global) ;
         let name = identifier.name in
         (* XXX Deal with global vs unglobal *)
         (* XXX Should also generate the statements that will read the data in
-           and validate it... Then a CSE pass will automatically fulfill one of our
-           Stanc3 promises to do data checking only once and at the appropriate level
-        *)
+         and validate it... Then a CSE pass will automatically fulfill one of our
+         Stanc3 promises to do data checking only once and at the appropriate level
+      *)
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
                  { adtype= AutoDiffable
                  ; vident= name
-                 ; st= trans_sizedtype sizedtype
-                 ; trans= trans_trans transformation }
+                 ; st= trans_sizedtype sizedtype }
              ; Option.map
                  ~f:(fun x -> Assignment (Var name, trans_expr x))
                  initial_value
@@ -171,47 +173,101 @@ let mir_for_each_in_array (st : sizedtype) (s : expr -> stmt_loc) =
   | SVector _ -> ( ?? )
   | SRowVector _ -> ( ?? )
   | SMatrix _ -> ( ?? )
+*)
 
-let rec trans_checks vident = function
+let rec trans_checks cvarname ctype t =
+  let check = {cvarname; ctype; cargs= []; cfname= ""} in
+  match t with
   | Ast.Identity -> []
-  | Ast.Lower lb -> [Check ("check_greater_or_equal", [Var vident; lb])]
-  | Ast.Upper ub -> [Check ("check_less_or_equal", [Var vident; ub])]
+  | Ast.Lower lb -> [Check {check with cargs= [lb]; cfname= "greater_or_equal"}]
+  | Ast.Upper ub -> [Check {check with cargs= [ub]; cfname= "less_or_equal"}]
   | Ast.LowerUpper (lb, ub) ->
       [Ast.Lower lb; Upper ub]
-      |> List.map ~f:(trans_trans vident)
+      |> List.map ~f:(trans_checks cvarname ctype)
       |> List.concat
-  | Ast.Ordered -> ( ?? )
-  | Ast.PositiveOrdered -> ( ?? )
-  | Ast.Simplex -> ( ?? )
-  | Ast.UnitVector -> ( ?? )
-  | Ast.CholeskyCorr -> ( ?? )
-  | Ast.CholeskyCov -> ( ?? )
-  | Ast.Correlation -> ( ?? )
-  | Ast.Covariance -> ( ?? )
+  | Ast.Ordered -> [Check {check with cfname= "ordered"}]
+  | Ast.PositiveOrdered -> [Check {check with cfname= "positive_ordered"}]
+  | Ast.Simplex -> [Check {check with cfname= "simplex"}]
+  | Ast.UnitVector -> [Check {check with cfname= "unit_vector"}]
+  | Ast.CholeskyCorr -> [Check {check with cfname= "cholesky_factor_corr"}]
+  | Ast.CholeskyCov -> [Check {check with cfname= "cholesky_factor"}]
+  | Ast.Correlation -> [Check {check with cfname= "corr_matrix"}]
+  | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
   | Ast.OffsetMultiplier (_, _) -> []
-*)
 
-(* XXX FIXME ETC*)
+(** Adds Mir statements that validate the variable once it has been read.
+    The code to read it in is emitted in the backend.contents
+    Here we intentionally only check declarations at the top level, i.e.
+    we only recurse into blocks and lists as we don't care about other declarations.
+*)
+let tvdecl_checks {tvident; tvtrans; tvtype; tvloc} =
+  let with_sloc stmt = {sloc= tvloc; stmt} in
+  let check_stmts =
+    List.map ~f:with_sloc (trans_checks tvident tvtype tvtrans)
+  in
+  with_sloc (SList check_stmts)
+
+let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
+  match stmt_typed with
+  | Ast.VarDecl
+      {sizedtype; transformation; identifier; initial_value; is_global} ->
+      ignore (initial_value, is_global) ;
+      Some
+        { tvident= identifier.name
+        ; tvtype= trans_sizedtype sizedtype
+        ; tvtrans= trans_trans transformation
+        ; tvloc= trans_loc stmt_typed_loc }
+  | _ -> None
+
+let mktvtable lst =
+  (* Someday we may support "topvars" below the "top" level, but for now
+     we only deal with ones that are in a list at the top of the
+  *)
+  List.(filter_opt (map ~f:trans_tvdecl lst))
+  |> List.map ~f:(fun t -> (t.tvident, t))
+  |> Map.Poly.of_alist_exn
+
+let pull_tvdecls = function
+  | None -> (Map.Poly.empty, [])
+  | Some lst ->
+      let tvdecls, other_statements =
+        List.partition_tf ~f:(Fn.compose Option.is_some trans_tvdecl) lst
+      in
+      let tvtable = mktvtable tvdecls in
+      let checks = Map.Poly.map ~f:tvdecl_checks tvtable |> Map.Poly.data in
+      (tvtable, checks @ List.map ~f:trans_stmt other_statements)
+
+(* We represent the data and parameter blocks as maps from a variable's identifier
+   to a tvdecl containing a little more information about it that we need to
+   generate data checks, read in data fields, or transform parameters.
+
+   vardecls mapping:
+   * data block -> private fields; checks in ctor
+   * tdata -> private fields; checks in ctor
+   * param -> log_prob fn params; transformations in write_array, transform_inits, log_prob
+   * tparam -> no initialization by default, checks that it has been initialized,
+               checked in log_prob, write_array,
+   * model -> no constraints allowed (not even corr_matrix et al); not visible
+   * gq -> declared and checked in write_array, shows up as param in some methods
+
+   So there are "local" (i.e. not top-level; not read in or written out anywhere) variable
+   declarations that do not allow transformations. These are the only kind allowed in
+   the model block. There are also then top-level ones, which are the only thing you can
+   write in both the parameters and data block. The generated quantities block allows both
+   types of variable declarations and, worse, mixes in top-level ones with normal ones.
+   We'll need to scan the list of declarations for top-level ones and essentially remove them
+   from the block.
+*)
 
 (*
-(** Adds Mir statements that validate and read in the variable*)
-let add_data_read_field {stmt; sloc} =
-  let s = {sloc; stmt} in
-  match stmt with
-  | Decl {vident; trans; _} ->
-      { sloc
-      ; stmt=
-          SList
-            ( s
-            :: List.map
-                 ~f:(fun stmt -> {sloc; stmt})
-                 [trans_checks vident trans] ) }
-  | _ -> {stmt; sloc}
+   There are at least three places where we currently generate redundant code:
+   - checks and validation of data and bounds
+   - assignment of newly initialized stuff to 0, which may immediately be filled
+   - setting the current line number
 
-*)
-
-(* XXX To add validation logic to MIR
-   We can add validate_non_negative_index, context__.validate_dims,
+   I think in general we'd like to try reifying these things in the MIR. The hope here
+   is that the optimization pass can easily and correctly determine dependencies
+   and purity for reordering, hoisting, and elimination.
 *)
 
 let trans_prog filename
@@ -233,18 +289,21 @@ let trans_prog filename
     let flattened = List.(concat (map ~f:lbind stmts)) in
     with_no_loc (match flattened with [] -> Skip | _ :: _ -> SList flattened)
   in
+  let pull_tvdecls_multi blocks =
+    let merge_maps maps =
+      List.map ~f:Map.Poly.to_alist maps
+      |> List.concat |> Map.Poly.of_alist_exn
+    and tvtables, stmts = List.map ~f:pull_tvdecls blocks |> List.unzip in
+    (merge_maps tvtables, coalesce (List.concat stmts))
+  in
   (* XXX probably a weird place to keep the name*)
   { prog_name= !Semantic_check.model_name
   ; prog_path= filename
   ; functionsb= trans_or_skip functionblock
-  ; datab=
-      coalesce
-        [ datablock |> trans_or_skip
-          (* |> add_data_read_field |> add_check_constraints *)
-        ; transformeddatablock |> trans_or_skip ]
-  ; paramsb= trans_or_skip parametersblock
+  ; datab= pull_tvdecls_multi [datablock; transformeddatablock]
   ; modelb=
-      coalesce
-        (* XXX save transformed parameters *)
-        (List.map ~f:trans_or_skip [transformedparametersblock; modelblock])
-  ; gqb= trans_or_skip generatedquantitiesblock }
+      (let tvtables, stmt =
+         pull_tvdecls_multi [parametersblock; transformedparametersblock]
+       in
+       (tvtables, coalesce [stmt; trans_or_skip modelblock]))
+  ; gqb= pull_tvdecls_multi [generatedquantitiesblock] }
