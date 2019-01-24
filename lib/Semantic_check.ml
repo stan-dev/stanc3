@@ -33,7 +33,7 @@ type context_flags_record =
   ; mutable in_returning_fun_def: bool
   ; mutable in_rng_fun_def: bool
   ; mutable in_lp_fun_def: bool
-  ; mutable in_loop: bool }
+  ; mutable loop_depth: int }
 
 let context_flags =
   { current_block= Functions
@@ -41,7 +41,7 @@ let context_flags =
   ; in_returning_fun_def= false
   ; in_rng_fun_def= false
   ; in_lp_fun_def= false
-  ; in_loop= false }
+  ; loop_depth= 0 }
 
 (* Some helper functions *)
 let dup_exists l =
@@ -1313,7 +1313,7 @@ and semantic_check_statement s =
   | Break ->
       (* Break and continue only occur in loops. *)
       let _ =
-        if not context_flags.in_loop then
+        if context_flags.loop_depth = 0 then
           semantic_error ~loc "Break statements may only be used in loops."
       in
       { stmt_typed= Break
@@ -1322,7 +1322,7 @@ and semantic_check_statement s =
   | Continue ->
       (* Break and continue only occur in loops. *)
       let _ =
-        if not context_flags.in_loop then
+        if context_flags.loop_depth = 0 then
           semantic_error ~loc "Continue statements may only be used in loops."
       in
       { stmt_typed= Continue
@@ -1400,9 +1400,9 @@ and semantic_check_statement s =
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
-      let _ = context_flags.in_loop <- true in
+      let _ = context_flags.loop_depth <- context_flags.loop_depth + 1 in
       let us = semantic_check_statement s in
-      let _ = context_flags.in_loop <- false in
+      let _ = context_flags.loop_depth <- context_flags.loop_depth - 1 in
       { stmt_typed= While (ue, us)
       ; stmt_typed_returntype= us.stmt_typed_returntype
       ; stmt_typed_loc= loc }
@@ -1433,9 +1433,9 @@ and semantic_check_statement s =
       let _ = Symbol_table.enter vm uid.name (oindexblock, UInt) in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
-      let _ = context_flags.in_loop <- true in
+      let _ = context_flags.loop_depth <- context_flags.loop_depth + 1 in
       let us = semantic_check_statement s in
-      let _ = context_flags.in_loop <- false in
+      let _ = context_flags.loop_depth <- context_flags.loop_depth - 1 in
       let _ = Symbol_table.end_scope vm in
       { stmt_typed=
           For
@@ -1469,9 +1469,9 @@ and semantic_check_statement s =
       in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
-      let _ = context_flags.in_loop <- true in
+      let _ = context_flags.loop_depth <- context_flags.loop_depth + 1 in
       let us = semantic_check_statement s in
-      let _ = context_flags.in_loop <- false in
+      let _ = context_flags.loop_depth <- context_flags.loop_depth - 1 in
       let _ = Symbol_table.end_scope vm in
       { stmt_typed= ForEach (uid, ue, us)
       ; stmt_typed_returntype= us.stmt_typed_returntype

@@ -105,6 +105,18 @@ functions {
       }
     }
 
+   // nested loop exit
+   while (1) {
+     while (1) {
+     }
+     break;
+   }
+   while (1) {
+     while (1) {
+     }
+     continue;
+   }
+
     return 0;
   }
 }
