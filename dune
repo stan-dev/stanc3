@@ -7,4 +7,8 @@
 
 (env
  (static
-  (flags (-ccopt -static))))
+  (flags (-ccopt -static)))
+  (dev
+  (flags (:standard -g)))
+ (release
+  (flags (:standard -O3))))

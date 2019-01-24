@@ -19,7 +19,7 @@ functions {
              real[] y,
              real[] theta,
              data real[] x,
-             data int[] x_int) ;  
+             data int[] x_int) ;
 
   real[] sho(real t,
              real[] y,
@@ -99,7 +99,7 @@ functions {
       for (v in vs) {
         z = 0;
         break;
-      }        
+      }
       for (v in vs) {
         z = 0;
         continue;
@@ -122,7 +122,7 @@ functions {
         break;
       }
       for (v in vs) {
-        z = 3.2;
+        z = 3.1;
         continue;
       }
     }
@@ -150,7 +150,7 @@ functions {
         break;
       }
       for (v in vs) {
-        z = 3.2;
+        z = 3.3;
         continue;
       }
     }
@@ -198,7 +198,7 @@ functions {
     if ((abs_diff / avg_scale) < min_)
       reject("user-specified rejection, difference below ",min_," x:",x," y:",y);
     return abs_diff / avg_scale;
-  }    
+  }
 
   vector foo_5(vector shared_params, vector job_params,
              data real[] data_r, data int[] data_i) {

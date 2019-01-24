@@ -1,3 +1,4 @@
+open Core_kernel
 open Stanclib
 
 (** The main program. *)
@@ -11,25 +12,32 @@ let usage = "Usage: " ^ name ^ " [option] ... [file] ..."
 (** A list of files to be loaded and run. *)
 let files = ref []
 
+let pretty_print_program = ref false
+let dump_mir = ref false
+
 (** Some example command-line options here *)
 let options =
   Arg.align
     [ ( "--debug-lex"
-      , Arg.Unit (fun () -> Debug.lexer_logging := true)
+      , Arg.Set Debug.lexer_logging
       , " For debugging purposes: print the lexer actions" )
     ; ( "--debug-parse"
-      , Arg.Unit (fun () -> Debug.grammar_logging := true)
+      , Arg.Set Debug.grammar_logging
       , " For debugging purposes: print the parser actions" )
     ; ( "--debug-ast"
-      , Arg.Unit (fun () -> Debug.ast_printing := true)
+      , Arg.Set Debug.ast_printing
       , " For debugging purposes: print the undecorated AST, before semantic \
          checking" )
     ; ( "--debug-decorated-ast"
-      , Arg.Unit (fun () -> Debug.typed_ast_printing := true)
+      , Arg.Set Debug.typed_ast_printing
+      , " For debugging purposes: print the decorated AST, after semantic \
+         checking" )
+    ; ( "--dump-mir"
+      , Arg.Set dump_mir
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
     ; ( "--auto-format"
-      , Arg.Unit (fun () -> Debug.pretty_print_program := true)
+      , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
     ; ( "--version"
       , Arg.Unit
@@ -54,8 +62,7 @@ let options =
             Semantic_check.check_that_all_functions_have_definition := false )
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include_paths"
-      , Arg.String
-          (fun str -> Lexer.include_paths := String.split_on_char ',' str)
+      , Arg.String (fun str -> Lexer.include_paths := String.split ~on:',' str)
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
@@ -69,7 +76,7 @@ let use_file filename =
     if !Semantic_check.model_name = "" then
       Semantic_check.model_name :=
         Core_kernel.String.drop_suffix
-          (List.hd (List.rev (Core_kernel.String.split filename ~on:'/')))
+          (List.hd_exn (List.rev (String.split filename ~on:'/')))
           5
         ^ "_model"
   in
@@ -80,29 +87,29 @@ let use_file filename =
       exit 1
   in
   let _ = Debug.ast_logger ast in
-  let _ = Debug.auto_formatter ast in
-  let typed_ast =
-    try Semantic_check.semantic_check_program ast
-    with Errors.SemanticError err ->
-      Errors.report_semantic_error err ;
-      exit 1
-  in
-  let _ = Debug.typed_ast_logger typed_ast in
-  let mir = Ast_to_Mir.trans_prog filename typed_ast in
-  (*let _ = Stan_math_backend.emit_prog Format.str_formatter mir in
-    let cpp = Format.flush_str_formatter () in
+  if !pretty_print_program then
+    print_endline (Pretty_printing.pretty_print_program ast)
+  else
+    let typed_ast =
+      try Semantic_check.semantic_check_program ast
+      with Errors.SemanticError err ->
+        Errors.report_semantic_error err ;
+        exit 1
+    in
+    let _ = Debug.typed_ast_logger typed_ast in
+    let mir = Ast_to_Mir.trans_prog filename typed_ast in
+    if !dump_mir then
+      Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+    let cpp = Format.asprintf "%a" Stan_math_backend.emit_prog mir in
     print_string cpp
-  *)
-  ignore mir
 
-(** Main program *)
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
   (* Files were listed in the wrong order, so we reverse them *)
   files := List.rev !files ;
   (* Run and load all the specified files. *)
-  let _ = List.map use_file !files in
+  let _ = List.map ~f:use_file !files in
   ()
 
 let _ = main ()
