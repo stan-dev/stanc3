@@ -70,11 +70,11 @@ functions {
    * @param x_i integer data (empty)
    * @return evolved CO2 for times ts
    */
-  real[] evolved_CO2(int N_t, real t0, real[] ts,
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts,
                      real gamma, real totalC_t0,
                      real k1, real k2, 
                      real alpha21, real alpha12,
-                     real[] x_r, int[] x_i) {
+                     data real[] x_r, data int[] x_i) {
 
     real C_t0[2];               // initial state
     real theta[4];              // ODE parameters

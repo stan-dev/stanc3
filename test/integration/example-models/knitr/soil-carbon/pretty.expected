@@ -14,7 +14,7 @@ functions {
     dC_dt[2] <- -k2 * C[2] + alpha21 * k1 * C[1];
     return dC_dt;
   }
-  real[] evolved_CO2(int N_t, real t0, real[] ts, real gamma, real totalC_t0, real k1, real k2, real alpha21, real alpha12, real[] x_r, int[] x_i) {
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma, real totalC_t0, real k1, real k2, real alpha21, real alpha12, data real[] x_r, data int[] x_i) {
     real C_t0[2];
     real theta[4];
     real C_hat[N_t, 2];
@@ -258,21 +258,6 @@ Warning: deprecated language construct used at file soil_incubation.stan, line 1
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-
-Semantic error at file soil_incubation.stan, line 93, columns 13-104:
-   -------------------------------------------------
-    91:      theta[4] <- alpha12;
-    92:  
-    93:      C_hat <- integrate_ode(two_pool_feedback, 
-                      ^
-    94:                             C_t0, t0, ts, theta, x_r, x_i);
-    95:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
 functions {
   real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r, int[] x_i) {
@@ -289,7 +274,7 @@ functions {
     dC_dt[2] <- alpha21 * k1 * C[1] - k2 * C[2];
     return dC_dt;
   }
-  real[] evolved_CO2(int N_t, real t0, real[] ts, real gamma, real totalC_t0, real k1, real k2, real alpha21, real alpha12, real[] x_r, int[] x_i) {
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma, real totalC_t0, real k1, real k2, real alpha21, real alpha12, data real[] x_r, data int[] x_i) {
     real C_t0[2];
     real theta[4];
     real C_hat[N_t, 2];
@@ -535,19 +520,4 @@ Warning: deprecated language construct used at file soil_incubation_measurement_
    -------------------------------------------------
 
 assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Semantic error at file soil_incubation_measurement_err.stan, line 43, columns 13-104:
-   -------------------------------------------------
-    41:      theta[4] <- alpha12;
-    42:  
-    43:      C_hat <- integrate_ode(two_pool_feedback, 
-                      ^
-    44:                             C_t0, t0, ts, theta, x_r, x_i);
-    45:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], data real, data real[], real[], data real[], data int[]) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
 
