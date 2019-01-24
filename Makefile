@@ -34,7 +34,10 @@ test/integration/model-name/%/dune: test/integration/model-name/dune
 test/integration/rstanarm/%/dune: test/integration/rstanarm/dune
 	echo "(include `echo "$*/" | sed -e "s|[^/]*/|../|g"`dune)" > $@
 
-OG_TEST_DUNES := test/integration/dune test/integration/examples-bad/dune test/integration/examples-good/dune test/integration/included/dune test/integration/model-name/dune test/integration/rstanarm/dune
+test/integration/example-models/%/dune: test/integration/example-models/dune
+	echo "(include `echo "$*/" | sed -e "s|[^/]*/|../|g"`dune)" > $@
+
+OG_TEST_DUNES := test/integration/dune test/integration/examples-bad/dune test/integration/examples-good/dune test/integration/included/dune test/integration/model-name/dune test/integration/rstanarm/dune test/integration/example-models/dune
 
 clean-test-dunes:
 	rm -rf $(filter-out $(OG_TEST_DUNES),$(TEST_DUNES))
