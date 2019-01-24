@@ -1668,8 +1668,14 @@ and semantic_check_statement s =
             Core_kernel.Option.map ~f:snd (Core_kernel.List.hd uarg_types)
           with
           | None -> semantic_error ~loc error_string
-          | Some UReal | Some UVector | Some URowVector | Some (UArray UReal)
-            ->
+          | Some UReal
+           |Some UVector
+           |Some URowVector
+           |Some UMatrix
+           |Some (UArray UReal)
+           |Some (UArray UVector)
+           |Some (UArray URowVector)
+           |Some (UArray UMatrix) ->
               ()
           | Some x ->
               semantic_error ~loc
