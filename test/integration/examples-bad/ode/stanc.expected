@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc bad_bdf_control_function_return.stan
 
-Semantic error at file "bad_bdf_control_function_return.stan", line 13, columns 6-151:
+Semantic error at file bad_bdf_control_function_return.stan, line 13, columns 6-151:
    -------------------------------------------------
     11:  model {
     12:    real x[2, 2]
@@ -17,7 +17,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 
-Semantic error at file "bad_fun_type.stan", line 27, columns 10-329:
+Semantic error at file bad_fun_type.stan, line 27, columns 10-329:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -33,7 +33,7 @@ Instead supplied arguments of incompatible type: (real[], real[], real[], real[]
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf.stan
 
-Semantic error at file "bad_fun_type_bdf.stan", line 27, columns 10-333:
+Semantic error at file bad_fun_type_bdf.stan, line 27, columns 10-333:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -50,7 +50,7 @@ Instead supplied arguments of incompatible type: (real[], real[], real[], real[]
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf_control.stan
 
-Semantic error at file "bad_fun_type_bdf_control.stan", line 27, columns 10-349:
+Semantic error at file bad_fun_type_bdf_control.stan, line 27, columns 10-349:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -67,7 +67,7 @@ Instead supplied arguments of incompatible type: (real[], real[], real[], real[]
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45.stan
 
-Semantic error at file "bad_fun_type_rk45.stan", line 27, columns 10-334:
+Semantic error at file bad_fun_type_rk45.stan, line 27, columns 10-334:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -84,7 +84,7 @@ Instead supplied arguments of incompatible type: (real[], real[], real[], real[]
 
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45_control.stan
 
-Semantic error at file "bad_fun_type_rk45_control.stan", line 27, columns 10-350:
+Semantic error at file bad_fun_type_rk45_control.stan, line 27, columns 10-350:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -101,7 +101,7 @@ Instead supplied arguments of incompatible type: (real[], real[], real[], real[]
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type.stan
 
-Semantic error at file "bad_t0_var_type.stan", line 26, columns 10-329:
+Semantic error at file bad_t0_var_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -117,7 +117,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_bdf.stan
 
-Semantic error at file "bad_t0_var_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_t0_var_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -134,7 +134,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_bdf_control.stan
 
-Semantic error at file "bad_t0_var_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_t0_var_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -151,7 +151,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_rk45.stan
 
-Semantic error at file "bad_t0_var_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_t0_var_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -168,7 +168,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t0_var_type_rk45_control.stan
 
-Semantic error at file "bad_t0_var_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_t0_var_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -185,7 +185,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t_type.stan
 
-Semantic error at file "bad_t_type.stan", line 26, columns 10-329:
+Semantic error at file bad_t_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -201,7 +201,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf.stan
 
-Semantic error at file "bad_t_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_t_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -218,7 +218,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf_control.stan
 
-Semantic error at file "bad_t_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_t_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -235,7 +235,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45.stan
 
-Semantic error at file "bad_t_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_t_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -252,7 +252,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45_control.stan
 
-Semantic error at file "bad_t_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_t_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -269,7 +269,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_theta_type.stan
 
-Semantic error at file "bad_theta_type.stan", line 27, columns 10-329:
+Semantic error at file bad_theta_type.stan, line 27, columns 10-329:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -285,7 +285,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf.stan
 
-Semantic error at file "bad_theta_type_bdf.stan", line 27, columns 10-333:
+Semantic error at file bad_theta_type_bdf.stan, line 27, columns 10-333:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -302,7 +302,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf_control.stan
 
-Semantic error at file "bad_theta_type_bdf_control.stan", line 27, columns 10-349:
+Semantic error at file bad_theta_type_bdf_control.stan, line 27, columns 10-349:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -319,7 +319,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45.stan
 
-Semantic error at file "bad_theta_type_rk45.stan", line 27, columns 10-334:
+Semantic error at file bad_theta_type_rk45.stan, line 27, columns 10-334:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -336,7 +336,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45_control.stan
 
-Semantic error at file "bad_theta_type_rk45_control.stan", line 27, columns 10-350:
+Semantic error at file bad_theta_type_rk45_control.stan, line 27, columns 10-350:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -353,7 +353,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_type.stan
 
-Semantic error at file "bad_ts_type.stan", line 26, columns 10-329:
+Semantic error at file bad_ts_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -369,7 +369,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf.stan
 
-Semantic error at file "bad_ts_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_ts_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -386,7 +386,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf_control.stan
 
-Semantic error at file "bad_ts_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_ts_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -403,7 +403,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45.stan
 
-Semantic error at file "bad_ts_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_ts_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -420,7 +420,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45_control.stan
 
-Semantic error at file "bad_ts_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_ts_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -437,7 +437,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type.stan
 
-Semantic error at file "bad_ts_var_type.stan", line 26, columns 10-329:
+Semantic error at file bad_ts_var_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -453,7 +453,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_bdf.stan
 
-Semantic error at file "bad_ts_var_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_ts_var_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -470,7 +470,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_bdf_control.stan
 
-Semantic error at file "bad_ts_var_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_ts_var_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -487,7 +487,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_rk45.stan
 
-Semantic error at file "bad_ts_var_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_ts_var_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -504,7 +504,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_ts_var_type_rk45_control.stan
 
-Semantic error at file "bad_ts_var_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_ts_var_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -521,7 +521,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
 
-Semantic error at file "bad_x_int_type.stan", line 26, columns 10-329:
+Semantic error at file bad_x_int_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -537,7 +537,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf.stan
 
-Semantic error at file "bad_x_int_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_x_int_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -554,7 +554,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf_control.stan
 
-Semantic error at file "bad_x_int_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_x_int_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -571,7 +571,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45.stan
 
-Semantic error at file "bad_x_int_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_x_int_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -588,7 +588,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45_control.stan
 
-Semantic error at file "bad_x_int_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_x_int_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -605,7 +605,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_type.stan
 
-Semantic error at file "bad_x_type.stan", line 27, columns 10-329:
+Semantic error at file bad_x_type.stan, line 27, columns 10-329:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -621,7 +621,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf.stan
 
-Semantic error at file "bad_x_type_bdf.stan", line 27, columns 10-333:
+Semantic error at file bad_x_type_bdf.stan, line 27, columns 10-333:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -638,7 +638,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf_control.stan
 
-Semantic error at file "bad_x_type_bdf_control.stan", line 27, columns 10-349:
+Semantic error at file bad_x_type_bdf_control.stan, line 27, columns 10-349:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -655,7 +655,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45.stan
 
-Semantic error at file "bad_x_type_rk45.stan", line 27, columns 10-334:
+Semantic error at file bad_x_type_rk45.stan, line 27, columns 10-334:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -672,7 +672,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45_control.stan
 
-Semantic error at file "bad_x_type_rk45_control.stan", line 27, columns 10-350:
+Semantic error at file bad_x_type_rk45_control.stan, line 27, columns 10-350:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real y_hat[10,2];
@@ -689,7 +689,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type.stan
 
-Semantic error at file "bad_x_var_type.stan", line 26, columns 10-329:
+Semantic error at file bad_x_var_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -705,7 +705,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf.stan
 
-Semantic error at file "bad_x_var_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_x_var_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -722,7 +722,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf_control.stan
 
-Semantic error at file "bad_x_var_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_x_var_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -739,7 +739,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45.stan
 
-Semantic error at file "bad_x_var_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_x_var_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -756,7 +756,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45_control.stan
 
-Semantic error at file "bad_x_var_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_x_var_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -773,7 +773,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_y_type.stan
 
-Semantic error at file "bad_y_type.stan", line 26, columns 10-329:
+Semantic error at file bad_y_type.stan, line 26, columns 10-329:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -789,7 +789,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf.stan
 
-Semantic error at file "bad_y_type_bdf.stan", line 26, columns 10-333:
+Semantic error at file bad_y_type_bdf.stan, line 26, columns 10-333:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -806,7 +806,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf_control.stan
 
-Semantic error at file "bad_y_type_bdf_control.stan", line 26, columns 10-349:
+Semantic error at file bad_y_type_bdf_control.stan, line 26, columns 10-349:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -823,7 +823,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45.stan
 
-Semantic error at file "bad_y_type_rk45.stan", line 26, columns 10-334:
+Semantic error at file bad_y_type_rk45.stan, line 26, columns 10-334:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];
@@ -840,7 +840,7 @@ Instead supplied arguments of incompatible type: (real, real[], real[], real[], 
 
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45_control.stan
 
-Semantic error at file "bad_y_type_rk45_control.stan", line 26, columns 10-350:
+Semantic error at file bad_y_type_rk45_control.stan, line 26, columns 10-350:
    -------------------------------------------------
     24:  transformed parameters {
     25:    real y_hat[10,2];

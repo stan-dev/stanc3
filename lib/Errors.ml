@@ -1,6 +1,15 @@
 (** Setup of our compiler errors *)
 open Ast
 
+(** Insert the line and column number string in a filename string before the first
+    include, after the first filename *)
+let append_position_to_filename fname pos_string =
+  let split_fname = Str.split (Str.regexp ", included from\nfile ") fname in
+  match split_fname with
+  | [] -> ""
+  | fname1 :: fnames ->
+      String.concat ", included from\nfile " ((fname1 ^ pos_string) :: fnames)
+
 (** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * Lexing.position
@@ -27,7 +36,7 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 let error_context file line column =
   try
     let bare_file =
-      List.hd (Str.split (Str.regexp "\" included from \"") file)
+      List.hd (Str.split (Str.regexp ", included from\nfile ") file)
     in
     let input = open_in bare_file in
     for _ = 1 to line - 3 do
@@ -73,9 +82,9 @@ let report_syntax_error = function
           sprintf "columns %d-%d" start_column curr_column
         else sprintf "column %d" start_column
       in
-      Printf.eprintf
-        "\nSyntax error at file \"%s\", %s, %s, parsing error:\n%!" file lines
-        columns ;
+      Printf.eprintf "\nSyntax error at file %s, parsing error:\n%!"
+        (append_position_to_filename file
+           (Printf.sprintf ", %s, %s" lines columns)) ;
       ( match error_context file curr_line curr_column with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
@@ -84,18 +93,18 @@ let report_syntax_error = function
       | Some error_message -> prerr_endline error_message )
   | Lexing (_, err_pos) ->
       let file, line, column = position err_pos in
-      Printf.eprintf
-        "\nSyntax error at file \"%s\", line %d, column %d, lexing error:\n"
-        file line (column - 1) ;
+      Printf.eprintf "\nSyntax error at file %s, lexing error:\n"
+        (append_position_to_filename file
+           (Printf.sprintf ", line %d, column %d" line (column - 1))) ;
       ( match error_context file line (column - 1) with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "Invalid character found. %s\n\n" ""
   | Includes (msg, err_pos) ->
       let file, line, column = position err_pos in
-      Printf.eprintf
-        "\nSyntax error at file \"%s\", line %d, column %d, includes error:\n"
-        file line column ;
+      Printf.eprintf "\nSyntax error at file %s, includes error:\n"
+        (append_position_to_filename file
+           (Printf.sprintf ", line %d, column %d" line column)) ;
       ( match error_context file line column with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
@@ -111,8 +120,10 @@ let print_location loc ppf =
       let begin_line = begin_pos.Lexing.pos_lnum in
       let filename = begin_pos.Lexing.pos_fname in
       if String.length filename != 0 then
-        Format.fprintf ppf "file \"%s\", line %d, columns %d-%d" filename
-          begin_line begin_char end_char
+        Format.fprintf ppf "file %s"
+          (append_position_to_filename filename
+             (Printf.sprintf ", line %d, columns %d-%d" begin_line begin_char
+                end_char))
       else
         Format.fprintf ppf "line %d, columns %d-%d" (begin_line - 1) begin_char
           end_char
@@ -145,11 +156,9 @@ let fatal_error ?(msg = "") _ =
 (* Warn that a language feature is deprecated *)
 let warn_deprecated (pos, msg) =
   let file, line, column = position pos in
-  Printf.eprintf
-    "\n\
-     Warning: deprecated language construct used at file \"%s\", line %d, \
-     column %d:\n"
-    file line (column - 1) ;
+  Printf.eprintf "\nWarning: deprecated language construct used at file %s:\n"
+    (append_position_to_filename file
+       (Printf.sprintf ", line %d, column %d" line (column - 1))) ;
   ( match error_context file line (column - 1) with
   | None -> ()
   | Some line -> Printf.eprintf "%s\n" line ) ;

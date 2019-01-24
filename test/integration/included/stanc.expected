@@ -1,6 +1,8 @@
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse1.stan
 
-Syntax error at file "../included/badrecurse1.stan" included from "badrecurse1.stan", line 1, column 0, includes error:
+Syntax error at file ../included/badrecurse1.stan, line 1, column 0, included from
+file ../included/badrecurse1.stan, line 1, column 25, included from
+file badrecurse1.stan, line 1, column 25, includes error:
    -------------------------------------------------
      1:  #include badrecurse1.stan
          ^
@@ -10,17 +12,10 @@ Found cyclical include structure.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse2.stan
 
-Syntax error at file "../included/badrecurse2.stan" included from "../included/badrecurse3.stan" included from "badrecurse2.stan", line 1, column 0, includes error:
-   -------------------------------------------------
-     1:  #include badrecurse3.stan
-         ^
-   -------------------------------------------------
-
-Found cyclical include structure.
-
-  $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse3.stan
-
-Syntax error at file "../included/badrecurse3.stan" included from "../included/badrecurse2.stan" included from "badrecurse3.stan", line 1, column 0, includes error:
+Syntax error at file ../included/badrecurse3.stan, line 1, column 0, included from
+file ../included/badrecurse2.stan, line 1, column 25, included from
+file ../included/badrecurse3.stan, line 1, column 25, included from
+file badrecurse2.stan, line 1, column 25, includes error:
    -------------------------------------------------
      1:  #include badrecurse2.stan
          ^
@@ -28,9 +23,33 @@ Syntax error at file "../included/badrecurse3.stan" included from "../included/b
 
 Found cyclical include structure.
 
+  $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse3.stan
+
+Syntax error at file ../included/badrecurse2.stan, line 1, column 0, included from
+file ../included/badrecurse3.stan, line 1, column 25, included from
+file ../included/badrecurse2.stan, line 1, column 25, included from
+file badrecurse3.stan, line 1, column 25, includes error:
+   -------------------------------------------------
+     1:  #include badrecurse3.stan
+         ^
+   -------------------------------------------------
+
+Found cyclical include structure.
+
+  $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format dep-warning.stan
+
+Syntax error at file dep-warning.stan, line 1, columns 2-6, parsing error:
+   -------------------------------------------------
+     1:    real z;
+               ^
+     2:    # I am a deprecated comment.
+   -------------------------------------------------
+
+Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl-err.stan
 
-Syntax error at file "incl-err.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl-err.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real z;
                ^
@@ -41,7 +60,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper.stan
 
-Syntax error at file "incl_stanc_helper.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl_stanc_helper.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real y;
                ^
@@ -52,7 +71,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper2.stan
 
-Syntax error at file "incl_stanc_helper2.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl_stanc_helper2.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real w;
                ^
@@ -61,9 +80,20 @@ Syntax error at file "incl_stanc_helper2.stan", line 1, columns 2-6, parsing err
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+  $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_deprecated_warning.stan
+
+Syntax error at file incl_stanc_helper_deprecated_warning.stan, line 1, columns 2-6, parsing error:
+   -------------------------------------------------
+     1:    real y;
+               ^
+     2:    #include dep-warning.stan
+   -------------------------------------------------
+
+Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_include_error.stan
 
-Syntax error at file "incl_stanc_helper_include_error.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl_stanc_helper_include_error.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real y;
                ^
@@ -74,7 +104,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_lex_error.stan
 
-Syntax error at file "incl_stanc_helper_lex_error.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl_stanc_helper_lex_error.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real y;
                ^
@@ -85,7 +115,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_parse_error.stan
 
-Syntax error at file "incl_stanc_helper_parse_error.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl_stanc_helper_parse_error.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real y;
                ^
@@ -96,7 +126,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format incl_stanc_helper_semantic_error.stan
 
-Syntax error at file "incl_stanc_helper_semantic_error.stan", line 1, columns 2-6, parsing error:
+Syntax error at file incl_stanc_helper_semantic_error.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real y;
                ^
@@ -114,7 +144,7 @@ data {
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format lex-err.stan
 
-Syntax error at file "lex-err.stan", line 1, columns 2-6, parsing error:
+Syntax error at file lex-err.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real z;
                ^
@@ -125,7 +155,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format parse-err.stan
 
-Syntax error at file "parse-err.stan", line 1, columns 2-6, parsing error:
+Syntax error at file parse-err.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real z;
                ^
@@ -136,7 +166,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format sem-err.stan
 
-Syntax error at file "sem-err.stan", line 1, columns 2-6, parsing error:
+Syntax error at file sem-err.stan, line 1, columns 2-6, parsing error:
    -------------------------------------------------
      1:    real z;
                ^
@@ -145,20 +175,45 @@ Syntax error at file "sem-err.stan", line 1, columns 2-6, parsing error:
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+  $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_deprecated_warning.stan
+parameters {
+  real y;
+  real z;
+}
+model {
+  y ~ normal(0, 1);
+}
+
+
+Warning: deprecated language construct used at file ../included/dep-warning.stan, line 2, column 2, included from
+file ../included/incl_stanc_helper_deprecated_warning.stan, line 2, column 27, included from
+file stanc_helper_with_bad_include_deprecated_warning.stan, line 2, column 50:
+   -------------------------------------------------
+     1:    real z;
+     2:    # I am a deprecated comment.
+           ^
+   -------------------------------------------------
+
+Comments beginning with # are deprecated. Please use // in place of # for line comments.
+
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_include_error.stan
 
-Syntax error at file "../included/incl-err.stan" included from "../included/incl_stanc_helper_include_error.stan" included from "stanc_helper_with_bad_include_include_error.stan", line 2, column 2, includes error:
+Syntax error at file ../included/incl-err.stan, line 2, column 2, included from
+file ../included/incl_stanc_helper_include_error.stan, line 2, column 24, included from
+file stanc_helper_with_bad_include_include_error.stan, line 2, column 45, includes error:
    -------------------------------------------------
      1:    real z;
      2:    #include "I'm not here.stan"
            ^
    -------------------------------------------------
 
-Could not find include file "I'm not here.stan" in specified include paths.
+Could not find include file I'm not here.stan in specified include paths.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_lex_error.stan
 
-Syntax error at file "../included/lex-err.stan" included from "../included/incl_stanc_helper_lex_error.stan" included from "stanc_helper_with_bad_include_lex_error.stan", line 2, column 8, lexing error:
+Syntax error at file ../included/lex-err.stan, line 2, column 8, included from
+file ../included/incl_stanc_helper_lex_error.stan, line 2, column 23, included from
+file stanc_helper_with_bad_include_lex_error.stan, line 2, column 41, lexing error:
    -------------------------------------------------
      1:    real z;
      2:    real w;$
@@ -169,7 +224,9 @@ Invalid character found.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_parse_error.stan
 
-Syntax error at file "../included/parse-err.stan" included from "../included/incl_stanc_helper_parse_error.stan" included from "stanc_helper_with_bad_include_parse_error.stan", line 2, columns 2-9, parsing error:
+Syntax error at file ../included/parse-err.stan, line 2, columns 2-9, included from
+file ../included/incl_stanc_helper_parse_error.stan, line 2, column 25, included from
+file stanc_helper_with_bad_include_parse_error.stan, line 2, column 43, parsing error:
    -------------------------------------------------
      1:    real z;
      2:    real w;=;
@@ -189,7 +246,9 @@ model {
 }
 
 
-Semantic error at file "../included/sem-err.stan" included from "../included/incl_stanc_helper_semantic_error.stan" included from "stanc_helper_with_bad_include_semantic_error.stan", line 2, columns 2-8:
+Semantic error at file ../included/sem-err.stan, line 2, columns 2-8, included from
+file ../included/incl_stanc_helper_semantic_error.stan, line 2, column 23, included from
+file stanc_helper_with_bad_include_semantic_error.stan, line 2, column 46:
    -------------------------------------------------
      1:    real z;
      2:    int w;
@@ -223,7 +282,7 @@ generated quantities {
 }
 
 
-Semantic error at file "stanc_helper_with_good_include_err_after_incl.stan", line 9, columns 8-10:
+Semantic error at file stanc_helper_with_good_include_err_after_incl.stan, line 9, columns 8-10:
    -------------------------------------------------
      7:  }
      8:  generated quantities {

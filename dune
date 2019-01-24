@@ -2,7 +2,7 @@
  (name stanc)
  (libraries stanclib)
  (public_name stanc)
- (preprocess (pps ppx_jane ppx_deriving.map))
+ (preprocess (pps ppx_jane))
  )
 
 (env
