@@ -99,7 +99,7 @@ let%expect_test "operator precedence" =
   let ast =
     parse_string Parser.Incremental.program
       "model {  \
-       print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q\\r.*s./t^u[v]'}); }"
+       print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }"
   in
   Core_kernel.print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -192,70 +192,68 @@ let%expect_test "operator precedence" =
                                            ((expr_untyped
                                              (BinOp
                                               ((expr_untyped
-                                                (Variable
-                                                 ((name n) (id_loc <opaque>))))
+                                                (BinOp
+                                                 ((expr_untyped
+                                                   (BinOp
+                                                    ((expr_untyped
+                                                      (Variable
+                                                       ((name n) (id_loc <opaque>))))
+                                                     (expr_untyped_loc <opaque>))
+                                                    Times
+                                                    ((expr_untyped
+                                                      (Variable
+                                                       ((name o) (id_loc <opaque>))))
+                                                     (expr_untyped_loc <opaque>))))
+                                                  (expr_untyped_loc <opaque>))
+                                                 Divide
+                                                 ((expr_untyped
+                                                   (Variable
+                                                    ((name p) (id_loc <opaque>))))
+                                                  (expr_untyped_loc <opaque>))))
                                                (expr_untyped_loc <opaque>))
-                                              Times
+                                              Modulo
                                               ((expr_untyped
                                                 (Variable
-                                                 ((name o) (id_loc <opaque>))))
+                                                 ((name q) (id_loc <opaque>))))
                                                (expr_untyped_loc <opaque>))))
                                             (expr_untyped_loc <opaque>))
-                                           Divide
+                                           EltTimes
                                            ((expr_untyped
                                              (Variable
-                                              ((name p) (id_loc <opaque>))))
+                                              ((name s) (id_loc <opaque>))))
                                             (expr_untyped_loc <opaque>))))
                                          (expr_untyped_loc <opaque>))
-                                        Modulo
+                                        EltDivide
                                         ((expr_untyped
                                           (BinOp
                                            ((expr_untyped
                                              (Variable
-                                              ((name q) (id_loc <opaque>))))
+                                              ((name t) (id_loc <opaque>))))
                                             (expr_untyped_loc <opaque>))
                                            LDivide
                                            ((expr_untyped
                                              (BinOp
                                               ((expr_untyped
-                                                (BinOp
-                                                 ((expr_untyped
-                                                   (Variable
-                                                    ((name r) (id_loc <opaque>))))
-                                                  (expr_untyped_loc <opaque>))
-                                                 EltTimes
-                                                 ((expr_untyped
-                                                   (Variable
-                                                    ((name s) (id_loc <opaque>))))
-                                                  (expr_untyped_loc <opaque>))))
+                                                (Variable
+                                                 ((name r) (id_loc <opaque>))))
                                                (expr_untyped_loc <opaque>))
-                                              EltDivide
+                                              Exp
                                               ((expr_untyped
-                                                (BinOp
+                                                (PostfixOp
                                                  ((expr_untyped
-                                                   (Variable
-                                                    ((name t) (id_loc <opaque>))))
-                                                  (expr_untyped_loc <opaque>))
-                                                 Exp
-                                                 ((expr_untyped
-                                                   (PostfixOp
+                                                   (Indexed
                                                     ((expr_untyped
-                                                      (Indexed
-                                                       ((expr_untyped
-                                                         (Variable
-                                                          ((name u)
-                                                           (id_loc <opaque>))))
-                                                        (expr_untyped_loc <opaque>))
-                                                       ((Single
-                                                         ((expr_untyped
-                                                           (Variable
-                                                            ((name v)
-                                                             (id_loc <opaque>))))
-                                                          (expr_untyped_loc
-                                                           <opaque>))))))
+                                                      (Variable
+                                                       ((name u) (id_loc <opaque>))))
                                                      (expr_untyped_loc <opaque>))
-                                                    Transpose))
-                                                  (expr_untyped_loc <opaque>))))
+                                                    ((Single
+                                                      ((expr_untyped
+                                                        (Variable
+                                                         ((name v)
+                                                          (id_loc <opaque>))))
+                                                       (expr_untyped_loc <opaque>))))))
+                                                  (expr_untyped_loc <opaque>))
+                                                 Transpose))
                                                (expr_untyped_loc <opaque>))))
                                             (expr_untyped_loc <opaque>))))
                                          (expr_untyped_loc <opaque>))))

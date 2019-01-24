@@ -40,9 +40,8 @@ let reducearray (sbt, l) =
 %left EQUALS NEQUALS
 %left LEQ LABRACK GEQ RABRACK
 %left PLUS MINUS
-%left TIMES DIVIDE MODULO
+%left TIMES DIVIDE MODULO ELTTIMES ELTDIVIDE
 %left LDIVIDE
-%left ELTTIMES ELTDIVIDE
 %nonassoc unary_over_binary
 %right HAT
 %left TRANSPOSE
