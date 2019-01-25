@@ -7,7 +7,7 @@ let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
 
 let check_of_same_type_mod_conv name t1 t2 =
-  if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
+  if String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
     match (t1, t2) with
     | UReal, UInt -> true

@@ -77,7 +77,7 @@ let%expect_test "parse conditional" =
     parse_string Parser.Incremental.program
       "model { if (1 < 2) { print(\"hi\");}}"
   in
-  Core_kernel.print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
     ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -104,7 +104,7 @@ let%expect_test "operator precedence" =
       "model {  \
        print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }"
   in
-  Core_kernel.print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())

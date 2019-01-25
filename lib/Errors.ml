@@ -1,4 +1,6 @@
 (** Setup of our compiler errors *)
+
+open Core_kernel
 open Ast
 
 (** Insert the line and column number string in a filename string before the first
@@ -8,7 +10,8 @@ let append_position_to_filename fname pos_string =
   match split_fname with
   | [] -> ""
   | fname1 :: fnames ->
-      String.concat ", included from\nfile " ((fname1 ^ pos_string) :: fnames)
+      String.concat ~sep:", included from\nfile "
+        ((fname1 ^ pos_string) :: fnames)
 
 (** Our type of syntax error information *)
 type parse_error =
@@ -36,30 +39,31 @@ let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 let error_context file line column =
   try
     let bare_file =
-      List.hd (Str.split (Str.regexp ", included from\nfile ") file)
+      List.hd_exn (Str.split (Str.regexp ", included from\nfile ") file)
     in
-    let input = open_in bare_file in
+    let open In_channel in
+    let input = create bare_file in
     for _ = 1 to line - 3 do
-      ignore (input_line input)
+      ignore (input_line_exn input)
     done ;
     let open Printf in
     let line_2_before =
-      if line > 2 then sprintf "%6d:  %s\n" (line - 2) (input_line input)
+      if line > 2 then sprintf "%6d:  %s\n" (line - 2) (input_line_exn input)
       else ""
     in
     let line_before =
-      if line > 1 then sprintf "%6d:  %s\n" (line - 1) (input_line input)
+      if line > 1 then sprintf "%6d:  %s\n" (line - 1) (input_line_exn input)
       else ""
     in
-    let our_line = sprintf "%6d:  %s\n" line (input_line input) in
+    let our_line = sprintf "%6d:  %s\n" line (input_line_exn input) in
     let cursor_line = String.make (column + 9) ' ' ^ "^\n" in
     let line_after =
-      try sprintf "%6d:  %s\n" (line + 1) (input_line input) with _ -> ""
+      try sprintf "%6d:  %s\n" (line + 1) (input_line_exn input) with _ -> ""
     in
     let line_2_after =
-      try sprintf "%6d:  %s\n" (line + 2) (input_line input) with _ -> ""
+      try sprintf "%6d:  %s\n" (line + 2) (input_line_exn input) with _ -> ""
     in
-    close_in input ;
+    close input ;
     Some
       (sprintf
          "   -------------------------------------------------\n\
@@ -119,7 +123,7 @@ let print_location loc ppf =
       let end_char = end_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
       let begin_line = begin_pos.Lexing.pos_lnum in
       let filename = begin_pos.Lexing.pos_fname in
-      if String.length filename != 0 then
+      if String.length filename <> 0 then
         Format.fprintf ppf "file %s"
           (append_position_to_filename filename
              (Printf.sprintf ", line %d, columns %d-%d" begin_line begin_char

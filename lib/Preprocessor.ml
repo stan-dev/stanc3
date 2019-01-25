@@ -4,7 +4,7 @@ open Core_kernel
 open Lexing
 
 let dup_exists l =
-  match Core_kernel.List.find_a_dup ~compare:String.compare l with
+  match List.find_a_dup ~compare:String.compare l with
   | Some _ -> true
   | None -> false
 
@@ -33,7 +33,7 @@ let rec try_open_in paths fname pos =
     with _ -> try_open_in rest_of_paths fname pos )
 
 let maybe_remove_quotes str =
-  let open Core_kernel.String in
+  let open String in
   if is_prefix str ~prefix:"\"" && is_suffix str ~suffix:"\"" then
     drop_suffix (drop_prefix str 1) 1
   else str

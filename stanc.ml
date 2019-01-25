@@ -1,3 +1,6 @@
+(** stanc console application *)
+
+open Core_kernel
 open Stanclib
 
 (** The main program. *)
@@ -56,7 +59,8 @@ let options =
     ; ( "--include_paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_paths := String.split_on_char ',' str )
+            Preprocessor.include_paths := String.split_on_chars ~on:[','] str
+            )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
@@ -69,8 +73,8 @@ let use_file filename =
   let _ =
     if !Semantic_check.model_name = "" then
       Semantic_check.model_name :=
-        Core_kernel.String.drop_suffix
-          (List.hd (List.rev (Core_kernel.String.split filename ~on:'/')))
+        String.drop_suffix
+          (List.hd_exn (List.rev (String.split filename ~on:'/')))
           5
         ^ "_model"
   in
@@ -103,7 +107,7 @@ let main () =
   (* Files were listed in the wrong order, so we reverse them *)
   files := List.rev !files ;
   (* Run and load all the specified files. *)
-  let _ = List.map use_file !files in
+  let _ = List.map ~f:use_file !files in
   ()
 
 let _ = main ()

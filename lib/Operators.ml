@@ -80,9 +80,7 @@ let operator_return_type_from_string op_name args =
     in
     try_recursive_find (Hashtbl.find_multi operator_names op_name)
 
-let operator_name op =
-  let open Core_kernel in
-  Sexp.to_string [%sexp (op : Ast.operator)]
+let operator_name op = Sexp.to_string [%sexp (op : Ast.operator)]
 
 let operator_return_type op =
   operator_return_type_from_string (operator_name op)
