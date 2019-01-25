@@ -1,5 +1,7 @@
-open Mir
+(** Generate C++ from the MIR *)
+
 open Core_kernel
+open Mir
 open Format
 
 (* XXX Step one here could be to do another pass over the MIR:

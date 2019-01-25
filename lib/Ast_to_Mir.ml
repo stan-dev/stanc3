@@ -1,5 +1,7 @@
-open Mir
+(** Translate from the AST to the MIR *)
+
 open Core_kernel
+open Mir
 
 let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with

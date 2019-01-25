@@ -4,6 +4,7 @@
 (* TODO: to preserve comments during pretty printing, we should capture them during parsing and attach them to AST nodes *)
 (* TODO: we could consider cutting off lines after 80 characters *)
 
+open Core_kernel
 open Ast
 
 let indent_num = ref 1
@@ -45,12 +46,12 @@ and pretty_print_unsizedtype = function
       pretty_print_unsizedtype ut2 ^ ("[" ^ String.make d ',') ^ "]"
   | UFun (argtypes, rt) ->
       "("
-      ^ String.concat ", " (List.map pretty_print_argtype argtypes)
+      ^ String.concat ~sep:", " (List.map ~f:pretty_print_argtype argtypes)
       ^ ") => " ^ pretty_print_returntype rt
   | UMathLibraryFunction -> "Stan Math function"
 
 and pretty_print_unsizedtypes l =
-  String.concat ", " (List.map pretty_print_unsizedtype l)
+  String.concat ~sep:", " (List.map ~f:pretty_print_unsizedtype l)
 
 and pretty_print_argtype = function
   | at, ut -> pretty_print_autodifftype at ^ pretty_print_unsizedtype ut
@@ -91,7 +92,7 @@ and pretty_print_index = function
       pretty_print_expression e1 ^ " : " ^ pretty_print_expression e2
 
 and pretty_print_list_of_indices l =
-  String.concat ", " (List.map pretty_print_index l)
+  String.concat ~sep:", " (List.map ~f:pretty_print_index l)
 
 and pretty_print_expression {expr_untyped= e_content; _} =
   match e_content with
@@ -112,9 +113,11 @@ and pretty_print_expression {expr_untyped= e_content; _} =
       ^ ")"
   | CondDistApp (id, es) ->
       pretty_print_identifier id ^ "("
-      ^ pretty_print_expression (List.hd es)
-      ^ "| "
-      ^ pretty_print_list_of_expression (List.tl es)
+      ^ ( match es with
+        | [] -> Errors.fatal_error ()
+        | e :: es' ->
+            pretty_print_expression e ^ "| "
+            ^ pretty_print_list_of_expression es' )
       ^ ")"
   (* GetLP is deprecated *)
   | GetLP -> "get_lp()"
@@ -128,7 +131,7 @@ and pretty_print_expression {expr_untyped= e_content; _} =
       match l with [] -> "" | l -> "[" ^ pretty_print_list_of_indices l ^ "]" )
 
 and pretty_print_list_of_expression es =
-  String.concat ", " (List.map pretty_print_expression es)
+  String.concat ~sep:", " (List.map ~f:pretty_print_expression es)
 
 and pretty_print_assignmentoperator = function
   | Assign -> "="
@@ -149,7 +152,7 @@ and pretty_print_printable = function
   | PExpr e -> pretty_print_expression e
 
 and pretty_print_list_of_printables l =
-  String.concat ", " (List.map pretty_print_printable l)
+  String.concat ~sep:", " (List.map ~f:pretty_print_printable l)
 
 and pretty_print_sizedtype = function
   | SInt -> "int"
@@ -295,9 +298,9 @@ and pretty_print_statement {stmt_untyped= s_content; _} =
       ^ init_string ^ ";"
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       pretty_print_returntype rt ^ " " ^ pretty_print_identifier id ^ "("
-      ^ String.concat ", "
+      ^ String.concat ~sep:", "
           (List.map
-             (function
+             ~f:(function
                | at, ut, id ->
                    pretty_print_autodifftype at
                    ^ pretty_print_unsizedtype ut
@@ -309,7 +312,8 @@ and pretty_print_statement {stmt_untyped= s_content; _} =
       | b -> ") " ^ pretty_print_statement b )
 
 and pretty_print_list_of_statements l =
-  String.concat "\n" (List.map (fun x -> tabs () ^ pretty_print_statement x) l)
+  String.concat ~sep:"\n"
+    (List.map ~f:(fun x -> tabs () ^ pretty_print_statement x) l)
   ^ "\n"
 
 and pretty_print_program = function

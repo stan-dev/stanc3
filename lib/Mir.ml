@@ -1,3 +1,6 @@
+(** The Middle Intermediate Representation, which program transformations
+    operate on *)
+
 open Core_kernel
 
 (*

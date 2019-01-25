@@ -1,10 +1,9 @@
 (** The parser for Stan. A Menhir file. *)
 
 %{
+open Core_kernel
 open Ast
 open Debugging
-module Option = Core_kernel.Option
-module List = Core_kernel.List
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
