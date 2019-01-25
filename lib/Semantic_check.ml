@@ -230,17 +230,6 @@ let check_fresh_variable id is_nullary_function =
     (fun name -> check_fresh_variable_basic name is_nullary_function)
     (probability_distribution_name_variants id)
 
-(* TODO: the following is very ugly, but we seem to need something like it to
-   reproduce the (strange) behaviour in the current Stan that local variables
-   have a block level that is determined by what has been assigned to them
-   rather than by where they were declared. *)
-let update_originblock name ob =
-  match Symbol_table.look vm name with
-  | Some (old_ob, ut) ->
-      let new_ob = lub_originblock [ob; old_ob] in
-      Symbol_table.unsafe_replace vm name (new_ob, ut)
-  | None -> fatal_error ()
-
 (* The actual semantic checks for all AST nodes! *)
 let rec semantic_check_program
     { functionblock= fb
@@ -1027,13 +1016,6 @@ and semantic_check_statement s =
                 ^ " declared in previous blocks." )
         | None -> fatal_error ()
       in
-      (* TODO: the following is very ugly, but we seem to need something like it to
-   reproduce the (strange) behaviour in the current Stan that local variables
-   have a block level that is determined by what has been assigned to them
-   rather than by where they were declared. I'm not sure that behaviour makes
-   sense unless we use static analysis as well to make sure these assignments
-   actually get evaluated in that phase. *)
-      let _ = update_originblock uid.name ue.expr_typed_origin in
       let opname =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
       in
@@ -1532,10 +1514,11 @@ and semantic_check_statement s =
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype ust in
       let _ = check_fresh_variable uid false in
-      (* Note: this origin block here is a bit of a curiosity to get Stan
-         to treat the level of local variables in the right way. It will get
-         modified (can be elevated) based on assignments.*)
-      let ob = if glob then context_flags.current_block else Functions in
+      let ob =
+        if glob || not (unsizedtype_contains_int ut) then
+          context_flags.current_block
+        else Data
+      in
       let _ = Symbol_table.enter vm id.name (ob, ut) in
       let _ =
         if

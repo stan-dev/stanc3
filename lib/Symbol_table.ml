@@ -68,10 +68,3 @@ let unsafe_clear_symbol_table s =
   Hashtbl.clear s.readonly ;
   Hashtbl.clear s.isunassigned ;
   Hashtbl.clear s.globals
-
-(* TODO: the following is very ugly, but we seem to need something like it to
- reproduce the (strange) behaviour in the current Stan that local variables
- have a block level that is determined by what has been assigned to them
- rather than by where they were declared. *)
-let unsafe_replace s str ty =
-  Hashtbl.remove s.table str ; Hashtbl.add s.table str ty
