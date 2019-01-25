@@ -3,6 +3,7 @@
 (* Idea: check many of things related to identifiers that are hard to check
 during parsing and are in fact irrelevant for building up the parse tree *)
 
+open Core_kernel
 open Symbol_table
 open Ast
 open Stan_math_signatures
@@ -45,7 +46,7 @@ let context_flags =
 
 (* Some helper functions *)
 let dup_exists l =
-  match Core_kernel.List.find_a_dup ~compare:String.compare l with
+  match List.find_a_dup ~compare:String.compare l with
   | Some _ -> true
   | None -> false
 
@@ -85,10 +86,10 @@ let check_of_int_or_real_type ue =
 
 let probability_distribution_name_variants id =
   let name = id.name in
-  let open Core_kernel.String in
+  let open String in
   let open Pervasives in
   List.map
-    (fun n -> {name= n; id_loc= id.id_loc})
+    ~f:(fun n -> {name= n; id_loc= id.id_loc})
     ( if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
     else if is_suffix ~suffix:"_lpmf" name then
       [name; drop_suffix name 5 ^ "_lpdf"; drop_suffix name 5 ^ "_log"]
@@ -215,7 +216,7 @@ let check_fresh_variable_basic id is_nullary_function =
          || get_stan_math_function_return_type_opt id.name [] = None )
     then
       let error_msg =
-        String.concat " "
+        String.concat ~sep:" "
           [ "Identifier"
           ; "'" ^ id.name ^ "'"
           ; "clashes with Stan Math library function." ]
@@ -225,7 +226,7 @@ let check_fresh_variable_basic id is_nullary_function =
   match Symbol_table.look vm id.name with
   | Some _ ->
       let error_msg =
-        String.concat " "
+        String.concat ~sep:" "
           ["Identifier"; "'" ^ id.name ^ "'"; "is already in use."]
       in
       semantic_error ~loc:id.id_loc error_msg
@@ -233,7 +234,7 @@ let check_fresh_variable_basic id is_nullary_function =
 
 let check_fresh_variable id is_nullary_function =
   List.iter
-    (fun name -> check_fresh_variable_basic name is_nullary_function)
+    ~f:(fun name -> check_fresh_variable_basic name is_nullary_function)
     (probability_distribution_name_variants id)
 
 (* The actual semantic checks for all AST nodes! *)
@@ -249,17 +250,16 @@ let rec semantic_check_program
      case we are processing multiple files in one run. *)
   let _ = unsafe_clear_symbol_table vm in
   let _ = context_flags.current_block <- Functions in
-  let semantic_check_statements = List.map semantic_check_statement in
-  let open Core_kernel.Option.Monad_infix in
-  let ufb = fb >>| List.map semantic_check_statement in
+  let semantic_check_statements = List.map ~f:semantic_check_statement in
+  let open Option.Monad_infix in
+  let ufb = fb >>| List.map ~f:semantic_check_statement in
   (* Check that all declared functions have a definition *)
   let _ =
     if
       Symbol_table.check_some_id_is_unassigned vm
       && !check_that_all_functions_have_definition
     then
-      semantic_error
-        ~loc:(List.hd (Core_kernel.Option.value_exn ufb)).stmt_typed_loc
+      semantic_error ~loc:(List.hd_exn (Option.value_exn ufb)).stmt_typed_loc
         "Some function is declared without specifying a definition."
     (* TODO: insert better location in the error above *)
   in
@@ -294,9 +294,9 @@ and semantic_check_identifier id =
   in
   let _ =
     if
-      Core_kernel.String.is_suffix id.name ~suffix:"__"
+      String.is_suffix id.name ~suffix:"__"
       || List.exists
-           (fun str -> str = id.name)
+           ~f:(fun str -> str = id.name)
            [ "true"; "false"; "repeat"; "until"; "then"; "var"; "fvar"
            ; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
            ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH"; "alignas"; "alignof"; "and"
@@ -336,7 +336,7 @@ and semantic_check_unsizedtype = function
   | UFun (l, rt) ->
       UFun
         ( List.map
-            (fun (at, ut) ->
+            ~f:(fun (at, ut) ->
               (semantic_check_autodifftype at, semantic_check_unsizedtype ut)
               )
             l
@@ -471,7 +471,7 @@ and semantic_check_transformation = function
   | Covariance -> Covariance
 
 and lub_ad_e exprs =
-  lub_ad_type (List.map (fun x -> x.expr_typed_ad_level) exprs)
+  lub_ad_type (List.map ~f:(fun x -> x.expr_typed_ad_level) exprs)
 
 and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
@@ -560,9 +560,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       and originblock, type_ =
-        Core_kernel.Option.value
-          ~default:(MathLibrary, UMathLibraryFunction)
-          ut
+        Option.value ~default:(MathLibrary, UMathLibraryFunction) ut
       in
       { expr_typed= Variable uid
       ; expr_typed_ad_level= calculate_autodifftype originblock type_
@@ -580,26 +578,26 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_loc= loc }
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id
-      and ues = List.map semantic_check_expression es in
+      and ues = List.map ~f:semantic_check_expression es in
       let _ =
         if uid.name = "map_rect" then
           match ues with
           | {expr_typed= Variable arg1_name; _} :: _ ->
               if
-                Core_kernel.String.is_suffix arg1_name.name ~suffix:"_lp"
-                || Core_kernel.String.is_suffix arg1_name.name ~suffix:"_rng"
+                String.is_suffix arg1_name.name ~suffix:"_lp"
+                || String.is_suffix arg1_name.name ~suffix:"_rng"
               then
                 semantic_error ~loc
                   ( "Mapped function cannot be an _rng or _lp function, found \
                      function name: " ^ arg1_name.name )
           | _ -> ()
       in
-      let open Core_kernel.String in
+      let open String in
       let open Pervasives in
       let _ =
         if
           List.exists
-            (fun x -> is_suffix uid.name ~suffix:x)
+            ~f:(fun x -> is_suffix uid.name ~suffix:x)
             ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
         then
           semantic_error ~loc
@@ -656,7 +654,8 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
-                ^ pretty_print_unsizedtypes (List.map type_of_expr_typed ues)
+                ^ pretty_print_unsizedtypes
+                    (List.map ~f:type_of_expr_typed ues)
                 ^ "." )
           in
           match Symbol_table.look vm uid.name with
@@ -681,7 +680,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                         (UFun (listedtypes, ReturnType ut))
                     ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
-                        (List.map type_of_expr_typed ues)
+                        (List.map ~f:type_of_expr_typed ues)
                     ^ "." )
               in
               { expr_typed= FunApp (uid, ues)
@@ -702,20 +701,20 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                 ^ " was supplied." ) ) )
   | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
-      let open Core_kernel.String in
+      let open String in
       let open Pervasives in
       let _ =
         if
           not
             (List.exists
-               (fun x -> is_suffix uid.name ~suffix:x)
+               ~f:(fun x -> is_suffix uid.name ~suffix:x)
                ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"])
         then
           semantic_error ~loc
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
              can make use of conditional notation."
       in
-      let ues = List.map semantic_check_expression es in
+      let ues = List.map ~f:semantic_check_expression es in
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
         if
@@ -751,7 +750,8 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                 ^ ". Available signatures: "
                 ^ pretty_print_all_stan_math_function_signatures uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
-                ^ pretty_print_unsizedtypes (List.map type_of_expr_typed ues)
+                ^ pretty_print_unsizedtypes
+                    (List.map ~f:type_of_expr_typed ues)
                 ^ "." )
           in
           match Symbol_table.look vm uid.name with
@@ -776,7 +776,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                         (UFun (listedtypes, ReturnType ut))
                     ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
-                        (List.map type_of_expr_typed ues)
+                        (List.map ~f:type_of_expr_typed ues)
                     ^ "." )
               in
               { expr_typed= CondDistApp (uid, ues)
@@ -832,27 +832,27 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | ArrayExpr es ->
-      let ues = List.map semantic_check_expression es in
-      let elementtypes = List.map (fun y -> y.expr_typed_type) ues in
+      let ues = List.map ~f:semantic_check_expression es in
+      let elementtypes = List.map ~f:(fun y -> y.expr_typed_type) ues in
       (* Array expressions must be of uniform type. (Or mix of int and real) *)
       let _ =
         if
           List.exists
-            (fun x ->
+            ~f:(fun x ->
               not
                 ( check_of_same_type_mod_array_conv "" x.expr_typed_type
-                    (List.hd ues).expr_typed_type
+                    (List.hd_exn ues).expr_typed_type
                 || check_of_same_type_mod_array_conv ""
-                     (List.hd ues).expr_typed_type x.expr_typed_type ) )
+                     (List.hd_exn ues).expr_typed_type x.expr_typed_type ) )
             ues
         then
           semantic_error ~loc
             "Array expression must have entries of consistent type."
       in
       let array_type =
-        if List.exists (fun x -> List.hd elementtypes <> x) elementtypes then
-          UArray UReal
-        else UArray (List.hd elementtypes)
+        if List.exists ~f:(fun x -> List.hd_exn elementtypes <> x) elementtypes
+        then UArray UReal
+        else UArray (List.hd_exn elementtypes)
       in
       let returnblock = lub_ad_e ues in
       { expr_typed= ArrayExpr ues
@@ -860,12 +860,12 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_type= array_type
       ; expr_typed_loc= loc }
   | RowVectorExpr es ->
-      let ues = List.map semantic_check_expression es in
-      let elementtypes = List.map (fun y -> y.expr_typed_type) ues in
+      let ues = List.map ~f:semantic_check_expression es in
+      let elementtypes = List.map ~f:(fun y -> y.expr_typed_type) ues in
       let ut =
-        if List.for_all (fun x -> x = UReal || x = UInt) elementtypes then
+        if List.for_all ~f:(fun x -> x = UReal || x = UInt) elementtypes then
           URowVector
-        else if List.for_all (fun x -> x = URowVector) elementtypes then
+        else if List.for_all ~f:(fun x -> x = URowVector) elementtypes then
           UMatrix
         else
           semantic_error ~loc
@@ -885,17 +885,18 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_loc= loc }
   | Indexed (e, indices) ->
       let ue = semantic_check_expression e in
-      let uindices = List.map semantic_check_index indices in
+      let uindices = List.map ~f:semantic_check_index indices in
       let uindices_with_types =
         List.map
-          (function Single e as i -> (i, e.expr_typed_type) | i -> (i, UInt))
+          ~f:(function
+            | Single e as i -> (i, e.expr_typed_type) | i -> (i, UInt))
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
         lub_ad_type
           ( at
           :: List.map
-               (function
+               ~f:(function
                  | All -> DataOnly
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                      lub_ad_type [at; ue1.expr_typed_ad_level]
@@ -992,9 +993,7 @@ and semantic_check_statement s =
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
       let uidoblock =
-        match
-          Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name)
-        with
+        match Option.map ~f:fst (Symbol_table.look vm uid.name) with
         | Some b -> b
         | None ->
             if is_stan_math_function_name uid.name then MathLibrary
@@ -1019,9 +1018,7 @@ and semantic_check_statement s =
             ^ ("'" ^ uid.name ^ "'")
             ^ " declared in previous blocks." )
       in
-      let opname =
-        Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
-      in
+      let opname = Sexp.to_string (sexp_of_assignmentoperator uassop) in
       match operator_return_type_from_string opname [ue2; ue] with
       | Some Void ->
           { stmt_typed=
@@ -1041,16 +1038,16 @@ and semantic_check_statement s =
             ^ pretty_print_assignmentoperator uassop
             ^ ": lhs has type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
             ^
-            if uassop != Assign && uassop != ArrowAssign then
+            if uassop <> Assign && uassop <> ArrowAssign then
               ". Available signatures:"
               ^ pretty_print_all_operator_signatures opname
             else "" ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
-      let ues = List.map semantic_check_expression es in
+      let ues = List.map ~f:semantic_check_expression es in
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lp"
+          String.is_suffix uid.name ~suffix:"_lp"
           && not
                ( context_flags.in_lp_fun_def
                || context_flags.current_block = Model )
@@ -1079,7 +1076,7 @@ and semantic_check_statement s =
                     ". Available signatures: "
                     pretty_print_all_stan_math_function_signatures uid.name
                     "\nInstead supplied arguments of incompatible type: "
-                    pretty_print_unsizedtypes (List.map type_of_expr_typed ues)
+                    pretty_print_unsizedtypes (List.map ~f: type_of_expr_typed ues)
                     "."  |}
           in
           match Symbol_table.look vm uid.name with
@@ -1097,7 +1094,7 @@ and semantic_check_statement s =
                     ^ pretty_print_unsizedtype (UFun (listedtypes, Void))
                     ^ "\nInstead supplied arguments of incompatible type: "
                     ^ pretty_print_unsizedtypes
-                        (List.map type_of_expr_typed ues)
+                        (List.map ~f:type_of_expr_typed ues)
                     ^ "." )
               in
               { stmt_typed= NRFunApp (uid, ues)
@@ -1173,14 +1170,14 @@ and semantic_check_statement s =
       let uid = semantic_check_identifier id in
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_lpdf"
-          || Core_kernel.String.is_suffix uid.name ~suffix:"_lpmf"
+          String.is_suffix uid.name ~suffix:"_lpdf"
+          || String.is_suffix uid.name ~suffix:"_lpmf"
         then
           semantic_error ~loc:uid.id_loc
             "~-statement expects a distribution name without '_lpdf' or \
              '_lpmf' suffix."
       in
-      let ues = List.map semantic_check_expression es in
+      let ues = List.map ~f:semantic_check_expression es in
       let ut = semantic_check_truncation t in
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
@@ -1194,8 +1191,8 @@ and semantic_check_statement s =
       in
       let _ =
         if
-          Core_kernel.String.is_suffix uid.name ~suffix:"_cdf"
-          || Core_kernel.String.is_suffix uid.name ~suffix:"_ccdf"
+          String.is_suffix uid.name ~suffix:"_cdf"
+          || String.is_suffix uid.name ~suffix:"_ccdf"
         then
           semantic_error ~loc
             ( "CDF and CCDF functions may not be used with sampling notation. \
@@ -1338,12 +1335,12 @@ and semantic_check_statement s =
       ; stmt_typed_returntype= Complete Void
       ; stmt_typed_loc= loc }
   | Print ps ->
-      let ups = List.map semantic_check_printable ps in
+      let ups = List.map ~f:semantic_check_printable ps in
       { stmt_typed= Print ups
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
   | Reject ps ->
-      let ups = List.map semantic_check_printable ps in
+      let ups = List.map ~f:semantic_check_printable ps in
       { stmt_typed= Reject ups
       ; stmt_typed_returntype= AnyReturnType
       ; stmt_typed_loc= loc }
@@ -1363,7 +1360,7 @@ and semantic_check_statement s =
             ^ "." )
       in
       let us1 = semantic_check_statement s1 in
-      let uos2 = Core_kernel.Option.map ~f:semantic_check_statement os2 in
+      let uos2 = Option.map ~f:semantic_check_statement os2 in
       let srt1 = us1.stmt_typed_returntype in
       let srt2 =
         match uos2 with
@@ -1463,7 +1460,7 @@ and semantic_check_statement s =
       ; stmt_typed_loc= loc }
   | Block vdsl ->
       let _ = Symbol_table.begin_scope vm in
-      let uvdsl = List.map semantic_check_statement vdsl in
+      let uvdsl = List.map ~f:semantic_check_statement vdsl in
       let _ = Symbol_table.end_scope vm in
       (* Any statements after a break or continue or return or reject do not count for the return
       type. *)
@@ -1477,10 +1474,10 @@ and semantic_check_statement s =
       { stmt_typed= Block uvdsl
       ; stmt_typed_returntype=
           List.fold_left
-            (try_compute_block_statement_returntype loc)
-            NoReturnType
+            ~f:(try_compute_block_statement_returntype loc)
+            ~init:NoReturnType
             (List.map
-               (fun x -> x.stmt_typed_returntype)
+               ~f:(fun x -> x.stmt_typed_returntype)
                (list_until_escape uvdsl))
       ; stmt_typed_loc= loc }
   | VarDecl
@@ -1582,14 +1579,14 @@ and semantic_check_statement s =
       let uid = semantic_check_identifier id in
       let uargs =
         List.map
-          (function
+          ~f:(function
             | at, ut, id ->
                 ( semantic_check_autodifftype at
                 , semantic_check_unsizedtype ut
                 , semantic_check_identifier id ))
           args
       in
-      let uarg_types = List.map (function w, y, _ -> (w, y)) uargs in
+      let uarg_types = List.map ~f:(function w, y, _ -> (w, y)) uargs in
       (* User defined functions cannot be overloaded *)
       let _ =
         if Symbol_table.check_is_unassigned vm uid.name then (
@@ -1601,7 +1598,7 @@ and semantic_check_statement s =
               ( "Function "
               ^ ("'" ^ uid.name ^ "'")
               ^ " has already been declared to have type "
-              ^ Core_kernel.Option.value_map ~default:"unknown"
+              ^ Option.value_map ~default:"unknown"
                   ~f:(fun (_, t) -> pretty_print_unsizedtype t)
                   (Symbol_table.look vm uid.name) ) )
         else check_fresh_variable uid (List.length uarg_types = 0)
@@ -1620,17 +1617,17 @@ and semantic_check_statement s =
       let _ =
         Symbol_table.enter vm uid.name (Functions, UFun (uarg_types, urt))
       in
-      let uarg_identifiers = List.map (function _, _, z -> z) uargs in
-      let uarg_names = List.map (fun x -> x.name) uarg_identifiers in
+      let uarg_identifiers = List.map ~f:(function _, _, z -> z) uargs in
+      let uarg_names = List.map ~f:(fun x -> x.name) uarg_identifiers in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
-      let _ = List.map (Symbol_table.set_read_only vm) uarg_names in
-      let open Core_kernel.String in
+      let _ = List.map ~f:(Symbol_table.set_read_only vm) uarg_names in
+      let open String in
       let open Pervasives in
       let _ =
         if
           urt <> ReturnType UReal
           && List.exists
-               (fun x -> is_suffix uid.name ~suffix:x)
+               ~f:(fun x -> is_suffix uid.name ~suffix:x)
                ["_log"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
         then
           semantic_error ~loc
@@ -1643,9 +1640,7 @@ and semantic_check_statement s =
             "Probability density functions require real variates (first \
              argument)."
           in
-          match
-            Core_kernel.Option.map ~f:snd (Core_kernel.List.hd uarg_types)
-          with
+          match Option.map ~f:snd (List.hd uarg_types) with
           | None -> semantic_error ~loc error_string
           | Some UReal
            |Some UVector
@@ -1667,9 +1662,7 @@ and semantic_check_statement s =
             "Probability mass functions require integer variates (first \
              argument)."
           in
-          match
-            Core_kernel.Option.map ~f:snd (Core_kernel.List.hd uarg_types)
-          with
+          match Option.map ~f:snd (List.hd uarg_types) with
           | None -> semantic_error ~loc error_string
           | Some UInt | Some (UArray UInt) -> ()
           | Some x ->
@@ -1695,15 +1688,15 @@ and semantic_check_statement s =
             "All function arguments must be distinct identifiers."
       in
       let _ =
-        List.map (fun x -> check_fresh_variable x false) uarg_identifiers
+        List.map ~f:(fun x -> check_fresh_variable x false) uarg_identifiers
       in
       (* TODO: Bob was suggesting that function arguments must be allowed to shadow user defined functions but not library functions. Should we allow for that? *)
       (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
          as if they are parameters, for the purposes of type checking. *)
       let _ =
-        List.map2 (Symbol_table.enter vm) uarg_names
+        List.map2 ~f:(Symbol_table.enter vm) uarg_names
           (List.map
-             (function
+             ~f:(function
                | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
              uarg_types)
       in
