@@ -3,7 +3,7 @@
 {
   module Stack = Core_kernel.Stack
   open Lexing
-  open Debug
+  open Debugging
   open Preprocessor
 
 (* Boilerplate for getting line numbers for errors *)

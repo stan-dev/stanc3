@@ -1,4 +1,5 @@
 (** Some functions for checking whether conversions between types are allowed *)
+
 open Ast
 
 val check_compatible_arguments_mod_conv :

@@ -15,21 +15,21 @@ let files = ref []
 let options =
   Arg.align
     [ ( "--debug-lex"
-      , Arg.Unit (fun () -> Debug.lexer_logging := true)
+      , Arg.Unit (fun () -> Debugging.lexer_logging := true)
       , " For debugging purposes: print the lexer actions" )
     ; ( "--debug-parse"
-      , Arg.Unit (fun () -> Debug.grammar_logging := true)
+      , Arg.Unit (fun () -> Debugging.grammar_logging := true)
       , " For debugging purposes: print the parser actions" )
     ; ( "--debug-ast"
-      , Arg.Unit (fun () -> Debug.ast_printing := true)
+      , Arg.Unit (fun () -> Debugging.ast_printing := true)
       , " For debugging purposes: print the undecorated AST, before semantic \
          checking" )
     ; ( "--debug-decorated-ast"
-      , Arg.Unit (fun () -> Debug.typed_ast_printing := true)
+      , Arg.Unit (fun () -> Debugging.typed_ast_printing := true)
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
     ; ( "--auto-format"
-      , Arg.Unit (fun () -> Debug.pretty_print_program := true)
+      , Arg.Unit (fun () -> Debugging.pretty_print_program := true)
       , " Pretty prints the program to the console" )
     ; ( "--version"
       , Arg.Unit
@@ -80,15 +80,15 @@ let use_file filename =
       Errors.report_syntax_error err ;
       exit 1
   in
-  let _ = Debug.ast_logger ast in
-  let _ = Debug.auto_formatter ast in
+  let _ = Debugging.ast_logger ast in
+  let _ = Debugging.auto_formatter ast in
   let typed_ast =
     try Semantic_check.semantic_check_program ast
     with Errors.SemanticError err ->
       Errors.report_semantic_error err ;
       exit 1
   in
-  let _ = Debug.typed_ast_logger typed_ast in
+  let _ = Debugging.typed_ast_logger typed_ast in
   let mir = Ast_to_Mir.trans_prog filename typed_ast in
   (*let _ = Stan_math_backend.emit_prog Format.str_formatter mir in
     let cpp = Format.flush_str_formatter () in

@@ -2,7 +2,7 @@
 
 %{
 open Ast
-open Debug
+open Debugging
 module Option = Core_kernel.Option
 module List = Core_kernel.List
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then

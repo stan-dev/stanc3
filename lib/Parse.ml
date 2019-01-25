@@ -1,7 +1,7 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's Incremental
     API *)
 
-module Stack = Core_kernel.Stack
+open Core_kernel
 open Errors
 
 let parse parse_fun lexbuf =
@@ -44,14 +44,14 @@ let parse parse_fun lexbuf =
             Some
               ( Parsing_errors.message (Interp.number state)
               ^
-              if !Debug.grammar_logging then
+              if !Debugging.grammar_logging then
                 "(Parse error state "
                 ^ string_of_int (Interp.number state)
                 ^ ")"
               else "" )
-          with Not_found ->
+          with Not_found_s _ ->
             Some
-              ( if !Debug.grammar_logging then
+              ( if !Debugging.grammar_logging then
                 "(Parse error state "
                 ^ string_of_int (Interp.number state)
                 ^ ")"
@@ -272,7 +272,7 @@ let%expect_test "operator precedence" =
        (generatedquantitiesblock ())) |}]
 
 let parse_file parse_fun path =
-  let chan = open_in path in
+  let chan = In_channel.create path in
   let lexbuf =
     let open Lexing in
     let lexbuf = from_channel chan in
