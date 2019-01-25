@@ -4,10 +4,6 @@ open Ast
 let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
 
-let autodifftype_of_originblock = function
-  | Param | TParam | Model -> AutoDiffable
-  | _ -> DataOnly
-
 let check_of_same_type_mod_conv name t1 t2 =
   if Core_kernel.String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
@@ -34,10 +30,9 @@ let check_compatible_arguments_mod_conv name args1 args2 =
   && List.for_all
        (fun y -> y = true)
        (List.map2
-          (fun sign {expr_typed_origin= o; expr_typed_type= t; _} ->
+          (fun sign {expr_typed_ad_level= o; expr_typed_type= t; _} ->
             check_of_same_type_mod_conv name (snd sign) t
-            && autodifftype_can_convert (fst sign)
-                 (autodifftype_of_originblock o) )
+            && autodifftype_can_convert (fst sign) o )
           args1 args2)
 
 let check_of_compatible_return_type rt1 srt2 =

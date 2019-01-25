@@ -65,11 +65,17 @@ let rec unsizedtype_of_sizedtype = function
   | SMatrix (_, _) -> UMatrix
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
-let rec lub_originblock = function
-  | [] -> MathLibrary
+let rec lub_ad_type = function
+  | [] -> DataOnly
   | x :: xs ->
-      let y = lub_originblock xs in
-      if compare_originblock x y < 0 then y else x
+      let y = lub_ad_type xs in
+      if compare_autodifftype x y < 0 then y else x
+
+let calculate_autodifftype at ut =
+  match at with
+  | (Param | TParam | Model) when not (unsizedtype_contains_int ut) ->
+      AutoDiffable
+  | _ -> DataOnly
 
 let check_of_int_type ue = ue.expr_typed_type = UInt
 let check_of_int_array_type ue = ue.expr_typed_type = UArray UInt
@@ -317,8 +323,6 @@ and semantic_check_identifier id =
   id
 
 (* Probably nothing to do here *)
-and semantic_check_originblock ob = ob
-(* Probably nothing to do here *)
 and semantic_check_autodifftype at = at
 
 (* Probably nothing to do here *)
@@ -332,8 +336,9 @@ and semantic_check_unsizedtype = function
   | UFun (l, rt) ->
       UFun
         ( List.map
-            (fun (ob, ut) ->
-              (semantic_check_originblock ob, semantic_check_unsizedtype ut) )
+            (fun (at, ut) ->
+              (semantic_check_autodifftype at, semantic_check_unsizedtype ut)
+              )
             l
         , semantic_check_returntype rt )
   | ut -> ut
@@ -465,8 +470,8 @@ and semantic_check_transformation = function
   | Correlation -> Correlation
   | Covariance -> Covariance
 
-and lub_origin_e exprs =
-  lub_originblock (List.map (fun x -> x.expr_typed_origin) exprs)
+and lub_ad_e exprs =
+  lub_ad_type (List.map (fun x -> x.expr_typed_ad_level) exprs)
 
 and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
@@ -477,7 +482,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       match operator_return_type_from_string "TernaryIf" [ue1; ue2; ue3] with
       | Some (ReturnType ut) ->
           { expr_typed= TernaryIf (ue1, ue2, ue3)
-          ; expr_typed_origin= lub_origin_e [ue1; ue2; ue3]
+          ; expr_typed_ad_level= lub_ad_e [ue1; ue2; ue3]
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
       | Some Void | None ->
@@ -499,7 +504,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       match operator_return_type uop [ue1; ue2] with
       | Some (ReturnType ut) ->
           { expr_typed= BinOp (ue1, uop, ue2)
-          ; expr_typed_origin= lub_origin_e [ue1; ue2]
+          ; expr_typed_ad_level= lub_ad_e [ue1; ue2]
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
       | Some Void | None ->
@@ -518,7 +523,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       match operator_return_type_prefix uop [ue] with
       | Some (ReturnType ut) ->
           { expr_typed= PrefixOp (uop, ue)
-          ; expr_typed_origin= lub_origin_e [ue]
+          ; expr_typed_ad_level= lub_ad_e [ue]
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
       | Some Void | None ->
@@ -535,7 +540,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
       match operator_return_type op [ue] with
       | Some (ReturnType ut) ->
           { expr_typed= PostfixOp (ue, uop)
-          ; expr_typed_origin= lub_origin_e [ue]
+          ; expr_typed_ad_level= lub_ad_e [ue]
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
       | Some Void | None ->
@@ -560,17 +565,17 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           ut
       in
       { expr_typed= Variable uid
-      ; expr_typed_origin= originblock
+      ; expr_typed_ad_level= calculate_autodifftype originblock type_
       ; expr_typed_type= type_
       ; expr_typed_loc= loc }
   | IntNumeral s ->
       { expr_typed= IntNumeral s
-      ; expr_typed_origin= Data
+      ; expr_typed_ad_level= DataOnly
       ; expr_typed_type= UInt
       ; expr_typed_loc= loc }
   | RealNumeral s ->
       { expr_typed= RealNumeral s
-      ; expr_typed_origin= Data
+      ; expr_typed_ad_level= DataOnly
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | FunApp (id, es) -> (
@@ -627,7 +632,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
              block, generated quantities block or user-defined functions with \
              names ending in _rng."
       in
-      let returnblock = lub_origin_e ues in
+      let returnblock = lub_ad_e ues in
       (* Function applications are returning functions *)
       match get_stan_math_function_return_type_opt uid.name ues with
       | Some Void ->
@@ -637,7 +642,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             ^ " was supplied." )
       | Some (ReturnType ut) ->
           { expr_typed= FunApp (uid, ues)
-          ; expr_typed_origin= returnblock
+          ; expr_typed_ad_level= returnblock
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
       (* Check that function arguments match signature  *)
@@ -680,7 +685,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                     ^ "." )
               in
               { expr_typed= FunApp (uid, ues)
-              ; expr_typed_origin= returnblock
+              ; expr_typed_ad_level= returnblock
               ; expr_typed_type= ut
               ; expr_typed_loc= loc }
           | Some _ ->
@@ -723,7 +728,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      let returnblock = lub_origin_e ues in
+      let returnblock = lub_ad_e ues in
       match get_stan_math_function_return_type_opt uid.name ues with
       | Some Void ->
           semantic_error ~loc
@@ -732,7 +737,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             ^ " was supplied." )
       | Some (ReturnType ut) ->
           { expr_typed= CondDistApp (uid, ues)
-          ; expr_typed_origin= returnblock
+          ; expr_typed_ad_level= returnblock
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
       (* Check that function arguments match signature  *)
@@ -775,7 +780,7 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                     ^ "." )
               in
               { expr_typed= CondDistApp (uid, ues)
-              ; expr_typed_origin= returnblock
+              ; expr_typed_ad_level= returnblock
               ; expr_typed_type= ut
               ; expr_typed_loc= loc }
           | Some _ ->
@@ -804,7 +809,8 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
              of functions with the suffix _lp."
       in
       { expr_typed= GetLP
-      ; expr_typed_origin= context_flags.current_block
+      ; expr_typed_ad_level=
+          calculate_autodifftype context_flags.current_block UReal
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | GetTarget ->
@@ -821,7 +827,8 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
              of functions with the suffix _lp."
       in
       { expr_typed= GetTarget
-      ; expr_typed_origin= context_flags.current_block
+      ; expr_typed_ad_level=
+          calculate_autodifftype context_flags.current_block UReal
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | ArrayExpr es ->
@@ -847,9 +854,9 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           UArray UReal
         else UArray (List.hd elementtypes)
       in
-      let returnblock = lub_origin_e ues in
+      let returnblock = lub_ad_e ues in
       { expr_typed= ArrayExpr ues
-      ; expr_typed_origin= returnblock
+      ; expr_typed_ad_level= returnblock
       ; expr_typed_type= array_type
       ; expr_typed_loc= loc }
   | RowVectorExpr es ->
@@ -865,15 +872,15 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
             "Row_vector expression must have all int and real entries or all \
              row_vector entries."
       in
-      let returnblock = lub_origin_e ues in
+      let returnblock = lub_ad_e ues in
       { expr_typed= RowVectorExpr ues
-      ; expr_typed_origin= returnblock
+      ; expr_typed_ad_level= returnblock
       ; expr_typed_type= ut
       ; expr_typed_loc= loc }
   | Paren e ->
       let ue = semantic_check_expression e in
       { expr_typed= Paren ue
-      ; expr_typed_origin= ue.expr_typed_origin
+      ; expr_typed_ad_level= ue.expr_typed_ad_level
       ; expr_typed_type= ue.expr_typed_type
       ; expr_typed_loc= loc }
   | Indexed (e, indices) ->
@@ -884,17 +891,17 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
           (function Single e as i -> (i, e.expr_typed_type) | i -> (i, UInt))
           uindices
       in
-      let inferred_originblock_of_indexed ob uindices =
-        lub_originblock
-          ( ob
+      let inferred_ad_type_of_indexed at uindices =
+        lub_ad_type
+          ( at
           :: List.map
                (function
-                 | All -> MathLibrary
+                 | All -> DataOnly
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
-                     lub_originblock [ob; ue1.expr_typed_origin]
+                     lub_ad_type [at; ue1.expr_typed_ad_level]
                  | Between (ue1, ue2) ->
-                     lub_originblock
-                       [ob; ue1.expr_typed_origin; ue2.expr_typed_origin])
+                     lub_ad_type
+                       [at; ue1.expr_typed_ad_level; ue2.expr_typed_ad_level])
                uindices )
       in
       let rec inferred_unsizedtype_of_indexed ut typed_indexl =
@@ -938,12 +945,12 @@ and semantic_check_expression {expr_untyped_loc= loc; expr_untyped} =
                   ^ pretty_print_unsizedtype ut
                   ^ "." ) )
       in
-      let ob = inferred_originblock_of_indexed ue.expr_typed_origin uindices
+      let at = inferred_ad_type_of_indexed ue.expr_typed_ad_level uindices
       and ut =
         inferred_unsizedtype_of_indexed ue.expr_typed_type uindices_with_types
       in
       { expr_typed= Indexed (ue, uindices)
-      ; expr_typed_origin= ob
+      ; expr_typed_ad_level= at
       ; expr_typed_type= ut
       ; expr_typed_loc= loc }
 
@@ -985,14 +992,13 @@ and semantic_check_statement s =
       let uassop = semantic_check_assignmentoperator assop in
       let ue = semantic_check_expression e in
       let uidoblock =
-        (function
-          | Some ob1, Some ob2 -> Some (lub_originblock [ob1; ob2])
-          | Some ob1, None -> Some ob1
-          | None, Some ob2 -> Some ob2
-          | None, None -> None)
-          ( ( if is_stan_math_function_name uid.name then Some MathLibrary
-            else None )
-          , Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name) )
+        match
+          Core_kernel.Option.map ~f:fst (Symbol_table.look vm uid.name)
+        with
+        | Some b -> b
+        | None ->
+            if is_stan_math_function_name uid.name then MathLibrary
+            else fatal_error ()
       in
       let _ =
         if Symbol_table.get_read_only vm uid.name then
@@ -1003,18 +1009,15 @@ and semantic_check_statement s =
       in
       (* Variables from previous blocks are read-only. In particular, data and parameters never assigned to *)
       let _ =
-        match uidoblock with
-        | Some b ->
-            if
-              (not (Symbol_table.is_global vm uid.name))
-              || b = context_flags.current_block
-            then ()
-            else
-              semantic_error ~loc
-                ( "Cannot assign to global variable "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " declared in previous blocks." )
-        | None -> fatal_error ()
+        if
+          (not (Symbol_table.is_global vm uid.name))
+          || uidoblock = context_flags.current_block
+        then ()
+        else
+          semantic_error ~loc
+            ( "Cannot assign to global variable "
+            ^ ("'" ^ uid.name ^ "'")
+            ^ " declared in previous blocks." )
       in
       let opname =
         Core_kernel.Sexp.to_string (sexp_of_assignmentoperator uassop)
@@ -1411,7 +1414,7 @@ and semantic_check_statement s =
       in
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
-      let oindexblock = lub_origin_e [ue1; ue2] in
+      let oindexblock = context_flags.current_block in
       let _ = Symbol_table.enter vm uid.name (oindexblock, UInt) in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
@@ -1444,7 +1447,7 @@ and semantic_check_statement s =
       in
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
-      let oindexblock = ue.expr_typed_origin in
+      let oindexblock = context_flags.current_block in
       let _ =
         Symbol_table.enter vm uid.name
           (oindexblock, loop_identifier_unsizedtype)
@@ -1488,25 +1491,22 @@ and semantic_check_statement s =
       ; is_global= glob } ->
       let ust = semantic_check_sizedtype st
       and not_ptq e f =
-        match e.expr_typed_origin with
-        | Param | TParam | GQuant -> false
-        | _ -> f ()
+        match e.expr_typed_ad_level with AutoDiffable -> false | _ -> f ()
       in
-      let rec check_sizes_below_param_level = function
+      let rec check_sizes_data_only = function
         | SVector ue -> not_ptq ue (fun () -> true)
         | SRowVector ue -> not_ptq ue (fun () -> true)
         | SMatrix (ue1, ue2) ->
             not_ptq ue1 (fun () ->
-                match ue2.expr_typed_origin with
-                | Param | TParam | GQuant -> false
+                match ue2.expr_typed_ad_level with
+                | AutoDiffable -> false
                 | _ -> true )
-        | SArray (ust2, ue) ->
-            not_ptq ue (fun () -> check_sizes_below_param_level ust2)
+        | SArray (ust2, ue) -> not_ptq ue (fun () -> check_sizes_data_only ust2)
         | _ -> true
       in
       (* Sizes must be of level at most data. *)
       let _ =
-        if glob && not (check_sizes_below_param_level ust) then
+        if glob && not (check_sizes_data_only ust) then
           semantic_error ~loc
             "Non-data variables are not allowed in top level size declarations."
       in
@@ -1514,11 +1514,7 @@ and semantic_check_statement s =
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype ust in
       let _ = check_fresh_variable uid false in
-      let ob =
-        if glob || not (unsizedtype_contains_int ut) then
-          context_flags.current_block
-        else Data
-      in
+      let ob = context_flags.current_block in
       let _ = Symbol_table.enter vm id.name (ob, ut) in
       let _ =
         if

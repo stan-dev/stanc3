@@ -98,7 +98,7 @@ and untyped_expression =
 and typed_expression =
   { expr_typed: typed_expression expression
   ; expr_typed_loc: location sexp_opaque [@compare.ignore]
-  ; expr_typed_origin: originblock
+  ; expr_typed_ad_level: autodifftype
   ; expr_typed_type: unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
