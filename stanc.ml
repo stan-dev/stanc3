@@ -55,7 +55,8 @@ let options =
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include_paths"
       , Arg.String
-          (fun str -> Lexer.include_paths := String.split_on_char ',' str)
+          (fun str ->
+            Preprocessor.include_paths := String.split_on_char ',' str )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 

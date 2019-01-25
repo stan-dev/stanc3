@@ -8,10 +8,10 @@ let parse parse_fun lexbuf =
      error messages support *)
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let _ = Stack.push lexbuf Lexer.include_stack in
+  let _ = Stack.push lexbuf Preprocessor.include_stack in
   let input _ =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
-       (Stack.top Lexer.include_stack))
+       (Stack.top Preprocessor.include_stack))
       ()
   in
   let success prog = prog in
@@ -33,8 +33,8 @@ let parse parse_fun lexbuf =
           (SyntaxError
              (Parsing
                 ( message
-                , Lexing.lexeme_start_p (Stack.top Lexer.include_stack)
-                , Lexing.lexeme_end_p (Stack.top Lexer.include_stack) )))
+                , Lexing.lexeme_start_p (Stack.top Preprocessor.include_stack)
+                , Lexing.lexeme_end_p (Stack.top Preprocessor.include_stack) )))
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
