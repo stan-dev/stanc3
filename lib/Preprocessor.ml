@@ -1,4 +1,6 @@
 (** Preprocessor for handling include directives *)
+
+open Core_kernel
 open Lexing
 
 let dup_exists l =
@@ -17,13 +19,13 @@ let rec try_open_in paths fname pos =
            (Includes
               ( "Could not find include file " ^ fname
                 ^ " in specified include paths.\n"
-              , lexeme_start_p (Stack.top include_stack) )))
+              , lexeme_start_p (Stack.top_exn include_stack) )))
   | path :: rest_of_paths -> (
     try
-      let old_path = (Stack.top include_stack).lex_start_p.pos_fname in
+      let old_path = (Stack.top_exn include_stack).lex_start_p.pos_fname in
       let open Printf in
       let full_path = path ^ "/" ^ fname in
-      ( open_in full_path
+      ( In_channel.create full_path
       , sprintf "%s, included from\nfile %s" full_path
           (Errors.append_position_to_filename old_path
              (sprintf ", line %d, column %d" pos.pos_lnum
@@ -52,7 +54,7 @@ let try_get_new_lexbuf fname pos =
         (Errors.SyntaxError
            (Includes
               ( "Found cyclical include structure.\n"
-              , lexeme_start_p (Stack.top include_stack) )))
+              , lexeme_start_p (Stack.top_exn include_stack) )))
   in
-  let _ = Stack.push new_lexbuf include_stack in
+  let _ = Stack.push include_stack new_lexbuf in
   new_lexbuf

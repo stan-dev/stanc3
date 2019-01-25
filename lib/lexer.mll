@@ -1,6 +1,7 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
+  module Stack = Core_kernel.Stack
   open Lexing
   open Debug
   open Preprocessor
@@ -181,14 +182,15 @@ rule token = parse
                                 if Stack.length include_stack = 1
                                 then Parser.EOF
                                 else
-                                  let _ = (Stack.pop include_stack) in
-                                  let old_lexbuf = (Stack.top include_stack) in
-                                    token old_lexbuf }
+                                  let _ = (Stack.pop_exn include_stack) in
+                                  let old_lexbuf =
+                                    (Stack.top_exn include_stack) in
+                                      token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
-                                (Lexing (lexeme (Stack.top include_stack),
-                                        (lexeme_start_p (Stack.top include_stack
-                                        ))))) }
+                                (Lexing (lexeme (Stack.top_exn include_stack),
+                                        (lexeme_start_p
+                                          (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment = parse

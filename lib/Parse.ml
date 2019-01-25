@@ -1,6 +1,7 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's Incremental
     API *)
 
+module Stack = Core_kernel.Stack
 open Errors
 
 let parse parse_fun lexbuf =
@@ -8,10 +9,10 @@ let parse parse_fun lexbuf =
      error messages support *)
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let _ = Stack.push lexbuf Preprocessor.include_stack in
+  let _ = Stack.push Preprocessor.include_stack lexbuf in
   let input _ =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
-       (Stack.top Preprocessor.include_stack))
+       (Stack.top_exn Preprocessor.include_stack))
       ()
   in
   let success prog = prog in
@@ -33,8 +34,10 @@ let parse parse_fun lexbuf =
           (SyntaxError
              (Parsing
                 ( message
-                , Lexing.lexeme_start_p (Stack.top Preprocessor.include_stack)
-                , Lexing.lexeme_end_p (Stack.top Preprocessor.include_stack) )))
+                , Lexing.lexeme_start_p
+                    (Stack.top_exn Preprocessor.include_stack)
+                , Lexing.lexeme_end_p
+                    (Stack.top_exn Preprocessor.include_stack) )))
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
