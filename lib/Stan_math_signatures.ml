@@ -1,37 +1,40 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
+open Core_kernel
 open Ast
 open Errors
 open Type_conversion
 open Pretty_printing
 
 (** The signatures hash table *)
-let stan_math_signatures = Hashtbl.create 3000
+let stan_math_signatures = String.Table.create ()
 
 (* -- Querying stan_math_signatures -- *)
 let get_stan_math_function_return_type_opt name args =
-  let namematches = Hashtbl.find_all stan_math_signatures name in
+  let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
-      (fun x -> check_compatible_arguments_mod_conv name (snd x) args)
+      ~f:(fun x -> check_compatible_arguments_mod_conv name (snd x) args)
       namematches
   in
   if List.length filteredmatches = 0 then None
     (* We return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
   else
     Some
-      (List.hd (List.sort compare_returntype (List.map fst filteredmatches)))
+      (List.hd_exn
+         (List.sort ~compare:compare_returntype
+            (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
 
 let pretty_print_all_stan_math_function_signatures name =
-  let namematches = Hashtbl.find_all stan_math_signatures name in
+  let namematches = Hashtbl.find_multi stan_math_signatures name in
   if List.length namematches = 0 then ""
   else
     "\n"
-    ^ String.concat "\n"
+    ^ String.concat ~sep:"\n"
         (List.map
-           (fun (x, y) -> pretty_print_unsizedtype (UFun (y, x)))
+           ~f:(fun (x, y) -> pretty_print_unsizedtype (UFun (y, x)))
            namematches)
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
@@ -86,14 +89,19 @@ let eigen_vector_types = function
 
 let eigen_vector_types_size = 4
 let is_primitive = function UReal -> true | UInt -> true | _ -> false
-let rng_return_type t lt = if List.for_all is_primitive lt then t else UArray t
+
+let rng_return_type t lt =
+  if List.for_all ~f:is_primitive lt then t else UArray t
 
 let add_unqualified (name, rt, uqargts) =
-  Hashtbl.add stan_math_signatures name
-    (rt, List.map (fun x -> (AutoDiffable, x)) uqargts)
+  let _ =
+    Hashtbl.add_multi stan_math_signatures ~key:name
+      ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
+  in
+  ()
 
 let add_qualified (name, rt, argts) =
-  Hashtbl.add stan_math_signatures name (rt, argts)
+  Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
 
 let add_nullary name = add_unqualified (name, ReturnType UReal, [])
 let add_unary name = add_unqualified (name, ReturnType UReal, [UReal])
