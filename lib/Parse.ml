@@ -130,7 +130,7 @@ let%expect_test "parse dangling else problem" =
               (stmt_untyped_loc <opaque>))
              (((stmt_untyped (Print ((PString "\"I'm afraid I can't do that.\""))))
                (stmt_untyped_loc <opaque>)))))
-           (stmt_untyped_loc <opaque>)))))  
+           (stmt_untyped_loc <opaque>)))))
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse minus unary" =
@@ -162,8 +162,7 @@ let%expect_test "parse minus unary" =
 
 let%expect_test "parse unary over binary" =
   let ast =
-    parse_string Parser.Incremental.program
-      "\n      model {\n        real x = x - - x - - x;\n      }\n      "
+    parse_string Parser.Incremental.program "model { real x = x - - x - - x; }"
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
