@@ -26,12 +26,12 @@ let vm = Symbol_table.initialize ()
 (* Record structure holding flags and other markers about context to be
    used for error reporting. *)
 type context_flags_record =
-  { mutable current_block: originblock
-  ; mutable in_fun_def: bool
-  ; mutable in_returning_fun_def: bool
-  ; mutable in_rng_fun_def: bool
-  ; mutable in_lp_fun_def: bool
-  ; mutable loop_depth: int }
+  { current_block: originblock
+  ; in_fun_def: bool
+  ; in_returning_fun_def: bool
+  ; in_rng_fun_def: bool
+  ; in_lp_fun_def: bool
+  ; loop_depth: int }
 
 (* Some helper functions *)
 let dup_exists l =
