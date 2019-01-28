@@ -238,17 +238,22 @@ let rec semantic_check_program
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   let _ = unsafe_clear_symbol_table vm in
-  let semantic_check_statements context_flags
-    = List.map ~f:(semantic_check_statement context_flags) in
+  let semantic_check_statements context_flags =
+    List.map ~f:(semantic_check_statement context_flags)
+  in
   let open Option.Monad_infix in
-  let context_flags =  { current_block= Functions
-                       ; in_fun_def= false
-                       ; in_returning_fun_def= false
-                       ; in_rng_fun_def= false
-                       ; in_lp_fun_def= false
-                       ; loop_depth= 0 } in 
-  let ufb = fb >>| semantic_check_statements
-                     { context_flags with current_block = Functions } in
+  let context_flags =
+    { current_block= Functions
+    ; in_fun_def= false
+    ; in_returning_fun_def= false
+    ; in_rng_fun_def= false
+    ; in_lp_fun_def= false
+    ; loop_depth= 0 }
+  in
+  let ufb =
+    fb
+    >>| semantic_check_statements {context_flags with current_block= Functions}
+  in
   (* Check that all declared functions have a definition *)
   let _ =
     if
@@ -259,21 +264,27 @@ let rec semantic_check_program
         "Some function is declared without specifying a definition."
     (* TODO: insert better location in the error above *)
   in
-  let udb = db >>| semantic_check_statements
-                     { context_flags with current_block = Data } in
-  let utdb = tdb >>| semantic_check_statements
-                     { context_flags with current_block = TData } in
-  let upb = pb >>| semantic_check_statements
-                     { context_flags with current_block = Param } in
-  let utpb = tpb >>| semantic_check_statements
-                       { context_flags with current_block = TParam } in
+  let udb =
+    db >>| semantic_check_statements {context_flags with current_block= Data}
+  in
+  let utdb =
+    tdb >>| semantic_check_statements {context_flags with current_block= TData}
+  in
+  let upb =
+    pb >>| semantic_check_statements {context_flags with current_block= Param}
+  in
+  let utpb =
+    tpb >>| semantic_check_statements {context_flags with current_block= TParam}
+  in
   (* Model top level variables only assigned and read in model  *)
   let _ = Symbol_table.begin_scope vm in
-  let umb = mb >>| semantic_check_statements
-                     { context_flags with current_block = Model } in
+  let umb =
+    mb >>| semantic_check_statements {context_flags with current_block= Model}
+  in
   let _ = Symbol_table.end_scope vm in
-  let ugb = gb >>| semantic_check_statements
-                     { context_flags with current_block = GQuant } in
+  let ugb =
+    gb >>| semantic_check_statements {context_flags with current_block= GQuant}
+  in
   { functionblock= ufb
   ; datablock= udb
   ; transformeddatablock= utdb
@@ -398,7 +409,7 @@ and semantic_check_sizedtype context_flags = function
 and semantic_check_transformation context_flags = function
   | Identity -> Identity
   | Lower e ->
-     let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression context_flags e in
       let _ =
         if not (check_of_int_or_real_type ue) then
           semantic_error_e ue
@@ -469,7 +480,8 @@ and semantic_check_transformation context_flags = function
 and lub_ad_e exprs =
   lub_ad_type (List.map ~f:(fun x -> x.expr_typed_ad_level) exprs)
 
-and semantic_check_expression context_flags {expr_untyped_loc= loc; expr_untyped} =
+and semantic_check_expression context_flags
+    {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
   | TernaryIf (e1, e2, e3) -> (
       let ue1 = semantic_check_expression context_flags e1 in
@@ -881,7 +893,9 @@ and semantic_check_expression context_flags {expr_untyped_loc= loc; expr_untyped
       ; expr_typed_loc= loc }
   | Indexed (e, indices) ->
       let ue = semantic_check_expression context_flags e in
-      let uindices = List.map ~f:(semantic_check_index context_flags) indices in
+      let uindices =
+        List.map ~f:(semantic_check_index context_flags) indices
+      in
       let uindices_with_types =
         List.map
           ~f:(function
@@ -958,7 +972,7 @@ and semantic_check_printable context_flags = function
   | PString s -> PString s
   (* Print/reject expressions cannot be of function type. *)
   | PExpr e -> (
-    let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression context_flags e in
       match ue.expr_typed_type with
       | UFun _ | UMathLibraryFunction ->
           semantic_error ~loc:ue.expr_typed_loc "Functions cannot be printed."
@@ -1378,9 +1392,11 @@ and semantic_check_statement context_flags s =
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." )
       in
-      let us = semantic_check_statement
-                 { context_flags with loop_depth = context_flags.loop_depth + 1 }
-                 s in
+      let us =
+        semantic_check_statement
+          {context_flags with loop_depth= context_flags.loop_depth + 1}
+          s
+      in
       { stmt_typed= While (ue, us)
       ; stmt_typed_returntype= us.stmt_typed_returntype
       ; stmt_typed_loc= loc }
@@ -1411,9 +1427,11 @@ and semantic_check_statement context_flags s =
       let _ = Symbol_table.enter vm uid.name (oindexblock, UInt) in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
-      let us = semantic_check_statement 
-                 { context_flags with loop_depth = context_flags.loop_depth + 1 }
-                 s in
+      let us =
+        semantic_check_statement
+          {context_flags with loop_depth= context_flags.loop_depth + 1}
+          s
+      in
       let _ = Symbol_table.end_scope vm in
       { stmt_typed=
           For
@@ -1447,9 +1465,11 @@ and semantic_check_statement context_flags s =
       in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
-      let us = semantic_check_statement
-                 { context_flags with loop_depth = context_flags.loop_depth + 1}
-                 s in
+      let us =
+        semantic_check_statement
+          {context_flags with loop_depth= context_flags.loop_depth + 1}
+          s
+      in
       let _ = Symbol_table.end_scope vm in
       { stmt_typed= ForEach (uid, ue, us)
       ; stmt_typed_returntype= us.stmt_typed_returntype
@@ -1482,7 +1502,7 @@ and semantic_check_statement context_flags s =
       ; identifier= id
       ; initial_value= init
       ; is_global= glob } ->
-     let ust = semantic_check_sizedtype context_flags st
+      let ust = semantic_check_sizedtype context_flags st
       and not_ptq e f =
         match e.expr_typed_ad_level with AutoDiffable -> false | _ -> f ()
       in
@@ -1686,14 +1706,15 @@ and semantic_check_statement context_flags s =
                | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
              uarg_types)
       in
-      let ub = semantic_check_statement
-                 { context_flags with
-                   in_fun_def = true;
-                   in_rng_fun_def = is_suffix uid.name ~suffix:"_rng";
-                   in_lp_fun_def = is_suffix uid.name ~suffix:"_lp";
-                   in_returning_fun_def = urt <> Void;
-                 }
-                 b in
+      let ub =
+        semantic_check_statement
+          { context_flags with
+            in_fun_def= true
+          ; in_rng_fun_def= is_suffix uid.name ~suffix:"_rng"
+          ; in_lp_fun_def= is_suffix uid.name ~suffix:"_lp"
+          ; in_returning_fun_def= urt <> Void }
+          b
+      in
       (* Check that every trace through function body contains return statement of right type *)
       let _ =
         if
