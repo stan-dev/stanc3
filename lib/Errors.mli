@@ -27,7 +27,7 @@ val report_syntax_error : parse_error -> unit
 val report_semantic_error : Ast.location * string -> unit
 (** A semantic error message used when handling a SemanticError *)
 
-val semantic_error : ?loc:Ast.location -> string -> 'a
+val semantic_error : loc:Ast.location -> string -> 'a
 (** Throw a semantic error reported by the toplevel *)
 
 val fatal_error : ?msg:string -> unit -> 'a

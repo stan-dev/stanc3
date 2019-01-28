@@ -116,42 +116,36 @@ let report_syntax_error = function
 
 (** Print a location *)
 let print_location loc ppf =
-  match loc with
-  | Nowhere -> Format.fprintf ppf "unknown location"
-  | Location (begin_pos, end_pos) ->
-      let begin_char = begin_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
-      let end_char = end_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
-      let begin_line = begin_pos.Lexing.pos_lnum in
-      let filename = begin_pos.Lexing.pos_fname in
-      if String.length filename <> 0 then
-        Format.fprintf ppf "file %s"
-          (append_position_to_filename filename
-             (Printf.sprintf ", line %d, columns %d-%d" begin_line begin_char
-                end_char))
-      else
-        Format.fprintf ppf "line %d, columns %d-%d" (begin_line - 1) begin_char
-          end_char
+  match loc with begin_pos, end_pos ->
+    let begin_char = begin_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
+    let end_char = end_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
+    let begin_line = begin_pos.Lexing.pos_lnum in
+    let filename = begin_pos.Lexing.pos_fname in
+    if String.length filename <> 0 then
+      Format.fprintf ppf "file %s"
+        (append_position_to_filename filename
+           (Printf.sprintf ", line %d, columns %d-%d" begin_line begin_char
+              end_char))
+    else
+      Format.fprintf ppf "line %d, columns %d-%d" (begin_line - 1) begin_char
+        end_char
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
-  match loc with
-  | Location ({pos_fname= file; pos_lnum= line; pos_cnum= pos; pos_bol= bol}, _)
-    ->
-      Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location loc) ;
-      ( match error_context file line (pos - bol) with
-      | None -> ()
-      | Some line -> Format.eprintf "%s\n" line ) ;
-      Format.kfprintf
-        (fun ppf -> Format.fprintf ppf "@.")
-        Format.err_formatter "%s\n" msg
-  | Nowhere ->
-      Format.eprintf "\n%s: " "Semantic error" ;
-      Format.kfprintf
-        (fun ppf -> Format.fprintf ppf "@.")
-        Format.err_formatter "%s\n" msg
+  match loc
+  with
+  | {Lexing.pos_fname= file; pos_lnum= line; pos_cnum= pos; pos_bol= bol}, _
+  ->
+    Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location loc) ;
+    ( match error_context file line (pos - bol) with
+    | None -> ()
+    | Some line -> Format.eprintf "%s\n" line ) ;
+    Format.kfprintf
+      (fun ppf -> Format.fprintf ppf "@.")
+      Format.err_formatter "%s\n" msg
 
 (* A semantic error reported by the toplevel *)
-let semantic_error ?(loc = Nowhere) msg = raise (SemanticError (loc, msg))
+let semantic_error ~loc msg = raise (SemanticError (loc, msg))
 
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =

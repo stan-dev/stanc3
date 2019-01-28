@@ -44,8 +44,7 @@ let targetpe e =
   Assignment (t, BinOp (t, Plus, e))
 
 let trans_loc = function
-  | Ast.Nowhere -> ""
-  | Ast.Location (start, end_) ->
+  | start, end_ ->
       (* XXX hack hack *)
       let open Lexing in
       sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum

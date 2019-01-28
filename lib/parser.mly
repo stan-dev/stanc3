@@ -112,12 +112,12 @@ identifier:
   | id=IDENTIFIER
     {
       grammar_logger ("identifier " ^ id) ;
-      {name=id; id_loc=Location ($startpos, $endpos)}
+      {name=id; id_loc=($startpos, $endpos)}
     }
   | TRUNCATE
     {
       grammar_logger "identifier T" ;
-      {name="T"; id_loc=Location ($startpos, $endpos)}
+      {name="T"; id_loc=($startpos, $endpos)}
     }
 
 function_def:
@@ -127,7 +127,7 @@ function_def:
       grammar_logger "function_def" ;
       {stmt_untyped=FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;};
-       stmt_untyped_loc=Location ($startpos, $endpos)}
+       stmt_untyped_loc=($startpos, $endpos)}
     }
 
 return_type:
@@ -179,7 +179,7 @@ var_decl:
                   identifier= id;
                   initial_value=Option.map ~f:snd ae;
                   is_global= false};
-       stmt_untyped_loc= Location ($startpos, $endpos)}}
+       stmt_untyped_loc= ($startpos, $endpos)}}
 
 sized_basic_type:
   | INT
@@ -204,7 +204,7 @@ top_var_decl_no_assign:
                    identifier= id;
                    initial_value= None;
                    is_global= true};
-       stmt_untyped_loc= Location ($startpos, $endpos)}
+       stmt_untyped_loc= ($startpos, $endpos)}
     }
 
 top_var_decl:
@@ -218,7 +218,7 @@ top_var_decl:
                        identifier= id;
                        initial_value= Option.map ~f:snd ass;
                        is_global= true};
-       stmt_untyped_loc= Location ($startpos, $endpos)}}
+       stmt_untyped_loc= ($startpos, $endpos)}}
 
 top_var_type:
   | INT r=range_constraint
@@ -286,13 +286,13 @@ offset_mult:
     {
       grammar_logger "loc" ;
       OffsetMultiplier (e, {expr_untyped= RealNumeral "1.";
-                         expr_untyped_loc=Location ($startpos(e), $endpos(e))} )
+                         expr_untyped_loc=($startpos(e), $endpos(e))} )
     }
   | MULTIPLIER ASSIGN e=constr_expression
     {
       grammar_logger "scale" ;
       OffsetMultiplier ({expr_untyped=RealNumeral "0.";
-                     expr_untyped_loc=Location ($startpos(e), $endpos(e))}, e)}
+                     expr_untyped_loc=($startpos(e), $endpos(e))}, e)}
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
@@ -305,15 +305,15 @@ dims:
       grammar_logger "lhs_expression" ;
       match snd l with
         | [] -> {expr_untyped=Variable (fst l);
-                 expr_untyped_loc=Location ($startpos, $endpos)}
+                 expr_untyped_loc=($startpos, $endpos)}
         | i -> {expr_untyped=
                   Indexed ({expr_untyped=Variable (fst l);
-                            expr_untyped_loc=Location ($startpos, $endpos)}, i);
-                expr_untyped_loc=Location ($startpos, $endpos)}
+                            expr_untyped_loc=($startpos, $endpos)}, i);
+                expr_untyped_loc=($startpos, $endpos)}
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
-      {expr_untyped=e; expr_untyped_loc= Location ($startpos, $endpos)}}
+      {expr_untyped=e; expr_untyped_loc= ($startpos, $endpos)}}
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -327,7 +327,7 @@ non_lhs:
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
        Indexed ({expr_untyped=ue;
-                 expr_untyped_loc= Location ($startpos(ue), $endpos(ue))}, i)}
+                 expr_untyped_loc= ($startpos(ue), $endpos(ue))}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -337,37 +337,37 @@ constr_expression:
     {
       grammar_logger "constr_expression_arithmetic" ;
       {expr_untyped=BinOp (e1, op, e2);
-       expr_untyped_loc=Location ($startpos, $endpos)}
+       expr_untyped_loc=($startpos, $endpos)}
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
       {expr_untyped=PrefixOp (op, e);
-       expr_untyped_loc=Location ($startpos, $endpos)}
+       expr_untyped_loc=($startpos, $endpos)}
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
       {expr_untyped=PostfixOp (e, op);
-       expr_untyped_loc=Location ($startpos, $endpos)}
+       expr_untyped_loc=($startpos, $endpos)}
     }
   | e=constr_expression LBRACK i=indexes RBRACK
     {
       grammar_logger "constr_expression_indexed" ;
       {expr_untyped=Indexed (e, i);
-       expr_untyped_loc=Location ($startpos, $endpos)}
+       expr_untyped_loc=($startpos, $endpos)}
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
       {expr_untyped=e;
-       expr_untyped_loc= Location ($startpos, $endpos)}
+       expr_untyped_loc= ($startpos, $endpos)}
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
       {expr_untyped=Variable id;
-       expr_untyped_loc=Location ($startpos, $endpos)}
+       expr_untyped_loc=($startpos, $endpos)}
     }
 
 common_expression:
@@ -482,10 +482,10 @@ lhs:
 statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
-       {stmt_untyped= s; stmt_untyped_loc= Location ($startpos, $endpos)} }
+       {stmt_untyped= s; stmt_untyped_loc= ($startpos, $endpos)} }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
-       {stmt_untyped= s; stmt_untyped_loc= Location ($startpos, $endpos)} }
+       {stmt_untyped= s; stmt_untyped_loc= ($startpos, $endpos)} }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
