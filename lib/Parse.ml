@@ -98,7 +98,153 @@ let%expect_test "parse conditional" =
          (stmt_untyped_loc <opaque>)))))
      (generatedquantitiesblock ())) |}]
 
-let%expect_test "operator precedence" =
+let%expect_test "parse dangling else problem" =
+  let ast =
+    parse_string Parser.Incremental.program
+      "model { if (1 < 2) print(\"I'm sorry\"); if (2 < 3) print(\", Dave, \
+       \"); else print(\"I'm afraid I can't do that.\");}"
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+      ((functionblock ()) (datablock ()) (transformeddatablock ())
+       (parametersblock ()) (transformedparametersblock ())
+       (modelblock
+        ((((stmt_untyped
+            (IfThenElse
+             ((expr_untyped
+               (BinOp ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
+                Less ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))
+              (expr_untyped_loc <opaque>))
+             ((stmt_untyped (Print ((PString "\"I'm sorry\""))))
+              (stmt_untyped_loc <opaque>))
+             ()))
+           (stmt_untyped_loc <opaque>))
+          ((stmt_untyped
+            (IfThenElse
+             ((expr_untyped
+               (BinOp ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))
+                Less ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>))))
+              (expr_untyped_loc <opaque>))
+             ((stmt_untyped (Print ((PString "\", Dave, \""))))
+              (stmt_untyped_loc <opaque>))
+             (((stmt_untyped (Print ((PString "\"I'm afraid I can't do that.\""))))
+               (stmt_untyped_loc <opaque>)))))
+           (stmt_untyped_loc <opaque>)))))  
+       (generatedquantitiesblock ())) |}]
+
+let%expect_test "parse minus unary" =
+  let ast =
+    parse_string Parser.Incremental.program "model { real x; x = -x;}"
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+      ((functionblock ()) (datablock ()) (transformeddatablock ())
+       (parametersblock ()) (transformedparametersblock ())
+       (modelblock
+        ((((stmt_untyped
+            (VarDecl (sizedtype SReal) (transformation Identity)
+             (identifier ((name x) (id_loc <opaque>))) (initial_value ())
+             (is_global false)))
+           (stmt_untyped_loc <opaque>))
+          ((stmt_untyped
+            (Assignment (assign_identifier ((name x) (id_loc <opaque>)))
+             (assign_indices ()) (assign_op Assign)
+             (assign_rhs
+              ((expr_untyped
+                (PrefixOp Minus
+                 ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
+                  (expr_untyped_loc <opaque>))))
+               (expr_untyped_loc <opaque>)))))
+           (stmt_untyped_loc <opaque>)))))
+       (generatedquantitiesblock ())) |}]
+
+let%expect_test "parse unary over binary" =
+  let ast =
+    parse_string Parser.Incremental.program
+      "\n      model {\n        real x = x - - x - - x;\n      }\n      "
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+    ((functionblock ()) (datablock ()) (transformeddatablock ())
+     (parametersblock ()) (transformedparametersblock ())
+     (modelblock
+      ((((stmt_untyped
+          (VarDecl (sizedtype SReal) (transformation Identity)
+           (identifier ((name x) (id_loc <opaque>)))
+           (initial_value
+            (((expr_untyped
+               (BinOp
+                ((expr_untyped
+                  (BinOp
+                   ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
+                    (expr_untyped_loc <opaque>))
+                   Minus
+                   ((expr_untyped
+                     (PrefixOp Minus
+                      ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
+                       (expr_untyped_loc <opaque>))))
+                    (expr_untyped_loc <opaque>))))
+                 (expr_untyped_loc <opaque>))
+                Minus
+                ((expr_untyped
+                  (PrefixOp Minus
+                   ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
+                    (expr_untyped_loc <opaque>))))
+                 (expr_untyped_loc <opaque>))))
+              (expr_untyped_loc <opaque>))))
+           (is_global false)))
+         (stmt_untyped_loc <opaque>)))))
+     (generatedquantitiesblock ())) |}]
+
+let%expect_test "parse indices, two different colons" =
+  let ast =
+    parse_string Parser.Incremental.program
+      "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }"
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+      ((functionblock ()) (datablock ()) (transformeddatablock ())
+       (parametersblock ()) (transformedparametersblock ())
+       (modelblock
+        ((((stmt_untyped
+            (VarDecl
+             (sizedtype
+              (SMatrix ((expr_untyped (IntNumeral 5)) (expr_untyped_loc <opaque>))
+               ((expr_untyped (IntNumeral 5)) (expr_untyped_loc <opaque>))))
+             (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
+             (initial_value ()) (is_global false)))
+           (stmt_untyped_loc <opaque>))
+          ((stmt_untyped
+            (Print
+             ((PExpr
+               ((expr_untyped
+                 (Indexed
+                  ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
+                   (expr_untyped_loc <opaque>))
+                  ((Between
+                    ((expr_untyped
+                      (TernaryIf
+                       ((expr_untyped
+                         (BinOp
+                          ((expr_untyped (IntNumeral 2))
+                           (expr_untyped_loc <opaque>))
+                          Minus
+                          ((expr_untyped (IntNumeral 3))
+                           (expr_untyped_loc <opaque>))))
+                        (expr_untyped_loc <opaque>))
+                       ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>))
+                       ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>))))
+                     (expr_untyped_loc <opaque>))
+                    ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))))
+                (expr_untyped_loc <opaque>))))))
+           (stmt_untyped_loc <opaque>)))))
+       (generatedquantitiesblock ())) |}]
+
+let%expect_test "parse operator precedence" =
   let ast =
     parse_string Parser.Incremental.program
       "model {  \
@@ -270,6 +416,113 @@ let%expect_test "operator precedence" =
                 (expr_untyped_loc <opaque>))))))
            (stmt_untyped_loc <opaque>)))))
        (generatedquantitiesblock ())) |}]
+
+let%expect_test "parse crazy truncation example" =
+  let ast =
+    parse_string Parser.Incremental.program
+      "\n\
+      \      model {\n\
+      \        real T[1,1] = {{42.0}};\n\
+      \        1 ~ normal(0, 1) T[1, T[1,1]];\n\
+      \        print(T[1,1]);\n\
+      \      }\n\
+      \      "
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+      ((functionblock ()) (datablock ()) (transformeddatablock ())
+       (parametersblock ()) (transformedparametersblock ())
+       (modelblock
+        ((((stmt_untyped
+            (VarDecl
+             (sizedtype
+              (SArray
+               (SArray SReal
+                ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+               ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))
+             (transformation Identity) (identifier ((name T) (id_loc <opaque>)))
+             (initial_value
+              (((expr_untyped
+                 (ArrayExpr
+                  (((expr_untyped
+                     (ArrayExpr
+                      (((expr_untyped (RealNumeral 42.0))
+                        (expr_untyped_loc <opaque>)))))
+                    (expr_untyped_loc <opaque>)))))
+                (expr_untyped_loc <opaque>))))
+             (is_global false)))
+           (stmt_untyped_loc <opaque>))
+          ((stmt_untyped
+            (Tilde
+             (arg ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+             (distribution ((name normal) (id_loc <opaque>)))
+             (args
+              (((expr_untyped (IntNumeral 0)) (expr_untyped_loc <opaque>))
+               ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))
+             (truncation
+              (TruncateBetween
+               ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
+               ((expr_untyped
+                 (Indexed
+                  ((expr_untyped (Variable ((name T) (id_loc <opaque>))))
+                   (expr_untyped_loc <opaque>))
+                  ((Single
+                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+                   (Single
+                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))))
+                (expr_untyped_loc <opaque>))))))
+           (stmt_untyped_loc <opaque>))
+          ((stmt_untyped
+            (Print
+             ((PExpr
+               ((expr_untyped
+                 (Indexed
+                  ((expr_untyped (Variable ((name T) (id_loc <opaque>))))
+                   (expr_untyped_loc <opaque>))
+                  ((Single
+                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+                   (Single
+                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))))
+                (expr_untyped_loc <opaque>))))))
+           (stmt_untyped_loc <opaque>)))))
+       (generatedquantitiesblock ())) |}]
+
+let%expect_test "parse nested loop" =
+  let ast =
+    parse_string Parser.Incremental.program
+      "      model {\n\
+      \              for (i in 1:2)\n\
+      \                for (j in 3:4)\n\
+      \                  print(\"Badger\");\n\
+      \            }\n\
+      \            "
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+    ((functionblock ()) (datablock ()) (transformeddatablock ())
+     (parametersblock ()) (transformedparametersblock ())
+     (modelblock
+      ((((stmt_untyped
+          (For (loop_variable ((name i) (id_loc <opaque>)))
+           (lower_bound
+            ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+           (upper_bound
+            ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>)))
+           (loop_body
+            ((stmt_untyped
+              (For (loop_variable ((name j) (id_loc <opaque>)))
+               (lower_bound
+                ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>)))
+               (upper_bound
+                ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>)))
+               (loop_body
+                ((stmt_untyped (Print ((PString "\"Badger\""))))
+                 (stmt_untyped_loc <opaque>)))))
+             (stmt_untyped_loc <opaque>)))))
+         (stmt_untyped_loc <opaque>)))))
+     (generatedquantitiesblock ())) |}]
 
 let parse_file parse_fun path =
   let chan = In_channel.create path in
