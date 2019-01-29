@@ -49,6 +49,7 @@ Syntax error at file plus_equals_bad_init.stan, line 3, columns 12-19, parsing e
 
 ";" or plain assignment is expected after a top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 
 Semantic error at file plus_equals_bad_lhs_idxs.stan, line 4, columns 2-14:
@@ -178,6 +179,7 @@ Syntax error at file plus_equals_matrix_shape_mismatch.stan, line 4, columns 9-1
    -------------------------------------------------
 
 "[" expression "]" expected for vector size.
+
 
   $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
 

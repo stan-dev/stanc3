@@ -10,6 +10,7 @@ Syntax error at file tparameters_betareg.stan, line 1, columns 2-4, parsing erro
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_glm.stan
 
 Syntax error at file tparameters_glm.stan, line 1, columns 2-8, parsing error:
@@ -22,6 +23,7 @@ Syntax error at file tparameters_glm.stan, line 1, columns 2-8, parsing error:
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_mvmer.stan
 
 Syntax error at file tparameters_mvmer.stan, line 1, columns 2-8, parsing error:
@@ -33,4 +35,5 @@ Syntax error at file tparameters_mvmer.stan, line 1, columns 2-8, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
 

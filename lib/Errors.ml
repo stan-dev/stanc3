@@ -79,19 +79,17 @@ let rec create_string_from_location loc =
 (** Render a location_span as a string *)
 let create_string_from_location_span loc_sp =
   match loc_sp with {start_loc; end_loc} ->
-    let begin_char = start_loc.colnum in
-    let end_char = end_loc.colnum in
-    let begin_line = start_loc.linenum in
-    let end_line = end_loc.linenum in
     let open Format in
     let filename_str = sprintf "file %s, " start_loc.filename in
     let linenum_str =
-      if end_line = begin_line then sprintf "line %d, " end_line
-      else sprintf "lines %d-%d, " begin_line end_line
+      if end_loc.linenum = start_loc.linenum then
+        sprintf "line %d, " end_loc.linenum
+      else sprintf "lines %d-%d, " start_loc.linenum end_loc.linenum
     in
     let colnum_str =
-      if end_line = begin_line then sprintf "columns %d-%d" begin_char end_char
-      else sprintf "column %d" begin_char
+      if end_loc.linenum = start_loc.linenum then
+        sprintf "columns %d-%d" start_loc.colnum end_loc.colnum
+      else sprintf "column %d" start_loc.colnum
     in
     let included_from_str =
       match start_loc.included_from with
@@ -149,7 +147,7 @@ let report_syntax_error = function
       | Some line -> Printf.eprintf "%s\n" line ) ;
       match message with
       | None -> Printf.eprintf "\n"
-      | Some error_message -> prerr_endline error_message )
+      | Some error_message -> Printf.eprintf "%s\n\n" error_message )
   | Lexing (_, err_pos) ->
       let loc = location_of_position err_pos in
       Printf.eprintf "\nSyntax error at %s, lexing error:\n"
@@ -165,16 +163,16 @@ let report_syntax_error = function
       ( match error_context loc with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
-      Printf.eprintf "%s\n" msg
+      Printf.eprintf "%s\n\n" msg
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
-  Format.eprintf "\n%s at %s:\n" "Semantic error"
+  Printf.eprintf "\n%s at %s:\n" "Semantic error"
     (create_string_from_location_span loc) ;
   ( match error_context loc.start_loc with
   | None -> ()
-  | Some linenum -> Format.eprintf "%s\n" linenum ) ;
-  Format.eprintf "%s\n\n" msg
+  | Some linenum -> Printf.eprintf "%s\n" linenum ) ;
+  Printf.eprintf "%s\n\n" msg
 
 (* Warn that a language feature is deprecated *)
 let warn_deprecated (pos, msg) =

@@ -8,6 +8,7 @@ Syntax error at file bad1.stan, line 1, columns 6-7, parsing error:
 
 Variable declaration, statement or "}" expected.
 
+
   $ ../../../../../install/default/bin/stanc bad10.stan
 
 Semantic error at file bad10.stan, line 2, columns 8-11:
@@ -53,6 +54,7 @@ Syntax error at file bad3.stan, line 1, columns 15-21, parsing error:
    -------------------------------------------------
 
 Expected "[" expression "," expression "]" for sizes of matrix.
+
 
   $ ../../../../../install/default/bin/stanc bad4.stan
 
@@ -146,6 +148,7 @@ Syntax error at file bad_bounds1.stan, line 2, columns 13-14, parsing error:
 
 ">" or ", upper = expression (not containing binary logical operators) ">" expected after specifying lower bound for type.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
 
 Semantic error at file bad_cov_exp_quad_arr_rvec_data.stan, line 13, columns 41-48:
@@ -174,6 +177,7 @@ Syntax error at file bad_cov_exp_quad_arr_rvec_param.stan, lines 12-16, column 0
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_data.stan
 
 Semantic error at file bad_cov_exp_quad_arr_vec_data.stan, line 13, columns 41-48:
@@ -201,6 +205,7 @@ Syntax error at file bad_cov_exp_quad_arr_vec_param.stan, lines 12-16, column 0,
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
+
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_data.stan
 
@@ -237,6 +242,7 @@ Syntax error at file bad_cov_exp_quad_len_param.stan, lines 12-16, column 0, par
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_rvec_param.stan
 
 Syntax error at file bad_cov_exp_quad_len_rvec_param.stan, lines 12-16, column 0, parsing error:
@@ -251,6 +257,7 @@ Syntax error at file bad_cov_exp_quad_len_rvec_param.stan, lines 12-16, column 0
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_vec_param.stan
 
 Syntax error at file bad_cov_exp_quad_len_vec_param.stan, lines 12-16, column 0, parsing error:
@@ -264,6 +271,7 @@ Syntax error at file bad_cov_exp_quad_len_vec_param.stan, lines 12-16, column 0,
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
+
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_data.stan
 
@@ -292,6 +300,7 @@ Syntax error at file bad_cov_exp_quad_rvec_arr_param.stan, lines 12-16, column 0
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
+
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_data.stan
 
@@ -349,6 +358,7 @@ Syntax error at file bad_cov_exp_quad_rvec_vec_param.stan, lines 12-16, column 0
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_data.stan
 
 Semantic error at file bad_cov_exp_quad_sigma_data.stan, line 13, columns 28-75:
@@ -384,6 +394,7 @@ Syntax error at file bad_cov_exp_quad_sigma_param.stan, lines 12-16, column 0, p
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_rvec_param.stan
 
 Syntax error at file bad_cov_exp_quad_sigma_rvec_param.stan, lines 12-16, column 0, parsing error:
@@ -398,6 +409,7 @@ Syntax error at file bad_cov_exp_quad_sigma_rvec_param.stan, lines 12-16, column
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_vec_param.stan
 
 Syntax error at file bad_cov_exp_quad_sigma_vec_param.stan, lines 12-16, column 0, parsing error:
@@ -411,6 +423,7 @@ Syntax error at file bad_cov_exp_quad_sigma_vec_param.stan, lines 12-16, column 
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
+
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_data.stan
 
@@ -439,6 +452,7 @@ Syntax error at file bad_cov_exp_quad_vec_arr_param.stan, lines 12-16, column 0,
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
+
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_data.stan
 
@@ -496,6 +510,7 @@ Syntax error at file bad_cov_exp_quad_vec_rvec_param.stan, lines 12-16, column 0
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
+
   $ ../../../../../install/default/bin/stanc bad_fun_name.stan
 
 Semantic error at file bad_fun_name.stan, line 2, columns 7-12:
@@ -536,6 +551,7 @@ Syntax error at file bad_periods_data.stan, line 2, columns 7-8, parsing error:
 
 Only top-level variable declarations are allowed in data and parameter blocks.
 
+
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
 
 Syntax error at file bad_periods_gqs.stan, line 8, columns 7-8, parsing error:
@@ -549,6 +565,7 @@ Syntax error at file bad_periods_gqs.stan, line 8, columns 7-8, parsing error:
    -------------------------------------------------
 
 ";" or plain assignment is expected after a top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
 
@@ -564,6 +581,7 @@ Syntax error at file bad_periods_local.stan, line 5, columns 7-8, parsing error:
 
 ";" or plain assignment expected after variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
 
 Syntax error at file bad_periods_params.stan, line 2, columns 7-8, parsing error:
@@ -576,6 +594,7 @@ Syntax error at file bad_periods_params.stan, line 2, columns 7-8, parsing error
    -------------------------------------------------
 
 Only top-level variable declarations are allowed in data and parameter blocks.
+
 
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
 
@@ -590,6 +609,7 @@ Syntax error at file bad_periods_tdata.stan, line 2, columns 7-8, parsing error:
 
 ";" or plain assignment is expected after a top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
 
 Syntax error at file bad_periods_tparams.stan, line 2, columns 7-8, parsing error:
@@ -602,6 +622,7 @@ Syntax error at file bad_periods_tparams.stan, line 2, columns 7-8, parsing erro
    -------------------------------------------------
 
 ";" or plain assignment is expected after a top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc good_all.stan
 

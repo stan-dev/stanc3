@@ -206,6 +206,7 @@ Syntax error at file break.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc case.stan
 
 Semantic error at file case.stan, line 2, columns 7-11:
@@ -284,6 +285,7 @@ Syntax error at file cholesky_factor_corr.stan, line 2, columns 2-6, parsing err
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc cholesky_factor_cov.stan
 
 Syntax error at file cholesky_factor_cov.stan, line 2, columns 2-6, parsing error:
@@ -296,6 +298,7 @@ Syntax error at file cholesky_factor_cov.stan, line 2, columns 2-6, parsing erro
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc class.stan
 
@@ -375,6 +378,7 @@ Syntax error at file continue.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc corr_matrix.stan
 
 Syntax error at file corr_matrix.stan, line 2, columns 2-6, parsing error:
@@ -388,6 +392,7 @@ Syntax error at file corr_matrix.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc cov_matrix.stan
 
 Syntax error at file cov_matrix.stan, line 2, columns 2-6, parsing error:
@@ -400,6 +405,7 @@ Syntax error at file cov_matrix.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc decltype.stan
 
@@ -492,6 +498,7 @@ Syntax error at file else.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc enum.stan
 
 Semantic error at file enum.stan, line 2, columns 7-11:
@@ -583,6 +590,7 @@ Syntax error at file for.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc friend.stan
 
 Semantic error at file friend.stan, line 2, columns 7-13:
@@ -635,6 +643,7 @@ Syntax error at file if.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc in.stan
 
 Syntax error at file in.stan, line 2, columns 2-6, parsing error:
@@ -647,6 +656,7 @@ Syntax error at file in.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc inline.stan
 
@@ -674,6 +684,7 @@ Syntax error at file int.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc long.stan
 
 Semantic error at file long.stan, line 2, columns 7-11:
@@ -699,6 +710,7 @@ Syntax error at file matrix.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc mutable.stan
 
@@ -843,6 +855,7 @@ Syntax error at file ordered.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc positive_ordered.stan
 
 Syntax error at file positive_ordered.stan, line 2, columns 2-6, parsing error:
@@ -855,6 +868,7 @@ Syntax error at file positive_ordered.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc private.stan
 
@@ -908,6 +922,7 @@ Syntax error at file real.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc register.stan
 
 Semantic error at file register.stan, line 2, columns 7-15:
@@ -960,6 +975,7 @@ Syntax error at file return.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc row_vector.stan
 
 Syntax error at file row_vector.stan, line 2, columns 2-6, parsing error:
@@ -972,6 +988,7 @@ Syntax error at file row_vector.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc short.stan
 
@@ -1011,6 +1028,7 @@ Syntax error at file simplex.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc sizeof.stan
 
@@ -1246,6 +1264,7 @@ Syntax error at file unit_vector.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc unsigned.stan
 
 Semantic error at file unsigned.stan, line 2, columns 7-15:
@@ -1311,6 +1330,7 @@ Syntax error at file vector.stan, line 2, columns 2-6, parsing error:
 
 Identifier expected after type in top-level variable declaration.
 
+
   $ ../../../../../install/default/bin/stanc virtual.stan
 
 Semantic error at file virtual.stan, line 2, columns 7-14:
@@ -1336,6 +1356,7 @@ Syntax error at file void.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc volatile.stan
 
@@ -1375,6 +1396,7 @@ Syntax error at file while.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Identifier expected after type in top-level variable declaration.
+
 
   $ ../../../../../install/default/bin/stanc xor.stan
 

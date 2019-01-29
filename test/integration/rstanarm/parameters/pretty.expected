@@ -10,6 +10,7 @@ Syntax error at file parameters_assoc.stan, line 1, columns 2-8, parsing error:
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format parameters_betareg.stan
 
 Syntax error at file parameters_betareg.stan, line 1, columns 2-8, parsing error:
@@ -21,6 +22,7 @@ Syntax error at file parameters_betareg.stan, line 1, columns 2-8, parsing error
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
 
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format parameters_event.stan
 
@@ -34,6 +36,7 @@ Syntax error at file parameters_event.stan, line 1, columns 2-6, parsing error:
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format parameters_glm.stan
 
 Syntax error at file parameters_glm.stan, line 1, columns 2-8, parsing error:
@@ -45,6 +48,7 @@ Syntax error at file parameters_glm.stan, line 1, columns 2-8, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
 
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format parameters_mvmer.stan
 
@@ -58,4 +62,5 @@ Syntax error at file parameters_mvmer.stan, line 2, columns 2-6, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
 
