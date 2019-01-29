@@ -114,33 +114,6 @@ let report_syntax_error = function
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "%s\n" msg
 
-(** Print a location *)
-let print_location_span loc ppf =
-  match loc with {start_loc; end_loc} ->
-    let begin_char = start_loc.colnum in
-    let end_char = end_loc.colnum in
-    let begin_line = start_loc.linenum in
-    let filename = start_loc.filename in
-    if String.length filename <> 0 then
-      Format.fprintf ppf "file %s"
-        (append_position_to_filename filename
-           (Printf.sprintf ", line %d, columns %d-%d" begin_line begin_char
-              end_char))
-    else
-      Format.fprintf ppf "line %d, columns %d-%d" (begin_line - 1) begin_char
-        end_char
-
-(** A semantic error message used when handling a SemanticError *)
-let report_semantic_error (loc, msg) =
-  match loc with {start_loc= {filename; linenum; colnum; _}; _} ->
-    Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location_span loc) ;
-    ( match error_context filename linenum colnum with
-    | None -> ()
-    | Some linenum -> Format.eprintf "%s\n" linenum ) ;
-    Format.kfprintf
-      (fun ppf -> Format.fprintf ppf "@.")
-      Format.err_formatter "%s\n" msg
-
 (* A semantic error reported by the toplevel *)
 let semantic_error ~loc msg = raise (SemanticError (loc, msg))
 
@@ -179,16 +152,6 @@ let rec parse_location_from_string str =
       ; included_from= Some (parse_location_from_string included_from_str) }
   | _ -> fatal_error ()
 
-let%expect_test "parse location from string" =
-  let loc = parse_location_from_string "file xxx.stan, line 245, column 13" in
-  print_endline loc.filename ;
-  print_endline (string_of_int loc.linenum) ;
-  print_endline (string_of_int loc.colnum) ;
-  [%expect {|
-      xxx.stan
-      245
-      13 |}]
-
 (** Render a location as a string *)
 let rec create_string_from_location loc =
   let open Format in
@@ -200,6 +163,54 @@ let rec create_string_from_location loc =
   in
   sprintf "file %s, line %d, column %d%s" loc.filename loc.linenum loc.colnum
     included_from_str
+
+(** Render a location_span as a string *)
+let create_string_from_location_span loc_sp ppf =
+  match loc_sp with {start_loc; end_loc} ->
+    let begin_char = start_loc.colnum in
+    let end_char = end_loc.colnum in
+    let begin_line = start_loc.linenum in
+    let open Format in
+    let filename_str = sprintf "file %s, " start_loc.filename in
+    let linenum_str = sprintf "line %d, " begin_line in
+    let colnum_str = sprintf "columns %d-%d" begin_char end_char in
+    let included_from_str =
+      match start_loc.included_from with
+      | None -> ""
+      | Some loc ->
+          sprintf ", included from\n%s" (create_string_from_location loc)
+    in
+    fprintf ppf "%s%s%s%s" filename_str linenum_str colnum_str
+      included_from_str
+
+(** A semantic error message used when handling a SemanticError *)
+let report_semantic_error (loc, msg) =
+  match loc with {start_loc= {filename; linenum; colnum; _}; _} ->
+    Format.eprintf "\n%s at %t:@\n" "Semantic error"
+      (create_string_from_location_span loc) ;
+    ( match error_context filename linenum colnum with
+    | None -> ()
+    | Some linenum -> Format.eprintf "%s\n" linenum ) ;
+    Format.kfprintf
+      (fun ppf -> Format.fprintf ppf "@.")
+      Format.err_formatter "%s\n" msg
+
+(** Take the AST.location corresponding to a Lexing.position *)
+let location_of_position = function
+  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
+      let split_fname =
+        Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
+      in
+      match split_fname with
+      | [] -> fatal_error ()
+      | fname1 :: fnames ->
+          { filename= fname1
+          ; linenum= pos_lnum
+          ; colnum= pos_cnum - pos_bol
+          ; included_from=
+              ( match fnames with
+              | [] -> None
+              | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
 
 let%expect_test "location string equivalence 1" =
   let str =
@@ -232,19 +243,12 @@ let%expect_test "location string equivalence 2" =
       file xxx.stan, line 35, column 24, included from
       file yyy.stan, line 345, column 214 |}]
 
-(** Take the AST.location corresponding to a Lexing.position *)
-let location_of_position = function
-  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
-      let split_fname =
-        Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
-      in
-      match split_fname with
-      | [] -> fatal_error ()
-      | fname1 :: fnames ->
-          { filename= fname1
-          ; linenum= pos_lnum
-          ; colnum= pos_cnum - pos_bol
-          ; included_from=
-              ( match fnames with
-              | [] -> None
-              | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
+let%expect_test "parse location from string" =
+  let loc = parse_location_from_string "file xxx.stan, line 245, column 13" in
+  print_endline loc.filename ;
+  print_endline (string_of_int loc.linenum) ;
+  print_endline (string_of_int loc.colnum) ;
+  [%expect {|
+      xxx.stan
+      245
+      13 |}]
