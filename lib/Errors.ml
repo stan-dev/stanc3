@@ -64,6 +64,11 @@ let location_of_position = function
               | [] -> None
               | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
 
+(** Take the AST.location_span corresponding to a pair of Lexing.position's *)
+let location_span_of_pos start_pos end_pos =
+  { start_loc= location_of_position start_pos
+  ; end_loc= location_of_position end_pos }
+
 (** Render a location as a string *)
 let rec create_string_from_location loc =
   let open Format in

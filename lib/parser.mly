@@ -9,10 +9,6 @@ open Errors
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
   List.fold l ~f:(fun y z -> SArray (y, z)) ~init:sbt
-
-let location_span_of_pos start_pos end_pos =
-  {start_loc=location_of_position start_pos;
-   end_loc=location_of_position end_pos}
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK

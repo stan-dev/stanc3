@@ -23,6 +23,10 @@ val semantic_error : loc:Ast.location_span -> string -> 'a
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
 
+val location_span_of_pos :
+  Lexing.position -> Lexing.position -> Ast.location_span
+(** Take the AST.location_span corresponding to a pair of Lexing.position's *)
+
 val location_of_position : Lexing.position -> Ast.location
 (** Take the AST.location corresponding to a Lexing.position *)
 
