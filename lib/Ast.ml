@@ -3,15 +3,7 @@ open Core_kernel
 
 (** Source code location_spans *)
 type location =
-  {filename: string; linenum: int; colnum: int; include_stack: location list}
-
-(** Take the AST.location corresponding to a Lexing.position *)
-let location_of_position = function
-  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} ->
-      { filename= pos_fname
-      ; linenum= pos_lnum
-      ; colnum= pos_cnum - pos_bol
-      ; include_stack= [] }
+  {filename: string; linenum: int; colnum: int; included_from: location option}
 
 (** Delimited location_span *)
 type location_span = {start_loc: location; end_loc: location}

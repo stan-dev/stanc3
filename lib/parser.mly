@@ -4,6 +4,7 @@
 open Core_kernel
 open Ast
 open Debugging
+open Errors
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =

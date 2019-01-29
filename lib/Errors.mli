@@ -1,5 +1,7 @@
 (** Some plumbing for our compiler errors *)
 
+val location_of_position : Lexing.position -> Ast.location
+
 val append_position_to_filename : string -> string -> string
 (** Insert the line and column number string in a filename string before the first
     include, after the first filename *)

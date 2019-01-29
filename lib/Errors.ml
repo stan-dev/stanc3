@@ -3,6 +3,96 @@
 open Core_kernel
 open Ast
 
+(** Parse a string into a location *)
+let rec parse_location_from_string str =
+  let split_str =
+    Str.bounded_split
+      (Str.regexp "file \\|, line \\|, column \\|, included from\n")
+      str 4
+  in
+  match split_str with
+  | [fname; linenum; colnum] ->
+      { filename= fname
+      ; linenum= int_of_string linenum
+      ; colnum= int_of_string colnum
+      ; included_from= None }
+  | [fname; linenum_str; colnum_str; included_from_str] ->
+      { filename= fname
+      ; linenum= int_of_string linenum_str
+      ; colnum= int_of_string colnum_str
+      ; included_from= Some (parse_location_from_string included_from_str) }
+  | _ -> fatal_error ()
+
+let%expect_test "parse location from string" =
+  let loc = parse_location_from_string "file xxx.stan, line 245, column 13" in
+  print_endline loc.filename ;
+  print_endline (string_of_int loc.linenum) ;
+  print_endline (string_of_int loc.colnum) ;
+  [%expect {|
+      xxx.stan
+      245
+      13 |}]
+
+(** Render a location as a string *)
+let rec create_string_from_location loc =
+  let open Format in
+  let included_from_str =
+    match loc.included_from with
+    | None -> ""
+    | Some loc2 ->
+        sprintf ", included from\n%s" (create_string_from_location loc2)
+  in
+  sprintf "file %s, line %d, column %d%s" loc.filename loc.linenum loc.colnum
+    included_from_str
+
+let%expect_test "location string equivalence 1" =
+  let str =
+    "file xxx.stan, line 245, column 13, included from\n\
+     file yyy.stan, line 666, column 42, included from\n\
+     file zzz.stan, line 24, column 77"
+  in
+  print_endline (create_string_from_location (parse_location_from_string str)) ;
+  [%expect
+    {|
+      file xxx.stan, line 245, column 13, included from
+      file yyy.stan, line 666, column 42, included from
+      file zzz.stan, line 24, column 77 |}]
+
+let%expect_test "location string equivalence 2" =
+  let loc =
+    { filename= "xxx.stan"
+    ; linenum= 35
+    ; colnum= 24
+    ; included_from=
+        Some
+          {filename= "yyy.stan"; linenum= 345; colnum= 214; included_from= None}
+    }
+  in
+  print_endline
+    (create_string_from_location
+       (parse_location_from_string (create_string_from_location loc))) ;
+  [%expect
+    {|
+      file xxx.stan, line 35, column 24, included from
+      file yyy.stan, line 345, column 214 |}]
+
+(** Take the AST.location corresponding to a Lexing.position *)
+let location_of_position = function
+  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
+      let split_fname =
+        Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
+      in
+      match split_fname with
+      | [] -> fatal_error ()
+      | fname1 :: fnames ->
+          { filename= fname1
+          ; linenum= pos_lnum
+          ; colnum= pos_cnum - pos_bol
+          ; included_from=
+              ( match fnames with
+              | [] -> None
+              | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
+
 (** Insert the line and column number string in a filename string before the first
     include, after the first filename *)
 let append_position_to_filename fname pos_string =
