@@ -44,10 +44,10 @@ let targetpe e =
   Assignment (t, BinOp (t, Plus, e))
 
 let trans_loc = function
-  | start, end_ ->
+  | {Ast.start_loc; end_loc} ->
       (* XXX hack hack *)
-      let open Lexing in
-      sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
+      sprintf "\"%s\", line %d-%d" start_loc.filename start_loc.linenum
+        end_loc.linenum
 
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
 let no_loc = ""

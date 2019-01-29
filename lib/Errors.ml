@@ -24,7 +24,7 @@ exception SyntaxError of parse_error
 
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
-exception SemanticError of (location * string)
+exception SemanticError of (location_span * string)
 
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
     [msg]. *)
@@ -115,12 +115,12 @@ let report_syntax_error = function
       Printf.eprintf "%s\n" msg
 
 (** Print a location *)
-let print_location loc ppf =
-  match loc with begin_pos, end_pos ->
-    let begin_char = begin_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
-    let end_char = end_pos.Lexing.pos_cnum - begin_pos.Lexing.pos_bol in
-    let begin_line = begin_pos.Lexing.pos_lnum in
-    let filename = begin_pos.Lexing.pos_fname in
+let print_location_span loc ppf =
+  match loc with {start_loc; end_loc} ->
+    let begin_char = start_loc.colnum in
+    let end_char = end_loc.colnum in
+    let begin_line = start_loc.linenum in
+    let filename = start_loc.filename in
     if String.length filename <> 0 then
       Format.fprintf ppf "file %s"
         (append_position_to_filename filename
@@ -132,14 +132,11 @@ let print_location loc ppf =
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
-  match loc
-  with
-  | {Lexing.pos_fname= file; pos_lnum= line; pos_cnum= pos; pos_bol= bol}, _
-  ->
-    Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location loc) ;
-    ( match error_context file line (pos - bol) with
+  match loc with {start_loc= {filename; linenum; colnum; _}; _} ->
+    Format.eprintf "\n%s at %t:@\n" "Semantic error" (print_location_span loc) ;
+    ( match error_context filename linenum colnum with
     | None -> ()
-    | Some line -> Format.eprintf "%s\n" line ) ;
+    | Some linenum -> Format.eprintf "%s\n" linenum ) ;
     Format.kfprintf
       (fun ppf -> Format.fprintf ppf "@.")
       Format.err_formatter "%s\n" msg

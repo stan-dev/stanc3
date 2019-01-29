@@ -15,7 +15,7 @@ exception SyntaxError of parse_error
 
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
-exception SemanticError of (Ast.location * string)
+exception SemanticError of (Ast.location_span * string)
 
 (** Exception for Fatal Errors. These should perhaps be left unhandled,
     so we can trace their origin. *)
@@ -24,10 +24,10 @@ exception FatalError of string
 val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
-val report_semantic_error : Ast.location * string -> unit
+val report_semantic_error : Ast.location_span * string -> unit
 (** A semantic error message used when handling a SemanticError *)
 
-val semantic_error : loc:Ast.location -> string -> 'a
+val semantic_error : loc:Ast.location_span -> string -> 'a
 (** Throw a semantic error reported by the toplevel *)
 
 val fatal_error : ?msg:string -> unit -> 'a
