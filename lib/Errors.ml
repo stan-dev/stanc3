@@ -47,6 +47,23 @@ let rec parse_location_from_string str =
       ; included_from= Some (parse_location_from_string included_from_str) }
   | _ -> fatal_error ()
 
+(** Take the AST.location corresponding to a Lexing.position *)
+let location_of_position = function
+  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
+      let split_fname =
+        Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
+      in
+      match split_fname with
+      | [] -> fatal_error ()
+      | fname1 :: fnames ->
+          { filename= fname1
+          ; linenum= pos_lnum
+          ; colnum= pos_cnum - pos_bol
+          ; included_from=
+              ( match fnames with
+              | [] -> None
+              | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
+
 (** Render a location as a string *)
 let rec create_string_from_location loc =
   let open Format in
@@ -84,30 +101,10 @@ let create_string_from_location_span loc_sp =
     in
     sprintf "%s%s%s%s" filename_str linenum_str colnum_str included_from_str
 
-(** Take the AST.location corresponding to a Lexing.position *)
-let location_of_position = function
-  | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
-      let split_fname =
-        Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
-      in
-      match split_fname with
-      | [] -> fatal_error ()
-      | fname1 :: fnames ->
-          { filename= fname1
-          ; linenum= pos_lnum
-          ; colnum= pos_cnum - pos_bol
-          ; included_from=
-              ( match fnames with
-              | [] -> None
-              | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
-
-let position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
+let error_context {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let file = pos_fname in
   let line = pos_lnum in
   let column = pos_cnum - pos_bol in
-  (file, line, column)
-
-let error_context file line column =
   try
     let bare_file =
       List.hd_exn (Str.split (Str.regexp ", included from\nfile ") file)
@@ -145,56 +142,57 @@ let error_context file line column =
 (** A syntax error message used when handling a SyntaxError *)
 let report_syntax_error = function
   | Parsing (message, start_pos, end_pos) -> (
-      let file, _, _ = position start_pos in
-      let _, curr_line, curr_column = position end_pos in
       Printf.eprintf "\nSyntax error at %s, parsing error:\n"
         (create_string_from_location_span
            { start_loc= location_of_position start_pos
            ; end_loc= location_of_position end_pos }) ;
-      ( match error_context file curr_line curr_column with
+      ( match error_context end_pos with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       match message with
       | None -> Printf.eprintf "\n"
       | Some error_message -> prerr_endline error_message )
   | Lexing (_, err_pos) ->
-      let file, line, column = position err_pos in
       Printf.eprintf "\nSyntax error at %s, lexing error:\n"
         (create_string_from_location
            (location_of_position {err_pos with pos_cnum= err_pos.pos_cnum - 1})) ;
-      ( match error_context file line column with
+      ( match error_context err_pos with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "Invalid character found. %s\n\n" ""
   | Includes (msg, err_pos) ->
-      let file, line, column = position err_pos in
       Printf.eprintf "\nSyntax error at %s, includes error:\n"
         (create_string_from_location (location_of_position err_pos)) ;
-      ( match error_context file line column with
+      ( match error_context err_pos with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "%s\n" msg
-
-(* Warn that a language feature is deprecated *)
-let warn_deprecated (pos, msg) =
-  let file, line, column = position pos in
-  Printf.eprintf "\nWarning: deprecated language construct used at %s:\n"
-    (create_string_from_location
-       (location_of_position {pos with pos_cnum= pos.pos_cnum - 1})) ;
-  ( match error_context file line (column - 1) with
-  | None -> ()
-  | Some line -> Printf.eprintf "%s\n" line ) ;
-  Printf.eprintf "%s\n\n" msg
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
   match loc with {start_loc= {filename; linenum; colnum; _}; _} ->
     Format.eprintf "\n%s at %s:\n" "Semantic error"
       (create_string_from_location_span loc) ;
-    ( match error_context filename linenum colnum with
+    ( match
+        error_context
+          { Lexing.pos_fname= filename
+          ; pos_lnum= linenum
+          ; pos_cnum= colnum
+          ; pos_bol= 0 }
+      with
     | None -> ()
     | Some linenum -> Format.eprintf "%s\n" linenum ) ;
     Format.eprintf "%s\n\n" msg
+
+(* Warn that a language feature is deprecated *)
+let warn_deprecated (pos, msg) =
+  let fixed_pos = {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1} in
+  Printf.eprintf "\nWarning: deprecated language construct used at %s:\n"
+    (create_string_from_location (location_of_position fixed_pos)) ;
+  ( match error_context fixed_pos with
+  | None -> ()
+  | Some line -> Printf.eprintf "%s\n" line ) ;
+  Printf.eprintf "%s\n\n" msg
 
 let%expect_test "location string equivalence 1" =
   let str =
