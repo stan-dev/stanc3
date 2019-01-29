@@ -20,7 +20,6 @@ let initialize () =
   ; isunassigned= String.Table.create ()
   ; globals= String.Table.create () }
 
-(* We just pick some initial size. Hash tables get resized dynamically if necessary, so it doesn't hugely matter. *)
 let enter s str ty =
   let _ =
     if !(s.scopedepth) = 0 then Hashtbl.add s.globals ~key:str ~data:()
@@ -29,7 +28,6 @@ let enter s str ty =
   let _ = Hashtbl.add s.table ~key:str ~data:ty in
   Stack.push s.stack str
 
-(* recall that OCaml hash tables store a stack of all the values for each key; this would allow us to use shadowing; if we don't want shadowing we can add an extra check here. *)
 let look s str = Hashtbl.find s.table str
 
 let begin_scope s =
