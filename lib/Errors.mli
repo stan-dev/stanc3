@@ -2,16 +2,16 @@
 
 (** Our type of syntax error information *)
 type parse_error =
-  | Lexing of string * Lexing.position
-  | Includes of string * Lexing.position
-  | Parsing of string option * Lexing.position * Lexing.position
+  | Lexing of string * Ast.location
+  | Includes of string * Ast.location
+  | Parsing of string * Ast.location_span
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
 (** Exception [SemanticError (loc, msg)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
-exception SemanticError of (Ast.location_span * string)
+exception SemanticError of (string * Ast.location_span)
 
 (** Exception for Fatal Errors. These should perhaps be left unhandled,
     so we can trace their origin. *)
@@ -32,7 +32,7 @@ val create_string_from_location : Ast.location -> string
 val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
-val report_semantic_error : Ast.location_span * string -> unit
+val report_semantic_error : string * Ast.location_span -> unit
 (** A semantic error message used when handling a SemanticError *)
 
 val warn_deprecated : Lexing.position * string -> unit

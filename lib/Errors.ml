@@ -5,23 +5,23 @@ open Ast
 
 (** Our type of syntax error information *)
 type parse_error =
-  | Lexing of string * Lexing.position
-  | Includes of string * Lexing.position
-  | Parsing of string option * Lexing.position * Lexing.position
+  | Lexing of string * location
+  | Includes of string * location
+  | Parsing of string * Ast.location_span
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
-(** Exception [SemanticError (loc, msg)] indicates a semantic error with message
+(** Exception [SemanticError (msg, loc)] indicates a semantic error with message
     [msg], occurring at location [loc]. *)
-exception SemanticError of (location_span * string)
+exception SemanticError of (string * location_span)
 
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
     [msg]. *)
 exception FatalError of string
 
 (* A semantic error reported by the toplevel *)
-let semantic_error ~loc msg = raise (SemanticError (loc, msg))
+let semantic_error ~loc msg = raise (SemanticError (msg, loc))
 
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
@@ -99,7 +99,8 @@ let create_string_from_location_span loc_sp =
     in
     sprintf "%s%s%s%s" filename_str linenum_str colnum_str included_from_str
 
-let error_context {filename; linenum; colnum; _} =
+(** We quote the lines before and after a certain location in the program *)
+let print_context {filename; linenum; colnum; _} =
   try
     let open In_channel in
     let input = create filename in
@@ -135,56 +136,43 @@ let error_context {filename; linenum; colnum; _} =
          line_2_before line_before our_line cursor_line line_after line_2_after)
   with _ -> None
 
+(** We quote the lines before and after a certain location in the program
+    and print a message *)
+let print_context_and_message message loc =
+  ( match print_context loc with
+  | None -> ()
+  | Some line -> Printf.eprintf "%s\n" line ) ;
+  Printf.eprintf "%s\n\n" message
+
 (** A syntax error message used when handling a SyntaxError *)
 let report_syntax_error = function
-  | Parsing (message, start_pos, end_pos) -> (
-      let start_loc = location_of_position start_pos in
-      let end_loc = location_of_position end_pos in
+  | Parsing (message, loc_span) ->
       Printf.eprintf "\nSyntax error at %s, parsing error:\n"
-        (create_string_from_location_span {start_loc; end_loc}) ;
-      ( match error_context end_loc with
-      | None -> ()
-      | Some line -> Printf.eprintf "%s\n" line ) ;
-      match message with
-      | None -> Printf.eprintf "\n"
-      | Some error_message -> Printf.eprintf "%s\n\n" error_message )
-  | Lexing (_, err_pos) ->
-      let loc = location_of_position err_pos in
+        (create_string_from_location_span loc_span) ;
+      print_context_and_message message loc_span.end_loc
+  | Lexing (_, loc) ->
       Printf.eprintf "\nSyntax error at %s, lexing error:\n"
         (create_string_from_location {loc with colnum= loc.colnum - 1}) ;
-      ( match error_context loc with
-      | None -> ()
-      | Some line -> Printf.eprintf "%s\n" line ) ;
-      Printf.eprintf "Invalid character found. %s\n\n" ""
-  | Includes (msg, err_pos) ->
-      let loc = location_of_position err_pos in
+      print_context_and_message "Invalid character found." loc
+  | Includes (message, loc) ->
       Printf.eprintf "\nSyntax error at %s, includes error:\n"
         (create_string_from_location loc) ;
-      ( match error_context loc with
-      | None -> ()
-      | Some line -> Printf.eprintf "%s\n" line ) ;
-      Printf.eprintf "%s\n\n" msg
+      print_context_and_message message loc
 
 (** A semantic error message used when handling a SemanticError *)
-let report_semantic_error (loc, msg) =
+let report_semantic_error (message, loc_span) =
   Printf.eprintf "\n%s at %s:\n" "Semantic error"
-    (create_string_from_location_span loc) ;
-  ( match error_context loc.start_loc with
-  | None -> ()
-  | Some linenum -> Printf.eprintf "%s\n" linenum ) ;
-  Printf.eprintf "%s\n\n" msg
+    (create_string_from_location_span loc_span) ;
+  print_context_and_message message loc_span.start_loc
 
 (* Warn that a language feature is deprecated *)
-let warn_deprecated (pos, msg) =
+let warn_deprecated (pos, message) =
   let loc =
     location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
   in
   Printf.eprintf "\nWarning: deprecated language construct used at %s:\n"
     (create_string_from_location loc) ;
-  ( match error_context loc with
-  | None -> ()
-  | Some line -> Printf.eprintf "%s\n" line ) ;
-  Printf.eprintf "%s\n\n" msg
+  print_context_and_message message loc
 
 let%expect_test "location string equivalence 1" =
   let str =

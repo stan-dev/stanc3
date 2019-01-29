@@ -19,7 +19,8 @@ let rec try_open_in paths fname pos =
            (Includes
               ( "Could not find include file " ^ fname
                 ^ " in specified include paths.\n"
-              , lexeme_start_p (Stack.top_exn include_stack) )))
+              , Errors.location_of_position
+                  (lexeme_start_p (Stack.top_exn include_stack)) )))
   | path :: rest_of_paths -> (
     try
       let full_path = path ^ "/" ^ fname in
@@ -52,7 +53,8 @@ let try_get_new_lexbuf fname pos =
         (Errors.SyntaxError
            (Includes
               ( "Found cyclical include structure.\n"
-              , lexeme_start_p (Stack.top_exn include_stack) )))
+              , Errors.location_of_position
+                  (lexeme_start_p (Stack.top_exn include_stack)) )))
   in
   let _ = Stack.push include_stack new_lexbuf in
   new_lexbuf

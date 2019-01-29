@@ -239,7 +239,7 @@ file stanc_helper_with_bad_include_lex_error.stan, line 2, column 0, lexing erro
                   ^
    -------------------------------------------------
 
-Invalid character found. 
+Invalid character found.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_parse_error.stan
 
