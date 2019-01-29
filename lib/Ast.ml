@@ -40,9 +40,11 @@ and unsizedtype =
 (** Return types for functions *)
 and returntype = Void | ReturnType of unsizedtype
 
+(** Our type for identifiers, on which we record a location *)
 and identifier =
   {name: string; id_loc: location_span sexp_opaque [@compare.ignore]}
 
+(** Arithmetic and logical operators *)
 and operator =
   | Plus
   | Minus
@@ -64,6 +66,7 @@ and operator =
   | Not
   | Transpose
 
+(** Indices for array access *)
 and 'e index =
   | All
   | Single of 'e
