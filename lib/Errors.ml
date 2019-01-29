@@ -179,6 +179,7 @@ let warn_deprecated (pos, message) =
     (create_string_from_location loc) ;
   print_context_and_message message loc
 
+(* TESTS *)
 let%expect_test "location string equivalence 1" =
   let str =
     "file xxx.stan, line 245, column 13, included from\n\
