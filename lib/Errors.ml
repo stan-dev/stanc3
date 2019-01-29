@@ -101,35 +101,33 @@ let create_string_from_location_span loc_sp =
     in
     sprintf "%s%s%s%s" filename_str linenum_str colnum_str included_from_str
 
-let error_context {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
-  let file = pos_fname in
-  let line = pos_lnum in
-  let column = pos_cnum - pos_bol in
+let error_context {filename; linenum; colnum; _} =
   try
-    let bare_file =
-      List.hd_exn (Str.split (Str.regexp ", included from\nfile ") file)
-    in
     let open In_channel in
-    let input = create bare_file in
-    for _ = 1 to line - 3 do
+    let input = create filename in
+    for _ = 1 to linenum - 3 do
       ignore (input_line_exn input)
     done ;
     let open Printf in
     let line_2_before =
-      if line > 2 then sprintf "%6d:  %s\n" (line - 2) (input_line_exn input)
+      if linenum > 2 then
+        sprintf "%6d:  %s\n" (linenum - 2) (input_line_exn input)
       else ""
     in
     let line_before =
-      if line > 1 then sprintf "%6d:  %s\n" (line - 1) (input_line_exn input)
+      if linenum > 1 then
+        sprintf "%6d:  %s\n" (linenum - 1) (input_line_exn input)
       else ""
     in
-    let our_line = sprintf "%6d:  %s\n" line (input_line_exn input) in
-    let cursor_line = String.make (column + 9) ' ' ^ "^\n" in
+    let our_line = sprintf "%6d:  %s\n" linenum (input_line_exn input) in
+    let cursor_line = String.make (colnum + 9) ' ' ^ "^\n" in
     let line_after =
-      try sprintf "%6d:  %s\n" (line + 1) (input_line_exn input) with _ -> ""
+      try sprintf "%6d:  %s\n" (linenum + 1) (input_line_exn input) with _ ->
+        ""
     in
     let line_2_after =
-      try sprintf "%6d:  %s\n" (line + 2) (input_line_exn input) with _ -> ""
+      try sprintf "%6d:  %s\n" (linenum + 2) (input_line_exn input) with _ ->
+        ""
     in
     close input ;
     Some
@@ -142,54 +140,50 @@ let error_context {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
 (** A syntax error message used when handling a SyntaxError *)
 let report_syntax_error = function
   | Parsing (message, start_pos, end_pos) -> (
+      let start_loc = location_of_position start_pos in
+      let end_loc = location_of_position end_pos in
       Printf.eprintf "\nSyntax error at %s, parsing error:\n"
-        (create_string_from_location_span
-           { start_loc= location_of_position start_pos
-           ; end_loc= location_of_position end_pos }) ;
-      ( match error_context end_pos with
+        (create_string_from_location_span {start_loc; end_loc}) ;
+      ( match error_context end_loc with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       match message with
       | None -> Printf.eprintf "\n"
       | Some error_message -> prerr_endline error_message )
   | Lexing (_, err_pos) ->
+      let loc = location_of_position err_pos in
       Printf.eprintf "\nSyntax error at %s, lexing error:\n"
-        (create_string_from_location
-           (location_of_position {err_pos with pos_cnum= err_pos.pos_cnum - 1})) ;
-      ( match error_context err_pos with
+        (create_string_from_location {loc with colnum= loc.colnum - 1}) ;
+      ( match error_context loc with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "Invalid character found. %s\n\n" ""
   | Includes (msg, err_pos) ->
+      let loc = location_of_position err_pos in
       Printf.eprintf "\nSyntax error at %s, includes error:\n"
-        (create_string_from_location (location_of_position err_pos)) ;
-      ( match error_context err_pos with
+        (create_string_from_location loc) ;
+      ( match error_context loc with
       | None -> ()
       | Some line -> Printf.eprintf "%s\n" line ) ;
       Printf.eprintf "%s\n" msg
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (loc, msg) =
-  match loc with {start_loc= {filename; linenum; colnum; _}; _} ->
-    Format.eprintf "\n%s at %s:\n" "Semantic error"
-      (create_string_from_location_span loc) ;
-    ( match
-        error_context
-          { Lexing.pos_fname= filename
-          ; pos_lnum= linenum
-          ; pos_cnum= colnum
-          ; pos_bol= 0 }
-      with
-    | None -> ()
-    | Some linenum -> Format.eprintf "%s\n" linenum ) ;
-    Format.eprintf "%s\n\n" msg
+  Format.eprintf "\n%s at %s:\n" "Semantic error"
+    (create_string_from_location_span loc) ;
+  ( match error_context loc.start_loc with
+  | None -> ()
+  | Some linenum -> Format.eprintf "%s\n" linenum ) ;
+  Format.eprintf "%s\n\n" msg
 
 (* Warn that a language feature is deprecated *)
 let warn_deprecated (pos, msg) =
-  let fixed_pos = {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1} in
+  let loc =
+    location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
+  in
   Printf.eprintf "\nWarning: deprecated language construct used at %s:\n"
-    (create_string_from_location (location_of_position fixed_pos)) ;
-  ( match error_context fixed_pos with
+    (create_string_from_location loc) ;
+  ( match error_context loc with
   | None -> ()
   | Some line -> Printf.eprintf "%s\n" line ) ;
   Printf.eprintf "%s\n\n" msg
