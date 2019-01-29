@@ -1151,7 +1151,7 @@ Identifier 'square' clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 
-Semantic error at file functions-bad17.stan, line 2, columns 2-3:
+Semantic error at file functions-bad17.stan, lines 2-4, column 2:
    -------------------------------------------------
      1:  functions {
      2:    vector bizbuz_log(vector x) {
@@ -1178,7 +1178,7 @@ Identifier 'foo' is already in use.
 
   $ ../../../../install/default/bin/stanc functions-bad19.stan
 
-Semantic error at file functions-bad19.stan, line 4, columns 2-3:
+Semantic error at file functions-bad19.stan, lines 4-6, column 2:
    -------------------------------------------------
      2:    real my_fun3(data real x);
      3:  
@@ -1205,7 +1205,7 @@ Some function is declared without specifying a definition.
 
   $ ../../../../install/default/bin/stanc functions-bad20.stan
 
-Semantic error at file functions-bad20.stan, line 4, columns 2-3:
+Semantic error at file functions-bad20.stan, lines 4-6, column 2:
    -------------------------------------------------
      2:    real my_fun3(real x);
      3:  
@@ -1924,7 +1924,7 @@ Truncation is only defined if distribution has _lcdf and _lccdf functions implem
 
   $ ../../../../install/default/bin/stanc real-pdf.stan
 
-Semantic error at file real-pdf.stan, line 2, columns 2-3:
+Semantic error at file real-pdf.stan, lines 2-4, column 2:
    -------------------------------------------------
      1:  functions {
      2:    real foo_lpdf(int y, real sigma) {
@@ -1937,7 +1937,7 @@ Probability density functions require real variates (first argument). Instead fo
 
   $ ../../../../install/default/bin/stanc real-pmf.stan
 
-Semantic error at file real-pmf.stan, line 2, columns 2-3:
+Semantic error at file real-pmf.stan, lines 2-4, column 2:
    -------------------------------------------------
      1:  functions {
      2:    real foo_lpmf(real y, real sigma) {

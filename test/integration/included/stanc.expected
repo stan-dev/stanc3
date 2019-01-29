@@ -217,7 +217,7 @@ file stanc_helper_with_bad_include_lex_error.stan, line 2, column 41, lexing err
    -------------------------------------------------
      1:    real z;
      2:    real w;$
-                 ^
+                  ^
    -------------------------------------------------
 
 Invalid character found. 

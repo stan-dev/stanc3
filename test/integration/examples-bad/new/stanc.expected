@@ -1725,7 +1725,7 @@ Ill-formed indices. Expected comma-separated set of indices followed by "]" afte
 Syntax error at file lexing_error.stan, line 1, column 6, lexing error:
    -------------------------------------------------
      1:  model {½ }
-               ^
+                ^
    -------------------------------------------------
 
 Invalid character found. 
