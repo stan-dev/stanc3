@@ -1,8 +1,9 @@
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse1.stan
 
 Syntax error at file ../included/badrecurse1.stan, line 1, column 0, included from
-file ../included/badrecurse1.stan, line 1, column 25, included from
-file badrecurse1.stan, line 1, column 25, includes error:
+file ../included/badrecurse1.stan, line 1, column 0, included from
+file ../included/badrecurse1.stan, line 1, column 0, included from
+file badrecurse1.stan, line 1, column 0, includes error:
    -------------------------------------------------
      1:  #include badrecurse1.stan
          ^
@@ -12,12 +13,13 @@ Found cyclical include structure.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse2.stan
 
-Syntax error at file ../included/badrecurse3.stan, line 1, column 0, included from
-file ../included/badrecurse2.stan, line 1, column 25, included from
-file ../included/badrecurse3.stan, line 1, column 25, included from
-file badrecurse2.stan, line 1, column 25, includes error:
+Syntax error at file ../included/badrecurse2.stan, line 1, column 0, included from
+file ../included/badrecurse3.stan, line 1, column 0, included from
+file ../included/badrecurse2.stan, line 1, column 0, included from
+file ../included/badrecurse3.stan, line 1, column 0, included from
+file badrecurse2.stan, line 1, column 0, includes error:
    -------------------------------------------------
-     1:  #include badrecurse2.stan
+     1:  #include badrecurse3.stan
          ^
    -------------------------------------------------
 
@@ -25,12 +27,13 @@ Found cyclical include structure.
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse3.stan
 
-Syntax error at file ../included/badrecurse2.stan, line 1, column 0, included from
-file ../included/badrecurse3.stan, line 1, column 25, included from
-file ../included/badrecurse2.stan, line 1, column 25, included from
-file badrecurse3.stan, line 1, column 25, includes error:
+Syntax error at file ../included/badrecurse3.stan, line 1, column 0, included from
+file ../included/badrecurse2.stan, line 1, column 0, included from
+file ../included/badrecurse3.stan, line 1, column 0, included from
+file ../included/badrecurse2.stan, line 1, column 0, included from
+file badrecurse3.stan, line 1, column 0, includes error:
    -------------------------------------------------
-     1:  #include badrecurse3.stan
+     1:  #include badrecurse2.stan
          ^
    -------------------------------------------------
 
@@ -186,8 +189,8 @@ model {
 
 
 Warning: deprecated language construct used at file ../included/dep-warning.stan, line 2, column 2, included from
-file ../included/incl_stanc_helper_deprecated_warning.stan, line 2, column 27, included from
-file stanc_helper_with_bad_include_deprecated_warning.stan, line 2, column 50:
+file ../included/incl_stanc_helper_deprecated_warning.stan, line 2, column 2, included from
+file stanc_helper_with_bad_include_deprecated_warning.stan, line 2, column 0:
    -------------------------------------------------
      1:    real z;
      2:    # I am a deprecated comment.
@@ -199,8 +202,8 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_include_error.stan
 
 Syntax error at file ../included/incl-err.stan, line 2, column 2, included from
-file ../included/incl_stanc_helper_include_error.stan, line 2, column 24, included from
-file stanc_helper_with_bad_include_include_error.stan, line 2, column 45, includes error:
+file ../included/incl_stanc_helper_include_error.stan, line 2, column 2, included from
+file stanc_helper_with_bad_include_include_error.stan, line 2, column 0, includes error:
    -------------------------------------------------
      1:    real z;
      2:    #include "I'm not here.stan"
@@ -212,8 +215,8 @@ Could not find include file I'm not here.stan in specified include paths.
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_lex_error.stan
 
 Syntax error at file ../included/lex-err.stan, line 2, column 8, included from
-file ../included/incl_stanc_helper_lex_error.stan, line 2, column 23, included from
-file stanc_helper_with_bad_include_lex_error.stan, line 2, column 41, lexing error:
+file ../included/incl_stanc_helper_lex_error.stan, line 2, column 2, included from
+file stanc_helper_with_bad_include_lex_error.stan, line 2, column 0, lexing error:
    -------------------------------------------------
      1:    real z;
      2:    real w;$
@@ -225,8 +228,8 @@ Invalid character found.
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_parse_error.stan
 
 Syntax error at file ../included/parse-err.stan, line 2, columns 2-9, included from
-file ../included/incl_stanc_helper_parse_error.stan, line 2, column 25, included from
-file stanc_helper_with_bad_include_parse_error.stan, line 2, column 43, parsing error:
+file ../included/incl_stanc_helper_parse_error.stan, line 2, column 2, included from
+file stanc_helper_with_bad_include_parse_error.stan, line 2, column 0, parsing error:
    -------------------------------------------------
      1:    real z;
      2:    real w;=;
@@ -247,8 +250,8 @@ model {
 
 
 Semantic error at file ../included/sem-err.stan, line 2, columns 2-8, included from
-file ../included/incl_stanc_helper_semantic_error.stan, line 2, column 23, included from
-file stanc_helper_with_bad_include_semantic_error.stan, line 2, column 46:
+file ../included/incl_stanc_helper_semantic_error.stan, line 2, column 2, included from
+file stanc_helper_with_bad_include_semantic_error.stan, line 2, column 0:
    -------------------------------------------------
      1:    real z;
      2:    int w;

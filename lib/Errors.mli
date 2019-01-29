@@ -1,10 +1,10 @@
 (** Some plumbing for our compiler errors *)
 
 val location_of_position : Lexing.position -> Ast.location
+(** Take the AST.location corresponding to a Lexing.position *)
 
-val append_position_to_filename : string -> string -> string
-(** Insert the line and column number string in a filename string before the first
-    include, after the first filename *)
+val create_string_from_location : Ast.location -> string
+(** Render a location as a string *)
 
 (** Our type of syntax error information *)
 type parse_error =

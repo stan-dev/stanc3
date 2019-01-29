@@ -3,16 +3,6 @@
 open Core_kernel
 open Ast
 
-(** Insert the line and column number string in a filename string before the first
-    include, after the first filename *)
-let append_position_to_filename fname pos_string =
-  let split_fname = Str.split (Str.regexp ", included from\nfile ") fname in
-  match split_fname with
-  | [] -> ""
-  | fname1 :: fnames ->
-      String.concat ~sep:", included from\nfile "
-        ((fname1 ^ pos_string) :: fnames)
-
 (** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * Lexing.position

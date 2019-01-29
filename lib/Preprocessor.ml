@@ -22,14 +22,12 @@ let rec try_open_in paths fname pos =
               , lexeme_start_p (Stack.top_exn include_stack) )))
   | path :: rest_of_paths -> (
     try
-      let old_path = (Stack.top_exn include_stack).lex_start_p.pos_fname in
-      let open Printf in
       let full_path = path ^ "/" ^ fname in
       ( In_channel.create full_path
       , sprintf "%s, included from\nfile %s" full_path
-          (Errors.append_position_to_filename old_path
-             (sprintf ", line %d, column %d" pos.pos_lnum
-                (pos.pos_cnum - pos.pos_bol))) )
+          (Errors.create_string_from_location
+             (Errors.location_of_position
+                (Stack.top_exn include_stack).lex_start_p)) )
     with _ -> try_open_in rest_of_paths fname pos )
 
 let maybe_remove_quotes str =
