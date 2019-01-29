@@ -1,11 +1,11 @@
 (** Abstract syntax tree *)
 open Core_kernel
 
-(** Source code location_spans *)
+(** Source code locations *)
 type location =
   {filename: string; linenum: int; colnum: int; included_from: location option}
 
-(** Delimited location_span *)
+(** Delimited locations *)
 type location_span = {start_loc: location; end_loc: location}
 
 (** Origin blocks, to keep track of where variables are declared *)
