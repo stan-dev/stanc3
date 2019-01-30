@@ -52,7 +52,7 @@ let try_get_new_lexbuf fname pos =
       raise
         (Errors.SyntaxError
            (Include
-              ( "Found cyclical include structure.\n"
+              ( Printf.sprintf "File %s recursively included itself.\n" fname
               , Errors.location_of_position
                   (lexeme_start_p (Stack.top_exn include_stack)) )))
   in

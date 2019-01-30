@@ -9,7 +9,7 @@ file badrecurse1.stan, line 1, column 0, include error:
          ^
    -------------------------------------------------
 
-Found cyclical include structure.
+File badrecurse1.stan recursively included itself.
 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse2.stan
@@ -24,7 +24,7 @@ file badrecurse2.stan, line 1, column 0, include error:
          ^
    -------------------------------------------------
 
-Found cyclical include structure.
+File badrecurse3.stan recursively included itself.
 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format badrecurse3.stan
@@ -39,7 +39,7 @@ file badrecurse3.stan, line 1, column 0, include error:
          ^
    -------------------------------------------------
 
-Found cyclical include structure.
+File badrecurse2.stan recursively included itself.
 
 
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format dep-warning.stan

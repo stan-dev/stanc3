@@ -65,7 +65,7 @@ let location_of_position = function
               | fnames :: _ -> Some (parse_location fnames) ) } )
 
 (** Take the AST.location_span corresponding to a pair of Lexing.position's *)
-let location_span_of_pos start_pos end_pos =
+let loc_span_of_pos start_pos end_pos =
   { begin_loc= location_of_position start_pos
   ; end_loc= location_of_position end_pos }
 

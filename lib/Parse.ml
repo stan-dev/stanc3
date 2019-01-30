@@ -33,7 +33,7 @@ let parse parse_fun lexbuf =
           (SyntaxError
              (Parsing
                 ( message
-                , Errors.location_span_of_pos
+                , Errors.loc_span_of_pos
                     (Lexing.lexeme_start_p
                        (Stack.top_exn Preprocessor.include_stack))
                     (Lexing.lexeme_end_p
@@ -53,7 +53,7 @@ let parse parse_fun lexbuf =
         in
         raise
           (SyntaxError
-             (Parsing (message, Errors.location_span_of_pos start_pos end_pos)))
+             (Parsing (message, Errors.loc_span_of_pos start_pos end_pos)))
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
