@@ -45,7 +45,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file radon_group.stan, line 3, column 18:
+Warning: deprecated language construct used in file radon_group.stan, line 3, column 18:
    -------------------------------------------------
      1:  data {
      2:    int<lower=1> N;
@@ -89,7 +89,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file radon_group_chr.stan, line 3, column 18:
+Warning: deprecated language construct used in file radon_group_chr.stan, line 3, column 18:
    -------------------------------------------------
      1:  data {
      2:    int<lower=1> N;
@@ -125,7 +125,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file radon_intercept.stan, line 3, column 18:
+Warning: deprecated language construct used in file radon_intercept.stan, line 3, column 18:
    -------------------------------------------------
      1:  data {
      2:    int<lower=1> N;
@@ -138,7 +138,7 @@ Warning: deprecated language construct used at file radon_intercept.stan, line 3
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file radon_intercept.stan, line 8, column 15:
+Warning: deprecated language construct used in file radon_intercept.stan, line 8, column 15:
    -------------------------------------------------
      6:  }
      7:  parameters {
@@ -178,7 +178,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file radon_intercept_chr.stan, line 3, column 18:
+Warning: deprecated language construct used in file radon_intercept_chr.stan, line 3, column 18:
    -------------------------------------------------
      1:  data {
      2:    int<lower=1> N;
@@ -217,7 +217,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file radon_no_pool.stan, line 3, column 18:
+Warning: deprecated language construct used in file radon_no_pool.stan, line 3, column 18:
    -------------------------------------------------
      1:  data {
      2:    int<lower=1> N;
@@ -260,7 +260,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file radon_no_pool_chr.stan, line 3, column 18:
+Warning: deprecated language construct used in file radon_no_pool_chr.stan, line 3, column 18:
    -------------------------------------------------
      1:  data {
      2:    int<lower=1> N;

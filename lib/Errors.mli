@@ -3,7 +3,7 @@
 (** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * Ast.location
-  | Includes of string * Ast.location
+  | Include of string * Ast.location
   | Parsing of string * Ast.location_span
 
 (** Exception for Syntax Errors *)

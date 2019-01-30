@@ -6,14 +6,14 @@ open Ast
 (** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * location
-  | Includes of string * location
+  | Include of string * location
   | Parsing of string * Ast.location_span
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
 (** Exception [SemanticError (msg, loc)] indicates a semantic error with message
-    [msg], occurring at location [loc]. *)
+    [msg], occurring in location [loc]. *)
 exception SemanticError of (string * location_span)
 
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
@@ -142,21 +142,21 @@ let print_context_and_message message loc =
 (** A syntax error message used when handling a SyntaxError *)
 let report_syntax_error = function
   | Parsing (message, loc_span) ->
-      Printf.eprintf "\nSyntax error at %s, parsing error:\n"
+      Printf.eprintf "\nSyntax error in %s, parsing error:\n"
         (create_string_from_location_span loc_span) ;
       print_context_and_message message loc_span.end_loc
   | Lexing (_, loc) ->
-      Printf.eprintf "\nSyntax error at %s, lexing error:\n"
+      Printf.eprintf "\nSyntax error in %s, lexing error:\n"
         (string_of_location {loc with col_num= loc.col_num - 1}) ;
       print_context_and_message "Invalid character found." loc
-  | Includes (message, loc) ->
-      Printf.eprintf "\nSyntax error at %s, includes error:\n"
+  | Include (message, loc) ->
+      Printf.eprintf "\nSyntax error in %s, include error:\n"
         (string_of_location loc) ;
       print_context_and_message message loc
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =
-  Printf.eprintf "\n%s at %s:\n" "Semantic error"
+  Printf.eprintf "\n%s in %s:\n" "Semantic error"
     (create_string_from_location_span loc_span) ;
   print_context_and_message message loc_span.begin_loc
 
@@ -165,7 +165,7 @@ let warn_deprecated (pos, message) =
   let loc =
     location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
   in
-  Printf.eprintf "\nWarning: deprecated language construct used at %s:\n"
+  Printf.eprintf "\nWarning: deprecated language construct used in %s:\n"
     (string_of_location loc) ;
   print_context_and_message message loc
 

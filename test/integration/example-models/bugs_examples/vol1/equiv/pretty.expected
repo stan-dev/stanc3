@@ -45,7 +45,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file equiv.stan, line 1, column 0:
+Warning: deprecated language construct used in file equiv.stan, line 1, column 0:
    -------------------------------------------------
      1:  # Equiv: bioequivalence in a cross-over trial
          ^
@@ -56,7 +56,7 @@ Warning: deprecated language construct used at file equiv.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 2, column 0:
+Warning: deprecated language construct used in file equiv.stan, line 2, column 0:
    -------------------------------------------------
      1:  # Equiv: bioequivalence in a cross-over trial
      2:  #  http://www.openbugs.net/Examples/Equiv.html
@@ -68,7 +68,7 @@ Warning: deprecated language construct used at file equiv.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 16, column 14:
+Warning: deprecated language construct used in file equiv.stan, line 16, column 14:
    -------------------------------------------------
     14:    for (n in 1:N) 
     15:      for (p in 1:P) 
@@ -81,7 +81,7 @@ Warning: deprecated language construct used at file equiv.stan, line 16, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 31, column 10:
+Warning: deprecated language construct used in file equiv.stan, line 31, column 10:
    -------------------------------------------------
     29:    real sigma1;
     30:    real sigma2;
@@ -94,7 +94,7 @@ Warning: deprecated language construct used at file equiv.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 32, column 10:
+Warning: deprecated language construct used in file equiv.stan, line 32, column 10:
    -------------------------------------------------
     30:    real sigma2;
     31:    sigma1 <- sqrt(sigmasq1); 
@@ -107,7 +107,7 @@ Warning: deprecated language construct used at file equiv.stan, line 32, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 39, column 12:
+Warning: deprecated language construct used in file equiv.stan, line 39, column 12:
    -------------------------------------------------
     37:      vector[P] m;
     38:      for (p in 1:P)
@@ -120,7 +120,7 @@ Warning: deprecated language construct used at file equiv.stan, line 39, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 54, column 9:
+Warning: deprecated language construct used in file equiv.stan, line 54, column 9:
    -------------------------------------------------
     52:    real theta;
     53:  
@@ -133,7 +133,7 @@ Warning: deprecated language construct used at file equiv.stan, line 54, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file equiv.stan, line 55, column 9:
+Warning: deprecated language construct used in file equiv.stan, line 55, column 9:
    -------------------------------------------------
     53:  
     54:    theta <- exp(phi);
