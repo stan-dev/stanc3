@@ -7,7 +7,7 @@ pipeline {
     agent none
     stages {
         stage("Build & Test") {
-            agent { 
+            agent {
                 dockerfile {
                     filename 'docker/dev-ubuntu/Dockerfile'
                     args "-u root --privileged --entrypoint=''" // TODO: set up a proper user in Dockerfile
