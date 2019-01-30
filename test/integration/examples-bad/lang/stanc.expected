@@ -165,7 +165,7 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_param.stan
 
-Syntax error in file bad_cov_exp_quad_arr_rvec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_arr_rvec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
@@ -194,7 +194,7 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_param.stan
 
-Syntax error in file bad_cov_exp_quad_arr_vec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_arr_vec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_params_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
@@ -230,7 +230,7 @@ Instead supplied arguments of incompatible type: vector[], vector[], real, real[
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
 
-Syntax error in file bad_cov_exp_quad_len_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_len_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -245,7 +245,7 @@ Syntax error in file bad_cov_exp_quad_len_param.stan, lines 12-16, column 0, par
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_rvec_param.stan
 
-Syntax error in file bad_cov_exp_quad_len_rvec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_len_rvec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -260,7 +260,7 @@ Syntax error in file bad_cov_exp_quad_len_rvec_param.stan, lines 12-16, column 0
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_vec_param.stan
 
-Syntax error in file bad_cov_exp_quad_len_vec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_len_vec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -289,7 +289,7 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_param.stan
 
-Syntax error in file bad_cov_exp_quad_rvec_arr_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_rvec_arr_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
@@ -346,7 +346,7 @@ Instead supplied arguments of incompatible type: row_vector[], vector[], real, r
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
 
-Syntax error in file bad_cov_exp_quad_rvec_vec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_rvec_vec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_params_matrix = cov_exp_quad(d_rvec_1, d_vec_1, d_sigma, d_len);
@@ -382,7 +382,7 @@ Instead supplied arguments of incompatible type: vector[], vector[], real[], rea
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
 
-Syntax error in file bad_cov_exp_quad_sigma_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_sigma_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -397,7 +397,7 @@ Syntax error in file bad_cov_exp_quad_sigma_param.stan, lines 12-16, column 0, p
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_rvec_param.stan
 
-Syntax error in file bad_cov_exp_quad_sigma_rvec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_sigma_rvec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -412,7 +412,7 @@ Syntax error in file bad_cov_exp_quad_sigma_rvec_param.stan, lines 12-16, column
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_vec_param.stan
 
-Syntax error in file bad_cov_exp_quad_sigma_vec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_sigma_vec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -441,7 +441,7 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_param.stan
 
-Syntax error in file bad_cov_exp_quad_vec_arr_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_vec_arr_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
@@ -498,7 +498,7 @@ Instead supplied arguments of incompatible type: vector[], row_vector[], real, r
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan
 
-Syntax error in file bad_cov_exp_quad_vec_rvec_param.stan, lines 12-16, column 0, parsing error:
+Syntax error in file bad_cov_exp_quad_vec_rvec_param.stan, lines 12-16, columns 0-1, parsing error:
    -------------------------------------------------
     14:  
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);

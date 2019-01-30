@@ -84,16 +84,20 @@ let rec string_of_location loc =
 let create_string_from_location_span loc_sp =
   match loc_sp with {begin_loc; end_loc} ->
     let open Format in
-    let filename_str = sprintf "file %s, " begin_loc.filename in
+    let filename_str =
+      if end_loc.filename = begin_loc.filename then
+        sprintf "file %s, " begin_loc.filename
+      else sprintf "files %s-%s, " begin_loc.filename end_loc.filename
+    in
     let linenum_str =
       if end_loc.line_num = begin_loc.line_num then
         sprintf "line %d, " end_loc.line_num
       else sprintf "lines %d-%d, " begin_loc.line_num end_loc.line_num
     in
     let colnum_str =
-      if end_loc.line_num = begin_loc.line_num then
-        sprintf "columns %d-%d" begin_loc.col_num end_loc.col_num
-      else sprintf "column %d" begin_loc.col_num
+      if end_loc.col_num = begin_loc.col_num then
+        sprintf "column %d" begin_loc.col_num
+      else sprintf "columns %d-%d" begin_loc.col_num end_loc.col_num
     in
     let included_from_str =
       match begin_loc.included_from with

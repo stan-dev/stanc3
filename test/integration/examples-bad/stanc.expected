@@ -644,7 +644,7 @@ Expected "{" after block keyword.
 
   $ ../../../../install/default/bin/stanc err-expected-end-of-model.stan
 
-Syntax error in file err-expected-end-of-model.stan, lines 1-2, column 0, parsing error:
+Syntax error in file err-expected-end-of-model.stan, lines 1-2, columns 0-1, parsing error:
    -------------------------------------------------
      1:  model {
      2:  }
@@ -657,7 +657,7 @@ Expected "generated quantities {" or end of file after end of model block.
 
   $ ../../../../install/default/bin/stanc err-expected-generated.stan
 
-Syntax error in file err-expected-generated.stan, lines 1-2, column 0, parsing error:
+Syntax error in file err-expected-generated.stan, lines 1-2, columns 0-1, parsing error:
    -------------------------------------------------
      1:  model {
      2:  }
@@ -671,7 +671,7 @@ Expected "generated quantities {" or end of file after end of model block.
 
   $ ../../../../install/default/bin/stanc err-expected-model.stan
 
-Syntax error in file err-expected-model.stan, lines 4-7, column 0, parsing error:
+Syntax error in file err-expected-model.stan, lines 4-7, columns 0-1, parsing error:
    -------------------------------------------------
      5:    int n;
      6:    n = 2;
@@ -928,7 +928,7 @@ Ill-formed expression. Found expression "||". Expect an expression next.
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
 
-Syntax error in file err-transformed-params.stan, lines 1-3, column 0, parsing error:
+Syntax error in file err-transformed-params.stan, lines 1-3, columns 0-1, parsing error:
    -------------------------------------------------
      1:  parameters {
      2:    real y;
@@ -971,7 +971,7 @@ Variable declaration, statement or "}" expected.
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_3.stan
 
-Syntax error in file expect_statement_seq_close_brace_3.stan, lines 4-6, column 2, parsing error:
+Syntax error in file expect_statement_seq_close_brace_3.stan, lines 4-6, columns 2-3, parsing error:
    -------------------------------------------------
      4:    for (v in vs[1]) {
      5:      z = 3;
@@ -1186,7 +1186,7 @@ Identifier 'square' clashes with Stan Math library function.
 
   $ ../../../../install/default/bin/stanc functions-bad17.stan
 
-Semantic error in file functions-bad17.stan, lines 2-4, column 2:
+Semantic error in file functions-bad17.stan, lines 2-4, columns 2-3:
    -------------------------------------------------
      1:  functions {
      2:    vector bizbuz_log(vector x) {
@@ -1213,7 +1213,7 @@ Identifier 'foo' is already in use.
 
   $ ../../../../install/default/bin/stanc functions-bad19.stan
 
-Semantic error in file functions-bad19.stan, lines 4-6, column 2:
+Semantic error in file functions-bad19.stan, lines 4-6, columns 2-3:
    -------------------------------------------------
      2:    real my_fun3(data real x);
      3:  
@@ -1240,7 +1240,7 @@ Some function is declared without specifying a definition.
 
   $ ../../../../install/default/bin/stanc functions-bad20.stan
 
-Semantic error in file functions-bad20.stan, lines 4-6, column 2:
+Semantic error in file functions-bad20.stan, lines 4-6, columns 2-3:
    -------------------------------------------------
      2:    real my_fun3(real x);
      3:  
@@ -1970,7 +1970,7 @@ Truncation is only defined if distribution has _lcdf and _lccdf functions implem
 
   $ ../../../../install/default/bin/stanc real-pdf.stan
 
-Semantic error in file real-pdf.stan, lines 2-4, column 2:
+Semantic error in file real-pdf.stan, lines 2-4, columns 2-3:
    -------------------------------------------------
      1:  functions {
      2:    real foo_lpdf(int y, real sigma) {
@@ -1983,7 +1983,7 @@ Probability density functions require real variates (first argument). Instead fo
 
   $ ../../../../install/default/bin/stanc real-pmf.stan
 
-Semantic error in file real-pmf.stan, lines 2-4, column 2:
+Semantic error in file real-pmf.stan, lines 2-4, columns 2-3:
    -------------------------------------------------
      1:  functions {
      2:    real foo_lpmf(real y, real sigma) {
