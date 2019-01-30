@@ -28,23 +28,23 @@ let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
 (** Parse a string into a location *)
-let rec parse_location_from_string str =
+let rec parse_location str =
   let split_str =
     Str.bounded_split
       (Str.regexp "file \\|, line \\|, column \\|, included from\n")
       str 4
   in
   match split_str with
-  | [fname; linenum; colnum] ->
+  | [fname; linenum_str; colnum_str] ->
       { filename= fname
-      ; linenum= int_of_string linenum
-      ; colnum= int_of_string colnum
+      ; line_num= int_of_string linenum_str
+      ; col_num= int_of_string colnum_str
       ; included_from= None }
   | [fname; linenum_str; colnum_str; included_from_str] ->
       { filename= fname
-      ; linenum= int_of_string linenum_str
-      ; colnum= int_of_string colnum_str
-      ; included_from= Some (parse_location_from_string included_from_str) }
+      ; line_num= int_of_string linenum_str
+      ; col_num= int_of_string colnum_str
+      ; included_from= Some (parse_location included_from_str) }
   | _ -> fatal_error ()
 
 (** Take the AST.location corresponding to a Lexing.position *)
@@ -57,91 +57,81 @@ let location_of_position = function
       | [] -> fatal_error ()
       | fname1 :: fnames ->
           { filename= fname1
-          ; linenum= pos_lnum
-          ; colnum= pos_cnum - pos_bol
+          ; line_num= pos_lnum
+          ; col_num= pos_cnum - pos_bol
           ; included_from=
               ( match fnames with
               | [] -> None
-              | fnames :: _ -> Some (parse_location_from_string fnames) ) } )
+              | fnames :: _ -> Some (parse_location fnames) ) } )
 
 (** Take the AST.location_span corresponding to a pair of Lexing.position's *)
 let location_span_of_pos start_pos end_pos =
-  { start_loc= location_of_position start_pos
+  { begin_loc= location_of_position start_pos
   ; end_loc= location_of_position end_pos }
 
 (** Render a location as a string *)
-let rec create_string_from_location loc =
+let rec string_of_location loc =
   let open Format in
   let included_from_str =
     match loc.included_from with
     | None -> ""
-    | Some loc2 ->
-        sprintf ", included from\n%s" (create_string_from_location loc2)
+    | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
   in
-  sprintf "file %s, line %d, column %d%s" loc.filename loc.linenum loc.colnum
+  sprintf "file %s, line %d, column %d%s" loc.filename loc.line_num loc.col_num
     included_from_str
 
 (** Render a location_span as a string *)
 let create_string_from_location_span loc_sp =
-  match loc_sp with {start_loc; end_loc} ->
+  match loc_sp with {begin_loc; end_loc} ->
     let open Format in
-    let filename_str = sprintf "file %s, " start_loc.filename in
+    let filename_str = sprintf "file %s, " begin_loc.filename in
     let linenum_str =
-      if end_loc.linenum = start_loc.linenum then
-        sprintf "line %d, " end_loc.linenum
-      else sprintf "lines %d-%d, " start_loc.linenum end_loc.linenum
+      if end_loc.line_num = begin_loc.line_num then
+        sprintf "line %d, " end_loc.line_num
+      else sprintf "lines %d-%d, " begin_loc.line_num end_loc.line_num
     in
     let colnum_str =
-      if end_loc.linenum = start_loc.linenum then
-        sprintf "columns %d-%d" start_loc.colnum end_loc.colnum
-      else sprintf "column %d" start_loc.colnum
+      if end_loc.line_num = begin_loc.line_num then
+        sprintf "columns %d-%d" begin_loc.col_num end_loc.col_num
+      else sprintf "column %d" begin_loc.col_num
     in
     let included_from_str =
-      match start_loc.included_from with
+      match begin_loc.included_from with
       | None -> ""
-      | Some loc ->
-          sprintf ", included from\n%s" (create_string_from_location loc)
+      | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
     in
     sprintf "%s%s%s%s" filename_str linenum_str colnum_str included_from_str
 
-(** We quote the lines before and after a certain location in the program *)
-let print_context {filename; linenum; colnum; _} =
+(** Return two lines before and after the specified location. *)
+let print_context {filename; line_num; col_num; _} =
   try
     let open In_channel in
     let input = create filename in
-    for _ = 1 to linenum - 3 do
+    for _ = 1 to line_num - 3 do
       ignore (input_line_exn input)
     done ;
-    let open Printf in
-    let line_2_before =
-      if linenum > 2 then
-        sprintf "%6d:  %s\n" (linenum - 2) (input_line_exn input)
+    let get_line num =
+      if num > 0 then
+        match input_line input with
+        | Some input -> Printf.sprintf "%6d:  %s\n" num input
+        | _ -> ""
       else ""
     in
-    let line_before =
-      if linenum > 1 then
-        sprintf "%6d:  %s\n" (linenum - 1) (input_line_exn input)
-      else ""
-    in
-    let our_line = sprintf "%6d:  %s\n" linenum (input_line_exn input) in
-    let cursor_line = String.make (colnum + 9) ' ' ^ "^\n" in
-    let line_after =
-      try sprintf "%6d:  %s\n" (linenum + 1) (input_line_exn input) with _ ->
-        ""
-    in
-    let line_2_after =
-      try sprintf "%6d:  %s\n" (linenum + 2) (input_line_exn input) with _ ->
-        ""
-    in
+    let line_2_before = get_line (line_num - 2) in
+    let line_before = get_line (line_num - 1) in
+    let our_line = get_line line_num in
+    let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
+    let line_after = get_line (line_num + 1) in
+    let line_2_after = get_line (line_num + 2) in
     close input ;
     Some
-      (sprintf
+      (Printf.sprintf
          "   -------------------------------------------------\n\
           %s%s%s%s%s%s   -------------------------------------------------\n"
          line_2_before line_before our_line cursor_line line_after line_2_after)
   with _ -> None
 
-(** We quote the lines before and after a certain location in the program
+(** Return two lines before and after the specified location
     and print a message *)
 let print_context_and_message message loc =
   ( match print_context loc with
@@ -157,18 +147,18 @@ let report_syntax_error = function
       print_context_and_message message loc_span.end_loc
   | Lexing (_, loc) ->
       Printf.eprintf "\nSyntax error at %s, lexing error:\n"
-        (create_string_from_location {loc with colnum= loc.colnum - 1}) ;
+        (string_of_location {loc with col_num= loc.col_num - 1}) ;
       print_context_and_message "Invalid character found." loc
   | Includes (message, loc) ->
       Printf.eprintf "\nSyntax error at %s, includes error:\n"
-        (create_string_from_location loc) ;
+        (string_of_location loc) ;
       print_context_and_message message loc
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =
   Printf.eprintf "\n%s at %s:\n" "Semantic error"
     (create_string_from_location_span loc_span) ;
-  print_context_and_message message loc_span.start_loc
+  print_context_and_message message loc_span.begin_loc
 
 (* Warn that a language feature is deprecated *)
 let warn_deprecated (pos, message) =
@@ -176,7 +166,7 @@ let warn_deprecated (pos, message) =
     location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
   in
   Printf.eprintf "\nWarning: deprecated language construct used at %s:\n"
-    (create_string_from_location loc) ;
+    (string_of_location loc) ;
   print_context_and_message message loc
 
 (* TESTS *)
@@ -186,7 +176,7 @@ let%expect_test "location string equivalence 1" =
      file yyy.stan, line 666, column 42, included from\n\
      file zzz.stan, line 24, column 77"
   in
-  print_endline (create_string_from_location (parse_location_from_string str)) ;
+  print_endline (string_of_location (parse_location str)) ;
   [%expect
     {|
       file xxx.stan, line 245, column 13, included from
@@ -196,26 +186,26 @@ let%expect_test "location string equivalence 1" =
 let%expect_test "location string equivalence 2" =
   let loc =
     { filename= "xxx.stan"
-    ; linenum= 35
-    ; colnum= 24
+    ; line_num= 35
+    ; col_num= 24
     ; included_from=
         Some
-          {filename= "yyy.stan"; linenum= 345; colnum= 214; included_from= None}
-    }
+          { filename= "yyy.stan"
+          ; line_num= 345
+          ; col_num= 214
+          ; included_from= None } }
   in
-  print_endline
-    (create_string_from_location
-       (parse_location_from_string (create_string_from_location loc))) ;
+  print_endline (string_of_location (parse_location (string_of_location loc))) ;
   [%expect
     {|
       file xxx.stan, line 35, column 24, included from
       file yyy.stan, line 345, column 214 |}]
 
 let%expect_test "parse location from string" =
-  let loc = parse_location_from_string "file xxx.stan, line 245, column 13" in
+  let loc = parse_location "file xxx.stan, line 245, column 13" in
   print_endline loc.filename ;
-  print_endline (string_of_int loc.linenum) ;
-  print_endline (string_of_int loc.colnum) ;
+  print_endline (string_of_int loc.line_num) ;
+  print_endline (string_of_int loc.col_num) ;
   [%expect {|
       xxx.stan
       245

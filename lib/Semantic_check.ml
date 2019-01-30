@@ -1130,7 +1130,7 @@ and semantic_check_statement context_flags s =
                 ^ " was supplied." ) ) )
   | TargetPE e ->
       let ue = semantic_check_expression context_flags e in
-      (* We check typing of ~ and target += *)
+      (* Check typing of ~ and target += *)
       let _ =
         match ue.expr_typed_type with
         | UFun _ | UMathLibraryFunction ->
@@ -1208,7 +1208,7 @@ and semantic_check_statement context_flags s =
             ( "CDF and CCDF functions may not be used with sampling notation. \
                Use increment_log_prob(" ^ uid.name ^ "_log(...)) instead." )
       in
-      (* We check typing of ~ and target += *)
+      (* Check typing of ~ and target += *)
       let distribution_name_is_defined name argumenttypes =
         get_stan_math_function_return_type_opt (name ^ "_lpdf") argumenttypes
         = Some (ReturnType UReal)

@@ -90,7 +90,7 @@ data_block:
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     {  grammar_logger "transformed_data_block" ;  tvds }
-    (* NOTE: We are choosing to allow mixing of statements and top_var_decls *)
+    (* NOTE: this allows mixing of statements and top_var_decls *)
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
