@@ -3,10 +3,13 @@ open Core_kernel
 
 (** Source code locations *)
 type location =
-  {filename: string; linenum: int; colnum: int; included_from: location option}
+  { filename: string
+  ; line_num: int
+  ; col_num: int
+  ; included_from: location option }
 
 (** Delimited locations *)
-type location_span = {start_loc: location; end_loc: location}
+type location_span = {begin_loc: location; end_loc: location}
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =

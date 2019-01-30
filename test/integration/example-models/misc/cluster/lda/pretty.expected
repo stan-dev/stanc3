@@ -41,7 +41,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file corr-lda.stan, line 21, column 14:
+Warning: deprecated language construct used in file corr-lda.stan, line 21, column 14:
    -------------------------------------------------
     19:    cov_matrix[K] Sigma;       // covariance matrix
     20:    for (m in 1:M)
@@ -54,7 +54,7 @@ Warning: deprecated language construct used at file corr-lda.stan, line 21, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file corr-lda.stan, line 23, column 16:
+Warning: deprecated language construct used in file corr-lda.stan, line 23, column 16:
    -------------------------------------------------
     21:      theta[m] <- softmax(eta[m]);
     22:    for (m in 1:K) {
@@ -67,7 +67,7 @@ Warning: deprecated language construct used at file corr-lda.stan, line 23, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file corr-lda.stan, line 25, column 18:
+Warning: deprecated language construct used in file corr-lda.stan, line 25, column 18:
    -------------------------------------------------
     23:      Sigma[m,m] <- sigma[m] * sigma[m] * Omega[m,m];
     24:      for (n in (m+1):K) {
@@ -80,7 +80,7 @@ Warning: deprecated language construct used at file corr-lda.stan, line 25, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file corr-lda.stan, line 26, column 18:
+Warning: deprecated language construct used in file corr-lda.stan, line 26, column 18:
    -------------------------------------------------
     24:      for (n in (m+1):K) {
     25:        Sigma[m,n] <- sigma[m] * sigma[n] * Omega[m,n];
@@ -93,7 +93,7 @@ Warning: deprecated language construct used at file corr-lda.stan, line 26, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file corr-lda.stan, line 44, column 16:
+Warning: deprecated language construct used in file corr-lda.stan, line 44, column 16:
    -------------------------------------------------
     42:      real gamma[K];
     43:      for (k in 1:K) 
@@ -106,7 +106,7 @@ Warning: deprecated language construct used at file corr-lda.stan, line 44, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file corr-lda.stan, line 45, column 21:
+Warning: deprecated language construct used in file corr-lda.stan, line 45, column 21:
    -------------------------------------------------
     43:      for (k in 1:K) 
     44:        gamma[k] <- log(theta[doc[n],k]) + log(phi[k,w[n]]);
@@ -144,7 +144,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file lda.stan, line 23, column 16:
+Warning: deprecated language construct used in file lda.stan, line 23, column 16:
    -------------------------------------------------
     21:      real gamma[K];
     22:      for (k in 1:K) 
@@ -157,7 +157,7 @@ Warning: deprecated language construct used at file lda.stan, line 23, column 16
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file lda.stan, line 24, column 21:
+Warning: deprecated language construct used in file lda.stan, line 24, column 21:
    -------------------------------------------------
     22:      for (k in 1:K) 
     23:        gamma[k] <- log(theta[doc[n],k]) + log(phi[k,w[n]]);

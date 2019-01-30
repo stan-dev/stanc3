@@ -33,7 +33,7 @@ let parse parse_fun lexbuf =
           (SyntaxError
              (Parsing
                 ( message
-                , Errors.location_span_of_pos
+                , Errors.loc_span_of_pos
                     (Lexing.lexeme_start_p
                        (Stack.top_exn Preprocessor.include_stack))
                     (Lexing.lexeme_end_p
@@ -53,7 +53,7 @@ let parse parse_fun lexbuf =
         in
         raise
           (SyntaxError
-             (Parsing (message, Errors.location_span_of_pos start_pos end_pos)))
+             (Parsing (message, Errors.loc_span_of_pos start_pos end_pos)))
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
@@ -68,6 +68,19 @@ let parse_string parse_fun str =
   in
   parse parse_fun lexbuf
 
+let parse_file parse_fun path =
+  let chan = In_channel.create path in
+  let lexbuf =
+    let open Lexing in
+    let lexbuf = from_channel chan in
+    lexbuf.lex_start_p
+    <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
+    lexbuf
+  in
+  parse parse_fun lexbuf
+
+(* TESTS *)
 let%expect_test "parse conditional" =
   let ast =
     parse_string Parser.Incremental.program
@@ -518,15 +531,3 @@ let%expect_test "parse nested loop" =
              (stmt_untyped_loc <opaque>)))))
          (stmt_untyped_loc <opaque>)))))
      (generatedquantitiesblock ())) |}]
-
-let parse_file parse_fun path =
-  let chan = In_channel.create path in
-  let lexbuf =
-    let open Lexing in
-    let lexbuf = from_channel chan in
-    lexbuf.lex_start_p
-    <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
-    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-    lexbuf
-  in
-  parse parse_fun lexbuf

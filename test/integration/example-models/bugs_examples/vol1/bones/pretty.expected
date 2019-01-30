@@ -26,7 +26,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file bones.stan, line 40, column 20:
+Warning: deprecated language construct used in file bones.stan, line 40, column 20:
    -------------------------------------------------
     38:        // Cumulative probability of > grade k given theta
     39:        for (k in 1:(ncat[j] - 1))
@@ -39,7 +39,7 @@ Warning: deprecated language construct used at file bones.stan, line 40, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file bones.stan, line 41, column 18:
+Warning: deprecated language construct used in file bones.stan, line 41, column 18:
    -------------------------------------------------
     39:        for (k in 1:(ncat[j] - 1))
     40:          Q[i, j, k] <- inv_logit(delta[j] * (theta[i] - gamma[j, k])); 
@@ -52,7 +52,7 @@ Warning: deprecated language construct used at file bones.stan, line 41, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file bones.stan, line 43, column 20:
+Warning: deprecated language construct used in file bones.stan, line 43, column 20:
    -------------------------------------------------
     41:        p[i, j, 1] <- 1 - Q[i, j, 1];
     42:        for (k in 2:(ncat[j] - 1))  
@@ -65,7 +65,7 @@ Warning: deprecated language construct used at file bones.stan, line 43, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file bones.stan, line 44, column 24:
+Warning: deprecated language construct used in file bones.stan, line 44, column 24:
    -------------------------------------------------
     42:        for (k in 2:(ncat[j] - 1))  
     43:          p[i, j, k] <- Q[i, j, k - 1] - Q[i, j, k];
@@ -78,7 +78,7 @@ Warning: deprecated language construct used at file bones.stan, line 44, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file bones.stan, line 51, column 25:
+Warning: deprecated language construct used in file bones.stan, line 51, column 25:
    -------------------------------------------------
     49:        // contribution
     50:        if (grade[i, j] != -1)
