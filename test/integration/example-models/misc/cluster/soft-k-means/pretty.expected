@@ -22,7 +22,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file soft-k-means.stan, line 9, column 13:
+Warning: deprecated language construct used in file soft-k-means.stan, line 9, column 13:
    -------------------------------------------------
      7:  transformed data {
      8:    real<upper=0> neg_log_K;
@@ -35,7 +35,7 @@ Warning: deprecated language construct used at file soft-k-means.stan, line 9, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file soft-k-means.stan, line 18, column 19:
+Warning: deprecated language construct used in file soft-k-means.stan, line 18, column 19:
    -------------------------------------------------
     16:    for (n in 1:N)
     17:      for (k in 1:K)
@@ -48,7 +48,7 @@ Warning: deprecated language construct used at file soft-k-means.stan, line 18, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file soft-k-means.stan, line 24, column 21:
+Warning: deprecated language construct used in file soft-k-means.stan, line 24, column 21:
    -------------------------------------------------
     22:      mu[k] ~ normal(0,1);  // prior
     23:    for (n in 1:N)

@@ -44,10 +44,10 @@ let targetpe e =
   Assignment (t, BinOp (t, Plus, e))
 
 let trans_loc = function
-  | {Ast.start_loc; end_loc} ->
-      (* XXX hack hack *)
-      sprintf "\"%s\", line %d-%d" start_loc.filename start_loc.linenum
-        end_loc.linenum
+  | {Ast.begin_loc; end_loc} ->
+      (* TODO: this is a stub; insert actual definition here. *)
+      sprintf "\"%s\", line %d-%d" begin_loc.filename begin_loc.line_num
+        end_loc.line_num
 
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
 let no_loc = ""

@@ -16,7 +16,7 @@ let rec try_open_in paths fname pos =
   | [] ->
       raise
         (Errors.SyntaxError
-           (Includes
+           (Include
               ( "Could not find include file " ^ fname
                 ^ " in specified include paths.\n"
               , Errors.location_of_position
@@ -26,7 +26,7 @@ let rec try_open_in paths fname pos =
       let full_path = path ^ "/" ^ fname in
       ( In_channel.create full_path
       , sprintf "%s, included from\nfile %s" full_path
-          (Errors.create_string_from_location
+          (Errors.string_of_location
              (Errors.location_of_position
                 (Stack.top_exn include_stack).lex_start_p)) )
     with _ -> try_open_in rest_of_paths fname pos )
@@ -51,8 +51,8 @@ let try_get_new_lexbuf fname pos =
     if dup_exists (Str.split (Str.regexp ", included from\nfile ") path) then
       raise
         (Errors.SyntaxError
-           (Includes
-              ( "Found cyclical include structure.\n"
+           (Include
+              ( Printf.sprintf "File %s recursively included itself.\n" fname
               , Errors.location_of_position
                   (lexeme_start_p (Stack.top_exn include_stack)) )))
   in

@@ -59,7 +59,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file alli2.stan, line 1, column 0:
+Warning: deprecated language construct used in file alli2.stan, line 1, column 0:
    -------------------------------------------------
      1:  # Alligators: multinomial - logistic regression 
          ^
@@ -70,7 +70,7 @@ Warning: deprecated language construct used at file alli2.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 2, column 0:
+Warning: deprecated language construct used in file alli2.stan, line 2, column 0:
    -------------------------------------------------
      1:  # Alligators: multinomial - logistic regression 
      2:  #  http://www.openbugs.net/Examples/Aligators.html
@@ -82,7 +82,7 @@ Warning: deprecated language construct used at file alli2.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 4, column 0:
+Warning: deprecated language construct used in file alli2.stan, line 4, column 0:
    -------------------------------------------------
      2:  #  http://www.openbugs.net/Examples/Aligators.html
      3:  
@@ -95,7 +95,7 @@ Warning: deprecated language construct used at file alli2.stan, line 4, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 25, column 12:
+Warning: deprecated language construct used in file alli2.stan, line 25, column 12:
    -------------------------------------------------
     23:    vector[K] gamma[J]; 
     24:  
@@ -108,7 +108,7 @@ Warning: deprecated language construct used at file alli2.stan, line 25, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 27, column 16:
+Warning: deprecated language construct used in file alli2.stan, line 27, column 16:
    -------------------------------------------------
     25:    alpha[1] <- 0;
     26:    for (k in 1:(K-1))
@@ -121,7 +121,7 @@ Warning: deprecated language construct used at file alli2.stan, line 27, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 30, column 15:
+Warning: deprecated language construct used in file alli2.stan, line 30, column 15:
    -------------------------------------------------
     28:  
     29:    for (i in 1:I)
@@ -134,7 +134,7 @@ Warning: deprecated language construct used at file alli2.stan, line 30, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 32, column 15:
+Warning: deprecated language construct used in file alli2.stan, line 32, column 15:
    -------------------------------------------------
     30:      beta[i,1] <- 0;
     31:    for (k in 1:K)
@@ -147,7 +147,7 @@ Warning: deprecated language construct used at file alli2.stan, line 32, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 36, column 21:
+Warning: deprecated language construct used in file alli2.stan, line 36, column 21:
    -------------------------------------------------
     34:    for (i in 1:(I-1))
     35:      for (k in 1:(K-1))
@@ -160,7 +160,7 @@ Warning: deprecated language construct used at file alli2.stan, line 36, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 39, column 16:
+Warning: deprecated language construct used in file alli2.stan, line 39, column 16:
    -------------------------------------------------
     37:  
     38:    for (j in 1:J)
@@ -173,7 +173,7 @@ Warning: deprecated language construct used at file alli2.stan, line 39, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 41, column 16:
+Warning: deprecated language construct used in file alli2.stan, line 41, column 16:
    -------------------------------------------------
     39:      gamma[j,1] <- 0;
     40:    for (k in 1:K)
@@ -186,7 +186,7 @@ Warning: deprecated language construct used at file alli2.stan, line 41, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 45, column 22:
+Warning: deprecated language construct used in file alli2.stan, line 45, column 22:
    -------------------------------------------------
     43:    for (j in 1:(J-1))
     44:      for (k in 1:(K-1))
@@ -199,7 +199,7 @@ Warning: deprecated language construct used at file alli2.stan, line 45, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 58, column 2:
+Warning: deprecated language construct used in file alli2.stan, line 58, column 2:
    -------------------------------------------------
     56:    } 
     57:  
@@ -212,7 +212,7 @@ Warning: deprecated language construct used at file alli2.stan, line 58, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 70, column 27:
+Warning: deprecated language construct used in file alli2.stan, line 70, column 27:
    -------------------------------------------------
     68:  
     69:    for (k in 1:K) { 
@@ -225,7 +225,7 @@ Warning: deprecated language construct used at file alli2.stan, line 70, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 71, column 27:
+Warning: deprecated language construct used in file alli2.stan, line 71, column 27:
    -------------------------------------------------
     69:    for (k in 1:K) { 
     70:      for (i in 1:I) b[i,k] <- beta[i,k];
@@ -238,7 +238,7 @@ Warning: deprecated language construct used at file alli2.stan, line 71, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 76, column 17:
+Warning: deprecated language construct used in file alli2.stan, line 76, column 17:
    -------------------------------------------------
     74:    for (k in 1:K) {
     75:      real mean_beta_k;
@@ -251,7 +251,7 @@ Warning: deprecated language construct used at file alli2.stan, line 76, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 78, column 14:
+Warning: deprecated language construct used in file alli2.stan, line 78, column 14:
    -------------------------------------------------
     76:      mean_beta_k <- mean(col(b, k));
     77:      for (i in 1:I) {
@@ -264,7 +264,7 @@ Warning: deprecated language construct used at file alli2.stan, line 78, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 84, column 18:
+Warning: deprecated language construct used in file alli2.stan, line 84, column 18:
    -------------------------------------------------
     82:    for (k in 1:K) {
     83:      real mean_gamma_k;
@@ -277,7 +277,7 @@ Warning: deprecated language construct used at file alli2.stan, line 84, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file alli2.stan, line 86, column 14:
+Warning: deprecated language construct used in file alli2.stan, line 86, column 14:
    -------------------------------------------------
     84:      mean_gamma_k <- mean(col(g, k));
     85:      for (j in 1:J) {

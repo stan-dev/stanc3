@@ -42,7 +42,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file endo1.stan, line 1, column 0:
+Warning: deprecated language construct used in file endo1.stan, line 1, column 0:
    -------------------------------------------------
      1:  # Endo: conditional inference in case-contrl studies 
          ^
@@ -53,7 +53,7 @@ Warning: deprecated language construct used at file endo1.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 2, column 0:
+Warning: deprecated language construct used in file endo1.stan, line 2, column 0:
    -------------------------------------------------
      1:  # Endo: conditional inference in case-contrl studies 
      2:  # http://www.openbugs.net/Examples/Endo.html
@@ -65,7 +65,7 @@ Warning: deprecated language construct used at file endo1.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 4, column 0:
+Warning: deprecated language construct used in file endo1.stan, line 4, column 0:
    -------------------------------------------------
      2:  # http://www.openbugs.net/Examples/Endo.html
      3:  
@@ -78,7 +78,7 @@ Warning: deprecated language construct used at file endo1.stan, line 4, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 5, column 0:
+Warning: deprecated language construct used in file endo1.stan, line 5, column 0:
    -------------------------------------------------
      3:  
      4:  # In this example, three methods of different 
@@ -91,7 +91,7 @@ Warning: deprecated language construct used at file endo1.stan, line 5, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 6, column 0:
+Warning: deprecated language construct used in file endo1.stan, line 6, column 0:
    -------------------------------------------------
      4:  # In this example, three methods of different 
      5:  # model specifications are used for one equivalent
@@ -104,7 +104,7 @@ Warning: deprecated language construct used at file endo1.stan, line 6, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 20, column 5:
+Warning: deprecated language construct used in file endo1.stan, line 20, column 5:
    -------------------------------------------------
     18:    vector<lower=0>[I] est[2];
     19:    vector[I] est1m2;
@@ -117,7 +117,7 @@ Warning: deprecated language construct used at file endo1.stan, line 20, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 22, column 13:
+Warning: deprecated language construct used in file endo1.stan, line 22, column 13:
    -------------------------------------------------
     20:    J <- 2;
     21:    for (i in 1:I) {
@@ -130,7 +130,7 @@ Warning: deprecated language construct used at file endo1.stan, line 22, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 23, column 13:
+Warning: deprecated language construct used in file endo1.stan, line 23, column 13:
    -------------------------------------------------
     21:    for (i in 1:I) {
     22:      Y[1, i] <- 1; 
@@ -143,7 +143,7 @@ Warning: deprecated language construct used at file endo1.stan, line 23, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 26, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 26, column 15:
    -------------------------------------------------
     24:    } 
     25:    for (i in 1:n10) {
@@ -156,7 +156,7 @@ Warning: deprecated language construct used at file endo1.stan, line 26, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 27, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 27, column 15:
    -------------------------------------------------
     25:    for (i in 1:n10) {
     26:      est[1, i] <- 1; 
@@ -169,7 +169,7 @@ Warning: deprecated language construct used at file endo1.stan, line 27, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 30, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 30, column 15:
    -------------------------------------------------
     28:    } 
     29:    for (i in (n10 + 1):(n10 + n01)) {  
@@ -182,7 +182,7 @@ Warning: deprecated language construct used at file endo1.stan, line 30, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 31, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 31, column 15:
    -------------------------------------------------
     29:    for (i in (n10 + 1):(n10 + n01)) {  
     30:      est[1, i] <- 0;
@@ -195,7 +195,7 @@ Warning: deprecated language construct used at file endo1.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 34, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 34, column 15:
    -------------------------------------------------
     32:    }
     33:    for (i in (n10 + n01 + 1):(n10 + n01 + n11)) { 
@@ -208,7 +208,7 @@ Warning: deprecated language construct used at file endo1.stan, line 34, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 35, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 35, column 15:
    -------------------------------------------------
     33:    for (i in (n10 + n01 + 1):(n10 + n01 + n11)) { 
     34:      est[1, i] <- 1;  
@@ -221,7 +221,7 @@ Warning: deprecated language construct used at file endo1.stan, line 35, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 38, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 38, column 15:
    -------------------------------------------------
     36:    }
     37:    for (i in (n10 + n01 + n11 + 1):I ) { 
@@ -234,7 +234,7 @@ Warning: deprecated language construct used at file endo1.stan, line 38, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 39, column 15:
+Warning: deprecated language construct used in file endo1.stan, line 39, column 15:
    -------------------------------------------------
     37:    for (i in (n10 + n01 + n11 + 1):I ) { 
     38:      est[1, i] <- 0;  
@@ -247,7 +247,7 @@ Warning: deprecated language construct used at file endo1.stan, line 39, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 41, column 10:
+Warning: deprecated language construct used in file endo1.stan, line 41, column 10:
    -------------------------------------------------
     39:      est[2, i] <- 0;
     40:    }
@@ -260,7 +260,7 @@ Warning: deprecated language construct used at file endo1.stan, line 41, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo1.stan, line 49, column 2:
+Warning: deprecated language construct used in file endo1.stan, line 49, column 2:
    -------------------------------------------------
     47:  
     48:  model {
@@ -321,7 +321,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file endo2.stan, line 22, column 13:
+Warning: deprecated language construct used in file endo2.stan, line 22, column 13:
    -------------------------------------------------
     20:    int<lower=0> est[I, 2]; 
     21:    for (i in 1:I) {
@@ -334,7 +334,7 @@ Warning: deprecated language construct used at file endo2.stan, line 22, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 23, column 13:
+Warning: deprecated language construct used in file endo2.stan, line 23, column 13:
    -------------------------------------------------
     21:    for (i in 1:I) {
     22:      Y[i, 1] <- 1; 
@@ -347,7 +347,7 @@ Warning: deprecated language construct used at file endo2.stan, line 23, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 26, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 26, column 15:
    -------------------------------------------------
     24:    } 
     25:    for (i in 1:n10) {
@@ -360,7 +360,7 @@ Warning: deprecated language construct used at file endo2.stan, line 26, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 27, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 27, column 15:
    -------------------------------------------------
     25:    for (i in 1:n10) {
     26:      est[i, 1] <- 1; 
@@ -373,7 +373,7 @@ Warning: deprecated language construct used at file endo2.stan, line 27, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 30, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 30, column 15:
    -------------------------------------------------
     28:    } 
     29:    for (i in (n10 + 1):(n10 + n01)) {  
@@ -386,7 +386,7 @@ Warning: deprecated language construct used at file endo2.stan, line 30, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 31, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 31, column 15:
    -------------------------------------------------
     29:    for (i in (n10 + 1):(n10 + n01)) {  
     30:      est[i, 1] <- 0;
@@ -399,7 +399,7 @@ Warning: deprecated language construct used at file endo2.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 34, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 34, column 15:
    -------------------------------------------------
     32:    }
     33:    for (i in (n10 + n01 + 1):(n10 + n01 + n11)) { 
@@ -412,7 +412,7 @@ Warning: deprecated language construct used at file endo2.stan, line 34, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 35, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 35, column 15:
    -------------------------------------------------
     33:    for (i in (n10 + n01 + 1):(n10 + n01 + n11)) { 
     34:      est[i, 1] <- 1;  
@@ -425,7 +425,7 @@ Warning: deprecated language construct used at file endo2.stan, line 35, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 38, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 38, column 15:
    -------------------------------------------------
     36:    }
     37:    for (i in (n10 + n01 + n11 + 1):I ) { 
@@ -438,7 +438,7 @@ Warning: deprecated language construct used at file endo2.stan, line 38, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 39, column 15:
+Warning: deprecated language construct used in file endo2.stan, line 39, column 15:
    -------------------------------------------------
     37:    for (i in (n10 + n01 + n11 + 1):I ) { 
     38:      est[i, 1] <- 0;  
@@ -451,7 +451,7 @@ Warning: deprecated language construct used at file endo2.stan, line 39, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 48, column 2:
+Warning: deprecated language construct used in file endo2.stan, line 48, column 2:
    -------------------------------------------------
     46:    real p[I, 2];
     47:  
@@ -464,7 +464,7 @@ Warning: deprecated language construct used at file endo2.stan, line 48, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 52, column 13:
+Warning: deprecated language construct used in file endo2.stan, line 52, column 13:
    -------------------------------------------------
     50:  
     51:    for (i in 1:I) {
@@ -477,7 +477,7 @@ Warning: deprecated language construct used at file endo2.stan, line 52, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 53, column 13:
+Warning: deprecated language construct used in file endo2.stan, line 53, column 13:
    -------------------------------------------------
     51:    for (i in 1:I) {
     52:      p[i, 1] <- exp(beta * est[i, 1]); 
@@ -490,7 +490,7 @@ Warning: deprecated language construct used at file endo2.stan, line 53, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 54, column 13:
+Warning: deprecated language construct used in file endo2.stan, line 54, column 13:
    -------------------------------------------------
     52:      p[i, 1] <- exp(beta * est[i, 1]); 
     53:      p[i, 2] <- exp(beta * est[i, 2]); 
@@ -503,7 +503,7 @@ Warning: deprecated language construct used at file endo2.stan, line 54, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 55, column 13:
+Warning: deprecated language construct used in file endo2.stan, line 55, column 13:
    -------------------------------------------------
     53:      p[i, 2] <- exp(beta * est[i, 2]); 
     54:      p[i, 1] <- p[i, 1] / (p[i, 1] + p[i, 2]); 
@@ -516,7 +516,7 @@ Warning: deprecated language construct used at file endo2.stan, line 55, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 58, column 21:
+Warning: deprecated language construct used in file endo2.stan, line 58, column 21:
    -------------------------------------------------
     56:  
     57:      // using the multinomial log-pmf explicitly 
@@ -529,7 +529,7 @@ Warning: deprecated language construct used at file endo2.stan, line 58, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file endo2.stan, line 59, column 21:
+Warning: deprecated language construct used in file endo2.stan, line 59, column 21:
    -------------------------------------------------
     57:      // using the multinomial log-pmf explicitly 
     58:      increment_log_prob(log(p[i, 1]) * Y[i, 1]);
@@ -585,7 +585,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file endo3.stan, line 1, column 0:
+Warning: deprecated language construct used in file endo3.stan, line 1, column 0:
    -------------------------------------------------
      1:  # Endo: conditional inference in case-contrl studies 
          ^
@@ -596,7 +596,7 @@ Warning: deprecated language construct used at file endo3.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 2, column 0:
+Warning: deprecated language construct used in file endo3.stan, line 2, column 0:
    -------------------------------------------------
      1:  # Endo: conditional inference in case-contrl studies 
      2:  # http://www.openbugs.net/Examples/Endo.html
@@ -608,7 +608,7 @@ Warning: deprecated language construct used at file endo3.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 4, column 0:
+Warning: deprecated language construct used in file endo3.stan, line 4, column 0:
    -------------------------------------------------
      2:  # http://www.openbugs.net/Examples/Endo.html
      3:  
@@ -621,7 +621,7 @@ Warning: deprecated language construct used at file endo3.stan, line 4, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 5, column 0:
+Warning: deprecated language construct used in file endo3.stan, line 5, column 0:
    -------------------------------------------------
      3:  
      4:  # In this example, three methods of different 
@@ -634,7 +634,7 @@ Warning: deprecated language construct used at file endo3.stan, line 5, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 6, column 0:
+Warning: deprecated language construct used in file endo3.stan, line 6, column 0:
    -------------------------------------------------
      4:  # In this example, three methods of different 
      5:  # model specifications are used for one equivalent
@@ -647,7 +647,7 @@ Warning: deprecated language construct used at file endo3.stan, line 6, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 20, column 5:
+Warning: deprecated language construct used in file endo3.stan, line 20, column 5:
    -------------------------------------------------
     18:    int<lower=0> Y[2, I]; 
     19:    vector<lower=0>[I] est[2];
@@ -660,7 +660,7 @@ Warning: deprecated language construct used at file endo3.stan, line 20, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 22, column 13:
+Warning: deprecated language construct used in file endo3.stan, line 22, column 13:
    -------------------------------------------------
     20:    J <- 2;
     21:    for (i in 1:I) {
@@ -673,7 +673,7 @@ Warning: deprecated language construct used at file endo3.stan, line 22, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 23, column 13:
+Warning: deprecated language construct used in file endo3.stan, line 23, column 13:
    -------------------------------------------------
     21:    for (i in 1:I) {
     22:      Y[1, i] <- 1; 
@@ -686,7 +686,7 @@ Warning: deprecated language construct used at file endo3.stan, line 23, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 26, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 26, column 15:
    -------------------------------------------------
     24:    } 
     25:    for (i in 1:n10) {
@@ -699,7 +699,7 @@ Warning: deprecated language construct used at file endo3.stan, line 26, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 27, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 27, column 15:
    -------------------------------------------------
     25:    for (i in 1:n10) {
     26:      est[1, i] <- 1; 
@@ -712,7 +712,7 @@ Warning: deprecated language construct used at file endo3.stan, line 27, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 30, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 30, column 15:
    -------------------------------------------------
     28:    } 
     29:    for (i in (n10 + 1):(n10 + n01)) {  
@@ -725,7 +725,7 @@ Warning: deprecated language construct used at file endo3.stan, line 30, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 31, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 31, column 15:
    -------------------------------------------------
     29:    for (i in (n10 + 1):(n10 + n01)) {  
     30:      est[1, i] <- 0;
@@ -738,7 +738,7 @@ Warning: deprecated language construct used at file endo3.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 34, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 34, column 15:
    -------------------------------------------------
     32:    }
     33:    for (i in (n10 + n01 + 1):(n10 + n01 + n11)) { 
@@ -751,7 +751,7 @@ Warning: deprecated language construct used at file endo3.stan, line 34, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 35, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 35, column 15:
    -------------------------------------------------
     33:    for (i in (n10 + n01 + 1):(n10 + n01 + n11)) { 
     34:      est[1, i] <- 1;  
@@ -764,7 +764,7 @@ Warning: deprecated language construct used at file endo3.stan, line 35, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 38, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 38, column 15:
    -------------------------------------------------
     36:    }
     37:    for (i in (n10 + n01 + n11 + 1):I) { 
@@ -777,7 +777,7 @@ Warning: deprecated language construct used at file endo3.stan, line 38, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 39, column 15:
+Warning: deprecated language construct used in file endo3.stan, line 39, column 15:
    -------------------------------------------------
     37:    for (i in (n10 + n01 + n11 + 1):I) { 
     38:      est[1, i] <- 0;  
@@ -790,7 +790,7 @@ Warning: deprecated language construct used at file endo3.stan, line 39, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file endo3.stan, line 49, column 2:
+Warning: deprecated language construct used in file endo3.stan, line 49, column 2:
    -------------------------------------------------
     47:  
     48:  model {

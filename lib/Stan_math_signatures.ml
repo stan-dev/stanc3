@@ -18,7 +18,7 @@ let get_stan_math_function_return_type_opt name args =
       namematches
   in
   if List.length filteredmatches = 0 then None
-    (* We return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+    (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
   else
     Some
       (List.hd_exn
@@ -150,7 +150,7 @@ let for_vector_types s =
     s (vector_types i)
   done
 
-(* -- We start populating stan_math_signaturess -- *)
+(* -- Start populating stan_math_signaturess -- *)
 let _ =
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;

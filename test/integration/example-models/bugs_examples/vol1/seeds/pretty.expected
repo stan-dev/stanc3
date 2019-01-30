@@ -33,7 +33,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file seeds.stan, line 1, column 0:
+Warning: deprecated language construct used in file seeds.stan, line 1, column 0:
    -------------------------------------------------
      1:  ## 
          ^
@@ -44,7 +44,7 @@ Warning: deprecated language construct used at file seeds.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds.stan, line 2, column 0:
+Warning: deprecated language construct used in file seeds.stan, line 2, column 0:
    -------------------------------------------------
      1:  ## 
      2:  ##  http://www.openbugs.net/Examples/Seeds.html
@@ -56,7 +56,7 @@ Warning: deprecated language construct used at file seeds.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds.stan, line 13, column 10:
+Warning: deprecated language construct used in file seeds.stan, line 13, column 10:
    -------------------------------------------------
     11:  transformed data {
     12:      vector[I] x1x2;
@@ -69,7 +69,7 @@ Warning: deprecated language construct used at file seeds.stan, line 13, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file seeds.stan, line 25, column 12:
+Warning: deprecated language construct used in file seeds.stan, line 25, column 12:
    -------------------------------------------------
     23:  transformed parameters {
     24:      real<lower=0> sigma;
@@ -116,7 +116,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 1, column 0:
+Warning: deprecated language construct used in file seeds_centered.stan, line 1, column 0:
    -------------------------------------------------
      1:  #  http://www.openbugs.net/Examples/Seeds.html
          ^
@@ -127,7 +127,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 1,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 2, column 0:
+Warning: deprecated language construct used in file seeds_centered.stan, line 2, column 0:
    -------------------------------------------------
      1:  #  http://www.openbugs.net/Examples/Seeds.html
      2:  # tau replaced by sigma direct estimation
@@ -139,7 +139,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 2,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 3, column 0:
+Warning: deprecated language construct used in file seeds_centered.stan, line 3, column 0:
    -------------------------------------------------
      1:  #  http://www.openbugs.net/Examples/Seeds.html
      2:  # tau replaced by sigma direct estimation
@@ -152,7 +152,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 3,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 4, column 0:
+Warning: deprecated language construct used in file seeds_centered.stan, line 4, column 0:
    -------------------------------------------------
      2:  # tau replaced by sigma direct estimation
      3:  # using narrower semi-informative priors
@@ -165,7 +165,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 4,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 9, column 18:
+Warning: deprecated language construct used in file seeds_centered.stan, line 9, column 18:
    -------------------------------------------------
      7:      int<lower=0> n[I];
      8:      int<lower=0> N[I];
@@ -178,7 +178,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 9,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 10, column 18:
+Warning: deprecated language construct used in file seeds_centered.stan, line 10, column 18:
    -------------------------------------------------
      8:      int<lower=0> N[I];
      9:      vector[I] x1; # seed type
@@ -191,7 +191,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 10
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 15, column 10:
+Warning: deprecated language construct used in file seeds_centered.stan, line 15, column 10:
    -------------------------------------------------
     13:  transformed data {
     14:      vector[I] x1x2;
@@ -204,7 +204,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 15
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 28, column 5:
+Warning: deprecated language construct used in file seeds_centered.stan, line 28, column 5:
    -------------------------------------------------
     26:  transformed parameters{
     27:    vector[I] b;
@@ -217,7 +217,7 @@ Warning: deprecated language construct used at file seeds_centered.stan, line 28
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file seeds_centered.stan, line 32, column 31:
+Warning: deprecated language construct used in file seeds_centered.stan, line 32, column 31:
    -------------------------------------------------
     30:  
     31:  model {
@@ -260,7 +260,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 1, column 0:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 1, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Seeds.html
          ^
@@ -271,7 +271,7 @@ Warning: deprecated language construct used at file seeds_stanified.stan, line 1
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 2, column 0:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 2, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Seeds.html
      2:  ## tau replaced by sigma direct estimation
@@ -283,7 +283,7 @@ Warning: deprecated language construct used at file seeds_stanified.stan, line 2
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 3, column 0:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 3, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Seeds.html
      2:  ## tau replaced by sigma direct estimation
@@ -296,7 +296,7 @@ Warning: deprecated language construct used at file seeds_stanified.stan, line 3
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 8, column 18:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 8, column 18:
    -------------------------------------------------
      6:      int<lower=0> n[I];
      7:      int<lower=0> N[I];
@@ -309,7 +309,7 @@ Warning: deprecated language construct used at file seeds_stanified.stan, line 8
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 9, column 18:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 9, column 18:
    -------------------------------------------------
      7:      int<lower=0> N[I];
      8:      vector[I] x1; # seed type
@@ -322,7 +322,7 @@ Warning: deprecated language construct used at file seeds_stanified.stan, line 9
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 14, column 10:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 14, column 10:
    -------------------------------------------------
     12:  transformed data {
     13:      vector[I] x1x2;
@@ -335,7 +335,7 @@ Warning: deprecated language construct used at file seeds_stanified.stan, line 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file seeds_stanified.stan, line 26, column 30:
+Warning: deprecated language construct used in file seeds_stanified.stan, line 26, column 30:
    -------------------------------------------------
     24:  
     25:  model {
