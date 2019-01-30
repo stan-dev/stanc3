@@ -83,28 +83,32 @@ let rec string_of_location loc =
 (** Render a location_span as a string *)
 let create_string_from_location_span loc_sp =
   match loc_sp with {begin_loc; end_loc} ->
+    let bf = begin_loc.filename in
+    let ef = end_loc.filename in
+    let bl = begin_loc.line_num in
+    let el = end_loc.line_num in
+    let bc = begin_loc.col_num in
+    let ec = end_loc.col_num in
     let open Format in
-    let filename_str =
-      if end_loc.filename = begin_loc.filename then
-        sprintf "file %s, " begin_loc.filename
-      else sprintf "files %s-%s, " begin_loc.filename end_loc.filename
-    in
-    let linenum_str =
-      if end_loc.line_num = begin_loc.line_num then
-        sprintf "line %d, " end_loc.line_num
-      else sprintf "lines %d-%d, " begin_loc.line_num end_loc.line_num
-    in
-    let colnum_str =
-      if end_loc.col_num = begin_loc.col_num then
-        sprintf "column %d" begin_loc.col_num
-      else sprintf "columns %d-%d" begin_loc.col_num end_loc.col_num
+    let file_line_col_string =
+      if bf = ef then
+        sprintf "file %s, %s" bf
+          ( if bl = el then
+            sprintf "line %d, %s" bl
+              ( if bc = ec then sprintf "column %d" bc
+              else sprintf "columns %d-%d" bc ec )
+          else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
+          )
+      else
+        sprintf "file %s, line %d, column %d to file %s, line %d, column %d" bf
+          bl bc ef el ec
     in
     let included_from_str =
       match begin_loc.included_from with
       | None -> ""
       | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
     in
-    sprintf "%s%s%s%s" filename_str linenum_str colnum_str included_from_str
+    sprintf "%s%s" file_line_col_string included_from_str
 
 (** Return two lines before and after the specified location. *)
 let print_context {filename; line_num; col_num; _} =

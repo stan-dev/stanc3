@@ -15,7 +15,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 
-Semantic error in file bad_data_int_const.stan, lines 21-22, columns 8-43:
+Semantic error in file bad_data_int_const.stan, line 21, column 8 to line 22, column 43:
    -------------------------------------------------
     19:  generated quantities {
     20:    vector[3] y_hat_gq
