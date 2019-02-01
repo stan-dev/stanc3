@@ -238,7 +238,7 @@ Semantic error in file conditional_condition_bad_1.stan, line 6, columns 6-7:
      8:  }
    -------------------------------------------------
 
-Condition in conditional needs to be of type int or real. Instead found type vector.
+Condition in conditional must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc conditional_condition_bad_2.stan
 
@@ -252,7 +252,7 @@ Semantic error in file conditional_condition_bad_2.stan, line 9, columns 11-12:
     11:  }
    -------------------------------------------------
 
-Condition in conditional needs to be of type int or real. Instead found type vector.
+Condition in conditional must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc continue1.stan
 
@@ -2685,17 +2685,17 @@ Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs 
 
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad1.stan
 
-Semantic error in file validate_int_expr2_bad1.stan, line 5, columns 16-17:
+Semantic error in file validate_int_expr2_bad1.stan, line 5, columns 12-15:
    -------------------------------------------------
      3:  }
      4:  model {
      5:    for (n in 1.7:N)
-                         ^
+                     ^
      6:      y ~ normal(0,1);
      7:  }
    -------------------------------------------------
 
-Identifier 'N' not in scope.
+Lower bound of for-loop must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad2.stan
 
@@ -2709,7 +2709,7 @@ Semantic error in file validate_int_expr2_bad2.stan, line 5, columns 14-18:
      7:  }
    -------------------------------------------------
 
-Upper bound of for-loop needs to be of type int. Instead found type real.
+Upper bound of for-loop must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad3.stan
 
@@ -2736,7 +2736,7 @@ Semantic error in file validate_int_expr2_bad4.stan, line 5, columns 14-18:
      7:  }
    -------------------------------------------------
 
-Upper bound of for-loop needs to be of type int. Instead found type real.
+Upper bound of for-loop must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc validate_logical_negate_expr_bad.stan
 
@@ -2783,7 +2783,7 @@ Semantic error in file validate_set_double_offset_multiplier_bad1.stan, line 3, 
      5:  }
    -------------------------------------------------
 
-Offset must be of int or real type. Instead found type vector.
+Offset must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad2.stan
 
@@ -2797,7 +2797,7 @@ Semantic error in file validate_set_double_offset_multiplier_bad2.stan, line 3, 
      5:  }
    -------------------------------------------------
 
-Multiplier must be of int or real type. Instead found type vector.
+Multiplier must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad3.stan
 
@@ -2825,7 +2825,7 @@ Semantic error in file validate_set_double_range_lower_bad1.stan, line 3, column
      5:  parameters {
    -------------------------------------------------
 
-Lower bound must be of int or real type. Instead found type vector.
+Lower bound must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_lower_bad2.stan
 
@@ -2839,7 +2839,7 @@ Semantic error in file validate_set_double_range_lower_bad2.stan, line 3, column
      5:  parameters {
    -------------------------------------------------
 
-Lower bound must be of int or real type. Instead found type vector.
+Lower bound must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad1.stan
 
@@ -2853,7 +2853,7 @@ Semantic error in file validate_set_double_range_upper_bad1.stan, line 3, column
      5:  parameters {
    -------------------------------------------------
 
-Upper bound must be of int or real type. Instead found type vector.
+Upper bound must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad2.stan
 
@@ -2867,7 +2867,7 @@ Semantic error in file validate_set_double_range_upper_bad2.stan, line 3, column
      5:  parameters {
    -------------------------------------------------
 
-Upper bound must be of int or real type. Instead found type vector.
+Upper bound must be of type int or real. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_lower_bad1.stan
 
