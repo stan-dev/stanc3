@@ -55,7 +55,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file camel.stan, line 10, column 9:
+Warning: deprecated language construct used in file camel.stan, line 10, column 9:
    -------------------------------------------------
      8:    vector[2] mu; 
      9:    matrix[2, 2] S; 
@@ -68,7 +68,7 @@ Warning: deprecated language construct used at file camel.stan, line 10, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 11, column 9:
+Warning: deprecated language construct used in file camel.stan, line 11, column 9:
    -------------------------------------------------
      9:    matrix[2, 2] S; 
     10:    mu[1] <- 0; 
@@ -81,7 +81,7 @@ Warning: deprecated language construct used at file camel.stan, line 11, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 12, column 11:
+Warning: deprecated language construct used in file camel.stan, line 12, column 11:
    -------------------------------------------------
     10:    mu[1] <- 0; 
     11:    mu[2] <- 0; 
@@ -94,7 +94,7 @@ Warning: deprecated language construct used at file camel.stan, line 12, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 13, column 11:
+Warning: deprecated language construct used in file camel.stan, line 13, column 11:
    -------------------------------------------------
     11:    mu[2] <- 0; 
     12:    S[1, 1] <- 1000; 
@@ -107,7 +107,7 @@ Warning: deprecated language construct used at file camel.stan, line 13, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 14, column 11:
+Warning: deprecated language construct used in file camel.stan, line 14, column 11:
    -------------------------------------------------
     12:    S[1, 1] <- 1000; 
     13:    S[1, 2] <- 0;
@@ -120,7 +120,7 @@ Warning: deprecated language construct used at file camel.stan, line 14, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 15, column 11:
+Warning: deprecated language construct used in file camel.stan, line 15, column 11:
    -------------------------------------------------
     13:    S[1, 2] <- 0;
     14:    S[2, 1] <- 0;
@@ -133,7 +133,7 @@ Warning: deprecated language construct used at file camel.stan, line 15, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 30, column 11:
+Warning: deprecated language construct used in file camel.stan, line 30, column 11:
    -------------------------------------------------
     28:  model {
     29:    vector[2] Y[12]; 
@@ -146,7 +146,7 @@ Warning: deprecated language construct used at file camel.stan, line 30, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 31, column 11:
+Warning: deprecated language construct used in file camel.stan, line 31, column 11:
    -------------------------------------------------
     29:    vector[2] Y[12]; 
     30:    Y[1, 1] <- 1; 
@@ -159,7 +159,7 @@ Warning: deprecated language construct used at file camel.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 32, column 11:
+Warning: deprecated language construct used in file camel.stan, line 32, column 11:
    -------------------------------------------------
     30:    Y[1, 1] <- 1; 
     31:    Y[1, 2] <- 1; 
@@ -172,7 +172,7 @@ Warning: deprecated language construct used at file camel.stan, line 32, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 33, column 11:
+Warning: deprecated language construct used in file camel.stan, line 33, column 11:
    -------------------------------------------------
     31:    Y[1, 2] <- 1; 
     32:    Y[2, 1] <- 1; 
@@ -185,7 +185,7 @@ Warning: deprecated language construct used at file camel.stan, line 33, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 34, column 11:
+Warning: deprecated language construct used in file camel.stan, line 34, column 11:
    -------------------------------------------------
     32:    Y[2, 1] <- 1; 
     33:    Y[2, 2] <- -1; 
@@ -198,7 +198,7 @@ Warning: deprecated language construct used at file camel.stan, line 34, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 35, column 11:
+Warning: deprecated language construct used in file camel.stan, line 35, column 11:
    -------------------------------------------------
     33:    Y[2, 2] <- -1; 
     34:    Y[3, 1] <- -1; 
@@ -211,7 +211,7 @@ Warning: deprecated language construct used at file camel.stan, line 35, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 36, column 11:
+Warning: deprecated language construct used in file camel.stan, line 36, column 11:
    -------------------------------------------------
     34:    Y[3, 1] <- -1; 
     35:    Y[3, 2] <- 1; 
@@ -224,7 +224,7 @@ Warning: deprecated language construct used at file camel.stan, line 36, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 37, column 11:
+Warning: deprecated language construct used in file camel.stan, line 37, column 11:
    -------------------------------------------------
     35:    Y[3, 2] <- 1; 
     36:    Y[4, 1] <- -1; 
@@ -237,7 +237,7 @@ Warning: deprecated language construct used at file camel.stan, line 37, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 39, column 11:
+Warning: deprecated language construct used in file camel.stan, line 39, column 11:
    -------------------------------------------------
     37:    Y[4, 2] <- -1; 
     38:  
@@ -250,7 +250,7 @@ Warning: deprecated language construct used at file camel.stan, line 39, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 40, column 11:
+Warning: deprecated language construct used in file camel.stan, line 40, column 11:
    -------------------------------------------------
     38:  
     39:    Y[5, 1] <- 2; 
@@ -263,7 +263,7 @@ Warning: deprecated language construct used at file camel.stan, line 40, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 41, column 11:
+Warning: deprecated language construct used in file camel.stan, line 41, column 11:
    -------------------------------------------------
     39:    Y[5, 1] <- 2; 
     40:    Y[6, 1] <- 2; 
@@ -276,7 +276,7 @@ Warning: deprecated language construct used at file camel.stan, line 41, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 42, column 11:
+Warning: deprecated language construct used in file camel.stan, line 42, column 11:
    -------------------------------------------------
     40:    Y[6, 1] <- 2; 
     41:    Y[7, 1] <- -2; 
@@ -289,7 +289,7 @@ Warning: deprecated language construct used at file camel.stan, line 42, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 43, column 11:
+Warning: deprecated language construct used in file camel.stan, line 43, column 11:
    -------------------------------------------------
     41:    Y[7, 1] <- -2; 
     42:    Y[8, 1] <- -2; 
@@ -302,7 +302,7 @@ Warning: deprecated language construct used at file camel.stan, line 43, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 44, column 11:
+Warning: deprecated language construct used in file camel.stan, line 44, column 11:
    -------------------------------------------------
     42:    Y[8, 1] <- -2; 
     43:    Y[5, 2] <- y52; 
@@ -315,7 +315,7 @@ Warning: deprecated language construct used at file camel.stan, line 44, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 45, column 11:
+Warning: deprecated language construct used in file camel.stan, line 45, column 11:
    -------------------------------------------------
     43:    Y[5, 2] <- y52; 
     44:    Y[6, 2] <- y62; 
@@ -328,7 +328,7 @@ Warning: deprecated language construct used at file camel.stan, line 45, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 46, column 11:
+Warning: deprecated language construct used in file camel.stan, line 46, column 11:
    -------------------------------------------------
     44:    Y[6, 2] <- y62; 
     45:    Y[7, 2] <- y72; 
@@ -341,7 +341,7 @@ Warning: deprecated language construct used at file camel.stan, line 46, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 47, column 11:
+Warning: deprecated language construct used in file camel.stan, line 47, column 11:
    -------------------------------------------------
     45:    Y[7, 2] <- y72; 
     46:    Y[8, 2] <- y82; 
@@ -354,7 +354,7 @@ Warning: deprecated language construct used at file camel.stan, line 47, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 48, column 12:
+Warning: deprecated language construct used in file camel.stan, line 48, column 12:
    -------------------------------------------------
     46:    Y[8, 2] <- y82; 
     47:    Y[9, 1] <- y91; 
@@ -367,7 +367,7 @@ Warning: deprecated language construct used at file camel.stan, line 48, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 49, column 12:
+Warning: deprecated language construct used in file camel.stan, line 49, column 12:
    -------------------------------------------------
     47:    Y[9, 1] <- y91; 
     48:    Y[10, 1] <- y101; 
@@ -380,7 +380,7 @@ Warning: deprecated language construct used at file camel.stan, line 49, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 50, column 12:
+Warning: deprecated language construct used in file camel.stan, line 50, column 12:
    -------------------------------------------------
     48:    Y[10, 1] <- y101; 
     49:    Y[11, 1] <- y111; 
@@ -393,7 +393,7 @@ Warning: deprecated language construct used at file camel.stan, line 50, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 51, column 11:
+Warning: deprecated language construct used in file camel.stan, line 51, column 11:
    -------------------------------------------------
     49:    Y[11, 1] <- y111; 
     50:    Y[12, 1] <- y121; 
@@ -406,7 +406,7 @@ Warning: deprecated language construct used at file camel.stan, line 51, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 52, column 12:
+Warning: deprecated language construct used in file camel.stan, line 52, column 12:
    -------------------------------------------------
     50:    Y[12, 1] <- y121; 
     51:    Y[9, 2] <- 2; 
@@ -419,7 +419,7 @@ Warning: deprecated language construct used at file camel.stan, line 52, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 53, column 12:
+Warning: deprecated language construct used in file camel.stan, line 53, column 12:
    -------------------------------------------------
     51:    Y[9, 2] <- 2; 
     52:    Y[10, 2] <- 2; 
@@ -432,7 +432,7 @@ Warning: deprecated language construct used at file camel.stan, line 53, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 54, column 12:
+Warning: deprecated language construct used in file camel.stan, line 54, column 12:
    -------------------------------------------------
     52:    Y[10, 2] <- 2; 
     53:    Y[11, 2] <- -2; 
@@ -445,7 +445,7 @@ Warning: deprecated language construct used at file camel.stan, line 54, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 58, column 19:
+Warning: deprecated language construct used in file camel.stan, line 58, column 19:
    -------------------------------------------------
     56:    // instead of Sigma ~ inv_wishart(2, S), 
     57:    // using the prior as in Tanner and Wong (1987) 
@@ -458,7 +458,7 @@ Warning: deprecated language construct used at file camel.stan, line 58, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file camel.stan, line 64, column 7:
+Warning: deprecated language construct used in file camel.stan, line 64, column 7:
    -------------------------------------------------
     62:  generated quantities { 
     63:    real<lower=-1,upper= 1> rho; 
@@ -514,7 +514,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file camel2.stan, line 15, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 15, column 9:
    -------------------------------------------------
     13:    matrix[2, 2] S; 
     14:  
@@ -527,7 +527,7 @@ Warning: deprecated language construct used at file camel2.stan, line 15, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 16, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 16, column 9:
    -------------------------------------------------
     14:  
     15:    mu[1] <- 0; 
@@ -540,7 +540,7 @@ Warning: deprecated language construct used at file camel2.stan, line 16, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 17, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 17, column 11:
    -------------------------------------------------
     15:    mu[1] <- 0; 
     16:    mu[2] <- 0; 
@@ -553,7 +553,7 @@ Warning: deprecated language construct used at file camel2.stan, line 17, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 18, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 18, column 11:
    -------------------------------------------------
     16:    mu[2] <- 0; 
     17:    S[1, 1] <- 1000; 
@@ -566,7 +566,7 @@ Warning: deprecated language construct used at file camel2.stan, line 18, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 19, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 19, column 11:
    -------------------------------------------------
     17:    S[1, 1] <- 1000; 
     18:    S[1, 2] <- 0;
@@ -579,7 +579,7 @@ Warning: deprecated language construct used at file camel2.stan, line 19, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 20, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 20, column 11:
    -------------------------------------------------
     18:    S[1, 2] <- 0;
     19:    S[2, 1] <- 0;
@@ -592,7 +592,7 @@ Warning: deprecated language construct used at file camel2.stan, line 20, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 22, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 22, column 11:
    -------------------------------------------------
     20:    S[2, 2] <- 1000;
     21:  
@@ -605,7 +605,7 @@ Warning: deprecated language construct used at file camel2.stan, line 22, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 23, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 23, column 11:
    -------------------------------------------------
     21:  
     22:    Y[1, 1] <- 1.; 
@@ -618,7 +618,7 @@ Warning: deprecated language construct used at file camel2.stan, line 23, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 24, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 24, column 11:
    -------------------------------------------------
     22:    Y[1, 1] <- 1.; 
     23:    Y[1, 2] <- 1.; 
@@ -631,7 +631,7 @@ Warning: deprecated language construct used at file camel2.stan, line 24, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 25, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 25, column 11:
    -------------------------------------------------
     23:    Y[1, 2] <- 1.; 
     24:    Y[2, 1] <- 1.; 
@@ -644,7 +644,7 @@ Warning: deprecated language construct used at file camel2.stan, line 25, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 26, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 26, column 11:
    -------------------------------------------------
     24:    Y[2, 1] <- 1.; 
     25:    Y[2, 2] <- -1.; 
@@ -657,7 +657,7 @@ Warning: deprecated language construct used at file camel2.stan, line 26, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 27, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 27, column 11:
    -------------------------------------------------
     25:    Y[2, 2] <- -1.; 
     26:    Y[3, 1] <- -1.; 
@@ -670,7 +670,7 @@ Warning: deprecated language construct used at file camel2.stan, line 27, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 28, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 28, column 11:
    -------------------------------------------------
     26:    Y[3, 1] <- -1.; 
     27:    Y[3, 2] <- 1.; 
@@ -683,7 +683,7 @@ Warning: deprecated language construct used at file camel2.stan, line 28, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 29, column 11:
+Warning: deprecated language construct used in file camel2.stan, line 29, column 11:
    -------------------------------------------------
     27:    Y[3, 2] <- 1.; 
     28:    Y[4, 1] <- -1.; 
@@ -696,7 +696,7 @@ Warning: deprecated language construct used at file camel2.stan, line 29, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 31, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 31, column 9:
    -------------------------------------------------
     29:    Y[4, 2] <- -1.; 
     30:  
@@ -709,7 +709,7 @@ Warning: deprecated language construct used at file camel2.stan, line 31, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 32, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 32, column 9:
    -------------------------------------------------
     30:  
     31:    Y1[1] <- 2.; 
@@ -722,7 +722,7 @@ Warning: deprecated language construct used at file camel2.stan, line 32, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 33, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 33, column 9:
    -------------------------------------------------
     31:    Y1[1] <- 2.; 
     32:    Y1[2] <- 2.; 
@@ -735,7 +735,7 @@ Warning: deprecated language construct used at file camel2.stan, line 33, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 34, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 34, column 9:
    -------------------------------------------------
     32:    Y1[2] <- 2.; 
     33:    Y1[3] <- -2.; 
@@ -748,7 +748,7 @@ Warning: deprecated language construct used at file camel2.stan, line 34, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 36, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 36, column 9:
    -------------------------------------------------
     34:    Y1[4] <- -2.; 
     35:    
@@ -761,7 +761,7 @@ Warning: deprecated language construct used at file camel2.stan, line 36, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 37, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 37, column 9:
    -------------------------------------------------
     35:    
     36:    Y2[1] <- 2.; 
@@ -774,7 +774,7 @@ Warning: deprecated language construct used at file camel2.stan, line 37, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 38, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 38, column 9:
    -------------------------------------------------
     36:    Y2[1] <- 2.; 
     37:    Y2[2] <- 2.; 
@@ -787,7 +787,7 @@ Warning: deprecated language construct used at file camel2.stan, line 38, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 39, column 9:
+Warning: deprecated language construct used in file camel2.stan, line 39, column 9:
    -------------------------------------------------
     37:    Y2[2] <- 2.; 
     38:    Y2[3] <- -2.; 
@@ -800,7 +800,7 @@ Warning: deprecated language construct used at file camel2.stan, line 39, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 46, column 7:
+Warning: deprecated language construct used in file camel2.stan, line 46, column 7:
    -------------------------------------------------
     44:  transformed parameters {
     45:    real<lower=-1,upper= 1> rho; 
@@ -813,7 +813,7 @@ Warning: deprecated language construct used at file camel2.stan, line 46, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file camel2.stan, line 52, column 19:
+Warning: deprecated language construct used in file camel2.stan, line 52, column 19:
    -------------------------------------------------
     50:    Y1 ~ normal(0, sqrt(Sigma[1, 1]));
     51:    Y2 ~ normal(0, sqrt(Sigma[2, 2])); 

@@ -23,7 +23,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file naive-bayes-unsup.stan, line 24, column 19:
+Warning: deprecated language construct used in file naive-bayes-unsup.stan, line 24, column 19:
    -------------------------------------------------
     22:     for (m in 1:M) 
     23:       for (k in 1:K) 
@@ -36,7 +36,7 @@ Warning: deprecated language construct used at file naive-bayes-unsup.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file naive-bayes-unsup.stan, line 27, column 24:
+Warning: deprecated language construct used in file naive-bayes-unsup.stan, line 27, column 24:
    -------------------------------------------------
     25:     for (n in 1:N)
     26:       for (k in 1:K)
@@ -49,7 +49,7 @@ Warning: deprecated language construct used at file naive-bayes-unsup.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file naive-bayes-unsup.stan, line 30, column 22:
+Warning: deprecated language construct used in file naive-bayes-unsup.stan, line 30, column 22:
    -------------------------------------------------
     28:                            + categorical_log(w[n],phi[k]);
     29:     for (m in 1:M)

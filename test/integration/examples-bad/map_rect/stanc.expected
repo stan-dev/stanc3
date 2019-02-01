@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc bad_data_i_type.stan
 
-Semantic error at file bad_data_i_type.stan, line 19, columns 8-68:
+Semantic error in file bad_data_i_type.stan, line 19, columns 8-68:
    -------------------------------------------------
     17:  generated quantities {
     18:    vector[3] y_hat_gq
@@ -15,7 +15,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 
-Semantic error at file bad_data_int_const.stan, line 21, columns 8-104:
+Semantic error in file bad_data_int_const.stan, line 21, column 8 to line 22, column 43:
    -------------------------------------------------
     19:  generated quantities {
     20:    vector[3] y_hat_gq
@@ -31,7 +31,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 
-Semantic error at file bad_data_r_type.stan, line 19, columns 8-68:
+Semantic error in file bad_data_r_type.stan, line 19, columns 8-68:
    -------------------------------------------------
     17:  generated quantities {
     18:    vector[3] y_hat_gq
@@ -46,7 +46,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 
-Semantic error at file bad_data_real_const.stan, line 20, columns 8-70:
+Semantic error in file bad_data_real_const.stan, line 20, columns 8-70:
    -------------------------------------------------
     18:  generated quantities {
     19:    vector[3] y_hat_gq
@@ -61,7 +61,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 
-Semantic error at file bad_fun_type.stan, line 19, columns 8-68:
+Semantic error in file bad_fun_type.stan, line 19, columns 8-68:
    -------------------------------------------------
     17:  generated quantities {
     18:    vector[3] y_hat_gq
@@ -76,7 +76,7 @@ Instead supplied arguments of incompatible type: (vector, vector[], real[], int[
 
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 
-Semantic error at file bad_job_params_type.stan, line 19, columns 8-68:
+Semantic error in file bad_job_params_type.stan, line 19, columns 8-68:
    -------------------------------------------------
     17:  generated quantities {
     18:    vector[3] y_hat_gq
@@ -91,7 +91,7 @@ Instead supplied arguments of incompatible type: (vector, vector, real[], int[])
 
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 
-Semantic error at file bad_lp_fn.stan, line 22, columns 16-52:
+Semantic error in file bad_lp_fn.stan, line 22, columns 16-52:
    -------------------------------------------------
     20:  }
     21:  model {
@@ -104,7 +104,7 @@ Mapped function cannot be an _rng or _lp function, found function name: lr_lp
 
   $ ../../../../../install/default/bin/stanc bad_rng_fn.stan
 
-Semantic error at file bad_rng_fn.stan, line 22, columns 19-56:
+Semantic error in file bad_rng_fn.stan, line 22, columns 19-56:
    -------------------------------------------------
     20:  }
     21:  transformed parameters {
@@ -117,7 +117,7 @@ Mapped function cannot be an _rng or _lp function, found function name: lr_rng
 
   $ ../../../../../install/default/bin/stanc bad_shared_params_type.stan
 
-Semantic error at file bad_shared_params_type.stan, line 19, columns 8-68:
+Semantic error in file bad_shared_params_type.stan, line 19, columns 8-68:
    -------------------------------------------------
     17:  generated quantities {
     18:    vector[3] y_hat_gq

@@ -3,8 +3,13 @@ open Core_kernel
 
 (** Source code locations *)
 type location =
-  | Location of Lexing.position * Lexing.position  (** delimited location *)
-  | Nowhere  (** no location *)
+  { filename: string
+  ; line_num: int
+  ; col_num: int
+  ; included_from: location option }
+
+(** Delimited locations *)
+type location_span = {begin_loc: location; end_loc: location}
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -38,8 +43,11 @@ and unsizedtype =
 (** Return types for functions *)
 and returntype = Void | ReturnType of unsizedtype
 
-and identifier = {name: string; id_loc: location sexp_opaque [@compare.ignore]}
+(** Our type for identifiers, on which we record a location *)
+and identifier =
+  {name: string; id_loc: location_span sexp_opaque [@compare.ignore]}
 
+(** Arithmetic and logical operators *)
 and operator =
   | Plus
   | Minus
@@ -61,6 +69,7 @@ and operator =
   | Not
   | Transpose
 
+(** Indices for array access *)
 and 'e index =
   | All
   | Single of 'e
@@ -88,16 +97,16 @@ and 'e expression =
   | Paren of 'e
   | Indexed of 'e * 'e index list
 
-(** Untyped expressions, which have locations as meta-data *)
+(** Untyped expressions, which have location_spans as meta-data *)
 and untyped_expression =
   { expr_untyped: untyped_expression expression
-  ; expr_untyped_loc: location sexp_opaque [@compare.ignore] }
+  ; expr_untyped_loc: location_span sexp_opaque [@compare.ignore] }
 
-(** Typed expressions also have meta-data after type checking: a location, as well as a type
+(** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 and typed_expression =
   { expr_typed: typed_expression expression
-  ; expr_typed_loc: location sexp_opaque [@compare.ignore]
+  ; expr_typed_loc: location_span sexp_opaque [@compare.ignore]
   ; expr_typed_ad_level: autodifftype
   ; expr_typed_type: unsizedtype }
 [@@deriving sexp, compare, map, hash]
@@ -219,16 +228,16 @@ and statement_returntype =
   | Complete of returntype
   | AnyReturnType
 
-(** Untyped statements, which have locations as meta-data *)
+(** Untyped statements, which have location_spans as meta-data *)
 and untyped_statement =
   { stmt_untyped: (untyped_expression, untyped_statement) statement
-  ; stmt_untyped_loc: location sexp_opaque [@compare.ignore] }
+  ; stmt_untyped_loc: location_span sexp_opaque [@compare.ignore] }
 
-(** Typed statements also have meta-data after type checking: a location, as well as a statement returntype
+(** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
 and typed_statement =
   { stmt_typed: (typed_expression, typed_statement) statement
-  ; stmt_typed_loc: location sexp_opaque [@compare.ignore]
+  ; stmt_typed_loc: location_span sexp_opaque [@compare.ignore]
   ; stmt_typed_returntype: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 

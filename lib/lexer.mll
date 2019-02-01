@@ -189,6 +189,7 @@ rule token = parse
 
   | _                         { raise (Errors.SyntaxError
                                 (Lexing (lexeme (Stack.top_exn include_stack),
+                                        Errors.location_of_position
                                         (lexeme_start_p
                                           (Stack.top_exn include_stack))))) }
 

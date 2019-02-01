@@ -48,7 +48,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 2, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 2, column 0:
    -------------------------------------------------
      1:  
      2:  # Hepatitis: a normal hierarchical model with measurement 
@@ -60,7 +60,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 2, colu
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 3, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 3, column 0:
    -------------------------------------------------
      1:  
      2:  # Hepatitis: a normal hierarchical model with measurement 
@@ -73,7 +73,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 3, colu
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 4, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 4, column 0:
    -------------------------------------------------
      2:  # Hepatitis: a normal hierarchical model with measurement 
      3:  # error
@@ -86,7 +86,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 4, colu
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 6, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 6, column 0:
    -------------------------------------------------
      4:  #  http://openbugs.net/Examples/Hepatitis.html
      5:  
@@ -99,7 +99,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 6, colu
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 7, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 7, column 0:
    -------------------------------------------------
      5:  
      6:  # In this version the measurement errors are not modeled.  
@@ -112,7 +112,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 7, colu
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 10, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 10, column 0:
    -------------------------------------------------
      8:  
      9:  
@@ -125,7 +125,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 10, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 11, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 11, column 0:
    -------------------------------------------------
      9:  
     10:  ## note that we have missing data in the orignal data Y[N, T]; 
@@ -138,7 +138,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 11, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 12, column 0:
+Warning: deprecated language construct used in file hepatitis.stan, line 12, column 0:
    -------------------------------------------------
     10:  ## note that we have missing data in the orignal data Y[N, T]; 
     11:  ## here, we turn Y[N, T] into Yvec with the missing
@@ -151,7 +151,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 12, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 16, column 32:
+Warning: deprecated language construct used in file hepatitis.stan, line 16, column 32:
    -------------------------------------------------
     14:  
     15:  data {
@@ -164,7 +164,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 16, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 17, column 32:
+Warning: deprecated language construct used in file hepatitis.stan, line 17, column 32:
    -------------------------------------------------
     15:  data {
     16:    int<lower=0> N1;              ## N1 is the length of the vector, Yvec1, that is 
@@ -177,7 +177,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 17, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 18, column 25:
+Warning: deprecated language construct used in file hepatitis.stan, line 18, column 25:
    -------------------------------------------------
     16:    int<lower=0> N1;              ## N1 is the length of the vector, Yvec1, that is 
     17:    int<lower=0> N;               ## created from concatenate columns of matrix Y[N, T] 
@@ -190,7 +190,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 18, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 19, column 25:
+Warning: deprecated language construct used in file hepatitis.stan, line 19, column 25:
    -------------------------------------------------
     17:    int<lower=0> N;               ## created from concatenate columns of matrix Y[N, T] 
     18:    real Yvec1[N1];        ## with NA's removed. 
@@ -203,7 +203,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 19, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 20, column 32:
+Warning: deprecated language construct used in file hepatitis.stan, line 20, column 32:
    -------------------------------------------------
     18:    real Yvec1[N1];        ## with NA's removed. 
     19:    real tvec1[N1];        ## N is the nrow of original matrix Y[N, T] 
@@ -216,7 +216,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 20, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 26, column 11:
+Warning: deprecated language construct used in file hepatitis.stan, line 26, column 11:
    -------------------------------------------------
     24:  transformed data {
     25:    real y0_mean; 
@@ -229,7 +229,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 26, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 45, column 11:
+Warning: deprecated language construct used in file hepatitis.stan, line 45, column 11:
    -------------------------------------------------
     43:    real sigma_alpha; 
     44:    real sigma_beta; 
@@ -242,7 +242,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 45, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 46, column 15:
+Warning: deprecated language construct used in file hepatitis.stan, line 46, column 15:
    -------------------------------------------------
     44:    real sigma_beta; 
     45:    sigma_y <- sqrt(sigmasq_y); 
@@ -255,7 +255,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 46, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 47, column 14:
+Warning: deprecated language construct used in file hepatitis.stan, line 47, column 14:
    -------------------------------------------------
     45:    sigma_y <- sqrt(sigmasq_y); 
     46:    sigma_alpha <- sqrt(sigmasq_alpha); 
@@ -268,7 +268,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 47, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 54, column 10:
+Warning: deprecated language construct used in file hepatitis.stan, line 54, column 10:
    -------------------------------------------------
     52:    real m[N1];
     53:    for (n in 1:N1) {
@@ -281,7 +281,7 @@ Warning: deprecated language construct used at file hepatitis.stan, line 54, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitis.stan, line 55, column 10:
+Warning: deprecated language construct used in file hepatitis.stan, line 55, column 10:
    -------------------------------------------------
     53:    for (n in 1:N1) {
     54:      oldn <- idxn1[n]; 
@@ -350,7 +350,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 2, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 2, column 0:
    -------------------------------------------------
      1:  
      2:  # Hepatitis: a normal hierarchical model with measurement 
@@ -362,7 +362,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 2, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 3, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 3, column 0:
    -------------------------------------------------
      1:  
      2:  # Hepatitis: a normal hierarchical model with measurement 
@@ -375,7 +375,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 3, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 4, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 4, column 0:
    -------------------------------------------------
      2:  # Hepatitis: a normal hierarchical model with measurement 
      3:  # error
@@ -388,7 +388,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 4, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 6, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 6, column 0:
    -------------------------------------------------
      4:  #  http://openbugs.net/Examples/Hepatitis.html
      5:  
@@ -401,7 +401,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 6, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 9, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 9, column 0:
    -------------------------------------------------
      7:  
      8:  
@@ -414,7 +414,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 9, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 10, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 10, column 0:
    -------------------------------------------------
      8:  
      9:  ## note that we have missing data in the orignal data Y[N, T]; 
@@ -427,7 +427,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 10, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 11, column 0:
+Warning: deprecated language construct used in file hepatitisME.stan, line 11, column 0:
    -------------------------------------------------
      9:  ## note that we have missing data in the orignal data Y[N, T]; 
     10:  ## here, we turn Y[N, T] into Yvec with the missing
@@ -440,7 +440,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 11, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 15, column 32:
+Warning: deprecated language construct used in file hepatitisME.stan, line 15, column 32:
    -------------------------------------------------
     13:  
     14:  data {
@@ -453,7 +453,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 15, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 16, column 32:
+Warning: deprecated language construct used in file hepatitisME.stan, line 16, column 32:
    -------------------------------------------------
     14:  data {
     15:    int<lower=0> N1;              ## N1 is the length of the vector, Yvec1, that is 
@@ -466,7 +466,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 16, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 17, column 25:
+Warning: deprecated language construct used in file hepatitisME.stan, line 17, column 25:
    -------------------------------------------------
     15:    int<lower=0> N1;              ## N1 is the length of the vector, Yvec1, that is 
     16:    int<lower=0> N;               ## created from concatenate columns of matrix Y[N, T] 
@@ -479,7 +479,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 17, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 18, column 25:
+Warning: deprecated language construct used in file hepatitisME.stan, line 18, column 25:
    -------------------------------------------------
     16:    int<lower=0> N;               ## created from concatenate columns of matrix Y[N, T] 
     17:    real Yvec1[N1];        ## with NA's removed. 
@@ -492,7 +492,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 18, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 19, column 32:
+Warning: deprecated language construct used in file hepatitisME.stan, line 19, column 32:
    -------------------------------------------------
     17:    real Yvec1[N1];        ## with NA's removed. 
     18:    real tvec1[N1];        ## N is the nrow of original matrix Y[N, T] 
@@ -505,7 +505,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 19, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 25, column 11:
+Warning: deprecated language construct used in file hepatitisME.stan, line 25, column 11:
    -------------------------------------------------
     23:  transformed data {
     24:    real y0_mean; 
@@ -518,7 +518,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 25, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 47, column 11:
+Warning: deprecated language construct used in file hepatitisME.stan, line 47, column 11:
    -------------------------------------------------
     45:    real<lower=0> sigma_alpha; 
     46:    real<lower=0> sigma_beta; 
@@ -531,7 +531,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 47, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 48, column 15:
+Warning: deprecated language construct used in file hepatitisME.stan, line 48, column 15:
    -------------------------------------------------
     46:    real<lower=0> sigma_beta; 
     47:    sigma_y <- sqrt(sigmasq_y); 
@@ -544,7 +544,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 48, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 49, column 14:
+Warning: deprecated language construct used in file hepatitisME.stan, line 49, column 14:
    -------------------------------------------------
     47:    sigma_y <- sqrt(sigmasq_y); 
     48:    sigma_alpha <- sqrt(sigmasq_alpha); 
@@ -557,7 +557,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 49, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 56, column 10:
+Warning: deprecated language construct used in file hepatitisME.stan, line 56, column 10:
    -------------------------------------------------
     54:    real m[N1]; 
     55:    for (n in 1:N1) {
@@ -570,7 +570,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 56, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 57, column 10:
+Warning: deprecated language construct used in file hepatitisME.stan, line 57, column 10:
    -------------------------------------------------
     55:    for (n in 1:N1) {
     56:      oldn <- idxn1[n]; 
@@ -583,7 +583,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 57, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 62, column 2:
+Warning: deprecated language construct used in file hepatitisME.stan, line 62, column 2:
    -------------------------------------------------
     60:  
     61:    mu0 ~ normal(theta, sigma_mu0); 
@@ -596,7 +596,7 @@ Warning: deprecated language construct used at file hepatitisME.stan, line 62, c
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file hepatitisME.stan, line 63, column 2:
+Warning: deprecated language construct used in file hepatitisME.stan, line 63, column 2:
    -------------------------------------------------
     61:    mu0 ~ normal(theta, sigma_mu0); 
     62:    ## It is a bit weird that to specify gamma prior on sigma_mu0 instead on gamma_mu0^2

@@ -11,7 +11,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file estdof.stan, line 2, column 0:
+Warning: deprecated language construct used in file estdof.stan, line 2, column 0:
    -------------------------------------------------
      1:  
      2:  ## estimated the degree of freedom (dof) from 
@@ -23,7 +23,7 @@ Warning: deprecated language construct used at file estdof.stan, line 2, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file estdof.stan, line 3, column 0:
+Warning: deprecated language construct used in file estdof.stan, line 3, column 0:
    -------------------------------------------------
      1:  
      2:  ## estimated the degree of freedom (dof) from 
@@ -36,7 +36,7 @@ Warning: deprecated language construct used at file estdof.stan, line 3, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file estdof.stan, line 4, column 0:
+Warning: deprecated language construct used in file estdof.stan, line 4, column 0:
    -------------------------------------------------
      2:  ## estimated the degree of freedom (dof) from 
      3:  ## samples by sim.stan
@@ -49,7 +49,7 @@ Warning: deprecated language construct used at file estdof.stan, line 4, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file estdof.stan, line 6, column 0:
+Warning: deprecated language construct used in file estdof.stan, line 6, column 0:
    -------------------------------------------------
      4:  # http://www.openbugs.net/Examples/t-df.html
      5:  
@@ -74,7 +74,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file simt4.stan, line 1, column 0:
+Warning: deprecated language construct used in file simt4.stan, line 1, column 0:
    -------------------------------------------------
      1:  ##  simulate samples from student t distribution 
          ^
@@ -85,7 +85,7 @@ Warning: deprecated language construct used at file simt4.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file simt4.stan, line 2, column 0:
+Warning: deprecated language construct used in file simt4.stan, line 2, column 0:
    -------------------------------------------------
      1:  ##  simulate samples from student t distribution 
      2:  ## 
@@ -97,7 +97,7 @@ Warning: deprecated language construct used at file simt4.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file simt4.stan, line 3, column 0:
+Warning: deprecated language construct used in file simt4.stan, line 3, column 0:
    -------------------------------------------------
      1:  ##  simulate samples from student t distribution 
      2:  ## 
@@ -110,7 +110,7 @@ Warning: deprecated language construct used at file simt4.stan, line 3, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file simt4.stan, line 7, column 5:
+Warning: deprecated language construct used in file simt4.stan, line 7, column 5:
    -------------------------------------------------
      5:  transformed data {
      6:    int d; 

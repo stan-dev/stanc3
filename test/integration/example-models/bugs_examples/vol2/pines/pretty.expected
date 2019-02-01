@@ -35,7 +35,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 12, column 9:
+Warning: deprecated language construct used in file pines-2.stan, line 12, column 9:
    -------------------------------------------------
     10:    vector[N] z_std;
     11:  
@@ -48,7 +48,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 12, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 13, column 9:
+Warning: deprecated language construct used in file pines-2.stan, line 13, column 9:
    -------------------------------------------------
     11:  
     12:    y_std <- (y - mean(y)) / sd(y);
@@ -61,7 +61,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 13, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 14, column 9:
+Warning: deprecated language construct used in file pines-2.stan, line 14, column 9:
    -------------------------------------------------
     12:    y_std <- (y - mean(y)) / sd(y);
     13:    x_std <- (x - mean(x)) / sd(x);
@@ -74,7 +74,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 14, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 27, column 5:
+Warning: deprecated language construct used in file pines-2.stan, line 27, column 5:
    -------------------------------------------------
     25:  
     26:    log_joint[1] 
@@ -87,7 +87,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 27, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 32, column 5:
+Warning: deprecated language construct used in file pines-2.stan, line 32, column 5:
    -------------------------------------------------
     30:      + normal_log(y_std, alpha + beta * x_std, sigma[1]);
     31:    log_joint[2]
@@ -100,7 +100,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 32, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 38, column 19:
+Warning: deprecated language construct used in file pines-2.stan, line 38, column 19:
    -------------------------------------------------
     36:  }
     37:  model {
@@ -113,7 +113,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 38, colum
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 39, column 19:
+Warning: deprecated language construct used in file pines-2.stan, line 39, column 19:
    -------------------------------------------------
     37:  model {
     38:    increment_log_prob(log_joint[1]);
@@ -126,7 +126,7 @@ Warning: deprecated language construct used at file pines-2.stan, line 39, colum
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file pines-2.stan, line 43, column 10:
+Warning: deprecated language construct used in file pines-2.stan, line 43, column 10:
    -------------------------------------------------
     41:  generated quantities {
     42:    real lambda;
@@ -215,7 +215,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file pines-4.stan, line 12, column 9:
+Warning: deprecated language construct used in file pines-4.stan, line 12, column 9:
    -------------------------------------------------
     10:    vector[N] z_std;
     11:  
@@ -228,7 +228,7 @@ Warning: deprecated language construct used at file pines-4.stan, line 12, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-4.stan, line 13, column 9:
+Warning: deprecated language construct used in file pines-4.stan, line 13, column 9:
    -------------------------------------------------
     11:  
     12:    y_std <- (y - mean(y)) / sd(y);
@@ -241,7 +241,7 @@ Warning: deprecated language construct used at file pines-4.stan, line 13, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-4.stan, line 14, column 9:
+Warning: deprecated language construct used in file pines-4.stan, line 14, column 9:
    -------------------------------------------------
     12:    y_std <- (y - mean(y)) / sd(y);
     13:    x_std <- (x - mean(x)) / sd(x);
@@ -254,7 +254,7 @@ Warning: deprecated language construct used at file pines-4.stan, line 14, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-4.stan, line 28, column 14:
+Warning: deprecated language construct used in file pines-4.stan, line 28, column 14:
    -------------------------------------------------
     26:    vector<lower=0>[2] sigma;
     27:    for (i in 1:2)
@@ -267,7 +267,7 @@ Warning: deprecated language construct used at file pines-4.stan, line 28, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-4.stan, line 34, column 5:
+Warning: deprecated language construct used in file pines-4.stan, line 34, column 5:
    -------------------------------------------------
     32:  
     33:    log_p[1] 
@@ -280,7 +280,7 @@ Warning: deprecated language construct used at file pines-4.stan, line 34, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-4.stan, line 44, column 5:
+Warning: deprecated language construct used in file pines-4.stan, line 44, column 5:
    -------------------------------------------------
     42:  
     43:    log_p[2] 
@@ -329,7 +329,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file pines-independent.stan, line 12, column 9:
+Warning: deprecated language construct used in file pines-independent.stan, line 12, column 9:
    -------------------------------------------------
     10:    vector[N] z_std;
     11:  
@@ -342,7 +342,7 @@ Warning: deprecated language construct used at file pines-independent.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-independent.stan, line 13, column 9:
+Warning: deprecated language construct used in file pines-independent.stan, line 13, column 9:
    -------------------------------------------------
     11:  
     12:    y_std <- (y - mean(y)) / sd(y);
@@ -355,7 +355,7 @@ Warning: deprecated language construct used at file pines-independent.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-independent.stan, line 14, column 9:
+Warning: deprecated language construct used in file pines-independent.stan, line 14, column 9:
    -------------------------------------------------
     12:    y_std <- (y - mean(y)) / sd(y);
     13:    x_std <- (x - mean(x)) / sd(x);
@@ -368,7 +368,7 @@ Warning: deprecated language construct used at file pines-independent.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-independent.stan, line 29, column 9:
+Warning: deprecated language construct used in file pines-independent.stan, line 29, column 9:
    -------------------------------------------------
     27:    alpha ~ normal(0,10);
     28:    beta ~ normal(0,5);
@@ -381,7 +381,7 @@ Warning: deprecated language construct used at file pines-independent.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines-independent.stan, line 33, column 9:
+Warning: deprecated language construct used in file pines-independent.stan, line 33, column 9:
    -------------------------------------------------
     31:    gamma ~ normal(0,10);
     32:    delta ~ normal(0,5);
@@ -432,7 +432,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file pines.stan, line 12, column 9:
+Warning: deprecated language construct used in file pines.stan, line 12, column 9:
    -------------------------------------------------
     10:    vector[N] z_std;
     11:  
@@ -445,7 +445,7 @@ Warning: deprecated language construct used at file pines.stan, line 12, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 13, column 9:
+Warning: deprecated language construct used in file pines.stan, line 13, column 9:
    -------------------------------------------------
     11:  
     12:    y_std <- (y - mean(y)) / sd(y);
@@ -458,7 +458,7 @@ Warning: deprecated language construct used at file pines.stan, line 13, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 14, column 9:
+Warning: deprecated language construct used in file pines.stan, line 14, column 9:
    -------------------------------------------------
     12:    y_std <- (y - mean(y)) / sd(y);
     13:    x_std <- (x - mean(x)) / sd(x);
@@ -471,7 +471,7 @@ Warning: deprecated language construct used at file pines.stan, line 14, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 29, column 14:
+Warning: deprecated language construct used in file pines.stan, line 29, column 14:
    -------------------------------------------------
     27:  
     28:    for (i in 1:2)
@@ -484,7 +484,7 @@ Warning: deprecated language construct used at file pines.stan, line 29, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 31, column 13:
+Warning: deprecated language construct used in file pines.stan, line 31, column 13:
    -------------------------------------------------
     29:      sigma[i] <- 1 / sqrt(tau[i]);
     30:  
@@ -497,7 +497,7 @@ Warning: deprecated language construct used at file pines.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 42, column 13:
+Warning: deprecated language construct used in file pines.stan, line 42, column 13:
    -------------------------------------------------
     40:      ;
     41:  
@@ -510,7 +510,7 @@ Warning: deprecated language construct used at file pines.stan, line 42, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 54, column 19:
+Warning: deprecated language construct used in file pines.stan, line 54, column 19:
    -------------------------------------------------
     52:  }
     53:  model {
@@ -523,7 +523,7 @@ Warning: deprecated language construct used at file pines.stan, line 54, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file pines.stan, line 58, column 7:
+Warning: deprecated language construct used in file pines.stan, line 58, column 7:
    -------------------------------------------------
     56:  generated quantities {
     57:    real pM2;
