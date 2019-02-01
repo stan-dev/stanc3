@@ -417,67 +417,39 @@ and semantic_check_sizedtype context_flags = function
       in
       SArray (ust, ue)
 
-and semantic_check_transformation context_flags = function
+and semantic_check_transformation context_flags =
+  let check_bound_type e name =
+    let ue = semantic_check_expression context_flags e in
+    let _ =
+      if not (check_of_int_or_real_type ue) then
+        semantic_error_e ue
+          ( name ^ " must be of int or real type. Instead found type "
+          ^ pretty_print_unsizedtype ue.expr_typed_type
+          ^ "." )
+    in
+    ue
+  in
+  function
   | Identity -> Identity
   | Lower e ->
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error_e ue
-            ( "Lower bound must be of int or real type. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ue = check_bound_type e "Lower bound" in
       Lower ue
   | Upper e ->
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error_e ue
-            ( "Upper bound must be of int or real type. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ue = check_bound_type e "Upper bound" in
       Upper ue
   | LowerUpper (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_or_real_type ue1) then
-          semantic_error_e ue1
-            ( "Lower and upper bound must be of int or real type. Instead \
-               found type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
-      in
-      let _ =
-        if not (check_of_int_or_real_type ue2) then
-          semantic_error_e ue2
-            ( "Lower and upper bound must be of int or real type. Instead \
-               found type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
-      in
+      let ue1 = check_bound_type e1 "Lower bound" in
+      let ue2 = check_bound_type e2 "Upper bound" in
       LowerUpper (ue1, ue2)
+  | Offset e ->
+      let ue = check_bound_type e "Offset" in
+      Offset ue
+  | Multiplier e ->
+      let ue = check_bound_type e "Multiplier" in
+      Multiplier ue
   | OffsetMultiplier (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_or_real_type ue1) then
-          semantic_error_e ue1
-            ( "Location and scale must be of int or real type. Instead found \
-               type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
-      in
-      let _ =
-        if not (check_of_int_or_real_type ue2) then
-          semantic_error_e ue2
-            ( "Location and scale must be of int or real type. Instead found \
-               type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
-      in
+      let ue1 = check_bound_type e1 "Offset" in
+      let ue2 = check_bound_type e2 "Multiplier" in
       OffsetMultiplier (ue1, ue2)
   | Ordered -> Ordered
   | PositiveOrdered -> PositiveOrdered

@@ -144,8 +144,9 @@ type 'e transformation =
   | Identity
   | Lower of 'e
   | Upper of 'e
-  (* XXX Refactor into single LowerUpper with options? or ideally transformation list as we all talked about*)
   | LowerUpper of 'e * 'e
+  | Offset of 'e
+  | Multiplier of 'e
   | OffsetMultiplier of 'e * 'e
   | Ordered
   | PositiveOrdered

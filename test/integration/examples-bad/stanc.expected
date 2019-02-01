@@ -2783,7 +2783,7 @@ Semantic error in file validate_set_double_offset_multiplier_bad1.stan, line 3, 
      5:  }
    -------------------------------------------------
 
-Location and scale must be of int or real type. Instead found type vector.
+Offset must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad2.stan
 
@@ -2797,7 +2797,7 @@ Semantic error in file validate_set_double_offset_multiplier_bad2.stan, line 3, 
      5:  }
    -------------------------------------------------
 
-Location and scale must be of int or real type. Instead found type vector.
+Multiplier must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad3.stan
 
@@ -2839,7 +2839,7 @@ Semantic error in file validate_set_double_range_lower_bad2.stan, line 3, column
      5:  parameters {
    -------------------------------------------------
 
-Lower and upper bound must be of int or real type. Instead found type vector.
+Lower bound must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_range_upper_bad1.stan
 
@@ -2867,7 +2867,7 @@ Semantic error in file validate_set_double_range_upper_bad2.stan, line 3, column
      5:  parameters {
    -------------------------------------------------
 
-Lower and upper bound must be of int or real type. Instead found type vector.
+Upper bound must be of int or real type. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_int_range_lower_bad1.stan
 
