@@ -27,7 +27,7 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 
 Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
 
-### NB for Developers on Windows
+### Development on Windows
 Having tried both native Windows development and development through [Ubuntu on WSL](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q?activetab=pivot:overviewtab), the Ubuntu on WSL route seems vastly smoother and it is what we recommend as a default.
 It's only downside seems to be that it builds Ubuntu, rather than Windows binaries.
 If Windows binaries are preferred, [OCaml for Windows](https://fdopen.github.io/opam-repository-mingw/) can be used.
