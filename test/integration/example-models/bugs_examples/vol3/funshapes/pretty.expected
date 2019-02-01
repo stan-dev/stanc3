@@ -45,7 +45,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 27, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 27, column 7:
    -------------------------------------------------
     25:    if (y_raw > 1) {
     26:      // cases 1, 2, 3, 4
@@ -58,7 +58,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 27, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 28, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 28, column 7:
    -------------------------------------------------
     26:      // cases 1, 2, 3, 4
     27:      x <- x_raw - 1;
@@ -71,7 +71,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 28, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 31, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 31, column 7:
    -------------------------------------------------
     29:    } else if (y_raw < 0.5) {
     30:      // cases 9, 0, A, B
@@ -84,7 +84,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 31, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 32, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 32, column 7:
    -------------------------------------------------
     30:      // cases 9, 0, A, B
     31:      x <- x_raw - 1;
@@ -97,7 +97,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 32, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 35, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 35, column 7:
    -------------------------------------------------
     33:    } else if (x_raw < 0.5) {
     34:      // case 5
@@ -110,7 +110,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 35, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 36, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 36, column 7:
    -------------------------------------------------
     34:      // case 5
     35:      x <- x_raw - 1;
@@ -123,7 +123,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 36, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 39, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 39, column 7:
    -------------------------------------------------
     37:    } else if (x_raw < 1.0) {
     38:      // case 6
@@ -136,7 +136,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 39, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 40, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 40, column 7:
    -------------------------------------------------
     38:      // case 6
     39:      x <- x_raw - 1.5;
@@ -149,7 +149,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 40, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 43, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 43, column 7:
    -------------------------------------------------
     41:    } else if (x_raw < 1.5) {
     42:      // case 7
@@ -162,7 +162,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 43, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 44, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 44, column 7:
    -------------------------------------------------
     42:      // case 7
     43:      x <- x_raw - 0.5;
@@ -175,7 +175,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 44, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 46, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 46, column 7:
    -------------------------------------------------
     44:      y <- y_raw - 0.5;
     45:    } else {
@@ -188,7 +188,7 @@ Warning: deprecated language construct used at file hsquare.stan, line 46, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file hsquare.stan, line 47, column 7:
+Warning: deprecated language construct used in file hsquare.stan, line 47, column 7:
    -------------------------------------------------
     45:    } else {
     46:      x <- x_raw - 1.0;
@@ -214,7 +214,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file parallelogram.stan, line 11, column 5:
+Warning: deprecated language construct used in file parallelogram.stan, line 11, column 5:
    -------------------------------------------------
      9:  transformed parameters {
     10:    real<lower=-1,upper=1> y;
@@ -242,7 +242,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file ring.stan, line 1, column 0:
+Warning: deprecated language construct used in file ring.stan, line 1, column 0:
    -------------------------------------------------
      1:  # the original version not using transformation is in ring.stan.0
          ^
@@ -253,7 +253,7 @@ Warning: deprecated language construct used at file ring.stan, line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file ring.stan, line 8, column 19:
+Warning: deprecated language construct used in file ring.stan, line 8, column 19:
    -------------------------------------------------
      6:  model {
      7:    // p(z,phi) prop-to z
@@ -266,7 +266,7 @@ Warning: deprecated language construct used at file ring.stan, line 8, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file ring.stan, line 13, column 5:
+Warning: deprecated language construct used in file ring.stan, line 13, column 5:
    -------------------------------------------------
     11:    real x;
     12:    real y;
@@ -279,7 +279,7 @@ Warning: deprecated language construct used at file ring.stan, line 13, column 5
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file ring.stan, line 14, column 5:
+Warning: deprecated language construct used in file ring.stan, line 14, column 5:
    -------------------------------------------------
     12:    real y;
     13:    x <- z * cos(phi); 
@@ -307,7 +307,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file squaremc.stan, line 19, column 5:
+Warning: deprecated language construct used in file squaremc.stan, line 19, column 5:
    -------------------------------------------------
     17:    real<lower=-1,upper=1> x;
     18:    real<lower=-1,upper=1> y;
@@ -320,7 +320,7 @@ Warning: deprecated language construct used at file squaremc.stan, line 19, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file squaremc.stan, line 20, column 5:
+Warning: deprecated language construct used in file squaremc.stan, line 20, column 5:
    -------------------------------------------------
     18:    real<lower=-1,upper=1> y;
     19:    x <- if_else(x_raw > 0, 1, -1) - x_raw;
@@ -333,7 +333,7 @@ Warning: deprecated language construct used at file squaremc.stan, line 20, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file squaremc.stan, line 23, column 19:
+Warning: deprecated language construct used in file squaremc.stan, line 23, column 19:
    -------------------------------------------------
     21:  }
     22:  model {

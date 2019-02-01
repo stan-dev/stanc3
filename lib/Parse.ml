@@ -25,39 +25,35 @@ let parse parse_fun lexbuf =
     match Interp.stack env with
     | (lazy Nil) ->
         let message =
-          Some
-            "Expected \"functions {\" or \"data {\" or \"transformed data {\" \
-             or \"parameters {\" or \"transformed parameters {\" or \"model \
-             {\" or \"generated quantities {\".\n"
+          "Expected \"functions {\" or \"data {\" or \"transformed data {\" \
+           or \"parameters {\" or \"transformed parameters {\" or \"model {\" \
+           or \"generated quantities {\".\n"
         in
         raise
           (SyntaxError
              (Parsing
                 ( message
-                , Lexing.lexeme_start_p
-                    (Stack.top_exn Preprocessor.include_stack)
-                , Lexing.lexeme_end_p
-                    (Stack.top_exn Preprocessor.include_stack) )))
+                , Errors.loc_span_of_pos
+                    (Lexing.lexeme_start_p
+                       (Stack.top_exn Preprocessor.include_stack))
+                    (Lexing.lexeme_end_p
+                       (Stack.top_exn Preprocessor.include_stack)) )))
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
-            Some
-              ( Parsing_errors.message (Interp.number state)
-              ^
-              if !Debugging.grammar_logging then
-                "(Parse error state "
-                ^ string_of_int (Interp.number state)
-                ^ ")"
-              else "" )
+            Parsing_errors.message (Interp.number state)
+            ^
+            if !Debugging.grammar_logging then
+              "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
+            else ""
           with Not_found_s _ ->
-            Some
-              ( if !Debugging.grammar_logging then
-                "(Parse error state "
-                ^ string_of_int (Interp.number state)
-                ^ ")"
-              else "" )
+            if !Debugging.grammar_logging then
+              "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
+            else ""
         in
-        raise (SyntaxError (Parsing (message, start_pos, end_pos)))
+        raise
+          (SyntaxError
+             (Parsing (message, Errors.loc_span_of_pos start_pos end_pos)))
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
@@ -72,6 +68,19 @@ let parse_string parse_fun str =
   in
   parse parse_fun lexbuf
 
+let parse_file parse_fun path =
+  let chan = In_channel.create path in
+  let lexbuf =
+    let open Lexing in
+    let lexbuf = from_channel chan in
+    lexbuf.lex_start_p
+    <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
+    lexbuf
+  in
+  parse parse_fun lexbuf
+
+(* TESTS *)
 let%expect_test "parse conditional" =
   let ast =
     parse_string Parser.Incremental.program
@@ -522,15 +531,3 @@ let%expect_test "parse nested loop" =
              (stmt_untyped_loc <opaque>)))))
          (stmt_untyped_loc <opaque>)))))
      (generatedquantitiesblock ())) |}]
-
-let parse_file parse_fun path =
-  let chan = In_channel.create path in
-  let lexbuf =
-    let open Lexing in
-    let lexbuf = from_channel chan in
-    lexbuf.lex_start_p
-    <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
-    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-    lexbuf
-  in
-  parse parse_fun lexbuf

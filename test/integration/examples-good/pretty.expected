@@ -70,7 +70,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file assignment-deprecated.stan, line 4, column 6:
+Warning: deprecated language construct used in file assignment-deprecated.stan, line 4, column 6:
    -------------------------------------------------
      2:    real mu;
      3:    real<lower=0> sigma;
@@ -83,7 +83,7 @@ Warning: deprecated language construct used at file assignment-deprecated.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file assignment-deprecated.stan, line 5, column 9:
+Warning: deprecated language construct used in file assignment-deprecated.stan, line 5, column 9:
    -------------------------------------------------
      3:    real<lower=0> sigma;
      4:    mu <- -1;
@@ -2102,7 +2102,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 15, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 15, column 19:
    -------------------------------------------------
     13:  model {
     14:    //  increment_log_prob(-e^2 / 2);
@@ -2115,7 +2115,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 16, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 16, column 19:
    -------------------------------------------------
     14:    //  increment_log_prob(-e^2 / 2);
     15:    increment_log_prob(a);
@@ -2128,7 +2128,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 17, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 17, column 19:
    -------------------------------------------------
     15:    increment_log_prob(a);
     16:    increment_log_prob(b);
@@ -2141,7 +2141,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 18, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 18, column 19:
    -------------------------------------------------
     16:    increment_log_prob(b);
     17:    increment_log_prob(b);
@@ -2154,7 +2154,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 19, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 19, column 19:
    -------------------------------------------------
     17:    increment_log_prob(b);
     18:    increment_log_prob(c);
@@ -2167,7 +2167,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 20, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 20, column 19:
    -------------------------------------------------
     18:    increment_log_prob(c);
     19:    increment_log_prob(d);
@@ -2180,7 +2180,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 21, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 21, column 19:
    -------------------------------------------------
     19:    increment_log_prob(d);
     20:    increment_log_prob(e);
@@ -2193,7 +2193,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 22, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 22, column 19:
    -------------------------------------------------
     20:    increment_log_prob(e);
     21:    increment_log_prob(f);
@@ -2206,7 +2206,7 @@ Warning: deprecated language construct used at file deprecate-increment-log-prob
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file deprecate-increment-log-prob.stan, line 23, column 19:
+Warning: deprecated language construct used in file deprecate-increment-log-prob.stan, line 23, column 19:
    -------------------------------------------------
     21:    increment_log_prob(f);
     22:    increment_log_prob(g);
@@ -2239,7 +2239,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file duplicate-warns.stan, line 4, column 19:
+Warning: deprecated language construct used in file duplicate-warns.stan, line 4, column 19:
    -------------------------------------------------
      2:    real foo;
      3:    foo = 1;
@@ -2252,7 +2252,7 @@ Warning: deprecated language construct used at file duplicate-warns.stan, line 4
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file duplicate-warns.stan, line 5, column 13:
+Warning: deprecated language construct used in file duplicate-warns.stan, line 5, column 13:
    -------------------------------------------------
      3:    foo = 1;
      4:    increment_log_prob(0);
@@ -2468,7 +2468,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file fun_log_forward_decl.stan, line 17, column 19:
+Warning: deprecated language construct used in file fun_log_forward_decl.stan, line 17, column 19:
    -------------------------------------------------
     15:  model {
     16:    mu ~ n();
@@ -2609,7 +2609,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file funs1.stan, line 3, column 21:
+Warning: deprecated language construct used in file funs1.stan, line 3, column 21:
    -------------------------------------------------
      1:  functions {
      2:    void unit_normal_lp(real u) {
@@ -2665,7 +2665,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file funs4.stan, line 10, column 19:
+Warning: deprecated language construct used in file funs4.stan, line 10, column 19:
    -------------------------------------------------
      8:  }
      9:  model {
@@ -2731,7 +2731,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file get-lp-deprecate.stan, line 5, column 24:
+Warning: deprecated language construct used in file get-lp-deprecate.stan, line 5, column 24:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -2758,7 +2758,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file get-lp-target.stan, line 6, column 26:
+Warning: deprecated language construct used in file get-lp-target.stan, line 6, column 26:
    -------------------------------------------------
      4:  transformed parameters {
      5:    print("target = ", target());
@@ -2771,7 +2771,7 @@ Warning: deprecated language construct used at file get-lp-target.stan, line 6, 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used at file get-lp-target.stan, line 10, column 26:
+Warning: deprecated language construct used in file get-lp-target.stan, line 10, column 26:
    -------------------------------------------------
      8:  model {
      9:    print("target = ", target());
@@ -2803,7 +2803,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file get_lp_good.stan, line 10, column 20:
+Warning: deprecated language construct used in file get_lp_good.stan, line 10, column 20:
    -------------------------------------------------
      8:    // allowed in functions ending in _lp
      9:    real foo_lp(real x) {
@@ -2816,7 +2816,7 @@ Warning: deprecated language construct used at file get_lp_good.stan, line 10, c
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used at file get_lp_good.stan, line 18, column 11:
+Warning: deprecated language construct used in file get_lp_good.stan, line 18, column 11:
    -------------------------------------------------
     16:  transformed parameters {
     17:    real z;
@@ -2829,7 +2829,7 @@ Warning: deprecated language construct used at file get_lp_good.stan, line 18, c
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 
-Warning: deprecated language construct used at file get_lp_good.stan, line 22, column 11:
+Warning: deprecated language construct used in file get_lp_good.stan, line 22, column 11:
    -------------------------------------------------
     20:  model {
     21:    real w;
@@ -2976,7 +2976,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 42, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 42, column 19:
    -------------------------------------------------
     40:  }
     41:  model {
@@ -2989,7 +2989,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 43, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 43, column 19:
    -------------------------------------------------
     41:  model {
     42:    increment_log_prob(n);
@@ -3002,7 +3002,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 44, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 44, column 19:
    -------------------------------------------------
     42:    increment_log_prob(n);
     43:    increment_log_prob(nn);
@@ -3015,7 +3015,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 46, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 46, column 19:
    -------------------------------------------------
     44:    increment_log_prob(nnn);
     45:  
@@ -3028,7 +3028,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 47, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 47, column 19:
    -------------------------------------------------
     45:  
     46:    increment_log_prob(x);
@@ -3041,7 +3041,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 48, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 48, column 19:
    -------------------------------------------------
     46:    increment_log_prob(x);
     47:    increment_log_prob(xx);
@@ -3054,7 +3054,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 49, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 49, column 19:
    -------------------------------------------------
     47:    increment_log_prob(xx);
     48:    increment_log_prob(xxx);
@@ -3067,7 +3067,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 51, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 51, column 19:
    -------------------------------------------------
     49:    increment_log_prob(xxxx);
     50:  
@@ -3080,7 +3080,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 52, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 52, column 19:
    -------------------------------------------------
     50:  
     51:    increment_log_prob(v);
@@ -3093,7 +3093,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 53, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 53, column 19:
    -------------------------------------------------
     51:    increment_log_prob(v);
     52:    increment_log_prob(vv);
@@ -3106,7 +3106,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 55, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 55, column 19:
    -------------------------------------------------
     53:    increment_log_prob(vvv);
     54:  
@@ -3119,7 +3119,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 56, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 56, column 19:
    -------------------------------------------------
     54:  
     55:    increment_log_prob(rv);
@@ -3132,7 +3132,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 57, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 57, column 19:
    -------------------------------------------------
     55:    increment_log_prob(rv);
     56:    increment_log_prob(rvv);
@@ -3145,7 +3145,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 59, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 59, column 19:
    -------------------------------------------------
     57:    increment_log_prob(rvvv);
     58:  
@@ -3158,7 +3158,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 60, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 60, column 19:
    -------------------------------------------------
     58:  
     59:    increment_log_prob(m);
@@ -3171,7 +3171,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 61, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 61, column 19:
    -------------------------------------------------
     59:    increment_log_prob(m);
     60:    increment_log_prob(mm);
@@ -3184,7 +3184,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 64, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 64, column 19:
    -------------------------------------------------
     62:  
     63:  
@@ -3197,7 +3197,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 65, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 65, column 19:
    -------------------------------------------------
     63:  
     64:    increment_log_prob(p_x);
@@ -3210,7 +3210,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 66, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 66, column 19:
    -------------------------------------------------
     64:    increment_log_prob(p_x);
     65:    increment_log_prob(p_xx);
@@ -3223,7 +3223,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 67, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 67, column 19:
    -------------------------------------------------
     65:    increment_log_prob(p_xx);
     66:    increment_log_prob(p_xxx);
@@ -3236,7 +3236,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 69, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 69, column 19:
    -------------------------------------------------
     67:    increment_log_prob(p_xxxx);
     68:  
@@ -3249,7 +3249,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 70, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 70, column 19:
    -------------------------------------------------
     68:  
     69:    increment_log_prob(p_v);
@@ -3262,7 +3262,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 71, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 71, column 19:
    -------------------------------------------------
     69:    increment_log_prob(p_v);
     70:    increment_log_prob(p_vv);
@@ -3275,7 +3275,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 73, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 73, column 19:
    -------------------------------------------------
     71:    increment_log_prob(p_vvv);
     72:  
@@ -3288,7 +3288,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 74, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 74, column 19:
    -------------------------------------------------
     72:  
     73:    increment_log_prob(p_rv);
@@ -3301,7 +3301,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 75, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 75, column 19:
    -------------------------------------------------
     73:    increment_log_prob(p_rv);
     74:    increment_log_prob(p_rvv);
@@ -3314,7 +3314,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 77, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 77, column 19:
    -------------------------------------------------
     75:    increment_log_prob(p_rvvv);
     76:  
@@ -3327,7 +3327,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 78, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 78, column 19:
    -------------------------------------------------
     76:  
     77:    increment_log_prob(p_m);
@@ -3340,7 +3340,7 @@ Warning: deprecated language construct used at file increment_log_prob.stan, lin
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file increment_log_prob.stan, line 79, column 19:
+Warning: deprecated language construct used in file increment_log_prob.stan, line 79, column 19:
    -------------------------------------------------
     77:    increment_log_prob(p_m);
     78:    increment_log_prob(p_mm);
@@ -3662,7 +3662,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file lkj_cov_deprecation2.stan, line 8, column 19:
+Warning: deprecated language construct used in file lkj_cov_deprecation2.stan, line 8, column 19:
    -------------------------------------------------
      6:  }
      7:  model {
@@ -3756,7 +3756,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file lp_in_fun.stan, line 3, column 26:
+Warning: deprecated language construct used in file lp_in_fun.stan, line 3, column 26:
    -------------------------------------------------
      1:  functions {
      2:    void foo_lp() {
@@ -4186,7 +4186,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file pound-comment-deprecated.stan, line 2, column 2:
+Warning: deprecated language construct used in file pound-comment-deprecated.stan, line 2, column 2:
    -------------------------------------------------
      1:  data {
      2:    # hey, this is the old way to do things, should raise warning

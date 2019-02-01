@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc non_data_index1.stan
 
-Semantic error at file non_data_index1.stan, line 6, columns 2-18:
+Semantic error in file non_data_index1.stan, line 6, columns 2-18:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -13,7 +13,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index10.stan
 
-Semantic error at file non_data_index10.stan, line 6, columns 2-33:
+Semantic error in file non_data_index10.stan, line 6, columns 2-33:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -26,7 +26,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index11.stan
 
-Semantic error at file non_data_index11.stan, line 6, columns 2-36:
+Semantic error in file non_data_index11.stan, line 6, columns 2-36:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -39,7 +39,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index12.stan
 
-Semantic error at file non_data_index12.stan, line 6, columns 2-34:
+Semantic error in file non_data_index12.stan, line 6, columns 2-34:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -52,7 +52,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index13.stan
 
-Semantic error at file non_data_index13.stan, line 6, columns 2-25:
+Semantic error in file non_data_index13.stan, line 6, columns 2-25:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -65,7 +65,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index14.stan
 
-Semantic error at file non_data_index14.stan, line 6, columns 2-24:
+Semantic error in file non_data_index14.stan, line 6, columns 2-24:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -78,7 +78,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index2.stan
 
-Semantic error at file non_data_index2.stan, line 6, columns 2-20:
+Semantic error in file non_data_index2.stan, line 6, columns 2-20:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -91,7 +91,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index3.stan
 
-Semantic error at file non_data_index3.stan, line 6, columns 2-24:
+Semantic error in file non_data_index3.stan, line 6, columns 2-24:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -104,7 +104,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index4.stan
 
-Semantic error at file non_data_index4.stan, line 5, columns 2-23:
+Semantic error in file non_data_index4.stan, line 5, columns 2-23:
    -------------------------------------------------
      3:  }
      4:  transformed parameters {
@@ -117,7 +117,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index5.stan
 
-Semantic error at file non_data_index5.stan, line 6, columns 2-23:
+Semantic error in file non_data_index5.stan, line 6, columns 2-23:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -131,7 +131,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index6.stan
 
-Semantic error at file non_data_index6.stan, line 6, columns 2-21:
+Semantic error in file non_data_index6.stan, line 6, columns 2-21:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -144,7 +144,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index7.stan
 
-Semantic error at file non_data_index7.stan, line 6, columns 2-21:
+Semantic error in file non_data_index7.stan, line 6, columns 2-21:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -157,7 +157,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index8.stan
 
-Semantic error at file non_data_index8.stan, line 6, columns 2-30:
+Semantic error in file non_data_index8.stan, line 6, columns 2-30:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {
@@ -170,7 +170,7 @@ Non-data variables are not allowed in top level size declarations.
 
   $ ../../../../../install/default/bin/stanc non_data_index9.stan
 
-Semantic error at file non_data_index9.stan, line 6, columns 2-25:
+Semantic error in file non_data_index9.stan, line 6, columns 2-25:
    -------------------------------------------------
      4:  }
      5:  transformed parameters {

@@ -26,7 +26,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file air.stan, line 13, column 9:
+Warning: deprecated language construct used in file air.stan, line 13, column 9:
    -------------------------------------------------
     11:  transformed data {
     12:    real<lower=0> sigma; 

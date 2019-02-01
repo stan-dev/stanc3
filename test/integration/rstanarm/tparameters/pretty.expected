@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_betareg.stan
 
-Syntax error at file tparameters_betareg.stan, line 1, columns 2-4, parsing error:
+Syntax error in file tparameters_betareg.stan, line 1, columns 2-4, parsing error:
    -------------------------------------------------
      1:    if (prior_dist_z == 0) omega = z_omega;
              ^
@@ -10,9 +10,10 @@ Syntax error at file tparameters_betareg.stan, line 1, columns 2-4, parsing erro
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_glm.stan
 
-Syntax error at file tparameters_glm.stan, line 1, columns 2-8, parsing error:
+Syntax error in file tparameters_glm.stan, line 1, columns 2-8, parsing error:
    -------------------------------------------------
      1:    vector[K] beta;
                  ^
@@ -22,9 +23,10 @@ Syntax error at file tparameters_glm.stan, line 1, columns 2-8, parsing error:
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
 
+
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format tparameters_mvmer.stan
 
-Syntax error at file tparameters_mvmer.stan, line 1, columns 2-8, parsing error:
+Syntax error in file tparameters_mvmer.stan, line 1, columns 2-8, parsing error:
    -------------------------------------------------
      1:    vector[yK[1]] yBeta1; // population level params
                  ^
@@ -33,4 +35,5 @@ Syntax error at file tparameters_mvmer.stan, line 1, columns 2-8, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
+
 

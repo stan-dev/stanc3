@@ -17,7 +17,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file pump.stan, line 1, column 0:
+Warning: deprecated language construct used in file pump.stan, line 1, column 0:
    -------------------------------------------------
      1:  # BUGS pump example (Vol 1, Example 2)
          ^

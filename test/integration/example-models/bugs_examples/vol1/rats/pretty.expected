@@ -39,7 +39,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file rats.stan, line 1, column 0:
+Warning: deprecated language construct used in file rats.stan, line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
          ^
@@ -50,7 +50,7 @@ Warning: deprecated language construct used at file rats.stan, line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats.stan, line 2, column 0:
+Warning: deprecated language construct used in file rats.stan, line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
      2:  # Page 3: Rats
@@ -62,7 +62,7 @@ Warning: deprecated language construct used at file rats.stan, line 2, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats.stan, line 26, column 11:
+Warning: deprecated language construct used in file rats.stan, line 26, column 11:
    -------------------------------------------------
     24:    real<lower=0> sigma_beta;
     25:  
@@ -75,7 +75,7 @@ Warning: deprecated language construct used at file rats.stan, line 26, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats.stan, line 27, column 15:
+Warning: deprecated language construct used in file rats.stan, line 27, column 15:
    -------------------------------------------------
     25:  
     26:    sigma_y <- sqrt(sigmasq_y);
@@ -88,7 +88,7 @@ Warning: deprecated language construct used at file rats.stan, line 27, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats.stan, line 28, column 14:
+Warning: deprecated language construct used in file rats.stan, line 28, column 14:
    -------------------------------------------------
     26:    sigma_y <- sqrt(sigmasq_y);
     27:    sigma_alpha <- sqrt(sigmasq_alpha);
@@ -101,7 +101,7 @@ Warning: deprecated language construct used at file rats.stan, line 28, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats.stan, line 45, column 10:
+Warning: deprecated language construct used in file rats.stan, line 45, column 10:
    -------------------------------------------------
     43:  generated quantities {
     44:    real alpha0;
@@ -147,7 +147,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 1, column 0:
+Warning: deprecated language construct used in file rats_stanified.stan, line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
          ^
@@ -158,7 +158,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 1,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 2, column 0:
+Warning: deprecated language construct used in file rats_stanified.stan, line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
      2:  # Model simplified
@@ -170,7 +170,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 2,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 4, column 18:
+Warning: deprecated language construct used in file rats_stanified.stan, line 4, column 18:
    -------------------------------------------------
      2:  # Model simplified
      3:  data {
@@ -183,7 +183,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 4,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 5, column 21:
+Warning: deprecated language construct used in file rats_stanified.stan, line 5, column 21:
    -------------------------------------------------
      3:  data {
      4:    int<lower=0> N; # Number of rats
@@ -196,7 +196,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 5,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 6, column 26:
+Warning: deprecated language construct used in file rats_stanified.stan, line 6, column 26:
    -------------------------------------------------
      4:    int<lower=0> N; # Number of rats
      5:    int<lower=0> Npts; # Number of data points
@@ -209,7 +209,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 6,
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 27, column 2:
+Warning: deprecated language construct used in file rats_stanified.stan, line 27, column 2:
    -------------------------------------------------
     25:    mu_alpha ~ normal(0, 100);
     26:    mu_beta ~ normal(0, 100);
@@ -222,7 +222,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 27
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 32, column 10:
+Warning: deprecated language construct used in file rats_stanified.stan, line 32, column 10:
    -------------------------------------------------
     30:    for (n in 1:Npts){
     31:      int irat;
@@ -235,7 +235,7 @@ Warning: deprecated language construct used at file rats_stanified.stan, line 32
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_stanified.stan, line 38, column 10:
+Warning: deprecated language construct used in file rats_stanified.stan, line 38, column 10:
    -------------------------------------------------
     36:  generated quantities {
     37:    real alpha0;
@@ -291,7 +291,7 @@ model {
 }
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 1, column 0:
+Warning: deprecated language construct used in file rats_vec.stan, line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
          ^
@@ -302,7 +302,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 1, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 2, column 0:
+Warning: deprecated language construct used in file rats_vec.stan, line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
      2:  # Page 3: Rats
@@ -314,7 +314,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 2, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 15, column 21:
+Warning: deprecated language construct used in file rats_vec.stan, line 15, column 21:
    -------------------------------------------------
     13:  
     14:    for (t in 1:T)
@@ -327,7 +327,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 15, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 19, column 29:
+Warning: deprecated language construct used in file rats_vec.stan, line 19, column 29:
    -------------------------------------------------
     17:    for (n in 1:N)
     18:      for (t in 1:T)
@@ -340,7 +340,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 19, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 37, column 11:
+Warning: deprecated language construct used in file rats_vec.stan, line 37, column 11:
    -------------------------------------------------
     35:    real<lower=0> sigma_beta;
     36:  
@@ -353,7 +353,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 37, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 38, column 15:
+Warning: deprecated language construct used in file rats_vec.stan, line 38, column 15:
    -------------------------------------------------
     36:  
     37:    sigma_y <- sqrt(sigmasq_y);
@@ -366,7 +366,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 38, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 39, column 14:
+Warning: deprecated language construct used in file rats_vec.stan, line 39, column 14:
    -------------------------------------------------
     37:    sigma_y <- sqrt(sigmasq_y);
     38:    sigma_alpha <- sqrt(sigmasq_alpha);
@@ -379,7 +379,7 @@ Warning: deprecated language construct used at file rats_vec.stan, line 39, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec.stan, line 46, column 25:
+Warning: deprecated language construct used in file rats_vec.stan, line 46, column 25:
    -------------------------------------------------
     44:    for (n in 1:N)
     45:      for (t in 1:T)
@@ -436,7 +436,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 1, column 0:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
          ^
@@ -447,7 +447,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 1, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 2, column 0:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
      2:  # Page 3: Rats
@@ -459,7 +459,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 2, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 28, column 11:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 28, column 11:
    -------------------------------------------------
     26:    vector[N] beta;
     27:  
@@ -472,7 +472,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 28,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 29, column 15:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 29, column 15:
    -------------------------------------------------
     27:  
     28:    sigma_y <- sqrt(sigmasq_y);
@@ -485,7 +485,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 29,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 30, column 14:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 30, column 14:
    -------------------------------------------------
     28:    sigma_y <- sqrt(sigmasq_y);
     29:    sigma_alpha <- sqrt(sigmasq_alpha);
@@ -498,7 +498,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 30,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 32, column 9:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 32, column 9:
    -------------------------------------------------
     30:    sigma_beta <- sqrt(sigmasq_beta);
     31:  
@@ -511,7 +511,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 32,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 33, column 8:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 33, column 8:
    -------------------------------------------------
     31:  
     32:    alpha <- (mu_alpha * 100.0) + alpha_z * sigma_alpha;
@@ -524,7 +524,7 @@ Warning: deprecated language construct used at file rats_vec_unit.stan, line 33,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used at file rats_vec_unit.stan, line 49, column 10:
+Warning: deprecated language construct used in file rats_vec_unit.stan, line 49, column 10:
    -------------------------------------------------
     47:  generated quantities {
     48:    real alpha0;
