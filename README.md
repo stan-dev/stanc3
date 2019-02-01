@@ -27,6 +27,27 @@ Run `./_build/default/stanc.exe` on individual .stan file to compile it. Use `-?
 
 Use `dune build @update_messages` to see if your additions to the parser have added any new error message possibilities, and `dune promote` to accept them.
 
+### NB for Developers on Windows
+Having tried both native Windows development and development through [Ubuntu on WSL](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q?activetab=pivot:overviewtab), the Ubuntu on WSL route seems vastly smoother and it is what we recommend as a default.
+It's only downside seems to be that it builds Ubuntu, rather than Windows binaries.
+If Windows binaries are preferred, [OCaml for Windows](https://fdopen.github.io/opam-repository-mingw/) can be used.
+
+### Editor advice
+For working on this project, we recommend using either VSCode or Emacs/Spacemacs as an editor, due to their good OCaml support through Merlin: syntax highlighting, auto-completion, type inference, automatic case splitting, and more.
+For people who prefer a GUI and have not memorized all Emacs keystrokes, VSCode might have the less steep learning curve.
+
+#### Setting up VSCode
+Install instructions for VSCode can be found [here](https://code.visualstudio.com/docs/setup/setup-overview).
+
+For Windows users: please note that we advise to follow the Linux install instructions through WSL.
+Seeing that VSCode is a GUI application, you will need to install an XServer and add `export DISPLAY=:0.0` to `~/.bashrc`.
+We recommend [Mobaxterm](https://mobaxterm.mobatek.net/).
+In case you are using a high-res display, it may be worth overriding the high DPI setting of Mobaxterm (right click Mobaxterm binary > properties > Compatibility > Change high DPI settings > Override high DPI scaling behaviour > Application) and adding `export GDK_SCALE=3` or `export GDK_SCALE=2` to `~/.bashrc`.
+We also advise setting `"window.titleBarStyle": "native"` in VSCode under settings to be able to have proper control over the window.
+
+Once in VSCode (on any platform), simply install the [OCaml extension](https://github.com/hackwaly/vscode-ocaml) and you should be ready to go.
+
+
 ## Project Timeline
 ### Code has been written for the following components:
 - A lexer
