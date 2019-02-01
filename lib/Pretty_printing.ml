@@ -21,17 +21,7 @@ let rec unwind_array_type = function
   | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
-let rec pretty_print_originblock = function
-  | MathLibrary -> "Math Library"
-  | Functions -> "functions"
-  | Data -> "data"
-  | TData -> "transformed data "
-  | Param -> "parameters"
-  | TParam -> "transformed parameters"
-  | Model -> "model"
-  | GQuant -> "generated quantities"
-
-and pretty_print_autodifftype = function
+let rec pretty_print_autodifftype = function
   | DataOnly -> "data "
   | AutoDiffable -> ""
 

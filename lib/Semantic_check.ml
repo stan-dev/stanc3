@@ -19,6 +19,17 @@ open Pretty_printing
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
 
+(** Origin blocks, to keep track of where variables are declared *)
+type originblock =
+  | MathLibrary
+  | Functions
+  | Data
+  | TData
+  | Param
+  | TParam
+  | Model
+  | GQuant
+
 let check_that_all_functions_have_definition = ref true
 let model_name = ref ""
 let vm = Symbol_table.initialize ()
