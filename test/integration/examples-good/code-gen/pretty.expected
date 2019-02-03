@@ -257,7 +257,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used at file gentest_mother1.stan, line 60, column 21:
+Warning: deprecated language construct used in file gentest_mother1.stan, line 60, column 21:
    -------------------------------------------------
     58:  
     59:    void unit_normal_lp(real u) {
@@ -270,7 +270,7 @@ Warning: deprecated language construct used at file gentest_mother1.stan, line 6
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used at file gentest_mother1.stan, line 184, column 20:
+Warning: deprecated language construct used in file gentest_mother1.stan, line 184, column 20:
    -------------------------------------------------
    182:  
    183:    real foo_lp(real x) {

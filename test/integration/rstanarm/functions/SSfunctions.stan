@@ -69,7 +69,7 @@ vector SS_fol(vector Dose, vector input, matrix Phi_) {
     real lKa = Phi_[1,2];
     real exp_lKe = exp(lKe);
     real exp_lKa = exp(lKa);
-    return (Dose * exp(lKe + lKa - Phi_[1,3])) .* 
+    return Dose * exp(lKe + lKa - Phi_[1,3]) .* 
       (exp(-exp_lKe * input) - exp(-exp_lKa * input)) / (exp_lKa - exp_lKe);
   }
 }

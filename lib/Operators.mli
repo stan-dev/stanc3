@@ -1,4 +1,5 @@
 (* -- Helpers for treatment of operators -- *)
+
 open Ast
 
 val operator_return_type_from_string :

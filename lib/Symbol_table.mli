@@ -41,11 +41,3 @@ val is_global : 'a state -> string -> bool
 
 val unsafe_clear_symbol_table : 'a state -> unit
 (** Used to clear the whole symbol table *)
-
-(* TODO: the following is very ugly, but we seem to need something like it to
- reproduce the (strange) behaviour in the current Stan that local variables
- have a block level that is determined by what has been assigned to them
- rather than by where they were declared. *)
-
-val unsafe_replace : 'a state -> string -> 'a -> unit
-(** Used to replace the information recorded for an identifier *)

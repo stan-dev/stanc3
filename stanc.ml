@@ -1,3 +1,5 @@
+(** stanc console application *)
+
 open Core_kernel
 open Stanclib
 
@@ -19,17 +21,17 @@ let dump_mir = ref false
 let options =
   Arg.align
     [ ( "--debug-lex"
-      , Arg.Set Debug.lexer_logging
+      , Arg.Set Debugging.lexer_logging
       , " For debugging purposes: print the lexer actions" )
     ; ( "--debug-parse"
-      , Arg.Set Debug.grammar_logging
+      , Arg.Set Debugging.grammar_logging
       , " For debugging purposes: print the parser actions" )
     ; ( "--debug-ast"
-      , Arg.Set Debug.ast_printing
+      , Arg.Set Debugging.ast_printing
       , " For debugging purposes: print the undecorated AST, before semantic \
          checking" )
     ; ( "--debug-decorated-ast"
-      , Arg.Set Debug.typed_ast_printing
+      , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
     ; ( "--dump-mir"
@@ -62,7 +64,10 @@ let options =
             Semantic_check.check_that_all_functions_have_definition := false )
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include_paths"
-      , Arg.String (fun str -> Lexer.include_paths := String.split ~on:',' str)
+      , Arg.String
+          (fun str ->
+            Preprocessor.include_paths := String.split_on_chars ~on:[','] str
+            )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
@@ -75,7 +80,7 @@ let use_file filename =
   let _ =
     if !Semantic_check.model_name = "" then
       Semantic_check.model_name :=
-        Core_kernel.String.drop_suffix
+        String.drop_suffix
           (List.hd_exn (List.rev (String.split filename ~on:'/')))
           5
         ^ "_model"
@@ -86,7 +91,7 @@ let use_file filename =
       Errors.report_syntax_error err ;
       exit 1
   in
-  let _ = Debug.ast_logger ast in
+  let _ = Debugging.ast_logger ast in
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast)
   else
@@ -96,7 +101,7 @@ let use_file filename =
         Errors.report_semantic_error err ;
         exit 1
     in
-    let _ = Debug.typed_ast_logger typed_ast in
+    let _ = Debugging.typed_ast_logger typed_ast in
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;

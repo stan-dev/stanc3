@@ -1,8 +1,8 @@
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
 (*
-open Mir
 open Core_kernel
+open Mir
 
 let _counter = ref 0;;
 let gensym =

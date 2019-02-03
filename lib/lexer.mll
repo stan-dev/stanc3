@@ -1,8 +1,10 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
+  module Stack = Core_kernel.Stack
   open Lexing
-  open Debug
+  open Debugging
+  open Preprocessor
 
 (* Boilerplate for getting line numbers for errors *)
   let incr_linenum lexbuf =
@@ -11,55 +13,6 @@
       pos_lnum = pos.pos_lnum + 1;
       pos_bol = pos.pos_cnum;
     }
-
-(* Some definitions for handling includes correctly *)
-  let dup_exists l = match Core_kernel.List.find_a_dup ~compare:String.compare l
-                     with | Some _ -> true
-                          | None -> false
-
-  let include_stack = Stack.create ()
-
-  let include_paths : string list ref = ref []
-
-  let rec try_open_in paths fname pos =
-  match paths with
-    | [] -> raise (Errors.SyntaxError
-              (Includes ("Could not find include file " ^ fname ^
-                         " in specified include paths.\n", lexeme_start_p
-                (Stack.top include_stack))))
-    | path :: rest_of_paths ->
-    try
-      let old_path = (Stack.top include_stack).lex_start_p.pos_fname in
-      let open Printf in
-      let full_path = path ^ "/" ^ fname in
-        open_in full_path, sprintf "%s, included from\nfile %s" full_path
-          (Errors.append_position_to_filename old_path
-            (sprintf ", line %d, column %d"
-                     pos.pos_lnum
-                     (pos.pos_cnum - pos.pos_bol)))
-    with _ -> try_open_in rest_of_paths fname pos
-
-  let maybe_remove_quotes str =
-    let open Core_kernel.String in
-    if is_prefix str ~prefix:"\"" &&
-       is_suffix str ~suffix:"\""
-    then drop_suffix (drop_prefix str 1) 1
-    else str
-
-  let try_get_new_lexbuf fname pos =
-    let chan, path = try_open_in !include_paths (maybe_remove_quotes fname) pos in
-    let new_lexbuf = from_channel chan in
-    let _ = (new_lexbuf).lex_start_p <- { pos_fname= path
-                                        ; pos_lnum= 1
-                                        ; pos_bol= 0
-                                        ; pos_cnum= 0 } in
-    let _ = new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p in
-    let _ = if dup_exists (Str.split (Str.regexp ", included from\nfile ") path)
-            then raise (Errors.SyntaxError (
-              Includes ("Found cyclical include structure.\n",
-                        (lexeme_start_p (Stack.top include_stack))))) in
-    let _ = Stack.push new_lexbuf include_stack in
-    new_lexbuf
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -90,7 +43,8 @@ rule token = parse
     ( '"' [^ '"']* '"'
     | non_space_or_newline*
     as fname)                 { lexer_logger ("include " ^ fname) ;
-                                let new_lexbuf = try_get_new_lexbuf fname lexbuf.lex_curr_p in
+                                let new_lexbuf =
+                                  try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
                                 Errors.warn_deprecated
@@ -228,14 +182,16 @@ rule token = parse
                                 if Stack.length include_stack = 1
                                 then Parser.EOF
                                 else
-                                  let _ = (Stack.pop include_stack) in
-                                  let old_lexbuf = (Stack.top include_stack) in
-                                    token old_lexbuf }
+                                  let _ = (Stack.pop_exn include_stack) in
+                                  let old_lexbuf =
+                                    (Stack.top_exn include_stack) in
+                                      token old_lexbuf }
 
   | _                         { raise (Errors.SyntaxError
-                                (Lexing (lexeme (Stack.top include_stack),
-                                        (lexeme_start_p (Stack.top include_stack
-                                        ))))) }
+                                (Lexing (lexeme (Stack.top_exn include_stack),
+                                        Errors.location_of_position
+                                        (lexeme_start_p
+                                          (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
 and multiline_comment = parse

@@ -1,4 +1,5 @@
 (*
+open Core_kernel
 open Mir
 
 let rec log1m = function

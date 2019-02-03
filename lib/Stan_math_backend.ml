@@ -1,5 +1,7 @@
-open Mir
+(** Generate C++ from the MIR *)
+
 open Core_kernel
+open Mir
 open Format
 
 let comma ppf () = fprintf ppf ",@ "

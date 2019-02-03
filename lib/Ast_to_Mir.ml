@@ -1,5 +1,7 @@
-open Mir
+(** Translate from the AST to the MIR *)
+
 open Core_kernel
+open Mir
 
 let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with
@@ -42,11 +44,10 @@ let targetpe e =
   Assignment (t, BinOp (t, Plus, e))
 
 let trans_loc = function
-  | Ast.Nowhere -> ""
-  | Ast.Location (start, end_) ->
-      (* XXX hack hack *)
-      let open Lexing in
-      sprintf "\"%s\", line %d-%d" start.pos_fname start.pos_lnum end_.pos_lnum
+  | {Ast.begin_loc; end_loc} ->
+      (* TODO: this is a stub; insert actual definition here. *)
+      sprintf "\"%s\", line %d-%d" begin_loc.filename begin_loc.line_num
+        end_loc.line_num
 
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
 let no_loc = ""
@@ -193,7 +194,7 @@ let rec trans_checks cvarname ctype t =
   | Ast.CholeskyCov -> [Check {check with cfname= "cholesky_factor"}]
   | Ast.Correlation -> [Check {check with cfname= "corr_matrix"}]
   | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
-  | Ast.OffsetMultiplier (_, _) -> []
+  | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
 
 let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
   match stmt_typed with

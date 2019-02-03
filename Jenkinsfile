@@ -10,7 +10,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'docker/dev-ubuntu/Dockerfile'
-                    args "-u root --privileged --entrypoint=''" // TODO: set up a proper user in Dockerfile
+                    args "-u root --privileged --entrypoint=\'\'" // TODO: set up a proper user in Dockerfile
                 }
             }
             steps {
@@ -33,8 +33,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
-                    // The following is from https://issues.jenkins-ci.org/browse/JENKINS-49385?focusedCommentId=328924&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-328924
-                    args "--entrypoint=''"
+                    args "--user root --privileged"
                 }
             }
             steps {
