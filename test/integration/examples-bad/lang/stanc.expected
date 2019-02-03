@@ -64,7 +64,7 @@ Semantic error in file bad4.stan, line 1, columns 38-42:
                                                ^
    -------------------------------------------------
 
-Lower bound of for-loop needs to be of type int. Instead found type real.
+Lower bound of for-loop must be of type int. Instead found type real.
 
   $ ../../../../../install/default/bin/stanc bad5.stan
 

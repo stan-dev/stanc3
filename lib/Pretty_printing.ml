@@ -21,17 +21,7 @@ let rec unwind_array_type = function
   | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
-let rec pretty_print_originblock = function
-  | MathLibrary -> "Math Library"
-  | Functions -> "functions"
-  | Data -> "data"
-  | TData -> "transformed data "
-  | Param -> "parameters"
-  | TParam -> "transformed parameters"
-  | Model -> "model"
-  | GQuant -> "generated quantities"
-
-and pretty_print_autodifftype = function
+let rec pretty_print_autodifftype = function
   | DataOnly -> "data "
   | AutoDiffable -> ""
 
@@ -171,6 +161,8 @@ and pretty_print_transformation = function
   | LowerUpper (e1, e2) ->
       "<lower=" ^ pretty_print_expression e1 ^ ", upper="
       ^ pretty_print_expression e2 ^ ">"
+  | Offset e -> "<offset=" ^ pretty_print_expression e ^ ">"
+  | Multiplier e -> "<multiplier=" ^ pretty_print_expression e ^ ">"
   | OffsetMultiplier (e1, e2) ->
       "<offset=" ^ pretty_print_expression e1 ^ ", multiplier="
       ^ pretty_print_expression e2 ^ ">"
@@ -213,7 +205,8 @@ and pretty_print_transformed_type st trans =
   in
   match trans with
   | Identity -> pretty_print_sizedtype st
-  | Lower _ | Upper _ | LowerUpper _ | OffsetMultiplier _ ->
+  | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
+   |OffsetMultiplier _ ->
       unsizedtype_string ^ pretty_print_transformation trans ^ sizes_string
   | Ordered -> "ordered" ^ sizes_string
   | PositiveOrdered -> "positive_ordered" ^ sizes_string

@@ -194,7 +194,7 @@ let rec trans_checks cvarname ctype t =
   | Ast.CholeskyCov -> [Check {check with cfname= "cholesky_factor"}]
   | Ast.Correlation -> [Check {check with cfname= "corr_matrix"}]
   | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
-  | Ast.OffsetMultiplier (_, _) -> []
+  | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
 
 (** Adds Mir statements that validate the variable once it has been read.
     The code to read it in is emitted in the backend.contents

@@ -11,19 +11,8 @@ type location =
 (** Delimited locations *)
 type location_span = {begin_loc: location; end_loc: location}
 
-(** Origin blocks, to keep track of where variables are declared *)
-type originblock =
-  | MathLibrary
-  | Functions
-  | Data
-  | TData
-  | Param
-  | TParam
-  | Model
-  | GQuant
-
 (** Flags for data only arguments to functions *)
-and autodifftype = DataOnly | AutoDiffable
+type autodifftype = DataOnly | AutoDiffable
 
 (** Unsized types for function arguments and for decorating expressions
     during type checking; we have a separate type here for Math library
@@ -155,8 +144,9 @@ type 'e transformation =
   | Identity
   | Lower of 'e
   | Upper of 'e
-  (* XXX Refactor into single LowerUpper with options? or ideally transformation list as we all talked about*)
   | LowerUpper of 'e * 'e
+  | Offset of 'e
+  | Multiplier of 'e
   | OffsetMultiplier of 'e * 'e
   | Ordered
   | PositiveOrdered
