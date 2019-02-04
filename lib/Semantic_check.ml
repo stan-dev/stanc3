@@ -19,6 +19,17 @@ open Pretty_printing
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
 
+(** Origin blocks, to keep track of where variables are declared *)
+type originblock =
+  | MathLibrary
+  | Functions
+  | Data
+  | TData
+  | Param
+  | TParam
+  | Model
+  | GQuant
+
 let check_that_all_functions_have_definition = ref true
 let model_name = ref ""
 let vm = Symbol_table.initialize ()
@@ -67,10 +78,10 @@ let calculate_autodifftype at ut =
       AutoDiffable
   | _ -> DataOnly
 
-let check_of_int_type ue = ue.expr_typed_type = UInt
-let check_of_int_array_type ue = ue.expr_typed_type = UArray UInt
+let has_int_type ue = ue.expr_typed_type = UInt
+let has_int_array_type ue = ue.expr_typed_type = UArray UInt
 
-let check_of_int_or_real_type ue =
+let has_int_or_real_type ue =
   match ue.expr_typed_type with UInt | UReal -> true | _ -> false
 
 let probability_distribution_name_variants id =
@@ -238,11 +249,11 @@ let rec semantic_check_program
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   let _ = unsafe_clear_symbol_table vm in
-  let semantic_check_statements context_flags =
-    List.map ~f:(semantic_check_statement context_flags)
+  let semantic_check_statements cf =
+    List.map ~f:(semantic_check_statement cf)
   in
   let open Option.Monad_infix in
-  let context_flags =
+  let cf =
     { current_block= Functions
     ; in_fun_def= false
     ; in_returning_fun_def= false
@@ -251,8 +262,7 @@ let rec semantic_check_program
     ; loop_depth= 0 }
   in
   let ufb =
-    fb
-    >>| semantic_check_statements {context_flags with current_block= Functions}
+    fb >>| semantic_check_statements {cf with current_block= Functions}
   in
   (* Check that all declared functions have a definition *)
   let _ =
@@ -264,27 +274,19 @@ let rec semantic_check_program
         "Some function is declared without specifying a definition."
     (* TODO: insert better location in the error above *)
   in
-  let udb =
-    db >>| semantic_check_statements {context_flags with current_block= Data}
-  in
+  let udb = db >>| semantic_check_statements {cf with current_block= Data} in
   let utdb =
-    tdb >>| semantic_check_statements {context_flags with current_block= TData}
+    tdb >>| semantic_check_statements {cf with current_block= TData}
   in
-  let upb =
-    pb >>| semantic_check_statements {context_flags with current_block= Param}
-  in
+  let upb = pb >>| semantic_check_statements {cf with current_block= Param} in
   let utpb =
-    tpb >>| semantic_check_statements {context_flags with current_block= TParam}
+    tpb >>| semantic_check_statements {cf with current_block= TParam}
   in
   (* Model top level variables only assigned and read in model  *)
   let _ = Symbol_table.begin_scope vm in
-  let umb =
-    mb >>| semantic_check_statements {context_flags with current_block= Model}
-  in
+  let umb = mb >>| semantic_check_statements {cf with current_block= Model} in
   let _ = Symbol_table.end_scope vm in
-  let ugb =
-    gb >>| semantic_check_statements {context_flags with current_block= GQuant}
-  in
+  let ugb = gb >>| semantic_check_statements {cf with current_block= GQuant} in
   { functionblock= ufb
   ; datablock= udb
   ; transformeddatablock= utdb
@@ -353,119 +355,56 @@ and semantic_check_unsizedtype = function
 and semantic_error_e {expr_typed_loc; _} msg =
   semantic_error ~loc:expr_typed_loc msg
 
-and semantic_check_sizedtype context_flags = function
+and semantic_check_sizedtype cf = function
   | SInt -> SInt
   | SReal -> SReal
   | SVector e ->
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_type ue) then
-          semantic_error_e ue
-            ( "Vector sizes must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ue = semantic_check_expression_of_int_type cf e "Vector sizes" in
       SVector ue
   | SRowVector e ->
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_type ue) then
-          semantic_error_e ue
-            ( "Row vector sizes must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ue = semantic_check_expression_of_int_type cf e "Row vector sizes" in
       SRowVector ue
   | SMatrix (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1
-      and ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_type ue1) then
-          semantic_error_e ue1
-            ( "Matrix sizes must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
-      in
-      let _ =
-        if not (check_of_int_type ue2) then
-          semantic_error_e ue2
-            ( "Matrix sizes must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
-      in
+      let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
+      and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
       SMatrix (ue1, ue2)
   | SArray (st, e) ->
-      let ust = semantic_check_sizedtype context_flags st in
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_type ue) then
-          semantic_error_e ue
-            ( "Array sizes must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ust = semantic_check_sizedtype cf st in
+      let ue = semantic_check_expression_of_int_type cf e "Array sizes" in
       SArray (ust, ue)
 
-and semantic_check_transformation context_flags = function
+and semantic_check_transformation cf = function
   | Identity -> Identity
   | Lower e ->
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error_e ue
-            ( "Lower bound must be of int or real type. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Lower bound"
       in
       Lower ue
   | Upper e ->
-      let ue = semantic_check_expression context_flags e in
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error_e ue
-            ( "Upper bound must be of int or real type. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Upper bound"
       in
       Upper ue
   | LowerUpper (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_or_real_type ue1) then
-          semantic_error_e ue1
-            ( "Lower and upper bound must be of int or real type. Instead \
-               found type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
+      let ue1 =
+        semantic_check_expression_of_int_or_real_type cf e1 "Lower bound"
       in
-      let _ =
-        if not (check_of_int_or_real_type ue2) then
-          semantic_error_e ue2
-            ( "Lower and upper bound must be of int or real type. Instead \
-               found type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
+      let ue2 =
+        semantic_check_expression_of_int_or_real_type cf e2 "Upper bound"
       in
       LowerUpper (ue1, ue2)
-  | OffsetMultiplier (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_or_real_type ue1) then
-          semantic_error_e ue1
-            ( "Location and scale must be of int or real type. Instead found \
-               type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
+  | Offset e ->
+      let ue = semantic_check_expression_of_int_or_real_type cf e "Offset" in
+      Offset ue
+  | Multiplier e ->
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Multiplier"
       in
-      let _ =
-        if not (check_of_int_or_real_type ue2) then
-          semantic_error_e ue2
-            ( "Location and scale must be of int or real type. Instead found \
-               type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
+      Multiplier ue
+  | OffsetMultiplier (e1, e2) ->
+      let ue1 = semantic_check_expression_of_int_or_real_type cf e1 "Offset" in
+      let ue2 =
+        semantic_check_expression_of_int_or_real_type cf e2 "Multiplier"
       in
       OffsetMultiplier (ue1, ue2)
   | Ordered -> Ordered
@@ -480,13 +419,34 @@ and semantic_check_transformation context_flags = function
 and lub_ad_e exprs =
   lub_ad_type (List.map ~f:(fun x -> x.expr_typed_ad_level) exprs)
 
-and semantic_check_expression context_flags
-    {expr_untyped_loc= loc; expr_untyped} =
+and semantic_check_expression_of_int_or_real_type cf e name =
+  let ue = semantic_check_expression cf e in
+  let _ =
+    if not (has_int_or_real_type ue) then
+      semantic_error_e ue
+        ( name ^ " must be of type int or real. Instead found type "
+        ^ pretty_print_unsizedtype ue.expr_typed_type
+        ^ "." )
+  in
+  ue
+
+and semantic_check_expression_of_int_type cf e name =
+  let ue = semantic_check_expression cf e in
+  let _ =
+    if not (has_int_type ue) then
+      semantic_error_e ue
+        ( name ^ " must be of type int. Instead found type "
+        ^ pretty_print_unsizedtype ue.expr_typed_type
+        ^ "." )
+  in
+  ue
+
+and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
   | TernaryIf (e1, e2, e3) -> (
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let ue3 = semantic_check_expression context_flags e3 in
+      let ue1 = semantic_check_expression cf e1 in
+      let ue2 = semantic_check_expression cf e2 in
+      let ue3 = semantic_check_expression cf e3 in
       match operator_return_type_from_string "TernaryIf" [ue1; ue2; ue3] with
       | Some (ReturnType ut) ->
           { expr_typed= TernaryIf (ue1, ue2, ue3)
@@ -506,9 +466,9 @@ and semantic_check_expression context_flags
             ^ pretty_print_unsizedtype ue3.expr_typed_type
             ^ "." ) )
   | BinOp (e1, op, e2) -> (
-      let ue1 = semantic_check_expression context_flags e1
+      let ue1 = semantic_check_expression cf e1
       and uop = semantic_check_operator op
-      and ue2 = semantic_check_expression context_flags e2 in
+      and ue2 = semantic_check_expression cf e2 in
       match operator_return_type uop [ue1; ue2] with
       | Some (ReturnType ut) ->
           { expr_typed= BinOp (ue1, uop, ue2)
@@ -527,7 +487,7 @@ and semantic_check_expression context_flags
             ^ "." ) )
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
-      and ue = semantic_check_expression context_flags e in
+      and ue = semantic_check_expression cf e in
       match operator_return_type_prefix uop [ue] with
       | Some (ReturnType ut) ->
           { expr_typed= PrefixOp (uop, ue)
@@ -543,7 +503,7 @@ and semantic_check_expression context_flags
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
   | PostfixOp (e, op) -> (
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       let uop = semantic_check_operator op in
       match operator_return_type op [ue] with
       | Some (ReturnType ut) ->
@@ -586,7 +546,7 @@ and semantic_check_expression context_flags
       ; expr_typed_loc= loc }
   | FunApp (id, es) -> (
       let uid = semantic_check_identifier id
-      and ues = List.map ~f:(semantic_check_expression context_flags) es in
+      and ues = List.map ~f:(semantic_check_expression cf) es in
       let _ =
         if uid.name = "map_rect" then
           match ues with
@@ -617,9 +577,7 @@ and semantic_check_expression context_flags
       let _ =
         if
           is_suffix uid.name ~suffix:"_lp"
-          && not
-               ( context_flags.in_lp_fun_def
-               || context_flags.current_block = Model )
+          && not (cf.in_lp_fun_def || cf.current_block = Model)
         then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
@@ -629,9 +587,8 @@ and semantic_check_expression context_flags
       let _ =
         if
           is_suffix uid.name ~suffix:"_rng"
-          && ( (context_flags.in_fun_def && not context_flags.in_rng_fun_def)
-             || context_flags.current_block = TParam
-             || context_flags.current_block = Model )
+          && ( (cf.in_fun_def && not cf.in_rng_fun_def)
+             || cf.current_block = TParam || cf.current_block = Model )
         then
           semantic_error ~loc
             "Random number generators are only allowed in transformed data \
@@ -722,14 +679,12 @@ and semantic_check_expression context_flags
             "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
              can make use of conditional notation."
       in
-      let ues = List.map ~f:(semantic_check_expression context_flags) es in
+      let ues = List.map ~f:(semantic_check_expression cf) es in
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
         if
           is_suffix uid.name ~suffix:"_lp"
-          && not
-               ( context_flags.in_lp_fun_def
-               || context_flags.current_block = Model )
+          && not (cf.in_lp_fun_def || cf.current_block = Model)
         then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
@@ -808,17 +763,15 @@ and semantic_check_expression context_flags
       let _ =
         if
           not
-            ( context_flags.in_lp_fun_def
-            || context_flags.current_block = Model
-            || context_flags.current_block = TParam )
+            ( cf.in_lp_fun_def || cf.current_block = Model
+            || cf.current_block = TParam )
         then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
       { expr_typed= GetLP
-      ; expr_typed_ad_level=
-          calculate_autodifftype context_flags.current_block UReal
+      ; expr_typed_ad_level= calculate_autodifftype cf.current_block UReal
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | GetTarget ->
@@ -826,21 +779,19 @@ and semantic_check_expression context_flags
       let _ =
         if
           not
-            ( context_flags.in_lp_fun_def
-            || context_flags.current_block = Model
-            || context_flags.current_block = TParam )
+            ( cf.in_lp_fun_def || cf.current_block = Model
+            || cf.current_block = TParam )
         then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
       { expr_typed= GetTarget
-      ; expr_typed_ad_level=
-          calculate_autodifftype context_flags.current_block UReal
+      ; expr_typed_ad_level= calculate_autodifftype cf.current_block UReal
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
   | ArrayExpr es ->
-      let ues = List.map ~f:(semantic_check_expression context_flags) es in
+      let ues = List.map ~f:(semantic_check_expression cf) es in
       let elementtypes = List.map ~f:(fun y -> y.expr_typed_type) ues in
       (* Array expressions must be of uniform type. (Or mix of int and real) *)
       let _ =
@@ -868,7 +819,7 @@ and semantic_check_expression context_flags
       ; expr_typed_type= array_type
       ; expr_typed_loc= loc }
   | RowVectorExpr es ->
-      let ues = List.map ~f:(semantic_check_expression context_flags) es in
+      let ues = List.map ~f:(semantic_check_expression cf) es in
       let elementtypes = List.map ~f:(fun y -> y.expr_typed_type) ues in
       let ut =
         if List.for_all ~f:(fun x -> x = UReal || x = UInt) elementtypes then
@@ -886,16 +837,14 @@ and semantic_check_expression context_flags
       ; expr_typed_type= ut
       ; expr_typed_loc= loc }
   | Paren e ->
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       { expr_typed= Paren ue
       ; expr_typed_ad_level= ue.expr_typed_ad_level
       ; expr_typed_type= ue.expr_typed_type
       ; expr_typed_loc= loc }
   | Indexed (e, indices) ->
-      let ue = semantic_check_expression context_flags e in
-      let uindices =
-        List.map ~f:(semantic_check_index context_flags) indices
-      in
+      let ue = semantic_check_expression cf e in
+      let uindices = List.map ~f:(semantic_check_index cf) indices in
       let uindices_with_types =
         List.map
           ~f:(function
@@ -968,17 +917,17 @@ and semantic_check_expression context_flags
 (* Probably nothing to do here *)
 and semantic_check_operator i = i
 
-and semantic_check_printable context_flags = function
+and semantic_check_printable cf = function
   | PString s -> PString s
   (* Print/reject expressions cannot be of function type. *)
   | PExpr e -> (
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       match ue.expr_typed_type with
       | UFun _ | UMathLibraryFunction ->
           semantic_error ~loc:ue.expr_typed_loc "Functions cannot be printed."
       | _ -> PExpr ue )
 
-and semantic_check_statement context_flags s =
+and semantic_check_statement cf s =
   let loc = s.stmt_untyped_loc in
   match s.stmt_untyped with
   | Assignment
@@ -987,7 +936,7 @@ and semantic_check_statement context_flags s =
       ; assign_op= assop
       ; assign_rhs= e } -> (
       let ue2 =
-        semantic_check_expression context_flags
+        semantic_check_expression cf
           { expr_untyped=
               Indexed
                 ( {expr_untyped= Variable id; expr_untyped_loc= id.id_loc}
@@ -1001,7 +950,7 @@ and semantic_check_statement context_flags s =
         | _ -> fatal_error ()
       in
       let uassop = semantic_check_assignmentoperator assop in
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       let uidoblock =
         match Option.map ~f:fst (Symbol_table.look vm uid.name) with
         | Some b -> b
@@ -1020,7 +969,7 @@ and semantic_check_statement context_flags s =
       let _ =
         if
           (not (Symbol_table.is_global vm uid.name))
-          || uidoblock = context_flags.current_block
+          || uidoblock = cf.current_block
         then ()
         else
           semantic_error ~loc
@@ -1054,13 +1003,11 @@ and semantic_check_statement context_flags s =
             else "" ) )
   | NRFunApp (id, es) -> (
       let uid = semantic_check_identifier id in
-      let ues = List.map ~f:(semantic_check_expression context_flags) es in
+      let ues = List.map ~f:(semantic_check_expression cf) es in
       let _ =
         if
           String.is_suffix uid.name ~suffix:"_lp"
-          && not
-               ( context_flags.in_lp_fun_def
-               || context_flags.current_block = Model )
+          && not (cf.in_lp_fun_def || cf.current_block = Model)
         then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
@@ -1129,7 +1076,7 @@ and semantic_check_statement context_flags s =
                 ^ ("'" ^ uid.name ^ "'")
                 ^ " was supplied." ) ) )
   | TargetPE e ->
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       (* Check typing of ~ and target += *)
       let _ =
         match ue.expr_typed_type with
@@ -1141,10 +1088,7 @@ and semantic_check_statement context_flags s =
       in
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
-        if
-          not
-            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
-        then
+        if not (cf.in_lp_fun_def || cf.current_block = Model) then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
@@ -1153,7 +1097,7 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
   | IncrementLogProb e ->
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       let _ =
         match ue.expr_typed_type with
         | UFun _ | UMathLibraryFunction ->
@@ -1164,10 +1108,7 @@ and semantic_check_statement context_flags s =
       in
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
-        if
-          not
-            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
-        then
+        if not (cf.in_lp_fun_def || cf.current_block = Model) then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
@@ -1176,7 +1117,7 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       let uid = semantic_check_identifier id in
       let _ =
         if
@@ -1187,14 +1128,11 @@ and semantic_check_statement context_flags s =
             "~-statement expects a distribution name without '_lpdf' or \
              '_lpmf' suffix."
       in
-      let ues = List.map ~f:(semantic_check_expression context_flags) es in
-      let ut = semantic_check_truncation context_flags t in
+      let ues = List.map ~f:(semantic_check_expression cf) es in
+      let ut = semantic_check_truncation cf t in
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       let _ =
-        if
-          not
-            (context_flags.in_lp_fun_def || context_flags.current_block = Model)
-        then
+        if not (cf.in_lp_fun_def || cf.current_block = Model) then
           semantic_error ~loc
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
@@ -1305,7 +1243,7 @@ and semantic_check_statement context_flags s =
   | Break ->
       (* Break and continue only occur in loops. *)
       let _ =
-        if context_flags.loop_depth = 0 then
+        if cf.loop_depth = 0 then
           semantic_error ~loc "Break statements may only be used in loops."
       in
       { stmt_typed= Break
@@ -1314,7 +1252,7 @@ and semantic_check_statement context_flags s =
   | Continue ->
       (* Break and continue only occur in loops. *)
       let _ =
-        if context_flags.loop_depth = 0 then
+        if cf.loop_depth = 0 then
           semantic_error ~loc "Continue statements may only be used in loops."
       in
       { stmt_typed= Continue
@@ -1324,19 +1262,18 @@ and semantic_check_statement context_flags s =
       (* No returns outside of function definitions *)
       (* In case of void function, no return statements anywhere *)
       let _ =
-        if not context_flags.in_returning_fun_def then
+        if not cf.in_returning_fun_def then
           semantic_error ~loc
             "Expression return statements may only be used inside returning \
              function definitions."
       in
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       { stmt_typed= Return ue
       ; stmt_typed_returntype= Complete (ReturnType ue.expr_typed_type)
       ; stmt_typed_loc= loc }
   | ReturnVoid ->
       let _ =
-        if (not context_flags.in_fun_def) || context_flags.in_returning_fun_def
-        then
+        if (not cf.in_fun_def) || cf.in_returning_fun_def then
           semantic_error ~loc
             "Void return statements may only be used inside non-returning \
              function definitions."
@@ -1345,12 +1282,12 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_returntype= Complete Void
       ; stmt_typed_loc= loc }
   | Print ps ->
-      let ups = List.map ~f:(semantic_check_printable context_flags) ps in
+      let ups = List.map ~f:(semantic_check_printable cf) ps in
       { stmt_typed= Print ups
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
   | Reject ps ->
-      let ups = List.map ~f:(semantic_check_printable context_flags) ps in
+      let ups = List.map ~f:(semantic_check_printable cf) ps in
       { stmt_typed= Reject ups
       ; stmt_typed_returntype= AnyReturnType
       ; stmt_typed_loc= loc }
@@ -1359,18 +1296,13 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
   | IfThenElse (e, s1, os2) ->
-      let ue = semantic_check_expression context_flags e in
-      (* For, while, for each, if constructs take expressions of valid type *)
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc:ue.expr_typed_loc
-            ( "Condition in conditional needs to be of type int or real. \
-               Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e
+          "Condition in conditional"
       in
-      let us1 = semantic_check_statement context_flags s1 in
-      let uos2 = Option.map ~f:(semantic_check_statement context_flags) os2 in
+      (* For, while, for each, if constructs take expressions of valid type *)
+      let us1 = semantic_check_statement cf s1 in
+      let uos2 = Option.map ~f:(semantic_check_statement cf) os2 in
       let srt1 = us1.stmt_typed_returntype in
       let srt2 =
         match uos2 with
@@ -1382,55 +1314,34 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_loc= loc
       ; stmt_typed_returntype= srt }
   | While (e, s) ->
-      let ue = semantic_check_expression context_flags e in
-      (* For, while, for each, if constructs take expressions of valid type *)
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc:ue.expr_typed_loc
-            ( "Condition in while loop needs to be of type int or real. \
-               Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e
+          "Condition in while-loop"
       in
+      (* For, while, for each, if constructs take expressions of valid type *)
       let us =
-        semantic_check_statement
-          {context_flags with loop_depth= context_flags.loop_depth + 1}
-          s
+        semantic_check_statement {cf with loop_depth= cf.loop_depth + 1} s
       in
       { stmt_typed= While (ue, us)
       ; stmt_typed_returntype= us.stmt_typed_returntype
       ; stmt_typed_loc= loc }
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       let uid = semantic_check_identifier id in
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
+      let ue1 =
+        semantic_check_expression_of_int_type cf e1 "Lower bound of for-loop"
+      in
+      let ue2 =
+        semantic_check_expression_of_int_type cf e2 "Upper bound of for-loop"
+      in
       (* For, while, for each, if constructs take expressions of valid type *)
-      let _ =
-        if not (check_of_int_type ue1) then
-          semantic_error ~loc:ue1.expr_typed_loc
-            ( "Lower bound of for-loop needs to be of type int. Instead found \
-               type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
-      in
-      let _ =
-        if not (check_of_int_type ue2) then
-          semantic_error ~loc:ue2.expr_typed_loc
-            ( "Upper bound of for-loop needs to be of type int. Instead found \
-               type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
-      in
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
-      let oindexblock = context_flags.current_block in
+      let oindexblock = cf.current_block in
       let _ = Symbol_table.enter vm uid.name (oindexblock, UInt) in
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
       let us =
-        semantic_check_statement
-          {context_flags with loop_depth= context_flags.loop_depth + 1}
-          s
+        semantic_check_statement {cf with loop_depth= cf.loop_depth + 1} s
       in
       let _ = Symbol_table.end_scope vm in
       { stmt_typed=
@@ -1443,7 +1354,7 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_loc= loc }
   | ForEach (id, e, s) ->
       let uid = semantic_check_identifier id in
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       (* For, while, for each, if constructs take expressions of valid type *)
       let loop_identifier_unsizedtype =
         match ue.expr_typed_type with
@@ -1451,14 +1362,14 @@ and semantic_check_statement context_flags s =
         | UVector | URowVector | UMatrix -> UReal
         | _ ->
             semantic_error ~loc:ue.expr_typed_loc
-              ( "Foreach loop must be over array, vector, row_vector or \
+              ( "Foreach-loop must be over array, vector, row_vector or \
                  matrix. Instead found expression of type "
               ^ pretty_print_unsizedtype ue.expr_typed_type
               ^ "." )
       in
       let _ = Symbol_table.begin_scope vm in
       let _ = check_fresh_variable uid false in
-      let oindexblock = context_flags.current_block in
+      let oindexblock = cf.current_block in
       let _ =
         Symbol_table.enter vm uid.name
           (oindexblock, loop_identifier_unsizedtype)
@@ -1466,9 +1377,7 @@ and semantic_check_statement context_flags s =
       (* Check that function args and loop identifiers are not modified in function. (passed by const ref)*)
       let _ = Symbol_table.set_read_only vm uid.name in
       let us =
-        semantic_check_statement
-          {context_flags with loop_depth= context_flags.loop_depth + 1}
-          s
+        semantic_check_statement {cf with loop_depth= cf.loop_depth + 1} s
       in
       let _ = Symbol_table.end_scope vm in
       { stmt_typed= ForEach (uid, ue, us)
@@ -1476,7 +1385,7 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_loc= loc }
   | Block vdsl ->
       let _ = Symbol_table.begin_scope vm in
-      let uvdsl = List.map ~f:(semantic_check_statement context_flags) vdsl in
+      let uvdsl = List.map ~f:(semantic_check_statement cf) vdsl in
       let _ = Symbol_table.end_scope vm in
       (* Any statements after a break or continue or return or reject do not count for the return
       type. *)
@@ -1502,7 +1411,7 @@ and semantic_check_statement context_flags s =
       ; identifier= id
       ; initial_value= init
       ; is_global= glob } ->
-      let ust = semantic_check_sizedtype context_flags st
+      let ust = semantic_check_sizedtype cf st
       and not_ptq e f =
         match e.expr_typed_ad_level with AutoDiffable -> false | _ -> f ()
       in
@@ -1523,11 +1432,11 @@ and semantic_check_statement context_flags s =
           semantic_error ~loc
             "Non-data variables are not allowed in top level size declarations."
       in
-      let utrans = semantic_check_transformation context_flags trans in
+      let utrans = semantic_check_transformation cf trans in
       let uid = semantic_check_identifier id in
       let ut = unsizedtype_of_sizedtype ust in
       let _ = check_fresh_variable uid false in
-      let ob = context_flags.current_block in
+      let ob = cf.current_block in
       let _ = Symbol_table.enter vm id.name (ob, ut) in
       let _ =
         if
@@ -1552,8 +1461,7 @@ and semantic_check_statement context_flags s =
       let _ =
         if
           glob
-          && ( context_flags.current_block = Param
-             || context_flags.current_block = TParam )
+          && (cf.current_block = Param || cf.current_block = TParam)
           && unsizedtype_contains_int ut
         then semantic_error ~loc "(Transformed) Parameters cannot be integers."
       in
@@ -1562,7 +1470,7 @@ and semantic_check_statement context_flags s =
         | None -> None
         | Some e -> (
           match
-            semantic_check_statement context_flags
+            semantic_check_statement cf
               { stmt_untyped=
                   Assignment
                     { assign_identifier= id
@@ -1708,7 +1616,7 @@ and semantic_check_statement context_flags s =
       in
       let ub =
         semantic_check_statement
-          { context_flags with
+          { cf with
             in_fun_def= true
           ; in_rng_fun_def= is_suffix uid.name ~suffix:"_rng"
           ; in_lp_fun_def= is_suffix uid.name ~suffix:"_lp"
@@ -1732,56 +1640,34 @@ and semantic_check_statement context_flags s =
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
 
-and semantic_check_truncation context_flags = function
+and semantic_check_truncation cf = function
   | NoTruncate -> NoTruncate
   | TruncateUpFrom e ->
-      let ue = semantic_check_expression context_flags e in
-      let loc = ue.expr_typed_loc in
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc
-            ( "Truncation bound must be of type int or real. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Truncation bound"
       in
       TruncateUpFrom ue
   | TruncateDownFrom e ->
-      let ue = semantic_check_expression context_flags e in
-      let loc = ue.expr_typed_loc in
-      let _ =
-        if not (check_of_int_or_real_type ue) then
-          semantic_error ~loc
-            ( "Truncation bound must be of type int or real. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Truncation bound"
       in
       TruncateDownFrom ue
   | TruncateBetween (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_or_real_type ue1) then
-          semantic_error_e ue1
-            ( "Truncation bound must be of type int or real. Instead found type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
+      let ue1 =
+        semantic_check_expression_of_int_or_real_type cf e1 "Truncation bound"
       in
-      let _ =
-        if not (check_of_int_or_real_type ue2) then
-          semantic_error_e ue2
-            ( "Truncation bound must be of type int or real. Instead found type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
+      let ue2 =
+        semantic_check_expression_of_int_or_real_type cf e2 "Truncation bound"
       in
       TruncateBetween (ue1, ue2)
 
-and semantic_check_index context_flags = function
+and semantic_check_index cf = function
   | All -> All
   (* Check that indexes have int (container) type *)
   | Single e ->
-      let ue = semantic_check_expression context_flags e in
+      let ue = semantic_check_expression cf e in
       let loc = ue.expr_typed_loc in
-      if check_of_int_type ue || check_of_int_array_type ue then Single ue
+      if has_int_type ue || has_int_array_type ue then Single ue
       else
         semantic_error ~loc
           ( "Index must be of type int or int[] or must be a range. Instead \
@@ -1789,44 +1675,14 @@ and semantic_check_index context_flags = function
           ^ pretty_print_unsizedtype ue.expr_typed_type
           ^ "." )
   | Upfrom e ->
-      let ue = semantic_check_expression context_flags e in
-      let loc = ue.expr_typed_loc in
-      let _ =
-        if not (check_of_int_type ue) then
-          semantic_error ~loc
-            ( "Range bound must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ue = semantic_check_expression_of_int_type cf e "Range bound" in
       Upfrom ue
   | Downfrom e ->
-      let ue = semantic_check_expression context_flags e in
-      let loc = ue.expr_typed_loc in
-      let _ =
-        if not (check_of_int_type ue) then
-          semantic_error ~loc
-            ( "Range bound must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue.expr_typed_type
-            ^ "." )
-      in
+      let ue = semantic_check_expression_of_int_type cf e "Range bound" in
       Downfrom ue
   | Between (e1, e2) ->
-      let ue1 = semantic_check_expression context_flags e1 in
-      let ue2 = semantic_check_expression context_flags e2 in
-      let _ =
-        if not (check_of_int_type ue1) then
-          semantic_error_e ue1
-            ( "Range bound must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue1.expr_typed_type
-            ^ "." )
-      in
-      let _ =
-        if not (check_of_int_type ue2) then
-          semantic_error_e ue2
-            ( "Range bound must be of type int. Instead found type "
-            ^ pretty_print_unsizedtype ue2.expr_typed_type
-            ^ "." )
-      in
+      let ue1 = semantic_check_expression_of_int_type cf e1 "Range bound" in
+      let ue2 = semantic_check_expression_of_int_type cf e2 "Range bound" in
       Between (ue1, ue2)
 
 (* Probably nothing to do here *)

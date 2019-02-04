@@ -150,7 +150,7 @@ Semantic error in file for_statements_bad_indices3.stan, line 5, columns 16-18:
      7:      return 0;
    -------------------------------------------------
 
-Foreach loop must be over array, vector, row_vector or matrix. Instead found expression of type int.
+Foreach-loop must be over array, vector, row_vector or matrix. Instead found expression of type int.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices4.stan
 
@@ -164,5 +164,5 @@ Semantic error in file for_statements_bad_indices4.stan, line 6, columns 18-19:
      8:      }
    -------------------------------------------------
 
-Foreach loop must be over array, vector, row_vector or matrix. Instead found expression of type real.
+Foreach-loop must be over array, vector, row_vector or matrix. Instead found expression of type real.
 

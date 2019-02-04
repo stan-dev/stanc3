@@ -284,18 +284,9 @@ offset_mult:
   | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
     { grammar_logger "offset_mult" ; OffsetMultiplier (e1, e2) }
   | OFFSET ASSIGN e=constr_expression
-    {
-      grammar_logger "loc" ;
-      OffsetMultiplier
-        (e, {expr_untyped= RealNumeral "1.";
-             expr_untyped_loc=loc_span_of_pos $startpos(e) $endpos(e)} )
-    }
+    { grammar_logger "offset" ; Offset e }
   | MULTIPLIER ASSIGN e=constr_expression
-    {
-      grammar_logger "scale" ;
-      OffsetMultiplier
-        ({expr_untyped=RealNumeral "0.";
-          expr_untyped_loc=loc_span_of_pos $startpos(e) $endpos(e)}, e)}
+    { grammar_logger "multiplier" ; Multiplier e }
 
 dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
