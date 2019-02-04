@@ -1,1 +1,1 @@
-model { real T[1]= {5.0};}
+model { real T[1] <- {5.0};}
