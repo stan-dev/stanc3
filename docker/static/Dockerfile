@@ -17,6 +17,8 @@ RUN opam switch create 4.07 ocaml-base-compiler.4.07.1 && \
   opam switch 4.07
 
 # Stanc3 also needs
-RUN opam install -y menhir core_kernel ppx_deriving
+COPY ./scripts/install_dev_deps.sh ./
+RUN bash -x install_dev_deps.sh
+
 
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
