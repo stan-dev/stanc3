@@ -94,7 +94,9 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
     let cpp = Format.asprintf "%a" Stan_math_backend.emit_prog mir in
-    print_string cpp )
+    Out_channel.write_all !output_file ~data:cpp )
+
+let remove_dotstan s = String.drop_suffix s 5
 
 let main () =
   (* Parse the arguments. *)
@@ -102,10 +104,9 @@ let main () =
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
-      String.drop_suffix
-        List.(hd_exn (rev (String.split !model_file ~on:'/')))
-        5
+      remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
       ^ "_model" ;
+  if !output_file = "" then output_file := remove_dotstan !model_file ^ ".cpp" ;
   use_file !model_file
 
 let () = main ()
