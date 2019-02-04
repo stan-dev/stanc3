@@ -249,10 +249,10 @@ let rec semantic_check_program
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   let _ = unsafe_clear_symbol_table vm in
-  let semantic_check_statements cf =
-    List.map ~f:(semantic_check_statement cf)
+  let semantic_check_ostatements_in_block cf b =
+    Option.map
+      ~f:(List.map ~f:(semantic_check_statement {cf with current_block= b}))
   in
-  let open Option.Monad_infix in
   let cf =
     { current_block= Functions
     ; in_fun_def= false
@@ -261,9 +261,7 @@ let rec semantic_check_program
     ; in_lp_fun_def= false
     ; loop_depth= 0 }
   in
-  let ufb =
-    fb >>| semantic_check_statements {cf with current_block= Functions}
-  in
+  let ufb = semantic_check_ostatements_in_block cf Functions fb in
   (* Check that all declared functions have a definition *)
   let _ =
     if
@@ -274,19 +272,15 @@ let rec semantic_check_program
         "Some function is declared without specifying a definition."
     (* TODO: insert better location in the error above *)
   in
-  let udb = db >>| semantic_check_statements {cf with current_block= Data} in
-  let utdb =
-    tdb >>| semantic_check_statements {cf with current_block= TData}
-  in
-  let upb = pb >>| semantic_check_statements {cf with current_block= Param} in
-  let utpb =
-    tpb >>| semantic_check_statements {cf with current_block= TParam}
-  in
+  let udb = semantic_check_ostatements_in_block cf Data db in
+  let utdb = semantic_check_ostatements_in_block cf TData tdb in
+  let upb = semantic_check_ostatements_in_block cf Param pb in
+  let utpb = semantic_check_ostatements_in_block cf TParam tpb in
   (* Model top level variables only assigned and read in model  *)
   let _ = Symbol_table.begin_scope vm in
-  let umb = mb >>| semantic_check_statements {cf with current_block= Model} in
+  let umb = semantic_check_ostatements_in_block cf Model mb in
   let _ = Symbol_table.end_scope vm in
-  let ugb = gb >>| semantic_check_statements {cf with current_block= GQuant} in
+  let ugb = semantic_check_ostatements_in_block cf GQuant gb in
   { functionblock= ufb
   ; datablock= udb
   ; transformeddatablock= utdb
