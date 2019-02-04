@@ -249,11 +249,9 @@ let rec semantic_check_program
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   let _ = unsafe_clear_symbol_table vm in
-  let semantic_check_ostatements cf =
-    Option.map ~f:(List.map ~f:(semantic_check_statement cf))
-  in
   let semantic_check_ostatements_in_block cf b =
-    semantic_check_ostatements {cf with current_block= b}
+    Option.map
+      ~f:(List.map ~f:(semantic_check_statement {cf with current_block= b}))
   in
   let cf =
     { current_block= Functions
