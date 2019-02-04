@@ -246,17 +246,6 @@ model {
   y ~ normal(0, 1);
 }
 
-
-Semantic error in file ../included/incl_stanc_helper_error_spread_over_files.stan, line 2, column 2 to file ../included/error_spread_over_files.stan, line 1, column 4, included from
-file stanc_helper_with_bad_include_error_spread_over_files.stan, line 2, column 0:
-   -------------------------------------------------
-     1:    real y;
-     2:    int #include error_spread_over_files.stan
-           ^
-   -------------------------------------------------
-
-(Transformed) Parameters cannot be integers.
-
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_bad_include_include_error.stan
 
 Syntax error in file ../included/incl-err.stan, line 2, column 2, included from
@@ -308,18 +297,6 @@ model {
   y ~ normal(0, 1);
 }
 
-
-Semantic error in file ../included/sem-err.stan, line 2, columns 2-8, included from
-file ../included/incl_stanc_helper_semantic_error.stan, line 2, column 2, included from
-file stanc_helper_with_bad_include_semantic_error.stan, line 2, column 0:
-   -------------------------------------------------
-     1:    real z;
-     2:    int w;
-           ^
-   -------------------------------------------------
-
-(Transformed) Parameters cannot be integers.
-
   $ ../../../../install/default/bin/stanc --include_paths="../included" --auto-format stanc_helper_with_good_include.stan
 parameters {
   real y;
@@ -343,16 +320,4 @@ model {
 generated quantities {
   print(ww);
 }
-
-
-Semantic error in file stanc_helper_with_good_include_err_after_incl.stan, line 9, columns 8-10:
-   -------------------------------------------------
-     7:  }
-     8:  generated quantities {
-     9:    print(ww);
-                 ^
-    10:  }
-   -------------------------------------------------
-
-Identifier 'ww' not in scope.
 

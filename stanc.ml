@@ -36,8 +36,7 @@ let options =
          checking" )
     ; ( "--dump-mir"
       , Arg.Set dump_mir
-      , " For debugging purposes: print the decorated AST, after semantic \
-         checking" )
+      , " For debugging purposes: print the MIR." )
     ; ( "--auto-format"
       , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
