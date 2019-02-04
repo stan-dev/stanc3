@@ -17,8 +17,8 @@ RUN opam switch create 4.07 ocaml-base-compiler.4.07.1 && \
   opam switch 4.07
 
 # Stanc3 also needs
-COPY ./scripts/install_dev_deps.sh ./
-RUN bash -x install_dev_deps.sh
+COPY ./scripts/install_build_deps.sh ./
+RUN bash -x install_build_deps.sh
 
 
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
