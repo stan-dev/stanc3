@@ -107,40 +107,27 @@ let probability_distribution_name_variants id =
       [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
     else [name] )
 
+let lub_rt loc rt1 rt2 =
+  match (rt1, rt2) with
+  | ReturnType UReal, ReturnType UInt | ReturnType UInt, ReturnType UReal ->
+      ReturnType UReal
+  | rt1, rt2 when rt1 = rt2 -> rt2
+  | _ ->
+      semantic_error ~loc
+        ( "Branches of function definition need to have the same return type. \
+           Instead, found return types "
+        ^ pretty_print_returntype rt1
+        ^ " and "
+        ^ pretty_print_returntype rt2
+        ^ "." )
+
 let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
-  | Complete (ReturnType UReal), Complete (ReturnType UInt)
-   |Complete (ReturnType UInt), Complete (ReturnType UReal) ->
-      Complete (ReturnType UReal)
-  | Incomplete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Incomplete (ReturnType UReal)
-   |Incomplete (ReturnType UReal), Complete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Complete (ReturnType UReal)
-   |Complete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Complete (ReturnType UInt), Incomplete (ReturnType UReal) ->
-      Incomplete (ReturnType UReal)
-  | Complete rt1, Complete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Complete rt1
+  | Complete rt1, Complete rt2 -> Complete (lub_rt loc rt1 rt2)
   | Incomplete rt1, Incomplete rt2
    |Complete rt1, Incomplete rt2
    |Incomplete rt1, Complete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Incomplete rt1
+      Incomplete (lub_rt loc rt1 rt2)
   | AnyReturnType, NoReturnType
    |NoReturnType, AnyReturnType
    |NoReturnType, NoReturnType ->
@@ -157,36 +144,10 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
 
 let try_compute_block_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
-  | Complete (ReturnType UReal), Complete (ReturnType UInt)
-   |Complete (ReturnType UInt), Complete (ReturnType UReal)
-   |Incomplete (ReturnType UReal), Complete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Complete (ReturnType UReal) ->
-      Complete (ReturnType UReal)
-  | Incomplete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Incomplete (ReturnType UReal)
-   |Complete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Complete (ReturnType UInt), Incomplete (ReturnType UReal) ->
-      Incomplete (ReturnType UReal)
   | Complete rt1, Complete rt2 | Incomplete rt1, Complete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Complete rt1
+      Complete (lub_rt loc rt1 rt2)
   | Incomplete rt1, Incomplete rt2 | Complete rt1, Incomplete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Incomplete rt1
+      Incomplete (lub_rt loc rt1 rt2)
   | NoReturnType, NoReturnType -> NoReturnType
   | AnyReturnType, Incomplete rt
    |Complete rt, NoReturnType
@@ -249,10 +210,10 @@ let rec semantic_check_program
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   let _ = unsafe_clear_symbol_table vm in
-  let semantic_check_statements cf =
-    List.map ~f:(semantic_check_statement cf)
+  let semantic_check_ostatements_in_block cf b =
+    Option.map
+      ~f:(List.map ~f:(semantic_check_statement {cf with current_block= b}))
   in
-  let open Option.Monad_infix in
   let cf =
     { current_block= Functions
     ; in_fun_def= false
@@ -261,9 +222,7 @@ let rec semantic_check_program
     ; in_lp_fun_def= false
     ; loop_depth= 0 }
   in
-  let ufb =
-    fb >>| semantic_check_statements {cf with current_block= Functions}
-  in
+  let ufb = semantic_check_ostatements_in_block cf Functions fb in
   (* Check that all declared functions have a definition *)
   let _ =
     if
@@ -274,19 +233,15 @@ let rec semantic_check_program
         "Some function is declared without specifying a definition."
     (* TODO: insert better location in the error above *)
   in
-  let udb = db >>| semantic_check_statements {cf with current_block= Data} in
-  let utdb =
-    tdb >>| semantic_check_statements {cf with current_block= TData}
-  in
-  let upb = pb >>| semantic_check_statements {cf with current_block= Param} in
-  let utpb =
-    tpb >>| semantic_check_statements {cf with current_block= TParam}
-  in
+  let udb = semantic_check_ostatements_in_block cf Data db in
+  let utdb = semantic_check_ostatements_in_block cf TData tdb in
+  let upb = semantic_check_ostatements_in_block cf Param pb in
+  let utpb = semantic_check_ostatements_in_block cf TParam tpb in
   (* Model top level variables only assigned and read in model  *)
   let _ = Symbol_table.begin_scope vm in
-  let umb = mb >>| semantic_check_statements {cf with current_block= Model} in
+  let umb = semantic_check_ostatements_in_block cf Model mb in
   let _ = Symbol_table.end_scope vm in
-  let ugb = gb >>| semantic_check_statements {cf with current_block= GQuant} in
+  let ugb = semantic_check_ostatements_in_block cf GQuant gb in
   { functionblock= ufb
   ; datablock= udb
   ; transformeddatablock= utdb
