@@ -31,6 +31,19 @@ generated quantities {
   s_g2 = sd(e_g);
 }
 
+
+Semantic error in file finite_populations.stan, line 15, columns 10-13:
+   -------------------------------------------------
+    13:  
+    14:    //finite population sd for when group level predictors are present
+    15:    g_hat = a_0 + a_1 * u_1 + a_2 * u;
+                   ^
+    16:  } 
+    17:  model {
+   -------------------------------------------------
+
+Identifier 'a_0' not in scope.
+
   $ ../../../../../../install/default/bin/stanc --auto-format multiple_comparison.stan
 data {
   int<lower=0> N;
@@ -88,6 +101,19 @@ model {
     for (k in 1 : 2) E_B[j, k] = B[j, k] - B_hat[j, k];
   }
 }
+
+
+Semantic error in file r_sqr.stan, line 11, columns 9-10:
+   -------------------------------------------------
+     9:    vector[n_county] a;
+    10:    vector[n_county] b;
+    11:    matrix[j,2] B;
+                  ^
+    12:    matrix[j,2] B_hat;
+    13:    vector[2] B_hat_temp;
+   -------------------------------------------------
+
+Identifier 'j' not in scope.
 
   $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_a.stan
 data {
