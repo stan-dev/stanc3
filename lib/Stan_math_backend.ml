@@ -73,14 +73,11 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 4>@[<v>%a@]@,}" pp_body body
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
-  pf ppf "@;<0 4>@[<v>%a@]@]" pp_body body
+  pf ppf "@ @;<0 4>@[<v>%a@]@]" pp_body body
 
-(* XXX This should probably recursively build up a statement For loop instead...*)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let mkloopvar d = sprintf "i_%d__" d in
   let loopvar = mkloopvar d in
-  (*let for_loop = {loopvar; lower= zero; upper=dim; body}
-*)
   match st with
   | Ast.SInt | SReal -> pf ppf "%a" pp_code_per_element name
   | SVector dim | SRowVector dim ->
@@ -125,6 +122,10 @@ let pp_template_decls ppf ts =
     ts
 
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
+
+let%expect_test "with idx" =
+  print_s [%sexp (with_idx (List.range 10 15) : (int * int) list)] ;
+  [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
 let pp_error_wrapper ppf (pp_err, err_arg, pp_contents, contents_arg) =
   string ppf "try " ;
@@ -336,38 +337,28 @@ let rec pp_zeroing_ctor_call ppf st =
   | SRowVector dim | SVector dim -> ignore dim ; pf ppf "%s" "XXX todo"
   | SMatrix (dim1, dim2) -> ignore (dim1, dim2)
 
-(* XXX *)
-
-let pp_zero ppf (name, st) =
-  let ut = Ast.remove_size st in
-  pf ppf "%s = %a(%a);" name
-    (pp_unsizedtype (stantype_prim_str ut))
-    ut pp_zeroing_ctor_call st
-
 let var_context_container st =
   match basetype (Ast.remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
-   2. Set data field to 0
-   3. find vals_%s__ from context__.vals_%s(vident)
-   4. keep track of pos__
-   5. run checks on resulting vident
+   1. find vals_%s__ from context__.vals_%s(vident)
+   1. keep track of pos__
+   1. run checks on resulting vident
 *)
 let pp_read_data ppf (vident, st) =
-  pf ppf "%a@ " pp_zero (vident, st) ;
   let vals = var_context_container st in
   let pp_read ppf loopvar = pf ppf "%s = %s;@ " vident loopvar in
   pf ppf "%s__ = context__.%s(\"%s\");@ " vals vals vident ;
   pp_run_code_per_el pp_read ppf (vals, st)
 
-let%expect_test "read int N" =
-  strf "@[<v>%a@]" pp_read_data ("N", Ast.SInt) |> print_endline ;
+let%expect_test "read int[N] y" =
+  strf "@[<v>%a@]" pp_read_data ("y", Ast.SArray (Ast.SInt, Var "N"))
+  |> print_endline ;
   [%expect
     {|
-    N = int(0);
-    vals_i__ = context__.vals_i("N");
-    N = vals_i; |}]
+    vals_i__ = context__.vals_i("y");
+    for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i[i_0__]; |}]
 
 (*
 
@@ -504,9 +495,9 @@ using namespace stan::math;
 
 let pp_prog ppf (p : stmt_loc prog) =
   let tvtable, datab = p.datab in
-  let datab = add_data_read_mir datab in
-  let datab = (Mir.map_toplevel_stmts trans_checks) datab in
-  let datab = (tvtable, datab) in
+  let datab =
+    (tvtable, datab |> add_data_read_mir |> Mir.map_toplevel_stmts trans_checks)
+  in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name globals usings pp_statement_loc p.functionsb
     pp_model {p with datab}
