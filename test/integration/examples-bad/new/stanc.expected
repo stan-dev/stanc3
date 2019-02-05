@@ -30,7 +30,7 @@ Syntax error in file blocks-bad10.stan, line 1, columns 0-16, parsing error:
                          ^
    -------------------------------------------------
 
-We expect "{" after "transfored data".
+We expect "{" after "transformed data".
 
 
   $ ../../../../../install/default/bin/stanc blocks-bad11.stan
@@ -52,7 +52,7 @@ Syntax error in file blocks-bad12.stan, line 1, columns 0-22, parsing error:
                                ^
    -------------------------------------------------
 
-We expect "{" after "transfored parameters".
+We expect "{" after "transformed parameters".
 
 
   $ ../../../../../install/default/bin/stanc blocks-bad2.stan
@@ -356,7 +356,7 @@ Syntax error in file fundef-bad7.stan, line 1, columns 19-20, parsing error:
                              ^
    -------------------------------------------------
 
-(Non-void) type expected function argument declaration.
+(Non-void) type expected in function argument declaration.
 
 
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan

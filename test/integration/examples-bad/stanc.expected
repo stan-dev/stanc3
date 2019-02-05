@@ -1087,7 +1087,7 @@ Syntax error in file functions-bad0.stan, line 2, columns 10-11, parsing error:
      4:    }
    -------------------------------------------------
 
-(Non-void) type expected function argument declaration.
+(Non-void) type expected in function argument declaration.
 
 
   $ ../../../../install/default/bin/stanc functions-bad1.stan
