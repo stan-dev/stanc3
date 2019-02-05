@@ -145,6 +145,9 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 let pp_located_error ppf (pp_contents, contents_arg, msg) =
   pp_error_wrapper ppf (pp_contents, contents_arg, pp_located_msg, msg)
 
+let pp_decl ppf (vident, st) =
+  pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size st) vident
+
 let pp_statement pp_statement_with_meta ppf s =
   let pp_stmt_list = list ~sep:cut pp_statement_with_meta in
   match s with
@@ -176,7 +179,7 @@ let pp_statement pp_statement_with_meta ppf s =
   | SList ls -> pp_stmt_list ppf ls
   | Decl {adtype; vident; st} ->
       ignore adtype ;
-      pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size st) vident
+      pp_decl ppf (vident, st)
   | FunDef {returntype; name; arguments; body} ->
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) arguments
@@ -430,20 +433,6 @@ class %s_model : public prob_grad {
 
 *)
 
-(*
-let%expect_test "prog" =
-  { functionsb= Skip
-  ; params= Decl (AutoDiffable, "theta", SReal)
-  ; data: ["y", SReal, "line 8"]
-  ; model: NRFnApp("print", Lit(Str, "hello world"))
-  ; gq: Skip ; tdata: Skip ; tparam: Skip
-  ; prog_name: "testmodel"
-  ; prog_path: "/testmodel.stan"}
-  |> pp_prog str_formatter ;
-  flush_str_formatter () |> print_endline ;
-  [%expect {| sassy({4, 2}, 27.0) |}]
-*)
-
 (* XXX Adds declarations.
    How will this mix with all the passes matching on declarations and adding
    new statements for each one, e.g. data reading and checking in the data block?*)
@@ -475,10 +464,52 @@ let%expect_test "trans check" =
   [%expect
     {| (NRFnApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
 
-let add_data_read_mir s = match s.stmt with Decl _ -> s | _ -> s
+let decls_of_p {datavars; _} =
+  Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl
+
+let pp_ctor ppf p =
+  pf ppf
+    {|
+%s(@[<v 0>stan::io::var_context& context__,
+@ unsigned int random_seed__ = 0;
+@ std::ostream* pstream__ = nullptr) : prob_grad(0) {@]
+@ @[<v 2>
+@ typedef double local_scalar_t__;
+@ boost::ecuyer1988 base_rng__ =
+@     stan::services::util::create_rng(random_seed__, 0);
+@ (void) base_rng__;  // suppress unused var warning
+@ static const char* function__ = "%s_model_namespace::%s";
+@ (void) function__;  // dummy to suppress unused var warning |}
+    p.prog_name p.prog_name p.prog_name ;
+  pf ppf
+    {|
+@ @ // Read in data variables
+@ %a
+@ @ // Transform data variables?
+@]
+|}
+    (list ~sep:cut pp_read_data)
+    (decls_of_p p)
+
+let pp_model_private ppf p =
+  pf ppf "@ %a" (list ~sep:cut pp_decl) (decls_of_p p)
+
+let pp_model_public ppf p = pf ppf "@ %a" pp_ctor p
 
 (* XXX *)
-let pp_model ppf p = ignore (ppf, p)
+let pp_model ppf p =
+  pf ppf
+    {|
+  class %s_model : public prob_grad {
+@ @[<v 1>
+@ private:
+@ @<v 1>[%a@]
+|}
+    p.prog_name pp_model_public p ;
+  pf ppf "@ public: @ @<v 1>[@ @ ~%s_model() { }" p.prog_name ;
+  pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
+  pf ppf "%a" pp_model_public p
+
 let globals = "static int current_statement_begin__;"
 
 let usings =
@@ -494,10 +525,6 @@ using namespace stan::math;
 |}
 
 let pp_prog ppf (p : stmt_loc prog) =
-  let tvtable, datab = p.datab in
-  let datab =
-    (tvtable, datab |> add_data_read_mir |> Mir.map_toplevel_stmts trans_checks)
-  in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name globals usings pp_statement_loc p.functionsb
-    pp_model {p with datab}
+    pp_model p

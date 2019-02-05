@@ -131,6 +131,7 @@ type 'e sizedtype =
   | SArray of 'e sizedtype * 'e
 [@@deriving sexp, compare, map, hash]
 
+(** remove_size [st] converts st from a sizedtype to an unsizedtype. *)
 let rec remove_size = function
   | SInt -> UInt
   | SReal -> UReal

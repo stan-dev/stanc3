@@ -86,7 +86,8 @@ type tvtable = (string, tvdecl) Map.Poly.t [@@deriving sexp]
 
 type 's prog =
   { functionsb: 's
-  ; datab: tvtable * 's
+  ; datavars: tvtable
+  ; tdatab: tvtable * 's
   ; modelb: tvtable * 's
   ; gqb: tvtable * 's
   ; prog_name: string
@@ -105,3 +106,5 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | Block ls -> {stmt= Block (List.map ~f:(map_toplevel_stmts f) ls); sloc}
   | SList ls -> {stmt= SList (List.map ~f:(map_toplevel_stmts f) ls); sloc}
   | _ -> f {sloc; stmt}
+
+let tvdecl_to_decl {tvident; tvtype; _} = (tvident, tvtype)

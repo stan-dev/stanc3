@@ -298,11 +298,15 @@ let trans_prog filename
     and tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
     (merge_maps tvtables, coalesce (List.concat stmts))
   in
+  let datavars, datachecks = pull_tvdecls datablock in
   (* XXX probably a weird place to keep the name*)
   { prog_name= !Semantic_check.model_name
   ; prog_path= filename
   ; functionsb= trans_or_skip functionblock
-  ; datab= pull_tvdecls_multi [datablock; transformeddatablock]
+  ; datavars
+  ; tdatab=
+      (let tvtables, stmt = pull_tvdecls_multi [transformeddatablock] in
+       (tvtables, coalesce (datachecks @ [stmt])))
   ; modelb=
       (let tvtables, stmt =
          pull_tvdecls_multi [parametersblock; transformedparametersblock]
