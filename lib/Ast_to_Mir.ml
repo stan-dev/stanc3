@@ -254,11 +254,12 @@ let pull_tvdecls = function
    Local vs. Global vardecls
    So there are "local" (i.e. not top-level; not read in or written out anywhere) variable
    declarations that do not allow transformations. These are the only kind allowed in
-   the model block. There are also then top-level ones, which are the only thing you can
+   the model block, and any declarations in a Block will also be local.
+   There are also then top-level ones, which are the only thing you can
    write in both the parameters and data block. The generated quantities block allows both
    types of variable declarations and, worse, mixes in top-level ones with normal ones.
    We'll need to scan the list of declarations for top-level ones and essentially remove them
-   from the block.
+   from the block. The AST has an `is_global` flag that also tracks this.
 *)
 
 (*

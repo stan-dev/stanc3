@@ -11,6 +11,46 @@ Semantic error in file assign_real_to_int.stan, line 11, columns 2-8:
 
 Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
 
+  $ ../../../../install/default/bin/stanc bad_fundef_returntypes1.stan
+
+Semantic error in file bad_fundef_returntypes1.stan, line 2, column 13 to line 6, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo() {
+                      ^
+     3:      return {1};
+     4:      real x  = 54;
+   -------------------------------------------------
+
+Branches of function definition need to have the same return type. Instead, found return types int[] and int.
+
+  $ ../../../../install/default/bin/stanc bad_fundef_returntypes2.stan
+
+Semantic error in file bad_fundef_returntypes2.stan, line 3, column 4 to line 6, column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo() {
+     3:      if (215)
+             ^
+     4:        return 24;
+     5:      else
+   -------------------------------------------------
+
+Branches of function definition need to have the same return type. Instead, found return types int and int[].
+
+  $ ../../../../install/default/bin/stanc bad_fundef_returntypes3.stan
+
+Semantic error in file bad_fundef_returntypes3.stan, line 2, column 13 to line 6, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo() {
+                      ^
+     3:      if (215)
+     4:        return 24;
+   -------------------------------------------------
+
+Branches of function definition need to have the same return type. Instead, found return types int and int[].
+
   $ ../../../../install/default/bin/stanc bad_prob_fun_suffix.stan
 
 Semantic error in file bad_prob_fun_suffix.stan, line 10, columns 2-19:
@@ -1047,7 +1087,7 @@ Syntax error in file functions-bad0.stan, line 2, columns 10-11, parsing error:
      4:    }
    -------------------------------------------------
 
-(Non-void) type expected function argument declaration.
+(Non-void) type expected in function argument declaration.
 
 
   $ ../../../../install/default/bin/stanc functions-bad1.stan
