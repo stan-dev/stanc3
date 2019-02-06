@@ -4,12 +4,6 @@ open Core_kernel
 open Mir
 open Format
 
-(* XXX Step one here could be to do another pass over the MIR:
-   1. Add required For loops for check_ functions, etc.
-   1. Add For loops for reading data in, writing data out
-   1. Add curr_location__ setting statements so we can elim them
-*)
-
 let comma ppf () = fprintf ppf ",@ "
 let newline ppf () = fprintf ppf "@;"
 let semi_new ppf () = fprintf ppf "@;"
@@ -163,19 +157,16 @@ let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
   emit_str ppf " catch const std::exception& e) " ;
   emit_block ppf (emit_err, err_arg)
 
-let emit_runtime_exception ppf =
-  fprintf ppf "std::runtime_error(std::string(%s) + e.what())"
+let emit_located_msg ppf msg =
+  fprintf ppf
+    {|stan::lang::rethrow_located(
+    std::runtime_error(std::string(%s) + e.what(), current_statement__);
+// Next line prevents compiler griping about no return
+throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+|}
+  @@ Option.value ~default:"e" msg
 
 let emit_located_error ppf (emit_contents, contents_arg, msg) =
-  let emit_located_msg ppf msg =
-    fprintf ppf
-      {|stan::lang::rethrow_located(%a, current_statement__);
-@ // Next line prevents compiler griping about no return
-@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
-|}
-      emit_option
-      (emit_runtime_exception, msg, "e")
-  in
   emit_error_wrapper ppf (emit_contents, contents_arg, emit_located_msg, msg)
 
 let emit_statement emit_statement_with_meta ppf s =
@@ -254,6 +245,9 @@ let emit_statement emit_statement_with_meta ppf s =
         , body )
 
 let rec emit_statement_loc ppf {sloc; stmt} =
+  (*
+  Sexp.to_string_hum [%sexp (stmt : stmt_loc statement)] |> print_endline ;
+*)
   fprintf ppf "current_statement_loc__ = \"%s\";@;" sloc ;
   emit_statement emit_statement_loc ppf stmt
 
@@ -348,11 +342,10 @@ let%expect_test "udf" =
         (void) DUMMY_VAR__;  // suppress unused var warning
         int current_statement_begin__ = -1;
         try {
-            stan::lang::rethrow_located(e, current_statement__);
-
-            // Next line prevents compiler griping about no return
-
-            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+            stan::lang::rethrow_located(
+        std::runtime_error(std::string(e) + e.what(), current_statement__);
+    // Next line prevents compiler griping about no return
+    throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
         } catch const std::exception& e) {
             return add(x, 1);

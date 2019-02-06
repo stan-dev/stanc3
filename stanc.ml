@@ -9,30 +9,35 @@ let version = "stanc version 3.0 alpha"
 let name = "stanc"
 
 (** The usage message. *)
-let usage = "Usage: " ^ name ^ " [option] ... [file] ..."
+let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
-(** A list of files to be loaded and run. *)
-let files = ref []
+let model_file = ref ""
+let pretty_print_program = ref false
+let dump_mir = ref false
+let output_file = ref ""
 
 (** Some example command-line options here *)
 let options =
   Arg.align
     [ ( "--debug-lex"
-      , Arg.Unit (fun () -> Debugging.lexer_logging := true)
+      , Arg.Set Debugging.lexer_logging
       , " For debugging purposes: print the lexer actions" )
     ; ( "--debug-parse"
-      , Arg.Unit (fun () -> Debugging.grammar_logging := true)
+      , Arg.Set Debugging.grammar_logging
       , " For debugging purposes: print the parser actions" )
     ; ( "--debug-ast"
-      , Arg.Unit (fun () -> Debugging.ast_printing := true)
+      , Arg.Set Debugging.ast_printing
       , " For debugging purposes: print the undecorated AST, before semantic \
          checking" )
     ; ( "--debug-decorated-ast"
-      , Arg.Unit (fun () -> Debugging.typed_ast_printing := true)
+      , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
+    ; ( "--dump-mir"
+      , Arg.Set dump_mir
+      , " For debugging purposes: print the MIR." )
     ; ( "--auto-format"
-      , Arg.Unit (fun () -> Debugging.pretty_print_program := true)
+      , Arg.Set pretty_print_program
       , " Pretty prints the program to the console" )
     ; ( "--version"
       , Arg.Unit
@@ -41,20 +46,15 @@ let options =
             exit 1 )
       , " Display stanc version number" )
     ; ( "--name"
-      , Arg.String (fun str -> Semantic_check.model_name := str)
+      , Arg.Set_string Semantic_check.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--o"
-      , Arg.String
-          (fun _ ->
-            print_endline "TODO: not yet implemented" ;
-            assert false )
+      , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
          \"$name.cpp\")" )
     ; ( "--allow_undefined"
-      , Arg.Unit
-          (fun () ->
-            Semantic_check.check_that_all_functions_have_definition := false )
+      , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include_paths"
       , Arg.String
@@ -64,20 +64,15 @@ let options =
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" ) ]
 
-(** Add a file to the list of files to be loaded, and record whether it should
-      be processed in interactive mode. *)
-let add_file filename = files := filename :: !files
+let model_file_err () =
+  Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
+  exit 127
+
+let add_file filename =
+  if !model_file = "" then model_file := filename else model_file_err ()
 
 (** ad directives from the given file. *)
 let use_file filename =
-  let _ =
-    if !Semantic_check.model_name = "" then
-      Semantic_check.model_name :=
-        String.drop_suffix
-          (List.hd_exn (List.rev (String.split filename ~on:'/')))
-          5
-        ^ "_model"
-  in
   let ast =
     try Parse.parse_file Parser.Incremental.program filename
     with Errors.SyntaxError err ->
@@ -85,7 +80,8 @@ let use_file filename =
       exit 1
   in
   let _ = Debugging.ast_logger ast in
-  let _ = Debugging.auto_formatter ast in
+  if !pretty_print_program then
+    print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
     try Semantic_check.semantic_check_program ast
     with Errors.SemanticError err ->
@@ -93,21 +89,24 @@ let use_file filename =
       exit 1
   in
   let _ = Debugging.typed_ast_logger typed_ast in
-  let mir = Ast_to_Mir.trans_prog filename typed_ast in
-  (*let _ = Stan_math_backend.emit_prog Format.str_formatter mir in
-    let cpp = Format.flush_str_formatter () in
-    print_string cpp
-  *)
-  ignore mir
+  if not !pretty_print_program then (
+    let mir = Ast_to_Mir.trans_prog filename typed_ast in
+    if !dump_mir then
+      Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+    let cpp = Format.asprintf "%a" Stan_math_backend.emit_prog mir in
+    Out_channel.write_all !output_file ~data:cpp )
 
-(** Main program *)
+let remove_dotstan s = String.drop_suffix s 5
+
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
-  (* Files were listed in the wrong order, so we reverse them *)
-  files := List.rev !files ;
-  (* Run and load all the specified files. *)
-  let _ = List.map ~f:use_file !files in
-  ()
+  if !model_file = "" then model_file_err () ;
+  if !Semantic_check.model_name = "" then
+    Semantic_check.model_name :=
+      remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
+      ^ "_model" ;
+  if !output_file = "" then output_file := remove_dotstan !model_file ^ ".cpp" ;
+  use_file !model_file
 
-let _ = main ()
+let () = main ()
