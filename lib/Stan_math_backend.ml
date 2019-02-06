@@ -120,9 +120,7 @@ let pp_arg ppf ((adtype, name, st), idx) =
   pf ppf "const %a& %s" (pp_unsizedtype adstr) st name
 
 let pp_template_decls ppf ts =
-  pf ppf "@[<hov>template <%a>@]@ "
-    (list ~sep:comma (fun ppf t -> pf ppf "typename %s" t))
-    ts
+  pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma (fmt "typename %s")) ts
 
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
