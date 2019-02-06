@@ -196,18 +196,6 @@ let rec trans_checks cvarname ctype t =
   | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
   | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
 
-(** Adds Mir statements that validate the variable once it has been read.
-    The code to read it in is emitted in the backend.contents
-    Here we intentionally only check declarations at the top level, i.e.
-    we only recurse into blocks and lists as we don't care about other declarations.
-*)
-let tvdecl_checks {tvident; tvtrans; tvtype; tvloc} =
-  let with_sloc stmt = {sloc= tvloc; stmt} in
-  let check_stmts =
-    List.map ~f:with_sloc (trans_checks tvident tvtype tvtrans)
-  in
-  with_sloc (SList check_stmts)
-
 let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
   match stmt_typed with
   | Ast.VarDecl
@@ -227,6 +215,18 @@ let mktvtable lst =
   List.(filter_opt (map ~f:trans_tvdecl lst))
   |> List.map ~f:(fun t -> (t.tvident, t))
   |> Map.Poly.of_alist_exn
+
+(** Adds Mir statements that validate the variable once it has been read.
+    The code to read it in is emitted in the backend.contents
+    Here we intentionally only check declarations at the top level, i.e.
+    we only recurse into blocks and lists as we don't care about other declarations.
+*)
+let tvdecl_checks {tvident; tvtrans; tvtype; tvloc} =
+  let with_sloc stmt = {sloc= tvloc; stmt} in
+  let check_stmts =
+    List.map ~f:with_sloc (trans_checks tvident tvtype tvtrans)
+  in
+  with_sloc (SList check_stmts)
 
 let pull_tvdecls = function
   | None -> (Map.Poly.empty, [])
@@ -251,19 +251,21 @@ let pull_tvdecls = function
    * model -> no constraints allowed (not even corr_matrix et al); not visible
    * gq -> declared and checked in write_array, shows up as param in some methods
 
+   Local vs. Global vardecls
    So there are "local" (i.e. not top-level; not read in or written out anywhere) variable
    declarations that do not allow transformations. These are the only kind allowed in
-   the model block. There are also then top-level ones, which are the only thing you can
+   the model block, and any declarations in a Block will also be local.
+   There are also then top-level ones, which are the only thing you can
    write in both the parameters and data block. The generated quantities block allows both
    types of variable declarations and, worse, mixes in top-level ones with normal ones.
    We'll need to scan the list of declarations for top-level ones and essentially remove them
-   from the block.
+   from the block. The AST has an `is_global` flag that also tracks this.
 *)
 
 (*
    There are at least three places where we currently generate redundant code:
    - checks and validation of data and bounds
-   - assignment of newly initialized stuff to 0, which may immediately be filled
+   - assignment of newly declared vars, which may immediately be filled
    - setting the current line number
 
    I think in general we'd like to try reifying these things in the MIR. The hope here
@@ -294,7 +296,7 @@ let trans_prog filename
     let merge_maps maps =
       List.map ~f:Map.Poly.to_alist maps
       |> List.concat |> Map.Poly.of_alist_exn
-    and tvtables, stmts = List.map ~f:pull_tvdecls blocks |> List.unzip in
+    and tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
     (merge_maps tvtables, coalesce (List.concat stmts))
   in
   (* XXX probably a weird place to keep the name*)

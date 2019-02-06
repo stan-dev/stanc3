@@ -93,7 +93,7 @@ type 's prog =
   ; prog_path: string }
 [@@deriving sexp]
 
-type stmt_loc = {sloc: string; stmt: stmt_loc statement}
+type stmt_loc = {sloc: string sexp_opaque; stmt: stmt_loc statement}
 [@@deriving sexp, hash]
 
 (* ===================== Some helper functions ====================== *)

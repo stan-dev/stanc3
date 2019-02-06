@@ -25,10 +25,3 @@ let typed_ast_to_string x =
 
 let typed_ast_logger t =
   if !typed_ast_printing then print_endline (typed_ast_to_string t)
-
-(* Controls whether an auto-formatted program will be pretty printed *)
-let pretty_print_program = ref false
-
-let auto_formatter t =
-  if !pretty_print_program then
-    print_endline (Pretty_printing.pretty_print_program t)
