@@ -2,77 +2,59 @@
 
 open Core_kernel
 open Mir
-open Format
+open Fmt
 
-let comma ppf () = fprintf ppf ",@ "
-let newline ppf () = fprintf ppf "@;"
-let semi_new ppf () = fprintf ppf "@;"
-let emit_str ppf s = fprintf ppf "%s" s
 let zero = Lit (Int, "0")
 
-let emit_option ppf (emitter, opt, default) =
-  match opt with
-  | Some x -> fprintf ppf "%a" emitter x
-  | None -> emit_str ppf default
-
-let rec emit_unsizedtype ad ppf = function
-  | Ast.UInt | UReal -> emit_str ppf ad
-  | UArray t -> fprintf ppf "std::vector<%a>" (emit_unsizedtype ad) t
-  | UMatrix -> fprintf ppf "Eigen::Matrix<%s, -1, -1>" ad
-  | URowVector -> fprintf ppf "Eigen::Matrix<%s, 1, -1>" ad
-  | UVector -> fprintf ppf "Eigen::Matrix<%s, -1, 1>" ad
+let rec pp_unsizedtype ad ppf = function
+  | Ast.UInt | UReal -> string ppf ad
+  | UArray t -> pf ppf "std::vector<%a>" (pp_unsizedtype ad) t
+  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" ad
+  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" ad
+  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" ad
   | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
 
 let%expect_test "emit function type raises" =
-  ( match emit_unsizedtype "sars" str_formatter Ast.UMathLibraryFunction with
-  | () -> print_endline (flush_str_formatter ())
+  ( match pp_unsizedtype "sars" stdout Ast.UMathLibraryFunction with
+  | () -> ()
   | exception e -> print_s [%sexp (e : exn)] ) ;
   [%expect {| ((x UMathLibraryFunction) "not implemented yet") |}]
 
-let emit_call ppf (name, emit_args, args) =
-  fprintf ppf "%s(@[<hov>%a@])" name emit_args args
+let pp_call ppf (name, pp_args, args) =
+  pf ppf "%s(@[<hov>%a@])" name pp_args args
 
-let rec emit_expr ppf s =
+let rec pp_expr ppf s =
   match s with
-  | Var s -> emit_str ppf s
-  | Lit (Str, s) -> fprintf ppf "\"%s\"" s
-  | Lit (_, s) -> emit_str ppf s
-  | FnApp (fname, args) ->
-      emit_call ppf (fname, pp_print_list ~pp_sep:comma emit_expr, args)
+  | Var s -> string ppf s
+  | Lit (Str, s) -> pf ppf "\"%s\"" s
+  | Lit (_, s) -> string ppf s
+  | FunApp (fname, args) -> pp_call ppf (fname, list ~sep:comma pp_expr, args)
   | BinOp (e1, op, e2) ->
-      fprintf ppf "%a %s %a" emit_expr e1
-        (Operators.operator_name op)
-        emit_expr e2
+      pf ppf "%a %s %a" pp_expr e1 (Operators.operator_name op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
-      fprintf ppf "(%a) ? (%a) : (%a)" emit_expr cond emit_expr ifb emit_expr
-        elseb
+      pf ppf "(%a) ? (%a) : (%a)" pp_expr cond pp_expr ifb pp_expr elseb
   | Indexed (e, idcs) ->
-      fprintf ppf "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
-        emit_expr e emit_indices idcs emit_expr e
+      pf ppf "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
+        pp_expr e pp_indices idcs pp_expr e
 
-and emit_index ppf idx =
-  let idx_phrase fmt idtype =
-    fprintf ppf fmt ("stan::model::index_" ^ idtype)
-  in
+and pp_index ppf idx =
+  let idx_phrase fmt idtype = pf ppf fmt ("stan::model::index_" ^ idtype) in
   match idx with
   | All -> idx_phrase "%s" "omni()"
-  | Single e -> idx_phrase "%s(%a)" "uni" emit_expr e
-  | Upfrom e -> idx_phrase "%s(%a)" "min" emit_expr e
-  | Downfrom e -> idx_phrase "%s(%a)" "max" emit_expr e
-  | Between (e1, e2) ->
-      idx_phrase "%s(%a, %a)" "min_max" emit_expr e1 emit_expr e2
-  | MultiIndex e -> idx_phrase "%s(%a)" "multi" emit_expr e
+  | Single e -> idx_phrase "%s(%a)" "uni" pp_expr e
+  | Upfrom e -> idx_phrase "%s(%a)" "min" pp_expr e
+  | Downfrom e -> idx_phrase "%s(%a)" "max" pp_expr e
+  | Between (e1, e2) -> idx_phrase "%s(%a, %a)" "min_max" pp_expr e1 pp_expr e2
+  | MultiIndex e -> idx_phrase "%s(%a)" "multi" pp_expr e
 
-and emit_indices ppf = function
-  | [] -> fprintf ppf "stan::model::nil_index_list()"
+and pp_indices ppf = function
+  | [] -> pf ppf "stan::model::nil_index_list()"
   | hd :: tail ->
-      fprintf ppf "stan::model::cons_list(%a,@ %a)" emit_index hd emit_indices
-        tail
+      pf ppf "stan::model::cons_list(%a,@ %a)" pp_index hd pp_indices tail
 
 let%expect_test "multi index" =
   Indexed (Var "vec", [MultiIndex (Var "intarr1"); MultiIndex (Var "intarr2")])
-  |> fprintf str_formatter "%a" emit_expr ;
-  flush_str_formatter () |> print_endline ;
+  |> strf "%a" pp_expr |> print_endline ;
   [%expect
     {|
     stan::model::rvalue(vec,
@@ -85,50 +67,43 @@ let rec stantype_prim_str = function
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
-let emit_prim_stantype ppf st = emit_unsizedtype (stantype_prim_str st) ppf st
+let pp_prim_stantype ppf st = pp_unsizedtype (stantype_prim_str st) ppf st
+let pp_block ppf (pp_body, body) = pf ppf "{@;<1 4>@[<v>%a@]@,}" pp_body body
 
-let emit_block ppf (emit_body, body) =
-  fprintf ppf "{@;<1 4>@[<v>%a@]@,}" emit_body body
-
-let emit_for_loop ppf (loopvar, lower, upper, emit_body, body) =
-  fprintf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
-    emit_expr lower loopvar emit_expr upper loopvar ;
-  fprintf ppf "@;<0 4>@[<v>%a@]@]" emit_body body
+let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
+  pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
+    pp_expr lower loopvar pp_expr upper loopvar ;
+  pf ppf "@;<0 4>@[<v>%a@]@]" pp_body body
 
 (* XXX This should probably recursively build up a statement For loop instead...*)
-let rec emit_run_code_per_el ?depth:(d = 0) emit_code_per_element ppf (name, st)
-    =
+let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let mkloopvar d = sprintf "i_%d__" d in
   let loopvar = mkloopvar d in
   (*let for_loop = {loopvar; lower= zero; upper=dim; body}
 *)
   match st with
-  | Ast.SInt | SReal -> fprintf ppf "%a" emit_code_per_element name
+  | Ast.SInt | SReal -> pf ppf "%a" pp_code_per_element name
   | SVector dim | SRowVector dim ->
-      emit_for_loop ppf
-        ( loopvar
-        , zero
-        , dim
-        , emit_code_per_element
-        , sprintf "%s[%s]" name loopvar )
+      pp_for_loop ppf
+        (loopvar, zero, dim, pp_code_per_element, sprintf "%s[%s]" name loopvar)
   | SMatrix (dim1, dim2) ->
       let loopvar2 = mkloopvar (d + 1) in
-      emit_for_loop ppf
+      pp_for_loop ppf
         ( loopvar
         , zero
         , dim1
-        , emit_for_loop
+        , pp_for_loop
         , ( loopvar2
           , zero
           , dim2
-          , emit_code_per_element
+          , pp_code_per_element
           , sprintf "%s(%s, %s)" name loopvar loopvar2 ) )
   | SArray (st, dim) ->
-      emit_for_loop ppf
+      pp_for_loop ppf
         ( loopvar
         , zero
         , dim
-        , emit_run_code_per_el ~depth:(d + 1) emit_code_per_element
+        , pp_run_code_per_el ~depth:(d + 1) pp_code_per_element
         , (sprintf "%s[%s]" name loopvar, st) )
 
 let rec integer_el_type = function
@@ -136,29 +111,27 @@ let rec integer_el_type = function
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 
-let emit_arg ppf ((adtype, name, st), idx) =
+let pp_arg ppf ((adtype, name, st), idx) =
   let adstr =
     match adtype with
     | Ast.DataOnly -> stantype_prim_str st
     | Ast.AutoDiffable -> sprintf "T%d__" idx
   in
-  fprintf ppf "const %a& %s" (emit_unsizedtype adstr) st name
+  pf ppf "const %a& %s" (pp_unsizedtype adstr) st name
 
-let emit_template_decls ppf ts =
-  fprintf ppf "@[<hov>template <%a>@]@ "
-    (pp_print_list ~pp_sep:comma (fun ppf t -> fprintf ppf "typename %s" t))
-    ts
+let pp_template_decls ppf =
+  pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma (fmt "typename %s"))
 
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
-let emit_error_wrapper ppf (emit_err, err_arg, emit_contents, contents_arg) =
-  emit_str ppf "try " ;
-  emit_block ppf (emit_contents, contents_arg) ;
-  emit_str ppf " catch const std::exception& e) " ;
-  emit_block ppf (emit_err, err_arg)
+let pp_error_wrapper ppf (pp_err, err_arg, pp_contents, contents_arg) =
+  string ppf "try " ;
+  pp_block ppf (pp_contents, contents_arg) ;
+  string ppf " catch const std::exception& e) " ;
+  pp_block ppf (pp_err, err_arg)
 
-let emit_located_msg ppf msg =
-  fprintf ppf
+let pp_located_msg ppf msg =
+  pf ppf
     {|stan::lang::rethrow_located(
     std::runtime_error(std::string(%s) + e.what(), current_statement__);
 // Next line prevents compiler griping about no return
@@ -166,73 +139,66 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
   @@ Option.value ~default:"e" msg
 
-let emit_located_error ppf (emit_contents, contents_arg, msg) =
-  emit_error_wrapper ppf (emit_contents, contents_arg, emit_located_msg, msg)
+let pp_located_error ppf (pp_contents, contents_arg, msg) =
+  pp_error_wrapper ppf (pp_contents, contents_arg, pp_located_msg, msg)
 
-let emit_statement emit_statement_with_meta ppf s =
-  let emit_stmt_list =
-    pp_print_list ~pp_sep:newline emit_statement_with_meta
-  in
+let pp_statement pp_statement_with_meta ppf s =
+  let pp_stmt_list = list ~sep:cut pp_statement_with_meta in
   match s with
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
-      fprintf ppf "%a = %a;" emit_expr assignee emit_expr rhs
-  | NRFnApp (fname, args) ->
-      fprintf ppf "%s(%a);" fname (pp_print_list ~pp_sep:comma emit_expr) args
-  | Break -> emit_str ppf "break;"
-  | Continue -> emit_str ppf "continue;"
-  | Return e -> fprintf ppf "return %a;" emit_option (emit_expr, e, "")
+      pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
+  | NRFunApp (fname, args) ->
+      pf ppf "%s(%a);" fname (list ~sep:comma pp_expr) args
+  | Break -> string ppf "break;"
+  | Continue -> string ppf "continue;"
+  | Return e -> pf ppf "return %a;" (option pp_expr) e
   | Skip -> ()
   | MarkLocation _ -> () (* XXX *)
   | Check _ -> () (* XXX *)
   | IfElse (cond, ifbranch, elsebranch) ->
-      let emit_else ppf x =
-        fprintf ppf " else {\n %a;\n}" emit_statement_with_meta x
+      let pp_else ppf x =
+        pf ppf " else {\n %a;\n}" pp_statement_with_meta x
       in
-      fprintf ppf "if (%a) %a %a\n" emit_expr cond emit_block
-        (emit_statement_with_meta, ifbranch)
-        emit_option
-        (emit_else, elsebranch, "")
+      pf ppf "if (%a) %a %a\n" pp_expr cond pp_block
+        (pp_statement_with_meta, ifbranch)
+        (option pp_else) elsebranch
   | While (cond, body) ->
-      fprintf ppf "while (%a) %a" emit_expr cond emit_block
-        (emit_statement_with_meta, body)
+      pf ppf "while (%a) %a" pp_expr cond pp_block
+        (pp_statement_with_meta, body)
   | For {loopvar; lower; upper; body} ->
-      let lv =
-        fprintf str_formatter "%a" emit_expr loopvar ;
-        flush_str_formatter ()
-      in
-      emit_for_loop ppf (lv, lower, upper, emit_statement_with_meta, body)
-  | Block ls -> emit_block ppf (emit_stmt_list, ls)
-  | SList ls -> emit_stmt_list ppf ls
-  | Decl {adtype; vident; st} ->
-      ignore adtype ;
-      fprintf ppf "%a %s;" emit_prim_stantype (Ast.remove_size st) vident
-  | FunDef {returntype; name; arguments; body} ->
+      let lv = strf "%a" pp_expr loopvar in
+      pp_for_loop ppf (lv, lower, upper, pp_statement_with_meta, body)
+  | Block ls -> pp_block ppf (pp_stmt_list, ls)
+  | SList ls -> pp_stmt_list ppf ls
+  | Decl {decl_adtype; decl_id; decl_type} ->
+      ignore decl_adtype ;
+      pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size decl_type) decl_id
+  | FunDef {fdrt; fdname; fdargs; fdbody} ->
       let argtypetemplates =
-        List.mapi ~f:(fun i _ -> sprintf "T%d__" i) arguments
+        List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
-      emit_template_decls ppf argtypetemplates ;
-      fprintf ppf "%a@ " emit_option
-        ( emit_unsizedtype "typename boost::math::tools::promote_args<>::type"
-        , returntype
-        , "void" ) ;
+      pp_template_decls ppf argtypetemplates ;
+      pf ppf "%a@ "
+        (option ~none:(const string "void")
+           (pp_unsizedtype "typename boost::math::tools::promote_args<>::type"))
+        fdrt ;
       (* XXX this is all so ugly: *)
-      emit_call ppf
-        ( name
+      pp_call ppf
+        ( fdname
         , (fun ppf (args, extra_arg) ->
-            (pp_print_list ~pp_sep:comma emit_arg) ppf (with_idx args) ;
-            fprintf ppf ",@ %s" extra_arg )
-        , (arguments, "std::ostream* pstream__") ) ;
-      fprintf ppf " " ;
-      emit_block ppf
-        ( (fun ppf body ->
-            let text = fprintf ppf "%s@;" in
-            fprintf ppf
+            (list ~sep:comma pp_arg) ppf (with_idx args) ;
+            pf ppf ",@ %s" extra_arg )
+        , (fdargs, "std::ostream* pstream__") ) ;
+      pf ppf " " ;
+      pp_block ppf
+        ( (fun ppf fdbody ->
+            let text = pf ppf "%s@;" in
+            pf ppf
               "@[<hv 8>typedef typename \
                boost::math::tools::promote_args<%a>::type \
                local_scalar_t__;@]@ "
-              (pp_print_list ~pp_sep:comma emit_str)
-              argtypetemplates ;
+              (list ~sep:comma string) argtypetemplates ;
             text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
             text "const static bool propto__ = true;" ;
             text "(void) propto__;" ;
@@ -241,37 +207,37 @@ let emit_statement emit_statement_with_meta ppf s =
                DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
             text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
             text "int current_statement_begin__ = -1;" ;
-            emit_located_error ppf (emit_statement_with_meta, body, None) )
-        , body )
+            pp_located_error ppf (pp_statement_with_meta, fdbody, None) )
+        , fdbody )
 
-let rec emit_statement_loc ppf {sloc; stmt} =
+let rec pp_statement_loc ppf {sloc; stmt} =
   (*
   Sexp.to_string_hum [%sexp (stmt : stmt_loc statement)] |> print_endline ;
 *)
-  fprintf ppf "current_statement_loc__ = \"%s\";@;" sloc ;
-  emit_statement emit_statement_loc ppf stmt
+  pf ppf "current_statement_loc__ = \"%s\";@;" sloc ;
+  pp_statement pp_statement_loc ppf stmt
 
 let%expect_test "location propagates" =
   {sloc= "hi"; stmt= Block [{stmt= Break; sloc= "lo"}]}
-  |> fprintf str_formatter "@[<v>%a@]" emit_statement_loc ;
-  flush_str_formatter () |> print_endline ;
+  |> strf "@[<v>%a@]" pp_statement_loc
+  |> print_endline ;
   [%expect
     {|
-    current_statement_loc__ = "hi";
-    {
-        current_statement_loc__ = "lo";
-        break;
-    } |}]
+      current_statement_loc__ = "hi";
+      {
+          current_statement_loc__ = "lo";
+          break;
+      } |}]
 
 type stmt_plain = {splain: stmt_plain statement}
 
-let rec emit_statement_plain ppf {splain} =
-  emit_statement emit_statement_plain ppf splain
+let rec pp_statement_plain ppf {splain} =
+  pp_statement pp_statement_plain ppf splain
 
 let%expect_test "if" =
-  {splain= IfElse (Var "true", {splain= NRFnApp ("print", [Var "x"])}, None)}
-  |> fprintf str_formatter "@[<v>%a@]" emit_statement_plain ;
-  flush_str_formatter () |> print_endline ;
+  {splain= IfElse (Var "true", {splain= NRFunApp ("print", [Var "x"])}, None)}
+  |> strf "@[<v>%a@]" pp_statement_plain
+  |> print_endline ;
   [%expect {|
     if (true) {
         print(x);
@@ -279,19 +245,19 @@ let%expect_test "if" =
 
 let%expect_test "run code per element" =
   let assign ppf x =
-    emit_statement_plain ppf
+    pp_statement_plain ppf
       { splain=
           Block
             [ { splain=
                   Assignment
                     (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
               }
-            ; {splain= NRFnApp ("print", [Var x])} ] }
+            ; {splain= NRFunApp ("print", [Var x])} ] }
   in
-  fprintf str_formatter "@[<v>%a@]"
-    (emit_run_code_per_el assign)
-    ("dubvec", SArray (SArray (SMatrix (Var "Y", Var "Z"), Var "X"), Var "W")) ;
-  flush_str_formatter () |> print_endline ;
+  strf "@[<v>%a@]"
+    (pp_run_code_per_el assign)
+    ("dubvec", SArray (SArray (SMatrix (Var "Y", Var "Z"), Var "X"), Var "W"))
+  |> print_endline ;
   [%expect
     {|
     for (size_t i_0__ = 0; i_0__ < W; i_0__++)
@@ -307,26 +273,26 @@ let%expect_test "run code per element" =
                     } |}]
 
 let%expect_test "decl" =
-  {splain= Decl {adtype= AutoDiffable; vident= "i"; st= SInt}}
-  |> emit_statement_plain str_formatter ;
-  flush_str_formatter () |> print_endline ;
+  {splain= Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= SInt}}
+  |> strf "%a" pp_statement_plain
+  |> print_endline ;
   [%expect {| int i; |}]
 
 let version = "// Code generated by Stan version 2.18.0"
 let includes = "#include <stan/model/model_header.hpp>"
 
 let%expect_test "udf" =
-  fprintf str_formatter "@[<v>%a"
-    (emit_statement emit_statement_plain)
+  strf "@[<v>%a"
+    (pp_statement pp_statement_plain)
     (FunDef
-       { returntype= None
-       ; name= "sars"
-       ; arguments=
+       { fdrt= None
+       ; fdname= "sars"
+       ; fdargs=
            [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
-       ; body=
-           {splain= Return (Some (FnApp ("add", [Var "x"; Lit (Int, "1")])))}
-       }) ;
-  flush_str_formatter () |> print_endline ;
+       ; fdbody=
+           {splain= Return (Some (FunApp ("add", [Var "x"; Lit (Int, "1")])))}
+       })
+  |> print_endline ;
   [%expect
     {|
     template <typename T0__, typename T1__>
@@ -361,23 +327,20 @@ let rec basetype = function
   | UVector -> "vector_d"
   | x -> raise_s [%message "basetype not defined for " (x : unsizedtype)]
 
-let rec emit_zeroing_ctor_call ppf st =
+let rec pp_zeroing_ctor_call ppf st =
   match st with
-  | Ast.SInt | SReal -> emit_str ppf "0"
-  | SArray (t, dim) ->
-      fprintf ppf "%a, %a" emit_expr dim emit_zeroing_ctor_call t
-  | SRowVector dim | SVector dim ->
-      ignore dim ;
-      fprintf ppf "%s" "XXX todo"
+  | Ast.SInt | SReal -> string ppf "0"
+  | SArray (t, dim) -> pf ppf "%a, %a" pp_expr dim pp_zeroing_ctor_call t
+  | SRowVector dim | SVector dim -> ignore dim ; pf ppf "%s" "XXX todo"
   | SMatrix (dim1, dim2) -> ignore (dim1, dim2)
 
 (* XXX *)
 
-let emit_zero ppf (name, st) =
+let pp_zero ppf (name, st) =
   let ut = Ast.remove_size st in
-  fprintf ppf "%s = %a(%a);" name
-    (emit_unsizedtype (stantype_prim_str ut))
-    ut emit_zeroing_ctor_call st
+  pf ppf "%s = %a(%a);" name
+    (pp_unsizedtype (stantype_prim_str ut))
+    ut pp_zeroing_ctor_call st
 
 let var_context_container st =
   match basetype (Ast.remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
@@ -385,20 +348,19 @@ let var_context_container st =
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    2. Set data field to 0
-   3. find vals_%s__ from context__.vals_%s(vident)
+   3. find vals_%s__ from context__.vals_%s(decl_id)
    4. keep track of pos__
-   5. run checks on resulting vident
+   5. run checks on resulting decl_id
 *)
-let emit_read_data ppf (vident, st) =
-  fprintf ppf "%a@ " emit_zero (vident, st) ;
+let pp_read_data ppf (decl_id, st) =
+  pf ppf "%a@ " pp_zero (decl_id, st) ;
   let vals = var_context_container st in
-  let emit_read ppf loopvar = fprintf ppf "%s = %s;@ " vident loopvar in
-  fprintf ppf "%s__ = context__.%s(\"%s\");@ " vals vals vident ;
-  emit_run_code_per_el emit_read ppf (vals, st)
+  let pp_read ppf loopvar = pf ppf "%s = %s;@ " decl_id loopvar in
+  pf ppf "%s__ = context__.%s(\"%s\");@ " vals vals decl_id ;
+  pp_run_code_per_el pp_read ppf (vals, st)
 
 let%expect_test "read int N" =
-  fprintf str_formatter "@[<v>%a@]" emit_read_data ("N", Ast.SInt) ;
-  flush_str_formatter () |> print_endline ;
+  strf "@[<v>%a@]" pp_read_data ("N", Ast.SInt) |> print_endline ;
   [%expect
     {|
     N = int(0);
@@ -407,7 +369,7 @@ let%expect_test "read int N" =
 
 (*
 
-let emit_constructor ppf p = fprintf ppf {|
+let pp_constructor ppf p = pf ppf {|
 @ %s(stan::io::var_context& context__,
 @ @[<v>   unsigned int random_seed__ = 0,
 @         std::ostream* pstream__ = NULL) : prob_grad(0) {
@@ -433,13 +395,13 @@ let emit_constructor ppf p = fprintf ppf {|
 @]@ }
 |}
     p.prog_name
-    emit_located_error ((pp_print_list ~pp_sep:newline emit_read_field),
+    pp_located_error ((list ~sep:newline pp_read_field),
                         p.datab, Some "Error while reading in data: ")
-    emit_located_error ((pp_print_list ~pp_sep:newline emit_transform),
+    pp_located_error ((list ~sep:newline pp_transform),
                         p.datab, Some "Error during transformed data block: ")
 
-let emit_model ppf (p: stmt_loc prog) =
-  fprintf ppf {|
+let pp_model ppf (p: stmt_loc prog) =
+  pf ppf {|
 class %s_model : public prob_grad {
 @ @[<v 1>
 @ private:
@@ -463,8 +425,8 @@ class %s_model : public prob_grad {
 @]
 }; // model
 |} p.prog_name
-    emit_statement_loc p.datab
-    emit_constructor p
+    pp_statement_loc p.datab
+    pp_constructor p
     p.prog_name p.prog_name
 (* transform inits
    log_prob
@@ -480,11 +442,11 @@ let%expect_test "prog" =
   { functionsb= Skip
   ; params= Decl (AutoDiffable, "theta", SReal)
   ; data: ["y", SReal, "line 8"]
-  ; model: NRFnApp("print", Lit(Str, "hello world"))
+  ; model: NRFunApp("print", Lit(Str, "hello world"))
   ; gq: Skip ; tdata: Skip ; tparam: Skip
   ; prog_name: "testmodel"
   ; prog_path: "/testmodel.stan"}
-  |> emit_prog str_formatter ;
+  |> pp_prog str_formatter ;
   flush_str_formatter () |> print_endline ;
   [%expect {| sassy({4, 2}, 27.0) |}]
 *)
@@ -492,11 +454,13 @@ let%expect_test "prog" =
 (* XXX Adds declarations.
    How will this mix with all the passes matching on declarations and adding
    new statements for each one, e.g. data reading and checking in the data block?*)
-let rec array_to_for sloc (ident, st) bodyfn =
-  match st with
+let rec array_to_for sloc (ident, decl_type) bodyfn =
+  match decl_type with
   | Ast.SArray (t, dim) ->
       let loopvar = Mir.gensym () in
-      let decl = Decl {adtype= Ast.DataOnly; vident= loopvar; st} in
+      let decl =
+        Decl {decl_adtype= Ast.DataOnly; decl_id= loopvar; decl_type}
+      in
       let body = array_to_for sloc (loopvar, t) bodyfn in
       let sfor = For {loopvar= Var loopvar; lower= zero; upper= dim; body} in
       let stmts = List.map ~f:(fun stmt -> {stmt; sloc}) [decl; sfor] in
@@ -505,25 +469,27 @@ let rec array_to_for sloc (ident, st) bodyfn =
 
 let trans_checks s =
   match s.stmt with
-  | Check {cfname; cvarname; ctype; cargs} ->
+  | Check {ccfunname; ccvid; cctype; ccargs} ->
       (* XXX The function__ is weird... maybe find a better way to handle it *)
       let ckfn ident =
-        NRFnApp ("check_" ^ cfname, Var "function__" :: Var ident :: cargs)
+        NRFunApp ("check_" ^ ccfunname, Var "function__" :: Var ident :: ccargs)
       in
-      array_to_for s.sloc (cvarname, ctype) ckfn
+      array_to_for s.sloc (ccvid, cctype) ckfn
   | _ -> s
 
 let%expect_test "trans check" =
-  let cfname = "greater_or_equal" and cargs = [zero] and ctype = Ast.SInt in
-  let ck = {stmt= Check {cfname; cvarname= "N"; ctype; cargs}; sloc= ""} in
+  let ccfunname = "greater_or_equal"
+  and ccargs = [zero]
+  and cctype = Ast.SInt in
+  let ck = {stmt= Check {ccfunname; ccvid= "N"; cctype; ccargs}; sloc= ""} in
   print_s [%sexp ((trans_checks ck).stmt : stmt_loc statement)] ;
   [%expect
-    {| (NRFnApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
+    {| (NRFunApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
 
 let add_data_read_mir s = match s.stmt with Decl _ -> s | _ -> s
 
 (* XXX *)
-let emit_model ppf p = ignore (ppf, p)
+let pp_model ppf p = ignore (ppf, p)
 let globals = "static int current_statement_begin__;"
 
 let usings =
@@ -538,12 +504,11 @@ using stan::model::prob_grad;
 using namespace stan::math;
 |}
 
-let emit_prog ppf (p : stmt_loc prog) =
+let pp_prog ppf (p : stmt_loc prog) =
   let tvtable, datab = p.datab in
   let datab = add_data_read_mir datab in
   let datab = (Mir.map_toplevel_stmts trans_checks) datab in
   let datab = (tvtable, datab) in
-  fprintf ppf
-    "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name globals usings emit_statement_loc p.functionsb
-    emit_model {p with datab}
+  pf ppf "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
+    version includes p.prog_name globals usings pp_statement_loc p.functionsb
+    pp_model {p with datab}
