@@ -93,7 +93,7 @@ let use_file filename =
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
-    let cpp = Format.asprintf "%a" Stan_math_backend.emit_prog mir in
+    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp )
 
 let remove_dotstan s = String.drop_suffix s 5

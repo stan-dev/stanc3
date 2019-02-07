@@ -1,5 +1,6 @@
 #!/bin/bash
 bash -x ./docker/install_ocaml.sh
+bash -x ./docker/install_build_deps.sh
 bash -x ./docker/install_dev_deps.sh
 
 # The following looks at what packages we're missing to build stanc.exe
