@@ -107,40 +107,27 @@ let probability_distribution_name_variants id =
       [name; drop_suffix name 4 ^ "_lpmf"; drop_suffix name 4 ^ "_lpdf"]
     else [name] )
 
+let lub_rt loc rt1 rt2 =
+  match (rt1, rt2) with
+  | ReturnType UReal, ReturnType UInt | ReturnType UInt, ReturnType UReal ->
+      ReturnType UReal
+  | rt1, rt2 when rt1 = rt2 -> rt2
+  | _ ->
+      semantic_error ~loc
+        ( "Branches of function definition need to have the same return type. \
+           Instead, found return types "
+        ^ pretty_print_returntype rt1
+        ^ " and "
+        ^ pretty_print_returntype rt2
+        ^ "." )
+
 let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
-  | Complete (ReturnType UReal), Complete (ReturnType UInt)
-   |Complete (ReturnType UInt), Complete (ReturnType UReal) ->
-      Complete (ReturnType UReal)
-  | Incomplete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Incomplete (ReturnType UReal)
-   |Incomplete (ReturnType UReal), Complete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Complete (ReturnType UReal)
-   |Complete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Complete (ReturnType UInt), Incomplete (ReturnType UReal) ->
-      Incomplete (ReturnType UReal)
-  | Complete rt1, Complete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Complete rt1
+  | Complete rt1, Complete rt2 -> Complete (lub_rt loc rt1 rt2)
   | Incomplete rt1, Incomplete rt2
    |Complete rt1, Incomplete rt2
    |Incomplete rt1, Complete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Incomplete rt1
+      Incomplete (lub_rt loc rt1 rt2)
   | AnyReturnType, NoReturnType
    |NoReturnType, AnyReturnType
    |NoReturnType, NoReturnType ->
@@ -157,36 +144,10 @@ let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
 
 let try_compute_block_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
-  | Complete (ReturnType UReal), Complete (ReturnType UInt)
-   |Complete (ReturnType UInt), Complete (ReturnType UReal)
-   |Incomplete (ReturnType UReal), Complete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Complete (ReturnType UReal) ->
-      Complete (ReturnType UReal)
-  | Incomplete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Incomplete (ReturnType UInt), Incomplete (ReturnType UReal)
-   |Complete (ReturnType UReal), Incomplete (ReturnType UInt)
-   |Complete (ReturnType UInt), Incomplete (ReturnType UReal) ->
-      Incomplete (ReturnType UReal)
   | Complete rt1, Complete rt2 | Incomplete rt1, Complete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Complete rt1
+      Complete (lub_rt loc rt1 rt2)
   | Incomplete rt1, Incomplete rt2 | Complete rt1, Incomplete rt2 ->
-      if rt1 <> rt2 then
-        semantic_error ~loc
-          ( "Branches of conditional need to have the same return type. \
-             Instead, found return types "
-          ^ pretty_print_returntype rt1
-          ^ " and "
-          ^ pretty_print_returntype rt2
-          ^ "." )
-      else Incomplete rt1
+      Incomplete (lub_rt loc rt1 rt2)
   | NoReturnType, NoReturnType -> NoReturnType
   | AnyReturnType, Incomplete rt
    |Complete rt, NoReturnType

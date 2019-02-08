@@ -28,7 +28,7 @@ let rec pp_expr ppf s =
   | Var s -> string ppf s
   | Lit (Str, s) -> pf ppf "\"%s\"" s
   | Lit (_, s) -> string ppf s
-  | FnApp (fname, args) -> pp_call ppf (fname, list ~sep:comma pp_expr, args)
+  | FunApp (fname, args) -> pp_call ppf (fname, list ~sep:comma pp_expr, args)
   | BinOp (e1, op, e2) ->
       pf ppf "%a %s %a" pp_expr e1 (Operators.operator_name op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
@@ -116,10 +116,8 @@ let pp_arg ppf ((adtype, name, st), idx) =
   in
   pf ppf "const %a& %s" (pp_unsizedtype adstr) st name
 
-let pp_template_decls ppf ts =
-  pf ppf "@[<hov>template <%a>@]@ "
-    (list ~sep:comma (fun ppf t -> pf ppf "typename %s" t))
-    ts
+let pp_template_decls ppf =
+  pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma (fmt "typename %s"))
 
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
@@ -154,7 +152,7 @@ let pp_statement pp_statement_with_meta ppf s =
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
       pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
-  | NRFnApp (fname, args) ->
+  | NRFunApp (fname, args) ->
       pf ppf "%s(%a);" fname (list ~sep:comma pp_expr) args
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
@@ -177,28 +175,28 @@ let pp_statement pp_statement_with_meta ppf s =
       pp_for_loop ppf (lv, lower, upper, pp_statement_with_meta, body)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
-  | Decl {adtype; vident; st} ->
-      ignore adtype ;
-      pp_decl ppf (vident, st)
-  | FunDef {returntype; name; arguments; body} ->
+  | Decl {decl_adtype; decl_id; decl_type} ->
+      ignore decl_adtype ;
+      pp_decl ppf (decl_id, decl_type)
+  | FunDef {fdrt; fdname; fdargs; fdbody} ->
       let argtypetemplates =
-        List.mapi ~f:(fun i _ -> sprintf "T%d__" i) arguments
+        List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
       pp_template_decls ppf argtypetemplates ;
       pf ppf "%a@ "
         (option ~none:(const string "void")
            (pp_unsizedtype "typename boost::math::tools::promote_args<>::type"))
-        returntype ;
+        fdrt ;
       (* XXX this is all so ugly: *)
       pp_call ppf
-        ( name
+        ( fdname
         , (fun ppf (args, extra_arg) ->
             (list ~sep:comma pp_arg) ppf (with_idx args) ;
             pf ppf ",@ %s" extra_arg )
-        , (arguments, "std::ostream* pstream__") ) ;
+        , (fdargs, "std::ostream* pstream__") ) ;
       pf ppf " " ;
       pp_block ppf
-        ( (fun ppf body ->
+        ( (fun ppf fdbody ->
             let text = pf ppf "%s@;" in
             pf ppf
               "@[<hv 8>typedef typename \
@@ -213,8 +211,8 @@ let pp_statement pp_statement_with_meta ppf s =
                DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
             text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
             text "int current_statement_begin__ = -1;" ;
-            pp_located_error ppf (pp_statement_with_meta, body, None) )
-        , body )
+            pp_located_error ppf (pp_statement_with_meta, fdbody, None) )
+        , fdbody )
 
 let rec pp_statement_loc ppf {sloc; stmt} =
   (*
@@ -241,7 +239,7 @@ let rec pp_statement_plain ppf {splain} =
   pp_statement pp_statement_plain ppf splain
 
 let%expect_test "if" =
-  {splain= IfElse (Var "true", {splain= NRFnApp ("print", [Var "x"])}, None)}
+  {splain= IfElse (Var "true", {splain= NRFunApp ("print", [Var "x"])}, None)}
   |> strf "@[<v>%a@]" pp_statement_plain
   |> print_endline ;
   [%expect {|
@@ -258,7 +256,7 @@ let%expect_test "run code per element" =
                   Assignment
                     (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
               }
-            ; {splain= NRFnApp ("print", [Var x])} ] }
+            ; {splain= NRFunApp ("print", [Var x])} ] }
   in
   strf "@[<v>%a@]"
     (pp_run_code_per_el assign)
@@ -279,7 +277,7 @@ let%expect_test "run code per element" =
                     } |}]
 
 let%expect_test "decl" =
-  {splain= Decl {adtype= AutoDiffable; vident= "i"; st= SInt}}
+  {splain= Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= SInt}}
   |> strf "%a" pp_statement_plain
   |> print_endline ;
   [%expect {| int i; |}]
@@ -291,12 +289,12 @@ let%expect_test "udf" =
   strf "@[<v>%a"
     (pp_statement pp_statement_plain)
     (FunDef
-       { returntype= None
-       ; name= "sars"
-       ; arguments=
+       { fdrt= None
+       ; fdname= "sars"
+       ; fdargs=
            [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
-       ; body=
-           {splain= Return (Some (FnApp ("add", [Var "x"; Lit (Int, "1")])))}
+       ; fdbody=
+           {splain= Return (Some (FunApp ("add", [Var "x"; Lit (Int, "1")])))}
        })
   |> print_endline ;
   [%expect
@@ -349,10 +347,10 @@ let var_context_container st =
    1. keep track of pos__
    1. run checks on resulting vident
 *)
-let pp_read_data ppf (vident, st) =
+let pp_read_data ppf (decl_id, st) =
   let vals = var_context_container st in
-  let pp_read ppf loopvar = pf ppf "%s = %s;@ " vident loopvar in
-  pf ppf "%s__ = context__.%s(\"%s\");@ " vals vals vident ;
+  let pp_read ppf loopvar = pf ppf "%s = %s;@ " decl_id loopvar in
+  pf ppf "%s__ = context__.%s(\"%s\");@ " vals vals decl_id ;
   pp_run_code_per_el pp_read ppf (vals, st)
 
 let%expect_test "read int[N] y" =
@@ -436,11 +434,13 @@ class %s_model : public prob_grad {
 (* XXX Adds declarations.
    How will this mix with all the passes matching on declarations and adding
    new statements for each one, e.g. data reading and checking in the data block?*)
-let rec array_to_for sloc (ident, st) bodyfn =
-  match st with
+let rec array_to_for sloc (ident, decl_type) bodyfn =
+  match decl_type with
   | Ast.SArray (t, dim) ->
       let loopvar = Mir.gensym () in
-      let decl = Decl {adtype= Ast.DataOnly; vident= loopvar; st} in
+      let decl =
+        Decl {decl_adtype= Ast.DataOnly; decl_id= loopvar; decl_type}
+      in
       let body = array_to_for sloc (loopvar, t) bodyfn in
       let sfor = For {loopvar= Var loopvar; lower= zero; upper= dim; body} in
       let stmts = List.map ~f:(fun stmt -> {stmt; sloc}) [decl; sfor] in
@@ -449,20 +449,22 @@ let rec array_to_for sloc (ident, st) bodyfn =
 
 let trans_checks s =
   match s.stmt with
-  | Check {cfname; cvarname; ctype; cargs} ->
+  | Check {ccfunname; ccvid; cctype; ccargs} ->
       (* XXX The function__ is weird... maybe find a better way to handle it *)
       let ckfn ident =
-        NRFnApp ("check_" ^ cfname, Var "function__" :: Var ident :: cargs)
+        NRFunApp ("check_" ^ ccfunname, Var "function__" :: Var ident :: ccargs)
       in
-      array_to_for s.sloc (cvarname, ctype) ckfn
+      array_to_for s.sloc (ccvid, cctype) ckfn
   | _ -> s
 
 let%expect_test "trans check" =
-  let cfname = "greater_or_equal" and cargs = [zero] and ctype = Ast.SInt in
-  let ck = {stmt= Check {cfname; cvarname= "N"; ctype; cargs}; sloc= ""} in
+  let ccfunname = "greater_or_equal"
+  and ccargs = [zero]
+  and cctype = Ast.SInt in
+  let ck = {stmt= Check {ccfunname; ccvid= "N"; cctype; ccargs}; sloc= ""} in
   print_s [%sexp ((trans_checks ck).stmt : stmt_loc statement)] ;
   [%expect
-    {| (NRFnApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
+    {| (NRFunApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
 
 let decls_of_p {datavars; _} =
   Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl

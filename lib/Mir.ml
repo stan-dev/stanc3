@@ -34,7 +34,7 @@ and index =
 and expr =
   | Var of string
   | Lit of litType * string
-  | FnApp of string * expr list
+  | FunApp of string * expr list
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
@@ -48,11 +48,11 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 [@@@ocaml.warning "-A"]
 
 type constraint_check =
-  {cfname: string; cvarname: string; ctype: sizedtype; cargs: expr list}
+  {ccfunname: string; ccvid: string; cctype: sizedtype; ccargs: expr list}
 
 and 's statement =
   | Assignment of expr * expr
-  | NRFnApp of string * expr list
+  | NRFunApp of string * expr list
   | Check of constraint_check
   | MarkLocation of string
   | Break
@@ -70,31 +70,43 @@ and 's statement =
   (* An SList does not share any of Block's semantics - it is just multiple
      (ordered!) statements*)
   | SList of 's list
-  | Decl of {adtype: adtype; vident: string; st: sizedtype}
+  | Decl of {decl_adtype: adtype; decl_id: string; decl_type: sizedtype}
   | FunDef of
-      { returntype: unsizedtype option
-      ; name: string
-      ; arguments: (adtype * string * unsizedtype) list
-      ; body: 's }
+      { fdrt: unsizedtype option
+      ; fdname: string
+      ; fdargs: (adtype * string * unsizedtype) list
+      ; fdbody: 's }
 [@@deriving sexp, hash]
 
-type tvdecl =
+(** A "top var" is a global variable visible to the I/O of Stan.
+   Local vs. Global vardecls
+   There are "local" (i.e. not top-level; not read in or written out anywhere) variable
+   declarations that do not allow transformations. These are the only kind allowed in
+   the model block, and any declarations in a Block will also be local.
+   There are also then top-level ones, which are the only thing you can
+   write in both the parameters and data block. The generated quantities block allows both
+   types of variable declarations and, worse, mixes in top-level ones with normal ones.
+   We'll need to scan the list of declarations for top-level ones and essentially remove them
+   from the block. The AST has an `is_global` flag that also tracks this.
+*)
+type top_var_decl =
   {tvident: string; tvtype: sizedtype; tvtrans: transformation; tvloc: string}
 [@@deriving sexp]
 
-type tvtable = (string, tvdecl) Map.Poly.t [@@deriving sexp]
+type top_var_table = (string, top_var_decl) Map.Poly.t [@@deriving sexp]
 
 type 's prog =
   { functionsb: 's
-  ; datavars: tvtable
-  ; tdatab: tvtable * 's
-  ; modelb: tvtable * 's
-  ; gqb: tvtable * 's
+  ; datavars: top_var_table
+  ; tdatab: top_var_table * 's
+  ; modelb: top_var_table * 's
+  ; gqb: top_var_table * 's
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp]
 
-type stmt_loc = {sloc: string sexp_opaque; stmt: stmt_loc statement}
+type stmt_loc =
+  {sloc: string sexp_opaque [@compare.ignore]; stmt: stmt_loc statement}
 [@@deriving sexp, hash]
 
 (* ===================== Some helper functions ====================== *)

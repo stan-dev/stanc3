@@ -2958,7 +2958,7 @@ program: FUNCTIONBLOCK LBRACE VOID TRUNCATE LPAREN WHILE
 ## return_type identifier LPAREN
 ##
 
-(Non-void) type expected function argument declaration.
+(Non-void) type expected in function argument declaration.
 
 program: FUNCTIONBLOCK LBRACE VOID TRUNCATE WHILE
 ##
@@ -13421,7 +13421,7 @@ program: TRANSFORMEDDATABLOCK WHILE
 ## TRANSFORMEDDATABLOCK
 ##
 
-We expect "{" after "transfored data".
+We expect "{" after "transformed data".
 
 program: TRANSFORMEDPARAMETERSBLOCK LBRACE RBRACE ELTTIMESASSIGN
 ##
@@ -13457,7 +13457,7 @@ program: TRANSFORMEDPARAMETERSBLOCK WHILE
 ## TRANSFORMEDPARAMETERSBLOCK
 ##
 
-We expect "{" after "transfored parameters".
+We expect "{" after "transformed parameters".
 
 program: MODELBLOCK LBRACE REAL TRUNCATE LBRACK TRUNCATE RBRACK ARROWASSIGN
 ##

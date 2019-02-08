@@ -2841,6 +2841,37 @@ Warning: deprecated language construct used in file get_lp_good.stan, line 22, c
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
+  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
+functions {
+  real foo() {
+    if (215) return 24;
+    return 24;
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes2.stan
+functions {
+  void foo() {
+    if (215) return;
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes3.stan
+functions {
+  real foo() {
+    if (215) return 24;
+    reject("");
+  }
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes4.stan
+functions {
+  real foo() {
+    if (215) return 24;
+    else reject("");
+  }
+}
+
   $ ../../../../install/default/bin/stanc --auto-format good_inf.stan
 data {
   real L;

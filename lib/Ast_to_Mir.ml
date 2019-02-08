@@ -9,15 +9,16 @@ let rec trans_expr {Ast.expr_typed; _} =
       TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
   | Ast.BinOp (lhs, op, rhs) -> BinOp (trans_expr lhs, op, trans_expr rhs)
   | Ast.PrefixOp (op, e) | Ast.PostfixOp (e, op) ->
-      FnApp (Operators.operator_name op, [trans_expr e])
+      FunApp (Operators.operator_name op, [trans_expr e])
   | Ast.Variable {name; _} -> Var name
   | Ast.IntNumeral x -> Lit (Int, x)
   | Ast.RealNumeral x -> Lit (Real, x)
   | Ast.FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
-      FnApp (name, List.map ~f:trans_expr args)
+      FunApp (name, List.map ~f:trans_expr args)
   | Ast.GetLP | Ast.GetTarget -> Var "target"
-  | Ast.ArrayExpr eles -> FnApp ("make_array", List.map ~f:trans_expr eles)
-  | Ast.RowVectorExpr eles -> FnApp ("make_rowvec", List.map ~f:trans_expr eles)
+  | Ast.ArrayExpr eles -> FunApp ("make_array", List.map ~f:trans_expr eles)
+  | Ast.RowVectorExpr eles ->
+      FunApp ("make_rowvec", List.map ~f:trans_expr eles)
   | Ast.Paren x -> trans_expr x
   | Ast.Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
@@ -37,7 +38,7 @@ and trans_idx = function
             "Expecting int or array" (e.expr_typed_type : Ast.unsizedtype)] )
 
 let trans_sizedtype = Ast.map_sizedtype trans_expr
-let neg_inf = FnApp ("negative_infinity", [])
+let neg_inf = FunApp ("negative_infinity", [])
 
 let targetpe e =
   let t = Var "target" in
@@ -85,11 +86,11 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           match assign_op with
           | Ast.Assign | Ast.ArrowAssign -> rhs
           | Ast.OperatorAssign op ->
-              FnApp (Operators.operator_name op, [assignee; rhs])
+              FunApp (Operators.operator_name op, [assignee; rhs])
         in
         Assignment (assignee, rhs)
     | Ast.NRFunApp ({name; _}, args) ->
-        NRFnApp (name, List.map ~f:trans_expr args)
+        NRFunApp (name, List.map ~f:trans_expr args)
     | Ast.IncrementLogProb e | Ast.TargetPE e -> targetpe (trans_expr e)
     | Ast.Tilde {arg; distribution; args; truncation} ->
         let add_dist =
@@ -97,15 +98,15 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           (* XXX Reminder to differentiate between tilde, which drops constants, and
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
           targetpe
-            (FnApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
+            (FunApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
         in
         Block
           [ Option.value
               ~default:(bind_loc stmt_typed_loc Skip)
               (truncate_dist arg truncation)
           ; bind_loc stmt_typed_loc add_dist ]
-    | Ast.Print ps -> NRFnApp ("print", List.map ~f:trans_printable ps)
-    | Ast.Reject ps -> NRFnApp ("reject", List.map ~f:trans_printable ps)
+    | Ast.Print ps -> NRFunApp ("print", List.map ~f:trans_printable ps)
+    | Ast.Reject ps -> NRFunApp ("reject", List.map ~f:trans_printable ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
         IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
     | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
@@ -119,17 +120,17 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         For
           { loopvar= Var loopvar.Ast.name
           ; lower= Lit (Int, "0")
-          ; upper= FnApp ("length", [trans_expr iteratee])
+          ; upper= FunApp ("length", [trans_expr iteratee])
           ; body= trans_stmt body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef
-          { returntype=
+          { fdrt=
               ( match returntype with
               | Ast.Void -> None
               | ReturnType ut -> Some ut )
-          ; name= funname.name
-          ; arguments= List.map ~f:trans_arg arguments
-          ; body= trans_stmt body }
+          ; fdname= funname.name
+          ; fdargs= List.map ~f:trans_arg arguments
+          ; fdbody= trans_stmt body }
     | Ast.VarDecl
         {sizedtype; transformation; identifier; initial_value; is_global} ->
         (* Should have already taken care of global and trans stuff. *)
@@ -143,9 +144,9 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
-                 { adtype= AutoDiffable
-                 ; vident= name
-                 ; st= trans_sizedtype sizedtype }
+                 { decl_adtype= AutoDiffable
+                 ; decl_id= name
+                 ; decl_type= trans_sizedtype sizedtype }
              ; Option.map
                  ~f:(fun x -> Assignment (Var name, trans_expr x))
                  initial_value
@@ -176,24 +177,26 @@ let mir_for_each_in_array (st : sizedtype) (s : expr -> stmt_loc) =
   | SMatrix _ -> ( ?? )
 *)
 
-let rec trans_checks cvarname ctype t =
-  let check = {cvarname; ctype; cargs= []; cfname= ""} in
+let rec trans_checks ccvid cctype t =
+  let check = {ccvid; cctype; ccargs= []; ccfunname= ""} in
   match t with
   | Ast.Identity -> []
-  | Ast.Lower lb -> [Check {check with cargs= [lb]; cfname= "greater_or_equal"}]
-  | Ast.Upper ub -> [Check {check with cargs= [ub]; cfname= "less_or_equal"}]
+  | Ast.Lower lb ->
+      [Check {check with ccargs= [lb]; ccfunname= "greater_or_equal"}]
+  | Ast.Upper ub ->
+      [Check {check with ccargs= [ub]; ccfunname= "less_or_equal"}]
   | Ast.LowerUpper (lb, ub) ->
       [Ast.Lower lb; Upper ub]
-      |> List.map ~f:(trans_checks cvarname ctype)
+      |> List.map ~f:(trans_checks ccvid cctype)
       |> List.concat
-  | Ast.Ordered -> [Check {check with cfname= "ordered"}]
-  | Ast.PositiveOrdered -> [Check {check with cfname= "positive_ordered"}]
-  | Ast.Simplex -> [Check {check with cfname= "simplex"}]
-  | Ast.UnitVector -> [Check {check with cfname= "unit_vector"}]
-  | Ast.CholeskyCorr -> [Check {check with cfname= "cholesky_factor_corr"}]
-  | Ast.CholeskyCov -> [Check {check with cfname= "cholesky_factor"}]
-  | Ast.Correlation -> [Check {check with cfname= "corr_matrix"}]
-  | Ast.Covariance -> [Check {check with cfname= "cov_matrix"}]
+  | Ast.Ordered -> [Check {check with ccfunname= "ordered"}]
+  | Ast.PositiveOrdered -> [Check {check with ccfunname= "positive_ordered"}]
+  | Ast.Simplex -> [Check {check with ccfunname= "simplex"}]
+  | Ast.UnitVector -> [Check {check with ccfunname= "unit_vector"}]
+  | Ast.CholeskyCorr -> [Check {check with ccfunname= "cholesky_factor_corr"}]
+  | Ast.CholeskyCov -> [Check {check with ccfunname= "cholesky_factor"}]
+  | Ast.Correlation -> [Check {check with ccfunname= "corr_matrix"}]
+  | Ast.Covariance -> [Check {check with ccfunname= "cov_matrix"}]
   | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
 
 let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
@@ -251,14 +254,6 @@ let pull_tvdecls = function
    * model -> no constraints allowed (not even corr_matrix et al); not visible
    * gq -> declared and checked in write_array, shows up as param in some methods
 
-   Local vs. Global vardecls
-   So there are "local" (i.e. not top-level; not read in or written out anywhere) variable
-   declarations that do not allow transformations. These are the only kind allowed in
-   the model block. There are also then top-level ones, which are the only thing you can
-   write in both the parameters and data block. The generated quantities block allows both
-   types of variable declarations and, worse, mixes in top-level ones with normal ones.
-   We'll need to scan the list of declarations for top-level ones and essentially remove them
-   from the block.
 *)
 
 (*

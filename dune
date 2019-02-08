@@ -9,6 +9,4 @@
  (static
   (flags (-ccopt -static)))
   (dev
-  (flags (:standard -g)))
- (release
-  (flags (:standard -O3))))
+  (flags (:standard -g))))
