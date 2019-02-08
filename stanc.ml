@@ -34,7 +34,7 @@ let options =
       , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
-    ; ( "--dump-mir"
+    ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR." )
     ; ( "--auto-format"
