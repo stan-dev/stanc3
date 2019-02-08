@@ -141,7 +141,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   @@ Option.value ~default:"e" msg
 
 let pp_located_error ppf (pp_contents, contents_arg, msg) =
-  pp_error_wrapper ppf (pp_contents, contents_arg, pp_located_msg, msg)
+  pp_error_wrapper ppf (pp_located_msg, msg, pp_contents, contents_arg)
 
 let pp_decl ppf (vident, st) =
   pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size st) vident
@@ -312,13 +312,13 @@ let%expect_test "udf" =
         (void) DUMMY_VAR__;  // suppress unused var warning
         int current_statement_begin__ = -1;
         try {
+            return add(x, 1);
+        } catch const std::exception& e) {
             stan::lang::rethrow_located(
         std::runtime_error(std::string(e) + e.what(), current_statement__);
     // Next line prevents compiler griping about no return
     throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
-        } catch const std::exception& e) {
-            return add(x, 1);
         }
     } |}]
 
