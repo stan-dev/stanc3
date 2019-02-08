@@ -400,10 +400,10 @@ class %s_model : public prob_grad {
 @ @[<v 1>
 @ private:
 @ // Fields here from the data block of the model
-@ @<v 1>[%a@]@
+@ @[<v 1>%a@]@
 
 @ public:
-@ @<v 1>[
+@ @[<v 1>
 @ // Constructor takes in data fields and transforms them
 @ %a
 @ @ ~%s_model() { }
@@ -457,12 +457,17 @@ let trans_checks s =
       array_to_for s.sloc (ccvid, cctype) ckfn
   | _ -> s
 
+let with_no_loc stmt = {stmt; sloc= ""}
+
 let%expect_test "trans check" =
-  let ccfunname = "greater_or_equal"
-  and ccargs = [zero]
-  and cctype = Ast.SInt in
-  let ck = {stmt= Check {ccfunname; ccvid= "N"; cctype; ccargs}; sloc= ""} in
-  print_s [%sexp ((trans_checks ck).stmt : stmt_loc statement)] ;
+  let ck =
+    Check
+      { ccfunname= "greater_or_equal"
+      ; ccvid= "N"
+      ; cctype= Ast.SInt
+      ; ccargs= [zero] }
+  in
+  print_s [%sexp ((trans_checks (with_no_loc ck)).stmt : stmt_loc statement)] ;
   [%expect
     {| (NRFunApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
 
@@ -505,10 +510,10 @@ let pp_model ppf p =
   class %s_model : public prob_grad {
 @ @[<v 1>
 @ private:
-@ @<v 1>[%a@]
+@ @[<v 1>%a@]
 |}
     p.prog_name pp_model_public p ;
-  pf ppf "@ public: @ @<v 1>[@ @ ~%s_model() { }" p.prog_name ;
+  pf ppf "@ public: @ @[<v 1>@ @ ~%s_model() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "%a" pp_model_public p
 
