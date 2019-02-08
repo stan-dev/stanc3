@@ -49,7 +49,7 @@ let rec expr_assigned_var (ex : expr) : expr =
   | Var _ as v -> v
   | _ -> raise (Failure "Unimplemented: analysis of assigning to non-var")
 
-type reaching_dep = (int * expr)
+type reaching_dep = (expr * int)
 [@@deriving sexp, hash, compare]
 
 module ReachingDepSet = Set.Make(struct
@@ -60,7 +60,7 @@ module ReachingDepSet = Set.Make(struct
   end)
 
 let filter_var_deps (deps : ReachingDepSet.t) (var : expr) : ReachingDepSet.t =
-  ReachingDepSet.filter deps ~f:(fun (label, v) -> v = var)
+  ReachingDepSet.filter deps ~f:(fun (v, label) -> v = var)
 
 type label_dep_sets =
   { entry_set : ReachingDepSet.t
@@ -76,65 +76,76 @@ type label_info =
 
 type dep_sets_map = label_dep_sets LabelMap.t
 
+let merge_label_maps (m1 : 'a LabelMap.t) (m2 : 'a LabelMap.t) : 'a LabelMap.t =
+  let f ~key:key opt = match opt with
+        | `Left v -> None
+        | `Right v -> None
+        | `Both (v1, v2) -> None
+  in LabelMap.merge m1 m2 ~f:f
+
 type label_accum_info =
   { dep_sets_update : ReachingDepSet.t -> ReachingDepSet.t
   ; transfer_to : LabelSet.t
   ; rhs_set : ExprSet.t
   }
 
-let accumulate_label_info (st : stmt_labeled) : label_accum_info LabelMap.t =
+let rec accumulate_label_info (st : stmt_labeled) : label_accum_info LabelMap.t =
   match st.slabel with
   | None -> LabelMap.empty
   | Some label -> match st.stmt with
   | Assignment (lhs, rhs) as stmt ->
     let info =
-      { dep_sets_update = fun entry -> filter_var_deps entry (expr_assigned_var lhs)
+      { dep_sets_update =
+        (let assigned_var = expr_assigned_var lhs
+         in let addition = ReachingDepSet.singleton (assigned_var, label)
+         in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
       ; transfer_to = LabelSet.empty
       ; rhs_set = expr_var_set rhs
       }
-    in LabelMap.singleton (label, info)
+    in LabelMap.singleton label info
   | Break as stmt ->
     let info =
       { (* the LHS of a break should be all of the LHSs of the whole loop *)
-        dep_sets_update = fun entry -> entry
+        dep_sets_update = (fun entry -> entry)
         (* the beginning of the loop or outside of the loop *)
       ; transfer_to = LabelSet.empty
         (* the RHS of a break should be variables effecting the control flow to get to the break *)
       ; rhs_set = ExprSet.empty
       }
-    in LabelMap.singleton (label, info)
+    in LabelMap.singleton label info
   | Continue as stmt ->
     let info =
       { (* the LHS of a continue should be all of the LHSs of the loop after the continue *)
-        dep_sets_update = fun entry -> entry
+        dep_sets_update = (fun entry -> entry)
         (* the beginning of the loop *)
       ; transfer_to = LabelSet.empty
         (* the RHS of a continue should be variables effecting the control flow to get to the continue *)
       ; rhs_set = ExprSet.empty
       }
-    in LabelMap.singleton (label, info)
+    in LabelMap.singleton label info
   | Return expr as stmt ->
     (* what about an optional return?
        does it need to influence all of the statements after it in a function, like continue? *)
     let info =
-      { dep_sets_update = fun entry -> entry
+      { dep_sets_update = (fun entry -> entry)
       ; transfer_to = LabelSet.empty
       ; rhs_set = ExprSet.empty
       }
-    in LabelMap.singleton (label, info)
+    in LabelMap.singleton label info
   | IfElse (pred, thens, elses) ->
     let info =
-      { dep_sets_update = fun entry -> entry
+      { dep_sets_update = (fun entry -> entry)
       ; transfer_to = LabelSet.empty
       ; rhs_set = expr_var_set pred
       };
-    in LabelMap.merge (LabelMap.singleton (label, info)) (accumulate_label_info thens) (* TODO ELSE *)
+    in merge_label_maps (LabelMap.singleton label info) (accumulate_label_info thens) (* TODO ELSE *)
   | While (pred, body) -> LabelMap.empty
   | For args -> LabelMap.empty
   | Block sts -> LabelMap.empty
   | SList l -> LabelMap.empty
   | Decl args -> LabelMap.empty
   | FunDef args -> LabelMap.empty
+  | _ -> raise (Failure "unimplemented constructor in analysis")
 
 let rec label_statements (start_ix : int ref) (st_loc : stmt_loc) : stmt_labeled =
   let transform_statement (apply_label : bool) (stmt : stmt_labeled statement) : stmt_labeled =
