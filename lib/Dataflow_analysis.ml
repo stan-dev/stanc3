@@ -85,8 +85,9 @@ let merge_label_maps (m1 : 'a LabelMap.t) (m2 : 'a LabelMap.t) : 'a LabelMap.t =
 
 type label_info =
   { dep_sets_update : ReachingDepSet.t -> ReachingDepSet.t
-  ; transfer_to : LabelSet.t
+  ; possible_previous : LabelSet.t
   ; rhs_set : ExprSet.t
+  ; controlflow : LabelSet.t
   }
 
 (* This is the state that's accumulated forward through the traversal *)
@@ -99,18 +100,20 @@ type traversal_state =
 (* This is the state that only flows downward into the tree *)
 type stack_state = LabelSet.t
 
+(* Ignoring non-local control flow (break, continue, return) for now *)
 let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_state) (st : stmt_loc) : traversal_state =
   match st.stmt with
-  | Assignment (lhs, rhs) as stmt ->
+  | Assignment (lhs, rhs) ->
     let info =
       { dep_sets_update =
         (let assigned_var = expr_assigned_var lhs
          in let addition = ReachingDepSet.singleton (assigned_var, label)
          in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
-      ; transfer_to = LabelSet.empty
+      ; possible_previous = trav_st.possible_previous
       ; rhs_set = expr_var_set rhs
+      ; controlflow = stack_state
       }
-    in LabelMap.singleton label info
+    in { trav_st with label_info = merge_label_maps trav_st.label_info (LabelMap.singleton label info) }
   | Break as stmt ->
     let info =
       { (* the LHS of a break should be all of the LHSs of the whole loop *)
