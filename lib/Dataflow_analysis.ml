@@ -83,16 +83,24 @@ let merge_label_maps (m1 : 'a LabelMap.t) (m2 : 'a LabelMap.t) : 'a LabelMap.t =
         | `Both (v1, v2) -> None
   in LabelMap.merge m1 m2 ~f:f
 
-type label_accum_info =
+type label_info =
   { dep_sets_update : ReachingDepSet.t -> ReachingDepSet.t
   ; transfer_to : LabelSet.t
   ; rhs_set : ExprSet.t
   }
 
-let rec accumulate_label_info (st : stmt_labeled) : label_accum_info LabelMap.t =
-  match st.slabel with
-  | None -> LabelMap.empty
-  | Some label -> match st.stmt with
+(* This is the state that's accumulated forward through the traversal *)
+type traversal_state =
+  { label_ix : int
+  ; LabelMap.t label_info
+  ; possible_previous : LabelSet.t
+  }
+
+(* This is the state that only flows downward into the tree *)
+type stack_state = LabelSet.t
+
+let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_state) (st : stmt_loc) : traversal_state =
+  match st.stmt with
   | Assignment (lhs, rhs) as stmt ->
     let info =
       { dep_sets_update =
