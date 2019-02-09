@@ -1,9 +1,11 @@
 open Core_kernel
 open Mir
 
+type label = int
+
 module LabelMap = Map.Make(
   struct
-    type t = int
+    type t = label
     let compare : int -> int -> int = compare
     let sexp_of_t = sexp_of_int
     let t_of_sexp = int_of_sexp
@@ -11,7 +13,7 @@ module LabelMap = Map.Make(
 
 module LabelSet = Set.Make(
   struct
-    type t = int
+    type t = label
     let compare : int -> int -> int = compare
     let sexp_of_t = sexp_of_int
     let t_of_sexp = int_of_sexp
@@ -24,13 +26,6 @@ module ExprSet = Set.Make(
     let sexp_of_t = sexp_of_expr
     let t_of_sexp = expr_of_sexp
   end)
-
-type stmt_labeled =
-  { slabel: int option
-  ; sloc: string sexp_opaque [@compare.ignore]
-  ; stmt: stmt_labeled statement
-  }
-[@@deriving sexp, hash]
 
 let rec expr_var_set (ex : expr) : ExprSet.t =
   match ex with
@@ -47,6 +42,7 @@ let rec expr_var_set (ex : expr) : ExprSet.t =
 let rec expr_assigned_var (ex : expr) : expr =
   match ex with
   | Var _ as v -> v
+  | Indexed (Var _ as v,_) -> v
   | _ -> raise (Failure "Unimplemented: analysis of assigning to non-var")
 
 type reaching_dep = (expr * int)
@@ -62,25 +58,11 @@ module ReachingDepSet = Set.Make(struct
 let filter_var_deps (deps : ReachingDepSet.t) (var : expr) : ReachingDepSet.t =
   ReachingDepSet.filter deps ~f:(fun (v, label) -> v = var)
 
-type label_dep_sets =
-  { entry_set : ReachingDepSet.t
-  ; exit_set : ReachingDepSet.t
-  }
-[@@deriving sexp, compare]
-
-type label_info =
-  { dep_sets : label_dep_sets
-  ; rhs_set : ExprSet.t
-  }
-[@@deriving sexp, compare]
-
-type dep_sets_map = label_dep_sets LabelMap.t
-
 let merge_label_maps (m1 : 'a LabelMap.t) (m2 : 'a LabelMap.t) : 'a LabelMap.t =
   let f ~key:key opt = match opt with
-        | `Left v -> None
-        | `Right v -> None
-        | `Both (v1, v2) -> None
+        | `Left v -> Some v
+        | `Right v -> Some v
+        | `Both (v1, v2) -> Some v1
   in LabelMap.merge m1 m2 ~f:f
 
 type label_info =
@@ -92,128 +74,182 @@ type label_info =
 
 (* This is the state that's accumulated forward through the traversal *)
 type traversal_state =
-  { label_ix : int
-  ; LabelMap.t label_info
+  { label_ix : label
+  ; label_info_map : label_info LabelMap.t
   ; possible_previous : LabelSet.t
   }
 
+let initial_trav_st =
+  { label_ix = 1
+  ; label_info_map = LabelMap.empty
+  ; possible_previous = LabelSet.singleton 0
+  }
+
+let initial_stack_st = 0
+
+let new_label (st : traversal_state) : (label * traversal_state) =
+  (st.label_ix, {st with label_ix = st.label_ix + 1})
+
 (* This is the state that only flows downward into the tree *)
-type stack_state = LabelSet.t
+type stack_state = label
 
 (* Ignoring non-local control flow (break, continue, return) for now *)
 let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_state) (st : stmt_loc) : traversal_state =
   match st.stmt with
   | Assignment (lhs, rhs) ->
+    let (label, trav_st') = new_label trav_st in
     let info =
       { dep_sets_update =
         (let assigned_var = expr_assigned_var lhs
          in let addition = ReachingDepSet.singleton (assigned_var, label)
          in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
-      ; possible_previous = trav_st.possible_previous
+      ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
-      ; controlflow = stack_state
+      ; controlflow = LabelSet.singleton stack_st
       }
-    in { trav_st with label_info = merge_label_maps trav_st.label_info (LabelMap.singleton label info) }
-  | Break as stmt ->
+    in { trav_st' with
+         label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
+       ; possible_previous = LabelSet.singleton label
+       }
+  | NRFunApp _ -> trav_st
+  | Check _ -> trav_st
+  | MarkLocation _ -> trav_st
+  | Break -> trav_st (* TODO *)
+  | Continue -> trav_st (* TODO *)
+  | Return _ -> trav_st (* TODO *)
+  | Skip -> trav_st
+  | IfElse (pred, then_stmt, else_stmt) ->
+    let (label, trav_st') = new_label trav_st in
+    let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
+    let then_st = accumulate_label_info recurse_st label then_stmt in
+    let else_st_opt = Option.map else_stmt (accumulate_label_info then_st label) in
     let info =
-      { (* the LHS of a break should be all of the LHSs of the whole loop *)
-        dep_sets_update = (fun entry -> entry)
-        (* the beginning of the loop or outside of the loop *)
-      ; transfer_to = LabelSet.empty
-        (* the RHS of a break should be variables effecting the control flow to get to the break *)
-      ; rhs_set = ExprSet.empty
-      }
-    in LabelMap.singleton label info
-  | Continue as stmt ->
-    let info =
-      { (* the LHS of a continue should be all of the LHSs of the loop after the continue *)
-        dep_sets_update = (fun entry -> entry)
-        (* the beginning of the loop *)
-      ; transfer_to = LabelSet.empty
-        (* the RHS of a continue should be variables effecting the control flow to get to the continue *)
-      ; rhs_set = ExprSet.empty
-      }
-    in LabelMap.singleton label info
-  | Return expr as stmt ->
-    (* what about an optional return?
-       does it need to influence all of the statements after it in a function, like continue? *)
-    let info =
-      { dep_sets_update = (fun entry -> entry)
-      ; transfer_to = LabelSet.empty
-      ; rhs_set = ExprSet.empty
-      }
-    in LabelMap.singleton label info
-  | IfElse (pred, thens, elses) ->
-    let info =
-      { dep_sets_update = (fun entry -> entry)
-      ; transfer_to = LabelSet.empty
+      { dep_sets_update = (fun entry -> entry) (* is this correct? *)
+      ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
-      };
-    in merge_label_maps (LabelMap.singleton label info) (accumulate_label_info thens) (* TODO ELSE *)
-  | While (pred, body) -> LabelMap.empty
-  | For args -> LabelMap.empty
-  | Block sts -> LabelMap.empty
-  | SList l -> LabelMap.empty
-  | Decl args -> LabelMap.empty
-  | FunDef args -> LabelMap.empty
-  | _ -> raise (Failure "unimplemented constructor in analysis")
-
-let rec label_statements (start_ix : int ref) (st_loc : stmt_loc) : stmt_labeled =
-  let transform_statement (apply_label : bool) (stmt : stmt_labeled statement) : stmt_labeled =
-    { slabel = if apply_label
-               then (let y = !start_ix in
-                     let () = (start_ix := !start_ix + 1) in
-                     Some y)
-               else None
-    ; sloc = st_loc.sloc
-    ; stmt = stmt}
-  in match st_loc.stmt with
-  | Assignment _ as stmt ->
-    transform_statement true stmt
-  | NRFunApp _ as stmt ->
-    transform_statement false stmt
-  | Check _ as stmt ->
-    transform_statement false stmt
-  | MarkLocation _ as stmt ->
-    transform_statement false stmt
-  | Break as stmt ->
-    transform_statement true stmt
-  | Continue as stmt ->
-    transform_statement true stmt
-  | Return _ as stmt ->
-    transform_statement true stmt
-  | Skip as stmt ->
-    transform_statement false stmt
-  | IfElse (pred, thens, elses) ->
-    let stmt = IfElse (pred, label_statements start_ix thens, Option.map elses (label_statements start_ix))
-    in transform_statement true stmt
-  | While (pred, body) ->
-    let stmt = While (pred, label_statements start_ix body)
-    in transform_statement true stmt
+      ; controlflow = LabelSet.singleton stack_st
+      }
+    in (match else_st_opt with
+      | Some else_st ->
+        { else_st with
+          label_info_map = merge_label_maps else_st.label_info_map (LabelMap.singleton label info)
+        ; possible_previous = LabelSet.union then_st.possible_previous else_st.possible_previous
+        }
+      | None ->
+        { then_st with
+          label_info_map = merge_label_maps then_st.label_info_map (LabelMap.singleton label info)
+        ; possible_previous = LabelSet.union then_st.possible_previous trav_st'.possible_previous
+        })
+  | While (pred, body_stmt) ->
+    let (label, trav_st') = new_label trav_st in
+    let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
+    let body_st = accumulate_label_info recurse_st label body_stmt in
+    let info =
+      { dep_sets_update = (fun entry -> entry) (* is this correct? *)
+      ; possible_previous = trav_st'.possible_previous
+      ; rhs_set = expr_var_set pred
+      ; controlflow = LabelSet.singleton stack_st
+      }
+    in { body_st with
+         label_info_map = merge_label_maps body_st.label_info_map (LabelMap.singleton label info)
+       ; possible_previous = LabelSet.union body_st.possible_previous trav_st'.possible_previous
+       }
   | For args ->
-    let stmt = For {args with body = label_statements start_ix args.body}
-    in transform_statement true stmt
-  | Block sts ->
-    let stmt = Block (List.map sts (label_statements start_ix))
-    in transform_statement false stmt
-  | SList l ->
-    let stmt = SList (List.map l (label_statements start_ix))
-    in transform_statement false stmt
-  | Decl args as stmt ->
-    transform_statement true stmt
-  | FunDef args ->
-    let stmt = FunDef {args with fdbody = label_statements start_ix args.fdbody}
-    in transform_statement false stmt
+    let (label, trav_st') = new_label trav_st in
+    let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
+    let body_st = accumulate_label_info recurse_st label args.body in
+    let info =
+      (** How should limited variable scope be handled? Is it sufficient to note a for loop as control flow effecting its body, instead of including the temporary variable in the set? This introduces questions of correct shadowing.
+      SOLUTION:
+       1. remove (loopvar, label) from the exit function of the final statement.
+       2. at declaration, remove variables that are shadowed by the loopvar. in the exit func, add them back.
+      This will be similar to limited-scope declarations within blocks.
+       **)
+      { dep_sets_update = (fun entry -> ReachingDepSet.union entry (ReachingDepSet.singleton (args.loopvar, label)))
+      ; possible_previous = trav_st'.possible_previous
+      ; rhs_set = ExprSet.union (expr_var_set args.lower) (expr_var_set args.upper)
+      ; controlflow = LabelSet.singleton stack_st
+      }
+    in { body_st with
+         label_info_map = merge_label_maps body_st.label_info_map (LabelMap.singleton label info)
+       ; possible_previous = LabelSet.union body_st.possible_previous trav_st'.possible_previous
+       }
+  | Block stmts ->
+    let f state stmt = accumulate_label_info state stack_st stmt
+    in List.fold_left stmts ~init:trav_st ~f:f
+  | SList stmts ->
+    let f state stmt = accumulate_label_info state stack_st stmt
+    in List.fold_left stmts ~init:trav_st ~f:f
+  | Decl args ->
+    let (label, trav_st') = new_label trav_st in
+    let info =
+      { dep_sets_update =
+        (let assigned_var = Var args.decl_id
+         in let addition = ReachingDepSet.singleton (assigned_var, label)
+         in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
+      ; possible_previous = trav_st'.possible_previous
+      ; rhs_set = ExprSet.empty
+      ; controlflow = LabelSet.singleton stack_st
+      }
+    in { trav_st' with
+         label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
+       ; possible_previous = LabelSet.singleton label
+       }
+  | FunDef args -> trav_st
 
-let label_prog (start_ix : int ref) (mir : stmt_loc prog) : (stmt_labeled prog) =
-  { functionsb = label_statements start_ix mir.functionsb
-  ; datab = (let (table, s) = mir.datab in (table, label_statements start_ix s))
-  ; modelb = (let (table, s) = mir.modelb in (table, label_statements start_ix s))
-  ; gqb = (let (table, s) = mir.gqb in (table, label_statements start_ix s))
-  ; prog_name = mir.prog_name
-  ; prog_path = mir.prog_path }
+(*
+type label_info =
+  { dep_sets_update : ReachingDepSet.t -> ReachingDepSet.t
+  ; possible_previous : LabelSet.t
+  ; rhs_set : ExprSet.t
+  ; controlflow : LabelSet.t
+  }
 
-(*let analysis (mir : stmt_loc statement) : dataflow =*)
-let analysis (mir : stmt_loc prog) : stmt_labeled prog =
-  let labeled = label_prog (ref 0) mir
-  in labeled
+(* This is the state that's accumulated forward through the traversal *)
+type traversal_state =
+  { label_ix : label
+  ; label_info_map : label_info LabelMap.t
+  ; possible_previous : LabelSet.t
+  }
+*)
+
+let rd_update_label (label : label) (label_info : label_info) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
+  let get_exit label = match LabelMap.find prev label with
+                     | None -> ReachingDepSet.empty
+                     | Some (_, exit_set) ->  exit_set
+  in let from_prev = ReachingDepSet.union_list (List.map (Set.to_list label_info.possible_previous) get_exit)
+  in (from_prev, label_info.dep_sets_update from_prev)
+
+let rd_apply (label_infos : label_info LabelMap.t) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+  let update_label ~key:(label : label) ~data:_ =
+    let label_info = LabelMap.find_exn label_infos label
+    in rd_update_label label label_info prev
+  in LabelMap.mapi prev ~f:update_label
+
+(* using y = x instead of compare x y = 0 gives a runtime(!?) error: "compare: functional value"*)
+let rec apply_until_fixed (f : 'a -> 'a) (x : 'a) : 'a =
+  let y = f x
+  in if compare y x = 0
+     then x
+     else apply_until_fixed f y
+
+let rd_fixpoint (info : label_info LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+  let starting_sets = LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
+  in apply_until_fixed (rd_apply info) starting_sets
+
+let analysis (mir : stmt_loc prog) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+  let model_block = snd mir.datab
+  in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
+  in let label_info = accum_info.label_info_map
+  in let result = rd_fixpoint label_info
+  in let () = print_string (if compare label_info LabelMap.empty = 0 then "label empty\n" else "label info nonempty\n")
+  in let () = print_string (if compare result LabelMap.empty = 0 then "result empty\n" else "result nonempty\n")
+  in let () = print_string ("label index " ^ (string_of_int accum_info.label_ix) ^ "\n")
+  in result
+
+(**
+TODO
+ * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
+ * Non-local control flow should be added to the traversal state
+ * Target assignments need to be split into one label for each summed term
+**)
