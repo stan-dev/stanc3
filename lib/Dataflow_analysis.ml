@@ -28,16 +28,14 @@ module ExprSet = Set.Make(
   end)
 
 let rec expr_var_set (ex : expr) : ExprSet.t =
+  let union_recur exprs = ExprSet.union_list (List.map exprs expr_var_set) in
   match ex with
   | Var _ as v -> ExprSet.singleton v
   | Lit _ -> ExprSet.empty
-  | FunApp (_, exprs) ->
-    List.fold_left (List.map exprs expr_var_set) ~init:ExprSet.empty ~f:ExprSet.union
-  | BinOp (expr1, _, expr2) ->
-    ExprSet.union (expr_var_set expr1) (expr_var_set expr2)
-  | TernaryIf (expr1, expr2, expr3) ->
-    ExprSet.union (ExprSet.union (expr_var_set expr1) (expr_var_set expr2)) (expr_var_set expr3)
-  | Indexed _ as i -> ExprSet.singleton i
+  | FunApp (_, exprs) -> union_recur exprs
+  | BinOp (expr1, _, expr2) -> union_recur [expr1; expr2]
+  | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
+  | Indexed (expr, _) -> expr_var_set expr (* TODO handle indices *)
 
 let rec expr_assigned_var (ex : expr) : expr =
   match ex with
