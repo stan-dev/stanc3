@@ -211,17 +211,19 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
     let body_st = accumulate_label_info recurse_st label body_stmt in
+    let possible_loop_st = {trav_st' with possible_previous = LabelSet.union_list [LabelSet.singleton label; body_st.possible_previous; body_st.continues]} in
+    let body_st' = accumulate_label_info possible_loop_st label body_stmt in
     let info =
       { dep_sets = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
-      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st.breaks]
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st'.breaks]
       ; loc = st.sloc
       ; target_sum_terms = None
       }
-    in { body_st with
-         label_info_map = merge_label_maps body_st.label_info_map (LabelMap.singleton label info)
-       ; possible_previous = LabelSet.union body_st.possible_previous trav_st'.possible_previous
+    in { body_st' with
+         label_info_map = merge_label_maps body_st'.label_info_map (LabelMap.singleton label info)
+       ; possible_previous = LabelSet.union body_st'.possible_previous trav_st'.possible_previous
        ; continues = LabelSet.empty
        ; breaks = LabelSet.empty
        }
@@ -229,8 +231,10 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
     let body_st = accumulate_label_info recurse_st label args.body in
+    let possible_loop_st = {trav_st' with possible_previous = LabelSet.union_list [LabelSet.singleton label; body_st.possible_previous; body_st.continues]} in
+    let body_st' = accumulate_label_info possible_loop_st label args.body in
     let alter_fn = fun set -> ReachingDepSet.remove set (args.loopvar, label) in
-    let body_st' = alter_last_rd body_st.possible_previous alter_fn body_st in
+    let body_st'' = alter_last_rd body_st'.possible_previous alter_fn body_st' in
     let info =
       (** How should limited variable scope be handled? Is it sufficient to note a for loop as control flow effecting its body, instead of including the temporary variable in the set? This introduces questions of correct shadowing.
       SOLUTION:
@@ -241,13 +245,13 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets = (fun entry -> ReachingDepSet.union entry (ReachingDepSet.singleton (args.loopvar, label)))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.union (expr_var_set args.lower) (expr_var_set args.upper)
-      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st.breaks]
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st''.breaks]
       ; loc = st.sloc
       ; target_sum_terms = None
       }
-    in { body_st' with
-         label_info_map = merge_label_maps body_st'.label_info_map (LabelMap.singleton label info)
-       ; possible_previous = LabelSet.union body_st'.possible_previous trav_st'.possible_previous
+    in { body_st'' with
+         label_info_map = merge_label_maps body_st''.label_info_map (LabelMap.singleton label info)
+       ; possible_previous = LabelSet.union body_st''.possible_previous trav_st'.possible_previous
        ; continues = LabelSet.empty
        ; breaks = LabelSet.empty
        }
@@ -318,7 +322,7 @@ let rd_fixpoint (info : label_info_update LabelMap.t) : label_info_fixpoint Labe
   in LabelMap.mapi maps ~f:(fun ~key:label ~data:ms -> {(LabelMap.find_exn info label) with dep_sets = ms})
 
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
-  let model_block = snd mir.modelb
+  let model_block = snd mir.datab
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
   in let label_info = accum_info.label_info_map
   in let result = rd_fixpoint label_info
@@ -328,6 +332,11 @@ let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
 
 (**
 TODO
+ * Does possible_previous for the beginning of a loop need to include the end of the loop?
+   - Yes. I need to add the final label and continue labels to the possible_previous of the first label
+   - How do I get access to the first label? Two ways:
+     1. Introspect the label iteration process, lookup trav_st.label_ix+1
+     2. Run the substatements once just to get the labels you need, then run it again with those added
  * Indexed variables
  * Shadowing
  * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
