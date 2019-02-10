@@ -122,7 +122,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
          in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
-      ; controlflow = LabelSet.union (LabelSet.singleton stack_st) trav_st.continues
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
       }
     in { trav_st' with
          label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
@@ -150,7 +150,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets_update = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
-      ; controlflow = LabelSet.union (LabelSet.singleton stack_st) trav_st.continues
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
       }
     in (match else_st_opt with
       | Some else_st ->
@@ -171,7 +171,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets_update = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
-      ; controlflow = LabelSet.union (LabelSet.union (LabelSet.singleton stack_st) trav_st.continues) body_st.breaks
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st.breaks]
       }
     in { body_st with
          label_info_map = merge_label_maps body_st.label_info_map (LabelMap.singleton label info)
@@ -195,7 +195,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets_update = (fun entry -> ReachingDepSet.union entry (ReachingDepSet.singleton (args.loopvar, label)))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.union (expr_var_set args.lower) (expr_var_set args.upper)
-      ; controlflow = LabelSet.union (LabelSet.union (LabelSet.singleton stack_st) trav_st.continues) body_st.breaks
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st.breaks]
       }
     in { body_st' with
          label_info_map = merge_label_maps body_st'.label_info_map (LabelMap.singleton label info)
@@ -218,7 +218,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
          in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.empty
-      ; controlflow = LabelSet.union (LabelSet.singleton stack_st) trav_st.continues
+      ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
       }
     in { trav_st' with
          label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
