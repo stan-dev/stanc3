@@ -77,12 +77,18 @@ type traversal_state =
   { label_ix : label
   ; label_info_map : label_info LabelMap.t
   ; possible_previous : LabelSet.t
+  ; continues : LabelSet.t
+  ; breaks : LabelSet.t
+  ; returns : LabelSet.t
   }
 
 let initial_trav_st =
   { label_ix = 1
   ; label_info_map = LabelMap.empty
   ; possible_previous = LabelSet.singleton 0
+  ; continues = LabelSet.empty
+  ; breaks = LabelSet.empty
+  ; returns = LabelSet.empty
   }
 
 let initial_stack_st = 0
@@ -93,11 +99,11 @@ let new_label (st : traversal_state) : (label * traversal_state) =
 (* This is the state that only flows downward into the tree *)
 type stack_state = label
 
-let remove_last_rd (last : LabelSet.t) (pair : expr * label) (trav_st : traversal_state) : traversal_state =
+let alter_last_rd (last : LabelSet.t) (alter : ReachingDepSet.t -> ReachingDepSet.t) (trav_st : traversal_state) : traversal_state =
   let remove_rd label_info_opt = match label_info_opt with
     | None -> raise (Failure "traversal state's possible_previous refers to nonexistant labels")
     | Some label_info -> { label_info with
-                           dep_sets_update = fun set -> ReachingDepSet.remove (label_info.dep_sets_update set) pair
+                           dep_sets_update = fun set -> alter (label_info.dep_sets_update set)
                          }
   in let remove_label_rd info_map label = LabelMap.update info_map label ~f:remove_rd
   in let label_info_map' = List.fold_left (LabelSet.to_list last) ~f:remove_label_rd ~init:trav_st.label_info_map
@@ -116,7 +122,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
          in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
-      ; controlflow = LabelSet.singleton stack_st
+      ; controlflow = LabelSet.union (LabelSet.singleton stack_st) trav_st.continues
       }
     in { trav_st' with
          label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
@@ -125,9 +131,15 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
   | NRFunApp _ -> trav_st
   | Check _ -> trav_st
   | MarkLocation _ -> trav_st
-  | Break -> trav_st (* TODO *)
-  | Continue -> trav_st (* TODO *)
-  | Return _ -> trav_st (* TODO *)
+  | Break ->
+    let (label, trav_st') = new_label trav_st in
+    { trav_st' with breaks = LabelSet.add trav_st'.breaks label}
+  | Continue ->
+    let (label, trav_st') = new_label trav_st in
+    { trav_st' with continues = LabelSet.add trav_st'.continues label}
+  | Return _ ->
+    let (label, trav_st') = new_label trav_st in
+    { trav_st' with returns = LabelSet.add trav_st'.returns label}
   | Skip -> trav_st
   | IfElse (pred, then_stmt, else_stmt) ->
     let (label, trav_st') = new_label trav_st in
@@ -138,7 +150,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets_update = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
-      ; controlflow = LabelSet.singleton stack_st
+      ; controlflow = LabelSet.union (LabelSet.singleton stack_st) trav_st.continues
       }
     in (match else_st_opt with
       | Some else_st ->
@@ -159,17 +171,20 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets_update = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
-      ; controlflow = LabelSet.singleton stack_st
+      ; controlflow = LabelSet.union (LabelSet.union (LabelSet.singleton stack_st) trav_st.continues) body_st.breaks
       }
     in { body_st with
          label_info_map = merge_label_maps body_st.label_info_map (LabelMap.singleton label info)
        ; possible_previous = LabelSet.union body_st.possible_previous trav_st'.possible_previous
+       ; continues = LabelSet.empty
+       ; breaks = LabelSet.empty
        }
   | For args ->
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
     let body_st = accumulate_label_info recurse_st label args.body in
-    let body_st' = remove_last_rd body_st.possible_previous (args.loopvar, label) body_st in
+    let alter_fn = fun set -> ReachingDepSet.remove set (args.loopvar, label) in
+    let body_st' = alter_last_rd body_st.possible_previous alter_fn body_st in
     let info =
       (** How should limited variable scope be handled? Is it sufficient to note a for loop as control flow effecting its body, instead of including the temporary variable in the set? This introduces questions of correct shadowing.
       SOLUTION:
@@ -180,11 +195,13 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       { dep_sets_update = (fun entry -> ReachingDepSet.union entry (ReachingDepSet.singleton (args.loopvar, label)))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.union (expr_var_set args.lower) (expr_var_set args.upper)
-      ; controlflow = LabelSet.singleton stack_st
+      ; controlflow = LabelSet.union (LabelSet.union (LabelSet.singleton stack_st) trav_st.continues) body_st.breaks
       }
     in { body_st' with
          label_info_map = merge_label_maps body_st'.label_info_map (LabelMap.singleton label info)
        ; possible_previous = LabelSet.union body_st'.possible_previous trav_st'.possible_previous
+       ; continues = LabelSet.empty
+       ; breaks = LabelSet.empty
        }
   | Block stmts ->
     let f state stmt = accumulate_label_info state stack_st stmt
@@ -201,7 +218,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
          in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.empty
-      ; controlflow = LabelSet.singleton stack_st
+      ; controlflow = LabelSet.union (LabelSet.singleton stack_st) trav_st.continues
       }
     in { trav_st' with
          label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
@@ -262,6 +279,8 @@ let analysis (mir : stmt_loc prog) : (ReachingDepSet.t * ReachingDepSet.t) Label
 (**
 TODO
  * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
+   - Shadowing won't really work with this scheme, I'm just leaving both local and outside alive
+   - Done for loops, needs to be done for scoped declarations
  * Non-local control flow should be added to the traversal state
  * Target assignments need to be split into one label for each summed term
 **)
