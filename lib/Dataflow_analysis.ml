@@ -277,9 +277,7 @@ let analysis (mir : stmt_loc prog) : (ReachingDepSet.t * ReachingDepSet.t) Label
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
   in let label_info = accum_info.label_info_map
   in let result = rd_fixpoint label_info
-  in let () = print_string (if compare label_info LabelMap.empty = 0 then "label empty\n" else "label info nonempty\n")
-  in let () = print_string (if compare result LabelMap.empty = 0 then "result empty\n" else "result nonempty\n")
-  in let () = print_string ("label index " ^ (string_of_int accum_info.label_ix) ^ "\n")
+  in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))
   in result
 
 (**
