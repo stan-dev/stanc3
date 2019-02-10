@@ -70,6 +70,7 @@ type label_info =
   ; possible_previous : LabelSet.t
   ; rhs_set : ExprSet.t
   ; controlflow : LabelSet.t
+  ; loc : string
   }
 
 (* This is the state that's accumulated forward through the traversal *)
@@ -123,6 +124,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
+      ; loc = st.sloc
       }
     in { trav_st' with
          label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
@@ -151,6 +153,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
+      ; loc = st.sloc
       }
     in (match else_st_opt with
       | Some else_st ->
@@ -172,6 +175,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set pred
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st.breaks]
+      ; loc = st.sloc
       }
     in { body_st with
          label_info_map = merge_label_maps body_st.label_info_map (LabelMap.singleton label info)
@@ -196,6 +200,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.union (expr_var_set args.lower) (expr_var_set args.upper)
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns; body_st.breaks]
+      ; loc = st.sloc
       }
     in { body_st' with
          label_info_map = merge_label_maps body_st'.label_info_map (LabelMap.singleton label info)
@@ -219,6 +224,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = ExprSet.empty
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
+      ; loc = st.sloc
       }
     in { trav_st' with
          label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
@@ -282,5 +288,6 @@ TODO
    - Shadowing won't really work with this scheme, I'm just leaving both local and outside alive
    - Done for loops, needs to be done for scoped declarations
  * Non-local control flow should be added to the traversal state
+   - Done, untested
  * Target assignments need to be split into one label for each summed term
 **)
