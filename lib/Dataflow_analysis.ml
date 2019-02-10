@@ -2,6 +2,7 @@ open Core_kernel
 open Mir
 
 type label = int
+[@@deriving sexp, hash, compare]
 
 module LabelMap = Map.Make(
   struct
@@ -35,7 +36,15 @@ let rec expr_var_set (ex : expr) : ExprSet.t =
   | FunApp (_, exprs) -> union_recur exprs
   | BinOp (expr1, _, expr2) -> union_recur [expr1; expr2]
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
-  | Indexed (expr, _) -> expr_var_set expr (* TODO handle indices *)
+  | Indexed (expr, ix) -> ExprSet.union_list (expr_var_set expr :: List.map ix ~f:index_var_set) (* TODO handle indices *)
+and index_var_set (ix : index) : ExprSet.t =
+  match ix with
+  | All -> ExprSet.empty
+  | Single expr -> expr_var_set expr
+  | Upfrom expr -> expr_var_set expr
+  | Downfrom expr -> expr_var_set expr
+  | Between (expr1, expr2) -> ExprSet.union (expr_var_set expr1) (expr_var_set expr1)
+  | MultiIndex expr -> expr_var_set expr
 
 let rec expr_assigned_var (ex : expr) : expr =
   match ex with
@@ -319,14 +328,42 @@ let rd_fixpoint (info : label_info_update LabelMap.t) : label_info_fixpoint Labe
   in let maps = apply_until_fixed (rd_apply info) starting_sets
   in LabelMap.mapi maps ~f:(fun ~key:label ~data:ms -> {(LabelMap.find_exn info label) with dep_sets = ms})
 
+let rec var_dependencies (label_info : label_info_fixpoint LabelMap.t) (possible_endpoints : LabelSet.t) (var : expr) : ExprSet.t =
+  let has_start = LabelSet.mem possible_endpoints 0 in
+  let endpoints_without_start = LabelSet.remove possible_endpoints 0 in
+  let last_infos = List.map (LabelSet.to_list endpoints_without_start) ~f:(fun l -> LabelMap.find_exn label_info l) in
+  let all_possible_assignments = ReachingDepSet.to_list (ReachingDepSet.union_list (List.map last_infos ~f:(fun i -> snd i.dep_sets))) in
+  let var_possible_assignments = List.filter_map all_possible_assignments ~f:(fun (v, l) -> if v = var then Some l else None) in
+  if List.is_empty var_possible_assignments
+  then ExprSet.singleton var
+  else ExprSet.union_list (List.map var_possible_assignments ~f:(label_dependencies label_info))
+
+and label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : ExprSet.t =
+  let this_info = LabelMap.find_exn label_info label in
+  ExprSet.union_list (List.map (ExprSet.to_list this_info.rhs_set) ~f:(var_dependencies label_info this_info.possible_previous) @ List.map (LabelSet.to_list (LabelSet.filter this_info.controlflow ~f:(fun x -> x <> 0))) ~f:(label_dependencies label_info))
+
+(*
+let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : ExprSet.t =
+  let this_info = LabelMap.find_exn label_info label in
+  let rhs_dep_sets = List.map (ExprSet.to_list label_info.rhs_set) ~f:(fun var -> (var, ReachingDepSet.filter (fst this_info.dep_sets) ~f:(fun (v, l) -> v = var))) in
+  let rhs_deps = ReachingDepSet.union_list (List.map rhs_dep_sets ~f:snd) in
+  let rhs_dep_list = List.map (ReachingDepSet.to_list rhs_deps) snd
+  let rhs_undefined = List.map (List.filter rhs_dep_sets ~f:(fun (v, s) -> ReachingDepSet.is_empty s)) ~f:fst in
+  ExprSet.union (ExprSet.of_list rhs_undefined) (ExprSet.union_list (List.map rhs_deps ~f:(label_dependencies label_info)))
+*)
+
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
   let model_block = snd mir.datab
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
-  in let label_info = accum_info.label_info_map
-  in let result = rd_fixpoint label_info
-  in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))
-  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (result : label_info_fixpoint LabelMap.t)];
-  in result
+  in let label_info = rd_fixpoint accum_info.label_info_map
+  (*in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))*)
+  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
+  in let _ = print_string "\n\n"
+  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (accum_info.possible_previous : LabelSet.t)];
+  in let _ = print_string "\n\n"
+  in let deps = var_dependencies label_info accum_info.possible_previous (Var "y")
+  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (deps : ExprSet.t)];
+  in label_info
 
 (**
 TODO
@@ -335,6 +372,7 @@ TODO
    - How do I get access to the first label? Two ways:
      1. Introspect the label iteration process, lookup trav_st.label_ix+1
      2. Run the substatements once just to get the labels you need, then run it again with those added
+   - Done #2
  * Indexed variables
  * Shadowing
  * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
