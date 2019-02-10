@@ -163,10 +163,15 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
     let (label, trav_st') = new_label trav_st in
     let info =
       { dep_sets =
-        (let assigned_var = expr_assigned_var lhs
-         in let addition = ReachingDepSet.singleton (assigned_var, label)
                 (* below doesn't work for indexed expressions *)
-         in fun entry -> ReachingDepSet.union addition (filter_var_deps entry assigned_var))
+        (fun entry ->
+         let assigned_var = expr_assigned_var lhs
+         in let this_assgn = ReachingDepSet.singleton (assigned_var, label)
+         in let implicit_decl =
+           if ReachingDepSet.is_empty (ReachingDepSet.filter entry ~f:(fun (v, l) -> v = lhs))
+           then ReachingDepSet.singleton (assigned_var, 0)
+           else ReachingDepSet.empty
+         in ReachingDepSet.union_list [filter_var_deps entry assigned_var; this_assgn; implicit_decl])
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
@@ -304,13 +309,14 @@ type traversal_state =
 *)
 
 let rd_update_label (label : label) (label_info : label_info_update) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
-  let get_exit label = match LabelMap.find prev label with
-                     | None -> ReachingDepSet.empty
-                     | Some (_, exit_set) ->  exit_set
+  let get_exit label = match label with
+    | 0 -> ReachingDepSet.empty
+    | l -> snd (LabelMap.find_exn prev label)
   in let from_prev = ReachingDepSet.union_list (List.map (Set.to_list label_info.possible_previous) get_exit)
   in (from_prev, label_info.dep_sets from_prev)
 
 let rd_apply (label_infos : label_info_update LabelMap.t) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+  (*let endpoint_rds = ReachingDepSet.union_list (List.map (LabelSet.to_list (LabelSet.remove possible_endpoints 0)) ~f:(fun l -> snd (LabelMap.find_exn prev l))) in*)
   let update_label ~key:(label : label) ~data:_ =
     let label_info = LabelMap.find_exn label_infos label
     in rd_update_label label label_info prev
@@ -323,24 +329,39 @@ let rec apply_until_fixed (f : 'a -> 'a) (x : 'a) : 'a =
      then x
      else apply_until_fixed f y
 
-let rd_fixpoint (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
+let rd_fixpoint (possible_endpoints : LabelSet.t) (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
   let starting_sets = LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
   in let maps = apply_until_fixed (rd_apply info) starting_sets
   in LabelMap.mapi maps ~f:(fun ~key:label ~data:ms -> {(LabelMap.find_exn info label) with dep_sets = ms})
 
-let rec var_dependencies (label_info : label_info_fixpoint LabelMap.t) (possible_endpoints : LabelSet.t) (var : expr) : ExprSet.t =
-  let has_start = LabelSet.mem possible_endpoints 0 in
+let rec var_dependencies (label_info : label_info_fixpoint LabelMap.t) (possible_endpoints : LabelSet.t) (var : expr) : (ExprSet.t * LabelSet.t) =
+  let (Var s) = var in
+  let _ = print_endline ("var_deps called on " ^ s ^ " " ^ (Sexp.to_string ([%sexp (possible_endpoints : LabelSet.t)]))) in
   let endpoints_without_start = LabelSet.remove possible_endpoints 0 in
   let last_infos = List.map (LabelSet.to_list endpoints_without_start) ~f:(fun l -> LabelMap.find_exn label_info l) in
   let all_possible_assignments = ReachingDepSet.to_list (ReachingDepSet.union_list (List.map last_infos ~f:(fun i -> snd i.dep_sets))) in
   let var_possible_assignments = List.filter_map all_possible_assignments ~f:(fun (v, l) -> if v = var then Some l else None) in
-  if List.is_empty var_possible_assignments
-  then ExprSet.singleton var
-  else ExprSet.union_list (List.map var_possible_assignments ~f:(label_dependencies label_info))
+  let _ = print_endline ("calling label_deps on labels " ^ (Sexp.to_string ([%sexp (var_possible_assignments : label list)]))) in
+  let zero_dep = not (List.is_empty (List.filter var_possible_assignments ~f:(fun l -> l = 0))) in
+  let (prev_expr_deps, prev_label_deps) = List.unzip (List.map (List.filter var_possible_assignments ~f:(fun l -> l <> 0)) ~f:(label_dependencies label_info)) in
+  let this_expr_dep = if (LabelSet.mem possible_endpoints 0 || List.is_empty var_possible_assignments || zero_dep)
+                      then ExprSet.singleton var else ExprSet.empty in
+  let result = (ExprSet.union_list (this_expr_dep :: prev_expr_deps), LabelSet.union_list prev_label_deps) in
+  let _ = print_endline (Sexp.to_string ([%sexp (result : (ExprSet.t * LabelSet.t))])) in
+  result
 
-and label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : ExprSet.t =
+and label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : (ExprSet.t * LabelSet.t) =
+  let _ = print_string ("label_deps called on " ^ (string_of_int label) ^ "\n") in
   let this_info = LabelMap.find_exn label_info label in
-  ExprSet.union_list (List.map (ExprSet.to_list this_info.rhs_set) ~f:(var_dependencies label_info this_info.possible_previous) @ List.map (LabelSet.to_list (LabelSet.filter this_info.controlflow ~f:(fun x -> x <> 0))) ~f:(label_dependencies label_info))
+  let (rhs_exprs, rhs_labels) = List.unzip (List.map (ExprSet.to_list this_info.rhs_set) ~f:(var_dependencies label_info this_info.possible_previous)) in
+  let (cf_exprs, cf_labels) = List.unzip (List.map (LabelSet.to_list (LabelSet.filter this_info.controlflow ~f:(fun x -> x <> 0))) ~f:(label_dependencies label_info)) in
+  (ExprSet.union_list (rhs_exprs @ cf_exprs), LabelSet.add (LabelSet.union_list (rhs_labels @ cf_labels)) label)
+
+let target_analysis (label_info : label_info_fixpoint LabelMap.t) (possible_endpoints : LabelSet.t) : expr list =
+  let (_, label_deps) = var_dependencies label_info possible_endpoints (Var "target") in
+  let term_opts = List.map (LabelSet.to_list label_deps) ~f:(fun l -> let info = LabelMap.find_exn label_info l in info.target_sum_terms) in
+  let terms = List.concat (List.concat_map term_opts ~f:(fun term_opt -> Option.value_map term_opt ~default:[] ~f:(fun x -> [x]))) in
+  List.filter terms ~f:(fun t -> t <> Var "target")
 
 (*
 let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : ExprSet.t =
@@ -353,20 +374,24 @@ let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : la
 *)
 
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
-  let model_block = snd mir.datab
+  let model_block = snd mir.modelb
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
-  in let label_info = rd_fixpoint accum_info.label_info_map
+  in let label_info = rd_fixpoint accum_info.possible_previous accum_info.label_info_map
   (*in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))*)
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
   in let _ = print_string "\n\n"
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (accum_info.possible_previous : LabelSet.t)];
   in let _ = print_string "\n\n"
-  in let deps = var_dependencies label_info accum_info.possible_previous (Var "y")
-  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (deps : ExprSet.t)];
+  in let deps = var_dependencies label_info accum_info.possible_previous (Var "target")
+  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (deps : (ExprSet.t * LabelSet.t))];
+  in let target_terms = target_analysis label_info accum_info.possible_previous
+  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (target_terms : expr list)];
   in label_info
 
 (**
 TODO
+ * Still need to include target additions as dependencies for normal variables
+   - Perform first fixpoint, use normal variable dependency analysis on target, insert additional labels for target sum terms, rerun fixpoint
  * Does possible_previous for the beginning of a loop need to include the end of the loop?
    - Yes. I need to add the final label and continue labels to the possible_previous of the first label
    - How do I get access to the first label? Two ways:
