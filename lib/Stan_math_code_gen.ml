@@ -234,7 +234,7 @@ and pp_statement ppf {stmt; sloc} =
                   "local_scalar_t__ \
                    DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
                 text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
-                text "int current_statement_begin__ = -1;" ;
+                text "int current_statement__ = -1;" ;
                 pp_located_error ppf (fdbody, None) )
             , fdbody ) )
 
@@ -331,7 +331,7 @@ let%expect_test "udf" =
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
-      int current_statement_begin__ = -1;
+      int current_statement__ = -1;
       try {
         current_statement_loc__ = "";
         return add(x, 1);
@@ -526,7 +526,7 @@ let pp_model ppf p =
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "%a" pp_model_public p
 
-let globals = "static int current_statement_begin__;"
+let globals = "static int current_statement__;"
 
 let usings =
   {|
