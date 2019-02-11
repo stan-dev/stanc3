@@ -150,7 +150,7 @@ let rec pp_located_error ppf (body_block, err_msg) =
 
 and pp_statement ppf {stmt; sloc} =
   ( match stmt with
-  | Block _ | SList _ -> ()
+  | Block _ | SList _ | FunDef _ -> ()
   | _ -> pf ppf "current_statement_loc__ = \"%s\";@;" sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
@@ -300,7 +300,6 @@ let%expect_test "udf" =
   |> print_endline ;
   [%expect
     {|
-    current_statement_loc__ = "";
     template <typename T0__, typename T1__>
     void
     sars(const Eigen::Matrix<double, -1, -1>& x,

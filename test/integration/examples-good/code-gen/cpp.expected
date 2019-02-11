@@ -14,12 +14,10 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math;
 
-current_statement_loc__ = ""gentest_mother1.stan", line 10-10";
 template <typename T0__>
 typename boost::math::tools::promote_args<>::type
 foo(const T0__& n, std::ostream* pstream__) ;
 
-current_statement_loc__ = ""gentest_mother1.stan", line 12-15";
 template <typename T0__>
 typename boost::math::tools::promote_args<>::type
 foo(const T0__& n, std::ostream* pstream__) {
@@ -46,7 +44,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 18-22";
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
 std::vector<typename boost::math::tools::promote_args<>::type>
@@ -54,7 +51,6 @@ sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) ;
 
-current_statement_loc__ = ""gentest_mother1.stan", line 24-33";
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
 std::vector<typename boost::math::tools::promote_args<>::type>
@@ -107,7 +103,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 35-37";
 template <>
 typename boost::math::tools::promote_args<>::type
 foo_bar0(, std::ostream* pstream__) {
@@ -129,7 +124,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 39-41";
 template <typename T0__>
 typename boost::math::tools::promote_args<>::type
 foo_bar1(const T0__& x, std::ostream* pstream__) {
@@ -151,7 +145,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 43-45";
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<>::type
 foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
@@ -174,7 +167,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 47-49";
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<>::type
 foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
@@ -197,7 +189,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 51-53";
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<>::type
 foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
@@ -220,7 +211,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 55-57";
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<>::type
 foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
@@ -243,7 +233,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 59-62";
 template <typename T0__>
 void
 unit_normal_lp(const T0__& u, std::ostream* pstream__) {
@@ -271,7 +260,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 64-170";
 template <typename T0__>
 typename boost::math::tools::promote_args<>::type
 foo_1(const T0__& a, std::ostream* pstream__) {
@@ -507,7 +495,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 172-177";
 template <typename T0__>
 typename boost::math::tools::promote_args<>::type
 foo_2(const T0__& a, std::ostream* pstream__) {
@@ -541,7 +528,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 179-181";
 template <typename T0__, typename T1__>
 std::vector<typename boost::math::tools::promote_args<>::type>
 foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
@@ -564,7 +550,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 183-185";
 template <typename T0__>
 typename boost::math::tools::promote_args<>::type
 foo_lp(const T0__& x, std::ostream* pstream__) {
@@ -586,7 +571,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 187-189";
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
@@ -608,7 +592,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 191-201";
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 typename boost::math::tools::promote_args<>::type
 relative_diff(const T0__& x, const T1__& y, const T2__& max_,
@@ -666,7 +649,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-current_statement_loc__ = ""gentest_mother1.stan", line 203-206";
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 Eigen::Matrix<typename boost::math::tools::promote_args<>::type, -1, 1>
 foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
