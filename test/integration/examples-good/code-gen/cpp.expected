@@ -693,30 +693,15 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
  private:
 
  
-  
-gentest_mother1_model(stan::io::var_context& context__,
-
-                         unsigned int random_seed__ = 0;
-
-                         std::ostream* pstream__ = nullptr) : prob_grad(0) {
-
-  
-
+  gentest_mother1_model(stan::io::var_context& context__,
+                        unsigned int random_seed__ = 0,
+                        std::ostream* pstream__ = nullptr) : prob_grad(0) {
     typedef double local_scalar_t__;
-
-    boost::ecuyer1988 base_rng__ =
-
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-
     (void) base_rng__;  // suppress unused var warning
-
     static const char* function__ = "gentest_mother1_model_model_namespace::gentest_mother1_model";
-
-    (void) function__;  // dummy to suppress unused var warning 
-
-    
-    // Read in data variables
-
+    (void) function__;  // dummy to suppress unused var warning
     vals_r__ = context__.vals_r("J");
     J = vals_r;
     
@@ -815,11 +800,7 @@ gentest_mother1_model(stan::io::var_context& context__,
     vals_r__ = context__.vals_r("d_vec");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
                                                
-
-    
-    // Transform data variables?
-
-
+  }
 
  public: 
  
@@ -827,30 +808,15 @@ gentest_mother1_model(stan::io::var_context& context__,
   ~gentest_mother1_model_model() { }
   
   static std::string model_name() { return "gentest_mother1_model"; }
-  
-gentest_mother1_model(stan::io::var_context& context__,
-
-                         unsigned int random_seed__ = 0;
-
-                         std::ostream* pstream__ = nullptr) : prob_grad(0) {
-
-  
-
+  gentest_mother1_model(stan::io::var_context& context__,
+                        unsigned int random_seed__ = 0,
+                        std::ostream* pstream__ = nullptr) : prob_grad(0) {
     typedef double local_scalar_t__;
-
-    boost::ecuyer1988 base_rng__ =
-
+    boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-
     (void) base_rng__;  // suppress unused var warning
-
     static const char* function__ = "gentest_mother1_model_model_namespace::gentest_mother1_model";
-
-    (void) function__;  // dummy to suppress unused var warning 
-
-    
-    // Read in data variables
-
+    (void) function__;  // dummy to suppress unused var warning
     vals_r__ = context__.vals_r("J");
     J = vals_r;
     
@@ -949,11 +915,7 @@ gentest_mother1_model(stan::io::var_context& context__,
     vals_r__ = context__.vals_r("d_vec");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
                                                
-
-    
-    // Transform data variables?
-
-
+  }
   }
   
 

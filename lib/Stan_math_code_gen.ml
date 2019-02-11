@@ -147,6 +147,8 @@ let%expect_test "arg types templated correctly" =
   |> maybe_templated_arg_types |> String.concat ~sep:"," |> print_endline ;
   [%expect {| T0__ |}]
 
+(** Pretty-prints a function's return-type, taking into account templated argument
+    promotion.*)
 let pp_returntype ppf arg_types rt =
   pf ppf "%a@ "
     (option ~none:(const string "void")
@@ -493,28 +495,23 @@ let decls_of_p {datavars; _} =
   Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl
 
 let pp_ctor ppf p =
-  pf ppf
-    {|
-%s(@[<v 0>stan::io::var_context& context__,
-@ unsigned int random_seed__ = 0;
-@ std::ostream* pstream__ = nullptr) : prob_grad(0) {@]
-@ @[<v 2>
-@ typedef double local_scalar_t__;
-@ boost::ecuyer1988 base_rng__ =
-@     stan::services::util::create_rng(random_seed__, 0);
-@ (void) base_rng__;  // suppress unused var warning
-@ static const char* function__ = "%s_model_namespace::%s";
-@ (void) function__;  // dummy to suppress unused var warning |}
-    p.prog_name p.prog_name p.prog_name ;
-  pf ppf
-    {|
-@ @ // Read in data variables
-@ %a
-@ @ // Transform data variables?
-@]
-|}
-    (list ~sep:cut pp_read_data)
-    (decls_of_p p)
+  let params =
+    [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
+    ; "std::ostream* pstream__ = nullptr" ]
+  in
+  pf ppf "%s(@[<v 0>%a) : prob_grad(0) @]" p.prog_name (list ~sep:comma string)
+    params ;
+  pp_block ppf
+    ( (fun ppf p ->
+        pf ppf "typedef double local_scalar_t__;" ;
+        pf ppf "@ boost::ecuyer1988 base_rng__ = " ;
+        pf ppf "@     stan::services::util::create_rng(random_seed__, 0);" ;
+        pf ppf "@ (void) base_rng__;  // suppress unused var warning" ;
+        pf ppf "@ static const char* function__ = \"%s_model_namespace::%s\";"
+          p.prog_name p.prog_name ;
+        pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
+        pf ppf "@ %a" (list ~sep:cut pp_read_data) (decls_of_p p) )
+    , p )
 
 let pp_model_private ppf p =
   pf ppf "@ %a" (list ~sep:cut pp_decl) (decls_of_p p)
