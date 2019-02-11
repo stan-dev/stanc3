@@ -685,13 +685,9 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
-
-  class gentest_mother1_model_model : public prob_grad {
-
-
+class gentest_mother1_model_model : public prob_grad {
 
  private:
-
  
   gentest_mother1_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
@@ -801,7 +797,6 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
                                                
   }
-
  public: 
  
   
