@@ -125,11 +125,10 @@ let%expect_test "with idx" =
   print_s [%sexp (with_idx (List.range 10 15) : (int * int) list)] ;
   [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
-let pp_error_wrapper ppf (pp_err, err_arg, pp_contents, contents_arg) =
-  string ppf "try " ;
-  pp_block ppf (pp_contents, contents_arg) ;
-  string ppf " catch const std::exception& e) " ;
-  pp_block ppf (pp_err, err_arg)
+let pp_decl ppf (vident, st) =
+  pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size st) vident
+
+let with_no_loc stmt = {stmt; sloc= ""}
 
 let pp_located_msg ppf msg =
   pf ppf
@@ -140,15 +139,16 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
   @@ Option.value ~default:"e" msg
 
-let pp_located_error ppf (pp_contents, contents_arg, msg) =
-  pp_error_wrapper ppf (pp_located_msg, msg, pp_contents, contents_arg)
+(** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
+    with a C++ try-catch that will rethrow the error with the proper source location
+    from the [body_block] (required to be a [stmt_loc Block] variant).
+*)
+let rec pp_located_error ppf (body_block, err_msg) =
+  pf ppf "try %a" pp_statement body_block ;
+  string ppf " catch const std::exception& e) " ;
+  pp_block ppf (pp_located_msg, err_msg)
 
-let pp_decl ppf (vident, st) =
-  pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size st) vident
-
-let with_no_loc stmt = {stmt; sloc= ""}
-
-let rec pp_statement ppf {stmt; sloc} =
+and pp_statement ppf {stmt; sloc} =
   ( match stmt with
   | Block _ | SList _ -> ()
   | _ -> pf ppf "current_statement_loc__ = \"%s\";@;" sloc ) ;
@@ -215,7 +215,7 @@ let rec pp_statement ppf {stmt; sloc} =
                    DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
                 text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
                 text "int current_statement_begin__ = -1;" ;
-                pp_located_error ppf (pp_statement, fdbody, None) )
+                pp_located_error ppf (fdbody, None) )
             , fdbody ) )
 
 let%expect_test "location propagates" =
@@ -294,7 +294,7 @@ let%expect_test "udf" =
         [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
     ; fdbody=
         Return (Some (FunApp ("add", [Var "x"; Lit (Int, "1")])))
-        |> with_no_loc }
+        |> with_no_loc |> List.return |> Block |> with_no_loc }
   |> with_no_loc
   |> strf "@[<v>%a" pp_statement
   |> print_endline ;
