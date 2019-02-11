@@ -516,12 +516,12 @@ let pp_ctor ppf p =
 let pp_model_private ppf p =
   pf ppf "@ %a" (list ~sep:cut pp_decl) (decls_of_p p)
 
+(* XXX *)
 let pp_model_public ppf p = pf ppf "@ %a" pp_ctor p
 
-(* XXX *)
 let pp_model ppf p =
   pf ppf "class %s_model : public prob_grad {" p.prog_name ;
-  pf ppf "@ @[<v 1>@ private:@ @[<v 1>%a@]" pp_model_public p ;
+  pf ppf "@ @[<v 1>@ private:@ @[<v 1>%a@]" pp_model_private p ;
   pf ppf "@ public: @ @[<v 1>@ @ ~%s_model() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "%a" pp_model_public p

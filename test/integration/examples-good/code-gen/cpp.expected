@@ -689,114 +689,27 @@ class gentest_mother1_model_model : public prob_grad {
 
  private:
  
-  gentest_mother1_model(stan::io::var_context& context__,
-                        unsigned int random_seed__ = 0,
-                        std::ostream* pstream__ = nullptr) : prob_grad(0) {
-    typedef double local_scalar_t__;
-    boost::ecuyer1988 base_rng__ = 
-        stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "gentest_mother1_model_model_namespace::gentest_mother1_model";
-    (void) function__;  // dummy to suppress unused var warning
-    vals_r__ = context__.vals_r("J");
-    J = vals_r;
-    
-    vals_i__ = context__.vals_i("K");
-    K = vals_i;
-    
-    vals_i__ = context__.vals_i("M");
-    M = vals_i;
-    
-    vals_i__ = context__.vals_i("N");
-    N = vals_i;
-    
-    vals_r__ = context__.vals_r("d_1d_row_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-        d_1d_row_vec = vals_r[i_0__][i_1__];
-        
-    vals_r__ = context__.vals_r("d_1d_simplex");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-        d_1d_simplex = vals_r[i_0__][i_1__];
-        
-    vals_r__ = context__.vals_r("d_1d_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-        d_1d_vec = vals_r[i_0__][i_1__];
-        
-    vals_r__ = context__.vals_r("d_3d_row_vec");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-            d_3d_row_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
-            
-    vals_r__ = context__.vals_r("d_3d_simplex");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-            d_3d_simplex = vals_r[i_0__][i_1__][i_2__][i_3__];
-            
-    vals_r__ = context__.vals_r("d_3d_vec");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-            d_3d_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
-            
-    vals_r__ = context__.vals_r("d_ar_mat");
-    for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < 2; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < 3; i_3__++) 
-            d_ar_mat = vals_r[i_0__][i_1__](i_2__, i_3__);
-            
-    vals_r__ = context__.vals_r("d_cfcov_33");
-    for (size_t i_0__ = 0; i_0__ < 3; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
-        d_cfcov_33 = vals_r(i_0__, i_1__);
-        
-    vals_r__ = context__.vals_r("d_cfcov_33_ar");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < 3; i_2__++) 
-          d_cfcov_33_ar = vals_r[i_0__](i_1__, i_2__);
-          
-    vals_r__ = context__.vals_r("d_cfcov_54");
-    for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
-        d_cfcov_54 = vals_r(i_0__, i_1__);
-        
-    vals_i__ = context__.vals_i("d_int_1d_ar");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_int_1d_ar = vals_i[i_0__];
-                                               
-    vals_i__ = context__.vals_i("d_int_3d_ar");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          d_int_3d_ar = vals_i[i_0__][i_1__][i_2__];
-          
-    vals_r__ = context__.vals_r("d_real_1d_ar");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_real_1d_ar = vals_r[i_0__];
-                                               
-    vals_r__ = context__.vals_r("d_real_3d_ar");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          d_real_3d_ar = vals_r[i_0__][i_1__][i_2__];
-          
-    vals_r__ = context__.vals_r("d_row_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_row_vec = vals_r[i_0__];
-                                               
-    vals_r__ = context__.vals_r("d_simplex");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_simplex = vals_r[i_0__];
-                                               
-    vals_r__ = context__.vals_r("d_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
-                                               
-  }
+  double J;
+  int K;
+  int M;
+  int N;
+  std::vector<Eigen::Matrix<double, 1, -1>> d_1d_row_vec;
+  std::vector<Eigen::Matrix<double, -1, 1>> d_1d_simplex;
+  std::vector<Eigen::Matrix<double, -1, 1>> d_1d_vec;
+  std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> d_3d_row_vec;
+  std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_3d_simplex;
+  std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_3d_vec;
+  std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> d_ar_mat;
+  Eigen::Matrix<double, -1, -1> d_cfcov_33;
+  std::vector<Eigen::Matrix<double, -1, -1>> d_cfcov_33_ar;
+  Eigen::Matrix<double, -1, -1> d_cfcov_54;
+  std::vector<int> d_int_1d_ar;
+  std::vector<std::vector<std::vector<int>>> d_int_3d_ar;
+  std::vector<double> d_real_1d_ar;
+  std::vector<std::vector<std::vector<double>>> d_real_3d_ar;
+  Eigen::Matrix<double, 1, -1> d_row_vec;
+  Eigen::Matrix<double, -1, 1> d_simplex;
+  Eigen::Matrix<double, -1, 1> d_vec;
  public: 
  
   
