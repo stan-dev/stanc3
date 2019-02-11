@@ -50,6 +50,8 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 type constraint_check =
   {ccfunname: string; ccvid: string; cctype: sizedtype; ccargs: expr list}
 
+and formal_params = (adtype * string * unsizedtype) list
+
 and 's statement =
   | Assignment of expr * expr
   | NRFunApp of string * expr list
@@ -74,7 +76,7 @@ and 's statement =
   | FunDef of
       { fdrt: unsizedtype option
       ; fdname: string
-      ; fdargs: (adtype * string * unsizedtype) list
+      ; fdargs: formal_params
       ; fdbody: 's }
 [@@deriving sexp, hash]
 

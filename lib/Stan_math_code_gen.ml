@@ -136,6 +136,26 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
   @@ Option.value ~default:"e" msg
 
+let maybe_templated_arg_types (args : formal_params) =
+  let is_autodiff (adtype, _, _) =
+    match adtype with Ast.AutoDiffable -> true | _ -> false
+  in
+  List.filter ~f:is_autodiff args |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
+
+let%expect_test "arg types templated correctly" =
+  [(Ast.AutoDiffable, "xreal", Ast.UReal); (Ast.DataOnly, "yint", Ast.UInt)]
+  |> maybe_templated_arg_types |> String.concat ~sep:"," |> print_endline ;
+  [%expect {| T0__ |}]
+
+let pp_returntype ppf arg_types rt =
+  pf ppf "%a@ "
+    (option ~none:(const string "void")
+       (pp_unsizedtype
+          (strf "typename boost::math::tools::promote_args<%a>::type"
+             (list ~sep:comma string)
+             (maybe_templated_arg_types arg_types))))
+    rt
+
 (** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).
@@ -180,15 +200,12 @@ and pp_statement ppf {stmt; sloc} =
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
+      (* Print template line*)
       pf ppf "@[<hov>template <%a>@]@ "
         (list ~sep:comma (fmt "typename %s"))
         argtypetemplates ;
-      pf ppf "%a@ "
-        (option ~none:(const string "void")
-           (pp_unsizedtype
-              (strf "typename boost::math::tools::promote_args<%a>::type"
-                 (list ~sep:comma string) argtypetemplates)))
-        fdrt ;
+      (* print return type *)
+      pp_returntype ppf fdargs fdrt ;
       (* XXX this is all so ugly: *)
       pp_call ppf
         ( fdname

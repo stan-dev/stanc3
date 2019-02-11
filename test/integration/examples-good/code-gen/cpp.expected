@@ -46,16 +46,16 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) ;
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) {
@@ -658,8 +658,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__,
-T3__>::type, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, 1>
 foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
       const Eigen::Matrix<T1__, -1, 1>& job_params,
       const std::vector<double>& data_r, const std::vector<int>& data_i,
