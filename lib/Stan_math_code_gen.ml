@@ -116,9 +116,6 @@ let pp_arg ppf ((adtype, name, st), idx) =
   in
   pf ppf "const %a& %s" (pp_unsizedtype adstr) st name
 
-let pp_template_decls ppf =
-  pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma (fmt "typename %s"))
-
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
 let%expect_test "with idx" =
@@ -183,10 +180,14 @@ and pp_statement ppf {stmt; sloc} =
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
-      pp_template_decls ppf argtypetemplates ;
+      pf ppf "@[<hov>template <%a>@]@ "
+        (list ~sep:comma (fmt "typename %s"))
+        argtypetemplates ;
       pf ppf "%a@ "
         (option ~none:(const string "void")
-           (pp_unsizedtype "typename boost::math::tools::promote_args<>::type"))
+           (pp_unsizedtype
+              (strf "typename boost::math::tools::promote_args<%a>::type"
+                 (list ~sep:comma string) argtypetemplates)))
         fdrt ;
       (* XXX this is all so ugly: *)
       pp_call ppf

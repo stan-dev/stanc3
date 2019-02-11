@@ -15,11 +15,11 @@ using stan::model::prob_grad;
 using namespace stan::math;
 
 template <typename T0__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__>::type
 foo(const T0__& n, std::ostream* pstream__) ;
 
 template <typename T0__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__>::type
 foo(const T0__& n, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__>::type local_scalar_t__;
   typedef local_scalar_t__ fun_return_scalar_t__;
@@ -46,14 +46,16 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 }
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) ;
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) {
@@ -125,7 +127,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__>::type
 foo_bar1(const T0__& x, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__>::type local_scalar_t__;
   typedef local_scalar_t__ fun_return_scalar_t__;
@@ -146,7 +148,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__,
           T1__>::type local_scalar_t__;
@@ -168,7 +171,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__,
           T1__>::type local_scalar_t__;
@@ -190,7 +194,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__,
           T1__>::type local_scalar_t__;
@@ -212,7 +217,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__,
           T1__>::type local_scalar_t__;
@@ -261,7 +267,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__>::type
 foo_1(const T0__& a, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__>::type local_scalar_t__;
   typedef local_scalar_t__ fun_return_scalar_t__;
@@ -496,7 +502,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__>::type
 foo_2(const T0__& a, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__>::type local_scalar_t__;
   typedef local_scalar_t__ fun_return_scalar_t__;
@@ -529,7 +535,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__>
-std::vector<typename boost::math::tools::promote_args<>::type>
+std::vector<typename boost::math::tools::promote_args<T0__,
+T1__>::type>
 foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__,
           T1__>::type local_scalar_t__;
@@ -551,7 +558,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__>::type
 foo_lp(const T0__& x, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__>::type local_scalar_t__;
   typedef local_scalar_t__ fun_return_scalar_t__;
@@ -593,7 +600,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type
 relative_diff(const T0__& x, const T1__& y, const T2__& max_,
               const T3__& min_, std::ostream* pstream__) {
   typedef typename boost::math::tools::promote_args<T0__,
@@ -650,7 +658,8 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 }
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<>::type, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type, -1, 1>
 foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
       const Eigen::Matrix<T1__, -1, 1>& job_params,
       const std::vector<double>& data_r, const std::vector<int>& data_i,
