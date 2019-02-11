@@ -68,12 +68,12 @@ let rec stantype_prim_str = function
   | _ -> "double"
 
 let pp_prim_stantype ppf st = pp_unsizedtype (stantype_prim_str st) ppf st
-let pp_block ppf (pp_body, body) = pf ppf "{@;<1 4>@[<v>%a@]@,}" pp_body body
+let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
-  pf ppf "@ @;<0 4>@[<v>%a@]@]" pp_body body
+  pf ppf "@ @;<0 2>@[<v>%a@]@]" pp_body body
 
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let mkloopvar d = sprintf "i_%d__" d in
@@ -149,7 +149,9 @@ let pp_decl ppf (vident, st) =
 let with_no_loc stmt = {stmt; sloc= ""}
 
 let rec pp_statement ppf {stmt; sloc} =
-  pf ppf "current_statement_loc__ = \"%s\";@;" sloc ;
+  ( match stmt with
+  | Block _ | SList _ -> ()
+  | _ -> pf ppf "current_statement_loc__ = \"%s\";@;" sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
   | Assignment (assignee, rhs) ->
@@ -164,8 +166,8 @@ let rec pp_statement ppf {stmt; sloc} =
   | MarkLocation _ -> () (* XXX *)
   | Check _ -> () (* XXX *)
   | IfElse (cond, ifbranch, elsebranch) ->
-      let pp_else ppf x = pf ppf " else {\n %a;\n}" pp_statement x in
-      pf ppf "if (%a) %a %a\n" pp_expr cond pp_block (pp_statement, ifbranch)
+      let pp_else ppf x = pf ppf "else %a" pp_statement x in
+      pf ppf "if (%a) %a %a" pp_expr cond pp_block (pp_statement, ifbranch)
         (option pp_else) elsebranch
   | While (cond, body) ->
       pf ppf "while (%a) %a" pp_expr cond pp_block (pp_statement, body)
@@ -222,23 +224,30 @@ let%expect_test "location propagates" =
   |> print_endline ;
   [%expect
     {|
-      current_statement_loc__ = "hi";
       {
-          current_statement_loc__ = "lo";
-          break;
+        current_statement_loc__ = "lo";
+        break;
       } |}]
 
 let%expect_test "if" =
   with_no_loc
-    (IfElse (Var "true", with_no_loc (NRFunApp ("print", [Var "x"])), None))
+    (IfElse
+       ( Var "true"
+       , with_no_loc (NRFunApp ("print", [Var "x"]))
+       , Some
+           (with_no_loc (Block [with_no_loc (NRFunApp ("print", [Var "y"]))]))
+       ))
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
     {|
     current_statement_loc__ = "";
     if (true) {
-        current_statement_loc__ = "";
-        print(x);
+      current_statement_loc__ = "";
+      print(x);
+    } else {
+      current_statement_loc__ = "";
+      print(y);
     } |}]
 
 let%expect_test "run code per element" =
@@ -254,19 +263,18 @@ let%expect_test "run code per element" =
   [%expect
     {|
     for (size_t i_0__ = 0; i_0__ < W; i_0__++)
-        for (size_t i_1__ = 0; i_1__ < X; i_1__++)
-            for (size_t i_2__ = 0; i_2__ < Y; i_2__++)
-                for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
-                    current_statement_loc__ = "";
-                    {
-                        current_statement_loc__ = "";
-                        dubvec[i_0__][i_1__](i_2__, i_3__) = stan::model::rvalue(vals_r__,
-                                                                 stan::model::cons_list(stan::model::index_uni(pos__++),
-                                                                 stan::model::nil_index_list()),
-                                                                 "vals_r__");;
-                        current_statement_loc__ = "";
-                        print(dubvec[i_0__][i_1__](i_2__, i_3__));
-                    } |}]
+      for (size_t i_1__ = 0; i_1__ < X; i_1__++)
+        for (size_t i_2__ = 0; i_2__ < Y; i_2__++)
+          for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
+            {
+              current_statement_loc__ = "";
+              dubvec[i_0__][i_1__](i_2__, i_3__) = stan::model::rvalue(vals_r__,
+                                                       stan::model::cons_list(stan::model::index_uni(pos__++),
+                                                       stan::model::nil_index_list()),
+                                                       "vals_r__");;
+              current_statement_loc__ = "";
+              print(dubvec[i_0__][i_1__](i_2__, i_3__));
+            } |}]
 
 let%expect_test "decl" =
   Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= SInt}
@@ -297,24 +305,24 @@ let%expect_test "udf" =
     void
     sars(const Eigen::Matrix<double, -1, -1>& x,
          const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
-        typedef typename boost::math::tools::promote_args<T0__,
-                T1__>::type local_scalar_t__;
-        typedef local_scalar_t__ fun_return_scalar_t__;
-        const static bool propto__ = true;
-        (void) propto__;
-        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-        (void) DUMMY_VAR__;  // suppress unused var warning
-        int current_statement_begin__ = -1;
-        try {
-            current_statement_loc__ = "";
-            return add(x, 1);
-        } catch const std::exception& e) {
-            stan::lang::rethrow_located(
+      typedef typename boost::math::tools::promote_args<T0__,
+              T1__>::type local_scalar_t__;
+      typedef local_scalar_t__ fun_return_scalar_t__;
+      const static bool propto__ = true;
+      (void) propto__;
+      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+      (void) DUMMY_VAR__;  // suppress unused var warning
+      int current_statement_begin__ = -1;
+      try {
+        current_statement_loc__ = "";
+        return add(x, 1);
+      } catch const std::exception& e) {
+        stan::lang::rethrow_located(
         std::runtime_error(std::string(e) + e.what(), current_statement__);
     // Next line prevents compiler griping about no return
     throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
-        }
+      }
     } |}]
 
 let rec basetype = function
