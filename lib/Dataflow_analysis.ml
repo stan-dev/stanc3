@@ -300,22 +300,6 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
        }
   | FunDef args -> trav_st
 
-(*
-type label_info =
-  { dep_sets : ReachingDepSet.t -> ReachingDepSet.t
-  ; possible_previous : LabelSet.t
-  ; rhs_set : ExprSet.t
-  ; controlflow : LabelSet.t
-  }
-
-(* This is the state that's accumulated forward through the traversal *)
-type traversal_state =
-  { label_ix : label
-  ; label_info_map : label_info LabelMap.t
-  ; possible_previous : LabelSet.t
-  }
-*)
-
 let rd_update_label (starting_rds : ReachingDepSet.t) (label : label) (label_info : label_info_update) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
   let get_exit label = match label with
     | 0 -> starting_rds
@@ -377,6 +361,32 @@ let target_analysis (label_info : label_info_fixpoint LabelMap.t) (possible_endp
   let terms = List.concat (List.concat_map term_opts ~f:(fun term_opt -> Option.value_map term_opt ~default:[] ~f:(fun x -> [x]))) in
   List.filter terms ~f:(fun t -> t <> Var "target")
 
+let target_terms (label_info : label_info_fixpoint LabelMap.t) : (expr * label) list =
+  let terms = LabelMap.fold label_info ~init:[] ~f:(fun ~key:l ~data:label_info accum -> List.map (Option.value ~default:[] label_info.target_sum_terms) ~f:(fun t -> (t, l)) @ accum)
+  in List.filter terms ~f:(fun (t,_) -> t <> Var "target")
+
+let rec var_statistical_dependencies' (label_info : label_info_fixpoint LabelMap.t) (target_terms : (expr * label) list) (var : expr) (already_explored : ExprSet.t) : (ExprSet.t * LabelSet.t) =
+  let other_vars (expr, label) =
+    let var_set = expr_var_set expr
+    in if ExprSet.mem var_set var
+       then List.map (ExprSet.to_list (ExprSet.remove var_set var)) ~f:(fun v -> (v, label))
+       else []
+  in let var_pairs = List.concat_map target_terms ~f:other_vars
+  in let (var_exprs, var_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> label_dependencies label_info label))
+  in let (stat_exprs, stat_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> var_statistical_dependencies label_info target_terms v))
+  in (ExprSet.union_list (var_exprs @ stat_exprs), LabelSet.union_list (var_labels @ stat_labels))
+
+let rec var_statistical_dependencies (label_info : label_info_fixpoint LabelMap.t) (target_terms : (expr * label) list) (var : expr) : (ExprSet.t * LabelSet.t) =
+  let other_vars (expr, label) =
+    let var_set = expr_var_set expr
+    in if ExprSet.mem var_set var
+       then List.map (ExprSet.to_list (ExprSet.remove var_set var)) ~f:(fun v -> (v, label))
+       else []
+  in let var_pairs = List.concat_map target_terms ~f:other_vars
+  in let (var_exprs, var_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> label_dependencies label_info label))
+  in let (stat_exprs, stat_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> var_statistical_dependencies label_info target_terms v))
+  in (ExprSet.union_list (var_exprs @ stat_exprs), LabelSet.union_list (var_labels @ stat_labels))
+
 (*
 let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : ExprSet.t =
   let this_info = LabelMap.find_exn label_info label in
@@ -388,7 +398,7 @@ let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : la
 *)
 
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
-  let (var_table, model_block) = mir.datab
+  let (var_table, model_block) = mir.modelb
   in let starting_vars = "target" :: Map.Poly.keys var_table
   in let starting_rds = ReachingDepSet.of_list (List.map starting_vars ~f:(fun name -> (Var name, 0)))
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
@@ -396,18 +406,43 @@ let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
   (*in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))*)
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
   in let _ = print_string "\n\n"
-  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (accum_info.possible_previous : LabelSet.t)];
-  in let _ = print_string "\n\n"
   in let deps = var_dependencies label_info accum_info.possible_previous (Var "y")
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (deps : (ExprSet.t * LabelSet.t))];
-  in let target_terms = target_analysis label_info accum_info.possible_previous
-  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (target_terms : expr list)];
+  in let t_terms = target_terms label_info
+  in let _ = print_endline ("Target terms: " ^ (Sexp.to_string ([%sexp (t_terms : (expr * label) list)])))
+  in let stat_deps = var_statistical_dependencies label_info t_terms (Var "y")
+  in let _ = print_string "\n\n"
+  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (stat_deps : (ExprSet.t * LabelSet.t))];
+  in let _ = print_string "\n\n"
   in label_info
 
 (**
 TODO
+ * Alternative formulation for target additions:
+   - Target addition statements have two types of contribution: affecting the target as a variable which takes effect inline, and adding a term which takes effect after the model block.
+   - Term nodes should:
+     - Include the target increment node's possible_previous as its own
+     - Be listed as possible_previous for node 0
+     - Include all of the term's variables on the RHS
+     - Add each of the terms' parameter variables to the RD set
+     - Not include any other variables in the RD set
+     - Include all other terms as possible_previous?
+   - These term nodes can be included in the fixpoint operation
+ * Target terms only introduce fully connected dependency graph in some cases:
+   x ~ normal(mu, sigma) introduces mu <-> sigma
+   does
+   theta ~ normal(mu, sigma) introduce mu <-> sigma if theta is not related to data?
+   Is this true? Interacting with target might always change how the parameters is sampled..
+   - Certainly only introduces dependencies onto parameters, not to anything else
+ * Need to find functions in the fdblock, and inline them in the NRFunApp statements - but they should only effect target, everything else is scoped in a block
  * Still need to include target additions as dependencies for normal variables
    - Perform first fixpoint, use normal variable dependency analysis on target, insert additional labels for target sum terms, rerun fixpoint
+   - Alternative, since target can only be incremented and not overwritten:
+     - Provide a second rd_apply that considers all target_sum_terms as labels, or split the results into classical and statistical dependence
+       - target_sum_terms should really always be labels, but ignored in the classic analysis
+       - So, back to the original idea of iterating over terms in the traversal?
+       - But, should they actually be able to depend on eachother? The dependency is only introduced between evaluations of the model block!
+       - Does that mean term dependencies should actually be introduced in the initial rd set, along with the symbol table?
  * Does possible_previous for the beginning of a loop need to include the end of the loop?
    - Yes. I need to add the final label and continue labels to the possible_previous of the first label
    - How do I get access to the first label? Two ways:
