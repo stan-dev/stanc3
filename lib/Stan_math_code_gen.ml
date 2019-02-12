@@ -241,12 +241,14 @@ and pp_statement ppf {stmt; sloc} =
           pf ppf "@ " )
 
 let%expect_test "location propagates" =
-  {sloc= "hi"; stmt= Block [{stmt= Break; sloc= "lo"}]}
+  {sloc= "hi"; stmt= Block [{stmt= NRFunApp ("print", []); sloc= "lo"}]}
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
-  [%expect {|
+  [%expect
+    {|
       {
-        break;
+        current_statement__ = "lo";
+        print();
       } |}]
 
 let%expect_test "if" =
