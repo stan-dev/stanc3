@@ -130,7 +130,7 @@ let with_no_loc stmt = {stmt; sloc= ""}
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
-    std::runtime_error(std::string(%s) + e.what(), current_statement__);
+      std::runtime_error(std::string(%s) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
@@ -166,7 +166,7 @@ let pp_location ppf = pf ppf "current_statement__ = \"%s\";@;"
 *)
 let rec pp_located_error ppf (body_block, err_msg) =
   pf ppf "try %a" pp_statement body_block ;
-  string ppf " catch const std::exception& e) " ;
+  string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
 and pp_statement ppf {stmt; sloc} =
@@ -334,9 +334,9 @@ let%expect_test "udf" =
       try {
         current_statement__ = "";
         return add(x, 1);
-      } catch const std::exception& e) {
+      } catch (const std::exception& e) {
         stan::lang::rethrow_located(
-        std::runtime_error(std::string(e) + e.what(), current_statement__);
+          std::runtime_error(std::string(e) + e.what(), current_statement__));
     // Next line prevents compiler griping about no return
     throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -526,7 +526,7 @@ let pp_model ppf p =
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s_model() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
-  pf ppf "@ %a" pp_model_public p
+  pf ppf "@ %a@ }" pp_model_public p
 
 let globals = "static int current_statement__;"
 

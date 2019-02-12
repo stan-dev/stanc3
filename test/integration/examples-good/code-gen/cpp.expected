@@ -36,9 +36,9 @@ foo(const T0__& n, std::ostream* pstream__) {
     } 
     current_statement__ = ""gentest_mother1.stan", line 14-14";
     return n Times foo(n Minus 1);
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -96,9 +96,9 @@ sho(const T0__& t, const std::vector<T1__>& y,
                                                             "y");;
     current_statement__ = ""gentest_mother1.stan", line 32-32";
     return dydt;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -117,9 +117,9 @@ foo_bar0(, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 36-36";
     return 0.0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -138,9 +138,9 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 40-40";
     return 1.0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -161,9 +161,9 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 44-44";
     return 2.0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -184,9 +184,9 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 48-48";
     return 1.0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -207,9 +207,9 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 52-52";
     return 1.0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -230,9 +230,9 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 56-56";
     return 1.0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -256,9 +256,9 @@ unit_normal_lp(const T0__& u, std::ostream* pstream__) {
       current_statement__ = ""gentest_mother1.stan", line 61-61";
       target = target Plus uniform(u, Minus(100), 100);
     }
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -457,9 +457,9 @@ foo_1(const T0__& a, std::ostream* pstream__) {
     }
     current_statement__ = ""gentest_mother1.stan", line 169-169";
     return 0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -488,9 +488,9 @@ foo_2(const T0__& a, std::ostream* pstream__) {
       y = v;
     current_statement__ = ""gentest_mother1.stan", line 176-176";
     return 0;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -511,9 +511,9 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 180-180";
     return rep_array(t, n);
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -532,9 +532,9 @@ foo_lp(const T0__& x, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 184-184";
     return x Plus target;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -553,9 +553,9 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   try {
     current_statement__ = ""gentest_mother1.stan", line 188-188";
     reject(""user-specified rejection"");
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -609,9 +609,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     } 
     current_statement__ = ""gentest_mother1.stan", line 200-200";
     return abs_diff Divide avg_scale;
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -637,9 +637,9 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   try {
     current_statement__ = ""gentest_mother1.stan", line 205-205";
     return Transpose(make_rowvec(1, 2, 3));
-  } catch const std::exception& e) {
+  } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-    std::runtime_error(std::string(e) + e.what(), current_statement__);
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
 // Next line prevents compiler griping about no return
 throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -803,6 +803,7 @@ class gentest_mother1_model_model : public prob_grad {
     vals_r__ = context__.vals_r("d_vec");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
                                                
+  }
   }
   }
   
