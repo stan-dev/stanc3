@@ -153,7 +153,7 @@ let pp_returntype ppf arg_types rt =
   pf ppf "%a@ "
     (option ~none:(const string "void")
        (pp_unsizedtype
-          (strf "typename boost::math::tools::promote_args<%a>::type"
+          (strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
              (list ~sep:comma string)
              (maybe_templated_arg_types arg_types))))
     rt
