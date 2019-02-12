@@ -693,124 +693,125 @@ class gentest_mother1_model_model : public prob_grad {
     (void) function__;  // dummy to suppress unused var warning
     try {
       current_statement__ = ""gentest_mother1.stan", line 214-214";
-      vals_r__ = context__.vals_r("J");
-      J = vals_r;
+      vals_r__ = context__.vals_r__("J");
+      J = vals_r__;
       
       current_statement__ = ""gentest_mother1.stan", line 211-211";
-      vals_i__ = context__.vals_i("K");
-      K = vals_i;
+      vals_i__ = context__.vals_i__("K");
+      K = vals_i__;
       
       current_statement__ = ""gentest_mother1.stan", line 210-210";
-      vals_i__ = context__.vals_i("M");
-      M = vals_i;
+      vals_i__ = context__.vals_i__("M");
+      M = vals_i__;
       
       current_statement__ = ""gentest_mother1.stan", line 209-209";
-      vals_i__ = context__.vals_i("N");
-      N = vals_i;
+      vals_i__ = context__.vals_i__("N");
+      N = vals_i__;
       
       current_statement__ = ""gentest_mother1.stan", line 221-221";
-      vals_r__ = context__.vals_r("d_1d_row_vec");
+      vals_r__ = context__.vals_r__("d_1d_row_vec");
       for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-          d_1d_row_vec = vals_r[i_0__][i_1__];
+          d_1d_row_vec = vals_r__[i_0__][i_1__];
           
       current_statement__ = ""gentest_mother1.stan", line 225-225";
-      vals_r__ = context__.vals_r("d_1d_simplex");
+      vals_r__ = context__.vals_r__("d_1d_simplex");
       for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-          d_1d_simplex = vals_r[i_0__][i_1__];
+          d_1d_simplex = vals_r__[i_0__][i_1__];
           
       current_statement__ = ""gentest_mother1.stan", line 218-218";
-      vals_r__ = context__.vals_r("d_1d_vec");
+      vals_r__ = context__.vals_r__("d_1d_vec");
       for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-          d_1d_vec = vals_r[i_0__][i_1__];
+          d_1d_vec = vals_r__[i_0__][i_1__];
           
       current_statement__ = ""gentest_mother1.stan", line 222-222";
-      vals_r__ = context__.vals_r("d_3d_row_vec");
+      vals_r__ = context__.vals_r__("d_3d_row_vec");
       for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
             for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-              d_3d_row_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
+              d_3d_row_vec = vals_r__[i_0__][i_1__][i_2__][i_3__];
               
       current_statement__ = ""gentest_mother1.stan", line 226-226";
-      vals_r__ = context__.vals_r("d_3d_simplex");
+      vals_r__ = context__.vals_r__("d_3d_simplex");
       for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
             for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-              d_3d_simplex = vals_r[i_0__][i_1__][i_2__][i_3__];
+              d_3d_simplex = vals_r__[i_0__][i_1__][i_2__][i_3__];
               
       current_statement__ = ""gentest_mother1.stan", line 219-219";
-      vals_r__ = context__.vals_r("d_3d_vec");
+      vals_r__ = context__.vals_r__("d_3d_vec");
       for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
             for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-              d_3d_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
+              d_3d_vec = vals_r__[i_0__][i_1__][i_2__][i_3__];
               
       current_statement__ = ""gentest_mother1.stan", line 223-223";
-      vals_r__ = context__.vals_r("d_ar_mat");
+      vals_r__ = context__.vals_r__("d_ar_mat");
       for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < 2; i_2__++) 
             for (size_t i_3__ = 0; i_3__ < 3; i_3__++) 
-              d_ar_mat = vals_r[i_0__][i_1__](i_2__, i_3__);
+              d_ar_mat = vals_r__[i_0__][i_1__](i_2__, i_3__);
               
       current_statement__ = ""gentest_mother1.stan", line 228-228";
-      vals_r__ = context__.vals_r("d_cfcov_33");
+      vals_r__ = context__.vals_r__("d_cfcov_33");
       for (size_t i_0__ = 0; i_0__ < 3; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
-          d_cfcov_33 = vals_r(i_0__, i_1__);
+          d_cfcov_33 = vals_r__(i_0__, i_1__);
           
       current_statement__ = ""gentest_mother1.stan", line 229-229";
-      vals_r__ = context__.vals_r("d_cfcov_33_ar");
+      vals_r__ = context__.vals_r__("d_cfcov_33_ar");
       for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < 3; i_2__++) 
-            d_cfcov_33_ar = vals_r[i_0__](i_1__, i_2__);
+            d_cfcov_33_ar = vals_r__[i_0__](i_1__, i_2__);
             
       current_statement__ = ""gentest_mother1.stan", line 227-227";
-      vals_r__ = context__.vals_r("d_cfcov_54");
+      vals_r__ = context__.vals_r__("d_cfcov_54");
       for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
-          d_cfcov_54 = vals_r(i_0__, i_1__);
+          d_cfcov_54 = vals_r__(i_0__, i_1__);
           
       current_statement__ = ""gentest_mother1.stan", line 212-212";
-      vals_i__ = context__.vals_i("d_int_1d_ar");
-      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_int_1d_ar = vals_i[i_0__];
-                                                 
+      vals_i__ = context__.vals_i__("d_int_1d_ar");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
+        d_int_1d_ar = vals_i__[i_0__];
+        
       current_statement__ = ""gentest_mother1.stan", line 213-213";
-      vals_i__ = context__.vals_i("d_int_3d_ar");
+      vals_i__ = context__.vals_i__("d_int_3d_ar");
       for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-            d_int_3d_ar = vals_i[i_0__][i_1__][i_2__];
+            d_int_3d_ar = vals_i__[i_0__][i_1__][i_2__];
             
       current_statement__ = ""gentest_mother1.stan", line 215-215";
-      vals_r__ = context__.vals_r("d_real_1d_ar");
+      vals_r__ = context__.vals_r__("d_real_1d_ar");
       for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-        d_real_1d_ar = vals_r[i_0__];
+        d_real_1d_ar = vals_r__[i_0__];
         
       current_statement__ = ""gentest_mother1.stan", line 216-216";
-      vals_r__ = context__.vals_r("d_real_3d_ar");
+      vals_r__ = context__.vals_r__("d_real_3d_ar");
       for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
         for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
           for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-            d_real_3d_ar = vals_r[i_0__][i_1__][i_2__];
+            d_real_3d_ar = vals_r__[i_0__][i_1__][i_2__];
             
       current_statement__ = ""gentest_mother1.stan", line 220-220";
-      vals_r__ = context__.vals_r("d_row_vec");
-      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_row_vec = vals_r[i_0__];
+      vals_r__ = context__.vals_r__("d_row_vec");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_row_vec = vals_r__[i_0__];
                                                  
       current_statement__ = ""gentest_mother1.stan", line 224-224";
-      vals_r__ = context__.vals_r("d_simplex");
-      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_simplex = vals_r[i_0__];
+      vals_r__ = context__.vals_r__("d_simplex");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_simplex = vals_r__[i_0__];
                                                  
       current_statement__ = ""gentest_mother1.stan", line 217-217";
-      vals_r__ = context__.vals_r("d_vec");
-      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
+      vals_r__ = context__.vals_r__("d_vec");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r__[i_0__];
                                                  
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(

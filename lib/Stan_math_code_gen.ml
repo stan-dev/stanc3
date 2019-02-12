@@ -372,9 +372,9 @@ let var_context_container st =
 *)
 let pp_read_data ppf (decl_id, st, loc) =
   pp_location ppf loc ;
-  let vals = var_context_container st in
+  let vals = var_context_container st ^ "__" in
   let pp_read ppf loopvar = pf ppf "%s = %s;@ " decl_id loopvar in
-  pf ppf "%s__ = context__.%s(\"%s\");@ " vals vals decl_id ;
+  pf ppf "%s = context__.%s(\"%s\");@ " vals vals decl_id ;
   pp_run_code_per_el pp_read ppf (vals, st)
 
 let%expect_test "read int[N] y" =
@@ -383,8 +383,8 @@ let%expect_test "read int[N] y" =
   [%expect
     {|
     current_statement__ = "";
-    vals_i__ = context__.vals_i("y");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i[i_0__]; |}]
+    vals_i__ = context__.vals_i__("y");
+    for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i__[i_0__]; |}]
 
 (*
 
