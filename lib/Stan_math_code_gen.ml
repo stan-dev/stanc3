@@ -237,7 +237,8 @@ and pp_statement ppf {stmt; sloc} =
                 text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
                 text "int current_statement__ = -1;" ;
                 pp_located_error ppf (fdbody, None) )
-            , fdbody ) )
+            , fdbody ) ;
+          pf ppf "@ " )
 
 let%expect_test "location propagates" =
   {sloc= "hi"; stmt= Block [{stmt= Break; sloc= "lo"}]}

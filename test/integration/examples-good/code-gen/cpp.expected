@@ -44,6 +44,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
 std::vector<typename boost::math::tools::promote_args<T0__, T1__,
@@ -104,6 +105,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <>
 typename boost::math::tools::promote_args<>::type
 foo_bar0(, std::ostream* pstream__) {
@@ -125,6 +127,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 foo_bar1(const T0__& x, std::ostream* pstream__) {
@@ -146,6 +149,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -169,6 +173,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -192,6 +197,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -215,6 +221,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__,
 T1__>::type
@@ -238,6 +245,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__>
 void
 unit_normal_lp(const T0__& u, std::ostream* pstream__) {
@@ -264,6 +272,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 foo_1(const T0__& a, std::ostream* pstream__) {
@@ -465,6 +474,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 foo_2(const T0__& a, std::ostream* pstream__) {
@@ -496,6 +506,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__>
 std::vector<typename boost::math::tools::promote_args<T0__,
 T1__>::type>
@@ -519,6 +530,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__>
 typename boost::math::tools::promote_args<T0__>::type
 foo_lp(const T0__& x, std::ostream* pstream__) {
@@ -540,6 +552,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
@@ -561,6 +574,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__,
 T3__>::type
@@ -617,6 +631,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
 T1__>::type, -1, 1>
@@ -645,6 +660,7 @@ throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
+
 class gentest_mother1_model_model : public prob_grad {
 
  private:
