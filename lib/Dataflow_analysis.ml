@@ -300,18 +300,16 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
        }
   | FunDef args -> trav_st
 
-let rd_update_label (starting_rds : ReachingDepSet.t) (label : label) (label_info : label_info_update) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
-  let get_exit label = match label with
-    | 0 -> starting_rds
-    | l -> snd (LabelMap.find_exn prev label)
+let rd_update_label (label : label) (label_info : label_info_update) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
+  let get_exit label = snd (LabelMap.find_exn prev label)
   in let from_prev = ReachingDepSet.union_list (List.map (Set.to_list label_info.possible_previous) get_exit)
   in (from_prev, label_info.dep_sets from_prev)
 
-let rd_apply (starting_rds : ReachingDepSet.t) (label_infos : label_info_update LabelMap.t) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+let rd_apply (label_infos : label_info_update LabelMap.t) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
   (*let endpoint_rds = ReachingDepSet.union_list (List.map (LabelSet.to_list (LabelSet.remove possible_endpoints 0)) ~f:(fun l -> snd (LabelMap.find_exn prev l))) in*)
   let update_label ~key:(label : label) ~data:_ =
     let label_info = LabelMap.find_exn label_infos label
-    in rd_update_label starting_rds label label_info prev
+    in rd_update_label label label_info prev
  (* in let _ = print_endline ("rd_apply result " ^ (Sexp.to_string ([%sexp (LabelMap.mapi prev ~f:update_label : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)])))*)
   in let _ = LabelMap.mapi prev ~f:(fun ~key:l ~data:d -> let u = update_label ~key:l ~data:d in print_endline ("rd_apply result " ^ (string_of_int l) ^ ": " ^ (Sexp.to_string ([%sexp (u: ReachingDepSet.t * ReachingDepSet.t)]))))
   in LabelMap.mapi prev ~f:update_label
@@ -327,9 +325,9 @@ let rd_equal (a : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) (b : (Reachi
   let equal_set_pairs (a1, a2) (b1, b2) = ReachingDepSet.equal a1 b1 && ReachingDepSet.equal a2 b2
   in LabelMap.equal equal_set_pairs a b
 
-let rd_fixpoint (starting_rds : ReachingDepSet.t) (possible_endpoints : LabelSet.t) (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
+let rd_fixpoint (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
   let initial_sets = LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
-  in let maps = apply_until_fixed rd_equal (rd_apply starting_rds info) initial_sets
+  in let maps = apply_until_fixed rd_equal (rd_apply info) initial_sets
   in LabelMap.mapi maps ~f:(fun ~key:label ~data:ms -> {(LabelMap.find_exn info label) with dep_sets = ms})
 
 let rec var_dependencies (label_info : label_info_fixpoint LabelMap.t) (possible_endpoints : LabelSet.t) (var : expr) : (ExprSet.t * LabelSet.t) =
@@ -361,10 +359,11 @@ let target_analysis (label_info : label_info_fixpoint LabelMap.t) (possible_endp
   let terms = List.concat (List.concat_map term_opts ~f:(fun term_opt -> Option.value_map term_opt ~default:[] ~f:(fun x -> [x]))) in
   List.filter terms ~f:(fun t -> t <> Var "target")
 
-let target_terms (label_info : label_info_fixpoint LabelMap.t) : (expr * label) list =
+let target_terms (label_info : ('s label_info) LabelMap.t) : (expr * label) list =
   let terms = LabelMap.fold label_info ~init:[] ~f:(fun ~key:l ~data:label_info accum -> List.map (Option.value ~default:[] label_info.target_sum_terms) ~f:(fun t -> (t, l)) @ accum)
-  in List.filter terms ~f:(fun (t,_) -> t <> Var "target")
+  in List.rev (List.filter terms ~f:(fun (t,_) -> t <> Var "target"))
 
+(*
 let rec var_statistical_dependencies' (label_info : label_info_fixpoint LabelMap.t) (target_terms : (expr * label) list) (var : expr) (already_explored : ExprSet.t) : (ExprSet.t * LabelSet.t) =
   let other_vars (expr, label) =
     let var_set = expr_var_set expr
@@ -386,6 +385,7 @@ let rec var_statistical_dependencies (label_info : label_info_fixpoint LabelMap.
   in let (var_exprs, var_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> label_dependencies label_info label))
   in let (stat_exprs, stat_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> var_statistical_dependencies label_info target_terms v))
   in (ExprSet.union_list (var_exprs @ stat_exprs), LabelSet.union_list (var_labels @ stat_labels))
+*)
 
 (*
 type 'dep label_info =
@@ -399,12 +399,12 @@ type 'dep label_info =
 [@@deriving sexp]
 *)
 
-let add_term_nodes (trav_st : traversal_state) : traversal_state =
-  let add_term_node ((trav_st, nodes) : (traversal_state * LabelSet.t)) ((term, label) : (expr * inc_label)) : (traversal_state, LabelSet.t) =
+let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) =
+  let add_term_node ((trav_st, nodes) : (traversal_state * LabelSet.t)) ((term, inc_label) : (expr * label)) : (traversal_state * LabelSet.t) =
     let (label, trav_st') = new_label trav_st in
     let target_inc_info = LabelMap.find_exn trav_st.label_info_map inc_label in
     let term_vars = expr_var_set term in
-    let label_info =
+    let info =
       { dep_sets = (fun entry -> ReachingDepSet.of_list (List.map (ExprSet.to_list term_vars) ~f:(fun v -> (v, label))))
       ; possible_previous = target_inc_info.possible_previous
       ; rhs_set = term_vars
@@ -415,28 +415,49 @@ let add_term_nodes (trav_st : traversal_state) : traversal_state =
     in ( { trav_st' with label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info) }
        , LabelSet.add nodes label
        )
-  in let (trav_st', term_nodes) = List.fold_left (target_terms accum_info.label_info) ~init:trav_st ~f:add_term_node
-  in LabelSet.fold term_nodes ~init:trav_st ~f:(fun l -> modify_label_info)
+  in let (trav_st', term_nodes) = List.fold_left (target_terms trav_st.label_info_map) ~init:(trav_st, LabelSet.empty) ~f:add_term_node
+  in let add_mutual_dependence trav_st label = modify_label_info trav_st label (fun info -> {info with possible_previous = LabelSet.union info.possible_previous term_nodes})
+  in (LabelSet.fold term_nodes ~init:trav_st' ~f:add_mutual_dependence, term_nodes)
 
+let node_0 (initial_declared : ExprSet.t) (term_labels_opt : LabelSet.t option) : label_info_update =
+  { dep_sets = (fun entry -> ReachingDepSet.union entry (ReachingDepSet.of_list (List.map (ExprSet.to_list initial_declared) ~f:(fun v -> (v, 0)))))
+  ; possible_previous = Option.value term_labels_opt ~default:LabelSet.empty
+  ; rhs_set = ExprSet.empty
+  ; controlflow = LabelSet.empty
+  ; loc = "Start of block"
+  ; target_sum_terms = None
+  }
 
+let add_node_0 (initial_declared : ExprSet.t) (term_labels_opt : LabelSet.t option) (trav_st : traversal_state) : traversal_state =
+  let label_info = node_0 initial_declared term_labels_opt
+  in { trav_st with label_info_map = merge_label_maps trav_st.label_info_map (LabelMap.singleton 0 label_info) }
+
+let augment_accum_info (trav_st : traversal_state) (initial_declared : ExprSet.t) (statistical_dependence : bool) : traversal_state =
+  if statistical_dependence
+  then let (trav_st', term_labels) = add_term_nodes trav_st
+       in add_node_0 initial_declared (Some term_labels) trav_st'
+  else add_node_0 initial_declared None trav_st
 
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
   let (var_table, model_block) = mir.modelb
-  in let starting_vars = "target" :: Map.Poly.keys var_table
-  in let starting_rds = ReachingDepSet.of_list (List.map starting_vars ~f:(fun name -> (Var name, 0)))
+  in let starting_vars = ExprSet.of_list (List.map ("target" :: Map.Poly.keys var_table) ~f:(fun v -> Var v))
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
-  in let label_info = rd_fixpoint starting_rds accum_info.possible_previous accum_info.label_info_map
+  in let accum_info' = augment_accum_info accum_info starting_vars true
+  (*in let starting_rds = ReachingDepSet.of_list (List.map starting_vars ~f:(fun name -> (Var name, 0)))*)
+  in let label_info = rd_fixpoint accum_info'.label_info_map
   (*in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))*)
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
   in let _ = print_string "\n\n"
-  in let deps = var_dependencies label_info accum_info.possible_previous (Var "y")
-  in let _ = Sexp.pp_hum Format.std_formatter [%sexp (deps : (ExprSet.t * LabelSet.t))];
+(*  in let deps = var_dependencies label_info accum_info.possible_previous (Var "y")
+  in let _ = print_endline ("y depends on:" ^ (Sexp.to_string ([%sexp (deps : (ExprSet.t * LabelSet.t))])))
   in let t_terms = target_terms label_info
   in let _ = print_endline ("Target terms: " ^ (Sexp.to_string ([%sexp (t_terms : (expr * label) list)])))
-  in let stat_deps = var_statistical_dependencies label_info t_terms (Var "y")
+  in let _ = print_endline ("Possible previous: " ^ (Sexp.to_string ([%sexp (accum_info.possible_previous : LabelSet.t)])))
+*)
+  (*in let stat_deps = var_statistical_dependencies label_info t_terms (Var "y")
   in let _ = print_string "\n\n"
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (stat_deps : (ExprSet.t * LabelSet.t))];
-  in let _ = print_string "\n\n"
+  in let _ = print_string "\n\n"*)
   in label_info
 
 (**
