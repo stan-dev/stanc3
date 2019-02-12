@@ -29,12 +29,12 @@ foo(const T0__& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 13-13";
+    current_statement__ = ""gentest_mother1.stan", line 13-13";
     if (n Equals 0) {
-      current_statement_loc__ = ""gentest_mother1.stan", line 13-13";
+      current_statement__ = ""gentest_mother1.stan", line 13-13";
       return 1;
     } 
-    current_statement_loc__ = ""gentest_mother1.stan", line 14-14";
+    current_statement__ = ""gentest_mother1.stan", line 14-14";
     return n Times foo(n Minus 1);
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -71,17 +71,17 @@ sho(const T0__& t, const std::vector<T1__>& y,
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 29-29";
+    current_statement__ = ""gentest_mother1.stan", line 29-29";
     std::vector<double> dydt;
     
-    current_statement_loc__ = ""gentest_mother1.stan", line 30-30";
+    current_statement__ = ""gentest_mother1.stan", line 30-30";
     stan::model::rvalue(dydt,
         stan::model::cons_list(stan::model::index_uni(1),
         stan::model::nil_index_list()), "dydt"); = stan::model::rvalue(y,
                                                        stan::model::cons_list(stan::model::index_uni(2),
                                                        stan::model::nil_index_list()),
                                                        "y");;
-    current_statement_loc__ = ""gentest_mother1.stan", line 31-31";
+    current_statement__ = ""gentest_mother1.stan", line 31-31";
     stan::model::rvalue(dydt,
         stan::model::cons_list(stan::model::index_uni(2),
         stan::model::nil_index_list()), "dydt"); = Minus(stan::model::rvalue(y,
@@ -94,7 +94,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
                                                             stan::model::cons_list(stan::model::index_uni(2),
                                                             stan::model::nil_index_list()),
                                                             "y");;
-    current_statement_loc__ = ""gentest_mother1.stan", line 32-32";
+    current_statement__ = ""gentest_mother1.stan", line 32-32";
     return dydt;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -115,7 +115,7 @@ foo_bar0(, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 36-36";
+    current_statement__ = ""gentest_mother1.stan", line 36-36";
     return 0.0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -136,7 +136,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 40-40";
+    current_statement__ = ""gentest_mother1.stan", line 40-40";
     return 1.0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -159,7 +159,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 44-44";
+    current_statement__ = ""gentest_mother1.stan", line 44-44";
     return 2.0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -182,7 +182,7 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 48-48";
+    current_statement__ = ""gentest_mother1.stan", line 48-48";
     return 1.0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -205,7 +205,7 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 52-52";
+    current_statement__ = ""gentest_mother1.stan", line 52-52";
     return 1.0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -228,7 +228,7 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 56-56";
+    current_statement__ = ""gentest_mother1.stan", line 56-56";
     return 1.0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -249,11 +249,11 @@ unit_normal_lp(const T0__& u, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 60-60";
+    current_statement__ = ""gentest_mother1.stan", line 60-60";
     target = target Plus normal_log(u, 0, 1);
     {
       
-      current_statement_loc__ = ""gentest_mother1.stan", line 61-61";
+      current_statement__ = ""gentest_mother1.stan", line 61-61";
       target = target Plus uniform(u, Minus(100), 100);
     }
   } catch const std::exception& e) {
@@ -275,187 +275,187 @@ foo_1(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 66-66";
+    current_statement__ = ""gentest_mother1.stan", line 66-66";
     while (1) {
       break;
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 67-67";
+    current_statement__ = ""gentest_mother1.stan", line 67-67";
     while (0) {
       continue;
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 70-70";
+    current_statement__ = ""gentest_mother1.stan", line 70-70";
     for (size_t i = 1; i < 10; i++) break;
-    current_statement_loc__ = ""gentest_mother1.stan", line 71-71";
+    current_statement__ = ""gentest_mother1.stan", line 71-71";
     for (size_t i = 1; i < 10; i++) continue;
-    current_statement_loc__ = ""gentest_mother1.stan", line 74-78";
+    current_statement__ = ""gentest_mother1.stan", line 74-78";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 75-75";
+        current_statement__ = ""gentest_mother1.stan", line 75-75";
         int b;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 76-76";
+        current_statement__ = ""gentest_mother1.stan", line 76-76";
         b = 5;
         break;
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 81-85";
+    current_statement__ = ""gentest_mother1.stan", line 81-85";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 82-84";
+        current_statement__ = ""gentest_mother1.stan", line 82-84";
         if (0) {
           break;
-        } else current_statement_loc__ = ""gentest_mother1.stan", line 83-84";
+        } else current_statement__ = ""gentest_mother1.stan", line 83-84";
         if (1) {
           break;
         } else break;
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 88-88";
+    current_statement__ = ""gentest_mother1.stan", line 88-88";
     while (1) {
-      current_statement_loc__ = ""gentest_mother1.stan", line 88-88";
+      current_statement__ = ""gentest_mother1.stan", line 88-88";
       while (0) {
         break;
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 91-93";
+    current_statement__ = ""gentest_mother1.stan", line 91-93";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 92-92";
+        current_statement__ = ""gentest_mother1.stan", line 92-92";
         for (size_t i = 1; i < 10; i++) break;
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 96-114";
+    current_statement__ = ""gentest_mother1.stan", line 96-114";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 97-97";
+        current_statement__ = ""gentest_mother1.stan", line 97-97";
         std::vector<std::vector<int>> vs;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 98-98";
+        current_statement__ = ""gentest_mother1.stan", line 98-98";
         int z;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 99-102";
+        current_statement__ = ""gentest_mother1.stan", line 99-102";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 100-100";
+            current_statement__ = ""gentest_mother1.stan", line 100-100";
             z = 0;
             break;
           }
-        current_statement_loc__ = ""gentest_mother1.stan", line 103-106";
+        current_statement__ = ""gentest_mother1.stan", line 103-106";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 104-104";
+            current_statement__ = ""gentest_mother1.stan", line 104-104";
             z = 0;
             continue;
           }
-        current_statement_loc__ = ""gentest_mother1.stan", line 107-113";
+        current_statement__ = ""gentest_mother1.stan", line 107-113";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 108-111";
+            current_statement__ = ""gentest_mother1.stan", line 108-111";
             for (size_t vv = 0; vv < length(v); vv++) 
               {
-                current_statement_loc__ = ""gentest_mother1.stan", line 109-109";
+                current_statement__ = ""gentest_mother1.stan", line 109-109";
                 z = 0;
                 break;
               }
-            current_statement_loc__ = ""gentest_mother1.stan", line 112-112";
+            current_statement__ = ""gentest_mother1.stan", line 112-112";
             z = 1;
           }
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 117-128";
+    current_statement__ = ""gentest_mother1.stan", line 117-128";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 118-118";
+        current_statement__ = ""gentest_mother1.stan", line 118-118";
         double z;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 119-119";
+        current_statement__ = ""gentest_mother1.stan", line 119-119";
         Eigen::Matrix<double, -1, -1> vs;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 120-123";
+        current_statement__ = ""gentest_mother1.stan", line 120-123";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 121-121";
+            current_statement__ = ""gentest_mother1.stan", line 121-121";
             z = 0;
             break;
           }
-        current_statement_loc__ = ""gentest_mother1.stan", line 124-127";
+        current_statement__ = ""gentest_mother1.stan", line 124-127";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 125-125";
+            current_statement__ = ""gentest_mother1.stan", line 125-125";
             z = 3.1;
             continue;
           }
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 131-142";
+    current_statement__ = ""gentest_mother1.stan", line 131-142";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 132-132";
+        current_statement__ = ""gentest_mother1.stan", line 132-132";
         double z;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 133-133";
+        current_statement__ = ""gentest_mother1.stan", line 133-133";
         Eigen::Matrix<double, -1, 1> vs;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 134-137";
+        current_statement__ = ""gentest_mother1.stan", line 134-137";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 135-135";
+            current_statement__ = ""gentest_mother1.stan", line 135-135";
             z = 0;
             break;
           }
-        current_statement_loc__ = ""gentest_mother1.stan", line 138-141";
+        current_statement__ = ""gentest_mother1.stan", line 138-141";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 139-139";
+            current_statement__ = ""gentest_mother1.stan", line 139-139";
             z = 3.2;
             continue;
           }
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 145-156";
+    current_statement__ = ""gentest_mother1.stan", line 145-156";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 146-146";
+        current_statement__ = ""gentest_mother1.stan", line 146-146";
         double z;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 147-147";
+        current_statement__ = ""gentest_mother1.stan", line 147-147";
         Eigen::Matrix<double, 1, -1> vs;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 148-151";
+        current_statement__ = ""gentest_mother1.stan", line 148-151";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 149-149";
+            current_statement__ = ""gentest_mother1.stan", line 149-149";
             z = 0;
             break;
           }
-        current_statement_loc__ = ""gentest_mother1.stan", line 152-155";
+        current_statement__ = ""gentest_mother1.stan", line 152-155";
         for (size_t v = 0; v < length(vs); v++) 
           {
-            current_statement_loc__ = ""gentest_mother1.stan", line 153-153";
+            current_statement__ = ""gentest_mother1.stan", line 153-153";
             z = 3.3;
             continue;
           }
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 159-167";
+    current_statement__ = ""gentest_mother1.stan", line 159-167";
     while (1) {
       {
-        current_statement_loc__ = ""gentest_mother1.stan", line 160-160";
+        current_statement__ = ""gentest_mother1.stan", line 160-160";
         int b;
         
-        current_statement_loc__ = ""gentest_mother1.stan", line 161-161";
+        current_statement__ = ""gentest_mother1.stan", line 161-161";
         b = 5;
         {
-          current_statement_loc__ = ""gentest_mother1.stan", line 163-163";
+          current_statement__ = ""gentest_mother1.stan", line 163-163";
           int c;
           
-          current_statement_loc__ = ""gentest_mother1.stan", line 164-164";
+          current_statement__ = ""gentest_mother1.stan", line 164-164";
           c = 6;
           break;
         }
       }
     }
-    current_statement_loc__ = ""gentest_mother1.stan", line 169-169";
+    current_statement__ = ""gentest_mother1.stan", line 169-169";
     return 0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -476,17 +476,17 @@ foo_2(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 173-173";
+    current_statement__ = ""gentest_mother1.stan", line 173-173";
     std::vector<int> vs;
     
-    current_statement_loc__ = ""gentest_mother1.stan", line 174-174";
+    current_statement__ = ""gentest_mother1.stan", line 174-174";
     int y;
     
-    current_statement_loc__ = ""gentest_mother1.stan", line 175-175";
+    current_statement__ = ""gentest_mother1.stan", line 175-175";
     for (size_t v = 0; v < length(vs); v++) 
-      current_statement_loc__ = ""gentest_mother1.stan", line 175-175";
+      current_statement__ = ""gentest_mother1.stan", line 175-175";
       y = v;
-    current_statement_loc__ = ""gentest_mother1.stan", line 176-176";
+    current_statement__ = ""gentest_mother1.stan", line 176-176";
     return 0;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -509,7 +509,7 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 180-180";
+    current_statement__ = ""gentest_mother1.stan", line 180-180";
     return rep_array(t, n);
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -530,7 +530,7 @@ foo_lp(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 184-184";
+    current_statement__ = ""gentest_mother1.stan", line 184-184";
     return x Plus target;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -551,7 +551,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 188-188";
+    current_statement__ = ""gentest_mother1.stan", line 188-188";
     reject(""user-specified rejection"");
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -577,19 +577,19 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 192-192";
+    current_statement__ = ""gentest_mother1.stan", line 192-192";
     double abs_diff;
     
-    current_statement_loc__ = ""gentest_mother1.stan", line 193-193";
+    current_statement__ = ""gentest_mother1.stan", line 193-193";
     double avg_scale;
     
-    current_statement_loc__ = ""gentest_mother1.stan", line 194-194";
+    current_statement__ = ""gentest_mother1.stan", line 194-194";
     abs_diff = fabs(x Minus y);
-    current_statement_loc__ = ""gentest_mother1.stan", line 195-195";
+    current_statement__ = ""gentest_mother1.stan", line 195-195";
     avg_scale = fabs(x) Plus fabs(y) Divide 2;
-    current_statement_loc__ = ""gentest_mother1.stan", line 196-197";
+    current_statement__ = ""gentest_mother1.stan", line 196-197";
     if (abs_diff Divide avg_scale Greater max_) {
-      current_statement_loc__ = ""gentest_mother1.stan", line 197-197";
+      current_statement__ = ""gentest_mother1.stan", line 197-197";
       reject(""user-specified rejection, difference above "",
       max_,
       "" x:"",
@@ -597,9 +597,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       "" y:"",
       y);
     } 
-    current_statement_loc__ = ""gentest_mother1.stan", line 198-199";
+    current_statement__ = ""gentest_mother1.stan", line 198-199";
     if (abs_diff Divide avg_scale Less min_) {
-      current_statement_loc__ = ""gentest_mother1.stan", line 199-199";
+      current_statement__ = ""gentest_mother1.stan", line 199-199";
       reject(""user-specified rejection, difference below "",
       min_,
       "" x:"",
@@ -607,7 +607,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       "" y:"",
       y);
     } 
-    current_statement_loc__ = ""gentest_mother1.stan", line 200-200";
+    current_statement__ = ""gentest_mother1.stan", line 200-200";
     return abs_diff Divide avg_scale;
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
@@ -635,7 +635,7 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
-    current_statement_loc__ = ""gentest_mother1.stan", line 205-205";
+    current_statement__ = ""gentest_mother1.stan", line 205-205";
     return Transpose(make_rowvec(1, 2, 3));
   } catch const std::exception& e) {
     stan::lang::rethrow_located(
