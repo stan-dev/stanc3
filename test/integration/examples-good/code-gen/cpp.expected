@@ -27,7 +27,7 @@ foo(const T0__& n, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 13-13";
     if (n Equals 0) {
@@ -39,8 +39,8 @@ foo(const T0__& n, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -70,7 +70,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 29-29";
     std::vector<double> dydt;
@@ -100,8 +100,8 @@ sho(const T0__& t, const std::vector<T1__>& y,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -115,15 +115,15 @@ foo_bar0(, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 36-36";
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -137,15 +137,15 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 40-40";
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -161,15 +161,15 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 44-44";
     return 2.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -185,15 +185,15 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 48-48";
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -209,15 +209,15 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 52-52";
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -233,15 +233,15 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 56-56";
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -255,7 +255,7 @@ unit_normal_lp(const T0__& u, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 60-60";
     target = target Plus normal_log(u, 0, 1);
@@ -267,8 +267,8 @@ unit_normal_lp(const T0__& u, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -282,7 +282,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 66-66";
     while (1) {
@@ -469,8 +469,8 @@ foo_1(const T0__& a, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -484,7 +484,7 @@ foo_2(const T0__& a, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 173-173";
     std::vector<int> vs;
@@ -501,8 +501,8 @@ foo_2(const T0__& a, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -518,15 +518,15 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 180-180";
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -540,15 +540,15 @@ foo_lp(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 184-184";
     return x Plus target;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -562,15 +562,15 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 188-188";
     reject(""user-specified rejection"");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -589,7 +589,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 192-192";
     double abs_diff;
@@ -626,8 +626,8 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -648,15 +648,15 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  int current_statement__ = -1;
+  
   try {
     current_statement__ = ""gentest_mother1.stan", line 205-205";
     return Transpose(make_rowvec(1, 2, 3));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
   }
 }
@@ -700,125 +700,134 @@ class gentest_mother1_model_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "gentest_mother1_model_model_namespace::gentest_mother1_model";
     (void) function__;  // dummy to suppress unused var warning
-    current_statement__ = ""gentest_mother1.stan", line 214-214";
-    vals_r__ = context__.vals_r("J");
-    J = vals_r;
-    
-    current_statement__ = ""gentest_mother1.stan", line 211-211";
-    vals_i__ = context__.vals_i("K");
-    K = vals_i;
-    
-    current_statement__ = ""gentest_mother1.stan", line 210-210";
-    vals_i__ = context__.vals_i("M");
-    M = vals_i;
-    
-    current_statement__ = ""gentest_mother1.stan", line 209-209";
-    vals_i__ = context__.vals_i("N");
-    N = vals_i;
-    
-    current_statement__ = ""gentest_mother1.stan", line 221-221";
-    vals_r__ = context__.vals_r("d_1d_row_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-        d_1d_row_vec = vals_r[i_0__][i_1__];
-        
-    current_statement__ = ""gentest_mother1.stan", line 225-225";
-    vals_r__ = context__.vals_r("d_1d_simplex");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-        d_1d_simplex = vals_r[i_0__][i_1__];
-        
-    current_statement__ = ""gentest_mother1.stan", line 218-218";
-    vals_r__ = context__.vals_r("d_1d_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
-        d_1d_vec = vals_r[i_0__][i_1__];
-        
-    current_statement__ = ""gentest_mother1.stan", line 222-222";
-    vals_r__ = context__.vals_r("d_3d_row_vec");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-            d_3d_row_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
-            
-    current_statement__ = ""gentest_mother1.stan", line 226-226";
-    vals_r__ = context__.vals_r("d_3d_simplex");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-            d_3d_simplex = vals_r[i_0__][i_1__][i_2__][i_3__];
-            
-    current_statement__ = ""gentest_mother1.stan", line 219-219";
-    vals_r__ = context__.vals_r("d_3d_vec");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
-            d_3d_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
-            
-    current_statement__ = ""gentest_mother1.stan", line 223-223";
-    vals_r__ = context__.vals_r("d_ar_mat");
-    for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < 2; i_2__++) 
-          for (size_t i_3__ = 0; i_3__ < 3; i_3__++) 
-            d_ar_mat = vals_r[i_0__][i_1__](i_2__, i_3__);
-            
-    current_statement__ = ""gentest_mother1.stan", line 228-228";
-    vals_r__ = context__.vals_r("d_cfcov_33");
-    for (size_t i_0__ = 0; i_0__ < 3; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
-        d_cfcov_33 = vals_r(i_0__, i_1__);
-        
-    current_statement__ = ""gentest_mother1.stan", line 229-229";
-    vals_r__ = context__.vals_r("d_cfcov_33_ar");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < 3; i_2__++) 
-          d_cfcov_33_ar = vals_r[i_0__](i_1__, i_2__);
+    try {
+      current_statement__ = ""gentest_mother1.stan", line 214-214";
+      vals_r__ = context__.vals_r("J");
+      J = vals_r;
+      
+      current_statement__ = ""gentest_mother1.stan", line 211-211";
+      vals_i__ = context__.vals_i("K");
+      K = vals_i;
+      
+      current_statement__ = ""gentest_mother1.stan", line 210-210";
+      vals_i__ = context__.vals_i("M");
+      M = vals_i;
+      
+      current_statement__ = ""gentest_mother1.stan", line 209-209";
+      vals_i__ = context__.vals_i("N");
+      N = vals_i;
+      
+      current_statement__ = ""gentest_mother1.stan", line 221-221";
+      vals_r__ = context__.vals_r("d_1d_row_vec");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
+          d_1d_row_vec = vals_r[i_0__][i_1__];
           
-    current_statement__ = ""gentest_mother1.stan", line 227-227";
-    vals_r__ = context__.vals_r("d_cfcov_54");
-    for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
-        d_cfcov_54 = vals_r(i_0__, i_1__);
+      current_statement__ = ""gentest_mother1.stan", line 225-225";
+      vals_r__ = context__.vals_r("d_1d_simplex");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
+          d_1d_simplex = vals_r[i_0__][i_1__];
+          
+      current_statement__ = ""gentest_mother1.stan", line 218-218";
+      vals_r__ = context__.vals_r("d_1d_vec");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < N; i_1__++) 
+          d_1d_vec = vals_r[i_0__][i_1__];
+          
+      current_statement__ = ""gentest_mother1.stan", line 222-222";
+      vals_r__ = context__.vals_r("d_3d_row_vec");
+      for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
+            for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
+              d_3d_row_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
+              
+      current_statement__ = ""gentest_mother1.stan", line 226-226";
+      vals_r__ = context__.vals_r("d_3d_simplex");
+      for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
+            for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
+              d_3d_simplex = vals_r[i_0__][i_1__][i_2__][i_3__];
+              
+      current_statement__ = ""gentest_mother1.stan", line 219-219";
+      vals_r__ = context__.vals_r("d_3d_vec");
+      for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
+            for (size_t i_3__ = 0; i_3__ < N; i_3__++) 
+              d_3d_vec = vals_r[i_0__][i_1__][i_2__][i_3__];
+              
+      current_statement__ = ""gentest_mother1.stan", line 223-223";
+      vals_r__ = context__.vals_r("d_ar_mat");
+      for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < 2; i_2__++) 
+            for (size_t i_3__ = 0; i_3__ < 3; i_3__++) 
+              d_ar_mat = vals_r[i_0__][i_1__](i_2__, i_3__);
+              
+      current_statement__ = ""gentest_mother1.stan", line 228-228";
+      vals_r__ = context__.vals_r("d_cfcov_33");
+      for (size_t i_0__ = 0; i_0__ < 3; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
+          d_cfcov_33 = vals_r(i_0__, i_1__);
+          
+      current_statement__ = ""gentest_mother1.stan", line 229-229";
+      vals_r__ = context__.vals_r("d_cfcov_33_ar");
+      for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < 3; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < 3; i_2__++) 
+            d_cfcov_33_ar = vals_r[i_0__](i_1__, i_2__);
+            
+      current_statement__ = ""gentest_mother1.stan", line 227-227";
+      vals_r__ = context__.vals_r("d_cfcov_54");
+      for (size_t i_0__ = 0; i_0__ < 5; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < 4; i_1__++) 
+          d_cfcov_54 = vals_r(i_0__, i_1__);
+          
+      current_statement__ = ""gentest_mother1.stan", line 212-212";
+      vals_i__ = context__.vals_i("d_int_1d_ar");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_int_1d_ar = vals_i[i_0__];
+                                                 
+      current_statement__ = ""gentest_mother1.stan", line 213-213";
+      vals_i__ = context__.vals_i("d_int_3d_ar");
+      for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
+            d_int_3d_ar = vals_i[i_0__][i_1__][i_2__];
+            
+      current_statement__ = ""gentest_mother1.stan", line 215-215";
+      vals_r__ = context__.vals_r("d_real_1d_ar");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) 
+        d_real_1d_ar = vals_r[i_0__];
         
-    current_statement__ = ""gentest_mother1.stan", line 212-212";
-    vals_i__ = context__.vals_i("d_int_1d_ar");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_int_1d_ar = vals_i[i_0__];
-                                               
-    current_statement__ = ""gentest_mother1.stan", line 213-213";
-    vals_i__ = context__.vals_i("d_int_3d_ar");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          d_int_3d_ar = vals_i[i_0__][i_1__][i_2__];
-          
-    current_statement__ = ""gentest_mother1.stan", line 215-215";
-    vals_r__ = context__.vals_r("d_real_1d_ar");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_real_1d_ar = vals_r[i_0__];
-                                               
-    current_statement__ = ""gentest_mother1.stan", line 216-216";
-    vals_r__ = context__.vals_r("d_real_3d_ar");
-    for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
-      for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
-        for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
-          d_real_3d_ar = vals_r[i_0__][i_1__][i_2__];
-          
-    current_statement__ = ""gentest_mother1.stan", line 220-220";
-    vals_r__ = context__.vals_r("d_row_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_row_vec = vals_r[i_0__];
-                                               
-    current_statement__ = ""gentest_mother1.stan", line 224-224";
-    vals_r__ = context__.vals_r("d_simplex");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_simplex = vals_r[i_0__];
-                                               
-    current_statement__ = ""gentest_mother1.stan", line 217-217";
-    vals_r__ = context__.vals_r("d_vec");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
-                                               
+      current_statement__ = ""gentest_mother1.stan", line 216-216";
+      vals_r__ = context__.vals_r("d_real_3d_ar");
+      for (size_t i_0__ = 0; i_0__ < K; i_0__++) 
+        for (size_t i_1__ = 0; i_1__ < M; i_1__++) 
+          for (size_t i_2__ = 0; i_2__ < N; i_2__++) 
+            d_real_3d_ar = vals_r[i_0__][i_1__][i_2__];
+            
+      current_statement__ = ""gentest_mother1.stan", line 220-220";
+      vals_r__ = context__.vals_r("d_row_vec");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_row_vec = vals_r[i_0__];
+                                                 
+      current_statement__ = ""gentest_mother1.stan", line 224-224";
+      vals_r__ = context__.vals_r("d_simplex");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_simplex = vals_r[i_0__];
+                                                 
+      current_statement__ = ""gentest_mother1.stan", line 217-217";
+      vals_r__ = context__.vals_r("d_vec");
+      for (size_t i_0__ = 0; i_0__ < N; i_0__++) d_vec = vals_r[i_0__];
+                                                 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+      std::runtime_error(std::string(e) + e.what(), current_statement__));
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+
+    }
   }
   }
   }

@@ -131,8 +131,8 @@ let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
       std::runtime_error(std::string(%s) + e.what(), current_statement__));
-// Next line prevents compiler griping about no return
-throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
   @@ Option.value ~default:"e" msg
 
@@ -164,12 +164,12 @@ let pp_location ppf = pf ppf "current_statement__ = \"%s\";@;"
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).
 *)
-let rec pp_located_error ppf (body_block, err_msg) =
-  pf ppf "try %a" pp_statement body_block ;
+let pp_located_error ppf (pp_body_block, body, err_msg) =
+  pf ppf "@ try %a" pp_body_block body ;
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
-and pp_statement ppf {stmt; sloc} =
+let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
   | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
   | _ -> pp_location ppf sloc ) ;
@@ -235,8 +235,7 @@ and pp_statement ppf {stmt; sloc} =
                   "local_scalar_t__ \
                    DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
                 text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
-                text "int current_statement__ = -1;" ;
-                pp_located_error ppf (fdbody, None) )
+                pp_located_error ppf (pp_statement, fdbody, None) )
             , fdbody ) ;
           pf ppf "@ " )
 
@@ -333,15 +332,15 @@ let%expect_test "udf" =
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
-      int current_statement__ = -1;
+
       try {
         current_statement__ = "";
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
           std::runtime_error(std::string(e) + e.what(), current_statement__));
-    // Next line prevents compiler griping about no return
-    throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+          // Next line prevents compiler griping about no return
+          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
       }
     } |}]
@@ -514,7 +513,10 @@ let pp_ctor ppf p =
         pf ppf "@ static const char* function__ = \"%s_model_namespace::%s\";"
           p.prog_name p.prog_name ;
         pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
-        pf ppf "@ %a" (list ~sep:cut pp_read_data) (decls_of_p p) )
+        pp_located_error ppf
+          ( (fun ppf body -> pp_block ppf (list ~sep:cut pp_read_data, body))
+          , decls_of_p p
+          , None ) )
     , p )
 
 let pp_model_private ppf p =
