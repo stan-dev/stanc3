@@ -388,14 +388,37 @@ let rec var_statistical_dependencies (label_info : label_info_fixpoint LabelMap.
   in (ExprSet.union_list (var_exprs @ stat_exprs), LabelSet.union_list (var_labels @ stat_labels))
 
 (*
-let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : label) : ExprSet.t =
-  let this_info = LabelMap.find_exn label_info label in
-  let rhs_dep_sets = List.map (ExprSet.to_list label_info.rhs_set) ~f:(fun var -> (var, ReachingDepSet.filter (fst this_info.dep_sets) ~f:(fun (v, l) -> v = var))) in
-  let rhs_deps = ReachingDepSet.union_list (List.map rhs_dep_sets ~f:snd) in
-  let rhs_dep_list = List.map (ReachingDepSet.to_list rhs_deps) snd
-  let rhs_undefined = List.map (List.filter rhs_dep_sets ~f:(fun (v, s) -> ReachingDepSet.is_empty s)) ~f:fst in
-  ExprSet.union (ExprSet.of_list rhs_undefined) (ExprSet.union_list (List.map rhs_deps ~f:(label_dependencies label_info)))
+type 'dep label_info =
+  { dep_sets : 'dep
+  ; possible_previous : LabelSet.t
+  ; rhs_set : ExprSet.t
+  ; controlflow : LabelSet.t
+  ; loc : string
+  ; target_sum_terms : (expr list) option
+  }
+[@@deriving sexp]
 *)
+
+let add_term_nodes (trav_st : traversal_state) : traversal_state =
+  let add_term_node ((trav_st, nodes) : (traversal_state * LabelSet.t)) ((term, label) : (expr * inc_label)) : (traversal_state, LabelSet.t) =
+    let (label, trav_st') = new_label trav_st in
+    let target_inc_info = LabelMap.find_exn trav_st.label_info_map inc_label in
+    let term_vars = expr_var_set term in
+    let label_info =
+      { dep_sets = (fun entry -> ReachingDepSet.of_list (List.map (ExprSet.to_list term_vars) ~f:(fun v -> (v, label))))
+      ; possible_previous = target_inc_info.possible_previous
+      ; rhs_set = term_vars
+      ; controlflow = target_inc_info.controlflow (* could also be [inc_label] *)
+      ; loc = target_inc_info.loc
+      ; target_sum_terms = None
+      }
+    in ( { trav_st' with label_info_map = merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info) }
+       , LabelSet.add nodes label
+       )
+  in let (trav_st', term_nodes) = List.fold_left (target_terms accum_info.label_info) ~init:trav_st ~f:add_term_node
+  in LabelSet.fold term_nodes ~init:trav_st ~f:(fun l -> modify_label_info)
+
+
 
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
   let (var_table, model_block) = mir.modelb
