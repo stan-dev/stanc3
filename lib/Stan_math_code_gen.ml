@@ -169,7 +169,7 @@ let rec pp_located_error ppf (body_block, err_msg) =
 
 and pp_statement ppf {stmt; sloc} =
   ( match stmt with
-  | Block _ | SList _ | FunDef _ | While _ | For _ | Skip -> ()
+  | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
   | _ -> pf ppf "current_statement_loc__ = \"%s\";@;" sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
@@ -241,10 +241,8 @@ let%expect_test "location propagates" =
   {sloc= "hi"; stmt= Block [{stmt= Break; sloc= "lo"}]}
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
-  [%expect
-    {|
+  [%expect {|
       {
-        current_statement_loc__ = "lo";
         break;
       } |}]
 

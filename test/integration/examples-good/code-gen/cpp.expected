@@ -275,20 +275,19 @@ foo_1(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   int current_statement__ = -1;
   try {
+    current_statement_loc__ = ""gentest_mother1.stan", line 66-66";
     while (1) {
-      current_statement_loc__ = ""gentest_mother1.stan", line 66-66";
       break;
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 67-67";
     while (0) {
-      current_statement_loc__ = ""gentest_mother1.stan", line 67-67";
       continue;
     }
-    for (size_t i = 1; i < 10; i++) 
-      current_statement_loc__ = ""gentest_mother1.stan", line 70-70";
-      break;
-    for (size_t i = 1; i < 10; i++) 
-      current_statement_loc__ = ""gentest_mother1.stan", line 71-71";
-      continue;
+    current_statement_loc__ = ""gentest_mother1.stan", line 70-70";
+    for (size_t i = 1; i < 10; i++) break;
+    current_statement_loc__ = ""gentest_mother1.stan", line 71-71";
+    for (size_t i = 1; i < 10; i++) continue;
+    current_statement_loc__ = ""gentest_mother1.stan", line 74-78";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 75-75";
@@ -296,37 +295,36 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         
         current_statement_loc__ = ""gentest_mother1.stan", line 76-76";
         b = 5;
-        current_statement_loc__ = ""gentest_mother1.stan", line 77-77";
         break;
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 81-85";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 82-84";
         if (0) {
-          current_statement_loc__ = ""gentest_mother1.stan", line 82-82";
           break;
         } else current_statement_loc__ = ""gentest_mother1.stan", line 83-84";
         if (1) {
-          current_statement_loc__ = ""gentest_mother1.stan", line 83-83";
           break;
-        } else current_statement_loc__ = ""gentest_mother1.stan", line 84-84";
-        break;
+        } else break;
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 88-88";
     while (1) {
+      current_statement_loc__ = ""gentest_mother1.stan", line 88-88";
       while (0) {
-        current_statement_loc__ = ""gentest_mother1.stan", line 88-88";
         break;
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 91-93";
     while (1) {
       {
-        for (size_t i = 1; i < 10; i++) 
-          current_statement_loc__ = ""gentest_mother1.stan", line 92-92";
-          break;
+        current_statement_loc__ = ""gentest_mother1.stan", line 92-92";
+        for (size_t i = 1; i < 10; i++) break;
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 96-114";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 97-97";
@@ -335,27 +333,28 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         current_statement_loc__ = ""gentest_mother1.stan", line 98-98";
         int z;
         
+        current_statement_loc__ = ""gentest_mother1.stan", line 99-102";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 100-100";
             z = 0;
-            current_statement_loc__ = ""gentest_mother1.stan", line 101-101";
             break;
           }
+        current_statement_loc__ = ""gentest_mother1.stan", line 103-106";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 104-104";
             z = 0;
-            current_statement_loc__ = ""gentest_mother1.stan", line 105-105";
             continue;
           }
+        current_statement_loc__ = ""gentest_mother1.stan", line 107-113";
         for (size_t v = 0; v < length(vs); v++) 
           {
+            current_statement_loc__ = ""gentest_mother1.stan", line 108-111";
             for (size_t vv = 0; vv < length(v); vv++) 
               {
                 current_statement_loc__ = ""gentest_mother1.stan", line 109-109";
                 z = 0;
-                current_statement_loc__ = ""gentest_mother1.stan", line 110-110";
                 break;
               }
             current_statement_loc__ = ""gentest_mother1.stan", line 112-112";
@@ -363,6 +362,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
           }
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 117-128";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 118-118";
@@ -371,22 +371,23 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         current_statement_loc__ = ""gentest_mother1.stan", line 119-119";
         Eigen::Matrix<double, -1, -1> vs;
         
+        current_statement_loc__ = ""gentest_mother1.stan", line 120-123";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 121-121";
             z = 0;
-            current_statement_loc__ = ""gentest_mother1.stan", line 122-122";
             break;
           }
+        current_statement_loc__ = ""gentest_mother1.stan", line 124-127";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 125-125";
             z = 3.1;
-            current_statement_loc__ = ""gentest_mother1.stan", line 126-126";
             continue;
           }
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 131-142";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 132-132";
@@ -395,22 +396,23 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         current_statement_loc__ = ""gentest_mother1.stan", line 133-133";
         Eigen::Matrix<double, -1, 1> vs;
         
+        current_statement_loc__ = ""gentest_mother1.stan", line 134-137";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 135-135";
             z = 0;
-            current_statement_loc__ = ""gentest_mother1.stan", line 136-136";
             break;
           }
+        current_statement_loc__ = ""gentest_mother1.stan", line 138-141";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 139-139";
             z = 3.2;
-            current_statement_loc__ = ""gentest_mother1.stan", line 140-140";
             continue;
           }
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 145-156";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 146-146";
@@ -419,22 +421,23 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         current_statement_loc__ = ""gentest_mother1.stan", line 147-147";
         Eigen::Matrix<double, 1, -1> vs;
         
+        current_statement_loc__ = ""gentest_mother1.stan", line 148-151";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 149-149";
             z = 0;
-            current_statement_loc__ = ""gentest_mother1.stan", line 150-150";
             break;
           }
+        current_statement_loc__ = ""gentest_mother1.stan", line 152-155";
         for (size_t v = 0; v < length(vs); v++) 
           {
             current_statement_loc__ = ""gentest_mother1.stan", line 153-153";
             z = 3.3;
-            current_statement_loc__ = ""gentest_mother1.stan", line 154-154";
             continue;
           }
       }
     }
+    current_statement_loc__ = ""gentest_mother1.stan", line 159-167";
     while (1) {
       {
         current_statement_loc__ = ""gentest_mother1.stan", line 160-160";
@@ -448,7 +451,6 @@ foo_1(const T0__& a, std::ostream* pstream__) {
           
           current_statement_loc__ = ""gentest_mother1.stan", line 164-164";
           c = 6;
-          current_statement_loc__ = ""gentest_mother1.stan", line 165-165";
           break;
         }
       }
@@ -480,6 +482,7 @@ foo_2(const T0__& a, std::ostream* pstream__) {
     current_statement_loc__ = ""gentest_mother1.stan", line 174-174";
     int y;
     
+    current_statement_loc__ = ""gentest_mother1.stan", line 175-175";
     for (size_t v = 0; v < length(vs); v++) 
       current_statement_loc__ = ""gentest_mother1.stan", line 175-175";
       y = v;
@@ -668,7 +671,7 @@ class gentest_mother1_model_model : public prob_grad {
   Eigen::Matrix<double, -1, 1> d_vec;
  
  public:
- ~gentest_mother1_model_model() { }
+  ~gentest_mother1_model_model() { }
   
   static std::string model_name() { return "gentest_mother1_model"; }
   
