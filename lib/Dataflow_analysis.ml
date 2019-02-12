@@ -108,6 +108,9 @@ let initial_trav_st =
 
 let initial_stack_st = 0
 
+let peek_next_label (st : traversal_state) : label =
+  st.label_ix + 1
+
 let new_label (st : traversal_state) : (label * traversal_state) =
   (st.label_ix, {st with label_ix = st.label_ix + 1})
 
@@ -156,6 +159,15 @@ let target_term_node (stack_st : stack_state) (loc : string) (trav_st : traversa
      ; possible_previous = LabelSet.singleton label
      }
 
+(* This is missing from Core.Option (!)*)
+let option_map (a : 'a option) (f : 'a -> 'b) : 'b option =
+  match a with
+  | None -> None
+  | Some a -> Some (f a)
+
+let modify_label_info (trav_st : traversal_state) (label : label) (f : label_info_update -> label_info_update) : traversal_state =
+  {trav_st with label_info_map = LabelMap.change trav_st.label_info_map label (fun info_opt -> option_map info_opt f)}
+
 (* Ignoring non-local control flow (break, continue, return) for now *)
 let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_state) (st : stmt_loc) : traversal_state =
   match st.stmt with
@@ -167,11 +179,7 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
         (fun entry ->
          let assigned_var = expr_assigned_var lhs
          in let this_assgn = ReachingDepSet.singleton (assigned_var, label)
-         in let implicit_decl =
-           if ReachingDepSet.is_empty (ReachingDepSet.filter entry ~f:(fun (v, l) -> v = lhs))
-           then ReachingDepSet.singleton (assigned_var, 0)
-           else ReachingDepSet.empty
-         in ReachingDepSet.union_list [filter_var_deps entry assigned_var; this_assgn; implicit_decl])
+         in ReachingDepSet.union (filter_var_deps entry assigned_var) this_assgn)
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
       ; controlflow = LabelSet.union_list [LabelSet.singleton stack_st; trav_st.continues; trav_st.returns]
@@ -223,8 +231,8 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
     let body_st = accumulate_label_info recurse_st label body_stmt in
-    let possible_loop_st = {trav_st' with possible_previous = LabelSet.union_list [LabelSet.singleton label; body_st.possible_previous; body_st.continues]} in
-    let body_st' = accumulate_label_info possible_loop_st label body_stmt in
+    let loop_start_possible_previous = LabelSet.union_list [LabelSet.singleton label; body_st.possible_previous; body_st.continues] in
+    let body_st' = modify_label_info body_st (peek_next_label recurse_st) (fun info -> {info with possible_previous = loop_start_possible_previous}) in
     let info =
       { dep_sets = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
@@ -243,8 +251,8 @@ let rec accumulate_label_info (trav_st : traversal_state) (stack_st : stack_stat
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
     let body_st = accumulate_label_info recurse_st label args.body in
-    let possible_loop_st = {trav_st' with possible_previous = LabelSet.union_list [LabelSet.singleton label; body_st.possible_previous; body_st.continues]} in
-    let body_st' = accumulate_label_info possible_loop_st label args.body in
+    let loop_start_possible_previous = LabelSet.union_list [LabelSet.singleton label; body_st.possible_previous; body_st.continues] in
+    let body_st' = modify_label_info body_st (peek_next_label recurse_st) (fun info -> {info with possible_previous = loop_start_possible_previous}) in
     let alter_fn = fun set -> ReachingDepSet.remove set (args.loopvar, label) in
     let body_st'' = alter_last_rd body_st'.possible_previous alter_fn body_st' in
     let info =
@@ -308,30 +316,36 @@ type traversal_state =
   }
 *)
 
-let rd_update_label (label : label) (label_info : label_info_update) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
+let rd_update_label (starting_rds : ReachingDepSet.t) (label : label) (label_info : label_info_update) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) =
   let get_exit label = match label with
-    | 0 -> ReachingDepSet.empty
+    | 0 -> starting_rds
     | l -> snd (LabelMap.find_exn prev label)
   in let from_prev = ReachingDepSet.union_list (List.map (Set.to_list label_info.possible_previous) get_exit)
   in (from_prev, label_info.dep_sets from_prev)
 
-let rd_apply (label_infos : label_info_update LabelMap.t) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+let rd_apply (starting_rds : ReachingDepSet.t) (label_infos : label_info_update LabelMap.t) (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
   (*let endpoint_rds = ReachingDepSet.union_list (List.map (LabelSet.to_list (LabelSet.remove possible_endpoints 0)) ~f:(fun l -> snd (LabelMap.find_exn prev l))) in*)
   let update_label ~key:(label : label) ~data:_ =
     let label_info = LabelMap.find_exn label_infos label
-    in rd_update_label label label_info prev
+    in rd_update_label starting_rds label label_info prev
+ (* in let _ = print_endline ("rd_apply result " ^ (Sexp.to_string ([%sexp (LabelMap.mapi prev ~f:update_label : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)])))*)
+  in let _ = LabelMap.mapi prev ~f:(fun ~key:l ~data:d -> let u = update_label ~key:l ~data:d in print_endline ("rd_apply result " ^ (string_of_int l) ^ ": " ^ (Sexp.to_string ([%sexp (u: ReachingDepSet.t * ReachingDepSet.t)]))))
   in LabelMap.mapi prev ~f:update_label
 
 (* using y = x instead of compare x y = 0 gives a runtime(!?) error: "compare: functional value"*)
-let rec apply_until_fixed (f : 'a -> 'a) (x : 'a) : 'a =
+let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) : 'a =
   let y = f x
-  in if compare y x = 0
+  in if equal x y
      then x
-     else apply_until_fixed f y
+     else apply_until_fixed equal f y
 
-let rd_fixpoint (possible_endpoints : LabelSet.t) (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
-  let starting_sets = LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
-  in let maps = apply_until_fixed (rd_apply info) starting_sets
+let rd_equal (a : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) (b : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : bool =
+  let equal_set_pairs (a1, a2) (b1, b2) = ReachingDepSet.equal a1 b1 && ReachingDepSet.equal a2 b2
+  in LabelMap.equal equal_set_pairs a b
+
+let rd_fixpoint (starting_rds : ReachingDepSet.t) (possible_endpoints : LabelSet.t) (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
+  let initial_sets = LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
+  in let maps = apply_until_fixed rd_equal (rd_apply starting_rds info) initial_sets
   in LabelMap.mapi maps ~f:(fun ~key:label ~data:ms -> {(LabelMap.find_exn info label) with dep_sets = ms})
 
 let rec var_dependencies (label_info : label_info_fixpoint LabelMap.t) (possible_endpoints : LabelSet.t) (var : expr) : (ExprSet.t * LabelSet.t) =
@@ -374,15 +388,17 @@ let label_dependencies (label_info : label_info_fixpoint LabelMap.t) (label : la
 *)
 
 let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
-  let model_block = snd mir.modelb
+  let (var_table, model_block) = mir.datab
+  in let starting_vars = "target" :: Map.Poly.keys var_table
+  in let starting_rds = ReachingDepSet.of_list (List.map starting_vars ~f:(fun name -> (Var name, 0)))
   in let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block
-  in let label_info = rd_fixpoint accum_info.possible_previous accum_info.label_info_map
+  in let label_info = rd_fixpoint starting_rds accum_info.possible_previous accum_info.label_info_map
   (*in let _ = LabelMap.mapi label_info ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))*)
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
   in let _ = print_string "\n\n"
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (accum_info.possible_previous : LabelSet.t)];
   in let _ = print_string "\n\n"
-  in let deps = var_dependencies label_info accum_info.possible_previous (Var "target")
+  in let deps = var_dependencies label_info accum_info.possible_previous (Var "y")
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (deps : (ExprSet.t * LabelSet.t))];
   in let target_terms = target_analysis label_info accum_info.possible_previous
   in let _ = Sexp.pp_hum Format.std_formatter [%sexp (target_terms : expr list)];
@@ -397,7 +413,7 @@ TODO
    - How do I get access to the first label? Two ways:
      1. Introspect the label iteration process, lookup trav_st.label_ix+1
      2. Run the substatements once just to get the labels you need, then run it again with those added
-   - Done #2
+   - Done #1
  * Indexed variables
  * Shadowing
  * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
@@ -409,4 +425,12 @@ TODO
    - Done, untested
  * Target assignments need to be split into one label for each summed term
    - Done, collected target terms in label_info of each target assignment, this is sufficient for depends analysis and prior partitioning
+
+
+
+ * if function ends in st, it can change the target
+
+ * write expect_test in file, found automatically, use dune runtest
+ * use dune format and dune promote to use the actual output as a unit test
+
 **)
