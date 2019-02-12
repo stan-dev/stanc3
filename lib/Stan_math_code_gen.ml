@@ -158,6 +158,8 @@ let pp_returntype ppf arg_types rt =
              (maybe_templated_arg_types arg_types))))
     rt
 
+let pp_location ppf = pf ppf "current_statement__ = \"%s\";@;"
+
 (** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).
@@ -170,7 +172,7 @@ let rec pp_located_error ppf (body_block, err_msg) =
 and pp_statement ppf {stmt; sloc} =
   ( match stmt with
   | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
-  | _ -> pf ppf "current_statement__ = \"%s\";@;" sloc ) ;
+  | _ -> pp_location ppf sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
   | Assignment (assignee, rhs) ->
@@ -366,17 +368,19 @@ let var_context_container st =
    1. keep track of pos__
    1. run checks on resulting vident
 *)
-let pp_read_data ppf (decl_id, st) =
+let pp_read_data ppf (decl_id, st, loc) =
+  pp_location ppf loc ;
   let vals = var_context_container st in
   let pp_read ppf loopvar = pf ppf "%s = %s;@ " decl_id loopvar in
   pf ppf "%s__ = context__.%s(\"%s\");@ " vals vals decl_id ;
   pp_run_code_per_el pp_read ppf (vals, st)
 
 let%expect_test "read int[N] y" =
-  strf "@[<v>%a@]" pp_read_data ("y", Ast.SArray (Ast.SInt, Var "N"))
+  strf "@[<v>%a@]" pp_read_data ("y", Ast.SArray (Ast.SInt, Var "N"), "")
   |> print_endline ;
   [%expect
     {|
+    current_statement__ = "";
     vals_i__ = context__.vals_i("y");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i[i_0__]; |}]
 
@@ -510,7 +514,9 @@ let pp_ctor ppf p =
         pf ppf "@ %a" (list ~sep:cut pp_read_data) (decls_of_p p) )
     , p )
 
-let pp_model_private ppf p = pf ppf "%a" (list ~sep:cut pp_decl) (decls_of_p p)
+let pp_model_private ppf p =
+  pf ppf "%a" (list ~sep:cut pp_decl)
+    (List.map ~f:(fun (x, y, _) -> (x, y)) (decls_of_p p))
 
 (* XXX *)
 let pp_model_public ppf p = pf ppf "@ %a" pp_ctor p

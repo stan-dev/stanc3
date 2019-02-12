@@ -120,4 +120,4 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | SList ls -> {stmt= SList (List.map ~f:(map_toplevel_stmts f) ls); sloc}
   | _ -> f {sloc; stmt}
 
-let tvdecl_to_decl {tvident; tvtype; _} = (tvident, tvtype)
+let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
