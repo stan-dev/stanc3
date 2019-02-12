@@ -169,7 +169,7 @@ let rec pp_located_error ppf (body_block, err_msg) =
 
 and pp_statement ppf {stmt; sloc} =
   ( match stmt with
-  | Block _ | SList _ | FunDef _ -> ()
+  | Block _ | SList _ | FunDef _ | While _ | For _ | Skip -> ()
   | _ -> pf ppf "current_statement_loc__ = \"%s\";@;" sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
@@ -182,7 +182,6 @@ and pp_statement ppf {stmt; sloc} =
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
   | Skip -> ()
-  | MarkLocation _ -> () (* XXX *)
   | Check _ -> () (* XXX *)
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
@@ -513,18 +512,17 @@ let pp_ctor ppf p =
         pf ppf "@ %a" (list ~sep:cut pp_read_data) (decls_of_p p) )
     , p )
 
-let pp_model_private ppf p =
-  pf ppf "@ %a" (list ~sep:cut pp_decl) (decls_of_p p)
+let pp_model_private ppf p = pf ppf "%a" (list ~sep:cut pp_decl) (decls_of_p p)
 
 (* XXX *)
 let pp_model_public ppf p = pf ppf "@ %a" pp_ctor p
 
 let pp_model ppf p =
   pf ppf "class %s_model : public prob_grad {" p.prog_name ;
-  pf ppf "@ @[<v 1>@ private:@ @[<v 1>%a@]" pp_model_private p ;
-  pf ppf "@ public: @ @[<v 1>@ @ ~%s_model() { }" p.prog_name ;
+  pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
+  pf ppf "@ public:@ @[<v 1> ~%s_model() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
-  pf ppf "%a" pp_model_public p
+  pf ppf "@ %a" pp_model_public p
 
 let globals = "static int current_statement__;"
 

@@ -56,7 +56,6 @@ and 's statement =
   | Assignment of expr * expr
   | NRFunApp of string * expr list
   | Check of constraint_check
-  | MarkLocation of string
   | Break
   | Continue
   | Return of expr option
