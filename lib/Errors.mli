@@ -32,6 +32,9 @@ val location_of_position : Lexing.position -> Ast.location
 val string_of_location : Ast.location -> string
 (** Render a location as a string *)
 
+val string_of_location_span : Ast.location_span -> string
+(** Render a location_span as a string *)
+
 val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
