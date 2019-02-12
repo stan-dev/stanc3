@@ -24,7 +24,7 @@ test/integration/examples-good/%/dune: test/integration/examples-good/dune
 
 test/integration/examples-bad/%/dune: test/integration/examples-bad/dune
 	echo "(include `echo "$*/" | sed -e "s|[^/]*/|../|g"`dune)" > $@
-  
+
 test/integration/included/%/dune: test/integration/included/dune
 	echo "(include `echo "$*/" | sed -e "s|[^/]*/|../|g"`dune)" > $@
 

@@ -13,6 +13,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let print_model_cpp = ref false
 let dump_mir = ref false
 let output_file = ref ""
 
@@ -33,7 +34,7 @@ let options =
       , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
-    ; ( "--dump-mir"
+    ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR." )
     ; ( "--auto-format"
@@ -53,6 +54,9 @@ let options =
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
          \"$name.cpp\")" )
+    ; ( "--print-cpp"
+      , Arg.Set print_model_cpp
+      , "If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow_undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
@@ -94,7 +98,8 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
-    Out_channel.write_all !output_file ~data:cpp )
+    Out_channel.write_all !output_file ~data:cpp ;
+    if !print_model_cpp then print_endline cpp )
 
 let remove_dotstan s = String.drop_suffix s 5
 

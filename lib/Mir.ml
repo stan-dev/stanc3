@@ -97,7 +97,8 @@ type top_var_table = (string, top_var_decl) Map.Poly.t [@@deriving sexp]
 
 type 's prog =
   { functionsb: 's
-  ; datab: top_var_table * 's
+  ; datavars: top_var_table
+  ; tdatab: top_var_table * 's
   ; modelb: top_var_table * 's
   ; gqb: top_var_table * 's
   ; prog_name: string
@@ -117,3 +118,5 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | Block ls -> {stmt= Block (List.map ~f:(map_toplevel_stmts f) ls); sloc}
   | SList ls -> {stmt= SList (List.map ~f:(map_toplevel_stmts f) ls); sloc}
   | _ -> f {sloc; stmt}
+
+let tvdecl_to_decl {tvident; tvtype; _} = (tvident, tvtype)
