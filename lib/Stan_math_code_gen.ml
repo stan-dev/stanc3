@@ -6,11 +6,14 @@
     [pf] and [strf] from the Fmt library[1]. On top of that, the "@" pretty-printing
     specifiers all actually correspond 1-to-1 with commands like [open_box] from
     the Format library[0]. The boxing system is best described in this explainer
-    pdf [2], particularly Section 3 ("Format basics"). Good luck!
+    pdf [2], particularly Section 3 ("Format basics"). It's worth noting that someone
+    was able to make a decent-looking pretty-printer for a subset of Javascript[3] that
+    might serve as a good reference. Good luck!
 
     [0] Format module doc: https://caml.inria.fr/pub/docs/manual-ocaml/libref/Format.html
     [1] Fmt module doc: https://erratique.ch/software/fmt/doc/Fmt.html
     [2] Format Unraveled: https://hal.archives-ouvertes.fr/hal-01503081/file/format-unraveled.pdf
+    [3] Javascript pretty-printer https://github.com/Virum/compiler/blob/28e807b842bab5dcf11460c8193dd5b16674951f/JavaScript.ml#L112
 *)
 
 open Core_kernel
@@ -190,7 +193,7 @@ let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
       let loopvar = Mir.gensym () in
       let new_ident = strf "%s[%s]" ident loopvar in
       let new_pp_body ppf ident =
-        pp_for_loop ppf (loopvar, Lit (Int, "0"), dim, pp_body, ident)
+        pp_for_loop ppf (loopvar, zero, dim, pp_body, ident)
       in
       pp_for_each_in_array ppf (t, new_pp_body, new_ident)
   | _ -> pp_body ppf ident
