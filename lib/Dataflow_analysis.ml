@@ -1,8 +1,11 @@
 open Core_kernel
 open Mir
 
+let debug_verbose = false
+let demonstration_verbose = false
+
 type label = int
-[@@deriving sexp, hash, compare]
+[@@deriving sexp]
 
 module LabelMap = Map.Make(
   struct
@@ -28,7 +31,6 @@ module ExprSet = Set.Make(
     let t_of_sexp = expr_of_sexp
   end)
 
-(*let rec expr_var_set (ex : expr) : ExprSet.t =*)
 let rec expr_var_set (ex : expr) : ExprSet.t =
   let union_recur exprs = ExprSet.union_list (List.map exprs ~f:expr_var_set) in
   match ex with
@@ -189,12 +191,6 @@ let target_term_node
   ; possible_previous = LabelSet.singleton label
   }
 
-(* This is missing from Core.Option (!)*)
-let option_map (a : 'a option) (f : 'a -> 'b) : 'b option =
-  match a with
-  | None -> None
-  | Some a -> Some (f a)
-
 let modify_label_info
     (trav_st : traversal_state)
     (label : label)
@@ -205,9 +201,10 @@ let modify_label_info
      LabelMap.change
        trav_st.label_info_map
        label
-       ~f:(fun info_opt -> option_map info_opt f)}
+       ~f:(function (*Option.map should exist but doesn't appear to*)
+           | None -> None
+           | Some info -> Some (f info))}
 
-(* Ignoring non-local control flow (break, continue, return) for now *)
 let rec accumulate_label_info
     (trav_st : traversal_state)
     (stack_st : stack_state)
@@ -218,7 +215,6 @@ let rec accumulate_label_info
     let (label, trav_st') = new_label trav_st in
     let info =
       { dep_sets =
-          (* below doesn't work for indexed expressions *)
           (fun entry ->
              let assigned_var = expr_assigned_var lhs
              in let this_assgn = ReachingDepSet.singleton (assigned_var, label)
@@ -394,7 +390,6 @@ let rec accumulate_label_info
   | FunDef _ -> trav_st
 
 
-let verbose = false
 
 
 let rd_update_label
@@ -416,7 +411,7 @@ let rd_apply
     let label_info = LabelMap.find_exn label_infos label in
     rd_update_label label_info prev
   in
-  (if not verbose then () else
+  (if debug_verbose then
      let _ =
        (LabelMap.mapi prev
           ~f:(fun ~key:l ~data:d ->
@@ -427,7 +422,6 @@ let rd_apply
      in ());
   LabelMap.mapi prev ~f:update_label
 
-(* using y = x instead of compare x y = 0 gives a runtime(!?) error: "compare: functional value"*)
 let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) : 'a =
   let y = f x in
   if equal x y
@@ -462,7 +456,7 @@ let rec var_dependencies
   let s = match var with
     | Var s -> s
     | _ -> raise (Failure "Cannot currently check dependency of non-var expression") in
-  if not verbose then () else
+  if debug_verbose then
     (print_endline ("var_deps called on " ^ s ^ " " ^
                     (Sexp.to_string ([%sexp (possible_endpoints : LabelSet.t)]))));
   let endpoints_without_start = LabelSet.remove possible_endpoints 0 in
@@ -481,7 +475,7 @@ let rec var_dependencies
       all_possible_assignments
       ~f:(fun (v, l) -> if v = var then Some l else None)
   in
-  if not verbose then () else
+  if debug_verbose then
     (print_endline ("calling label_deps on labels " ^
                     (Sexp.to_string ([%sexp (var_possible_assignments : label list)]))));
   let zero_dep =
@@ -507,7 +501,7 @@ let rec var_dependencies
     ( ExprSet.union_list (this_expr_dep :: prev_expr_deps)
     , LabelSet.union_list prev_label_deps)
   in
-  if not verbose then () else
+  if debug_verbose then
     (print_endline (Sexp.to_string ([%sexp (result : (ExprSet.t * LabelSet.t))])));
   result
 
@@ -517,7 +511,7 @@ and label_dependencies
     (label : label)
   : (ExprSet.t * LabelSet.t) =
   let visited' = LabelSet.add visited label in
-  if not verbose then () else
+  if debug_verbose then
     (print_string ("label_deps called on " ^ (string_of_int label) ^ "\n"));
   let this_info = LabelMap.find_exn label_info label in
   let (rhs_exprs, rhs_labels) =
@@ -570,42 +564,6 @@ let target_terms (label_info : ('s label_info) LabelMap.t) : (expr * label) list
   in
   List.rev (List.filter terms ~f:(fun (t,_) -> t <> Var "target"))
 
-(*
-let rec var_statistical_dependencies' (label_info : label_info_fixpoint LabelMap.t) (target_terms : (expr * label) list) (var : expr) (already_explored : ExprSet.t) : (ExprSet.t * LabelSet.t) =
-  let other_vars (expr, label) =
-    let var_set = expr_var_set expr
-    in if ExprSet.mem var_set var
-       then List.map (ExprSet.to_list (ExprSet.remove var_set var)) ~f:(fun v -> (v, label))
-       else []
-  in let var_pairs = List.concat_map target_terms ~f:other_vars
-  in let (var_exprs, var_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> label_dependencies label_info label))
-  in let (stat_exprs, stat_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> var_statistical_dependencies label_info target_terms v))
-  in (ExprSet.union_list (var_exprs @ stat_exprs), LabelSet.union_list (var_labels @ stat_labels))
-
-let rec var_statistical_dependencies (label_info : label_info_fixpoint LabelMap.t) (target_terms : (expr * label) list) (var : expr) : (ExprSet.t * LabelSet.t) =
-  let other_vars (expr, label) =
-    let var_set = expr_var_set expr
-    in if ExprSet.mem var_set var
-       then List.map (ExprSet.to_list (ExprSet.remove var_set var)) ~f:(fun v -> (v, label))
-       else []
-  in let var_pairs = List.concat_map target_terms ~f:other_vars
-  in let (var_exprs, var_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> label_dependencies label_info label))
-  in let (stat_exprs, stat_labels) = List.unzip (List.map var_pairs ~f:(fun (v, label) -> var_statistical_dependencies label_info target_terms v))
-  in (ExprSet.union_list (var_exprs @ stat_exprs), LabelSet.union_list (var_labels @ stat_labels))
-*)
-
-(*
-type 'dep label_info =
-  { dep_sets : 'dep
-  ; possible_previous : LabelSet.t
-  ; rhs_set : ExprSet.t
-  ; controlflow : LabelSet.t
-  ; loc : string
-  ; target_sum_terms : (expr list) option
-  }
-[@@deriving sexp]
-*)
-
 let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) =
   let add_term_node
       ((trav_st, nodes) : (traversal_state * LabelSet.t))
@@ -622,7 +580,7 @@ let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) 
                  ~f:(fun v -> (v, label))))
       ; possible_previous = target_inc_info.possible_previous
       ; rhs_set = term_vars
-      ; controlflow = target_inc_info.controlflow (* could also be [inc_label] *)
+      ; controlflow = target_inc_info.controlflow
       ; loc = target_inc_info.loc
       ; target_sum_terms = None
       }
@@ -686,36 +644,57 @@ let augment_accum_info
   else
     add_node_0 initial_declared None trav_st
 
-let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
-  let (var_table, model_block) = mir.modelb in
-  let starting_vars =
-    ExprSet.of_list
-      (List.map ("target" :: Map.Poly.keys var_table) ~f:(fun v -> Var v))
+let block_dependence_graph
+    (model_block : stmt_loc)
+    (preexisting_table : top_var_table)
+    (statistical_dependence : bool)
+  : (label_info_fixpoint LabelMap.t * LabelSet.t) =
+  let preexisting_vars = ExprSet.of_list
+      (List.map
+         ("target" :: Map.Poly.keys preexisting_table)
+         ~f:(fun v -> Var v))
   in
   let accum_info = accumulate_label_info initial_trav_st initial_stack_st model_block in
-  let accum_info' = augment_accum_info accum_info starting_vars false in
+  let accum_info' = augment_accum_info accum_info preexisting_vars statistical_dependence in
   let label_info = rd_fixpoint accum_info'.label_info_map in
-  let _ =
-    LabelMap.mapi
-      label_info
-      ~f:(fun ~key:l ~data:i -> print_string ((string_of_int l) ^ ": " ^ i.loc ^ "\n"))
+  (label_info, accum_info.possible_previous)
+
+let analysis_example (mir : stmt_loc prog) : (label_info_fixpoint LabelMap.t * LabelSet.t) =
+  let (var_table, model_block) = mir.modelb in
+  let (label_info, possible_endpoints) =
+    block_dependence_graph
+      model_block
+      var_table
+      true
   in
-  Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
-  print_string "\n\n";
-  let deps =
-    var_dependencies label_info LabelSet.empty accum_info.possible_previous (Var "y")
+  let var = "y" in
+  let (expr_deps, label_deps) =
+    var_dependencies label_info LabelSet.empty possible_endpoints (Var var)
   in
-  print_endline
-    ("y depends on:" ^ (Sexp.to_string ([%sexp (deps : (ExprSet.t * LabelSet.t))])));
-  (*  in let t_terms = target_terms label_info
-      in let _ = print_endline ("Target terms: " ^ (Sexp.to_string ([%sexp (t_terms : (expr * label) list)])))
-      in let _ = print_endline ("Possible previous: " ^ (Sexp.to_string ([%sexp (accum_info.possible_previous : LabelSet.t)])))
-  *)
-  (*in let stat_deps = var_statistical_dependencies label_info t_terms (Var "y")
-    in let _ = print_string "\n\n"
-    in let _ = Sexp.pp_hum Format.std_formatter [%sexp (stat_deps : (ExprSet.t * LabelSet.t))];
-    in let _ = print_string "\n\n"*)
-  label_info
+
+  if demonstration_verbose then begin
+    let preexisting_vars = ExprSet.of_list
+        (List.map
+           ("target" :: Map.Poly.keys var_table)
+           ~f:(fun v -> Var v))
+    in
+    Sexp.pp_hum Format.std_formatter [%sexp (label_info : label_info_fixpoint LabelMap.t)];
+    print_string "\n\n";
+    print_endline
+      ("Pre-existing variables: " ^
+       (Sexp.to_string ([%sexp (preexisting_vars : ExprSet.t)])));
+    print_endline
+      ("Possible endpoints: " ^
+       (Sexp.to_string ([%sexp (possible_endpoints : LabelSet.t)])));
+    print_endline
+      (var ^ " depends on labels: " ^
+       (Sexp.to_string ([%sexp (label_deps : LabelSet.t)])));
+    print_endline
+      (var ^ " depends on global variables: " ^
+       (Sexp.to_string ([%sexp (expr_deps : ExprSet.t)])));
+  end;
+
+  (label_info, possible_endpoints)
 
 (**
    TODO
@@ -769,4 +748,55 @@ let analysis (mir : stmt_loc prog) : label_info_fixpoint LabelMap.t =
  * write expect_test in file, found automatically, use dune runtest
  * use dune format and dune promote to use the actual output as a unit test
 
+   val trans_prog : string -> Ast.typed_program -> Mir.stmt_loc Mir.prog
+
+   val parse_string :
+     (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)
+   -> string
+   -> Ast.untyped_program
+   (** A helper function to take a parser, a string and produce an AST. Under the
+    hood, it takes care of Menhir's custom syntax error messages. *)
+
+   val semantic_check_program : untyped_program -> typed_program
+   (** Performs semantic check on AST and returns original AST embellished with type decorations *)
  **)
+
+let%test _ = 5 = 120
+let%test _ = raise (Failure "ran test")
+
+let%expect_test "Example program" =
+  let ast =
+    raise (Failure "ran expect test")
+    (*Parse.parse_string Parser.Incremental.program
+      "      model {\n\
+      \              for (i in 1:2)\n\
+      \                for (j in 3:4)\n\
+      \                  print(\"Badger\");\n\
+      \            }\n\
+      \            "*)
+  in
+  print_s [%sexp (ast : Ast.untyped_program)] ;
+  [%expect
+    {|
+    ((functionblock ()) (datablock ()) (transformeddatablock ())
+     (parametersblock ()) (transformedparametersblock ())
+     (modelblock
+      ((((stmt_untyped
+          (For (loop_variable ((name i) (id_loc <opaque>)))
+           (lower_bound
+            ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+           (upper_bound
+            ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>)))
+           (loop_body
+            ((stmt_untyped
+              (For (loop_variable ((name j) (id_loc <opaque>)))
+               (lower_bound
+                ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>)))
+               (upper_bound
+                ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>)))
+               (loop_body
+                ((stmt_untyped (Print ((PString "\"Badger\""))))
+                 (stmt_untyped_loc <opaque>)))))
+             (stmt_untyped_loc <opaque>)))))
+         (stmt_untyped_loc <opaque>)))))
+     (generatedquantitiesblock ())) |}]

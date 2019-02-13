@@ -94,7 +94,7 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
     (*Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;*)
-    let _ = Dataflow_analysis.analysis mir in ();
+    let _ = Dataflow_analysis.analysis_example mir in ();
     print_string "\n";
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp )
