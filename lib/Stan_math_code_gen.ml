@@ -190,12 +190,13 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
 let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
   match cctype with
   | Ast.SArray (t, dim) ->
-      let loopvar = Mir.gensym () in
+      let loopvar, reset_sym = Mir.gensym_enter () in
       let new_ident = strf "%s[%s]" ident loopvar in
       let new_pp_body ppf ident =
         pp_for_loop ppf (loopvar, zero, dim, pp_body, ident)
       in
-      pp_for_each_in_array ppf (t, new_pp_body, new_ident)
+      pp_for_each_in_array ppf (t, new_pp_body, new_ident) ;
+      reset_sym ()
   | _ -> pp_body ppf ident
 
 let%expect_test "single pp_for_each_in_array" =
@@ -492,6 +493,6 @@ using namespace stan::math;
 |}
 
 let pp_prog ppf (p : stmt_loc prog) =
-  pf ppf "@[<v>@ %s@ %s@ namespace %s_model_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
+  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name globals usings pp_statement p.functionsb
     pp_model p
