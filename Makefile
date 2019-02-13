@@ -1,5 +1,5 @@
 all:
-	dune build stanc.exe --profile release
+	dune build stanc.exe
 
 TEST_DUNES := $(foreach d,$(shell find test/integration -type d),$(d)/dune)
 test: $(TEST_DUNES)
