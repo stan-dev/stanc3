@@ -1,6 +1,17 @@
-(** Generate C++ from the MIR *)
+(** Generate C++ from the MIR.
 
-(* XXX Doc links (4) *)
+    This module makes extensive use of the Format[0] module via the Fmt[1] API.
+    As such, you'll need to understand the "%a" and "@" notation from [0], especially
+    the section headed "Formatted pretty-printing." Then, we use functions like
+    [pf] and [strf] from the Fmt library[1]. On top of that, the "@" pretty-printing
+    specifiers all actually correspond 1-to-1 with commands like [open_box] from
+    the Format library[0]. The boxing system is best described in this explainer
+    pdf [2], particularly Section 3 ("Format basics"). Good luck!
+
+    [0] Format module doc: https://caml.inria.fr/pub/docs/manual-ocaml/libref/Format.html
+    [1] Fmt module doc: https://erratique.ch/software/fmt/doc/Fmt.html
+    [2] Format Unraveled: https://hal.archives-ouvertes.fr/hal-01503081/file/format-unraveled.pdf
+*)
 
 open Core_kernel
 open Mir
