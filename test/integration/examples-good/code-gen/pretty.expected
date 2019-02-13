@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format 8schools.stan
+  $ ../../../../../install/default/bin/stanc --auto-format eight_schools_ncp.stan
 data {
   int<lower=0> J;
   real y[J];

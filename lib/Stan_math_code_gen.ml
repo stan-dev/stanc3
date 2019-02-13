@@ -462,7 +462,7 @@ let pp_ctor ppf p =
         pf ppf "@ boost::ecuyer1988 base_rng__ = " ;
         pf ppf "@     stan::services::util::create_rng(random_seed__, 0);" ;
         pf ppf "@ (void) base_rng__;  // suppress unused var warning" ;
-        pf ppf "@ static const char* function__ = \"%s_model_namespace::%s\";"
+        pf ppf "@ static const char* function__ = \"%s_namespace::%s\";"
           p.prog_name p.prog_name ;
         pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
         pp_located_error ppf
@@ -478,9 +478,9 @@ let pp_model_private ppf p =
 let pp_model_public ppf p = pf ppf "@ %a" pp_ctor p
 
 let pp_model ppf p =
-  pf ppf "class %s_model : public prob_grad {" p.prog_name ;
+  pf ppf "class %s : public prob_grad {" p.prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
-  pf ppf "@ public:@ @[<v 1> ~%s_model() { }" p.prog_name ;
+  pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "@ %a@]@]@ }" pp_model_public p
 
