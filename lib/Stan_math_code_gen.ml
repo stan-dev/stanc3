@@ -162,7 +162,7 @@ let pp_returntype ppf arg_types rt =
              (maybe_templated_arg_types arg_types))))
     rt
 
-let pp_location ppf = pf ppf "current_statement__ = \"%s\";@;"
+let pp_location ppf = pf ppf "current_statement__ = %S;@;"
 
 (** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
@@ -463,7 +463,7 @@ let pp_model ppf p =
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "@ %a@ }" pp_model_public p
 
-let globals = "static int current_statement__;"
+let globals = "static char* current_statement__;"
 
 let usings =
   {|
