@@ -214,6 +214,9 @@ let%expect_test "for each in array" =
     for (size_t sym2 = 0; sym2 < z; sym2++)
       for (size_t sym1 = 0; sym1 < y; sym1++) check_whatever(alpha[sym1][sym2]); |}]
 
+let trans_math_fn fname =
+  match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])
+
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
   | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
@@ -224,7 +227,9 @@ let rec pp_statement ppf {stmt; sloc} =
       (* XXX completely wrong *)
       pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
   | NRFunApp (fname, args) ->
-      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
+      let fname, extra_args = trans_math_fn fname in
+      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
+        (extra_args @ args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
@@ -297,7 +302,7 @@ let%expect_test "location propagates" =
     {|
       {
         current_statement__ = "lo";
-        print();
+        stan_print(pstream__);
       } |}]
 
 let%expect_test "if" =
@@ -315,10 +320,10 @@ let%expect_test "if" =
     current_statement__ = "";
     if (true) {
       current_statement__ = "";
-      print(x);
+      stan_print(pstream__, x);
     } else {
       current_statement__ = "";
-      print(y);
+      stan_print(pstream__, y);
     } |}]
 
 let%expect_test "run code per element" =
@@ -344,7 +349,7 @@ let%expect_test "run code per element" =
                                                        stan::model::nil_index_list()),
                                                        "vals_r__");;
               current_statement__ = "";
-              print(dubvec[i_0__][i_1__](i_2__, i_3__));
+              stan_print(pstream__, dubvec[i_0__][i_1__](i_2__, i_3__));
             } |}]
 
 let%expect_test "decl" =

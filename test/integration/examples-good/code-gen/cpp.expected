@@ -885,7 +885,8 @@ class gentest_mother1_model_model : public prob_grad {
                           stan::model::cons_list(stan::model::index_uni(j),
                           stan::model::nil_index_list())), "d_ar_mat");;
               current_statement__ = "\"gentest_mother1.stan\", line 244-244";
-              print("ar dim1: ", i, " ar dim2: ", j, " matrix: ", l_mat);
+              stan_print(pstream__, "ar dim1: ", i, " ar dim2: ", j,
+                         " matrix: ", l_mat);
             }
         }
       {
