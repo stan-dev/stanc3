@@ -288,10 +288,12 @@ let trans_prog filename
       | None | Some [] -> Skip
       | Some lst -> SList (List.map ~f:trans_stmt lst) )
   in
-  let lbind s = match s.stmt with SList ls -> ls | Skip -> [] | _ -> [s] in
+  let lbind s =
+    match s.stmt with SList ls | Block ls -> ls | Skip -> [] | _ -> [s]
+  in
   let coalesce stmts =
     let flattened = List.(concat (map ~f:lbind stmts)) in
-    with_no_loc (match flattened with [] -> Skip | _ :: _ -> SList flattened)
+    with_no_loc (match flattened with [] -> Skip | _ :: _ -> Block flattened)
   in
   let pull_tvdecls_multi blocks =
     let merge_maps maps =

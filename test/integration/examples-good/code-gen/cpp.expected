@@ -48,11 +48,13 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = "\"eight_schools_ncp.stan\", line 3-3";
       vals_r__ = context__.vals_r__("y");
       for (size_t i_0__ = 0; i_0__ < J; i_0__++) y = vals_r__[i_0__];
-      current_statement__ = "\"eight_schools_ncp.stan\", line 2-2";
-      check_greater_or_equal(function__, J, 0);
-      current_statement__ = "\"eight_schools_ncp.stan\", line 4-4";
-      for (size_t sym1 = 0; sym1 < J; sym1++)
-        check_greater_or_equal(function__, sigma[sym1], 0);
+      {
+        current_statement__ = "\"eight_schools_ncp.stan\", line 2-2";
+        check_greater_or_equal(function__, J, 0);
+        current_statement__ = "\"eight_schools_ncp.stan\", line 4-4";
+        for (size_t sym1 = 0; sym1 < J; sym1++)
+          check_greater_or_equal(function__, sigma[sym1], 0);
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string(e) + e.what(), current_statement__));
@@ -71,36 +73,38 @@ class eight_schools_ncp_model : public prob_grad {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    try current_statement__ = "\"eight_schools_ncp.stan\", line 9-9";
-    check_greater_or_equal(function__, tau, 0);
-    current_statement__ = "\"eight_schools_ncp.stan\", line 15-16";
-    for (size_t j = 1; j < J; j++)
-      current_statement__ = "\"eight_schools_ncp.stan\", line 16-16";
-      stan::model::rvalue(theta,
-          stan::model::cons_list(stan::model::index_uni(j),
-          stan::model::nil_index_list()), "theta"); = mu Plus tau Times 
-      stan::model::rvalue(theta_tilde,
-          stan::model::cons_list(stan::model::index_uni(j),
-          stan::model::nil_index_list()), "theta_tilde");;
-    {
-      
-      current_statement__ = "\"eight_schools_ncp.stan\", line 20-20";
-      target = target Plus normal(mu, 0, 5);
-    }
-    {
-      
-      current_statement__ = "\"eight_schools_ncp.stan\", line 21-21";
-      target = target Plus cauchy(tau, 0, 5);
-    }
-    {
-      
-      current_statement__ = "\"eight_schools_ncp.stan\", line 22-22";
-      target = target Plus normal(theta_tilde, 0, 1);
-    }
-    {
-      
-      current_statement__ = "\"eight_schools_ncp.stan\", line 23-23";
-      target = target Plus normal(y, theta, sigma);
+    try {
+      current_statement__ = "\"eight_schools_ncp.stan\", line 9-9";
+      check_greater_or_equal(function__, tau, 0);
+      current_statement__ = "\"eight_schools_ncp.stan\", line 15-16";
+      for (size_t j = 1; j < J; j++)
+        current_statement__ = "\"eight_schools_ncp.stan\", line 16-16";
+        stan::model::rvalue(theta,
+            stan::model::cons_list(stan::model::index_uni(j),
+            stan::model::nil_index_list()), "theta"); = mu Plus tau Times 
+        stan::model::rvalue(theta_tilde,
+            stan::model::cons_list(stan::model::index_uni(j),
+            stan::model::nil_index_list()), "theta_tilde");;
+      {
+        
+        current_statement__ = "\"eight_schools_ncp.stan\", line 20-20";
+        target = target Plus normal(mu, 0, 5);
+      }
+      {
+        
+        current_statement__ = "\"eight_schools_ncp.stan\", line 21-21";
+        target = target Plus cauchy(tau, 0, 5);
+      }
+      {
+        
+        current_statement__ = "\"eight_schools_ncp.stan\", line 22-22";
+        target = target Plus normal(theta_tilde, 0, 1);
+      }
+      {
+        
+        current_statement__ = "\"eight_schools_ncp.stan\", line 23-23";
+        target = target Plus normal(y, theta, sigma);
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string(e) + e.what(), current_statement__));
