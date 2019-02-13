@@ -1,5 +1,7 @@
 (** Generate C++ from the MIR *)
 
+(* XXX Doc links (4) *)
+
 open Core_kernel
 open Mir
 open Fmt
@@ -70,10 +72,12 @@ let rec stantype_prim_str = function
 let pp_prim_stantype ppf st = pp_unsizedtype (stantype_prim_str st) ppf st
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
+(** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
+    pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
-  pf ppf "@ @;<0 2>@[<v>%a@]@]" pp_body body
+  pf ppf "@,@;<1 2>@[<v>%a@]@]" pp_body body
 
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let mkloopvar d = sprintf "i_%d__" d in
@@ -169,6 +173,32 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
+let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
+  match cctype with
+  | Ast.SArray (t, dim) ->
+      let loopvar = Mir.gensym () in
+      let new_ident = strf "%s[%s]" ident loopvar in
+      let new_pp_body ppf ident =
+        pp_for_loop ppf (loopvar, Lit (Int, "0"), dim, pp_body, ident)
+      in
+      pp_for_each_in_array ppf (t, new_pp_body, new_ident)
+  | _ -> pp_body ppf ident
+
+let%expect_test "single pp_for_each_in_array" =
+  let ppbody ppf id = pf ppf "%s++" id in
+  strf "%a" pp_for_each_in_array (Ast.SReal, ppbody, "x") |> print_endline ;
+  [%expect {| x++ |}]
+
+let%expect_test "for each in array" =
+  let ppbody ppf id = pf ppf "check_whatever(%s);" id in
+  strf "%a" pp_for_each_in_array
+    (Ast.SArray (Ast.SArray (Ast.SReal, Var "z"), Var "y"), ppbody, "alpha")
+  |> print_endline ;
+  [%expect
+    {|
+    for (size_t sym2 = 0; sym2 < z; sym2++)
+      for (size_t sym1 = 0; sym1 < y; sym1++) check_whatever(alpha[sym1][sym2]); |}]
+
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
   | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
@@ -184,7 +214,12 @@ let rec pp_statement ppf {stmt; sloc} =
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
   | Skip -> ()
-  | Check _ -> () (* XXX *)
+  | Check {ccfunname; ccvid; ccargs; cctype} ->
+      let pp_ckfn ppf ident =
+        pf ppf "check_%s(@[<hov>%a@]);" ccfunname (list ~sep:comma pp_expr)
+          (Var "function__" :: Var ident :: ccargs)
+      in
+      pp_for_each_in_array ppf (cctype, pp_ckfn, ccvid)
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
       pf ppf "if (%a) %a %a" pp_expr cond pp_block (pp_statement, ifbranch)
@@ -386,124 +421,20 @@ let%expect_test "read int[N] y" =
     vals_i__ = context__.vals_i__("y");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i__[i_0__]; |}]
 
-(*
-
-let pp_constructor ppf p = pf ppf {|
-@ %s(stan::io::var_context& context__,
-@ @[<v>   unsigned int random_seed__ = 0,
-@         std::ostream* pstream__ = NULL) : prob_grad(0) {
-@] @ @[<v 4>
-@       typedef double local_scalar_t__;
-
-@       boost::ecuyer1988 base_rng__ =
-@         stan::services::util::create_rng(random_seed__, 0);
-@       (void) base_rng__;  // suppress unused var warning
-
-@       current_statement_begin__ = -1;
-
-@       static const char* function__ = "bernoulli_model_namespace::bernoulli_model";
-@       (void) function__;  // dummy to suppress unused var warning
-@       size_t pos__;
-@       (void) pos__;  // dummy to suppress unused var warning
-@       std::vector<int> vals_i__;
-@       std::vector<double> vals_r__;
-@       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-@       (void) DUMMY_VAR__;  // suppress unused var warning
-@ %a
-@ %a
-@]@ }
-|}
-    p.prog_name
-    pp_located_error ((list ~sep:newline pp_read_field),
-                        p.datab, Some "Error while reading in data: ")
-    pp_located_error ((list ~sep:newline pp_transform),
-                        p.datab, Some "Error during transformed data block: ")
-
-let pp_model ppf (p: stmt_loc prog) =
-  pf ppf {|
-class %s_model : public prob_grad {
-@ @[<v 1>
-@ private:
-@ // Fields here from the data block of the model
-@ @[<v 1>%a@]@
-
-@ public:
-@ @[<v 1>
-@ // Constructor takes in data fields and transforms them
-@ %a
-@ @ ~%s_model() { }
-@ @ static std::string model_name() { return "%s"; }
-@ @ // transform_inits takes in constrained init values for parameters and unconstrains them
-@ %a
-@ @ // The log_prob function transforms the parameters from the unconstrained space
-@ // back to the constrained space and runs the model block on them.
-@ %a
-@ @ %a
-@ @ %a
-@]
-@]
-}; // model
-|} p.prog_name
-    pp_statement_loc p.datab
-    pp_constructor p
-    p.prog_name p.prog_name
-(* transform inits
-   log_prob
-   get_param_names
-   get_dims
-   write_array
-*)
-
-*)
-
-(* XXX Adds declarations.
-   How will this mix with all the passes matching on declarations and adding
-   new statements for each one, e.g. data reading and checking in the data block?*)
-let rec array_to_for sloc (ident, decl_type) bodyfn =
-  match decl_type with
-  | Ast.SArray (t, dim) ->
-      let loopvar = Mir.gensym () in
-      let decl =
-        Decl {decl_adtype= Ast.DataOnly; decl_id= loopvar; decl_type}
-      in
-      let body = array_to_for sloc (loopvar, t) bodyfn in
-      let sfor = For {loopvar= Var loopvar; lower= zero; upper= dim; body} in
-      let stmts = List.map ~f:(fun stmt -> {stmt; sloc}) [decl; sfor] in
-      {stmt= SList stmts; sloc}
-  | _ -> {stmt= bodyfn ident; sloc}
-
-let trans_checks s =
-  match s.stmt with
-  | Check {ccfunname; ccvid; cctype; ccargs} ->
-      (* XXX The function__ is weird... maybe find a better way to handle it *)
-      let ckfn ident =
-        NRFunApp ("check_" ^ ccfunname, Var "function__" :: Var ident :: ccargs)
-      in
-      array_to_for s.sloc (ccvid, cctype) ckfn
-  | _ -> s
-
-let%expect_test "trans check" =
-  let ck =
-    Check
-      { ccfunname= "greater_or_equal"
-      ; ccvid= "N"
-      ; cctype= Ast.SInt
-      ; ccargs= [zero] }
-  in
-  print_s [%sexp ((trans_checks (with_no_loc ck)).stmt : stmt_loc statement)] ;
-  [%expect
-    {| (NRFunApp check_greater_or_equal ((Var function__) (Var N) (Lit Int 0))) |}]
-
 let decls_of_p {datavars; _} =
   Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl
+
+let pp_read_and_check_decls ppf p =
+  list ~sep:cut pp_read_data ppf (decls_of_p p) ;
+  pp_statement ppf (snd p.tdatab)
 
 let pp_ctor ppf p =
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  pf ppf "%s(@[<v 0>%a) : prob_grad(0) @]" p.prog_name (list ~sep:comma string)
-    params ;
+  pf ppf "%s(@[<hov 0>%a) : prob_grad(0) @]" p.prog_name
+    (list ~sep:comma string) params ;
   pp_block ppf
     ( (fun ppf p ->
         pf ppf "typedef double local_scalar_t__;" ;
@@ -514,9 +445,8 @@ let pp_ctor ppf p =
           p.prog_name p.prog_name ;
         pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
         pp_located_error ppf
-          ( (fun ppf body -> pp_block ppf (list ~sep:cut pp_read_data, body))
-          , decls_of_p p
-          , None ) )
+          ((fun ppf p -> pp_block ppf (pp_read_and_check_decls, p)), p, None)
+        )
     , p )
 
 let pp_model_private ppf p =
