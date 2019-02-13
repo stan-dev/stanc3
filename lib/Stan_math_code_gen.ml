@@ -148,7 +148,7 @@ let with_no_loc stmt = {stmt; sloc= ""}
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
-      std::runtime_error(std::string(%s) + e.what(), current_statement__));
+          std::runtime_error(std::string(%s) + e.what(), current_statement__));
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 |}
@@ -393,7 +393,7 @@ let%expect_test "udf" =
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
-          std::runtime_error(std::string(e) + e.what(), current_statement__));
+              std::runtime_error(std::string(e) + e.what(), current_statement__));
           // Next line prevents compiler griping about no return
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
 
@@ -428,9 +428,10 @@ let var_context_container st =
 let pp_read_data ppf (decl_id, st, loc) =
   pp_location ppf loc ;
   let vals = var_context_container st ^ "__" in
-  let pp_read ppf loopvar = pf ppf "%s = %s;@ " decl_id loopvar in
-  pf ppf "%s = context__.%s(\"%s\");@ " vals vals decl_id ;
-  pp_run_code_per_el pp_read ppf (vals, st)
+  let pp_read ppf loopvar = pf ppf "%s = %s;" decl_id loopvar in
+  pf ppf "%s = context__.%s(\"%s\");@;" vals vals decl_id ;
+  pp_run_code_per_el pp_read ppf (vals, st) ;
+  pf ppf "@;"
 
 let%expect_test "read int[N] y" =
   strf "@[<v>%a@]" pp_read_data ("y", Ast.SArray (Ast.SInt, Var "N"), "")
@@ -481,7 +482,7 @@ let pp_model ppf p =
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s_model() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
-  pf ppf "@ %a@ }" pp_model_public p
+  pf ppf "@ %a@]@]@ }" pp_model_public p
 
 let globals = "static char* current_statement__;"
 
