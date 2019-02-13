@@ -64,7 +64,13 @@ class eight_schools_ncp_model : public prob_grad {
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
                std::ostream* pstream__ = 0) {
-  typedef T__ local_scalar_t__;local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());(void) DUMMY_VAR__;  // dummy to suppress unused var warningT__ lp__(0.0);stan::math::accumulator<T__> lp_accum__;stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+  typedef T__ local_scalar_t__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // dummy to suppress unused var warning
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    
     try current_statement__ = "\"eight_schools_ncp.stan\", line 9-9";
     check_greater_or_equal(function__, tau, 0);
     current_statement__ = "\"eight_schools_ncp.stan\", line 15-16";

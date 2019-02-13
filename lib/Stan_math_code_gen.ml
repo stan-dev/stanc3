@@ -482,20 +482,21 @@ let pp_model_private ppf p =
     (List.map ~f:(fun (x, y, _) -> (x, y)) (decls_of_p p))
 
 let pp_log_prob ppf p =
-  pf ppf "template <bool propto__, bool jacobian__, typename T__>@," ;
+  let text = pf ppf "%s@," in
+  text "template <bool propto__, bool jacobian__, typename T__>" ;
   let params =
     [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
     ; "std::ostream* pstream__ = 0" ]
   in
   pf ppf "T__ log_prob(@[<hov>%a@])" (list ~sep:comma string) params ;
   pf ppf " {@,@[<v 2>" ;
-  pf ppf "typedef T__ local_scalar_t__;" ;
-  pf ppf
+  text "typedef T__ local_scalar_t__;" ;
+  text
     "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-  pf ppf "(void) DUMMY_VAR__;  // dummy to suppress unused var warning" ;
-  pf ppf "T__ lp__(0.0);" ;
-  pf ppf "stan::math::accumulator<T__> lp_accum__;" ;
-  pf ppf "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
+  text "(void) DUMMY_VAR__;  // dummy to suppress unused var warning" ;
+  text "T__ lp__(0.0);" ;
+  text "stan::math::accumulator<T__> lp_accum__;" ;
+  text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
   (* XXX Jacobians of parameters*)
   (* XXX Transformed parameters *)
   (* XXX Transformed parameter validation *)
