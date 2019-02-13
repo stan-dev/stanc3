@@ -242,10 +242,10 @@ let rec pp_statement ppf {stmt; sloc} =
       pp_for_each_in_array ppf (cctype, pp_ckfn, ccvid)
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
-      pf ppf "if (%a) %a %a" pp_expr cond pp_block (pp_statement, ifbranch)
-        (option pp_else) elsebranch
+      pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block
+        (pp_statement, ifbranch) (option pp_else) elsebranch
   | While (cond, body) ->
-      pf ppf "while (%a) %a" pp_expr cond pp_block (pp_statement, body)
+      pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block (pp_statement, body)
   | For {loopvar; lower; upper; body} ->
       let lv = strf "%a" pp_expr loopvar in
       pp_for_loop ppf (lv, lower, upper, pp_statement, body)
@@ -281,7 +281,7 @@ let rec pp_statement ppf {stmt; sloc} =
                 pf ppf
                   "@[<hv 8>typedef typename \
                    boost::math::tools::promote_args<%a>::type \
-                   local_scalar_t__;@]@ "
+                   local_scalar_t__;@]@,"
                   (list ~sep:comma string) argtypetemplates ;
                 text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
                 text "const static bool propto__ = true;" ;
