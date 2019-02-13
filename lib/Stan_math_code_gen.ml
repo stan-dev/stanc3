@@ -42,7 +42,7 @@ let pp_call ppf (name, pp_args, args) =
 let rec pp_expr ppf s =
   match s with
   | Var s -> string ppf s
-  | Lit (Str, s) -> pf ppf "\"%s\"" s
+  | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> string ppf s
   | FunApp (fname, args) -> pp_call ppf (fname, list ~sep:comma pp_expr, args)
   | BinOp (e1, op, e2) ->
@@ -224,7 +224,7 @@ let rec pp_statement ppf {stmt; sloc} =
       (* XXX completely wrong *)
       pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
   | NRFunApp (fname, args) ->
-      pf ppf "%s(%a);" fname (list ~sep:comma pp_expr) args
+      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e

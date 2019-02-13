@@ -558,7 +558,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   
   try {
     current_statement__ = "\"gentest_mother1.stan\", line 188-188";
-    reject(""user-specified rejection"");
+    reject("user-specified rejection");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
       std::runtime_error(std::string(e) + e.what(), current_statement__));
@@ -596,22 +596,14 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     current_statement__ = "\"gentest_mother1.stan\", line 196-197";
     if (abs_diff Divide avg_scale Greater max_) {
       current_statement__ = "\"gentest_mother1.stan\", line 197-197";
-      reject(""user-specified rejection, difference above "",
-      max_,
-      "" x:"",
-      x,
-      "" y:"",
-      y);
+      reject("user-specified rejection, difference above ", max_, " x:", x,
+             " y:", y);
     } 
     current_statement__ = "\"gentest_mother1.stan\", line 198-199";
     if (abs_diff Divide avg_scale Less min_) {
       current_statement__ = "\"gentest_mother1.stan\", line 199-199";
-      reject(""user-specified rejection, difference below "",
-      min_,
-      "" x:"",
-      x,
-      "" y:"",
-      y);
+      reject("user-specified rejection, difference below ", min_, " x:", x,
+             " y:", y);
     } 
     current_statement__ = "\"gentest_mother1.stan\", line 200-200";
     return abs_diff Divide avg_scale;
@@ -893,12 +885,7 @@ class gentest_mother1_model_model : public prob_grad {
                           stan::model::cons_list(stan::model::index_uni(j),
                           stan::model::nil_index_list())), "d_ar_mat");;
               current_statement__ = "\"gentest_mother1.stan\", line 244-244";
-              print(""ar dim1: "",
-              i,
-              "" ar dim2: "",
-              j,
-              "" matrix: "",
-              l_mat);
+              print("ar dim1: ", i, " ar dim2: ", j, " matrix: ", l_mat);
             }
         }
       {

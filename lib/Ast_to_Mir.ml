@@ -70,6 +70,16 @@ let truncate_dist ast_obs t =
   | Ast.TruncateBetween (lb, ub) ->
       Some (trunc Less lb (Some (trunc Greater ub None)))
 
+let unquote s =
+  if s.[0] = '"' && s.[String.length s - 1] = '"' then
+    String.drop_suffix (String.drop_prefix s 1) 1
+  else s
+
+let trans_printable (p : Ast.typed_expression Ast.printable) =
+  match p with
+  | Ast.PString s -> Lit (Str, unquote s)
+  | Ast.PExpr e -> trans_expr e
+
 let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
   let or_skip = Option.value ~default:Skip in
   let s =
@@ -159,9 +169,6 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.Skip -> Skip
   in
   bind_loc stmt_typed_loc s
-
-and trans_printable (p : Ast.typed_expression Ast.printable) =
-  match p with Ast.PString s -> Lit (Str, s) | Ast.PExpr e -> trans_expr e
 
 (* XXX Write a function that generates MIR to execute once on each thing in some nested
    arrays (but not elements within a matrix or vector) *)
