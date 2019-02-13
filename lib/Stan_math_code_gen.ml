@@ -180,8 +180,7 @@ let pp_location ppf = pf ppf "current_statement__ = %S;@;"
 
 (** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
-    from the [body_block] (required to be a [stmt_loc Block] variant).
-*)
+    from the [body_block] (required to be a [stmt_loc Block] variant).*)
 let pp_located_error ppf (pp_body_block, body, err_msg) =
   pf ppf "@ try %a" pp_body_block body ;
   string ppf " catch (const std::exception& e) " ;
@@ -426,6 +425,11 @@ let var_context_container st =
    1. run checks on resulting vident
 *)
 let pp_read_data ppf (decl_id, st, loc) =
+  (* XXX:
+     * Add stuff like
+       context__.validate_dims("data initialization", "J", "int", context__.to_vec());
+     * Add validate_non_negative_index("sigma", "J", J);
+  *)
   pp_location ppf loc ;
   let vals = var_context_container st ^ "__" in
   let pp_read ppf loopvar = pf ppf "%s = %s;" decl_id loopvar in
@@ -450,6 +454,9 @@ let pp_read_and_check_decls ppf p =
   pp_statement ppf (snd p.tdatab)
 
 let pp_ctor ppf p =
+  (* XXX:
+     1. Set num_params_r__
+  *)
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
@@ -474,8 +481,40 @@ let pp_model_private ppf p =
   pf ppf "%a" (list ~sep:cut pp_decl)
     (List.map ~f:(fun (x, y, _) -> (x, y)) (decls_of_p p))
 
+let pp_log_prob ppf p =
+  pf ppf "template <bool propto__, bool jacobian__, typename T__>@," ;
+  let params =
+    [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
+    ; "std::ostream* pstream__ = 0" ]
+  in
+  pf ppf "T__ log_prob(@[<hov>%a@])" (list ~sep:comma string) params ;
+  pf ppf " {@,@[<v 2>" ;
+  pf ppf "typedef T__ local_scalar_t__;" ;
+  pf ppf
+    "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+  pf ppf "(void) DUMMY_VAR__;  // dummy to suppress unused var warning" ;
+  pf ppf "T__ lp__(0.0);" ;
+  pf ppf "stan::math::accumulator<T__> lp_accum__;" ;
+  pf ppf "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
+  (* XXX Jacobians of parameters*)
+  (* XXX Transformed parameters *)
+  (* XXX Transformed parameter validation *)
+  pp_located_error ppf (pp_statement, snd p.modelb, None) ;
+  pf ppf "@]@,}@,"
+
 (* XXX *)
-let pp_model_public ppf p = pf ppf "@ %a" pp_ctor p
+let pp_model_public ppf p =
+  (*XXX:
+    1. T__ log_prob
+    2. get_param_names
+    3. get_dims
+    4. write_array
+    5. constrained_param_names
+    6. unconstrained_param_names
+    7.
+  *)
+  pf ppf "@ %a" pp_ctor p ;
+  pf ppf "@ %a" pp_log_prob p
 
 let pp_model ppf p =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
@@ -500,5 +539,5 @@ using namespace stan::math;
 
 let pp_prog ppf (p : stmt_loc prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name globals usings pp_statement p.functionsb
+    version includes p.prog_name usings globals pp_statement p.functionsb
     pp_model p
