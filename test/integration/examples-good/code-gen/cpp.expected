@@ -48,13 +48,11 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = "\"eight_schools_ncp.stan\", line 3-3";
       vals_r__ = context__.vals_r__("y");
       for (size_t i_0__ = 0; i_0__ < J; i_0__++) y = vals_r__[i_0__];
-      {
-        current_statement__ = "\"eight_schools_ncp.stan\", line 2-2";
-        check_greater_or_equal(function__, J, 0);
-        current_statement__ = "\"eight_schools_ncp.stan\", line 4-4";
-        for (size_t sym1 = 0; sym1 < J; sym1++)
-          check_greater_or_equal(function__, sigma[sym1], 0);
-      }
+      current_statement__ = "\"eight_schools_ncp.stan\", line 2-2";
+      check_greater_or_equal(function__, J, 0);
+      current_statement__ = "\"eight_schools_ncp.stan\", line 4-4";
+      for (size_t sym1 = 0; sym1 < J; sym1++)
+        check_greater_or_equal(function__, sigma[sym1], 0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string(e) + e.what(), current_statement__));

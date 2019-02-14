@@ -263,6 +263,9 @@ let pull_tvdecls = function
 
 *)
 
+let merge_maps maps =
+  maps |> List.map ~f:Map.Poly.to_alist |> List.concat |> Map.Poly.of_alist_exn
+
 (*
    There are at least three places where we currently generate redundant code:
    - checks and validation of data and bounds
@@ -293,13 +296,10 @@ let trans_prog filename
   in
   let coalesce stmts =
     let flattened = List.(concat (map ~f:lbind stmts)) in
-    with_no_loc (match flattened with [] -> Skip | _ :: _ -> Block flattened)
+    with_no_loc (SList flattened)
   in
   let pull_tvdecls_multi blocks =
-    let merge_maps maps =
-      List.map ~f:Map.Poly.to_alist maps
-      |> List.concat |> Map.Poly.of_alist_exn
-    and tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
+    let tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
     (merge_maps tvtables, coalesce (List.concat stmts))
   in
   let datavars, datachecks = pull_tvdecls datablock in

@@ -168,15 +168,14 @@ let%expect_test "arg types templated correctly" =
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  pf ppf "%a@ "
-    (option ~none:(const string "void")
-       (pp_unsizedtype
-          (strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
-             (list ~sep:comma string)
-             (maybe_templated_arg_types arg_types))))
-    rt
+  let scalar =
+    strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
+      (list ~sep:comma string)
+      (maybe_templated_arg_types arg_types)
+  in
+  pf ppf "%a@ " (option ~none:(const string "void") (pp_unsizedtype scalar)) rt
 
-let pp_location ppf = pf ppf "current_statement__ = %S;@;"
+let pp_location = fmt "current_statement__ = %S;@;"
 
 (** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
@@ -453,6 +452,9 @@ let pp_read_and_check_decls ppf p =
   list ~sep:cut pp_read_data ppf (decls_of_p p) ;
   pp_statement ppf (snd p.tdatab)
 
+let block_of_list s =
+  {s with stmt= (match s.stmt with SList ls -> Block ls | x -> x)}
+
 let pp_ctor ppf p =
   (* XXX:
      1. Set num_params_r__
@@ -500,13 +502,11 @@ let pp_log_prob ppf p =
   (* XXX Jacobians of parameters*)
   (* XXX Transformed parameters *)
   (* XXX Transformed parameter validation *)
-  pp_located_error ppf (pp_statement, snd p.modelb, None) ;
+  pp_located_error ppf (pp_statement, p.modelb |> snd |> block_of_list, None) ;
   pf ppf "@]@,}@,"
 
-(* XXX *)
 let pp_model_public ppf p =
   (*XXX:
-    1. T__ log_prob
     2. get_param_names
     3. get_dims
     4. write_array
