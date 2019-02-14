@@ -2,7 +2,7 @@ open Core_kernel
 open Mir
 
 let debug_verbose = false
-let demonstration_verbose = false
+let demonstration_verbose = true
 
 (***********************************)
 (* Basic datatypes                 *)
@@ -11,21 +11,21 @@ let demonstration_verbose = false
 (**
    A label is a unique identifier for a node in the dataflow/dependency graph, and
    usually corresponds to one node in the Mir.
- *)
+*)
 type label = int
 [@@deriving sexp]
 
 (**
-  A 'reaching dependency' (or reaching_dep or RD) statement (v, l) says that the variable
-  v could have been affected at the label l.
- *)
+   A 'reaching dependency' (or reaching_dep or RD) statement (v, l) says that the variable
+   v could have been affected at the label l.
+*)
 type reaching_dep = (expr * int)
 [@@deriving sexp, hash, compare]
 
 (**
-  A reaching dependency set holds the set of reaching dependencies that could be true at
-  some point.
- *)
+   A reaching dependency set holds the set of reaching dependencies that could be true at
+   some point.
+*)
 module ReachingDepSet = Set.Make(struct
     type t = reaching_dep
     let compare : reaching_dep -> reaching_dep -> int = compare
@@ -57,6 +57,14 @@ module ExprSet = Set.Make(
     let t_of_sexp = expr_of_sexp
   end)
 
+type source_loc = MirNode of string
+                | StartOfBlock
+                | TargetTerm of {
+                    term : expr
+                  ; assignment_label : label
+                  }
+[@@deriving sexp]
+
 (**
    Information to be collected about each node
    * dep_sets: Information about how the label effects the dependency set
@@ -72,15 +80,14 @@ module ExprSet = Set.Make(
    * loc: The location of the Mir node that this node corresponds to, or a description if
      there is none
    * target_sum_terms: The list of target term expressions this node adds, if any
- *)
+*)
 type 'dep node_info =
   {
     dep_sets : 'dep
   ; possible_previous : LabelSet.t
   ; rhs_set : ExprSet.t
   ; controlflow : LabelSet.t
-  ; loc : string
-  ; target_sum_terms : (expr list) option
+  ; loc : source_loc
   }
 [@@deriving sexp]
 
@@ -88,13 +95,13 @@ type 'dep node_info =
    A node_info, where the reaching dependency information takes the form of an update
    function that maps from the 'entry' set to the 'exit' set, where the entry set is
    what's true before executing this node and the exit set is true after.
- *)
+*)
 type node_info_update = (ReachingDepSet.t -> ReachingDepSet.t) node_info
 
 (**
    A node_info where the reaching dependency information is explicitly written as the
    entry and exit sets, as after fixpoint analysis.
- *)
+*)
 type node_info_fixpoint = (ReachingDepSet.t * ReachingDepSet.t) node_info
 [@@deriving sexp]
 
@@ -107,26 +114,15 @@ type node_info_fixpoint = (ReachingDepSet.t * ReachingDepSet.t) node_info
    * continues: A set of the continue nodes that have been encountered since exiting a loop
    * breaks: A set of the break nodes that have been encountered since exiting a loop
    * returns: A set of the return nodes that have been encountered
- *)
+*)
 type traversal_state =
   { label_ix : label
   ; node_info_map : node_info_update LabelMap.t
   ; possible_previous : LabelSet.t
+  ; target_terms : LabelSet.t
   ; continues : LabelSet.t
   ; breaks : LabelSet.t
   ; returns : LabelSet.t
-  }
-
-(**
-   Initial traversal state, where 0 label represents the beginning of the function/block
- *)
-let initial_trav_st =
-  { label_ix = 1
-  ; node_info_map = LabelMap.empty
-  ; possible_previous = LabelSet.singleton 0
-  ; continues = LabelSet.empty
-  ; breaks = LabelSet.empty
-  ; returns = LabelSet.empty
   }
 
 (** The most recently nested control flow (block start, if/then, or loop)
@@ -145,7 +141,7 @@ let initial_cf_st = 0
    The set of variables in an expression, including inside an index
 
    For use in RHS sets, not LHS assignment sets, except in a target term
- *)
+*)
 let rec expr_var_set (ex : expr) : ExprSet.t =
   let union_recur exprs = ExprSet.union_list (List.map exprs ~f:expr_var_set) in
   match ex with
@@ -166,7 +162,7 @@ and index_var_set (ix : index) : ExprSet.t =
 
 (**
    The variable being assigned to when `ex` is LHS
- *)
+*)
 let expr_assigned_var (ex : expr) : expr =
   match ex with
   | Var _ as v -> v
@@ -198,29 +194,6 @@ let peek_next_label (st : traversal_state) : label =
 let new_label (st : traversal_state) : (label * traversal_state) =
   (st.label_ix, {st with label_ix = st.label_ix + 1})
 
-(**
-   Modify the reaching dependency update functions of the possible set of previously
-   executed nodes
- *)
-let alter_last_rd
-    (alter : ReachingDepSet.t -> ReachingDepSet.t)
-    (trav_st : traversal_state)
-  : traversal_state =
-  let remove_rd node_info_opt = match node_info_opt with
-    | None -> raise (Failure "traversal state's possible_previous refers to nonexistant labels")
-    | Some node_info -> { node_info with
-                           dep_sets = fun set -> alter (node_info.dep_sets set)
-                         }
-  in
-  let remove_label_rd info_map label = LabelMap.update info_map label ~f:remove_rd in
-  let node_info_map' =
-    List.fold_left
-      (LabelSet.to_list trav_st.possible_previous)
-      ~f:remove_label_rd
-      ~init:trav_st.node_info_map
-  in
-  { trav_st with node_info_map = node_info_map' }
-
 (** The list of terms in expression *)
 let rec summation_terms (rhs : expr) : expr list =
   match rhs with
@@ -243,6 +216,59 @@ let modify_node_info
            | Some info -> Some (f info))}
 
 (**
+   Right-compose a function with the reaching dependency update functions of the possible
+   set of previously executed nodes
+*)
+let compose_last_rd_update
+    (alter : ReachingDepSet.t -> ReachingDepSet.t)
+    (trav_st : traversal_state)
+  : traversal_state =
+  let compose_rd_update node_info =
+    { node_info with
+      dep_sets = fun set -> alter (node_info.dep_sets set)}
+  in
+  List.fold_left
+    (LabelSet.to_list trav_st.possible_previous)
+    ~f:(fun trav_st label -> modify_node_info trav_st label compose_rd_update)
+    ~init:trav_st
+
+let add_target_term_node
+    (trav_st : traversal_state)
+    (assignment_node : label)
+    (term : expr)
+  : traversal_state =
+  let (label, trav_st') = new_label trav_st in
+  let assgn_info = LabelMap.find_exn trav_st'.node_info_map assignment_node in
+  let term_vars = expr_var_set term in
+  let info =
+    { dep_sets =
+        (fun _ -> ReachingDepSet.of_list
+            (List.map
+               (ExprSet.to_list term_vars)
+               ~f:(fun v -> (v, label))))
+    ; possible_previous = LabelSet.union assgn_info.possible_previous trav_st.target_terms
+    ; rhs_set = term_vars
+    ; controlflow = assgn_info.controlflow
+    ; loc = TargetTerm {term = term; assignment_label = assignment_node}
+    }
+  in
+  let trav_st'' =
+    { trav_st' with
+      node_info_map =
+        merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info)
+    ; target_terms = LabelSet.add trav_st'.target_terms label
+    }
+  in
+  let add_previous (node_info : node_info_update) : node_info_update =
+    { node_info with
+      possible_previous = LabelSet.add node_info.possible_previous label}
+  in
+  List.fold_left
+    (0 :: (LabelSet.to_list trav_st.target_terms))
+    ~init:trav_st''
+    ~f:(fun trav_st l -> modify_node_info trav_st l add_previous)
+
+(**
    Traverse the Mir statement `st` to build up a final `traversal_state` value.
 
    See `traversal_state` and `cf_state` types for descriptions of the state.
@@ -261,27 +287,31 @@ let rec accumulate_node_info
     let info =
       { dep_sets =
           (fun entry ->
-             let assigned_var = expr_assigned_var lhs
-             in let this_assgn = ReachingDepSet.singleton (assigned_var, label)
-             in ReachingDepSet.union (filter_var_deps entry assigned_var) this_assgn)
+             let assigned_var = expr_assigned_var lhs in
+             ReachingDepSet.union
+               (filter_var_deps entry assigned_var)
+               (ReachingDepSet.singleton (assigned_var, label)))
       ; possible_previous = trav_st'.possible_previous
       ; rhs_set = expr_var_set rhs
       ; controlflow =
           LabelSet.union_list
             [LabelSet.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc = st.sloc
-      ; target_sum_terms =
-          if lhs = Var "target" then
-            Some (summation_terms rhs)
-          else
-            None
+      ; loc = MirNode st.sloc
       }
     in
-    { trav_st' with
-      node_info_map =
-        merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info)
-    ; possible_previous = LabelSet.singleton label
-    }
+    let trav_st'' =
+      { trav_st' with
+        node_info_map =
+          merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info)
+      ; possible_previous = LabelSet.singleton label
+      }
+    in if lhs = Var "target" then
+      List.fold_left
+        (List.filter (summation_terms rhs) ~f:(fun v -> v <> Var "target"))
+        ~init:trav_st''
+        ~f:(fun trav_st term -> add_target_term_node trav_st label term)
+    else
+      trav_st''
   | NRFunApp _ -> trav_st
   | Check _ -> trav_st
   | MarkLocation _ -> trav_st
@@ -307,8 +337,7 @@ let rec accumulate_node_info
       ; controlflow =
           LabelSet.union_list
             [LabelSet.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc = st.sloc
-      ; target_sum_terms = None
+      ; loc = MirNode st.sloc
       }
     in
     (match else_st_opt with
@@ -349,8 +378,7 @@ let rec accumulate_node_info
             ; trav_st.continues
             ; trav_st.returns
             ; body_st'.breaks]
-      ; loc = st.sloc
-      ; target_sum_terms = None
+      ; loc = MirNode st.sloc
       }
     in
     { body_st' with
@@ -378,7 +406,7 @@ let rec accumulate_node_info
         (fun info -> {info with possible_previous = loop_start_possible_previous})
     in
     let alter_fn = fun set -> ReachingDepSet.remove set (args.loopvar, label) in
-    let body_st'' = alter_last_rd alter_fn body_st' in
+    let body_st'' = compose_last_rd_update alter_fn body_st' in
     let info =
       { dep_sets =
           (fun entry ->
@@ -392,8 +420,7 @@ let rec accumulate_node_info
             ; trav_st.continues
             ; trav_st.returns
             ; body_st''.breaks]
-      ; loc = st.sloc
-      ; target_sum_terms = None
+      ; loc = MirNode st.sloc
       }
     in
     { body_st'' with
@@ -423,8 +450,7 @@ let rec accumulate_node_info
       ; controlflow =
           LabelSet.union_list
             [LabelSet.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc = st.sloc
-      ; target_sum_terms = None
+      ; loc = MirNode st.sloc
       }
     in
     { trav_st' with
@@ -479,7 +505,7 @@ let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) : '
 
    It turns out that doing = or == does not work for these types.
    = actually gives a *runtime* error.
- *)
+*)
 let rd_equal
     (a : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)
     (b : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)
@@ -594,12 +620,13 @@ and label_dependencies
   ( ExprSet.union_list (rhs_exprs @ cf_exprs)
   , LabelSet.add (LabelSet.union_list (rhs_labels @ cf_labels)) label)
 
+  (*
 (**
    Collect all of the target terms, and the labels where they were added.
 
    It's important to know the labels because the variables in the expression could change
    of the course of execution.
-  *)
+*)
 let target_terms (node_info : ('s node_info) LabelMap.t) : (expr * label) list =
   let terms =
     LabelMap.fold
@@ -611,7 +638,9 @@ let target_terms (node_info : ('s node_info) LabelMap.t) : (expr * label) list =
             ~f:(fun t -> (t, l)) @ accum)
   in
   List.rev (List.filter terms ~f:(fun (t,_) -> t <> Var "target"))
+  *)
 
+(*
 (**
    Append new nodes to the traversal_state that correspond to the effect that a target
    term has on the variables it involves.
@@ -623,7 +652,7 @@ let target_terms (node_info : ('s node_info) LabelMap.t) : (expr * label) list =
    Term nodes can't be included in the normal flow of the graph, since the effect they
    have on parameters doesn't 'happen' until in between executions of the block. Instead,
    it works similarly to a while loop, with target terms at the end of the loop body.
- *)
+*)
 let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) =
   let add_term_node
       ((trav_st, nodes) : (traversal_state * LabelSet.t))
@@ -665,16 +694,16 @@ let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) 
           possible_previous = LabelSet.union info.possible_previous term_nodes})
   in
   (LabelSet.fold term_nodes ~init:trav_st' ~f:add_mutual_dependence, term_nodes)
+  *)
 
 (**
    Define 'node 0', the node representing the beginning of the block. This node 'assigns'
    global variables declared before execution of the block, and forwards along the
    effects of the term labels. This is analogous to the beginning of a loop, where
    execution could have come from before the loop or from the end of the loop.
- *)
+*)
 let node_0
     (initial_declared : ExprSet.t)
-    (term_labels : LabelSet.t)
   : node_info_update =
   { dep_sets = (fun entry ->
         ReachingDepSet.union entry
@@ -682,50 +711,53 @@ let node_0
              (List.map
                 (ExprSet.to_list initial_declared)
                 ~f:(fun v -> (v, 0)))))
-  ; possible_previous = term_labels
+  ; possible_previous = LabelSet.empty
   ; rhs_set = ExprSet.empty
   ; controlflow = LabelSet.empty
-  ; loc = "Start of block"
-  ; target_sum_terms = None
+  ; loc = StartOfBlock
   }
 
 (**
    Add node 0 to a traversal state, including variables declared outside the block and
    with dependence on all of the target term nodes.
- *)
-let add_node_0
+*)
+let initial_traversal_state
     (initial_declared : ExprSet.t)
-    (term_labels : LabelSet.t)
-    (trav_st : traversal_state)
   : traversal_state =
-  let node_info = node_0 initial_declared term_labels in
-  { trav_st with
-    node_info_map =
-      merge_label_maps trav_st.node_info_map (LabelMap.singleton 0 node_info) }
+  let node_0_info = node_0 initial_declared in
+  { label_ix = 1
+  ; node_info_map =
+      (LabelMap.singleton 0 node_0_info)
+  ; possible_previous = LabelSet.singleton 0
+  ; target_terms = LabelSet.empty
+  ; continues = LabelSet.empty
+  ; breaks = LabelSet.empty
+  ; returns = LabelSet.empty
+  }
 
 (**
    Add the accumulated set of return labels to the set of possible exit points
- *)
+*)
 let add_return_exits
     (trav_st : traversal_state)
   : traversal_state =
   {trav_st with
-     possible_previous = LabelSet.union trav_st.returns trav_st.possible_previous}
+   possible_previous = LabelSet.union trav_st.returns trav_st.possible_previous}
 
 type dataflow_graph =
   {
     (* All of the information for each node *)
     node_info_map : node_info_fixpoint LabelMap.t
-    (* The set of nodes that could have been the last to execute *)
+  (* The set of nodes that could have been the last to execute *)
   ; possible_exits : LabelSet.t
-    (* The set of nodes corresponding to target terms *)
+  (* The set of nodes corresponding to target terms *)
   ; target_term_nodes : LabelSet.t
   }
 [@@deriving sexp]
 
 (**
    Construct a dataflow graph for the block, given some preexisting (global?) variables
- *)
+*)
 let block_dataflow_graph
     (model_block : stmt_loc)
     (preexisting_table : top_var_table)
@@ -735,21 +767,19 @@ let block_dataflow_graph
          ("target" :: Map.Poly.keys preexisting_table)
          ~f:(fun v -> Var v))
   in
+  let initial_trav_st = initial_traversal_state preexisting_vars in
   let accum_info = accumulate_node_info initial_trav_st initial_cf_st model_block in
-  let accum_info' = add_return_exits accum_info in
-  let possible_exits = accum_info'.possible_previous in
-  let (accum_info'', term_labels) = add_term_nodes accum_info' in
-  let accum_info''' = add_node_0 preexisting_vars term_labels accum_info'' in
-  let node_info = rd_fixpoint accum_info'''.node_info_map in
+  (*let (accum_info'', term_labels) = add_term_nodes accum_info' in*)
+  let node_info = rd_fixpoint accum_info.node_info_map in
   { node_info_map = node_info
-  ; possible_exits = possible_exits
-  ; target_term_nodes = term_labels
+  ; possible_exits = LabelSet.union accum_info.possible_previous accum_info.returns
+  ; target_term_nodes = accum_info.target_terms
   }
 
 (**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.
- *)
+*)
 let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   let (var_table, model_block) = mir.modelb in
   let df_graph =
@@ -773,6 +803,9 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
     print_endline
       ("Pre-existing variables: " ^
        (Sexp.to_string ([%sexp (preexisting_vars : ExprSet.t)])));
+    print_endline
+      ("Target term nodes: " ^
+       (Sexp.to_string ([%sexp (df_graph.target_term_nodes : LabelSet.t)])));
     print_endline
       ("Possible endpoints: " ^
        (Sexp.to_string ([%sexp (df_graph.possible_exits : LabelSet.t)])));
@@ -833,28 +866,28 @@ let%expect_test "Example program" =
  * Alternative formulation for target additions:
    - Target addition statements have two types of contribution: affecting the target as a variable which takes effect inline, and adding a term which takes effect after the model block.
    - Term nodes should:
-     - Include the target increment node's possible_previous as its own
-     - Be listed as possible_previous for node 0
-     - Include all of the term's variables on the RHS
-     - Add each of the terms' parameter variables to the RD set
-     - Not include any other variables in the RD set
-     - Include all other terms as possible_previous?
+   - Include the target increment node's possible_previous as its own
+   - Be listed as possible_previous for node 0
+   - Include all of the term's variables on the RHS
+   - Add each of the terms' parameter variables to the RD set
+   - Not include any other variables in the RD set
+   - Include all other terms as possible_previous?
    - These term nodes can be included in the fixpoint operation
  * Target terms only introduce fully connected dependency graph in some cases:
-   x ~ normal(mu, sigma) introduces mu <-> sigma
-   does
-   theta ~ normal(mu, sigma) introduce mu <-> sigma if theta is not related to data?
-   Is this true? Interacting with target might always change how the parameters is sampled..
+     x ~ normal(mu, sigma) introduces mu <-> sigma
+     does
+     theta ~ normal(mu, sigma) introduce mu <-> sigma if theta is not related to data?
+     Is this true? Interacting with target might always change how the parameters is sampled..
    - Certainly only introduces dependencies onto parameters, not to anything else
  * Need to find functions in the fdblock, and inline them in the NRFunApp statements - but they should only effect target, everything else is scoped in a block
  * Still need to include target additions as dependencies for normal variables
    - Perform first fixpoint, use normal variable dependency analysis on target, insert additional labels for target sum terms, rerun fixpoint
    - Alternative, since target can only be incremented and not overwritten:
-     - Provide a second rd_apply that considers all target_sum_terms as labels, or split the results into classical and statistical dependence
-       - target_sum_terms should really always be labels, but ignored in the classic analysis
-       - So, back to the original idea of iterating over terms in the traversal?
-       - But, should they actually be able to depend on eachother? The dependency is only introduced between evaluations of the model block!
-       - Does that mean term dependencies should actually be introduced in the initial rd set, along with the symbol table?
+   - Provide a second rd_apply that considers all target_sum_terms as labels, or split the results into classical and statistical dependence
+   - target_sum_terms should really always be labels, but ignored in the classic analysis
+   - So, back to the original idea of iterating over terms in the traversal?
+   - But, should they actually be able to depend on eachother? The dependency is only introduced between evaluations of the model block!
+   - Does that mean term dependencies should actually be introduced in the initial rd set, along with the symbol table?
  * Does possible_previous for the beginning of a loop need to include the end of the loop?
    - Yes. I need to add the final label and continue labels to the possible_previous of the first label
    - How do I get access to the first label? Two ways:
@@ -865,8 +898,8 @@ let%expect_test "Example program" =
  * Shadowing
  * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
    - Shadowing won't really work with this scheme, I'm just leaving both local and outside alive
-     - Wait, is that actually correct?
-     - Not quite correct, instead you could map all shadowed values into a special 'shadowed' token in the exit of the for loop, and map it back in the exit of the body
+   - Wait, is that actually correct?
+   - Not quite correct, instead you could map all shadowed values into a special 'shadowed' token in the exit of the for loop, and map it back in the exit of the body
    - Done for loops, needs to be done for scoped declarations
  * Non-local control flow should be added to the traversal state
    - Done, untested
