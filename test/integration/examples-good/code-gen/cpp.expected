@@ -98,6 +98,12 @@ class eight_schools_ncp_model : public prob_grad {
     }
   }
   
+  void get_param_names(std::vector<std::string>& names) const {
+    names.push_back("mu");
+    names.push_back("tau");
+    names.push_back("theta");
+    names.push_back("theta_tilde");
+  }
 }
 }
 

@@ -481,6 +481,14 @@ let pp_model_private ppf p =
   pf ppf "%a" (list ~sep:cut pp_decl)
     (List.map ~f:(fun (x, y, _) -> (x, y)) (decls_of_p p))
 
+let pp_get_param_names ppf p =
+  let param_names = Map.Poly.keys (fst p.modelb) in
+  let add_param = fmt "names.push_back(%S);" in
+  pf ppf
+    "@[<v 2>void get_param_names(std::vector<std::string>& names) const \
+     {@,%a@]@,}"
+    (list ~sep:cut add_param) param_names
+
 let pp_log_prob ppf p =
   let text = pf ppf "%s@," in
   text "template <bool propto__, bool jacobian__, typename T__>" ;
@@ -505,7 +513,6 @@ let pp_log_prob ppf p =
 
 let pp_model_public ppf p =
   (*XXX:
-    2. get_param_names
     3. get_dims
     4. write_array
     5. constrained_param_names
@@ -513,7 +520,8 @@ let pp_model_public ppf p =
     7.
   *)
   pf ppf "@ %a" pp_ctor p ;
-  pf ppf "@ %a" pp_log_prob p
+  pf ppf "@ %a" pp_log_prob p ;
+  pf ppf "@ %a" pp_get_param_names p
 
 let pp_model ppf p =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
