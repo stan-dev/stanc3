@@ -44,12 +44,7 @@ let targetpe e =
   let t = Var "target" in
   Assignment (t, BinOp (t, Plus, e))
 
-let trans_loc = function
-  | {Ast.begin_loc; end_loc} ->
-      (* TODO: this is a stub; insert actual definition here. *)
-      sprintf "\"%s\", line %d-%d" begin_loc.filename begin_loc.line_num
-        end_loc.line_num
-
+let trans_loc = Errors.string_of_location_span
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
 let no_loc = ""
 let with_no_loc s = {stmt= s; sloc= no_loc}

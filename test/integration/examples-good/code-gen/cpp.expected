@@ -37,20 +37,20 @@ class eight_schools_ncp_model : public prob_grad {
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // dummy to suppress unused var warning
     try {
-      current_statement__ = "\"eight_schools_ncp.stan\", line 2-2";
+      current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
       vals_i__ = context__.vals_i__("J");
       J = vals_i__;
       
-      current_statement__ = "\"eight_schools_ncp.stan\", line 4-4";
+      current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
       vals_r__ = context__.vals_r__("sigma");
       for (size_t i_0__ = 0; i_0__ < J; i_0__++) sigma = vals_r__[i_0__];
       
-      current_statement__ = "\"eight_schools_ncp.stan\", line 3-3";
+      current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
       vals_r__ = context__.vals_r__("y");
       for (size_t i_0__ = 0; i_0__ < J; i_0__++) y = vals_r__[i_0__];
-      current_statement__ = "\"eight_schools_ncp.stan\", line 2-2";
+      current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
       check_greater_or_equal(function__, J, 0);
-      current_statement__ = "\"eight_schools_ncp.stan\", line 4-4";
+      current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
       for (size_t sym1 = 0; sym1 < J; sym1++)
         check_greater_or_equal(function__, sigma[sym1], 0);
     } catch (const std::exception& e) {
@@ -71,24 +71,24 @@ class eight_schools_ncp_model : public prob_grad {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
     try {
-      current_statement__ = "\"eight_schools_ncp.stan\", line 9-9";
+      current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
       check_greater_or_equal(function__, tau, 0);
-      current_statement__ = "\"eight_schools_ncp.stan\", line 15-16";
+      current_statement__ = "file eight_schools_ncp.stan, line 15, column 2 to line 16, column 41";
       for (size_t j = 1; j < J; j++)
-        current_statement__ = "\"eight_schools_ncp.stan\", line 16-16";
+        current_statement__ = "file eight_schools_ncp.stan, line 16, columns 4-41";
         stan::model::rvalue(theta,
             stan::model::cons_list(stan::model::index_uni(j),
             stan::model::nil_index_list()), "theta"); = mu Plus tau Times 
         stan::model::rvalue(theta_tilde,
             stan::model::cons_list(stan::model::index_uni(j),
             stan::model::nil_index_list()), "theta_tilde");;
-      current_statement__ = "\"eight_schools_ncp.stan\", line 20-20";
+      current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
       target = target Plus normal(mu, 0, 5);
-      current_statement__ = "\"eight_schools_ncp.stan\", line 21-21";
+      current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
       target = target Plus cauchy(tau, 0, 5);
-      current_statement__ = "\"eight_schools_ncp.stan\", line 22-22";
+      current_statement__ = "file eight_schools_ncp.stan, line 22, columns 2-29";
       target = target Plus normal(theta_tilde, 0, 1);
-      current_statement__ = "\"eight_schools_ncp.stan\", line 23-23";
+      current_statement__ = "file eight_schools_ncp.stan, line 23, columns 2-27";
       target = target Plus normal(y, theta, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
