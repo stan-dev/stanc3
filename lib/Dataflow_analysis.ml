@@ -1,9 +1,6 @@
 open Core_kernel
 open Mir
 
-let debug_verbose = true
-let demonstration_verbose = true
-
 (***********************************)
 (* Basic datatypes                 *)
 (***********************************)
@@ -150,7 +147,8 @@ let rec expr_var_set (ex : expr) : ExprSet.t =
   | FunApp (_, exprs) -> union_recur exprs
   | BinOp (expr1, _, expr2) -> union_recur [expr1; expr2]
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
-  | Indexed (expr, ix) -> ExprSet.union_list (expr_var_set expr :: List.map ix ~f:index_var_set) (* TODO handle indices *)
+  | Indexed (expr, ix) ->
+    ExprSet.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
 and index_var_set (ix : index) : ExprSet.t =
   match ix with
   | All -> ExprSet.empty
@@ -232,6 +230,49 @@ let compose_last_rd_update
     ~f:(fun trav_st label -> modify_node_info trav_st label compose_rd_update)
     ~init:trav_st
 
+(***********************************)
+(* Mir traversal & node_info making*)
+(***********************************)
+
+(**
+   Define 'node 0', the node representing the beginning of the block. This node adds
+   global variables declared before execution of the block to the RD set, and forwards
+   along the effects of the term labels. This is analogous to the beginning of a loop,
+   where control could have come from before the loop or from the end of the loop.
+*)
+let node_0
+    (initial_declared : ExprSet.t)
+  : node_info_update =
+  { dep_sets = (fun entry ->
+        ReachingDepSet.union entry
+          (ReachingDepSet.of_list
+             (List.map
+                (ExprSet.to_list initial_declared)
+                ~f:(fun v -> (v, 0)))))
+  ; possible_previous = LabelSet.empty
+  ; rhs_set = ExprSet.empty
+  ; controlflow = LabelSet.empty
+  ; loc = StartOfBlock
+  }
+
+(**
+   Add node 0 to a traversal state, including variables declared outside the block and
+   with dependence on all of the target term nodes.
+*)
+let initial_traversal_state
+    (initial_declared : ExprSet.t)
+  : traversal_state =
+  let node_0_info = node_0 initial_declared in
+  { label_ix = 1
+  ; node_info_map =
+      (LabelMap.singleton 0 node_0_info)
+  ; possible_previous = LabelSet.singleton 0
+  ; target_terms = LabelSet.empty
+  ; continues = LabelSet.empty
+  ; breaks = LabelSet.empty
+  ; returns = LabelSet.empty
+  }
+
 (**
    Append a node to the traversal_state that corresponds to the effect that a target
    term has on the variables it involves.
@@ -287,8 +328,8 @@ let add_target_term_node
 
    See `traversal_state` and `cf_state` types for descriptions of the state.
 
-   Traversal is done in a syntax-directed order, and builds a node_info values for each Mir node that could affect or
-   read a variable.
+   Traversal is done in a syntax-directed order, and builds a node_info values for each
+   Mir node that could affect or read a variable.
 *)
 let rec accumulate_node_info
     (trav_st : traversal_state)
@@ -475,6 +516,10 @@ let rec accumulate_node_info
   | FunDef _ -> trav_st
 
 
+(***********************************)
+(* RD fixpoint functions           *)
+(***********************************)
+
 (** Find the new value of the RD sets of a label, given the previous RD sets *)
 let rd_update_label
     (node_info : node_info_update)
@@ -496,15 +541,6 @@ let rd_apply
     let node_info = LabelMap.find_exn node_infos label in
     rd_update_label node_info prev
   in
-  (if debug_verbose then
-     let _ =
-       (LabelMap.mapi prev
-          ~f:(fun ~key:l ~data:d ->
-              let u = update_label ~key:l ~data:d in
-              print_endline ("rd_apply result " ^ (string_of_int l) ^ ": " ^
-                             (Sexp.to_string
-                                ([%sexp (u: ReachingDepSet.t * ReachingDepSet.t)])))));
-     in ());
   LabelMap.mapi prev ~f:update_label
 
 (** Find the fixpoint of a function and an initial value, given definition of equality *)
@@ -543,54 +579,18 @@ let rd_fixpoint (info : node_info_update LabelMap.t) : node_info_fixpoint LabelM
     ~f:(fun ~key:label ~data:ms ->
         {(LabelMap.find_exn info label) with dep_sets = ms})
 
-(**
-   Define 'node 0', the node representing the beginning of the block. This node adds
-   global variables declared before execution of the block to the RD set, and forwards
-   along the effects of the term labels. This is analogous to the beginning of a loop,
-   where control could have come from before the loop or from the end of the loop.
-*)
-let node_0
-    (initial_declared : ExprSet.t)
-  : node_info_update =
-  { dep_sets = (fun entry ->
-        ReachingDepSet.union entry
-          (ReachingDepSet.of_list
-             (List.map
-                (ExprSet.to_list initial_declared)
-                ~f:(fun v -> (v, 0)))))
-  ; possible_previous = LabelSet.empty
-  ; rhs_set = ExprSet.empty
-  ; controlflow = LabelSet.empty
-  ; loc = StartOfBlock
-  }
+
+(***********************************)
+(* Dependency analysis & interface *)
+(***********************************)
 
 (**
-   Add node 0 to a traversal state, including variables declared outside the block and
-   with dependence on all of the target term nodes.
+   Everything we need to know to do dependency analysis
+   * node_info_map: Collection of node information
+   * possible_exits: Set of nodes that could be the last to execute under some execution
+   * target_term_nodes: Set of nodes corresponding to target terms, to be excluded for
+     non-statistical dependency analysis
 *)
-let initial_traversal_state
-    (initial_declared : ExprSet.t)
-  : traversal_state =
-  let node_0_info = node_0 initial_declared in
-  { label_ix = 1
-  ; node_info_map =
-      (LabelMap.singleton 0 node_0_info)
-  ; possible_previous = LabelSet.singleton 0
-  ; target_terms = LabelSet.empty
-  ; continues = LabelSet.empty
-  ; breaks = LabelSet.empty
-  ; returns = LabelSet.empty
-  }
-
-(**
-   Add the accumulated set of return labels to the set of possible exit points
-*)
-let add_return_exits
-    (trav_st : traversal_state)
-  : traversal_state =
-  {trav_st with
-   possible_previous = LabelSet.union trav_st.returns trav_st.possible_previous}
-
 type dataflow_graph =
   {
     (* All of the information for each node *)
@@ -627,7 +627,8 @@ let block_dataflow_graph
    with `label`.
 
    If `statistical_dependence` is off, the nodes corresponding to target terms will not be
-   traversed (recursively), and the result will be the same as a classical dataflow analysis.
+   traversed (recursively), and the result will be the same as a classical dataflow
+   analysis.
 *)
 let rec label_dependencies
     (df_graph : dataflow_graph)
@@ -635,8 +636,6 @@ let rec label_dependencies
     (so_far : LabelSet.t)
     (label : label)
   : LabelSet.t =
-  if debug_verbose then
-    (print_string ("label_deps called on " ^ (string_of_int label) ^ " with " ^ (Sexp.to_string ([%sexp (so_far : LabelSet.t)])) ^ "\n"));
   let node_info = LabelMap.find_exn df_graph.node_info_map label in
   let rhs_labels =
     LabelSet.of_list
@@ -687,7 +686,8 @@ and labels_dependencies
    Find the set of labels for nodes that could affect the final value of the variable.
 
    If `statistical_dependence` is off, the nodes corresponding to target terms will not be
-   traversed (recursively), and the result will be the same as a classical dataflow analysis.
+   traversed (recursively), and the result will be the same as a classical dataflow
+   analysis.
 *)
 let final_var_dependencies
     (df_graph : dataflow_graph)
@@ -758,13 +758,13 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   let var = "y" in
   let label_deps = final_var_dependencies df_graph false (Var var) in
   let expr_deps = preexisting_var_dependencies df_graph label_deps in
+  let preexisting_vars = ExprSet.of_list
+      (List.map
+         ("target" :: Map.Poly.keys var_table)
+         ~f:(fun v -> Var v))
+  in
 
-  if demonstration_verbose then begin
-    let preexisting_vars = ExprSet.of_list
-        (List.map
-           ("target" :: Map.Poly.keys var_table)
-           ~f:(fun v -> Var v))
-    in
+  if true then begin
     Sexp.pp_hum
       Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
@@ -787,6 +787,13 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   end;
 
   df_graph
+
+(***********************************)
+(* Tests                           *)
+(***********************************)
+
+(* Inline tests don't seem to work *)
+
 let%test _ = 5 = 120
 let%test _ = raise (Failure "ran test")
 
@@ -807,68 +814,12 @@ let%expect_test "Example program" =
   [%expect
     {| |}]
 
-
 (**
-   TODO
- * Alternative formulation for target additions:
-   - Target addition statements have two types of contribution: affecting the target as a variable which takes effect inline, and adding a term which takes effect after the model block.
-   - Term nodes should:
-   - Include the target increment node's possible_previous as its own
-   - Be listed as possible_previous for node 0
-   - Include all of the term's variables on the RHS
-   - Add each of the terms' parameter variables to the RD set
-   - Not include any other variables in the RD set
-   - Include all other terms as possible_previous?
-   - These term nodes can be included in the fixpoint operation
- * Target terms only introduce fully connected dependency graph in some cases:
-     x ~ normal(mu, sigma) introduces mu <-> sigma
-     does
-     theta ~ normal(mu, sigma) introduce mu <-> sigma if theta is not related to data?
-     Is this true? Interacting with target might always change how the parameters is sampled..
-   - Certainly only introduces dependencies onto parameters, not to anything else
- * Need to find functions in the fdblock, and inline them in the NRFunApp statements - but they should only effect target, everything else is scoped in a block
- * Still need to include target additions as dependencies for normal variables
-   - Perform first fixpoint, use normal variable dependency analysis on target, insert additional labels for target sum terms, rerun fixpoint
-   - Alternative, since target can only be incremented and not overwritten:
-   - Provide a second rd_apply that considers all target_sum_terms as labels, or split the results into classical and statistical dependence
-   - target_sum_terms should really always be labels, but ignored in the classic analysis
-   - So, back to the original idea of iterating over terms in the traversal?
-   - But, should they actually be able to depend on eachother? The dependency is only introduced between evaluations of the model block!
-   - Does that mean term dependencies should actually be introduced in the initial rd set, along with the symbol table?
- * Does possible_previous for the beginning of a loop need to include the end of the loop?
-   - Yes. I need to add the final label and continue labels to the possible_previous of the first label
-   - How do I get access to the first label? Two ways:
-     1. Introspect the label iteration process, lookup trav_st.label_ix+1
-     2. Run the substatements once just to get the labels you need, then run it again with those added
-   - Done #1
- * Indexed variables
- * Shadowing
- * Solve scoping issue in for-loops. Does this apply to declarations within blocks as well?
-   - Shadowing won't really work with this scheme, I'm just leaving both local and outside alive
-   - Wait, is that actually correct?
-   - Not quite correct, instead you could map all shadowed values into a special 'shadowed' token in the exit of the for loop, and map it back in the exit of the body
-   - Done for loops, needs to be done for scoped declarations
- * Non-local control flow should be added to the traversal state
-   - Done, untested
- * Target assignments need to be split into one label for each summed term
-   - Done, collected target terms in node_info of each target assignment, this is sufficient for depends analysis and prior partitioning
-
-
-
- * if function ends in st, it can change the target
-
- * write expect_test in file, found automatically, use dune runtest
- * use dune format and dune promote to use the actual output as a unit test
-
-   val trans_prog : string -> Ast.typed_program -> Mir.stmt_loc Mir.prog
-
-   val parse_string :
-     (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)
-   -> string
-   -> Ast.untyped_program
-   (** A helper function to take a parser, a string and produce an AST. Under the
-    hood, it takes care of Menhir's custom syntax error messages. *)
-
-   val semantic_check_program : untyped_program -> typed_program
-   (** Performs semantic check on AST and returns original AST embellished with type decorations *)
+   ~~~~~ STILL TODO ~~~~~
+ * Indexed variables are currently handled as monoliths
+ * Need to know which variables are parameters and which are data, since target terms
+   shouldn't introduce dependency to data variables
+ * Variables declared in blocks should go out of scope
+   * This is done already for for-loop index variables
+ * Traverse functions that end in st, since they can change the target
  **)
