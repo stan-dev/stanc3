@@ -1,7 +1,7 @@
 open Core_kernel
 open Mir
 
-let debug_verbose = false
+let debug_verbose = true
 let demonstration_verbose = true
 
 (***********************************)
@@ -232,6 +232,20 @@ let compose_last_rd_update
     ~f:(fun trav_st label -> modify_node_info trav_st label compose_rd_update)
     ~init:trav_st
 
+(**
+   Append a node to the traversal_state that corresponds to the effect that a target
+   term has on the variables it involves.
+
+   Each term node lists every other as a `possible_previous` node, because sampling
+   considers them effectively simultaneously. Term nodes list their corresponding target
+   increment node's control flow as their own.
+
+   Term nodes are modeled as executing before the start of the block, rather than before
+   the next expression in the traversal. Term nodes can't be included in the normal flow
+   of the graph, since the effect they have on parameters doesn't 'happen' until in
+   between executions of the block. Instead, it works similarly to a while loop, with
+   target terms at the 'end' of the loop body.
+*)
 let add_target_term_node
     (trav_st : traversal_state)
     (assignment_node : label)
@@ -529,178 +543,11 @@ let rd_fixpoint (info : node_info_update LabelMap.t) : node_info_fixpoint LabelM
     ~f:(fun ~key:label ~data:ms ->
         {(LabelMap.find_exn info label) with dep_sets = ms})
 
-let rec var_dependencies
-    (node_info : node_info_fixpoint LabelMap.t)
-    (visited : LabelSet.t)
-    (possible_endpoints : LabelSet.t)
-    (var : expr)
-  : (ExprSet.t * LabelSet.t) =
-  let s = match var with
-    | Var s -> s
-    | _ -> raise (Failure "Cannot currently check dependency of non-var expression") in
-  if debug_verbose then
-    (print_endline ("var_deps called on " ^ s ^ " " ^
-                    (Sexp.to_string ([%sexp (possible_endpoints : LabelSet.t)]))));
-  let endpoints_without_start = LabelSet.remove possible_endpoints 0 in
-  let last_infos =
-    List.map
-      (LabelSet.to_list endpoints_without_start)
-      ~f:(fun l -> LabelMap.find_exn node_info l)
-  in
-  let all_possible_assignments =
-    ReachingDepSet.to_list
-      (ReachingDepSet.union_list
-         (List.map last_infos ~f:(fun i -> snd i.dep_sets)))
-  in
-  let var_possible_assignments =
-    List.filter_map
-      all_possible_assignments
-      ~f:(fun (v, l) -> if v = var then Some l else None)
-  in
-  if debug_verbose then
-    (print_endline ("calling label_deps on labels " ^
-                    (Sexp.to_string ([%sexp (var_possible_assignments : label list)]))));
-  let zero_dep =
-    not (List.is_empty (List.filter var_possible_assignments ~f:(fun l -> l = 0)))
-  in
-  let (prev_expr_deps, prev_label_deps) =
-    List.unzip
-      (List.map
-         (List.filter
-            var_possible_assignments
-            ~f:(fun l -> not (LabelSet.mem visited l)))
-         ~f:(label_dependencies node_info visited))
-  in
-  let this_expr_dep =
-    if (LabelSet.mem possible_endpoints 0
-        || List.is_empty var_possible_assignments
-        || zero_dep) then
-      ExprSet.singleton var
-    else
-      ExprSet.empty
-  in
-  let result =
-    ( ExprSet.union_list (this_expr_dep :: prev_expr_deps)
-    , LabelSet.union_list prev_label_deps)
-  in
-  if debug_verbose then
-    (print_endline (Sexp.to_string ([%sexp (result : (ExprSet.t * LabelSet.t))])));
-  result
-
 (**
-   Find the set of labels for nodes whose RHS could affect the value of `label`.
-
-   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
-   traversed, and the result will be the same as a classical dataflow analysis.
-*)
-and label_dependencies
-    (node_info : node_info_fixpoint LabelMap.t)
-    (visited : LabelSet.t)
-    (label : label)
-  : (ExprSet.t * LabelSet.t) =
-  let visited' = LabelSet.add visited label in
-  if debug_verbose then
-    (print_string ("label_deps called on " ^ (string_of_int label) ^ "\n"));
-  let this_info = LabelMap.find_exn node_info label in
-  let (rhs_exprs, rhs_labels) =
-    List.unzip
-      (List.map
-         (ExprSet.to_list this_info.rhs_set)
-         ~f:(var_dependencies node_info visited' this_info.possible_previous))
-  in
-  let (cf_exprs, cf_labels) =
-    List.unzip
-      (List.map
-         (LabelSet.to_list
-            (LabelSet.filter
-               this_info.controlflow
-               ~f:(fun x -> x <> 0)))
-         ~f:(label_dependencies node_info visited'))
-  in
-  ( ExprSet.union_list (rhs_exprs @ cf_exprs)
-  , LabelSet.add (LabelSet.union_list (rhs_labels @ cf_labels)) label)
-
-  (*
-(**
-   Collect all of the target terms, and the labels where they were added.
-
-   It's important to know the labels because the variables in the expression could change
-   of the course of execution.
-*)
-let target_terms (node_info : ('s node_info) LabelMap.t) : (expr * label) list =
-  let terms =
-    LabelMap.fold
-      node_info
-      ~init:[]
-      ~f:(fun ~key:l ~data:node_info accum ->
-          List.map
-            (Option.value ~default:[] node_info.target_sum_terms)
-            ~f:(fun t -> (t, l)) @ accum)
-  in
-  List.rev (List.filter terms ~f:(fun (t,_) -> t <> Var "target"))
-  *)
-
-(*
-(**
-   Append new nodes to the traversal_state that correspond to the effect that a target
-   term has on the variables it involves.
-
-   Each term node lists every other as a `possible_previous` node, because sampling
-   considers them effectively simultaneously. Term nodes list their corresponding target
-   increment node's control flow as their own.
-
-   Term nodes can't be included in the normal flow of the graph, since the effect they
-   have on parameters doesn't 'happen' until in between executions of the block. Instead,
-   it works similarly to a while loop, with target terms at the end of the loop body.
-*)
-let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) =
-  let add_term_node
-      ((trav_st, nodes) : (traversal_state * LabelSet.t))
-      ((term, inc_label) : (expr * label))
-    : (traversal_state * LabelSet.t) =
-    let (label, trav_st') = new_label trav_st in
-    let target_inc_info = LabelMap.find_exn trav_st.node_info_map inc_label in
-    let term_vars = expr_var_set term in
-    let info =
-      { dep_sets =
-          (fun _ -> ReachingDepSet.of_list
-              (List.map
-                 (ExprSet.to_list term_vars)
-                 ~f:(fun v -> (v, label))))
-      ; possible_previous = target_inc_info.possible_previous
-      ; rhs_set = term_vars
-      ; controlflow = target_inc_info.controlflow
-      ; loc = target_inc_info.loc
-      ; target_sum_terms = None
-      }
-    in ( { trav_st' with
-           node_info_map =
-             merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info) }
-       , LabelSet.add nodes label
-       )
-  in
-  let (trav_st', term_nodes) =
-    List.fold_left
-      (target_terms trav_st.node_info_map)
-      ~init:(trav_st, LabelSet.empty)
-      ~f:add_term_node
-  in
-  let add_mutual_dependence trav_st label =
-    modify_node_info
-      trav_st
-      label
-      (fun info ->
-         {info with
-          possible_previous = LabelSet.union info.possible_previous term_nodes})
-  in
-  (LabelSet.fold term_nodes ~init:trav_st' ~f:add_mutual_dependence, term_nodes)
-  *)
-
-(**
-   Define 'node 0', the node representing the beginning of the block. This node 'assigns'
-   global variables declared before execution of the block, and forwards along the
-   effects of the term labels. This is analogous to the beginning of a loop, where
-   execution could have come from before the loop or from the end of the loop.
+   Define 'node 0', the node representing the beginning of the block. This node adds
+   global variables declared before execution of the block to the RD set, and forwards
+   along the effects of the term labels. This is analogous to the beginning of a loop,
+   where control could have come from before the loop or from the end of the loop.
 *)
 let node_0
     (initial_declared : ExprSet.t)
@@ -768,29 +615,149 @@ let block_dataflow_graph
          ~f:(fun v -> Var v))
   in
   let initial_trav_st = initial_traversal_state preexisting_vars in
-  let accum_info = accumulate_node_info initial_trav_st initial_cf_st model_block in
-  (*let (accum_info'', term_labels) = add_term_nodes accum_info' in*)
-  let node_info = rd_fixpoint accum_info.node_info_map in
+  let trav_st = accumulate_node_info initial_trav_st initial_cf_st model_block in
+  let node_info = rd_fixpoint trav_st.node_info_map in
   { node_info_map = node_info
-  ; possible_exits = LabelSet.union accum_info.possible_previous accum_info.returns
-  ; target_term_nodes = accum_info.target_terms
+  ; possible_exits = LabelSet.union trav_st.possible_previous trav_st.returns
+  ; target_term_nodes = trav_st.target_terms
   }
+
+(**
+   Find the set of labels for nodes that could affect the value or behavior of the node
+   with `label`.
+
+   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
+   traversed (recursively), and the result will be the same as a classical dataflow analysis.
+*)
+let rec label_dependencies
+    (df_graph : dataflow_graph)
+    (statistical_dependence : bool)
+    (so_far : LabelSet.t)
+    (label : label)
+  : LabelSet.t =
+  if debug_verbose then
+    (print_string ("label_deps called on " ^ (string_of_int label) ^ " with " ^ (Sexp.to_string ([%sexp (so_far : LabelSet.t)])) ^ "\n"));
+  let node_info = LabelMap.find_exn df_graph.node_info_map label in
+  let rhs_labels =
+    LabelSet.of_list
+      (List.map
+         (ReachingDepSet.to_list
+            (ReachingDepSet.filter
+               (fst node_info.dep_sets)
+               ~f:(fun (v, _) -> ExprSet.mem node_info.rhs_set v)))
+         ~f:snd)
+  in
+  let labels = LabelSet.union rhs_labels node_info.controlflow in
+  let filtered_labels =
+    if statistical_dependence then
+      labels
+    else
+      LabelSet.diff labels df_graph.target_term_nodes
+  in
+  labels_dependencies
+    df_graph
+    statistical_dependence
+    (LabelSet.add so_far label)
+    filtered_labels
+
+(**
+   Find the set of labels for nodes that could affect the value or behavior of any of the
+   nodes `labels`.
+
+   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
+   traversed (recursively), and the result will be the same as a classical dataflow
+   analysis.
+*)
+and labels_dependencies
+    (df_graph : dataflow_graph)
+    (statistical_dependence : bool)
+    (so_far : LabelSet.t)
+    (labels : LabelSet.t)
+  : LabelSet.t =
+  LabelSet.fold
+    labels
+    ~init:so_far
+    ~f:(fun so_far label ->
+        if LabelSet.mem so_far label then
+          so_far
+        else
+          label_dependencies df_graph statistical_dependence so_far label)
+
+(**
+   Find the set of labels for nodes that could affect the final value of the variable.
+
+   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
+   traversed (recursively), and the result will be the same as a classical dataflow analysis.
+*)
+let final_var_dependencies
+    (df_graph : dataflow_graph)
+    (statistical_dependence : bool)
+    (var : expr)
+  : LabelSet.t =
+  let exit_rd_set =
+    (ReachingDepSet.union_list
+       (List.map
+          ((LabelSet.to_list df_graph.possible_exits))
+          ~f:(fun l ->
+              let info = LabelMap.find_exn df_graph.node_info_map l in
+              snd info.dep_sets)))
+  in
+  let labels =
+    (* I wish I knew how to map on sets across types. Equivalent Haskell to the following:
+       Set.map snd . Set.filter ((== var) . fst) *)
+    LabelSet.of_list
+      (List.map
+         (ReachingDepSet.to_list
+            (ReachingDepSet.filter
+               exit_rd_set
+               ~f:(fun (v, _) -> v = var)))
+         ~f:snd)
+  in
+  let filtered_labels =
+    if statistical_dependence then
+      labels
+    else
+      LabelSet.diff labels df_graph.target_term_nodes
+  in
+  labels_dependencies df_graph statistical_dependence LabelSet.empty filtered_labels
+
+(**
+   Find the set of preexisting variables that are dependencies for the set of nodes
+   `labels`.
+*)
+let preexisting_var_dependencies
+    (df_graph : dataflow_graph)
+    (labels : LabelSet.t)
+  : ExprSet.t =
+  let rds =
+    (ReachingDepSet.union_list
+       (List.map
+          (LabelSet.to_list labels)
+          ~f:(fun l ->
+              let info = LabelMap.find_exn df_graph.node_info_map l in
+              (ReachingDepSet.filter
+                 (fst info.dep_sets)
+                 ~f:(fun (v, l) -> l = 0 && ExprSet.mem info.rhs_set v)))))
+  in
+  ExprSet.of_list
+    (List.map
+       (ReachingDepSet.to_list rds)
+       ~f:fst)
 
 (**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.
 *)
 let analysis_example (mir : stmt_loc prog) : dataflow_graph =
-  let (var_table, model_block) = mir.modelb in
+  let (var_table, model_block) = mir.datab in
   let df_graph =
     block_dataflow_graph
       model_block
       var_table
   in
   let var = "y" in
-  let (expr_deps, label_deps) =
-    var_dependencies df_graph.node_info_map LabelSet.empty df_graph.possible_exits (Var var)
-  in
+  let label_deps = final_var_dependencies df_graph false (Var var) in
+  let expr_deps = preexisting_var_dependencies df_graph label_deps in
 
   if demonstration_verbose then begin
     let preexisting_vars = ExprSet.of_list
@@ -798,10 +765,12 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
            ("target" :: Map.Poly.keys var_table)
            ~f:(fun v -> Var v))
     in
-    Sexp.pp_hum Format.std_formatter [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
+    Sexp.pp_hum
+      Format.std_formatter
+      [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
     print_string "\n\n";
     print_endline
-      ("Pre-existing variables: " ^
+      ("Preexisting variables: " ^
        (Sexp.to_string ([%sexp (preexisting_vars : ExprSet.t)])));
     print_endline
       ("Target term nodes: " ^
@@ -810,10 +779,10 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
       ("Possible endpoints: " ^
        (Sexp.to_string ([%sexp (df_graph.possible_exits : LabelSet.t)])));
     print_endline
-      (var ^ " depends on labels: " ^
+      ("Var " ^ var ^ " depends on labels: " ^
        (Sexp.to_string ([%sexp (label_deps : LabelSet.t)])));
     print_endline
-      (var ^ " depends on global variables: " ^
+      ("Var " ^ var ^ " depends on preexisting variables: " ^
        (Sexp.to_string ([%sexp (expr_deps : ExprSet.t)])));
   end;
 
@@ -836,29 +805,7 @@ let%expect_test "Example program" =
   let df_graph = block_dataflow_graph block table in
   print_s [%sexp (df_graph : dataflow_graph)] ;
   [%expect
-    {|
-    ((functionblock ()) (datablock ()) (transformeddatablock ())
-     (parametersblock ()) (transformedparametersblock ())
-     (modelblock
-      ((((stmt_untyped
-          (For (loop_variable ((name i) (id_loc <opaque>)))
-           (lower_bound
-            ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
-           (upper_bound
-            ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>)))
-           (loop_body
-            ((stmt_untyped
-              (For (loop_variable ((name j) (id_loc <opaque>)))
-               (lower_bound
-                ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>)))
-               (upper_bound
-                ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>)))
-               (loop_body
-                ((stmt_untyped (Print ((PString "\"Badger\""))))
-                 (stmt_untyped_loc <opaque>)))))
-             (stmt_untyped_loc <opaque>)))))
-         (stmt_untyped_loc <opaque>)))))
-     (generatedquantitiesblock ())) |}]
+    {| |}]
 
 
 (**
