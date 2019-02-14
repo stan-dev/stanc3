@@ -81,7 +81,7 @@ let rec string_of_location loc =
     included_from_str
 
 (** Render a location_span as a string *)
-let create_string_from_location_span loc_sp =
+let string_of_location_span loc_sp =
   match loc_sp with {begin_loc; end_loc} ->
     let bf = begin_loc.filename in
     let ef = end_loc.filename in
@@ -151,7 +151,7 @@ let print_context_and_message message loc =
 let report_syntax_error = function
   | Parsing (message, loc_span) ->
       Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-        (create_string_from_location_span loc_span) ;
+        (string_of_location_span loc_span) ;
       print_context_and_message message loc_span.end_loc
   | Lexing (_, loc) ->
       Printf.eprintf "\nSyntax error in %s, lexing error:\n"
@@ -165,7 +165,7 @@ let report_syntax_error = function
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =
   Printf.eprintf "\n%s in %s:\n" "Semantic error"
-    (create_string_from_location_span loc_span) ;
+    (string_of_location_span loc_span) ;
   print_context_and_message message loc_span.begin_loc
 
 (* Warn that a language feature is deprecated *)

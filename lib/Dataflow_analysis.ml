@@ -753,14 +753,14 @@ let preexisting_var_dependencies
    variable dependencies of the "y" variable, printing results to stdout.
 *)
 let analysis_example (mir : stmt_loc prog) : dataflow_graph =
-  let (var_table, model_block) = mir.datab in
+  let (var_table, model_block) = mir.modelb in
   let df_graph =
     block_dataflow_graph
       model_block
       var_table
   in
   let var = "y" in
-  let label_deps = final_var_dependencies df_graph false (Var var) in
+  let label_deps = final_var_dependencies df_graph true (Var var) in
   let expr_deps = preexisting_var_dependencies df_graph label_deps in
   let preexisting_vars = ExprSet.of_list
       (List.map
