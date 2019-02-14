@@ -64,11 +64,11 @@ let truncate_dist ast_obs t =
          (BinOp (obs, cond, trans_expr x), bind_loc x.expr_typed_loc add_inf, y))
   in
   match t with
-  | Ast.NoTruncate -> None
-  | Ast.TruncateUpFrom lb -> Some (trunc Less lb None)
-  | Ast.TruncateDownFrom ub -> Some (trunc Greater ub None)
+  | Ast.NoTruncate -> []
+  | Ast.TruncateUpFrom lb -> [trunc Less lb None]
+  | Ast.TruncateDownFrom ub -> [trunc Greater ub None]
   | Ast.TruncateBetween (lb, ub) ->
-      Some (trunc Less lb (Some (trunc Greater ub None)))
+      [trunc Less lb (Some (trunc Greater ub None))]
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then
@@ -110,11 +110,8 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           targetpe
             (FunApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
         in
-        Block
-          [ Option.value
-              ~default:(bind_loc stmt_typed_loc Skip)
-              (truncate_dist arg truncation)
-          ; bind_loc stmt_typed_loc add_dist ]
+        SList
+          (truncate_dist arg truncation @ [bind_loc stmt_typed_loc add_dist])
     | Ast.Print ps -> NRFunApp ("print", List.map ~f:trans_printable ps)
     | Ast.Reject ps -> NRFunApp ("reject", List.map ~f:trans_printable ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->

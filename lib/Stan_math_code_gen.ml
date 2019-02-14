@@ -150,8 +150,7 @@ let pp_located_msg ppf msg =
     {|stan::lang::rethrow_located(
           std::runtime_error(std::string(%s) + e.what(), current_statement__));
       // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
-|}
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
   @@ Option.value ~default:"e" msg
 
 let maybe_templated_arg_types (args : formal_params) =
@@ -394,7 +393,6 @@ let%expect_test "udf" =
               std::runtime_error(std::string(e) + e.what(), current_statement__));
           // Next line prevents compiler griping about no return
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
-
       }
     } |}]
 
