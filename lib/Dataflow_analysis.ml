@@ -58,7 +58,7 @@ module ExprSet = Set.Make(
   end)
 
 (**
-   Information we collect about each node
+   Information to be collected about each node
    * dep_sets: Information about how the label effects the dependency set
    * rhs_set: The 'right hand side' set of variables that affect the value or behavior of
      this node
@@ -73,7 +73,7 @@ module ExprSet = Set.Make(
      there is none
    * target_sum_terms: The list of target term expressions this node adds, if any
  *)
-type 'dep label_info =
+type 'dep node_info =
   {
     dep_sets : 'dep
   ; possible_previous : LabelSet.t
@@ -85,23 +85,23 @@ type 'dep label_info =
 [@@deriving sexp]
 
 (**
-   A label_info, where the reaching dependency information takes the form of an update
+   A node_info, where the reaching dependency information takes the form of an update
    function that maps from the 'entry' set to the 'exit' set, where the entry set is
    what's true before executing this node and the exit set is true after.
  *)
-type label_info_update = (ReachingDepSet.t -> ReachingDepSet.t) label_info
+type node_info_update = (ReachingDepSet.t -> ReachingDepSet.t) node_info
 
 (**
-   A label_info where the reaching dependency information is explicitly written as the
+   A node_info where the reaching dependency information is explicitly written as the
    entry and exit sets, as after fixpoint analysis.
  *)
-type label_info_fixpoint = (ReachingDepSet.t * ReachingDepSet.t) label_info
+type node_info_fixpoint = (ReachingDepSet.t * ReachingDepSet.t) node_info
 [@@deriving sexp]
 
 (**
    The state that will be maintained throughout the traversal of the Mir
    * label_ix: The next label that's free to use
-   * label_info_map: The label information that's been built so far
+   * node_info_map: The label information that's been built so far
    * possible_previous: The set of nodes that could have immediately preceded this point
      under some execution of the program
    * continues: A set of the continue nodes that have been encountered since exiting a loop
@@ -110,7 +110,7 @@ type label_info_fixpoint = (ReachingDepSet.t * ReachingDepSet.t) label_info
  *)
 type traversal_state =
   { label_ix : label
-  ; label_info_map : label_info_update LabelMap.t
+  ; node_info_map : node_info_update LabelMap.t
   ; possible_previous : LabelSet.t
   ; continues : LabelSet.t
   ; breaks : LabelSet.t
@@ -122,7 +122,7 @@ type traversal_state =
  *)
 let initial_trav_st =
   { label_ix = 1
-  ; label_info_map = LabelMap.empty
+  ; node_info_map = LabelMap.empty
   ; possible_previous = LabelSet.singleton 0
   ; continues = LabelSet.empty
   ; breaks = LabelSet.empty
@@ -206,20 +206,20 @@ let alter_last_rd
     (alter : ReachingDepSet.t -> ReachingDepSet.t)
     (trav_st : traversal_state)
   : traversal_state =
-  let remove_rd label_info_opt = match label_info_opt with
+  let remove_rd node_info_opt = match node_info_opt with
     | None -> raise (Failure "traversal state's possible_previous refers to nonexistant labels")
-    | Some label_info -> { label_info with
-                           dep_sets = fun set -> alter (label_info.dep_sets set)
+    | Some node_info -> { node_info with
+                           dep_sets = fun set -> alter (node_info.dep_sets set)
                          }
   in
   let remove_label_rd info_map label = LabelMap.update info_map label ~f:remove_rd in
-  let label_info_map' =
+  let node_info_map' =
     List.fold_left
       (LabelSet.to_list trav_st.possible_previous)
       ~f:remove_label_rd
-      ~init:trav_st.label_info_map
+      ~init:trav_st.node_info_map
   in
-  { trav_st with label_info_map = label_info_map' }
+  { trav_st with node_info_map = node_info_map' }
 
 (** The list of terms in expression *)
 let rec summation_terms (rhs : expr) : expr list =
@@ -227,16 +227,16 @@ let rec summation_terms (rhs : expr) : expr list =
   | BinOp (e1, Plus, e2) -> List.append (summation_terms e1) (summation_terms e2)
   | _ as e -> [e]
 
-(** Apply function `f` to label_info for `label` in `trav_st` *)
-let modify_label_info
+(** Apply function `f` to node_info for `label` in `trav_st` *)
+let modify_node_info
     (trav_st : traversal_state)
     (label : label)
-    (f : label_info_update -> label_info_update)
+    (f : node_info_update -> node_info_update)
   : traversal_state =
   {trav_st with
-   label_info_map =
+   node_info_map =
      LabelMap.change
-       trav_st.label_info_map
+       trav_st.node_info_map
        label
        ~f:(function (*Option.map should exist but doesn't appear to*)
            | None -> None
@@ -247,10 +247,10 @@ let modify_label_info
 
    See `traversal_state` and `cf_state` types for descriptions of the state.
 
-   Traversal is done in a syntax-directed order, and builds a label_info values for each Mir node that could affect or
+   Traversal is done in a syntax-directed order, and builds a node_info values for each Mir node that could affect or
    read a variable.
 *)
-let rec accumulate_label_info
+let rec accumulate_node_info
     (trav_st : traversal_state)
     (cf_st : cf_state)
     (st : stmt_loc)
@@ -278,8 +278,8 @@ let rec accumulate_label_info
       }
     in
     { trav_st' with
-      label_info_map =
-        merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
+      node_info_map =
+        merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info)
     ; possible_previous = LabelSet.singleton label
     }
   | NRFunApp _ -> trav_st
@@ -298,8 +298,8 @@ let rec accumulate_label_info
   | IfElse (pred, then_stmt, else_stmt) ->
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
-    let then_st = accumulate_label_info recurse_st label then_stmt in
-    let else_st_opt = Option.map else_stmt ~f:(accumulate_label_info then_st label) in
+    let then_st = accumulate_node_info recurse_st label then_stmt in
+    let else_st_opt = Option.map else_stmt ~f:(accumulate_node_info then_st label) in
     let info =
       { dep_sets = (fun entry -> entry) (* is this correct? *)
       ; possible_previous = trav_st'.possible_previous
@@ -314,27 +314,27 @@ let rec accumulate_label_info
     (match else_st_opt with
      | Some else_st ->
        { else_st with
-         label_info_map =
-           merge_label_maps else_st.label_info_map (LabelMap.singleton label info)
+         node_info_map =
+           merge_label_maps else_st.node_info_map (LabelMap.singleton label info)
        ; possible_previous =
            LabelSet.union then_st.possible_previous else_st.possible_previous
        }
      | None ->
        { then_st with
-         label_info_map =
-           merge_label_maps then_st.label_info_map (LabelMap.singleton label info)
+         node_info_map =
+           merge_label_maps then_st.node_info_map (LabelMap.singleton label info)
        ; possible_previous =
            LabelSet.union then_st.possible_previous trav_st'.possible_previous
        })
   | While (pred, body_stmt) ->
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
-    let body_st = accumulate_label_info recurse_st label body_stmt in
+    let body_st = accumulate_node_info recurse_st label body_stmt in
     let loop_start_possible_previous =
       LabelSet.union_list
         [LabelSet.singleton label; body_st.possible_previous; body_st.continues] in
     let body_st' =
-      modify_label_info
+      modify_node_info
         body_st
         (peek_next_label recurse_st)
         (fun info -> {info with possible_previous = loop_start_possible_previous})
@@ -354,9 +354,9 @@ let rec accumulate_label_info
       }
     in
     { body_st' with
-      label_info_map =
+      node_info_map =
         merge_label_maps
-          body_st'.label_info_map
+          body_st'.node_info_map
           (LabelMap.singleton label info)
     ; possible_previous =
         LabelSet.union body_st'.possible_previous trav_st'.possible_previous
@@ -366,13 +366,13 @@ let rec accumulate_label_info
   | For args ->
     let (label, trav_st') = new_label trav_st in
     let recurse_st = {trav_st' with possible_previous = LabelSet.singleton label} in
-    let body_st = accumulate_label_info recurse_st label args.body in
+    let body_st = accumulate_node_info recurse_st label args.body in
     let loop_start_possible_previous =
       LabelSet.union_list
         [LabelSet.singleton label; body_st.possible_previous; body_st.continues]
     in
     let body_st' =
-      modify_label_info
+      modify_node_info
         body_st
         (peek_next_label recurse_st)
         (fun info -> {info with possible_previous = loop_start_possible_previous})
@@ -397,18 +397,18 @@ let rec accumulate_label_info
       }
     in
     { body_st'' with
-      label_info_map =
-        merge_label_maps body_st''.label_info_map (LabelMap.singleton label info)
+      node_info_map =
+        merge_label_maps body_st''.node_info_map (LabelMap.singleton label info)
     ; possible_previous =
         LabelSet.union body_st''.possible_previous trav_st'.possible_previous
     ; continues = LabelSet.empty
     ; breaks = LabelSet.empty
     }
   | Block stmts ->
-    let f state stmt = accumulate_label_info state cf_st stmt
+    let f state stmt = accumulate_node_info state cf_st stmt
     in List.fold_left stmts ~init:trav_st ~f:f
   | SList stmts ->
-    let f state stmt = accumulate_label_info state cf_st stmt
+    let f state stmt = accumulate_node_info state cf_st stmt
     in List.fold_left stmts ~init:trav_st ~f:f
   | Decl args ->
     let (label, trav_st') = new_label trav_st in
@@ -428,8 +428,8 @@ let rec accumulate_label_info
       }
     in
     { trav_st' with
-      label_info_map =
-        merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info)
+      node_info_map =
+        merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info)
     ; possible_previous = LabelSet.singleton label
     }
   | FunDef _ -> trav_st
@@ -437,24 +437,24 @@ let rec accumulate_label_info
 
 (** Find the new value of the RD sets of a label, given the previous RD sets *)
 let rd_update_label
-    (label_info : label_info_update)
+    (node_info : node_info_update)
     (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)
   : (ReachingDepSet.t * ReachingDepSet.t) =
   let get_exit label = snd (LabelMap.find_exn prev label) in
   let from_prev =
     ReachingDepSet.union_list
-      (List.map (Set.to_list label_info.possible_previous) ~f:get_exit)
+      (List.map (Set.to_list node_info.possible_previous) ~f:get_exit)
   in
-  (from_prev, label_info.dep_sets from_prev)
+  (from_prev, node_info.dep_sets from_prev)
 
 (** Find the new values of the RD sets, given the previous RD sets *)
 let rd_apply
-    (label_infos : label_info_update LabelMap.t)
+    (node_infos : node_info_update LabelMap.t)
     (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)
   : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
   let update_label ~key:(label : label) ~data:_ =
-    let label_info = LabelMap.find_exn label_infos label in
-    rd_update_label label_info prev
+    let node_info = LabelMap.find_exn node_infos label in
+    rd_update_label node_info prev
   in
   (if debug_verbose then
      let _ =
@@ -493,7 +493,7 @@ let rd_equal
    Find the fixpoints of the dataflow update functions. Fixpoints should correspond to
    the full, correct dataflow graph.
 *)
-let rd_fixpoint (info : label_info_update LabelMap.t) : label_info_fixpoint LabelMap.t =
+let rd_fixpoint (info : node_info_update LabelMap.t) : node_info_fixpoint LabelMap.t =
   let initial_sets =
     LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
   in
@@ -504,7 +504,7 @@ let rd_fixpoint (info : label_info_update LabelMap.t) : label_info_fixpoint Labe
         {(LabelMap.find_exn info label) with dep_sets = ms})
 
 let rec var_dependencies
-    (label_info : label_info_fixpoint LabelMap.t)
+    (node_info : node_info_fixpoint LabelMap.t)
     (visited : LabelSet.t)
     (possible_endpoints : LabelSet.t)
     (var : expr)
@@ -519,7 +519,7 @@ let rec var_dependencies
   let last_infos =
     List.map
       (LabelSet.to_list endpoints_without_start)
-      ~f:(fun l -> LabelMap.find_exn label_info l)
+      ~f:(fun l -> LabelMap.find_exn node_info l)
   in
   let all_possible_assignments =
     ReachingDepSet.to_list
@@ -543,7 +543,7 @@ let rec var_dependencies
          (List.filter
             var_possible_assignments
             ~f:(fun l -> not (LabelSet.mem visited l)))
-         ~f:(label_dependencies label_info visited))
+         ~f:(label_dependencies node_info visited))
   in
   let this_expr_dep =
     if (LabelSet.mem possible_endpoints 0
@@ -568,19 +568,19 @@ let rec var_dependencies
    traversed, and the result will be the same as a classical dataflow analysis.
 *)
 and label_dependencies
-    (label_info : label_info_fixpoint LabelMap.t)
+    (node_info : node_info_fixpoint LabelMap.t)
     (visited : LabelSet.t)
     (label : label)
   : (ExprSet.t * LabelSet.t) =
   let visited' = LabelSet.add visited label in
   if debug_verbose then
     (print_string ("label_deps called on " ^ (string_of_int label) ^ "\n"));
-  let this_info = LabelMap.find_exn label_info label in
+  let this_info = LabelMap.find_exn node_info label in
   let (rhs_exprs, rhs_labels) =
     List.unzip
       (List.map
          (ExprSet.to_list this_info.rhs_set)
-         ~f:(var_dependencies label_info visited' this_info.possible_previous))
+         ~f:(var_dependencies node_info visited' this_info.possible_previous))
   in
   let (cf_exprs, cf_labels) =
     List.unzip
@@ -589,7 +589,7 @@ and label_dependencies
             (LabelSet.filter
                this_info.controlflow
                ~f:(fun x -> x <> 0)))
-         ~f:(label_dependencies label_info visited'))
+         ~f:(label_dependencies node_info visited'))
   in
   ( ExprSet.union_list (rhs_exprs @ cf_exprs)
   , LabelSet.add (LabelSet.union_list (rhs_labels @ cf_labels)) label)
@@ -600,14 +600,14 @@ and label_dependencies
    It's important to know the labels because the variables in the expression could change
    of the course of execution.
   *)
-let target_terms (label_info : ('s label_info) LabelMap.t) : (expr * label) list =
+let target_terms (node_info : ('s node_info) LabelMap.t) : (expr * label) list =
   let terms =
     LabelMap.fold
-      label_info
+      node_info
       ~init:[]
-      ~f:(fun ~key:l ~data:label_info accum ->
+      ~f:(fun ~key:l ~data:node_info accum ->
           List.map
-            (Option.value ~default:[] label_info.target_sum_terms)
+            (Option.value ~default:[] node_info.target_sum_terms)
             ~f:(fun t -> (t, l)) @ accum)
   in
   List.rev (List.filter terms ~f:(fun (t,_) -> t <> Var "target"))
@@ -630,7 +630,7 @@ let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) 
       ((term, inc_label) : (expr * label))
     : (traversal_state * LabelSet.t) =
     let (label, trav_st') = new_label trav_st in
-    let target_inc_info = LabelMap.find_exn trav_st.label_info_map inc_label in
+    let target_inc_info = LabelMap.find_exn trav_st.node_info_map inc_label in
     let term_vars = expr_var_set term in
     let info =
       { dep_sets =
@@ -645,19 +645,19 @@ let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) 
       ; target_sum_terms = None
       }
     in ( { trav_st' with
-           label_info_map =
-             merge_label_maps trav_st'.label_info_map (LabelMap.singleton label info) }
+           node_info_map =
+             merge_label_maps trav_st'.node_info_map (LabelMap.singleton label info) }
        , LabelSet.add nodes label
        )
   in
   let (trav_st', term_nodes) =
     List.fold_left
-      (target_terms trav_st.label_info_map)
+      (target_terms trav_st.node_info_map)
       ~init:(trav_st, LabelSet.empty)
       ~f:add_term_node
   in
   let add_mutual_dependence trav_st label =
-    modify_label_info
+    modify_node_info
       trav_st
       label
       (fun info ->
@@ -675,7 +675,7 @@ let add_term_nodes (trav_st : traversal_state) : (traversal_state * LabelSet.t) 
 let node_0
     (initial_declared : ExprSet.t)
     (term_labels : LabelSet.t)
-  : label_info_update =
+  : node_info_update =
   { dep_sets = (fun entry ->
         ReachingDepSet.union entry
           (ReachingDepSet.of_list
@@ -698,10 +698,10 @@ let add_node_0
     (term_labels : LabelSet.t)
     (trav_st : traversal_state)
   : traversal_state =
-  let label_info = node_0 initial_declared term_labels in
+  let node_info = node_0 initial_declared term_labels in
   { trav_st with
-    label_info_map =
-      merge_label_maps trav_st.label_info_map (LabelMap.singleton 0 label_info) }
+    node_info_map =
+      merge_label_maps trav_st.node_info_map (LabelMap.singleton 0 node_info) }
 
 (**
    Add the accumulated set of return labels to the set of possible exit points
@@ -715,7 +715,7 @@ let add_return_exits
 type dataflow_graph =
   {
     (* All of the information for each node *)
-    label_info_map : label_info_fixpoint LabelMap.t
+    node_info_map : node_info_fixpoint LabelMap.t
     (* The set of nodes that could have been the last to execute *)
   ; possible_exits : LabelSet.t
     (* The set of nodes corresponding to target terms *)
@@ -735,13 +735,13 @@ let block_dataflow_graph
          ("target" :: Map.Poly.keys preexisting_table)
          ~f:(fun v -> Var v))
   in
-  let accum_info = accumulate_label_info initial_trav_st initial_cf_st model_block in
+  let accum_info = accumulate_node_info initial_trav_st initial_cf_st model_block in
   let accum_info' = add_return_exits accum_info in
   let possible_exits = accum_info'.possible_previous in
   let (accum_info'', term_labels) = add_term_nodes accum_info' in
   let accum_info''' = add_node_0 preexisting_vars term_labels accum_info'' in
-  let label_info = rd_fixpoint accum_info'''.label_info_map in
-  { label_info_map = label_info
+  let node_info = rd_fixpoint accum_info'''.node_info_map in
+  { node_info_map = node_info
   ; possible_exits = possible_exits
   ; target_term_nodes = term_labels
   }
@@ -759,7 +759,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   in
   let var = "y" in
   let (expr_deps, label_deps) =
-    var_dependencies df_graph.label_info_map LabelSet.empty df_graph.possible_exits (Var var)
+    var_dependencies df_graph.node_info_map LabelSet.empty df_graph.possible_exits (Var var)
   in
 
   if demonstration_verbose then begin
@@ -768,7 +768,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
            ("target" :: Map.Poly.keys var_table)
            ~f:(fun v -> Var v))
     in
-    Sexp.pp_hum Format.std_formatter [%sexp (df_graph.label_info_map : label_info_fixpoint LabelMap.t)];
+    Sexp.pp_hum Format.std_formatter [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
     print_string "\n\n";
     print_endline
       ("Pre-existing variables: " ^
@@ -871,7 +871,7 @@ let%expect_test "Example program" =
  * Non-local control flow should be added to the traversal state
    - Done, untested
  * Target assignments need to be split into one label for each summed term
-   - Done, collected target terms in label_info of each target assignment, this is sufficient for depends analysis and prior partitioning
+   - Done, collected target terms in node_info of each target assignment, this is sufficient for depends analysis and prior partitioning
 
 
 
