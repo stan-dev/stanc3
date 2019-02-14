@@ -54,6 +54,10 @@ module ExprSet = Set.Make(
     let t_of_sexp = expr_of_sexp
   end)
 
+(**
+   Description of where a node in the dependency graph came from, where MirNode is the
+   location from an Mir.loc_stmt
+ *)
 type source_loc = MirNode of string
                 | StartOfBlock
                 | TargetTerm of {
