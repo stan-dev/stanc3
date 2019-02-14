@@ -644,7 +644,7 @@ let augment_accum_info
   else
     add_node_0 initial_declared None trav_st
 
-let block_dependence_graph
+let block_dataflow_graph
     (model_block : stmt_loc)
     (preexisting_table : top_var_table)
     (statistical_dependence : bool)
@@ -662,7 +662,7 @@ let block_dependence_graph
 let analysis_example (mir : stmt_loc prog) : (label_info_fixpoint LabelMap.t * LabelSet.t) =
   let (var_table, model_block) = mir.modelb in
   let (label_info, possible_endpoints) =
-    block_dependence_graph
+    block_dataflow_graph
       model_block
       var_table
       true
@@ -766,16 +766,18 @@ let%test _ = raise (Failure "ran test")
 
 let%expect_test "Example program" =
   let ast =
-    raise (Failure "ran expect test")
-    (*Parse.parse_string Parser.Incremental.program
+    Parse.parse_string Parser.Incremental.program
       "      model {\n\
       \              for (i in 1:2)\n\
       \                for (j in 3:4)\n\
       \                  print(\"Badger\");\n\
       \            }\n\
-      \            "*)
+      \            "
   in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  let mir = Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast) in
+  let (table, block) = mir.modelb in
+  let df_graph = block_dataflow_graph block table true in
+  print_s [%sexp (df_graph : label_info_fixpoint LabelMap.t * LabelSet.t)] ;
   [%expect
     {|
     ((functionblock ()) (datablock ()) (transformeddatablock ())
