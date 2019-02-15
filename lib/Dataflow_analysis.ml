@@ -619,7 +619,7 @@ let block_dataflow_graph
   : dataflow_graph =
   let preexisting_vars = ExprSet.of_list
       (List.map
-         ("target" :: Map.Poly.keys preexisting_table)
+         ("x" :: "target" :: Map.Poly.keys preexisting_table)
          ~f:(fun v -> Var v))
   in
   let initial_trav_st = initial_traversal_state preexisting_vars in
@@ -753,6 +753,24 @@ let preexisting_var_dependencies
        ~f:fst)
 
 (**
+   Find the set of target term nodes which do not depend on any preexisting variables in
+   `exprs`. Only non-statistical dependence is considered, otherwise all overlapping terms
+   will depend on eachother.
+ *)
+let exprset_independent_target_terms
+    (df_graph : dataflow_graph)
+    (exprs : ExprSet.t)
+  : LabelSet.t =
+  LabelSet.filter
+    df_graph.target_term_nodes
+    ~f:(fun l ->
+        let label_deps = label_dependencies df_graph false LabelSet.empty l in
+        ExprSet.is_empty
+          (ExprSet.inter
+             (preexisting_var_dependencies df_graph label_deps)
+             exprs))
+
+(**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.
 *)
@@ -766,6 +784,16 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   let var = "y" in
   let label_deps = final_var_dependencies df_graph true (Var var) in
   let expr_deps = preexisting_var_dependencies df_graph label_deps in
+  let data_vars = ExprSet.of_list [Var "x"] in
+  let prior_term_labels = exprset_independent_target_terms df_graph data_vars in
+  let prior_terms =
+    List.map
+      (LabelSet.to_list prior_term_labels)
+      ~f:(fun l ->
+          match (LabelMap.find_exn df_graph.node_info_map l).loc with
+          | TargetTerm {term = term; _} -> term
+          | _ -> raise (Failure "Found non-target term in target term list"))
+  in
   let preexisting_vars = ExprSet.of_list
       (List.map
          ("target" :: Map.Poly.keys var_table)
@@ -786,6 +814,12 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
     print_endline
       ("Possible endpoints: " ^
        (Sexp.to_string ([%sexp (df_graph.possible_exits : LabelSet.t)])));
+    print_endline
+      ("Assumed data variables: " ^
+       (Sexp.to_string ([%sexp (data_vars : ExprSet.t)])));
+    print_endline
+      ("Data-independent target term expressions: " ^
+       (Sexp.to_string ([%sexp (prior_terms : expr list)])));
     print_endline
       ("Var " ^ var ^ " depends on labels: " ^
        (Sexp.to_string ([%sexp (label_deps : LabelSet.t)])));
