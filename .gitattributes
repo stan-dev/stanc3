@@ -1,9 +1,7 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
-* text=auto
+* text=crlf
 
-# Explicitly declare text files you want to always be normalized and converted
-# to native line endings on checkout.
-*.expected binary
+*.expected text
 
 test/examples-good/* linguist-vendored
 test/examples-bad/* linguist-vendored
