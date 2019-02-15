@@ -69,10 +69,10 @@ type source_loc = MirNode of string
 (**
    Information to be collected about each node
    * dep_sets: Information about how the label effects the dependency set
-   * rhs_set: The 'right hand side' set of variables that affect the value or behavior of
-     this node
    * possible_previous: The set of nodes that could have immediately preceded this node
      under some execution of the program
+   * rhs_set: The 'right hand side' set of variables that affect the value or behavior of
+     this node
    * controlflow: The set of control flow nodes that are immediate parents of this node:
      * The most recent nested if/then or loop,
      * or the beginning of the function or block if there are no containing branches,
@@ -80,7 +80,6 @@ type source_loc = MirNode of string
      * plus, for loops, any break statements they contain
    * loc: The location of the Mir node that this node corresponds to, or a description if
      there is none
-   * target_sum_terms: The list of target term expressions this node adds, if any
 *)
 type 'dep node_info =
   {
