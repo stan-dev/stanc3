@@ -859,8 +859,9 @@ let%expect_test "Example program" =
 (**
    ~~~~~ STILL TODO ~~~~~
  * Indexed variables are currently handled as monoliths
- * Need to know which variables are parameters and which are data, since target terms
-   shouldn't introduce dependency to data variables
+ * Need to know which variables are parameters and which are data, since
+   * target terms shouldn't introduce dependency to data variables
+   * data-independent target terms might be useful
  * Variables declared in blocks should go out of scope
    * This is done already for for-loop index variables
  * Traverse functions that end in st, since they can change the target
