@@ -3,8 +3,8 @@ open Core_kernel
 let maybe_convert_cmd_to_windows cmd =
   let pattern = "/install/default/bin/" in
   let to_windows str =
-    String.substr_replace_first ~pattern ~with_:"/install/default.windows/bin/"
-      str
+    String.substr_replace_first ~pattern ~with_:"/default.windows/" str
+    ^ ".exe"
   in
   let path =
     String.prefix cmd
