@@ -1,7 +1,7 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=lf
 
-*.expected text
+*.expected binary
 
 test/examples-good/* linguist-vendored
 test/examples-bad/* linguist-vendored
