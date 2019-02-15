@@ -47,6 +47,12 @@ pipeline {
                    """
             }
         }
+        stage("Build & Test windows binary") {
+            agent { label 'windows' }
+            steps {
+                bat "bash -cl \"make clean; dune build -x windows; dune runtest\""
+            }
+        }
     }
     post {
         always {
