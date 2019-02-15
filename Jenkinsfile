@@ -9,7 +9,7 @@ pipeline {
         stage("Build & Test windows binary") {
             agent { label 'windows' }
             steps {
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
+                ps "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
             }
         }
         stage("Build & Test") {
