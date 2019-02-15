@@ -28,7 +28,7 @@ let rec pp_expr ppf s =
   | Var s -> string ppf s
   | Lit (Str, s) -> pf ppf "\"%s\"" s
   | Lit (_, s) -> string ppf s
-  | FunApp (fname, args) -> pp_call ppf (fname, list ~sep:nop pp_expr, args)
+  | FunApp (fname, args) -> pp_call ppf (fname, list ~sep:comma pp_expr, args)
   | BinOp (e1, op, e2) ->
       pf ppf "%a %s %a" pp_expr e1 (Operators.operator_name op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
@@ -117,7 +117,7 @@ let pp_arg ppf ((adtype, name, st), idx) =
   pf ppf "const %a& %s" (pp_unsizedtype adstr) st name
 
 let pp_template_decls ppf =
-  pf ppf "@[<hov>template <%a>@]@ " (list ~sep:nop (fmt "typename %s"))
+  pf ppf "@[<hov>template <%a>@]@ " (list ~sep:comma (fmt "typename %s"))
 
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
@@ -158,7 +158,7 @@ let rec pp_statement ppf {stmt; sloc} =
       (* XXX completely wrong *)
       pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
   | NRFunApp (fname, args) ->
-      pf ppf "%s(%a);" fname (list ~sep:nop pp_expr) args
+      pf ppf "%s(%a);" fname (list ~sep:comma pp_expr) args
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
@@ -192,7 +192,7 @@ let rec pp_statement ppf {stmt; sloc} =
       pp_call ppf
         ( fdname
         , (fun ppf (args, extra_arg) ->
-            (list ~sep:nop pp_arg) ppf (with_idx args) ;
+            (list ~sep:comma pp_arg) ppf (with_idx args) ;
             pf ppf ",@ %s" extra_arg )
         , (fdargs, "std::ostream* pstream__") ) ;
       pf ppf " " ;
