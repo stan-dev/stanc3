@@ -6,6 +6,12 @@ def utils = new org.stan.Utils()
 pipeline {
     agent none
     stages {
+        stage("Build & Test windows binary") {
+            agent { label 'windows' }
+            steps {
+                bat "bash -cl \"make clean; dune build -x windows; dune runtest\""
+            }
+        }
         stage("Build & Test") {
             agent {
                 dockerfile {
@@ -45,12 +51,6 @@ pipeline {
                       eval \$(opam env)
                       dune runtest --profile static
                    """
-            }
-        }
-        stage("Build & Test windows binary") {
-            agent { label 'windows' }
-            steps {
-                bat "bash -cl \"make clean; dune build -x windows; dune runtest\""
             }
         }
     }
