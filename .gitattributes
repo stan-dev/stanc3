@@ -1,6 +1,8 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text eol=lf
 
+# Explicitly declare text files you want to always be normalized and converted
+# to lf line endings on checkout.
 *.expected text
 
 test/examples-good/* linguist-vendored
