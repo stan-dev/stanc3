@@ -297,10 +297,10 @@ let%expect_test "location propagates" =
   |> print_endline ;
   [%expect
     {|
-      {
-        current_statement__ = "lo";
-        stan_print(pstream__);
-      } |}]
+    {
+      current_statement__ = "lo";
+      stan_print(pstream__);
+    } |}]
 
 let%expect_test "if" =
   with_no_loc
@@ -443,11 +443,11 @@ let%expect_test "read int[N] y" =
     vals_i__ = context__.vals_i__("y");
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i__[i_0__]; |}]
 
-let decls_of_p {datavars; _} =
+let data_decls_of_p {datavars; _} =
   Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl
 
 let pp_read_and_check_decls ppf p =
-  list ~sep:cut pp_read_data ppf (decls_of_p p) ;
+  list ~sep:cut pp_read_data ppf (data_decls_of_p p) ;
   pp_statement ppf (snd p.tdatab)
 
 let block_of_list s =
@@ -479,15 +479,47 @@ let pp_ctor ppf p =
 
 let pp_model_private ppf p =
   pf ppf "%a" (list ~sep:cut pp_decl)
-    (List.map ~f:(fun (x, y, _) -> (x, y)) (decls_of_p p))
+    (List.map ~f:(fun (x, y, _) -> (x, y)) (data_decls_of_p p))
 
 let pp_get_param_names ppf p =
-  let param_names = Map.Poly.keys (fst p.modelb) in
+  let param_names =
+    p.modelb |> fst |> Map.Poly.keys |> List.sort ~compare:String.compare
+  in
   let add_param = fmt "names.push_back(%S);" in
   pf ppf
     "@[<v 2>void get_param_names(std::vector<std::string>& names) const \
      {@,%a@]@,}"
     (list ~sep:cut add_param) param_names
+
+let rec get_dims = function
+  | Ast.SInt | Ast.SReal -> []
+  | Ast.SVector d | Ast.SRowVector d -> [d]
+  | Ast.SMatrix (dim1, dim2) -> [dim1; dim2]
+  | Ast.SArray (t, dim) -> dim :: get_dims t
+
+let%expect_test "dims" =
+  strf "@[%a@]" (list ~sep:comma pp_expr)
+    (get_dims (Ast.SArray (Ast.SMatrix (Var "x", Var "y"), Var "z")))
+  |> print_endline ;
+  [%expect {| z, x, y |}]
+
+let get_params {modelb; _} = fst modelb
+
+let get_param_types p =
+  get_params p |> Map.Poly.data |> List.map ~f:tvdecl_to_decl
+  |> List.map ~f:(fun (_, t, _) -> t)
+
+let pp_get_dims ppf p =
+  let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
+  let pp_dim_sep ppf () =
+    pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
+  in
+  pf ppf
+    "@[<v 2>void get_dims(std::vector<std::vector<size_t>>& dimss__) const \
+     {@,dimss__.resize(0);@,std::vector<size_t> dims__;@,%a%a@]@,}"
+    (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
+    (List.map ~f:get_dims (get_param_types p))
+    pp_dim_sep ()
 
 let pp_log_prob ppf p =
   let text = pf ppf "%s@," in
@@ -521,7 +553,8 @@ let pp_model_public ppf p =
   *)
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
-  pf ppf "@ %a" pp_get_param_names p
+  pf ppf "@ %a" pp_get_param_names p ;
+  pf ppf "@ %a" pp_get_dims p
 
 let pp_model ppf p =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
@@ -533,16 +566,14 @@ let pp_model ppf p =
 let globals = "static char* current_statement__;"
 
 let usings =
-  {|
-using std::istream;
+  {| using std::istream;
 using std::string;
 using std::stringstream;
 using std::vector;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::prob_grad;
-using namespace stan::math;
-|}
+using namespace stan::math; |}
 
 let pp_prog ppf (p : stmt_loc prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
