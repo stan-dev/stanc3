@@ -67,8 +67,8 @@ let rec pp_expr ppf s =
   | TernaryIf (cond, ifb, elseb) ->
       pf ppf "(%a) ? (%a) : (%a)" pp_expr cond pp_expr ifb pp_expr elseb
   | Indexed (e, idcs) ->
-      pf ppf "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
-        pp_expr e pp_indices idcs pp_expr e
+      pf ppf "stan::model::rvalue(@[<hov>%a,@,%a,@]@ \"%a\")" pp_expr e
+        pp_indices idcs pp_expr e
 
 and pp_index ppf idx =
   let idx_phrase fmt idtype = pf ppf fmt ("stan::model::index_" ^ idtype) in
@@ -91,9 +91,10 @@ let%expect_test "multi index" =
   [%expect
     {|
     stan::model::rvalue(vec,
-        stan::model::cons_list(stan::model::index_multi(intarr1),
-        stan::model::cons_list(stan::model::index_multi(intarr2),
-        stan::model::nil_index_list())), "vec"); |}]
+                        stan::model::cons_list(stan::model::index_multi(intarr1),
+                        stan::model::cons_list(stan::model::index_multi(intarr2),
+                        stan::model::nil_index_list())),
+    "vec") |}]
 
 let rec stantype_prim_str = function
   | Ast.UInt -> "int"
@@ -239,7 +240,7 @@ let rec pp_statement ppf {stmt; sloc} =
   match stmt with
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
-      pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
+      pf ppf "@[<hov 4>%a =@;%a;@]" pp_expr assignee pp_expr rhs
   | NRFunApp (fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
@@ -354,10 +355,11 @@ let%expect_test "run code per element" =
           for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
             {
               current_statement__ = "";
-              dubvec[i_0__][i_1__](i_2__, i_3__) = stan::model::rvalue(vals_r__,
-                                                       stan::model::cons_list(stan::model::index_uni(pos__++),
-                                                       stan::model::nil_index_list()),
-                                                       "vals_r__");;
+              dubvec[i_0__][i_1__](i_2__, i_3__) =
+                  stan::model::rvalue(vals_r__,
+                                      stan::model::cons_list(stan::model::index_uni(pos__++),
+                                      stan::model::nil_index_list()),
+                  "vals_r__");
               current_statement__ = "";
               stan_print(pstream__, dubvec[i_0__][i_1__](i_2__, i_3__));
             } |}]
