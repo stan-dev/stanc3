@@ -804,7 +804,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
     Sexp.pp_hum
       Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
-    print_string "\n\n"
+    print_string "\n\n";
     print_endline
       ("Preexisting variables: " ^
        (Sexp.to_string ([%sexp (preexisting_vars : ExprSet.t)])));
@@ -873,6 +873,7 @@ let%expect_test "Example program" =
            (loc (MirNode "\"string\", line 3-4"))))))
        (possible_exits (0 1 2)) (target_term_nodes ()))
     |}]
+
 (**
    ~~~~~ STILL TODO ~~~~~
  * Indexed variables are currently handled as monoliths
