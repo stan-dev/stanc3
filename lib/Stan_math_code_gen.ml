@@ -20,6 +20,21 @@ open Core_kernel
 open Mir
 open Fmt
 
+let pp_operator = function
+  | Plus -> "+"
+  | Minus -> "-"
+  | Times -> "*"
+  | Divide -> "/"
+  | Modulo -> "%"
+  | Or -> "||"
+  | And -> "&&"
+  | Equals -> "=="
+  | NEquals -> "!="
+  | Less -> "<"
+  | Leq -> "<="
+  | Greater -> ">"
+  | Geq -> ">="
+
 let zero = Lit (Int, "0")
 
 let rec pp_unsizedtype ad ppf = function
@@ -48,7 +63,7 @@ let rec pp_expr ppf s =
   | Lit (_, s) -> string ppf s
   | FunApp (fname, args) -> pp_call ppf (fname, pp_expr, args)
   | BinOp (e1, op, e2) ->
-      pf ppf "%a %s %a" pp_expr e1 (Operators.operator_name op) pp_expr e2
+      pf ppf "%a %s %a" pp_expr e1 (pp_operator op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
       pf ppf "(%a) ? (%a) : (%a)" pp_expr cond pp_expr ifb pp_expr elseb
   | Indexed (e, idcs) ->
@@ -537,7 +552,9 @@ let pp_transformed_params ppf params = ignore params ; string ppf "//TODO"
 let pp_transformed_param_checks ppf params =
   ignore params ; string ppf "//TODO"
 
-let pp_transform_inits ppf params = ignore params ; string ppf "//TODO"
+let pp_transform_inits ppf params =
+  ignore params ;
+  string ppf "//TODO transform_inits"
 
 let pp_fndef_sig ppf (rt, fname, params) =
   pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params
