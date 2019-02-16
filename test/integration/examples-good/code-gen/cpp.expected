@@ -67,6 +67,12 @@ class eight_schools_ncp_model : public prob_grad {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    //Jacobians
+    //TODO
+    //Transformed parameters
+    //TODO
+    //Transformed parameter constraint checks
+    //TODO
     
     try {
       current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
@@ -117,6 +123,9 @@ class eight_schools_ncp_model : public prob_grad {
     dims__.resize(0);
     
   }
+  //TODO write_array
+  //TODO constrained_param_names
+  //TODO unconstrained_param_names
 }
 }
 

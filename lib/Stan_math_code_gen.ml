@@ -521,6 +521,24 @@ let pp_get_dims ppf p =
     (List.map ~f:get_dims (get_param_types p))
     pp_dim_sep ()
 
+let pp_write_array ppf p =
+  ignore p ;
+  string ppf "//TODO write_array"
+
+let pp_constrained_param_names ppf p =
+  ignore p ;
+  string ppf "//TODO constrained_param_names"
+
+let pp_unconstrained_param_names ppf p =
+  ignore p ;
+  string ppf "//TODO unconstrained_param_names"
+
+let pp_jacobians ppf params = ignore params ; string ppf "//TODO"
+let pp_transformed_params ppf params = ignore params ; string ppf "//TODO"
+
+let pp_transformed_param_checks ppf params =
+  ignore params ; string ppf "//TODO"
+
 let pp_log_prob ppf p =
   let text = pf ppf "%s@," in
   text "template <bool propto__, bool jacobian__, typename T__>" ;
@@ -537,24 +555,21 @@ let pp_log_prob ppf p =
   text "T__ lp__(0.0);" ;
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
-  (* XXX Jacobians of parameters*)
-  (* XXX Transformed parameters *)
-  (* XXX Transformed parameter validation *)
+  pf ppf "//Jacobians@,%a@," pp_jacobians (get_params p) ;
+  pf ppf "//Transformed parameters@,%a@," pp_transformed_params (get_params p) ;
+  pf ppf "//Transformed parameter constraint checks@,%a@,"
+    pp_transformed_param_checks (get_params p) ;
   pp_located_error ppf (pp_statement, p.modelb |> snd |> block_of_list, None) ;
   pf ppf "@]@,}@,"
 
 let pp_model_public ppf p =
-  (*XXX:
-    3. get_dims
-    4. write_array
-    5. constrained_param_names
-    6. unconstrained_param_names
-    7.
-  *)
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
   pf ppf "@ %a" pp_get_param_names p ;
-  pf ppf "@ %a" pp_get_dims p
+  pf ppf "@ %a" pp_get_dims p ;
+  pf ppf "@ %a" pp_write_array p ;
+  pf ppf "@ %a" pp_constrained_param_names p ;
+  pf ppf "@ %a" pp_unconstrained_param_names p
 
 let pp_model ppf p =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
