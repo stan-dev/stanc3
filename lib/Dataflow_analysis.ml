@@ -854,15 +854,13 @@ let%expect_test "Example program" =
   let df_graph = block_dataflow_graph block table in
   print_s [%sexp (df_graph : dataflow_graph)] ;
   [%expect
-    {| 
+    {|
       ((node_info_map
         ((0
-          ((dep_sets (() (((Var target) 0)))) (possible_previous ())
-           (rhs_set ()) (controlflow ()) (loc StartOfBlock)))
+          ((dep_sets (() (((Var target) 0)))) (possible_previous ()) (rhs_set ())
+           (controlflow ()) (loc StartOfBlock)))
          (1
-          ((dep_sets
-            ((((Var target) 0))
-             (((Var i) 1) ((Var target) 0))))
+          ((dep_sets ((((Var target) 0)) (((Var i) 1) ((Var target) 0))))
            (possible_previous (0)) (rhs_set ()) (controlflow (0))
            (loc (MirNode "\"string\", line 2-4"))))
          (2
