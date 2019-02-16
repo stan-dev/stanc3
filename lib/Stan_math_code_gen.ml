@@ -581,7 +581,8 @@ let pp_model ppf p =
 let globals = "static char* current_statement__;"
 
 let usings =
-  {| using std::istream;
+  {|
+using std::istream;
 using std::string;
 using std::stringstream;
 using std::vector;
