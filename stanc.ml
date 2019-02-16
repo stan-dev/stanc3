@@ -56,7 +56,7 @@ let options =
          \"$name.cpp\")" )
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
-      , "If set, output the generated C++ Stan model class to stdout." )
+      , " If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow_undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
