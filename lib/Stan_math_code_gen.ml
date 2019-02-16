@@ -447,6 +447,7 @@ let data_decls_of_p {datavars; _} =
   Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl
 
 let pp_read_and_check_decls ppf p =
+  pf ppf "//Read data variables in@," ;
   list ~sep:cut pp_read_data ppf (data_decls_of_p p) ;
   pp_statement ppf (snd p.tdatab)
 

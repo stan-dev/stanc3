@@ -36,6 +36,7 @@ class eight_schools_ncp_model : public prob_grad {
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // dummy to suppress unused var warning
     try {
+      //Read data variables in
       current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
       vals_i__ = context__.vals_i__("J");
       J = vals_i__;
