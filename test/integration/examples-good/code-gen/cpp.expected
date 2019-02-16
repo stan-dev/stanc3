@@ -128,6 +128,8 @@ class eight_schools_ncp_model : public prob_grad {
   //TODO write_array
   //TODO constrained_param_names
   //TODO unconstrained_param_names
+  //TODO
 }
 }
+typedef eight_schools_ncp_modelnamespace::eight_schools_ncp_model stan_model;
 

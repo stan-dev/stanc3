@@ -36,15 +36,17 @@ let%expect_test "emit function type raises" =
   | exception e -> print_s [%sexp (e : exn)] ) ;
   [%expect {| ((x UMathLibraryFunction) "not implemented yet") |}]
 
-let pp_call ppf (name, pp_args, args) =
-  pf ppf "%s(@[<hov>%a@])" name pp_args args
+let pp_call ppf (name, pp_arg, args) =
+  pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
+
+let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 
 let rec pp_expr ppf s =
   match s with
   | Var s -> string ppf s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> string ppf s
-  | FunApp (fname, args) -> pp_call ppf (fname, list ~sep:comma pp_expr, args)
+  | FunApp (fname, args) -> pp_call ppf (fname, pp_expr, args)
   | BinOp (e1, op, e2) ->
       pf ppf "%a %s %a" pp_expr e1 (Operators.operator_name op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
@@ -262,13 +264,9 @@ let rec pp_statement ppf {stmt; sloc} =
       (* print return type *)
       pp_returntype ppf fdargs fdrt ;
       (* XXX this is all so ugly: *)
-      pp_call ppf
-        ( fdname
-        , (fun ppf (args, extra_arg) ->
-            (list ~sep:comma pp_arg) ppf (with_idx args) ;
-            pf ppf ",@ %s" extra_arg )
-        , (fdargs, "std::ostream* pstream__") ) ;
-      pf ppf " " ;
+      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg) (with_idx fdargs) ;
+      pf ppf ", std::ostream* pstream__" ;
+      pf ppf "@]) " ;
       match fdbody.stmt with
       | Skip -> pf ppf ";@ "
       | _ ->
@@ -487,9 +485,8 @@ let pp_get_param_names ppf p =
     p.modelb |> fst |> Map.Poly.keys |> List.sort ~compare:String.compare
   in
   let add_param = fmt "names.push_back(%S);" in
-  pf ppf
-    "@[<v 2>void get_param_names(std::vector<std::string>& names) const \
-     {@,%a@]@,}"
+  pf ppf "@[<v 2>void %a const {@,%a@]@,}" pp_call_str
+    ("get_param_names", ["std::vector<std::string>& names"])
     (list ~sep:cut add_param) param_names
 
 let rec get_dims = function
@@ -515,9 +512,9 @@ let pp_get_dims ppf p =
   let pp_dim_sep ppf () =
     pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
   in
-  pf ppf
-    "@[<v 2>void get_dims(std::vector<std::vector<size_t>>& dimss__) const \
-     {@,dimss__.resize(0);@,std::vector<size_t> dims__;@,%a%a@]@,}"
+  let params = ["std::vector<std::vector<size_t>>& dimss__"] in
+  pf ppf "@[<v 2>void %a const " pp_call_str ("get_dims", params) ;
+  pf ppf "{@,dimss__.resize(0);@,std::vector<size_t> dims__;@,%a%a@]@,}"
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
     (List.map ~f:get_dims (get_param_types p))
     pp_dim_sep ()
@@ -540,6 +537,11 @@ let pp_transformed_params ppf params = ignore params ; string ppf "//TODO"
 let pp_transformed_param_checks ppf params =
   ignore params ; string ppf "//TODO"
 
+let pp_transform_inits ppf params = ignore params ; string ppf "//TODO"
+
+let pp_fndef_sig ppf (rt, fname, params) =
+  pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params
+
 let pp_log_prob ppf p =
   let text = pf ppf "%s@," in
   text "template <bool propto__, bool jacobian__, typename T__>" ;
@@ -547,7 +549,7 @@ let pp_log_prob ppf p =
     [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
     ; "std::ostream* pstream__ = 0" ]
   in
-  pf ppf "T__ log_prob(@[<hov>%a@])" (list ~sep:comma string) params ;
+  pf ppf "T__ %a" pp_call_str ("log_prob", params) ;
   pf ppf " {@,@[<v 2>" ;
   text "typedef T__ local_scalar_t__;" ;
   text
@@ -570,7 +572,8 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_get_dims p ;
   pf ppf "@ %a" pp_write_array p ;
   pf ppf "@ %a" pp_constrained_param_names p ;
-  pf ppf "@ %a" pp_unconstrained_param_names p
+  pf ppf "@ %a" pp_unconstrained_param_names p ;
+  pf ppf "@ %a" pp_transform_inits p
 
 let pp_model ppf p =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
@@ -595,4 +598,5 @@ using namespace stan::math; |}
 let pp_prog ppf (p : stmt_loc prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals pp_statement p.functionsb
-    pp_model p
+    pp_model p ;
+  pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
