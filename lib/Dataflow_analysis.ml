@@ -836,8 +836,8 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
 
 (* Inline tests don't seem to work *)
 
-let%test _ = 5 = 120
-let%test _ = raise (Failure "ran test")
+(* let%test _ = 5 = 120
+   let%test _ = raise (Failure "ran test")*)
 
 let%expect_test "Example program" =
   let ast =
