@@ -800,7 +800,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
          ~f:(fun v -> Var v))
   in
 
-  if true then begin
+  if false then begin
     Sexp.pp_hum
       Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
