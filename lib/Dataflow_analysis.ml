@@ -619,7 +619,7 @@ let block_dataflow_graph
   : dataflow_graph =
   let preexisting_vars = ExprSet.of_list
       (List.map
-         ("x" :: "target" :: Map.Poly.keys preexisting_table)
+         ("target" :: Map.Poly.keys preexisting_table)
          ~f:(fun v -> Var v))
   in
   let initial_trav_st = initial_traversal_state preexisting_vars in
@@ -804,7 +804,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
     Sexp.pp_hum
       Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)];
-    print_string "\n\n";
+    print_string "\n\n"
     print_endline
       ("Preexisting variables: " ^
        (Sexp.to_string ([%sexp (preexisting_vars : ExprSet.t)])));
@@ -854,8 +854,25 @@ let%expect_test "Example program" =
   let df_graph = block_dataflow_graph block table in
   print_s [%sexp (df_graph : dataflow_graph)] ;
   [%expect
-    {| |}]
-
+    {| 
+      ((node_info_map
+        ((0
+          ((dep_sets (() (((Var target) 0)))) (possible_previous ())
+           (rhs_set ()) (controlflow ()) (loc StartOfBlock)))
+         (1
+          ((dep_sets
+            ((((Var target) 0))
+             (((Var i) 1) ((Var target) 0))))
+           (possible_previous (0)) (rhs_set ()) (controlflow (0))
+           (loc (MirNode "\"string\", line 2-4"))))
+         (2
+          ((dep_sets
+            ((((Var i) 1) ((Var j) 2) ((Var target) 0))
+             (((Var j) 2) ((Var target) 0))))
+           (possible_previous (1 2)) (rhs_set ()) (controlflow (1))
+           (loc (MirNode "\"string\", line 3-4"))))))
+       (possible_exits (0 1 2)) (target_term_nodes ()))
+    |}]
 (**
    ~~~~~ STILL TODO ~~~~~
  * Indexed variables are currently handled as monoliths
