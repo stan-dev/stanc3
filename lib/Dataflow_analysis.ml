@@ -7,7 +7,7 @@ open Mir
 
 (**
    A label is a unique identifier for a node in the dataflow/dependency graph, and
-   usually corresponds to one node in the Mir.
+   often corresponds to one node in the Mir.
 *)
 type label = int [@@deriving sexp, hash, compare]
 
@@ -18,7 +18,7 @@ type label = int [@@deriving sexp, hash, compare]
 type vexpr = VVar of string [@@deriving sexp, hash, compare]
 
 (**
-   A 'reaching definition' (or reaching_def or RD) statement (v, l) says that the variable
+   A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that the variable
    v could have been affected at the label l.
 *)
 type reaching_defn = vexpr * label [@@deriving sexp, hash, compare]
@@ -48,8 +48,8 @@ type source_loc =
    * loc: The location of the Mir node that this node corresponds to, or a description if
      there is none
 *)
-type 'rd node_info =
-  { rd_sets: 'rd
+type 'rd_info node_info =
+  { rd_sets: 'rd_info
   ; possible_previous: label Set.Poly.t
   ; rhs_set: vexpr Set.Poly.t
   ; controlflow: label Set.Poly.t
