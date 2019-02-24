@@ -118,7 +118,8 @@ type traversal_state =
   ; target_terms: LabelSet.t
   ; continues: LabelSet.t
   ; breaks: LabelSet.t
-  ; returns: LabelSet.t }
+  ; returns: LabelSet.t
+  ; rejects: LabelSet.t }
 
 (** The most recently nested control flow (block start, if/then, or loop)
 
@@ -260,7 +261,8 @@ let initial_traversal_state (preexisting_vars : ExprSet.t) : traversal_state =
   ; target_terms= LabelSet.empty
   ; continues= LabelSet.empty
   ; breaks= LabelSet.empty
-  ; returns= LabelSet.empty }
+  ; returns= LabelSet.empty
+  ; rejects= LabelSet.empty}
 
 let initial_cf_st = 0
 
@@ -347,6 +349,27 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
           ~init:trav_st''
           ~f:(fun trav_st term -> add_target_term_node trav_st label term)
       else trav_st''
+  | NRFunApp ("reject", _) ->
+    let label, trav_st' = new_label trav_st in
+    let info =
+      { rd_sets= (fun entry -> entry)
+      ; possible_previous= trav_st'.possible_previous
+      ; rhs_set= ExprSet.empty
+      ; controlflow=
+          LabelSet.union_list
+            [LabelSet.singleton cf_st; trav_st.continues; trav_st.returns]
+      ; loc= MirNode st.sloc }
+    in
+    let add_cf (node_info : node_info_update) : node_info_update =
+      { node_info with
+        controlflow= LabelSet.add node_info.controlflow label }
+    in
+    { (modify_node_info trav_st' 0 add_cf) with
+      node_info_map=
+        merge_label_maps trav_st'.node_info_map
+          (LabelMap.singleton label info)
+    ; possible_previous= LabelSet.singleton label
+    ; rejects= LabelSet.add trav_st'.rejects label }
   | NRFunApp (_, exprs) ->
       let label, trav_st' = new_label trav_st in
       let info =
@@ -581,13 +604,14 @@ let rd_fixedpoint (info : node_info_update LabelMap.t) :
    Everything we need to know to do dependency analysis
    * node_info_map: Collection of node information
    * possible_exits: Set of nodes that could be the last to execute under some execution
-   * target_term_nodes: Set of nodes corresponding to target terms, to be excluded for
-     non-statistical dependency analysis
+   * probabilistic_nodes: Set of nodes corresponding to which can only introduce
+     probabilistic dependencies, such as target terms and reject statements, to be
+     excluded for non-statistical dependency analysis
 *)
 type dataflow_graph =
   { node_info_map: node_info_fixedpoint LabelMap.t
   ; possible_exits: LabelSet.t
-  ; target_term_nodes: LabelSet.t }
+  ; probabilistic_nodes: LabelSet.t }
 [@@deriving sexp]
 
 (**
@@ -605,7 +629,7 @@ let block_dataflow_graph (body : stmt_loc) (preexisting_table : top_var_table)
   let node_info_fixedpoint = rd_fixedpoint trav_st.node_info_map in
   { node_info_map= node_info_fixedpoint
   ; possible_exits= LabelSet.union trav_st.possible_previous trav_st.returns
-  ; target_term_nodes= trav_st.target_terms }
+  ; probabilistic_nodes= LabelSet.union trav_st.target_terms trav_st.rejects }
 
 (**
    Find the set of labels for nodes that could affect the value or behavior of the node
@@ -630,7 +654,7 @@ let rec label_dependencies (df_graph : dataflow_graph)
   let labels = LabelSet.union rhs_labels node_info.controlflow in
   let filtered_labels =
     if statistical_dependence then labels
-    else LabelSet.diff labels df_graph.target_term_nodes
+    else LabelSet.diff labels df_graph.probabilistic_nodes
   in
   labels_dependencies df_graph statistical_dependence
     (LabelSet.add so_far label)
@@ -677,7 +701,7 @@ let final_var_dependencies (df_graph : dataflow_graph)
   in
   let filtered_labels =
     if statistical_dependence then labels
-    else LabelSet.diff labels df_graph.target_term_nodes
+    else LabelSet.diff labels df_graph.probabilistic_nodes
   in
   labels_dependencies df_graph statistical_dependence LabelSet.empty
     filtered_labels
@@ -704,7 +728,7 @@ let preexisting_var_dependencies (df_graph : dataflow_graph)
  *)
 let exprset_independent_target_terms (df_graph : dataflow_graph)
     (exprs : ExprSet.t) : LabelSet.t =
-  LabelSet.filter df_graph.target_term_nodes ~f:(fun l ->
+  LabelSet.filter df_graph.probabilistic_nodes ~f:(fun l ->
       let label_deps = label_dependencies df_graph false LabelSet.empty l in
       ExprSet.is_empty
         (ExprSet.inter (preexisting_var_dependencies df_graph label_deps) exprs)
@@ -743,7 +767,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
       ^ Sexp.to_string [%sexp (preexisting_vars : ExprSet.t)] ) ;
     print_endline
       ( "Target term nodes: "
-      ^ Sexp.to_string [%sexp (df_graph.target_term_nodes : LabelSet.t)] ) ;
+      ^ Sexp.to_string [%sexp (df_graph.probabilistic_nodes : LabelSet.t)] ) ;
     print_endline
       ( "Possible endpoints: "
       ^ Sexp.to_string [%sexp (df_graph.possible_exits : LabelSet.t)] ) ;
