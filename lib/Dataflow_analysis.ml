@@ -12,7 +12,7 @@ open Mir
 type label = int [@@deriving sexp, hash, compare]
 
 (**
-   Representation of a variable that can be assigned to. This should also be able to
+   Representation of an expression that can be assigned to. This should also be able to
    represent indexed variables, but we don't support that yet.
 *)
 type vexpr = VVar of string [@@deriving sexp, hash, compare]
