@@ -173,7 +173,8 @@ let expr_assigned_var (ex : expr) : expr =
 (***********************************)
 
 (** Remove RDs corresponding to a variable *)
-let filter_var_defns (defns : ReachingDefnSet.t) (var : expr) : ReachingDefnSet.t =
+let filter_var_defns (defns : ReachingDefnSet.t) (var : expr) :
+    ReachingDefnSet.t =
   ReachingDefnSet.filter defns ~f:(fun (v, _) -> v <> var)
 
 (** Union label maps, preserving the left element in a collision *)
@@ -346,7 +347,22 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
           ~init:trav_st''
           ~f:(fun trav_st term -> add_target_term_node trav_st label term)
       else trav_st''
-  | NRFunApp _ -> trav_st
+  | NRFunApp (_, exprs) ->
+      let label, trav_st' = new_label trav_st in
+      let info =
+        { rd_sets= (fun entry -> entry)
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set= ExprSet.union_list (List.map exprs ~f:expr_var_set)
+        ; controlflow=
+            LabelSet.union_list
+              [LabelSet.singleton cf_st; trav_st.continues; trav_st.returns]
+        ; loc= MirNode st.sloc }
+      in
+      { trav_st' with
+        node_info_map=
+          merge_label_maps trav_st'.node_info_map
+            (LabelMap.singleton label info)
+      ; possible_previous= LabelSet.singleton label }
   | Check _ -> trav_st
   | MarkLocation _ -> trav_st
   | Break ->
@@ -550,7 +566,8 @@ let rd_equal (a : (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t)
 let rd_fixedpoint (info : node_info_update LabelMap.t) :
     node_info_fixedpoint LabelMap.t =
   let initial_sets =
-    LabelMap.map info ~f:(fun _ -> (ReachingDefnSet.empty, ReachingDefnSet.empty))
+    LabelMap.map info ~f:(fun _ ->
+        (ReachingDefnSet.empty, ReachingDefnSet.empty) )
   in
   let fixed_points = apply_until_fixed rd_equal (rd_apply info) initial_sets in
   LabelMap.mapi fixed_points ~f:(fun ~key:label ~data:fixedpoint ->
@@ -580,8 +597,8 @@ let block_dataflow_graph (body : stmt_loc) (preexisting_table : top_var_table)
     : dataflow_graph =
   let preexisting_vars =
     ExprSet.of_list
-      (List.map ("x" :: "target" :: Map.Poly.keys preexisting_table) ~f:(fun v ->
-           Var v ))
+      (List.map ("x" :: "target" :: Map.Poly.keys preexisting_table)
+         ~f:(fun v -> Var v ))
   in
   let initial_trav_st = initial_traversal_state preexisting_vars in
   let trav_st = traverse_mir initial_trav_st initial_cf_st body in
@@ -754,7 +771,7 @@ let%expect_test "Example program" =
       "      model {\n\
       \              for (i in 1:2)\n\
       \                for (j in 3:4)\n\
-      \                  print(\"Badger\");\n\
+      \                  print(\"Badger\", i + j);\n\
       \            }\n\
       \            "
   in
@@ -778,11 +795,17 @@ let%expect_test "Example program" =
            (loc (MirNode "\"string\", line 2-4"))))
          (2
           ((rd_sets
+            ((((Var i) 1) ((Var target) 0) ((Var x) 0))
+             (((Var i) 1) ((Var j) 2) ((Var target) 0) ((Var x) 0))))
+           (possible_previous (1 3)) (rhs_set ()) (controlflow (1))
+           (loc (MirNode "\"string\", line 3-4"))))
+         (3
+          ((rd_sets
             ((((Var i) 1) ((Var j) 2) ((Var target) 0) ((Var x) 0))
-             (((Var j) 2) ((Var target) 0) ((Var x) 0))))
-           (possible_previous (1 2)) (rhs_set ()) (controlflow (1))
-           (loc (MirNode "\"string\", line 3-4"))))))
-       (possible_exits (0 1 2)) (target_term_nodes ()))
+             (((Var target) 0) ((Var x) 0))))
+           (possible_previous (2 3)) (rhs_set ((Var i) (Var j))) (controlflow (2))
+           (loc (MirNode "\"string\", line 4-4"))))))
+       (possible_exits (0 1 3)) (target_term_nodes ()))
     |}]
 
 (**
