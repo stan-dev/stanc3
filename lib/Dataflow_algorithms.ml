@@ -887,7 +887,7 @@ model {
          (possible_exits (0)) (probabilistic_nodes ()))))
     |}]
 
-let%expect_test "Example program" =
+let%expect_test "block_dataflow_graph example" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -923,3 +923,180 @@ let%expect_test "Example program" =
            (loc (MirNode "\"string\", line 5-5"))))))
        (possible_exits (0 1 3)) (probabilistic_nodes ()))
     |}]
+
+let%expect_test "program_df_graphs example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        data {
+          vector[10] x;
+        }
+        parameters {
+          real y;
+        }
+        model {
+          x ~ normal(y, 1);
+        }
+        generated quantities {
+          real z;
+          z = y + 1;
+        }
+      |}
+  in
+  let prog =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let df_graphs = program_df_graphs prog in
+  print_s [%sexp (df_graphs : prog_df_graphs)] ;
+  [%expect
+    {|
+      ((tdatab
+        ((node_info_map
+          ((0
+            ((rd_sets (() (((VVar x) 0) ((VVar y) 0)))) (possible_previous ())
+             (rhs_set ()) (controlflow ()) (loc StartOfBlock)))))
+         (possible_exits (0)) (probabilistic_nodes ())))
+       (modelb
+        ((node_info_map
+          ((0
+            ((rd_sets
+              ((((VVar x) 2) ((VVar y) 2))
+               (((VVar x) 0) ((VVar x) 2) ((VVar y) 0) ((VVar y) 2))))
+             (possible_previous (2)) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))
+           (1
+            ((rd_sets
+              ((((VVar x) 0) ((VVar x) 2) ((VVar y) 0) ((VVar y) 2))
+               (((VVar target) 1) ((VVar x) 0) ((VVar x) 2) ((VVar y) 0)
+                ((VVar y) 2))))
+             (possible_previous (0)) (rhs_set ((VVar target) (VVar x) (VVar y)))
+             (controlflow (0)) (loc (MirNode "\"string\", line 9-9"))))
+           (2
+            ((rd_sets
+              ((((VVar x) 0) ((VVar x) 2) ((VVar y) 0) ((VVar y) 2))
+               (((VVar x) 2) ((VVar y) 2))))
+             (possible_previous (0)) (rhs_set ((VVar x) (VVar y)))
+             (controlflow (0))
+             (loc
+              (TargetTerm (term (FunApp normal ((Var x) (Var y) (Lit Int 1))))
+               (assignment_label 1)))))))
+         (possible_exits (1)) (probabilistic_nodes (2))))
+       (gqb
+        ((node_info_map
+          ((0
+            ((rd_sets (() (((VVar x) 0) ((VVar y) 0)))) (possible_previous ())
+             (rhs_set ()) (controlflow ()) (loc StartOfBlock)))
+           (1
+            ((rd_sets
+              ((((VVar x) 0) ((VVar y) 0))
+               (((VVar x) 0) ((VVar y) 0) ((VVar z) 1))))
+             (possible_previous (0)) (rhs_set ((VVar y))) (controlflow (0))
+             (loc (MirNode "\"string\", line 13-13"))))))
+         (possible_exits (1)) (probabilistic_nodes ()))))
+    |}]
+(*
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N,M] x;
+  int<lower=0,upper=1> y[N];
+  vector[M] beta_true;
+
+  real alpha_true = 1.5;
+  for (j in 1:M)
+  {
+    beta_true[j] = j/M;
+  }
+  for (i in 1:N)
+  {
+    for (j in 1:M)
+    {
+      x[i,j] = normal_rng(0,1);
+    }
+    y[i] = bernoulli_logit_rng((x * beta_true + alpha_true)[i]);
+  }
+}
+*)
+
+let%expect_test "labels_dependencies example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+transformed data {
+      int a;
+      int b;
+      int c;
+      int d;
+
+      a = 0; // node 1
+      b = 1; // node 2
+
+      c = b; // node 3
+
+      if (a) // node 4
+      {
+        d = a; // node 5
+      } else {
+        c = a; // node 6
+        d = c; // node 7
+      }
+
+      print(d); // node 8
+}
+      |}
+  in
+  let prog =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let table, block = prog.tdatab in
+  let df_graph = block_dataflow_graph block (exprset_of_table table) in
+  let exits = df_graph.possible_exits in
+  let dependencies = labels_dependencies df_graph false exits in
+  print_s [%sexp (dependencies : label Set.Poly.t)] ;
+  [%expect
+    {|
+      (0 1 5 6 7 8 9)
+    |}]
+
+
+    (*
+       TODO
+let%expect_test "top_var_dependencies example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+data {
+  int a;
+  int b;
+}
+
+model {
+  int c;
+  int d;
+
+  c = b;
+  if (a)
+  {
+    d = a;
+  } else {
+    c = a;
+    d = c;
+  }
+
+  print(d);
+}
+      |}
+  in
+  let prog =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let df_graphs = program_df_graphs prog in
+  let model_graph = df_graphs.modelb in
+  let exits = model_graph.possible_exits in
+  let dependencies = top_var_dependencies model_graph exits in
+  print_s [%sexp (dependencies : vexpr Set.Poly.t)] ;
+  [%expect
+    {|
+      (0 1 5 6 7 8 9)
+    |}]
+*)
