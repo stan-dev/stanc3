@@ -690,6 +690,36 @@ let exprset_of_table (table : top_var_table) : expr Set.Poly.t =
   Set.Poly.of_list (List.map (Map.Poly.keys table) ~f:(fun s -> Var s))
 
 (**
+   Represents the dataflow graphs for each interesting block in the program MIR.
+
+   See Mir.prog for block descriptions.
+*)
+type prog_df_graphs =
+  { tdatab : dataflow_graph
+  ; modelb : dataflow_graph
+  ; gqb : dataflow_graph
+  }
+[@@deriving sexp]
+
+(**
+   Build the dataflow graphs for each interesting block in the program MIR
+*)
+let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
+  let data_table = prog.datavars in
+  let tdata_table, tdata_block = prog.tdatab in
+  let data_vars =
+    Set.Poly.union (exprset_of_table data_table) (exprset_of_table tdata_table)
+  in
+  let parameter_table, model_block = prog.modelb in
+  let parameter_vars = exprset_of_table parameter_table in
+  let (_, gq_block) = prog.gqb in
+  let top_vars = Set.Poly.union data_vars parameter_vars in
+  { tdatab = block_dataflow_graph tdata_block top_vars
+  ; modelb = block_dataflow_graph model_block top_vars
+  ; gqb = block_dataflow_graph gq_block top_vars
+  }
+
+(**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.
 *)
@@ -715,7 +745,7 @@ let analysis_example (prog : stmt_loc prog) : dataflow_graph =
         | TargetTerm {term; _} -> term
         | _ -> raise (Failure "Found non-target term in target term list") )
   in
-  if true then (
+  if false then (
     Sexp.pp_hum Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixedpoint Int.Map.t)] ;
     print_string "\n\n" ;
@@ -747,15 +777,257 @@ let analysis_example (prog : stmt_loc prog) : dataflow_graph =
 (* Tests                           *)
 (***********************************)
 
+let%expect_test "bernoulli_logit_glm_performance.stan" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+transformed data {
+  int<lower=0> N = 50;
+  int<lower=0> M = 100;
+  matrix[N,M] x;
+  int<lower=0,upper=1> y[N];
+  vector[M] beta_true;
+  real alpha_true = 1.5;
+  for (j in 1:M)
+  {
+    beta_true[j] = j/M;
+  }
+  for (i in 1:N)
+  {
+    for (j in 1:M)
+    {
+      x[i,j] = normal_rng(0,1);
+    }
+    y[i] = bernoulli_logit_rng((x * beta_true + alpha_true)[i]);
+  }
+}
+parameters {
+  real alpha_inferred;
+  vector[M] beta_inferred;
+  }
+model {
+  beta_inferred ~ normal(0, 2);
+  alpha_inferred ~ normal(0, 4);
+
+  y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
+}
+      |}
+  in
+  let prog =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let df_graphs = program_df_graphs prog
+  in
+  print_s [%sexp (df_graphs : prog_df_graphs)] ;
+  [%expect
+    {|
+      ((tdatab
+        ((node_info_map
+          ((0
+            ((rd_sets
+              (()
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var x) 0) ((Var y) 0))))
+             (possible_previous ()) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))
+           (1
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var x) 0) ((Var y) 0))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var j) 1) ((Var x) 0) ((Var y) 0))))
+             (possible_previous (0)) (rhs_set ((Var M))) (controlflow (0))
+             (loc (MirNode "\"string\", line 9-12"))))
+           (2
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var j) 1) ((Var x) 0) ((Var y) 0))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 2)
+                ((Var x) 0) ((Var y) 0))))
+             (possible_previous (1 2)) (rhs_set ((Var M) (Var j)))
+             (controlflow (1)) (loc (MirNode "\"string\", line 11-11"))))
+           (3
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var x) 0) ((Var y) 0))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var i) 3) ((Var x) 0) ((Var y) 0))))
+             (possible_previous (0 2)) (rhs_set ((Var N))) (controlflow (0))
+             (loc (MirNode "\"string\", line 13-20"))))
+           (4
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var i) 3) ((Var x) 0) ((Var x) 5) ((Var y) 0)
+                ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var i) 3) ((Var j) 4) ((Var x) 0) ((Var x) 5)
+                ((Var y) 0) ((Var y) 6))))
+             (possible_previous (3 6)) (rhs_set ((Var M))) (controlflow (3))
+             (loc (MirNode "\"string\", line 15-18"))))
+           (5
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var i) 3) ((Var j) 4) ((Var x) 0) ((Var x) 5)
+                ((Var y) 0) ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var i) 3) ((Var x) 5) ((Var y) 0)
+                ((Var y) 6))))
+             (possible_previous (4 5)) (rhs_set ()) (controlflow (4))
+             (loc (MirNode "\"string\", line 17-17"))))
+           (6
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var i) 3) ((Var x) 0) ((Var x) 5) ((Var y) 0)
+                ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var beta_true) 2) ((Var x) 0) ((Var x) 5) ((Var y) 6))))
+             (possible_previous (3 5))
+             (rhs_set ((Var alpha_true) (Var beta_true) (Var i) (Var x)))
+             (controlflow (3)) (loc (MirNode "\"string\", line 19-19"))))))
+         (possible_exits (0 2 6)) (probabilistic_nodes ())))
+       (modelb
+        ((node_info_map
+          ((0
+            ((rd_sets
+              ((((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var x) 6)
+                ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))))
+             (possible_previous (2 4 6)) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))
+           (1
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 1) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))))
+             (possible_previous (0)) (rhs_set ((Var beta_inferred) (Var target)))
+             (controlflow (0)) (loc (MirNode "\"string\", line 27-27"))))
+           (2
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))
+               (((Var beta_inferred) 2))))
+             (possible_previous (0 4 6)) (rhs_set ((Var beta_inferred)))
+             (controlflow (0))
+             (loc
+              (TargetTerm
+               (term (FunApp normal ((Var beta_inferred) (Lit Int 0) (Lit Int 2))))
+               (assignment_label 1)))))
+           (3
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 1) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 3) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))))
+             (possible_previous (1)) (rhs_set ((Var alpha_inferred) (Var target)))
+             (controlflow (0)) (loc (MirNode "\"string\", line 28-28"))))
+           (4
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 1) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))
+               (((Var alpha_inferred) 4))))
+             (possible_previous (1 2 6)) (rhs_set ((Var alpha_inferred)))
+             (controlflow (0))
+             (loc
+              (TargetTerm
+               (term
+                (FunApp normal ((Var alpha_inferred) (Lit Int 0) (Lit Int 4))))
+               (assignment_label 3)))))
+           (5
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 3) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 5) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))))
+             (possible_previous (3))
+             (rhs_set
+              ((Var alpha_inferred) (Var beta_inferred) (Var target) (Var x)
+               (Var y)))
+             (controlflow (0)) (loc (MirNode "\"string\", line 30-30"))))
+           (6
+            ((rd_sets
+              ((((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_inferred) 4) ((Var alpha_inferred) 6)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0)
+                ((Var beta_inferred) 2) ((Var beta_inferred) 6) ((Var beta_true) 0)
+                ((Var target) 3) ((Var x) 0) ((Var x) 6) ((Var y) 0) ((Var y) 6))
+               (((Var alpha_inferred) 6) ((Var beta_inferred) 6) ((Var x) 6)
+                ((Var y) 6))))
+             (possible_previous (2 3 4))
+             (rhs_set ((Var alpha_inferred) (Var beta_inferred) (Var x) (Var y)))
+             (controlflow (0))
+             (loc
+              (TargetTerm
+               (term
+                (FunApp bernoulli_logit_glm
+                 ((Var y) (Var x) (Var alpha_inferred) (Var beta_inferred))))
+               (assignment_label 5)))))))
+         (possible_exits (5)) (probabilistic_nodes (2 4 6))))
+       (gqb
+        ((node_info_map
+          ((0
+            ((rd_sets
+              (()
+               (((Var M) 0) ((Var N) 0) ((Var alpha_inferred) 0)
+                ((Var alpha_true) 0) ((Var beta_inferred) 0) ((Var beta_true) 0)
+                ((Var x) 0) ((Var y) 0))))
+             (possible_previous ()) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))))
+         (possible_exits (0)) (probabilistic_nodes ()))))
+    |}]
+
 let%expect_test "Example program" =
   let ast =
     Parse.parse_string Parser.Incremental.program
-      "      model {\n\
-      \              for (i in 1:2)\n\
-      \                for (j in 3:4)\n\
-      \                  print(\"Badger\", i + j);\n\
-      \            }\n\
-      \            "
+      {|
+        model {
+          for (i in 1:2)
+            for (j in 3:4)
+              print("Badger", i + j);
+        }
+      |}
   in
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
@@ -771,15 +1043,15 @@ let%expect_test "Example program" =
            (loc StartOfBlock)))
          (1
           ((rd_sets (() (((Var i) 1)))) (possible_previous (0)) (rhs_set ())
-           (controlflow (0)) (loc (MirNode "\"string\", line 2-4"))))
+           (controlflow (0)) (loc (MirNode "\"string\", line 3-5"))))
          (2
           ((rd_sets ((((Var i) 1)) (((Var i) 1) ((Var j) 2))))
            (possible_previous (1 3)) (rhs_set ()) (controlflow (1))
-           (loc (MirNode "\"string\", line 3-4"))))
+           (loc (MirNode "\"string\", line 4-5"))))
          (3
           ((rd_sets ((((Var i) 1) ((Var j) 2)) ())) (possible_previous (2 3))
            (rhs_set ((Var i) (Var j))) (controlflow (2))
-           (loc (MirNode "\"string\", line 4-4"))))))
+           (loc (MirNode "\"string\", line 5-5"))))))
        (possible_exits (0 1 3)) (probabilistic_nodes ()))
     |}]
 
