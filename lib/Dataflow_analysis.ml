@@ -12,21 +12,21 @@ open Mir
 type label = int [@@deriving sexp]
 
 (**
-   A 'reaching dependency' (or reaching_dep or RD) statement (v, l) says that the variable
+   A 'reaching definition' (or reaching_def or RD) statement (v, l) says that the variable
    v could have been affected at the label l.
 *)
-type reaching_dep = expr * int [@@deriving sexp, hash, compare]
+type reaching_defn = expr * int [@@deriving sexp, hash, compare]
 
 (**
-   A reaching dependency set holds the set of reaching dependencies that could be true at
+   A reaching definition set holds the set of reaching definition that could be true at
    some point.
 *)
-module ReachingDepSet = Set.Make (struct
-  type t = reaching_dep
+module ReachingDefnSet = Set.Make (struct
+  type t = reaching_defn
 
-  let compare : reaching_dep -> reaching_dep -> int = compare
-  let sexp_of_t = sexp_of_reaching_dep
-  let t_of_sexp = reaching_dep_of_sexp
+  let compare : reaching_defn -> reaching_defn -> int = compare
+  let sexp_of_t = sexp_of_reaching_defn
+  let t_of_sexp = reaching_defn_of_sexp
 end)
 
 module LabelMap = Map.Make (struct
@@ -65,7 +65,7 @@ type source_loc =
 
 (**
    Information to be collected about each node
-   * dep_sets: Information about how the label effects the dependency set
+   * rd_sets: Information about how the label effects the reaching definition sets
    * possible_previous: The set of nodes that could have immediately preceded this node
      under some execution of the program
    * rhs_set: The 'right hand side' set of variables that affect the value or behavior of
@@ -78,8 +78,8 @@ type source_loc =
    * loc: The location of the Mir node that this node corresponds to, or a description if
      there is none
 *)
-type 'dep node_info =
-  { dep_sets: 'dep
+type 'rd node_info =
+  { rd_sets: 'rd
   ; possible_previous: LabelSet.t
   ; rhs_set: ExprSet.t
   ; controlflow: LabelSet.t
@@ -87,17 +87,17 @@ type 'dep node_info =
 [@@deriving sexp]
 
 (**
-   A node_info, where the reaching dependency information takes the form of an update
+   A node_info, where the reaching definition information takes the form of an update
    function that maps from the 'entry' set to the 'exit' set, where the entry set is
    what's true before executing this node and the exit set is true after.
 *)
-type node_info_update = (ReachingDepSet.t -> ReachingDepSet.t) node_info
+type node_info_update = (ReachingDefnSet.t -> ReachingDefnSet.t) node_info
 
 (**
-   A node_info where the reaching dependency information is explicitly written as the
+   A node_info where the reaching definition information is explicitly written as the
    entry and exit sets, as after fixpoint analysis.
 *)
-type node_info_fixpoint = (ReachingDepSet.t * ReachingDepSet.t) node_info
+type node_info_fixpoint = (ReachingDefnSet.t * ReachingDefnSet.t) node_info
 [@@deriving sexp]
 
 (**
@@ -173,8 +173,8 @@ let expr_assigned_var (ex : expr) : expr =
 (***********************************)
 
 (** Remove RDs corresponding to a variable *)
-let filter_var_deps (deps : ReachingDepSet.t) (var : expr) : ReachingDepSet.t =
-  ReachingDepSet.filter deps ~f:(fun (v, _) -> v <> var)
+let filter_var_defns (defns : ReachingDefnSet.t) (var : expr) : ReachingDefnSet.t =
+  ReachingDefnSet.filter defns ~f:(fun (v, _) -> v <> var)
 
 (** Union label maps, preserving the left element in a collision *)
 let merge_label_maps (m1 : 'a LabelMap.t) (m2 : 'a LabelMap.t) : 'a LabelMap.t
@@ -212,13 +212,13 @@ let modify_node_info (trav_st : traversal_state) (label : label)
         | Some info -> Some (f info) ) }
 
 (**
-   Right-compose a function with the reaching dependency update functions of the possible
+   Right-compose a function with the reaching definition update functions of the possible
    set of previously executed nodes
 *)
-let compose_last_rd_update (alter : ReachingDepSet.t -> ReachingDepSet.t)
+let compose_last_rd_update (alter : ReachingDefnSet.t -> ReachingDefnSet.t)
     (trav_st : traversal_state) : traversal_state =
   let compose_rd_update node_info =
-    {node_info with dep_sets= (fun set -> alter (node_info.dep_sets set))}
+    {node_info with rd_sets= (fun set -> alter (node_info.rd_sets set))}
   in
   List.fold_left
     (LabelSet.to_list trav_st.possible_previous)
@@ -237,10 +237,10 @@ let compose_last_rd_update (alter : ReachingDepSet.t -> ReachingDepSet.t)
    loop or from the end of the loop.
 *)
 let node_0 (preexisting_vars : ExprSet.t) : node_info_update =
-  { dep_sets=
+  { defn_sets=
       (fun entry ->
-        ReachingDepSet.union entry
-          (ReachingDepSet.of_list
+        ReachingDefnSet.union entry
+          (ReachingDefnSet.of_list
              (List.map (ExprSet.to_list preexisting_vars) ~f:(fun v -> (v, 0))))
         )
   ; possible_previous= LabelSet.empty
@@ -283,9 +283,9 @@ let add_target_term_node (trav_st : traversal_state) (assignment_node : label)
   let assgn_info = LabelMap.find_exn trav_st'.node_info_map assignment_node in
   let term_vars = expr_var_set term in
   let info =
-    { dep_sets=
+    { defn_sets=
         (fun _ ->
-          ReachingDepSet.of_list
+          ReachingDefnSet.of_list
             (List.map (ExprSet.to_list term_vars) ~f:(fun v -> (v, label))) )
     ; possible_previous=
         LabelSet.union assgn_info.possible_previous trav_st.target_terms
@@ -320,12 +320,12 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
   | Assignment (lhs, rhs) ->
       let label, trav_st' = new_label trav_st in
       let info =
-        { dep_sets=
+        { rd_sets=
             (fun entry ->
               let assigned_var = expr_assigned_var lhs in
-              ReachingDepSet.union
+              ReachingDefnSet.union
                 (filter_var_deps entry assigned_var)
-                (ReachingDepSet.singleton (assigned_var, label)) )
+                (ReachingDefnSet.singleton (assigned_var, label)) )
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set= expr_var_set rhs
         ; controlflow=
@@ -367,7 +367,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       let then_st = traverse_mir recurse_st label then_stmt in
       let else_st_opt = Option.map else_stmt ~f:(traverse_mir then_st label) in
       let info =
-        { dep_sets= (fun entry -> entry) (* is this correct? *)
+        { rd_sets= (fun entry -> entry) (* is this correct? *)
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set= expr_var_set pred
         ; controlflow=
@@ -408,7 +408,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
             {info with possible_previous= loop_start_possible_previous} )
       in
       let info =
-        { dep_sets= (fun entry -> entry) (* is this correct? *)
+        { rd_sets= (fun entry -> entry) (* is this correct? *)
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set= expr_var_set pred
         ; controlflow=
@@ -440,13 +440,13 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
         modify_node_info body_st (peek_next_label recurse_st) (fun info ->
             {info with possible_previous= loop_start_possible_previous} )
       in
-      let alter_fn set = ReachingDepSet.remove set (args.loopvar, label) in
+      let alter_fn set = ReachingDefnSet.remove set (args.loopvar, label) in
       let body_st'' = compose_last_rd_update alter_fn body_st' in
       let info =
-        { dep_sets=
+        { rd_sets=
             (fun entry ->
-              ReachingDepSet.union entry
-                (ReachingDepSet.singleton (args.loopvar, label)) )
+              ReachingDefnSet.union entry
+                (ReachingDefnSet.singleton (args.loopvar, label)) )
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set=
             ExprSet.union (expr_var_set args.lower) (expr_var_set args.upper)
@@ -473,12 +473,12 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
   | Decl args ->
       let label, trav_st' = new_label trav_st in
       let info =
-        { dep_sets=
+        { rd_sets=
             (let assigned_var = Var args.decl_id in
-             let addition = ReachingDepSet.singleton (assigned_var, label) in
+             let addition = ReachingDefnSet.singleton (assigned_var, label) in
              fun entry ->
-               ReachingDepSet.union addition
-                 (filter_var_deps entry assigned_var))
+               ReachingDefnSet.union addition
+                 (filter_var_defns entry assigned_var))
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set= ExprSet.empty
         ; controlflow=
@@ -502,22 +502,22 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
    sets
  *)
 let rd_update_label (node_info : node_info_update)
-    (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) :
-    ReachingDepSet.t * ReachingDepSet.t =
+    (prev : (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t) :
+    ReachingDefnSet.t * ReachingDefnSet.t =
   let get_exit label = snd (LabelMap.find_exn prev label) in
   let from_prev =
-    ReachingDepSet.union_list
+    ReachingDefnSet.union_list
       (List.map (Set.to_list node_info.possible_previous) ~f:get_exit)
   in
-  (from_prev, node_info.dep_sets from_prev)
+  (from_prev, node_info.rd_sets from_prev)
 
 (**
    Find the new values of the RD sets in node_infos, given the previous iteration of RD
    sets
  *)
 let rd_apply (node_infos : node_info_update LabelMap.t)
-    (prev : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) :
-    (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t =
+    (prev : (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t) :
+    (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t =
   let update_label ~key:(label : label) ~data:_ =
     let node_info = LabelMap.find_exn node_infos label in
     rd_update_label node_info prev
@@ -536,10 +536,10 @@ let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) :
    It turns out that doing = or == does not work for these types.
    = actually gives a *runtime* error.
 *)
-let rd_equal (a : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)
-    (b : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t) : bool =
+let rd_equal (a : (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t)
+    (b : (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t) : bool =
   let equal_set_pairs (a1, a2) (b1, b2) =
-    ReachingDepSet.equal a1 b1 && ReachingDepSet.equal a2 b2
+    ReachingDefnSet.equal a1 b1 && ReachingDefnSet.equal a2 b2
   in
   LabelMap.equal equal_set_pairs a b
 
@@ -550,11 +550,11 @@ let rd_equal (a : (ReachingDepSet.t * ReachingDepSet.t) LabelMap.t)
 let rd_fixpoint (info : node_info_update LabelMap.t) :
     node_info_fixpoint LabelMap.t =
   let initial_sets =
-    LabelMap.map info ~f:(fun _ -> (ReachingDepSet.empty, ReachingDepSet.empty))
+    LabelMap.map info ~f:(fun _ -> (ReachingDefnSet.empty, ReachingDefnSet.empty))
   in
   let fixpoints = apply_until_fixed rd_equal (rd_apply info) initial_sets in
   LabelMap.mapi fixpoints ~f:(fun ~key:label ~data:fixpoint ->
-      {(LabelMap.find_exn info label) with dep_sets= fixpoint} )
+      {(LabelMap.find_exn info label) with rd_sets= fixpoint} )
 
 (***********************************)
 (* Dependency analysis & interface *)
@@ -580,7 +580,7 @@ let block_dataflow_graph (body : stmt_loc) (preexisting_table : top_var_table)
     : dataflow_graph =
   let preexisting_vars =
     ExprSet.of_list
-      (List.map ("target" :: Map.Poly.keys preexisting_table) ~f:(fun v ->
+      (List.map ("x" :: "target" :: Map.Poly.keys preexisting_table) ~f:(fun v ->
            Var v ))
   in
   let initial_trav_st = initial_traversal_state preexisting_vars in
@@ -605,8 +605,8 @@ let rec label_dependencies (df_graph : dataflow_graph)
   let rhs_labels =
     LabelSet.of_list
       (List.map
-         (ReachingDepSet.to_list
-            (ReachingDepSet.filter (fst node_info.dep_sets) ~f:(fun (v, _) ->
+         (ReachingDefnSet.to_list
+            (ReachingDefnSet.filter (fst node_info.rd_sets) ~f:(fun (v, _) ->
                  ExprSet.mem node_info.rhs_set v )))
          ~f:snd)
   in
@@ -644,18 +644,18 @@ and labels_dependencies (df_graph : dataflow_graph)
 let final_var_dependencies (df_graph : dataflow_graph)
     (statistical_dependence : bool) (var : expr) : LabelSet.t =
   let exit_rd_set =
-    ReachingDepSet.union_list
+    ReachingDefnSet.union_list
       (List.map (LabelSet.to_list df_graph.possible_exits) ~f:(fun l ->
            let info = LabelMap.find_exn df_graph.node_info_map l in
-           snd info.dep_sets ))
+           snd info.rd_sets ))
   in
   let labels =
     (* I wish I knew how to map on sets across types. Equivalent Haskell to the following:
        Set.map snd . Set.filter ((== var) . fst) *)
     LabelSet.of_list
       (List.map
-         (ReachingDepSet.to_list
-            (ReachingDepSet.filter exit_rd_set ~f:(fun (v, _) -> v = var)))
+         (ReachingDefnSet.to_list
+            (ReachingDefnSet.filter exit_rd_set ~f:(fun (v, _) -> v = var)))
          ~f:snd)
   in
   let filtered_labels =
@@ -672,13 +672,13 @@ let final_var_dependencies (df_graph : dataflow_graph)
 let preexisting_var_dependencies (df_graph : dataflow_graph)
     (labels : LabelSet.t) : ExprSet.t =
   let rds =
-    ReachingDepSet.union_list
+    ReachingDefnSet.union_list
       (List.map (LabelSet.to_list labels) ~f:(fun l ->
            let info = LabelMap.find_exn df_graph.node_info_map l in
-           ReachingDepSet.filter (fst info.dep_sets) ~f:(fun (v, l) ->
+           ReachingDefnSet.filter (fst info.rd_sets) ~f:(fun (v, l) ->
                l = 0 && ExprSet.mem info.rhs_set v ) ))
   in
-  ExprSet.of_list (List.map (ReachingDepSet.to_list rds) ~f:fst)
+  ExprSet.of_list (List.map (ReachingDefnSet.to_list rds) ~f:fst)
 
 (**
    Find the set of target term nodes which do not depend on any preexisting variables in
@@ -715,9 +715,9 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   in
   let preexisting_vars =
     ExprSet.of_list
-      (List.map ("target" :: Map.Poly.keys var_table) ~f:(fun v -> Var v))
+      (List.map ("x" :: "target" :: Map.Poly.keys var_table) ~f:(fun v -> Var v))
   in
-  if false then (
+  if true then (
     Sexp.pp_hum Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)] ;
     print_string "\n\n" ;
@@ -748,11 +748,6 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
 (* Tests                           *)
 (***********************************)
 
-(* Inline tests don't seem to work *)
-
-(* let%test _ = 5 = 120
-   let%test _ = raise (Failure "ran test")*)
-
 let%expect_test "Example program" =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -773,16 +768,18 @@ let%expect_test "Example program" =
     {|
       ((node_info_map
         ((0
-          ((dep_sets (() (((Var target) 0)))) (possible_previous ()) (rhs_set ())
-           (controlflow ()) (loc StartOfBlock)))
+          ((rd_sets (() (((Var target) 0) ((Var x) 0)))) (possible_previous ())
+           (rhs_set ()) (controlflow ()) (loc StartOfBlock)))
          (1
-          ((dep_sets ((((Var target) 0)) (((Var i) 1) ((Var target) 0))))
+          ((rd_sets
+            ((((Var target) 0) ((Var x) 0))
+             (((Var i) 1) ((Var target) 0) ((Var x) 0))))
            (possible_previous (0)) (rhs_set ()) (controlflow (0))
            (loc (MirNode "\"string\", line 2-4"))))
          (2
-          ((dep_sets
-            ((((Var i) 1) ((Var j) 2) ((Var target) 0))
-             (((Var j) 2) ((Var target) 0))))
+          ((rd_sets
+            ((((Var i) 1) ((Var j) 2) ((Var target) 0) ((Var x) 0))
+             (((Var j) 2) ((Var target) 0) ((Var x) 0))))
            (possible_previous (1 2)) (rhs_set ()) (controlflow (1))
            (loc (MirNode "\"string\", line 3-4"))))))
        (possible_exits (0 1 2)) (target_term_nodes ()))
