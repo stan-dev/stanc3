@@ -577,7 +577,7 @@ let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
   ; gqb= block_dataflow_graph gq_block top_vars }
 
 (** See .mli file *)
-let analysis_example (prog : stmt_loc prog) : dataflow_graph =
+let analysis_example (prog : stmt_loc prog) (var : string) : unit =
   let data_table = prog.datavars in
   let tdata_table, _ = prog.tdatab in
   let data_vars =
@@ -587,7 +587,6 @@ let analysis_example (prog : stmt_loc prog) : dataflow_graph =
   let parameter_vars = exprset_of_table parameter_table in
   let top_vars = Set.Poly.union data_vars parameter_vars in
   let df_graph = block_dataflow_graph model_block top_vars in
-  let var = "y" in
   let label_deps = final_var_dependencies df_graph true (VVar var) in
   let expr_deps = top_var_dependencies df_graph label_deps in
   let prior_term_labels =
@@ -599,33 +598,31 @@ let analysis_example (prog : stmt_loc prog) : dataflow_graph =
         | TargetTerm {term; _} -> term
         | _ -> raise (Failure "Found non-target term in target term list") )
   in
-  if false then (
-    Sexp.pp_hum Format.std_formatter
-      [%sexp (df_graph.node_info_map : node_info_fixedpoint Int.Map.t)] ;
-    print_string "\n\n" ;
-    print_endline
-      ( "Top data variables: "
-      ^ Sexp.to_string [%sexp (data_vars : vexpr Set.Poly.t)] ) ;
-    print_endline
-      ( "Top parameter variables: "
-      ^ Sexp.to_string [%sexp (parameter_vars : vexpr Set.Poly.t)] ) ;
-    print_endline
-      ( "Target term nodes: "
-      ^ Sexp.to_string
-          [%sexp (df_graph.probabilistic_nodes : label Set.Poly.t)] ) ;
-    print_endline
-      ( "Possible endpoints: "
-      ^ Sexp.to_string [%sexp (df_graph.possible_exits : label Set.Poly.t)] ) ;
-    print_endline
-      ( "Data-independent target term expressions: "
-      ^ Sexp.to_string [%sexp (prior_terms : expr list)] ) ;
-    print_endline
-      ( "Var " ^ var ^ " depends on labels: "
-      ^ Sexp.to_string [%sexp (label_deps : label Set.Poly.t)] ) ;
-    print_endline
-      ( "Var " ^ var ^ " depends on top variables: "
-      ^ Sexp.to_string [%sexp (expr_deps : vexpr Set.Poly.t)] ) ) ;
-  df_graph
+  Sexp.pp_hum Format.std_formatter
+    [%sexp (df_graph.node_info_map : node_info_fixedpoint Int.Map.t)] ;
+  print_string "\n\n" ;
+  print_endline
+    ( "Top data variables: "
+    ^ Sexp.to_string [%sexp (data_vars : vexpr Set.Poly.t)] ) ;
+  print_endline
+    ( "Top parameter variables: "
+    ^ Sexp.to_string [%sexp (parameter_vars : vexpr Set.Poly.t)] ) ;
+  print_endline
+    ( "Target term nodes: "
+    ^ Sexp.to_string [%sexp (df_graph.probabilistic_nodes : label Set.Poly.t)]
+    ) ;
+  print_endline
+    ( "Possible endpoints: "
+    ^ Sexp.to_string [%sexp (df_graph.possible_exits : label Set.Poly.t)] ) ;
+  print_endline
+    ( "Data-independent target term expressions: "
+    ^ Sexp.to_string [%sexp (prior_terms : expr list)] ) ;
+  print_endline
+    ( "Var " ^ var ^ " depends on labels: "
+    ^ Sexp.to_string [%sexp (label_deps : label Set.Poly.t)] ) ;
+  print_endline
+    ( "Var " ^ var ^ " depends on top variables: "
+    ^ Sexp.to_string [%sexp (expr_deps : vexpr Set.Poly.t)] )
 
 (***********************************)
 (* Tests                           *)
