@@ -717,7 +717,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
     ExprSet.of_list
       (List.map ("x" :: "target" :: Map.Poly.keys var_table) ~f:(fun v -> Var v))
   in
-  if true then (
+  if false then (
     Sexp.pp_hum Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixedpoint LabelMap.t)] ;
     print_string "\n\n" ;
