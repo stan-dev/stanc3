@@ -9,13 +9,13 @@ open Mir
    A label is a unique identifier for a node in the dataflow/dependency graph, and
    usually corresponds to one node in the Mir.
 *)
-type label = int [@@deriving sexp]
+type label = int [@@deriving sexp, hash, compare]
 
 (**
    A 'reaching definition' (or reaching_def or RD) statement (v, l) says that the variable
    v could have been affected at the label l.
 *)
-type reaching_defn = expr * int [@@deriving sexp, hash, compare]
+type reaching_defn = expr * label [@@deriving sexp, hash, compare]
 
 (**
    A reaching definition set holds the set of reaching definition that could be true at
@@ -95,9 +95,9 @@ type node_info_update = (ReachingDefnSet.t -> ReachingDefnSet.t) node_info
 
 (**
    A node_info where the reaching definition information is explicitly written as the
-   entry and exit sets, as after fixpoint analysis.
+   entry and exit sets, as after finding the fixed-point solution.
 *)
-type node_info_fixpoint = (ReachingDefnSet.t * ReachingDefnSet.t) node_info
+type node_info_fixedpoint = (ReachingDefnSet.t * ReachingDefnSet.t) node_info
 [@@deriving sexp]
 
 (**
@@ -237,7 +237,7 @@ let compose_last_rd_update (alter : ReachingDefnSet.t -> ReachingDefnSet.t)
    loop or from the end of the loop.
 *)
 let node_0 (preexisting_vars : ExprSet.t) : node_info_update =
-  { defn_sets=
+  { rd_sets=
       (fun entry ->
         ReachingDefnSet.union entry
           (ReachingDefnSet.of_list
@@ -283,7 +283,7 @@ let add_target_term_node (trav_st : traversal_state) (assignment_node : label)
   let assgn_info = LabelMap.find_exn trav_st'.node_info_map assignment_node in
   let term_vars = expr_var_set term in
   let info =
-    { defn_sets=
+    { rd_sets=
         (fun _ ->
           ReachingDefnSet.of_list
             (List.map (ExprSet.to_list term_vars) ~f:(fun v -> (v, label))) )
@@ -324,7 +324,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
             (fun entry ->
               let assigned_var = expr_assigned_var lhs in
               ReachingDefnSet.union
-                (filter_var_deps entry assigned_var)
+                (filter_var_defns entry assigned_var)
                 (ReachingDefnSet.singleton (assigned_var, label)) )
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set= expr_var_set rhs
@@ -494,7 +494,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
   | FunDef _ -> trav_st
 
 (***********************************)
-(* RD fixpoint functions           *)
+(* RD fixed-point functions           *)
 (***********************************)
 
 (**
@@ -524,7 +524,7 @@ let rd_apply (node_infos : node_info_update LabelMap.t)
   in
   LabelMap.mapi prev ~f:update_label
 
-(** Find the fixpoint of a function and an initial value, given definition of equality *)
+(** Find the fixed point of a function and an initial value, given definition of equality *)
 let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) :
     'a =
   let y = f x in
@@ -544,17 +544,17 @@ let rd_equal (a : (ReachingDefnSet.t * ReachingDefnSet.t) LabelMap.t)
   LabelMap.equal equal_set_pairs a b
 
 (**
-   Find the fixpoints of the dataflow update functions. Fixpoints should correspond to
+   Find the fixed point of the dataflow update functions. Fixed point should correspond to
    the full, correct dataflow graph.
 *)
-let rd_fixpoint (info : node_info_update LabelMap.t) :
-    node_info_fixpoint LabelMap.t =
+let rd_fixedpoint (info : node_info_update LabelMap.t) :
+    node_info_fixedpoint LabelMap.t =
   let initial_sets =
     LabelMap.map info ~f:(fun _ -> (ReachingDefnSet.empty, ReachingDefnSet.empty))
   in
-  let fixpoints = apply_until_fixed rd_equal (rd_apply info) initial_sets in
-  LabelMap.mapi fixpoints ~f:(fun ~key:label ~data:fixpoint ->
-      {(LabelMap.find_exn info label) with rd_sets= fixpoint} )
+  let fixed_points = apply_until_fixed rd_equal (rd_apply info) initial_sets in
+  LabelMap.mapi fixed_points ~f:(fun ~key:label ~data:fixedpoint ->
+      {(LabelMap.find_exn info label) with rd_sets= fixedpoint} )
 
 (***********************************)
 (* Dependency analysis & interface *)
@@ -568,7 +568,7 @@ let rd_fixpoint (info : node_info_update LabelMap.t) :
      non-statistical dependency analysis
 *)
 type dataflow_graph =
-  { node_info_map: node_info_fixpoint LabelMap.t
+  { node_info_map: node_info_fixedpoint LabelMap.t
   ; possible_exits: LabelSet.t
   ; target_term_nodes: LabelSet.t }
 [@@deriving sexp]
@@ -585,8 +585,8 @@ let block_dataflow_graph (body : stmt_loc) (preexisting_table : top_var_table)
   in
   let initial_trav_st = initial_traversal_state preexisting_vars in
   let trav_st = traverse_mir initial_trav_st initial_cf_st body in
-  let node_info_fixpoint = rd_fixpoint trav_st.node_info_map in
-  { node_info_map= node_info_fixpoint
+  let node_info_fixedpoint = rd_fixedpoint trav_st.node_info_map in
+  { node_info_map= node_info_fixedpoint
   ; possible_exits= LabelSet.union trav_st.possible_previous trav_st.returns
   ; target_term_nodes= trav_st.target_terms }
 
@@ -719,7 +719,7 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
   in
   if true then (
     Sexp.pp_hum Format.std_formatter
-      [%sexp (df_graph.node_info_map : node_info_fixpoint LabelMap.t)] ;
+      [%sexp (df_graph.node_info_map : node_info_fixedpoint LabelMap.t)] ;
     print_string "\n\n" ;
     print_endline
       ( "Preexisting variables: "
