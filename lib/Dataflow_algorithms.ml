@@ -1,104 +1,6 @@
 open Core_kernel
 open Mir
-
-(***********************************)
-(* Basic datatypes                 *)
-(***********************************)
-
-(**
-   A label is a unique identifier for a node in the dataflow/dependency graph, and
-   often corresponds to one node in the Mir.
-*)
-type label = int [@@deriving sexp, hash, compare]
-
-(**
-   Representation of an expression that can be assigned to. This should also be able to
-   represent indexed variables, but we don't support that yet.
-*)
-type vexpr = VVar of string [@@deriving sexp, hash, compare]
-
-(**
-   A 'reaching definition' (or reaching_defn or RD) statement (v, l) says that the variable
-   v could have been affected at the label l.
-*)
-type reaching_defn = vexpr * label [@@deriving sexp, hash, compare]
-
-(**
-   Description of where a node in the dependency graph came from, where MirNode is the
-   location from an Mir.loc_stmt
- *)
-type source_loc =
-  | MirNode of string
-  | StartOfBlock
-  | TargetTerm of {term: expr; assignment_label: label}
-[@@deriving sexp]
-
-(**
-   Information to be collected about each node
-   * rd_sets: Information about how the label effects the reaching definition sets
-   * possible_previous: The set of nodes that could have immediately preceded this node
-     under some execution of the program
-   * rhs_set: The 'right hand side' set of variables that affect the value or behavior of
-     this node
-   * controlflow: The set of control flow nodes that are immediate parents of this node:
-     * The most recent nested if/then or loop,
-     * or the beginning of the function or block if there are no containing branches,
-     * plus the set of relevant continue/return statements,
-     * plus, for loops, any break statements they contain
-   * loc: The location of the Mir node that this node corresponds to, or a description if
-     there is none
-*)
-type 'rd_info node_info =
-  { rd_sets: 'rd_info
-  ; possible_previous: label Set.Poly.t
-  ; rhs_set: vexpr Set.Poly.t
-  ; controlflow: label Set.Poly.t
-  ; loc: source_loc }
-[@@deriving sexp]
-
-(**
-   A node_info, where the reaching definition information takes the form of an update
-   function that maps from the 'entry' set to the 'exit' set, where the entry set is
-   what's true before executing this node and the exit set is true after.
-*)
-type node_info_update =
-  (reaching_defn Set.Poly.t -> reaching_defn Set.Poly.t) node_info
-
-(**
-   A node_info where the reaching definition information is explicitly written as the
-   entry and exit sets, as after finding the fixed-point solution.
-*)
-type node_info_fixedpoint =
-  (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) node_info
-[@@deriving sexp]
-
-(**
-   The state that will be maintained throughout the traversal of the Mir
-   * label_ix: The next label that's free to use
-   * node_info_map: The label information that's been built so far
-   * possible_previous: The set of nodes that could have immediately preceded this point
-     under some execution of the program
-   * target_terms: The set of nodes that correspond to terms added to the target variable
-   * continues: A set of the continue nodes that have been encountered since exiting a loop
-   * breaks: A set of the break nodes that have been encountered since exiting a loop
-   * returns: A set of the return nodes that have been encountered
-*)
-type traversal_state =
-  { label_ix: label
-  ; node_info_map: node_info_update Int.Map.t
-  ; possible_previous: label Set.Poly.t
-  ; target_terms: label Set.Poly.t
-  ; continues: label Set.Poly.t
-  ; breaks: label Set.Poly.t
-  ; returns: label Set.Poly.t
-  ; rejects: label Set.Poly.t }
-
-(** The most recently nested control flow (block start, if/then, or loop)
-
-    This isn't included in the traversal_state because it only flows downward through the
-    tree, not across and up like everything else
-*)
-type cf_state = label
+open Dataflow_types
 
 (**
    This is a helper function equivalent to List.concat_map but for Sets
@@ -575,23 +477,7 @@ let rd_fixedpoint (info : node_info_update Int.Map.t) :
 (* Dependency analysis & interface *)
 (***********************************)
 
-(**
-   Everything we need to know to do dependency analysis
-   * node_info_map: Collection of node information
-   * possible_exits: Set of nodes that could be the last to execute under some execution
-   * probabilistic_nodes: Set of nodes corresponding to which can only introduce
-     probabilistic dependencies, such as target terms and reject statements, to be
-     excluded for non-statistical dependency analysis
-*)
-type dataflow_graph =
-  { node_info_map: node_info_fixedpoint Int.Map.t
-  ; possible_exits: label Set.Poly.t
-  ; probabilistic_nodes: label Set.Poly.t }
-[@@deriving sexp]
-
-(**
-   Construct a dataflow graph for the block, given some top (global?) variables
-*)
+(** See .mli file *)
 let block_dataflow_graph (body : stmt_loc) (param_vars : vexpr Set.Poly.t) :
     dataflow_graph =
   let initial_trav_st = initial_traversal_state param_vars in
@@ -601,14 +487,7 @@ let block_dataflow_graph (body : stmt_loc) (param_vars : vexpr Set.Poly.t) :
   ; possible_exits= Set.Poly.union trav_st.possible_previous trav_st.returns
   ; probabilistic_nodes= Set.Poly.union trav_st.target_terms trav_st.rejects }
 
-(**
-   Find the set of labels for nodes that could affect the value or behavior of the node
-   with `label`.
-
-   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
-   traversed (recursively), and the result will be the same as a classical dataflow
-   analysis.
-*)
+(** See .mli file *)
 let rec label_dependencies (df_graph : dataflow_graph)
     (statistical_dependence : bool) (so_far : label Set.Poly.t) (label : label)
     : label Set.Poly.t =
@@ -628,14 +507,7 @@ let rec label_dependencies (df_graph : dataflow_graph)
     (Set.Poly.add so_far label)
     filtered_labels
 
-(**
-   Find the set of labels for nodes that could affect the value or behavior of any of the
-   nodes `labels`.
-
-   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
-   traversed (recursively), and the result will be the same as a classical dataflow
-   analysis.
-*)
+(** See .mli file *)
 and labels_dependencies (df_graph : dataflow_graph)
     (statistical_dependence : bool) (so_far : label Set.Poly.t)
     (labels : label Set.Poly.t) : label Set.Poly.t =
@@ -643,13 +515,7 @@ and labels_dependencies (df_graph : dataflow_graph)
       if Set.Poly.mem so_far label then so_far
       else label_dependencies df_graph statistical_dependence so_far label )
 
-(**
-   Find the set of labels for nodes that could affect the final value of the variable.
-
-   If `statistical_dependence` is off, the nodes corresponding to target terms will not be
-   traversed (recursively), and the result will be the same as a classical dataflow
-   analysis.
-*)
+(** See .mli file *)
 let final_var_dependencies (df_graph : dataflow_graph)
     (statistical_dependence : bool) (var : vexpr) : label Set.Poly.t =
   let exit_rd_set =
@@ -669,10 +535,7 @@ let final_var_dependencies (df_graph : dataflow_graph)
   labels_dependencies df_graph statistical_dependence Set.Poly.empty
     filtered_labels
 
-(**
-   Find the set of top variables that are dependencies for the set of nodes
-   `labels`.
-*)
+(** See .mli file *)
 let top_var_dependencies (df_graph : dataflow_graph)
     (labels : label Set.Poly.t) : vexpr Set.Poly.t =
   let rds =
@@ -683,11 +546,7 @@ let top_var_dependencies (df_graph : dataflow_graph)
   in
   Set.Poly.map rds ~f:fst
 
-(**
-   Find the set of target term nodes which do not depend on any top variables in
-   `exprs`. Only non-statistical dependence is considered, otherwise all overlapping terms
-   will depend on eachother.
- *)
+(** See .mli file *)
 let exprset_independent_target_terms (df_graph : dataflow_graph)
     (exprs : vexpr Set.Poly.t) : label Set.Poly.t =
   Set.Poly.filter df_graph.probabilistic_nodes ~f:(fun l ->
@@ -702,18 +561,7 @@ let exprset_independent_target_terms (df_graph : dataflow_graph)
 let exprset_of_table (table : top_var_table) : vexpr Set.Poly.t =
   Set.Poly.of_list (List.map (Map.Poly.keys table) ~f:(fun s -> VVar s))
 
-(**
-   Represents the dataflow graphs for each interesting block in the program MIR.
-
-   See Mir.prog for block descriptions.
-*)
-type prog_df_graphs =
-  {tdatab: dataflow_graph; modelb: dataflow_graph; gqb: dataflow_graph}
-[@@deriving sexp]
-
-(**
-   Build the dataflow graphs for each interesting block in the program MIR
-*)
+(** See .mli file *)
 let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
   let data_table = prog.datavars in
   let tdata_table, tdata_block = prog.tdatab in
@@ -728,10 +576,7 @@ let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
   ; modelb= block_dataflow_graph model_block top_vars
   ; gqb= block_dataflow_graph gq_block top_vars }
 
-(**
-   Builds a dataflow graph from the model block and evaluates the label and global
-   variable dependencies of the "y" variable, printing results to stdout.
-*)
+(** See .mli file *)
 let analysis_example (prog : stmt_loc prog) : dataflow_graph =
   let data_table = prog.datavars in
   let tdata_table, _ = prog.tdatab in
