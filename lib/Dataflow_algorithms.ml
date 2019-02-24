@@ -487,10 +487,10 @@ let block_dataflow_graph (body : stmt_loc) (param_vars : vexpr Set.Poly.t) :
   ; possible_exits= Set.Poly.union trav_st.possible_previous trav_st.returns
   ; probabilistic_nodes= Set.Poly.union trav_st.target_terms trav_st.rejects }
 
-(** See .mli file *)
-let rec label_dependencies (df_graph : dataflow_graph)
-    (statistical_dependence : bool) (so_far : label Set.Poly.t) (label : label)
-    : label Set.Poly.t =
+(** Helper for label_dependencies *)
+let rec label_dependencies_rec (so_far : label Set.Poly.t)
+    (df_graph : dataflow_graph) (probabilistic_dependence : bool)
+    (label : label) : label Set.Poly.t =
   let node_info = Int.Map.find_exn df_graph.node_info_map label in
   let rhs_labels =
     Set.Poly.map
@@ -500,24 +500,32 @@ let rec label_dependencies (df_graph : dataflow_graph)
   in
   let labels = Set.Poly.union rhs_labels node_info.controlflow in
   let filtered_labels =
-    if statistical_dependence then labels
+    if probabilistic_dependence then labels
     else Set.Poly.diff labels df_graph.probabilistic_nodes
   in
-  labels_dependencies df_graph statistical_dependence
+  labels_dependencies_rec
     (Set.Poly.add so_far label)
-    filtered_labels
+    df_graph probabilistic_dependence filtered_labels
 
-(** See .mli file *)
-and labels_dependencies (df_graph : dataflow_graph)
-    (statistical_dependence : bool) (so_far : label Set.Poly.t)
+(** Helper for labels_dependencies *)
+and labels_dependencies_rec (so_far : label Set.Poly.t)
+    (df_graph : dataflow_graph) (probabilistic_dependence : bool)
     (labels : label Set.Poly.t) : label Set.Poly.t =
   Set.Poly.fold labels ~init:so_far ~f:(fun so_far label ->
       if Set.Poly.mem so_far label then so_far
-      else label_dependencies df_graph statistical_dependence so_far label )
+      else
+        label_dependencies_rec so_far df_graph probabilistic_dependence label
+  )
+
+(** See .mli file *)
+let label_dependencies = label_dependencies_rec Set.Poly.empty
+
+(** See .mli file *)
+let labels_dependencies = labels_dependencies_rec Set.Poly.empty
 
 (** See .mli file *)
 let final_var_dependencies (df_graph : dataflow_graph)
-    (statistical_dependence : bool) (var : vexpr) : label Set.Poly.t =
+    (probabilistic_dependence : bool) (var : vexpr) : label Set.Poly.t =
   let exit_rd_set =
     union_map df_graph.possible_exits ~f:(fun l ->
         let info = Int.Map.find_exn df_graph.node_info_map l in
@@ -529,11 +537,10 @@ let final_var_dependencies (df_graph : dataflow_graph)
       ~f:snd
   in
   let filtered_labels =
-    if statistical_dependence then labels
+    if probabilistic_dependence then labels
     else Set.Poly.diff labels df_graph.probabilistic_nodes
   in
-  labels_dependencies df_graph statistical_dependence Set.Poly.empty
-    filtered_labels
+  labels_dependencies df_graph probabilistic_dependence filtered_labels
 
 (** See .mli file *)
 let top_var_dependencies (df_graph : dataflow_graph)
@@ -550,7 +557,7 @@ let top_var_dependencies (df_graph : dataflow_graph)
 let exprset_independent_target_terms (df_graph : dataflow_graph)
     (exprs : vexpr Set.Poly.t) : label Set.Poly.t =
   Set.Poly.filter df_graph.probabilistic_nodes ~f:(fun l ->
-      let label_deps = label_dependencies df_graph false Set.Poly.empty l in
+      let label_deps = label_dependencies df_graph false l in
       Set.Poly.is_empty
         (Set.Poly.inter (top_var_dependencies df_graph label_deps) exprs) )
 
@@ -916,14 +923,3 @@ let%expect_test "Example program" =
            (loc (MirNode "\"string\", line 5-5"))))))
        (possible_exits (0 1 3)) (probabilistic_nodes ()))
     |}]
-
-(**
-   ~~~~~ STILL TODO ~~~~~
- * Indexed variables are currently handled as monoliths
- * Need to know which variables are parameters and which are data, since
-   * target terms shouldn't introduce dependency to data variables
-   * data-independent target terms might be useful
- * Variables declared in blocks should go out of scope
-   * This is done already for for-loop index variables
- * Traverse functions that end in st, since they can change the target
- **)
