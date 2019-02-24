@@ -210,22 +210,20 @@ let compose_last_rd_update
    analogous to the beginning of a loop, where control could have come from before the
    loop or from the end of the loop.
 *)
-let node_0 (preexisting_vars : expr Set.Poly.t) : node_info_update =
+let node_0 (top_vars : expr Set.Poly.t) : node_info_update =
   { rd_sets=
       (fun entry ->
-        Set.Poly.union entry
-          (Set.Poly.map preexisting_vars ~f:(fun v -> (v, 0))) )
+        Set.Poly.union entry (Set.Poly.map top_vars ~f:(fun v -> (v, 0))) )
   ; possible_previous= Set.Poly.empty
   ; rhs_set= Set.Poly.empty
   ; controlflow= Set.Poly.empty
   ; loc= StartOfBlock }
 
 (**
-   Initialize a traversal state, including node 0 with the preexisting variables
+   Initialize a traversal state, including node 0 with the top variables
 *)
-let initial_traversal_state (preexisting_vars : expr Set.Poly.t) :
-    traversal_state =
-  let node_0_info = node_0 preexisting_vars in
+let initial_traversal_state (top_vars : expr Set.Poly.t) : traversal_state =
+  let node_0_info = node_0 top_vars in
   { label_ix= 1
   ; node_info_map= Int.Map.singleton 0 node_0_info
   ; possible_previous= Set.Poly.singleton 0
@@ -579,16 +577,11 @@ type dataflow_graph =
 [@@deriving sexp]
 
 (**
-   Construct a dataflow graph for the block, given some preexisting (global?) variables
+   Construct a dataflow graph for the block, given some top (global?) variables
 *)
-let block_dataflow_graph (body : stmt_loc) (preexisting_table : top_var_table)
-    : dataflow_graph =
-  let preexisting_vars =
-    Set.Poly.of_list
-      (List.map ("x" :: "target" :: Map.Poly.keys preexisting_table)
-         ~f:(fun v -> Var v ))
-  in
-  let initial_trav_st = initial_traversal_state preexisting_vars in
+let block_dataflow_graph (body : stmt_loc) (param_vars : expr Set.Poly.t) :
+    dataflow_graph =
+  let initial_trav_st = initial_traversal_state param_vars in
   let trav_st = traverse_mir initial_trav_st initial_cf_st body in
   let node_info_fixedpoint = rd_fixedpoint trav_st.node_info_map in
   { node_info_map= node_info_fixedpoint
@@ -664,10 +657,10 @@ let final_var_dependencies (df_graph : dataflow_graph)
     filtered_labels
 
 (**
-   Find the set of preexisting variables that are dependencies for the set of nodes
+   Find the set of top variables that are dependencies for the set of nodes
    `labels`.
 *)
-let preexisting_var_dependencies (df_graph : dataflow_graph)
+let top_var_dependencies (df_graph : dataflow_graph)
     (labels : label Set.Poly.t) : expr Set.Poly.t =
   let rds =
     union_map labels ~f:(fun l ->
@@ -678,7 +671,7 @@ let preexisting_var_dependencies (df_graph : dataflow_graph)
   Set.Poly.map rds ~f:fst
 
 (**
-   Find the set of target term nodes which do not depend on any preexisting variables in
+   Find the set of target term nodes which do not depend on any top variables in
    `exprs`. Only non-statistical dependence is considered, otherwise all overlapping terms
    will depend on eachother.
  *)
@@ -687,21 +680,32 @@ let exprset_independent_target_terms (df_graph : dataflow_graph)
   Set.Poly.filter df_graph.probabilistic_nodes ~f:(fun l ->
       let label_deps = label_dependencies df_graph false Set.Poly.empty l in
       Set.Poly.is_empty
-        (Set.Poly.inter
-           (preexisting_var_dependencies df_graph label_deps)
-           exprs) )
+        (Set.Poly.inter (top_var_dependencies df_graph label_deps) exprs) )
+
+(**
+   Helper function to construct an (variable) expression set from the variable names from
+   a top_var_table
+*)
+let exprset_of_table (table : top_var_table) : expr Set.Poly.t =
+  Set.Poly.of_list (List.map (Map.Poly.keys table) ~f:(fun s -> Var s))
 
 (**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.
 *)
-let analysis_example (mir : stmt_loc prog) : dataflow_graph =
-  let var_table, model_block = mir.modelb in
-  let df_graph = block_dataflow_graph model_block var_table in
+let analysis_example (prog : stmt_loc prog) : dataflow_graph =
+  let data_table = prog.datavars in
+  let tdata_table, _ = prog.tdatab in
+  let data_vars =
+    Set.Poly.union (exprset_of_table data_table) (exprset_of_table tdata_table)
+  in
+  let parameter_table, model_block = prog.modelb in
+  let parameter_vars = exprset_of_table parameter_table in
+  let top_vars = Set.Poly.union data_vars parameter_vars in
+  let df_graph = block_dataflow_graph model_block top_vars in
   let var = "y" in
   let label_deps = final_var_dependencies df_graph true (Var var) in
-  let expr_deps = preexisting_var_dependencies df_graph label_deps in
-  let data_vars = Set.Poly.singleton (Var "x") in
+  let expr_deps = top_var_dependencies df_graph label_deps in
   let prior_term_labels =
     exprset_independent_target_terms df_graph data_vars
   in
@@ -711,17 +715,16 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
         | TargetTerm {term; _} -> term
         | _ -> raise (Failure "Found non-target term in target term list") )
   in
-  let preexisting_vars =
-    Set.Poly.of_list
-      (List.map ("x" :: "target" :: Map.Poly.keys var_table) ~f:(fun v -> Var v))
-  in
-  if false then (
+  if true then (
     Sexp.pp_hum Format.std_formatter
       [%sexp (df_graph.node_info_map : node_info_fixedpoint Int.Map.t)] ;
     print_string "\n\n" ;
     print_endline
-      ( "Preexisting variables: "
-      ^ Sexp.to_string [%sexp (preexisting_vars : expr Set.Poly.t)] ) ;
+      ( "Top data variables: "
+      ^ Sexp.to_string [%sexp (data_vars : expr Set.Poly.t)] ) ;
+    print_endline
+      ( "Top parameter variables: "
+      ^ Sexp.to_string [%sexp (parameter_vars : expr Set.Poly.t)] ) ;
     print_endline
       ( "Target term nodes: "
       ^ Sexp.to_string
@@ -730,16 +733,13 @@ let analysis_example (mir : stmt_loc prog) : dataflow_graph =
       ( "Possible endpoints: "
       ^ Sexp.to_string [%sexp (df_graph.possible_exits : label Set.Poly.t)] ) ;
     print_endline
-      ( "Assumed data variables: "
-      ^ Sexp.to_string [%sexp (data_vars : expr Set.Poly.t)] ) ;
-    print_endline
       ( "Data-independent target term expressions: "
       ^ Sexp.to_string [%sexp (prior_terms : expr list)] ) ;
     print_endline
       ( "Var " ^ var ^ " depends on labels: "
       ^ Sexp.to_string [%sexp (label_deps : label Set.Poly.t)] ) ;
     print_endline
-      ( "Var " ^ var ^ " depends on preexisting variables: "
+      ( "Var " ^ var ^ " depends on top variables: "
       ^ Sexp.to_string [%sexp (expr_deps : expr Set.Poly.t)] ) ) ;
   df_graph
 
@@ -761,31 +761,24 @@ let%expect_test "Example program" =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
   let table, block = mir.modelb in
-  let df_graph = block_dataflow_graph block table in
+  let df_graph = block_dataflow_graph block (exprset_of_table table) in
   print_s [%sexp (df_graph : dataflow_graph)] ;
   [%expect
     {|
       ((node_info_map
         ((0
-          ((rd_sets (() (((Var target) 0) ((Var x) 0)))) (possible_previous ())
-           (rhs_set ()) (controlflow ()) (loc StartOfBlock)))
+          ((rd_sets (() ())) (possible_previous ()) (rhs_set ()) (controlflow ())
+           (loc StartOfBlock)))
          (1
-          ((rd_sets
-            ((((Var target) 0) ((Var x) 0))
-             (((Var i) 1) ((Var target) 0) ((Var x) 0))))
-           (possible_previous (0)) (rhs_set ()) (controlflow (0))
-           (loc (MirNode "\"string\", line 2-4"))))
+          ((rd_sets (() (((Var i) 1)))) (possible_previous (0)) (rhs_set ())
+           (controlflow (0)) (loc (MirNode "\"string\", line 2-4"))))
          (2
-          ((rd_sets
-            ((((Var i) 1) ((Var target) 0) ((Var x) 0))
-             (((Var i) 1) ((Var j) 2) ((Var target) 0) ((Var x) 0))))
+          ((rd_sets ((((Var i) 1)) (((Var i) 1) ((Var j) 2))))
            (possible_previous (1 3)) (rhs_set ()) (controlflow (1))
            (loc (MirNode "\"string\", line 3-4"))))
          (3
-          ((rd_sets
-            ((((Var i) 1) ((Var j) 2) ((Var target) 0) ((Var x) 0))
-             (((Var target) 0) ((Var x) 0))))
-           (possible_previous (2 3)) (rhs_set ((Var i) (Var j))) (controlflow (2))
+          ((rd_sets ((((Var i) 1) ((Var j) 2)) ())) (possible_previous (2 3))
+           (rhs_set ((Var i) (Var j))) (controlflow (2))
            (loc (MirNode "\"string\", line 4-4"))))))
        (possible_exits (0 1 3)) (probabilistic_nodes ()))
     |}]
