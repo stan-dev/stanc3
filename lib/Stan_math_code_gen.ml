@@ -22,12 +22,12 @@ open Fmt
 
 let zero = Lit (Int, "0")
 
-let rec pp_unsizedtype ad ppf = function
-  | Ast.UInt | UReal -> string ppf ad
-  | UArray t -> pf ppf "std::vector<%a>" (pp_unsizedtype ad) t
-  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" ad
-  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" ad
-  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" ad
+let rec pp_unsizedtype scalar_type ppf = function
+  | Ast.UInt | UReal -> string ppf scalar_type
+  | UArray t -> pf ppf "std::vector<%a>" (pp_unsizedtype scalar_type) t
+  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar_type
+  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar_type
+  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar_type
   | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
 
 let%expect_test "emit function type raises" =
@@ -155,7 +155,7 @@ let pp_located_msg ppf msg =
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
   @@ Option.value ~default:"e" msg
 
-let maybe_templated_arg_types (args : formal_params) =
+let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
     match adtype with Ast.AutoDiffable -> true | _ -> false
   in
@@ -178,18 +178,19 @@ let pp_returntype ppf arg_types rt =
 
 let pp_location = fmt "current_statement__ = %S;@;"
 
-(** [pp_located_error ppf (body_block, err_msg)] surrounds [body_block]
+(** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
 let pp_located_error ppf (pp_body_block, body, err_msg) =
   pf ppf "@ try %a" pp_body_block body ;
+  (* XXX Figure out a good way to refactor this so it doesn't require a body block. *)
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
 let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
   match cctype with
   | Ast.SArray (t, dim) ->
-      let loopvar, reset_sym = Mir.gensym_enter () in
+      let loopvar, reset_sym = Util.gensym_enter () in
       let new_ident = strf "%s[%s]" ident loopvar in
       let new_pp_body ppf ident =
         pp_for_loop ppf (loopvar, zero, dim, pp_body, ident)
@@ -210,8 +211,9 @@ let%expect_test "for each in array" =
   |> print_endline ;
   [%expect
     {|
-    for (size_t sym2 = 0; sym2 < z; sym2++)
-      for (size_t sym1 = 0; sym1 < y; sym1++) check_whatever(alpha[sym1][sym2]); |}]
+    for (size_t sym2__ = 0; sym2__ < z; sym2__++)
+      for (size_t sym1__ = 0; sym1__ < y; sym1__++)
+        check_whatever(alpha[sym1__][sym2__]); |}]
 
 let trans_math_fn fname =
   match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])
@@ -225,6 +227,7 @@ let rec pp_statement ppf {stmt; sloc} =
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
       pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
+  | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
   | NRFunApp (fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
@@ -285,6 +288,10 @@ let rec pp_statement ppf {stmt; sloc} =
                   "local_scalar_t__ \
                    DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
                 text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
+                (* XXX Need to figure out how to pass in appropriate template arguments
+                   to pp_statement or something such that local variable declarations get the right
+                   scalar type w.r.t. autodiff/template (var vs double scalar type).
+                *)
                 pp_located_error ppf (pp_statement, fdbody, None) )
             , fdbody ) ;
           pf ppf "@ " )
