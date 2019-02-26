@@ -20,6 +20,21 @@ open Core_kernel
 open Mir
 open Fmt
 
+let pp_operator = function
+  | Plus -> "+"
+  | Minus -> "-"
+  | Times -> "*"
+  | Divide -> "/"
+  | Modulo -> "%"
+  | Or -> "||"
+  | And -> "&&"
+  | Equals -> "=="
+  | NEquals -> "!="
+  | Less -> "<"
+  | Leq -> "<="
+  | Greater -> ">"
+  | Geq -> ">="
+
 let zero = Lit (Int, "0")
 
 let rec pp_unsizedtype scalar_type ppf = function
@@ -48,12 +63,12 @@ let rec pp_expr ppf s =
   | Lit (_, s) -> string ppf s
   | FunApp (fname, args) -> pp_call ppf (fname, pp_expr, args)
   | BinOp (e1, op, e2) ->
-      pf ppf "%a %s %a" pp_expr e1 (Operators.operator_name op) pp_expr e2
+      pf ppf "%a %s %a" pp_expr e1 (pp_operator op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
       pf ppf "(%a) ? (%a) : (%a)" pp_expr cond pp_expr ifb pp_expr elseb
   | Indexed (e, idcs) ->
-      pf ppf "@[<hov 4>stan::model::rvalue(%a,@,@[<hov>%a,@]@ \"%a\");@]"
-        pp_expr e pp_indices idcs pp_expr e
+      pf ppf "stan::model::rvalue(@[<hov>%a,@,%a,@]@ \"%a\")" pp_expr e
+        pp_indices idcs pp_expr e
 
 and pp_index ppf idx =
   let idx_phrase fmt idtype = pf ppf fmt ("stan::model::index_" ^ idtype) in
@@ -76,9 +91,10 @@ let%expect_test "multi index" =
   [%expect
     {|
     stan::model::rvalue(vec,
-        stan::model::cons_list(stan::model::index_multi(intarr1),
-        stan::model::cons_list(stan::model::index_multi(intarr2),
-        stan::model::nil_index_list())), "vec"); |}]
+                        stan::model::cons_list(stan::model::index_multi(intarr1),
+                        stan::model::cons_list(stan::model::index_multi(intarr2),
+                        stan::model::nil_index_list())),
+    "vec") |}]
 
 let rec stantype_prim_str = function
   | Ast.UInt -> "int"
@@ -226,7 +242,7 @@ let rec pp_statement ppf {stmt; sloc} =
   match stmt with
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
-      pf ppf "%a = %a;" pp_expr assignee pp_expr rhs
+      pf ppf "@[<hov 4>%a =@;%a;@]" pp_expr assignee pp_expr rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
   | NRFunApp (fname, args) ->
       let fname, extra_args = trans_math_fn fname in
@@ -346,10 +362,11 @@ let%expect_test "run code per element" =
           for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
             {
               current_statement__ = "";
-              dubvec[i_0__][i_1__](i_2__, i_3__) = stan::model::rvalue(vals_r__,
-                                                       stan::model::cons_list(stan::model::index_uni(pos__++),
-                                                       stan::model::nil_index_list()),
-                                                       "vals_r__");;
+              dubvec[i_0__][i_1__](i_2__, i_3__) =
+                  stan::model::rvalue(vals_r__,
+                                      stan::model::cons_list(stan::model::index_uni(pos__++),
+                                      stan::model::nil_index_list()),
+                  "vals_r__");
               current_statement__ = "";
               stan_print(pstream__, dubvec[i_0__][i_1__](i_2__, i_3__));
             } |}]
@@ -544,7 +561,9 @@ let pp_transformed_params ppf params = ignore params ; string ppf "//TODO"
 let pp_transformed_param_checks ppf params =
   ignore params ; string ppf "//TODO"
 
-let pp_transform_inits ppf params = ignore params ; string ppf "//TODO"
+let pp_transform_inits ppf params =
+  ignore params ;
+  string ppf "//TODO transform_inits"
 
 let pp_fndef_sig ppf (rt, fname, params) =
   pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params

@@ -13,7 +13,20 @@ open Core_kernel
 
 type litType = Int | Real | Str
 
-and operator = Ast.operator
+and operator =
+  | Plus
+  | Minus
+  | Times
+  | Divide
+  | Modulo
+  | Or
+  | And
+  | Equals
+  | NEquals
+  | Less
+  | Leq
+  | Greater
+  | Geq
 
 and transformation = expr Ast.transformation
 

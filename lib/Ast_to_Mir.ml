@@ -3,11 +3,37 @@
 open Core_kernel
 open Mir
 
+let trans_op (op : Ast.operator) =
+  match op with
+  | Ast.Plus -> Plus
+  | Ast.Minus -> Minus
+  | Ast.Times -> Times
+  | Ast.Divide -> Divide
+  | Ast.Modulo -> Modulo
+  | Ast.Or -> Or
+  | Ast.And -> And
+  | Ast.Equals -> Equals
+  | Ast.NEquals -> NEquals
+  | Ast.Less -> Less
+  | Ast.Leq -> Leq
+  | Ast.Greater -> Greater
+  | Ast.Geq -> Geq
+  | _ ->
+      let msg = " should have been transformed to a FunApp by this point." in
+      raise_s [%message (op : Ast.operator) msg]
+
 let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with
   | Ast.TernaryIf (cond, ifb, elseb) ->
       TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
-  | Ast.BinOp (lhs, op, rhs) -> BinOp (trans_expr lhs, op, trans_expr rhs)
+  | Ast.BinOp (lhs, op, rhs) -> (
+      let lhs, rhs = (trans_expr lhs, trans_expr rhs) in
+      match op with
+      | Ast.LDivide | Ast.EltTimes | Ast.EltDivide | Ast.Pow | Ast.Not
+       |Ast.Transpose ->
+          let fnname = Sexp.to_string_hum [%sexp (op : Ast.operator)] in
+          FunApp (fnname, [lhs; rhs])
+      | _ -> BinOp (lhs, trans_op op, rhs) )
   | Ast.PrefixOp (op, e) | Ast.PostfixOp (e, op) ->
       FunApp (Operators.operator_name op, [trans_expr e])
   | Ast.Variable {name; _} -> Var name
@@ -92,7 +118,7 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         let rhs =
           match assign_op with
           | Ast.Assign | Ast.ArrowAssign -> rhs
-          | Ast.OperatorAssign op -> BinOp (assignee, op, rhs)
+          | Ast.OperatorAssign op -> BinOp (assignee, trans_op op, rhs)
         in
         Assignment (assignee, rhs)
     | Ast.NRFunApp ({name; _}, args) ->

@@ -83,11 +83,12 @@ class eight_schools_ncp_model : public prob_grad {
       for (size_t j = 1; j < J; j++)
         current_statement__ = "file eight_schools_ncp.stan, line 16, columns 4-41";
         stan::model::rvalue(theta,
-            stan::model::cons_list(stan::model::index_uni(j),
-            stan::model::nil_index_list()), "theta"); = mu Plus tau Times 
-        stan::model::rvalue(theta_tilde,
-            stan::model::cons_list(stan::model::index_uni(j),
-            stan::model::nil_index_list()), "theta_tilde");;
+                            stan::model::cons_list(stan::model::index_uni(j),
+                            stan::model::nil_index_list()), "theta") =
+            mu + tau * stan::model::rvalue(theta_tilde,
+                                           stan::model::cons_list(stan::model::index_uni(j),
+                                           stan::model::nil_index_list()),
+            "theta_tilde");
       current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
       lp_accum__.add(normal(mu, 0, 5))
       current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
@@ -128,7 +129,7 @@ class eight_schools_ncp_model : public prob_grad {
   //TODO write_array
   //TODO constrained_param_names
   //TODO unconstrained_param_names
-  //TODO
+  //TODO transform_inits
 }
 }
 typedef eight_schools_ncp_modelnamespace::eight_schools_ncp_model stan_model;
