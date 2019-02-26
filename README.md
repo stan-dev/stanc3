@@ -110,9 +110,14 @@ Once in VSCode (on any platform), simply install the [OCaml extension](https://g
 1. `install_tensorflow()` style installers for R and Python that install a C++ toolchain in the user's home directory. We will need this to install the new `stanc` binary.
 1. Work needed to compile the math library ahead of time!
 
-## Architectural goals for the new compiler
+## Design goals for the new compiler
 * **Multiple phases**, each with human-readable intermediate representations for easy debugging and optimization design.
-* **Optimizing** - takes advantage of info known at the Stan language level.
+* **Optimizing** - takes advantage of info known at the Stan language level. Minimize information we must teach users for them to write performant code.
+* **Holistic-** bring as much of the code as possible into the MIR for whole-program optimization.
+* **Research platform-** enable a new class of optimizations based on probability theory.
+* **Modular** - architect & build in a way that makes it easy to outsource things like symbolic differentiation to external libraries and to use parts of the compiler as the basis for other tools built around the Stan language.
+* **Simplicity first -** When making a choice between correct simplicity and a perceived performance benefit, we want to make the choice for simplicity unless we can show significant (> 5%) benchmark improvements to compile times or run times. Premature optimization is the root of all evil.
+
 
 ### Distinct Stanc Phases
 1. Parse Stan language into AST that represents the syntax quite closely and aides in development of pretty-printers and linters

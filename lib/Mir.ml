@@ -11,16 +11,6 @@ open Core_kernel
        - mark FnApps as containing print or reject
 *)
 
-let _counter = ref 0
-
-let gensym () =
-  _counter := !_counter + 1 ;
-  sprintf "sym%d" !_counter
-
-let gensym_enter () =
-  let old_counter = !_counter in
-  (gensym (), fun () -> _counter := old_counter)
-
 type litType = Int | Real | Str
 
 and operator =
@@ -67,10 +57,11 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 type constraint_check =
   {ccfunname: string; ccvid: string; cctype: sizedtype; ccargs: expr list}
 
-and formal_params = (adtype * string * unsizedtype) list
+and fun_arg_decl = (adtype * string * unsizedtype) list
 
 and 's statement =
   | Assignment of expr * expr
+  | TargetPE of expr
   | NRFunApp of string * expr list
   | Check of constraint_check
   | Break
@@ -92,7 +83,7 @@ and 's statement =
   | FunDef of
       { fdrt: unsizedtype option
       ; fdname: string
-      ; fdargs: formal_params
+      ; fdargs: fun_arg_decl
       ; fdbody: 's }
 [@@deriving sexp, hash]
 

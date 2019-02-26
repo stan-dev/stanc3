@@ -51,8 +51,8 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
       check_greater_or_equal(function__, J, 0);
       current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-      for (size_t sym1 = 0; sym1 < J; sym1++)
-        check_greater_or_equal(function__, sigma[sym1], 0);
+      for (size_t sym1__ = 0; sym1__ < J; sym1__++)
+        check_greater_or_equal(function__, sigma[sym1__], 0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string(e) + e.what(), current_statement__));
@@ -90,13 +90,13 @@ class eight_schools_ncp_model : public prob_grad {
                                            stan::model::nil_index_list()),
             "theta_tilde");
       current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
-      target = target + normal(mu, 0, 5);
+      lp_accum__.add(normal(mu, 0, 5))
       current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
-      target = target + cauchy(tau, 0, 5);
+      lp_accum__.add(cauchy(tau, 0, 5))
       current_statement__ = "file eight_schools_ncp.stan, line 22, columns 2-29";
-      target = target + normal(theta_tilde, 0, 1);
+      lp_accum__.add(normal(theta_tilde, 0, 1))
       current_statement__ = "file eight_schools_ncp.stan, line 23, columns 2-27";
-      target = target + normal(y, theta, sigma);
+      lp_accum__.add(normal(y, theta, sigma))
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string(e) + e.what(), current_statement__));
