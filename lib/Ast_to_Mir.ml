@@ -19,7 +19,8 @@ let trans_op (op : Ast.operator) =
   | Ast.Greater -> Greater
   | Ast.Geq -> Geq
   | _ ->
-      raise_s [%message "Should never try to translate " (op : Ast.operator)]
+      let msg = " should have been transformed to a FunApp by this point." in
+      raise_s [%message (op : Ast.operator) msg]
 
 let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with
