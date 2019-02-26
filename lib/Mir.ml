@@ -11,12 +11,6 @@ open Core_kernel
        - mark FnApps as containing print or reject
 *)
 
-let _counter = ref 0
-
-let gensym () =
-  _counter := !_counter + 1 ;
-  sprintf "sym%d" !_counter
-
 type litType = Int | Real | Str
 
 and operator = Ast.operator
@@ -50,11 +44,13 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 type constraint_check =
   {ccfunname: string; ccvid: string; cctype: sizedtype; ccargs: expr list}
 
+and fun_arg_decl = (adtype * string * unsizedtype) list
+
 and 's statement =
   | Assignment of expr * expr
+  | TargetPE of expr
   | NRFunApp of string * expr list
   | Check of constraint_check
-  | MarkLocation of string
   | Break
   | Continue
   | Return of expr option
@@ -74,7 +70,7 @@ and 's statement =
   | FunDef of
       { fdrt: unsizedtype option
       ; fdname: string
-      ; fdargs: (adtype * string * unsizedtype) list
+      ; fdargs: fun_arg_decl
       ; fdbody: 's }
 [@@deriving sexp, hash]
 
@@ -119,4 +115,4 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | SList ls -> {stmt= SList (List.map ~f:(map_toplevel_stmts f) ls); sloc}
   | _ -> f {sloc; stmt}
 
-let tvdecl_to_decl {tvident; tvtype; _} = (tvident, tvtype)
+let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
