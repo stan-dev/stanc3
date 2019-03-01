@@ -1,6 +1,8 @@
 (** The API for a monotone framework *)
 open Core_kernel
 
+(** The API for a data flowgraph, needed for the mfp algorithm
+    in the monotone framework *)
 module type FLOWGRAPH = sig
   type labels
 
@@ -12,6 +14,8 @@ module type FLOWGRAPH = sig
   val sucessors : labels -> labels Set.Poly.t
 end
 
+(** The API for a complete (possibly non-distributive) lattice,
+    needed for the mfp algorithm in the monotone framework *)
 module type LATTICE = sig
   type properties
 
@@ -24,6 +28,10 @@ module type LATTICE = sig
   val lub : properties -> properties -> properties
 end
 
+(** The API for a transfer function, needed for the mfp algorithm
+    in the monotone framework.
+    This describes how output properties are computed from input
+    properties at a given node in the flow graph. *)
 module type TRANSFER_FUNCTION = sig
   type labels
   type properties
