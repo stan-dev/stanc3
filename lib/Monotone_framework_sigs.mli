@@ -2,12 +2,10 @@
 open Core_kernel
 
 module type FLOWGRAPH = sig
-  type t
-  type labels = t
+  type labels
 
-  val compare : labels -> labels -> int
-  val sexp_of_t : labels -> Base.Sexp.t
-  val hash : labels -> int
+  include Base__.Hashtbl_intf.Key with type t = labels
+
   val initials : labels Set.Poly.t
   val list_nodes : unit -> labels List.t
   val list_edges : unit -> (labels * labels) List.t
@@ -19,7 +17,7 @@ module type LATTICE = sig
   type properties
 
   val bottom : properties
-  val equal : properties -> properties -> bool
+  val leq : properties -> properties -> bool
 
   val extremal : properties
   (**  An extremal value, which might not be the top element *)
