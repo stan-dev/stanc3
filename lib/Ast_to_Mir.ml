@@ -3,11 +3,37 @@
 open Core_kernel
 open Mir
 
+let trans_op (op : Ast.operator) =
+  match op with
+  | Ast.Plus -> Plus
+  | Ast.Minus -> Minus
+  | Ast.Times -> Times
+  | Ast.Divide -> Divide
+  | Ast.Modulo -> Modulo
+  | Ast.Or -> Or
+  | Ast.And -> And
+  | Ast.Equals -> Equals
+  | Ast.NEquals -> NEquals
+  | Ast.Less -> Less
+  | Ast.Leq -> Leq
+  | Ast.Greater -> Greater
+  | Ast.Geq -> Geq
+  | _ ->
+      let msg = " should have been transformed to a FunApp by this point." in
+      raise_s [%message (op : Ast.operator) msg]
+
 let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with
   | Ast.TernaryIf (cond, ifb, elseb) ->
       TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
-  | Ast.BinOp (lhs, op, rhs) -> BinOp (trans_expr lhs, op, trans_expr rhs)
+  | Ast.BinOp (lhs, op, rhs) -> (
+      let lhs, rhs = (trans_expr lhs, trans_expr rhs) in
+      match op with
+      | Ast.LDivide | Ast.EltTimes | Ast.EltDivide | Ast.Pow | Ast.Not
+       |Ast.Transpose ->
+          let fnname = Sexp.to_string_hum [%sexp (op : Ast.operator)] in
+          FunApp (fnname, [lhs; rhs])
+      | _ -> BinOp (lhs, trans_op op, rhs) )
   | Ast.PrefixOp (op, e) | Ast.PostfixOp (e, op) ->
       FunApp (Operators.operator_name op, [trans_expr e])
   | Ast.Variable {name; _} -> Var name
@@ -40,16 +66,13 @@ and trans_idx = function
 let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf = FunApp ("negative_infinity", [])
 
-let targetpe e =
-  let t = Var "target" in
-  Assignment (t, BinOp (t, Plus, e))
+let lbind s =
+  match s.stmt with SList ls | Block ls -> ls | Skip -> [] | _ -> [s]
 
-let trans_loc = function
-  | {Ast.begin_loc; end_loc} ->
-      (* TODO: this is a stub; insert actual definition here. *)
-      sprintf "\"%s\", line %d-%d" begin_loc.filename begin_loc.line_num
-        end_loc.line_num
+let add_to_or_create_block source target =
+  {target with stmt= Block ({target with stmt= source} :: lbind target)}
 
+let trans_loc = Errors.string_of_location_span
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
 let no_loc = ""
 let with_no_loc s = {stmt= s; sloc= no_loc}
@@ -57,18 +80,28 @@ let trans_trans = Ast.map_transformation trans_expr
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
-  let add_inf = targetpe neg_inf and obs = trans_expr ast_obs in
+  let add_inf = TargetPE neg_inf and obs = trans_expr ast_obs in
   let trunc cond x y =
     bind_loc x.Ast.expr_typed_loc
       (IfElse
          (BinOp (obs, cond, trans_expr x), bind_loc x.expr_typed_loc add_inf, y))
   in
   match t with
-  | Ast.NoTruncate -> None
-  | Ast.TruncateUpFrom lb -> Some (trunc Less lb None)
-  | Ast.TruncateDownFrom ub -> Some (trunc Greater ub None)
+  | Ast.NoTruncate -> []
+  | Ast.TruncateUpFrom lb -> [trunc Less lb None]
+  | Ast.TruncateDownFrom ub -> [trunc Greater ub None]
   | Ast.TruncateBetween (lb, ub) ->
-      Some (trunc Less lb (Some (trunc Greater ub None)))
+      [trunc Less lb (Some (trunc Greater ub None))]
+
+let unquote s =
+  if s.[0] = '"' && s.[String.length s - 1] = '"' then
+    String.drop_suffix (String.drop_prefix s 1) 1
+  else s
+
+let trans_printable (p : Ast.typed_expression Ast.printable) =
+  match p with
+  | Ast.PString s -> Lit (Str, unquote s)
+  | Ast.PExpr e -> trans_expr e
 
 let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
   let or_skip = Option.value ~default:Skip in
@@ -85,26 +118,22 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         let rhs =
           match assign_op with
           | Ast.Assign | Ast.ArrowAssign -> rhs
-          | Ast.OperatorAssign op ->
-              FunApp (Operators.operator_name op, [assignee; rhs])
+          | Ast.OperatorAssign op -> BinOp (assignee, trans_op op, rhs)
         in
         Assignment (assignee, rhs)
     | Ast.NRFunApp ({name; _}, args) ->
         NRFunApp (name, List.map ~f:trans_expr args)
-    | Ast.IncrementLogProb e | Ast.TargetPE e -> targetpe (trans_expr e)
+    | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e)
     | Ast.Tilde {arg; distribution; args; truncation} ->
         let add_dist =
           (* XXX distribution name suffix? *)
           (* XXX Reminder to differentiate between tilde, which drops constants, and
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
-          targetpe
+          TargetPE
             (FunApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
         in
-        Block
-          [ Option.value
-              ~default:(bind_loc stmt_typed_loc Skip)
-              (truncate_dist arg truncation)
-          ; bind_loc stmt_typed_loc add_dist ]
+        SList
+          (truncate_dist arg truncation @ [bind_loc stmt_typed_loc add_dist])
     | Ast.Print ps -> NRFunApp ("print", List.map ~f:trans_printable ps)
     | Ast.Reject ps -> NRFunApp ("reject", List.map ~f:trans_printable ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
@@ -117,11 +146,18 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           ; upper= trans_expr upper_bound
           ; body= trans_stmt loop_body }
     | Ast.ForEach (loopvar, iteratee, body) ->
+        let iteratee = trans_expr iteratee
+        and indexing_var = Var (Util.gensym ())
+        and body = trans_stmt body in
+        let assign_loopvar =
+          Assignment
+            (Var loopvar.name, Indexed (iteratee, [Single indexing_var]))
+        in
         For
-          { loopvar= Var loopvar.Ast.name
+          { loopvar= indexing_var
           ; lower= Lit (Int, "0")
-          ; upper= FunApp ("length", [trans_expr iteratee])
-          ; body= trans_stmt body }
+          ; upper= FunApp ("length", [iteratee])
+          ; body= add_to_or_create_block assign_loopvar body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef
           { fdrt=
@@ -133,18 +169,16 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           ; fdbody= trans_stmt body }
     | Ast.VarDecl
         {sizedtype; transformation; identifier; initial_value; is_global} ->
-        (* Should have already taken care of global and trans stuff. *)
+        (* Should have already taken care of global and transformation-related stuff
+          in other passes over this AST.*)
         ignore (transformation, is_global) ;
         let name = identifier.name in
-        (* XXX Deal with global vs unglobal *)
-        (* XXX Should also generate the statements that will read the data in
-         and validate it... Then a CSE pass will automatically fulfill one of our
-         Stanc3 promises to do data checking only once and at the appropriate level
-      *)
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
-                 { decl_adtype= AutoDiffable
+                 { decl_adtype=
+                     AutoDiffable
+                     (* XXX Shouldn't be autodiffable in tdata or gen quant *)
                  ; decl_id= name
                  ; decl_type= trans_sizedtype sizedtype }
              ; Option.map
@@ -159,9 +193,6 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.Skip -> Skip
   in
   bind_loc stmt_typed_loc s
-
-and trans_printable (p : Ast.typed_expression Ast.printable) =
-  match p with Ast.PString s -> Lit (Str, s) | Ast.PExpr e -> trans_expr e
 
 (* XXX Write a function that generates MIR to execute once on each thing in some nested
    arrays (but not elements within a matrix or vector) *)
@@ -256,6 +287,9 @@ let pull_tvdecls = function
 
 *)
 
+let merge_maps maps =
+  maps |> List.map ~f:Map.Poly.to_alist |> List.concat |> Map.Poly.of_alist_exn
+
 (*
    There are at least three places where we currently generate redundant code:
    - checks and validation of data and bounds
@@ -281,16 +315,12 @@ let trans_prog filename
       | None | Some [] -> Skip
       | Some lst -> SList (List.map ~f:trans_stmt lst) )
   in
-  let lbind s = match s.stmt with SList ls -> ls | Skip -> [] | _ -> [s] in
   let coalesce stmts =
     let flattened = List.(concat (map ~f:lbind stmts)) in
-    with_no_loc (match flattened with [] -> Skip | _ :: _ -> SList flattened)
+    with_no_loc (SList flattened)
   in
   let pull_tvdecls_multi blocks =
-    let merge_maps maps =
-      List.map ~f:Map.Poly.to_alist maps
-      |> List.concat |> Map.Poly.of_alist_exn
-    and tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
+    let tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
     (merge_maps tvtables, coalesce (List.concat stmts))
   in
   let datavars, datachecks = pull_tvdecls datablock in
