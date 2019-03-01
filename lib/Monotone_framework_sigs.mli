@@ -7,9 +7,8 @@ module type FLOWGRAPH = sig
   include Base__.Hashtbl_intf.Key with type t = labels
 
   val initials : labels Set.Poly.t
-  val list_nodes : unit -> labels List.t
-  val list_edges : unit -> (labels * labels) List.t
-  val predecessors : labels -> labels Set.Poly.t
+  val nodes : labels Set.Poly.t
+  val edges : (labels * labels) Set.Poly.t
   val sucessors : labels -> labels Set.Poly.t
 end
 
@@ -19,7 +18,7 @@ module type LATTICE = sig
   val bottom : properties
   val leq : properties -> properties -> bool
 
-  val extremal : properties
+  val extreme : properties
   (**  An extremal value, which might not be the top element *)
 
   val lub : properties -> properties -> properties
