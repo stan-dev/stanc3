@@ -8,11 +8,11 @@ open Monotone_framework_sigs
                                         reaching def example
          write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
                                          inverse flow graph of flow graph
-         write instance of TRANSFER_FUNCTION for available expressions
+         write instance of TRANSFER_FUNCTION for available Expressions
                                                  reaching definitions
-                                                 live variables
+                                                 live Variables
                                                  constant propagation
-                                                 very busy expressions *)
+                                                 very busy Expressions *)
 
 module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   type properties = S.vals Set.Poly.t
@@ -48,9 +48,9 @@ module New_bot (L : LATTICE) : LATTICE = struct
   let extreme = Some L.extreme
 end
 
-module Dual_function_lattice (DOM : PREPOWERSET) (CODOM : PREFLATSET) :
+module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : PREFLATSET) :
   LATTICE = struct
-  type properties = (DOM.vals, CODOM.vals) Map.Poly.t
+  type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
   let bottom = Errors.fatal_error ()
 
@@ -59,7 +59,7 @@ module Dual_function_lattice (DOM : PREPOWERSET) (CODOM : PREFLATSET) :
     Map.filteri ~f s1
 
   let leq s1 s2 =
-    Set.for_all DOM.extreme ~f:(fun k ->
+    Set.for_all Dom.extreme ~f:(fun k ->
         match (Map.find s1 k, Map.find s2 k) with
         | Some x, Some y -> x = y
         | Some _, None | None, None -> true
@@ -70,13 +70,34 @@ end
 
 (* TODO: set extreme below in these two prepowersets*)
 module Constant_propagation_lattice
-    (VARIABLES : PREPOWERSET)
-    (VALUES : PREFLATSET) : LATTICE =
-  New_bot (Dual_function_lattice (VARIABLES) (VALUES))
+    (Variables : PREPOWERSET)
+    (Values : PREFLATSET) : LATTICE =
+  New_bot (Dual_partial_function_lattice (Variables) (Values))
 
-module Available_expressions_lattice
-(EXPRESSIONS : PREPOWERSET) : LATTICE =
-Dual_powerset_lattice (EXPRESSIONS)
+(* Note: this is also the lattice for a very busy expressions analysis
+   (the only difference is that that analysis is performed on the reverse
+   flow graph instead) *)
+module Available_expressions_lattice (Expressions : PREFLATSET) : LATTICE =
+Dual_powerset_lattice (struct
+  type vals = Expressions.vals
+
+  let extreme = Set.Poly.empty
+end)
+
+module Live_variables_lattice (Variables : PREFLATSET) : LATTICE =
+Powerset_lattice (struct
+  type vals = Variables.vals
+
+  let extreme = Set.Poly.empty
+end)
+
+module Reaching_definitions_lattice
+    (Variables : PREPOWERSET)
+    (Labels : PREFLATSET) : LATTICE = Powerset_lattice (struct
+  type vals = Variables.vals * Labels.vals option
+
+  let extreme = Set.Poly.map ~f:(fun x -> (x, None)) Variables.extreme
+end)
 
 module Monotone_framework : MONOTONE_FRAMEWORK =
 functor
