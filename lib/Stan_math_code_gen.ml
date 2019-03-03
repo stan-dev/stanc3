@@ -111,33 +111,29 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf "@,@;<1 2>@[<v>%a@]@]" pp_body body
 
+(* XXX this is so bad, someone please rethink these concepts for me! I suspect
+   the entire function is premised on a bad level of abstraction.
+*)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let mkloopvar d = sprintf "i_%d__" d in
+  let size = FunApp (name ^ ".size", []) in
   let loopvar = mkloopvar d in
   match st with
   | Ast.SInt | SReal -> pf ppf "%a" pp_code_per_element name
-  | SVector dim | SRowVector dim ->
-      pp_for_loop ppf
-        (loopvar, zero, dim, pp_code_per_element, sprintf "%s[%s]" name loopvar)
-  | SMatrix (dim1, dim2) ->
-      let loopvar2 = mkloopvar (d + 1) in
+  | SVector _ | SRowVector _ | SMatrix _ ->
       pp_for_loop ppf
         ( loopvar
         , zero
-        , dim1
-        , pp_for_loop
-        , ( loopvar2
-          , zero
-          , dim2
-          , pp_code_per_element
-          , sprintf "%s(%s, %s)" name loopvar loopvar2 ) )
-  | SArray (st, dim) ->
+        , size
+        , pp_code_per_element
+        , sprintf "%s(%s)" name loopvar )
+  | SArray (st, _) ->
       pp_for_loop ppf
         ( loopvar
         , zero
-        , dim
+        , size
         , pp_run_code_per_el ~depth:(d + 1) pp_code_per_element
-        , (sprintf "%s[%s]" name loopvar, st) )
+        , (strf "%s[%s]" name loopvar, st) )
 
 let rec integer_el_type = function
   | Ast.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
@@ -356,20 +352,18 @@ let%expect_test "run code per element" =
   |> print_endline ;
   [%expect
     {|
-    for (size_t i_0__ = 0; i_0__ < W; i_0__++)
-      for (size_t i_1__ = 0; i_1__ < X; i_1__++)
-        for (size_t i_2__ = 0; i_2__ < Y; i_2__++)
-          for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
-            {
-              current_statement__ = "";
-              dubvec[i_0__][i_1__](i_2__, i_3__) =
-                  stan::model::rvalue(vals_r__,
-                                      stan::model::cons_list(stan::model::index_uni(pos__++),
-                                      stan::model::nil_index_list()),
-                  "vals_r__");
-              current_statement__ = "";
-              stan_print(pstream__, dubvec[i_0__][i_1__](i_2__, i_3__));
-            } |}]
+    for (size_t i_0__ = 0; i_0__ < dubvec.size(); i_0__++)
+      for (size_t i_1__ = 0; i_1__ < dubvec[i_0__].size(); i_1__++)
+        for (size_t i_2__ = 0; i_2__ < dubvec[i_0__][i_1__].size(); i_2__++)
+          {
+            current_statement__ = "";
+            dubvec[i_0__][i_1__](i_2__) =
+                stan::model::rvalue(vals_r__,
+                                    stan::model::cons_list(stan::model::index_uni(pos__++),
+                                    stan::model::nil_index_list()), "vals_r__");
+            current_statement__ = "";
+            stan_print(pstream__, dubvec[i_0__][i_1__](i_2__));
+          } |}]
 
 let%expect_test "decl" =
   Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= SInt}
@@ -464,10 +458,10 @@ let pp_read_data ppf (decl_id, st, loc) =
   *)
   pp_location ppf loc ;
   let vals = var_context_container st ^ "__" in
-  let pp_read ppf loopvar = pf ppf "%s = %s;" decl_id loopvar in
+  let pp_read ppf decl_id = pf ppf "%s = %s;" decl_id vals in
   pf ppf "%s = context__.%s(\"%s\");@;" vals vals decl_id ;
   pp_set_size ppf decl_id st ;
-  pp_run_code_per_el pp_read ppf (vals, st) ;
+  pp_run_code_per_el pp_read ppf (decl_id, st) ;
   pf ppf "@;"
 
 let%expect_test "read int[N] y" =
@@ -478,7 +472,7 @@ let%expect_test "read int[N] y" =
     current_statement__ = "";
     vals_i__ = context__.vals_i__("y");
     y = std::vector<int>(N, 0);
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i__[i_0__]; |}]
+    for (size_t i_0__ = 0; i_0__ < y.size(); i_0__++) y[i_0__] = vals_i__; |}]
 
 let data_decls_of_p {datavars; _} =
   Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl

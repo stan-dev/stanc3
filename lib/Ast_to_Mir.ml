@@ -313,7 +313,7 @@ let trans_prog filename
     with_no_loc
       ( match lst_option with
       | None | Some [] -> Skip
-      | Some lst -> SList (List.map ~f:trans_stmt lst) )
+      | Some lst -> Block (List.map ~f:trans_stmt lst) )
   in
   let coalesce stmts =
     let flattened = List.(concat (map ~f:lbind stmts)) in
