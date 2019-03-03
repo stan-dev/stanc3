@@ -43,10 +43,12 @@ class eight_schools_ncp_model : public prob_grad {
       
       current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
       vals_r__ = context__.vals_r__("sigma");
+      sigma = std::vector<double>(J, 0);
       for (size_t i_0__ = 0; i_0__ < J; i_0__++) sigma = vals_r__[i_0__];
       
       current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
       vals_r__ = context__.vals_r__("y");
+      y = std::vector<double>(J, 0);
       for (size_t i_0__ = 0; i_0__ < J; i_0__++) y = vals_r__[i_0__];
       current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
       check_greater_or_equal(function__, J, 0);

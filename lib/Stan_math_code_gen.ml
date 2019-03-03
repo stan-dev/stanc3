@@ -437,6 +437,19 @@ let rec pp_zeroing_ctor_call ppf st =
 let var_context_container st =
   match basetype (Ast.remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
+let pp_set_size ppf decl_id st =
+  let rec pp_size_ctor ppf st =
+    let pp_st ppf st = pf ppf "%a" pp_prim_stantype (Ast.remove_size st) in
+    match st with
+    | Ast.SInt | SReal -> pf ppf "0"
+    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
+    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
+  in
+  match st with
+  | Ast.SInt | SReal -> ()
+  | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
+
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
@@ -453,6 +466,7 @@ let pp_read_data ppf (decl_id, st, loc) =
   let vals = var_context_container st ^ "__" in
   let pp_read ppf loopvar = pf ppf "%s = %s;" decl_id loopvar in
   pf ppf "%s = context__.%s(\"%s\");@;" vals vals decl_id ;
+  pp_set_size ppf decl_id st ;
   pp_run_code_per_el pp_read ppf (vals, st) ;
   pf ppf "@;"
 
@@ -463,6 +477,7 @@ let%expect_test "read int[N] y" =
     {|
     current_statement__ = "";
     vals_i__ = context__.vals_i__("y");
+    y = std::vector<int>(N, 0);
     for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i__[i_0__]; |}]
 
 let data_decls_of_p {datavars; _} =
