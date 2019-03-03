@@ -3,16 +3,13 @@
 open Core_kernel
 open Monotone_framework_sigs
 
-(* TODO: write instances of LATTICE for 
-                                        function type
-                                        reaching def example
-         write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
+(* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
                                          inverse flow graph of flow graph
-         write instance of TRANSFER_FUNCTION for available Expressions
+         write instance of TRANSFER_FUNCTION for available expressions
                                                  reaching definitions
-                                                 live Variables
+                                                 live variables
                                                  constant propagation
-                                                 very busy Expressions *)
+                                                 very busy expressions *)
 
 module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   type properties = S.vals Set.Poly.t
