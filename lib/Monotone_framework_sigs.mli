@@ -14,6 +14,18 @@ module type FLOWGRAPH = sig
   val sucessors : labels -> labels Set.Poly.t
 end
 
+module type PREFLATSET = sig
+  type vals
+
+  val ( = ) : vals -> vals -> bool
+end
+
+module type PREPOWERSET = sig
+  type vals
+
+  val extreme : vals Set.Poly.t
+end
+
 (** The API for a complete (possibly non-distributive) lattice,
     needed for the mfp algorithm in the monotone framework *)
 module type LATTICE = sig

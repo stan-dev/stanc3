@@ -3,12 +3,8 @@
 open Core_kernel
 open Monotone_framework_sigs
 
-
-(* TODO: write instances of LATTICE for powerset
-                                        dual powerset
+(* TODO: write instances of LATTICE for 
                                         function type
-                                        new top element
-                                        new bottom element
                                         reaching def example
          write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
                                          inverse flow graph of flow graph
@@ -17,6 +13,70 @@ open Monotone_framework_sigs
                                                  live variables
                                                  constant propagation
                                                  very busy expressions *)
+
+module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
+  type properties = S.vals Set.Poly.t
+
+  let bottom = Set.Poly.empty
+  let lub s1 s2 = Set.Poly.union s1 s2
+  let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
+  let extreme = S.extreme
+end
+
+module Dual_powerset_lattice (S : PREPOWERSET) : LATTICE = struct
+  type properties = S.vals Set.Poly.t
+
+  let bottom = Set.Poly.empty
+  let lub s1 s2 = Set.Poly.inter s1 s2
+  let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
+  let extreme = S.extreme
+end
+
+module New_bot (L : LATTICE) : LATTICE = struct
+  type properties = L.properties option
+
+  let bottom = None
+
+  let lub = function
+    | Some s1 -> ( function Some s2 -> Some (L.lub s1 s2) | None -> Some s1 )
+    | None -> fun x -> x
+
+  let leq = function
+    | Some s1 -> ( function Some s2 -> L.leq s1 s2 | None -> false )
+    | None -> fun _ -> true
+
+  let extreme = Some L.extreme
+end
+
+module Dual_function_lattice (DOM : PREPOWERSET) (CODOM : PREFLATSET) :
+  LATTICE = struct
+  type properties = (DOM.vals, CODOM.vals) Map.Poly.t
+
+  let bottom = Errors.fatal_error ()
+
+  let lub s1 s2 =
+    let f ~key ~data = Map.find s2 key = Some data in
+    Map.filteri ~f s1
+
+  let leq s1 s2 =
+    Set.for_all DOM.extreme ~f:(fun k ->
+        match (Map.find s1 k, Map.find s2 k) with
+        | Some x, Some y -> x = y
+        | Some _, None | None, None -> true
+        | None, Some _ -> false )
+
+  let extreme = Map.Poly.empty
+end
+
+(* TODO: set extreme below in these two prepowersets*)
+module Constant_propagation_lattice
+    (VARIABLES : PREPOWERSET)
+    (VALUES : PREFLATSET) : LATTICE =
+  New_bot (Dual_function_lattice (VARIABLES) (VALUES))
+
+module Available_expressions_lattice
+(EXPRESSIONS : PREPOWERSET) : LATTICE =
+Dual_powerset_lattice (EXPRESSIONS)
 
 module Monotone_framework : MONOTONE_FRAMEWORK =
 functor
@@ -29,7 +89,7 @@ functor
   ->
   struct
     let mfp () =
-      (* STEP 1 *)
+      (* STEP 1: initialize data structures *)
       let workstack = Stack.of_list (Set.to_list F.edges) in
       let analysis_in = Hashtbl.create (module F) in
       let _ =
@@ -39,7 +99,7 @@ functor
               ~data:(if Set.mem F.initials l then L.extreme else L.bottom) )
           F.nodes
       in
-      (* STEP 2 *)
+      (* STEP 2: iterate *)
       let _ =
         while Stack.length workstack <> 0 do
           let l, l' = Stack.pop_exn workstack in
@@ -56,7 +116,7 @@ functor
               Stack.push workstack (l', l'') )
         done
       in
-      (* STEP 3 *)
+      (* STEP 3: present final results *)
       let analysis_out = Hashtbl.create (module F) in
       let _ =
         Set.iter
