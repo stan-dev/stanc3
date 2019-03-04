@@ -1,4 +1,5 @@
-(** The API for a monotone framework *)
+(** The API for a monotone framework, as described in Nielson, Nielson, and Hankin.
+    This gives a modular way of implementing many static analyses. *)
 open Core_kernel
 
 (** The API for a data flowgraph, needed for the mfp algorithm
@@ -14,12 +15,14 @@ module type FLOWGRAPH = sig
   val sucessors : labels -> labels Set.Poly.t
 end
 
+(** The minimal data we need to use a type in forming a lattice of various kinds *)
 module type PREFLATSET = sig
   type vals
 
   val ( = ) : vals -> vals -> bool
 end
 
+(** The data we need to form a powerset lattice *)
 module type PREPOWERSET = sig
   type vals
 
@@ -51,6 +54,12 @@ module type TRANSFER_FUNCTION = sig
   val transfer_function : labels -> properties -> properties
 end
 
+(** The API for a monotone framework. mfp computes the minimal fixed
+    point of the equations/inequalities defined between property lattice
+    elements at the entry and exit of different flowgraph nodes, where these
+    equations/inequalities are generated from the transfer function.
+    Returns a hash table of the (input_properties, output_properties) for
+    each node l in the flow graph. *)
 module type MONOTONE_FRAMEWORK = functor
   (F : FLOWGRAPH)
   (L : LATTICE)

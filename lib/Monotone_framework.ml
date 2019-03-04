@@ -65,7 +65,6 @@ module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : PREFLATSET) :
   let extreme = Map.Poly.empty
 end
 
-(* TODO: set extreme below in these two prepowersets*)
 module Constant_propagation_lattice
     (Variables : PREPOWERSET)
     (Values : PREFLATSET) : LATTICE =
