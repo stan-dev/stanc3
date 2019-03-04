@@ -111,22 +111,17 @@ functor
       and type properties = L.properties)
   ->
   struct
-    let mfp ~reverse =
-      (* STEP 0: set up whether to perform a forward or reverse analysis *)
-      let edges, initials, sucessors =
-        if reverse then (F.rev_edges (), F.finals, F.predecessors)
-        else (F.edges (), F.initials, F.sucessors)
-      in
+    let mfp () =
       (* STEP 1: initialize data structures *)
       (* TODO: does the order here affect the efficiency of the algorithm much? *)
-      let workstack = Stack.of_list (Set.to_list edges) in
+      let workstack = Stack.of_list (Set.to_list (F.edges ())) in
       let analysis_in = Hashtbl.create (module F) in
       let _ =
         Set.iter
           ~f:(fun l ->
             Hashtbl.add_exn analysis_in ~key:l
-              ~data:(if Set.mem initials l then L.initial else L.bottom) )
-          F.nodes
+              ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
+          (F.nodes ())
       in
       (* STEP 2: iterate *)
       let _ =
@@ -141,7 +136,8 @@ functor
               Hashtbl.set analysis_in ~key:l'
                 ~data:(L.lub old_analysis_out_l' new_analysis_out_l')
           in
-          Set.iter (sucessors l') ~f:(fun l'' -> Stack.push workstack (l', l''))
+          Set.iter (F.sucessors l') ~f:(fun l'' ->
+              Stack.push workstack (l', l'') )
         done
       in
       (* STEP 3: present final results *)
@@ -151,7 +147,7 @@ functor
           ~f:(fun l ->
             Hashtbl.add_exn analysis_in ~key:l
               ~data:(T.transfer_function l (Hashtbl.find_exn analysis_in l)) )
-          F.nodes
+          (F.nodes ())
       in
       (analysis_in, analysis_out)
   end
