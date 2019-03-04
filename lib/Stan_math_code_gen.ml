@@ -111,29 +111,23 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf "@,@;<1 2>@[<v>%a@]@]" pp_body body
 
-(* XXX this is so bad, someone please rethink these concepts for me! I suspect
+(* XXX this is so bad, someone please rethink these concepts for us! I suspect
    the entire function is premised on a bad level of abstraction.
 *)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
-  let mkloopvar d = sprintf "i_%d__" d in
   let size = FunApp (name ^ ".size", []) in
-  let loopvar = mkloopvar d in
+  let loopvar = sprintf "i_%d__" d in
+  let loop_0_to_size per_ele new_vident =
+    pp_for_loop ppf (loopvar, zero, size, per_ele, new_vident)
+  in
   match st with
   | Ast.SInt | SReal -> pf ppf "%a" pp_code_per_element name
   | SVector _ | SRowVector _ | SMatrix _ ->
-      pp_for_loop ppf
-        ( loopvar
-        , zero
-        , size
-        , pp_code_per_element
-        , sprintf "%s(%s)" name loopvar )
+      loop_0_to_size pp_code_per_element (strf "%s(%s)" name loopvar)
   | SArray (st, _) ->
-      pp_for_loop ppf
-        ( loopvar
-        , zero
-        , size
-        , pp_run_code_per_el ~depth:(d + 1) pp_code_per_element
-        , (strf "%s[%s]" name loopvar, st) )
+      loop_0_to_size
+        (pp_run_code_per_el ~depth:(d + 1) pp_code_per_element)
+        (strf "%s[%s]" name loopvar, st)
 
 let rec integer_el_type = function
   | Ast.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
@@ -201,13 +195,15 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
 
 let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
   match cctype with
-  | Ast.SArray (t, dim) ->
+  | Ast.SArray (t, _) ->
       let loopvar, reset_sym = Util.gensym_enter () in
       let new_ident = strf "%s[%s]" ident loopvar in
+      let size = FunApp (ident ^ ".size", []) in
       let new_pp_body ppf ident =
-        pp_for_loop ppf (loopvar, zero, dim, pp_body, ident)
+        pp_for_each_in_array ppf (t, pp_body, ident)
       in
-      pp_for_each_in_array ppf (t, new_pp_body, new_ident) ;
+      pp_for_loop ppf
+        (loopvar, zero, size, pp_for_each_in_array, (t, new_pp_body, new_ident)) ;
       reset_sym ()
   | _ -> pp_body ppf ident
 
@@ -223,9 +219,10 @@ let%expect_test "for each in array" =
   |> print_endline ;
   [%expect
     {|
-    for (size_t sym2__ = 0; sym2__ < z; sym2__++)
-      for (size_t sym1__ = 0; sym1__ < y; sym1__++)
-        check_whatever(alpha[sym1__][sym2__]); |}]
+    for (size_t sym1__ = 0; sym1__ < alpha.size(); sym1__++)
+      for (size_t sym2__ = 0; sym2__ < alpha[sym1__].size(); sym2__++)
+        for (size_t sym3__ = 0; sym3__ < alpha[sym1__][sym2__].size(); sym3__++)
+          check_whatever(alpha[sym1__][sym2__][sym3__]); |}]
 
 let trans_math_fn fname =
   match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])
@@ -339,31 +336,6 @@ let%expect_test "if" =
       current_statement__ = "";
       stan_print(pstream__, y);
     } |}]
-
-let%expect_test "run code per element" =
-  let assign ppf x =
-    [ Assignment (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
-    ; NRFunApp ("print", [Var x]) ]
-    |> List.map ~f:with_no_loc |> Block |> with_no_loc |> pp_statement ppf
-  in
-  strf "@[<v>%a@]"
-    (pp_run_code_per_el assign)
-    ("dubvec", SArray (SArray (SMatrix (Var "Y", Var "Z"), Var "X"), Var "W"))
-  |> print_endline ;
-  [%expect
-    {|
-    for (size_t i_0__ = 0; i_0__ < dubvec.size(); i_0__++)
-      for (size_t i_1__ = 0; i_1__ < dubvec[i_0__].size(); i_1__++)
-        for (size_t i_2__ = 0; i_2__ < dubvec[i_0__][i_1__].size(); i_2__++)
-          {
-            current_statement__ = "";
-            dubvec[i_0__][i_1__](i_2__) =
-                stan::model::rvalue(vals_r__,
-                                    stan::model::cons_list(stan::model::index_uni(pos__++),
-                                    stan::model::nil_index_list()), "vals_r__");
-            current_statement__ = "";
-            stan_print(pstream__, dubvec[i_0__][i_1__](i_2__));
-          } |}]
 
 let%expect_test "decl" =
   Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= SInt}

@@ -54,7 +54,7 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
       check_greater_or_equal(function__, J, 0);
       current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-      for (size_t sym1__ = 0; sym1__ < J; sym1__++)
+      for (size_t sym1__ = 0; sym1__ < sigma.size(); sym1__++)
         check_greater_or_equal(function__, sigma[sym1__], 0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
