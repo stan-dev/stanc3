@@ -70,7 +70,8 @@ module Constant_propagation_lattice
     (Values : PREFLATSET) : LATTICE =
   New_bot (Dual_partial_function_lattice (Variables) (Values))
 
-(* Note: this is also the lattice for a very busy expressions analysis
+(* Note: this is also the lattice for a very busy expressions (anticipated
+   expressions) analysis
    (the only difference is that that analysis is performed on the reverse
    flow graph instead) *)
 module Available_expressions_lattice (Expressions : PREFLATSET) : LATTICE =
@@ -80,6 +81,8 @@ Dual_powerset_lattice (struct
   let extreme = Set.Poly.empty
 end)
 
+(* Note: this is also the lattice for a used expression analysis (but with
+   expressions rather than variables, also run backwards) *)
 module Live_variables_lattice (Variables : PREFLATSET) : LATTICE =
 Powerset_lattice (struct
   type vals = Variables.vals
