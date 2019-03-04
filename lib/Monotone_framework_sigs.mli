@@ -31,6 +31,7 @@ module type PREPOWERSET = sig
   type vals
 
   val initial : vals Set.Poly.t
+  val total : vals Set.Poly.t
 end
 
 (** The API for a complete (possibly non-distributive) lattice,

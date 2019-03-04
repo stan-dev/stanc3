@@ -23,7 +23,7 @@ end
 module Dual_powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   type properties = S.vals Set.Poly.t
 
-  let bottom = Set.Poly.empty
+  let bottom = S.total
   let lub s1 s2 = Set.Poly.inter s1 s2
   let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
   let initial = S.initial
@@ -74,11 +74,12 @@ module Constant_propagation_lattice
    expressions) analysis
    (the only difference is that that analysis is performed on the reverse
    flow graph instead) *)
-module Available_expressions_lattice (Expressions : PREFLATSET) : LATTICE =
+module Available_expressions_lattice (Expressions : PREPOWERSET) : LATTICE =
 Dual_powerset_lattice (struct
   type vals = Expressions.vals
 
   let initial = Set.Poly.empty
+  let total = Expressions.total
 end)
 
 (* Note: this is also the lattice for a used expression analysis (but with
@@ -88,6 +89,7 @@ Powerset_lattice (struct
   type vals = Variables.vals
 
   let initial = Set.Poly.empty
+  let total = Errors.fatal_error ()
 end)
 
 module Reaching_definitions_lattice
@@ -96,6 +98,7 @@ module Reaching_definitions_lattice
   type vals = Variables.vals * Labels.vals option
 
   let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
+  let total = Errors.fatal_error ()
 end)
 
 module Monotone_framework : MONOTONE_FRAMEWORK =
