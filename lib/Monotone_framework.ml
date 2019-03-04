@@ -113,15 +113,20 @@ functor
   struct
     let mfp () =
       (* STEP 1: initialize data structures *)
-      (* TODO: does the order here affect the efficiency of the algorithm much? *)
-      let workstack = Stack.of_list (Set.to_list (F.edges ())) in
+      let workstack = Stack.create () in
+      (* TODO: does the order matter a lot for efficiency here? *)
+      let _ =
+        Map.iteri F.successors ~f:(fun ~key ~data ->
+            Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) )
+      in
       let analysis_in = Hashtbl.create (module F) in
+      let nodes = Set.union (Set.of_map_keys F.successors) F.initials in
       let _ =
         Set.iter
           ~f:(fun l ->
             Hashtbl.add_exn analysis_in ~key:l
               ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
-          (F.nodes ())
+          nodes
       in
       (* STEP 2: iterate *)
       let _ =
@@ -136,7 +141,7 @@ functor
               Hashtbl.set analysis_in ~key:l'
                 ~data:(L.lub old_analysis_out_l' new_analysis_out_l')
           in
-          Set.iter (F.sucessors l') ~f:(fun l'' ->
+          Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
               Stack.push workstack (l', l'') )
         done
       in
@@ -147,7 +152,7 @@ functor
           ~f:(fun l ->
             Hashtbl.add_exn analysis_in ~key:l
               ~data:(T.transfer_function l (Hashtbl.find_exn analysis_in l)) )
-          (F.nodes ())
+          nodes
       in
       (analysis_in, analysis_out)
   end

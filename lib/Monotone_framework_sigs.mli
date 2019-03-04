@@ -11,9 +11,7 @@ module type FLOWGRAPH = sig
   include Base__.Hashtbl_intf.Key with type t = labels
 
   val initials : labels Set.Poly.t
-  val nodes : unit -> labels Set.Poly.t
-  val edges : unit -> (labels * labels) Set.Poly.t
-  val sucessors : labels -> labels Set.Poly.t
+  val successors : (labels, labels Set.Poly.t) Map.Poly.t
 end
 
 (** The minimal data we need to use a type in forming a lattice of various kinds *)
