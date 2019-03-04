@@ -1,4 +1,5 @@
-(** The API for a monotone framework, as described in Nielson, Nielson, and Hankin.
+(** The API for a monotone framework, as described in 2.3-2.4 of
+    Nielson, Nielson, and Hankin or 9.3 of Aho et al..
     This gives a modular way of implementing many static analyses. *)
 open Core_kernel
 
@@ -10,9 +11,12 @@ module type FLOWGRAPH = sig
   include Base__.Hashtbl_intf.Key with type t = labels
 
   val initials : labels Set.Poly.t
+  val finals : labels Set.Poly.t
   val nodes : labels Set.Poly.t
-  val edges : (labels * labels) Set.Poly.t
+  val edges : unit -> (labels * labels) Set.Poly.t
+  val rev_edges : unit -> (labels * labels) Set.Poly.t
   val sucessors : labels -> labels Set.Poly.t
+  val predecessors : labels -> labels Set.Poly.t
 end
 
 (** The minimal data we need to use a type in forming a lattice of various kinds *)
@@ -59,7 +63,9 @@ end
     elements at the entry and exit of different flowgraph nodes, where these
     equations/inequalities are generated from the transfer function.
     Returns a hash table of the (input_properties, output_properties) for
-    each node l in the flow graph. *)
+    each node l in the flow graph.
+    A boolean reverse determines whether the analysis should be reverse or
+    forward. *)
 module type MONOTONE_FRAMEWORK = functor
   (F : FLOWGRAPH)
   (L : LATTICE)
@@ -69,6 +75,6 @@ module type MONOTONE_FRAMEWORK = functor
       and type properties = L.properties)
   -> sig
   val mfp :
-       unit
+       reverse:bool
     -> (T.labels, T.properties) Hashtbl.t * (T.labels, T.properties) Hashtbl.t
 end
