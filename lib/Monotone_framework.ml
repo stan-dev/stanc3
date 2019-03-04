@@ -17,7 +17,7 @@ module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   let bottom = Set.Poly.empty
   let lub s1 s2 = Set.Poly.union s1 s2
   let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
-  let extreme = S.extreme
+  let initial = S.initial
 end
 
 module Dual_powerset_lattice (S : PREPOWERSET) : LATTICE = struct
@@ -26,7 +26,7 @@ module Dual_powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   let bottom = Set.Poly.empty
   let lub s1 s2 = Set.Poly.inter s1 s2
   let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
-  let extreme = S.extreme
+  let initial = S.initial
 end
 
 module New_bot (L : LATTICE) : LATTICE = struct
@@ -42,7 +42,7 @@ module New_bot (L : LATTICE) : LATTICE = struct
     | Some s1 -> ( function Some s2 -> L.leq s1 s2 | None -> false )
     | None -> fun _ -> true
 
-  let extreme = Some L.extreme
+  let initial = Some L.initial
 end
 
 module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : PREFLATSET) :
@@ -56,13 +56,13 @@ module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : PREFLATSET) :
     Map.filteri ~f s1
 
   let leq s1 s2 =
-    Set.for_all Dom.extreme ~f:(fun k ->
+    Set.for_all Dom.initial ~f:(fun k ->
         match (Map.find s1 k, Map.find s2 k) with
         | Some x, Some y -> x = y
         | Some _, None | None, None -> true
         | None, Some _ -> false )
 
-  let extreme = Map.Poly.empty
+  let initial = Map.Poly.empty
 end
 
 module Constant_propagation_lattice
@@ -78,7 +78,7 @@ module Available_expressions_lattice (Expressions : PREFLATSET) : LATTICE =
 Dual_powerset_lattice (struct
   type vals = Expressions.vals
 
-  let extreme = Set.Poly.empty
+  let initial = Set.Poly.empty
 end)
 
 (* Note: this is also the lattice for a used expression analysis (but with
@@ -87,7 +87,7 @@ module Live_variables_lattice (Variables : PREFLATSET) : LATTICE =
 Powerset_lattice (struct
   type vals = Variables.vals
 
-  let extreme = Set.Poly.empty
+  let initial = Set.Poly.empty
 end)
 
 module Reaching_definitions_lattice
@@ -95,7 +95,7 @@ module Reaching_definitions_lattice
     (Labels : PREFLATSET) : LATTICE = Powerset_lattice (struct
   type vals = Variables.vals * Labels.vals option
 
-  let extreme = Set.Poly.map ~f:(fun x -> (x, None)) Variables.extreme
+  let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
 end)
 
 module Monotone_framework : MONOTONE_FRAMEWORK =
@@ -122,7 +122,7 @@ functor
         Set.iter
           ~f:(fun l ->
             Hashtbl.add_exn analysis_in ~key:l
-              ~data:(if Set.mem initials l then L.extreme else L.bottom) )
+              ~data:(if Set.mem initials l then L.initial else L.bottom) )
           F.nodes
       in
       (* STEP 2: iterate *)

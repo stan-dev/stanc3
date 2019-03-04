@@ -30,7 +30,7 @@ end
 module type PREPOWERSET = sig
   type vals
 
-  val extreme : vals Set.Poly.t
+  val initial : vals Set.Poly.t
 end
 
 (** The API for a complete (possibly non-distributive) lattice,
@@ -41,8 +41,8 @@ module type LATTICE = sig
   val bottom : properties
   val leq : properties -> properties -> bool
 
-  val extreme : properties
-  (**  An extremal value, which might not be the top element.
+  val initial : properties
+  (**  An initial value, which might not be the top element.
        The idea is that this is the property that you start with
        (you assume to be true at the start of your analysis). *)
 
