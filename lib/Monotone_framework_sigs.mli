@@ -42,7 +42,9 @@ module type LATTICE = sig
   val leq : properties -> properties -> bool
 
   val extreme : properties
-  (**  An extremal value, which might not be the top element *)
+  (**  An extremal value, which might not be the top element.
+       The idea is that this is the property that you start with
+       (you assume to be true at the start of your analysis). *)
 
   val lub : properties -> properties -> properties
 end
