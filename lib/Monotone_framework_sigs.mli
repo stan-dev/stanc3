@@ -28,6 +28,13 @@ module type PREPOWERSET = sig
   type vals
 
   val initial : vals Set.Poly.t
+end
+
+(** The data we need to form a dual powerset lattice *)
+module type PREDUALPOWERSET = sig
+  type vals
+
+  val initial : vals Set.Poly.t
   val total : vals Set.Poly.t
 end
 
