@@ -11,6 +11,26 @@ open Monotone_framework_sigs
                                                  constant propagation
                                                  very busy expressions *)
 
+(** Reverse flowgraphs to be used for reverse analyses.
+    Observe that this respects the invariants listed for a FLOWGRAPH *)
+module Reverse (F : FLOWGRAPH) : FLOWGRAPH = struct
+  type labels = F.labels
+  type t = labels
+
+  let compare = F.compare
+  let hash = F.hash
+  let sexp_of_t = F.sexp_of_t
+  let initials = Set.of_map_keys (Map.filter F.successors ~f:Set.is_empty)
+
+  let successors =
+    Map.fold F.successors
+      ~init:(Map.map F.successors ~f:(fun _ -> Set.Poly.empty))
+      ~f:(fun ~key:old_pred ~data:old_succs accum ->
+        Set.fold old_succs ~init:accum ~f:(fun accum old_succ ->
+            Map.set accum ~key:old_succ
+              ~data:(Set.add (Map.find_exn accum old_succ) old_pred) ) )
+end
+
 module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   type properties = S.vals Set.Poly.t
 
@@ -120,7 +140,7 @@ functor
             Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) )
       in
       let analysis_in = Hashtbl.create (module F) in
-      let nodes = Set.union (Set.of_map_keys F.successors) F.initials in
+      let nodes = Set.of_map_keys F.successors in
       let _ =
         Set.iter
           ~f:(fun l ->

@@ -4,7 +4,9 @@
 open Core_kernel
 
 (** The API for a flowgraph, needed for the mfp algorithm
-    in the monotone framework *)
+    in the monotone framework.
+    Assumed invariants: successors contains all graph nodes as keys
+                        initials is a subset of the graph nodes *)
 module type FLOWGRAPH = sig
   type labels
 
