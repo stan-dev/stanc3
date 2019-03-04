@@ -4,7 +4,6 @@ open Core_kernel
 open Monotone_framework_sigs
 
 (* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
-                                         inverse flow graph of flow graph
          write instance of TRANSFER_FUNCTION for available expressions
                                                  reaching definitions
                                                  live variables
