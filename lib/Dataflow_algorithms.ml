@@ -6,7 +6,7 @@ open Dataflow_types
    This is a helper function equivalent to List.concat_map but for Sets
 *)
 let union_map (set : 'a Set.Poly.t) ~(f : 'a -> 'b Set.Poly.t) : 'b Set.Poly.t
-  =
+    =
   Set.Poly.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.Poly.union s (f a))
 
 (***********************************)
@@ -34,7 +34,7 @@ let rec expr_var_set (ex : expr) : vexpr Set.Poly.t =
   | BinOp (expr1, _, expr2) -> union_recur [expr1; expr2]
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
-    Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
+      Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
 
 and index_var_set (ix : index) : vexpr Set.Poly.t =
   match ix with
@@ -43,7 +43,7 @@ and index_var_set (ix : index) : vexpr Set.Poly.t =
   | Upfrom expr -> expr_var_set expr
   | Downfrom expr -> expr_var_set expr
   | Between (expr1, expr2) ->
-    Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
+      Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
 (**
@@ -61,7 +61,7 @@ let expr_assigned_var (ex : expr) : vexpr =
 
 (** Remove RDs corresponding to a variable *)
 let filter_var_defns (defns : reaching_defn Set.Poly.t) (var : vexpr) :
-  reaching_defn Set.Poly.t =
+    reaching_defn Set.Poly.t =
   Set.Poly.filter defns ~f:(fun (v, _) -> v <> var)
 
 (** Union label maps, preserving the left element in a collision *)
@@ -85,7 +85,7 @@ let new_label (st : traversal_state) : label * traversal_state =
 let rec summation_terms (rhs : expr) : expr list =
   match rhs with
   | BinOp (e1, Plus, e2) ->
-    List.append (summation_terms e1) (summation_terms e2)
+      List.append (summation_terms e1) (summation_terms e2)
   | _ as e -> [e]
 
 (** Apply function `f` to node_info for `label` in `trav_st` *)
@@ -94,9 +94,9 @@ let modify_node_info (trav_st : traversal_state) (label : label)
   { trav_st with
     node_info_map=
       Int.Map.change trav_st.node_info_map label ~f:(function
-          (*Option.map should exist but doesn't appear to*)
-          | None -> None
-          | Some info -> Some (f info) ) }
+        (*Option.map should exist but doesn't appear to*)
+        | None -> None
+        | Some info -> Some (f info) ) }
 
 (**
    Right-compose a function with the reaching definition update functions of the possible
@@ -126,7 +126,7 @@ let compose_last_rd_update
 let node_0 (top_vars : vexpr Set.Poly.t) : node_info_update =
   { rd_sets=
       (fun entry ->
-         Set.Poly.union entry (Set.Poly.map top_vars ~f:(fun v -> (v, 0))) )
+        Set.Poly.union entry (Set.Poly.map top_vars ~f:(fun v -> (v, 0))) )
   ; possible_previous= Set.Poly.empty
   ; rhs_set= Set.Poly.empty
   ; controlflow= Set.Poly.empty
@@ -200,81 +200,81 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
     (st : stmt_loc) : traversal_state =
   match st.stmt with
   | Assignment (lhs, rhs) ->
-    let label, trav_st' = new_label trav_st in
-    let info =
-      { rd_sets=
-          (fun entry ->
-             let assigned_var = expr_assigned_var lhs in
-             Set.Poly.union
-               (filter_var_defns entry assigned_var)
-               (Set.Poly.singleton (assigned_var, label)) )
-      ; possible_previous= trav_st'.possible_previous
-      ; rhs_set= expr_var_set rhs
-      ; controlflow=
-          Set.Poly.union_list
-            [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc= MirNode st.sloc }
-    in
-    let trav_st'' =
+      let label, trav_st' = new_label trav_st in
+      let info =
+        { rd_sets=
+            (fun entry ->
+              let assigned_var = expr_assigned_var lhs in
+              Set.Poly.union
+                (filter_var_defns entry assigned_var)
+                (Set.Poly.singleton (assigned_var, label)) )
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set= expr_var_set rhs
+        ; controlflow=
+            Set.Poly.union_list
+              [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
+        ; loc= MirNode st.sloc }
+      in
+      let trav_st'' =
+        { trav_st' with
+          node_info_map=
+            merge_label_maps trav_st'.node_info_map
+              (Int.Map.singleton label info)
+        ; possible_previous= Set.Poly.singleton label }
+      in
+      if lhs = Var "target" then
+        List.fold_left
+          (List.filter (summation_terms rhs) ~f:(fun v -> v <> Var "target"))
+          ~init:trav_st''
+          ~f:(fun trav_st term -> add_target_term_node trav_st label term)
+      else trav_st''
+  | NRFunApp ("reject", _) ->
+      let label, trav_st' = new_label trav_st in
+      let info =
+        { rd_sets= (fun entry -> entry)
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set= Set.Poly.empty
+        ; controlflow=
+            Set.Poly.union_list
+              [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
+        ; loc= MirNode st.sloc }
+      in
+      let add_cf (node_info : node_info_update) : node_info_update =
+        {node_info with controlflow= Set.Poly.add node_info.controlflow label}
+      in
+      { (modify_node_info trav_st' 0 add_cf) with
+        node_info_map=
+          merge_label_maps trav_st'.node_info_map
+            (Int.Map.singleton label info)
+      ; possible_previous= Set.Poly.singleton label
+      ; rejects= Set.Poly.add trav_st'.rejects label }
+  | NRFunApp (_, exprs) ->
+      let label, trav_st' = new_label trav_st in
+      let info =
+        { rd_sets= (fun entry -> entry)
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set= Set.Poly.union_list (List.map exprs ~f:expr_var_set)
+        ; controlflow=
+            Set.Poly.union_list
+              [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
+        ; loc= MirNode st.sloc }
+      in
       { trav_st' with
         node_info_map=
           merge_label_maps trav_st'.node_info_map
             (Int.Map.singleton label info)
       ; possible_previous= Set.Poly.singleton label }
-    in
-    if lhs = Var "target" then
-      List.fold_left
-        (List.filter (summation_terms rhs) ~f:(fun v -> v <> Var "target"))
-        ~init:trav_st''
-        ~f:(fun trav_st term -> add_target_term_node trav_st label term)
-    else trav_st''
-  | NRFunApp ("reject", _) ->
-    let label, trav_st' = new_label trav_st in
-    let info =
-      { rd_sets= (fun entry -> entry)
-      ; possible_previous= trav_st'.possible_previous
-      ; rhs_set= Set.Poly.empty
-      ; controlflow=
-          Set.Poly.union_list
-            [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc= MirNode st.sloc }
-    in
-    let add_cf (node_info : node_info_update) : node_info_update =
-      {node_info with controlflow= Set.Poly.add node_info.controlflow label}
-    in
-    { (modify_node_info trav_st' 0 add_cf) with
-      node_info_map=
-        merge_label_maps trav_st'.node_info_map
-          (Int.Map.singleton label info)
-    ; possible_previous= Set.Poly.singleton label
-    ; rejects= Set.Poly.add trav_st'.rejects label }
-  | NRFunApp (_, exprs) ->
-    let label, trav_st' = new_label trav_st in
-    let info =
-      { rd_sets= (fun entry -> entry)
-      ; possible_previous= trav_st'.possible_previous
-      ; rhs_set= Set.Poly.union_list (List.map exprs ~f:expr_var_set)
-      ; controlflow=
-          Set.Poly.union_list
-            [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc= MirNode st.sloc }
-    in
-    { trav_st' with
-      node_info_map=
-        merge_label_maps trav_st'.node_info_map
-          (Int.Map.singleton label info)
-    ; possible_previous= Set.Poly.singleton label }
   | Check _ -> trav_st
   | MarkLocation _ -> trav_st
   | Break ->
-    let label, trav_st' = new_label trav_st in
-    {trav_st' with breaks= Set.Poly.add trav_st'.breaks label}
+      let label, trav_st' = new_label trav_st in
+      {trav_st' with breaks= Set.Poly.add trav_st'.breaks label}
   | Continue ->
-    let label, trav_st' = new_label trav_st in
-    {trav_st' with continues= Set.Poly.add trav_st'.continues label}
+      let label, trav_st' = new_label trav_st in
+      {trav_st' with continues= Set.Poly.add trav_st'.continues label}
   | Return _ ->
-    let label, trav_st' = new_label trav_st in
-    {trav_st' with returns= Set.Poly.add trav_st'.returns label}
+      let label, trav_st' = new_label trav_st in
+      {trav_st' with returns= Set.Poly.add trav_st'.returns label}
   | Skip -> trav_st
   | IfElse (pred, then_stmt, else_stmt) -> (
       let label, trav_st' = new_label trav_st in
@@ -294,121 +294,121 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       in
       match else_st_opt with
       | Some else_st ->
-        { else_st with
-          node_info_map=
-            merge_label_maps else_st.node_info_map
-              (Int.Map.singleton label info)
-        ; possible_previous=
-            Set.Poly.union then_st.possible_previous
-              else_st.possible_previous }
+          { else_st with
+            node_info_map=
+              merge_label_maps else_st.node_info_map
+                (Int.Map.singleton label info)
+          ; possible_previous=
+              Set.Poly.union then_st.possible_previous
+                else_st.possible_previous }
       | None ->
-        { then_st with
-          node_info_map=
-            merge_label_maps then_st.node_info_map
-              (Int.Map.singleton label info)
-        ; possible_previous=
-            Set.Poly.union then_st.possible_previous
-              trav_st'.possible_previous } )
+          { then_st with
+            node_info_map=
+              merge_label_maps then_st.node_info_map
+                (Int.Map.singleton label info)
+          ; possible_previous=
+              Set.Poly.union then_st.possible_previous
+                trav_st'.possible_previous } )
   | While (pred, body_stmt) ->
-    let label, trav_st' = new_label trav_st in
-    let recurse_st =
-      {trav_st' with possible_previous= Set.Poly.singleton label}
-    in
-    let body_st = traverse_mir recurse_st label body_stmt in
-    let loop_start_possible_previous =
-      Set.Poly.union_list
-        [ Set.Poly.singleton label; body_st.possible_previous
-        ; body_st.continues ]
-    in
-    let body_st' =
-      modify_node_info body_st (peek_next_label recurse_st) (fun info ->
-          {info with possible_previous= loop_start_possible_previous} )
-    in
-    let info =
-      { rd_sets= (fun entry -> entry) (* is this correct? *)
-      ; possible_previous= trav_st'.possible_previous
-      ; rhs_set= expr_var_set pred
-      ; controlflow=
-          Set.Poly.union_list
-            [ Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns
-            ; body_st'.breaks ]
-      ; loc= MirNode st.sloc }
-    in
-    { body_st' with
-      node_info_map=
-        merge_label_maps body_st'.node_info_map
-          (Int.Map.singleton label info)
-    ; possible_previous=
-        Set.Poly.union body_st'.possible_previous trav_st'.possible_previous
-    ; continues= Set.Poly.empty
-    ; breaks= Set.Poly.empty }
+      let label, trav_st' = new_label trav_st in
+      let recurse_st =
+        {trav_st' with possible_previous= Set.Poly.singleton label}
+      in
+      let body_st = traverse_mir recurse_st label body_stmt in
+      let loop_start_possible_previous =
+        Set.Poly.union_list
+          [ Set.Poly.singleton label; body_st.possible_previous
+          ; body_st.continues ]
+      in
+      let body_st' =
+        modify_node_info body_st (peek_next_label recurse_st) (fun info ->
+            {info with possible_previous= loop_start_possible_previous} )
+      in
+      let info =
+        { rd_sets= (fun entry -> entry) (* is this correct? *)
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set= expr_var_set pred
+        ; controlflow=
+            Set.Poly.union_list
+              [ Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns
+              ; body_st'.breaks ]
+        ; loc= MirNode st.sloc }
+      in
+      { body_st' with
+        node_info_map=
+          merge_label_maps body_st'.node_info_map
+            (Int.Map.singleton label info)
+      ; possible_previous=
+          Set.Poly.union body_st'.possible_previous trav_st'.possible_previous
+      ; continues= Set.Poly.empty
+      ; breaks= Set.Poly.empty }
   | For args ->
-    let label, trav_st' = new_label trav_st in
-    let recurse_st =
-      {trav_st' with possible_previous= Set.Poly.singleton label}
-    in
-    let body_st = traverse_mir recurse_st label args.body in
-    let loop_start_possible_previous =
-      Set.Poly.union_list
-        [ Set.Poly.singleton label; body_st.possible_previous
-        ; body_st.continues ]
-    in
-    let body_st' =
-      modify_node_info body_st (peek_next_label recurse_st) (fun info ->
-          {info with possible_previous= loop_start_possible_previous} )
-    in
-    let alter_fn set =
-      Set.Poly.remove set (vexpr_of_expr_exn args.loopvar, label)
-    in
-    let body_st'' = compose_last_rd_update alter_fn body_st' in
-    let info =
-      { rd_sets=
-          (fun entry ->
-             Set.Poly.union entry
-               (Set.Poly.singleton (vexpr_of_expr_exn args.loopvar, label)) )
-      ; possible_previous= trav_st'.possible_previous
-      ; rhs_set=
-          Set.Poly.union (expr_var_set args.lower) (expr_var_set args.upper)
-      ; controlflow=
-          Set.Poly.union_list
-            [ Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns
-            ; body_st''.breaks ]
-      ; loc= MirNode st.sloc }
-    in
-    { body_st'' with
-      node_info_map=
-        merge_label_maps body_st''.node_info_map
-          (Int.Map.singleton label info)
-    ; possible_previous=
-        Set.Poly.union body_st''.possible_previous trav_st'.possible_previous
-    ; continues= Set.Poly.empty
-    ; breaks= Set.Poly.empty }
+      let label, trav_st' = new_label trav_st in
+      let recurse_st =
+        {trav_st' with possible_previous= Set.Poly.singleton label}
+      in
+      let body_st = traverse_mir recurse_st label args.body in
+      let loop_start_possible_previous =
+        Set.Poly.union_list
+          [ Set.Poly.singleton label; body_st.possible_previous
+          ; body_st.continues ]
+      in
+      let body_st' =
+        modify_node_info body_st (peek_next_label recurse_st) (fun info ->
+            {info with possible_previous= loop_start_possible_previous} )
+      in
+      let alter_fn set =
+        Set.Poly.remove set (vexpr_of_expr_exn args.loopvar, label)
+      in
+      let body_st'' = compose_last_rd_update alter_fn body_st' in
+      let info =
+        { rd_sets=
+            (fun entry ->
+              Set.Poly.union entry
+                (Set.Poly.singleton (vexpr_of_expr_exn args.loopvar, label)) )
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set=
+            Set.Poly.union (expr_var_set args.lower) (expr_var_set args.upper)
+        ; controlflow=
+            Set.Poly.union_list
+              [ Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns
+              ; body_st''.breaks ]
+        ; loc= MirNode st.sloc }
+      in
+      { body_st'' with
+        node_info_map=
+          merge_label_maps body_st''.node_info_map
+            (Int.Map.singleton label info)
+      ; possible_previous=
+          Set.Poly.union body_st''.possible_previous trav_st'.possible_previous
+      ; continues= Set.Poly.empty
+      ; breaks= Set.Poly.empty }
   | Block stmts ->
-    let f state stmt = traverse_mir state cf_st stmt in
-    List.fold_left stmts ~init:trav_st ~f
+      let f state stmt = traverse_mir state cf_st stmt in
+      List.fold_left stmts ~init:trav_st ~f
   | SList stmts ->
-    let f state stmt = traverse_mir state cf_st stmt in
-    List.fold_left stmts ~init:trav_st ~f
+      let f state stmt = traverse_mir state cf_st stmt in
+      List.fold_left stmts ~init:trav_st ~f
   | Decl args ->
-    let label, trav_st' = new_label trav_st in
-    let info =
-      { rd_sets=
-          (let assigned_var = VVar args.decl_id in
-           let addition = Set.Poly.singleton (assigned_var, label) in
-           fun entry ->
-             Set.Poly.union addition (filter_var_defns entry assigned_var))
-      ; possible_previous= trav_st'.possible_previous
-      ; rhs_set= Set.Poly.empty
-      ; controlflow=
-          Set.Poly.union_list
-            [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
-      ; loc= MirNode st.sloc }
-    in
-    { trav_st' with
-      node_info_map=
-        merge_label_maps trav_st'.node_info_map
-          (Int.Map.singleton label info)
-    ; possible_previous= Set.Poly.singleton label }
+      let label, trav_st' = new_label trav_st in
+      let info =
+        { rd_sets=
+            (let assigned_var = VVar args.decl_id in
+             let addition = Set.Poly.singleton (assigned_var, label) in
+             fun entry ->
+               Set.Poly.union addition (filter_var_defns entry assigned_var))
+        ; possible_previous= trav_st'.possible_previous
+        ; rhs_set= Set.Poly.empty
+        ; controlflow=
+            Set.Poly.union_list
+              [Set.Poly.singleton cf_st; trav_st.continues; trav_st.returns]
+        ; loc= MirNode st.sloc }
+      in
+      { trav_st' with
+        node_info_map=
+          merge_label_maps trav_st'.node_info_map
+            (Int.Map.singleton label info)
+      ; possible_previous= Set.Poly.singleton label }
   | FunDef _ -> trav_st
 
 (***********************************)
@@ -421,7 +421,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
 *)
 let rd_update_label (node_info : node_info_update)
     (prev : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t) :
-  reaching_defn Set.Poly.t * reaching_defn Set.Poly.t =
+    reaching_defn Set.Poly.t * reaching_defn Set.Poly.t =
   let get_exit label = snd (Int.Map.find_exn prev label) in
   let from_prev = union_map node_info.possible_previous ~f:get_exit in
   (from_prev, node_info.rd_sets from_prev)
@@ -432,7 +432,7 @@ let rd_update_label (node_info : node_info_update)
 *)
 let rd_apply (node_infos : node_info_update Int.Map.t)
     (prev : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t) :
-  (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t =
+    (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t =
   let update_label ~key:(label : label) ~data:_ =
     let node_info = Int.Map.find_exn node_infos label in
     rd_update_label node_info prev
@@ -441,7 +441,7 @@ let rd_apply (node_infos : node_info_update Int.Map.t)
 
 (** Find the fixed point of a function and an initial value, given definition of equality *)
 let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) :
-  'a =
+    'a =
   let y = f x in
   if equal x y then x else apply_until_fixed equal f y
 
@@ -454,7 +454,7 @@ let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) :
 let rd_equal
     (a : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t)
     (b : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t) :
-  bool =
+    bool =
   let equal_set_pairs (a1, a2) (b1, b2) =
     Set.Poly.equal a1 b1 && Set.Poly.equal a2 b2
   in
@@ -465,7 +465,7 @@ let rd_equal
    the full, correct dataflow graph.
 *)
 let rd_fixedpoint (info : node_info_update Int.Map.t) :
-  node_info_fixedpoint Int.Map.t =
+    node_info_fixedpoint Int.Map.t =
   let initial_sets =
     Int.Map.map info ~f:(fun _ -> (Set.Poly.empty, Set.Poly.empty))
   in
@@ -479,7 +479,7 @@ let rd_fixedpoint (info : node_info_update Int.Map.t) :
 
 (** See .mli file *)
 let block_dataflow_graph (body : stmt_loc) (param_vars : vexpr Set.Poly.t) :
-  dataflow_graph =
+    dataflow_graph =
   let initial_trav_st = initial_traversal_state param_vars in
   let trav_st = traverse_mir initial_trav_st initial_cf_st body in
   let node_info_fixedpoint = rd_fixedpoint trav_st.node_info_map in
@@ -515,7 +515,7 @@ and labels_dependencies_rec (so_far : label Set.Poly.t)
       if Set.Poly.mem so_far label then so_far
       else
         label_dependencies_rec so_far df_graph probabilistic_dependence label
-    )
+  )
 
 (** See .mli file *)
 let label_dependencies = label_dependencies_rec Set.Poly.empty
@@ -610,68 +610,73 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
   print_string "\n\n" ;
   print_endline
     ( "Top data variables: "
-      ^ Sexp.to_string [%sexp (data_vars : vexpr Set.Poly.t)] ) ;
+    ^ Sexp.to_string [%sexp (data_vars : vexpr Set.Poly.t)] ) ;
   print_endline
     ( "Top parameter variables: "
-      ^ Sexp.to_string [%sexp (parameter_vars : vexpr Set.Poly.t)] ) ;
+    ^ Sexp.to_string [%sexp (parameter_vars : vexpr Set.Poly.t)] ) ;
   print_endline
     ( "Target term nodes: "
-      ^ Sexp.to_string [%sexp (df_graph.probabilistic_nodes : label Set.Poly.t)]
+    ^ Sexp.to_string [%sexp (df_graph.probabilistic_nodes : label Set.Poly.t)]
     ) ;
   print_endline
     ( "Possible endpoints: "
-      ^ Sexp.to_string [%sexp (df_graph.possible_exits : label Set.Poly.t)] ) ;
+    ^ Sexp.to_string [%sexp (df_graph.possible_exits : label Set.Poly.t)] ) ;
   print_endline
     ( "Data-independent target term expressions: "
-      ^ Sexp.to_string [%sexp (prior_terms : expr list)] ) ;
+    ^ Sexp.to_string [%sexp (prior_terms : expr list)] ) ;
   print_endline
     ( "Var " ^ var ^ " depends on labels: "
-      ^ Sexp.to_string [%sexp (label_deps : label Set.Poly.t)] ) ;
+    ^ Sexp.to_string [%sexp (label_deps : label Set.Poly.t)] ) ;
   print_endline
     ( "Var " ^ var ^ " depends on top variables: "
-      ^ Sexp.to_string [%sexp (expr_deps : vexpr Set.Poly.t)] )
+    ^ Sexp.to_string [%sexp (expr_deps : vexpr Set.Poly.t)] )
 
 (***********************************)
 (* Utility functions               *)
 (***********************************)
 
+(**
+   A traversal that simultaneously accumulates a state (type 'f) and replaces the
+   substatement values from ('a to 'c). Traversal is done in-order but ignores branching,
+   e.g., and if's then block is followed by the else block rather than branching.
+*)
 let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
     ~(f : 'f -> 'a -> 'f * 'c) : 'f * 'c statement =
   match stmt with
   | IfElse (pred, then_s, else_s_opt) ->
-    let s', c = f state then_s in
-    Option.value_map else_s_opt
-      ~default:(s', IfElse (pred, c, None))
-      ~f:(fun else_s ->
+      let s', c = f state then_s in
+      Option.value_map else_s_opt
+        ~default:(s', IfElse (pred, c, None))
+        ~f:(fun else_s ->
           let s'', c' = f s' else_s in
           (s'', IfElse (pred, c, Some c')) )
   | While (pred, body) ->
-    let s', c = f state body in
-    (s', While (pred, c))
+      let s', c = f state body in
+      (s', While (pred, c))
   | For vars ->
-    let s', c = f state vars.body in
-    (s', For {vars with body= c})
+      let s', c = f state vars.body in
+      (s', For {vars with body= c})
   | Block stmts ->
-    let s', ls =
-      List.fold_left stmts
-        ~f:(fun (s, l) stmt ->
+      let s', ls =
+        List.fold_left stmts
+          ~f:(fun (s, l) stmt ->
             let s', c = f s stmt in
             (s', List.cons c l) )
-        ~init:(state, [])
-    in
-    (s', Block (List.rev ls))
+          ~init:(state, [])
+      in
+      (s', Block (List.rev ls))
   | SList stmts ->
-    let s', ls =
-      List.fold_left stmts
-        ~f:(fun (s, l) stmt ->
+      let s', ls =
+        List.fold_left stmts
+          ~f:(fun (s, l) stmt ->
             let s', c = f s stmt in
             (s', List.cons c l) )
-        ~init:(state, [])
-    in
-    (s', SList (List.rev ls))
+          ~init:(state, [])
+      in
+      (s', SList (List.rev ls))
   | FunDef vars ->
-    let s', c = f state vars.fdbody in
-    (s', FunDef {vars with fdbody= c})
+      let s', c = f state vars.fdbody in
+      (s', FunDef {vars with fdbody= c})
   | Assignment _ as s -> (state, s)
   | NRFunApp _ as s -> (state, s)
   | Check _ as s -> (state, s)
@@ -682,27 +687,41 @@ let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
   | Skip as s -> (state, s)
   | Decl _ as s -> (state, s)
 
-let branching_traverse_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f) ~init:(state : 'f)
-    ~(f : 'f -> 'a -> 'f * 'c) : 'f * 'c statement =
+(**
+   Like a forward traversal, but branches accumulate two different states that are
+   recombined with join.
+*)
+let branching_traverse_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
+    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) : 'f * 'c statement =
   match stmt with
   | IfElse (pred, then_s, else_s_opt) ->
-    let s', c = f state then_s in
-    Option.value_map else_s_opt
-      ~default:(s', IfElse (pred, c, None))
-      ~f:(fun else_s ->
+      let s', c = f state then_s in
+      Option.value_map else_s_opt
+        ~default:(s', IfElse (pred, c, None))
+        ~f:(fun else_s ->
           let s'', c' = f state else_s in
           (join s' s'', IfElse (pred, c, Some c')) )
-  | _ as s -> fwd_traverse_statement s ~init:state ~f:f
+  | _ as s -> fwd_traverse_statement s ~init:state ~f
 
-let branching_fold_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f) ~init:(state : 'f)
-    ~(f : 'f -> 'a -> 'f) : 'f =
-  fst (branching_traverse_statement stmt ~join:join ~init:state ~f:(fun s a -> (f s a, ())))
+(** Like a branching traversal, but doesn't return an updated statement.
+*)
+let branching_fold_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
+    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f) : 'f =
+  fst
+    (branching_traverse_statement stmt ~join ~init:state ~f:(fun s a ->
+         (f s a, ()) ))
 
+(**
+   The statement map is built by traversing substatements recursively to replace
+   substatements with their labels while building up the substatements' statement maps.
+   Then, the result is the union of the substatement maps with this statement's singleton
+   pair, which is expressed in terms of the new label-containing statement.
+*)
 let build_statement_map (extract : 's -> 's statement) (stmt : 's) :
-  int statement Int.Map.t =
+    int statement Int.Map.t =
   let rec build_statement_map_rec (extract : 's -> 's statement)
       (next_label : label) (map : int statement Int.Map.t) (stmt : 's) :
-    (int * int statement Int.Map.t) * int =
+      (int * int statement Int.Map.t) * int =
     let this_label = next_label in
     let next_label' = next_label + 1 in
     let f (label, map) stmt = build_statement_map_rec extract label map stmt in
@@ -716,12 +735,23 @@ let build_statement_map (extract : 's -> 's statement) (stmt : 's) :
   map
 
 (**
-   Building the controlflow graph requires a traversal with state that includes continues, breaks, returns and the controlflow graph accumulator. The traversal should be a branching traversal with set unions rather than a forward traversal because continue and return statements shouldn't affect other branches of execution.
+   Building the controlflow graph requires a traversal with state that includes continues,
+   breaks, returns and the controlflow graph accumulator. The traversal should be a
+   branching traversal with set unions rather than a forward traversal because continue
+   and return statements shouldn't affect other branches of execution.
 *)
-let build_cf_graph (statement_map : int statement Int.Map.t) : Int.Set.t Int.Map.t =
-  let rec build_cf_graph_rec (cf_parent : label) ((breaks_in, returns_in, continues_in, map_in) : Int.Set.t * Int.Set.t * Int.Set.t * Int.Set.t Int.Map.t) (label : label) : Int.Set.t * Int.Set.t * Int.Set.t * Int.Set.t Int.Map.t =
+let build_cf_graph (statement_map : int statement Int.Map.t) :
+    Int.Set.t Int.Map.t =
+  let rec build_cf_graph_rec (cf_parent : label)
+      ((breaks_in, returns_in, continues_in, map_in) :
+        Int.Set.t * Int.Set.t * Int.Set.t * Int.Set.t Int.Map.t)
+      (label : label) : Int.Set.t * Int.Set.t * Int.Set.t * Int.Set.t Int.Map.t
+      =
     let stmt = Int.Map.find_exn statement_map label in
-    let is_ctrl_flow = match stmt with
+
+    (* Only control flow nodes should pass themselves down as parents *)
+    let is_ctrl_flow =
+      match stmt with
       | IfElse _ -> true
       | While _ -> true
       | For _ -> true
@@ -729,28 +759,100 @@ let build_cf_graph (statement_map : int statement Int.Map.t) : Int.Set.t Int.Map
       | _ -> false
     in
     let child_cf = if is_ctrl_flow then label else cf_parent in
-    let join_state (breaks1, returns1, continues1, map_sofar1) (breaks2, returns2, continues2, map_sofar2) =
-      (Int.Set.union breaks1 breaks2, Int.Set.union returns1 returns2, Int.Set.union continues1 continues2, merge_label_maps map_sofar1 map_sofar2)
+
+    let join_state (breaks1, returns1, continues1, map_sofar1)
+        (breaks2, returns2, continues2, map_sofar2) =
+      ( Int.Set.union breaks1 breaks2
+      , Int.Set.union returns1 returns2
+      , Int.Set.union continues1 continues2
+      , merge_label_maps map_sofar1 map_sofar2 )
     in
-    let (breaks_subexpr, returns_subexpr, continues_subexpr, map_subexpr) = branching_fold_statement stmt ~join:join_state ~init:(breaks_in, returns_in, continues_in, map_in) ~f:(build_cf_graph_rec child_cf) in
-    let (breaks_out, returns_out, continues_out, extra_cf_deps) = match stmt with
+    (* The accumulated state after traversing substatements *)
+    let breaks_subexpr, returns_subexpr, continues_subexpr, map_subexpr =
+      branching_fold_statement stmt ~join:join_state
+        ~init:(breaks_in, returns_in, continues_in, map_in)
+        ~f:(build_cf_graph_rec child_cf)
+    in
+
+    (* Some statements interact with the break/return/continue states
+       E.g., loops nullify breaks and continues in their body, but are still affected by
+       breaks and input continues*)
+    let breaks_out, returns_out, continues_out, extra_cf_deps =
+      match stmt with
       | Break ->
-        ( Int.Set.add breaks_subexpr label, returns_subexpr, continues_subexpr, continues_in)
+          ( Int.Set.add breaks_subexpr label
+          , returns_subexpr
+          , continues_subexpr
+          , Int.Set.empty )
       | Return _ ->
-        ( breaks_subexpr, Int.Set.add returns_subexpr label, continues_subexpr, continues_in)
+          ( breaks_subexpr
+          , Int.Set.add returns_subexpr label
+          , continues_subexpr
+          , Int.Set.empty )
       | Continue ->
-        ( breaks_subexpr, returns_subexpr, Int.Set.add continues_subexpr label, continues_in)
+          ( breaks_subexpr
+          , returns_subexpr
+          , Int.Set.add continues_subexpr label
+          , Int.Set.empty )
       | While _ ->
-        ( Int.Set.empty, returns_subexpr, Int.Set.empty, breaks_subexpr)
+        (breaks_in, returns_subexpr, continues_in, breaks_subexpr)
       | For _ ->
-        ( Int.Set.empty, returns_subexpr, Int.Set.empty, breaks_subexpr)
-      | _ -> (breaks_subexpr, returns_subexpr, continues_subexpr, continues_in)
+        (breaks_in, returns_subexpr, continues_in, breaks_subexpr)
+      | _ -> (breaks_subexpr, returns_subexpr, continues_subexpr, Int.Set.empty)
     in
-    let cf_deps = Int.Set.add (Int.Set.union returns_subexpr extra_cf_deps) cf_parent in
-    (breaks_out, returns_out, continues_out, merge_label_maps map_subexpr (Int.Map.singleton label cf_deps))
+    let cf_deps =
+      Int.Set.add (Int.Set.union continues_in (Int.Set.union returns_subexpr extra_cf_deps)) cf_parent
+    in
+    ( breaks_out
+    , returns_out
+    , continues_out
+    , merge_label_maps map_subexpr (Int.Map.singleton label cf_deps) )
   in
-  let (_, _, _, map) = build_cf_graph_rec 0 (Int.Set.empty, Int.Set.empty, Int.Set.empty, Int.Map.empty) 1 in
+  let _, _, _, map =
+    build_cf_graph_rec 0
+      (Int.Set.empty, Int.Set.empty, Int.Set.empty, Int.Map.empty)
+      1
+  in
   map
+
+(**
+   Building the predecessor graph requires a traversal with state that includes the
+   current previous nodes and the predecessor graph accumulator. Special cases are made
+   for loops, because they should include the body exits as predecessors to the body, and
+   they should include loop predecessors in their exit sets. I'm not sure if the single
+   re-traversal of the loop body is sufficient or this requires finding a fixed-point.
+*)
+let build_predecessor_graph (statement_map : int statement Int.Map.t) :
+    Int.Set.t * Int.Set.t Int.Map.t =
+  let rec build_pred_graph_rec
+      ((preds, map_in) : Int.Set.t * Int.Set.t Int.Map.t) (label : label) :
+      Int.Set.t * Int.Set.t Int.Map.t =
+    let stmt = Int.Map.find_exn statement_map label in
+    let join_state (preds1, map1) (preds2, map2) =
+      (Int.Set.union preds1 preds2, merge_label_maps map1 map2)
+    in
+    let exits, map_subexpr =
+      branching_fold_statement stmt ~join:join_state
+        ~init:(Int.Set.singleton label, map_in)
+        ~f:build_pred_graph_rec
+    in
+    let looping_predecessors () =
+      let exits, map_subexpr =
+        branching_fold_statement stmt ~join:join_state
+          ~init:(Int.Set.add exits label, map_in)
+          ~f:build_pred_graph_rec
+      in
+      (Int.Set.union preds exits, map_subexpr)
+    in
+    let exits', map_subexpr' =
+      match stmt with
+      | For _ -> looping_predecessors ()
+      | While _ -> looping_predecessors ()
+      | _ -> (exits, map_subexpr)
+    in
+    (exits', merge_label_maps map_subexpr' (Int.Map.singleton label preds))
+  in
+  build_pred_graph_rec (Int.Set.singleton 0, Int.Map.empty) 1
 
 let example_program =
   let ast =
@@ -773,6 +875,7 @@ let example_program =
               } else {
                 print("Badger", i + j);
               }
+              print("Fin");
             }
           }
         }
@@ -783,7 +886,6 @@ let example_program =
   in
   let _, block = mir.modelb in
   block
-
 
 let%expect_test "Statement label map example" =
   let statement_map = build_statement_map (fun s -> s.stmt) example_program in
@@ -797,7 +899,7 @@ let%expect_test "Statement label map example" =
        (7 (NRFunApp print ((Var i)))) (8 (Block (9)))
        (9
         (For (loopvar (Var j)) (lower (Lit Int 1)) (upper (Lit Int 10)) (body 10)))
-       (10 (Block (11 14 17)))
+       (10 (Block (11 14 17 22)))
        (11 (IfElse (BinOp (Var j) Greater (Lit Int 9)) 12 ())) (12 (Block (13)))
        (13 Break)
        (14
@@ -808,7 +910,8 @@ let%expect_test "Statement label map example" =
        (15 (Block (16))) (16 Continue)
        (17 (IfElse (BinOp (Var j) Greater (Lit Int 5)) 18 (20))) (18 (Block (19)))
        (19 Continue) (20 (Block (21)))
-       (21 (NRFunApp print ((Lit Str "\"Badger\"") (BinOp (Var i) Plus (Var j))))))
+       (21 (NRFunApp print ((Lit Str "\"Badger\"") (BinOp (Var i) Plus (Var j)))))
+       (22 (NRFunApp print ((Lit Str "\"Fin\"")))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -819,7 +922,20 @@ let%expect_test "Controlflow graph example" =
     {|
       ((1 (0)) (2 (0)) (3 (0)) (4 (0)) (5 (0)) (6 (5)) (7 (5)) (8 (5)) (9 (5 13))
        (10 (9)) (11 (9)) (12 (11)) (13 (11)) (14 (9)) (15 (14)) (16 (14))
-       (17 (9 16)) (18 (16 17)) (19 (16 17)) (20 (16 17)) (21 (16 17)))
+       (17 (9 16)) (18 (16 17)) (19 (16 17)) (20 (16 17)) (21 (16 17))
+       (22 (9 16 19)))
+    |}]
+
+let%expect_test "Predecessor graph example" =
+  let statement_map = build_statement_map (fun s -> s.stmt) example_program in
+  let exits, preds = build_predecessor_graph statement_map in
+  print_s [%sexp ((exits, preds) : Int.Set.t * Int.Set.t Int.Map.t)] ;
+  [%expect
+    {|
+      ((7 8 22)
+       ((1 (0)) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8))
+        (10 (9 22)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
+        (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
     |}]
 
 (***********************************)
