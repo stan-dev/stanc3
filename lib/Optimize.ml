@@ -43,7 +43,47 @@ let rec replace_fresh_local_vars stmt =
            l)
   | x -> x
 
-let substitute_args _ _ b = b
+let rec subst_args_expr args es e =
+  let arg_map = Map.Poly.of_alist_exn (List.zip_exn args es) in
+  let f = subst_args_expr args es in
+  match e with
+  | Var v -> ( match Map.find arg_map v with None -> Var v | Some e -> e )
+  | Lit (t, v) -> Lit (t, v)
+  | FunApp (s, e_list) -> FunApp (s, List.map ~f e_list)
+  (* Note: when we add higher order functions, we will need to do something here. *)
+  | BinOp (e1, op, e2) -> BinOp (f e1, op, f e2)
+  | TernaryIf (e1, e2, e3) -> TernaryIf (f e1, f e2, f e3)
+  | Indexed (e, is) -> Indexed (f e, List.map ~f:(subst_args_idx args es) is)
+
+and subst_args_idx args es i =
+  let f = subst_args_expr args es in
+  match i with
+  | All -> All
+  | Single e -> Single (f e)
+  | Upfrom e -> Upfrom (f e)
+  | Downfrom e -> Downfrom (f e)
+  | Between (e1, e2) -> Between (f e1, f e2)
+  | MultiIndex e -> MultiIndex (f e)
+
+let rec subst_args_stmt args es b =
+  let f = subst_args_expr args es in
+  let g {stmt; sloc} = {stmt= subst_args_stmt args es stmt; sloc} in
+  match b with
+  | Assignment (e1, e2) -> Assignment (f e1, f e2)
+  | TargetPE e -> TargetPE (f e)
+  | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
+  | Check {ccfunname; ccvid; cctype; ccargs} ->
+      Check {ccfunname; ccvid; cctype; ccargs= List.map ccargs ~f}
+  | Return opt_e -> Return (Option.map opt_e ~f)
+  | IfElse (e, b1, b2) -> IfElse (f e, g b1, Option.map ~f:g b2)
+  | While (e, b) -> While (f e, g b)
+  | For {loopvar; lower; upper; body} ->
+      For {loopvar; lower= f lower; upper= f upper; body= g body}
+  | Block sl -> Block (List.map ~f:g sl)
+  | SList sl -> SList (List.map ~f:g sl)
+  | FunDef {fdrt; fdname; fdargs; fdbody} ->
+      FunDef {fdrt; fdname; fdargs; fdbody= g fdbody}
+  | x -> x
 
 (* TODO *)
 
@@ -123,7 +163,7 @@ let rec inline_function_statement fim {stmt; sloc} =
                 | Some (args, b) ->
                     let b = replace_fresh_local_vars b in
                     let b = handle_early_returns None b in
-                    substitute_args args es b ) ] )
+                    subst_args_stmt args es b ) ] )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
           let se_list = List.map ~f:(inline_function_expression fim) ccargs in
           let s_list = List.concat (List.map ~f:fst se_list) in
@@ -170,7 +210,9 @@ let rec inline_function_statement fim {stmt; sloc} =
                       ; sloc= "" } } ] )
       | Block l -> Block (List.map l ~f:(inline_function_statement fim))
       | SList l -> SList (List.map l ~f:(inline_function_statement fim))
-      | FunDef _ -> Errors.fatal_error ()
+      | FunDef {fdrt; fdname; fdargs; fdbody} ->
+          FunDef
+            {fdrt; fdname; fdargs; fdbody= inline_function_statement fim fdbody}
       | Decl r -> Decl r
       | Skip -> Skip
       | Break -> Break
@@ -191,7 +233,7 @@ and inline_function_expression fim e =
           let b = replace_fresh_local_vars b in
           let x = Util.gensym () in
           let b = handle_early_returns (Some x) b in
-          (s_list @ [substitute_args args es b], Var x) )
+          (s_list @ [subst_args_stmt args es b], Var x) )
   | BinOp (e1, op, e2) ->
       let sl1, e1 = inline_function_expression fim e1 in
       let sl2, e2 = inline_function_expression fim e2 in
@@ -235,7 +277,7 @@ and inline_function_index fim i =
 
 let function_inlining (mir : stmt_loc prog) =
   let function_inline_map = create_function_inline_map mir.functionsb in
-  { functionsb= mir.functionsb
+  { functionsb= inline_function_statement function_inline_map mir.functionsb
   ; datavars= mir.datavars
   ; tdatab=
       ( fst mir.tdatab
