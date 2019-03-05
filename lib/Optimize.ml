@@ -36,7 +36,11 @@ let rec inline_function_statement fim {stmt; sloc} =
             ( inline_function_expression fim e1
             , inline_function_expression fim e2 )
       | TargetPE e -> TargetPE (inline_function_expression fim e)
-      | NRFunApp (s, es) -> NRFunApp (s, es) (* TODO *)
+      | NRFunApp (s, es) -> (
+          let new_es = List.map ~f:(inline_function_expression fim) es in
+          match Map.find fim s with
+          | None -> NRFunApp (s, new_es)
+          | Some (_, _) -> NRFunApp (s, new_es) )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
           Check
             { ccfunname
