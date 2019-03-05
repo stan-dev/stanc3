@@ -635,29 +635,43 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
 (* Utility functions               *)
 (***********************************)
 
-let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f) ~f:(f : 'f -> 'a -> 'f * 'c) : ('f * 'c statement) =
+let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
+    ~(f : 'f -> 'a -> 'f * 'c) : 'f * 'c statement =
   match stmt with
   | IfElse (pred, then_s, else_s_opt) ->
-    let (s', c) = f state then_s in
-    Option.value_map else_s_opt
-      ~default:(s', IfElse (pred, c, None))
-      ~f:(fun else_s -> let (s'', c') = f s' else_s in
-           (s'', IfElse (pred, c, Some c')))
+      let s', c = f state then_s in
+      Option.value_map else_s_opt
+        ~default:(s', IfElse (pred, c, None))
+        ~f:(fun else_s ->
+          let s'', c' = f s' else_s in
+          (s'', IfElse (pred, c, Some c')) )
   | While (pred, body) ->
-    let (s', c) = f state body in
-    (s', While (pred, c))
+      let s', c = f state body in
+      (s', While (pred, c))
   | For vars ->
-    let (s', c) = f state vars.body in
-    (s', For {vars with body = c})
+      let s', c = f state vars.body in
+      (s', For {vars with body= c})
   | Block stmts ->
-    let (s', ls) = List.fold_left stmts ~f:(fun (s, l) stmt -> let (s', c) = f s stmt in (s', List.cons c l)) ~init:(state, []) in
-    (s', Block ls)
+      let s', ls =
+        List.fold_left stmts
+          ~f:(fun (s, l) stmt ->
+            let s', c = f s stmt in
+            (s', List.cons c l) )
+          ~init:(state, [])
+      in
+      (s', Block ls)
   | SList stmts ->
-    let (s', ls) = List.fold_left stmts ~f:(fun (s, l) stmt -> let (s', c) = f s stmt in (s', List.cons c l)) ~init:(state, []) in
-    (s', Block ls)
+      let s', ls =
+        List.fold_left stmts
+          ~f:(fun (s, l) stmt ->
+            let s', c = f s stmt in
+            (s', List.cons c l) )
+          ~init:(state, [])
+      in
+      (s', Block ls)
   | FunDef vars ->
-    let (s', c) = f state vars.fdbody in
-    (s', FunDef {vars with fdbody = c})
+      let s', c = f state vars.fdbody in
+      (s', FunDef {vars with fdbody= c})
   | Assignment _ as s -> (state, s)
   | NRFunApp _ as s -> (state, s)
   | Check _ as s -> (state, s)
@@ -668,15 +682,21 @@ let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f) ~f:(f : 'f -
   | Skip as s -> (state, s)
   | Decl _ as s -> (state, s)
 
-let build_statement_map (extract : 's -> 's statement) (stmt : 's) : (int statement) Int.Map.t =
-  let rec build_statement_map_rec (extract : 's -> 's statement) (next_label : label) (map : (int statement) Int.Map.t) (stmt : 's) : (int * (int statement) Int.Map.t) * int =
+let build_statement_map (extract : 's -> 's statement) (stmt : 's) :
+    int statement Int.Map.t =
+  let rec build_statement_map_rec (extract : 's -> 's statement)
+      (next_label : label) (map : int statement Int.Map.t) (stmt : 's) :
+      (int * int statement Int.Map.t) * int =
     let this_label = next_label in
     let next_label' = next_label + 1 in
     let f (label, map) stmt = build_statement_map_rec extract label map stmt in
-    let ((next_label'', map), built) = fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f:f in
-    ((next_label'', merge_label_maps map (Int.Map.singleton this_label built)), this_label)
+    let (next_label'', map), built =
+      fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f
+    in
+    ( (next_label'', merge_label_maps map (Int.Map.singleton this_label built))
+    , this_label )
   in
-  let ((_, map), _) = build_statement_map_rec extract 1 Int.Map.empty stmt in
+  let (_, map), _ = build_statement_map_rec extract 1 Int.Map.empty stmt in
   map
 
 let%expect_test "Statement label map example" =
