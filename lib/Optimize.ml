@@ -24,17 +24,92 @@ let create_function_inline_map {stmt; _} =
       Errors.fatal_error ()
   | SList l -> List.fold l ~init:Map.Poly.empty ~f
 
-let inline_function _ s = s
+let replace_fresh_local_vars s = s
+
+(* TODO *)
+
+let rec inline_function_statement fim {stmt; sloc} =
+  { stmt=
+      ( match stmt with
+      | Assignment (e1, e2) ->
+          Assignment
+            ( inline_function_expression fim e1
+            , inline_function_expression fim e2 )
+      | TargetPE e -> TargetPE (inline_function_expression fim e)
+      | NRFunApp (s, es) -> NRFunApp (s, es) (* TODO *)
+      | Check {ccfunname; ccvid; cctype; ccargs} ->
+          Check
+            { ccfunname
+            ; ccvid
+            ; cctype
+            ; ccargs= List.map ccargs ~f:(inline_function_expression fim) }
+      | Return e -> Return (Option.map ~f:(inline_function_expression fim) e)
+      | IfElse (e, s1, s2) ->
+          IfElse
+            ( inline_function_expression fim e
+            , inline_function_statement fim s1
+            , Option.map ~f:(inline_function_statement fim) s2 )
+      | While (e, s) ->
+          While
+            (inline_function_expression fim e, inline_function_statement fim s)
+      | For {loopvar; lower; upper; body} ->
+          For
+            { loopvar
+            ; lower= inline_function_expression fim lower
+            ; upper= inline_function_expression fim upper
+            ; body= inline_function_statement fim body }
+      | Block l -> Block (List.map l ~f:(inline_function_statement fim))
+      | SList l -> SList (List.map l ~f:(inline_function_statement fim))
+      | FunDef _ -> Errors.fatal_error ()
+      | Decl r -> Decl r
+      | Skip -> Skip
+      | Break -> Break
+      | Continue -> Continue )
+  ; sloc }
+
+and inline_function_expression fim e =
+  match e with
+  | Var x -> Var x
+  | Lit (t, v) -> Lit (t, v)
+  | FunApp (_, _) -> failwith "<case>" (* TODO *)
+  | BinOp (e1, op, e2) ->
+      BinOp
+        ( inline_function_expression fim e1
+        , op
+        , inline_function_expression fim e2 )
+  | TernaryIf (e1, e2, e3) ->
+      TernaryIf
+        ( inline_function_expression fim e1
+        , inline_function_expression fim e2
+        , inline_function_expression fim e3 )
+  | Indexed (e, i) ->
+      Indexed
+        ( inline_function_expression fim e
+        , List.map ~f:(inline_function_index fim) i )
+
+and inline_function_index fim i =
+  match i with
+  | All -> All
+  | Single e -> Single (inline_function_expression fim e)
+  | Upfrom e -> Upfrom (inline_function_expression fim e)
+  | Downfrom e -> Downfrom (inline_function_expression fim e)
+  | Between (e1, e2) ->
+      Between
+        (inline_function_expression fim e1, inline_function_expression fim e2)
+  | MultiIndex e -> MultiIndex (inline_function_expression fim e)
 
 let function_inlining (mir : stmt_loc prog) =
   let function_inline_map = create_function_inline_map mir.functionsb in
   { functionsb= mir.functionsb
   ; datavars= mir.datavars
   ; tdatab=
-      (fst mir.tdatab, inline_function function_inline_map (snd mir.tdatab))
+      ( fst mir.tdatab
+      , inline_function_statement function_inline_map (snd mir.tdatab) )
   ; modelb=
-      (fst mir.modelb, inline_function function_inline_map (snd mir.modelb))
-  ; gqb= (fst mir.gqb, inline_function function_inline_map (snd mir.gqb))
+      ( fst mir.modelb
+      , inline_function_statement function_inline_map (snd mir.modelb) )
+  ; gqb=
+      (fst mir.gqb, inline_function_statement function_inline_map (snd mir.gqb))
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
 
