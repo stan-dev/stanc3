@@ -8,8 +8,10 @@ let create_function_inline_map {stmt; _} =
   let f accum {stmt; _} =
     match stmt with
     | FunDef {fdname; fdargs; fdbody; _} -> (
-      match Map.add accum ~key:fdname ~data:(fdargs, fdbody.stmt) with
-      (* TODO *)
+      match
+        Map.add accum ~key:fdname
+          ~data:(List.map ~f:(fun (_, name, _) -> name) fdargs, fdbody.stmt)
+      with
       | `Ok m -> m
       | `Duplicate -> accum )
     | _ -> Errors.fatal_error ()
@@ -33,42 +35,79 @@ let substitute_args _ _ b = b
 
 (* TODO *)
 
+let handle_early_returns b = b
+
+(* TODO: could do something like create a loop with a single
+iteration so we can use control operators like break *)
+
+let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
+let slist_no_loc l = SList (map_no_loc l)
+
 let rec inline_function_statement fim {stmt; sloc} =
   { stmt=
       ( match stmt with
       | Assignment (e1, e2) ->
-          Assignment
-            ( inline_function_expression fim e1
-            , inline_function_expression fim e2 )
-      | TargetPE e -> TargetPE (inline_function_expression fim e)
-      | NRFunApp (s, es) -> (
-          let new_es = List.map ~f:(inline_function_expression fim) es in
-          match Map.find fim s with
-          | None -> NRFunApp (s, new_es)
-          | Some (args, b) ->
-              let new_b = replace_fresh_local_vars b in
-              substitute_args args new_es new_b )
+          let sl1, e1 = inline_function_expression fim e1 in
+          let sl2, e2 = inline_function_expression fim e2 in
+          slist_no_loc (sl1 @ sl2 @ [Assignment (e1, e2)])
+      | TargetPE e ->
+          let s, e = inline_function_expression fim e in
+          slist_no_loc (s @ [TargetPE e])
+      | NRFunApp (s, es) ->
+          let se_list = List.map ~f:(inline_function_expression fim) es in
+          let s_list = List.concat (List.map ~f:fst se_list) in
+          let es = List.map ~f:snd se_list in
+          slist_no_loc
+            ( s_list
+            @ [ ( match Map.find fim s with
+                | None -> NRFunApp (s, es)
+                | Some (args, b) ->
+                    let b = replace_fresh_local_vars b in
+                    substitute_args args es b ) ] )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
-          Check
-            { ccfunname
-            ; ccvid
-            ; cctype
-            ; ccargs= List.map ccargs ~f:(inline_function_expression fim) }
-      | Return e -> Return (Option.map ~f:(inline_function_expression fim) e)
+          let se_list = List.map ~f:(inline_function_expression fim) ccargs in
+          let s_list = List.concat (List.map ~f:fst se_list) in
+          let es = List.map ~f:snd se_list in
+          slist_no_loc (s_list @ [Check {ccfunname; ccvid; cctype; ccargs= es}])
+      | Return e -> (
+        match e with
+        | None -> Return None
+        | Some e ->
+            let s, e = inline_function_expression fim e in
+            slist_no_loc (s @ [Return (Some e)]) )
       | IfElse (e, s1, s2) ->
-          IfElse
-            ( inline_function_expression fim e
-            , inline_function_statement fim s1
-            , Option.map ~f:(inline_function_statement fim) s2 )
+          let s, e = inline_function_expression fim e in
+          slist_no_loc
+            ( s
+            @ [ IfElse
+                  ( e
+                  , inline_function_statement fim s1
+                  , Option.map ~f:(inline_function_statement fim) s2 ) ] )
       | While (e, s) ->
-          While
-            (inline_function_expression fim e, inline_function_statement fim s)
+          let s', e = inline_function_expression fim e in
+          slist_no_loc
+            ( s'
+            @ [ While
+                  ( e
+                  , { stmt=
+                        SList
+                          ([inline_function_statement fim s] @ map_no_loc s')
+                    ; sloc= "" } ) ] )
       | For {loopvar; lower; upper; body} ->
-          For
-            { loopvar
-            ; lower= inline_function_expression fim lower
-            ; upper= inline_function_expression fim upper
-            ; body= inline_function_statement fim body }
+          let s_lower, lower = inline_function_expression fim lower in
+          let s_upper, upper = inline_function_expression fim upper in
+          slist_no_loc
+            ( s_lower @ s_upper
+            @ [ For
+                  { loopvar
+                  ; lower
+                  ; upper
+                  ; body=
+                      { stmt=
+                          SList
+                            ( [inline_function_statement fim body]
+                            @ map_no_loc s_upper )
+                      ; sloc= "" } } ] )
       | Block l -> Block (List.map l ~f:(inline_function_statement fim))
       | SList l -> SList (List.map l ~f:(inline_function_statement fim))
       | FunDef _ -> Errors.fatal_error ()
@@ -80,34 +119,58 @@ let rec inline_function_statement fim {stmt; sloc} =
 
 and inline_function_expression fim e =
   match e with
-  | Var x -> Var x
-  | Lit (t, v) -> Lit (t, v)
-  | FunApp (_, _) -> failwith "<case>" (* TODO *)
+  | Var x -> ([], Var x)
+  | Lit (t, v) -> ([], Lit (t, v))
+  | FunApp (s, es) -> (
+      let se_list = List.map ~f:(inline_function_expression fim) es in
+      let s_list = List.concat (List.map ~f:fst se_list) in
+      let es = List.map ~f:snd se_list in
+      match Map.find fim s with
+      | None -> ([], FunApp (s, es))
+      | Some (args, b) ->
+          let b = replace_fresh_local_vars b in
+          let x = Util.gensym () in
+          (s_list @ [substitute_args args es b], Var x) )
   | BinOp (e1, op, e2) ->
-      BinOp
-        ( inline_function_expression fim e1
-        , op
-        , inline_function_expression fim e2 )
+      let sl1, e1 = inline_function_expression fim e1 in
+      let sl2, e2 = inline_function_expression fim e2 in
+      (sl1 @ sl2, BinOp (e1, op, e2))
   | TernaryIf (e1, e2, e3) ->
-      TernaryIf
-        ( inline_function_expression fim e1
-        , inline_function_expression fim e2
-        , inline_function_expression fim e3 )
-  | Indexed (e, i) ->
-      Indexed
-        ( inline_function_expression fim e
-        , List.map ~f:(inline_function_index fim) i )
+      let sl1, e1 = inline_function_expression fim e1 in
+      let sl2, e2 = inline_function_expression fim e2 in
+      let sl3, e3 = inline_function_expression fim e3 in
+      ( sl1
+        @ [ IfElse
+              ( e1
+              , {stmt= slist_no_loc sl2; sloc= ""}
+              , Some {stmt= slist_no_loc sl3; sloc= ""} ) ]
+      , TernaryIf (e1, e2, e3) )
+  | Indexed (e, i_list) ->
+      let sl, e = inline_function_expression fim e in
+      let si_list = List.map ~f:(inline_function_index fim) i_list in
+      let i_list = List.map ~f:snd si_list in
+      let s_list = List.concat (List.map ~f:fst si_list) in
+      (sl @ s_list, Indexed (e, i_list))
 
 and inline_function_index fim i =
   match i with
-  | All -> All
-  | Single e -> Single (inline_function_expression fim e)
-  | Upfrom e -> Upfrom (inline_function_expression fim e)
-  | Downfrom e -> Downfrom (inline_function_expression fim e)
+  | All -> ([], All)
+  | Single e ->
+      let sl, e = inline_function_expression fim e in
+      (sl, Single e)
+  | Upfrom e ->
+      let sl, e = inline_function_expression fim e in
+      (sl, Upfrom e)
+  | Downfrom e ->
+      let sl, e = inline_function_expression fim e in
+      (sl, Downfrom e)
   | Between (e1, e2) ->
-      Between
-        (inline_function_expression fim e1, inline_function_expression fim e2)
-  | MultiIndex e -> MultiIndex (inline_function_expression fim e)
+      let sl1, e1 = inline_function_expression fim e1 in
+      let sl2, e2 = inline_function_expression fim e2 in
+      (sl1 @ sl2, Between (e1, e2))
+  | MultiIndex e ->
+      let sl, e = inline_function_expression fim e in
+      (sl, MultiIndex e)
 
 let function_inlining (mir : stmt_loc prog) =
   let function_inline_map = create_function_inline_map mir.functionsb in
