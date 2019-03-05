@@ -180,7 +180,7 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
                      AutoDiffable
                      (* XXX Shouldn't be autodiffable in tdata or gen quant *)
                  ; decl_id= name
-                 ; decl_type= trans_sizedtype sizedtype }
+                 ; decl_type= Ast.remove_size (trans_sizedtype sizedtype) }
              ; Option.map
                  ~f:(fun x -> Assignment (Var name, trans_expr x))
                  initial_value

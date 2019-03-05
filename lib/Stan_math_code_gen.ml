@@ -158,9 +158,7 @@ let%expect_test "with idx" =
   print_s [%sexp (with_idx (List.range 10 15) : (int * int) list)] ;
   [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
-let pp_decl ppf (vident, st) =
-  pf ppf "%a %s;" pp_prim_stantype (Ast.remove_size st) vident
-
+let pp_decl ppf (vident, st) = pf ppf "%a %s;" pp_prim_stantype st vident
 let with_no_loc stmt = {stmt; sloc= ""}
 
 let pp_located_msg ppf msg =
@@ -372,7 +370,7 @@ let%expect_test "run code per element" =
             } |}]
 
 let%expect_test "decl" =
-  Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= SInt}
+  Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= UInt}
   |> with_no_loc |> strf "%a" pp_statement |> print_endline ;
   [%expect {|
     current_statement__ = "";
@@ -502,7 +500,7 @@ let pp_ctor ppf p =
 
 let pp_model_private ppf p =
   pf ppf "%a" (list ~sep:cut pp_decl)
-    (List.map ~f:(fun (x, y, _) -> (x, y)) (data_decls_of_p p))
+    (List.map ~f:(fun (x, y, _) -> (x, Ast.remove_size y)) (data_decls_of_p p))
 
 let pp_get_param_names ppf p =
   let param_names =

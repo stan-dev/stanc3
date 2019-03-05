@@ -79,7 +79,7 @@ and 's statement =
   (* An SList does not share any of Block's semantics - it is just multiple
      (ordered!) statements*)
   | SList of 's list
-  | Decl of {decl_adtype: adtype; decl_id: string; decl_type: sizedtype}
+  | Decl of {decl_adtype: adtype; decl_id: string; decl_type: unsizedtype}
   | FunDef of
       { fdrt: unsizedtype option
       ; fdname: string
