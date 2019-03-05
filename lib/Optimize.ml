@@ -43,16 +43,60 @@ let rec replace_fresh_local_vars stmt =
            l)
   | x -> x
 
-(* TODO *)
-
 let substitute_args _ _ b = b
 
 (* TODO *)
 
-let handle_early_returns _ b = b
-
-(* TODO: could do something like create a loop with a single
-iteration so we can use control operators like break *)
+let rec handle_early_returns opt_var b =
+  For
+    { loopvar= Var (Util.gensym ())
+    ; lower= Lit (Int, "1")
+    ; upper= Lit (Int, "1")
+    ; body=
+        { sloc= ""
+        ; stmt=
+            ( match b with
+            | Return opt_ret -> (
+              match (opt_var, opt_ret) with
+              | None, Some _ | Some _, None -> Errors.fatal_error ()
+              | None, None -> Break
+              | Some v, Some e -> Assignment (Var v, e) )
+            | IfElse (e, b1, b2) ->
+                IfElse
+                  ( e
+                  , {stmt= handle_early_returns opt_var b1.stmt; sloc= b1.sloc}
+                  , match b2 with
+                    | None -> None
+                    | Some b2 ->
+                        Some
+                          { stmt= handle_early_returns opt_var b2.stmt
+                          ; sloc= b2.sloc } )
+            | While (e, body) ->
+                While
+                  ( e
+                  , { stmt= handle_early_returns opt_var body.stmt
+                    ; sloc= body.sloc } )
+            | For {loopvar; lower; upper; body} ->
+                For
+                  { loopvar
+                  ; lower
+                  ; upper
+                  ; body=
+                      { stmt= handle_early_returns opt_var body.stmt
+                      ; sloc= body.sloc } }
+            | Block l ->
+                Block
+                  (List.map
+                     ~f:(fun {stmt; sloc} ->
+                       {stmt= handle_early_returns opt_var stmt; sloc} )
+                     l)
+            | SList l ->
+                SList
+                  (List.map
+                     ~f:(fun {stmt; sloc} ->
+                       {stmt= handle_early_returns opt_var stmt; sloc} )
+                     l)
+            | x -> x ) } }
 
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
 let slist_no_loc l = SList (map_no_loc l)
