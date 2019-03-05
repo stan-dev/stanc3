@@ -100,7 +100,10 @@ let rec handle_early_returns opt_var b =
               match (opt_var, opt_ret) with
               | None, Some _ | Some _, None -> Errors.fatal_error ()
               | None, None -> Break
-              | Some v, Some e -> Assignment (Var v, e) )
+              | Some v, Some e ->
+                  SList
+                    [ {stmt= Assignment (Var v, e); sloc= ""}
+                    ; {stmt= Break; sloc= ""} ] )
             | IfElse (e, b1, b2) ->
                 IfElse
                   ( e
