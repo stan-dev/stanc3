@@ -27,7 +27,21 @@ let create_function_inline_map {stmt; _} =
       Errors.fatal_error ()
   | SList l -> List.fold l ~init:Map.Poly.empty ~f
 
-let replace_fresh_local_vars s = s
+let rec replace_fresh_local_vars stmt =
+  match stmt with
+  | Decl {decl_adtype; decl_type; _} ->
+      Decl {decl_adtype; decl_id= Util.gensym (); decl_type}
+  | SList l ->
+      SList
+        (List.map
+           ~f:(fun {stmt; sloc} -> {stmt= replace_fresh_local_vars stmt; sloc})
+           l)
+  | Block l ->
+      Block
+        (List.map
+           ~f:(fun {stmt; sloc} -> {stmt= replace_fresh_local_vars stmt; sloc})
+           l)
+  | x -> x
 
 (* TODO *)
 
@@ -35,7 +49,7 @@ let substitute_args _ _ b = b
 
 (* TODO *)
 
-let handle_early_returns b = b
+let handle_early_returns _ b = b
 
 (* TODO: could do something like create a loop with a single
 iteration so we can use control operators like break *)
@@ -43,6 +57,7 @@ iteration so we can use control operators like break *)
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
 let slist_no_loc l = SList (map_no_loc l)
 
+(* TODO: declare variables we are binding results to*)
 let rec inline_function_statement fim {stmt; sloc} =
   { stmt=
       ( match stmt with
@@ -63,6 +78,7 @@ let rec inline_function_statement fim {stmt; sloc} =
                 | None -> NRFunApp (s, es)
                 | Some (args, b) ->
                     let b = replace_fresh_local_vars b in
+                    let b = handle_early_returns None b in
                     substitute_args args es b ) ] )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
           let se_list = List.map ~f:(inline_function_expression fim) ccargs in
@@ -126,10 +142,11 @@ and inline_function_expression fim e =
       let s_list = List.concat (List.map ~f:fst se_list) in
       let es = List.map ~f:snd se_list in
       match Map.find fim s with
-      | None -> ([], FunApp (s, es))
+      | None -> (s_list, FunApp (s, es))
       | Some (args, b) ->
           let b = replace_fresh_local_vars b in
           let x = Util.gensym () in
+          let b = handle_early_returns (Some x) b in
           (s_list @ [substitute_args args es b], Var x) )
   | BinOp (e1, op, e2) ->
       let sl1, e1 = inline_function_expression fim e1 in
