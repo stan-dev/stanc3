@@ -632,6 +632,79 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
     ^ Sexp.to_string [%sexp (expr_deps : vexpr Set.Poly.t)] )
 
 (***********************************)
+(* Utility functions               *)
+(***********************************)
+
+let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f) ~f:(f : 'f -> 'a -> 'f * 'c) : ('f * 'c statement) =
+  match stmt with
+  | IfElse (pred, then_s, else_s_opt) ->
+    let (s', c) = f state then_s in
+    Option.value_map else_s_opt
+      ~default:(s', IfElse (pred, c, None))
+      ~f:(fun else_s -> let (s'', c') = f s' else_s in
+           (s'', IfElse (pred, c, Some c')))
+  | While (pred, body) ->
+    let (s', c) = f state body in
+    (s', While (pred, c))
+  | For vars ->
+    let (s', c) = f state vars.body in
+    (s', For {vars with body = c})
+  | Block stmts ->
+    let (s', ls) = List.fold_left stmts ~f:(fun (s, l) stmt -> let (s', c) = f s stmt in (s', List.cons c l)) ~init:(state, []) in
+    (s', Block ls)
+  | SList stmts ->
+    let (s', ls) = List.fold_left stmts ~f:(fun (s, l) stmt -> let (s', c) = f s stmt in (s', List.cons c l)) ~init:(state, []) in
+    (s', Block ls)
+  | FunDef vars ->
+    let (s', c) = f state vars.fdbody in
+    (s', FunDef {vars with fdbody = c})
+  | Assignment _ as s -> (state, s)
+  | NRFunApp _ as s -> (state, s)
+  | Check _ as s -> (state, s)
+  | MarkLocation _ as s -> (state, s)
+  | Break as s -> (state, s)
+  | Continue as s -> (state, s)
+  | Return _ as s -> (state, s)
+  | Skip as s -> (state, s)
+  | Decl _ as s -> (state, s)
+
+let build_statement_map (extract : 's -> 's statement) (stmt : 's) : (int statement) Int.Map.t =
+  let rec build_statement_map_rec (extract : 's -> 's statement) (next_label : label) (map : (int statement) Int.Map.t) (stmt : 's) : (int * (int statement) Int.Map.t) * int =
+    let this_label = next_label in
+    let next_label' = next_label + 1 in
+    let f (label, map) stmt = build_statement_map_rec extract label map stmt in
+    let ((next_label'', map), built) = fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f:f in
+    ((next_label'', merge_label_maps map (Int.Map.singleton this_label built)), this_label)
+  in
+  let ((_, map), _) = build_statement_map_rec extract 1 Int.Map.empty stmt in
+  map
+
+let%expect_test "Statement label map example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        model {
+          for (i in 1:2)
+            for (j in 3:4)
+              print("Badger", i + j);
+        }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let _, block = mir.modelb in
+  let statement_map = build_statement_map (fun s -> s.stmt) block in
+  print_s [%sexp (statement_map : int statement Int.Map.t)] ;
+  [%expect
+    {|
+      ((1 (Block (2)))
+       (2 (For (loopvar (Var i)) (lower (Lit Int 1)) (upper (Lit Int 2)) (body 3)))
+       (3 (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4)) (body 4)))
+       (4 (NRFunApp print ((Lit Str "\"Badger\"") (BinOp (Var i) Plus (Var j))))))
+    |}]
+
+(***********************************)
 (* Tests                           *)
 (***********************************)
 
@@ -994,6 +1067,7 @@ let%expect_test "program_df_graphs example" =
              (loc (MirNode "\"string\", line 13-13"))))))
          (possible_exits (1)) (probabilistic_nodes ()))))
     |}]
+
 (*
 transformed data {
   int<lower=0> N = 50;
@@ -1053,13 +1127,11 @@ transformed data {
   let exits = df_graph.possible_exits in
   let dependencies = labels_dependencies df_graph false exits in
   print_s [%sexp (dependencies : label Set.Poly.t)] ;
-  [%expect
-    {|
+  [%expect {|
       (0 1 4 5 6 7 8)
     |}]
 
-
-    (*
+(*
        TODO
 let%expect_test "top_var_dependencies example" =
   let ast =
@@ -1209,8 +1281,6 @@ model {
              (loc StartOfBlock)))))
          (possible_exits (0)) (probabilistic_nodes ()))))
     |}]
-
-
 
 let%expect_test "LDA example" =
   let ast =
