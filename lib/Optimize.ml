@@ -8,7 +8,8 @@ let create_function_inline_map {stmt; _} =
   let f accum {stmt; _} =
     match stmt with
     | FunDef {fdname; fdargs; fdbody; _} -> (
-      match Map.add accum ~key:fdname ~data:(fdargs, fdbody) with
+      match Map.add accum ~key:fdname ~data:(fdargs, fdbody.stmt) with
+      (* TODO *)
       | `Ok m -> m
       | `Duplicate -> accum )
     | _ -> Errors.fatal_error ()
@@ -28,6 +29,10 @@ let replace_fresh_local_vars s = s
 
 (* TODO *)
 
+let substitute_args _ _ b = b
+
+(* TODO *)
+
 let rec inline_function_statement fim {stmt; sloc} =
   { stmt=
       ( match stmt with
@@ -40,7 +45,9 @@ let rec inline_function_statement fim {stmt; sloc} =
           let new_es = List.map ~f:(inline_function_expression fim) es in
           match Map.find fim s with
           | None -> NRFunApp (s, new_es)
-          | Some (_, _) -> NRFunApp (s, new_es) )
+          | Some (args, b) ->
+              let new_b = replace_fresh_local_vars b in
+              substitute_args args new_es new_b )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
           Check
             { ccfunname
