@@ -319,8 +319,27 @@ let rec unroll_loops_statement {stmt; sloc} =
       ( match stmt with
       | For {loopvar; lower; upper; body} -> (
         match (contains_top_break_or_continue body, lower, upper) with
-        | false, Lit (Int, _), Lit (Int, _) -> For {loopvar; lower; upper; body}
-        | _ -> failwith "<case>" )
+        | false, Lit (Int, low), Lit (Int, up) ->
+            let range =
+              List.map
+                ~f:(fun i -> Lit (Int, Int.to_string i))
+                (List.range ~start:`inclusive ~stop:`inclusive
+                   (Int.of_string low) (Int.of_string up))
+            in
+            let loopvar_str =
+              match loopvar with Var s -> s | _ -> Errors.fatal_error ()
+            in
+            let stmts =
+              List.map
+                ~f:(fun i ->
+                  { stmt=
+                      subst_args_stmt [loopvar_str] [i]
+                        (unroll_loops_statement body).stmt
+                  ; sloc= "" } )
+                range
+            in
+            SList stmts
+        | _ -> For {loopvar; lower; upper; body= unroll_loops_statement body} )
       | IfElse (e, b1, b2) ->
           IfElse
             ( e
