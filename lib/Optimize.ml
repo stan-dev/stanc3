@@ -147,75 +147,74 @@ let rec handle_early_returns opt_var b =
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
 let slist_no_loc l = SList (map_no_loc l)
 
+let slist_concat_no_loc l stmt =
+  match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
+
 let rec inline_function_statement adt fim {stmt; sloc} =
   { stmt=
       ( match stmt with
       | Assignment (e1, e2) ->
           let sl1, e1 = inline_function_expression adt fim e1 in
           let sl2, e2 = inline_function_expression adt fim e2 in
-          slist_no_loc (sl1 @ sl2 @ [Assignment (e1, e2)])
+          slist_concat_no_loc (sl1 @ sl2) (Assignment (e1, e2))
       | TargetPE e ->
           let s, e = inline_function_expression adt fim e in
-          slist_no_loc (s @ [TargetPE e])
+          slist_concat_no_loc s (TargetPE e)
       | NRFunApp (s, es) ->
           let se_list = List.map ~f:(inline_function_expression adt fim) es in
           let s_list = List.concat (List.map ~f:fst se_list) in
           let es = List.map ~f:snd se_list in
-          slist_no_loc
-            ( s_list
-            @ [ ( match Map.find fim s with
-                | None -> NRFunApp (s, es)
-                | Some (_, args, b) ->
-                    let b = replace_fresh_local_vars b in
-                    let b = handle_early_returns None b in
-                    subst_args_stmt args es b ) ] )
+          slist_concat_no_loc s_list
+            ( match Map.find fim s with
+            | None -> NRFunApp (s, es)
+            | Some (_, args, b) ->
+                let b = replace_fresh_local_vars b in
+                let b = handle_early_returns None b in
+                subst_args_stmt args es b )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
           let se_list =
             List.map ~f:(inline_function_expression adt fim) ccargs
           in
           let s_list = List.concat (List.map ~f:fst se_list) in
           let es = List.map ~f:snd se_list in
-          slist_no_loc (s_list @ [Check {ccfunname; ccvid; cctype; ccargs= es}])
+          slist_concat_no_loc s_list
+            (Check {ccfunname; ccvid; cctype; ccargs= es})
       | Return e -> (
         match e with
         | None -> Return None
         | Some e ->
             let s, e = inline_function_expression adt fim e in
-            slist_no_loc (s @ [Return (Some e)]) )
+            slist_concat_no_loc s (Return (Some e)) )
       | IfElse (e, s1, s2) ->
           let s, e = inline_function_expression adt fim e in
-          slist_no_loc
-            ( s
-            @ [ IfElse
-                  ( e
-                  , inline_function_statement adt fim s1
-                  , Option.map ~f:(inline_function_statement adt fim) s2 ) ] )
+          slist_concat_no_loc s
+            (IfElse
+               ( e
+               , inline_function_statement adt fim s1
+               , Option.map ~f:(inline_function_statement adt fim) s2 ))
       | While (e, s) ->
           let s', e = inline_function_expression adt fim e in
-          slist_no_loc
-            ( s'
-            @ [ While
-                  ( e
-                  , { stmt=
-                        SList
-                          ( [inline_function_statement adt fim s]
-                          @ map_no_loc s' )
-                    ; sloc= "" } ) ] )
+          slist_concat_no_loc s'
+            (While
+               ( e
+               , { stmt=
+                     SList
+                       ([inline_function_statement adt fim s] @ map_no_loc s')
+                 ; sloc= "" } ))
       | For {loopvar; lower; upper; body} ->
           let s_lower, lower = inline_function_expression adt fim lower in
           let s_upper, upper = inline_function_expression adt fim upper in
-          slist_no_loc
-            ( s_lower @ s_upper
-            @ [ For
-                  { loopvar
-                  ; lower
-                  ; upper
-                  ; body=
-                      { stmt=
-                          SList
-                            ( [inline_function_statement adt fim body]
-                            @ map_no_loc s_upper )
-                      ; sloc= "" } } ] )
+          slist_concat_no_loc (s_lower @ s_upper)
+            (For
+               { loopvar
+               ; lower
+               ; upper
+               ; body=
+                   { stmt=
+                       SList
+                         ( [inline_function_statement adt fim body]
+                         @ map_no_loc s_upper )
+                   ; sloc= "" } })
       | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
       | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
       | FunDef {fdrt; fdname; fdargs; fdbody} ->
@@ -421,12 +420,8 @@ let%expect_test "inline functions" =
                 ((sloc <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (SList (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))))))
-                    ((sloc <opaque>)
-                     (stmt
-                      (SList (((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))))))
+                   (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
+                    ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
             ((sloc <opaque>)
              (stmt
               (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -435,10 +430,7 @@ let%expect_test "inline functions" =
                  (stmt
                   (Block
                    (((sloc <opaque>)
-                     (stmt
-                      (SList
-                       (((sloc <opaque>)
-                         (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))))))
+                     (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))
        (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
        (modelb
         (()
@@ -447,33 +439,28 @@ let%expect_test "inline functions" =
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
+               (For (loopvar (Var sym3__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
+                 ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym3__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (For (loopvar (Var sym1__)) (lower (Lit Int 1))
+                        (upper (Lit Int 1))
+                        (body
+                         ((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))))))
                      ((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>)
-                          (stmt
-                           (For (loopvar (Var sym1__)) (lower (Lit Int 1))
-                            (upper (Lit Int 1))
-                            (body
-                             ((sloc <opaque>)
-                              (stmt (NRFunApp print ((Lit Int 3)))))))))
+                       (For (loopvar (Var sym2__)) (lower (Lit Int 1))
+                        (upper (Lit Int 1))
+                        (body
                          ((sloc <opaque>)
                           (stmt
-                           (For (loopvar (Var sym2__)) (lower (Lit Int 1))
-                            (upper (Lit Int 1))
-                            (body
-                             ((sloc <opaque>)
-                              (stmt
-                               (NRFunApp print
-                                ((FunApp make_rowvec
-                                  ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
-                                   (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))))))))))
+                           (NRFunApp print
+                            ((FunApp make_rowvec
+                              ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
+                               (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))))))
              ((sloc <opaque>)
               (stmt
                (SList
@@ -543,21 +530,14 @@ let%expect_test "do not inline recursive functions" =
                  (stmt
                   (Block
                    (((sloc <opaque>)
-                     (stmt
-                      (SList
-                       (((sloc <opaque>)
-                         (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))))))
+                     (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))
        (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
        (modelb
         (()
          ((sloc <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
-              (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt (NRFunApp reject ((FunApp g ((Lit Int 53)))))))))))))))))
+            (((sloc <opaque>) (stmt (NRFunApp reject ((FunApp g ((Lit Int 53)))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
 
@@ -597,13 +577,8 @@ let%expect_test "inline function in loop" =
                 ((sloc <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (SList
-                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))))))
-                    ((sloc <opaque>)
-                     (stmt
-                      (SList (((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))))))
+                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                    ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
             ((sloc <opaque>)
              (stmt
               (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -611,15 +586,9 @@ let%expect_test "inline function in loop" =
                 ((sloc <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (SList
-                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))))))
+                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
                     ((sloc <opaque>)
-                     (stmt
-                      (SList
-                       (((sloc <opaque>)
-                         (stmt (Return ((BinOp (Var z) Plus (Lit Int 24)))))))))))))))))))))))
+                     (stmt (Return ((BinOp (Var z) Plus (Lit Int 24)))))))))))))))))))
        (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
        (modelb
         (()
@@ -628,19 +597,12 @@ let%expect_test "inline function in loop" =
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
+               (For (loopvar (Var i)) (lower (Lit Int 42)) (upper (Lit Int 6))
+                (body
+                 ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var i)) (lower (Lit Int 42)) (upper (Lit Int 6))
-                    (body
-                     ((sloc <opaque>)
-                      (stmt
-                       (SList
-                        (((sloc <opaque>)
-                          (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt (NRFunApp print ((Lit Str body)))))))))))))))))))))))))))
+                   (SList
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
 
