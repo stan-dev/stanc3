@@ -26,7 +26,10 @@ let create_function_inline_map {stmt; _} =
    |While (_, _)
    |For _ | Decl _ | FunDef _ ->
       raise_s [%sexp (stmt : stmt_loc statement)]
-  | SList l -> List.fold l ~init:Map.Poly.empty ~f
+  | SList l ->
+      Map.filter
+        ~f:(fun (_, _, v) -> v <> Skip)
+        (List.fold l ~init:Map.Poly.empty ~f)
   | Skip -> Map.Poly.empty
 
 let rec replace_fresh_local_vars stmt =
