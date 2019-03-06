@@ -314,18 +314,23 @@ let function_inlining (mir : stmt_loc prog) =
 let contains_top_break_or_continue _ = false
 
 (* TODO *)
-let unroll_loops_statement {stmt; sloc} =
+let rec unroll_loops_statement {stmt; sloc} =
   { stmt=
       ( match stmt with
       | For {loopvar; lower; upper; body} ->
           if contains_top_break_or_continue body then
             For {loopvar; lower; upper; body}
           else failwith "<case>"
-      | IfElse (_, _, _) -> failwith "<case>"
-      | While (_, _) -> failwith "<case>"
-      | Block _ -> failwith "<case>"
-      | SList _ -> failwith "<case>"
-      | FunDef _ -> failwith "<case>"
+      | IfElse (e, b1, b2) ->
+          IfElse
+            ( e
+            , unroll_loops_statement b1
+            , Option.map ~f:unroll_loops_statement b2 )
+      | While (e, b) -> While (e, unroll_loops_statement b)
+      | Block l -> Block (List.map ~f:unroll_loops_statement l)
+      | SList l -> SList (List.map ~f:unroll_loops_statement l)
+      | FunDef {fdrt; fdname; fdargs; fdbody} ->
+          FunDef {fdrt; fdname; fdargs; fdbody= unroll_loops_statement fdbody}
       | Check x -> Check x
       | Break -> Break
       | Assignment (x, y) -> Assignment (x, y)
