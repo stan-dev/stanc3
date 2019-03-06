@@ -225,9 +225,9 @@ let%expect_test "for each in array" =
   |> print_endline ;
   [%expect
     {|
-    for (size_t sym9__ = 0; sym9__ < z; sym9__++)
-      for (size_t sym8__ = 0; sym8__ < y; sym8__++)
-        check_whatever(alpha[sym8__][sym9__]); |}]
+    for (size_t sym19__ = 0; sym19__ < z; sym19__++)
+      for (size_t sym18__ = 0; sym18__ < y; sym18__++)
+        check_whatever(alpha[sym18__][sym19__]); |}]
 
 let trans_math_fn fname =
   match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])

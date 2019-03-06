@@ -773,7 +773,7 @@ let%expect_test "inline function in while loop" =
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
 
-let%expect_test "inline function in while loop" =
+let%expect_test "inline function in if then else" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -860,7 +860,7 @@ let%expect_test "inline function in while loop" =
 
     |}]
 
-let%expect_test "inline function in while loop" =
+let%expect_test "inline function in ternary if " =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1009,6 +1009,97 @@ let%expect_test "inline function in while loop" =
                     ((TernaryIf (Var sym12__) (Var sym14__) (Var sym16__))))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
+
+let%expect_test "inline function in ternary if " =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        int f(int z) {
+          if (2) {
+            print("f");
+            return 42;
+          }
+          return 6;
+        }
+      }
+      model {
+        print(f(2));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functionsb
+        ((sloc <opaque>)
+         (stmt
+          (SList
+           (((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+               (fdbody
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (IfElse (Lit Int 2)
+                       ((sloc <opaque>)
+                        (stmt
+                         (Block
+                          (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                           ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))
+                       ())))
+                    ((sloc <opaque>) (stmt (Return ((Lit Int 6))))))))))))))))))
+       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+       (modelb
+        (()
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym18__)
+                    (decl_type UInt))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (For (loopvar (Var sym19__)) (lower (Lit Int 1))
+                    (upper (Lit Int 1))
+                    (body
+                     ((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt
+                           (IfElse (Lit Int 2)
+                            ((sloc <opaque>)
+                             (stmt
+                              (Block
+                               (((sloc <opaque>)
+                                 (stmt (NRFunApp print ((Lit Str f)))))
+                                ((sloc <opaque>)
+                                 (stmt
+                                  (SList
+                                   (((sloc <opaque>)
+                                     (stmt (Assignment (Var sym18__) (Lit Int 42))))
+                                    ((sloc <opaque>) (stmt Break))))))))))
+                            ())))
+                         ((sloc <opaque>)
+                          (stmt
+                           (SList
+                            (((sloc <opaque>)
+                              (stmt (Assignment (Var sym18__) (Lit Int 6))))
+                             ((sloc <opaque>) (stmt Break))))))))))))))
+                 ((sloc <opaque>) (stmt (NRFunApp print ((Var sym18__)))))))))))))))
+       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |} ]
 
 let%expect_test "unroll nested loop" =
   let ast =
