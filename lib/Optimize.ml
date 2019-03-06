@@ -311,7 +311,23 @@ let function_inlining (mir : stmt_loc prog) =
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
 
-let contains_top_break_or_continue _ = false
+let rec contains_top_break_or_continue {stmt; _} =
+  match stmt with
+  | Break | Continue -> true
+  | Assignment (_, _)
+   |TargetPE _
+   |NRFunApp (_, _)
+   |Check _ | Return _ | FunDef _ | Decl _
+   |While (_, _)
+   |For _ | Skip ->
+      false
+  | Block l | SList l -> List.exists l ~f:contains_top_break_or_continue
+  | IfElse (_, b1, b2) -> (
+      contains_top_break_or_continue b1
+      ||
+      match b2 with
+      | None -> false
+      | Some b -> contains_top_break_or_continue b )
 
 (* TODO *)
 let rec unroll_loops_statement {stmt; sloc} =
