@@ -311,6 +311,41 @@ let function_inlining (mir : stmt_loc prog) =
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
 
+let contains_top_break_or_continue _ = false
+
+(* TODO *)
+let unroll_loops_statement {stmt; sloc} =
+  { stmt=
+      ( match stmt with
+      | For {loopvar; lower; upper; body} ->
+          if contains_top_break_or_continue body then
+            For {loopvar; lower; upper; body}
+          else failwith "<case>"
+      | IfElse (_, _, _) -> failwith "<case>"
+      | While (_, _) -> failwith "<case>"
+      | Block _ -> failwith "<case>"
+      | SList _ -> failwith "<case>"
+      | FunDef _ -> failwith "<case>"
+      | Check x -> Check x
+      | Break -> Break
+      | Assignment (x, y) -> Assignment (x, y)
+      | TargetPE x -> TargetPE x
+      | NRFunApp (x, y) -> NRFunApp (x, y)
+      | Continue -> Continue
+      | Return x -> Return x
+      | Skip -> Skip
+      | Decl x -> Decl x )
+  ; sloc }
+
+let loop_unrolling (mir : stmt_loc prog) =
+  { functionsb= unroll_loops_statement mir.functionsb
+  ; datavars= mir.datavars
+  ; tdatab= (fst mir.tdatab, unroll_loops_statement (snd mir.tdatab))
+  ; modelb= (fst mir.modelb, unroll_loops_statement (snd mir.modelb))
+  ; gqb= (fst mir.gqb, unroll_loops_statement (snd mir.gqb))
+  ; prog_name= mir.prog_name
+  ; prog_path= mir.prog_path }
+
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
 (*
