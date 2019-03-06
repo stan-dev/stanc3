@@ -317,10 +317,10 @@ let contains_top_break_or_continue _ = false
 let rec unroll_loops_statement {stmt; sloc} =
   { stmt=
       ( match stmt with
-      | For {loopvar; lower; upper; body} ->
-          if contains_top_break_or_continue body then
-            For {loopvar; lower; upper; body}
-          else failwith "<case>"
+      | For {loopvar; lower; upper; body} -> (
+        match (contains_top_break_or_continue body, lower, upper) with
+        | false, Lit (Int, _), Lit (Int, _) -> For {loopvar; lower; upper; body}
+        | _ -> failwith "<case>" )
       | IfElse (e, b1, b2) ->
           IfElse
             ( e
