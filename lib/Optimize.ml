@@ -390,6 +390,50 @@ let loop_unrolling (mir : stmt_loc prog) =
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
 
+let rec collapse_lists_statement {stmt; sloc} =
+  let rec collapse_lists l =
+    match l with
+    | [] -> []
+    | {stmt= SList l'; _} :: rest -> l' @ collapse_lists rest
+    | x :: rest -> x :: collapse_lists rest
+  in
+  { stmt=
+      ( match stmt with
+      | Assignment (x, y) -> Assignment (x, y)
+      | TargetPE x -> TargetPE x
+      | NRFunApp (x, y) -> NRFunApp (x, y)
+      | Check x -> Check x
+      | Break -> Break
+      | Continue -> Continue
+      | Return x -> Return x
+      | Skip -> Skip
+      | IfElse (x, y, z) ->
+          IfElse
+            ( x
+            , collapse_lists_statement y
+            , Option.map ~f:collapse_lists_statement z )
+      | While (x, y) -> While (x, collapse_lists_statement y)
+      | For {loopvar; lower; upper; body} ->
+          For {loopvar; lower; upper; body= collapse_lists_statement body}
+      | Block l ->
+          Block (List.map ~f:collapse_lists_statement (collapse_lists l))
+      | SList l ->
+          SList (List.map ~f:collapse_lists_statement (collapse_lists l))
+      | Decl x -> Decl x
+      | FunDef {fdrt; fdname; fdargs; fdbody} ->
+          FunDef {fdrt; fdname; fdargs; fdbody= collapse_lists_statement fdbody}
+      )
+  ; sloc }
+
+let list_collapsing (mir : stmt_loc prog) =
+  { functionsb= collapse_lists_statement mir.functionsb
+  ; datavars= mir.datavars
+  ; tdatab= (fst mir.tdatab, collapse_lists_statement (snd mir.tdatab))
+  ; modelb= (fst mir.modelb, collapse_lists_statement (snd mir.modelb))
+  ; gqb= (fst mir.gqb, collapse_lists_statement (snd mir.gqb))
+  ; prog_name= mir.prog_name
+  ; prog_path= mir.prog_path }
+
 let%expect_test "inline functions" =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -484,6 +528,95 @@ let%expect_test "inline functions" =
                  ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym2__)))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
+
+let%expect_test "list collapsing" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        void f(int x, matrix y) {
+          print(x);
+          print(y);
+        }
+        real g(int z) {
+          return z^2;
+        }
+      }
+      model {
+        f(3, [[3,2],[4,6]]);
+        reject(g(53));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+    ((functionsb
+      ((sloc <opaque>)
+       (stmt
+        (SList
+         (((sloc <opaque>)
+           (stmt
+            (FunDef (fdrt ()) (fdname f)
+             (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
+             (fdbody
+              ((sloc <opaque>)
+               (stmt
+                (Block
+                 (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
+                  ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
+          ((sloc <opaque>)
+           (stmt
+            (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+             (fdbody
+              ((sloc <opaque>)
+               (stmt
+                (Block
+                 (((sloc <opaque>)
+                   (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))
+     (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+     (modelb
+      (()
+       ((sloc <opaque>)
+        (stmt
+         (SList
+          (((sloc <opaque>)
+            (stmt
+             (For (loopvar (Var sym4__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+              (body
+               ((sloc <opaque>)
+                (stmt
+                 (Block
+                  (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
+                   ((sloc <opaque>)
+                    (stmt
+                     (NRFunApp print
+                      ((FunApp make_rowvec
+                        ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
+                         (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
+           ((sloc <opaque>)
+            (stmt
+             (Decl (decl_adtype AutoDiffable) (decl_id sym5__) (decl_type UReal))))
+           ((sloc <opaque>)
+            (stmt
+             (For (loopvar (Var sym6__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+              (body
+               ((sloc <opaque>)
+                (stmt
+                 (Block
+                  (((sloc <opaque>)
+                    (stmt
+                     (Assignment (Var sym5__)
+                      (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
+                   ((sloc <opaque>) (stmt Break))))))))))
+           ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym5__)))))))))))
+     (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+     (prog_path ""))
+    |}]
 
 let%expect_test "do not inline recursive functions" =
   let ast =
@@ -592,11 +725,11 @@ let%expect_test "inline function in for loop" =
                (SList
                 (((sloc <opaque>)
                   (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym7__)
                     (decl_type UInt))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym5__)) (lower (Lit Int 1))
+                   (For (loopvar (Var sym8__)) (lower (Lit Int 1))
                     (upper (Lit Int 1))
                     (body
                      ((sloc <opaque>)
@@ -607,15 +740,15 @@ let%expect_test "inline function in for loop" =
                           (stmt
                            (SList
                             (((sloc <opaque>)
-                              (stmt (Assignment (Var sym4__) (Lit Int 42))))
+                              (stmt (Assignment (Var sym7__) (Lit Int 42))))
                              ((sloc <opaque>) (stmt Break))))))))))))))
                  ((sloc <opaque>)
                   (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym6__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
                     (decl_type UInt))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym7__)) (lower (Lit Int 1))
+                   (For (loopvar (Var sym10__)) (lower (Lit Int 1))
                     (upper (Lit Int 1))
                     (body
                      ((sloc <opaque>)
@@ -627,12 +760,12 @@ let%expect_test "inline function in for loop" =
                            (SList
                             (((sloc <opaque>)
                               (stmt
-                               (Assignment (Var sym6__)
+                               (Assignment (Var sym9__)
                                 (BinOp (Lit Int 3) Plus (Lit Int 24)))))
                              ((sloc <opaque>) (stmt Break))))))))))))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var i)) (lower (Var sym4__)) (upper (Var sym6__))
+                   (For (loopvar (Var i)) (lower (Var sym7__)) (upper (Var sym9__))
                     (body
                      ((sloc <opaque>)
                       (stmt
@@ -640,11 +773,11 @@ let%expect_test "inline function in for loop" =
                         (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
                          ((sloc <opaque>)
                           (stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym6__)
+                           (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
                             (decl_type UInt))))
                          ((sloc <opaque>)
                           (stmt
-                           (For (loopvar (Var sym7__)) (lower (Lit Int 1))
+                           (For (loopvar (Var sym10__)) (lower (Lit Int 1))
                             (upper (Lit Int 1))
                             (body
                              ((sloc <opaque>)
@@ -657,7 +790,7 @@ let%expect_test "inline function in for loop" =
                                    (SList
                                     (((sloc <opaque>)
                                       (stmt
-                                       (Assignment (Var sym6__)
+                                       (Assignment (Var sym9__)
                                         (BinOp (Lit Int 3) Plus (Lit Int 24)))))
                                      ((sloc <opaque>) (stmt Break))))))))))))))))))))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
@@ -722,11 +855,11 @@ let%expect_test "inline function in while loop" =
                (SList
                 (((sloc <opaque>)
                   (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym8__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
                     (decl_type UInt))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym9__)) (lower (Lit Int 1))
+                   (For (loopvar (Var sym12__)) (lower (Lit Int 1))
                     (upper (Lit Int 1))
                     (body
                      ((sloc <opaque>)
@@ -738,23 +871,23 @@ let%expect_test "inline function in while loop" =
                            (SList
                             (((sloc <opaque>)
                               (stmt
-                               (Assignment (Var sym8__)
+                               (Assignment (Var sym11__)
                                 (BinOp (Lit Int 3) Plus (Lit Int 24)))))
                              ((sloc <opaque>) (stmt Break))))))))))))))
                  ((sloc <opaque>)
                   (stmt
-                   (While (Var sym8__)
+                   (While (Var sym11__)
                     ((sloc <opaque>)
                      (stmt
                       (SList
                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
                         ((sloc <opaque>)
                          (stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym8__)
+                          (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
                            (decl_type UInt))))
                         ((sloc <opaque>)
                          (stmt
-                          (For (loopvar (Var sym9__)) (lower (Lit Int 1))
+                          (For (loopvar (Var sym12__)) (lower (Lit Int 1))
                            (upper (Lit Int 1))
                            (body
                             ((sloc <opaque>)
@@ -767,7 +900,7 @@ let%expect_test "inline function in while loop" =
                                   (SList
                                    (((sloc <opaque>)
                                      (stmt
-                                      (Assignment (Var sym8__)
+                                      (Assignment (Var sym11__)
                                        (BinOp (Lit Int 3) Plus (Lit Int 24)))))
                                     ((sloc <opaque>) (stmt Break)))))))))))))))))))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
@@ -832,11 +965,11 @@ let%expect_test "inline function in if then else" =
                (SList
                 (((sloc <opaque>)
                   (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym10__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym13__)
                     (decl_type UInt))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym11__)) (lower (Lit Int 1))
+                   (For (loopvar (Var sym14__)) (lower (Lit Int 1))
                     (upper (Lit Int 1))
                     (body
                      ((sloc <opaque>)
@@ -848,12 +981,12 @@ let%expect_test "inline function in if then else" =
                            (SList
                             (((sloc <opaque>)
                               (stmt
-                               (Assignment (Var sym10__)
+                               (Assignment (Var sym13__)
                                 (BinOp (Lit Int 3) Plus (Lit Int 24)))))
                              ((sloc <opaque>) (stmt Break))))))))))))))
                  ((sloc <opaque>)
                   (stmt
-                   (IfElse (Var sym10__)
+                   (IfElse (Var sym13__)
                     ((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body))))) ())))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path ""))
@@ -933,11 +1066,11 @@ let%expect_test "inline function in ternary if " =
                (SList
                 (((sloc <opaque>)
                   (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym12__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym15__)
                     (decl_type UInt))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym13__)) (lower (Lit Int 1))
+                   (For (loopvar (Var sym16__)) (lower (Lit Int 1))
                     (upper (Lit Int 1))
                     (body
                      ((sloc <opaque>)
@@ -948,21 +1081,21 @@ let%expect_test "inline function in ternary if " =
                           (stmt
                            (SList
                             (((sloc <opaque>)
-                              (stmt (Assignment (Var sym12__) (Lit Int 42))))
+                              (stmt (Assignment (Var sym15__) (Lit Int 42))))
                              ((sloc <opaque>) (stmt Break))))))))))))))
                  ((sloc <opaque>)
                   (stmt
-                   (IfElse (Var sym12__)
+                   (IfElse (Var sym15__)
                     ((sloc <opaque>)
                      (stmt
                       (SList
                        (((sloc <opaque>)
                          (stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym14__)
+                          (Decl (decl_adtype AutoDiffable) (decl_id sym17__)
                            (decl_type UInt))))
                         ((sloc <opaque>)
                          (stmt
-                          (For (loopvar (Var sym15__)) (lower (Lit Int 1))
+                          (For (loopvar (Var sym18__)) (lower (Lit Int 1))
                            (upper (Lit Int 1))
                            (body
                             ((sloc <opaque>)
@@ -975,7 +1108,7 @@ let%expect_test "inline function in ternary if " =
                                   (SList
                                    (((sloc <opaque>)
                                      (stmt
-                                      (Assignment (Var sym14__)
+                                      (Assignment (Var sym17__)
                                        (BinOp (Lit Int 3) Plus (Lit Int 24)))))
                                     ((sloc <opaque>) (stmt Break))))))))))))))))))
                     (((sloc <opaque>)
@@ -983,11 +1116,11 @@ let%expect_test "inline function in ternary if " =
                        (SList
                         (((sloc <opaque>)
                           (stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym16__)
+                           (Decl (decl_adtype AutoDiffable) (decl_id sym19__)
                             (decl_type UInt))))
                          ((sloc <opaque>)
                           (stmt
-                           (For (loopvar (Var sym17__)) (lower (Lit Int 1))
+                           (For (loopvar (Var sym20__)) (lower (Lit Int 1))
                             (upper (Lit Int 1))
                             (body
                              ((sloc <opaque>)
@@ -1000,13 +1133,13 @@ let%expect_test "inline function in ternary if " =
                                    (SList
                                     (((sloc <opaque>)
                                       (stmt
-                                       (Assignment (Var sym16__)
+                                       (Assignment (Var sym19__)
                                         (BinOp (Lit Int 4) Plus (Lit Int 4)))))
                                      ((sloc <opaque>) (stmt Break))))))))))))))))))))))
                  ((sloc <opaque>)
                   (stmt
                    (NRFunApp print
-                    ((TernaryIf (Var sym12__) (Var sym14__) (Var sym16__))))))))))))))))
+                    ((TernaryIf (Var sym15__) (Var sym17__) (Var sym19__))))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
 
@@ -1066,11 +1199,11 @@ let%expect_test "inline function in ternary if " =
                (SList
                 (((sloc <opaque>)
                   (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym18__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym21__)
                     (decl_type UInt))))
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym19__)) (lower (Lit Int 1))
+                   (For (loopvar (Var sym22__)) (lower (Lit Int 1))
                     (upper (Lit Int 1))
                     (body
                      ((sloc <opaque>)
@@ -1088,18 +1221,18 @@ let%expect_test "inline function in ternary if " =
                                  (stmt
                                   (SList
                                    (((sloc <opaque>)
-                                     (stmt (Assignment (Var sym18__) (Lit Int 42))))
+                                     (stmt (Assignment (Var sym21__) (Lit Int 42))))
                                     ((sloc <opaque>) (stmt Break))))))))))
                             ())))
                          ((sloc <opaque>)
                           (stmt
                            (SList
                             (((sloc <opaque>)
-                              (stmt (Assignment (Var sym18__) (Lit Int 6))))
+                              (stmt (Assignment (Var sym21__) (Lit Int 6))))
                              ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>) (stmt (NRFunApp print ((Var sym18__)))))))))))))))
+                 ((sloc <opaque>) (stmt (NRFunApp print ((Var sym21__)))))))))))))))
        (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |} ]
+       (prog_path "")) |}]
 
 let%expect_test "unroll nested loop" =
   let ast =
