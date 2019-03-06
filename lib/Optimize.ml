@@ -147,7 +147,6 @@ let rec handle_early_returns opt_var b =
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
 let slist_no_loc l = SList (map_no_loc l)
 
-(* TODO: declare variables we are binding results to*)
 let rec inline_function_statement adt fim {stmt; sloc} =
   { stmt=
       ( match stmt with
@@ -329,7 +328,6 @@ let rec contains_top_break_or_continue {stmt; _} =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
-(* TODO *)
 let rec unroll_loops_statement {stmt; sloc} =
   { stmt=
       ( match stmt with
@@ -385,6 +383,358 @@ let loop_unrolling (mir : stmt_loc prog) =
   ; gqb= (fst mir.gqb, unroll_loops_statement (snd mir.gqb))
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
+
+let%expect_test "inline functions" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        void f(int x, matrix y) {
+          print(x);
+          print(y);
+        }
+        real g(int z) {
+          return z^2;
+        }
+      }
+      model {
+        f(3, [[3,2],[4,6]]);
+        reject(g(53));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functionsb
+        ((sloc <opaque>)
+         (stmt
+          (SList
+           (((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt ()) (fdname f)
+               (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
+               (fdbody
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (SList (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (SList (((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))))))
+            ((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+               (fdbody
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (SList
+                       (((sloc <opaque>)
+                         (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))))))
+       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+       (modelb
+        (()
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (For (loopvar (Var sym3__)) (lower (Lit Int 1))
+                    (upper (Lit Int 1))
+                    (body
+                     ((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt
+                           (For (loopvar (Var sym1__)) (lower (Lit Int 1))
+                            (upper (Lit Int 1))
+                            (body
+                             ((sloc <opaque>)
+                              (stmt (NRFunApp print ((Lit Int 3)))))))))
+                         ((sloc <opaque>)
+                          (stmt
+                           (For (loopvar (Var sym2__)) (lower (Lit Int 1))
+                            (upper (Lit Int 1))
+                            (body
+                             ((sloc <opaque>)
+                              (stmt
+                               (NRFunApp print
+                                ((FunApp make_rowvec
+                                  ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
+                                   (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
+                    (decl_type UReal))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (For (loopvar (Var sym6__)) (lower (Lit Int 1))
+                    (upper (Lit Int 1))
+                    (body
+                     ((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt
+                           (For (loopvar (Var sym5__)) (lower (Lit Int 1))
+                            (upper (Lit Int 1))
+                            (body
+                             ((sloc <opaque>)
+                              (stmt
+                               (SList
+                                (((sloc <opaque>)
+                                  (stmt
+                                   (Assignment (Var sym4__)
+                                    (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
+                                 ((sloc <opaque>) (stmt Break))))))))))))))))))
+                 ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym4__)))))))))))))))
+       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "do not inline recursive functions" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        real g(int z);
+        real g(int z) {
+          return z^2;
+        }
+      }
+      model {
+        reject(g(53));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functionsb
+        ((sloc <opaque>)
+         (stmt
+          (SList
+           (((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+               (fdbody ((sloc <opaque>) (stmt Skip))))))
+            ((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+               (fdbody
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (SList
+                       (((sloc <opaque>)
+                         (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))))))
+       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+       (modelb
+        (()
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt (NRFunApp reject ((FunApp g ((Lit Int 53)))))))))))))))))
+       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "inline function in loop" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        int f(int z) {
+          print("f");
+          return 42;
+        }
+        int g(int z) {
+          print("g");
+          return z + 24;
+        }
+      }
+      model {
+        for (i in 42 : 6) print("body");
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functionsb
+        ((sloc <opaque>)
+         (stmt
+          (SList
+           (((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+               (fdbody
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (SList
+                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (SList (((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))))))
+            ((sloc <opaque>)
+             (stmt
+              (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+               (fdbody
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (SList
+                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (SList
+                       (((sloc <opaque>)
+                         (stmt (Return ((BinOp (Var z) Plus (Lit Int 24)))))))))))))))))))))))
+       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+       (modelb
+        (()
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (For (loopvar (Var i)) (lower (Lit Int 42)) (upper (Lit Int 6))
+                    (body
+                     ((sloc <opaque>)
+                      (stmt
+                       (SList
+                        (((sloc <opaque>)
+                          (stmt
+                           (SList
+                            (((sloc <opaque>)
+                              (stmt (NRFunApp print ((Lit Str body)))))))))))))))))))))))))))
+       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "unroll nested loop" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|      model {
+                for (i in 1:2)
+                  for (j in 3:4)
+                    print(i, j);
+                   }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = loop_unrolling mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functionsb ((sloc <opaque>) (stmt Skip))) (datavars ())
+       (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+       (modelb
+        (()
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (SList
+                    (((sloc <opaque>)
+                      (stmt (NRFunApp print ((Lit Int 1) (Lit Int 3)))))
+                     ((sloc <opaque>)
+                      (stmt (NRFunApp print ((Lit Int 1) (Lit Int 4)))))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (SList
+                    (((sloc <opaque>)
+                      (stmt (NRFunApp print ((Lit Int 2) (Lit Int 3)))))
+                     ((sloc <opaque>)
+                      (stmt (NRFunApp print ((Lit Int 2) (Lit Int 4)))))))))))))))))))
+       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "unroll nested loop with break" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|      model {
+                for (i in 1:2)
+                  for (j in 3:4) {
+                    print(i);
+                    break;
+                  }
+              }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = loop_unrolling mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functionsb ((sloc <opaque>) (stmt Skip))) (datavars ())
+       (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
+       (modelb
+        (()
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
+                    (body
+                     ((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 1)))))
+                         ((sloc <opaque>) (stmt Break))))))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
+                    (body
+                     ((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))))))))
+       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
