@@ -22,23 +22,23 @@ module type TYPE = sig
 end
 
 (** The data we need to form a powerset lattice *)
-module type PREPOWERSET = sig
+module type INITIALTYPE = sig
   type vals
 
   val initial : vals Set.Poly.t
 end
 
 (** The data we need to form e.g. an available xpressions lattice*)
-module type PREDUALSET = sig
+module type TOTALTYPE = sig
   type vals
 
   val total : vals Set.Poly.t
 end
 
 (** The data we need to form a dual powerset lattice *)
-module type PREDUALPOWERSET = sig
-  include PREPOWERSET
-  include PREDUALSET with type vals := vals
+module type INITIALTOTALTYPE = sig
+  include INITIALTYPE
+  include TOTALTYPE with type vals := vals
 end
 
 (** The API for a complete (possibly non-distributive) lattice,

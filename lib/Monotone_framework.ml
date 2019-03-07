@@ -30,7 +30,7 @@ module Reverse (F : FLOWGRAPH) : FLOWGRAPH = struct
               ~data:(Set.add (Map.find_exn accum old_succ) old_pred) ) )
 end
 
-module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
+module Powerset_lattice (S : INITIALTYPE) : LATTICE = struct
   type properties = S.vals Set.Poly.t
 
   let bottom = Set.Poly.empty
@@ -39,7 +39,7 @@ module Powerset_lattice (S : PREPOWERSET) : LATTICE = struct
   let initial = S.initial
 end
 
-module Dual_powerset_lattice (S : PREDUALPOWERSET) : LATTICE = struct
+module Dual_powerset_lattice (S : INITIALTOTALTYPE) : LATTICE = struct
   type properties = S.vals Set.Poly.t
 
   let bottom = S.total
@@ -64,7 +64,7 @@ module New_bot (L : LATTICE) : LATTICE = struct
   let initial = Some L.initial
 end
 
-module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : TYPE) :
+module Dual_partial_function_lattice (Dom : INITIALTYPE) (Codom : TYPE) :
   LATTICE = struct
   type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
@@ -84,34 +84,36 @@ module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : TYPE) :
   let initial = Map.Poly.empty
 end
 
-module Constant_propagation_lattice (Variables : PREPOWERSET) (Values : TYPE) :
-  LATTICE =
-  New_bot (Dual_partial_function_lattice (Variables) (Values))
+(* To use for constant propagation analysis *)
+module Dual_partial_function_lattice_with_bot
+    (Dom : INITIALTYPE)
+    (Codom : TYPE) : LATTICE =
+  New_bot (Dual_partial_function_lattice (Dom) (Codom))
 
-(* Note: this is also the lattice for a very busy expressions (anticipated
-   expressions) analysis
-   (the only difference is that that analysis is performed on the reverse
-   flow graph instead) *)
-module Available_expressions_lattice (Expressions : PREDUALSET) : LATTICE =
+(* To use for very busy expressions (anticipated expressions)
+              available expressions
+              postponable expresions
+   analyses *)
+module Dual_powerset_lattice_empty_initial (T : TOTALTYPE) : LATTICE =
 Dual_powerset_lattice (struct
-  type vals = Expressions.vals
+  type vals = T.vals
 
   let initial = Set.Poly.empty
-  let total = Expressions.total
+  let total = T.total
 end)
 
-(* Note: this is also the lattice for a used expression analysis (but with
-   expressions rather than variables, also run backwards) *)
-(* TODO: can we give these better names? *)
-(* TODO: can we reduce the requirements on the parameters for these lattices? *)
-module Live_variables_lattice (Variables : TYPE) : LATTICE =
+(* To use for used expressions
+              live variables
+   analyses *)
+module Powerset_lattice_empty_initial (T : TYPE) : LATTICE =
 Powerset_lattice (struct
-  type vals = Variables.vals
+  type vals = T.vals
 
   let initial = Set.Poly.empty
 end)
 
-module Reaching_definitions_lattice (Variables : PREPOWERSET) (Labels : TYPE) :
+(* To use for reaching definitions analysis *)
+module Reaching_definitions_lattice (Variables : INITIALTYPE) (Labels : TYPE) :
   LATTICE = Powerset_lattice (struct
   type vals = Variables.vals * Labels.vals option
 
