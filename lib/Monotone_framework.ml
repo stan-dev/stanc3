@@ -448,13 +448,12 @@ functor
             Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) )
       in
       let analysis_in = Hashtbl.create (module F) in
-      let nodes = Set.of_map_keys F.successors in
       let _ =
-        Set.iter
+        Map.iter_keys
           ~f:(fun l ->
             Hashtbl.add_exn analysis_in ~key:l
               ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
-          nodes
+          F.successors
       in
       (* STEP 2: iterate *)
       let _ =
@@ -474,12 +473,14 @@ functor
         done
       in
       (* STEP 3: present final results *)
-      let analysis_out =
-        Set.fold ~init:Map.Poly.empty
-          ~f:(fun accum l ->
-            Map.add_exn accum ~key:l
-              ~data:(T.transfer_function l (Hashtbl.find_exn analysis_in l)) )
-          nodes
+      let analysis_in_out =
+        Map.fold ~init:Map.Poly.empty
+          ~f:(fun ~key ~data:_ accum ->
+            let analysis_in_data = Hashtbl.find_exn analysis_in key in
+            Map.add_exn accum ~key
+              ~data:(analysis_in_data, T.transfer_function key analysis_in_data)
+            )
+          F.successors
       in
-      (Map.Poly.of_hashtbl_exn analysis_in, analysis_out)
+      analysis_in_out
   end

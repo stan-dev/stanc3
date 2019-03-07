@@ -72,7 +72,7 @@ end
     point of the equations/inequalities defined between property lattice
     elements at the entry and exit of different flowgraph nodes, where these
     equations/inequalities are generated from the transfer function.
-    Returns a hash table of the (input_properties, output_properties) for
+    Returns a map of the (input_properties, output_properties) for
     each node l in the flow graph.
     The analysis performed is always a forward analysis. 
     For a reverse analysis, supply the reverse flow graph.*)
@@ -84,8 +84,5 @@ module type MONOTONE_FRAMEWORK = functor
      with type labels = F.labels
       and type properties = L.properties)
   -> sig
-  val mfp :
-       unit
-    -> (T.labels, T.properties) Map.Poly.t
-       * (T.labels, T.properties) Map.Poly.t
+  val mfp : unit -> (T.labels, T.properties * T.properties) Map.Poly.t
 end
