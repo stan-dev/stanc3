@@ -122,6 +122,57 @@ module Reaching_definitions_lattice (Variables : INITIALTYPE) (Labels : TYPE) :
   let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
 end)
 
+(* TODO: this is temporary until Ryan's code to get the real flow graph is
+   merged *)
+
+let flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t = Map.Poly.empty
+let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
+
+module Available_expressions_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = Mir.expr Set.Poly.t
+
+  let transfer_function l p =
+    let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+    let gen =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    let kill =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    transfer_gen_kill p gen kill
+end
+
 module Monotone_framework : MONOTONE_FRAMEWORK =
 functor
   (F : FLOWGRAPH)
