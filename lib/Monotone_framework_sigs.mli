@@ -86,5 +86,6 @@ module type MONOTONE_FRAMEWORK = functor
   -> sig
   val mfp :
        unit
-    -> (T.labels, T.properties) Hashtbl.t * (T.labels, T.properties) Hashtbl.t
+    -> (T.labels, T.properties) Map.Poly.t
+       * (T.labels, T.properties) Map.Poly.t
 end

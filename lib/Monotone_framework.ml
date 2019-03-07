@@ -474,13 +474,12 @@ functor
         done
       in
       (* STEP 3: present final results *)
-      let analysis_out = Hashtbl.create (module F) in
-      let _ =
-        Set.iter
-          ~f:(fun l ->
-            Hashtbl.add_exn analysis_in ~key:l
+      let analysis_out =
+        Set.fold ~init:Map.Poly.empty
+          ~f:(fun accum l ->
+            Map.add_exn accum ~key:l
               ~data:(T.transfer_function l (Hashtbl.find_exn analysis_in l)) )
           nodes
       in
-      (analysis_in, analysis_out)
+      (Map.Poly.of_hashtbl_exn analysis_in, analysis_out)
   end
