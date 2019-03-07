@@ -138,6 +138,8 @@ module Constant_propagation_transfer : TRANSFER_FUNCTION = struct
         let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
         Some
           ( match mir_node with
+          (* TODO: we are currently only propagating constants for scalars.
+             We could do the same for matrix and array expressions if we wanted. *)
           | Mir.Assignment (Var s, Mir.Lit (t, v)) ->
               Map.set m ~key:s ~data:(Mir.Lit (t, v))
           | Mir.Decl {decl_id= s; _} | Mir.Assignment (Var s, _) ->
@@ -162,39 +164,38 @@ module Reaching_definitions_transfer : TRANSFER_FUNCTION = struct
     let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
     let gen =
       match mir_node with
-      | Mir.Assignment (_, _) -> failwith "<case>"
-      | Mir.TargetPE _ -> failwith "<case>"
-      | Mir.NRFunApp (_, _) -> failwith "<case>"
-      | Mir.Check _ -> failwith "<case>"
-      | Mir.Break -> failwith "<case>"
-      | Mir.Continue -> failwith "<case>"
-      | Mir.Return _ -> failwith "<case>"
-      | Mir.Skip -> failwith "<case>"
-      | Mir.IfElse (_, _, _) -> failwith "<case>"
-      | Mir.While (_, _) -> failwith "<case>"
-      | Mir.For _ -> failwith "<case>"
-      | Mir.Block _ -> failwith "<case>"
-      | Mir.SList _ -> failwith "<case>"
-      | Mir.Decl _ -> failwith "<case>"
-      | Mir.FunDef _ -> failwith "<case>"
+      | Mir.Assignment (Var x, _)
+       |Mir.Assignment (Indexed (Var x, _), _)
+       |Mir.FunDef {fdname= x; _} ->
+          Set.Poly.singleton (x, Some l)
+      | Mir.Assignment (_, _) -> Errors.fatal_error ()
+      | Mir.TargetPE _ -> Set.Poly.singleton ("target", Some l)
+      | Mir.NRFunApp (s, _) when String.suffix s 3 = "_lp" ->
+          Set.Poly.singleton ("target", Some l)
+      | Mir.NRFunApp (_, _)
+       |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+       |Mir.IfElse (_, _, _)
+       |Mir.While (_, _)
+       |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ ->
+          Set.Poly.empty
     in
     let kill =
       match mir_node with
-      | Mir.Assignment (_, _) -> failwith "<case>"
-      | Mir.TargetPE _ -> failwith "<case>"
-      | Mir.NRFunApp (_, _) -> failwith "<case>"
-      | Mir.Check _ -> failwith "<case>"
-      | Mir.Break -> failwith "<case>"
-      | Mir.Continue -> failwith "<case>"
-      | Mir.Return _ -> failwith "<case>"
-      | Mir.Skip -> failwith "<case>"
-      | Mir.IfElse (_, _, _) -> failwith "<case>"
-      | Mir.While (_, _) -> failwith "<case>"
-      | Mir.For _ -> failwith "<case>"
-      | Mir.Block _ -> failwith "<case>"
-      | Mir.SList _ -> failwith "<case>"
-      | Mir.Decl _ -> failwith "<case>"
-      | Mir.FunDef _ -> failwith "<case>"
+      | Mir.Decl {decl_id= x; _}
+       |Mir.Assignment (Var x, _)
+       |Mir.Assignment (Indexed (Var x, _), _)
+       |Mir.FunDef {fdname= x; _} ->
+          Set.filter p ~f:(fun (y, _) -> y = x)
+      | Mir.Assignment (_, _) -> Errors.fatal_error ()
+      | Mir.TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
+      | Mir.NRFunApp (s, _) when String.suffix s 3 = "_lp" ->
+          Set.filter p ~f:(fun (y, _) -> y = "target")
+      | Mir.NRFunApp (_, _)
+       |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+       |Mir.IfElse (_, _, _)
+       |Mir.While (_, _)
+       |Mir.For _ | Mir.Block _ | Mir.SList _ ->
+          Set.Poly.empty
     in
     transfer_gen_kill p gen kill
 end
