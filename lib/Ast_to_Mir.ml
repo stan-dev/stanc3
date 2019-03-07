@@ -103,7 +103,7 @@ let trans_printable (p : Ast.typed_expression Ast.printable) =
   | Ast.PString s -> Lit (Str, unquote s)
   | Ast.PExpr e -> trans_expr e
 
-let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
+let rec trans_stmt adt {Ast.stmt_typed; stmt_typed_loc; _} =
   let or_skip = Option.value ~default:Skip in
   let s =
     match stmt_typed with
@@ -137,18 +137,21 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.Print ps -> NRFunApp ("print", List.map ~f:trans_printable ps)
     | Ast.Reject ps -> NRFunApp ("reject", List.map ~f:trans_printable ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
-        IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
-    | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
+        IfElse
+          ( trans_expr cond
+          , trans_stmt adt ifb
+          , Option.map ~f:(trans_stmt adt) elseb )
+    | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt adt body)
     | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
           { loopvar= Var loop_variable.Ast.name
           ; lower= trans_expr lower_bound
           ; upper= trans_expr upper_bound
-          ; body= trans_stmt loop_body }
+          ; body= trans_stmt adt loop_body }
     | Ast.ForEach (loopvar, iteratee, body) ->
         let iteratee = trans_expr iteratee
         and indexing_var = Var (Util.gensym ())
-        and body = trans_stmt body in
+        and body = trans_stmt adt body in
         let assign_loopvar =
           Assignment
             (Var loopvar.name, Indexed (iteratee, [Single indexing_var]))
@@ -166,7 +169,7 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
               | ReturnType ut -> Some ut )
           ; fdname= funname.name
           ; fdargs= List.map ~f:trans_arg arguments
-          ; fdbody= trans_stmt body }
+          ; fdbody= trans_stmt adt body }
     | Ast.VarDecl
         {sizedtype; transformation; identifier; initial_value; is_global} ->
         (* Should have already taken care of global and transformation-related stuff
@@ -176,16 +179,14 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
         SList
           (List.map ~f:(bind_loc stmt_typed_loc)
              [ Decl
-                 { decl_adtype=
-                     AutoDiffable
-                     (* XXX Shouldn't be autodiffable in tdata or gen quant *)
+                 { decl_adtype= adt
                  ; decl_id= name
                  ; decl_type= Ast.remove_size (trans_sizedtype sizedtype) }
              ; Option.map
                  ~f:(fun x -> Assignment (Var name, trans_expr x))
                  initial_value
                |> or_skip ])
-    | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
+    | Ast.Block stmts -> Block (List.map ~f:(trans_stmt adt) stmts)
     | Ast.Return e -> Return (Some (trans_expr e))
     | Ast.ReturnVoid -> Return None
     | Ast.Break -> Break
@@ -262,7 +263,7 @@ let tvdecl_checks {tvident; tvtrans; tvtype; tvloc} =
   in
   with_sloc (SList check_stmts)
 
-let pull_tvdecls = function
+let pull_tvdecls adt = function
   | None -> (Map.Poly.empty, [])
   | Some lst ->
       let tvdecls, other_statements =
@@ -270,7 +271,7 @@ let pull_tvdecls = function
       in
       let tvtable = mktvtable tvdecls in
       let checks = Map.Poly.map ~f:tvdecl_checks tvtable |> Map.Poly.data in
-      (tvtable, checks @ List.map ~f:trans_stmt other_statements)
+      (tvtable, checks @ List.map ~f:(trans_stmt adt) other_statements)
 
 (* We represent the data and parameter blocks as maps from a variable's identifier
    to a tvdecl containing a little more information about it that we need to
@@ -309,32 +310,37 @@ let trans_prog filename
     ; transformedparametersblock
     ; modelblock
     ; generatedquantitiesblock } =
-  let trans_or_skip lst_option =
+  let trans_or_skip adt lst_option =
     with_no_loc
       ( match lst_option with
       | None | Some [] -> Skip
-      | Some lst -> SList (List.map ~f:trans_stmt lst) )
+      | Some lst -> SList (List.map ~f:(trans_stmt adt) lst) )
   in
   let coalesce stmts =
     let flattened = List.(concat (map ~f:lbind stmts)) in
     with_no_loc (SList flattened)
   in
-  let pull_tvdecls_multi blocks =
-    let tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
+  let pull_tvdecls_multi adt blocks =
+    let tvtables, stmts =
+      blocks |> List.map ~f:(pull_tvdecls adt) |> List.unzip
+    in
     (merge_maps tvtables, coalesce (List.concat stmts))
   in
-  let datavars, datachecks = pull_tvdecls datablock in
+  let datavars, datachecks = pull_tvdecls DataOnly datablock in
   (* XXX probably a weird place to keep the name*)
   { prog_name= !Semantic_check.model_name
   ; prog_path= filename
-  ; functionsb= trans_or_skip functionblock
+  ; functionsb= trans_or_skip DataOnly functionblock
   ; datavars
   ; tdatab=
-      (let tvtables, stmt = pull_tvdecls_multi [transformeddatablock] in
+      (let tvtables, stmt =
+         pull_tvdecls_multi DataOnly [transformeddatablock]
+       in
        (tvtables, coalesce (datachecks @ [stmt])))
   ; modelb=
       (let tvtables, stmt =
-         pull_tvdecls_multi [parametersblock; transformedparametersblock]
+         pull_tvdecls_multi AutoDiffable
+           [parametersblock; transformedparametersblock]
        in
-       (tvtables, coalesce [stmt; trans_or_skip modelblock]))
-  ; gqb= pull_tvdecls_multi [generatedquantitiesblock] }
+       (tvtables, coalesce [stmt; trans_or_skip AutoDiffable modelblock]))
+  ; gqb= pull_tvdecls_multi DataOnly [generatedquantitiesblock] }
