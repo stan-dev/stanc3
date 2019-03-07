@@ -64,7 +64,7 @@ module New_bot (L : LATTICE) : LATTICE = struct
   let initial = Some L.initial
 end
 
-module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : PREFLATSET) :
+module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : TYPE) :
   LATTICE = struct
   type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
@@ -84,17 +84,16 @@ module Dual_partial_function_lattice (Dom : PREPOWERSET) (Codom : PREFLATSET) :
   let initial = Map.Poly.empty
 end
 
-module Constant_propagation_lattice
-    (Variables : PREPOWERSET)
-    (Values : PREFLATSET) : LATTICE =
+module Constant_propagation_lattice (Variables : PREPOWERSET) (Values : TYPE) :
+  LATTICE =
   New_bot (Dual_partial_function_lattice (Variables) (Values))
 
 (* Note: this is also the lattice for a very busy expressions (anticipated
    expressions) analysis
    (the only difference is that that analysis is performed on the reverse
    flow graph instead) *)
-module Available_expressions_lattice (Expressions : PREDUALPOWERSET) :
-  LATTICE = Dual_powerset_lattice (struct
+module Available_expressions_lattice (Expressions : PREDUALSET) : LATTICE =
+Dual_powerset_lattice (struct
   type vals = Expressions.vals
 
   let initial = Set.Poly.empty
@@ -103,16 +102,17 @@ end)
 
 (* Note: this is also the lattice for a used expression analysis (but with
    expressions rather than variables, also run backwards) *)
-module Live_variables_lattice (Variables : PREFLATSET) : LATTICE =
+(* TODO: can we give these better names? *)
+(* TODO: can we reduce the requirements on the parameters for these lattices? *)
+module Live_variables_lattice (Variables : TYPE) : LATTICE =
 Powerset_lattice (struct
   type vals = Variables.vals
 
   let initial = Set.Poly.empty
 end)
 
-module Reaching_definitions_lattice
-    (Variables : PREPOWERSET)
-    (Labels : PREFLATSET) : LATTICE = Powerset_lattice (struct
+module Reaching_definitions_lattice (Variables : PREPOWERSET) (Labels : TYPE) :
+  LATTICE = Powerset_lattice (struct
   type vals = Variables.vals * Labels.vals option
 
   let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial

@@ -17,10 +17,8 @@ module type FLOWGRAPH = sig
 end
 
 (** The minimal data we need to use a type in forming a lattice of various kinds *)
-module type PREFLATSET = sig
+module type TYPE = sig
   type vals
-
-  val ( = ) : vals -> vals -> bool
 end
 
 (** The data we need to form a powerset lattice *)
@@ -30,12 +28,17 @@ module type PREPOWERSET = sig
   val initial : vals Set.Poly.t
 end
 
-(** The data we need to form a dual powerset lattice *)
-module type PREDUALPOWERSET = sig
+(** The data we need to form e.g. an available xpressions lattice*)
+module type PREDUALSET = sig
   type vals
 
-  val initial : vals Set.Poly.t
   val total : vals Set.Poly.t
+end
+
+(** The data we need to form a dual powerset lattice *)
+module type PREDUALPOWERSET = sig
+  include PREPOWERSET
+  include PREDUALSET with type vals := vals
 end
 
 (** The API for a complete (possibly non-distributive) lattice,
