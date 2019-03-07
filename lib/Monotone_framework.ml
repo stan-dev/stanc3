@@ -8,7 +8,9 @@ open Monotone_framework_sigs
                                                  reaching definitions
                                                  live variables
                                                  constant propagation
-                                                 very busy expressions *)
+                                                 very busy expressions (anticipated expressions)
+                                                 used expressions
+                                                 postponable expressions *)
 
 (** Reverse flowgraphs to be used for reverse analyses.
     Observe that this respects the invariants listed for a FLOWGRAPH *)
