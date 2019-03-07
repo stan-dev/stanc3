@@ -199,6 +199,28 @@ let reaching_definitions_transfer
   end
   : TRANSFER_FUNCTION )
 
+(* TODO: insert Ryan's implementations here? *)
+let rec free_vars_expr (e : Mir.expr) =
+  match e with
+  | Mir.Var x -> Set.Poly.singleton x
+  | Mir.Lit (_, _) -> Set.Poly.empty
+  | Mir.FunApp (f, l) ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | Mir.BinOp (e1, _, e2) ->
+      Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
+  | Mir.TernaryIf (e1, e2, e3) ->
+      Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
+  | Mir.Indexed (e, l) ->
+      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
+
+and free_vars_idx (i : Mir.index) =
+  match i with
+  | Mir.All -> Set.Poly.empty
+  | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
+      free_vars_expr e
+  | Mir.Between (e1, e2) ->
+      Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
+
 let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
     =
   ( module struct
@@ -296,11 +318,65 @@ let anticipated_expressions_transfer
   end
   : TRANSFER_FUNCTION )
 
+(* TODO: Should we count constants and variables as used expressions?
+   I am doing so now, but suspect it is not neccessary.*)
+let rec used_expressions_expr (e : Mir.expr) =
+  Set.Poly.union (Set.Poly.singleton e)
+    ( match e with
+    | Mir.Var _ | Mir.Lit (_, _) -> Set.Poly.empty
+    | Mir.FunApp (_, l) ->
+        Set.Poly.union_list (List.map ~f:used_expressions_expr l)
+    | Mir.BinOp (e1, _, e2) ->
+        Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
+    | Mir.TernaryIf (e1, e2, e3) ->
+        Set.Poly.union_list
+          [ used_expressions_expr e1; used_expressions_expr e2
+          ; used_expressions_expr e3 ]
+    | Mir.Indexed (e, l) ->
+        Set.Poly.union_list
+          (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
+
+and used_expressions_idx (i : Mir.index) =
+  match i with
+  | Mir.All -> Set.Poly.empty
+  | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
+      used_expressions_expr e
+  | Mir.Between (e1, e2) ->
+      Set.Poly.union (used_expressions_expr e1) (used_expressions_expr e2)
+
+let rec used_expressions_stmt {Mir.stmt; _} =
+  match stmt with
+  | Mir.Assignment (Var _, e) | Mir.TargetPE e | Mir.Return (Some e) ->
+      used_expressions_expr e
+  | Mir.Assignment (Indexed (Var _, l), e) ->
+      Set.Poly.union (used_expressions_expr e)
+        (Set.Poly.union_list (List.map ~f:used_expressions_idx l))
+  | Mir.Assignment _ -> Errors.fatal_error ()
+  | Mir.IfElse (e, b1, Some b2) ->
+      Set.Poly.union_list
+        [ used_expressions_expr e; used_expressions_stmt b1
+        ; used_expressions_stmt b2 ]
+  | Mir.NRFunApp (_, l) | Mir.Check {ccargs= l; _} ->
+      Set.Poly.union_list (List.map ~f:used_expressions_expr l)
+  | Mir.Decl _
+   |Mir.Return None
+   |Mir.Break | Mir.Continue | Mir.FunDef _ | Mir.Skip ->
+      Set.Poly.empty
+  | Mir.IfElse (e, b, None) | Mir.While (e, b) ->
+      Set.Poly.union (used_expressions_expr e) (used_expressions_stmt b)
+  | Mir.For {lower= e1; upper= e2; body= b; loopvar= s} ->
+      Set.Poly.union_list
+        [ used_expressions_expr e1; used_expressions_expr e2
+        ; used_expressions_stmt b; Set.Poly.singleton s ]
+  | Mir.Block l | Mir.SList l ->
+      Set.Poly.union_list (List.map ~f:used_expressions_stmt l)
+
 (* NOTE: we want to implement lazy code motion. Aho describes a slightly
    different available expression pass for that that uses the anticipated
    expression pass. *)
 let available_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
+    (_ : (int, Mir.expr Set.Poly.t * Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
