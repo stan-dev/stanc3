@@ -126,9 +126,264 @@ end)
    merged *)
 
 let flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t = Map.Poly.empty
+
+module Constant_propagation_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = (string, Mir.expr) Map.Poly.t option
+
+  let transfer_function l p =
+    match p with
+    | None -> None
+    | Some m ->
+        let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+        Some
+          ( match mir_node with
+          | Mir.Assignment (Var s, Mir.Lit (t, v)) ->
+              Map.set m ~key:s ~data:(Mir.Lit (t, v))
+          | Mir.Decl {decl_id= s; _} | Mir.Assignment (Var s, _) ->
+              Map.remove m s
+          | Mir.Assignment (_, _)
+           |Mir.TargetPE _
+           |Mir.NRFunApp (_, _)
+           |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+           |Mir.IfElse (_, _, _)
+           |Mir.While (_, _)
+           |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
+              m )
+end
+
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
+module Reaching_definitions_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = (string * labels option) Set.Poly.t
+
+  let transfer_function l p =
+    let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+    let gen =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    let kill =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    transfer_gen_kill p gen kill
+end
+
+module Live_variables_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = string Set.Poly.t
+
+  let transfer_function l p =
+    let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+    let gen =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    let kill =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    transfer_gen_kill p gen kill
+end
+
+module Anticipated_expressions_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = Mir.expr Set.Poly.t
+
+  let transfer_function l p =
+    let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+    let gen =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    let kill =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    (* NOTE: this is note quite the usual gen kill pattern *)
+    Set.union gen (Set.diff p kill)
+end
+
+(* NOTE: we want to implement lazy code motion. Aho describes a slightly
+   different available expression pass for that that uses the anticipated
+   expression pass. *)
 module Available_expressions_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = Mir.expr Set.Poly.t
+
+  let transfer_function l p =
+    let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+    let gen =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    let kill =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    transfer_gen_kill p gen kill
+end
+
+module Postponable_expressions_transfer : TRANSFER_FUNCTION = struct
+  type labels = int
+  type properties = Mir.expr Set.Poly.t
+
+  let transfer_function l p =
+    let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+    let gen =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    let kill =
+      match mir_node with
+      | Mir.Assignment (_, _) -> failwith "<case>"
+      | Mir.TargetPE _ -> failwith "<case>"
+      | Mir.NRFunApp (_, _) -> failwith "<case>"
+      | Mir.Check _ -> failwith "<case>"
+      | Mir.Break -> failwith "<case>"
+      | Mir.Continue -> failwith "<case>"
+      | Mir.Return _ -> failwith "<case>"
+      | Mir.Skip -> failwith "<case>"
+      | Mir.IfElse (_, _, _) -> failwith "<case>"
+      | Mir.While (_, _) -> failwith "<case>"
+      | Mir.For _ -> failwith "<case>"
+      | Mir.Block _ -> failwith "<case>"
+      | Mir.SList _ -> failwith "<case>"
+      | Mir.Decl _ -> failwith "<case>"
+      | Mir.FunDef _ -> failwith "<case>"
+    in
+    transfer_gen_kill p gen kill
+end
+
+module Used_expressions_transfer : TRANSFER_FUNCTION = struct
   type labels = int
   type properties = Mir.expr Set.Poly.t
 
