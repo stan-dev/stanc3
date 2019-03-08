@@ -5,7 +5,6 @@ open Monotone_framework_sigs
 
 (* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
          write instance of TRANSFER_FUNCTION for available expressions
-                                                 live variables
                                                  very busy expressions (anticipated expressions)
                                                  used expressions
                                                  postponable expressions *)
@@ -179,6 +178,23 @@ let copy_propagation_transfer
 
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
+let assigned_vars_stmt (s : Mir.stmt_loc Mir.statement) =
+  match s with
+  | Mir.Assignment (Var x, _)
+   |Mir.Assignment (Indexed (Var x, _), _)
+   |Mir.FunDef {fdname= x; _} ->
+      Set.Poly.singleton x
+  | Mir.Assignment (_, _) -> Errors.fatal_error ()
+  | Mir.TargetPE _ -> Set.Poly.singleton "target"
+  | Mir.NRFunApp (s, _) when String.suffix s 3 = "_lp" ->
+      Set.Poly.singleton "target"
+  | Mir.NRFunApp (_, _)
+   |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+   |Mir.IfElse (_, _, _)
+   |Mir.While (_, _)
+   |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ ->
+      Set.Poly.empty
+
 let reaching_definitions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
   ( module struct
@@ -188,21 +204,7 @@ let reaching_definitions_transfer
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
       let gen =
-        match mir_node with
-        | Mir.Assignment (Var x, _)
-         |Mir.Assignment (Indexed (Var x, _), _)
-         |Mir.FunDef {fdname= x; _} ->
-            Set.Poly.singleton (x, Some l)
-        | Mir.Assignment (_, _) -> Errors.fatal_error ()
-        | Mir.TargetPE _ -> Set.Poly.singleton ("target", Some l)
-        | Mir.NRFunApp (s, _) when String.suffix s 3 = "_lp" ->
-            Set.Poly.singleton ("target", Some l)
-        | Mir.NRFunApp (_, _)
-         |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
-         |Mir.IfElse (_, _, _)
-         |Mir.While (_, _)
-         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ ->
-            Set.Poly.empty
+        Set.Poly.map ~f:(fun x -> (x, Some l)) (assigned_vars_stmt mir_node)
       in
       let kill =
         match mir_node with
@@ -277,6 +279,19 @@ let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
       Set.Poly.diff (free_vars_stmt b.stmt)
         (Set.Poly.of_list (List.map ~f:(fun (_, s, _) -> s) l))
 
+(** A variation on free_vars_stmt, where we do not recursively count free
+    variables in sub statements  *)
+let top_free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
+  match s with
+  | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
+   |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
+   |Mir.Skip ->
+      free_vars_stmt s
+  | Mir.While (e, _) | Mir.IfElse (e, _, _) -> free_vars_expr e
+  | Mir.For {lower= e1; upper= e2; _} ->
+      Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
+  | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
+
 (* TODO: in the live variables analysis, we probably want to assume that
    target, parameters, transformed parameters and generated quantities are
    always live.
@@ -290,10 +305,12 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen = free_vars_stmt mir_node in
+      let gen = top_free_vars_stmt mir_node in
       let kill =
         match mir_node with
-        | Mir.Assignment (Var x, _) | Mir.Assignment (Indexed (Var x, _), _) ->
+        | Mir.Assignment (Var x, _)
+         |Mir.Assignment (Indexed (Var x, _), _)
+         |Mir.Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | Mir.Assignment _ -> Errors.fatal_error ()
         | Mir.TargetPE _
@@ -301,60 +318,10 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
          |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
          |Mir.IfElse (_, _, _)
          |Mir.While (_, _)
-         (* TODO: double check - should decls kill a variable? No right? *)
-         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ | Mir.FunDef _ ->
+         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
             Set.Poly.empty
       in
       transfer_gen_kill p gen kill
-  end
-  : TRANSFER_FUNCTION )
-
-let anticipated_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
-  ( module struct
-    type labels = int
-    type properties = Mir.expr Set.Poly.t
-
-    let transfer_function l p =
-      let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
-      let kill =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
-      (* NOTE: this is note quite the usual gen kill pattern *)
-      Set.union gen (Set.diff p kill)
   end
   : TRANSFER_FUNCTION )
 
@@ -384,8 +351,8 @@ and used_expressions_idx (i : Mir.index) =
   | Mir.Between (e1, e2) ->
       Set.Poly.union (used_expressions_expr e1) (used_expressions_expr e2)
 
-let rec used_expressions_stmt {Mir.stmt; _} =
-  match stmt with
+let rec used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
+  match s with
   | Mir.Assignment (Var _, e) | Mir.TargetPE e | Mir.Return (Some e) ->
       used_expressions_expr e
   | Mir.Assignment (Indexed (Var _, l), e) ->
@@ -394,8 +361,9 @@ let rec used_expressions_stmt {Mir.stmt; _} =
   | Mir.Assignment _ -> Errors.fatal_error ()
   | Mir.IfElse (e, b1, Some b2) ->
       Set.Poly.union_list
-        [ used_expressions_expr e; used_expressions_stmt b1
-        ; used_expressions_stmt b2 ]
+        [ used_expressions_expr e
+        ; used_expressions_stmt b1.stmt
+        ; used_expressions_stmt b2.stmt ]
   | Mir.NRFunApp (_, l) | Mir.Check {ccargs= l; _} ->
       Set.Poly.union_list (List.map ~f:used_expressions_expr l)
   | Mir.Decl _
@@ -403,16 +371,55 @@ let rec used_expressions_stmt {Mir.stmt; _} =
    |Mir.Break | Mir.Continue | Mir.FunDef _ | Mir.Skip ->
       Set.Poly.empty
   | Mir.IfElse (e, b, None) | Mir.While (e, b) ->
-      Set.Poly.union (used_expressions_expr e) (used_expressions_stmt b)
+      Set.Poly.union (used_expressions_expr e) (used_expressions_stmt b.stmt)
   | Mir.For {lower= e1; upper= e2; body= b; loopvar= s} ->
       Set.Poly.union_list
         [ used_expressions_expr e1; used_expressions_expr e2
-        ; used_expressions_stmt b; Set.Poly.singleton s ]
+        ; used_expressions_stmt b.stmt
+        ; Set.Poly.singleton s ]
   | Mir.Block l | Mir.SList l ->
-      Set.Poly.union_list (List.map ~f:used_expressions_stmt l)
+      Set.Poly.union_list
+        (List.map ~f:(fun s -> used_expressions_stmt s.stmt) l)
+
+(** A variant of used_expressions_stmt where we do not count uses of expressions
+    recursively within substatements *)
+let top_used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
+  match s with
+  | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
+   |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
+   |Mir.Skip ->
+      used_expressions_stmt s
+  | Mir.While (e, _) | Mir.IfElse (e, _, _) -> used_expressions_expr e
+  | Mir.For {lower= e1; upper= e2; _} ->
+      Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
+  | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
+
+let rec killed_expressions_stmt (p : Mir.expr Set.Poly.t)
+    (s : Mir.stmt_loc Mir.statement) =
+  Set.Poly.filter p ~f:(fun e ->
+      let free_vars = free_vars_expr e in
+      let assigned_vars = assigned_vars_stmt s in
+      not (Set.is_empty (Set.Poly.inter free_vars assigned_vars)) )
+
+let anticipated_expressions_transfer
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = Mir.expr Set.Poly.t
+
+    let transfer_function l p =
+      let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+      let gen = top_used_expressions_stmt mir_node in
+      let kill = killed_expressions_stmt p mir_node in
+      transfer_gen_kill p gen kill
+  end
+  : TRANSFER_FUNCTION )
+
+let transfer_gen_kill_alt p gen kill =
+  Set.Poly.diff (Set.Poly.union p gen) kill
 
 (* NOTE: we want to implement lazy code motion. Aho describes a slightly
-   different available expression pass for that that uses the anticipated
+   more general available expression pass for that that uses the anticipated
    expression pass. *)
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
@@ -459,7 +466,7 @@ let available_expressions_transfer
         | Mir.Decl _ -> failwith "<case>"
         | Mir.FunDef _ -> failwith "<case>"
       in
-      transfer_gen_kill p gen kill
+      transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
 
@@ -507,7 +514,7 @@ let postponable_expressions_transfer
         | Mir.Decl _ -> failwith "<case>"
         | Mir.FunDef _ -> failwith "<case>"
       in
-      transfer_gen_kill p gen kill
+      transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
 
@@ -555,7 +562,7 @@ let used_expressions_transfer
         | Mir.Decl _ -> failwith "<case>"
         | Mir.FunDef _ -> failwith "<case>"
       in
-      transfer_gen_kill p gen kill
+      transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
 
