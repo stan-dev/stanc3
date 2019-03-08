@@ -4,9 +4,6 @@ open Core_kernel
 open Monotone_framework_sigs
 
 (* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR *)
-
-(** Reverse flowgraphs to be used for reverse analyses.
-    Observe that this respects the invariants listed for a FLOWGRAPH *)
 let flowgraph_of_mir (_ : Mir.stmt_loc Mir.prog) :
     (module FLOWGRAPH) * (int, Mir.stmt_loc) Map.Poly.t =
   ( ( module struct
@@ -22,6 +19,8 @@ let flowgraph_of_mir (_ : Mir.stmt_loc Mir.prog) :
     : FLOWGRAPH )
   , failwith "NOT YET IMPLEMENTED" )
 
+(** Reverse flowgraphs to be used for reverse analyses.
+    Observe that this respects the invariants listed for a FLOWGRAPH *)
 module Reverse (F : FLOWGRAPH) : FLOWGRAPH = struct
   type labels = F.labels
   type t = labels
