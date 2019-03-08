@@ -150,6 +150,33 @@ let constant_propagation_transfer
   end
   : TRANSFER_FUNCTION )
 
+let copy_propagation_transfer
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = (string, string) Map.Poly.t option
+
+    let transfer_function l p =
+      match p with
+      | None -> None
+      | Some m ->
+          let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+          Some
+            ( match mir_node with
+            | Mir.Assignment (Var s, Mir.Var t) -> Map.set m ~key:s ~data:t
+            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Var s, _) ->
+                Map.remove m s
+            | Mir.Assignment (_, _)
+             |Mir.TargetPE _
+             |Mir.NRFunApp (_, _)
+             |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+             |Mir.IfElse (_, _, _)
+             |Mir.While (_, _)
+             |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
+                m )
+  end
+  : TRANSFER_FUNCTION )
+
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
 let reaching_definitions_transfer
