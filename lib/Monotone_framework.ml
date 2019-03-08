@@ -277,6 +277,11 @@ let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
       Set.Poly.diff (free_vars_stmt b.stmt)
         (Set.Poly.of_list (List.map ~f:(fun (_, s, _) -> s) l))
 
+(* TODO: in the live variables analysis, we probably want to assume that
+   target, parameters, transformed parameters and generated quantities are
+   always live.
+   We could either do that by initializing suitably or by just adding
+   them later in the dead code elimination pass. *)
 let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
     =
   ( module struct
@@ -296,6 +301,7 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
          |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
          |Mir.IfElse (_, _, _)
          |Mir.While (_, _)
+         (* TODO: double check - should decls kill a variable? No right? *)
          |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ | Mir.FunDef _ ->
             Set.Poly.empty
       in
