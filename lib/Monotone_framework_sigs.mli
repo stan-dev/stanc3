@@ -68,6 +68,8 @@ module type TRANSFER_FUNCTION = sig
   val transfer_function : labels -> properties -> properties
 end
 
+type 'a entry_exit = {entry: 'a; exit: 'a}
+
 (** The API for a monotone framework. mfp computes the minimal fixed
     point of the equations/inequalities defined between property lattice
     elements at the entry and exit of different flowgraph nodes, where these
@@ -84,5 +86,5 @@ module type MONOTONE_FRAMEWORK = functor
      with type labels = F.labels
       and type properties = L.properties)
   -> sig
-  val mfp : unit -> (T.labels, T.properties * T.properties) Map.Poly.t
+  val mfp : unit -> (T.labels, T.properties entry_exit) Map.Poly.t
 end

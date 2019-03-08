@@ -423,145 +423,46 @@ let transfer_gen_kill_alt p gen kill =
    expression pass. *)
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
-    (_ : (int, Mir.expr Set.Poly.t * Mir.expr Set.Poly.t) Map.Poly.t) =
+    (anticipated_expressions :
+      (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
-      let kill =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
+      let gen = (Map.find_exn anticipated_expressions l).entry in
+      let kill = killed_expressions_stmt p mir_node in
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
 
 let postponable_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
+    (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
-      let kill =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
+      let gen = Map.find_exn earliest l in
+      let kill = top_used_expressions_stmt mir_node in
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
 
 let used_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
+    (latest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
-      let kill =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
+      let gen = top_used_expressions_stmt mir_node in
+      let kill = Map.find_exn latest l in
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
@@ -615,8 +516,9 @@ functor
           ~f:(fun ~key ~data:_ accum ->
             let analysis_in_data = Hashtbl.find_exn analysis_in key in
             Map.add_exn accum ~key
-              ~data:(analysis_in_data, T.transfer_function key analysis_in_data)
-            )
+              ~data:
+                { entry= analysis_in_data
+                ; exit= T.transfer_function key analysis_in_data } )
           F.successors
       in
       analysis_in_out
