@@ -394,7 +394,7 @@ let top_used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
       Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
   | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
 
-let rec killed_expressions_stmt (p : Mir.expr Set.Poly.t)
+let killed_expressions_stmt (p : Mir.expr Set.Poly.t)
     (s : Mir.stmt_loc Mir.statement) =
   Set.Poly.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
