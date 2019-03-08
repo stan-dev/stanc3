@@ -78,13 +78,9 @@ type 'a entry_exit = {entry: 'a; exit: 'a}
     each node l in the flow graph.
     The analysis performed is always a forward analysis. 
     For a reverse analysis, supply the reverse flow graph.*)
-module type MONOTONE_FRAMEWORK = functor
-  (F : FLOWGRAPH)
-  (L : LATTICE)
-  (T :
-     TRANSFER_FUNCTION
-     with type labels = F.labels
-      and type properties = L.properties)
-  -> sig
-  val mfp : unit -> (T.labels, T.properties entry_exit) Map.Poly.t
+module type MONOTONE_FRAMEWORK = sig
+  type labels
+  type properties
+
+  val mfp : unit -> (labels, properties entry_exit) Map.Poly.t
 end
