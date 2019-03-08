@@ -21,113 +21,126 @@ let flowgraph_of_mir (_ : Mir.stmt_loc Mir.prog) :
 
 (** Reverse flowgraphs to be used for reverse analyses.
     Observe that this respects the invariants listed for a FLOWGRAPH *)
-module Reverse (F : FLOWGRAPH) : FLOWGRAPH = struct
-  type labels = F.labels
-  type t = labels
 
-  let compare = F.compare
-  let hash = F.hash
-  let sexp_of_t = F.sexp_of_t
-  let initials = Set.of_map_keys (Map.filter F.successors ~f:Set.is_empty)
+let reverse (module F : FLOWGRAPH) =
+  ( module struct
+    type labels = F.labels
+    type t = labels
 
-  let successors =
-    Map.fold F.successors
-      ~init:(Map.map F.successors ~f:(fun _ -> Set.Poly.empty))
-      ~f:(fun ~key:old_pred ~data:old_succs accum ->
-        Set.fold old_succs ~init:accum ~f:(fun accum old_succ ->
-            Map.set accum ~key:old_succ
-              ~data:(Set.add (Map.find_exn accum old_succ) old_pred) ) )
-end
+    let compare = F.compare
+    let hash = F.hash
+    let sexp_of_t = F.sexp_of_t
+    let initials = Set.of_map_keys (Map.filter F.successors ~f:Set.is_empty)
 
-module Powerset_lattice (S : INITIALTYPE) : LATTICE = struct
-  type properties = S.vals Set.Poly.t
+    let successors =
+      Map.fold F.successors
+        ~init:(Map.map F.successors ~f:(fun _ -> Set.Poly.empty))
+        ~f:(fun ~key:old_pred ~data:old_succs accum ->
+          Set.fold old_succs ~init:accum ~f:(fun accum old_succ ->
+              Map.set accum ~key:old_succ
+                ~data:(Set.add (Map.find_exn accum old_succ) old_pred) ) )
+  end
+  : FLOWGRAPH )
 
-  let bottom = Set.Poly.empty
-  let lub s1 s2 = Set.Poly.union s1 s2
-  let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
-  let initial = S.initial
-end
+let powerset_lattice (module S : INITIALTYPE) =
+  ( module struct
+    type properties = S.vals Set.Poly.t
 
-module Dual_powerset_lattice (S : INITIALTOTALTYPE) : LATTICE = struct
-  type properties = S.vals Set.Poly.t
+    let bottom = Set.Poly.empty
+    let lub s1 s2 = Set.Poly.union s1 s2
+    let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
+    let initial = S.initial
+  end
+  : LATTICE )
 
-  let bottom = S.total
-  let lub s1 s2 = Set.Poly.inter s1 s2
-  let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
-  let initial = S.initial
-end
+let dual_powerset_lattice (module S : INITIALTOTALTYPE) =
+  ( module struct
+    type properties = S.vals Set.Poly.t
 
-module New_bot (L : LATTICE) : LATTICE = struct
-  type properties = L.properties option
+    let bottom = S.total
+    let lub s1 s2 = Set.Poly.inter s1 s2
+    let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
+    let initial = S.initial
+  end
+  : LATTICE )
 
-  let bottom = None
+let new_bot (module L : LATTICE) =
+  ( module struct
+    type properties = L.properties option
 
-  let lub = function
-    | Some s1 -> ( function Some s2 -> Some (L.lub s1 s2) | None -> Some s1 )
-    | None -> fun x -> x
+    let bottom = None
 
-  let leq = function
-    | Some s1 -> ( function Some s2 -> L.leq s1 s2 | None -> false )
-    | None -> fun _ -> true
+    let lub = function
+      | Some s1 -> (
+          function Some s2 -> Some (L.lub s1 s2) | None -> Some s1 )
+      | None -> fun x -> x
 
-  let initial = Some L.initial
-end
+    let leq = function
+      | Some s1 -> ( function Some s2 -> L.leq s1 s2 | None -> false )
+      | None -> fun _ -> true
 
-module Dual_partial_function_lattice (Dom : INITIALTYPE) (Codom : TYPE) :
-  LATTICE = struct
-  type properties = (Dom.vals, Codom.vals) Map.Poly.t
+    let initial = Some L.initial
+  end
+  : LATTICE )
 
-  let bottom = Errors.fatal_error ()
+let dual_partial_function_lattice (module Dom : INITIALTYPE)
+    (module Codom : TYPE) =
+  ( module struct
+    type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
-  let lub s1 s2 =
-    let f ~key ~data = Map.find s2 key = Some data in
-    Map.filteri ~f s1
+    let bottom = Errors.fatal_error ()
 
-  let leq s1 s2 =
-    Set.for_all Dom.initial ~f:(fun k ->
-        match (Map.find s1 k, Map.find s2 k) with
-        | Some x, Some y -> x = y
-        | Some _, None | None, None -> true
-        | None, Some _ -> false )
+    let lub s1 s2 =
+      let f ~key ~data = Map.find s2 key = Some data in
+      Map.filteri ~f s1
 
-  let initial = Map.Poly.empty
-end
+    let leq s1 s2 =
+      Set.for_all Dom.initial ~f:(fun k ->
+          match (Map.find s1 k, Map.find s2 k) with
+          | Some x, Some y -> x = y
+          | Some _, None | None, None -> true
+          | None, Some _ -> false )
+
+    let initial = Map.Poly.empty
+  end
+  : LATTICE )
 
 (* To use for constant propagation analysis *)
-module Dual_partial_function_lattice_with_bot
-    (Dom : INITIALTYPE)
-    (Codom : TYPE) : LATTICE =
-  New_bot (Dual_partial_function_lattice (Dom) (Codom))
+let dual_partial_function_lattice_with_bot (module Dom : INITIALTYPE)
+    (module Codom : TYPE) =
+  new_bot (dual_partial_function_lattice (module Dom) (module Codom))
 
 (* To use for very busy expressions (anticipated expressions)
               available expressions
               postponable expresions
    analyses *)
-module Dual_powerset_lattice_empty_initial (T : TOTALTYPE) : LATTICE =
-Dual_powerset_lattice (struct
-  type vals = T.vals
+let dual_powerset_lattice_empty_initial (module T : TOTALTYPE) =
+  dual_powerset_lattice
+    ( module struct
+      type vals = T.vals
 
-  let initial = Set.Poly.empty
-  let total = T.total
-end)
+      let initial = Set.Poly.empty
+      let total = T.total
+    end )
 
 (* To use for used expressions
               live variables
    analyses *)
-module Powerset_lattice_empty_initial (T : TYPE) : LATTICE =
-Powerset_lattice (struct
-  type vals = T.vals
+let powerset_lattice_empty_initial (module T : TYPE) =
+  powerset_lattice
+    (module struct type vals = T.vals
 
-  let initial = Set.Poly.empty
-end)
+                   let initial = Set.Poly.empty end)
 
 (* To use for reaching definitions analysis *)
-module Reaching_definitions_lattice (Variables : INITIALTYPE) (Labels : TYPE) :
-  LATTICE = Powerset_lattice (struct
-  type vals = Variables.vals * Labels.vals option
+let reaching_definitions_lattice (module Variables : INITIALTYPE)
+    (module Labels : TYPE) =
+  powerset_lattice
+    ( module struct
+      type vals = Variables.vals * Labels.vals option
 
-  let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
-end)
+      let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
+    end )
 
 let constant_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -520,16 +533,14 @@ let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
   end
   : TRANSFER_FUNCTION )
 
-module Monotone_framework : MONOTONE_FRAMEWORK =
-functor
-  (F : FLOWGRAPH)
-  (L : LATTICE)
-  (T :
-     TRANSFER_FUNCTION
-     with type labels = F.labels
-      and type properties = L.properties)
-  ->
-  struct
+let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
+    (module L : LATTICE with type properties = p)
+    (module T : TRANSFER_FUNCTION with type labels = l and type properties = p)
+    =
+  ( module struct
+    type labels = l
+    type properties = p
+
     let mfp () =
       (* STEP 1: initialize data structures *)
       let workstack = Stack.create () in
@@ -576,3 +587,4 @@ functor
       in
       analysis_in_out
   end
+  : MONOTONE_FRAMEWORK )
