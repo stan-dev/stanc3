@@ -400,15 +400,24 @@ let killed_expressions_stmt (p : Mir.expr Set.Poly.t)
       let assigned_vars = assigned_vars_stmt s in
       not (Set.is_empty (Set.Poly.inter free_vars assigned_vars)) )
 
+(* Note: we will want to reuse our computation of used *)
+let used (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  Map.Poly.fold flowgraph_to_mir ~init:Map.Poly.empty
+    ~f:(fun ~key ~data accum ->
+      Map.Poly.set accum ~key ~data:(top_used_expressions_stmt data.stmt) )
+
+(* TODO: figure out whether we will also want to reuse the computation of killed *)
+
 let anticipated_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
+    (used : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen = top_used_expressions_stmt mir_node in
+      let gen = Map.Poly.find_exn used l in
       let kill = killed_expressions_stmt p mir_node in
       transfer_gen_kill p gen kill
   end
@@ -436,31 +445,62 @@ let available_expressions_transfer
   end
   : TRANSFER_FUNCTION )
 
+let earliest
+    (anticipated_expressions :
+      (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t)
+    (available_expressions : (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t)
+    =
+  Map.fold anticipated_expressions ~init:Map.Poly.empty
+    ~f:(fun ~key ~data accum ->
+      match
+        Option.map (Map.find available_expressions key) ~f:(fun x -> x.entry)
+      with
+      | Some x when x = data.entry -> Map.set accum ~key ~data:x
+      | _ -> accum )
+
 let postponable_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
+    (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
     (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
 
     let transfer_function l p =
-      let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
       let gen = Map.find_exn earliest l in
-      let kill = top_used_expressions_stmt mir_node in
+      let kill = Map.find_exn used l in
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION )
 
-let used_expressions_transfer
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
+(* TODO: Reuse used and killed between expression analyses *)
+
+let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
+    (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
+    (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t)
+    (postponable_expressions :
+      (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t) =
+  let earliest_or_postponable key =
+    Set.Poly.union
+      (Map.Poly.find_exn earliest key)
+      (Map.Poly.find_exn postponable_expressions key).entry
+  in
+  let latest key =
+    Set.Poly.filter (earliest_or_postponable key) ~f:(fun e ->
+        Set.Poly.mem (Map.Poly.find_exn used key) e
+        || Set.Poly.exists (Map.Poly.find_exn successors key) ~f:(fun s ->
+               not (Set.Poly.mem (earliest_or_postponable s) e) ) )
+  in
+  Map.fold earliest ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
+      Map.set accum ~key ~data:(latest key) )
+
+let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
     (latest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.expr Set.Poly.t
 
     let transfer_function l p =
-      let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen = top_used_expressions_stmt mir_node in
+      let gen = Map.find_exn used l in
       let kill = Map.find_exn latest l in
       transfer_gen_kill_alt p gen kill
   end
