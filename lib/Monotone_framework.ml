@@ -248,6 +248,35 @@ and free_vars_idx (i : Mir.index) =
   | Mir.Between (e1, e2) ->
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
+let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
+  match s with
+  | Mir.Assignment (Var _, e) | Mir.Return (Some e) | Mir.TargetPE e ->
+      free_vars_expr e
+  | Mir.Assignment (Indexed (Var _, l), e) ->
+      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
+  | Mir.Assignment _ -> Errors.fatal_error ()
+  | Mir.NRFunApp (f, l) ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | Mir.Check {ccfunname= f; ccvid= g; ccargs= l; _} ->
+      Set.Poly.union_list
+        ( Set.Poly.singleton f :: Set.Poly.singleton g
+        :: List.map ~f:free_vars_expr l )
+  | Mir.IfElse (e, b1, Some b2) ->
+      Set.Poly.union_list
+        [free_vars_expr e; free_vars_stmt b1.stmt; free_vars_stmt b2.stmt]
+  | Mir.IfElse (e, b, None) | Mir.While (e, b) ->
+      Set.Poly.union (free_vars_expr e) (free_vars_stmt b.stmt)
+  | Mir.For {lower= e1; upper= e2; body= b; _} ->
+      Set.Poly.union_list
+        [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.stmt]
+  | Mir.Block l | Mir.SList l ->
+      Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.stmt) l)
+  | Mir.Decl _ | Mir.Break | Mir.Continue | Mir.Return None | Mir.Skip ->
+      Set.Poly.empty
+  | Mir.FunDef {fdargs= l; fdbody= b; _} ->
+      Set.Poly.diff (free_vars_stmt b.stmt)
+        (Set.Poly.of_list (List.map ~f:(fun (_, s, _) -> s) l))
+
 let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
     =
   ( module struct
@@ -256,41 +285,19 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
-      let gen =
-        match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
-      in
+      let gen = free_vars_stmt mir_node in
       let kill =
         match mir_node with
-        | Mir.Assignment (_, _) -> failwith "<case>"
-        | Mir.TargetPE _ -> failwith "<case>"
-        | Mir.NRFunApp (_, _) -> failwith "<case>"
-        | Mir.Check _ -> failwith "<case>"
-        | Mir.Break -> failwith "<case>"
-        | Mir.Continue -> failwith "<case>"
-        | Mir.Return _ -> failwith "<case>"
-        | Mir.Skip -> failwith "<case>"
-        | Mir.IfElse (_, _, _) -> failwith "<case>"
-        | Mir.While (_, _) -> failwith "<case>"
-        | Mir.For _ -> failwith "<case>"
-        | Mir.Block _ -> failwith "<case>"
-        | Mir.SList _ -> failwith "<case>"
-        | Mir.Decl _ -> failwith "<case>"
-        | Mir.FunDef _ -> failwith "<case>"
+        | Mir.Assignment (Var x, _) | Mir.Assignment (Indexed (Var x, _), _) ->
+            Set.Poly.singleton x
+        | Mir.Assignment _ -> Errors.fatal_error ()
+        | Mir.TargetPE _
+         |Mir.NRFunApp (_, _)
+         |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+         |Mir.IfElse (_, _, _)
+         |Mir.While (_, _)
+         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ | Mir.FunDef _ ->
+            Set.Poly.empty
       in
       transfer_gen_kill p gen kill
   end
