@@ -32,7 +32,7 @@ let create_function_inline_map {stmt; _} =
         (List.fold l ~init:Map.Poly.empty ~f)
   | Skip -> Map.Poly.empty
 
-let rec replace_fresh_local_vars adt stmt =
+let rec replace_fresh_local_vars_and_adt adt stmt =
   match stmt with
   | Decl {decl_type; _} ->
       Decl {decl_adtype= adt; decl_id= Util.gensym (); decl_type}
@@ -40,13 +40,13 @@ let rec replace_fresh_local_vars adt stmt =
       SList
         (List.map
            ~f:(fun {stmt; sloc} ->
-             {stmt= replace_fresh_local_vars adt stmt; sloc} )
+             {stmt= replace_fresh_local_vars_and_adt adt stmt; sloc} )
            l)
   | Block l ->
       Block
         (List.map
            ~f:(fun {stmt; sloc} ->
-             {stmt= replace_fresh_local_vars adt stmt; sloc} )
+             {stmt= replace_fresh_local_vars_and_adt adt stmt; sloc} )
            l)
   | x -> x
 
@@ -170,7 +170,7 @@ let rec inline_function_statement adt fim {stmt; sloc} =
             ( match Map.find fim s with
             | None -> NRFunApp (s, es)
             | Some (_, args, b) ->
-                let b = replace_fresh_local_vars adt b in
+                let b = replace_fresh_local_vars_and_adt adt b in
                 let b = handle_early_returns None b in
                 subst_args_stmt args es b )
       | Check {ccfunname; ccvid; cctype; ccargs} ->
@@ -249,7 +249,7 @@ and inline_function_expression adt fim e =
       match Map.find fim s with
       | None -> (s_list, FunApp (s, es))
       | Some (rt, args, b) ->
-          let b = replace_fresh_local_vars adt b in
+          let b = replace_fresh_local_vars_and_adt adt b in
           let x = Util.gensym () in
           let b = handle_early_returns (Some x) b in
           ( s_list
