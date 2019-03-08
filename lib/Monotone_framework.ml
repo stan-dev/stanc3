@@ -7,6 +7,21 @@ open Monotone_framework_sigs
 
 (** Reverse flowgraphs to be used for reverse analyses.
     Observe that this respects the invariants listed for a FLOWGRAPH *)
+let flowgraph_of_mir (_ : Mir.stmt_loc Mir.prog) :
+    (module FLOWGRAPH) * (int, Mir.stmt_loc) Map.Poly.t =
+  ( ( module struct
+      type labels = int
+      type t = labels
+
+      let compare = Int.compare
+      let hash = Int.hash
+      let sexp_of_t = Int.sexp_of_t
+      let initials = failwith "NOT YET IMPLEMENTED"
+      let successors = failwith "NOT YET IMPLEMENTED"
+    end
+    : FLOWGRAPH )
+  , failwith "NOT YET IMPLEMENTED" )
+
 module Reverse (F : FLOWGRAPH) : FLOWGRAPH = struct
   type labels = F.labels
   type t = labels
