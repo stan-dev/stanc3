@@ -3,11 +3,7 @@
 open Core_kernel
 open Monotone_framework_sigs
 
-(* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR
-         write instance of TRANSFER_FUNCTION for available expressions
-                                                 very busy expressions (anticipated expressions)
-                                                 used expressions
-                                                 postponable expressions *)
+(* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR *)
 
 (** Reverse flowgraphs to be used for reverse analyses.
     Observe that this respects the invariants listed for a FLOWGRAPH *)
@@ -325,8 +321,9 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
   end
   : TRANSFER_FUNCTION )
 
-(* TODO: Should we count constants and variables as used expressions?
-   I am doing so now, but suspect it is not neccessary.*)
+(* Note: we do not count constants or variables are expressions
+   (as there is no computation needed for them, so they do not
+   need to take part in any optimizations for expression placement).*)
 let rec used_expressions_expr (e : Mir.expr) =
   Set.Poly.union (Set.Poly.singleton e)
     ( match e with
