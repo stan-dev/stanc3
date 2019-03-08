@@ -395,6 +395,8 @@ let killed_expressions_stmt (p : Mir.expr Set.Poly.t)
     (s : Mir.stmt_loc Mir.statement) =
   Set.Poly.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
+      (* Note: a simple test for membership would be more efficient here,
+         but it would require us to duplicate some code. *)
       let assigned_vars = assigned_vars_stmt s in
       not (Set.is_empty (Set.Poly.inter free_vars assigned_vars)) )
 
