@@ -5,7 +5,8 @@ open Monotone_framework_sigs
 
 (* TODO: write instance of FLOWGRAPH for Stan flowgraph of Stan MIR *)
 let flowgraph_of_mir (_ : Mir.stmt_loc Mir.prog) :
-    (module FLOWGRAPH) * (int, Mir.stmt_loc) Map.Poly.t =
+    (module FLOWGRAPH with type labels = int) * (int, Mir.stmt_loc) Map.Poly.t
+    =
   ( ( module struct
       type labels = int
       type t = labels
@@ -16,13 +17,14 @@ let flowgraph_of_mir (_ : Mir.stmt_loc Mir.prog) :
       let initials = failwith "NOT YET IMPLEMENTED"
       let successors = failwith "NOT YET IMPLEMENTED"
     end
-    : FLOWGRAPH )
+    : FLOWGRAPH
+      with type labels = int )
   , failwith "NOT YET IMPLEMENTED" )
 
 (** Reverse flowgraphs to be used for reverse analyses.
     Observe that this respects the invariants listed for a FLOWGRAPH *)
 
-let reverse (module F : FLOWGRAPH) =
+let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
   ( module struct
     type labels = F.labels
     type t = labels
@@ -40,9 +42,10 @@ let reverse (module F : FLOWGRAPH) =
               Map.set accum ~key:old_succ
                 ~data:(Set.add (Map.find_exn accum old_succ) old_pred) ) )
   end
-  : FLOWGRAPH )
+  : FLOWGRAPH
+    with type labels = l )
 
-let powerset_lattice (module S : INITIALTYPE) =
+let powerset_lattice (type v) (module S : INITIALTYPE with type vals = v) =
   ( module struct
     type properties = S.vals Set.Poly.t
 
@@ -51,9 +54,11 @@ let powerset_lattice (module S : INITIALTYPE) =
     let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
     let initial = S.initial
   end
-  : LATTICE )
+  : LATTICE
+    with type properties = v Set.Poly.t )
 
-let dual_powerset_lattice (module S : INITIALTOTALTYPE) =
+let dual_powerset_lattice (type v)
+    (module S : INITIALTOTALTYPE with type vals = v) =
   ( module struct
     type properties = S.vals Set.Poly.t
 
@@ -62,9 +67,10 @@ let dual_powerset_lattice (module S : INITIALTOTALTYPE) =
     let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
     let initial = S.initial
   end
-  : LATTICE )
+  : LATTICE
+    with type properties = v Set.Poly.t )
 
-let new_bot (module L : LATTICE) =
+let new_bot (type p) (module L : LATTICE with type properties = p) =
   ( module struct
     type properties = L.properties option
 
@@ -81,10 +87,12 @@ let new_bot (module L : LATTICE) =
 
     let initial = Some L.initial
   end
-  : LATTICE )
+  : LATTICE
+    with type properties = p option )
 
-let dual_partial_function_lattice (module Dom : INITIALTYPE)
-    (module Codom : TYPE) =
+let dual_partial_function_lattice (type dv cv)
+    (module Dom : TOTALTYPE with type vals = dv)
+    (module Codom : TYPE with type vals = cv) =
   ( module struct
     type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
@@ -95,7 +103,7 @@ let dual_partial_function_lattice (module Dom : INITIALTYPE)
       Map.filteri ~f s1
 
     let leq s1 s2 =
-      Set.for_all Dom.initial ~f:(fun k ->
+      Set.for_all Dom.total ~f:(fun k ->
           match (Map.find s1 k, Map.find s2 k) with
           | Some x, Some y -> x = y
           | Some _, None | None, None -> true
@@ -103,18 +111,21 @@ let dual_partial_function_lattice (module Dom : INITIALTYPE)
 
     let initial = Map.Poly.empty
   end
-  : LATTICE )
+  : LATTICE
+    with type properties = (dv, cv) Map.Poly.t )
 
 (* To use for constant propagation analysis *)
-let dual_partial_function_lattice_with_bot (module Dom : INITIALTYPE)
-    (module Codom : TYPE) =
+let dual_partial_function_lattice_with_bot (type dv cv)
+    (module Dom : TOTALTYPE with type vals = dv)
+    (module Codom : TYPE with type vals = cv) =
   new_bot (dual_partial_function_lattice (module Dom) (module Codom))
 
 (* To use for very busy expressions (anticipated expressions)
               available expressions
               postponable expresions
    analyses *)
-let dual_powerset_lattice_empty_initial (module T : TOTALTYPE) =
+let dual_powerset_lattice_empty_initial (type v)
+    (module T : TOTALTYPE with type vals = v) =
   dual_powerset_lattice
     ( module struct
       type vals = T.vals
@@ -126,15 +137,17 @@ let dual_powerset_lattice_empty_initial (module T : TOTALTYPE) =
 (* To use for used expressions
               live variables
    analyses *)
-let powerset_lattice_empty_initial (module T : TYPE) =
+let powerset_lattice_empty_initial (type v)
+    (module T : TYPE with type vals = v) =
   powerset_lattice
     (module struct type vals = T.vals
 
                    let initial = Set.Poly.empty end)
 
 (* To use for reaching definitions analysis *)
-let reaching_definitions_lattice (module Variables : INITIALTYPE)
-    (module Labels : TYPE) =
+let reaching_definitions_lattice (type v l)
+    (module Variables : INITIALTYPE with type vals = v)
+    (module Labels : TYPE with type vals = l) =
   powerset_lattice
     ( module struct
       type vals = Variables.vals * Labels.vals option
@@ -170,7 +183,9 @@ let constant_propagation_transfer
              |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
                 m )
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int
+     and type properties = (string, Mir.expr) Map.Poly.t option )
 
 let copy_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -197,7 +212,9 @@ let copy_propagation_transfer
              |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
                 m )
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int
+     and type properties = (string, string) Map.Poly.t option )
 
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
@@ -249,7 +266,9 @@ let reaching_definitions_transfer
       in
       transfer_gen_kill p gen kill
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int
+     and type properties = (string * int option) Set.Poly.t )
 
 (* TODO: insert Ryan's implementations here? *)
 let rec free_vars_expr (e : Mir.expr) =
@@ -346,7 +365,8 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
       in
       transfer_gen_kill p gen kill
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = string Set.Poly.t )
 
 (* Note: we do not count constants or variables are expressions
    (as there is no computation needed for them, so they do not
@@ -448,7 +468,8 @@ let anticipated_expressions_transfer
       let kill = killed_expressions_stmt p mir_node in
       transfer_gen_kill p gen kill
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = Mir.expr Set.Poly.t )
 
 let transfer_gen_kill_alt p gen kill =
   Set.Poly.diff (Set.Poly.union p gen) kill
@@ -470,7 +491,8 @@ let available_expressions_transfer
       let kill = killed_expressions_stmt p mir_node in
       transfer_gen_kill_alt p gen kill
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = Mir.expr Set.Poly.t )
 
 let earliest
     (anticipated_expressions :
@@ -497,7 +519,8 @@ let postponable_expressions_transfer
       let kill = Map.find_exn used l in
       transfer_gen_kill_alt p gen kill
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = Mir.expr Set.Poly.t )
 
 (* TODO: Reuse used and killed between expression analyses *)
 
@@ -531,7 +554,8 @@ let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
       let kill = Map.find_exn latest l in
       transfer_gen_kill_alt p gen kill
   end
-  : TRANSFER_FUNCTION )
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = Mir.expr Set.Poly.t )
 
 let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
     (module L : LATTICE with type properties = p)
@@ -587,4 +611,28 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       in
       analysis_in_out
   end
-  : MONOTONE_FRAMEWORK )
+  : MONOTONE_FRAMEWORK
+    with type labels = l and type properties = p )
+
+let constant_propagation (type l p) (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let domain =
+    ( module struct
+      type vals = string
+
+      (* TODO: fix this total set. *)
+      let total = Set.Poly.singleton "x"
+    end
+    : TOTALTYPE
+      with type vals = string )
+  in
+  let codomain =
+    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
+  in
+  let (module Lattice) =
+    dual_partial_function_lattice_with_bot domain codomain
+  in
+  let (module Transfer) = constant_propagation_transfer flowgraph_to_mir in
+  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
