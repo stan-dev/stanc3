@@ -368,13 +368,10 @@ let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
 
-(* Note: we do not count constants or variables are expressions
-   (as there is no computation needed for them, so they do not
-   need to take part in any optimizations for expression placement).*)
 let rec used_expressions_expr (e : Mir.expr) =
   Set.Poly.union (Set.Poly.singleton e)
     ( match e with
-    | Mir.Var _ | Mir.Lit (_, _) -> Set.Poly.empty
+    | (Mir.Var _ | Mir.Lit (_, _)) as e -> Set.Poly.singleton e
     | Mir.FunApp (_, l) ->
         Set.Poly.union_list (List.map ~f:used_expressions_expr l)
     | Mir.BinOp (e1, _, e2) ->
@@ -614,7 +611,33 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
   : MONOTONE_FRAMEWORK
     with type labels = l and type properties = p )
 
-let constant_propagation (type l p) (mir : Mir.stmt_loc Mir.prog)
+let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
+  match s with
+  | Mir.Decl {decl_id= x; _} -> Set.Poly.singleton x
+  | Mir.Assignment (_, _)
+   |Mir.TargetPE _
+   |Mir.NRFunApp (_, _)
+   |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip ->
+      Set.Poly.empty
+  | Mir.IfElse (_, b1, Some b2) ->
+      Set.Poly.union
+        (declared_variables_stmt b1.stmt)
+        (declared_variables_stmt b2.stmt)
+  | Mir.While (_, b) | Mir.IfElse (_, b, None) ->
+      declared_variables_stmt b.stmt
+  | Mir.For {loopvar= x; body= b; _} -> (
+    match x with
+    | Var s -> Set.Poly.add (declared_variables_stmt b.stmt) s
+    | _ -> Errors.fatal_error () )
+  | Mir.Block l | Mir.SList l ->
+      Set.Poly.union_list
+        (List.map ~f:(fun x -> declared_variables_stmt x.stmt) l)
+  | Mir.FunDef {fdname= f; fdargs= l; fdbody= b; _} ->
+      Set.Poly.union
+        (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
+        (declared_variables_stmt b.stmt)
+
+let constant_propagation (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -622,8 +645,11 @@ let constant_propagation (type l p) (mir : Mir.stmt_loc Mir.prog)
     ( module struct
       type vals = string
 
-      (* TODO: fix this total set. *)
-      let total = Set.Poly.singleton "x"
+      let total =
+        Set.Poly.union_list
+          (List.map
+             ~f:(fun x -> declared_variables_stmt x.stmt)
+             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
     end
     : TOTALTYPE
       with type vals = string )
@@ -635,4 +661,30 @@ let constant_propagation (type l p) (mir : Mir.stmt_loc Mir.prog)
     dual_partial_function_lattice_with_bot domain codomain
   in
   let (module Transfer) = constant_propagation_transfer flowgraph_to_mir in
+  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+
+let copy_propagation (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let domain =
+    ( module struct
+      type vals = string
+
+      let total =
+        Set.Poly.union_list
+          (List.map
+             ~f:(fun x -> declared_variables_stmt x.stmt)
+             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+    end
+    : TOTALTYPE
+      with type vals = string )
+  in
+  let codomain =
+    (module struct type vals = string end : TYPE with type vals = string)
+  in
+  let (module Lattice) =
+    dual_partial_function_lattice_with_bot domain codomain
+  in
+  let (module Transfer) = copy_propagation_transfer flowgraph_to_mir in
   monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
