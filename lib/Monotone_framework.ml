@@ -761,6 +761,8 @@ let lazy_expressions_mfp (mir : Mir.stmt_loc Mir.prog)
          ~f:(fun x -> used_expressions_stmt x.stmt)
          [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
   in
+  (* TODO: we need to watch out in the lazy code motion pass that the autodiff and
+     block structure imposes real boundaries on how much we can move code around. *)
   let used_expr = used flowgraph_to_mir in
   let expressions_initial_total_type =
     ( module struct
