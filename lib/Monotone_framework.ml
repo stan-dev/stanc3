@@ -633,7 +633,7 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
 
-let constant_propagation (mir : Mir.stmt_loc Mir.prog)
+let constant_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -657,9 +657,12 @@ let constant_propagation (mir : Mir.stmt_loc Mir.prog)
     dual_partial_function_lattice_with_bot domain codomain
   in
   let (module Transfer) = constant_propagation_transfer flowgraph_to_mir in
-  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
 
-let copy_propagation (mir : Mir.stmt_loc Mir.prog)
+let copy_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -683,9 +686,12 @@ let copy_propagation (mir : Mir.stmt_loc Mir.prog)
     dual_partial_function_lattice_with_bot domain codomain
   in
   let (module Transfer) = copy_propagation_transfer flowgraph_to_mir in
-  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
 
-let reaching_definitions (mir : Mir.stmt_loc Mir.prog)
+let reaching_definitions_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -707,11 +713,14 @@ let reaching_definitions (mir : Mir.stmt_loc Mir.prog)
   in
   let (module Lattice) = reaching_definitions_lattice variables labels in
   let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
-  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
 
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
-let live_variables (mir : Mir.stmt_loc Mir.prog)
+let live_variables_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -733,11 +742,14 @@ let live_variables (mir : Mir.stmt_loc Mir.prog)
   in
   let (module Lattice) = powerset_lattice variables in
   let (module Transfer) = live_variables_transfer flowgraph_to_mir in
-  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
 
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
-let lazy_expressions (mir : Mir.stmt_loc Mir.prog)
+let lazy_expressions_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
@@ -760,8 +772,11 @@ let lazy_expressions (mir : Mir.stmt_loc Mir.prog)
     : INITIALTOTALTYPE
       with type vals = Mir.expr )
   in
-  let (module Lattice) = dual_powerset_lattice expressions in
-  let (module Transfer) =
+  let (module Lattice1) = dual_powerset_lattice expressions in
+  let (module Transfer1) =
     anticipated_expressions_transfer flowgraph_to_mir all_used
   in
-  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
+  in
+  Mf.mfp ()
