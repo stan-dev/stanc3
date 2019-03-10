@@ -23,14 +23,14 @@ end
 
 (** The data we need to form a powerset lattice *)
 module type INITIALTYPE = sig
-  type vals
+  include TYPE
 
   val initial : vals Set.Poly.t
 end
 
 (** The data we need to form e.g. an available xpressions lattice*)
 module type TOTALTYPE = sig
-  type vals
+  include TYPE
 
   val total : vals Set.Poly.t
 end

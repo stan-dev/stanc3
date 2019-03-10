@@ -721,7 +721,7 @@ let reaching_definitions_mfp (mir : Mir.stmt_loc Mir.prog)
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
 let live_variables_mfp (mir : Mir.stmt_loc Mir.prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
   let variables =
@@ -743,7 +743,7 @@ let live_variables_mfp (mir : Mir.stmt_loc Mir.prog)
   let (module Lattice) = powerset_lattice variables in
   let (module Transfer) = live_variables_transfer flowgraph_to_mir in
   let (module Mf) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+    monotone_framework (module Rev_Flowgraph) (module Lattice) (module Transfer)
   in
   Mf.mfp ()
 
@@ -752,6 +752,8 @@ let live_variables_mfp (mir : Mir.stmt_loc Mir.prog)
 let lazy_expressions_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
+    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
   let all_expressions =
     Set.Poly.union_list
@@ -759,24 +761,69 @@ let lazy_expressions_mfp (mir : Mir.stmt_loc Mir.prog)
          ~f:(fun x -> used_expressions_stmt x.stmt)
          [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
   in
-  let all_used = used flowgraph_to_mir in
-  let expressions =
+  let used_expr = used flowgraph_to_mir in
+  let expressions_initial_total_type =
     ( module struct
       type vals = Mir.expr
 
-      (* NOTE: global generated quantities, (transformed) parameters and target are always observable
-   so should be live. *)
       let total = all_expressions
       let initial = all_expressions
     end
     : INITIALTOTALTYPE
       with type vals = Mir.expr )
   in
-  let (module Lattice1) = dual_powerset_lattice expressions in
+  let expressions_type =
+    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
+  in
+  let (module Lattice1) =
+    dual_powerset_lattice expressions_initial_total_type
+  in
+  (* TODO: seeing that used_variables is basically a liveness analysis for expressions,
+     does that mean we should initialize to include all observable variables? *)
+  let (module Lattice2) = powerset_lattice_empty_initial expressions_type in
   let (module Transfer1) =
-    anticipated_expressions_transfer flowgraph_to_mir all_used
+    anticipated_expressions_transfer flowgraph_to_mir used_expr
   in
-  let (module Mf) =
-    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
+  let (module Mf1) =
+    monotone_framework
+      (module Rev_Flowgraph)
+      (module Lattice1)
+      (module Transfer1)
   in
-  Mf.mfp ()
+  let anticipated_expressions_mfp = Mf1.mfp () in
+  let (module Transfer2) =
+    available_expressions_transfer flowgraph_to_mir anticipated_expressions_mfp
+  in
+  let (module Mf2) =
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer2)
+  in
+  let available_expressions_mfp = Mf2.mfp () in
+  let earliest_expr =
+    earliest anticipated_expressions_mfp available_expressions_mfp
+  in
+  let (module Transfer3) =
+    postponable_expressions_transfer used_expr earliest_expr
+  in
+  let (module Mf3) =
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer3)
+  in
+  let postponable_expressions_mfp = Mf3.mfp () in
+  let latest_expr =
+    latest Flowgraph.successors used_expr earliest_expr
+      postponable_expressions_mfp
+  in
+  let (module Transfer4) = used_expressions_transfer used_expr latest_expr in
+  let (module Mf4) =
+    monotone_framework
+      (module Rev_Flowgraph)
+      (module Lattice2)
+      (module Transfer4)
+  in
+  let used_expressions_mfp = Mf4.mfp () in
+  ( used_expr
+  , anticipated_expressions_mfp
+  , available_expressions_mfp
+  , earliest_expr
+  , postponable_expressions_mfp
+  , latest_expr
+  , used_expressions_mfp )
