@@ -709,6 +709,8 @@ let reaching_definitions (mir : Mir.stmt_loc Mir.prog)
   let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
   monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
 
+(** Monotone framework instance for live_variables analysis. Expects reverse
+    flowgraph. *)
 let live_variables (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -731,4 +733,35 @@ let live_variables (mir : Mir.stmt_loc Mir.prog)
   in
   let (module Lattice) = powerset_lattice variables in
   let (module Transfer) = live_variables_transfer flowgraph_to_mir in
+  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+
+(** Instantiate all four instances of the monotone framework for lazy
+    code motion, reusing code between them *)
+let lazy_expressions (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let all_expressions =
+    Set.Poly.union_list
+      (List.map
+         ~f:(fun x -> used_expressions_stmt x.stmt)
+         [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+  in
+  let all_used = used flowgraph_to_mir in
+  let expressions =
+    ( module struct
+      type vals = Mir.expr
+
+      (* NOTE: global generated quantities, (transformed) parameters and target are always observable
+   so should be live. *)
+      let total = all_expressions
+      let initial = all_expressions
+    end
+    : INITIALTOTALTYPE
+      with type vals = Mir.expr )
+  in
+  let (module Lattice) = dual_powerset_lattice expressions in
+  let (module Transfer) =
+    anticipated_expressions_transfer flowgraph_to_mir all_used
+  in
   monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
