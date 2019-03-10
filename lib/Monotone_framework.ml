@@ -144,6 +144,7 @@ let powerset_lattice_empty_initial (type v)
 
                    let initial = Set.Poly.empty end)
 
+(* TODO: maybe we should just inline this definition and some of the previous. *)
 (* To use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
@@ -334,11 +335,6 @@ let top_free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
   | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
 
-(* TODO: in the live variables analysis, we probably want to assume that
-   target, parameters, transformed parameters and generated quantities are
-   always live.
-   We could either do that by initializing suitably or by just adding
-   them later in the dead code elimination pass. *)
 let live_variables_transfer (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t)
     =
   ( module struct
@@ -711,4 +707,28 @@ let reaching_definitions (mir : Mir.stmt_loc Mir.prog)
   in
   let (module Lattice) = reaching_definitions_lattice variables labels in
   let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+
+let live_variables (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let variables =
+    ( module struct
+      type vals = string
+
+      (* NOTE: global generated quantities, (transformed) parameters and target are always observable
+   so should be live. *)
+      let initial =
+        Set.Poly.add
+          (Set.Poly.union
+             (Set.of_map_keys (fst mir.gqb))
+             (Set.of_map_keys (fst mir.modelb)))
+          "target"
+    end
+    : INITIALTYPE
+      with type vals = string )
+  in
+  let (module Lattice) = powerset_lattice variables in
+  let (module Transfer) = live_variables_transfer flowgraph_to_mir in
   monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
