@@ -688,3 +688,27 @@ let copy_propagation (mir : Mir.stmt_loc Mir.prog)
   in
   let (module Transfer) = copy_propagation_transfer flowgraph_to_mir in
   monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+
+let reaching_definitions (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let variables =
+    ( module struct
+      type vals = string
+
+      let initial =
+        Set.Poly.union_list
+          (List.map
+             ~f:(fun x -> declared_variables_stmt x.stmt)
+             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+    end
+    : INITIALTYPE
+      with type vals = string )
+  in
+  let labels =
+    (module struct type vals = int end : TYPE with type vals = int)
+  in
+  let (module Lattice) = reaching_definitions_lattice variables labels in
+  let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
+  monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
