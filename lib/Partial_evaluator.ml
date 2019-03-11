@@ -39,6 +39,8 @@ let rec eval (e : expr) =
         FunApp ("categorical_logit_lpmf", [y; alpha])
     | "categorical_rng", [FunApp ("inv_logit", [alpha])] ->
         FunApp ("categorical_logit_rng", [alpha])
+    | "columns_dot_product", [x; y] when x = y ->
+        FunApp ("columns_dot_self", [x])
     | "dot_product", [x; y] when x = y -> FunApp ("dot_self", [x])
     | "inv", [FunApp ("sqrt", l)] -> FunApp ("inv_sqrt", l)
     | "inv", [FunApp ("square", [x])] -> FunApp ("inv_square", [x])
@@ -55,29 +57,88 @@ let rec eval (e : expr) =
     (* TODO: can only do below for reals:
     | "log", [BinOp (FunApp ("exp", [x]),Minus,FunApp ("exp", [y]))] ->
     FunApp ("log_diff_exp", [x;y]) *)
-    | "log", [FunApp ("falling_factorial", l)] ->  FunApp("log_falling_factorial", l)
+    (* TODO: log_mix?*)
+    | "log", [FunApp ("falling_factorial", l)] ->
+        FunApp ("log_falling_factorial", l)
+    | "log", [FunApp ("rising_factorial", l)] ->
+        FunApp ("log_rising_factorial", l)
     | "log", [FunApp ("inv_logit", l)] -> FunApp ("log_inv_logit", l)
+    | "log", [FunApp ("softmax", l)] -> FunApp ("log_softmax", l)
+    | "log", [FunApp ("sum", [FunApp ("exp", l)])] -> FunApp ("log_sum_exp", l)
     (* TODO: can only do below for reals:
     | "log", [BinOp (FunApp ("exp", [x]),Plus ,FunApp ("exp", [y]))] ->
     FunApp ("log_sum_exp", [x;y]) *)
+    | "multi_normal_lpdf", [y; mu; FunApp ("inverse", [tau])] ->
+        FunApp ("multi_normal_prec_lpdf", [y; mu; tau])
+    | "neg_binomial_2_lpmf", [y; FunApp ("log", [eta]); phi] ->
+        FunApp ("neg_binomial_2_log_lpmf", [y; eta; phi])
+    | "neg_binomial_2_rng", [FunApp ("log", [eta]); phi] ->
+        FunApp ("neg_binomial_2_log_rng", [eta; phi])
+    | "poisson_lpmf", [y; FunApp ("log", [eta])] ->
+        FunApp ("poisson_log_lpmf", [y; eta])
+    | "poisson_rng", [FunApp ("log", [eta])] ->
+        FunApp ("poisson_log_rng", [eta])
     | "pow", [Lit (Int, "2"); x] -> FunApp ("exp2", [x])
-    | "pow", [x; Lit (Int, "2")] ->
-        FunApp ("square", [x]) (* TODO: insert all composite functions here *)
+    | "rows_dot_product", [x; y] when x = y -> FunApp ("rows_dot_self", [x])
+    | "pow", [x; Lit (Int, "2")] -> FunApp ("square", [x])
+    | "pow", [x; Lit (Real, "0.5")]
+     |"pow", [x; BinOp (Lit (Int, "1"), Divide, Lit (Int, "2"))] ->
+        FunApp ("sqrt", [x])
+    (* TODO: insert all composite functions here *)
+    | "square", [FunApp ("sd", [x])] -> FunApp ("variance", [x])
+    | "sqrt", [Lit (Int, "2")] -> FunApp ("sqrt2", [])
+    | "sum", [FunApp ("square", [BinOp (x, Minus, y)])] ->
+        FunApp ("squared_distance", [x; y])
+    | "sum", [FunApp ("diagonal", l)] -> FunApp ("trace", l)
+    | ( "trace"
+      , [ BinOp
+            ( BinOp (BinOp (d, Times, FunApp ("transpose", [b])), Times, a)
+            , Times
+            , c ) ] )
+      when b = c ->
+        FunApp ("trace_gen_quad_form", [d; a; b])
+    | "trace", [BinOp (FunApp ("transpose", [b]), Times, BinOp (a, Times, c))]
+      when b = c ->
+        FunApp ("trace_quad_form", [a; b])
+    | "trace", [BinOp (BinOp (FunApp ("transpose", [b]), Times, a), Times, c)]
+      when b = c ->
+        FunApp ("trace_quad_form", [a; b])
     | _, l' -> FunApp (f, l') )
   | BinOp (e1, op, e2) -> (
     match (eval e1, op, eval e2) with
-    | e1', Times, FunApp ("diag_matrix", [v]) ->
-        FunApp ("diag_post_multiply", [e1'; v])
-    | FunApp ("diag_matrix", [v]), Times, e2' ->
-        FunApp ("diag_pre_multiply", [v; e2'])
     | Lit (Int, "1"), Minus, FunApp ("erf", l) -> FunApp ("erfc", l)
     | Lit (Int, "1"), Minus, FunApp ("erfc", l) -> FunApp ("erf", l)
     | FunApp ("exp", l'), Minus, Lit (Int, "1") -> FunApp ("expm1", l')
     (* TODO: can only do below for reals:
     | BinOp (x, Times, y), Plus, z
     | z, Plus, BinOp (x, Times,y)-> FunApp ("fma", [x;y;z]) *)
-    | Lit (Int, "1"), Minus, FunApp ("gamma_p", l) ->
-        FunApp ("gamma_q", l)
+    | Lit (Int, "1"), Minus, FunApp ("gamma_p", l) -> FunApp ("gamma_q", l)
+    | Lit (Int, "1"), Minus, FunApp ("gamma_q", l) -> FunApp ("gamma_p", l)
+    (* TODO: can only do below for t reals:       
+| FunApp("matrix_exp", [BinOp(t,Times ,a)]), Times, b
+| FunApp("matrix_exp", [BinOp(a,Times ,t)]), Times, b-> FunApp("scale_matrix_exp_multiply", [t;a;b]) *)
+    | FunApp ("matrix_exp", [a]), Times, b ->
+        FunApp ("matrix_exp_multiply", [a; b])
+    (* TODO: can only do below for reals:  
+| x, Times, FunApp("log", [y]) -> FunApp("multiply_log", [x;y]) *)
+    | ( FunApp ("transpose", [FunApp ("diag_matrix", [v])])
+      , Times
+      , BinOp (a, Times, FunApp ("diag_matrix", [w])) )
+      when v = w ->
+        FunApp ("quad_form_diag", [a; v])
+    | ( BinOp (FunApp ("transpose", [FunApp ("diag_matrix", [v])]), Times, a)
+      , Times
+      , FunApp ("diag_matrix", [w]) )
+      when v = w ->
+        FunApp ("quad_form_diag", [a; v])
+    | FunApp ("transpose", [b]), Times, BinOp (a, Times, c) when b = c ->
+        FunApp ("quad_form", [a; b])
+    | BinOp (FunApp ("transpose", [b]), Times, a), Times, c when b = c ->
+        FunApp ("quad_form", [a; b])
+    | e1', Times, FunApp ("diag_matrix", [v]) ->
+        FunApp ("diag_post_multiply", [e1'; v])
+    | FunApp ("diag_matrix", [v]), Times, e2' ->
+        FunApp ("diag_pre_multiply", [v; e2'])
         (* TODO: insert all composite functions here *)
         
         (* TODO: deal properly with different orders for operators, real vs int *)
