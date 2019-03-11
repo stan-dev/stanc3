@@ -21,19 +21,58 @@ and subst_idx m i =
   | Between (e1, e2) -> Between (subst m e1, subst m e2)
   | MultiIndex e -> MultiIndex (subst m e)
 
-(* TODO *)
 let rec eval (e : expr) =
   match e with
   | Var _ | Lit (_, _) -> e
   | FunApp (f, l) -> (
-    match (f, List.map ~f:eval l) with (* TODO: etc *)
-                                 | _, l' -> FunApp (f, l') )
+    match (f, List.map ~f:eval l) with
+    (* TODO: deal with tilde statements and unnormalized distributions properly here *)
+    (* TODO: deal with GLM functions here *)
+    (* TODO: be careful here with operators which get translated to function calls *)
+    | "bernoulli_lpmf", [y; FunApp ("inv_logit", [alpha])] ->
+        FunApp ("bernoulli_logit_lpmf", [y; alpha])
+    | "bernoulli_rng", [FunApp ("inv_logit", [alpha])] ->
+        FunApp ("bernoulli_logit_rng", [alpha])
+    | "binomial_lpmf", [y; FunApp ("inv_logit", [n; alpha])] ->
+        FunApp ("binomial_logit_lpmf", [y; n; alpha])
+    | "categorical_lpmf", [y; FunApp ("inv_logit", [alpha])] ->
+        FunApp ("categorical_logit_lpmf", [y; alpha])
+    | "categorical_rng", [FunApp ("inv_logit", [alpha])] ->
+        FunApp ("categorical_logit_rng", [alpha])
+    | "dot_product", [x; y] when x = y -> FunApp ("dot_self", [x])
+    | "inv", [FunApp ("sqrt", l)] -> FunApp ("inv_sqrt", l)
+    | "inv", [FunApp ("square", [x])] -> FunApp ("inv_square", [x])
+    | "log", [BinOp (Lit (Int, "1"), Minus, FunApp ("exp", [x]))] ->
+        FunApp ("log1m_exp", [x])
+    | "log", [BinOp (Lit (Int, "1"), Minus, FunApp ("inv_logit", [x]))] ->
+        FunApp ("log1m_inv_logit", [x])
+    | "log", [BinOp (Lit (Int, "1"), Minus, x)] -> FunApp ("log1m", [x])
+    | "log", [BinOp (Lit (Int, "1"), Plus, FunApp ("exp", [x]))] ->
+        FunApp ("log1p_exp", [x])
+    | "log", [BinOp (Lit (Int, "1"), Plus, x)] -> FunApp ("log1p", [x])
+    | "pow", [x; Lit (Int, "2")] ->
+        FunApp ("square", [x]) (* TODO: insert all composite functions here *)
+    | _, l' -> FunApp (f, l') )
   | BinOp (e1, op, e2) -> (
     match (eval e1, op, eval e2) with
+    | e1', Times, FunApp ("diag_matrix", [v]) ->
+        FunApp ("diag_post_multiply", [e1'; v])
+    | FunApp ("diag_matrix", [v]), Times, e2' ->
+        FunApp ("diag_pre_multiply", [v; e2'])
+    | Lit (Int, "1"), Minus, FunApp ("erf", l) -> FunApp ("erfc", l)
+    | Lit (Int, "1"), Minus, FunApp ("erfc", l) -> FunApp ("erf", l)
+    | FunApp ("exp", l'), Minus, Lit (Int, "1") -> FunApp ("expm1", l')
+    (* TODO: can only do below for reals:
+    | BinOp (x, Times, y), Plus, z
+    | z, Plus, BinOp (x, Times,y)-> FunApp ("fma", [x;y;z]) *)
+    | Lit (Int, "1"), Minus, FunApp ("gamma_p", l) ->
+        FunApp ("gamma_q", l)
+        (* TODO: insert all composite functions here *)
+        
+        (* TODO: deal properly with different orders for operators, real vs int *)
     | Lit (Int, i1), Plus, Lit (Int, i2) ->
         Lit (Int, Int.to_string (Int.of_string i1 + Int.of_string i2))
-        (* TODO: etc *)
-    | FunApp ("exp", l'), Minus, Lit (Int, "1") -> FunApp ("expm1", l')
+        (* TODO: constant folding for arithmetic expressions *)
     | e1', _, e2' -> BinOp (e1', op, e2') )
   | TernaryIf (e1, e2, e3) -> TernaryIf (eval e1, eval e2, eval e3)
   | Indexed (e, l) -> Indexed (eval e, List.map ~f:eval_idx l)
