@@ -188,6 +188,37 @@ let constant_propagation_transfer
     with type labels = int
      and type properties = (string, Mir.expr) Map.Poly.t option )
 
+(** AKA forward substitution (see page 396 of Muchnick) *)
+let expression_propagation_transfer
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = (string, Mir.expr) Map.Poly.t option
+
+    let transfer_function l p =
+      match p with
+      | None -> None
+      | Some m ->
+          let mir_node = (Map.find_exn flowgraph_to_mir l).stmt in
+          Some
+            ( match mir_node with
+            (* TODO: we are currently only propagating constants for scalars.
+             We could do the same for matrix and array expressions if we wanted. *)
+            | Mir.Assignment (Var s, e) -> Map.set m ~key:s ~data:e
+            | Mir.Decl {decl_id= s; _} -> Map.remove m s
+            | Mir.Assignment (_, _)
+             |Mir.TargetPE _
+             |Mir.NRFunApp (_, _)
+             |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+             |Mir.IfElse (_, _, _)
+             |Mir.While (_, _)
+             |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
+                m )
+  end
+  : TRANSFER_FUNCTION
+    with type labels = int
+     and type properties = (string, Mir.expr) Map.Poly.t option )
+
 let copy_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
   ( module struct
@@ -632,6 +663,35 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
       Set.Poly.union
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
+
+let expression_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let domain =
+    ( module struct
+      type vals = string
+
+      let total =
+        Set.Poly.union_list
+          (List.map
+             ~f:(fun x -> declared_variables_stmt x.stmt)
+             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+    end
+    : TOTALTYPE
+      with type vals = string )
+  in
+  let codomain =
+    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
+  in
+  let (module Lattice) =
+    dual_partial_function_lattice_with_bot domain codomain
+  in
+  let (module Transfer) = expression_propagation_transfer flowgraph_to_mir in
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
 
 let constant_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
