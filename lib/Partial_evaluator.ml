@@ -21,6 +21,51 @@ and subst_idx m i =
   | Between (e1, e2) -> Between (subst m e1, subst m e2)
   | MultiIndex e -> MultiIndex (subst m e)
 
+let apply_operator_int (op : operator) i1 i2 =
+  Lit
+    ( Int
+    , Int.to_string
+        ( match op with
+        | Plus -> i1 + i2
+        | Minus -> i1 - i2
+        | Times -> i1 * i2
+        | Divide -> i1 / i2
+        | Modulo -> i1 % i2
+        | Or -> Bool.to_int (i1 <> 0 || i2 <> 0)
+        | And -> Bool.to_int (i1 <> 0 && i2 <> 0)
+        | Equals -> Bool.to_int (i1 = i2)
+        | NEquals -> Bool.to_int (i1 <> i2)
+        | Less -> Bool.to_int (i1 < i2)
+        | Leq -> Bool.to_int (i1 <= i2)
+        | Greater -> Bool.to_int (i1 > i2)
+        | Geq -> Bool.to_int (i1 >= i2) ) )
+
+let apply_arithmetic_operator_real (op : operator) r1 r2 =
+  Lit
+    ( Real
+    , Float.to_string
+        ( match op with
+        | Plus -> r1 +. r2
+        | Minus -> r1 -. r2
+        | Times -> r1 *. r2
+        | Divide -> r1 /. r2
+        | _ -> Errors.fatal_error () ) )
+
+let apply_logical_operator_real (op : operator) r1 r2 =
+  Lit
+    ( Int
+    , Int.to_string
+        ( match op with
+        | Or -> Bool.to_int (r1 <> 0. || r2 <> 0.)
+        | And -> Bool.to_int (r1 <> 0. && r2 <> 0.)
+        | Equals -> Bool.to_int (r1 = r2)
+        | NEquals -> Bool.to_int (r1 <> r2)
+        | Less -> Bool.to_int (r1 < r2)
+        | Leq -> Bool.to_int (r1 <= r2)
+        | Greater -> Bool.to_int (r1 > r2)
+        | Geq -> Bool.to_int (r1 >= r2)
+        | _ -> Errors.fatal_error () ) )
+
 let rec eval (e : expr) =
   match e with
   | Var _ | Lit (_, _) -> e
@@ -144,13 +189,30 @@ let rec eval (e : expr) =
         FunApp ("diag_pre_multiply", [v; e2'])
         (* TODO: insert all composite functions here *)
         
-        (* TODO: deal properly with different orders for operators, real vs int *)
-    | Lit (Int, i1), Plus, Lit (Int, i2) ->
-        Lit (Int, Int.to_string (Int.of_string i1 + Int.of_string i2))
-        (* TODO: constant folding for arithmetic expressions *)
+        (* Constant folding for arithmetic operators *)
+    | Lit (Int, i1), _, Lit (Int, i2) ->
+        apply_operator_int op (Int.of_string i1) (Int.of_string i2)
+    | Lit (Real, i1), _, Lit (Real, i2)
+     |Lit (Int, i1), _, Lit (Real, i2)
+     |Lit (Real, i1), _, Lit (Int, i2) -> (
+      match op with
+      | Plus | Minus | Times | Divide ->
+          apply_arithmetic_operator_real op (Float.of_string i1)
+            (Float.of_string i2)
+      | _ ->
+          apply_logical_operator_real op (Float.of_string i1)
+            (Float.of_string i2)
+          (* TODO: the rest of the arithmetic and logical operators *) )
     | e1', _, e2' -> BinOp (e1', op, e2') )
-  | TernaryIf (e1, e2, e3) -> TernaryIf (eval e1, eval e2, eval e3)
-  | Indexed (e, l) -> Indexed (eval e, List.map ~f:eval_idx l)
+  | TernaryIf (e1, e2, e3) -> (
+    match (eval e1, eval e2, eval e3) with
+    | Lit (Int, "0"), _, e3' -> e3'
+    | Lit (Int, _), e2', _ -> e2'
+    | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
+  | Indexed (e, l) ->
+      (* TODO: do something clever with array and matrix expressions here?
+  Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+      Indexed (eval e, List.map ~f:eval_idx l)
 
 and eval_idx i =
   match i with
