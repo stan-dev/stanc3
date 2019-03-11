@@ -171,12 +171,15 @@ let constant_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Mir.Assignment (Var s, Mir.Lit (t, v)) ->
-                Map.set m ~key:s ~data:(Mir.Lit (t, v))
-            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Var s, _) ->
+            | Mir.Assignment (Var s, e) -> (
+              match Partial_evaluator.eval_subst m e with
+              | Mir.Lit (t, v) -> Map.set m ~key:s ~data:(Mir.Lit (t, v))
+              | _ -> Map.remove m s )
+            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Indexed (Var s, _), _)
+              ->
                 Map.remove m s
-            | Mir.Assignment (_, _)
-             |Mir.TargetPE _
+            | Mir.Assignment (_, _) -> Errors.fatal_error ()
+            | Mir.TargetPE _
              |Mir.NRFunApp (_, _)
              |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
              |Mir.IfElse (_, _, _)
@@ -204,10 +207,13 @@ let expression_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Mir.Assignment (Var s, e) -> Map.set m ~key:s ~data:e
-            | Mir.Decl {decl_id= s; _} -> Map.remove m s
-            | Mir.Assignment (_, _)
-             |Mir.TargetPE _
+            | Mir.Assignment (Var s, e) ->
+                Map.set m ~key:s ~data:(Partial_evaluator.eval_subst m e)
+            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Indexed (Var s, _), _)
+              ->
+                Map.remove m s
+            | Mir.Assignment (_, _) -> Errors.fatal_error ()
+            | Mir.TargetPE _
              |Mir.NRFunApp (_, _)
              |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
              |Mir.IfElse (_, _, _)
