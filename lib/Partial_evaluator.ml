@@ -187,9 +187,8 @@ let rec eval (e : expr) =
         FunApp ("diag_post_multiply", [e1'; v])
     | FunApp ("diag_matrix", [v]), Times, e2' ->
         FunApp ("diag_pre_multiply", [v; e2'])
-        (* TODO: insert all composite functions here *)
         
-        (* Constant folding for arithmetic operators *)
+        (* Constant folding for operators *)
     | Lit (Int, i1), _, Lit (Int, i2) ->
         apply_operator_int op (Int.of_string i1) (Int.of_string i2)
     | Lit (Real, i1), _, Lit (Real, i2)
@@ -201,8 +200,7 @@ let rec eval (e : expr) =
             (Float.of_string i2)
       | _ ->
           apply_logical_operator_real op (Float.of_string i1)
-            (Float.of_string i2)
-          (* TODO: the rest of the arithmetic and logical operators *) )
+            (Float.of_string i2) )
     | e1', _, e2' -> BinOp (e1', op, e2') )
   | TernaryIf (e1, e2, e3) -> (
     match (eval e1, eval e2, eval e3) with
