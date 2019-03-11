@@ -27,8 +27,15 @@ let rec eval (e : expr) =
   | FunApp (f, l) -> (
     match (f, List.map ~f:eval l) with
     (* TODO: deal with tilde statements and unnormalized distributions properly here *)
-    (* TODO: deal with GLM functions here *)
+    
     (* TODO: be careful here with operators which get translated to function calls *)
+    (* TODO: deal with GLM functions here. Need type information though.
+    | "bernoulli_logit_lpmf", [y; BinOp (alpha, Plus, BinOp (beta, Times, x))]
+     |"bernoulli_logit_lpmf", [y; BinOp (BinOp (beta, Times, x), Plus, alpha)]
+     |"bernoulli_logit_lpmf", [y; BinOp (alpha, Plus, BinOp (x, Times, beta))]
+     |"bernoulli_logit_lpmf", [y; BinOp (BinOp (x, Times, beta), Plus, alpha)]
+      ->
+        FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta]) *)
     | "bernoulli_lpmf", [y; FunApp ("inv_logit", [alpha])] ->
         FunApp ("bernoulli_logit_lpmf", [y; alpha])
     | "bernoulli_rng", [FunApp ("inv_logit", [alpha])] ->
@@ -97,11 +104,7 @@ let rec eval (e : expr) =
             , c ) ] )
       when b = c ->
         FunApp ("trace_gen_quad_form", [d; a; b])
-    | "trace", [BinOp (FunApp ("transpose", [b]), Times, BinOp (a, Times, c))]
-      when b = c ->
-        FunApp ("trace_quad_form", [a; b])
-    | "trace", [BinOp (BinOp (FunApp ("transpose", [b]), Times, a), Times, c)]
-      when b = c ->
+    | "trace", [FunApp ("quad_form", [a; b])] ->
         FunApp ("trace_quad_form", [a; b])
     | _, l' -> FunApp (f, l') )
   | BinOp (e1, op, e2) -> (
