@@ -50,6 +50,17 @@ let rec eval (e : expr) =
     | "log", [BinOp (Lit (Int, "1"), Plus, FunApp ("exp", [x]))] ->
         FunApp ("log1p_exp", [x])
     | "log", [BinOp (Lit (Int, "1"), Plus, x)] -> FunApp ("log1p", [x])
+    | "log", [FunApp ("fabs", [FunApp ("determinant", [x])])] ->
+        FunApp ("log_determinant", [x])
+    (* TODO: can only do below for reals:
+    | "log", [BinOp (FunApp ("exp", [x]),Minus,FunApp ("exp", [y]))] ->
+    FunApp ("log_diff_exp", [x;y]) *)
+    | "log", [FunApp ("falling_factorial", l)] ->  FunApp("log_falling_factorial", l)
+    | "log", [FunApp ("inv_logit", l)] -> FunApp ("log_inv_logit", l)
+    (* TODO: can only do below for reals:
+    | "log", [BinOp (FunApp ("exp", [x]),Plus ,FunApp ("exp", [y]))] ->
+    FunApp ("log_sum_exp", [x;y]) *)
+    | "pow", [Lit (Int, "2"); x] -> FunApp ("exp2", [x])
     | "pow", [x; Lit (Int, "2")] ->
         FunApp ("square", [x]) (* TODO: insert all composite functions here *)
     | _, l' -> FunApp (f, l') )
