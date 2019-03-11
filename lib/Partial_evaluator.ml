@@ -25,13 +25,16 @@ and subst_idx m i =
 let rec eval (e : expr) =
   match e with
   | Var _ | Lit (_, _) -> e
-  | FunApp (f, l) -> FunApp (f, List.map ~f:eval l)
+  | FunApp (f, l) -> (
+    match (f, List.map ~f:eval l) with (* TODO: etc *)
+                                 | _, l' -> FunApp (f, l') )
   | BinOp (e1, op, e2) -> (
     match (eval e1, op, eval e2) with
     | Lit (Int, i1), Plus, Lit (Int, i2) ->
         Lit (Int, Int.to_string (Int.of_string i1 + Int.of_string i2))
         (* TODO: etc *)
-    | (e1', _, e2') -> BinOp (e1', op, e2') )
+    | FunApp ("exp", l'), Minus, Lit (Int, "1") -> FunApp ("expm1", l')
+    | e1', _, e2' -> BinOp (e1', op, e2') )
   | TernaryIf (e1, e2, e3) -> TernaryIf (eval e1, eval e2, eval e3)
   | Indexed (e, l) -> Indexed (eval e, List.map ~f:eval_idx l)
 
