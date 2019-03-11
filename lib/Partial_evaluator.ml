@@ -1,29 +1,47 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
 open Core_kernel
+open Mir
 
-(* TODO *)
-let rec subst (m : (string, Mir.expr) Map.Poly.t) (e : Mir.expr) =
+let rec subst (m : (string, expr) Map.Poly.t) (e : expr) =
   match e with
-  | Mir.Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
-  | Mir.Lit (_, _) -> e
-  | Mir.FunApp (f, l) -> Mir.FunApp (f, List.map ~f:(subst m) l)
-  | Mir.BinOp (e1, op, e2) -> Mir.BinOp (subst m e1, op, subst m e2)
-  | Mir.TernaryIf (e1, e2, e3) ->
-      Mir.TernaryIf (subst m e1, subst m e2, subst m e3)
-  | Mir.Indexed (e, l) -> Mir.Indexed (subst m e, List.map ~f:(subst_idx m) l)
+  | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
+  | Lit (_, _) -> e
+  | FunApp (f, l) -> FunApp (f, List.map ~f:(subst m) l)
+  | BinOp (e1, op, e2) -> BinOp (subst m e1, op, subst m e2)
+  | TernaryIf (e1, e2, e3) -> TernaryIf (subst m e1, subst m e2, subst m e3)
+  | Indexed (e, l) -> Indexed (subst m e, List.map ~f:(subst_idx m) l)
 
 and subst_idx m i =
   match i with
-  | Mir.All -> Mir.All
-  | Mir.Single e -> Mir.Single (subst m e)
-  | Mir.Upfrom e -> Mir.Upfrom (subst m e)
-  | Mir.Downfrom e -> Mir.Downfrom (subst m e)
-  | Mir.Between (e1, e2) -> Mir.Between (subst m e1, subst m e2)
-  | Mir.MultiIndex e -> Mir.MultiIndex (subst m e)
+  | All -> All
+  | Single e -> Single (subst m e)
+  | Upfrom e -> Upfrom (subst m e)
+  | Downfrom e -> Downfrom (subst m e)
+  | Between (e1, e2) -> Between (subst m e1, subst m e2)
+  | MultiIndex e -> MultiIndex (subst m e)
 
 (* TODO *)
-let eval (e : Mir.expr) = e
+let rec eval (e : expr) =
+  match e with
+  | Var _ | Lit (_, _) -> e
+  | FunApp (f, l) -> FunApp (f, List.map ~f:eval l)
+  | BinOp (e1, op, e2) -> (
+    match (eval e1, op, eval e2) with
+    | Lit (Int, i1), Plus, Lit (Int, i2) ->
+        Lit (Int, Int.to_string (Int.of_string i1 + Int.of_string i2))
+        (* TODO: etc *)
+    | (e1', _, e2') -> BinOp (e1', op, e2') )
+  | TernaryIf (e1, e2, e3) -> TernaryIf (eval e1, eval e2, eval e3)
+  | Indexed (e, l) -> Indexed (eval e, List.map ~f:eval_idx l)
 
-let eval_subst (m : (string, Mir.expr) Map.Poly.t) (e : Mir.expr) =
-  eval (subst m e)
+and eval_idx i =
+  match i with
+  | All -> All
+  | Single e -> Single (eval e)
+  | Upfrom e -> Upfrom (eval e)
+  | Downfrom e -> Downfrom (eval e)
+  | Between (e1, e2) -> Between (eval e1, eval e2)
+  | MultiIndex e -> MultiIndex (eval e)
+
+let eval_subst (m : (string, expr) Map.Poly.t) (e : expr) = eval (subst m e)
