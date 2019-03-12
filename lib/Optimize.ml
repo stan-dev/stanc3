@@ -440,8 +440,7 @@ let copy_propagation (mir : stmt_loc_num prog)
   in
   map_prog constant_fold_stmt mir
 
-let is_target_affecting_function_call e =
-  match e with FunApp (f, _) -> String.suffix f 3 = "_lp" | _ -> false
+let is_function_call e = match e with FunApp (f, _) -> true | _ -> false
 
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
@@ -477,8 +476,8 @@ let dead_code_elimination (mir : stmt_loc_num prog)
             let b1' = dead_code_elim_stmt b1 in
             let b2' = Option.map ~f:dead_code_elim_stmt b2 in
             if
-              (* TODO: e having side effects? *)
-              (not (is_target_affecting_function_call e))
+              (* TODO: check if function call e has side effects, otherwise still optimize away? *)
+              (not (is_function_call e))
               && b1'.stmt = Skip
               && ( Option.map ~f:(fun x -> x.stmt) b2' = Some Skip
                  || Option.map ~f:(fun x -> x.stmt) b2' = None )
@@ -486,18 +485,16 @@ let dead_code_elimination (mir : stmt_loc_num prog)
             else IfElse (e, b1', b2')
         | While (e, b) ->
             let b' = dead_code_elim_stmt b in
-            (* TODO: e having side effects? *)
-            if
-              (not (is_target_affecting_function_call e))
-              && is_skip_break_continue b'.stmt
+            (* TODO: check if function call e has side effects, otherwise still optimize away? *)
+            if (not (is_function_call e)) && is_skip_break_continue b'.stmt
             then Skip
             else While (e, b')
         | For {loopvar; lower; upper; body} ->
-            (* TODO: e having side effects? *)
+            (* TODO: check if function call e has side effects, otherwise still optimize away? *)
             let body' = dead_code_elim_stmt body in
             if
-              (not (is_target_affecting_function_call lower))
-              && (not (is_target_affecting_function_call upper))
+              (not (is_function_call lower))
+              && (not (is_function_call upper))
               && is_skip_break_continue body'.stmt
             then Skip
             else For {loopvar; lower; upper; body= body'}
