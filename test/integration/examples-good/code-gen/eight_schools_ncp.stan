@@ -1,0 +1,1 @@
+../stat_comp_benchmarks_models/eight_schools.stan
