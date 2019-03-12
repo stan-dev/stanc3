@@ -1,18 +1,31 @@
 open Core_kernel
 open Mir
 
-let rec ends_with suffix s = 
+(* stub *)
+let types_match _e1 _e2 =
+  true
+
+(* stub *)
+let is_user_defined _e = false
+
+(* stub *)
+let is_scalar _e =
+  true
+  
+(* stub *)
+let pretty_print _e =
+  "pretty printed e"
+
+(* stub *)
+let gen_type _e =
+  "double"
+  
+let ends_with suffix s = 
   let len_suffix = String.length suffix in
   let len_s = String.length s in
-  len_suffix <= len_s &&
-  String.equal suffix (String.sub s ~pos:(len_s - len_suffix) ~len:len_suffix)
+  len_suffix <= len_s && String.equal suffix (String.sub s ~pos:(len_s - len_suffix) ~len:len_suffix)
 
-and gen_exprs = function
-  | [] -> ""
-  | hd::[] -> gen_expr hd
-  | hd::tl -> sprintf "%s, %s" (gen_expr hd) (gen_exprs tl)
-
-and gen_op = function
+let gen_op = function
   | Plus -> "+"
   | Minus -> "-"
   | Times -> "*"
@@ -27,7 +40,7 @@ and gen_op = function
   | Greater -> ">"
   | Geq -> ">="
 
-  and gen_op_name = function
+let gen_op_name = function
   | Plus -> "add"
   | Minus -> "subtract"
   | Times -> "multiply"
@@ -42,6 +55,31 @@ and gen_op = function
   | Greater -> "operator>"
   | Geq -> "operator>="
 
+let suffix_args f =
+  if (ends_with "_rng" f) 
+  then [ "base_rng__" ]
+  else (if (ends_with "_lp" f) 
+        then [ "lp__"; "lp_accum__"]
+        else [])
+
+let user_defined_args f =
+  if is_user_defined f then [ "pstream__" ] else []
+
+let gen_extra_fun_args f = 
+  String.concat ~sep:", " (List.append (suffix_args f) (user_defined_args f))
+
+let include_sep s1 s2 = (String.length s1) > 0 && (String.length s2) > 0
+
+let gen_sep s1 s2 =
+  sprintf "%s%s%s" s1 (if (include_sep s1 s2) then ", " else "") s2
+
+
+
+let rec gen_exprs = function
+  | [] -> ""
+  | hd::[] -> gen_expr hd
+  | hd::tl -> sprintf "%s, %s" (gen_expr hd) (gen_exprs tl)
+
 and gen_index = function
   | All -> "stan::model::index_omni()"
   | Single e -> sprintf "stan::model::index_uni(%s)" (gen_expr e)
@@ -54,42 +92,6 @@ and gen_indexes = function
    | [] -> "stan::model::nil_index_list()"
    | idx::idxs -> sprintf "stan::model::cons_list(%s, %s)" (gen_index idx) (gen_indexes idxs)
 
-and is_user_defined _ = false
-
-and suffix_args f =
-  if (ends_with "_rng" f) 
-  then [ "base_rng__" ]
-  else (if (ends_with "_lp" f) 
-        then [ "lp__"; "lp_accum__"]
-        else [])
-
-and user_defined_args f =
-  if is_user_defined f then [ "pstream__" ] else []
-
-and gen_extra_fun_args f = 
-  String.concat ~sep:", " (List.append (suffix_args f) (user_defined_args f))
-
-and include_sep s1 s2 = ((String.length s1) > 0) && ((String.length s2) > 0)
-
-and gen_sep s1 s2 =
-  sprintf "%s%s%s" s1 (if (include_sep s1 s2) then ", " else "") s2
-
-and is_scalar _ =
-  true
-
-and gen_type _ =
-  "double"
-
-and types_match _ _ =
-  true
-
-and pretty_print e =
-  gen_expr e
-  
-(* binary logical {&&, ||} require short circuit and conversion to primitive
- * values.  All other functions need to have right function name passed in. 
- * This will be operator*(x, y), etc. for scalars and multiply(x, y) for matrices.
- *)
 and gen_expr = function
 | Var s -> s
 | Lit (Str, s) -> sprintf "%S" s
@@ -107,6 +109,7 @@ and gen_expr = function
             (gen_type (TernaryIf (ec, et, ef))) (gen_expr et) 
             (gen_type (TernaryIf (ec, et, ef))) (gen_expr ef)
 | Indexed (e, idx) -> sprintf "stan::model::rvalue(%s, %s, %S)" (gen_expr e) (gen_indexes idx) (pretty_print e)
+
 
 let%expect_test "endswith1" =
 printf "%B" (ends_with "" "");
@@ -171,7 +174,7 @@ printf "%s" (gen_expr (TernaryIf ((Lit (Int, "1")), (Lit (Real, "1.2")), (Lit (R
 
 let%expect_test "gen_expr10" =
 printf "%s" (gen_expr (Indexed ((Var "a"), [All])));
-[%expect {| stan::model::rvalue(a, stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list()), "a") |}]
+[%expect {| stan::model::rvalue(a, stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list()), "pretty printed e") |}]
 
 let%expect_test "gen_expr11" =
 printf "%s" (gen_expr (FunApp ("foo_rng", [(Lit (Int, "123"))])));
