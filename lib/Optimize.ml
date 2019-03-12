@@ -48,47 +48,9 @@ let rec replace_fresh_local_vars stmt =
            l)
   | x -> x
 
-let rec subst_args_expr args es e =
-  let arg_map = Map.Poly.of_alist_exn (List.zip_exn args es) in
-  let f = subst_args_expr args es in
-  match e with
-  | Var v -> ( match Map.find arg_map v with None -> Var v | Some e -> e )
-  | Lit (t, v) -> Lit (t, v)
-  | FunApp (s, e_list) -> FunApp (s, List.map ~f e_list)
-  (* Note: when we add higher order functions, we will need to do something here. *)
-  | BinOp (e1, op, e2) -> BinOp (f e1, op, f e2)
-  | TernaryIf (e1, e2, e3) -> TernaryIf (f e1, f e2, f e3)
-  | Indexed (e, is) -> Indexed (f e, List.map ~f:(subst_args_idx args es) is)
-
-and subst_args_idx args es i =
-  let f = subst_args_expr args es in
-  match i with
-  | All -> All
-  | Single e -> Single (f e)
-  | Upfrom e -> Upfrom (f e)
-  | Downfrom e -> Downfrom (f e)
-  | Between (e1, e2) -> Between (f e1, f e2)
-  | MultiIndex e -> MultiIndex (f e)
-
-let rec subst_args_stmt args es b =
-  let f = subst_args_expr args es in
-  let g {stmt; sloc} = {stmt= subst_args_stmt args es stmt; sloc} in
-  match b with
-  | Assignment (e1, e2) -> Assignment (f e1, f e2)
-  | TargetPE e -> TargetPE (f e)
-  | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
-  | Check {ccfunname; ccvid; cctype; ccargs} ->
-      Check {ccfunname; ccvid; cctype; ccargs= List.map ccargs ~f}
-  | Return opt_e -> Return (Option.map opt_e ~f)
-  | IfElse (e, b1, b2) -> IfElse (f e, g b1, Option.map ~f:g b2)
-  | While (e, b) -> While (f e, g b)
-  | For {loopvar; lower; upper; body} ->
-      For {loopvar; lower= f lower; upper= f upper; body= g body}
-  | Block sl -> Block (List.map ~f:g sl)
-  | SList sl -> SList (List.map ~f:g sl)
-  | FunDef {fdrt; fdname; fdargs; fdbody} ->
-      FunDef {fdrt; fdname; fdargs; fdbody= g fdbody}
-  | x -> x
+let subst_args_stmt args es =
+  let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
+  Partial_evaluator.subst_stmt m
 
 let rec handle_early_returns_help opt_var b =
   match b with
@@ -381,14 +343,7 @@ let rec unroll_loops_statement {stmt; sloc} =
       | Decl x -> Decl x )
   ; sloc }
 
-let loop_unrolling (mir : stmt_loc prog) =
-  { functionsb= unroll_loops_statement mir.functionsb
-  ; datavars= mir.datavars
-  ; tdatab= (fst mir.tdatab, unroll_loops_statement (snd mir.tdatab))
-  ; modelb= (fst mir.modelb, unroll_loops_statement (snd mir.modelb))
-  ; gqb= (fst mir.gqb, unroll_loops_statement (snd mir.gqb))
-  ; prog_name= mir.prog_name
-  ; prog_path= mir.prog_path }
+let loop_unrolling (mir : stmt_loc prog) = map_prog unroll_loops_statement mir
 
 let rec collapse_lists_statement {stmt; sloc} =
   let rec collapse_lists l =
@@ -426,16 +381,14 @@ let rec collapse_lists_statement {stmt; sloc} =
   ; sloc }
 
 let list_collapsing (mir : stmt_loc prog) =
-  { functionsb= collapse_lists_statement mir.functionsb
-  ; datavars= mir.datavars
-  ; tdatab= (fst mir.tdatab, collapse_lists_statement (snd mir.tdatab))
-  ; modelb= (fst mir.modelb, collapse_lists_statement (snd mir.modelb))
-  ; gqb= (fst mir.gqb, collapse_lists_statement (snd mir.gqb))
-  ; prog_name= mir.prog_name
-  ; prog_path= mir.prog_path }
+  map_prog collapse_lists_statement mir
 
 (* TODO *)
-let constant_fold_stmt _ s = s
+let constant_fold_stmt constants s =
+  let s' = unnumbered_statement_of_numbered_statement s in
+  match (Map.find_exn constants s.num).Monotone_framework_sigs.entry with
+  | None -> s'
+  | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
 
 let constant_folding (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -446,15 +399,7 @@ let constant_folding (mir : stmt_loc_num prog)
       (module Flowgraph)
       flowgraph_to_mir
   in
-  match mir
-  with {functionsb; datavars; tdatab; modelb; gqb; prog_name; prog_path} ->
-    { functionsb= constant_fold_stmt constants functionsb
-    ; datavars
-    ; tdatab= (fst tdatab, constant_fold_stmt constants (snd tdatab))
-    ; modelb= (fst modelb, constant_fold_stmt constants (snd modelb))
-    ; gqb= (fst gqb, constant_fold_stmt constants (snd gqb))
-    ; prog_name
-    ; prog_path }
+  map_prog (constant_fold_stmt constants) mir
 
 let _ = constant_folding
 

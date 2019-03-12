@@ -3,23 +3,44 @@
 open Core_kernel
 open Mir
 
-let rec subst (m : (string, expr) Map.Poly.t) (e : expr) =
+let rec subst_expr (m : (string, expr) Map.Poly.t) (e : expr) =
   match e with
   | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
   | Lit (_, _) -> e
-  | FunApp (f, l) -> FunApp (f, List.map ~f:(subst m) l)
-  | BinOp (e1, op, e2) -> BinOp (subst m e1, op, subst m e2)
-  | TernaryIf (e1, e2, e3) -> TernaryIf (subst m e1, subst m e2, subst m e3)
-  | Indexed (e, l) -> Indexed (subst m e, List.map ~f:(subst_idx m) l)
+  | FunApp (f, l) -> FunApp (f, List.map ~f:(subst_expr m) l)
+  | BinOp (e1, op, e2) -> BinOp (subst_expr m e1, op, subst_expr m e2)
+  | TernaryIf (e1, e2, e3) ->
+      TernaryIf (subst_expr m e1, subst_expr m e2, subst_expr m e3)
+  | Indexed (e, l) -> Indexed (subst_expr m e, List.map ~f:(subst_idx m) l)
 
 and subst_idx m i =
   match i with
   | All -> All
-  | Single e -> Single (subst m e)
-  | Upfrom e -> Upfrom (subst m e)
-  | Downfrom e -> Downfrom (subst m e)
-  | Between (e1, e2) -> Between (subst m e1, subst m e2)
-  | MultiIndex e -> MultiIndex (subst m e)
+  | Single e -> Single (subst_expr m e)
+  | Upfrom e -> Upfrom (subst_expr m e)
+  | Downfrom e -> Downfrom (subst_expr m e)
+  | Between (e1, e2) -> Between (subst_expr m e1, subst_expr m e2)
+  | MultiIndex e -> MultiIndex (subst_expr m e)
+
+let rec subst_stmt m b =
+  let f = subst_expr m in
+  let g {stmt; sloc} = {stmt= subst_stmt m stmt; sloc} in
+  match b with
+  | Assignment (e1, e2) -> Assignment (f e1, f e2)
+  | TargetPE e -> TargetPE (f e)
+  | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
+  | Check {ccfunname; ccvid; cctype; ccargs} ->
+      Check {ccfunname; ccvid; cctype; ccargs= List.map ccargs ~f}
+  | Return opt_e -> Return (Option.map opt_e ~f)
+  | IfElse (e, b1, b2) -> IfElse (f e, g b1, Option.map ~f:g b2)
+  | While (e, b) -> While (f e, g b)
+  | For {loopvar; lower; upper; body} ->
+      For {loopvar; lower= f lower; upper= f upper; body= g body}
+  | Block sl -> Block (List.map ~f:g sl)
+  | SList sl -> SList (List.map ~f:g sl)
+  | FunDef {fdrt; fdname; fdargs; fdbody} ->
+      FunDef {fdrt; fdname; fdargs; fdbody= g fdbody}
+  | x -> x
 
 let apply_operator_int (op : operator) i1 i2 =
   Lit
@@ -220,4 +241,5 @@ and eval_idx i =
   | Between (e1, e2) -> Between (eval e1, eval e2)
   | MultiIndex e -> MultiIndex (eval e)
 
-let eval_subst (m : (string, expr) Map.Poly.t) (e : expr) = eval (subst m e)
+let eval_subst (m : (string, expr) Map.Poly.t) (e : expr) =
+  eval (subst_expr m e)
