@@ -394,7 +394,7 @@ let%expect_test "parse operator precedence" =
                                                 (Variable
                                                  ((name r) (id_loc <opaque>))))
                                                (expr_untyped_loc <opaque>))
-                                              Exp
+                                              Pow
                                               ((expr_untyped
                                                 (PostfixOp
                                                  ((expr_untyped

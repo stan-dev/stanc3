@@ -61,7 +61,7 @@ and pretty_print_operator = function
   | LDivide -> "\\"
   | EltTimes -> ".*"
   | EltDivide -> "./"
-  | Exp -> "^"
+  | Pow -> "^"
   | Or -> "||"
   | And -> "&&"
   | Equals -> "=="

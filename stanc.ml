@@ -56,7 +56,7 @@ let options =
          \"$name.cpp\")" )
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
-      , "If set, output the generated C++ Stan model class to stdout." )
+      , " If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow_undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
@@ -97,6 +97,8 @@ let use_file filename =
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+    if false then Dataflow_algorithms.analysis_example mir "y" ;
+    () ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )
