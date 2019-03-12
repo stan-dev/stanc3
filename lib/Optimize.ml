@@ -434,6 +434,28 @@ let list_collapsing (mir : stmt_loc prog) =
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
 
+(* TODO *)
+let constant_fold_stmt _ s = s
+
+let constant_folding (mir : stmt_loc prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let constants =
+    Monotone_framework.constant_propagation_mfp mir
+      (module Flowgraph)
+      flowgraph_to_mir
+  in
+  match mir
+  with {functionsb; datavars; tdatab; modelb; gqb; prog_name; prog_path} ->
+    { functionsb= constant_fold_stmt constants functionsb
+    ; datavars
+    ; tdatab= (fst tdatab, constant_fold_stmt constants (snd tdatab))
+    ; modelb= (fst modelb, constant_fold_stmt constants (snd modelb))
+    ; gqb= (fst gqb, constant_fold_stmt constants (snd gqb))
+    ; prog_name
+    ; prog_path }
+
 let%expect_test "inline functions" =
   let ast =
     Parse.parse_string Parser.Incremental.program

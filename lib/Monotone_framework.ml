@@ -670,35 +670,6 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
 
-let expression_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
-  let domain =
-    ( module struct
-      type vals = string
-
-      let total =
-        Set.Poly.union_list
-          (List.map
-             ~f:(fun x -> declared_variables_stmt x.stmt)
-             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
-    end
-    : TOTALTYPE
-      with type vals = string )
-  in
-  let codomain =
-    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
-  in
-  let (module Lattice) =
-    dual_partial_function_lattice_with_bot domain codomain
-  in
-  let (module Transfer) = expression_propagation_transfer flowgraph_to_mir in
-  let (module Mf) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
-  in
-  Mf.mfp ()
-
 let constant_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -723,6 +694,35 @@ let constant_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
     dual_partial_function_lattice_with_bot domain codomain
   in
   let (module Transfer) = constant_propagation_transfer flowgraph_to_mir in
+  let (module Mf) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
+  in
+  Mf.mfp ()
+
+let expression_propagation_mfp (mir : Mir.stmt_loc Mir.prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+  let domain =
+    ( module struct
+      type vals = string
+
+      let total =
+        Set.Poly.union_list
+          (List.map
+             ~f:(fun x -> declared_variables_stmt x.stmt)
+             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+    end
+    : TOTALTYPE
+      with type vals = string )
+  in
+  let codomain =
+    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
+  in
+  let (module Lattice) =
+    dual_partial_function_lattice_with_bot domain codomain
+  in
+  let (module Transfer) = expression_propagation_transfer flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

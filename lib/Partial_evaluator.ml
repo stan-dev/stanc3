@@ -187,7 +187,6 @@ let rec eval (e : expr) =
         FunApp ("diag_post_multiply", [e1'; v])
     | FunApp ("diag_matrix", [v]), Times, e2' ->
         FunApp ("diag_pre_multiply", [v; e2'])
-        
         (* Constant folding for operators *)
     | Lit (Int, i1), _, Lit (Int, i2) ->
         apply_operator_int op (Int.of_string i1) (Int.of_string i2)

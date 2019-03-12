@@ -118,6 +118,12 @@ type stmt_loc =
   {sloc: string sexp_opaque [@compare.ignore]; stmt: stmt_loc statement}
 [@@deriving sexp, hash]
 
+type stmt_loc_num =
+  { slocn: string sexp_opaque [@compare.ignore]
+  ; stmtn: stmt_loc statement
+  ; num: int }
+[@@deriving sexp, hash]
+
 (* ===================== Some helper functions ====================== *)
 
 (** Dives into any number of nested blocks and lists, but will not recurse other
