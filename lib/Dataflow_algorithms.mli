@@ -13,6 +13,14 @@ open Dataflow_types
  * Traverse functions that end in st, since they can change the target
  **)
 
+(**
+   ~~~~ Untested/doesn't work: ~~~~~
+
+   * Any function that takes a `probabilistic_dependence` bool has untested behavior when that bool is true. I haven't fully thought out the probabilistic dependency (factor) graph, and I will probably end up re-implementing it.
+   * The top_var_dependencies function needs reworking
+   * The exprset_independent_target_terms might be outdated with TargetPE now in the MIR
+ **)
+
 val program_df_graphs : stmt_loc prog -> prog_df_graphs
 (**
    Construct dataflow graphs for each interesting block in the program MIR
@@ -59,10 +67,9 @@ val labels_dependencies :
 val top_var_dependencies :
   dataflow_graph -> label Set.Poly.t -> vexpr Set.Poly.t
 (**
-   Find the set of top variables that are dependencies for the given set of nodes
+   ~~~ TODO: untested ~~~
 
-   For example usage and output, see the expect test "top_var_dependencies example" in
-   Dataflow_algorithms.ml
+   Find the set of top variables that are dependencies for the given set of nodes
 *)
 
 val final_var_dependencies :
@@ -78,6 +85,8 @@ val final_var_dependencies :
 val exprset_independent_target_terms :
   dataflow_graph -> vexpr Set.Poly.t -> label Set.Poly.t
 (**
+   ~~~ TODO: Possibly outdated with new MIR ~~~
+
    Find the set of target term nodes which do not depend on any top variables in
    `exprs`. Only non-probabilistic dependence is considered, otherwise all overlapping terms
    will depend on eachother.
