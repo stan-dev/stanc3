@@ -45,7 +45,7 @@ and expr =
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, compare]
 
 type adtype = Ast.autodifftype [@@deriving sexp, hash, map]
 type sizedtype = expr Ast.sizedtype [@@deriving sexp, hash, map]
