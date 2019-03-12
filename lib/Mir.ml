@@ -45,11 +45,11 @@ and expr =
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
-[@@deriving sexp, hash, compare]
+[@@deriving sexp, hash, map, compare]
 
-type adtype = Ast.autodifftype [@@deriving sexp, hash]
-type sizedtype = expr Ast.sizedtype [@@deriving sexp, hash]
-type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
+type adtype = Ast.autodifftype [@@deriving sexp, hash, map]
+type sizedtype = expr Ast.sizedtype [@@deriving sexp, hash, map]
+type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash, map]
 
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
@@ -112,11 +112,17 @@ type 's prog =
   ; gqb: top_var_table * 's
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp]
+[@@deriving sexp, map]
 
 type stmt_loc =
   {sloc: string sexp_opaque [@compare.ignore]; stmt: stmt_loc statement}
-[@@deriving sexp, hash]
+[@@deriving sexp, hash, map]
+
+type stmt_loc_num =
+  { slocn: string sexp_opaque [@compare.ignore]
+  ; stmtn: stmt_loc_num statement
+  ; num: int }
+[@@deriving sexp, hash, map]
 
 (* ===================== Some helper functions ====================== *)
 
@@ -129,3 +135,18 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | _ -> f {sloc; stmt}
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
+
+let rec unnumbered_statement_of_numbered_statement {stmtn; slocn; _} =
+  { stmt= map_statement unnumbered_statement_of_numbered_statement stmtn
+  ; sloc= slocn }
+
+let numbered_statement_of_unnumbered_statement {stmt; sloc} =
+  failwith "TODO: not yet implemented"
+
+(** Forgetful function from numbered to unnumbered programs *)
+let unnumbered_prog_of_numbered_prog p =
+  map_prog unnumbered_statement_of_numbered_statement p
+
+(** Decorate statements in Mir with unique numbers *)
+let numbered_prog_of_unnumbered_prog p =
+  map_prog numbered_statement_of_unnumbered_statement p
