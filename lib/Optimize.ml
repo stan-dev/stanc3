@@ -48,47 +48,9 @@ let rec replace_fresh_local_vars stmt =
            l)
   | x -> x
 
-let rec subst_args_expr args es e =
-  let arg_map = Map.Poly.of_alist_exn (List.zip_exn args es) in
-  let f = subst_args_expr args es in
-  match e with
-  | Var v -> ( match Map.find arg_map v with None -> Var v | Some e -> e )
-  | Lit (t, v) -> Lit (t, v)
-  | FunApp (s, e_list) -> FunApp (s, List.map ~f e_list)
-  (* Note: when we add higher order functions, we will need to do something here. *)
-  | BinOp (e1, op, e2) -> BinOp (f e1, op, f e2)
-  | TernaryIf (e1, e2, e3) -> TernaryIf (f e1, f e2, f e3)
-  | Indexed (e, is) -> Indexed (f e, List.map ~f:(subst_args_idx args es) is)
-
-and subst_args_idx args es i =
-  let f = subst_args_expr args es in
-  match i with
-  | All -> All
-  | Single e -> Single (f e)
-  | Upfrom e -> Upfrom (f e)
-  | Downfrom e -> Downfrom (f e)
-  | Between (e1, e2) -> Between (f e1, f e2)
-  | MultiIndex e -> MultiIndex (f e)
-
-let rec subst_args_stmt args es b =
-  let f = subst_args_expr args es in
-  let g {stmt; sloc} = {stmt= subst_args_stmt args es stmt; sloc} in
-  match b with
-  | Assignment (e1, e2) -> Assignment (f e1, f e2)
-  | TargetPE e -> TargetPE (f e)
-  | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
-  | Check {ccfunname; ccvid; cctype; ccargs} ->
-      Check {ccfunname; ccvid; cctype; ccargs= List.map ccargs ~f}
-  | Return opt_e -> Return (Option.map opt_e ~f)
-  | IfElse (e, b1, b2) -> IfElse (f e, g b1, Option.map ~f:g b2)
-  | While (e, b) -> While (f e, g b)
-  | For {loopvar; lower; upper; body} ->
-      For {loopvar; lower= f lower; upper= f upper; body= g body}
-  | Block sl -> Block (List.map ~f:g sl)
-  | SList sl -> SList (List.map ~f:g sl)
-  | FunDef {fdrt; fdname; fdargs; fdbody} ->
-      FunDef {fdrt; fdname; fdargs; fdbody= g fdbody}
-  | x -> x
+let subst_args_stmt args es =
+  let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
+  Partial_evaluator.subst_stmt m
 
 let rec handle_early_returns_help opt_var b =
   match b with
@@ -381,14 +343,7 @@ let rec unroll_loops_statement {stmt; sloc} =
       | Decl x -> Decl x )
   ; sloc }
 
-let loop_unrolling (mir : stmt_loc prog) =
-  { functionsb= unroll_loops_statement mir.functionsb
-  ; datavars= mir.datavars
-  ; tdatab= (fst mir.tdatab, unroll_loops_statement (snd mir.tdatab))
-  ; modelb= (fst mir.modelb, unroll_loops_statement (snd mir.modelb))
-  ; gqb= (fst mir.gqb, unroll_loops_statement (snd mir.gqb))
-  ; prog_name= mir.prog_name
-  ; prog_path= mir.prog_path }
+let loop_unrolling (mir : stmt_loc prog) = map_prog unroll_loops_statement mir
 
 let rec collapse_lists_statement {stmt; sloc} =
   let rec collapse_lists l =
@@ -426,13 +381,186 @@ let rec collapse_lists_statement {stmt; sloc} =
   ; sloc }
 
 let list_collapsing (mir : stmt_loc prog) =
-  { functionsb= collapse_lists_statement mir.functionsb
-  ; datavars= mir.datavars
-  ; tdatab= (fst mir.tdatab, collapse_lists_statement (snd mir.tdatab))
-  ; modelb= (fst mir.modelb, collapse_lists_statement (snd mir.modelb))
-  ; gqb= (fst mir.gqb, collapse_lists_statement (snd mir.gqb))
-  ; prog_name= mir.prog_name
-  ; prog_path= mir.prog_path }
+  map_prog collapse_lists_statement mir
+
+(* TODO: DRY up next three *)
+let constant_propagation (mir : stmt_loc_num prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let constants =
+    Monotone_framework.constant_propagation_mfp mir
+      (module Flowgraph)
+      flowgraph_to_mir
+  in
+  let constant_fold_stmt s =
+    let s' = unnumbered_statement_of_numbered_statement s in
+    match (Map.find_exn constants s.num).Monotone_framework_sigs.entry with
+    | None -> s'
+    | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
+  in
+  map_prog constant_fold_stmt mir
+
+let expression_propagation (mir : stmt_loc_num prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let expressions =
+    Monotone_framework.expression_propagation_mfp mir
+      (module Flowgraph)
+      flowgraph_to_mir
+  in
+  let constant_fold_stmt s =
+    let s' = unnumbered_statement_of_numbered_statement s in
+    match (Map.find_exn expressions s.num).Monotone_framework_sigs.entry with
+    | None -> s'
+    | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
+  in
+  map_prog constant_fold_stmt mir
+
+let copy_propagation (mir : stmt_loc_num prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let copies =
+    Monotone_framework.copy_propagation_mfp mir
+      (module Flowgraph)
+      flowgraph_to_mir
+  in
+  let constant_fold_stmt s =
+    let s' = unnumbered_statement_of_numbered_statement s in
+    match (Map.find_exn copies s.num).Monotone_framework_sigs.entry with
+    | None -> s'
+    | Some m ->
+        { stmt=
+            Partial_evaluator.subst_stmt
+              (Map.Poly.map ~f:(fun s -> Var s) m)
+              s'.stmt
+        ; sloc= s'.sloc }
+  in
+  map_prog constant_fold_stmt mir
+
+let rec can_side_effect_expr (e : expr) =
+  match e with
+  | Var _ | Lit (_, _) -> false
+  | FunApp (f, es) ->
+      String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
+  | BinOp (e1, _, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
+  | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
+  | Indexed (e, is) ->
+      can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
+
+and can_side_effect_idx (i : index) =
+  match i with
+  | All -> false
+  | Single e | Upfrom e | Downfrom e | MultiIndex e -> can_side_effect_expr e
+  | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
+
+let is_skip_break_continue s =
+  match s with Skip | Break | Continue -> true | _ -> false
+
+(* TODO: could also implement partial dead code elimination *)
+let dead_code_elimination (mir : stmt_loc_num prog)
+    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let live_variables =
+    Monotone_framework.live_variables_mfp mir
+      (module Rev_Flowgraph)
+      flowgraph_to_mir
+  in
+  let rec dead_code_elim_stmt s =
+    (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
+    let live_variables_s =
+      (Map.find_exn live_variables s.num).Monotone_framework_sigs.entry
+    in
+    let stmtn = s.stmtn in
+    let stmt = (unnumbered_statement_of_numbered_statement s).stmt in
+    { stmt=
+        ( match stmtn with
+        | Assignment (Var x, rhs) ->
+            if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
+              stmt
+            else Skip
+        | Assignment (Indexed (Var x, is), rhs) ->
+            if
+              Set.Poly.mem live_variables_s x
+              || can_side_effect_expr rhs
+              || List.exists ~f:can_side_effect_idx is
+            then stmt
+            else Skip
+        | Assignment _ -> Errors.fatal_error ()
+        (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
+           due to side effects. *)
+        | Decl _ | TargetPE _
+         |NRFunApp (_, _)
+         |Check _ | Break | Continue | Return _ | Skip ->
+            stmt
+        | IfElse (e, b1, b2) -> (
+            let b1' = dead_code_elim_stmt b1 in
+            let b2' = Option.map ~f:dead_code_elim_stmt b2 in
+            if
+              (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+              (not (can_side_effect_expr e))
+              && b1'.stmt = Skip
+              && ( Option.map ~f:(fun x -> x.stmt) b2' = Some Skip
+                 || Option.map ~f:(fun x -> x.stmt) b2' = None )
+            then Skip
+            else
+              match e with
+              | Lit (Int, "0") | Lit (Real, "0.0") -> (
+                match b2' with Some x -> x.stmt | None -> Skip )
+              | Lit (_, _) -> b1'.stmt
+              | _ -> IfElse (e, b1', b2') )
+        | While (e, b) -> (
+            let b' = dead_code_elim_stmt b in
+            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+            if (not (can_side_effect_expr e)) && is_skip_break_continue b'.stmt
+            then Skip
+            else
+              match e with
+              | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
+              | _ -> While (e, b') )
+        | For {loopvar; lower; upper; body} ->
+            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+            let body' = dead_code_elim_stmt body in
+            if
+              (not (can_side_effect_expr lower))
+              && (not (can_side_effect_expr upper))
+              && is_skip_break_continue body'.stmt
+            then Skip
+            else For {loopvar; lower; upper; body= body'}
+        | Block l ->
+            let l' =
+              List.filter
+                ~f:(fun x -> x.stmt <> Skip)
+                (List.map ~f:dead_code_elim_stmt l)
+            in
+            if List.length l' = 0 then Skip else Block l'
+        | SList l ->
+            let l' =
+              List.filter
+                ~f:(fun x -> x.stmt <> Skip)
+                (List.map ~f:dead_code_elim_stmt l)
+            in
+            if List.length l' = 0 then Skip else SList l'
+        (* TODO: do dead code elimination in function body too! *)
+        | FunDef {fdname; _} ->
+            if Set.Poly.mem live_variables_s fdname then stmt else Skip )
+    ; sloc= s.slocn }
+  in
+  map_prog dead_code_elim_stmt mir
+
+(* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
+(* TODO: implement lazy code motion. Make sure to apply it separately to each program block, rather than to the program as a whole. *)
+(* TODO: or maybe combine the previous two *)
+
+(* TODO: add tests *)
+let _ =
+  ( constant_propagation
+  , expression_propagation
+  , copy_propagation
+  , dead_code_elimination )
 
 let%expect_test "inline functions" =
   let ast =
