@@ -440,6 +440,12 @@ let copy_propagation (mir : stmt_loc_num prog)
   in
   map_prog constant_fold_stmt mir
 
+let is_target_affecting_function_call e =
+  match e with FunApp (f, _) -> String.suffix f 3 = "_lp" | _ -> false
+
+let is_skip_break_continue s =
+  match s with Skip | Break | Continue -> true | _ -> false
+
 let dead_code_elimination (mir : stmt_loc_num prog)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -472,7 +478,8 @@ let dead_code_elimination (mir : stmt_loc_num prog)
             let b2' = Option.map ~f:dead_code_elim_stmt b2 in
             if
               (* TODO: e having side effects? *)
-              b1'.stmt = Skip
+              (not (is_target_affecting_function_call e))
+              && b1'.stmt = Skip
               && ( Option.map ~f:(fun x -> x.stmt) b2' = Some Skip
                  || Option.map ~f:(fun x -> x.stmt) b2' = None )
             then Skip
@@ -480,11 +487,19 @@ let dead_code_elimination (mir : stmt_loc_num prog)
         | While (e, b) ->
             let b' = dead_code_elim_stmt b in
             (* TODO: e having side effects? *)
-            if b'.stmt = Skip then Skip else While (e, b')
+            if
+              (not (is_target_affecting_function_call e))
+              && is_skip_break_continue b'.stmt
+            then Skip
+            else While (e, b')
         | For {loopvar; lower; upper; body} ->
             (* TODO: e having side effects? *)
             let body' = dead_code_elim_stmt body in
-            if body'.stmt = Skip then Skip
+            if
+              (not (is_target_affecting_function_call lower))
+              && (not (is_target_affecting_function_call upper))
+              && is_skip_break_continue body'.stmt
+            then Skip
             else For {loopvar; lower; upper; body= body'}
         | Block l ->
             let l' =
