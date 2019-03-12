@@ -77,12 +77,15 @@ and gen_sep s1 s2 =
 and is_scalar _ =
   true
 
-and get_type _ =
+and gen_type _ =
   "double"
 
 and types_match _ _ =
   true
 
+and pretty_print e =
+  gen_expr e
+  
 (* binary logical {&&, ||} require short circuit and conversion to primitive
  * values.  All other functions need to have right function name passed in. 
  * This will be operator*(x, y), etc. for scalars and multiply(x, y) for matrices.
@@ -101,9 +104,9 @@ and gen_expr = function
     then sprintf "(%s ? %s : %s)" (gen_expr ec) (gen_expr et) (gen_expr ef)
     else sprintf "(%s ? stan::math::promote_scalar<%s>(%s) : stan::math::promote_scalar<%s>(%s)"
             (gen_expr ec) 
-            (get_type (TernaryIf (ec, et, ef))) (gen_expr et) 
-            (get_type (TernaryIf (ec, et, ef))) (gen_expr ef)
-| Indexed (e, idx) -> sprintf "stan::model::rvalue(%s, %s, %S)" (gen_expr e) (gen_indexes idx) (gen_expr e)
+            (gen_type (TernaryIf (ec, et, ef))) (gen_expr et) 
+            (gen_type (TernaryIf (ec, et, ef))) (gen_expr ef)
+| Indexed (e, idx) -> sprintf "stan::model::rvalue(%s, %s, %S)" (gen_expr e) (gen_indexes idx) (pretty_print e)
 
 let%expect_test "endswith1" =
 printf "%B" (ends_with "" "");
