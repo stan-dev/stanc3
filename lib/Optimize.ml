@@ -440,11 +440,26 @@ let copy_propagation (mir : stmt_loc_num prog)
   in
   map_prog constant_fold_stmt mir
 
-let is_function_call e = match e with FunApp (_, _) -> true | _ -> false
+let rec can_side_effect_expr (e : expr) =
+  match e with
+  | Var _ | Lit (_, _) -> false
+  | FunApp (f, es) ->
+      String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
+  | BinOp (e1, _, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
+  | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
+  | Indexed (e, is) ->
+      can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
+
+and can_side_effect_idx (i : index) =
+  match i with
+  | All -> false
+  | Single e | Upfrom e | Downfrom e | MultiIndex e -> can_side_effect_expr e
+  | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
 
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
 
+(* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : stmt_loc_num prog)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -463,38 +478,55 @@ let dead_code_elimination (mir : stmt_loc_num prog)
     let stmt = (unnumbered_statement_of_numbered_statement s).stmt in
     { stmt=
         ( match stmtn with
-        | Decl {decl_id= x; _}
-         |Assignment (Var x, _)
-         |Assignment (Indexed (Var x, _), _) ->
-            if Set.Poly.mem live_variables_s x then stmt else Skip
+        | Assignment (Var x, rhs) ->
+            if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
+              stmt
+            else Skip
+        | Assignment (Indexed (Var x, is), rhs) ->
+            if
+              Set.Poly.mem live_variables_s x
+              || can_side_effect_expr rhs
+              || List.exists ~f:can_side_effect_idx is
+            then stmt
+            else Skip
         | Assignment _ -> Errors.fatal_error ()
-        | TargetPE _
+        (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
+           due to side effects. *)
+        | Decl _ | TargetPE _
          |NRFunApp (_, _)
          |Check _ | Break | Continue | Return _ | Skip ->
             stmt
-        | IfElse (e, b1, b2) ->
+        | IfElse (e, b1, b2) -> (
             let b1' = dead_code_elim_stmt b1 in
             let b2' = Option.map ~f:dead_code_elim_stmt b2 in
             if
-              (* TODO: check if function call e has side effects, otherwise still optimize away? *)
-              (not (is_function_call e))
+              (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+              (not (can_side_effect_expr e))
               && b1'.stmt = Skip
               && ( Option.map ~f:(fun x -> x.stmt) b2' = Some Skip
                  || Option.map ~f:(fun x -> x.stmt) b2' = None )
             then Skip
-            else IfElse (e, b1', b2')
-        | While (e, b) ->
+            else
+              match e with
+              | Lit (Int, "0") | Lit (Real, "0.0") -> (
+                match b2' with Some x -> x.stmt | None -> Skip )
+              | Lit (_, _) -> b1'.stmt
+              | _ -> IfElse (e, b1', b2') )
+        | While (e, b) -> (
             let b' = dead_code_elim_stmt b in
-            (* TODO: check if function call e has side effects, otherwise still optimize away? *)
-            if (not (is_function_call e)) && is_skip_break_continue b'.stmt
+            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+            if (not (can_side_effect_expr e)) && is_skip_break_continue b'.stmt
             then Skip
-            else While (e, b')
+            else
+              match e with
+              | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
+              | _ -> While (e, b') )
         | For {loopvar; lower; upper; body} ->
-            (* TODO: check if function call e has side effects, otherwise still optimize away? *)
+            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
             let body' = dead_code_elim_stmt body in
             if
-              (not (is_function_call lower))
-              && (not (is_function_call upper))
+              (not (can_side_effect_expr lower))
+              && (not (can_side_effect_expr upper))
               && is_skip_break_continue body'.stmt
             then Skip
             else For {loopvar; lower; upper; body= body'}
@@ -518,6 +550,10 @@ let dead_code_elimination (mir : stmt_loc_num prog)
     ; sloc= s.slocn }
   in
   map_prog dead_code_elim_stmt mir
+
+(* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
+(* TODO: implement lazy code motion. Make sure to apply it separately to each program block, rather than to the program as a whole. *)
+(* TODO: or maybe combine the previous two *)
 
 (* TODO: add tests *)
 let _ =
