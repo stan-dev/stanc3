@@ -13,19 +13,34 @@ and gen_exprs = function
   | hd::tl -> sprintf "%s, %s" (gen_expr hd) (gen_exprs tl)
 
 and gen_op = function
-  | Plus
+  | Plus -> "+"
   | Minus -> "-"
   | Times -> "*"
   | Divide -> "/"
   | Modulo -> "%"
-  | Or -> "||"
   | And -> "&&"
+  | Or -> "||"
   | Equals -> "=="
   | NEquals -> "!="
   | Less -> "<"
   | Leq -> "<="
   | Greater -> ">"
   | Geq -> ">="
+
+  and gen_op_name = function
+  | Plus -> "add"
+  | Minus -> "subtract"
+  | Times -> "multiply"
+  | Divide -> "divide"
+  | Modulo -> "operator%"
+  | And -> "operator&&"
+  | Or -> "operator||"
+  | Equals -> "operator=="
+  | NEquals -> "operator!="
+  | Less -> "operator<"
+  | Leq -> "operator<="
+  | Greater -> "operator>"
+  | Geq -> "operator>="
 
 and gen_index = function
   | All -> "stan::model::index_omni()"
@@ -59,13 +74,35 @@ and include_sep s1 s2 = ((String.length s1) > 0) && ((String.length s2) > 0)
 and gen_sep s1 s2 =
   sprintf "%s%s%s" s1 (if (include_sep s1 s2) then ", " else "") s2
 
+and is_scalar _ =
+  true
+
+and get_type _ =
+  "double"
+
+and types_match _ _ =
+  true
+
+(* binary logical {&&, ||} require short circuit and conversion to primitive
+ * values.  All other functions need to have right function name passed in. 
+ * This will be operator*(x, y), etc. for scalars and multiply(x, y) for matrices.
+ *)
 and gen_expr = function
 | Var s -> s
 | Lit (Str, s) -> sprintf "%S" s
 | Lit (_, s) -> s
 | FunApp (f, es) -> sprintf "%s(%s)" f (gen_sep (gen_exprs es) (gen_extra_fun_args f))
-| BinOp (e1, op, e2) -> sprintf "(%s %s %s)" (gen_expr e1) (gen_op op) (gen_expr e2)
-| TernaryIf (ec, et, ef) -> sprintf "(%s ? %s : %s)" (gen_expr ec) (gen_expr et) (gen_expr ef)
+| BinOp (e1, op, e2) -> 
+    if is_scalar e1 && is_scalar e2 
+    then sprintf "(primitive(%s) %s primitive(%s))" (gen_expr e1) (gen_op op) (gen_expr e2)
+    else sprintf "%s(%s, %s)" (gen_op_name op) (gen_expr e1) (gen_expr e2)
+| TernaryIf (ec, et, ef) -> 
+    if types_match et ef 
+    then sprintf "(%s ? %s : %s)" (gen_expr ec) (gen_expr et) (gen_expr ef)
+    else sprintf "(%s ? stan::math::promote_scalar<%s>(%s) : stan::math::promote_scalar<%s>(%s)"
+            (gen_expr ec) 
+            (get_type (TernaryIf (ec, et, ef))) (gen_expr et) 
+            (get_type (TernaryIf (ec, et, ef))) (gen_expr ef)
 | Indexed (e, idx) -> sprintf "stan::model::rvalue(%s, %s, %S)" (gen_expr e) (gen_indexes idx) (gen_expr e)
 
 let%expect_test "endswith1" =
@@ -122,7 +159,7 @@ printf "%s" (gen_expr (FunApp ("bar", [(Lit (Int, "123")); Lit(Real, "1.2")])));
 
 let%expect_test "gen_expr8" =
 printf "%s" (gen_expr (BinOp ((Lit (Int, "123")), Plus,  (Lit (Int, "4")))));
-[%expect {| (123 - 4) |}]
+[%expect {| (primitive(123) + primitive(4)) |}]
 
 let%expect_test "gen_expr9" =
 printf "%s" (gen_expr (TernaryIf ((Lit (Int, "1")), (Lit (Real, "1.2")), (Lit (Real, "2.3")))));
