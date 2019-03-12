@@ -193,37 +193,6 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
-let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
-  match cctype with
-  | Ast.SArray (t, _) ->
-      let loopvar, reset_sym = Util.gensym_enter () in
-      let new_ident = strf "%s[%s]" ident loopvar in
-      let size = FunApp ("length", [Var ident]) in
-      let new_pp_body ppf ident =
-        pp_for_each_in_array ppf (t, pp_body, ident)
-      in
-      pp_for_loop ppf
-        (loopvar, zero, size, pp_for_each_in_array, (t, new_pp_body, new_ident)) ;
-      reset_sym ()
-  | _ -> pp_body ppf ident
-
-let%expect_test "single pp_for_each_in_array" =
-  let ppbody ppf id = pf ppf "%s++" id in
-  strf "%a" pp_for_each_in_array (Ast.SReal, ppbody, "x") |> print_endline ;
-  [%expect {| x++ |}]
-
-let%expect_test "for each in array" =
-  let ppbody ppf id = pf ppf "check_whatever(%s);" id in
-  strf "%a" pp_for_each_in_array
-    (Ast.SArray (Ast.SArray (Ast.SReal, Var "z"), Var "y"), ppbody, "alpha")
-  |> print_endline ;
-  [%expect
-    {|
-    for (size_t sym1__ = 0; sym1__ < length(alpha); sym1__++)
-      for (size_t sym2__ = 0; sym2__ < length(alpha[sym1__]); sym2__++)
-        for (size_t sym3__ = 0; sym3__ < length(alpha[sym1__][sym2__]); sym3__++)
-          check_whatever(alpha[sym1__][sym2__][sym3__]); |}]
-
 let trans_math_fn fname =
   match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])
 
