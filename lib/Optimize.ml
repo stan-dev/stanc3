@@ -383,13 +383,7 @@ let rec collapse_lists_statement {stmt; sloc} =
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
-(* TODO *)
-let constant_fold_stmt constants s =
-  let s' = unnumbered_statement_of_numbered_statement s in
-  match (Map.find_exn constants s.num).Monotone_framework_sigs.entry with
-  | None -> s'
-  | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
-
+(* TODO: DRY up next three *)
 let constant_folding (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -399,7 +393,52 @@ let constant_folding (mir : stmt_loc_num prog)
       (module Flowgraph)
       flowgraph_to_mir
   in
-  map_prog (constant_fold_stmt constants) mir
+  let constant_fold_stmt s =
+    let s' = unnumbered_statement_of_numbered_statement s in
+    match (Map.find_exn constants s.num).Monotone_framework_sigs.entry with
+    | None -> s'
+    | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
+  in
+  map_prog constant_fold_stmt mir
+
+let expression_folding (mir : stmt_loc_num prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let expressions =
+    Monotone_framework.expression_propagation_mfp mir
+      (module Flowgraph)
+      flowgraph_to_mir
+  in
+  let constant_fold_stmt s =
+    let s' = unnumbered_statement_of_numbered_statement s in
+    match (Map.find_exn expressions s.num).Monotone_framework_sigs.entry with
+    | None -> s'
+    | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
+  in
+  map_prog constant_fold_stmt mir
+
+let copy_propagation (mir : stmt_loc_num prog)
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let copies =
+    Monotone_framework.copy_propagation_mfp mir
+      (module Flowgraph)
+      flowgraph_to_mir
+  in
+  let constant_fold_stmt s =
+    let s' = unnumbered_statement_of_numbered_statement s in
+    match (Map.find_exn copies s.num).Monotone_framework_sigs.entry with
+    | None -> s'
+    | Some m ->
+        { stmt=
+            Partial_evaluator.subst_stmt
+              (Map.Poly.map ~f:(fun s -> Var s) m)
+              s'.stmt
+        ; sloc= s'.sloc }
+  in
+  map_prog constant_fold_stmt mir
 
 let _ = constant_folding
 
