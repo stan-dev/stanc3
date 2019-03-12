@@ -11,9 +11,9 @@ open Core_kernel
        - mark FnApps as containing print or reject
 *)
 
-type litType = Int | Real | Str
+type litType = Int | Real | Str [@@deriving sexp, hash]
 
-and operator =
+type operator =
   | Plus
   | Minus
   | Times
@@ -27,17 +27,23 @@ and operator =
   | Leq
   | Greater
   | Geq
+[@@deriving sexp, hash]
 
-and transformation = expr Ast.transformation
+type transformation = expr Ast.transformation
 
 and index =
   | All
   | Single of expr
+  (*
+  | MatrixSingle of expr
+ *)
   | Upfrom of expr
   | Downfrom of expr
   | Between of expr * expr
   | MultiIndex of expr
 
+(** XXX
+*)
 and expr =
   | Var of string
   | Lit of litType * string
@@ -54,16 +60,13 @@ type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
-type constraint_check =
-  {ccfunname: string; ccvid: string; cctype: sizedtype; ccargs: expr list}
-
-and fun_arg_decl = (adtype * string * unsizedtype) list
+type fun_arg_decl = (adtype * string * unsizedtype) list
 
 and 's statement =
   | Assignment of expr * expr
   | TargetPE of expr
   | NRFunApp of string * expr list
-  | Check of constraint_check
+  | Check of string * expr list
   | Break
   | Continue
   | Return of expr option
@@ -105,11 +108,20 @@ type top_var_decl =
 type top_var_table = (string, top_var_decl) Map.Poly.t [@@deriving sexp]
 
 type 's prog =
-  { functionsb: 's
-  ; datavars: top_var_table
-  ; tdatab: top_var_table * 's
-  ; modelb: top_var_table * 's
-  ; gqb: top_var_table * 's
+  { functions_block: 's list
+  ; data_vars: top_var_table
+  ; tdata_vars: top_var_table
+  ; prepare_data: 's list
+  ; params: top_var_table
+  ; tparams: top_var_table
+  ; prepare_params:
+      's list
+      (* XXX too intimately tied up with stan reader.hpp and writer.hpp in codegen
+     TODO: codegen parameter constraining and unconstraining in prepare_params
+  *)
+  ; log_prob: 's list
+  ; gen_quant_vars: top_var_table
+  ; generate_quantities: 's list
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp]

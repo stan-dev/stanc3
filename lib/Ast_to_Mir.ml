@@ -74,8 +74,6 @@ let add_to_or_create_block source target =
 
 let trans_loc = Errors.string_of_location_span
 let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
-let no_loc = ""
-let with_no_loc s = {stmt= s; sloc= no_loc}
 let trans_trans = Ast.map_transformation trans_expr
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
@@ -194,40 +192,78 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
   in
   bind_loc stmt_typed_loc s
 
-(* XXX Write a function that generates MIR to execute once on each thing in some nested
-   arrays (but not elements within a matrix or vector) *)
+(** [add_index expression index] returns an expression that (additionally)
+    indexes into the input [expression] by [index].*)
+let add_index e i =
+  match e with
+  | Var _ -> Indexed (e, [i])
+  | Indexed (e, indices) -> Indexed (e, indices @ [i])
+  | _ -> raise_s [%message "These should go away with Ryan's LHS"]
 
-(*
-let mir_for_each_in_array (st : sizedtype) (s : expr -> stmt_loc) =
-  match st with
-  | SInt -> s
-  | SReal -> ( ?? )
-  | SArray (_, _) -> ( ?? )
-  | SVector _ -> ( ?? )
-  | SRowVector _ -> ( ?? )
-  | SMatrix _ -> ( ?? )
+(** [mkfor] returns a MIR For statement that iterates over the given expression
+    [iteratee]. *)
+let mkfor ut bodyfn iteratee sloc =
+  let idx s =
+    match ut with
+    (*  | Ast.UMatrix -> MatrixSingle (Var s)
 *)
+    | Ast.UVector | URowVector | UMatrix | UArray _ -> Single (Var s)
+    | _ ->
+        raise_s
+          [%message "Why are we making for loops around" (ut : unsizedtype)]
+  in
+  let sym, reset = Util.gensym_enter () in
+  let stmt =
+    For
+      { loopvar= Var sym
+      ; lower= Lit (Int, "0")
+      ; upper= FunApp ("length", [iteratee])
+      ; body= {stmt= Block [bodyfn (add_index iteratee (idx sym))]; sloc} }
+  in
+  reset () ; {stmt; sloc}
 
-let rec trans_checks ccvid cctype t =
-  let check = {ccvid; cctype; ccargs= []; ccfunname= ""} in
-  match t with
+(** [for_scalar unsizedtype...] generates a For statement that loops
+    over the scalars in the underlying [unsizedtype] *)
+let rec for_scalar (ut : unsizedtype) bodyfn var sloc =
+  match ut with
+  | Ast.UInt | UReal -> bodyfn var
+  | UVector | URowVector | UMatrix -> mkfor ut bodyfn var sloc
+  | UArray t -> mkfor ut (fun e -> for_scalar t bodyfn e sloc) var sloc
+  | UFun _ | UMathLibraryFunction ->
+      raise_s [%message "Can't for over " (ut : unsizedtype)]
+
+(** [for_eigen unsizedtype...] generates a For statement that loops
+    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
+    overarrays and running bodyfn on any eign types found within.*)
+let rec for_eigen ut bodyfn var sloc =
+  match ut with
+  | Ast.UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
+  | UArray t -> mkfor ut (fun e -> for_eigen t bodyfn e sloc) var sloc
+  | UFun _ | UMathLibraryFunction ->
+      raise_s [%message "Can't for over " (ut : unsizedtype)]
+
+let rec trans_checks tvd =
+  let chk forl fn args =
+    forl
+      (Ast.remove_size tvd.tvtype)
+      (fun id -> {stmt= Check (fn, id :: args); sloc= tvd.tvloc})
+      (Var tvd.tvident) tvd.tvloc
+  in
+  match tvd.tvtrans with
   | Ast.Identity -> []
-  | Ast.Lower lb ->
-      [Check {check with ccargs= [lb]; ccfunname= "greater_or_equal"}]
-  | Ast.Upper ub ->
-      [Check {check with ccargs= [ub]; ccfunname= "less_or_equal"}]
+  | Ast.Lower lb -> [chk for_scalar "greater_or_equal" [lb]]
+  | Ast.Upper ub -> [chk for_scalar "less_or_equal" [ub]]
   | Ast.LowerUpper (lb, ub) ->
-      [Ast.Lower lb; Upper ub]
-      |> List.map ~f:(trans_checks ccvid cctype)
-      |> List.concat
-  | Ast.Ordered -> [Check {check with ccfunname= "ordered"}]
-  | Ast.PositiveOrdered -> [Check {check with ccfunname= "positive_ordered"}]
-  | Ast.Simplex -> [Check {check with ccfunname= "simplex"}]
-  | Ast.UnitVector -> [Check {check with ccfunname= "unit_vector"}]
-  | Ast.CholeskyCorr -> [Check {check with ccfunname= "cholesky_factor_corr"}]
-  | Ast.CholeskyCov -> [Check {check with ccfunname= "cholesky_factor"}]
-  | Ast.Correlation -> [Check {check with ccfunname= "corr_matrix"}]
-  | Ast.Covariance -> [Check {check with ccfunname= "cov_matrix"}]
+      trans_checks {tvd with tvtrans= Ast.Lower lb}
+      @ trans_checks {tvd with tvtrans= Ast.Upper ub}
+  | Ast.Ordered -> [chk for_eigen "ordered" []]
+  | Ast.PositiveOrdered -> [chk for_eigen "positive_ordered" []]
+  | Ast.Simplex -> [chk for_eigen "simplex" []]
+  | Ast.UnitVector -> [chk for_eigen "unit_vector" []]
+  | Ast.CholeskyCorr -> [chk for_eigen "cholesky_factor_corr" []]
+  | Ast.CholeskyCov -> [chk for_eigen "cholesky_factor" []]
+  | Ast.Correlation -> [chk for_eigen "corr_matrix" []]
+  | Ast.Covariance -> [chk for_eigen "cov_matrix" []]
   | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
 
 let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
@@ -255,22 +291,16 @@ let mktvtable lst =
     Here we intentionally only check declarations at the top level, i.e.
     we only recurse into blocks and lists as we don't care about other declarations.
 *)
-let tvdecl_checks {tvident; tvtrans; tvtype; tvloc} =
-  let with_sloc stmt = {sloc= tvloc; stmt} in
-  let check_stmts =
-    List.map ~f:with_sloc (trans_checks tvident tvtype tvtrans)
+let pull_tvdecls list_op =
+  let is_tvdecl = function
+    | {Ast.stmt_typed= VarDecl _; _} -> true
+    | _ -> false
   in
-  with_sloc (SList check_stmts)
-
-let pull_tvdecls = function
+  match list_op with
   | None -> (Map.Poly.empty, [])
   | Some lst ->
-      let tvdecls, other_statements =
-        List.partition_tf ~f:(Fn.compose Option.is_some trans_tvdecl) lst
-      in
-      let tvtable = mktvtable tvdecls in
-      let checks = Map.Poly.map ~f:tvdecl_checks tvtable |> Map.Poly.data in
-      (tvtable, checks @ List.map ~f:trans_stmt other_statements)
+      let tvdecls, statements = List.partition_tf ~f:is_tvdecl lst in
+      (mktvtable tvdecls, List.map ~f:trans_stmt statements)
 
 (* We represent the data and parameter blocks as maps from a variable's identifier
    to a tvdecl containing a little more information about it that we need to
@@ -284,23 +314,16 @@ let pull_tvdecls = function
                checked in log_prob, write_array,
    * model -> no constraints allowed (not even corr_matrix et al); not visible
    * gq -> declared and checked in write_array, shows up as param in some methods
-
 *)
 
-let merge_maps maps =
-  maps |> List.map ~f:Map.Poly.to_alist |> List.concat |> Map.Poly.of_alist_exn
-
-(*
-   There are at least three places where we currently generate redundant code:
+(* There are at least three places where we currently generate redundant code:
    - checks and validation of data and bounds
    - assignment of newly declared vars, which may immediately be filled
    - setting the current line number
 
    I think in general we'd like to try reifying these things in the MIR. The hope here
    is that the optimization pass can easily and correctly determine dependencies
-   and purity for reordering, hoisting, and elimination.
-*)
-
+   and purity for reordering, hoisting, and elimination.*)
 let trans_prog filename
     { Ast.functionblock
     ; datablock
@@ -309,32 +332,35 @@ let trans_prog filename
     ; transformedparametersblock
     ; modelblock
     ; generatedquantitiesblock } =
-  let trans_or_skip lst_option =
-    with_no_loc
-      ( match lst_option with
-      | None | Some [] -> Skip
-      | Some lst -> SList (List.map ~f:trans_stmt lst) )
+  let map f list_op = Option.to_list list_op |> List.concat |> List.map ~f in
+  let or_empty f list_op =
+    Option.(value ~default:Map.Poly.empty (map ~f list_op))
   in
-  let coalesce stmts =
-    let flattened = List.(concat (map ~f:lbind stmts)) in
-    with_no_loc (SList flattened)
+  let map_tvds f tvtable = Map.Poly.data tvtable |> List.map ~f in
+  let data_vars = or_empty mktvtable datablock in
+  let params = or_empty mktvtable parametersblock in
+  let tdata_vars, tdata = pull_tvdecls transformeddatablock in
+  let tparams, prepare_params = pull_tvdecls transformedparametersblock in
+  let prepare_data =
+    List.(
+      concat
+        (concat
+           [ map_tvds trans_checks data_vars
+           ; [tdata]
+           ; map_tvds trans_checks tdata_vars ]))
   in
-  let pull_tvdecls_multi blocks =
-    let tvtables, stmts = blocks |> List.map ~f:pull_tvdecls |> List.unzip in
-    (merge_maps tvtables, coalesce (List.concat stmts))
+  let gen_quant_vars, generate_quantities =
+    pull_tvdecls generatedquantitiesblock
   in
-  let datavars, datachecks = pull_tvdecls datablock in
-  (* XXX probably a weird place to keep the name*)
-  { prog_name= !Semantic_check.model_name
-  ; prog_path= filename
-  ; functionsb= trans_or_skip functionblock
-  ; datavars
-  ; tdatab=
-      (let tvtables, stmt = pull_tvdecls_multi [transformeddatablock] in
-       (tvtables, coalesce (datachecks @ [stmt])))
-  ; modelb=
-      (let tvtables, stmt =
-         pull_tvdecls_multi [parametersblock; transformedparametersblock]
-       in
-       (tvtables, coalesce [stmt; trans_or_skip modelblock]))
-  ; gqb= pull_tvdecls_multi [generatedquantitiesblock] }
+  { functions_block= map trans_stmt functionblock
+  ; data_vars
+  ; tdata_vars
+  ; prepare_data
+  ; params
+  ; tparams
+  ; prepare_params
+  ; log_prob= map trans_stmt modelblock
+  ; gen_quant_vars
+  ; generate_quantities
+  ; prog_name= !Semantic_check.model_name
+  ; prog_path= filename }
