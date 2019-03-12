@@ -384,7 +384,7 @@ let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
 (* TODO: DRY up next three *)
-let constant_folding (mir : stmt_loc_num prog)
+let constant_propagation (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
@@ -401,7 +401,7 @@ let constant_folding (mir : stmt_loc_num prog)
   in
   map_prog constant_fold_stmt mir
 
-let expression_folding (mir : stmt_loc_num prog)
+let expression_propagation (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
@@ -440,7 +440,79 @@ let copy_propagation (mir : stmt_loc_num prog)
   in
   map_prog constant_fold_stmt mir
 
-let _ = constant_folding
+let dead_code_elimination (mir : stmt_loc_num prog)
+    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let live_variables =
+    Monotone_framework.live_variables_mfp mir
+      (module Rev_Flowgraph)
+      flowgraph_to_mir
+  in
+  let rec dead_code_elim_stmt s =
+    (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
+    let live_variables_s =
+      (Map.find_exn live_variables s.num).Monotone_framework_sigs.entry
+    in
+    let stmtn = s.stmtn in
+    let stmt = (unnumbered_statement_of_numbered_statement s).stmt in
+    { stmt=
+        ( match stmtn with
+        | Decl {decl_id= x; _}
+         |Assignment (Var x, _)
+         |Assignment (Indexed (Var x, _), _) ->
+            if Set.Poly.mem live_variables_s x then stmt else Skip
+        | Assignment _ -> Errors.fatal_error ()
+        | TargetPE _
+         |NRFunApp (_, _)
+         |Check _ | Break | Continue | Return _ | Skip ->
+            stmt
+        | IfElse (e, b1, b2) ->
+            let b1' = dead_code_elim_stmt b1 in
+            let b2' = Option.map ~f:dead_code_elim_stmt b2 in
+            if
+              (* TODO: e having side effects? *)
+              b1'.stmt = Skip
+              && ( Option.map ~f:(fun x -> x.stmt) b2' = Some Skip
+                 || Option.map ~f:(fun x -> x.stmt) b2' = None )
+            then Skip
+            else IfElse (e, b1', b2')
+        | While (e, b) ->
+            let b' = dead_code_elim_stmt b in
+            (* TODO: e having side effects? *)
+            if b'.stmt = Skip then Skip else While (e, b')
+        | For {loopvar; lower; upper; body} ->
+            (* TODO: e having side effects? *)
+            let body' = dead_code_elim_stmt body in
+            if body'.stmt = Skip then Skip
+            else For {loopvar; lower; upper; body= body'}
+        | Block l ->
+            let l' =
+              List.filter
+                ~f:(fun x -> x.stmt <> Skip)
+                (List.map ~f:dead_code_elim_stmt l)
+            in
+            if List.length l' = 0 then Skip else Block l'
+        | SList l ->
+            let l' =
+              List.filter
+                ~f:(fun x -> x.stmt <> Skip)
+                (List.map ~f:dead_code_elim_stmt l)
+            in
+            if List.length l' = 0 then Skip else SList l'
+        (* TODO: do dead code elimination in function body too! *)
+        | FunDef {fdname; _} ->
+            if Set.Poly.mem live_variables_s fdname then stmt else Skip )
+    ; sloc= s.slocn }
+  in
+  map_prog dead_code_elim_stmt mir
+
+(* TODO: add tests *)
+let _ =
+  ( constant_propagation
+  , expression_propagation
+  , copy_propagation
+  , dead_code_elimination )
 
 let%expect_test "inline functions" =
   let ast =
