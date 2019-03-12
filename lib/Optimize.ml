@@ -437,10 +437,10 @@ let list_collapsing (mir : stmt_loc prog) =
 (* TODO *)
 let constant_fold_stmt _ s = s
 
-let constant_folding (mir : stmt_loc prog)
+let constant_folding (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc) Map.Poly.t) =
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   let constants =
     Monotone_framework.constant_propagation_mfp mir
       (module Flowgraph)
@@ -455,6 +455,8 @@ let constant_folding (mir : stmt_loc prog)
     ; gqb= (fst gqb, constant_fold_stmt constants (snd gqb))
     ; prog_name
     ; prog_path }
+
+let _ = constant_folding
 
 let%expect_test "inline functions" =
   let ast =

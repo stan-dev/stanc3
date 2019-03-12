@@ -120,7 +120,7 @@ type stmt_loc =
 
 type stmt_loc_num =
   { slocn: string sexp_opaque [@compare.ignore]
-  ; stmtn: stmt_loc statement
+  ; stmtn: stmt_loc_num statement
   ; num: int }
 [@@deriving sexp, hash]
 
