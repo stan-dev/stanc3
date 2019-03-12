@@ -425,7 +425,7 @@ common_expression:
   | ELTDIVIDE
     {   grammar_logger "infix_eltdivide" ; EltDivide }
   | HAT
-    {  grammar_logger "infix_hat" ; Exp }
+    {  grammar_logger "infix_hat" ; Pow }
 
 %inline logicalBinOp:
   | OR

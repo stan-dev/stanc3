@@ -46,7 +46,7 @@ and operator =
   | LDivide
   | EltTimes
   | EltDivide
-  | Exp
+  | Pow
   | Or
   | And
   | Equals
