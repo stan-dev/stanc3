@@ -52,13 +52,22 @@ class eight_schools_ncp_model : public prob_grad {
       y = std::vector<double>(J, 0);
       for (size_t i_0__ = 0; i_0__ < y.size(); i_0__++) y[i_0__] = vals_r__;
       current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-      check_greater_or_equal(function__, J, 0);
+      current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
+      greater_or_equal(function__, J, 0);
       current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-      for (size_t sym1__ = 0; sym1__ < sigma.size(); sym1__++)
-        check_greater_or_equal(function__, sigma[sym1__], 0);
+      for (size_t sym1__ = 0; sym1__ < length(sigma); sym1__++)
+        {
+          current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
+          current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
+          greater_or_equal(function__,
+                           stan::model::rvalue(sigma,
+                                               stan::model::cons_list(stan::model::index_uni(sym1__),
+                                               stan::model::nil_index_list()),
+                           "sigma"), 0);
+        }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
-          std::runtime_error(std::string(e) + e.what(), current_statement__));
+          std::runtime_error(std::string("inside ctor") + ": " + e.what(), current_statement__));
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -72,16 +81,9 @@ class eight_schools_ncp_model : public prob_grad {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    //Jacobians
-    //TODO
-    //Transformed parameters
-    //TODO
-    //Transformed parameter constraint checks
-    //TODO
+    //TODO: Unpack parameters with reader and constrain
     
     try {
-      current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
-      check_greater_or_equal(function__, tau, 0);
       current_statement__ = "file eight_schools_ncp.stan, line 15, column 2 to line 16, column 41";
       for (size_t j = 1; j < J; j++)
         current_statement__ = "file eight_schools_ncp.stan, line 16, columns 4-41";
@@ -92,6 +94,15 @@ class eight_schools_ncp_model : public prob_grad {
                                            stan::model::cons_list(stan::model::index_uni(j),
                                            stan::model::nil_index_list()),
             "theta_tilde");
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside prepare_params") + ": " + e.what(), current_statement__));
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }//Transformed parameters
+    //TODO
+    
+    try {
       current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
       lp_accum__.add(normal(mu, 0, 5))
       current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
@@ -102,7 +113,7 @@ class eight_schools_ncp_model : public prob_grad {
       lp_accum__.add(normal(y, theta, sigma))
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
-          std::runtime_error(std::string(e) + e.what(), current_statement__));
+          std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
