@@ -3,7 +3,7 @@ open Mir
 open Dataflow_types
 
 (** Union label maps, preserving the left element in a collision *)
-let merge_label_maps (m1 : 'a Int.Map.t) (m2 : 'a Int.Map.t) : 'a Int.Map.t =
+let union_maps_left (m1 : 'a Int.Map.t) (m2 : 'a Int.Map.t) : 'a Int.Map.t =
   let f ~key:_ opt =
     match opt with
     | `Left v -> Some v
@@ -11,10 +11,6 @@ let merge_label_maps (m1 : 'a Int.Map.t) (m2 : 'a Int.Map.t) : 'a Int.Map.t =
     | `Both (v1, _) -> Some v1
   in
   Int.Map.merge m1 m2 ~f
-
-(***********************************)
-(* Utility functions               *)
-(***********************************)
 
 (**
    A traversal that simultaneously accumulates a state (type 'f) and replaces the
@@ -93,10 +89,7 @@ let branching_fold_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
          (f s a, ()) ))
 
 (**
-   The statement map is built by traversing substatements recursively to replace
-   substatements with their labels while building up the substatements' statement maps.
-   Then, the result is the union of the substatement maps with this statement's singleton
-   pair, which is expressed in terms of the new label-containing statement.
+   See interface file
 *)
 let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
     (stmt : 's) : (int statement * 'm) Int.Map.t =
@@ -110,13 +103,16 @@ let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
       fwd_traverse_statement (extract stmt) ~init:(next_label', map) ~f
     in
     ( ( next_label''
-      , merge_label_maps map
+      , union_maps_left map
           (Int.Map.singleton this_label (built, metadata stmt)) )
     , this_label )
   in
   let (_, map), _ = build_statement_map_rec 1 Int.Map.empty stmt in
   map
 
+(**
+   See interface file
+*)
 let rec build_recursive_statement (rebuild : 's statement -> 'm -> 's)
     (statement_map : (label statement * 'm) Int.Map.t) (label : label) : 's =
   let stmt_ints, meta = Int.Map.find_exn statement_map label in
@@ -125,10 +121,7 @@ let rec build_recursive_statement (rebuild : 's statement -> 'm -> 's)
   rebuild stmt meta
 
 (**
-   Building the controlflow graph requires a traversal with state that includes continues,
-   breaks, returns and the controlflow graph accumulator. The traversal should be a
-   branching traversal with set unions rather than a forward traversal because continue
-   and return statements shouldn't affect other branches of execution.
+   See interface file
 *)
 let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
     Int.Set.t Int.Map.t =
@@ -153,7 +146,7 @@ let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
       ( Int.Set.union breaks1 breaks2
       , Int.Set.union returns1 returns2
       , Int.Set.union continues1 continues2
-      , merge_label_maps map_sofar1 map_sofar2 )
+      , union_maps_left map_sofar1 map_sofar2 )
     in
     (* The accumulated state after traversing substatements *)
     let breaks_subexpr, returns_subexpr, continues_subexpr, map_subexpr =
@@ -197,7 +190,7 @@ let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
     ( breaks_out
     , returns_out
     , continues_out
-    , merge_label_maps map_subexpr (Int.Map.singleton label cf_deps) )
+    , union_maps_left map_subexpr (Int.Map.singleton label cf_deps) )
   in
   let _, _, _, map =
     build_cf_graph_rec None
@@ -207,11 +200,7 @@ let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
   map
 
 (**
-   Building the predecessor graph requires a traversal with state that includes the
-   current previous nodes and the predecessor graph accumulator. Special cases are made
-   for loops, because they should include the body exits as predecessors to the body, and
-   they should include loop predecessors in their exit sets. I'm not sure if the single
-   re-traversal of the loop body is sufficient or this requires finding a fixed-point.
+   See interface file
 *)
 let build_predecessor_graph (statement_map : (int statement * 'm) Int.Map.t) :
     Int.Set.t * Int.Set.t Int.Map.t =
@@ -220,7 +209,7 @@ let build_predecessor_graph (statement_map : (int statement * 'm) Int.Map.t) :
       Int.Set.t * Int.Set.t Int.Map.t =
     let stmt, _ = Int.Map.find_exn statement_map label in
     let join_state (preds1, map1) (preds2, map2) =
-      (Int.Set.union preds1 preds2, merge_label_maps map1 map2)
+      (Int.Set.union preds1 preds2, union_maps_left map1 map2)
     in
     let exits, map_subexpr =
       branching_fold_statement stmt ~join:join_state
@@ -241,9 +230,13 @@ let build_predecessor_graph (statement_map : (int statement * 'm) Int.Map.t) :
       | While _ -> looping_predecessors ()
       | _ -> (exits, map_subexpr)
     in
-    (exits', merge_label_maps map_subexpr' (Int.Map.singleton label preds))
+    (exits', union_maps_left map_subexpr' (Int.Map.singleton label preds))
   in
   build_pred_graph_rec (Int.Set.empty, Int.Map.empty) 1
+
+(***********************************)
+(* Tests                           *)
+(***********************************)
 
 let example1_program =
   let ast =
