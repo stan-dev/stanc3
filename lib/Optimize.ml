@@ -440,7 +440,7 @@ let copy_propagation (mir : stmt_loc_num prog)
   in
   map_prog constant_fold_stmt mir
 
-let is_function_call e = match e with FunApp (f, _) -> true | _ -> false
+let is_function_call e = match e with FunApp (_, _) -> true | _ -> false
 
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
