@@ -68,11 +68,13 @@ let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
   | Skip as s -> (state, s)
   | Decl _ as s -> (state, s)
 
+(*
 let map_statement (stmt : 'a statement) ~(f : 'a -> 'c) : 'c statement =
   let _, stmt' =
     fwd_traverse_statement stmt ~init:() ~f:(fun _ a -> ((), f a))
   in
   stmt'
+*)
 
 (**
    Like a forward traversal, but branches accumulate two different states that are
@@ -127,7 +129,7 @@ let rec build_recursive_statement (rebuild : 's statement -> 'm -> 's)
     (statement_map : (label statement * 'm) Int.Map.t) (label : label) : 's =
   let stmt_ints, meta = Int.Map.find_exn statement_map label in
   let build_stmt = build_recursive_statement rebuild statement_map in
-  let stmt = map_statement stmt_ints ~f:build_stmt in
+  let stmt = map_statement build_stmt stmt_ints in
   rebuild stmt meta
 
 (**
