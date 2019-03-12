@@ -85,7 +85,7 @@ and 's statement =
       ; fdname: string
       ; fdargs: fun_arg_decl
       ; fdbody: 's }
-[@@deriving sexp, hash, map, fold]
+[@@deriving sexp, hash, map]
 
 (** A "top var" is a global variable visible to the I/O of Stan.
    Local vs. Global vardecls

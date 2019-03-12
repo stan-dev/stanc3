@@ -68,14 +68,6 @@ let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
   | Skip as s -> (state, s)
   | Decl _ as s -> (state, s)
 
-(*
-let map_statement (stmt : 'a statement) ~(f : 'a -> 'c) : 'c statement =
-  let _, stmt' =
-    fwd_traverse_statement stmt ~init:() ~f:(fun _ a -> ((), f a))
-  in
-  stmt'
-*)
-
 (**
    Like a forward traversal, but branches accumulate two different states that are
    recombined with join.
