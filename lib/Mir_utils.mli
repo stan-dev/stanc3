@@ -29,3 +29,6 @@ val expr_assigned_var : expr -> vexpr
 
 val summation_terms : expr -> expr list
 (** The list of terms in expression separated by a + *)
+
+val stmt_of_block : stmt_loc list -> stmt_loc
+(** Represent a list of statements as a single statement *)

@@ -279,8 +279,8 @@ let example1_program =
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
-  let _, block = mir.modelb in
-  block
+  let block = Mir.SList mir.log_prob in
+  {stmt= block; sloc= ""}
 
 let example1_statement_map =
   build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example1_program

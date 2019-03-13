@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Monotone_framework_sigs
+open Dataflow_utils
 
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
 let inverse_flowgraph_of_stmt (stmt : Mir.stmt_loc) :
@@ -353,10 +354,8 @@ let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
   | Mir.Assignment _ -> Errors.fatal_error ()
   | Mir.NRFunApp (f, l) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
-  | Mir.Check {ccfunname= f; ccvid= g; ccargs= l; _} ->
-      Set.Poly.union_list
-        ( Set.Poly.singleton f :: Set.Poly.singleton g
-        :: List.map ~f:free_vars_expr l )
+  | Mir.Check (f, l) ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
   | Mir.IfElse (e, b1, Some b2) ->
       Set.Poly.union_list
         [free_vars_expr e; free_vars_stmt b1.stmt; free_vars_stmt b2.stmt]
@@ -452,7 +451,7 @@ let rec used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
         [ used_expressions_expr e
         ; used_expressions_stmt b1.stmt
         ; used_expressions_stmt b2.stmt ]
-  | Mir.NRFunApp (_, l) | Mir.Check {ccargs= l; _} ->
+  | Mir.NRFunApp (_, l) | Mir.Check (_, l) ->
       Set.Poly.union_list (List.map ~f:used_expressions_expr l)
   | Mir.Decl _
    |Mir.Return None
@@ -697,7 +696,9 @@ let constant_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
              ~f:(fun x ->
                declared_variables_stmt
                  (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
-             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+             (List.concat
+                [ mir.functions_block; mir.generate_quantities
+                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
     end
     : TOTALTYPE
       with type vals = string )
@@ -728,7 +729,9 @@ let expression_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
              ~f:(fun x ->
                declared_variables_stmt
                  (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
-             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+             (List.concat
+                [ mir.functions_block; mir.generate_quantities
+                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
     end
     : TOTALTYPE
       with type vals = string )
@@ -759,7 +762,9 @@ let copy_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
              ~f:(fun x ->
                declared_variables_stmt
                  (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
-             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+             (List.concat
+                [ mir.functions_block; mir.generate_quantities
+                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
     end
     : TOTALTYPE
       with type vals = string )
@@ -791,7 +796,9 @@ let reaching_definitions_mfp (mir : Mir.stmt_loc_num Mir.prog)
              ~f:(fun x ->
                declared_variables_stmt
                  (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
-             [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+             (List.concat
+                [ mir.functions_block; mir.generate_quantities
+                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
     end
     : INITIALTYPE
       with type vals = string )
@@ -821,8 +828,8 @@ let live_variables_mfp (mir : Mir.stmt_loc_num Mir.prog)
       let initial =
         Set.Poly.add
           (Set.Poly.union
-             (Set.of_map_keys (fst mir.gqb))
-             (Set.of_map_keys (fst mir.modelb)))
+             (Set.of_map_keys mir.gen_quant_vars)
+             (Set.of_map_keys (union_maps_left mir.params mir.tparams)))
           "target"
     end
     : INITIALTYPE
@@ -849,7 +856,9 @@ let lazy_expressions_mfp (mir : Mir.stmt_loc_num Mir.prog)
          ~f:(fun x ->
            used_expressions_stmt (Mir.unnumbered_stmt_of_numbered_stmt x).stmt
            )
-         [mir.functionsb; snd mir.gqb; snd mir.modelb; snd mir.tdatab])
+         (List.concat
+            [ mir.functions_block; mir.generate_quantities; mir.prepare_params
+            ; mir.log_prob; mir.prepare_data ]))
   in
   (* TODO: we need to watch out in the lazy code motion pass that the autodiff and
      block structure imposes real boundaries on how much we can move code around. *)

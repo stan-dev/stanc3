@@ -29,8 +29,7 @@ let rec subst_stmt m b =
   | Assignment (e1, e2) -> Assignment (f e1, f e2)
   | TargetPE e -> TargetPE (f e)
   | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
-  | Check {ccfunname; ccvid; cctype; ccargs} ->
-      Check {ccfunname; ccvid; cctype; ccargs= List.map ccargs ~f}
+  | Check (ccfunname, ccargs) -> Check (ccfunname, List.map ccargs ~f)
   | Return opt_e -> Return (Option.map opt_e ~f)
   | IfElse (e, b1, b2) -> IfElse (f e, g b1, Option.map ~f:g b2)
   | While (e, b) -> While (f e, g b)

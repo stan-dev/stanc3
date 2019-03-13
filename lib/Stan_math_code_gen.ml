@@ -111,33 +111,23 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf "@,@;<1 2>@[<v>%a@]@]" pp_body body
 
+(* XXX this is so bad, someone please rethink these concepts for us! I suspect
+   the entire function is premised on a bad level of abstraction.
+*)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
-  let mkloopvar d = sprintf "i_%d__" d in
-  let loopvar = mkloopvar d in
+  let size = FunApp (name ^ ".size", []) in
+  let loopvar = sprintf "i_%d__" d in
+  let loop_0_to_size per_ele new_vident =
+    pp_for_loop ppf (loopvar, zero, size, per_ele, new_vident)
+  in
   match st with
   | Ast.SInt | SReal -> pf ppf "%a" pp_code_per_element name
-  | SVector dim | SRowVector dim ->
-      pp_for_loop ppf
-        (loopvar, zero, dim, pp_code_per_element, sprintf "%s[%s]" name loopvar)
-  | SMatrix (dim1, dim2) ->
-      let loopvar2 = mkloopvar (d + 1) in
-      pp_for_loop ppf
-        ( loopvar
-        , zero
-        , dim1
-        , pp_for_loop
-        , ( loopvar2
-          , zero
-          , dim2
-          , pp_code_per_element
-          , sprintf "%s(%s, %s)" name loopvar loopvar2 ) )
-  | SArray (st, dim) ->
-      pp_for_loop ppf
-        ( loopvar
-        , zero
-        , dim
-        , pp_run_code_per_el ~depth:(d + 1) pp_code_per_element
-        , (sprintf "%s[%s]" name loopvar, st) )
+  | SVector _ | SRowVector _ | SMatrix _ ->
+      loop_0_to_size pp_code_per_element (strf "%s(%s)" name loopvar)
+  | SArray (st, _) ->
+      loop_0_to_size
+        (pp_run_code_per_el ~depth:(d + 1) pp_code_per_element)
+        (strf "%s[%s]" name loopvar, st)
 
 let rec integer_el_type = function
   | Ast.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
@@ -164,10 +154,10 @@ let with_no_loc stmt = {stmt; sloc= ""}
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
-          std::runtime_error(std::string(%s) + e.what(), current_statement__));
+          std::runtime_error(std::string(%S) + ": " + e.what(), current_statement__));
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
-  @@ Option.value ~default:"e" msg
+    msg
 
 let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
@@ -201,34 +191,6 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
-let rec pp_for_each_in_array ppf (cctype, pp_body, ident) =
-  match cctype with
-  | Ast.SArray (t, dim) ->
-      let loopvar, reset_sym = Util.gensym_enter () in
-      let new_ident = strf "%s[%s]" ident loopvar in
-      let new_pp_body ppf ident =
-        pp_for_loop ppf (loopvar, zero, dim, pp_body, ident)
-      in
-      pp_for_each_in_array ppf (t, new_pp_body, new_ident) ;
-      reset_sym ()
-  | _ -> pp_body ppf ident
-
-let%expect_test "single pp_for_each_in_array" =
-  let ppbody ppf id = pf ppf "%s++" id in
-  strf "%a" pp_for_each_in_array (Ast.SReal, ppbody, "x") |> print_endline ;
-  [%expect {| x++ |}]
-
-let%expect_test "for each in array" =
-  let ppbody ppf id = pf ppf "check_whatever(%s);" id in
-  strf "%a" pp_for_each_in_array
-    (Ast.SArray (Ast.SArray (Ast.SReal, Var "z"), Var "y"), ppbody, "alpha")
-  |> print_endline ;
-  [%expect
-    {|
-    for (size_t sym24__ = 0; sym24__ < z; sym24__++)
-      for (size_t sym23__ = 0; sym23__ < y; sym23__++)
-        check_whatever(alpha[sym23__][sym24__]); |}]
-
 let trans_math_fn fname =
   match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])
 
@@ -246,16 +208,12 @@ let rec pp_statement ppf {stmt; sloc} =
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
+  | Check (fname, args) ->
+      pp_statement ppf {stmt= NRFunApp (fname, Var "function__" :: args); sloc}
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
   | Skip -> ()
-  | Check {ccfunname; ccvid; ccargs; cctype} ->
-      let pp_ckfn ppf ident =
-        pf ppf "check_%s(@[<hov>%a@]);" ccfunname (list ~sep:comma pp_expr)
-          (Var "function__" :: Var ident :: ccargs)
-      in
-      pp_for_each_in_array ppf (cctype, pp_ckfn, ccvid)
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
       pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block
@@ -306,7 +264,8 @@ let rec pp_statement ppf {stmt; sloc} =
                    to pp_statement or something such that local variable declarations get the right
                    scalar type w.r.t. autodiff/template (var vs double scalar type).
                 *)
-                pp_located_error ppf (pp_statement, fdbody, None) )
+                pp_located_error ppf
+                  (pp_statement, fdbody, "inside UDF " ^ fdname) )
             , fdbody ) ;
           pf ppf "@ " )
 
@@ -341,33 +300,6 @@ let%expect_test "if" =
       current_statement__ = "";
       stan_print(pstream__, y);
     } |}]
-
-let%expect_test "run code per element" =
-  let assign ppf x =
-    [ Assignment (Var x, Indexed (Var "vals_r__", [Single (Var "pos__++")]))
-    ; NRFunApp ("print", [Var x]) ]
-    |> List.map ~f:with_no_loc |> Block |> with_no_loc |> pp_statement ppf
-  in
-  strf "@[<v>%a@]"
-    (pp_run_code_per_el assign)
-    ("dubvec", SArray (SArray (SMatrix (Var "Y", Var "Z"), Var "X"), Var "W"))
-  |> print_endline ;
-  [%expect
-    {|
-    for (size_t i_0__ = 0; i_0__ < W; i_0__++)
-      for (size_t i_1__ = 0; i_1__ < X; i_1__++)
-        for (size_t i_2__ = 0; i_2__ < Y; i_2__++)
-          for (size_t i_3__ = 0; i_3__ < Z; i_3__++)
-            {
-              current_statement__ = "";
-              dubvec[i_0__][i_1__](i_2__, i_3__) =
-                  stan::model::rvalue(vals_r__,
-                                      stan::model::cons_list(stan::model::index_uni(pos__++),
-                                      stan::model::nil_index_list()),
-                  "vals_r__");
-              current_statement__ = "";
-              stan_print(pstream__, dubvec[i_0__][i_1__](i_2__, i_3__));
-            } |}]
 
 let%expect_test "decl" =
   Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= UInt}
@@ -410,7 +342,7 @@ let%expect_test "udf" =
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
-              std::runtime_error(std::string(e) + e.what(), current_statement__));
+              std::runtime_error(std::string("inside UDF sars") + ": " + e.what(), current_statement__));
           // Next line prevents compiler griping about no return
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
@@ -435,6 +367,19 @@ let rec pp_zeroing_ctor_call ppf st =
 let var_context_container st =
   match basetype (Ast.remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
+let pp_set_size ppf decl_id st =
+  let rec pp_size_ctor ppf st =
+    let pp_st ppf st = pf ppf "%a" pp_prim_stantype (Ast.remove_size st) in
+    match st with
+    | Ast.SInt | SReal -> pf ppf "0"
+    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
+    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
+  in
+  match st with
+  | Ast.SInt | SReal -> ()
+  | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
+
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
@@ -449,9 +394,10 @@ let pp_read_data ppf (decl_id, st, loc) =
   *)
   pp_location ppf loc ;
   let vals = var_context_container st ^ "__" in
-  let pp_read ppf loopvar = pf ppf "%s = %s;" decl_id loopvar in
+  let pp_read ppf decl_id = pf ppf "%s = %s;" decl_id vals in
   pf ppf "%s = context__.%s(\"%s\");@;" vals vals decl_id ;
-  pp_run_code_per_el pp_read ppf (vals, st) ;
+  pp_set_size ppf decl_id st ;
+  pp_run_code_per_el pp_read ppf (decl_id, st) ;
   pf ppf "@;"
 
 let%expect_test "read int[N] y" =
@@ -461,15 +407,16 @@ let%expect_test "read int[N] y" =
     {|
     current_statement__ = "";
     vals_i__ = context__.vals_i__("y");
-    for (size_t i_0__ = 0; i_0__ < N; i_0__++) y = vals_i__[i_0__]; |}]
+    y = std::vector<int>(N, 0);
+    for (size_t i_0__ = 0; i_0__ < y.size(); i_0__++) y[i_0__] = vals_i__; |}]
 
-let data_decls_of_p {datavars; _} =
-  Map.Poly.data datavars |> List.map ~f:tvdecl_to_decl
+let data_decls_of_p {data_vars; _} =
+  Map.Poly.data data_vars |> List.map ~f:tvdecl_to_decl
 
 let pp_read_and_check_decls ppf p =
   pf ppf "//Read data variables in@," ;
   list ~sep:cut pp_read_data ppf (data_decls_of_p p) ;
-  pp_statement ppf (snd p.tdatab)
+  list ~sep:cut pp_statement ppf p.prepare_data
 
 let block_of_list s =
   {s with stmt= (match s.stmt with SList ls -> Block ls | x -> x)}
@@ -494,8 +441,9 @@ let pp_ctor ppf p =
           p.prog_name p.prog_name ;
         pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
         pp_located_error ppf
-          ((fun ppf p -> pp_block ppf (pp_read_and_check_decls, p)), p, None)
-        )
+          ( (fun ppf p -> pp_block ppf (pp_read_and_check_decls, p))
+          , p
+          , "inside ctor" ) )
     , p )
 
 let pp_model_private ppf p =
@@ -504,7 +452,9 @@ let pp_model_private ppf p =
 
 let pp_get_param_names ppf p =
   let param_names =
-    p.modelb |> fst |> Map.Poly.keys |> List.sort ~compare:String.compare
+    List.map ~f:Map.Poly.keys [p.params; p.tparams]
+    |> List.concat
+    |> List.sort ~compare:String.compare
   in
   let add_param = fmt "names.push_back(%S);" in
   pf ppf "@[<v 2>void %a const {@,%a@]@,}" pp_call_str
@@ -523,10 +473,11 @@ let%expect_test "dims" =
   |> print_endline ;
   [%expect {| z, x, y |}]
 
-let get_params {modelb; _} = fst modelb
+let get_all_params {params; tparams; _} =
+  List.(concat (map ~f:Map.Poly.data [params; tparams]))
 
-let get_param_types p =
-  get_params p |> Map.Poly.data |> List.map ~f:tvdecl_to_decl
+let get_all_param_types p =
+  get_all_params p |> List.map ~f:tvdecl_to_decl
   |> List.map ~f:(fun (_, t, _) -> t)
 
 let pp_get_dims ppf p =
@@ -538,7 +489,7 @@ let pp_get_dims ppf p =
   pf ppf "@[<v 2>void %a const " pp_call_str ("get_dims", params) ;
   pf ppf "{@,dimss__.resize(0);@,std::vector<size_t> dims__;@,%a%a@]@,}"
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
-    (List.map ~f:get_dims (get_param_types p))
+    (List.map ~f:get_dims (get_all_param_types p))
     pp_dim_sep ()
 
 let pp_write_array ppf p =
@@ -553,8 +504,7 @@ let pp_unconstrained_param_names ppf p =
   ignore p ;
   string ppf "//TODO unconstrained_param_names"
 
-let pp_jacobians ppf params = ignore params ; string ppf "//TODO"
-let pp_transformed_params ppf params = ignore params ; string ppf "//TODO"
+let pp_transformed_params ppf tparams = ignore tparams ; string ppf "//TODO"
 
 let pp_transformed_param_checks ppf params =
   ignore params ; string ppf "//TODO"
@@ -565,6 +515,23 @@ let pp_transform_inits ppf params =
 
 let pp_fndef_sig ppf (rt, fname, params) =
   pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params
+
+(* constraining parameters for before log prob and write_array
+  match tvtrans with
+  | Ast.Identity -> None
+  | Lower lb -> constrain for_scalar "lb_constrain" [lb]
+  | Upper ub -> constrain for_scalar "ub_constrain" [ub]
+  | LowerUpper (lb, ub) -> constrain for_scalar "lub_constrain" [lb; ub]
+  | Offset o -> constrain for_scalar "offset_multiplier" [o; Lit (Int, "1")]
+  | Multiplier m -> constrain for_scalar "offset_multiplier" [Lit (Int, "0"); m]
+  | OffsetMultiplier (o, m) -> constrain for_scalar "offset_multiplier" [o; m]
+  | Ordered -> constrain for_eigen "ordered" []
+  | PositiveOrdered | Simplex | UnitVector -> constrain for_eigen "ordered" []
+  |CholeskyCorr -> constrain for_eigen "cholesky_factor_corr" []
+  | CholeskyCov | Correlation | Covariance ->
+      None
+
+*)
 
 let pp_log_prob ppf p =
   let text = pf ppf "%s@," in
@@ -582,11 +549,15 @@ let pp_log_prob ppf p =
   text "T__ lp__(0.0);" ;
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
-  pf ppf "//Jacobians@,%a@," pp_jacobians (get_params p) ;
-  pf ppf "//Transformed parameters@,%a@," pp_transformed_params (get_params p) ;
-  pf ppf "//Transformed parameter constraint checks@,%a@,"
-    pp_transformed_param_checks (get_params p) ;
-  pp_located_error ppf (pp_statement, p.modelb |> snd |> block_of_list, None) ;
+  pf ppf "//TODO: Unpack parameters with reader and constrain@," ;
+  (* XXX Eventually we can create a separate prepare_params method? *)
+  pp_located_error ppf
+    ( pp_statement
+    , {stmt= Block p.prepare_params; sloc= ""}
+    , "inside prepare_params" ) ;
+  pf ppf "//Transformed parameters@,%a@," pp_transformed_params p.tparams ;
+  pp_located_error ppf
+    (pp_statement, {stmt= Block p.log_prob; sloc= ""}, "inside log_prob") ;
   pf ppf "@]@,}@,"
 
 let pp_model_public ppf p =
@@ -621,6 +592,7 @@ using namespace stan::math; |}
 
 let pp_prog ppf (p : stmt_loc prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings globals pp_statement p.functionsb
-    pp_model p ;
+    version includes p.prog_name usings globals
+    (list ~sep:cut pp_statement)
+    p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name

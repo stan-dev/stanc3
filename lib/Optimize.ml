@@ -2,7 +2,7 @@
 open Core_kernel
 open Mir
 
-let create_function_inline_map {stmt; _} =
+let create_function_inline_map l =
   (* We only add the first definition for each function to the inline map.
    This will make sure we do not inline recursive functions. *)
   let f accum {stmt; _} =
@@ -17,20 +17,9 @@ let create_function_inline_map {stmt; _} =
       | `Duplicate -> accum )
     | _ -> Errors.fatal_error ()
   in
-  match stmt with
-  | Assignment (_, _)
-   |TargetPE _
-   |NRFunApp (_, _)
-   |Block _ | Check _ | Break | Continue | Return _
-   |IfElse (_, _, _)
-   |While (_, _)
-   |For _ | Decl _ | FunDef _ ->
-      raise_s [%sexp (stmt : stmt_loc statement)]
-  | SList l ->
-      Map.filter
-        ~f:(fun (_, _, v) -> v <> Skip)
-        (List.fold l ~init:Map.Poly.empty ~f)
-  | Skip -> Map.Poly.empty
+  Map.filter
+    ~f:(fun (_, _, v) -> v <> Skip)
+    (List.fold l ~init:Map.Poly.empty ~f)
 
 let rec replace_fresh_local_vars stmt =
   match stmt with
@@ -133,14 +122,11 @@ let rec inline_function_statement adt fim {stmt; sloc} =
                 let b = replace_fresh_local_vars b in
                 let b = handle_early_returns None b in
                 subst_args_stmt args es b )
-      | Check {ccfunname; ccvid; cctype; ccargs} ->
-          let se_list =
-            List.map ~f:(inline_function_expression adt fim) ccargs
-          in
+      | Check (f, l) ->
+          let se_list = List.map ~f:(inline_function_expression adt fim) l in
           let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
           let es = List.map ~f:snd se_list in
-          slist_concat_no_loc s_list
-            (Check {ccfunname; ccvid; cctype; ccargs= es})
+          slist_concat_no_loc s_list (Check (f, es))
       | Return e -> (
         match e with
         | None -> Return None
@@ -259,22 +245,22 @@ and inline_function_index adt fim i =
       (sl, MultiIndex e)
 
 let function_inlining (mir : stmt_loc prog) =
-  let function_inline_map = create_function_inline_map mir.functionsb in
-  { functionsb=
-      inline_function_statement Ast.DataOnly function_inline_map mir.functionsb
-  ; datavars= mir.datavars
-  ; tdatab=
-      ( fst mir.tdatab
-      , inline_function_statement Ast.DataOnly function_inline_map
-          (snd mir.tdatab) )
-  ; modelb=
-      ( fst mir.modelb
-      , inline_function_statement Ast.AutoDiffable function_inline_map
-          (snd mir.modelb) )
-  ; gqb=
-      ( fst mir.gqb
-      , inline_function_statement Ast.DataOnly function_inline_map
-          (snd mir.gqb) )
+  let function_inline_map = create_function_inline_map mir.functions_block in
+  let inline_function_statements adt =
+    List.map ~f:(inline_function_statement adt function_inline_map)
+  in
+  { functions_block= inline_function_statements Ast.DataOnly mir.functions_block
+  ; data_vars= mir.data_vars
+  ; tdata_vars= mir.tdata_vars
+  ; prepare_data= inline_function_statements Ast.DataOnly mir.prepare_data
+  ; params= mir.params
+  ; tparams= mir.tparams
+  ; prepare_params=
+      inline_function_statements Ast.AutoDiffable mir.prepare_params
+  ; log_prob= inline_function_statements Ast.AutoDiffable mir.log_prob
+  ; gen_quant_vars= mir.gen_quant_vars
+  ; generate_quantities=
+      inline_function_statements Ast.DataOnly mir.generate_quantities
   ; prog_name= mir.prog_name
   ; prog_path= mir.prog_path }
 
@@ -332,7 +318,7 @@ let rec unroll_loops_statement {stmt; sloc} =
       | SList l -> SList (List.map ~f:unroll_loops_statement l)
       | FunDef {fdrt; fdname; fdargs; fdbody} ->
           FunDef {fdrt; fdname; fdargs; fdbody= unroll_loops_statement fdbody}
-      | Check x -> Check x
+      | Check (x, y) -> Check (x, y)
       | Break -> Break
       | Assignment (x, y) -> Assignment (x, y)
       | TargetPE x -> TargetPE x
@@ -357,7 +343,7 @@ let rec collapse_lists_statement {stmt; sloc} =
       | Assignment (x, y) -> Assignment (x, y)
       | TargetPE x -> TargetPE x
       | NRFunApp (x, y) -> NRFunApp (x, y)
-      | Check x -> Check x
+      | Check (x, y) -> Check (x, y)
       | Break -> Break
       | Continue -> Continue
       | Return x -> Return x

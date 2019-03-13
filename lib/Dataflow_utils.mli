@@ -2,6 +2,9 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
+val union_maps_left :
+  ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
+
 val build_cf_graph :
      (label, label statement * 'm) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t

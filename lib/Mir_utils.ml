@@ -45,3 +45,6 @@ let rec summation_terms (rhs : expr) : expr list =
   | BinOp (e1, Plus, e2) ->
       List.append (summation_terms e1) (summation_terms e2)
   | _ as e -> [e]
+
+(** See interface file *)
+let stmt_of_block b = {stmt= SList b; sloc= ""}
