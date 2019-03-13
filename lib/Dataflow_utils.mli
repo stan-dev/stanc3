@@ -2,7 +2,9 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
-val build_cf_graph : (int statement * 'm) Int.Map.t -> Int.Set.t Int.Map.t
+val build_cf_graph :
+     (label, label statement * 'm) Map.Poly.t
+  -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the controlflow graph requires a traversal with state that includes continues,
    breaks, returns and the controlflow graph accumulator. The traversal should be a
@@ -10,7 +12,9 @@ val build_cf_graph : (int statement * 'm) Int.Map.t -> Int.Set.t Int.Map.t
    and return statements shouldn't affect other branches of execution.
 *)
 
-val build_predecessor_graph : (int statement * 'm) Int.Map.t -> Int.Set.t * Int.Set.t Int.Map.t
+val build_predecessor_graph :
+     (label, label statement * 'm) Map.Poly.t
+  -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the predecessor graph requires a traversal with state that includes the
    current previous nodes and the predecessor graph accumulator. Special cases are made
@@ -19,13 +23,21 @@ val build_predecessor_graph : (int statement * 'm) Int.Map.t -> Int.Set.t * Int.
    re-traversal of the loop body is sufficient or this requires finding a fixed-point.
 *)
 
-val build_recursive_statement : ('s statement -> 'm -> 's) -> ((label statement * 'm) Int.Map.t) -> label -> 's
+val build_recursive_statement :
+     ('s statement -> 'm -> 's)
+  -> (label, label statement * 'm) Map.Poly.t
+  -> label
+  -> 's
 (**
    Build a fixed-point data type representation of a statement given a label-map
    representation.
 *)
 
-val build_statement_map : ('s -> 's statement) -> ('s -> 'm) -> 's -> (int statement * 'm) Int.Map.t
+val build_statement_map :
+     ('s -> 's statement)
+  -> ('s -> 'm)
+  -> 's
+  -> (label, label statement * 'm) Map.Poly.t
 (**
    The statement map is built by traversing substatements recursively to replace
    substatements with their labels while building up the substatements' statement maps.

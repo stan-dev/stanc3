@@ -20,14 +20,15 @@ let filter_var_defns (defns : reaching_defn Set.Poly.t) (var : vexpr) :
   Set.Poly.filter defns ~f:(fun (v, _) -> v <> var)
 
 (** Union label maps, preserving the left element in a collision *)
-let merge_label_maps (m1 : 'a Int.Map.t) (m2 : 'a Int.Map.t) : 'a Int.Map.t =
+let merge_label_maps (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
+    ('a, 'b) Map.Poly.t =
   let f ~key:_ opt =
     match opt with
     | `Left v -> Some v
     | `Right v -> Some v
     | `Both (v1, _) -> Some v1
   in
-  Int.Map.merge m1 m2 ~f
+  Map.Poly.merge m1 m2 ~f
 
 (** Get the label of the next node to be assigned *)
 let peek_next_label (st : traversal_state) : label = st.label_ix
@@ -48,7 +49,7 @@ let modify_node_info (trav_st : traversal_state) (label : label)
     (f : node_info_update -> node_info_update) : traversal_state =
   { trav_st with
     node_info_map=
-      Int.Map.change trav_st.node_info_map label ~f:(function
+      Map.Poly.change trav_st.node_info_map label ~f:(function
         (*Option.map should exist but doesn't appear to*)
         | None -> None
         | Some info -> Some (f info) ) }
@@ -93,7 +94,7 @@ let node_0 (top_vars : vexpr Set.Poly.t) : node_info_update =
 let initial_traversal_state (top_vars : vexpr Set.Poly.t) : traversal_state =
   let node_0_info = node_0 top_vars in
   { label_ix= 1
-  ; node_info_map= Int.Map.singleton 0 node_0_info
+  ; node_info_map= Map.Poly.singleton 0 node_0_info
   ; possible_previous= Set.Poly.singleton 0
   ; target_terms= Set.Poly.empty
   ; continues= Set.Poly.empty
@@ -120,7 +121,7 @@ let initial_cf_st = 0
 let add_target_term_node (trav_st : traversal_state) (assignment_node : label)
     (term : expr) : traversal_state =
   let label, trav_st' = new_label trav_st in
-  let assgn_info = Int.Map.find_exn trav_st'.node_info_map assignment_node in
+  let assgn_info = Map.Poly.find_exn trav_st'.node_info_map assignment_node in
   let term_vars = expr_var_set term in
   let info =
     { rd_sets= (fun _ -> Set.Poly.map term_vars ~f:(fun v -> (v, label)))
@@ -133,7 +134,7 @@ let add_target_term_node (trav_st : traversal_state) (assignment_node : label)
   let trav_st'' =
     { trav_st' with
       node_info_map=
-        merge_label_maps trav_st'.node_info_map (Int.Map.singleton label info)
+        merge_label_maps trav_st'.node_info_map (Map.Poly.singleton label info)
     ; target_terms= Set.Poly.add trav_st'.target_terms label }
   in
   let add_previous (node_info : node_info_update) : node_info_update =
@@ -174,7 +175,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
         { trav_st' with
           node_info_map=
             merge_label_maps trav_st'.node_info_map
-              (Int.Map.singleton label info)
+              (Map.Poly.singleton label info)
         ; possible_previous= Set.Poly.singleton label }
       in
       if lhs = Var "target" then
@@ -200,7 +201,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       { (modify_node_info trav_st' 0 add_cf) with
         node_info_map=
           merge_label_maps trav_st'.node_info_map
-            (Int.Map.singleton label info)
+            (Map.Poly.singleton label info)
       ; possible_previous= Set.Poly.singleton label
       ; rejects= Set.Poly.add trav_st'.rejects label }
   | NRFunApp (_, exprs) ->
@@ -217,7 +218,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       { trav_st' with
         node_info_map=
           merge_label_maps trav_st'.node_info_map
-            (Int.Map.singleton label info)
+            (Map.Poly.singleton label info)
       ; possible_previous= Set.Poly.singleton label }
   | Check _ -> trav_st
   | TargetPE _ -> trav_st
@@ -252,7 +253,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
           { else_st with
             node_info_map=
               merge_label_maps else_st.node_info_map
-                (Int.Map.singleton label info)
+                (Map.Poly.singleton label info)
           ; possible_previous=
               Set.Poly.union then_st.possible_previous
                 else_st.possible_previous }
@@ -260,7 +261,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
           { then_st with
             node_info_map=
               merge_label_maps then_st.node_info_map
-                (Int.Map.singleton label info)
+                (Map.Poly.singleton label info)
           ; possible_previous=
               Set.Poly.union then_st.possible_previous
                 trav_st'.possible_previous } )
@@ -292,7 +293,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       { body_st' with
         node_info_map=
           merge_label_maps body_st'.node_info_map
-            (Int.Map.singleton label info)
+            (Map.Poly.singleton label info)
       ; possible_previous=
           Set.Poly.union body_st'.possible_previous trav_st'.possible_previous
       ; continues= Set.Poly.empty
@@ -333,7 +334,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       { body_st'' with
         node_info_map=
           merge_label_maps body_st''.node_info_map
-            (Int.Map.singleton label info)
+            (Map.Poly.singleton label info)
       ; possible_previous=
           Set.Poly.union body_st''.possible_previous trav_st'.possible_previous
       ; continues= Set.Poly.empty
@@ -362,7 +363,7 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       { trav_st' with
         node_info_map=
           merge_label_maps trav_st'.node_info_map
-            (Int.Map.singleton label info)
+            (Map.Poly.singleton label info)
       ; possible_previous= Set.Poly.singleton label }
   | FunDef _ -> trav_st
 
@@ -375,9 +376,10 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
    sets
 *)
 let rd_update_label (node_info : node_info_update)
-    (prev : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t) :
-    reaching_defn Set.Poly.t * reaching_defn Set.Poly.t =
-  let get_exit label = snd (Int.Map.find_exn prev label) in
+    (prev :
+      (label, reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Map.Poly.t)
+    : reaching_defn Set.Poly.t * reaching_defn Set.Poly.t =
+  let get_exit label = snd (Map.Poly.find_exn prev label) in
   let from_prev = union_map node_info.possible_previous ~f:get_exit in
   (from_prev, node_info.rd_sets from_prev)
 
@@ -385,14 +387,15 @@ let rd_update_label (node_info : node_info_update)
    Find the new values of the RD sets in node_infos, given the previous iteration of RD
    sets
 *)
-let rd_apply (node_infos : node_info_update Int.Map.t)
-    (prev : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t) :
-    (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t =
+let rd_apply (node_infos : (label, node_info_update) Map.Poly.t)
+    (prev :
+      (label, reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Map.Poly.t)
+    : (label, reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Map.Poly.t =
   let update_label ~key:(label : label) ~data:_ =
-    let node_info = Int.Map.find_exn node_infos label in
+    let node_info = Map.Poly.find_exn node_infos label in
     rd_update_label node_info prev
   in
-  Int.Map.mapi prev ~f:update_label
+  Map.Poly.mapi prev ~f:update_label
 
 (** Find the fixed point of a function and an initial value, given definition of equality *)
 let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) :
@@ -407,26 +410,28 @@ let rec apply_until_fixed (equal : 'a -> 'a -> bool) (f : 'a -> 'a) (x : 'a) :
    = actually gives a *runtime* error.
 *)
 let rd_equal
-    (a : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t)
-    (b : (reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Int.Map.t) :
-    bool =
+    (a :
+      (label, reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Map.Poly.t)
+    (b :
+      (label, reaching_defn Set.Poly.t * reaching_defn Set.Poly.t) Map.Poly.t)
+    : bool =
   let equal_set_pairs (a1, a2) (b1, b2) =
     Set.Poly.equal a1 b1 && Set.Poly.equal a2 b2
   in
-  Int.Map.equal equal_set_pairs a b
+  Map.Poly.equal equal_set_pairs a b
 
 (**
    Find the fixed point of the dataflow update functions. Fixed point should correspond to
    the full, correct dataflow graph.
 *)
-let rd_fixedpoint (info : node_info_update Int.Map.t) :
-    node_info_fixedpoint Int.Map.t =
+let rd_fixedpoint (info : (label, node_info_update) Map.Poly.t) :
+    (label, node_info_fixedpoint) Map.Poly.t =
   let initial_sets =
-    Int.Map.map info ~f:(fun _ -> (Set.Poly.empty, Set.Poly.empty))
+    Map.Poly.map info ~f:(fun _ -> (Set.Poly.empty, Set.Poly.empty))
   in
   let fixed_points = apply_until_fixed rd_equal (rd_apply info) initial_sets in
-  Int.Map.mapi fixed_points ~f:(fun ~key:label ~data:fixedpoint ->
-      {(Int.Map.find_exn info label) with rd_sets= fixedpoint} )
+  Map.Poly.mapi fixed_points ~f:(fun ~key:label ~data:fixedpoint ->
+      {(Map.Poly.find_exn info label) with rd_sets= fixedpoint} )
 
 (***********************************)
 (* Dependency analysis & interface *)
@@ -446,7 +451,7 @@ let block_dataflow_graph (body : stmt_loc) (param_vars : vexpr Set.Poly.t) :
 let rec label_dependencies_rec (so_far : label Set.Poly.t)
     (df_graph : dataflow_graph) (probabilistic_dependence : bool)
     (label : label) : label Set.Poly.t =
-  let node_info = Int.Map.find_exn df_graph.node_info_map label in
+  let node_info = Map.Poly.find_exn df_graph.node_info_map label in
   let rhs_labels =
     Set.Poly.map
       (Set.Poly.filter (fst node_info.rd_sets) ~f:(fun (v, _) ->
@@ -483,7 +488,7 @@ let final_var_dependencies (df_graph : dataflow_graph)
     (probabilistic_dependence : bool) (var : vexpr) : label Set.Poly.t =
   let exit_rd_set =
     union_map df_graph.possible_exits ~f:(fun l ->
-        let info = Int.Map.find_exn df_graph.node_info_map l in
+        let info = Map.Poly.find_exn df_graph.node_info_map l in
         snd info.rd_sets )
   in
   let labels =
@@ -502,7 +507,7 @@ let top_var_dependencies (df_graph : dataflow_graph)
     (labels : label Set.Poly.t) : vexpr Set.Poly.t =
   let rds =
     union_map labels ~f:(fun l ->
-        let info = Int.Map.find_exn df_graph.node_info_map l in
+        let info = Map.Poly.find_exn df_graph.node_info_map l in
         Set.Poly.filter (fst info.rd_sets) ~f:(fun (v, l) ->
             l = 0 && Set.Poly.mem info.rhs_set v ) )
   in
@@ -556,12 +561,12 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
   in
   let prior_terms =
     List.map (Set.Poly.to_list prior_term_labels) ~f:(fun l ->
-        match (Int.Map.find_exn df_graph.node_info_map l).loc with
+        match (Map.Poly.find_exn df_graph.node_info_map l).loc with
         | TargetTerm {term; _} -> term
         | _ -> raise (Failure "Found non-target term in target term list") )
   in
   Sexp.pp_hum Format.std_formatter
-    [%sexp (df_graph.node_info_map : node_info_fixedpoint Int.Map.t)] ;
+    [%sexp (df_graph.node_info_map : (label, node_info_fixedpoint) Map.Poly.t)] ;
   print_string "\n\n" ;
   print_endline
     ( "Top data variables: "

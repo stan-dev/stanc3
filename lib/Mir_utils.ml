@@ -21,6 +21,7 @@ let rec expr_var_set (ex : expr) : vexpr Set.Poly.t =
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
+
 and index_var_set (ix : index) : vexpr Set.Poly.t =
   match ix with
   | All -> Set.Poly.empty

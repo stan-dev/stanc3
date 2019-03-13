@@ -85,7 +85,7 @@ type node_info_fixedpoint =
 *)
 type traversal_state =
   { label_ix: label
-  ; node_info_map: node_info_update Int.Map.t
+  ; node_info_map: (int, node_info_update) Map.Poly.t
   ; possible_previous: label Set.Poly.t
   ; target_terms: label Set.Poly.t
   ; continues: label Set.Poly.t
@@ -109,7 +109,7 @@ type cf_state = label
      excluded for non-statistical dependency analysis
 *)
 type dataflow_graph =
-  { node_info_map: node_info_fixedpoint Int.Map.t
+  { node_info_map: (int, node_info_fixedpoint) Map.Poly.t
   ; possible_exits: label Set.Poly.t
   ; probabilistic_nodes: label Set.Poly.t }
 [@@deriving sexp]

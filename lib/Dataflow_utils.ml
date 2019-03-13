@@ -3,14 +3,15 @@ open Mir
 open Dataflow_types
 
 (** Union label maps, preserving the left element in a collision *)
-let union_maps_left (m1 : 'a Int.Map.t) (m2 : 'a Int.Map.t) : 'a Int.Map.t =
+let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
+    ('a, 'b) Map.Poly.t =
   let f ~key:_ opt =
     match opt with
     | `Left v -> Some v
     | `Right v -> Some v
     | `Both (v1, _) -> Some v1
   in
-  Int.Map.merge m1 m2 ~f
+  Map.Poly.merge m1 m2 ~f
 
 (**
    A traversal that simultaneously accumulates a state (type 'f) and replaces the
@@ -92,10 +93,10 @@ let branching_fold_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
    See interface file
 *)
 let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
-    (stmt : 's) : (int statement * 'm) Int.Map.t =
+    (stmt : 's) : (label, label statement * 'm) Map.Poly.t =
   let rec build_statement_map_rec (next_label : label)
-      (map : (int statement * 'm) Int.Map.t) (stmt : 's) :
-      (int * (int statement * 'm) Int.Map.t) * int =
+      (map : (label, label statement * 'm) Map.Poly.t) (stmt : 's) :
+      (label * (label, label statement * 'm) Map.Poly.t) * label =
     let this_label = next_label in
     let next_label' = next_label + 1 in
     let f (label, map) stmt = build_statement_map_rec label map stmt in
@@ -104,18 +105,19 @@ let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
     in
     ( ( next_label''
       , union_maps_left map
-          (Int.Map.singleton this_label (built, metadata stmt)) )
+          (Map.Poly.singleton this_label (built, metadata stmt)) )
     , this_label )
   in
-  let (_, map), _ = build_statement_map_rec 1 Int.Map.empty stmt in
+  let (_, map), _ = build_statement_map_rec 1 Map.Poly.empty stmt in
   map
 
 (**
    See interface file
 *)
 let rec build_recursive_statement (rebuild : 's statement -> 'm -> 's)
-    (statement_map : (label statement * 'm) Int.Map.t) (label : label) : 's =
-  let stmt_ints, meta = Int.Map.find_exn statement_map label in
+    (statement_map : (label, label statement * 'm) Map.Poly.t) (label : label)
+    : 's =
+  let stmt_ints, meta = Map.Poly.find_exn statement_map label in
   let build_stmt = build_recursive_statement rebuild statement_map in
   let stmt = map_statement build_stmt stmt_ints in
   rebuild stmt meta
@@ -123,14 +125,19 @@ let rec build_recursive_statement (rebuild : 's statement -> 'm -> 's)
 (**
    See interface file
 *)
-let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
-    Int.Set.t Int.Map.t =
+let build_cf_graph (statement_map : (label, label statement * 'm) Map.Poly.t) :
+    (label, label Set.Poly.t) Map.Poly.t =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((breaks_in, returns_in, continues_in, map_in) :
-        Int.Set.t * Int.Set.t * Int.Set.t * Int.Set.t Int.Map.t)
-      (label : label) : Int.Set.t * Int.Set.t * Int.Set.t * Int.Set.t Int.Map.t
-      =
-    let stmt, _ = Int.Map.find_exn statement_map label in
+        label Set.Poly.t
+        * label Set.Poly.t
+        * label Set.Poly.t
+        * (label, label Set.Poly.t) Map.Poly.t) (label : label) :
+      label Set.Poly.t
+      * label Set.Poly.t
+      * label Set.Poly.t
+      * (label, label Set.Poly.t) Map.Poly.t =
+    let stmt, _ = Map.Poly.find_exn statement_map label in
     (* Only control flow nodes should pass themselves down as parents *)
     let is_ctrl_flow =
       match stmt with
@@ -143,9 +150,9 @@ let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
     let child_cf = if is_ctrl_flow then Some label else cf_parent in
     let join_state (breaks1, returns1, continues1, map_sofar1)
         (breaks2, returns2, continues2, map_sofar2) =
-      ( Int.Set.union breaks1 breaks2
-      , Int.Set.union returns1 returns2
-      , Int.Set.union continues1 continues2
+      ( Set.Poly.union breaks1 breaks2
+      , Set.Poly.union returns1 returns2
+      , Set.Poly.union continues1 continues2
       , union_maps_left map_sofar1 map_sofar2 )
     in
     (* The accumulated state after traversing substatements *)
@@ -160,41 +167,42 @@ let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
     let breaks_out, returns_out, continues_out, extra_cf_deps =
       match stmt with
       | Break ->
-          ( Int.Set.add breaks_subexpr label
+          ( Set.Poly.add breaks_subexpr label
           , returns_subexpr
           , continues_subexpr
-          , Int.Set.empty )
+          , Set.Poly.empty )
       | Return _ ->
           ( breaks_subexpr
-          , Int.Set.add returns_subexpr label
+          , Set.Poly.add returns_subexpr label
           , continues_subexpr
-          , Int.Set.empty )
+          , Set.Poly.empty )
       | Continue ->
           ( breaks_subexpr
           , returns_subexpr
-          , Int.Set.add continues_subexpr label
-          , Int.Set.empty )
+          , Set.Poly.add continues_subexpr label
+          , Set.Poly.empty )
       | While _ -> (breaks_in, returns_subexpr, continues_in, breaks_subexpr)
       | For _ -> (breaks_in, returns_subexpr, continues_in, breaks_subexpr)
-      | _ -> (breaks_subexpr, returns_subexpr, continues_subexpr, Int.Set.empty)
+      | _ ->
+          (breaks_subexpr, returns_subexpr, continues_subexpr, Set.Poly.empty)
     in
     let cf_parent_set =
-      Option.value_map cf_parent ~default:Int.Set.empty ~f:Int.Set.singleton
+      Option.value_map cf_parent ~default:Set.Poly.empty ~f:Set.Poly.singleton
     in
     let cf_deps =
-      Int.Set.union
-        (Int.Set.union continues_in
-           (Int.Set.union returns_subexpr extra_cf_deps))
+      Set.Poly.union
+        (Set.Poly.union continues_in
+           (Set.Poly.union returns_subexpr extra_cf_deps))
         cf_parent_set
     in
     ( breaks_out
     , returns_out
     , continues_out
-    , union_maps_left map_subexpr (Int.Map.singleton label cf_deps) )
+    , union_maps_left map_subexpr (Map.Poly.singleton label cf_deps) )
   in
   let _, _, _, map =
     build_cf_graph_rec None
-      (Int.Set.empty, Int.Set.empty, Int.Set.empty, Int.Map.empty)
+      (Set.Poly.empty, Set.Poly.empty, Set.Poly.empty, Map.Poly.empty)
       1
   in
   map
@@ -202,27 +210,30 @@ let build_cf_graph (statement_map : (int statement * 'm) Int.Map.t) :
 (**
    See interface file
 *)
-let build_predecessor_graph (statement_map : (int statement * 'm) Int.Map.t) :
-    Int.Set.t * Int.Set.t Int.Map.t =
+let build_predecessor_graph
+    (statement_map : (label, label statement * 'm) Map.Poly.t) :
+    label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t =
   let rec build_pred_graph_rec
-      ((preds, map_in) : Int.Set.t * Int.Set.t Int.Map.t) (label : label) :
-      Int.Set.t * Int.Set.t Int.Map.t =
-    let stmt, _ = Int.Map.find_exn statement_map label in
+      ((preds, map_in) :
+        label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)
+      (label : label) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
+      =
+    let stmt, _ = Map.Poly.find_exn statement_map label in
     let join_state (preds1, map1) (preds2, map2) =
-      (Int.Set.union preds1 preds2, union_maps_left map1 map2)
+      (Set.Poly.union preds1 preds2, union_maps_left map1 map2)
     in
     let exits, map_subexpr =
       branching_fold_statement stmt ~join:join_state
-        ~init:(Int.Set.singleton label, map_in)
+        ~init:(Set.Poly.singleton label, map_in)
         ~f:build_pred_graph_rec
     in
     let looping_predecessors () =
       let exits, map_subexpr =
         branching_fold_statement stmt ~join:join_state
-          ~init:(Int.Set.add exits label, map_in)
+          ~init:(Set.Poly.add exits label, map_in)
           ~f:build_pred_graph_rec
       in
-      (Int.Set.union preds exits, map_subexpr)
+      (Set.Poly.union preds exits, map_subexpr)
     in
     let exits', map_subexpr' =
       match stmt with
@@ -230,9 +241,9 @@ let build_predecessor_graph (statement_map : (int statement * 'm) Int.Map.t) :
       | While _ -> looping_predecessors ()
       | _ -> (exits, map_subexpr)
     in
-    (exits', union_maps_left map_subexpr' (Int.Map.singleton label preds))
+    (exits', union_maps_left map_subexpr' (Map.Poly.singleton label preds))
   in
-  build_pred_graph_rec (Int.Set.empty, Int.Map.empty) 1
+  build_pred_graph_rec (Set.Poly.empty, Map.Poly.empty) 1
 
 (***********************************)
 (* Tests                           *)
@@ -275,7 +286,9 @@ let example1_statement_map =
   build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example1_program
 
 let%expect_test "Statement label map example" =
-  print_s [%sexp (example1_statement_map : (int statement * string) Int.Map.t)] ;
+  print_s
+    [%sexp
+      (example1_statement_map : (label, label statement * string) Map.Poly.t)] ;
   [%expect
     {|
       ((1 ((SList (2 5)) ""))
@@ -324,7 +337,7 @@ let%expect_test "Statement label map example" =
 
 let%expect_test "Controlflow graph example" =
   let cf = build_cf_graph example1_statement_map in
-  print_s [%sexp (cf : Int.Set.t Int.Map.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 ()) (6 (5)) (7 (5)) (8 (5)) (9 (5 13))
@@ -335,7 +348,9 @@ let%expect_test "Controlflow graph example" =
 
 let%expect_test "Predecessor graph example" =
   let exits, preds = build_predecessor_graph example1_statement_map in
-  print_s [%sexp ((exits, preds) : Int.Set.t * Int.Set.t Int.Map.t)] ;
+  print_s
+    [%sexp
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
       ((7 8 22)

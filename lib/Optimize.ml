@@ -383,7 +383,7 @@ let rec collapse_lists_statement {stmt; sloc} =
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
-(* TODO: DRY up next three *)
+(*(* TODO: DRY up next three *)
 let constant_propagation (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -393,6 +393,7 @@ let constant_propagation (mir : stmt_loc_num prog)
       (module Flowgraph)
       flowgraph_to_mir
   in
+  (* TODO: fix this *)
   let constant_fold_stmt s =
     let s' = unnumbered_statement_of_numbered_statement s in
     match (Map.find_exn constants s.num).Monotone_framework_sigs.entry with
@@ -410,6 +411,7 @@ let expression_propagation (mir : stmt_loc_num prog)
       (module Flowgraph)
       flowgraph_to_mir
   in
+  (* TODO: fix this *)
   let constant_fold_stmt s =
     let s' = unnumbered_statement_of_numbered_statement s in
     match (Map.find_exn expressions s.num).Monotone_framework_sigs.entry with
@@ -427,6 +429,7 @@ let copy_propagation (mir : stmt_loc_num prog)
       (module Flowgraph)
       flowgraph_to_mir
   in
+  (* TODO: fix this *)
   let constant_fold_stmt s =
     let s' = unnumbered_statement_of_numbered_statement s in
     match (Map.find_exn copies s.num).Monotone_framework_sigs.entry with
@@ -549,6 +552,8 @@ let dead_code_elimination (mir : stmt_loc_num prog)
             if Set.Poly.mem live_variables_s fdname then stmt else Skip )
     ; sloc= s.slocn }
   in
+  (* TODO: This last bit isn't quite right. We want to perform dead-code elim at the level of the whole
+     program, carrying state in between blocks. *)
   map_prog dead_code_elim_stmt mir
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
@@ -560,7 +565,7 @@ let _ =
   ( constant_propagation
   , expression_propagation
   , copy_propagation
-  , dead_code_elimination )
+  , dead_code_elimination ))*)
 
 let%expect_test "inline functions" =
   let ast =

@@ -119,9 +119,7 @@ type stmt_loc =
 [@@deriving sexp, hash, map]
 
 type stmt_loc_num =
-  { slocn: string sexp_opaque [@compare.ignore]
-  ; stmtn: stmt_loc_num statement
-  ; num: int }
+  {slocn: string sexp_opaque [@compare.ignore]; stmtn: int statement}
 [@@deriving sexp, hash, map]
 
 (* ===================== Some helper functions ====================== *)
@@ -136,11 +134,18 @@ let rec map_toplevel_stmts f {sloc; stmt} =
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
 
-let rec unnumbered_statement_of_numbered_statement {stmtn; slocn; _} =
-  { stmt= map_statement unnumbered_statement_of_numbered_statement stmtn
-  ; sloc= slocn }
+let rec unnumbered_statement_of_numbered_statement (stmtn : int statement) :
+    stmt_loc statement =
+  failwith "TODO: not yet implemented"
 
-let numbered_statement_of_unnumbered_statement {stmt; sloc} =
+let numbered_statement_of_unnumbered_statement (stmt : stmt_loc statement) :
+    int statement =
+  failwith "TODO: not yet implemented"
+
+let rec unnumbered_stmt_of_numbered_stmt {stmtn; slocn} : stmt_loc =
+  failwith "TODO: not yet implemented"
+
+let numbered_stmt_of_unnumbered_stmt {stmt; sloc} : stmt_loc_num =
   failwith "TODO: not yet implemented"
 
 (** Forgetful function from numbered to unnumbered programs *)
