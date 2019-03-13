@@ -2,7 +2,7 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
-(** Union label maps, preserving the left element in a collision *)
+(** Union maps, preserving the left element in a collision *)
 let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
     ('a, 'b) Map.Poly.t =
   let f ~key:_ opt =
@@ -279,7 +279,7 @@ let example1_program =
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
-  let block = Mir.SList mir.log_prob in
+  let block = Mir.Block mir.log_prob in
   {stmt= block; sloc= ""}
 
 let example1_statement_map =
@@ -291,7 +291,7 @@ let%expect_test "Statement label map example" =
       (example1_statement_map : (label, label statement * string) Map.Poly.t)] ;
   [%expect
     {|
-      ((1 ((SList (2 5)) ""))
+      ((1 ((Block (2 5)) ""))
        (2 ((SList (3 4)) "file string, line 3, columns 10-20"))
        (3
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))

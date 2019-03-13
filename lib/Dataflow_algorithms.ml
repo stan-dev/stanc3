@@ -2,6 +2,7 @@ open Core_kernel
 open Mir
 open Dataflow_types
 open Mir_utils
+open Dataflow_utils
 
 (**
    This is a helper function equivalent to List.concat_map but for Sets
@@ -18,17 +19,6 @@ let union_map (set : 'a Set.Poly.t) ~(f : 'a -> 'b Set.Poly.t) : 'b Set.Poly.t
 let filter_var_defns (defns : reaching_defn Set.Poly.t) (var : vexpr) :
     reaching_defn Set.Poly.t =
   Set.Poly.filter defns ~f:(fun (v, _) -> v <> var)
-
-(** Union label maps, preserving the left element in a collision *)
-let merge_maps (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
-    ('a, 'b) Map.Poly.t =
-  let f ~key:_ opt =
-    match opt with
-    | `Left v -> Some v
-    | `Right v -> Some v
-    | `Both (v1, _) -> Some v1
-  in
-  Map.Poly.merge m1 m2 ~f
 
 (** Get the label of the next node to be assigned *)
 let peek_next_label (st : traversal_state) : label = st.label_ix
@@ -134,7 +124,7 @@ let add_target_term_node (trav_st : traversal_state) (assignment_node : label)
   let trav_st'' =
     { trav_st' with
       node_info_map=
-        merge_maps trav_st'.node_info_map (Map.Poly.singleton label info)
+        union_maps_left trav_st'.node_info_map (Map.Poly.singleton label info)
     ; target_terms= Set.Poly.add trav_st'.target_terms label }
   in
   let add_previous (node_info : node_info_update) : node_info_update =
@@ -174,7 +164,8 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       let trav_st'' =
         { trav_st' with
           node_info_map=
-            merge_maps trav_st'.node_info_map (Map.Poly.singleton label info)
+            union_maps_left trav_st'.node_info_map
+              (Map.Poly.singleton label info)
         ; possible_previous= Set.Poly.singleton label }
       in
       if lhs = Var "target" then
@@ -199,7 +190,8 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       in
       { (modify_node_info trav_st' 0 add_cf) with
         node_info_map=
-          merge_maps trav_st'.node_info_map (Map.Poly.singleton label info)
+          union_maps_left trav_st'.node_info_map
+            (Map.Poly.singleton label info)
       ; possible_previous= Set.Poly.singleton label
       ; rejects= Set.Poly.add trav_st'.rejects label }
   | NRFunApp (_, exprs) ->
@@ -215,7 +207,8 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       in
       { trav_st' with
         node_info_map=
-          merge_maps trav_st'.node_info_map (Map.Poly.singleton label info)
+          union_maps_left trav_st'.node_info_map
+            (Map.Poly.singleton label info)
       ; possible_previous= Set.Poly.singleton label }
   | Check _ -> trav_st
   | TargetPE _ -> trav_st
@@ -249,14 +242,16 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       | Some else_st ->
           { else_st with
             node_info_map=
-              merge_maps else_st.node_info_map (Map.Poly.singleton label info)
+              union_maps_left else_st.node_info_map
+                (Map.Poly.singleton label info)
           ; possible_previous=
               Set.Poly.union then_st.possible_previous
                 else_st.possible_previous }
       | None ->
           { then_st with
             node_info_map=
-              merge_maps then_st.node_info_map (Map.Poly.singleton label info)
+              union_maps_left then_st.node_info_map
+                (Map.Poly.singleton label info)
           ; possible_previous=
               Set.Poly.union then_st.possible_previous
                 trav_st'.possible_previous } )
@@ -287,7 +282,8 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       in
       { body_st' with
         node_info_map=
-          merge_maps body_st'.node_info_map (Map.Poly.singleton label info)
+          union_maps_left body_st'.node_info_map
+            (Map.Poly.singleton label info)
       ; possible_previous=
           Set.Poly.union body_st'.possible_previous trav_st'.possible_previous
       ; continues= Set.Poly.empty
@@ -327,7 +323,8 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       in
       { body_st'' with
         node_info_map=
-          merge_maps body_st''.node_info_map (Map.Poly.singleton label info)
+          union_maps_left body_st''.node_info_map
+            (Map.Poly.singleton label info)
       ; possible_previous=
           Set.Poly.union body_st''.possible_previous trav_st'.possible_previous
       ; continues= Set.Poly.empty
@@ -355,7 +352,8 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
       in
       { trav_st' with
         node_info_map=
-          merge_maps trav_st'.node_info_map (Map.Poly.singleton label info)
+          union_maps_left trav_st'.node_info_map
+            (Map.Poly.singleton label info)
       ; possible_previous= Set.Poly.singleton label }
   | FunDef _ -> trav_st
 
@@ -530,14 +528,16 @@ let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
     Set.Poly.union (exprset_of_table data_table) (exprset_of_table tdata_table)
   in
   let parameter_table, model_block =
-    ( merge_maps prog.params prog.tparams
+    ( union_maps_left prog.params prog.tparams
     , stmt_of_block
         (prog.prepare_params @ [{stmt= Block prog.log_prob; sloc= ""}]) )
   in
   let parameter_vars = exprset_of_table parameter_table in
-  (* TODO: global transformed parameters need to be added here *)
-  let gq_block = stmt_of_block prog.generate_quantities in
-  let top_vars = Set.Poly.union data_vars parameter_vars in
+  let gq_table, gq_block =
+    (prog.gen_quant_vars, stmt_of_block prog.generate_quantities)
+  in
+  let gq_vars = exprset_of_table gq_table in
+  let top_vars = Set.Poly.union_list [data_vars; parameter_vars; gq_vars] in
   { tdatab= block_dataflow_graph tdata_block top_vars
   ; modelb= block_dataflow_graph model_block top_vars
   ; gqb= block_dataflow_graph gq_block top_vars }
@@ -550,7 +550,7 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
     Set.Poly.union (exprset_of_table data_table) (exprset_of_table tdata_table)
   in
   let parameter_table, model_block =
-    ( merge_maps prog.params prog.tparams
+    ( union_maps_left prog.params prog.tparams
     , stmt_of_block
         (prog.prepare_params @ [{stmt= Block prog.log_prob; sloc= ""}]) )
   in
@@ -783,7 +783,7 @@ let%expect_test "block_dataflow_graph example" =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
   let table, block =
-    ( merge_maps mir.params mir.tparams
+    ( union_maps_left mir.params mir.tparams
     , stmt_of_block
         (mir.prepare_params @ [{stmt= Block mir.log_prob; sloc= ""}]) )
   in
@@ -839,23 +839,26 @@ let%expect_test "program_df_graphs example" =
       ((tdatab
         ((node_info_map
           ((0
-            ((rd_sets (() (((VVar x) 0) ((VVar y) 0)))) (possible_previous ())
-             (rhs_set ()) (controlflow ()) (loc StartOfBlock)))))
+            ((rd_sets (() (((VVar x) 0) ((VVar y) 0) ((VVar z) 0))))
+             (possible_previous ()) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))))
          (possible_exits (0)) (probabilistic_nodes ())))
        (modelb
         ((node_info_map
           ((0
-            ((rd_sets (() (((VVar x) 0) ((VVar y) 0)))) (possible_previous ())
-             (rhs_set ()) (controlflow ()) (loc StartOfBlock)))))
+            ((rd_sets (() (((VVar x) 0) ((VVar y) 0) ((VVar z) 0))))
+             (possible_previous ()) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))))
          (possible_exits (0)) (probabilistic_nodes ())))
        (gqb
         ((node_info_map
           ((0
-            ((rd_sets (() (((VVar x) 0) ((VVar y) 0)))) (possible_previous ())
-             (rhs_set ()) (controlflow ()) (loc StartOfBlock)))
+            ((rd_sets (() (((VVar x) 0) ((VVar y) 0) ((VVar z) 0))))
+             (possible_previous ()) (rhs_set ()) (controlflow ())
+             (loc StartOfBlock)))
            (1
             ((rd_sets
-              ((((VVar x) 0) ((VVar y) 0))
+              ((((VVar x) 0) ((VVar y) 0) ((VVar z) 0))
                (((VVar x) 0) ((VVar y) 0) ((VVar z) 1))))
              (possible_previous (0)) (rhs_set ((VVar y))) (controlflow (0))
              (loc (MirNode "file string, line 13, columns 10-20"))))))
@@ -957,7 +960,7 @@ model {
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
   let df_graphs = program_df_graphs prog in
-  let model_graph = df_graphs.log_prob in
+  let model_graph = df_graphs.modelb in
   let exits = model_graph.possible_exits in
   let dependencies = top_var_dependencies model_graph exits in
   print_s [%sexp (dependencies : vexpr Set.Poly.t)] ;
