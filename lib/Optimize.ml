@@ -578,75 +578,66 @@ let%expect_test "inline functions" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt ()) (fdname f)
-               (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
-                    ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>)
-                     (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt ()) (fdname f)
+            (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
+                 ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2)))))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (For (loopvar (Var sym1__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+            (body
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    ((FunApp make_rowvec
+                      ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
+                       (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
          ((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym1__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (Decl (decl_adtype AutoDiffable) (decl_id sym2__) (decl_type UReal))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym3__)) (lower (Lit Int 1)) (upper (Lit Int 1))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
-                     ((sloc <opaque>)
+                    (((sloc <opaque>)
                       (stmt
-                       (NRFunApp print
-                        ((FunApp make_rowvec
-                          ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
-                           (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
-             ((sloc <opaque>)
-              (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym2__)
-                    (decl_type UReal))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (For (loopvar (Var sym3__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
-                     ((sloc <opaque>)
-                      (stmt
-                       (Block
+                       (SList
                         (((sloc <opaque>)
                           (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt
-                               (Assignment (Var sym2__)
-                                (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym2__)))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                           (Assignment (Var sym2__)
+                            (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym2__)))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "list collapsing" =
   let ast =
@@ -674,50 +665,47 @@ let%expect_test "list collapsing" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-    ((functionsb
-      ((sloc <opaque>)
-       (stmt
-        (SList
-         (((sloc <opaque>)
-           (stmt
-            (FunDef (fdrt ()) (fdname f)
-             (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
-             (fdbody
-              ((sloc <opaque>)
-               (stmt
-                (Block
-                 (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
-                  ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
-          ((sloc <opaque>)
-           (stmt
-            (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-             (fdbody
-              ((sloc <opaque>)
-               (stmt
-                (Block
-                 (((sloc <opaque>)
-                   (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))
-     (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-     (modelb
-      (()
+    ((functions_block
+      (((sloc <opaque>)
+        (stmt
+         (FunDef (fdrt ()) (fdname f)
+          (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
+          (fdbody
+           ((sloc <opaque>)
+            (stmt
+             (Block
+              (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
+               ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
+       ((sloc <opaque>)
+        (stmt
+         (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+          (fdbody
+           ((sloc <opaque>)
+            (stmt
+             (Block
+              (((sloc <opaque>)
+                (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2)))))))))))))))))
+     (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+     (prepare_params ())
+     (log_prob
+      (((sloc <opaque>)
+        (stmt
+         (For (loopvar (Var sym4__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+          (body
+           ((sloc <opaque>)
+            (stmt
+             (Block
+              (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
+               ((sloc <opaque>)
+                (stmt
+                 (NRFunApp print
+                  ((FunApp make_rowvec
+                    ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
+                     (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
        ((sloc <opaque>)
         (stmt
          (SList
           (((sloc <opaque>)
-            (stmt
-             (For (loopvar (Var sym4__)) (lower (Lit Int 1)) (upper (Lit Int 1))
-              (body
-               ((sloc <opaque>)
-                (stmt
-                 (Block
-                  (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
-                   ((sloc <opaque>)
-                    (stmt
-                     (NRFunApp print
-                      ((FunApp make_rowvec
-                        ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
-                         (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
-           ((sloc <opaque>)
             (stmt
              (Decl (decl_adtype AutoDiffable) (decl_id sym5__) (decl_type UReal))))
            ((sloc <opaque>)
@@ -733,8 +721,7 @@ let%expect_test "list collapsing" =
                       (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
                    ((sloc <opaque>) (stmt Break))))))))))
            ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym5__)))))))))))
-     (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-     (prog_path ""))
+     (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path ""))
     |}]
 
 let%expect_test "do not inline recursive functions" =
@@ -758,32 +745,25 @@ let%expect_test "do not inline recursive functions" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody ((sloc <opaque>) (stmt Skip))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>)
-                     (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2))))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody ((sloc <opaque>) (stmt Skip))))))
          ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>) (stmt (NRFunApp reject ((FunApp g ((Lit Int 53)))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+           (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2)))))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>) (stmt (NRFunApp reject ((FunApp g ((Lit Int 53)))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in for loop" =
   let ast =
@@ -810,110 +790,99 @@ let%expect_test "inline function in for loop" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                    ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                    ((sloc <opaque>)
-                     (stmt (Return ((BinOp (Var z) Plus (Lit Int 24)))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
          ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                 ((sloc <opaque>)
+                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym7__)
-                    (decl_type UInt))))
+               (Decl (decl_adtype AutoDiffable) (decl_id sym7__) (decl_type UInt))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym8__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym8__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
-                     ((sloc <opaque>)
-                      (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                         ((sloc <opaque>)
-                          (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt (Assignment (Var sym7__) (Lit Int 42))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
-                    (decl_type UInt))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (For (loopvar (Var sym10__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
-                     ((sloc <opaque>)
-                      (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                         ((sloc <opaque>)
-                          (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt
-                               (Assignment (Var sym9__)
-                                (BinOp (Lit Int 3) Plus (Lit Int 24)))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (For (loopvar (Var i)) (lower (Var sym7__)) (upper (Var sym9__))
-                    (body
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
                      ((sloc <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
+                        (((sloc <opaque>)
+                          (stmt (Assignment (Var sym7__) (Lit Int 42))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id sym9__) (decl_type UInt))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym10__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
+                 ((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                     ((sloc <opaque>)
+                      (stmt
+                       (SList
+                        (((sloc <opaque>)
+                          (stmt
+                           (Assignment (Var sym9__)
+                            (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var i)) (lower (Var sym7__)) (upper (Var sym9__))
+                (body
+                 ((sloc <opaque>)
+                  (stmt
+                   (SList
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
+                     ((sloc <opaque>)
+                      (stmt
+                       (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
+                        (decl_type UInt))))
+                     ((sloc <opaque>)
+                      (stmt
+                       (For (loopvar (Var sym10__)) (lower (Lit Int 1))
+                        (upper (Lit Int 1))
+                        (body
                          ((sloc <opaque>)
                           (stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
-                            (decl_type UInt))))
-                         ((sloc <opaque>)
-                          (stmt
-                           (For (loopvar (Var sym10__)) (lower (Lit Int 1))
-                            (upper (Lit Int 1))
-                            (body
+                           (Block
+                            (((sloc <opaque>)
+                              (stmt (NRFunApp print ((Lit Str g)))))
                              ((sloc <opaque>)
                               (stmt
-                               (Block
+                               (SList
                                 (((sloc <opaque>)
-                                  (stmt (NRFunApp print ((Lit Str g)))))
-                                 ((sloc <opaque>)
                                   (stmt
-                                   (SList
-                                    (((sloc <opaque>)
-                                      (stmt
-                                       (Assignment (Var sym9__)
-                                        (BinOp (Lit Int 3) Plus (Lit Int 24)))))
-                                     ((sloc <opaque>) (stmt Break))))))))))))))))))))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                                   (Assignment (Var sym9__)
+                                    (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                                 ((sloc <opaque>) (stmt Break))))))))))))))))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in while loop" =
   let ast =
@@ -940,90 +909,80 @@ let%expect_test "inline function in while loop" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                    ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                    ((sloc <opaque>)
-                     (stmt (Return ((BinOp (Var z) Plus (Lit Int 24)))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
          ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                 ((sloc <opaque>)
+                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
-                    (decl_type UInt))))
+               (Decl (decl_adtype AutoDiffable) (decl_id sym11__) (decl_type UInt))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym12__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym12__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
                      ((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                         ((sloc <opaque>)
+                       (SList
+                        (((sloc <opaque>)
                           (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt
-                               (Assignment (Var sym11__)
-                                (BinOp (Lit Int 3) Plus (Lit Int 24)))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (While (Var sym11__)
+                           (Assignment (Var sym11__)
+                            (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (While (Var sym11__)
+                ((sloc <opaque>)
+                 (stmt
+                  (SList
+                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
                     ((sloc <opaque>)
                      (stmt
-                      (SList
-                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
+                      (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
+                       (decl_type UInt))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (For (loopvar (Var sym12__)) (lower (Lit Int 1))
+                       (upper (Lit Int 1))
+                       (body
                         ((sloc <opaque>)
                          (stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
-                           (decl_type UInt))))
-                        ((sloc <opaque>)
-                         (stmt
-                          (For (loopvar (Var sym12__)) (lower (Lit Int 1))
-                           (upper (Lit Int 1))
-                           (body
+                          (Block
+                           (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
                             ((sloc <opaque>)
                              (stmt
-                              (Block
+                              (SList
                                (((sloc <opaque>)
-                                 (stmt (NRFunApp print ((Lit Str g)))))
-                                ((sloc <opaque>)
                                  (stmt
-                                  (SList
-                                   (((sloc <opaque>)
-                                     (stmt
-                                      (Assignment (Var sym11__)
-                                       (BinOp (Lit Int 3) Plus (Lit Int 24)))))
-                                    ((sloc <opaque>) (stmt Break)))))))))))))))))))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                                  (Assignment (Var sym11__)
+                                   (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                                ((sloc <opaque>) (stmt Break)))))))))))))))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in if then else" =
   let ast =
@@ -1050,65 +1009,56 @@ let%expect_test "inline function in if then else" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                    ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                    ((sloc <opaque>)
-                     (stmt (Return ((BinOp (Var z) Plus (Lit Int 24)))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
          ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                 ((sloc <opaque>)
+                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym13__)
-                    (decl_type UInt))))
+               (Decl (decl_adtype AutoDiffable) (decl_id sym13__) (decl_type UInt))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym14__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym14__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
                      ((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                         ((sloc <opaque>)
+                       (SList
+                        (((sloc <opaque>)
                           (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt
-                               (Assignment (Var sym13__)
-                                (BinOp (Lit Int 3) Plus (Lit Int 24)))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (IfElse (Var sym13__)
-                    ((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body))))) ())))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path ""))
+                           (Assignment (Var sym13__)
+                            (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (IfElse (Var sym13__)
+                ((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body))))) ())))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path ""))
 
     |}]
 
@@ -1141,126 +1091,116 @@ let%expect_test "inline function in ternary if " =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                    ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
-                    ((sloc <opaque>)
-                     (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))
-            ((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname h) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str h)))))
-                    ((sloc <opaque>)
-                     (stmt (Return ((BinOp (Var z) Plus (Lit Int 4)))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
          ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                 ((sloc <opaque>)
+                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname h) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str h)))))
+                 ((sloc <opaque>)
+                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 4))))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym15__)
-                    (decl_type UInt))))
+               (Decl (decl_adtype AutoDiffable) (decl_id sym15__) (decl_type UInt))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym16__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym16__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
                      ((sloc <opaque>)
-                      (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                         ((sloc <opaque>)
-                          (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt (Assignment (Var sym15__) (Lit Int 42))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (IfElse (Var sym15__)
-                    ((sloc <opaque>)
-                     (stmt
-                      (SList
-                       (((sloc <opaque>)
-                         (stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym17__)
-                           (decl_type UInt))))
-                        ((sloc <opaque>)
-                         (stmt
-                          (For (loopvar (Var sym18__)) (lower (Lit Int 1))
-                           (upper (Lit Int 1))
-                           (body
-                            ((sloc <opaque>)
-                             (stmt
-                              (Block
-                               (((sloc <opaque>)
-                                 (stmt (NRFunApp print ((Lit Str g)))))
-                                ((sloc <opaque>)
-                                 (stmt
-                                  (SList
-                                   (((sloc <opaque>)
-                                     (stmt
-                                      (Assignment (Var sym17__)
-                                       (BinOp (Lit Int 3) Plus (Lit Int 24)))))
-                                    ((sloc <opaque>) (stmt Break))))))))))))))))))
-                    (((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
-                          (stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym19__)
-                            (decl_type UInt))))
+                          (stmt (Assignment (Var sym15__) (Lit Int 42))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (IfElse (Var sym15__)
+                ((sloc <opaque>)
+                 (stmt
+                  (SList
+                   (((sloc <opaque>)
+                     (stmt
+                      (Decl (decl_adtype AutoDiffable) (decl_id sym17__)
+                       (decl_type UInt))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (For (loopvar (Var sym18__)) (lower (Lit Int 1))
+                       (upper (Lit Int 1))
+                       (body
+                        ((sloc <opaque>)
+                         (stmt
+                          (Block
+                           (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                            ((sloc <opaque>)
+                             (stmt
+                              (SList
+                               (((sloc <opaque>)
+                                 (stmt
+                                  (Assignment (Var sym17__)
+                                   (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                                ((sloc <opaque>) (stmt Break))))))))))))))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (SList
+                    (((sloc <opaque>)
+                      (stmt
+                       (Decl (decl_adtype AutoDiffable) (decl_id sym19__)
+                        (decl_type UInt))))
+                     ((sloc <opaque>)
+                      (stmt
+                       (For (loopvar (Var sym20__)) (lower (Lit Int 1))
+                        (upper (Lit Int 1))
+                        (body
                          ((sloc <opaque>)
                           (stmt
-                           (For (loopvar (Var sym20__)) (lower (Lit Int 1))
-                            (upper (Lit Int 1))
-                            (body
+                           (Block
+                            (((sloc <opaque>)
+                              (stmt (NRFunApp print ((Lit Str h)))))
                              ((sloc <opaque>)
                               (stmt
-                               (Block
+                               (SList
                                 (((sloc <opaque>)
-                                  (stmt (NRFunApp print ((Lit Str h)))))
-                                 ((sloc <opaque>)
                                   (stmt
-                                   (SList
-                                    (((sloc <opaque>)
-                                      (stmt
-                                       (Assignment (Var sym19__)
-                                        (BinOp (Lit Int 4) Plus (Lit Int 4)))))
-                                     ((sloc <opaque>) (stmt Break))))))))))))))))))))))
-                 ((sloc <opaque>)
-                  (stmt
-                   (NRFunApp print
-                    ((TernaryIf (Var sym15__) (Var sym17__) (Var sym19__))))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                                   (Assignment (Var sym19__)
+                                    (BinOp (Lit Int 4) Plus (Lit Int 4)))))
+                                 ((sloc <opaque>) (stmt Break))))))))))))))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                ((TernaryIf (Var sym15__) (Var sym17__) (Var sym19__))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in ternary if " =
   let ast =
@@ -1286,72 +1226,62 @@ let%expect_test "inline function in ternary if " =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb
-        ((sloc <opaque>)
-         (stmt
-          (SList
-           (((sloc <opaque>)
-             (stmt
-              (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-               (fdbody
-                ((sloc <opaque>)
-                 (stmt
-                  (Block
-                   (((sloc <opaque>)
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt
+                   (IfElse (Lit Int 2)
+                    ((sloc <opaque>)
                      (stmt
-                      (IfElse (Lit Int 2)
-                       ((sloc <opaque>)
-                        (stmt
-                         (Block
-                          (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                           ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))
-                       ())))
-                    ((sloc <opaque>) (stmt (Return ((Lit Int 6))))))))))))))))))
-       (datavars ()) (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
-         ((sloc <opaque>)
+                      (Block
+                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                        ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))
+                    ())))
+                 ((sloc <opaque>) (stmt (Return ((Lit Int 6)))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym21__)
-                    (decl_type UInt))))
+               (Decl (decl_adtype AutoDiffable) (decl_id sym21__) (decl_type UInt))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var sym22__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+                (body
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var sym22__)) (lower (Lit Int 1))
-                    (upper (Lit Int 1))
-                    (body
-                     ((sloc <opaque>)
+                   (Block
+                    (((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>)
-                          (stmt
-                           (IfElse (Lit Int 2)
+                       (IfElse (Lit Int 2)
+                        ((sloc <opaque>)
+                         (stmt
+                          (Block
+                           (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
                             ((sloc <opaque>)
                              (stmt
-                              (Block
+                              (SList
                                (((sloc <opaque>)
-                                 (stmt (NRFunApp print ((Lit Str f)))))
-                                ((sloc <opaque>)
-                                 (stmt
-                                  (SList
-                                   (((sloc <opaque>)
-                                     (stmt (Assignment (Var sym21__) (Lit Int 42))))
-                                    ((sloc <opaque>) (stmt Break))))))))))
-                            ())))
-                         ((sloc <opaque>)
-                          (stmt
-                           (SList
-                            (((sloc <opaque>)
-                              (stmt (Assignment (Var sym21__) (Lit Int 6))))
-                             ((sloc <opaque>) (stmt Break))))))))))))))
-                 ((sloc <opaque>) (stmt (NRFunApp print ((Var sym21__)))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                                 (stmt (Assignment (Var sym21__) (Lit Int 42))))
+                                ((sloc <opaque>) (stmt Break))))))))))
+                        ())))
+                     ((sloc <opaque>)
+                      (stmt
+                       (SList
+                        (((sloc <opaque>)
+                          (stmt (Assignment (Var sym21__) (Lit Int 6))))
+                         ((sloc <opaque>) (stmt Break))))))))))))))
+             ((sloc <opaque>) (stmt (NRFunApp print ((Var sym21__)))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "unroll nested loop" =
   let ast =
@@ -1369,32 +1299,27 @@ let%expect_test "unroll nested loop" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb ((sloc <opaque>) (stmt Skip))) (datavars ())
-       (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
-         ((sloc <opaque>)
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
                (SList
                 (((sloc <opaque>)
-                  (stmt
-                   (SList
-                    (((sloc <opaque>)
-                      (stmt (NRFunApp print ((Lit Int 1) (Lit Int 3)))))
-                     ((sloc <opaque>)
-                      (stmt (NRFunApp print ((Lit Int 1) (Lit Int 4)))))))))
+                  (stmt (NRFunApp print ((Lit Int 1) (Lit Int 3)))))
                  ((sloc <opaque>)
-                  (stmt
-                   (SList
-                    (((sloc <opaque>)
-                      (stmt (NRFunApp print ((Lit Int 2) (Lit Int 3)))))
-                     ((sloc <opaque>)
-                      (stmt (NRFunApp print ((Lit Int 2) (Lit Int 4)))))))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                  (stmt (NRFunApp print ((Lit Int 1) (Lit Int 4)))))))))
+             ((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt (NRFunApp print ((Lit Int 2) (Lit Int 3)))))
+                 ((sloc <opaque>)
+                  (stmt (NRFunApp print ((Lit Int 2) (Lit Int 4)))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "unroll nested loop with break" =
   let ast =
@@ -1414,36 +1339,31 @@ let%expect_test "unroll nested loop with break" =
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
-      ((functionsb ((sloc <opaque>) (stmt Skip))) (datavars ())
-       (tdatab (() ((sloc <opaque>) (stmt (SList ())))))
-       (modelb
-        (()
-         ((sloc <opaque>)
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
           (stmt
            (SList
             (((sloc <opaque>)
               (stmt
-               (SList
-                (((sloc <opaque>)
-                  (stmt
-                   (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
-                    (body
-                     ((sloc <opaque>)
-                      (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 1)))))
-                         ((sloc <opaque>) (stmt Break))))))))))
+               (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
+                (body
                  ((sloc <opaque>)
                   (stmt
-                   (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
-                    (body
-                     ((sloc <opaque>)
-                      (stmt
-                       (Block
-                        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))))))))
-       (gqb (() ((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 1)))))
+                     ((sloc <opaque>) (stmt Break))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
+                (body
+                 ((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
+                     ((sloc <opaque>) (stmt Break))))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
