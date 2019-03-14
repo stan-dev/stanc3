@@ -13,22 +13,6 @@ open Core_kernel
 
 type litType = Int | Real | Str [@@deriving sexp, hash]
 
-type operator =
-  | Plus
-  | Minus
-  | Times
-  | Divide
-  | Modulo
-  | Or
-  | And
-  | Equals
-  | NEquals
-  | Less
-  | Leq
-  | Greater
-  | Geq
-[@@deriving sexp, hash]
-
 type transformation = expr Ast.transformation
 
 and index =
@@ -48,7 +32,6 @@ and expr =
   | Var of string
   | Lit of litType * string
   | FunApp of string * expr list
-  | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
   | Indexed of expr * index list
 [@@deriving sexp, hash]

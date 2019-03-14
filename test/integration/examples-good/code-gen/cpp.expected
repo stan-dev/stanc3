@@ -90,10 +90,12 @@ class eight_schools_ncp_model : public prob_grad {
         stan::model::rvalue(theta,
                             stan::model::cons_list(stan::model::index_uni(j),
                             stan::model::nil_index_list()), "theta") =
-            mu + tau * stan::model::rvalue(theta_tilde,
+            Plus(mu,
+                 Times(tau,
+                       stan::model::rvalue(theta_tilde,
                                            stan::model::cons_list(stan::model::index_uni(j),
                                            stan::model::nil_index_list()),
-            "theta_tilde");
+                       "theta_tilde")));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside prepare_params") + ": " + e.what(), current_statement__));

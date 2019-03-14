@@ -20,21 +20,6 @@ open Core_kernel
 open Mir
 open Fmt
 
-let pp_operator = function
-  | Plus -> "+"
-  | Minus -> "-"
-  | Times -> "*"
-  | Divide -> "/"
-  | Modulo -> "%"
-  | Or -> "||"
-  | And -> "&&"
-  | Equals -> "=="
-  | NEquals -> "!="
-  | Less -> "<"
-  | Leq -> "<="
-  | Greater -> ">"
-  | Geq -> ">="
-
 let zero = Lit (Int, "0")
 
 let rec pp_unsizedtype scalar_type ppf = function
@@ -62,8 +47,6 @@ let rec pp_expr ppf s =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> string ppf s
   | FunApp (fname, args) -> pp_call ppf (fname, pp_expr, args)
-  | BinOp (e1, op, e2) ->
-      pf ppf "%a %s %a" pp_expr e1 (pp_operator op) pp_expr e2
   | TernaryIf (cond, ifb, elseb) ->
       pf ppf "(%a) ? (%a) : (%a)" pp_expr cond pp_expr ifb pp_expr elseb
   | Indexed (e, idcs) ->

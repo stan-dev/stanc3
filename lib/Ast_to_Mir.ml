@@ -3,48 +3,23 @@
 open Core_kernel
 open Mir
 
-let trans_op (op : Ast.operator) =
-  match op with
-  | Ast.Plus -> Plus
-  | Ast.Minus -> Minus
-  | Ast.Times -> Times
-  | Ast.Divide -> Divide
-  | Ast.Modulo -> Modulo
-  | Ast.Or -> Or
-  | Ast.And -> And
-  | Ast.Equals -> Equals
-  | Ast.NEquals -> NEquals
-  | Ast.Less -> Less
-  | Ast.Leq -> Leq
-  | Ast.Greater -> Greater
-  | Ast.Geq -> Geq
-  | _ ->
-      let msg = " should have been transformed to a FunApp by this point." in
-      raise_s [%message (op : Ast.operator) msg]
+let op_to_funapp op args = FunApp (Operators.operator_name op, args)
 
 let rec trans_expr {Ast.expr_typed; _} =
   match expr_typed with
   | Ast.TernaryIf (cond, ifb, elseb) ->
       TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
-  | Ast.BinOp (lhs, op, rhs) -> (
-      let lhs, rhs = (trans_expr lhs, trans_expr rhs) in
-      match op with
-      | Ast.LDivide | Ast.EltTimes | Ast.EltDivide | Ast.Pow | Ast.Not
-       |Ast.Transpose ->
-          let fnname = Sexp.to_string_hum [%sexp (op : Ast.operator)] in
-          FunApp (fnname, [lhs; rhs])
-      | _ -> BinOp (lhs, trans_op op, rhs) )
+  | Ast.BinOp (lhs, op, rhs) -> op_to_funapp op [trans_expr lhs; trans_expr rhs]
   | Ast.PrefixOp (op, e) | Ast.PostfixOp (e, op) ->
-      FunApp (Operators.operator_name op, [trans_expr e])
+      op_to_funapp op [trans_expr e]
   | Ast.Variable {name; _} -> Var name
   | Ast.IntNumeral x -> Lit (Int, x)
   | Ast.RealNumeral x -> Lit (Real, x)
   | Ast.FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
-      FunApp (name, List.map ~f:trans_expr args)
+      FunApp (name, trans_exprs args)
   | Ast.GetLP | Ast.GetTarget -> Var "target"
-  | Ast.ArrayExpr eles -> FunApp ("make_array", List.map ~f:trans_expr eles)
-  | Ast.RowVectorExpr eles ->
-      FunApp ("make_rowvec", List.map ~f:trans_expr eles)
+  | Ast.ArrayExpr eles -> FunApp ("make_array", trans_exprs eles)
+  | Ast.RowVectorExpr eles -> FunApp ("make_rowvec", trans_exprs eles)
   | Ast.Paren x -> trans_expr x
   | Ast.Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
@@ -63,6 +38,8 @@ and trans_idx = function
           [%message
             "Expecting int or array" (e.expr_typed_type : Ast.unsizedtype)] )
 
+and trans_exprs = List.map ~f:trans_expr
+
 let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf = FunApp ("negative_infinity", [])
 
@@ -78,18 +55,20 @@ let trans_trans = Ast.map_transformation trans_expr
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
-  let add_inf = TargetPE neg_inf and obs = trans_expr ast_obs in
-  let trunc cond x y =
+  let add_inf = TargetPE neg_inf in
+  let trunc cond_op x y =
     bind_loc x.Ast.expr_typed_loc
       (IfElse
-         (BinOp (obs, cond, trans_expr x), bind_loc x.expr_typed_loc add_inf, y))
+         ( op_to_funapp cond_op (trans_exprs [ast_obs; x])
+         , bind_loc x.expr_typed_loc add_inf
+         , y ))
   in
   match t with
   | Ast.NoTruncate -> []
-  | Ast.TruncateUpFrom lb -> [trunc Less lb None]
-  | Ast.TruncateDownFrom ub -> [trunc Greater ub None]
-  | Ast.TruncateBetween (lb, ub) ->
-      [trunc Less lb (Some (trunc Greater ub None))]
+  | TruncateUpFrom lb -> [trunc Ast.Less lb None]
+  | TruncateDownFrom ub -> [trunc Ast.Greater ub None]
+  | TruncateBetween (lb, ub) ->
+      [trunc Ast.Less lb (Some (trunc Ast.Greater ub None))]
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then
@@ -112,23 +91,22 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           match assign_indices with
           | [] -> assignee
           | lst -> Indexed (assignee, List.map ~f:trans_idx lst)
-        and rhs = trans_expr assign_rhs in
+        in
+        let rhs = trans_expr assign_rhs in
         let rhs =
           match assign_op with
-          | Ast.Assign | Ast.ArrowAssign -> rhs
-          | Ast.OperatorAssign op -> BinOp (assignee, trans_op op, rhs)
+          | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+          | Ast.OperatorAssign op -> op_to_funapp op [assignee; rhs]
         in
         Assignment (assignee, rhs)
-    | Ast.NRFunApp ({name; _}, args) ->
-        NRFunApp (name, List.map ~f:trans_expr args)
+    | Ast.NRFunApp ({name; _}, args) -> NRFunApp (name, trans_exprs args)
     | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e)
     | Ast.Tilde {arg; distribution; args; truncation} ->
         let add_dist =
           (* XXX distribution name suffix? *)
           (* XXX Reminder to differentiate between tilde, which drops constants, and
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
-          TargetPE
-            (FunApp (distribution.name, List.map ~f:trans_expr (arg :: args)))
+          TargetPE (FunApp (distribution.name, trans_exprs (arg :: args)))
         in
         SList
           (truncate_dist arg truncation @ [bind_loc stmt_typed_loc add_dist])
