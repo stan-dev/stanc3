@@ -128,11 +128,11 @@ type 's prog =
 
 type stmt_loc =
   {sloc: string sexp_opaque [@compare.ignore]; stmt: stmt_loc statement}
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash]
 
 type stmt_loc_num =
   {slocn: string sexp_opaque [@compare.ignore]; stmtn: int statement}
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash]
 
 (* ===================== Some helper functions ====================== *)
 
@@ -145,6 +145,20 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | _ -> f {sloc; stmt}
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
+
+let map_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
+    (f : int -> stmt_loc_num -> stmt_loc_num) (s : stmt_loc_num) =
+  let rec map_stmt_num' (cur_node : int) (s : stmt_loc_num) : stmt_loc =
+    let find_node i = Map.find_exn flowgraph_to_mir i in
+    let recurse i = map_stmt_num' i (find_node i) in
+    match f cur_node s with {slocn; stmtn} ->
+      {sloc= slocn; stmt= map_statement recurse stmtn}
+  in
+  map_stmt_num' 1 s
+
+let stmt_loc_of_stmt_loc_num
+    (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) =
+  map_stmt_loc_num flowgraph_to_mir (fun _ s' -> s') s
 
 let rec unnumbered_statement_of_numbered_statement (stmtn : int statement) :
     stmt_loc statement =
