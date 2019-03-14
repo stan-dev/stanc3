@@ -20,13 +20,17 @@ let create_function_inline_map l =
     ~f:(fun (_, _, v) -> v.stmt <> Skip)
     (List.fold l ~init:Map.Poly.empty ~f)
 
-let replace_fresh_local_vars =
-  let f = function
-    | Decl {decl_adtype; decl_type; _} ->
-        Decl {decl_adtype; decl_id= Util.gensym (); decl_type}
-    | x -> x
+let replace_fresh_local_vars s' =
+  let f m = function
+    | Decl {decl_adtype; decl_type; decl_id} ->
+        let fresh_name = Util.gensym () in
+        ( Decl {decl_adtype; decl_id= fresh_name; decl_type}
+        , Map.Poly.set m ~key:decl_id ~data:(Var fresh_name) )
+    | x -> (x, m)
+    (* TODO: this is wrong. Please fix that uses of the variables also get replaced: pass around a map. *)
   in
-  map_stmt_loc f
+  let s, m = fold_stmt_loc f Map.Poly.empty s' in
+  {stmt= Partial_evaluator.subst_stmt m s.stmt; sloc= s.sloc}
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in

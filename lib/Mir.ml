@@ -88,7 +88,7 @@ and 's statement =
       ; fdname: string
       ; fdargs: fun_arg_decl
       ; fdbody: 's }
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, fold]
 
 (** A "top var" is a global variable visible to the I/O of Stan.
    Local vs. Global vardecls
@@ -148,18 +148,50 @@ let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
 
 let rec map_stmt_loc (f : 'a statement -> 'a statement)
     ({sloc; stmt} : stmt_loc) =
+  let modified_stmt = f stmt in
   let recurse = map_stmt_loc f in
-  {sloc; stmt= map_statement recurse (f stmt)}
+  {sloc; stmt= map_statement recurse modified_stmt}
+
+let rec fold_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
+    (state : 's) ({sloc; stmt} : stmt_loc) : stmt_loc * 's =
+  let modified_stmt, modified_state = f state stmt in
+  let recurse (_, child_state) (child_s : stmt_loc) =
+    let a, b = fold_stmt_loc f child_state child_s in
+    (a.stmt, b)
+  in
+  let (final_stmt, final_state) : stmt_loc statement * 's =
+    fold_statement recurse (modified_stmt, modified_state) modified_stmt
+  in
+  ({sloc; stmt= final_stmt}, final_state)
 
 let map_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
     (f : int -> 'a statement -> 'a statement) (s : stmt_loc_num) =
-  let rec map_stmt_num' (cur_node : int) ({slocn; stmtn} : stmt_loc_num) :
+  let rec map_stmt_loc_num' (cur_node : int) ({slocn; stmtn} : stmt_loc_num) :
       stmt_loc =
     let find_node i = Map.find_exn flowgraph_to_mir i in
-    let recurse i = map_stmt_num' i (find_node i) in
-    {sloc= slocn; stmt= map_statement recurse (f cur_node stmtn)}
+    let recurse i = map_stmt_loc_num' i (find_node i) in
+    let modified_stmt = f cur_node stmtn in
+    {sloc= slocn; stmt= map_statement recurse modified_stmt}
   in
-  map_stmt_num' 1 s
+  map_stmt_loc_num' 1 s
+
+let rec fold_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
+    (f : int -> 's -> 'a statement -> 'a statement * 's) (state : 's)
+    (s : stmt_loc_num) : stmt_loc * 's =
+  let rec fold_stmt_loc_num' (cur_node : int) ({slocn; stmtn} : stmt_loc_num)
+      (state : 's) : stmt_loc * 's =
+    let find_node i = Map.find_exn flowgraph_to_mir i in
+    let modified_stmt, modified_state = f cur_node state stmtn in
+    let recurse (_, child_state) (i : int) =
+      let a, b = fold_stmt_loc_num' i (find_node i) child_state in
+      (a.stmt, b)
+    in
+    let (final_stmt, final_state) : stmt_loc statement * 's =
+      fold_statement recurse (Skip, modified_state) modified_stmt
+    in
+    ({sloc= slocn; stmt= final_stmt}, final_state)
+  in
+  fold_stmt_loc_num' 1 state s
 
 let stmt_loc_of_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) =
