@@ -27,7 +27,6 @@ let replace_fresh_local_vars s' =
         ( Decl {decl_adtype; decl_id= fresh_name; decl_type}
         , Map.Poly.set m ~key:decl_id ~data:(Var fresh_name) )
     | x -> (x, m)
-    (* TODO: this is wrong. Please fix that uses of the variables also get replaced: pass around a map. *)
   in
   let s, m = fold_stmt_loc f Map.Poly.empty s' in
   {stmt= Partial_evaluator.subst_stmt m s.stmt; sloc= s.sloc}
@@ -166,6 +165,7 @@ and inline_function_expression adt fim e =
   | BinOp (e1, op, e2) ->
       let sl1, e1 = inline_function_expression adt fim e1 in
       let sl2, e2 = inline_function_expression adt fim e2 in
+      (* TODO: really, || and && should be lazy here. *)
       (sl1 @ sl2, BinOp (e1, op, e2))
   | TernaryIf (e1, e2, e3) ->
       let sl1, e1 = inline_function_expression adt fim e1 in
@@ -242,52 +242,33 @@ let rec contains_top_break_or_continue {stmt; _} =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
-let rec unroll_loops_statement {stmt; sloc} =
-  { stmt=
-      ( match stmt with
-      | For {loopvar; lower; upper; body} -> (
-        match (contains_top_break_or_continue body, lower, upper) with
-        | false, Lit (Int, low), Lit (Int, up) ->
-            let range =
-              List.map
-                ~f:(fun i -> Lit (Int, Int.to_string i))
-                (List.range ~start:`inclusive ~stop:`inclusive
-                   (Int.of_string low) (Int.of_string up))
-            in
-            let loopvar_str =
-              match loopvar with Var s -> s | _ -> Errors.fatal_error ()
-            in
-            let stmts =
-              List.map
-                ~f:(fun i ->
-                  { stmt=
-                      subst_args_stmt [loopvar_str] [i]
-                        (unroll_loops_statement body).stmt
-                  ; sloc= "" } )
-                range
-            in
-            SList stmts
-        | _ -> For {loopvar; lower; upper; body= unroll_loops_statement body} )
-      | IfElse (e, b1, b2) ->
-          IfElse
-            ( e
-            , unroll_loops_statement b1
-            , Option.map ~f:unroll_loops_statement b2 )
-      | While (e, b) -> While (e, unroll_loops_statement b)
-      | Block l -> Block (List.map ~f:unroll_loops_statement l)
-      | SList l -> SList (List.map ~f:unroll_loops_statement l)
-      | FunDef {fdrt; fdname; fdargs; fdbody} ->
-          FunDef {fdrt; fdname; fdargs; fdbody= unroll_loops_statement fdbody}
-      | Check (x, y) -> Check (x, y)
-      | Break -> Break
-      | Assignment (x, y) -> Assignment (x, y)
-      | TargetPE x -> TargetPE x
-      | NRFunApp (x, y) -> NRFunApp (x, y)
-      | Continue -> Continue
-      | Return x -> Return x
-      | Skip -> Skip
-      | Decl x -> Decl x )
-  ; sloc }
+let unroll_loops_statement =
+  let f stmt =
+    match stmt with
+    | For {loopvar; lower; upper; body} -> (
+      match (contains_top_break_or_continue body, lower, upper) with
+      | false, Lit (Int, low), Lit (Int, up) ->
+          let range =
+            List.map
+              ~f:(fun i -> Lit (Int, Int.to_string i))
+              (List.range ~start:`inclusive ~stop:`inclusive
+                 (Int.of_string low) (Int.of_string up))
+          in
+          let loopvar_str =
+            match loopvar with Var s -> s | _ -> Errors.fatal_error ()
+          in
+          let stmts =
+            List.map
+              ~f:(fun i ->
+                {stmt= subst_args_stmt [loopvar_str] [i] body.stmt; sloc= ""}
+                )
+              range
+          in
+          SList stmts
+      | _ -> stmt )
+    | _ -> stmt
+  in
+  map_stmt_loc f
 
 let loop_unrolling (mir : stmt_loc prog) = map_prog unroll_loops_statement mir
 
