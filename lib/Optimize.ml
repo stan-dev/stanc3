@@ -494,7 +494,30 @@ let%expect_test "map_stmt_loc" =
   let mir = map_prog (map_stmt_loc f) mir  in
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
-    {| |} ]
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))
+         ((sloc <opaque>)
+          (stmt
+           (IfElse (Lit Int 13)
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
+                 (stmt (NRFunApp print ((Lit Int 244) (Lit Int 244)))))
+                ((sloc <opaque>)
+                 (stmt
+                  (IfElse (Lit Int 24)
+                   ((sloc <opaque>)
+                    (stmt
+                     (Block
+                      (((sloc <opaque>)
+                        (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))))))
+                   ())))))))
+            ())))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |} ]
 
 let%expect_test "map_stmt_loc" =
   let ast =
@@ -518,7 +541,30 @@ let%expect_test "map_stmt_loc" =
   let mir_num = (fold_stmt_loc f 0) {stmt= SList mir.log_prob;sloc=""}  in
   print_s [%sexp (mir_num : stmt_loc * int)] ;
   [%expect
-    {| |} ]
+    {|
+      (((sloc <opaque>)
+        (stmt
+         (SList
+          (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))
+           ((sloc <opaque>)
+            (stmt
+             (IfElse (Lit Int 13)
+              ((sloc <opaque>)
+               (stmt
+                (Block
+                 (((sloc <opaque>)
+                   (stmt (NRFunApp print ((Lit Int 244) (Lit Int 244)))))
+                  ((sloc <opaque>)
+                   (stmt
+                    (IfElse (Lit Int 24)
+                     ((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))))))
+                     ())))))))
+              ())))))))
+       3) |} ]
 
 let%expect_test "inline functions" =
   let ast =
