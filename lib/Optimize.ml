@@ -10,89 +10,45 @@ let create_function_inline_map l =
     | FunDef {fdname; fdargs; fdbody; fdrt} -> (
       match
         Map.add accum ~key:fdname
-          ~data:
-            (fdrt, List.map ~f:(fun (_, name, _) -> name) fdargs, fdbody.stmt)
+          ~data:(fdrt, List.map ~f:(fun (_, name, _) -> name) fdargs, fdbody)
       with
       | `Ok m -> m
       | `Duplicate -> accum )
     | _ -> Errors.fatal_error ()
   in
   Map.filter
-    ~f:(fun (_, _, v) -> v <> Skip)
+    ~f:(fun (_, _, v) -> v.stmt <> Skip)
     (List.fold l ~init:Map.Poly.empty ~f)
 
-let rec replace_fresh_local_vars stmt =
-  match stmt with
-  | Decl {decl_adtype; decl_type; _} ->
-      Decl {decl_adtype; decl_id= Util.gensym (); decl_type}
-  | SList l ->
-      SList
-        (List.map
-           ~f:(fun {stmt; sloc} -> {stmt= replace_fresh_local_vars stmt; sloc})
-           l)
-  | Block l ->
-      Block
-        (List.map
-           ~f:(fun {stmt; sloc} -> {stmt= replace_fresh_local_vars stmt; sloc})
-           l)
-  | x -> x
+let replace_fresh_local_vars =
+  let f = function
+    | Decl {decl_adtype; decl_type; _} ->
+        Decl {decl_adtype; decl_id= Util.gensym (); decl_type}
+    | x -> x
+  in
+  map_stmt_loc f
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   Partial_evaluator.subst_stmt m
 
-let rec handle_early_returns_help opt_var b =
-  match b with
-  | Return opt_ret -> (
-    match (opt_var, opt_ret) with
-    | None, Some _ | Some _, None -> Errors.fatal_error ()
-    | None, None -> Break
-    | Some v, Some e ->
-        SList [{stmt= Assignment (Var v, e); sloc= ""}; {stmt= Break; sloc= ""}]
-    )
-  | IfElse (e, b1, b2) ->
-      IfElse
-        ( e
-        , {stmt= handle_early_returns_help opt_var b1.stmt; sloc= b1.sloc}
-        , match b2 with
-          | None -> None
-          | Some b2 ->
-              Some
-                {stmt= handle_early_returns_help opt_var b2.stmt; sloc= b2.sloc}
-        )
-  | While (e, body) ->
-      While
-        ( e
-        , {stmt= handle_early_returns_help opt_var body.stmt; sloc= body.sloc}
-        )
-  | For {loopvar; lower; upper; body} ->
-      For
-        { loopvar
-        ; lower
-        ; upper
-        ; body=
-            {stmt= handle_early_returns_help opt_var body.stmt; sloc= body.sloc}
-        }
-  | Block l ->
-      Block
-        (List.map
-           ~f:(fun {stmt; sloc} ->
-             {stmt= handle_early_returns_help opt_var stmt; sloc} )
-           l)
-  | SList l ->
-      SList
-        (List.map
-           ~f:(fun {stmt; sloc} ->
-             {stmt= handle_early_returns_help opt_var stmt; sloc} )
-           l)
-  | x -> x
-
 let handle_early_returns opt_var b =
+  let f = function
+    | Return opt_ret -> (
+      match (opt_var, opt_ret) with
+      | None, Some _ | Some _, None -> Errors.fatal_error ()
+      | None, None -> Break
+      | Some v, Some e ->
+          SList
+            [{stmt= Assignment (Var v, e); sloc= ""}; {stmt= Break; sloc= ""}]
+      )
+    | x -> x
+  in
   For
     { loopvar= Var (Util.gensym ())
     ; lower= Lit (Int, "1")
     ; upper= Lit (Int, "1")
-    ; body= {sloc= ""; stmt= handle_early_returns_help opt_var b} }
+    ; body= map_stmt_loc f b }
 
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
 let slist_no_loc l = SList (map_no_loc l)

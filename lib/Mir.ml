@@ -165,10 +165,6 @@ let stmt_loc_of_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) =
   map_stmt_loc_num flowgraph_to_mir (fun _ s' -> s') s
 
-let numbered_statement_of_unnumbered_statement (stmt : stmt_loc statement) :
-    int statement =
-  failwith "TODO: not yet implemented"
-
 let statement_stmt_loc_of_statement_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) s =
   (stmt_loc_of_stmt_loc_num flowgraph_to_mir {stmtn= s; slocn= ""}).stmt
