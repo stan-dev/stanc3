@@ -160,10 +160,6 @@ let stmt_loc_of_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) =
   map_stmt_loc_num flowgraph_to_mir (fun _ s' -> s') s
 
-let rec unnumbered_statement_of_numbered_statement (stmtn : int statement) :
-    stmt_loc statement =
-  failwith "TODO: not yet implemented"
-
 let numbered_statement_of_unnumbered_statement (stmt : stmt_loc statement) :
     int statement =
   failwith "TODO: not yet implemented"
@@ -175,8 +171,9 @@ let numbered_stmt_of_unnumbered_stmt {stmt; sloc} : stmt_loc_num =
   failwith "TODO: not yet implemented"
 
 (** Forgetful function from numbered to unnumbered programs *)
-let unnumbered_prog_of_numbered_prog p =
-  map_prog unnumbered_statement_of_numbered_statement p
+let unnumbered_prog_of_numbered_prog
+    (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) p =
+  map_prog (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p
 
 (** Decorate statements in Mir with unique numbers *)
 let numbered_prog_of_unnumbered_prog p =

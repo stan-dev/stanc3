@@ -379,7 +379,9 @@ let top_free_vars_stmt (s : int Mir.statement) =
   | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
    |Mir.Skip ->
-      free_vars_stmt (Mir.unnumbered_statement_of_numbered_statement s)
+      free_vars_stmt
+        (Mir.stmt_loc_of_stmt_loc_num Map.Poly.empty {stmtn= s; slocn= ""})
+          .stmt
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> free_vars_expr e
   | Mir.For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
@@ -475,7 +477,9 @@ let top_used_expressions_stmt (s : int Mir.statement) =
   | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
    |Mir.Skip ->
-      used_expressions_stmt (Mir.unnumbered_statement_of_numbered_statement s)
+      used_expressions_stmt
+        (Mir.stmt_loc_of_stmt_loc_num Map.Poly.empty {stmtn= s; slocn= ""})
+          .stmt
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> used_expressions_expr e
   | Mir.For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
