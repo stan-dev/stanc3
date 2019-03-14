@@ -270,42 +270,21 @@ let unroll_loops_statement =
   in
   map_stmt_loc f
 
-let loop_unrolling (mir : stmt_loc prog) = map_prog unroll_loops_statement mir
+let loop_unrolling = map_prog unroll_loops_statement
 
-let rec collapse_lists_statement {stmt; sloc} =
+let collapse_lists_statement =
   let rec collapse_lists l =
     match l with
     | [] -> []
     | {stmt= SList l'; _} :: rest -> l' @ collapse_lists rest
     | x :: rest -> x :: collapse_lists rest
   in
-  { stmt=
-      ( match stmt with
-      | Assignment (x, y) -> Assignment (x, y)
-      | TargetPE x -> TargetPE x
-      | NRFunApp (x, y) -> NRFunApp (x, y)
-      | Check (x, y) -> Check (x, y)
-      | Break -> Break
-      | Continue -> Continue
-      | Return x -> Return x
-      | Skip -> Skip
-      | IfElse (x, y, z) ->
-          IfElse
-            ( x
-            , collapse_lists_statement y
-            , Option.map ~f:collapse_lists_statement z )
-      | While (x, y) -> While (x, collapse_lists_statement y)
-      | For {loopvar; lower; upper; body} ->
-          For {loopvar; lower; upper; body= collapse_lists_statement body}
-      | Block l ->
-          Block (List.map ~f:collapse_lists_statement (collapse_lists l))
-      | SList l ->
-          SList (List.map ~f:collapse_lists_statement (collapse_lists l))
-      | Decl x -> Decl x
-      | FunDef {fdrt; fdname; fdargs; fdbody} ->
-          FunDef {fdrt; fdname; fdargs; fdbody= collapse_lists_statement fdbody}
-      )
-  ; sloc }
+  let f = function
+    | Block l -> Block (collapse_lists l)
+    | SList l -> SList (collapse_lists l)
+    | x -> x
+  in
+  map_stmt_loc f
 
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
@@ -493,6 +472,53 @@ let _ =
   , expression_propagation
   , copy_propagation
   , dead_code_elimination ))*)
+let%expect_test "map_stmt_loc" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        print(24);
+        if (13) {
+          print(244);
+          if (24) {
+            print(24);
+          }
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let f = function NRFunApp("print",[s]) -> NRFunApp("print",[s;s])
+  | x ->x in
+  let mir = map_prog (map_stmt_loc f) mir  in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {| |} ]
+
+let%expect_test "map_stmt_loc" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        print(24);
+        if (13) {
+          print(244);
+          if (24) {
+            print(24);
+          }
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let f i = function NRFunApp("print",[s]) ->  (NRFunApp("print",[s;s]), i+1)
+  | x ->(x,i) in
+  let mir_num = (fold_stmt_loc f 0) {stmt= SList mir.log_prob;sloc=""}  in
+  print_s [%sexp (mir_num : stmt_loc * int)] ;
+  [%expect
+    {| |} ]
 
 let%expect_test "inline functions" =
   let ast =

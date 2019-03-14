@@ -152,7 +152,7 @@ let rec map_stmt_loc (f : 'a statement -> 'a statement)
   let recurse = map_stmt_loc f in
   {sloc; stmt= map_statement recurse modified_stmt}
 
-let rec fold_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
+(*let rec fold_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
     (state : 's) ({sloc; stmt} : stmt_loc) : stmt_loc * 's =
   let modified_stmt, modified_state = f state stmt in
   let recurse (_, child_state) (child_s : stmt_loc) =
@@ -162,7 +162,19 @@ let rec fold_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
   let (final_stmt, final_state) : stmt_loc statement * 's =
     fold_statement recurse (modified_stmt, modified_state) modified_stmt
   in
-  ({sloc; stmt= final_stmt}, final_state)
+  ({sloc; stmt= final_stmt}, final_state)*)
+(* TODO: this functional implementation above doing the right thing. 
+   The imperative one is. *)
+let fold_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
+    (state : 's) ({sloc; stmt} : stmt_loc) : stmt_loc * 's =
+    let cur_state = ref (state) in 
+    let g stmt =
+    let stmt, state = f (!cur_state) (stmt) in
+    let _ = cur_state := state in 
+    stmt in 
+    let stmt = map_stmt_loc g {sloc;stmt} in 
+    let state = ! cur_state in 
+    (stmt, state)
 
 let map_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
     (f : int -> 'a statement -> 'a statement) (s : stmt_loc_num) =
@@ -175,7 +187,7 @@ let map_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
   in
   map_stmt_loc_num' 1 s
 
-let rec fold_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
+(*let rec fold_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
     (f : int -> 's -> 'a statement -> 'a statement * 's) (state : 's)
     (s : stmt_loc_num) : stmt_loc * 's =
   let rec fold_stmt_loc_num' (cur_node : int) ({slocn; stmtn} : stmt_loc_num)
@@ -191,7 +203,19 @@ let rec fold_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
     in
     ({sloc= slocn; stmt= final_stmt}, final_state)
   in
-  fold_stmt_loc_num' 1 state s
+  fold_stmt_loc_num' 1 state s *)
+(* TODO: this functional implementation above isn't doing the right thing *)
+let rec fold_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
+    (f : int -> 's -> 'a statement -> 'a statement * 's) (state : 's)
+    (s : stmt_loc_num) : stmt_loc * 's =
+    let cur_state = ref (state) in 
+    let g i stmt =
+    let stmt, state = f i (!cur_state) (stmt) in
+    let _ = cur_state := state in 
+    stmt in 
+    let stmt = map_stmt_loc_num flowgraph_to_mir g s in 
+    let state = ! cur_state in 
+    (stmt, state)
 
 let stmt_loc_of_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) (s : stmt_loc_num) =
@@ -205,3 +229,4 @@ let statement_stmt_loc_of_statement_stmt_loc_num
 let unnumbered_prog_of_numbered_prog
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) p =
   map_prog (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p
+
