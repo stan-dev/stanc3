@@ -146,13 +146,18 @@ let rec map_toplevel_stmts f {sloc; stmt} =
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
 
+let rec map_stmt_loc (f : 'a statement -> 'a statement)
+    ({sloc; stmt} : stmt_loc) =
+  let recurse = map_stmt_loc f in
+  {sloc; stmt= map_statement recurse (f stmt)}
+
 let map_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
-    (f : int -> stmt_loc_num -> stmt_loc_num) (s : stmt_loc_num) =
-  let rec map_stmt_num' (cur_node : int) (s : stmt_loc_num) : stmt_loc =
+    (f : int -> 'a statement -> 'a statement) (s : stmt_loc_num) =
+  let rec map_stmt_num' (cur_node : int) ({slocn; stmtn} : stmt_loc_num) :
+      stmt_loc =
     let find_node i = Map.find_exn flowgraph_to_mir i in
     let recurse i = map_stmt_num' i (find_node i) in
-    match f cur_node s with {slocn; stmtn} ->
-      {sloc= slocn; stmt= map_statement recurse stmtn}
+    {sloc= slocn; stmt= map_statement recurse (f cur_node stmtn)}
   in
   map_stmt_num' 1 s
 
@@ -164,17 +169,11 @@ let numbered_statement_of_unnumbered_statement (stmt : stmt_loc statement) :
     int statement =
   failwith "TODO: not yet implemented"
 
-let rec unnumbered_stmt_of_numbered_stmt {stmtn; slocn} : stmt_loc =
-  failwith "TODO: not yet implemented"
-
-let numbered_stmt_of_unnumbered_stmt {stmt; sloc} : stmt_loc_num =
-  failwith "TODO: not yet implemented"
+let statement_stmt_loc_of_statement_stmt_loc_num
+    (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) s =
+  (stmt_loc_of_stmt_loc_num flowgraph_to_mir {stmtn= s; slocn= ""}).stmt
 
 (** Forgetful function from numbered to unnumbered programs *)
 let unnumbered_prog_of_numbered_prog
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) p =
   map_prog (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p
-
-(** Decorate statements in Mir with unique numbers *)
-let numbered_prog_of_unnumbered_prog p =
-  map_prog numbered_statement_of_unnumbered_statement p

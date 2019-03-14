@@ -380,8 +380,7 @@ let top_free_vars_stmt (s : int Mir.statement) =
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
    |Mir.Skip ->
       free_vars_stmt
-        (Mir.stmt_loc_of_stmt_loc_num Map.Poly.empty {stmtn= s; slocn= ""})
-          .stmt
+        (Mir.statement_stmt_loc_of_statement_stmt_loc_num Map.Poly.empty s)
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> free_vars_expr e
   | Mir.For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
@@ -478,8 +477,7 @@ let top_used_expressions_stmt (s : int Mir.statement) =
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
    |Mir.Skip ->
       used_expressions_stmt
-        (Mir.stmt_loc_of_stmt_loc_num Map.Poly.empty {stmtn= s; slocn= ""})
-          .stmt
+        (Mir.statement_stmt_loc_of_statement_stmt_loc_num Map.Poly.empty s)
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> used_expressions_expr e
   | Mir.For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
@@ -699,7 +697,7 @@ let constant_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
           (List.map
              ~f:(fun x ->
                declared_variables_stmt
-                 (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
+                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
              (List.concat
                 [ mir.functions_block; mir.generate_quantities
                 ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
@@ -732,7 +730,7 @@ let expression_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
           (List.map
              ~f:(fun x ->
                declared_variables_stmt
-                 (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
+                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
              (List.concat
                 [ mir.functions_block; mir.generate_quantities
                 ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
@@ -765,7 +763,7 @@ let copy_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
           (List.map
              ~f:(fun x ->
                declared_variables_stmt
-                 (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
+                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
              (List.concat
                 [ mir.functions_block; mir.generate_quantities
                 ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
@@ -799,7 +797,7 @@ let reaching_definitions_mfp (mir : Mir.stmt_loc_num Mir.prog)
           (List.map
              ~f:(fun x ->
                declared_variables_stmt
-                 (Mir.unnumbered_stmt_of_numbered_stmt x).stmt )
+                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
              (List.concat
                 [ mir.functions_block; mir.generate_quantities
                 ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
@@ -858,8 +856,8 @@ let lazy_expressions_mfp (mir : Mir.stmt_loc_num Mir.prog)
     Set.Poly.union_list
       (List.map
          ~f:(fun x ->
-           used_expressions_stmt (Mir.unnumbered_stmt_of_numbered_stmt x).stmt
-           )
+           used_expressions_stmt
+             (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
          (List.concat
             [ mir.functions_block; mir.generate_quantities; mir.prepare_params
             ; mir.log_prob; mir.prepare_data ]))
