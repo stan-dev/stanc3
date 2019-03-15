@@ -290,23 +290,28 @@ let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
 (* TODO: DRY up next parts. They are ugly. *)
-let merge_stmts l =
-  {stmt= SList (List.map ~f:(fun x -> {stmt= SList x; sloc= ""}) l); sloc= ""}
 
 let split_stmts s =
   match s.stmt with
   | SList l ->
       List.map
         ~f:(fun x ->
-          match x.stmt with SList l -> l | _ -> Errors.fatal_error () )
+          match x.stmt with
+          | SList l | Block l -> l
+          | _ -> Errors.fatal_error () )
         l
   | _ -> Errors.fatal_error ()
 
 let constant_propagation (mir : stmt_loc prog) =
   let s =
-    merge_stmts
-      [ mir.functions_block; mir.prepare_data; mir.prepare_params; mir.log_prob
-      ; mir.generate_quantities ]
+    { stmt=
+        SList
+          [ {stmt= SList mir.functions_block; sloc= ""}
+          ; {stmt= SList mir.prepare_data; sloc= ""}
+          ; {stmt= SList mir.prepare_params; sloc= ""}
+          ; {stmt= Block mir.log_prob; sloc= ""}
+          ; {stmt= SList mir.generate_quantities; sloc= ""} ]
+    ; sloc= "" }
   in
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt s
@@ -1408,14 +1413,16 @@ let%expect_test "unroll nested loop with break" =
                     (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
                      ((sloc <opaque>) (stmt Break))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
-(*
+
 let%expect_test "constant propagation" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
       transformed data {
-        int i = 42;
-        int j = 2;
+        int i;
+        i = 42;
+        int j;
+        j = 2;
       }
       model {
         for (x in 1:i) {
@@ -1427,8 +1434,157 @@ let%expect_test "constant propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
+  (* TODO: make sure partial evaluation works! *)
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
-  [%expect {||}] *)
+  [%expect
+    {|
+    ((functions_block ()) (data_vars ())
+     (tdata_vars
+      ((i
+        ((tvident i) (tvtype SInt) (tvtrans Identity)
+         (tvloc "file string, line 3, columns 8-14")))
+       (j
+        ((tvident j) (tvtype SInt) (tvtrans Identity)
+         (tvloc "file string, line 5, columns 8-14")))))
+     (prepare_data
+      (((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
+       ((sloc <opaque>) (stmt (Assignment (Var j) (Lit Int 2))))))
+     (params ()) (tparams ()) (prepare_params ())
+     (log_prob
+      (((sloc <opaque>)
+        (stmt
+         (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Lit Int 42))
+          (body
+           ((sloc <opaque>)
+            (stmt
+             (Block
+              (((sloc <opaque>)
+                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 2))))))))))))))))
+     (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "constant propagation, local scope" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        int i;
+        i = 42;
+        {
+          int j;
+          j = 2;
+        }
+      }
+      model {
+        int j;
+        for (x in 1:i) {
+          print(i + j);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = constant_propagation mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+    ((functions_block ()) (data_vars ())
+     (tdata_vars
+      ((i
+        ((tvident i) (tvtype SInt) (tvtrans Identity)
+         (tvloc "file string, line 3, columns 8-14")))))
+     (prepare_data
+      (((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
+       ((sloc <opaque>)
+        (stmt
+         (Block
+          (((sloc <opaque>)
+            (stmt
+             (SList
+              (((sloc <opaque>)
+                (stmt
+                 (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
+               ((sloc <opaque>) (stmt Skip))))))
+           ((sloc <opaque>) (stmt (Assignment (Var j) (Lit Int 2))))))))))
+     (params ()) (tparams ()) (prepare_params ())
+     (log_prob
+      (((sloc <opaque>)
+        (stmt
+         (SList
+          (((sloc <opaque>)
+            (stmt (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
+           ((sloc <opaque>) (stmt Skip))))))
+       ((sloc <opaque>)
+        (stmt
+         (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Lit Int 42))
+          (body
+           ((sloc <opaque>)
+            (stmt
+             (Block
+              (((sloc <opaque>)
+                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Var j))))))))))))))))
+     (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "constant propagation, model block local scope" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int i;
+        i = 42;
+        int j;
+        j = 2;
+      }
+      generated quantities {
+        int i;
+        int j;
+        for (x in 1:i) {
+          print(i + j);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = constant_propagation mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+    ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+     (params ()) (tparams ()) (prepare_params ())
+     (log_prob
+      (((sloc <opaque>)
+        (stmt
+         (SList
+          (((sloc <opaque>)
+            (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))
+           ((sloc <opaque>) (stmt Skip))))))
+       ((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
+       ((sloc <opaque>)
+        (stmt
+         (SList
+          (((sloc <opaque>)
+            (stmt (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
+           ((sloc <opaque>) (stmt Skip))))))
+       ((sloc <opaque>) (stmt (Assignment (Var j) (Lit Int 2))))))
+     (gen_quant_vars
+      ((i
+        ((tvident i) (tvtype SInt) (tvtrans Identity)
+         (tvloc "file string, line 9, columns 8-14")))
+       (j
+        ((tvident j) (tvtype SInt) (tvtrans Identity)
+         (tvloc "file string, line 10, columns 8-14")))))
+     (generate_quantities
+      (((sloc <opaque>)
+        (stmt
+         (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Lit Int 42))
+          (body
+           ((sloc <opaque>)
+            (stmt
+             (Block
+              (((sloc <opaque>)
+                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 2))))))))))))))))
+     (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)

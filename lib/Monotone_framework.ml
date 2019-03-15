@@ -627,17 +627,17 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       let _ =
         while Stack.length workstack <> 0 do
           let l, l' = Stack.pop_exn workstack in
-          let old_analysis_out_l' = Hashtbl.find_exn analysis_in l' in
-          let new_analysis_out_l' =
+          let old_analysis_in_l' = Hashtbl.find_exn analysis_in l' in
+          let new_analysis_in_l' =
             T.transfer_function l (Hashtbl.find_exn analysis_in l)
           in
-          let _ =
-            if not (L.leq new_analysis_out_l' old_analysis_out_l') then
+          if not (L.leq new_analysis_in_l' old_analysis_in_l') then
+            let _ =
               Hashtbl.set analysis_in ~key:l'
-                ~data:(L.lub old_analysis_out_l' new_analysis_out_l')
-          in
-          Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
-              Stack.push workstack (l', l'') )
+                ~data:(L.lub old_analysis_in_l' new_analysis_in_l')
+            in
+            Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
+                Stack.push workstack (l', l'') )
         done
       in
       (* STEP 3: present final results *)
