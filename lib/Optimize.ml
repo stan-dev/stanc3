@@ -289,13 +289,31 @@ let collapse_lists_statement =
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
-(* TODO: DRY up next three *)
-let constant_propagation (mir : stmt_loc_num prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+(* TODO: DRY up next parts. They are ugly. *)
+let merge_stmts l =
+  {stmt= SList (List.map ~f:(fun x -> {stmt= SList x; sloc= ""}) l); sloc= ""}
+
+let split_stmts s =
+  match s.stmt with
+  | SList l ->
+      List.map
+        ~f:(fun x ->
+          match x.stmt with SList l -> l | _ -> Errors.fatal_error () )
+        l
+  | _ -> Errors.fatal_error ()
+
+let constant_propagation (mir : stmt_loc prog) =
+  let s =
+    merge_stmts
+      [ mir.functions_block; mir.prepare_data; mir.prepare_params; mir.log_prob
+      ; mir.generate_quantities ]
+  in
+  let flowgraph, flowgraph_to_mir =
+    Monotone_framework.forward_flowgraph_of_stmt s
+  in
+  let (module Flowgraph) = flowgraph in
   let constants =
-    Monotone_framework.constant_propagation_mfp mir
+    Monotone_framework.constant_propagation_mfp
       (module Flowgraph)
       flowgraph_to_mir
   in
@@ -305,7 +323,14 @@ let constant_propagation (mir : stmt_loc_num prog)
           (Option.value ~default:Map.Poly.empty
              (Map.find_exn constants i).entry) )
   in
-  map_prog constant_fold_stmt mir
+  let s = constant_fold_stmt (Map.find_exn flowgraph_to_mir 1) in
+  let l = split_stmts s in
+  { mir with
+    functions_block= List.nth_exn l 0
+  ; prepare_data= List.nth_exn l 1
+  ; prepare_params= List.nth_exn l 2
+  ; log_prob= List.nth_exn l 3
+  ; generate_quantities= List.nth_exn l 4 }
 
 let _ = constant_propagation
 
@@ -1383,6 +1408,27 @@ let%expect_test "unroll nested loop with break" =
                     (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
                      ((sloc <opaque>) (stmt Break))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "constant propagation" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        int i = 42;
+        int j = 2;
+      }
+      model {
+        for (x in 1:i) {
+          print(i + j);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = constant_propagation mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect {||}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)

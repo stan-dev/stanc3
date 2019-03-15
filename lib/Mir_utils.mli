@@ -15,7 +15,7 @@ val expr_var_set : expr -> vexpr Set.Poly.t
    For use in RHS sets, not LHS assignment sets, except in a target term.
 *)
 
-val index_var_set : index -> vexpr Set.Poly.t
+val index_var_set : idx -> vexpr Set.Poly.t
 (**
    The set of variables in an index.
 

@@ -29,9 +29,7 @@ type operator =
   | Geq
 [@@deriving sexp, hash, compare]
 
-type transformation = expr Ast.transformation
-
-and index =
+type idx =
   | All
   | Single of expr
   (*
@@ -50,9 +48,10 @@ and expr =
   | FunApp of string * expr list
   | BinOp of expr * operator * expr
   | TernaryIf of expr * expr * expr
-  | Indexed of expr * index list
+  | Indexed of expr * idx list
 [@@deriving sexp, hash, map, compare]
 
+type transformation = expr Ast.transformation [@@deriving sexp]
 type adtype = Ast.autodifftype [@@deriving sexp, hash, map]
 type sizedtype = expr Ast.sizedtype [@@deriving sexp, hash, map]
 type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash, map]

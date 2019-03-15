@@ -337,7 +337,7 @@ let rec free_vars_expr (e : Mir.expr) =
   | Mir.Indexed (e, l) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
 
-and free_vars_idx (i : Mir.index) =
+and free_vars_idx (i : Mir.idx) =
   match i with
   | Mir.All -> Set.Poly.empty
   | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
@@ -431,7 +431,7 @@ let rec used_expressions_expr (e : Mir.expr) =
         Set.Poly.union_list
           (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
 
-and used_expressions_idx (i : Mir.index) =
+and used_expressions_idx (i : Mir.idx) =
   match i with
   | Mir.All -> Set.Poly.empty
   | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
@@ -684,23 +684,18 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
 
-let constant_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
+let constant_propagation_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let mir = Map.find_exn flowgraph_to_mir 1 in
   let domain =
     ( module struct
       type vals = string
 
       let total =
-        Set.Poly.union_list
-          (List.map
-             ~f:(fun x ->
-               declared_variables_stmt
-                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
-             (List.concat
-                [ mir.functions_block; mir.generate_quantities
-                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
+        declared_variables_stmt
+          (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt
     end
     : TOTALTYPE
       with type vals = string )

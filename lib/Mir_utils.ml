@@ -22,7 +22,7 @@ let rec expr_var_set (ex : expr) : vexpr Set.Poly.t =
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
 
-and index_var_set (ix : index) : vexpr Set.Poly.t =
+and index_var_set (ix : idx) : vexpr Set.Poly.t =
   match ix with
   | All -> Set.Poly.empty
   | Single expr -> expr_var_set expr
