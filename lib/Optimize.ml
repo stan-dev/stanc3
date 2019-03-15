@@ -29,7 +29,7 @@ let replace_fresh_local_vars s' =
     | x -> (x, m)
   in
   let s, m = fold_stmt_loc f Map.Poly.empty s' in
-  {stmt= Partial_evaluator.subst_stmt m s.stmt; sloc= s.sloc}
+  Partial_evaluator.subst_stmt m s
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
@@ -80,7 +80,7 @@ let rec inline_function_statement adt fim {stmt; sloc} =
             | Some (_, args, b) ->
                 let b = replace_fresh_local_vars b in
                 let b = handle_early_returns None b in
-                subst_args_stmt args es b )
+                (subst_args_stmt args es {stmt= b; sloc= ""}).stmt )
       | Check (f, l) ->
           let se_list = List.map ~f:(inline_function_expression adt fim) l in
           let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
@@ -160,7 +160,7 @@ and inline_function_expression adt fim e =
           ( s_list
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ; subst_args_stmt args es b ]
+              ; (subst_args_stmt args es {stmt= b; sloc= ""}).stmt ]
           , Var x ) )
   | BinOp (e1, op, e2) ->
       let sl1, e1 = inline_function_expression adt fim e1 in
@@ -260,7 +260,7 @@ let unroll_loops_statement =
           let stmts =
             List.map
               ~f:(fun i ->
-                {stmt= subst_args_stmt [loopvar_str] [i] body.stmt; sloc= ""}
+                subst_args_stmt [loopvar_str] [i] {stmt= body.stmt; sloc= ""}
                 )
               range
           in
@@ -289,7 +289,7 @@ let collapse_lists_statement =
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
-(*(* TODO: DRY up next three *)
+(* TODO: DRY up next three *)
 let constant_propagation (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -299,15 +299,17 @@ let constant_propagation (mir : stmt_loc_num prog)
       (module Flowgraph)
       flowgraph_to_mir
   in
-  (* TODO: fix this *)
-  let constant_fold_stmt s =
-    let s' = unnumbered_statement_of_numbered_statement s in
-    match (Map.find_exn constants s.num).Monotone_framework_sigs.entry with
-    | None -> s'
-    | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
+  let constant_fold_stmt =
+    map_stmt_loc_num flowgraph_to_mir (fun i ->
+        Partial_evaluator.subst_stmt_base
+          (Option.value ~default:Map.Poly.empty
+             (Map.find_exn constants i).entry) )
   in
   map_prog constant_fold_stmt mir
 
+let _ = constant_propagation
+
+(*
 let expression_propagation (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -489,9 +491,11 @@ let%expect_test "map_stmt_loc" =
   in
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
-  let f = function NRFunApp("print",[s]) -> NRFunApp("print",[s;s])
-  | x ->x in
-  let mir = map_prog (map_stmt_loc f) mir  in
+  let f = function
+    | NRFunApp ("print", [s]) -> NRFunApp ("print", [s; s])
+    | x -> x
+  in
+  let mir = map_prog (map_stmt_loc f) mir in
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
@@ -517,7 +521,7 @@ let%expect_test "map_stmt_loc" =
                         (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))))))
                    ())))))))
             ())))))
-       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |} ]
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "map_stmt_loc" =
   let ast =
@@ -536,9 +540,11 @@ let%expect_test "map_stmt_loc" =
   in
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
-  let f i = function NRFunApp("print",[s]) ->  (NRFunApp("print",[s;s]), i+1)
-  | x ->(x,i) in
-  let mir_num = (fold_stmt_loc f 0) {stmt= SList mir.log_prob;sloc=""}  in
+  let f i = function
+    | NRFunApp ("print", [s]) -> (NRFunApp ("print", [s; s]), i + 1)
+    | x -> (x, i)
+  in
+  let mir_num = (fold_stmt_loc f 0) {stmt= SList mir.log_prob; sloc= ""} in
   print_s [%sexp (mir_num : stmt_loc * int)] ;
   [%expect
     {|
@@ -564,7 +570,7 @@ let%expect_test "map_stmt_loc" =
                           (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))))))
                      ())))))))
               ())))))))
-       3) |} ]
+       3) |}]
 
 let%expect_test "inline functions" =
   let ast =

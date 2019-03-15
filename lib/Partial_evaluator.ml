@@ -22,24 +22,28 @@ and subst_idx m i =
   | Between (e1, e2) -> Between (subst_expr m e1, subst_expr m e2)
   | MultiIndex e -> MultiIndex (subst_expr m e)
 
-let rec subst_stmt m b =
+let subst_stmt_base m b =
   let f = subst_expr m in
-  let g {stmt; sloc} = {stmt= subst_stmt m stmt; sloc} in
   match b with
   | Assignment (e1, e2) -> Assignment (f e1, f e2)
   | TargetPE e -> TargetPE (f e)
   | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
   | Check (ccfunname, ccargs) -> Check (ccfunname, List.map ccargs ~f)
   | Return opt_e -> Return (Option.map opt_e ~f)
-  | IfElse (e, b1, b2) -> IfElse (f e, g b1, Option.map ~f:g b2)
-  | While (e, b) -> While (f e, g b)
+  | IfElse (e, b1, b2) -> IfElse (f e, b1, b2)
+  | While (e, b) -> While (f e, b)
   | For {loopvar; lower; upper; body} ->
-      For {loopvar; lower= f lower; upper= f upper; body= g body}
-  | Block sl -> Block (List.map ~f:g sl)
-  | SList sl -> SList (List.map ~f:g sl)
+      For {loopvar; lower= f lower; upper= f upper; body}
+  | Block sl -> Block sl
+  | SList sl -> SList sl
   | FunDef {fdrt; fdname; fdargs; fdbody} ->
-      FunDef {fdrt; fdname; fdargs; fdbody= g fdbody}
+      FunDef {fdrt; fdname; fdargs; fdbody}
   | x -> x
+
+let subst_stmt m = Mir.map_stmt_loc (subst_stmt_base m)
+
+(* TODO: parameterize statement also over expressions and then define the above with a
+   recursive map *)
 
 let apply_operator_int (op : operator) i1 i2 =
   Lit

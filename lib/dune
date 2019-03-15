@@ -2,7 +2,7 @@
   (name stanclib)
   (libraries core_kernel str menhirLib fmt)
   (inline_tests)
-  (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+  (preprocess (pps ppx_jane ppx_deriving.map)))
 
 (ocamllex lexer)
 
