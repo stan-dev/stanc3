@@ -41,12 +41,9 @@ module type INITIALTOTALTYPE = sig
   include TOTALTYPE with type vals := vals
 end
 
-(** The API for a complete (possibly non-distributive) lattice,
-    needed for the mfp algorithm in the monotone framework *)
-module type LATTICE = sig
+module type LATTICE_NO_BOT = sig
   type properties
 
-  val bottom : properties
   val leq : properties -> properties -> bool
 
   val initial : properties
@@ -55,6 +52,14 @@ module type LATTICE = sig
        (you assume to be true at the start of your analysis). *)
 
   val lub : properties -> properties -> properties
+end
+
+(** The API for a complete (possibly non-distributive) lattice,
+    needed for the mfp algorithm in the monotone framework *)
+module type LATTICE = sig
+  include LATTICE_NO_BOT
+
+  val bottom : properties
 end
 
 (** The API for a transfer function, needed for the mfp algorithm

@@ -1408,7 +1408,7 @@ let%expect_test "unroll nested loop with break" =
                     (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
                      ((sloc <opaque>) (stmt Break))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
-
+(*
 let%expect_test "constant propagation" =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -1428,7 +1428,7 @@ let%expect_test "constant propagation" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
-  [%expect {||}]
+  [%expect {||}] *)
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)

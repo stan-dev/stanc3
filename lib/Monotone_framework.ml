@@ -85,7 +85,7 @@ let dual_powerset_lattice (type v)
   : LATTICE
     with type properties = v Set.Poly.t )
 
-let new_bot (type p) (module L : LATTICE with type properties = p) =
+let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   ( module struct
     type properties = L.properties option
 
@@ -111,8 +111,6 @@ let dual_partial_function_lattice (type dv cv)
   ( module struct
     type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
-    let bottom = Errors.fatal_error ()
-
     let lub s1 s2 =
       let f ~key ~data = Map.find s2 key = Some data in
       Map.filteri ~f s1
@@ -126,7 +124,7 @@ let dual_partial_function_lattice (type dv cv)
 
     let initial = Map.Poly.empty
   end
-  : LATTICE
+  : LATTICE_NO_BOT
     with type properties = (dv, cv) Map.Poly.t )
 
 (* To use for constant propagation analysis *)
