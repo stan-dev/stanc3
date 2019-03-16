@@ -362,30 +362,31 @@ let expression_propagation (mir : stmt_loc prog) =
   let s = expression_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
   update_program_statement_blocks mir s
 
-(*
-let copy_propagation (mir : stmt_loc_num prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+let copy_propagation (mir : stmt_loc prog) =
+  let s = statement_of_program mir in
+  let flowgraph, flowgraph_to_mir =
+    Monotone_framework.forward_flowgraph_of_stmt s
+  in
+  let (module Flowgraph) = flowgraph in
   let copies =
     Monotone_framework.copy_propagation_mfp mir
       (module Flowgraph)
       flowgraph_to_mir
   in
-  (* TODO: fix this *)
-  let constant_fold_stmt s =
-    let s' = unnumbered_statement_of_numbered_statement s in
-    match (Map.find_exn copies s.num).Monotone_framework_sigs.entry with
-    | None -> s'
-    | Some m ->
-        { stmt=
-            Partial_evaluator.subst_stmt
-              (Map.Poly.map ~f:(fun s -> Var s) m)
-              s'.stmt
-        ; sloc= s'.sloc }
+  let copy_propagate_stmt =
+    map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
+        Partial_evaluator.subst_stmt_base
+          (Map.map
+             ~f:(fun s -> Var s)
+             (Option.value ~default:Map.Poly.empty
+                (Map.find_exn copies i).entry)) )
   in
-  map_prog constant_fold_stmt mir
+  let s = copy_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
+  update_program_statement_blocks mir s
 
+(* TODO: unify all of these propagation analyses under one umbrella *)
+
+(*
 let rec can_side_effect_expr (e : expr) =
   match e with
   | Var _ | Lit (_, _) -> false
@@ -1441,7 +1442,6 @@ let%expect_test "constant propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  (* TODO: make sure partial evaluation works! *)
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
@@ -1613,7 +1613,6 @@ let%expect_test "expression propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
-  (* TODO: make sure partial evaluation works! *)
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
@@ -1641,6 +1640,60 @@ let%expect_test "expression propagation" =
                   (stmt
                    (NRFunApp print
                     ((BinOp (Var i) Plus (BinOp (Lit Int 2) Plus (Var i)))))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "copy propagation" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        int i;
+        int j;
+        j = i;
+        int k;
+        k = 2 * j;
+      }
+      model {
+        for (x in 1:i) {
+          print(i + j + k);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = copy_propagation mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ())
+       (tdata_vars
+        ((i
+          ((tvident i) (tvtype SInt) (tvtrans Identity)
+           (tvloc "file string, line 3, columns 8-14")))
+         (j
+          ((tvident j) (tvtype SInt) (tvtrans Identity)
+           (tvloc "file string, line 4, columns 8-14")))
+         (k
+          ((tvident k) (tvtype SInt) (tvtrans Identity)
+           (tvloc "file string, line 6, columns 8-14")))))
+       (prepare_data
+        (((sloc <opaque>) (stmt (Assignment (Var j) (Var i))))
+         ((sloc <opaque>)
+          (stmt (Assignment (Var k) (BinOp (Lit Int 2) Times (Var i)))))))
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Var i))
+            (body
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    ((BinOp (BinOp (Var i) Plus (Var i)) Plus (Var k))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,

@@ -698,8 +698,6 @@ let constant_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
           ; Set.Poly.of_map_keys prog.tparams
           ; declared_variables_stmt
               (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
-
-      (* TODO: do something similar for other propagation analyses*)
     end
     : TOTALTYPE
       with type vals = string )
@@ -732,8 +730,6 @@ let expression_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
           ; Set.Poly.of_map_keys prog.tparams
           ; declared_variables_stmt
               (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
-
-      (* TODO: do something similar for other propagation analyses*)
     end
     : TOTALTYPE
       with type vals = string )
@@ -750,25 +746,24 @@ let expression_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
   in
   Mf.mfp ()
 
-(* TODO: dry up this definition and the previous *)
+(* TODO: dry up this definition and the previous and one after *)
 
-let copy_propagation_mfp (mir : Mir.stmt_loc_num Mir.prog)
+let copy_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+  let mir = Map.find_exn flowgraph_to_mir 1 in
   let domain =
     ( module struct
       type vals = string
 
       let total =
         Set.Poly.union_list
-          (List.map
-             ~f:(fun x ->
-               declared_variables_stmt
-                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
-             (List.concat
-                [ mir.functions_block; mir.generate_quantities
-                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
+          [ Set.Poly.of_map_keys prog.gen_quant_vars
+          ; Set.Poly.of_map_keys prog.tdata_vars
+          ; Set.Poly.of_map_keys prog.tparams
+          ; declared_variables_stmt
+              (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
     end
     : TOTALTYPE
       with type vals = string )
