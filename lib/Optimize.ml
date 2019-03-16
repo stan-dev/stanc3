@@ -290,29 +290,37 @@ let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
 (* TODO: DRY up next parts. They are ugly. *)
+let statement_of_program mir =
+  { stmt=
+      SList
+        [ {stmt= SList mir.functions_block; sloc= ""}
+        ; {stmt= SList mir.prepare_data; sloc= ""}
+        ; {stmt= SList mir.prepare_params; sloc= ""}
+        ; {stmt= Block mir.log_prob; sloc= ""}
+        ; {stmt= SList mir.generate_quantities; sloc= ""} ]
+  ; sloc= "" }
 
-let split_stmts s =
-  match s.stmt with
-  | SList l ->
-      List.map
-        ~f:(fun x ->
-          match x.stmt with
-          | SList l | Block l -> l
-          | _ -> Errors.fatal_error () )
-        l
-  | _ -> Errors.fatal_error ()
+let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
+  let l =
+    match s.stmt with
+    | SList l ->
+        List.map
+          ~f:(fun x ->
+            match x.stmt with
+            | SList l | Block l -> l
+            | _ -> Errors.fatal_error () )
+          l
+    | _ -> Errors.fatal_error ()
+  in
+  { mir with
+    functions_block= List.nth_exn l 0
+  ; prepare_data= List.nth_exn l 1
+  ; prepare_params= List.nth_exn l 2
+  ; log_prob= List.nth_exn l 3
+  ; generate_quantities= List.nth_exn l 4 }
 
 let constant_propagation (mir : stmt_loc prog) =
-  let s =
-    { stmt=
-        SList
-          [ {stmt= SList mir.functions_block; sloc= ""}
-          ; {stmt= SList mir.prepare_data; sloc= ""}
-          ; {stmt= SList mir.prepare_params; sloc= ""}
-          ; {stmt= Block mir.log_prob; sloc= ""}
-          ; {stmt= SList mir.generate_quantities; sloc= ""} ]
-    ; sloc= "" }
-  in
+  let s = statement_of_program mir in
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt s
   in
@@ -329,15 +337,9 @@ let constant_propagation (mir : stmt_loc prog) =
              (Map.find_exn constants i).entry) )
   in
   let s = constant_fold_stmt (Map.find_exn flowgraph_to_mir 1) in
-  let l = split_stmts s in
-  { mir with
-    functions_block= List.nth_exn l 0
-  ; prepare_data= List.nth_exn l 1
-  ; prepare_params= List.nth_exn l 2
-  ; log_prob= List.nth_exn l 3
-  ; generate_quantities= List.nth_exn l 4 }
+  update_program_statement_blocks mir s
 
-let _ = constant_propagation
+(* TODO: implement separate constant folding phase *)
 
 (*
 let expression_propagation (mir : stmt_loc_num prog)
@@ -1422,7 +1424,7 @@ let%expect_test "constant propagation" =
         int i;
         i = 42;
         int j;
-        j = 2;
+        j = 2 + i;
       }
       model {
         for (x in 1:i) {
@@ -1448,7 +1450,8 @@ let%expect_test "constant propagation" =
          (tvloc "file string, line 5, columns 8-14")))))
      (prepare_data
       (((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
-       ((sloc <opaque>) (stmt (Assignment (Var j) (Lit Int 2))))))
+       ((sloc <opaque>)
+        (stmt (Assignment (Var j) (BinOp (Lit Int 2) Plus (Lit Int 42)))))))
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
       (((sloc <opaque>)
@@ -1459,7 +1462,7 @@ let%expect_test "constant propagation" =
             (stmt
              (Block
               (((sloc <opaque>)
-                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 2))))))))))))))))
+                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 44))))))))))))))))
      (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "constant propagation, local scope" =
