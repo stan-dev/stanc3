@@ -20,3 +20,6 @@ val pretty_print_all_operator_signatures : string -> string
 
 (* XXX Hacked for prefix *)
 val pretty_print_all_operator_signatures_prefix : string -> string
+
+(* The name of the TernaryIf operator *)
+val ternary_if : string

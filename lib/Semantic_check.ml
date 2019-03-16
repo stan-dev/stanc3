@@ -440,7 +440,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let ue1 = semantic_check_expression cf e1 in
       let ue2 = semantic_check_expression cf e2 in
       let ue3 = semantic_check_expression cf e3 in
-      match operator_return_type_from_string "TernaryIf" [ue1; ue2; ue3] with
+      match operator_return_type_from_string ternary_if [ue1; ue2; ue3] with
       | Some (ReturnType ut) ->
           { expr_typed= TernaryIf (ue1, ue2, ue3)
           ; expr_typed_ad_level= lub_ad_e [ue1; ue2; ue3]
@@ -450,7 +450,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
-            ^ pretty_print_all_operator_signatures "TernaryIf"
+            ^ pretty_print_all_operator_signatures ternary_if
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ ", "
