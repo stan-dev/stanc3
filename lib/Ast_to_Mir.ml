@@ -3,26 +3,46 @@
 open Core_kernel
 open Mir
 
-let op_to_funapp op args = FunApp (Operators.operator_name op, args)
+(* XXX fix exn *)
+let unwrap_return_exn = function
+  | Some (Ast.ReturnType ut) -> ut
+  | x ->
+      raise_s [%message "Unexpected return type " (x : Ast.returntype option)]
 
-let rec trans_expr {Ast.expr_typed; _} =
+let rec op_to_funapp op args =
+  { texpr= FunApp (Operators.operator_name op, trans_exprs args)
+  ; texpr_type= Operators.operator_return_type op args |> unwrap_return_exn
+  ; texpr_loc= Ast.expr_loc_lub args
+  ; texpr_adlevel= Ast.expr_ad_lub args }
+
+and trans_expr
+    { Ast.expr_typed
+    ; expr_typed_type= texpr_type
+    ; expr_typed_loc= texpr_loc
+    ; expr_typed_ad_level= texpr_adlevel } =
   match expr_typed with
-  | Ast.TernaryIf (cond, ifb, elseb) ->
-      TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
-  | Ast.BinOp (lhs, op, rhs) -> op_to_funapp op [trans_expr lhs; trans_expr rhs]
-  | Ast.PrefixOp (op, e) | Ast.PostfixOp (e, op) ->
-      op_to_funapp op [trans_expr e]
-  | Ast.Variable {name; _} -> Var name
-  | Ast.IntNumeral x -> Lit (Int, x)
-  | Ast.RealNumeral x -> Lit (Real, x)
-  | Ast.FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
-      FunApp (name, trans_exprs args)
-  | Ast.GetLP | Ast.GetTarget -> Var "target"
-  | Ast.ArrayExpr eles -> FunApp ("make_array", trans_exprs eles)
-  | Ast.RowVectorExpr eles -> FunApp ("make_rowvec", trans_exprs eles)
   | Ast.Paren x -> trans_expr x
-  | Ast.Indexed (lhs, indices) ->
-      Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
+  | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
+  | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
+  | _ ->
+      let texpr =
+        match expr_typed with
+        | Ast.TernaryIf (cond, ifb, elseb) ->
+            TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
+        | Variable {name; _} -> Var name
+        | IntNumeral x -> Lit (Int, x)
+        | RealNumeral x -> Lit (Real, x)
+        | FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
+            FunApp (name, trans_exprs args)
+        | GetLP | GetTarget -> Var "target"
+        | ArrayExpr eles -> FunApp ("make_array", trans_exprs eles)
+        | RowVectorExpr eles -> FunApp ("make_rowvec", trans_exprs eles)
+        | Indexed (lhs, indices) ->
+            Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
+        | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
+            raise_s [%message "Impossible!"]
+      in
+      {texpr; texpr_type; texpr_loc; texpr_adlevel}
 
 and trans_idx = function
   | Ast.All -> All
@@ -41,7 +61,12 @@ and trans_idx = function
 and trans_exprs = List.map ~f:trans_expr
 
 let trans_sizedtype = Ast.map_sizedtype trans_expr
-let neg_inf = FunApp ("negative_infinity", [])
+
+let neg_inf =
+  { texpr_type= UReal
+  ; texpr_loc= no_span
+  ; texpr= FunApp ("negative_infinity", [])
+  ; texpr_adlevel= Ast.DataOnly }
 
 let lbind s =
   match s.stmt with SList ls | Block ls -> ls | Skip -> [] | _ -> [s]
@@ -49,19 +74,17 @@ let lbind s =
 let add_to_or_create_block source target =
   {target with stmt= Block ({target with stmt= source} :: lbind target)}
 
-let trans_loc = Errors.string_of_location_span
-let bind_loc loc s = {stmt= s; sloc= trans_loc loc}
 let trans_trans = Ast.map_transformation trans_expr
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
-  let add_inf = TargetPE neg_inf in
   let trunc cond_op x y =
-    bind_loc x.Ast.expr_typed_loc
-      (IfElse
-         ( op_to_funapp cond_op (trans_exprs [ast_obs; x])
-         , bind_loc x.expr_typed_loc add_inf
-         , y ))
+    let sloc = x.Ast.expr_typed_loc in
+    { sloc
+    ; stmt=
+        IfElse
+          (op_to_funapp cond_op [ast_obs; x], {sloc; stmt= TargetPE neg_inf}, y)
+    }
   in
   match t with
   | Ast.NoTruncate -> []
@@ -75,30 +98,43 @@ let unquote s =
     String.drop_suffix (String.drop_prefix s 1) 1
   else s
 
-let trans_printable (p : Ast.typed_expression Ast.printable) =
-  match p with
-  | Ast.PString s -> Lit (Str, unquote s)
-  | Ast.PExpr e -> trans_expr e
+let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
+  List.map
+    ~f:(function
+      | Ast.PString s ->
+          { texpr_adlevel= Ast.DataOnly
+          ; texpr= Lit (Str, unquote s)
+          ; texpr_loc
+          ; texpr_type= UReal }
+          (*XXX hack strings aren't real*)
+      | Ast.PExpr e -> trans_expr e)
+    ps
 
-let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
+let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
+  let texpr_loc = sloc in
   let or_skip = Option.value ~default:Skip in
-  let s =
+  let stmt =
     match stmt_typed with
     | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
       ->
-        let assignee = Var assign_identifier.name in
+        let wrap_expr expr_typed =
+          { Ast.expr_typed_loc= sloc
+          ; expr_typed_ad_level= assign_rhs.expr_typed_ad_level
+          ; expr_typed_type= assign_rhs.expr_typed_type
+          ; expr_typed }
+        in
+        let assignee = wrap_expr @@ Ast.Variable assign_identifier in
         let assignee =
           match assign_indices with
           | [] -> assignee
-          | lst -> Indexed (assignee, List.map ~f:trans_idx lst)
+          | lst -> wrap_expr @@ Ast.Indexed (assignee, lst)
         in
-        let rhs = trans_expr assign_rhs in
         let rhs =
           match assign_op with
           | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-          | Ast.OperatorAssign op -> op_to_funapp op [assignee; rhs]
+          | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
         in
-        Assignment (assignee, rhs)
+        Assignment (trans_expr assignee, rhs)
     | Ast.NRFunApp ({name; _}, args) -> NRFunApp (name, trans_exprs args)
     | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e)
     | Ast.Tilde {arg; distribution; args; truncation} ->
@@ -106,33 +142,44 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           (* XXX distribution name suffix? *)
           (* XXX Reminder to differentiate between tilde, which drops constants, and
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
-          TargetPE (FunApp (distribution.name, trans_exprs (arg :: args)))
+          TargetPE
+            { texpr= FunApp (distribution.name, trans_exprs (arg :: args))
+            ; texpr_loc
+            ; texpr_adlevel= Ast.expr_ad_lub (arg :: args)
+            ; texpr_type= UReal }
         in
-        SList
-          (truncate_dist arg truncation @ [bind_loc stmt_typed_loc add_dist])
-    | Ast.Print ps -> NRFunApp ("print", List.map ~f:trans_printable ps)
-    | Ast.Reject ps -> NRFunApp ("reject", List.map ~f:trans_printable ps)
+        SList (truncate_dist arg truncation @ [{sloc; stmt= add_dist}])
+    | Ast.Print ps -> NRFunApp ("print", trans_printables sloc ps)
+    | Ast.Reject ps -> NRFunApp ("reject", trans_printables sloc ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
         IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
     | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
     | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
-          { loopvar= Var loop_variable.Ast.name
+          { loopvar=
+              { texpr= Var loop_variable.Ast.name
+              ; texpr_loc
+              ; texpr_type= UInt
+              ; texpr_adlevel= DataOnly }
           ; lower= trans_expr lower_bound
           ; upper= trans_expr upper_bound
           ; body= trans_stmt loop_body }
     | Ast.ForEach (loopvar, iteratee, body) ->
+        let wrap texpr =
+          {texpr; texpr_loc; texpr_type= UInt; texpr_adlevel= DataOnly}
+        in
         let iteratee = trans_expr iteratee
-        and indexing_var = Var (Util.gensym ())
+        and indexing_var = wrap (Var (Util.gensym ()))
         and body = trans_stmt body in
         let assign_loopvar =
           Assignment
-            (Var loopvar.name, Indexed (iteratee, [Single indexing_var]))
+            ( Var loopvar.name |> wrap
+            , Indexed (iteratee, [Single indexing_var]) |> wrap )
         in
         For
           { loopvar= indexing_var
-          ; lower= Lit (Int, "0")
-          ; upper= FunApp ("length", [iteratee])
+          ; lower= wrap @@ Lit (Int, "0")
+          ; upper= wrap @@ FunApp ("length", [iteratee])
           ; body= add_to_or_create_block assign_loopvar body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef
@@ -149,18 +196,20 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
           in other passes over this AST.*)
         ignore (transformation, is_global) ;
         let name = identifier.name in
+        let assign rhs =
+          let rhs = trans_expr rhs in
+          Assignment ({rhs with texpr= Var name}, rhs)
+        in
         SList
-          (List.map ~f:(bind_loc stmt_typed_loc)
+          (List.map
+             ~f:(fun stmt -> {sloc; stmt})
              [ Decl
                  { decl_adtype=
                      AutoDiffable
                      (* XXX Shouldn't be autodiffable in tdata or gen quant *)
                  ; decl_id= name
                  ; decl_type= Ast.remove_size (trans_sizedtype sizedtype) }
-             ; Option.map
-                 ~f:(fun x -> Assignment (Var name, trans_expr x))
-                 initial_value
-               |> or_skip ])
+             ; Option.map ~f:assign initial_value |> or_skip ])
     | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
     | Ast.Return e -> Return (Some (trans_expr e))
     | Ast.ReturnVoid -> Return None
@@ -168,15 +217,23 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc; _} =
     | Ast.Continue -> Continue
     | Ast.Skip -> Skip
   in
-  bind_loc stmt_typed_loc s
+  {sloc; stmt}
 
 (** [add_index expression index] returns an expression that (additionally)
     indexes into the input [expression] by [index].*)
-let add_index e i =
-  match e with
-  | Var _ -> Indexed (e, [i])
-  | Indexed (e, indices) -> Indexed (e, indices @ [i])
-  | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+let add_int_index e i =
+  let mir_i = trans_idx i in
+  let texpr =
+    match e.texpr with
+    | Var _ -> Indexed (e, [mir_i])
+    | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
+    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+  in
+  let texpr_type =
+    Semantic_check.inferred_unsizedtype_of_indexed e.texpr_loc e.texpr_type
+      [(i, UInt)]
+  in
+  {e with texpr; texpr_type}
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
@@ -185,18 +242,28 @@ let mkfor ut bodyfn iteratee sloc =
     match ut with
     (*  | Ast.UMatrix -> MatrixSingle (Var s)
 *)
-    | Ast.UVector | URowVector | UMatrix | UArray _ -> Single (Var s)
+    | Ast.UVector | URowVector | UMatrix | UArray _ ->
+        let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
+        Ast.Single
+          { Ast.expr_typed_loc= sloc
+          ; expr_typed
+          ; expr_typed_ad_level= DataOnly
+          ; expr_typed_type= UInt }
     | _ ->
         raise_s
           [%message "Why are we making for loops around" (ut : unsizedtype)]
   in
   let sym, reset = Util.gensym_enter () in
+  let loopvar =
+    {texpr= Var sym; texpr_loc= sloc; texpr_type= UInt; texpr_adlevel= DataOnly}
+  in
   let stmt =
     For
-      { loopvar= Var sym
-      ; lower= Lit (Int, "0")
-      ; upper= FunApp ("length", [iteratee])
-      ; body= {stmt= Block [bodyfn (add_index iteratee (idx sym))]; sloc} }
+      { loopvar
+      ; lower= {loopvar with texpr= Lit (Int, "0")}
+      ; upper= {loopvar with texpr= FunApp ("length", [iteratee])}
+      ; body= {stmt= Block [bodyfn (add_int_index iteratee (idx sym))]; sloc}
+      }
   in
   reset () ; {stmt; sloc}
 
@@ -225,7 +292,11 @@ let rec trans_checks tvd =
     forl
       (Ast.remove_size tvd.tvtype)
       (fun id -> {stmt= Check (fn, id :: args); sloc= tvd.tvloc})
-      (Var tvd.tvident) tvd.tvloc
+      { texpr= Var tvd.tvident
+      ; texpr_type= Ast.remove_size tvd.tvtype
+      ; texpr_loc= tvd.tvloc
+      ; texpr_adlevel= DataOnly }
+      tvd.tvloc
   in
   match tvd.tvtrans with
   | Ast.Identity -> []
@@ -244,7 +315,7 @@ let rec trans_checks tvd =
   | Ast.Covariance -> [chk for_eigen "cov_matrix" []]
   | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
 
-let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
+let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc= tvloc; _} =
   match stmt_typed with
   | Ast.VarDecl
       {sizedtype; transformation; identifier; initial_value; is_global} ->
@@ -253,7 +324,7 @@ let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc; _} =
         { tvident= identifier.name
         ; tvtype= trans_sizedtype sizedtype
         ; tvtrans= trans_trans transformation
-        ; tvloc= trans_loc stmt_typed_loc }
+        ; tvloc }
   | _ -> None
 
 let mktvtable lst =

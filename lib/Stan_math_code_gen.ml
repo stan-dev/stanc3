@@ -20,7 +20,13 @@ open Core_kernel
 open Mir
 open Fmt
 
-let zero = Lit (Int, "0")
+let internal_expr =
+  { texpr= Var "UHOH"
+  ; texpr_loc= no_span
+  ; texpr_type= UReal
+  ; texpr_adlevel= DataOnly }
+
+let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
 let rec pp_unsizedtype scalar_type ppf = function
   | Ast.UInt | UReal -> string ppf scalar_type
@@ -41,8 +47,8 @@ let pp_call ppf (name, pp_arg, args) =
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 
-let rec pp_expr ppf s =
-  match s with
+let rec pp_expr ppf {texpr; _} =
+  match texpr with
   | Var s -> string ppf s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> string ppf s
@@ -68,17 +74,6 @@ and pp_indices ppf = function
   | hd :: tail ->
       pf ppf "stan::model::cons_list(%a,@ %a)" pp_index hd pp_indices tail
 
-let%expect_test "multi index" =
-  Indexed (Var "vec", [MultiIndex (Var "intarr1"); MultiIndex (Var "intarr2")])
-  |> strf "%a" pp_expr |> print_endline ;
-  [%expect
-    {|
-    stan::model::rvalue(vec,
-                        stan::model::cons_list(stan::model::index_multi(intarr1),
-                        stan::model::cons_list(stan::model::index_multi(intarr2),
-                        stan::model::nil_index_list())),
-    "vec") |}]
-
 let rec stantype_prim_str = function
   | Ast.UInt -> "int"
   | UArray t -> stantype_prim_str t
@@ -98,7 +93,12 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
    the entire function is premised on a bad level of abstraction.
 *)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
-  let size = FunApp (name ^ ".size", []) in
+  let size =
+    { texpr= FunApp (name ^ ".size", [])
+    ; texpr_loc= no_span
+    ; texpr_type= UInt
+    ; texpr_adlevel= DataOnly }
+  in
   let loopvar = sprintf "i_%d__" d in
   let loop_0_to_size per_ele new_vident =
     pp_for_loop ppf (loopvar, zero, size, per_ele, new_vident)
@@ -132,7 +132,7 @@ let%expect_test "with idx" =
   [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
 let pp_decl ppf (vident, st) = pf ppf "%a %s;" pp_prim_stantype st vident
-let with_no_loc stmt = {stmt; sloc= ""}
+let with_no_loc stmt = {stmt; sloc= no_span}
 
 let pp_located_msg ppf msg =
   pf ppf
@@ -163,7 +163,8 @@ let pp_returntype ppf arg_types rt =
   in
   pf ppf "%a@ " (option ~none:(const string "void") (pp_unsizedtype scalar)) rt
 
-let pp_location = fmt "current_statement__ = %S;@;"
+let pp_location ppf loc =
+  pf ppf "current_statement__ = %S;@;" (Errors.string_of_location_span loc)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
@@ -175,7 +176,9 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
   pp_block ppf (pp_located_msg, err_msg)
 
 let trans_math_fn fname =
-  match fname with "print" -> ("stan_print", [Var "pstream__"]) | x -> (x, [])
+  match fname with
+  | "print" -> ("stan_print", [{internal_expr with texpr= Var "pstream__"}])
+  | x -> (x, [])
 
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
@@ -192,7 +195,8 @@ let rec pp_statement ppf {stmt; sloc} =
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
   | Check (fname, args) ->
-      pp_statement ppf {stmt= NRFunApp (fname, Var "function__" :: args); sloc}
+      let args = {internal_expr with texpr= Var "function__"} :: args in
+      pp_statement ppf {stmt= NRFunApp (fname, args); sloc}
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
@@ -253,83 +257,20 @@ let rec pp_statement ppf {stmt; sloc} =
           pf ppf "@ " )
 
 let%expect_test "location propagates" =
-  {sloc= "hi"; stmt= Block [{stmt= NRFunApp ("print", []); sloc= "lo"}]}
+  let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
+  let loc2 = {no_span with begin_loc= {no_loc with filename= "LO"}} in
+  {sloc= loc1; stmt= Block [{stmt= NRFunApp ("print", []); sloc= loc2}]}
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
     {|
     {
-      current_statement__ = "lo";
+      current_statement__ = "file LO, line 0, column 0 to file , line 0, column 0";
       stan_print(pstream__);
     } |}]
 
-let%expect_test "if" =
-  with_no_loc
-    (IfElse
-       ( Var "true"
-       , with_no_loc (NRFunApp ("print", [Var "x"]))
-       , Some
-           (with_no_loc (Block [with_no_loc (NRFunApp ("print", [Var "y"]))]))
-       ))
-  |> strf "@[<v>%a@]" pp_statement
-  |> print_endline ;
-  [%expect
-    {|
-    current_statement__ = "";
-    if (true) {
-      current_statement__ = "";
-      stan_print(pstream__, x);
-    } else {
-      current_statement__ = "";
-      stan_print(pstream__, y);
-    } |}]
-
-let%expect_test "decl" =
-  Decl {decl_adtype= AutoDiffable; decl_id= "i"; decl_type= UInt}
-  |> with_no_loc |> strf "%a" pp_statement |> print_endline ;
-  [%expect {|
-    current_statement__ = "";
-    int i; |}]
-
 let version = "// Code generated by Stan version 2.18.0"
 let includes = "#include <stan/model/model_header.hpp>"
-
-let%expect_test "udf" =
-  FunDef
-    { fdrt= None
-    ; fdname= "sars"
-    ; fdargs=
-        [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
-    ; fdbody=
-        Return (Some (FunApp ("add", [Var "x"; Lit (Int, "1")])))
-        |> with_no_loc |> List.return |> Block |> with_no_loc }
-  |> with_no_loc
-  |> strf "@[<v>%a" pp_statement
-  |> print_endline ;
-  [%expect
-    {|
-    template <typename T0__, typename T1__>
-    void
-    sars(const Eigen::Matrix<double, -1, -1>& x,
-         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
-      typedef typename boost::math::tools::promote_args<T0__,
-              T1__>::type local_scalar_t__;
-      typedef local_scalar_t__ fun_return_scalar_t__;
-      const static bool propto__ = true;
-      (void) propto__;
-      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      (void) DUMMY_VAR__;  // suppress unused var warning
-
-      try {
-        current_statement__ = "";
-        return add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(
-              std::runtime_error(std::string("inside UDF sars") + ": " + e.what(), current_statement__));
-          // Next line prevents compiler griping about no return
-          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
-      }
-    } |}]
 
 let rec basetype = function
   | Ast.UInt -> "int"
@@ -384,11 +325,12 @@ let pp_read_data ppf (decl_id, st, loc) =
   pf ppf "@;"
 
 let%expect_test "read int[N] y" =
-  strf "@[<v>%a@]" pp_read_data ("y", Ast.SArray (Ast.SInt, Var "N"), "")
+  strf "@[<v>%a@]" pp_read_data
+    ("y", Ast.SArray (Ast.SInt, {internal_expr with texpr= Var "N"}), no_span)
   |> print_endline ;
   [%expect
     {|
-    current_statement__ = "";
+    current_statement__ = "file , line 0, column 0";
     vals_i__ = context__.vals_i__("y");
     y = std::vector<int>(N, 0);
     for (size_t i_0__ = 0; i_0__ < y.size(); i_0__++) y[i_0__] = vals_i__; |}]
@@ -451,8 +393,9 @@ let rec get_dims = function
   | Ast.SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
+  let v s = {internal_expr with texpr= Var s} in
   strf "@[%a@]" (list ~sep:comma pp_expr)
-    (get_dims (Ast.SArray (Ast.SMatrix (Var "x", Var "y"), Var "z")))
+    (get_dims (Ast.SArray (Ast.SMatrix (v "x", v "y"), v "z")))
   |> print_endline ;
   [%expect {| z, x, y |}]
 
@@ -536,11 +479,11 @@ let pp_log_prob ppf p =
   (* XXX Eventually we can create a separate prepare_params method? *)
   pp_located_error ppf
     ( pp_statement
-    , {stmt= Block p.prepare_params; sloc= ""}
+    , {stmt= Block p.prepare_params; sloc= no_span}
     , "inside prepare_params" ) ;
   pf ppf "//Transformed parameters@,%a@," pp_transformed_params p.tparams ;
   pp_located_error ppf
-    (pp_statement, {stmt= Block p.log_prob; sloc= ""}, "inside log_prob") ;
+    (pp_statement, {stmt= Block p.log_prob; sloc= no_span}, "inside log_prob") ;
   pf ppf "@]@,}@,"
 
 let pp_model_public ppf p =
@@ -573,9 +516,48 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
-let pp_prog ppf (p : stmt_loc prog) =
+let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals
     (list ~sep:cut pp_statement)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
+
+let%expect_test "udf" =
+  let w e = {internal_expr with texpr= e} in
+  FunDef
+    { fdrt= None
+    ; fdname= "sars"
+    ; fdargs=
+        [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
+    ; fdbody=
+        Return
+          (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+        |> with_no_loc |> List.return |> Block |> with_no_loc }
+  |> with_no_loc
+  |> strf "@[<v>%a" pp_statement
+  |> print_endline ;
+  [%expect
+    {|
+    template <typename T0__, typename T1__>
+    void
+    sars(const Eigen::Matrix<double, -1, -1>& x,
+         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
+      typedef typename boost::math::tools::promote_args<T0__,
+              T1__>::type local_scalar_t__;
+      typedef local_scalar_t__ fun_return_scalar_t__;
+      const static bool propto__ = true;
+      (void) propto__;
+      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+      (void) DUMMY_VAR__;  // suppress unused var warning
+
+      try {
+        current_statement__ = "file , line 0, column 0";
+        return add(x, 1);
+      } catch (const std::exception& e) {
+        stan::lang::rethrow_located(
+              std::runtime_error(std::string("inside UDF sars") + ": " + e.what(), current_statement__));
+          // Next line prevents compiler griping about no return
+          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+      }
+    } |}]

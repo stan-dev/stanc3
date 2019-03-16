@@ -396,6 +396,44 @@ and semantic_check_expression_of_int_type cf e name =
   in
   ue
 
+and inferred_unsizedtype_of_indexed loc ut typed_indexl =
+  let recurse = inferred_unsizedtype_of_indexed loc in
+  match (ut, typed_indexl) with
+  (* Here, we need some special logic to deal with row and column vectors
+     properly. *)
+  | UMatrix, [(All, _); (Single _, UInt)]
+   |UMatrix, [(Upfrom _, _); (Single _, UInt)]
+   |UMatrix, [(Downfrom _, _); (Single _, UInt)]
+   |UMatrix, [(Between _, _); (Single _, UInt)]
+   |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
+      UVector
+  | ut, [] -> ut
+  | ut, typed_index :: typed_indices -> (
+      let reduce_type =
+        match typed_index with Single _, UInt -> true | _ -> false
+      in
+      match ut with
+      | UArray ut' ->
+          if reduce_type then recurse ut' typed_indices
+            (* TODO: this can easily be made tail recursive if needs be *)
+          else UArray (recurse ut' typed_indices)
+      | UVector ->
+          if reduce_type then recurse UReal typed_indices
+          else recurse UVector typed_indices
+      | URowVector ->
+          if reduce_type then recurse UReal typed_indices
+          else recurse URowVector typed_indices
+      | UMatrix ->
+          if reduce_type then recurse URowVector typed_indices
+          else recurse UMatrix typed_indices
+      (* Check that expressions take valid number of indices (based on their matrix/array dimensions) *)
+      | _ ->
+          semantic_error ~loc
+            ( "Only expressions of array, matrix, row_vector and vector type \
+               may be indexed. Instead, found type "
+            ^ pretty_print_unsizedtype ut
+            ^ "." ) )
+
 and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
   | TernaryIf (e1, e2, e3) -> (
@@ -819,50 +857,10 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                        [at; ue1.expr_typed_ad_level; ue2.expr_typed_ad_level])
                uindices )
       in
-      let rec inferred_unsizedtype_of_indexed ut typed_indexl =
-        match (ut, typed_indexl) with
-        (* Here, we need some special logic to deal with row and column vectors
-           properly. *)
-        | UMatrix, [(All, _); (Single _, UInt)]
-         |UMatrix, [(Upfrom _, _); (Single _, UInt)]
-         |UMatrix, [(Downfrom _, _); (Single _, UInt)]
-         |UMatrix, [(Between _, _); (Single _, UInt)]
-         |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-            UVector
-        | ut, [] -> ut
-        | ut, typed_index :: typed_indices -> (
-            let reduce_type =
-              match typed_index with Single _, UInt -> true | _ -> false
-            in
-            match ut with
-            | UArray ut' ->
-                if reduce_type then
-                  inferred_unsizedtype_of_indexed ut' typed_indices
-                  (* TODO: this can easily be made tail recursive if needs be *)
-                else UArray (inferred_unsizedtype_of_indexed ut' typed_indices)
-            | UVector ->
-                if reduce_type then
-                  inferred_unsizedtype_of_indexed UReal typed_indices
-                else inferred_unsizedtype_of_indexed UVector typed_indices
-            | URowVector ->
-                if reduce_type then
-                  inferred_unsizedtype_of_indexed UReal typed_indices
-                else inferred_unsizedtype_of_indexed URowVector typed_indices
-            | UMatrix ->
-                if reduce_type then
-                  inferred_unsizedtype_of_indexed URowVector typed_indices
-                else inferred_unsizedtype_of_indexed UMatrix typed_indices
-            (* Check that expressions take valid number of indices (based on their matrix/array dimensions) *)
-            | _ ->
-                semantic_error ~loc
-                  ( "Only expressions of array, matrix, row_vector and vector \
-                     type may be indexed. Instead, found type "
-                  ^ pretty_print_unsizedtype ut
-                  ^ "." ) )
-      in
       let at = inferred_ad_type_of_indexed ue.expr_typed_ad_level uindices
       and ut =
-        inferred_unsizedtype_of_indexed ue.expr_typed_type uindices_with_types
+        inferred_unsizedtype_of_indexed loc ue.expr_typed_type
+          uindices_with_types
       in
       { expr_typed= Indexed (ue, uindices)
       ; expr_typed_ad_level= at
