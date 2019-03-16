@@ -330,37 +330,39 @@ let constant_propagation (mir : stmt_loc prog) =
       (module Flowgraph)
       flowgraph_to_mir
   in
-  let constant_fold_stmt =
+  let constant_propagate_stmt =
     map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
         Partial_evaluator.subst_stmt_base
           (Option.value ~default:Map.Poly.empty
              (Map.find_exn constants i).entry) )
   in
-  let s = constant_fold_stmt (Map.find_exn flowgraph_to_mir 1) in
+  let s = constant_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
   update_program_statement_blocks mir s
 
 (* TODO: implement separate constant folding phase;
    this will be very clean once we have a recursive map over expressions *)
 
-(*
-let expression_propagation (mir : stmt_loc_num prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+let expression_propagation (mir : stmt_loc prog) =
+  let s = statement_of_program mir in
+  let flowgraph, flowgraph_to_mir =
+    Monotone_framework.forward_flowgraph_of_stmt s
+  in
+  let (module Flowgraph) = flowgraph in
   let expressions =
     Monotone_framework.expression_propagation_mfp mir
       (module Flowgraph)
       flowgraph_to_mir
   in
-  (* TODO: fix this *)
-  let constant_fold_stmt s =
-    let s' = unnumbered_statement_of_numbered_statement s in
-    match (Map.find_exn expressions s.num).Monotone_framework_sigs.entry with
-    | None -> s'
-    | Some m -> {stmt= Partial_evaluator.subst_stmt m s'.stmt; sloc= s'.sloc}
+  let expression_propagate_stmt =
+    map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
+        Partial_evaluator.subst_stmt_base
+          (Option.value ~default:Map.Poly.empty
+             (Map.find_exn expressions i).entry) )
   in
-  map_prog constant_fold_stmt mir
+  let s = expression_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
+  update_program_statement_blocks mir s
 
+(*
 let copy_propagation (mir : stmt_loc_num prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
@@ -1591,6 +1593,55 @@ let%expect_test "constant propagation, model block local scope" =
               (((sloc <opaque>)
                 (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 2))))))))))))))))
      (prog_name "") (prog_path "")) |}]
+
+let%expect_test "expression propagation" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        int i;
+        int j;
+        j = 2 + i;
+      }
+      model {
+        for (x in 1:i) {
+          print(i + j);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = expression_propagation mir in
+  (* TODO: make sure partial evaluation works! *)
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ())
+       (tdata_vars
+        ((i
+          ((tvident i) (tvtype SInt) (tvtrans Identity)
+           (tvloc "file string, line 3, columns 8-14")))
+         (j
+          ((tvident j) (tvtype SInt) (tvtrans Identity)
+           (tvloc "file string, line 4, columns 8-14")))))
+       (prepare_data
+        (((sloc <opaque>)
+          (stmt (Assignment (Var j) (BinOp (Lit Int 2) Plus (Var i)))))))
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Var i))
+            (body
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    ((BinOp (Var i) Plus (BinOp (Lit Int 2) Plus (Var i)))))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
