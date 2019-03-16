@@ -28,7 +28,7 @@ let replace_fresh_local_vars s' =
         , Map.Poly.set m ~key:decl_id ~data:(Var fresh_name) )
     | x -> (x, m)
   in
-  let s, m = fold_stmt_loc f Map.Poly.empty s' in
+  let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
   Partial_evaluator.subst_stmt m s
 
 let subst_args_stmt args es =
@@ -51,7 +51,7 @@ let handle_early_returns opt_var b =
     { loopvar= Var (Util.gensym ())
     ; lower= Lit (Int, "1")
     ; upper= Lit (Int, "1")
-    ; body= map_stmt_loc f b }
+    ; body= map_rec_stmt_loc f b }
 
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
 let slist_no_loc l = SList (map_no_loc l)
@@ -268,7 +268,7 @@ let unroll_loops_statement =
       | _ -> stmt )
     | _ -> stmt
   in
-  map_stmt_loc f
+  map_rec_stmt_loc f
 
 let loop_unrolling = map_prog unroll_loops_statement
 
@@ -284,7 +284,7 @@ let collapse_lists_statement =
     | SList l -> SList (collapse_lists l)
     | x -> x
   in
-  map_stmt_loc f
+  map_rec_stmt_loc f
 
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
@@ -331,7 +331,7 @@ let constant_propagation (mir : stmt_loc prog) =
       flowgraph_to_mir
   in
   let constant_fold_stmt =
-    map_stmt_loc_num flowgraph_to_mir (fun i ->
+    map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
         Partial_evaluator.subst_stmt_base
           (Option.value ~default:Map.Poly.empty
              (Map.find_exn constants i).entry) )
@@ -339,7 +339,8 @@ let constant_propagation (mir : stmt_loc prog) =
   let s = constant_fold_stmt (Map.find_exn flowgraph_to_mir 1) in
   update_program_statement_blocks mir s
 
-(* TODO: implement separate constant folding phase *)
+(* TODO: implement separate constant folding phase;
+   this will be very clean once we have a recursive map over expressions *)
 
 (*
 let expression_propagation (mir : stmt_loc_num prog)
@@ -506,7 +507,7 @@ let _ =
   , expression_propagation
   , copy_propagation
   , dead_code_elimination ))*)
-let%expect_test "map_stmt_loc" =
+let%expect_test "map_rec_stmt_loc" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -527,7 +528,7 @@ let%expect_test "map_stmt_loc" =
     | NRFunApp ("print", [s]) -> NRFunApp ("print", [s; s])
     | x -> x
   in
-  let mir = map_prog (map_stmt_loc f) mir in
+  let mir = map_prog (map_rec_stmt_loc f) mir in
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
     {|
@@ -555,7 +556,7 @@ let%expect_test "map_stmt_loc" =
             ())))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
-let%expect_test "map_stmt_loc" =
+let%expect_test "map_rec_stmt_loc" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -576,7 +577,9 @@ let%expect_test "map_stmt_loc" =
     | NRFunApp ("print", [s]) -> (NRFunApp ("print", [s; s]), i + 1)
     | x -> (x, i)
   in
-  let mir_num = (fold_stmt_loc f 0) {stmt= SList mir.log_prob; sloc= ""} in
+  let mir_num =
+    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; sloc= ""}
+  in
   print_s [%sexp (mir_num : stmt_loc * int)] ;
   [%expect
     {|

@@ -40,7 +40,7 @@ let subst_stmt_base m b =
       FunDef {fdrt; fdname; fdargs; fdbody}
   | x -> x
 
-let subst_stmt m = Mir.map_stmt_loc (subst_stmt_base m)
+let subst_stmt m = Mir.map_rec_stmt_loc (subst_stmt_base m)
 
 (* TODO: parameterize statement also over expressions and then define the above with a
    recursive map *)
