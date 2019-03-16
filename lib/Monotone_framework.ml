@@ -682,7 +682,7 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
 
-let constant_propagation_mfp
+let constant_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
@@ -692,8 +692,14 @@ let constant_propagation_mfp
       type vals = string
 
       let total =
-        declared_variables_stmt
-          (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt
+        Set.Poly.union_list
+          [ Set.Poly.of_map_keys prog.gen_quant_vars
+          ; Set.Poly.of_map_keys prog.tdata_vars
+          ; Set.Poly.of_map_keys prog.tparams
+          ; declared_variables_stmt
+              (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
+
+      (* TODO: do something similar for other propagation analyses*)
     end
     : TOTALTYPE
       with type vals = string )

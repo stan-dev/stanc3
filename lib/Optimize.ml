@@ -326,7 +326,7 @@ let constant_propagation (mir : stmt_loc prog) =
   in
   let (module Flowgraph) = flowgraph in
   let constants =
-    Monotone_framework.constant_propagation_mfp
+    Monotone_framework.constant_propagation_mfp mir
       (module Flowgraph)
       flowgraph_to_mir
   in
