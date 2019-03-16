@@ -28,16 +28,32 @@ let internal_expr =
 
 let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
-let rec pp_unsizedtype scalar_type ppf = function
-  | Ast.UInt | UReal -> string ppf scalar_type
-  | UArray t -> pf ppf "std::vector<%a>" (pp_unsizedtype scalar_type) t
-  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar_type
-  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar_type
-  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar_type
+let rec stantype_prim_str = function
+  | Ast.UInt -> "int"
+  | UArray t -> stantype_prim_str t
+  | _ -> "double"
+
+let rec pp_unsizedtype_custom_scalar scalar ppf ut =
+  match ut with
+  | Ast.UInt | UReal -> string ppf scalar
+  | UArray t ->
+      pf ppf "std::vector<%a>" (pp_unsizedtype_custom_scalar scalar) t
+  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
+  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
+  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
 
+let pp_unsizedtype adtype ppf ut =
+  let scalar_type =
+    match adtype with
+    | Ast.DataOnly -> stantype_prim_str ut
+    | Ast.AutoDiffable -> "T__"
+    (* XXX Bob - do we ever need different autodiff types per var / fn arg / etc?*)
+  in
+  pp_unsizedtype_custom_scalar scalar_type ppf ut
+
 let%expect_test "emit function type raises" =
-  ( match pp_unsizedtype "sars" stdout Ast.UMathLibraryFunction with
+  ( match pp_unsizedtype DataOnly stdout Ast.UMathLibraryFunction with
   | () -> ()
   | exception e -> print_s [%sexp (e : exn)] ) ;
   [%expect {| ((x UMathLibraryFunction) "not implemented yet") |}]
@@ -74,12 +90,7 @@ and pp_indices ppf = function
   | hd :: tail ->
       pf ppf "stan::model::cons_list(%a,@ %a)" pp_index hd pp_indices tail
 
-let rec stantype_prim_str = function
-  | Ast.UInt -> "int"
-  | UArray t -> stantype_prim_str t
-  | _ -> "double"
-
-let pp_prim_stantype ppf st = pp_unsizedtype (stantype_prim_str st) ppf st
+let pp_prim_stantype ppf st = pp_unsizedtype ppf st
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
@@ -117,13 +128,8 @@ let rec integer_el_type = function
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 
-let pp_arg ppf ((adtype, name, st), idx) =
-  let adstr =
-    match adtype with
-    | Ast.DataOnly -> stantype_prim_str st
-    | Ast.AutoDiffable -> sprintf "T%d__" idx
-  in
-  pf ppf "const %a& %s" (pp_unsizedtype adstr) st name
+let pp_arg ppf (adtype, name, st) =
+  pf ppf "const %a& %s" (pp_unsizedtype adtype) st name
 
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
@@ -131,7 +137,9 @@ let%expect_test "with idx" =
   print_s [%sexp (with_idx (List.range 10 15) : (int * int) list)] ;
   [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
-let pp_decl ppf (vident, st) = pf ppf "%a %s;" pp_prim_stantype st vident
+let pp_decl ppf (vident, st, adtype) =
+  pf ppf "%a %s;" (pp_unsizedtype adtype) st vident
+
 let with_no_loc stmt = {stmt; sloc= no_span}
 
 let pp_located_msg ppf msg =
@@ -161,7 +169,9 @@ let pp_returntype ppf arg_types rt =
       (list ~sep:comma string)
       (maybe_templated_arg_types arg_types)
   in
-  pf ppf "%a@ " (option ~none:(const string "void") (pp_unsizedtype scalar)) rt
+  pf ppf "%a@ "
+    (option ~none:(const string "void") (pp_unsizedtype_custom_scalar scalar))
+    rt
 
 let pp_location ppf loc =
   pf ppf "current_statement__ = %S;@;" (Errors.string_of_location_span loc)
@@ -213,8 +223,7 @@ let rec pp_statement ppf {stmt; sloc} =
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
-      ignore decl_adtype ;
-      pp_decl ppf (decl_id, decl_type)
+      pp_decl ppf (decl_id, decl_type, decl_adtype)
   | FunDef {fdrt; fdname; fdargs; fdbody} -> (
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
@@ -226,7 +235,7 @@ let rec pp_statement ppf {stmt; sloc} =
       (* print return type *)
       pp_returntype ppf fdargs fdrt ;
       (* XXX this is all so ugly: *)
-      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg) (with_idx fdargs) ;
+      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg) fdargs ;
       pf ppf ", std::ostream* pstream__" ;
       pf ppf "@]) " ;
       match fdbody.stmt with
@@ -247,10 +256,6 @@ let rec pp_statement ppf {stmt; sloc} =
                   "local_scalar_t__ \
                    DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
                 text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
-                (* XXX Need to figure out how to pass in appropriate template arguments
-                   to pp_statement or something such that local variable declarations get the right
-                   scalar type w.r.t. autodiff/template (var vs double scalar type).
-                *)
                 pp_located_error ppf
                   (pp_statement, fdbody, "inside UDF " ^ fdname) )
             , fdbody ) ;
@@ -293,7 +298,9 @@ let var_context_container st =
 
 let pp_set_size ppf decl_id st =
   let rec pp_size_ctor ppf st =
-    let pp_st ppf st = pf ppf "%a" pp_prim_stantype (Ast.remove_size st) in
+    let pp_st ppf st =
+      pf ppf "%a" (pp_unsizedtype DataOnly) (Ast.remove_size st)
+    in
     match st with
     | Ast.SInt | SReal -> pf ppf "0"
     | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
@@ -373,7 +380,9 @@ let pp_ctor ppf p =
 
 let pp_model_private ppf p =
   pf ppf "%a" (list ~sep:cut pp_decl)
-    (List.map ~f:(fun (x, y, _) -> (x, Ast.remove_size y)) (data_decls_of_p p))
+    (List.map
+       ~f:(fun (x, y, _) -> (x, Ast.remove_size y, Ast.DataOnly))
+       (data_decls_of_p p))
 
 let pp_get_param_names ppf p =
   let param_names =
@@ -542,7 +551,7 @@ let%expect_test "udf" =
     template <typename T0__, typename T1__>
     void
     sars(const Eigen::Matrix<double, -1, -1>& x,
-         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
+         const Eigen::Matrix<T__, 1, -1>& y, std::ostream* pstream__) {
       typedef typename boost::math::tools::promote_args<T0__,
               T1__>::type local_scalar_t__;
       typedef local_scalar_t__ fun_return_scalar_t__;
