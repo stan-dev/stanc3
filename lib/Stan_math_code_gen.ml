@@ -20,14 +20,6 @@ open Core_kernel
 open Mir
 open Fmt
 
-let internal_expr =
-  { texpr= Var "UHOH"
-  ; texpr_loc= no_span
-  ; texpr_type= UReal
-  ; texpr_adlevel= DataOnly }
-
-let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
-
 let rec stantype_prim_str = function
   | Ast.UInt -> "int"
   | UArray t -> stantype_prim_str t
@@ -218,8 +210,7 @@ let rec pp_statement ppf {stmt; sloc} =
   | While (cond, body) ->
       pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block (pp_statement, body)
   | For {loopvar; lower; upper; body} ->
-      let lv = strf "%a" pp_expr loopvar in
-      pp_for_loop ppf (lv, lower, upper, pp_statement, body)
+      pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->

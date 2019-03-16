@@ -57,7 +57,7 @@ and ('e, 's) statement =
   | IfElse of 'e * 's * 's option
   | While of 'e * 's
   (* XXX Collapse with For? *)
-  | For of {loopvar: 'e; lower: 'e; upper: 'e; body: 's}
+  | For of {loopvar: string; lower: 'e; upper: 'e; body: 's}
   (* A Block for now corresponds tightly with a C++ block:
      variables declared within it have local scope and are garbage collected
      when the block ends.*)
@@ -126,7 +126,7 @@ type stmt_loc =
 
 type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
 
-(* ===================== Some helper functions ====================== *)
+(* ===================== Some helper functions and values ====================== *)
 
 (** Dives into any number of nested blocks and lists, but will not recurse other
     places statements occur in the MIR (e.g. loop bodies) *)
@@ -137,3 +137,11 @@ let rec map_toplevel_stmts f {sloc; stmt} =
   | _ -> f {sloc; stmt}
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
+
+let internal_expr =
+  { texpr= Var "UHOH"
+  ; texpr_loc= no_span
+  ; texpr_type= UInt
+  ; texpr_adlevel= DataOnly }
+
+let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}

@@ -156,20 +156,17 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
     | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
     | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
-          { loopvar=
-              { texpr= Var loop_variable.Ast.name
-              ; texpr_loc
-              ; texpr_type= UInt
-              ; texpr_adlevel= DataOnly }
+          { loopvar= loop_variable.Ast.name
           ; lower= trans_expr lower_bound
           ; upper= trans_expr upper_bound
           ; body= trans_stmt loop_body }
     | Ast.ForEach (loopvar, iteratee, body) ->
+        let newsym = Util.gensym () in
         let wrap texpr =
           {texpr; texpr_loc; texpr_type= UInt; texpr_adlevel= DataOnly}
         in
         let iteratee = trans_expr iteratee
-        and indexing_var = wrap (Var (Util.gensym ()))
+        and indexing_var = wrap (Var newsym)
         and body = trans_stmt body in
         let assign_loopvar =
           Assignment
@@ -177,7 +174,7 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
             , Indexed (iteratee, [Single indexing_var]) |> wrap )
         in
         For
-          { loopvar= indexing_var
+          { loopvar= newsym
           ; lower= wrap @@ Lit (Int, "0")
           ; upper= wrap @@ FunApp ("length", [iteratee])
           ; body= add_to_or_create_block assign_loopvar body }
@@ -253,16 +250,14 @@ let mkfor ut bodyfn iteratee sloc =
         raise_s
           [%message "Why are we making for loops around" (ut : unsizedtype)]
   in
-  let sym, reset = Util.gensym_enter () in
-  let loopvar =
-    {texpr= Var sym; texpr_loc= sloc; texpr_type= UInt; texpr_adlevel= DataOnly}
-  in
+  let loopvar, reset = Util.gensym_enter () in
   let stmt =
     For
       { loopvar
-      ; lower= {loopvar with texpr= Lit (Int, "0")}
-      ; upper= {loopvar with texpr= FunApp ("length", [iteratee])}
-      ; body= {stmt= Block [bodyfn (add_int_index iteratee (idx sym))]; sloc}
+      ; lower= {internal_expr with texpr= Lit (Int, "0")}
+      ; upper= {internal_expr with texpr= FunApp ("length", [iteratee])}
+      ; body=
+          {stmt= Block [bodyfn (add_int_index iteratee (idx loopvar))]; sloc}
       }
   in
   reset () ; {stmt; sloc}
