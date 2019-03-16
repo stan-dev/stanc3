@@ -386,7 +386,6 @@ let copy_propagation (mir : stmt_loc prog) =
 
 (* TODO: unify all of these propagation analyses under one umbrella *)
 
-(*
 let rec can_side_effect_expr (e : expr) =
   match e with
   | Var _ | Lit (_, _) -> false
@@ -397,7 +396,7 @@ let rec can_side_effect_expr (e : expr) =
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
 
-and can_side_effect_idx (i : index) =
+and can_side_effect_idx (i : idx) =
   match i with
   | All -> false
   | Single e | Upfrom e | Downfrom e | MultiIndex e -> can_side_effect_expr e
@@ -407,22 +406,30 @@ let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
 
 (* TODO: could also implement partial dead code elimination *)
-let dead_code_elimination (mir : stmt_loc_num prog)
-    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+let dead_code_elimination (mir : stmt_loc prog) =
+(* TODO: think about whether we should treat function bodies as local scopes in the statement
+   from the POV of a live variables analysis.
+   (Obviously, this shouldn't be the case for the purposes of reaching definitions,
+   constant propagation, expressions analyses. But I do think that's the right way to
+   go about live variables. *)
+  let s = statement_of_program mir in
+  let rev_flowgraph, flowgraph_to_mir =
+    Monotone_framework.inverse_flowgraph_of_stmt s
+  in
+  let (module Rev_Flowgraph) = rev_flowgraph in
   let live_variables =
     Monotone_framework.live_variables_mfp mir
       (module Rev_Flowgraph)
       flowgraph_to_mir
   in
+  (* TODO: from here *)
   let rec dead_code_elim_stmt s =
     (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
     let live_variables_s =
       (Map.find_exn live_variables s.num).Monotone_framework_sigs.entry
     in
     let stmtn = s.stmtn in
-    let stmt = (unnumbered_statement_of_numbered_statement s).stmt in
+    let stmt = (stmt_loc_of_stmt_loc_num flowgraph_to_mir s).stmt in
     { stmt=
         ( match stmtn with
         | Assignment (Var x, rhs) ->
@@ -505,11 +512,7 @@ let dead_code_elimination (mir : stmt_loc_num prog)
 (* TODO: or maybe combine the previous two *)
 
 (* TODO: add tests *)
-let _ =
-  ( constant_propagation
-  , expression_propagation
-  , copy_propagation
-  , dead_code_elimination ))*)
+
 let%expect_test "map_rec_stmt_loc" =
   let ast =
     Parse.parse_string Parser.Incremental.program

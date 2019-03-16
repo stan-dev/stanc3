@@ -814,7 +814,7 @@ let reaching_definitions_mfp (mir : Mir.stmt_loc_num Mir.prog)
 
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
-let live_variables_mfp (mir : Mir.stmt_loc_num Mir.prog)
+let live_variables_mfp (prog : Mir.stmt_loc Mir.prog)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
@@ -827,8 +827,8 @@ let live_variables_mfp (mir : Mir.stmt_loc_num Mir.prog)
       let initial =
         Set.Poly.add
           (Set.Poly.union
-             (Set.of_map_keys mir.gen_quant_vars)
-             (Set.of_map_keys (union_maps_left mir.params mir.tparams)))
+             (Set.of_map_keys prog.gen_quant_vars)
+             (Set.of_map_keys (union_maps_left prog.params prog.tparams)))
           "target"
     end
     : INITIALTYPE
