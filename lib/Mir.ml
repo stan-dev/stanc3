@@ -88,7 +88,7 @@ type 'e top_var_decl =
   { tvident: string
   ; tvtype: 'e Ast.sizedtype
   ; tvtrans: 'e Ast.transformation
-  ; tvloc: Ast.location_span sexp_opaque }
+  ; tvloc: Ast.location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp]
 
 type 'e top_var_table = (string, 'e top_var_decl) Map.Poly.t [@@deriving sexp]
