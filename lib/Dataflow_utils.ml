@@ -110,6 +110,7 @@ let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
   in
   let (_, map), _ = build_statement_map_rec 1 Map.Poly.empty stmt in
   map
+
 (* TODO: this currently does not seem to be labelling inside function bodies.
    Could we also do that? *)
 
@@ -435,6 +436,7 @@ let%expect_test "Predecessor graph example 2" =
        ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (7)) (9 (8))
         (10 (9)) (11 (10))))
     |}]
+
 (* TODO: this predecessor graph is all wrong! *)
 
 let%test "Reconstructed recursive statement" =
