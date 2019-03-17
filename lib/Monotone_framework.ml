@@ -242,7 +242,7 @@ let copy_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = (string, string) Map.Poly.t option
+    type properties = (string, Mir.expr) Map.Poly.t option
 
     let transfer_function l p =
       match p with
@@ -251,7 +251,8 @@ let copy_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
           Some
             ( match mir_node with
-            | Mir.Assignment (Var s, Mir.Var t) -> Map.set m ~key:s ~data:t
+            | Mir.Assignment (Var s, Mir.Var t) ->
+                Map.set m ~key:s ~data:(Mir.Var t)
             | Mir.Decl {decl_id= s; _} | Mir.Assignment (Var s, _) ->
                 Map.remove m s
             | Mir.Assignment (_, _)
@@ -265,7 +266,7 @@ let copy_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, string) Map.Poly.t option )
+     and type properties = (string, Mir.expr) Map.Poly.t option )
 
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
@@ -395,19 +396,16 @@ let live_variables_transfer
       let gen = top_free_vars_stmt mir_node in
       let kill =
         match mir_node with
-        | Mir.Assignment (Var x, _)
-         |Mir.Decl {decl_id= x; _} ->
+        | Mir.Assignment (Var x, _) | Mir.Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | Mir.TargetPE _
          |Mir.NRFunApp (_, _)
          |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
          |Mir.IfElse (_, _, _)
          |Mir.While (_, _)
-         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ 
-         
-         |Mir.Assignment (Indexed (Var _, _), _)->
+         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _
+         |Mir.Assignment (Indexed (Var _, _), _) ->
             Set.Poly.empty
-
         | Mir.Assignment _ -> Errors.fatal_error ()
       in
       transfer_gen_kill p gen kill
@@ -684,10 +682,16 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
 
-let constant_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
+let propagation_mfp (prog : Mir.stmt_loc Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
+    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
+    (propagation_transfer :
+         (int, Mir.stmt_loc_num) Map.Poly.t
+      -> (module
+          TRANSFER_FUNCTION
+            with type labels = int
+             and type properties = (string, Mir.expr) Map.Poly.t option)) =
   let mir = Map.find_exn flowgraph_to_mir 1 in
   let domain =
     ( module struct
@@ -710,73 +714,7 @@ let constant_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
   let (module Lattice) =
     dual_partial_function_lattice_with_bot domain codomain
   in
-  let (module Transfer) = constant_propagation_transfer flowgraph_to_mir in
-  let (module Mf) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
-  in
-  Mf.mfp ()
-
-let expression_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
-  let mir = Map.find_exn flowgraph_to_mir 1 in
-  let domain =
-    ( module struct
-      type vals = string
-
-      let total =
-        Set.Poly.union_list
-          [ Set.Poly.of_map_keys prog.gen_quant_vars
-          ; Set.Poly.of_map_keys prog.tdata_vars
-          ; Set.Poly.of_map_keys prog.tparams
-          ; declared_variables_stmt
-              (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
-    end
-    : TOTALTYPE
-      with type vals = string )
-  in
-  let codomain =
-    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
-  in
-  let (module Lattice) =
-    dual_partial_function_lattice_with_bot domain codomain
-  in
-  let (module Transfer) = expression_propagation_transfer flowgraph_to_mir in
-  let (module Mf) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
-  in
-  Mf.mfp ()
-
-(* TODO: dry up this definition and the previous and one after *)
-
-let copy_propagation_mfp (prog : Mir.stmt_loc Mir.prog)
-    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int)
-    (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
-  let mir = Map.find_exn flowgraph_to_mir 1 in
-  let domain =
-    ( module struct
-      type vals = string
-
-      let total =
-        Set.Poly.union_list
-          [ Set.Poly.of_map_keys prog.gen_quant_vars
-          ; Set.Poly.of_map_keys prog.tdata_vars
-          ; Set.Poly.of_map_keys prog.tparams
-          ; declared_variables_stmt
-              (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
-    end
-    : TOTALTYPE
-      with type vals = string )
-  in
-  let codomain =
-    (module struct type vals = string end : TYPE with type vals = string)
-  in
-  let (module Lattice) =
-    dual_partial_function_lattice_with_bot domain codomain
-  in
-  let (module Transfer) = copy_propagation_transfer flowgraph_to_mir in
+  let (module Transfer) = propagation_transfer flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
   in

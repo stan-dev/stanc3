@@ -106,6 +106,11 @@ type top_var_decl =
 
 type top_var_table = (string, top_var_decl) Map.Poly.t [@@deriving sexp]
 
+(* TODO: question - is it not a problem that you are throwing away the order here?
+   Could we separate the top_var_table later after optimization? That way we can 
+   also optimize the transformations etc and use the top var decls more easily
+   in e.g. live variables analysis. *)
+
 type 's prog =
   { functions_block: 's list
   ; data_vars: top_var_table
@@ -150,8 +155,9 @@ let rec map_rec_stmt_loc (f : stmt_loc statement -> stmt_loc statement)
   let recurse = map_rec_stmt_loc f in
   {sloc; stmt= f (map_statement recurse stmt)}
 
-let map_rec_state_stmt_loc (f : 's -> stmt_loc statement -> stmt_loc statement * 's)
-    (state : 's) ({sloc; stmt} : stmt_loc) : stmt_loc * 's =
+let map_rec_state_stmt_loc
+    (f : 's -> stmt_loc statement -> stmt_loc statement * 's) (state : 's)
+    ({sloc; stmt} : stmt_loc) : stmt_loc * 's =
   let cur_state = ref state in
   let g stmt =
     let stmt, state = f !cur_state stmt in
@@ -174,8 +180,8 @@ let map_rec_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
 
 let rec map_rec_state_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
-    (f : int -> 's -> stmt_loc statement -> stmt_loc statement * 's) (state : 's)
-    (s : stmt_loc_num) : stmt_loc * 's =
+    (f : int -> 's -> stmt_loc statement -> stmt_loc statement * 's)
+    (state : 's) (s : stmt_loc_num) : stmt_loc * 's =
   let cur_state = ref state in
   let g i stmt =
     let stmt, state = f i !cur_state stmt in

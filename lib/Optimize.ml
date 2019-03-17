@@ -289,7 +289,6 @@ let collapse_lists_statement =
 let list_collapsing (mir : stmt_loc prog) =
   map_prog collapse_lists_statement mir
 
-(* TODO: DRY up next parts. They are ugly. *)
 let statement_of_program mir =
   { stmt=
       SList
@@ -308,7 +307,7 @@ let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
           ~f:(fun x ->
             match x.stmt with
             | SList l | Block l -> l
-            | _ -> raise_s [%sexp (x : stmt_loc)])
+            | _ -> raise_s [%sexp (x : stmt_loc)] )
           l
     | _ -> raise_s [%sexp (s : stmt_loc)]
   in
@@ -319,72 +318,43 @@ let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
   ; log_prob= List.nth_exn l 3
   ; generate_quantities= List.nth_exn l 4 }
 
-let constant_propagation (mir : stmt_loc prog) =
+let propagation
+    (propagation_transfer :
+         (int, Mir.stmt_loc_num) Map.Poly.t
+      -> (module
+          Monotone_framework_sigs.TRANSFER_FUNCTION
+            with type labels = int
+             and type properties = (string, Mir.expr) Map.Poly.t option))
+    (mir : stmt_loc prog) =
   let s = statement_of_program mir in
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt s
   in
   let (module Flowgraph) = flowgraph in
-  let constants =
-    Monotone_framework.constant_propagation_mfp mir
+  let values =
+    Monotone_framework.propagation_mfp mir
       (module Flowgraph)
-      flowgraph_to_mir
+      flowgraph_to_mir propagation_transfer
   in
-  let constant_propagate_stmt =
+  let propagate_stmt =
     map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
         Partial_evaluator.subst_stmt_base
-          (Option.value ~default:Map.Poly.empty
-             (Map.find_exn constants i).entry) )
+          (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry)
+    )
   in
-  let s = constant_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
+  let s = propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
   update_program_statement_blocks mir s
+
+let constant_propagation =
+  propagation Monotone_framework.constant_propagation_transfer
 
 (* TODO: implement separate constant folding phase;
    this will be very clean once we have a recursive map over expressions *)
 
-let expression_propagation (mir : stmt_loc prog) =
-  let s = statement_of_program mir in
-  let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt s
-  in
-  let (module Flowgraph) = flowgraph in
-  let expressions =
-    Monotone_framework.expression_propagation_mfp mir
-      (module Flowgraph)
-      flowgraph_to_mir
-  in
-  let expression_propagate_stmt =
-    map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
-        Partial_evaluator.subst_stmt_base
-          (Option.value ~default:Map.Poly.empty
-             (Map.find_exn expressions i).entry) )
-  in
-  let s = expression_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
-  update_program_statement_blocks mir s
+let expression_propagation =
+  propagation Monotone_framework.expression_propagation_transfer
 
-let copy_propagation (mir : stmt_loc prog) =
-  let s = statement_of_program mir in
-  let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt s
-  in
-  let (module Flowgraph) = flowgraph in
-  let copies =
-    Monotone_framework.copy_propagation_mfp mir
-      (module Flowgraph)
-      flowgraph_to_mir
-  in
-  let copy_propagate_stmt =
-    map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
-        Partial_evaluator.subst_stmt_base
-          (Map.map
-             ~f:(fun s -> Var s)
-             (Option.value ~default:Map.Poly.empty
-                (Map.find_exn copies i).entry)) )
-  in
-  let s = copy_propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
-  update_program_statement_blocks mir s
-
-(* TODO: unify all of these propagation analyses under one umbrella *)
+let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
 
 let rec can_side_effect_expr (e : expr) =
   match e with
@@ -441,84 +411,69 @@ let dead_code_elimination (mir : stmt_loc prog) =
       (module Rev_Flowgraph)
       flowgraph_to_mir
   in
-  let dead_code_elim_stmt_base = (fun i stmt ->
-        (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
-        let live_variables_s =
-          (Map.find_exn live_variables i).Monotone_framework_sigs.entry
-        in
-        match stmt with
-        | Assignment (Var x, rhs) ->
-            if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
-              stmt
-            else Skip
-        | Assignment (Indexed (Var x, is), rhs) ->
-            if
-              Set.Poly.mem live_variables_s x
-              || can_side_effect_expr rhs
-              || List.exists ~f:can_side_effect_idx is
-            then stmt
-            else Skip
-        | Assignment _ -> Errors.fatal_error ()
-        (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
+  let dead_code_elim_stmt_base i stmt =
+    (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
+    let live_variables_s =
+      (Map.find_exn live_variables i).Monotone_framework_sigs.entry
+    in
+    match stmt with
+    | Assignment (Var x, rhs) ->
+        if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
+          stmt
+        else Skip
+    | Assignment (Indexed (Var x, is), rhs) ->
+        if
+          Set.Poly.mem live_variables_s x
+          || can_side_effect_expr rhs
+          || List.exists ~f:can_side_effect_idx is
+        then stmt
+        else Skip
+    | Assignment _ -> Errors.fatal_error ()
+    (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
            due to side effects. *)
-        | Decl _ | TargetPE _
-         |NRFunApp (_, _)
-         |Check _ | Break | Continue | Return _ | Skip ->
-            stmt
-        | IfElse (e, b1, b2) -> (
-            if
-              (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-              (not (can_side_effect_expr e))
-              && b1.stmt = Skip
-              && ( Option.map
-                     ~f:(fun x -> x.stmt)
-                     b2
-                   = Some Skip
-                 || Option.map
-                      ~f:(fun x -> x.stmt)
-                      b2
-                    = None )
-            then Skip
-            else
-              match e with
-              | Lit (Int, "0") | Lit (Real, "0.0") -> (
-                match b2 with
-                | Some x -> x.stmt
-                | None -> Skip )
-              | Lit (_, _) -> b1.stmt
-              | _ -> IfElse (e, b1, b2) )
-        | While (e, b) -> (
-              match e with
-              | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
-              | _ -> While (e, b) )
-        | For {loopvar; lower; upper; body} ->
-            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-            if
-              (not (can_side_effect_expr lower))
-              && (not (can_side_effect_expr upper))
-              && is_skip_break_continue
-                   body.stmt
-            then Skip
-            else For {loopvar; lower; upper; body}
-        | Block l ->
-            let l' =
-              List.filter
-                ~f:(fun x -> x.stmt <> Skip)
-                l
-            in
-            if List.length l' = 0 then Skip else Block l'
-        | SList l ->
-            let l' =
-              List.filter
-                ~f:(fun x -> x.stmt <> Skip)
-                l
-            in SList l'
-        (* TODO: do dead code elimination in function body too! *)
-        | FunDef {fdname; _} ->
-            if Set.Poly.mem live_variables_s fdname then stmt else Skip )
+    | Decl _ | TargetPE _
+     |NRFunApp (_, _)
+     |Check _ | Break | Continue | Return _ | Skip ->
+        stmt
+    | IfElse (e, b1, b2) -> (
+        if
+          (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+          (not (can_side_effect_expr e))
+          && b1.stmt = Skip
+          && ( Option.map ~f:(fun x -> x.stmt) b2 = Some Skip
+             || Option.map ~f:(fun x -> x.stmt) b2 = None )
+        then Skip
+        else
+          match e with
+          | Lit (Int, "0") | Lit (Real, "0.0") -> (
+            match b2 with Some x -> x.stmt | None -> Skip )
+          | Lit (_, _) -> b1.stmt
+          | _ -> IfElse (e, b1, b2) )
+    | While (e, b) -> (
+      match e with
+      | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
+      | _ -> While (e, b) )
+    | For {loopvar; lower; upper; body} ->
+        (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+        if
+          (not (can_side_effect_expr lower))
+          && (not (can_side_effect_expr upper))
+          && is_skip_break_continue body.stmt
+        then Skip
+        else For {loopvar; lower; upper; body}
+    | Block l ->
+        let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
+        if List.length l' = 0 then Skip else Block l'
+    | SList l ->
+        let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
+        SList l'
+    (* TODO: do dead code elimination in function body too! *)
+    | FunDef {fdname; _} ->
+        if Set.Poly.mem live_variables_s fdname then stmt else Skip
   in
   let dead_code_elim_stmt =
-    map_rec_stmt_loc_num flowgraph_to_mir  dead_code_elim_stmt_base in
+    map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
+  in
   let s = dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
   let mir = update_program_statement_blocks mir s in
   { mir with
@@ -1762,7 +1717,7 @@ let%expect_test "dead code elimination" =
        (log_prob
         (((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
          ((sloc <opaque>) (stmt (NRFunApp print ((Var j)))))))
-       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |} ]
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination decl" =
   let ast =
@@ -1808,7 +1763,7 @@ let%expect_test "dead code elimination decl" =
                   (stmt
                    (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
              ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))))))
-       (prog_name "") (prog_path "")) |} ]
+       (prog_name "") (prog_path "")) |}]
 
 (* TODO: this one doesn't work yet
 let%expect_test "dead code elimination functions" =
@@ -1939,7 +1894,7 @@ let%expect_test "dead code elimination, if then" =
          ((sloc <opaque>)
           (stmt
            (Block (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str goodbye)))))))))))
-       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |} ]
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, nested" =
   let ast =
@@ -1970,7 +1925,6 @@ let%expect_test "dead code elimination, nested" =
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
          ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
-
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
