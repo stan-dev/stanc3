@@ -145,13 +145,12 @@ let rec map_toplevel_stmts f {sloc; stmt} =
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
 
-let rec map_rec_stmt_loc (f : 'a statement -> 'a statement)
+let rec map_rec_stmt_loc (f : stmt_loc statement -> stmt_loc statement)
     ({sloc; stmt} : stmt_loc) =
-  let modified_stmt = f stmt in
   let recurse = map_rec_stmt_loc f in
-  {sloc; stmt= map_statement recurse modified_stmt}
+  {sloc; stmt= f (map_statement recurse stmt)}
 
-let map_rec_state_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
+let map_rec_state_stmt_loc (f : 's -> stmt_loc statement -> stmt_loc statement * 's)
     (state : 's) ({sloc; stmt} : stmt_loc) : stmt_loc * 's =
   let cur_state = ref state in
   let g stmt =
@@ -164,19 +163,18 @@ let map_rec_state_stmt_loc (f : 's -> 'a statement -> 'a statement * 's)
   (stmt, state)
 
 let map_rec_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
-    (f : int -> 'a statement -> 'a statement) (s : stmt_loc_num) =
+    (f : int -> stmt_loc statement -> stmt_loc statement) (s : stmt_loc_num) =
   let rec map_rec_stmt_loc_num' (cur_node : int)
       ({slocn; stmtn} : stmt_loc_num) : stmt_loc =
     let find_node i = Map.find_exn flowgraph_to_mir i in
     let recurse i = map_rec_stmt_loc_num' i (find_node i) in
-    let modified_stmt = f cur_node stmtn in
-    {sloc= slocn; stmt= map_statement recurse modified_stmt}
+    {sloc= slocn; stmt= f cur_node (map_statement recurse stmtn)}
   in
   map_rec_stmt_loc_num' 1 s
 
 let rec map_rec_state_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
-    (f : int -> 's -> 'a statement -> 'a statement * 's) (state : 's)
+    (f : int -> 's -> stmt_loc statement -> stmt_loc statement * 's) (state : 's)
     (s : stmt_loc_num) : stmt_loc * 's =
   let cur_state = ref state in
   let g i stmt =

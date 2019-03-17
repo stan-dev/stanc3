@@ -396,17 +396,19 @@ let live_variables_transfer
       let kill =
         match mir_node with
         | Mir.Assignment (Var x, _)
-         |Mir.Assignment (Indexed (Var x, _), _)
          |Mir.Decl {decl_id= x; _} ->
             Set.Poly.singleton x
-        | Mir.Assignment _ -> Errors.fatal_error ()
         | Mir.TargetPE _
          |Mir.NRFunApp (_, _)
          |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
          |Mir.IfElse (_, _, _)
          |Mir.While (_, _)
-         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ ->
+         |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _ 
+         
+         |Mir.Assignment (Indexed (Var _, _), _)->
             Set.Poly.empty
+
+        | Mir.Assignment _ -> Errors.fatal_error ()
       in
       transfer_gen_kill p gen kill
   end

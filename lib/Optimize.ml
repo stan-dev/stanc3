@@ -308,9 +308,9 @@ let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
           ~f:(fun x ->
             match x.stmt with
             | SList l | Block l -> l
-            | _ -> Errors.fatal_error () )
+            | _ -> raise_s [%sexp (x : stmt_loc)])
           l
-    | _ -> Errors.fatal_error ()
+    | _ -> raise_s [%sexp (s : stmt_loc)]
   in
   { mir with
     functions_block= List.nth_exn l 0
@@ -405,14 +405,33 @@ and can_side_effect_idx (i : idx) =
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
 
+let statement_of_program_with_fun_bodies mir =
+  let function_bodies =
+    List.concat
+      (List.map
+         ~f:(fun x ->
+           match x.stmt with
+           | FunDef {fdbody; _} -> [x; fdbody]
+           | _ -> Errors.fatal_error () )
+         mir.functions_block)
+  in
+  { stmt=
+      SList
+        [ {stmt= SList function_bodies; sloc= ""}
+        ; {stmt= SList mir.prepare_data; sloc= ""}
+        ; {stmt= SList mir.prepare_params; sloc= ""}
+        ; {stmt= Block mir.log_prob; sloc= ""}
+        ; {stmt= SList mir.generate_quantities; sloc= ""} ]
+  ; sloc= "" }
+
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : stmt_loc prog) =
-(* TODO: think about whether we should treat function bodies as local scopes in the statement
+  (* TODO: think about whether we should treat function bodies as local scopes in the statement
    from the POV of a live variables analysis.
    (Obviously, this shouldn't be the case for the purposes of reaching definitions,
    constant propagation, expressions analyses. But I do think that's the right way to
    go about live variables. *)
-  let s = statement_of_program mir in
+  let s = statement_of_program_with_fun_bodies mir in
   let rev_flowgraph, flowgraph_to_mir =
     Monotone_framework.inverse_flowgraph_of_stmt s
   in
@@ -422,16 +441,12 @@ let dead_code_elimination (mir : stmt_loc prog) =
       (module Rev_Flowgraph)
       flowgraph_to_mir
   in
-  (* TODO: from here *)
-  let rec dead_code_elim_stmt s =
-    (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
-    let live_variables_s =
-      (Map.find_exn live_variables s.num).Monotone_framework_sigs.entry
-    in
-    let stmtn = s.stmtn in
-    let stmt = (stmt_loc_of_stmt_loc_num flowgraph_to_mir s).stmt in
-    { stmt=
-        ( match stmtn with
+  let dead_code_elim_stmt_base = (fun i stmt ->
+        (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
+        let live_variables_s =
+          (Map.find_exn live_variables i).Monotone_framework_sigs.entry
+        in
+        match stmt with
         | Assignment (Var x, rhs) ->
             if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
               stmt
@@ -451,61 +466,66 @@ let dead_code_elimination (mir : stmt_loc prog) =
          |Check _ | Break | Continue | Return _ | Skip ->
             stmt
         | IfElse (e, b1, b2) -> (
-            let b1' = dead_code_elim_stmt b1 in
-            let b2' = Option.map ~f:dead_code_elim_stmt b2 in
             if
               (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
               (not (can_side_effect_expr e))
-              && b1'.stmt = Skip
-              && ( Option.map ~f:(fun x -> x.stmt) b2' = Some Skip
-                 || Option.map ~f:(fun x -> x.stmt) b2' = None )
+              && b1.stmt = Skip
+              && ( Option.map
+                     ~f:(fun x -> x.stmt)
+                     b2
+                   = Some Skip
+                 || Option.map
+                      ~f:(fun x -> x.stmt)
+                      b2
+                    = None )
             then Skip
             else
               match e with
               | Lit (Int, "0") | Lit (Real, "0.0") -> (
-                match b2' with Some x -> x.stmt | None -> Skip )
-              | Lit (_, _) -> b1'.stmt
-              | _ -> IfElse (e, b1', b2') )
+                match b2 with
+                | Some x -> x.stmt
+                | None -> Skip )
+              | Lit (_, _) -> b1.stmt
+              | _ -> IfElse (e, b1, b2) )
         | While (e, b) -> (
-            let b' = dead_code_elim_stmt b in
-            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-            if (not (can_side_effect_expr e)) && is_skip_break_continue b'.stmt
-            then Skip
-            else
               match e with
               | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
-              | _ -> While (e, b') )
+              | _ -> While (e, b) )
         | For {loopvar; lower; upper; body} ->
             (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-            let body' = dead_code_elim_stmt body in
             if
               (not (can_side_effect_expr lower))
               && (not (can_side_effect_expr upper))
-              && is_skip_break_continue body'.stmt
+              && is_skip_break_continue
+                   body.stmt
             then Skip
-            else For {loopvar; lower; upper; body= body'}
+            else For {loopvar; lower; upper; body}
         | Block l ->
             let l' =
               List.filter
                 ~f:(fun x -> x.stmt <> Skip)
-                (List.map ~f:dead_code_elim_stmt l)
+                l
             in
             if List.length l' = 0 then Skip else Block l'
         | SList l ->
             let l' =
               List.filter
                 ~f:(fun x -> x.stmt <> Skip)
-                (List.map ~f:dead_code_elim_stmt l)
-            in
-            if List.length l' = 0 then Skip else SList l'
+                l
+            in SList l'
         (* TODO: do dead code elimination in function body too! *)
         | FunDef {fdname; _} ->
             if Set.Poly.mem live_variables_s fdname then stmt else Skip )
-    ; sloc= s.slocn }
   in
-  (* TODO: This last bit isn't quite right. We want to perform dead-code elim at the level of the whole
-     program, carrying state in between blocks. *)
-  map_prog dead_code_elim_stmt mir
+  let dead_code_elim_stmt =
+    map_rec_stmt_loc_num flowgraph_to_mir  dead_code_elim_stmt_base in
+  let s = dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
+  let mir = update_program_statement_blocks mir s in
+  { mir with
+    functions_block=
+      List.filter
+        ~f:(fun x -> match x.stmt with FunDef _ -> true | _ -> false)
+        mir.functions_block }
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: implement lazy code motion. Make sure to apply it separately to each program block, rather than to the program as a whole. *)
@@ -1698,6 +1718,259 @@ let%expect_test "copy propagation" =
                    (NRFunApp print
                     ((BinOp (BinOp (Var i) Plus (Var i)) Plus (Var k))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "dead code elimination" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        int i[2];
+        i[1] = 2;
+        i = {3, 2};
+        int j[2];
+        j = {3, 2};
+        j[1] = 2;
+      }
+      model {
+        print(i);
+        print(j);
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ())
+       (tdata_vars
+        ((i
+          ((tvident i) (tvtype (SArray SInt (Lit Int 2))) (tvtrans Identity)
+           (tvloc "file string, line 3, columns 8-17")))
+         (j
+          ((tvident j) (tvtype (SArray SInt (Lit Int 2))) (tvtrans Identity)
+           (tvloc "file string, line 6, columns 8-17")))))
+       (prepare_data
+        (((sloc <opaque>)
+          (stmt (Assignment (Var i) (FunApp make_array ((Lit Int 3) (Lit Int 2))))))
+         ((sloc <opaque>)
+          (stmt (Assignment (Var j) (FunApp make_array ((Lit Int 3) (Lit Int 2))))))
+         ((sloc <opaque>)
+          (stmt (Assignment (Indexed (Var j) ((Single (Lit Int 1)))) (Lit Int 2))))))
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
+         ((sloc <opaque>) (stmt (NRFunApp print ((Var j)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |} ]
+
+let%expect_test "dead code elimination decl" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int i;
+        i = 4;
+      }
+      generated quantities {
+        {
+          int i;
+          print(i);
+        }
+      }
+      |}
+  in
+  (* TODO: this doesn't work yet with global variables i. Ask Sean to
+     not remove top decls? *)
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))))
+       (gen_quant_vars ())
+       (generate_quantities
+        (((sloc <opaque>)
+          (stmt
+           (Block
+            (((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
+             ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))))))
+       (prog_name "") (prog_path "")) |} ]
+
+(* TODO: this one doesn't work yet
+let%expect_test "dead code elimination functions" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        real f() {
+          return 24;
+        }
+      }
+      model {
+        print(42);
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {| |} ] *)
+
+let%expect_test "dead code elimination, for loop" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int i;
+        print(i);
+        for (j in 3:5);
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
+         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "dead code elimination, while loop" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int i;
+        print(i);
+        while (0) {
+          print(13);
+        };
+        while (1) {
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
+         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
+         ((sloc <opaque>) (stmt (While (Lit Int 1) ((sloc <opaque>) (stmt Skip)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "dead code elimination, if then" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int i;
+        print(i);
+        if (1) {
+          print("hello");
+        } else {
+          print("goodbye");
+        }
+        if (0) {
+          print("hello");
+        } else {
+          print("goodbye");
+        }
+        if (i) {
+
+        } else {
+
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
+         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
+         ((sloc <opaque>)
+          (stmt
+           (Block (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str hello)))))))))
+         ((sloc <opaque>)
+          (stmt
+           (Block (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str goodbye)))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |} ]
+
+let%expect_test "dead code elimination, nested" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int i;
+        print(i);
+        for (j in 3:5) {
+          for (k in 34:2);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
+         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
