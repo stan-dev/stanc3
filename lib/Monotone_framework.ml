@@ -60,6 +60,8 @@ let forward_flowgraph_of_stmt stmt =
   let inv_flowgraph = inverse_flowgraph_of_stmt stmt in
   (reverse (fst inv_flowgraph), snd inv_flowgraph)
 
+(**  The lattice of sets of some values, with the inclusion order, set union
+     and the empty set *)
 let powerset_lattice (type v) (module S : INITIALTYPE with type vals = v) =
   ( module struct
     type properties = S.vals Set.Poly.t
@@ -72,6 +74,8 @@ let powerset_lattice (type v) (module S : INITIALTYPE with type vals = v) =
   : LATTICE
     with type properties = v Set.Poly.t )
 
+(**  The lattice of subsets of some set, with the inverse inclusion order,
+     set intersection and the total set *)
 let dual_powerset_lattice (type v)
     (module S : INITIALTOTALTYPE with type vals = v) =
   ( module struct
@@ -85,6 +89,7 @@ let dual_powerset_lattice (type v)
   : LATTICE
     with type properties = v Set.Poly.t )
 
+(**  Add a fresh bottom element to a lattice (possibly without bottom) *)
 let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   ( module struct
     type properties = L.properties option
@@ -105,6 +110,8 @@ let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   : LATTICE
     with type properties = p option )
 
+(** The lattice (without bottom) of partial functions, ordered under
+    inverse graph inclusion, with intersection *)
 let dual_partial_function_lattice (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
@@ -127,16 +134,14 @@ let dual_partial_function_lattice (type dv cv)
   : LATTICE_NO_BOT
     with type properties = (dv, cv) Map.Poly.t )
 
-(* To use for constant propagation analysis *)
+(* The lattice of partial functions, where we add a fresh bottom element,
+   to represent an inconsistent combination of functions *)
 let dual_partial_function_lattice_with_bot (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
   new_bot (dual_partial_function_lattice (module Dom) (module Codom))
 
-(* To use for very busy expressions (anticipated expressions)
-              available expressions
-              postponable expresions
-   analyses *)
+(* A dual powerset lattice, where we set the initial set to be empty *)
 let dual_powerset_lattice_empty_initial (type v)
     (module T : TOTALTYPE with type vals = v) =
   dual_powerset_lattice
@@ -147,9 +152,7 @@ let dual_powerset_lattice_empty_initial (type v)
       let total = T.total
     end )
 
-(* To use for used expressions
-              live variables
-   analyses *)
+(* A powerset lattice, where we set the initial set to be empty *)
 let powerset_lattice_empty_initial (type v)
     (module T : TYPE with type vals = v) =
   powerset_lattice
@@ -157,8 +160,7 @@ let powerset_lattice_empty_initial (type v)
 
                    let initial = Set.Poly.empty end)
 
-(* TODO: maybe we should just inline this definition and some of the previous. *)
-(* To use for reaching definitions analysis *)
+(* The specific powerset lattice we use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
@@ -169,6 +171,7 @@ let reaching_definitions_lattice (type v l)
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end )
 
+(* The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
@@ -204,7 +207,8 @@ let constant_propagation_transfer
     with type labels = int
      and type properties = (string, Mir.expr) Map.Poly.t option )
 
-(** AKA forward substitution (see page 396 of Muchnick) *)
+(** The transfer function for an expression propagation analysis,
+    AKA forward substitution (see page 396 of Muchnick) *)
 let expression_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
@@ -238,6 +242,7 @@ let expression_propagation_transfer
     with type labels = int
      and type properties = (string, Mir.expr) Map.Poly.t option )
 
+(** The transfer function for a copy propagation analysis *)
 let copy_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
@@ -268,8 +273,11 @@ let copy_propagation_transfer
     with type labels = int
      and type properties = (string, Mir.expr) Map.Poly.t option )
 
+(** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
+(* TODO: from here *)
+(** Calculate the set of variables that a statement can assign to *)
 let assigned_vars_stmt (s : 'a Mir.statement) =
   match s with
   | Mir.Assignment (Var x, _)
@@ -287,6 +295,7 @@ let assigned_vars_stmt (s : 'a Mir.statement) =
    |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ ->
       Set.Poly.empty
 
+(** The transfer function for a reaching definitions analysis *)
 let reaching_definitions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
@@ -322,7 +331,7 @@ let reaching_definitions_transfer
     with type labels = int
      and type properties = (string * int option) Set.Poly.t )
 
-(* TODO: insert Ryan's implementations here? *)
+(** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Mir.expr) =
   match e with
   | Mir.Var x -> Set.Poly.singleton x
@@ -335,7 +344,7 @@ let rec free_vars_expr (e : Mir.expr) =
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
   | Mir.Indexed (e, l) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
-
+(** Calculate the free (non-bound) variables in an index*)
 and free_vars_idx (i : Mir.idx) =
   match i with
   | Mir.All -> Set.Poly.empty
@@ -344,6 +353,7 @@ and free_vars_idx (i : Mir.idx) =
   | Mir.Between (e1, e2) ->
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
+(** Calculate the free (non-bound) variables in a statement *)
 let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
   match s with
   | Mir.Assignment (Var _, e) | Mir.Return (Some e) | Mir.TargetPE e ->
@@ -385,6 +395,7 @@ let top_free_vars_stmt (s : int Mir.statement) =
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
   | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
 
+(** The transfer function for a live variables analysis *)
 let live_variables_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
@@ -413,6 +424,7 @@ let live_variables_transfer
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
 
+(** Calculate the set of sub-expressions of an expression *)
 let rec used_expressions_expr (e : Mir.expr) =
   Set.Poly.union (Set.Poly.singleton e)
     ( match e with
@@ -428,7 +440,7 @@ let rec used_expressions_expr (e : Mir.expr) =
     | Mir.Indexed (e, l) ->
         Set.Poly.union_list
           (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
-
+(** Calculate the set of sub-expressions of an index *)
 and used_expressions_idx (i : Mir.idx) =
   match i with
   | Mir.All -> Set.Poly.empty
@@ -437,6 +449,7 @@ and used_expressions_idx (i : Mir.idx) =
   | Mir.Between (e1, e2) ->
       Set.Poly.union (used_expressions_expr e1) (used_expressions_expr e2)
 
+(** Calculate the set of sub-expressions in a statement *)
 let rec used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
   match s with
   | Mir.Assignment (Var _, e) | Mir.TargetPE e | Mir.Return (Some e) ->
@@ -481,6 +494,9 @@ let top_used_expressions_stmt (s : int Mir.statement) =
       Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
   | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
 
+(** Calculate the subset (of p) of expressions that will need to be recomputed as a
+    consequence of evaluating the statement s (because of writes to variables performed
+    by s) *)
 let killed_expressions_stmt (p : Mir.expr Set.Poly.t) (s : int Mir.statement) =
   Set.Poly.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
@@ -489,7 +505,8 @@ let killed_expressions_stmt (p : Mir.expr Set.Poly.t) (s : int Mir.statement) =
       let assigned_vars = assigned_vars_stmt s in
       not (Set.is_empty (Set.Poly.inter free_vars assigned_vars)) )
 
-(* Note: we will want to reuse our computation of used *)
+(** Calculate the set of expressions that needs to be computed at each node
+    in the flowgraph *)
 let used (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   Map.Poly.fold flowgraph_to_mir ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
@@ -497,6 +514,8 @@ let used (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
 
 (* TODO: figure out whether we will also want to reuse the computation of killed *)
 
+(** The transfer function for an anticipated expressions analysis (as a part of lazy
+    code motion) *)
 let anticipated_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
     (used : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
@@ -513,12 +532,17 @@ let anticipated_expressions_transfer
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Mir.expr Set.Poly.t )
 
+(** A helper function for defining transfer functions in terms of gen and kill sets
+    in an alternative way, that is used in some of the subanalyses of lazy code motion *)
 let transfer_gen_kill_alt p gen kill =
   Set.Poly.diff (Set.Poly.union p gen) kill
 
 (* NOTE: we want to implement lazy code motion. Aho describes a slightly
    more general available expression pass for that that uses the anticipated
-   expression pass. *)
+   expression pass.
+   QUESTION: does this give the traditional available expressions analysis if
+   anticipated expressions is empty? *)
+(** An available expressions analysis, to be used in lazy code motion *)
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
     (anticipated_expressions :
@@ -536,6 +560,8 @@ let available_expressions_transfer
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Mir.expr Set.Poly.t )
 
+(** Calculates the set of expressions that can be calculated for the first time
+    at each node in the flow graph *)
 let earliest
     (anticipated_expressions :
       (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t)
@@ -549,6 +575,7 @@ let earliest
       | Some x when x = data.entry -> Map.set accum ~key ~data:x
       | _ -> accum )
 
+(** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
 let postponable_expressions_transfer
     (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
     (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
@@ -564,8 +591,7 @@ let postponable_expressions_transfer
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Mir.expr Set.Poly.t )
 
-(* TODO: Reuse used and killed between expression analyses *)
-
+(** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
     (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
     (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t)
@@ -585,6 +611,7 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
   Map.fold earliest ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
       Map.set accum ~key ~data:(latest key) )
 
+(** The transfer function for a used expressions analysis, as a part of lazy code motion *)
 let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
     (latest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
   ( module struct
@@ -599,6 +626,15 @@ let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Mir.expr Set.Poly.t )
 
+(** The central definition of a monotone dataflow analysis framework.
+    Given a compatible flowgraph, lattice and transfer function, we can
+    run the mfp (maximal fixed point) algorithm, which computes a maximal
+    fixed point (MFP) for the set of equations/inequalities of properties at the
+    entry and exit of each node in the flow graph, as defined by the triple.
+    Note that this gives a safe approximation to the MOP (meet over all paths)
+    solution that we would really be interested in, but which is often incomputable.
+    In case of a distributive lattice of properties, the MFP and MOP solutions coincide.
+    *)
 let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
     (module L : LATTICE with type properties = p)
     (module T : TRANSFER_FUNCTION with type labels = l and type properties = p)
