@@ -110,6 +110,8 @@ let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
   in
   let (_, map), _ = build_statement_map_rec 1 Map.Poly.empty stmt in
   map
+(* TODO: this currently does not seem to be labelling inside function bodies.
+   Could we also do that? *)
 
 (**
    See interface file
@@ -358,6 +360,82 @@ let%expect_test "Predecessor graph example" =
         (10 (9 22)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
         (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
     |}]
+
+let example2_program =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        real f() {
+          if (3>2) {
+            print("hello");
+            return 2;
+          }
+          return 22;
+        }
+        void g() {
+          print("bye");
+        }
+      }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let block = Mir.Block mir.functions_block in
+  {stmt= block; sloc= ""}
+
+let example2_statement_map =
+  build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example2_program
+
+let%expect_test "Statement label map example 2" =
+  print_s
+    [%sexp
+      (example2_statement_map : (label, label statement * string) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((1 ((Block (2 9)) ""))
+       (2
+        ((FunDef (fdrt (UReal)) (fdname f) (fdargs ()) (fdbody 3))
+         "file string, line 3, column 8 to line 9, column 9"))
+       (3 ((Block (4 8)) "file string, line 3, column 17 to line 9, column 9"))
+       (4
+        ((IfElse (BinOp (Lit Int 3) Greater (Lit Int 2)) 5 ())
+         "file string, line 4, column 10 to line 7, column 11"))
+       (5 ((Block (6 7)) "file string, line 4, column 19 to line 7, column 11"))
+       (6
+        ((NRFunApp print ((Lit Str hello))) "file string, line 5, columns 12-27"))
+       (7 ((Return ((Lit Int 2))) "file string, line 6, columns 12-21"))
+       (8 ((Return ((Lit Int 22))) "file string, line 8, columns 10-20"))
+       (9
+        ((FunDef (fdrt ()) (fdname g) (fdargs ()) (fdbody 10))
+         "file string, line 10, column 8 to line 12, column 9"))
+       (10 ((Block (11)) "file string, line 10, column 17 to line 12, column 9"))
+       (11
+        ((NRFunApp print ((Lit Str bye))) "file string, line 11, columns 10-23")))
+    |}]
+
+let%expect_test "Controlflow graph example 2" =
+  let cf = build_cf_graph example2_statement_map in
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((1 (7 8)) (2 (7 8)) (3 (2 7 8)) (4 (2 7)) (5 (4 7)) (6 (4)) (7 (4))
+       (8 (2 7)) (9 (7 8)) (10 (7 8 9)) (11 (7 8 9)))
+    |}]
+
+let%expect_test "Predecessor graph example 2" =
+  let exits, preds = build_predecessor_graph example2_statement_map in
+  print_s
+    [%sexp
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((11)
+       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (7)) (9 (8))
+        (10 (9)) (11 (10))))
+    |}]
+(* TODO: this predecessor graph is all wrong! *)
 
 let%test "Reconstructed recursive statement" =
   let stmt =
