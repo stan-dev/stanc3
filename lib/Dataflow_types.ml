@@ -28,9 +28,9 @@ type reaching_defn = vexpr * label [@@deriving sexp, hash, compare]
    location from an Mir.loc_stmt
  *)
 type source_loc =
-  | MirNode of string
+  | MirNode of Ast.location_span
   | StartOfBlock
-  | TargetTerm of {term: expr; assignment_label: label}
+  | TargetTerm of {term: expr_typed_located; assignment_label: label}
 [@@deriving sexp]
 
 (**

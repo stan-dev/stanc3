@@ -4,37 +4,39 @@ open Core_kernel
 open Type_conversion
 open Ast
 
+let ternary_if = "TernaryIf__"
+
 (** A hash table to hold some name conversions between the AST nodes and the
     Stan Math name of the operator *)
 let operator_names = String.Table.create ()
 
-let _ = Hashtbl.add_multi operator_names ~key:"Plus" ~data:"add"
+let _ = Hashtbl.add_multi operator_names ~key:"Plus__" ~data:"add"
 
 (*XXX is there a difference in Stan math for unary plus?*)
-let _ = Hashtbl.add_multi operator_names ~key:"PPlus" ~data:"plus"
-let _ = Hashtbl.add_multi operator_names ~key:"Minus" ~data:"subtract"
+let _ = Hashtbl.add_multi operator_names ~key:"PPlus__" ~data:"plus"
+let _ = Hashtbl.add_multi operator_names ~key:"Minus__" ~data:"subtract"
 
 (*XXX is there a difference in Stan math for unary minus?*)
-let _ = Hashtbl.add_multi operator_names ~key:"PMinus" ~data:"minus"
-let _ = Hashtbl.add_multi operator_names ~key:"Times" ~data:"multiply"
-let _ = Hashtbl.add_multi operator_names ~key:"Divide" ~data:"divide"
-let _ = Hashtbl.add_multi operator_names ~key:"Divide" ~data:"mdivide_right"
-let _ = Hashtbl.add_multi operator_names ~key:"Modulo" ~data:"modulus"
-let _ = Hashtbl.add_multi operator_names ~key:"LDivide" ~data:"mdivide_left"
-let _ = Hashtbl.add_multi operator_names ~key:"EltTimes" ~data:"elt_multiply"
-let _ = Hashtbl.add_multi operator_names ~key:"EltDivide" ~data:"elt_divide"
-let _ = Hashtbl.add_multi operator_names ~key:"Pow" ~data:"pow"
-let _ = Hashtbl.add_multi operator_names ~key:"Or" ~data:"logical_or"
-let _ = Hashtbl.add_multi operator_names ~key:"And" ~data:"logical_and"
-let _ = Hashtbl.add_multi operator_names ~key:"Equals" ~data:"logical_eq"
-let _ = Hashtbl.add_multi operator_names ~key:"NEquals" ~data:"logical_neq"
-let _ = Hashtbl.add_multi operator_names ~key:"Less" ~data:"logical_lt"
-let _ = Hashtbl.add_multi operator_names ~key:"Leq" ~data:"logical_lte"
-let _ = Hashtbl.add_multi operator_names ~key:"Greater" ~data:"logical_gt"
-let _ = Hashtbl.add_multi operator_names ~key:"Geq" ~data:"logical_gte"
-let _ = Hashtbl.add_multi operator_names ~key:"PNot" ~data:"logical_negation"
-let _ = Hashtbl.add_multi operator_names ~key:"Transpose" ~data:"transpose"
-let _ = Hashtbl.add_multi operator_names ~key:"TernaryIf" ~data:"if_else"
+let _ = Hashtbl.add_multi operator_names ~key:"PMinus__" ~data:"minus"
+let _ = Hashtbl.add_multi operator_names ~key:"Times__" ~data:"multiply"
+let _ = Hashtbl.add_multi operator_names ~key:"Divide__" ~data:"divide"
+let _ = Hashtbl.add_multi operator_names ~key:"Divide__" ~data:"mdivide_right"
+let _ = Hashtbl.add_multi operator_names ~key:"Modulo__" ~data:"modulus"
+let _ = Hashtbl.add_multi operator_names ~key:"LDivide__" ~data:"mdivide_left"
+let _ = Hashtbl.add_multi operator_names ~key:"EltTimes__" ~data:"elt_multiply"
+let _ = Hashtbl.add_multi operator_names ~key:"EltDivide__" ~data:"elt_divide"
+let _ = Hashtbl.add_multi operator_names ~key:"Pow__" ~data:"pow"
+let _ = Hashtbl.add_multi operator_names ~key:"Or__" ~data:"logical_or"
+let _ = Hashtbl.add_multi operator_names ~key:"And__" ~data:"logical_and"
+let _ = Hashtbl.add_multi operator_names ~key:"Equals__" ~data:"logical_eq"
+let _ = Hashtbl.add_multi operator_names ~key:"NEquals__" ~data:"logical_neq"
+let _ = Hashtbl.add_multi operator_names ~key:"Less__" ~data:"logical_lt"
+let _ = Hashtbl.add_multi operator_names ~key:"Leq__" ~data:"logical_lte"
+let _ = Hashtbl.add_multi operator_names ~key:"Greater__" ~data:"logical_gt"
+let _ = Hashtbl.add_multi operator_names ~key:"Geq__" ~data:"logical_gte"
+let _ = Hashtbl.add_multi operator_names ~key:"PNot__" ~data:"logical_negation"
+let _ = Hashtbl.add_multi operator_names ~key:"Transpose__" ~data:"transpose"
+let _ = Hashtbl.add_multi operator_names ~key:ternary_if ~data:"if_else"
 
 let _ =
   Hashtbl.add_multi operator_names ~key:"(OperatorAssign Plus)"
@@ -80,7 +82,7 @@ let operator_return_type_from_string op_name args =
     in
     try_recursive_find (Hashtbl.find_multi operator_names op_name)
 
-let operator_name op = Sexp.to_string [%sexp (op : Ast.operator)]
+let operator_name op = Sexp.to_string [%sexp (op : Ast.operator)] ^ "__"
 
 let operator_return_type op =
   operator_return_type_from_string (operator_name op)

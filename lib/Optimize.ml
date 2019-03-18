@@ -25,7 +25,12 @@ let replace_fresh_local_vars s' =
     | Decl {decl_adtype; decl_type; decl_id} ->
         let fresh_name = Util.gensym () in
         ( Decl {decl_adtype; decl_id= fresh_name; decl_type}
-        , Map.Poly.set m ~key:decl_id ~data:(Var fresh_name) )
+        , Map.Poly.set m ~key:decl_id
+            ~data:
+              { texpr= Var fresh_name
+              ; texpr_type= decl_type
+              ; texpr_adlevel= decl_adtype
+              ; texpr_loc= Mir.no_span } )
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
@@ -35,25 +40,40 @@ let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   Partial_evaluator.subst_stmt m
 
-let handle_early_returns opt_var b =
+let handle_early_returns opt_triple b =
   let f = function
     | Return opt_ret -> (
-      match (opt_var, opt_ret) with
-      | None, Some _ | Some _, None -> Errors.fatal_error ()
+      match (opt_triple, opt_ret) with
       | None, None -> Break
-      | Some v, Some e ->
+      | Some (Some rt, adt, name), Some e ->
           SList
-            [{stmt= Assignment (Var v, e); sloc= ""}; {stmt= Break; sloc= ""}]
-      )
+            [ { stmt=
+                  Assignment
+                    ( { texpr= Var name
+                      ; texpr_type= rt
+                      ; texpr_loc= Mir.no_span
+                      ; texpr_adlevel= adt }
+                    , e )
+              ; sloc= Mir.no_span }
+            ; {stmt= Break; sloc= Mir.no_span} ]
+      | _, _ -> Errors.fatal_error () )
     | x -> x
   in
   For
-    { loopvar= Var (Util.gensym ())
-    ; lower= Lit (Int, "1")
-    ; upper= Lit (Int, "1")
+    { loopvar= Util.gensym ()
+    ; lower=
+        { texpr= Lit (Int, "1")
+        ; texpr_type= UInt
+        ; texpr_adlevel= DataOnly
+        ; texpr_loc= Mir.no_span }
+    ; upper=
+        { texpr= Lit (Int, "1")
+        ; texpr_type= UInt
+        ; texpr_adlevel= DataOnly
+        ; texpr_loc= Mir.no_span }
     ; body= map_rec_stmt_loc f b }
 
-let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= ""}) l
+let map_no_loc l = List.map ~f:(fun s -> {stmt= s; sloc= Mir.no_span}) l
 let slist_no_loc l = SList (map_no_loc l)
 
 let slist_concat_no_loc l stmt =
@@ -80,7 +100,7 @@ let rec inline_function_statement adt fim {stmt; sloc} =
             | Some (_, args, b) ->
                 let b = replace_fresh_local_vars b in
                 let b = handle_early_returns None b in
-                (subst_args_stmt args es {stmt= b; sloc= ""}).stmt )
+                (subst_args_stmt args es {stmt= b; sloc= Mir.no_span}).stmt )
       | Check (f, l) ->
           let se_list = List.map ~f:(inline_function_expression adt fim) l in
           let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
@@ -111,7 +131,7 @@ let rec inline_function_statement adt fim {stmt; sloc} =
                          SList
                            ( [inline_function_statement adt fim s]
                            @ map_no_loc s' )
-                     ; sloc= "" } ))
+                     ; sloc= Mir.no_span } ))
       | For {loopvar; lower; upper; body} ->
           let s_lower, lower = inline_function_expression adt fim lower in
           let s_upper, upper = inline_function_expression adt fim upper in
@@ -128,7 +148,7 @@ let rec inline_function_statement adt fim {stmt; sloc} =
                            SList
                              ( [inline_function_statement adt fim body]
                              @ map_no_loc s_upper )
-                       ; sloc= "" } ) })
+                       ; sloc= Mir.no_span } ) })
       | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
       | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
       | FunDef {fdrt; fdname; fdargs; fdbody} ->
@@ -144,29 +164,28 @@ let rec inline_function_statement adt fim {stmt; sloc} =
   ; sloc }
 
 and inline_function_expression adt fim e =
-  match e with
-  | Var x -> ([], Var x)
-  | Lit (t, v) -> ([], Lit (t, v))
+  match e.texpr with
+  | Var _ -> ([], e)
+  | Lit (_, _) -> ([], e)
   | FunApp (s, es) -> (
       let se_list = List.map ~f:(inline_function_expression adt fim) es in
       let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
       let es = List.map ~f:snd se_list in
       match Map.find fim s with
-      | None -> (s_list, FunApp (s, es))
+      | None -> (s_list, e)
       | Some (rt, args, b) ->
           let b = replace_fresh_local_vars b in
           let x = Util.gensym () in
-          let b = handle_early_returns (Some x) b in
+          let b = handle_early_returns (Some (rt, adt, x)) b in
           ( s_list
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ; (subst_args_stmt args es {stmt= b; sloc= ""}).stmt ]
-          , Var x ) )
-  | BinOp (e1, op, e2) ->
-      let sl1, e1 = inline_function_expression adt fim e1 in
-      let sl2, e2 = inline_function_expression adt fim e2 in
-      (* TODO: really, || and && should be lazy here. *)
-      (sl1 @ sl2, BinOp (e1, op, e2))
+              ; (subst_args_stmt args es {stmt= b; sloc= Mir.no_span}).stmt ]
+          , { texpr= Var x
+            ; texpr_type= Option.value_exn rt
+            ; texpr_adlevel= adt
+            ; texpr_loc= Mir.no_span } )
+      (* TODO: really, || and && should be lazy here. *) )
   | TernaryIf (e1, e2, e3) ->
       let sl1, e1 = inline_function_expression adt fim e1 in
       let sl2, e2 = inline_function_expression adt fim e2 in
@@ -174,15 +193,14 @@ and inline_function_expression adt fim e =
       ( sl1
         @ [ IfElse
               ( e1
-              , {stmt= slist_no_loc sl2; sloc= ""}
-              , Some {stmt= slist_no_loc sl3; sloc= ""} ) ]
-      , TernaryIf (e1, e2, e3) )
+              , {stmt= slist_no_loc sl2; sloc= Mir.no_span}
+              , Some {stmt= slist_no_loc sl3; sloc= Mir.no_span} ) ]
+      , {e with texpr= TernaryIf (e1, e2, e3); texpr_loc= Mir.no_span} )
   | Indexed (e, i_list) ->
       let sl, e = inline_function_expression adt fim e in
       let si_list = List.map ~f:(inline_function_index adt fim) i_list in
-      let i_list = List.map ~f:snd si_list in
       let s_list = List.concat (List.rev (List.map ~f:fst si_list)) in
-      (s_list @ sl, Indexed (e, i_list))
+      (s_list @ sl, e)
 
 and inline_function_index adt fim i =
   match i with
@@ -204,7 +222,7 @@ and inline_function_index adt fim i =
       let sl, e = inline_function_expression adt fim e in
       (sl, MultiIndex e)
 
-let function_inlining (mir : stmt_loc prog) =
+let function_inlining (mir : typed_prog) =
   let function_inline_map = create_function_inline_map mir.functions_block in
   let inline_function_statements adt =
     List.map ~f:(inline_function_statement adt function_inline_map)
@@ -246,22 +264,25 @@ let unroll_loops_statement =
   let f stmt =
     match stmt with
     | For {loopvar; lower; upper; body} -> (
-      match (contains_top_break_or_continue body, lower, upper) with
+      match
+        (contains_top_break_or_continue body, lower.texpr, upper.texpr)
+      with
       | false, Lit (Int, low), Lit (Int, up) ->
           let range =
             List.map
-              ~f:(fun i -> Lit (Int, Int.to_string i))
+              ~f:(fun i ->
+                { texpr= Lit (Int, Int.to_string i)
+                ; texpr_type= UInt
+                ; texpr_loc= Mir.no_span
+                ; texpr_adlevel= DataOnly } )
               (List.range ~start:`inclusive ~stop:`inclusive
                  (Int.of_string low) (Int.of_string up))
-          in
-          let loopvar_str =
-            match loopvar with Var s -> s | _ -> Errors.fatal_error ()
           in
           let stmts =
             List.map
               ~f:(fun i ->
-                subst_args_stmt [loopvar_str] [i] {stmt= body.stmt; sloc= ""}
-                )
+                subst_args_stmt [loopvar] [i]
+                  {stmt= body.stmt; sloc= Mir.no_span} )
               range
           in
           SList stmts
@@ -270,7 +291,7 @@ let unroll_loops_statement =
   in
   map_rec_stmt_loc f
 
-let loop_unrolling = map_prog unroll_loops_statement
+let loop_unrolling = map_prog (fun x -> x) unroll_loops_statement
 
 let collapse_lists_statement =
   let rec collapse_lists l =
@@ -286,19 +307,19 @@ let collapse_lists_statement =
   in
   map_rec_stmt_loc f
 
-let list_collapsing (mir : stmt_loc prog) =
-  map_prog collapse_lists_statement mir
+let list_collapsing (mir : typed_prog) =
+  map_prog (fun x -> x) collapse_lists_statement mir
 
 let statement_of_program mir =
   { stmt=
       SList
         (List.map
-           ~f:(fun x -> {stmt= SList x; sloc= ""})
+           ~f:(fun x -> {stmt= SList x; sloc= Mir.no_span})
            [ mir.functions_block; mir.prepare_data; mir.prepare_params
            ; mir.log_prob; mir.generate_quantities ])
-  ; sloc= "" }
+  ; sloc= Mir.no_span }
 
-let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
+let update_program_statement_blocks (mir : typed_prog) (s : stmt_loc) =
   let l =
     match s.stmt with
     | SList l ->
@@ -323,8 +344,8 @@ let propagation
       -> (module
           Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Mir.expr) Map.Poly.t option))
-    (mir : stmt_loc prog) =
+             and type properties = (string, Mir.expr_typed_located) Map.Poly.t
+                                   option)) (mir : typed_prog) =
   let s = statement_of_program mir in
   let flowgraph, flowgraph_to_mir =
     Monotone_framework.forward_flowgraph_of_stmt s
@@ -355,17 +376,16 @@ let expression_propagation =
 
 let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
 
-let rec can_side_effect_expr (e : expr) =
-  match e with
+let rec can_side_effect_expr (e : expr_typed_located) =
+  match e.texpr with
   | Var _ | Lit (_, _) -> false
   | FunApp (f, es) ->
       String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
-  | BinOp (e1, _, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
 
-and can_side_effect_idx (i : idx) =
+and can_side_effect_idx (i : expr_typed_located index) =
   match i with
   | All -> false
   | Single e | Upfrom e | Downfrom e | MultiIndex e -> can_side_effect_expr e
@@ -375,7 +395,7 @@ let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
 
 (* TODO: could also implement partial dead code elimination *)
-let dead_code_elimination (mir : stmt_loc prog) =
+let dead_code_elimination (mir : typed_prog) =
   (* TODO: think about whether we should treat function bodies as local scopes in the statement
    from the POV of a live variables analysis.
    (Obviously, this shouldn't be the case for the purposes of reaching definitions,
@@ -397,11 +417,11 @@ let dead_code_elimination (mir : stmt_loc prog) =
       (Map.find_exn live_variables i).Monotone_framework_sigs.entry
     in
     match stmt with
-    | Assignment (Var x, rhs) ->
+    | Assignment ({texpr= Var x; _}, rhs) ->
         if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
           stmt
         else Skip
-    | Assignment (Indexed (Var x, is), rhs) ->
+    | Assignment ({texpr= Indexed ({texpr= Var x; _}, is); _}, rhs) ->
         if
           Set.Poly.mem live_variables_s x
           || can_side_effect_expr rhs
@@ -424,13 +444,13 @@ let dead_code_elimination (mir : stmt_loc prog) =
              || Option.map ~f:(fun x -> x.stmt) b2 = None )
         then Skip
         else
-          match e with
+          match e.texpr with
           | Lit (Int, "0") | Lit (Real, "0.0") -> (
             match b2 with Some x -> x.stmt | None -> Skip )
           | Lit (_, _) -> b1.stmt
           | _ -> IfElse (e, b1, b2) )
     | While (e, b) -> (
-      match e with
+      match e.texpr with
       | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
       | _ -> While (e, b) )
     | For {loopvar; lower; upper; body} ->
@@ -484,30 +504,50 @@ let%expect_test "map_rec_stmt_loc" =
     | NRFunApp ("print", [s]) -> NRFunApp ("print", [s; s])
     | x -> x
   in
-  let mir = map_prog (map_rec_stmt_loc f) mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  let mir = map_prog (fun x -> x) (map_rec_stmt_loc f) mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))
+        (((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+              (texpr_adlevel DataOnly))
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+              (texpr_adlevel DataOnly))))))
          ((sloc <opaque>)
           (stmt
-           (IfElse (Lit Int 13)
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 13))
+             (texpr_adlevel DataOnly))
             ((sloc <opaque>)
              (stmt
               (Block
                (((sloc <opaque>)
-                 (stmt (NRFunApp print ((Lit Int 244) (Lit Int 244)))))
+                 (stmt
+                  (NRFunApp print
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 244))
+                     (texpr_adlevel DataOnly))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 244))
+                     (texpr_adlevel DataOnly))))))
                 ((sloc <opaque>)
                  (stmt
-                  (IfElse (Lit Int 24)
+                  (IfElse
+                   ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+                    (texpr_adlevel DataOnly))
                    ((sloc <opaque>)
                     (stmt
                      (Block
                       (((sloc <opaque>)
-                        (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))))))
+                        (stmt
+                         (NRFunApp print
+                          (((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 24)) (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 24)) (texpr_adlevel DataOnly))))))))))
                    ())))))))
             ())))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
@@ -534,7 +574,7 @@ let%expect_test "map_rec_stmt_loc" =
     | x -> (x, i)
   in
   let mir_num =
-    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; sloc= ""}
+    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; sloc= Mir.no_span}
   in
   print_s [%sexp (mir_num : stmt_loc * int)] ;
   [%expect
@@ -542,23 +582,43 @@ let%expect_test "map_rec_stmt_loc" =
       (((sloc <opaque>)
         (stmt
          (SList
-          (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))
+          (((sloc <opaque>)
+            (stmt
+             (NRFunApp print
+              (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+                (texpr_adlevel DataOnly))
+               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+                (texpr_adlevel DataOnly))))))
            ((sloc <opaque>)
             (stmt
-             (IfElse (Lit Int 13)
+             (IfElse
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 13))
+               (texpr_adlevel DataOnly))
               ((sloc <opaque>)
                (stmt
                 (Block
                  (((sloc <opaque>)
-                   (stmt (NRFunApp print ((Lit Int 244) (Lit Int 244)))))
+                   (stmt
+                    (NRFunApp print
+                     (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 244))
+                       (texpr_adlevel DataOnly))
+                      ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 244))
+                       (texpr_adlevel DataOnly))))))
                   ((sloc <opaque>)
                    (stmt
-                    (IfElse (Lit Int 24)
+                    (IfElse
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+                      (texpr_adlevel DataOnly))
                      ((sloc <opaque>)
                       (stmt
                        (Block
                         (((sloc <opaque>)
-                          (stmt (NRFunApp print ((Lit Int 24) (Lit Int 24)))))))))
+                          (stmt
+                           (NRFunApp print
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 24)) (texpr_adlevel DataOnly))
+                             ((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 24)) (texpr_adlevel DataOnly))))))))))
                      ())))))))
               ())))))))
        3) |}]
@@ -585,7 +645,7 @@ let%expect_test "inline functions" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -597,8 +657,16 @@ let%expect_test "inline functions" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
-                 ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                      (texpr_adlevel DataOnly))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var y))
+                      (texpr_adlevel AutoDiffable))))))))))))))
          ((sloc <opaque>)
           (stmt
            (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -607,24 +675,60 @@ let%expect_test "inline functions" =
               (stmt
                (Block
                 (((sloc <opaque>)
-                  (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2)))))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UReal) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Pow__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt
-           (For (loopvar (Var sym1__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+           (For (loopvar sym1__)
+            (lower
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
+            (upper
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
             (body
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
                   (stmt
                    (NRFunApp print
-                    ((FunApp make_rowvec
-                      ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
-                       (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
+                    (((texpr_type UMatrix) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp make_rowvec
+                        (((texpr_type URowVector) (texpr_loc <opaque>)
+                          (texpr
+                           (FunApp make_rowvec
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                             ((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type URowVector) (texpr_loc <opaque>)
+                          (texpr
+                           (FunApp make_rowvec
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 4)) (texpr_adlevel DataOnly))
+                             ((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 6)) (texpr_adlevel DataOnly)))))
+                          (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))
          ((sloc <opaque>)
           (stmt
            (SList
@@ -633,7 +737,13 @@ let%expect_test "inline functions" =
                (Decl (decl_adtype AutoDiffable) (decl_id sym2__) (decl_type UReal))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym3__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym3__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
@@ -643,10 +753,23 @@ let%expect_test "inline functions" =
                        (SList
                         (((sloc <opaque>)
                           (stmt
-                           (Assignment (Var sym2__)
-                            (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
+                           (Assignment
+                            ((texpr_type UReal) (texpr_loc <opaque>)
+                             (texpr (Var sym2__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UReal) (texpr_loc <opaque>)
+                             (texpr
+                              (FunApp Pow__
+                               (((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 53)) (texpr_adlevel DataOnly))
+                                ((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                             (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym2__)))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp reject
+                (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym2__))
+                  (texpr_adlevel AutoDiffable))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "list collapsing" =
@@ -672,7 +795,7 @@ let%expect_test "list collapsing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
     ((functions_block
@@ -684,8 +807,16 @@ let%expect_test "list collapsing" =
            ((sloc <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>) (stmt (NRFunApp print ((Var x)))))
-               ((sloc <opaque>) (stmt (NRFunApp print ((Var y)))))))))))))
+              (((sloc <opaque>)
+                (stmt
+                 (NRFunApp print
+                  (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                    (texpr_adlevel DataOnly))))))
+               ((sloc <opaque>)
+                (stmt
+                 (NRFunApp print
+                  (((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var y))
+                    (texpr_adlevel AutoDiffable))))))))))))))
        ((sloc <opaque>)
         (stmt
          (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -694,24 +825,60 @@ let%expect_test "list collapsing" =
             (stmt
              (Block
               (((sloc <opaque>)
-                (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2)))))))))))))))))
+                (stmt
+                 (Return
+                  (((texpr_type UReal) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Pow__
+                      (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly))))))))))))))))
      (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
      (prepare_params ())
      (log_prob
       (((sloc <opaque>)
         (stmt
-         (For (loopvar (Var sym4__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+         (For (loopvar sym4__)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
           (body
            ((sloc <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 3)))))
+              (((sloc <opaque>)
+                (stmt
+                 (NRFunApp print
+                  (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                    (texpr_adlevel DataOnly))))))
                ((sloc <opaque>)
                 (stmt
                  (NRFunApp print
-                  ((FunApp make_rowvec
-                    ((FunApp make_rowvec ((Lit Int 3) (Lit Int 2)))
-                     (FunApp make_rowvec ((Lit Int 4) (Lit Int 6)))))))))))))))))
+                  (((texpr_type UMatrix) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp make_rowvec
+                      (((texpr_type URowVector) (texpr_loc <opaque>)
+                        (texpr
+                         (FunApp make_rowvec
+                          (((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type URowVector) (texpr_loc <opaque>)
+                        (texpr
+                         (FunApp make_rowvec
+                          (((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 4)) (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 6)) (texpr_adlevel DataOnly)))))
+                        (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly))))))))))))))
        ((sloc <opaque>)
         (stmt
          (SList
@@ -720,17 +887,36 @@ let%expect_test "list collapsing" =
              (Decl (decl_adtype AutoDiffable) (decl_id sym5__) (decl_type UReal))))
            ((sloc <opaque>)
             (stmt
-             (For (loopvar (Var sym6__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+             (For (loopvar sym6__)
+              (lower
+               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                (texpr_adlevel DataOnly)))
+              (upper
+               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                (texpr_adlevel DataOnly)))
               (body
                ((sloc <opaque>)
                 (stmt
                  (Block
                   (((sloc <opaque>)
                     (stmt
-                     (Assignment (Var sym5__)
-                      (FunApp Pow ((Lit Int 53) (Lit Int 2))))))
+                     (Assignment
+                      ((texpr_type UReal) (texpr_loc <opaque>)
+                       (texpr (Var sym5__)) (texpr_adlevel AutoDiffable))
+                      ((texpr_type UReal) (texpr_loc <opaque>)
+                       (texpr
+                        (FunApp Pow__
+                         (((texpr_type UInt) (texpr_loc <opaque>)
+                           (texpr (Lit Int 53)) (texpr_adlevel DataOnly))
+                          ((texpr_type UInt) (texpr_loc <opaque>)
+                           (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                       (texpr_adlevel DataOnly)))))
                    ((sloc <opaque>) (stmt Break))))))))))
-           ((sloc <opaque>) (stmt (NRFunApp reject ((Var sym5__)))))))))))
+           ((sloc <opaque>)
+            (stmt
+             (NRFunApp reject
+              (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym5__))
+                (texpr_adlevel AutoDiffable))))))))))))
      (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path ""))
     |}]
 
@@ -752,7 +938,7 @@ let%expect_test "do not inline recursive functions" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -768,11 +954,28 @@ let%expect_test "do not inline recursive functions" =
               (stmt
                (Block
                 (((sloc <opaque>)
-                  (stmt (Return ((FunApp Pow ((Var z) (Lit Int 2)))))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UReal) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Pow__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>) (stmt (NRFunApp reject ((FunApp g ((Lit Int 53)))))))))
+        (((sloc <opaque>)
+          (stmt
+           (NRFunApp reject
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp g
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 53))
+                  (texpr_adlevel DataOnly)))))
+              (texpr_adlevel DataOnly))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in for loop" =
@@ -797,7 +1000,7 @@ let%expect_test "inline function in for loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -808,8 +1011,16 @@ let%expect_test "inline function in for loop" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str f))
+                      (texpr_adlevel DataOnly))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+                      (texpr_adlevel DataOnly))))))))))))))
          ((sloc <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -817,9 +1028,22 @@ let%expect_test "inline function in for loop" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str g))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
@@ -831,66 +1055,130 @@ let%expect_test "inline function in for loop" =
                (Decl (decl_adtype AutoDiffable) (decl_id sym7__) (decl_type UInt))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym8__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym8__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str f)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
-                          (stmt (Assignment (Var sym7__) (Lit Int 42))))
+                          (stmt
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Var sym7__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Lit Int 42)) (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
              ((sloc <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym9__) (decl_type UInt))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym10__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym10__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str g)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
                           (stmt
-                           (Assignment (Var sym9__)
-                            (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Var sym9__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr
+                              (FunApp Plus__
+                               (((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                                ((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                             (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var i)) (lower (Var sym7__)) (upper (Var sym9__))
+               (For (loopvar i)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym7__))
+                  (texpr_adlevel AutoDiffable)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym9__))
+                  (texpr_adlevel AutoDiffable)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (SList
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str body)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>)
                       (stmt
                        (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
                         (decl_type UInt))))
                      ((sloc <opaque>)
                       (stmt
-                       (For (loopvar (Var sym10__)) (lower (Lit Int 1))
-                        (upper (Lit Int 1))
+                       (For (loopvar sym10__)
+                        (lower
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 1)) (texpr_adlevel DataOnly)))
+                        (upper
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 1)) (texpr_adlevel DataOnly)))
                         (body
                          ((sloc <opaque>)
                           (stmt
                            (Block
                             (((sloc <opaque>)
-                              (stmt (NRFunApp print ((Lit Str g)))))
+                              (stmt
+                               (NRFunApp print
+                                (((texpr_type UReal) (texpr_loc <opaque>)
+                                  (texpr (Lit Str g)) (texpr_adlevel DataOnly))))))
                              ((sloc <opaque>)
                               (stmt
                                (SList
                                 (((sloc <opaque>)
                                   (stmt
-                                   (Assignment (Var sym9__)
-                                    (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                                   (Assignment
+                                    ((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr (Var sym9__))
+                                     (texpr_adlevel AutoDiffable))
+                                    ((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr
+                                      (FunApp Plus__
+                                       (((texpr_type UInt) (texpr_loc <opaque>)
+                                         (texpr (Lit Int 3))
+                                         (texpr_adlevel DataOnly))
+                                        ((texpr_type UInt) (texpr_loc <opaque>)
+                                         (texpr (Lit Int 24))
+                                         (texpr_adlevel DataOnly)))))
+                                     (texpr_adlevel DataOnly)))))
                                  ((sloc <opaque>) (stmt Break))))))))))))))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
@@ -916,7 +1204,7 @@ let%expect_test "inline function in while loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -927,8 +1215,16 @@ let%expect_test "inline function in while loop" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str f))
+                      (texpr_adlevel DataOnly))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+                      (texpr_adlevel DataOnly))))))))))))))
          ((sloc <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -936,9 +1232,22 @@ let%expect_test "inline function in while loop" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str g))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
@@ -950,47 +1259,93 @@ let%expect_test "inline function in while loop" =
                (Decl (decl_adtype AutoDiffable) (decl_id sym11__) (decl_type UInt))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym12__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym12__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str g)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
                           (stmt
-                           (Assignment (Var sym11__)
-                            (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Var sym11__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr
+                              (FunApp Plus__
+                               (((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                                ((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                             (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
              ((sloc <opaque>)
               (stmt
-               (While (Var sym11__)
+               (While
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym11__))
+                 (texpr_adlevel AutoDiffable))
                 ((sloc <opaque>)
                  (stmt
                   (SList
-                   (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body)))))
+                   (((sloc <opaque>)
+                     (stmt
+                      (NRFunApp print
+                       (((texpr_type UReal) (texpr_loc <opaque>)
+                         (texpr (Lit Str body)) (texpr_adlevel DataOnly))))))
                     ((sloc <opaque>)
                      (stmt
                       (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
                        (decl_type UInt))))
                     ((sloc <opaque>)
                      (stmt
-                      (For (loopvar (Var sym12__)) (lower (Lit Int 1))
-                       (upper (Lit Int 1))
+                      (For (loopvar sym12__)
+                       (lower
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                         (texpr_adlevel DataOnly)))
+                       (upper
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                         (texpr_adlevel DataOnly)))
                        (body
                         ((sloc <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                           (((sloc <opaque>)
+                             (stmt
+                              (NRFunApp print
+                               (((texpr_type UReal) (texpr_loc <opaque>)
+                                 (texpr (Lit Str g)) (texpr_adlevel DataOnly))))))
                             ((sloc <opaque>)
                              (stmt
                               (SList
                                (((sloc <opaque>)
                                  (stmt
-                                  (Assignment (Var sym11__)
-                                   (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym11__))
+                                    (texpr_adlevel AutoDiffable))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr
+                                     (FunApp Plus__
+                                      (((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Lit Int 3))
+                                        (texpr_adlevel DataOnly))
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Lit Int 24))
+                                        (texpr_adlevel DataOnly)))))
+                                    (texpr_adlevel DataOnly)))))
                                 ((sloc <opaque>) (stmt Break)))))))))))))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
@@ -1016,7 +1371,7 @@ let%expect_test "inline function in if then else" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1027,8 +1382,16 @@ let%expect_test "inline function in if then else" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str f))
+                      (texpr_adlevel DataOnly))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+                      (texpr_adlevel DataOnly))))))))))))))
          ((sloc <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -1036,9 +1399,22 @@ let%expect_test "inline function in if then else" =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str g))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
@@ -1050,24 +1426,50 @@ let%expect_test "inline function in if then else" =
                (Decl (decl_adtype AutoDiffable) (decl_id sym13__) (decl_type UInt))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym14__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym14__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str g)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
                           (stmt
-                           (Assignment (Var sym13__)
-                            (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Var sym13__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr
+                              (FunApp Plus__
+                               (((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                                ((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                             (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
              ((sloc <opaque>)
               (stmt
-               (IfElse (Var sym13__)
-                ((sloc <opaque>) (stmt (NRFunApp print ((Lit Str body))))) ())))))))))
+               (IfElse
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym13__))
+                 (texpr_adlevel AutoDiffable))
+                ((sloc <opaque>)
+                 (stmt
+                  (NRFunApp print
+                   (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str body))
+                     (texpr_adlevel DataOnly))))))
+                ())))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path ""))
 
     |}]
@@ -1098,7 +1500,7 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1109,8 +1511,16 @@ let%expect_test "inline function in ternary if " =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                 ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str f))
+                      (texpr_adlevel DataOnly))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+                      (texpr_adlevel DataOnly))))))))))))))
          ((sloc <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
@@ -1118,9 +1528,22 @@ let%expect_test "inline function in ternary if " =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str g))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 24))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 24)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))
          ((sloc <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname h) (fdargs ((AutoDiffable z UInt)))
@@ -1128,9 +1551,22 @@ let%expect_test "inline function in ternary if " =
              ((sloc <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str h)))))
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str h))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (Return ((BinOp (Var z) Plus (Lit Int 4))))))))))))))))
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 4)) (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
@@ -1142,21 +1578,38 @@ let%expect_test "inline function in ternary if " =
                (Decl (decl_adtype AutoDiffable) (decl_id sym15__) (decl_type UInt))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym16__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym16__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str f)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
-                          (stmt (Assignment (Var sym15__) (Lit Int 42))))
+                          (stmt
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Var sym15__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Lit Int 42)) (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
              ((sloc <opaque>)
               (stmt
-               (IfElse (Var sym15__)
+               (IfElse
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym15__))
+                 (texpr_adlevel AutoDiffable))
                 ((sloc <opaque>)
                  (stmt
                   (SList
@@ -1166,20 +1619,41 @@ let%expect_test "inline function in ternary if " =
                        (decl_type UInt))))
                     ((sloc <opaque>)
                      (stmt
-                      (For (loopvar (Var sym18__)) (lower (Lit Int 1))
-                       (upper (Lit Int 1))
+                      (For (loopvar sym18__)
+                       (lower
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                         (texpr_adlevel DataOnly)))
+                       (upper
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                         (texpr_adlevel DataOnly)))
                        (body
                         ((sloc <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str g)))))
+                           (((sloc <opaque>)
+                             (stmt
+                              (NRFunApp print
+                               (((texpr_type UReal) (texpr_loc <opaque>)
+                                 (texpr (Lit Str g)) (texpr_adlevel DataOnly))))))
                             ((sloc <opaque>)
                              (stmt
                               (SList
                                (((sloc <opaque>)
                                  (stmt
-                                  (Assignment (Var sym17__)
-                                   (BinOp (Lit Int 3) Plus (Lit Int 24)))))
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym17__))
+                                    (texpr_adlevel AutoDiffable))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr
+                                     (FunApp Plus__
+                                      (((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Lit Int 3))
+                                        (texpr_adlevel DataOnly))
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Lit Int 24))
+                                        (texpr_adlevel DataOnly)))))
+                                    (texpr_adlevel DataOnly)))))
                                 ((sloc <opaque>) (stmt Break))))))))))))))))))
                 (((sloc <opaque>)
                   (stmt
@@ -1190,26 +1664,55 @@ let%expect_test "inline function in ternary if " =
                         (decl_type UInt))))
                      ((sloc <opaque>)
                       (stmt
-                       (For (loopvar (Var sym20__)) (lower (Lit Int 1))
-                        (upper (Lit Int 1))
+                       (For (loopvar sym20__)
+                        (lower
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 1)) (texpr_adlevel DataOnly)))
+                        (upper
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 1)) (texpr_adlevel DataOnly)))
                         (body
                          ((sloc <opaque>)
                           (stmt
                            (Block
                             (((sloc <opaque>)
-                              (stmt (NRFunApp print ((Lit Str h)))))
+                              (stmt
+                               (NRFunApp print
+                                (((texpr_type UReal) (texpr_loc <opaque>)
+                                  (texpr (Lit Str h)) (texpr_adlevel DataOnly))))))
                              ((sloc <opaque>)
                               (stmt
                                (SList
                                 (((sloc <opaque>)
                                   (stmt
-                                   (Assignment (Var sym19__)
-                                    (BinOp (Lit Int 4) Plus (Lit Int 4)))))
+                                   (Assignment
+                                    ((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr (Var sym19__))
+                                     (texpr_adlevel AutoDiffable))
+                                    ((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr
+                                      (FunApp Plus__
+                                       (((texpr_type UInt) (texpr_loc <opaque>)
+                                         (texpr (Lit Int 4))
+                                         (texpr_adlevel DataOnly))
+                                        ((texpr_type UInt) (texpr_loc <opaque>)
+                                         (texpr (Lit Int 4))
+                                         (texpr_adlevel DataOnly)))))
+                                     (texpr_adlevel DataOnly)))))
                                  ((sloc <opaque>) (stmt Break))))))))))))))))))))))
              ((sloc <opaque>)
               (stmt
                (NRFunApp print
-                ((TernaryIf (Var sym15__) (Var sym17__) (Var sym19__))))))))))))
+                (((texpr_type UInt) (texpr_loc <opaque>)
+                  (texpr
+                   (TernaryIf
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym15__))
+                     (texpr_adlevel AutoDiffable))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym17__))
+                     (texpr_adlevel AutoDiffable))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym19__))
+                     (texpr_adlevel AutoDiffable))))
+                  (texpr_adlevel DataOnly))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in ternary if " =
@@ -1233,7 +1736,7 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1246,14 +1749,28 @@ let%expect_test "inline function in ternary if " =
                (Block
                 (((sloc <opaque>)
                   (stmt
-                   (IfElse (Lit Int 2)
+                   (IfElse
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                     (texpr_adlevel DataOnly))
                     ((sloc <opaque>)
                      (stmt
                       (Block
-                       (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
-                        ((sloc <opaque>) (stmt (Return ((Lit Int 42)))))))))
+                       (((sloc <opaque>)
+                         (stmt
+                          (NRFunApp print
+                           (((texpr_type UReal) (texpr_loc <opaque>)
+                             (texpr (Lit Str f)) (texpr_adlevel DataOnly))))))
+                        ((sloc <opaque>)
+                         (stmt
+                          (Return
+                           (((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Lit Int 42)) (texpr_adlevel DataOnly))))))))))
                     ())))
-                 ((sloc <opaque>) (stmt (Return ((Lit Int 6)))))))))))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
@@ -1265,32 +1782,59 @@ let%expect_test "inline function in ternary if " =
                (Decl (decl_adtype AutoDiffable) (decl_id sym21__) (decl_type UInt))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var sym22__)) (lower (Lit Int 1)) (upper (Lit Int 1))
+               (For (loopvar sym22__)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
                     (((sloc <opaque>)
                       (stmt
-                       (IfElse (Lit Int 2)
+                       (IfElse
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                         (texpr_adlevel DataOnly))
                         ((sloc <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str f)))))
+                           (((sloc <opaque>)
+                             (stmt
+                              (NRFunApp print
+                               (((texpr_type UReal) (texpr_loc <opaque>)
+                                 (texpr (Lit Str f)) (texpr_adlevel DataOnly))))))
                             ((sloc <opaque>)
                              (stmt
                               (SList
                                (((sloc <opaque>)
-                                 (stmt (Assignment (Var sym21__) (Lit Int 42))))
+                                 (stmt
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym21__))
+                                    (texpr_adlevel AutoDiffable))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Lit Int 42)) (texpr_adlevel DataOnly)))))
                                 ((sloc <opaque>) (stmt Break))))))))))
                         ())))
                      ((sloc <opaque>)
                       (stmt
                        (SList
                         (((sloc <opaque>)
-                          (stmt (Assignment (Var sym21__) (Lit Int 6))))
+                          (stmt
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Var sym21__)) (texpr_adlevel AutoDiffable))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Lit Int 6)) (texpr_adlevel DataOnly)))))
                          ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>) (stmt (NRFunApp print ((Var sym21__)))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym21__))
+                  (texpr_adlevel AutoDiffable))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "unroll nested loop" =
@@ -1306,7 +1850,7 @@ let%expect_test "unroll nested loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1319,16 +1863,36 @@ let%expect_test "unroll nested loop" =
               (stmt
                (SList
                 (((sloc <opaque>)
-                  (stmt (NRFunApp print ((Lit Int 1) (Lit Int 3)))))
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                      (texpr_adlevel DataOnly))
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (NRFunApp print ((Lit Int 1) (Lit Int 4)))))))))
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                      (texpr_adlevel DataOnly))
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+                      (texpr_adlevel DataOnly))))))))))
              ((sloc <opaque>)
               (stmt
                (SList
                 (((sloc <opaque>)
-                  (stmt (NRFunApp print ((Lit Int 2) (Lit Int 3)))))
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                      (texpr_adlevel DataOnly))
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                      (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>)
-                  (stmt (NRFunApp print ((Lit Int 2) (Lit Int 4)))))))))))))))
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                      (texpr_adlevel DataOnly))
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "unroll nested loop with break" =
@@ -1346,7 +1910,7 @@ let%expect_test "unroll nested loop with break" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1357,21 +1921,41 @@ let%expect_test "unroll nested loop with break" =
            (SList
             (((sloc <opaque>)
               (stmt
-               (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
+               (For (loopvar j)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 1)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 1)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>) (stmt Break))))))))))
              ((sloc <opaque>)
               (stmt
-               (For (loopvar (Var j)) (lower (Lit Int 3)) (upper (Lit Int 4))
+               (For (loopvar j)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+                  (texpr_adlevel DataOnly)))
                 (body
                  ((sloc <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 2)))))
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 2)) (texpr_adlevel DataOnly))))))
                      ((sloc <opaque>) (stmt Break))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
@@ -1395,32 +1979,60 @@ let%expect_test "constant propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (data_vars ())
      (tdata_vars
-      ((i
-        ((tvident i) (tvtype SInt) (tvtrans Identity)
-         (tvloc "file string, line 3, columns 8-14")))
-       (j
-        ((tvident j) (tvtype SInt) (tvtrans Identity)
-         (tvloc "file string, line 5, columns 8-14")))))
+      ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
+       (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
      (prepare_data
-      (((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
+      (((sloc <opaque>)
+        (stmt
+         (Assignment
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+           (texpr_adlevel DataOnly))
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+           (texpr_adlevel DataOnly)))))
        ((sloc <opaque>)
-        (stmt (Assignment (Var j) (BinOp (Lit Int 2) Plus (Lit Int 42)))))))
+        (stmt
+         (Assignment
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+           (texpr_adlevel DataOnly))
+          ((texpr_type UInt) (texpr_loc <opaque>)
+           (texpr
+            (FunApp Plus__
+             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+               (texpr_adlevel DataOnly)))))
+           (texpr_adlevel DataOnly)))))))
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
       (((sloc <opaque>)
         (stmt
-         (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Lit Int 42))
+         (For (loopvar x)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+            (texpr_adlevel DataOnly)))
           (body
            ((sloc <opaque>)
             (stmt
              (Block
               (((sloc <opaque>)
-                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 44))))))))))))))))
+                (stmt
+                 (NRFunApp print
+                  (((texpr_type UInt) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Plus__
+                      (((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Lit Int 42)) (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Lit Int 44)) (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly))))))))))))))))
      (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "constant propagation, local scope" =
@@ -1446,16 +2058,20 @@ let%expect_test "constant propagation, local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (data_vars ())
      (tdata_vars
-      ((i
-        ((tvident i) (tvtype SInt) (tvtrans Identity)
-         (tvloc "file string, line 3, columns 8-14")))))
+      ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
      (prepare_data
-      (((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
+      (((sloc <opaque>)
+        (stmt
+         (Assignment
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+           (texpr_adlevel DataOnly))
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+           (texpr_adlevel DataOnly)))))
        ((sloc <opaque>)
         (stmt
          (Block
@@ -1466,7 +2082,13 @@ let%expect_test "constant propagation, local scope" =
                 (stmt
                  (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
                ((sloc <opaque>) (stmt Skip))))))
-           ((sloc <opaque>) (stmt (Assignment (Var j) (Lit Int 2))))))))))
+           ((sloc <opaque>)
+            (stmt
+             (Assignment
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+               (texpr_adlevel DataOnly)))))))))))
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
       (((sloc <opaque>)
@@ -1477,13 +2099,28 @@ let%expect_test "constant propagation, local scope" =
            ((sloc <opaque>) (stmt Skip))))))
        ((sloc <opaque>)
         (stmt
-         (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Lit Int 42))
+         (For (loopvar x)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+            (texpr_adlevel DataOnly)))
           (body
            ((sloc <opaque>)
             (stmt
              (Block
               (((sloc <opaque>)
-                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Var j))))))))))))))))
+                (stmt
+                 (NRFunApp print
+                  (((texpr_type UInt) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Plus__
+                      (((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Lit Int 42)) (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+                        (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly))))))))))))))))
      (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "constant propagation, model block local scope" =
@@ -1508,7 +2145,7 @@ let%expect_test "constant propagation, model block local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1520,31 +2157,54 @@ let%expect_test "constant propagation, model block local scope" =
           (((sloc <opaque>)
             (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))
            ((sloc <opaque>) (stmt Skip))))))
-       ((sloc <opaque>) (stmt (Assignment (Var i) (Lit Int 42))))
+       ((sloc <opaque>)
+        (stmt
+         (Assignment
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+           (texpr_adlevel DataOnly))
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+           (texpr_adlevel DataOnly)))))
        ((sloc <opaque>)
         (stmt
          (SList
           (((sloc <opaque>)
             (stmt (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
            ((sloc <opaque>) (stmt Skip))))))
-       ((sloc <opaque>) (stmt (Assignment (Var j) (Lit Int 2))))))
+       ((sloc <opaque>)
+        (stmt
+         (Assignment
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+           (texpr_adlevel DataOnly))
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+           (texpr_adlevel DataOnly)))))))
      (gen_quant_vars
-      ((i
-        ((tvident i) (tvtype SInt) (tvtrans Identity)
-         (tvloc "file string, line 9, columns 8-14")))
-       (j
-        ((tvident j) (tvtype SInt) (tvtrans Identity)
-         (tvloc "file string, line 10, columns 8-14")))))
+      ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
+       (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
      (generate_quantities
       (((sloc <opaque>)
         (stmt
-         (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Lit Int 42))
+         (For (loopvar x)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+            (texpr_adlevel DataOnly)))
           (body
            ((sloc <opaque>)
             (stmt
              (Block
               (((sloc <opaque>)
-                (stmt (NRFunApp print ((BinOp (Lit Int 42) Plus (Lit Int 2))))))))))))))))
+                (stmt
+                 (NRFunApp print
+                  (((texpr_type UInt) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Plus__
+                      (((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Lit Int 42)) (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly))))))))))))))))
      (prog_name "") (prog_path "")) |}]
 
 let%expect_test "expression propagation" =
@@ -1566,25 +2226,38 @@ let%expect_test "expression propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ())
        (tdata_vars
-        ((i
-          ((tvident i) (tvtype SInt) (tvtrans Identity)
-           (tvloc "file string, line 3, columns 8-14")))
-         (j
-          ((tvident j) (tvtype SInt) (tvtrans Identity)
-           (tvloc "file string, line 4, columns 8-14")))))
+        ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
+         (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
        (prepare_data
         (((sloc <opaque>)
-          (stmt (Assignment (Var j) (BinOp (Lit Int 2) Plus (Var i)))))))
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Plus__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))))
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt
-           (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Var i))
+           (For (loopvar x)
+            (lower
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
+            (upper
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly)))
             (body
              ((sloc <opaque>)
               (stmt
@@ -1592,7 +2265,20 @@ let%expect_test "expression propagation" =
                 (((sloc <opaque>)
                   (stmt
                    (NRFunApp print
-                    ((BinOp (Var i) Plus (BinOp (Lit Int 2) Plus (Var i)))))))))))))))))
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr
+                           (FunApp Plus__
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 2)) (texpr_adlevel DataOnly))
+                             ((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Var i)) (texpr_adlevel DataOnly)))))
+                          (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "copy propagation" =
@@ -1616,29 +2302,46 @@ let%expect_test "copy propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = copy_propagation mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ())
        (tdata_vars
-        ((i
-          ((tvident i) (tvtype SInt) (tvtrans Identity)
-           (tvloc "file string, line 3, columns 8-14")))
-         (j
-          ((tvident j) (tvtype SInt) (tvtrans Identity)
-           (tvloc "file string, line 4, columns 8-14")))
-         (k
-          ((tvident k) (tvtype SInt) (tvtrans Identity)
-           (tvloc "file string, line 6, columns 8-14")))))
+        ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
+         (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
+         (k ((tvident k) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
        (prepare_data
-        (((sloc <opaque>) (stmt (Assignment (Var j) (Var i))))
+        (((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+             (texpr_adlevel DataOnly)))))
          ((sloc <opaque>)
-          (stmt (Assignment (Var k) (BinOp (Lit Int 2) Times (Var i)))))))
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var k))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Times__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))))
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt
-           (For (loopvar (Var x)) (lower (Lit Int 1)) (upper (Var i))
+           (For (loopvar x)
+            (lower
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
+            (upper
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly)))
             (body
              ((sloc <opaque>)
               (stmt
@@ -1646,7 +2349,20 @@ let%expect_test "copy propagation" =
                 (((sloc <opaque>)
                   (stmt
                    (NRFunApp print
-                    ((BinOp (BinOp (Var i) Plus (Var i)) Plus (Var k))))))))))))))))
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr
+                           (FunApp Plus__
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Var i)) (texpr_adlevel DataOnly))
+                             ((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Var i)) (texpr_adlevel DataOnly)))))
+                          (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var k))
+                          (texpr_adlevel DataOnly)))))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination" =
@@ -1670,28 +2386,78 @@ let%expect_test "dead code elimination" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ())
        (tdata_vars
         ((i
-          ((tvident i) (tvtype (SArray SInt (Lit Int 2))) (tvtrans Identity)
-           (tvloc "file string, line 3, columns 8-17")))
+          ((tvident i)
+           (tvtype
+            (SArray SInt
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+              (texpr_adlevel DataOnly))))
+           (tvtrans Identity) (tvloc <opaque>)))
          (j
-          ((tvident j) (tvtype (SArray SInt (Lit Int 2))) (tvtrans Identity)
-           (tvloc "file string, line 6, columns 8-17")))))
+          ((tvident j)
+           (tvtype
+            (SArray SInt
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+              (texpr_adlevel DataOnly))))
+           (tvtrans Identity) (tvloc <opaque>)))))
        (prepare_data
         (((sloc <opaque>)
-          (stmt (Assignment (Var i) (FunApp make_array ((Lit Int 3) (Lit Int 2))))))
+          (stmt
+           (Assignment
+            ((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var i))
+             (texpr_adlevel DataOnly))
+            ((texpr_type (UArray UInt)) (texpr_loc <opaque>)
+             (texpr
+              (FunApp make_array
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))
          ((sloc <opaque>)
-          (stmt (Assignment (Var j) (FunApp make_array ((Lit Int 3) (Lit Int 2))))))
+          (stmt
+           (Assignment
+            ((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var j))
+             (texpr_adlevel DataOnly))
+            ((texpr_type (UArray UInt)) (texpr_loc <opaque>)
+             (texpr
+              (FunApp make_array
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))
          ((sloc <opaque>)
-          (stmt (Assignment (Indexed (Var j) ((Single (Lit Int 1)))) (Lit Int 2))))))
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (Indexed
+               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+                (texpr_adlevel DataOnly))
+               ((Single
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly))))))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+             (texpr_adlevel DataOnly)))))))
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
-         ((sloc <opaque>) (stmt (NRFunApp print ((Var j)))))))
+        (((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var j))
+              (texpr_adlevel DataOnly))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination decl" =
@@ -1715,7 +2481,7 @@ let%expect_test "dead code elimination decl" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1737,7 +2503,11 @@ let%expect_test "dead code elimination decl" =
                 (((sloc <opaque>)
                   (stmt
                    (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-             ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                  (texpr_adlevel DataOnly))))))))))))
        (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination functions" =
@@ -1759,7 +2529,7 @@ let%expect_test "dead code elimination functions" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1777,10 +2547,19 @@ let%expect_test "dead code elimination functions" =
                       (stmt
                        (Decl (decl_adtype AutoDiffable) (decl_id x)
                         (decl_type UInt))))))))
-                 ((sloc <opaque>) (stmt (Return ((Lit Int 24)))))))))))))))
+                 ((sloc <opaque>)
+                  (stmt
+                   (Return
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 24))
+                      (texpr_adlevel DataOnly))))))))))))))))
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
-       (log_prob (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 42)))))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+              (texpr_adlevel DataOnly))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, for loop" =
@@ -1797,7 +2576,7 @@ let%expect_test "dead code elimination, for loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1808,7 +2587,11 @@ let%expect_test "dead code elimination, for loop" =
            (SList
             (((sloc <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, while loop" =
@@ -1829,7 +2612,7 @@ let%expect_test "dead code elimination, while loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1840,8 +2623,17 @@ let%expect_test "dead code elimination, while loop" =
            (SList
             (((sloc <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
-         ((sloc <opaque>) (stmt (While (Lit Int 1) ((sloc <opaque>) (stmt Skip)))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (While
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>) (stmt Skip)))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, if then" =
@@ -1872,7 +2664,7 @@ let%expect_test "dead code elimination, if then" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1883,13 +2675,27 @@ let%expect_test "dead code elimination, if then" =
            (SList
             (((sloc <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))
          ((sloc <opaque>)
           (stmt
-           (Block (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str hello)))))))))
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly))))))
          ((sloc <opaque>)
           (stmt
-           (Block (((sloc <opaque>) (stmt (NRFunApp print ((Lit Str goodbye)))))))))))
+           (Block
+            (((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str hello))
+                  (texpr_adlevel DataOnly))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (Block
+            (((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str goodbye))
+                  (texpr_adlevel DataOnly))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, nested" =
@@ -1908,7 +2714,7 @@ let%expect_test "dead code elimination, nested" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
@@ -1919,7 +2725,11 @@ let%expect_test "dead code elimination, nested" =
            (SList
             (((sloc <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+              (texpr_adlevel DataOnly))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,

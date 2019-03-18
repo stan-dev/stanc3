@@ -6,7 +6,7 @@ val union_maps_left :
   ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
 
 val build_cf_graph :
-     (label, label statement * 'm) Map.Poly.t
+     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the controlflow graph requires a traversal with state that includes continues,
@@ -16,7 +16,7 @@ val build_cf_graph :
 *)
 
 val build_predecessor_graph :
-     (label, label statement * 'm) Map.Poly.t
+     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
   -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the predecessor graph requires a traversal with state that includes the
@@ -27,8 +27,8 @@ val build_predecessor_graph :
 *)
 
 val build_recursive_statement :
-     ('s statement -> 'm -> 's)
-  -> (label, label statement * 'm) Map.Poly.t
+     ((expr_typed_located, 's) statement -> 'm -> 's)
+  -> (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
   -> label
   -> 's
 (**
@@ -37,10 +37,10 @@ val build_recursive_statement :
 *)
 
 val build_statement_map :
-     ('s -> 's statement)
+     ('s -> (expr_typed_located, 's) statement)
   -> ('s -> 'm)
   -> 's
-  -> (label, label statement * 'm) Map.Poly.t
+  -> (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
 (**
    The statement map is built by traversing substatements recursively to replace
    substatements with their labels while building up the substatements' statement maps.

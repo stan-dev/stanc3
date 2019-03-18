@@ -21,7 +21,7 @@ open Dataflow_types
    * The exprset_independent_target_terms might be outdated with TargetPE now in the MIR
  **)
 
-val program_df_graphs : stmt_loc prog -> prog_df_graphs
+val program_df_graphs : typed_prog -> prog_df_graphs
 (**
    Construct dataflow graphs for each interesting block in the program MIR
 
@@ -92,7 +92,7 @@ val exprset_independent_target_terms :
    will depend on eachother.
 *)
 
-val analysis_example : stmt_loc prog -> string -> unit
+val analysis_example : typed_prog -> string -> unit
 (**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.

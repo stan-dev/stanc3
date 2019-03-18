@@ -176,7 +176,7 @@ let constant_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = (string, Mir.expr) Map.Poly.t option
+    type properties = (string, Mir.expr_typed_located) Map.Poly.t option
 
     let transfer_function l p =
       match p with
@@ -187,12 +187,12 @@ let constant_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Mir.Assignment (Var s, e) -> (
+            | Mir.Assignment ({texpr= Var s; _}, e) -> (
               match Partial_evaluator.eval_subst m e with
-              | Mir.Lit (t, v) -> Map.set m ~key:s ~data:(Mir.Lit (t, v))
+              | {texpr= Mir.Lit (_, _); _} as e' -> Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
-            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Indexed (Var s, _), _)
-              ->
+            | Mir.Decl {decl_id= s; _}
+             |Mir.Assignment ({texpr= Indexed ({texpr= Var s; _}, _); _}, _) ->
                 Map.remove m s
             | Mir.Assignment (_, _) -> Errors.fatal_error ()
             | Mir.TargetPE _
@@ -205,7 +205,8 @@ let constant_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Mir.expr) Map.Poly.t option )
+     and type properties = (string, Mir.expr_typed_located) Map.Poly.t option
+  )
 
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
@@ -213,7 +214,7 @@ let expression_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = (string, Mir.expr) Map.Poly.t option
+    type properties = (string, Mir.expr_typed_located) Map.Poly.t option
 
     let transfer_function l p =
       match p with
@@ -224,10 +225,10 @@ let expression_propagation_transfer
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
-            | Mir.Assignment (Var s, e) ->
+            | Mir.Assignment ({texpr= Var s; _}, e) ->
                 Map.set m ~key:s ~data:(Partial_evaluator.eval_subst m e)
-            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Indexed (Var s, _), _)
-              ->
+            | Mir.Decl {decl_id= s; _}
+             |Mir.Assignment ({texpr= Indexed ({texpr= Var s; _}, _); _}, _) ->
                 Map.remove m s
             | Mir.Assignment (_, _) -> Errors.fatal_error ()
             | Mir.TargetPE _
@@ -240,14 +241,15 @@ let expression_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Mir.expr) Map.Poly.t option )
+     and type properties = (string, Mir.expr_typed_located) Map.Poly.t option
+  )
 
 (** The transfer function for a copy propagation analysis *)
 let copy_propagation_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = (string, Mir.expr) Map.Poly.t option
+    type properties = (string, Mir.expr_typed_located) Map.Poly.t option
 
     let transfer_function l p =
       match p with
@@ -256,9 +258,14 @@ let copy_propagation_transfer
           let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
           Some
             ( match mir_node with
-            | Mir.Assignment (Var s, Mir.Var t) ->
-                Map.set m ~key:s ~data:(Mir.Var t)
-            | Mir.Decl {decl_id= s; _} | Mir.Assignment (Var s, _) ->
+            | Mir.Assignment
+                ( {texpr= Mir.Var s; _}
+                , {texpr= Mir.Var t; texpr_type; texpr_loc; texpr_adlevel} ) ->
+                Map.set m ~key:s
+                  ~data:
+                    {Mir.texpr= Mir.Var t; texpr_type; texpr_loc; texpr_adlevel}
+            | Mir.Decl {decl_id= s; _} | Mir.Assignment ({texpr= Var s; _}, _)
+              ->
                 Map.remove m s
             | Mir.Assignment (_, _)
              |Mir.TargetPE _
@@ -271,7 +278,8 @@ let copy_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Mir.expr) Map.Poly.t option )
+     and type properties = (string, Mir.expr_typed_located) Map.Poly.t option
+  )
 
 (** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
@@ -279,10 +287,10 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 (* TODO: from here *)
 
 (** Calculate the set of variables that a statement can assign to *)
-let assigned_vars_stmt (s : 'a Mir.statement) =
+let assigned_vars_stmt (s : (Mir.expr_typed_located, 'a) Mir.statement) =
   match s with
-  | Mir.Assignment (Var x, _)
-   |Mir.Assignment (Indexed (Var x, _), _)
+  | Mir.Assignment ({texpr= Var x; _}, _)
+   |Mir.Assignment ({texpr= Indexed ({texpr= Var x; _}, _); _}, _)
    |Mir.FunDef {fdname= x; _} ->
       Set.Poly.singleton x
   | Mir.Assignment (_, _) -> Errors.fatal_error ()
@@ -311,8 +319,8 @@ let reaching_definitions_transfer
       let kill =
         match mir_node with
         | Mir.Decl {decl_id= x; _}
-         |Mir.Assignment (Var x, _)
-         |Mir.Assignment (Indexed (Var x, _), _)
+         |Mir.Assignment ({texpr= Var x; _}, _)
+         |Mir.Assignment ({texpr= Indexed ({texpr= Var x; _}, _); _}, _)
          |Mir.FunDef {fdname= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | Mir.Assignment (_, _) -> Errors.fatal_error ()
@@ -333,21 +341,19 @@ let reaching_definitions_transfer
      and type properties = (string * int option) Set.Poly.t )
 
 (** Calculate the free (non-bound) variables in an expression *)
-let rec free_vars_expr (e : Mir.expr) =
-  match e with
+let rec free_vars_expr (e : Mir.expr_typed_located) =
+  match e.texpr with
   | Mir.Var x -> Set.Poly.singleton x
   | Mir.Lit (_, _) -> Set.Poly.empty
   | Mir.FunApp (f, l) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
-  | Mir.BinOp (e1, _, e2) ->
-      Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
   | Mir.TernaryIf (e1, e2, e3) ->
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
   | Mir.Indexed (e, l) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
 
 (** Calculate the free (non-bound) variables in an index*)
-and free_vars_idx (i : Mir.idx) =
+and free_vars_idx (i : Mir.expr_typed_located Mir.index) =
   match i with
   | Mir.All -> Set.Poly.empty
   | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
@@ -356,11 +362,14 @@ and free_vars_idx (i : Mir.idx) =
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
 (** Calculate the free (non-bound) variables in a statement *)
-let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
+let rec free_vars_stmt
+    (s : (Mir.expr_typed_located, Mir.stmt_loc) Mir.statement) =
   match s with
-  | Mir.Assignment (Var _, e) | Mir.Return (Some e) | Mir.TargetPE e ->
+  | Mir.Assignment ({texpr= Var _; _}, e)
+   |Mir.Return (Some e)
+   |Mir.TargetPE e ->
       free_vars_expr e
-  | Mir.Assignment (Indexed (Var _, l), e) ->
+  | Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, l); _}, e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
   | Mir.Assignment _ -> Errors.fatal_error ()
   | Mir.NRFunApp (f, l) ->
@@ -386,7 +395,7 @@ let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
 (** A variation on free_vars_stmt, where we do not recursively count free
     variables in sub statements  *)
 let top_free_vars_stmt (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
-    (s : int Mir.statement) =
+    (s : (Mir.expr_typed_located, int) Mir.statement) =
   match s with
   | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
@@ -410,7 +419,7 @@ let live_variables_transfer
       let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
-        | Mir.Assignment (Var x, _) | Mir.Decl {decl_id= x; _} ->
+        | Mir.Assignment ({texpr= Var x; _}, _) | Mir.Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | Mir.TargetPE _
          |Mir.NRFunApp (_, _)
@@ -418,9 +427,11 @@ let live_variables_transfer
          |Mir.IfElse (_, _, _)
          |Mir.While (_, _)
          |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _
-         |Mir.Assignment (Indexed (Var _, _), _) ->
+         |Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, _); _}, _) ->
             Set.Poly.empty
-        | Mir.Assignment _ -> raise_s [%sexp (mir_node : int Mir.statement)]
+        | Mir.Assignment _ ->
+            raise_s
+              [%sexp (mir_node : (Mir.expr_typed_located, int) Mir.statement)]
       in
       transfer_gen_kill p gen kill
   end
@@ -428,14 +439,12 @@ let live_variables_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** Calculate the set of sub-expressions of an expression *)
-let rec used_expressions_expr (e : Mir.expr) =
+let rec used_expressions_expr (e : Mir.expr_typed_located) =
   Set.Poly.union (Set.Poly.singleton e)
-    ( match e with
-    | (Mir.Var _ | Mir.Lit (_, _)) as e -> Set.Poly.singleton e
+    ( match e.texpr with
+    | Mir.Var _ | Mir.Lit (_, _) -> Set.Poly.empty
     | Mir.FunApp (_, l) ->
         Set.Poly.union_list (List.map ~f:used_expressions_expr l)
-    | Mir.BinOp (e1, _, e2) ->
-        Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
     | Mir.TernaryIf (e1, e2, e3) ->
         Set.Poly.union_list
           [ used_expressions_expr e1; used_expressions_expr e2
@@ -445,7 +454,7 @@ let rec used_expressions_expr (e : Mir.expr) =
           (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
 
 (** Calculate the set of sub-expressions of an index *)
-and used_expressions_idx (i : Mir.idx) =
+and used_expressions_idx (i : Mir.expr_typed_located Mir.index) =
   match i with
   | Mir.All -> Set.Poly.empty
   | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
@@ -454,11 +463,14 @@ and used_expressions_idx (i : Mir.idx) =
       Set.Poly.union (used_expressions_expr e1) (used_expressions_expr e2)
 
 (** Calculate the set of sub-expressions in a statement *)
-let rec used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
+let rec used_expressions_stmt
+    (s : (Mir.expr_typed_located, Mir.stmt_loc) Mir.statement) =
   match s with
-  | Mir.Assignment (Var _, e) | Mir.TargetPE e | Mir.Return (Some e) ->
+  | Mir.Assignment ({texpr= Var _; _}, e)
+   |Mir.TargetPE e
+   |Mir.Return (Some e) ->
       used_expressions_expr e
-  | Mir.Assignment (Indexed (Var _, l), e) ->
+  | Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, l); _}, e) ->
       Set.Poly.union (used_expressions_expr e)
         (Set.Poly.union_list (List.map ~f:used_expressions_idx l))
   | Mir.Assignment _ -> Errors.fatal_error ()
@@ -479,14 +491,19 @@ let rec used_expressions_stmt (s : Mir.stmt_loc Mir.statement) =
       Set.Poly.union_list
         [ used_expressions_expr e1; used_expressions_expr e2
         ; used_expressions_stmt b.stmt
-        ; Set.Poly.singleton s ]
+        ; Set.Poly.singleton
+            { Mir.texpr= Var s
+            ; texpr_type= UInt
+            ; texpr_adlevel= DataOnly
+            ; texpr_loc= Mir.no_span } ]
   | Mir.Block l | Mir.SList l ->
       Set.Poly.union_list
         (List.map ~f:(fun s -> used_expressions_stmt s.stmt) l)
 
 (** A variant of used_expressions_stmt where we do not count uses of expressions
     recursively within substatements *)
-let top_used_expressions_stmt (s : int Mir.statement) =
+let top_used_expressions_stmt (s : (Mir.expr_typed_located, int) Mir.statement)
+    =
   match s with
   | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
@@ -501,7 +518,8 @@ let top_used_expressions_stmt (s : int Mir.statement) =
 (** Calculate the subset (of p) of expressions that will need to be recomputed as a
     consequence of evaluating the statement s (because of writes to variables performed
     by s) *)
-let killed_expressions_stmt (p : Mir.expr Set.Poly.t) (s : int Mir.statement) =
+let killed_expressions_stmt (p : Mir.expr_typed_located Set.Poly.t)
+    (s : (Mir.expr_typed_located, int) Mir.statement) =
   Set.Poly.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here,
@@ -522,10 +540,10 @@ let used (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
     code motion) *)
 let anticipated_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
-    (used : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
+    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr Set.Poly.t
+    type properties = Mir.expr_typed_located Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
@@ -534,7 +552,8 @@ let anticipated_expressions_transfer
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Mir.expr Set.Poly.t )
+    with type labels = int
+     and type properties = Mir.expr_typed_located Set.Poly.t )
 
 (** A helper function for defining transfer functions in terms of gen and kill sets
     in an alternative way, that is used in some of the subanalyses of lazy code motion *)
@@ -551,10 +570,10 @@ let transfer_gen_kill_alt p gen kill =
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
     (anticipated_expressions :
-      (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t) =
+      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr Set.Poly.t
+    type properties = Mir.expr_typed_located Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
@@ -563,15 +582,16 @@ let available_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Mir.expr Set.Poly.t )
+    with type labels = int
+     and type properties = Mir.expr_typed_located Set.Poly.t )
 
 (** Calculates the set of expressions that can be calculated for the first time
     at each node in the flow graph *)
 let earliest
     (anticipated_expressions :
-      (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t)
-    (available_expressions : (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t)
-    =
+      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t)
+    (available_expressions :
+      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
   Map.fold anticipated_expressions ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
       match
@@ -582,11 +602,11 @@ let earliest
 
 (** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
 let postponable_expressions_transfer
-    (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
-    (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
+    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
+    (earliest : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr Set.Poly.t
+    type properties = Mir.expr_typed_located Set.Poly.t
 
     let transfer_function l p =
       let gen = Map.find_exn earliest l in
@@ -594,14 +614,15 @@ let postponable_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Mir.expr Set.Poly.t )
+    with type labels = int
+     and type properties = Mir.expr_typed_located Set.Poly.t )
 
 (** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
-    (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
-    (earliest : (int, Mir.expr Set.Poly.t) Map.Poly.t)
+    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
+    (earliest : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
     (postponable_expressions :
-      (int, Mir.expr Set.Poly.t entry_exit) Map.Poly.t) =
+      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
   let earliest_or_postponable key =
     Set.Poly.union
       (Map.Poly.find_exn earliest key)
@@ -617,11 +638,12 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
       Map.set accum ~key ~data:(latest key) )
 
 (** The transfer function for a used expressions analysis, as a part of lazy code motion *)
-let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
-    (latest : (int, Mir.expr Set.Poly.t) Map.Poly.t) =
+let used_expressions_transfer
+    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
+    (latest : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr Set.Poly.t
+    type properties = Mir.expr_typed_located Set.Poly.t
 
     let transfer_function l p =
       let gen = Map.find_exn used l in
@@ -629,7 +651,8 @@ let used_expressions_transfer (used : (int, Mir.expr Set.Poly.t) Map.Poly.t)
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Mir.expr Set.Poly.t )
+    with type labels = int
+     and type properties = Mir.expr_typed_located Set.Poly.t )
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
@@ -697,7 +720,8 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
   : MONOTONE_FRAMEWORK
     with type labels = l and type properties = p )
 
-let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
+let rec declared_variables_stmt
+    (s : (Mir.expr_typed_located, Mir.stmt_loc) Mir.statement) =
   match s with
   | Mir.Decl {decl_id= x; _} -> Set.Poly.singleton x
   | Mir.Assignment (_, _)
@@ -711,10 +735,8 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (declared_variables_stmt b2.stmt)
   | Mir.While (_, b) | Mir.IfElse (_, b, None) ->
       declared_variables_stmt b.stmt
-  | Mir.For {loopvar= x; body= b; _} -> (
-    match x with
-    | Var s -> Set.Poly.add (declared_variables_stmt b.stmt) s
-    | _ -> Errors.fatal_error () )
+  | Mir.For {loopvar= s; body= b; _} ->
+      Set.Poly.add (declared_variables_stmt b.stmt) s
   | Mir.Block l | Mir.SList l ->
       Set.Poly.union_list
         (List.map ~f:(fun x -> declared_variables_stmt x.stmt) l)
@@ -723,7 +745,7 @@ let rec declared_variables_stmt (s : Mir.stmt_loc Mir.statement) =
         (Set.Poly.of_list (f :: List.map l ~f:(fun (_, x, _) -> x)))
         (declared_variables_stmt b.stmt)
 
-let propagation_mfp (prog : Mir.stmt_loc Mir.prog)
+let propagation_mfp (prog : Mir.typed_prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
@@ -732,7 +754,8 @@ let propagation_mfp (prog : Mir.stmt_loc Mir.prog)
       -> (module
           TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Mir.expr) Map.Poly.t option)) =
+             and type properties = (string, Mir.expr_typed_located) Map.Poly.t
+                                   option)) =
   let mir = Map.find_exn flowgraph_to_mir 1 in
   let domain =
     ( module struct
@@ -743,6 +766,8 @@ let propagation_mfp (prog : Mir.stmt_loc Mir.prog)
           [ Set.Poly.of_map_keys prog.gen_quant_vars
           ; Set.Poly.of_map_keys prog.tdata_vars
           ; Set.Poly.of_map_keys prog.tparams
+          ; Set.Poly.of_map_keys prog.params
+          ; Set.Poly.of_map_keys prog.data_vars
           ; declared_variables_stmt
               (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
     end
@@ -750,7 +775,10 @@ let propagation_mfp (prog : Mir.stmt_loc Mir.prog)
       with type vals = string )
   in
   let codomain =
-    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
+    (module struct type vals = Mir.expr_typed_located
+    end
+    : TYPE
+      with type vals = Mir.expr_typed_located )
   in
   let (module Lattice) =
     dual_partial_function_lattice_with_bot domain codomain
@@ -761,7 +789,7 @@ let propagation_mfp (prog : Mir.stmt_loc Mir.prog)
   in
   Mf.mfp ()
 
-let reaching_definitions_mfp (mir : Mir.stmt_loc_num Mir.prog)
+let reaching_definitions_mfp (mir : Mir.typed_prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
@@ -769,16 +797,13 @@ let reaching_definitions_mfp (mir : Mir.stmt_loc_num Mir.prog)
     ( module struct
       type vals = string
 
-      (* TODO: this should only be the global variables *)
       let initial =
         Set.Poly.union_list
-          (List.map
-             ~f:(fun x ->
-               declared_variables_stmt
-                 (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
-             (List.concat
-                [ mir.functions_block; mir.generate_quantities
-                ; mir.prepare_params; mir.log_prob; mir.prepare_data ]))
+          [ Set.Poly.of_map_keys mir.gen_quant_vars
+          ; Set.Poly.of_map_keys mir.tdata_vars
+          ; Set.Poly.of_map_keys mir.tparams
+          ; Set.Poly.of_map_keys mir.params
+          ; Set.Poly.of_map_keys mir.data_vars ]
     end
     : INITIALTYPE
       with type vals = string )
@@ -795,7 +820,7 @@ let reaching_definitions_mfp (mir : Mir.stmt_loc_num Mir.prog)
 
 (** Monotone framework instance for live_variables analysis. Expects reverse
     flowgraph. *)
-let live_variables_mfp (prog : Mir.stmt_loc Mir.prog)
+let live_variables_mfp (prog : Mir.typed_prog)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
@@ -824,7 +849,8 @@ let live_variables_mfp (prog : Mir.stmt_loc Mir.prog)
 
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
-let lazy_expressions_mfp (mir : Mir.stmt_loc_num Mir.prog)
+let lazy_expressions_mfp
+    (mir : (Mir.expr_typed_located, Mir.stmt_loc_num) Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -845,16 +871,19 @@ let lazy_expressions_mfp (mir : Mir.stmt_loc_num Mir.prog)
   let used_expr = used flowgraph_to_mir in
   let expressions_initial_total_type =
     ( module struct
-      type vals = Mir.expr
+      type vals = Mir.expr_typed_located
 
       let total = all_expressions
       let initial = all_expressions
     end
     : INITIALTOTALTYPE
-      with type vals = Mir.expr )
+      with type vals = Mir.expr_typed_located )
   in
   let expressions_type =
-    (module struct type vals = Mir.expr end : TYPE with type vals = Mir.expr)
+    (module struct type vals = Mir.expr_typed_located
+    end
+    : TYPE
+      with type vals = Mir.expr_typed_located )
   in
   let (module Lattice1) =
     dual_powerset_lattice expressions_initial_total_type

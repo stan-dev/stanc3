@@ -18,8 +18,9 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
    substatement values from ('a to 'c). Traversal is done in-order but ignores branching,
    e.g., and if's then block is followed by the else block rather than branching.
 *)
-let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
-    ~(f : 'f -> 'a -> 'f * 'c) : 'f * 'c statement =
+let fwd_traverse_statement (stmt : (expr_typed_located, 'a) statement)
+    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) :
+    'f * (expr_typed_located, 'c) statement =
   match stmt with
   | IfElse (pred, then_s, else_s_opt) ->
       let s', c = f state then_s in
@@ -69,8 +70,9 @@ let fwd_traverse_statement (stmt : 'a statement) ~init:(state : 'f)
    Like a forward traversal, but branches accumulate two different states that are
    recombined with join.
 *)
-let branching_traverse_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
-    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) : 'f * 'c statement =
+let branching_traverse_statement (stmt : (expr_typed_located, 'a) statement)
+    ~(join : 'f -> 'f -> 'f) ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) :
+    'f * (expr_typed_located, 'c) statement =
   match stmt with
   | IfElse (pred, then_s, else_s_opt) ->
       let s', c = f state then_s in
@@ -83,8 +85,8 @@ let branching_traverse_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
 
 (** Like a branching traversal, but doesn't return an updated statement.
 *)
-let branching_fold_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
-    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f) : 'f =
+let branching_fold_statement (stmt : (expr_typed_located, 'a) statement)
+    ~(join : 'f -> 'f -> 'f) ~init:(state : 'f) ~(f : 'f -> 'a -> 'f) : 'f =
   fst
     (branching_traverse_statement stmt ~join ~init:state ~f:(fun s a ->
          (f s a, ()) ))
@@ -92,11 +94,14 @@ let branching_fold_statement (stmt : 'a statement) ~(join : 'f -> 'f -> 'f)
 (**
    See interface file
 *)
-let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
-    (stmt : 's) : (label, label statement * 'm) Map.Poly.t =
+let build_statement_map (extract : 's -> (expr_typed_located, 's) statement)
+    (metadata : 's -> 'm) (stmt : 's) :
+    (label, (expr_typed_located, label) statement * 'm) Map.Poly.t =
   let rec build_statement_map_rec (next_label : label)
-      (map : (label, label statement * 'm) Map.Poly.t) (stmt : 's) :
-      (label * (label, label statement * 'm) Map.Poly.t) * label =
+      (map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t)
+      (stmt : 's) :
+      (label * (label, (expr_typed_located, label) statement * 'm) Map.Poly.t)
+      * label =
     let this_label = next_label in
     let next_label' = next_label + 1 in
     let f (label, map) stmt = build_statement_map_rec label map stmt in
@@ -117,18 +122,22 @@ let build_statement_map (extract : 's -> 's statement) (metadata : 's -> 'm)
 (**
    See interface file
 *)
-let rec build_recursive_statement (rebuild : 's statement -> 'm -> 's)
-    (statement_map : (label, label statement * 'm) Map.Poly.t) (label : label)
-    : 's =
+let rec build_recursive_statement
+    (rebuild : (expr_typed_located, 's) statement -> 'm -> 's)
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t)
+    (label : label) : 's =
   let stmt_ints, meta = Map.Poly.find_exn statement_map label in
   let build_stmt = build_recursive_statement rebuild statement_map in
-  let stmt = map_statement build_stmt stmt_ints in
+  let stmt = map_statement (fun x -> x) build_stmt stmt_ints in
   rebuild stmt meta
 
 (**
    See interface file
 *)
-let build_cf_graph (statement_map : (label, label statement * 'm) Map.Poly.t) :
+let build_cf_graph
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let rec build_cf_graph_rec (cf_parent : label option)
       ((breaks_in, returns_in, continues_in, map_in) :
@@ -214,7 +223,8 @@ let build_cf_graph (statement_map : (label, label statement * 'm) Map.Poly.t) :
    See interface file
 *)
 let build_predecessor_graph
-    (statement_map : (label, label statement * 'm) Map.Poly.t) :
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t =
   let rec build_pred_graph_rec
       ((preds, map_in) :
@@ -283,7 +293,7 @@ let example1_program =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
   let block = Mir.Block mir.log_prob in
-  {stmt= block; sloc= ""}
+  {stmt= block; sloc= Mir.no_span}
 
 let example1_statement_map =
   build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example1_program
@@ -291,7 +301,10 @@ let example1_statement_map =
 let%expect_test "Statement label map example" =
   print_s
     [%sexp
-      (example1_statement_map : (label, label statement * string) Map.Poly.t)] ;
+      ( example1_statement_map
+        : ( label
+          , (expr_typed_located, label) statement * Ast.location_span )
+          Map.Poly.t )] ;
   [%expect
     {|
       ((1 ((Block (2 5)) ""))
@@ -389,10 +402,10 @@ let example2_program =
   in
   let blocks =
     Mir.SList
-      [ {stmt= SList mir.functions_block; sloc= ""}
-      ; {stmt= Block mir.log_prob; sloc= ""} ]
+      [ {stmt= SList mir.functions_block; sloc= Mir.no_span}
+      ; {stmt= Block mir.log_prob; sloc= Mir.no_span} ]
   in
-  {stmt= blocks; sloc= ""}
+  {stmt= blocks; sloc= Mir.no_span}
 
 let example2_statement_map =
   build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example2_program
@@ -400,31 +413,117 @@ let example2_statement_map =
 let%expect_test "Statement label map example 2" =
   print_s
     [%sexp
-      (example2_statement_map : (label, label statement * string) Map.Poly.t)] ;
+      ( example2_statement_map
+        : ( label
+          , (expr_typed_located, label) statement * Ast.location_span )
+          Map.Poly.t )] ;
   [%expect
     {|
-      ((1 ((SList (2 14)) "")) (2 ((SList (3 11)) ""))
+      ((1
+        ((SList (2 14))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (2
+        ((SList (3 11))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (3
         ((FunDef (fdrt (UReal)) (fdname f) (fdargs ()) (fdbody 4))
-         "file string, line 3, column 8 to line 10, column 9"))
-       (4 ((Block (5 9 10)) "file string, line 3, column 17 to line 10, column 9"))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 10) (col_num 9) (included_from ()))))))
+       (4
+        ((Block (5 9 10))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 17) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 10) (col_num 9) (included_from ()))))))
        (5
-        ((IfElse (BinOp (Lit Int 3) Greater (Lit Int 2)) 6 ())
-         "file string, line 4, column 10 to line 7, column 11"))
-       (6 ((Block (7 8)) "file string, line 4, column 19 to line 7, column 11"))
+        ((IfElse
+          ((texpr_type UInt) (texpr_loc <opaque>)
+           (texpr
+            (FunApp Greater__
+             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+               (texpr_adlevel DataOnly)))))
+           (texpr_adlevel DataOnly))
+          6 ())
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 7) (col_num 11) (included_from ()))))))
+       (6
+        ((Block (7 8))
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 19) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 7) (col_num 11) (included_from ()))))))
        (7
-        ((NRFunApp print ((Lit Str hello))) "file string, line 5, columns 12-27"))
-       (8 ((Return ((Lit Int 2))) "file string, line 6, columns 12-21"))
-       (9 ((Return ((Lit Int 22))) "file string, line 8, columns 10-20"))
-       (10 ((Return ((Lit Int 14))) "file string, line 9, columns 10-20"))
+        ((NRFunApp print
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str hello))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 5) (col_num 12) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 5) (col_num 27) (included_from ()))))))
+       (8
+        ((Return
+          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 6) (col_num 12) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 21) (included_from ()))))))
+       (9
+        ((Return
+          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 22))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 8) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 8) (col_num 20) (included_from ()))))))
+       (10
+        ((Return
+          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 14))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 9) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 9) (col_num 20) (included_from ()))))))
        (11
         ((FunDef (fdrt ()) (fdname g) (fdargs ()) (fdbody 12))
-         "file string, line 11, column 8 to line 13, column 9"))
-       (12 ((Block (13)) "file string, line 11, column 17 to line 13, column 9"))
+         ((begin_loc
+           ((filename string) (line_num 11) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 13) (col_num 9) (included_from ()))))))
+       (12
+        ((Block (13))
+         ((begin_loc
+           ((filename string) (line_num 11) (col_num 17) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 13) (col_num 9) (included_from ()))))))
        (13
-        ((NRFunApp print ((Lit Str bye))) "file string, line 12, columns 10-23"))
-       (14 ((Block (15)) ""))
-       (15 ((NRFunApp print ((FunApp f ()))) "file string, line 16, columns 8-19")))
+        ((NRFunApp print
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str bye))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 12) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 12) (col_num 23) (included_from ()))))))
+       (14
+        ((Block (15))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (15
+        ((NRFunApp print
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (FunApp f ()))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 16) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 16) (col_num 19) (included_from ())))))))
     |}]
 
 let%expect_test "Controlflow graph example 2" =

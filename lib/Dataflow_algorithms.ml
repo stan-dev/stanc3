@@ -28,11 +28,11 @@ let new_label (st : traversal_state) : label * traversal_state =
   (st.label_ix, {st with label_ix= st.label_ix + 1})
 
 (** The list of terms in expression *)
-let rec summation_terms (rhs : expr) : expr list =
-  match rhs with
-  | BinOp (e1, Plus, e2) ->
+let rec summation_terms (rhs : expr_typed_located) : expr_typed_located list =
+  match rhs.texpr with
+  | FunApp ("Plus__", [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
-  | _ as e -> [e]
+  | _ -> [rhs]
 
 (** Apply function `f` to node_info for `label` in `trav_st` *)
 let modify_node_info (trav_st : traversal_state) (label : label)
@@ -109,7 +109,7 @@ let initial_cf_st = 0
    target terms at the 'end' of the loop body.
 *)
 let add_target_term_node (trav_st : traversal_state) (assignment_node : label)
-    (term : expr) : traversal_state =
+    (term : expr_typed_located) : traversal_state =
   let label, trav_st' = new_label trav_st in
   let assgn_info = Map.Poly.find_exn trav_st'.node_info_map assignment_node in
   let term_vars = expr_var_set term in
@@ -168,9 +168,10 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
               (Map.Poly.singleton label info)
         ; possible_previous= Set.Poly.singleton label }
       in
-      if lhs = Var "target" then
+      if lhs.texpr = Var "target" then
         List.fold_left
-          (List.filter (summation_terms rhs) ~f:(fun v -> v <> Var "target"))
+          (List.filter (summation_terms rhs) ~f:(fun v ->
+               v.texpr <> Var "target" ))
           ~init:trav_st''
           ~f:(fun trav_st term -> add_target_term_node trav_st label term)
       else trav_st''
@@ -303,15 +304,13 @@ let rec traverse_mir (trav_st : traversal_state) (cf_st : cf_state)
         modify_node_info body_st (peek_next_label recurse_st) (fun info ->
             {info with possible_previous= loop_start_possible_previous} )
       in
-      let alter_fn set =
-        Set.Poly.remove set (vexpr_of_expr_exn args.loopvar, label)
-      in
+      let alter_fn set = Set.Poly.remove set (VVar args.loopvar, label) in
       let body_st'' = compose_last_rd_update alter_fn body_st' in
       let info =
         { rd_sets=
             (fun entry ->
               Set.Poly.union entry
-                (Set.Poly.singleton (vexpr_of_expr_exn args.loopvar, label)) )
+                (Set.Poly.singleton (VVar args.loopvar, label)) )
         ; possible_previous= trav_st'.possible_previous
         ; rhs_set=
             Set.Poly.union (expr_var_set args.lower) (expr_var_set args.upper)
@@ -515,11 +514,12 @@ let exprset_independent_target_terms (df_graph : dataflow_graph)
    Helper function to construct an (variable) expression set from the variable names from
    a top_var_table
 *)
-let exprset_of_table (table : top_var_table) : vexpr Set.Poly.t =
+let exprset_of_table (table : expr_typed_located top_var_table) :
+    vexpr Set.Poly.t =
   Set.Poly.of_list (List.map (Map.Poly.keys table) ~f:(fun s -> VVar s))
 
 (** See .mli file *)
-let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
+let program_df_graphs (prog : typed_prog) : prog_df_graphs =
   let data_table = prog.data_vars in
   let tdata_table, tdata_block =
     (prog.tdata_vars, stmt_of_block prog.prepare_data)
@@ -530,7 +530,8 @@ let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
   let parameter_table, model_block =
     ( union_maps_left prog.params prog.tparams
     , stmt_of_block
-        (prog.prepare_params @ [{stmt= Block prog.log_prob; sloc= ""}]) )
+        (prog.prepare_params @ [{stmt= Block prog.log_prob; sloc= Mir.no_span}])
+    )
   in
   let parameter_vars = exprset_of_table parameter_table in
   let gq_table, gq_block =
@@ -543,7 +544,7 @@ let program_df_graphs (prog : stmt_loc prog) : prog_df_graphs =
   ; gqb= block_dataflow_graph gq_block top_vars }
 
 (** See .mli file *)
-let analysis_example (prog : stmt_loc prog) (var : string) : unit =
+let analysis_example (prog : typed_prog) (var : string) : unit =
   let data_table = prog.data_vars in
   let tdata_table = prog.tdata_vars in
   let data_vars =
@@ -552,7 +553,8 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
   let parameter_table, model_block =
     ( union_maps_left prog.params prog.tparams
     , stmt_of_block
-        (prog.prepare_params @ [{stmt= Block prog.log_prob; sloc= ""}]) )
+        (prog.prepare_params @ [{stmt= Block prog.log_prob; sloc= Mir.no_span}])
+    )
   in
   let parameter_vars = exprset_of_table parameter_table in
   let top_vars = Set.Poly.union data_vars parameter_vars in
@@ -586,7 +588,7 @@ let analysis_example (prog : stmt_loc prog) (var : string) : unit =
     ^ Sexp.to_string [%sexp (df_graph.possible_exits : label Set.Poly.t)] ) ;
   print_endline
     ( "Data-independent target term expressions: "
-    ^ Sexp.to_string [%sexp (prior_terms : expr list)] ) ;
+    ^ Sexp.to_string [%sexp (prior_terms : expr_typed_located list)] ) ;
   print_endline
     ( "Var " ^ var ^ " depends on labels: "
     ^ Sexp.to_string [%sexp (label_deps : label Set.Poly.t)] ) ;
@@ -660,7 +662,12 @@ model {
                 ((VVar alpha_true) 0) ((VVar beta_inferred) 0) ((VVar beta_true) 0)
                 ((VVar j) 1) ((VVar x) 0) ((VVar y) 0))))
              (possible_previous (0)) (rhs_set ((VVar M))) (controlflow (0))
-             (loc (MirNode "file string, line 9, column 2 to line 12, column 3"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 9) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 12) (col_num 3) (included_from ()))))))))
            (2
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -671,7 +678,12 @@ model {
                 ((VVar x) 0) ((VVar y) 0))))
              (possible_previous (1 2)) (rhs_set ((VVar M) (VVar j)))
              (controlflow (1))
-             (loc (MirNode "file string, line 11, columns 4-23"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 11) (col_num 4) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 11) (col_num 23) (included_from ()))))))))
            (3
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -681,7 +693,12 @@ model {
                 ((VVar alpha_true) 0) ((VVar beta_inferred) 0) ((VVar beta_true) 0)
                 ((VVar beta_true) 2) ((VVar i) 3) ((VVar x) 0) ((VVar y) 0))))
              (possible_previous (0 2)) (rhs_set ((VVar N))) (controlflow (0))
-             (loc (MirNode "file string, line 13, column 2 to line 20, column 3"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 3) (included_from ()))))))))
            (4
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -693,7 +710,12 @@ model {
                 ((VVar beta_true) 2) ((VVar i) 3) ((VVar j) 4) ((VVar x) 0)
                 ((VVar x) 5) ((VVar y) 0) ((VVar y) 6))))
              (possible_previous (3 6)) (rhs_set ((VVar M))) (controlflow (3))
-             (loc (MirNode "file string, line 15, column 4 to line 18, column 5"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 15) (col_num 4) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 18) (col_num 5) (included_from ()))))))))
            (5
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -705,7 +727,12 @@ model {
                 ((VVar beta_true) 2) ((VVar i) 3) ((VVar x) 5) ((VVar y) 0)
                 ((VVar y) 6))))
              (possible_previous (4 5)) (rhs_set ()) (controlflow (4))
-             (loc (MirNode "file string, line 17, columns 6-31"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 17) (col_num 6) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 17) (col_num 31) (included_from ()))))))))
            (6
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -718,7 +745,12 @@ model {
              (possible_previous (3 5))
              (rhs_set ((VVar alpha_true) (VVar beta_true) (VVar i) (VVar x)))
              (controlflow (3))
-             (loc (MirNode "file string, line 19, columns 4-64"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 19) (col_num 4) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 19) (col_num 64) (included_from ()))))))))
            (7
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -730,7 +762,12 @@ model {
                 ((VVar beta_true) 2) ((VVar sym1__) 7) ((VVar x) 0) ((VVar x) 5)
                 ((VVar y) 0) ((VVar y) 6))))
              (possible_previous (0 2 6)) (rhs_set ((VVar y))) (controlflow (0))
-             (loc (MirNode "file string, line 6, columns 2-28"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 6) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 6) (col_num 28) (included_from ()))))))))
            (8
             ((rd_sets
               ((((VVar M) 0) ((VVar N) 0) ((VVar alpha_inferred) 0)
@@ -742,7 +779,12 @@ model {
                 ((VVar beta_true) 2) ((VVar sym1__) 7) ((VVar sym1__) 8)
                 ((VVar x) 0) ((VVar x) 5) ((VVar y) 0) ((VVar y) 6))))
              (possible_previous (0 2 6 7)) (rhs_set ((VVar y))) (controlflow (0))
-             (loc (MirNode "file string, line 6, columns 2-28"))))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 6) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 6) (col_num 28) (included_from ()))))))))))
          (possible_exits (0 2 6 7 8)) (probabilistic_nodes ())))
        (modelb
         ((node_info_map
@@ -785,7 +827,8 @@ let%expect_test "block_dataflow_graph example" =
   let table, block =
     ( union_maps_left mir.params mir.tparams
     , stmt_of_block
-        (mir.prepare_params @ [{stmt= Block mir.log_prob; sloc= ""}]) )
+        (mir.prepare_params @ [{stmt= Block mir.log_prob; sloc= Mir.no_span}])
+    )
   in
   let df_graph = block_dataflow_graph block (exprset_of_table table) in
   print_s [%sexp (df_graph : dataflow_graph)] ;
@@ -798,15 +841,30 @@ let%expect_test "block_dataflow_graph example" =
          (1
           ((rd_sets (() (((VVar i) 1)))) (possible_previous (0)) (rhs_set ())
            (controlflow (0))
-           (loc (MirNode "file string, line 3, column 10 to line 5, column 37"))))
+           (loc
+            (MirNode
+             ((begin_loc
+               ((filename string) (line_num 3) (col_num 10) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 5) (col_num 37) (included_from ()))))))))
          (2
           ((rd_sets ((((VVar i) 1)) (((VVar i) 1) ((VVar j) 2))))
            (possible_previous (1 3)) (rhs_set ()) (controlflow (1))
-           (loc (MirNode "file string, line 4, column 12 to line 5, column 37"))))
+           (loc
+            (MirNode
+             ((begin_loc
+               ((filename string) (line_num 4) (col_num 12) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 5) (col_num 37) (included_from ()))))))))
          (3
           ((rd_sets ((((VVar i) 1) ((VVar j) 2)) ())) (possible_previous (2 3))
            (rhs_set ((VVar i) (VVar j))) (controlflow (2))
-           (loc (MirNode "file string, line 5, columns 14-37"))))))
+           (loc
+            (MirNode
+             ((begin_loc
+               ((filename string) (line_num 5) (col_num 14) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 5) (col_num 37) (included_from ()))))))))))
        (possible_exits (0 1 3)) (probabilistic_nodes ()))
     |}]
 
@@ -861,7 +919,12 @@ let%expect_test "program_df_graphs example" =
               ((((VVar x) 0) ((VVar y) 0) ((VVar z) 0))
                (((VVar x) 0) ((VVar y) 0) ((VVar z) 1))))
              (possible_previous (0)) (rhs_set ((VVar y))) (controlflow (0))
-             (loc (MirNode "file string, line 13, columns 10-20"))))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 10) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 20) (included_from ()))))))))))
          (possible_exits (1)) (probabilistic_nodes ()))))
     |}]
 
@@ -1013,7 +1076,12 @@ model {
                (((VVar J) 0) ((VVar mu) 0) ((VVar sigma) 0) ((VVar sym1__) 1)
                 ((VVar tau) 0) ((VVar theta) 0) ((VVar y) 0))))
              (possible_previous (0)) (rhs_set ((VVar sigma))) (controlflow (0))
-             (loc (MirNode "file string, line 5, columns 2-25"))))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 5) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 5) (col_num 25) (included_from ()))))))))))
          (possible_exits (0 1)) (probabilistic_nodes ())))
        (modelb
         ((node_info_map
@@ -1095,7 +1163,12 @@ model {
                 ((VVar alpha) 0) ((VVar beta) 0) ((VVar doc) 0) ((VVar phi) 0)
                 ((VVar sym1__) 1) ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0)) (rhs_set ((VVar alpha))) (controlflow (0))
-             (loc (MirNode "file string, line 9, columns 2-27"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 9) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 9) (col_num 27) (included_from ()))))))))
            (2
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1105,7 +1178,12 @@ model {
                 ((VVar alpha) 0) ((VVar beta) 0) ((VVar doc) 0) ((VVar phi) 0)
                 ((VVar sym1__) 1) ((VVar sym1__) 2) ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0 1)) (rhs_set ((VVar beta))) (controlflow (0))
-             (loc (MirNode "file string, line 10, columns 2-26"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 10) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 10) (col_num 26) (included_from ()))))))))
            (3
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1116,7 +1194,12 @@ model {
                 ((VVar sym1__) 1) ((VVar sym1__) 2) ((VVar sym1__) 3)
                 ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0 1 2)) (rhs_set ((VVar doc))) (controlflow (0))
-             (loc (MirNode "file string, line 8, columns 2-30"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 8) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 8) (col_num 30) (included_from ()))))))))
            (4
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1128,7 +1211,12 @@ model {
                 ((VVar sym1__) 1) ((VVar sym1__) 2) ((VVar sym1__) 3)
                 ((VVar sym1__) 4) ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0 1 2 3)) (rhs_set ((VVar doc))) (controlflow (0))
-             (loc (MirNode "file string, line 8, columns 2-30"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 8) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 8) (col_num 30) (included_from ()))))))))
            (5
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1140,7 +1228,12 @@ model {
                 ((VVar sym1__) 1) ((VVar sym1__) 2) ((VVar sym1__) 3)
                 ((VVar sym1__) 4) ((VVar sym1__) 5) ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0 1 2 3 4)) (rhs_set ((VVar w))) (controlflow (0))
-             (loc (MirNode "file string, line 7, columns 2-28"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 7) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 7) (col_num 28) (included_from ()))))))))
            (6
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1153,7 +1246,13 @@ model {
                 ((VVar sym1__) 4) ((VVar sym1__) 5) ((VVar sym1__) 6)
                 ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0 1 2 3 4 5)) (rhs_set ((VVar w)))
-             (controlflow (0)) (loc (MirNode "file string, line 7, columns 2-28"))))))
+             (controlflow (0))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 7) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 7) (col_num 28) (included_from ()))))))))))
          (possible_exits (0 1 2 3 4 5 6)) (probabilistic_nodes ())))
        (modelb
         ((node_info_map
@@ -1174,7 +1273,12 @@ model {
                 ((VVar alpha) 0) ((VVar beta) 0) ((VVar doc) 0) ((VVar m) 1)
                 ((VVar phi) 0) ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0)) (rhs_set ((VVar M))) (controlflow (0))
-             (loc (MirNode "file string, line 17, column 2 to line 18, column 32"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 17) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 18) (col_num 32) (included_from ()))))))))
            (2
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1184,7 +1288,12 @@ model {
                 ((VVar alpha) 0) ((VVar beta) 0) ((VVar doc) 0) ((VVar k) 2)
                 ((VVar m) 1) ((VVar phi) 0) ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (0 1)) (rhs_set ((VVar K))) (controlflow (0))
-             (loc (MirNode "file string, line 19, column 2 to line 20, column 29"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 19) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 29) (included_from ()))))))))
            (3
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1195,7 +1304,12 @@ model {
                 ((VVar m) 1) ((VVar n) 3) ((VVar phi) 0) ((VVar theta) 0)
                 ((VVar w) 0))))
              (possible_previous (0 1 2)) (rhs_set ((VVar N))) (controlflow (0))
-             (loc (MirNode "file string, line 21, column 2 to line 26, column 3"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 2) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 26) (col_num 3) (included_from ()))))))))
            (4
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1207,7 +1321,12 @@ model {
                 ((VVar k) 2) ((VVar m) 1) ((VVar phi) 0) ((VVar theta) 0)
                 ((VVar w) 0))))
              (possible_previous (3 4 6)) (rhs_set ()) (controlflow (3))
-             (loc (MirNode "file string, line 22, columns 4-18"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 22) (col_num 4) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 22) (col_num 18) (included_from ()))))))))
            (5
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1219,7 +1338,12 @@ model {
                 ((VVar k) 2) ((VVar k) 5) ((VVar m) 1) ((VVar phi) 0)
                 ((VVar theta) 0) ((VVar w) 0))))
              (possible_previous (4)) (rhs_set ((VVar K))) (controlflow (3))
-             (loc (MirNode "file string, line 23, column 4 to line 24, column 58"))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 4) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 24) (col_num 58) (included_from ()))))))))
            (6
             ((rd_sets
               ((((VVar K) 0) ((VVar M) 0) ((VVar N) 0) ((VVar V) 0)
@@ -1234,7 +1358,12 @@ model {
              (rhs_set
               ((VVar doc) (VVar k) (VVar n) (VVar phi) (VVar theta) (VVar w)))
              (controlflow (5))
-             (loc (MirNode "file string, line 24, columns 6-58"))))))
+             (loc
+              (MirNode
+               ((begin_loc
+                 ((filename string) (line_num 24) (col_num 6) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 24) (col_num 58) (included_from ()))))))))))
          (possible_exits (0 1 2 4 6)) (probabilistic_nodes ())))
        (gqb
         ((node_info_map
