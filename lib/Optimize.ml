@@ -292,11 +292,10 @@ let list_collapsing (mir : stmt_loc prog) =
 let statement_of_program mir =
   { stmt=
       SList
-        [ {stmt= SList mir.functions_block; sloc= ""}
-        ; {stmt= SList mir.prepare_data; sloc= ""}
-        ; {stmt= SList mir.prepare_params; sloc= ""}
-        ; {stmt= Block mir.log_prob; sloc= ""}
-        ; {stmt= SList mir.generate_quantities; sloc= ""} ]
+        (List.map
+           ~f:(fun x -> {stmt= SList x; sloc= ""})
+           [ mir.functions_block; mir.prepare_data; mir.prepare_params
+           ; mir.log_prob; mir.generate_quantities ])
   ; sloc= "" }
 
 let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
@@ -306,7 +305,7 @@ let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
         List.map
           ~f:(fun x ->
             match x.stmt with
-            | SList l | Block l -> l
+            | SList l -> l
             | _ -> raise_s [%sexp (x : stmt_loc)] )
           l
     | _ -> raise_s [%sexp (s : stmt_loc)]
@@ -316,7 +315,9 @@ let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
   ; prepare_data= List.nth_exn l 1
   ; prepare_params= List.nth_exn l 2
   ; log_prob= List.nth_exn l 3
-  ; generate_quantities= List.nth_exn l 4 }
+  ; generate_quantities=
+      ( try List.nth_exn l 4 with _ -> raise_s [%sexp (l : stmt_loc list list)]
+      ) }
 
 let propagation
     (propagation_transfer :
