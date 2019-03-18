@@ -277,6 +277,7 @@ let copy_propagation_transfer
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
 (* TODO: from here *)
+
 (** Calculate the set of variables that a statement can assign to *)
 let assigned_vars_stmt (s : 'a Mir.statement) =
   match s with
@@ -344,6 +345,7 @@ let rec free_vars_expr (e : Mir.expr) =
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
   | Mir.Indexed (e, l) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
+
 (** Calculate the free (non-bound) variables in an index*)
 and free_vars_idx (i : Mir.idx) =
   match i with
@@ -383,8 +385,8 @@ let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
 
 (** A variation on free_vars_stmt, where we do not recursively count free
     variables in sub statements  *)
-let top_free_vars_stmt  (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
-(s : int Mir.statement) =
+let top_free_vars_stmt (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
+    (s : int Mir.statement) =
   match s with
   | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
@@ -418,7 +420,7 @@ let live_variables_transfer
          |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.FunDef _
          |Mir.Assignment (Indexed (Var _, _), _) ->
             Set.Poly.empty
-        | Mir.Assignment _ -> Errors.fatal_error ()
+        | Mir.Assignment _ -> raise_s [%sexp (mir_node : int Mir.statement)]
       in
       transfer_gen_kill p gen kill
   end
@@ -441,6 +443,7 @@ let rec used_expressions_expr (e : Mir.expr) =
     | Mir.Indexed (e, l) ->
         Set.Poly.union_list
           (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
+
 (** Calculate the set of sub-expressions of an index *)
 and used_expressions_idx (i : Mir.idx) =
   match i with
@@ -543,6 +546,7 @@ let transfer_gen_kill_alt p gen kill =
    expression pass.
    QUESTION: does this give the traditional available expressions analysis if
    anticipated expressions is empty? *)
+
 (** An available expressions analysis, to be used in lazy code motion *)
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)

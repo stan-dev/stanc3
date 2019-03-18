@@ -25,7 +25,9 @@ and subst_idx m i =
 let subst_stmt_base m b =
   let f = subst_expr m in
   match b with
-  | Assignment (e1, e2) -> Assignment (f e1, f e2)
+  | Assignment (Var x, e2) -> Assignment (Var x, f e2)
+  | Assignment (Indexed (Var x, l), e2) ->
+      Assignment (Indexed (Var x, List.map ~f:(subst_idx m) l), f e2)
   | TargetPE e -> TargetPE (f e)
   | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
   | Check (ccfunname, ccargs) -> Check (ccfunname, List.map ccargs ~f)

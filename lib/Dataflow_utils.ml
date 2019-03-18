@@ -373,6 +373,7 @@ let example2_program =
             return 2;
           }
           return 22;
+          return 14;
         }
         void g() {
           print("bye");
@@ -402,11 +403,11 @@ let%expect_test "Statement label map example 2" =
       (example2_statement_map : (label, label statement * string) Map.Poly.t)] ;
   [%expect
     {|
-      ((1 ((SList (2 13)) "")) (2 ((SList (3 10)) ""))
+      ((1 ((SList (2 14)) "")) (2 ((SList (3 11)) ""))
        (3
         ((FunDef (fdrt (UReal)) (fdname f) (fdargs ()) (fdbody 4))
-         "file string, line 3, column 8 to line 9, column 9"))
-       (4 ((Block (5 9)) "file string, line 3, column 17 to line 9, column 9"))
+         "file string, line 3, column 8 to line 10, column 9"))
+       (4 ((Block (5 9 10)) "file string, line 3, column 17 to line 10, column 9"))
        (5
         ((IfElse (BinOp (Lit Int 3) Greater (Lit Int 2)) 6 ())
          "file string, line 4, column 10 to line 7, column 11"))
@@ -415,14 +416,15 @@ let%expect_test "Statement label map example 2" =
         ((NRFunApp print ((Lit Str hello))) "file string, line 5, columns 12-27"))
        (8 ((Return ((Lit Int 2))) "file string, line 6, columns 12-21"))
        (9 ((Return ((Lit Int 22))) "file string, line 8, columns 10-20"))
-       (10
-        ((FunDef (fdrt ()) (fdname g) (fdargs ()) (fdbody 11))
-         "file string, line 10, column 8 to line 12, column 9"))
-       (11 ((Block (12)) "file string, line 10, column 17 to line 12, column 9"))
-       (12
-        ((NRFunApp print ((Lit Str bye))) "file string, line 11, columns 10-23"))
-       (13 ((Block (14)) ""))
-       (14 ((NRFunApp print ((FunApp f ()))) "file string, line 15, columns 8-19")))
+       (10 ((Return ((Lit Int 14))) "file string, line 9, columns 10-20"))
+       (11
+        ((FunDef (fdrt ()) (fdname g) (fdargs ()) (fdbody 12))
+         "file string, line 11, column 8 to line 13, column 9"))
+       (12 ((Block (13)) "file string, line 11, column 17 to line 13, column 9"))
+       (13
+        ((NRFunApp print ((Lit Str bye))) "file string, line 12, columns 10-23"))
+       (14 ((Block (15)) ""))
+       (15 ((NRFunApp print ((FunApp f ()))) "file string, line 16, columns 8-19")))
     |}]
 
 let%expect_test "Controlflow graph example 2" =
@@ -430,9 +432,9 @@ let%expect_test "Controlflow graph example 2" =
   print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((1 (8 9)) (2 (8 9)) (3 (8 9)) (4 (3 8 9)) (5 (3 8)) (6 (5 8)) (7 (5))
-       (8 (5)) (9 (3 8)) (10 (8 9)) (11 (8 9 10)) (12 (8 9 10)) (13 (8 9))
-       (14 (8 9)))
+      ((1 (8 9 10)) (2 (8 9 10)) (3 (8 9 10)) (4 (3 8 9 10)) (5 (3 8)) (6 (5 8))
+       (7 (5)) (8 (5)) (9 (3 8)) (10 (3 8 9)) (11 (8 9 10)) (12 (8 9 10 11))
+       (13 (8 9 10 11)) (14 (8 9 10)) (15 (8 9 10)))
     |}]
 
 let%expect_test "Predecessor graph example 2" =
@@ -442,12 +444,12 @@ let%expect_test "Predecessor graph example 2" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((14)
+      ((15)
        ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (7)) (9 (8))
-        (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13))))
+        (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14))))
     |}]
 
-(* TODO: this predecessor graph is all wrong! *)
+(* TODO: this predecessor graph is wrong! *)
 
 let%test "Reconstructed recursive statement" =
   let stmt =
