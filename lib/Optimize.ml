@@ -375,25 +375,6 @@ and can_side_effect_idx (i : idx) =
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
 
-let statement_of_program_with_fun_bodies mir =
-  let function_bodies =
-    List.concat
-      (List.map
-         ~f:(fun x ->
-           match x.stmt with
-           | FunDef {fdbody; _} -> [x; fdbody]
-           | _ -> Errors.fatal_error () )
-         mir.functions_block)
-  in
-  { stmt=
-      SList
-        [ {stmt= SList function_bodies; sloc= ""}
-        ; {stmt= SList mir.prepare_data; sloc= ""}
-        ; {stmt= SList mir.prepare_params; sloc= ""}
-        ; {stmt= Block mir.log_prob; sloc= ""}
-        ; {stmt= SList mir.generate_quantities; sloc= ""} ]
-  ; sloc= "" }
-
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : stmt_loc prog) =
   (* TODO: think about whether we should treat function bodies as local scopes in the statement
@@ -401,7 +382,7 @@ let dead_code_elimination (mir : stmt_loc prog) =
    (Obviously, this shouldn't be the case for the purposes of reaching definitions,
    constant propagation, expressions analyses. But I do think that's the right way to
    go about live variables. *)
-  let s = statement_of_program_with_fun_bodies mir in
+  let s = statement_of_program mir in
   let rev_flowgraph, flowgraph_to_mir =
     Monotone_framework.inverse_flowgraph_of_stmt s
   in
@@ -468,19 +449,14 @@ let dead_code_elimination (mir : stmt_loc prog) =
         let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
         SList l'
     (* TODO: do dead code elimination in function body too! *)
-    | FunDef {fdname; _} ->
-        if Set.Poly.mem live_variables_s fdname then stmt else Skip
+    | FunDef x -> FunDef x
   in
   let dead_code_elim_stmt =
     map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
   in
   let s = dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
   let mir = update_program_statement_blocks mir s in
-  { mir with
-    functions_block=
-      List.filter
-        ~f:(fun x -> match x.stmt with FunDef _ -> true | _ -> false)
-        mir.functions_block }
+  mir
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: implement lazy code motion. Make sure to apply it separately to each program block, rather than to the program as a whole. *)
@@ -1765,13 +1741,14 @@ let%expect_test "dead code elimination decl" =
              ((sloc <opaque>) (stmt (NRFunApp print ((Var i)))))))))))
        (prog_name "") (prog_path "")) |}]
 
-(* TODO: this one doesn't work yet
 let%expect_test "dead code elimination functions" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
       functions {
         real f() {
+          int x;
+          x = 23;
           return 24;
         }
       }
@@ -1785,7 +1762,27 @@ let%expect_test "dead code elimination functions" =
   let mir = dead_code_elimination mir in
   print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
   [%expect
-    {| |} ] *)
+    {|
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UReal)) (fdname f) (fdargs ())
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt
+                   (SList
+                    (((sloc <opaque>)
+                      (stmt
+                       (Decl (decl_adtype AutoDiffable) (decl_id x)
+                        (decl_type UInt))))))))
+                 ((sloc <opaque>) (stmt (Return ((Lit Int 24)))))))))))))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
+       (log_prob (((sloc <opaque>) (stmt (NRFunApp print ((Lit Int 42)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, for loop" =
   let ast =

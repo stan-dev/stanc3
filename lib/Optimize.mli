@@ -13,6 +13,7 @@ val loop_unrolling : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 val list_collapsing : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 (** Remove redundant SList constructors from the Mir that might have
     been introduced by other optimizations *)
+
 val constant_propagation : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 (** Propagate constant values through variable assignments *)
 
@@ -24,7 +25,7 @@ val expression_propagation : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 val copy_propagation : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 (** Propagate copies of variables through assignments. *)
 
-val dead_code_elimination  : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
+val dead_code_elimination : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 (** Eliminate semantically redundant code branches.
     This includes removing redundant assignments (because they will be overwritten)
     and removing redundant code in program branches that will never be reached. *)

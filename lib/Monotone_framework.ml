@@ -383,13 +383,14 @@ let rec free_vars_stmt (s : Mir.stmt_loc Mir.statement) =
 
 (** A variation on free_vars_stmt, where we do not recursively count free
     variables in sub statements  *)
-let top_free_vars_stmt (s : int Mir.statement) =
+let top_free_vars_stmt  (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
+(s : int Mir.statement) =
   match s with
   | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
    |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
    |Mir.Skip ->
       free_vars_stmt
-        (Mir.statement_stmt_loc_of_statement_stmt_loc_num Map.Poly.empty s)
+        (Mir.statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> free_vars_expr e
   | Mir.For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
@@ -404,7 +405,7 @@ let live_variables_transfer
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
-      let gen = top_free_vars_stmt mir_node in
+      let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
         | Mir.Assignment (Var x, _) | Mir.Decl {decl_id= x; _} ->
