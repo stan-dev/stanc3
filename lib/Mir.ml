@@ -178,7 +178,7 @@ let map_rec_stmt_loc_num (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
   in
   map_rec_stmt_loc_num' 1 s
 
-let rec map_rec_state_stmt_loc_num
+let map_rec_state_stmt_loc_num
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t)
     (f : int -> 's -> stmt_loc statement -> stmt_loc statement * 's)
     (state : 's) (s : stmt_loc_num) : stmt_loc * 's =

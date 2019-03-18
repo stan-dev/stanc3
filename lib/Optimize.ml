@@ -315,9 +315,7 @@ let update_program_statement_blocks (mir : stmt_loc prog) (s : stmt_loc) =
   ; prepare_data= List.nth_exn l 1
   ; prepare_params= List.nth_exn l 2
   ; log_prob= List.nth_exn l 3
-  ; generate_quantities=
-      ( try List.nth_exn l 4 with _ -> raise_s [%sexp (l : stmt_loc list list)]
-      ) }
+  ; generate_quantities= List.nth_exn l 4 }
 
 let propagation
     (propagation_transfer :
