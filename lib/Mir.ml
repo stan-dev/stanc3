@@ -147,6 +147,24 @@ let rec map_toplevel_stmts f {sloc; stmt} =
 
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
 
+let rec map_rec_expr (f : expr_typed_located expr -> expr_typed_located expr)
+    (e : expr_typed_located) =
+  let recurse = map_rec_expr f in
+  {e with texpr= f (map_expr recurse e.texpr)}
+
+let map_rec_expr_state
+    (f : 's -> expr_typed_located expr -> expr_typed_located expr * 's)
+    (state : 's) (e : expr_typed_located) : expr_typed_located * 's =
+  let cur_state = ref state in
+  let g e' =
+    let e', state = f !cur_state e' in
+    let _ = cur_state := state in
+    e'
+  in
+  let e = map_rec_expr g e in
+  let state = !cur_state in
+  (e, state)
+
 let rec map_rec_stmt_loc
     (f :
          (expr_typed_located, stmt_loc) statement
