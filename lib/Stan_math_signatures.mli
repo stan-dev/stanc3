@@ -3,7 +3,7 @@
 open Ast
 
 val get_stan_math_function_return_type_opt :
-  string -> typed_expression list -> returntype option
+  string -> (autodifftype * unsizedtype) list -> returntype option
 (** Get an optional return type for a Stan Math library function, given its name and argument types. *)
 
 val is_stan_math_function_name : string -> bool

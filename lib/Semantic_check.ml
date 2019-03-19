@@ -590,7 +590,12 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       in
       let returnblock = lub_ad_e ues in
       (* Function applications are returning functions *)
-      match get_stan_math_function_return_type_opt uid.name ues with
+      match
+        get_stan_math_function_return_type_opt uid.name
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             ues)
+      with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -628,7 +633,10 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                 if
                   not
                     (check_compatible_arguments_mod_conv uid.name listedtypes
-                       ues)
+                       (List.map
+                          ~f:(fun x ->
+                            (x.expr_typed_ad_level, x.expr_typed_type) )
+                          ues))
                 then
                   semantic_error ~loc
                     ( "Ill-typed arguments supplied to function "
@@ -684,7 +692,12 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
              of functions with the suffix _lp."
       in
       let returnblock = lub_ad_e ues in
-      match get_stan_math_function_return_type_opt uid.name ues with
+      match
+        get_stan_math_function_return_type_opt uid.name
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             ues)
+      with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -722,7 +735,10 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                 if
                   not
                     (check_compatible_arguments_mod_conv uid.name listedtypes
-                       ues)
+                       (List.map
+                          ~f:(fun x ->
+                            (x.expr_typed_ad_level, x.expr_typed_type) )
+                          ues))
                 then
                   semantic_error ~loc
                     ( "Ill-typed arguments supplied to function "
@@ -966,7 +982,12 @@ and semantic_check_statement cf s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match get_stan_math_function_return_type_opt uid.name ues with
+      match
+        get_stan_math_function_return_type_opt uid.name
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             ues)
+      with
       | Some Void ->
           { stmt_typed= NRFunApp (uid, ues)
           ; stmt_typed_returntype= NoReturnType
@@ -995,7 +1016,10 @@ and semantic_check_statement cf s =
                 if
                   not
                     (check_compatible_arguments_mod_conv uid.name listedtypes
-                       ues)
+                       (List.map
+                          ~f:(fun x ->
+                            (x.expr_typed_ad_level, x.expr_typed_type) )
+                          ues))
                 then
                   semantic_error ~loc
                     ( "Ill-typed arguments supplied to function "
@@ -1100,7 +1124,12 @@ and semantic_check_statement cf s =
                Use increment_log_prob(" ^ uid.name ^ "_log(...)) instead." )
       in
       (* Check typing of ~ and target += *)
-      let distribution_name_is_defined name argumenttypes =
+      let distribution_name_is_defined name arguments =
+        let argumenttypes =
+          List.map
+            ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+            arguments
+        in
         get_stan_math_function_return_type_opt (name ^ "_lpdf") argumenttypes
         = Some (ReturnType UReal)
         || get_stan_math_function_return_type_opt (name ^ "_lpmf")
@@ -1134,7 +1163,12 @@ and semantic_check_statement cf s =
             ^ ("'" ^ uid.name ^ "'")
             ^ " was found with the correct signature." )
       in
-      let cumulative_density_is_defined name argumenttypes =
+      let cumulative_density_is_defined name arguments =
+        let argumenttypes =
+          List.map
+            ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+            arguments
+        in
         ( get_stan_math_function_return_type_opt (name ^ "_lcdf") argumenttypes
           = Some (ReturnType UReal)
         ||

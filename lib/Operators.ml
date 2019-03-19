@@ -75,7 +75,10 @@ let operator_return_type_from_string op_name args =
       | [] -> None
       | name :: names -> (
         match
-          Stan_math_signatures.get_stan_math_function_return_type_opt name args
+          Stan_math_signatures.get_stan_math_function_return_type_opt name
+            (List.map
+               ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+               args)
         with
         | None -> try_recursive_find names
         | Some ut -> Some ut )

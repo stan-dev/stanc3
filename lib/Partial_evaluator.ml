@@ -75,6 +75,7 @@ let rec eval_expr (e : Mir.expr_typed_located) =
       | Var _ | Lit (_, _) -> e.texpr
       | FunApp (f, l) -> (
           let l = List.map ~f:eval_expr l in
+          (* let try_fun_app (f', l') = *)
           match (f, l) with
           (* TODO: deal with tilde statements and unnormalized distributions properly here *)
           
