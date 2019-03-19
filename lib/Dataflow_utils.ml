@@ -1,6 +1,7 @@
 open Core_kernel
 open Mir
 open Dataflow_types
+open Mir_utils
 
 (** Union maps, preserving the left element in a collision *)
 let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
@@ -12,59 +13,6 @@ let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
     | `Both (v1, _) -> Some v1
   in
   Map.Poly.merge m1 m2 ~f
-
-(**
-   A traversal that simultaneously accumulates a state (type 'f) and replaces the
-   substatement values from ('a to 'c). Traversal is done in-order but ignores branching,
-   e.g., and if's then block is followed by the else block rather than branching.
-*)
-let fwd_traverse_statement (stmt : (expr_typed_located, 'a) statement)
-    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) :
-    'f * (expr_typed_located, 'c) statement =
-  match stmt with
-  | IfElse (pred, then_s, else_s_opt) ->
-      let s', c = f state then_s in
-      Option.value_map else_s_opt
-        ~default:(s', IfElse (pred, c, None))
-        ~f:(fun else_s ->
-          let s'', c' = f s' else_s in
-          (s'', IfElse (pred, c, Some c')) )
-  | While (pred, body) ->
-      let s', c = f state body in
-      (s', While (pred, c))
-  | For vars ->
-      let s', c = f state vars.body in
-      (s', For {vars with body= c})
-  | Block stmts ->
-      let s', ls =
-        List.fold_left stmts
-          ~f:(fun (s, l) stmt ->
-            let s', c = f s stmt in
-            (s', List.cons c l) )
-          ~init:(state, [])
-      in
-      (s', Block (List.rev ls))
-  | SList stmts ->
-      let s', ls =
-        List.fold_left stmts
-          ~f:(fun (s, l) stmt ->
-            let s', c = f s stmt in
-            (s', List.cons c l) )
-          ~init:(state, [])
-      in
-      (s', SList (List.rev ls))
-  | FunDef vars ->
-      let s', c = f state vars.fdbody in
-      (s', FunDef {vars with fdbody= c})
-  | Assignment _ as s -> (state, s)
-  | TargetPE _ as s -> (state, s)
-  | NRFunApp _ as s -> (state, s)
-  | Check _ as s -> (state, s)
-  | Break as s -> (state, s)
-  | Continue as s -> (state, s)
-  | Return _ as s -> (state, s)
-  | Skip as s -> (state, s)
-  | Decl _ as s -> (state, s)
 
 (**
    Like a forward traversal, but branches accumulate two different states that are

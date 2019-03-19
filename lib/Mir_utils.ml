@@ -2,6 +2,55 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
+let fwd_traverse_statement (stmt : (expr_typed_located, 'a) statement)
+    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) :
+    'f * (expr_typed_located, 'c) statement =
+  match stmt with
+  | IfElse (pred, then_s, else_s_opt) ->
+      let s', c = f state then_s in
+      Option.value_map else_s_opt
+        ~default:(s', IfElse (pred, c, None))
+        ~f:(fun else_s ->
+          let s'', c' = f s' else_s in
+          (s'', IfElse (pred, c, Some c')) )
+  | While (pred, body) ->
+      let s', c = f state body in
+      (s', While (pred, c))
+  | For vars ->
+      let s', c = f state vars.body in
+      (s', For {vars with body= c})
+  | Block stmts ->
+      let s', ls =
+        List.fold_left stmts
+          ~f:(fun (s, l) stmt ->
+            let s', c = f s stmt in
+            (s', List.cons c l) )
+          ~init:(state, [])
+      in
+      (s', Block (List.rev ls))
+  | SList stmts ->
+      let s', ls =
+        List.fold_left stmts
+          ~f:(fun (s, l) stmt ->
+            let s', c = f s stmt in
+            (s', List.cons c l) )
+          ~init:(state, [])
+      in
+      (s', SList (List.rev ls))
+  | FunDef vars ->
+      let s', c = f state vars.fdbody in
+      (s', FunDef {vars with fdbody= c})
+  | Assignment _ as s -> (state, s)
+  | TargetPE _ as s -> (state, s)
+  | NRFunApp _ as s -> (state, s)
+  | Check _ as s -> (state, s)
+  | Break as s -> (state, s)
+  | Continue as s -> (state, s)
+  | Return _ as s -> (state, s)
+  | Skip as s -> (state, s)
+  | Decl _ as s -> (state, s)
+
+
 (** See interface file *)
 let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =
   match ex.texpr with
