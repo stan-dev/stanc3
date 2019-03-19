@@ -481,7 +481,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
       and ue = semantic_check_expression cf e in
-      match operator_return_type_prefix uop [ue] with
+      match operator_return_type uop [ue] with
       | Some (ReturnType ut) ->
           { expr_typed= PrefixOp (uop, ue)
           ; expr_typed_ad_level= lub_ad_e [ue]
@@ -491,7 +491,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures_prefix (operator_name uop)
+            ^ pretty_print_all_operator_signatures (operator_name uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )

@@ -391,11 +391,11 @@ common_expression:
 
 %inline prefixOp:
   | BANG
-    {   grammar_logger "prefix_bang" ; Not }
+    {   grammar_logger "prefix_bang" ; PNot }
   | MINUS
-    {  grammar_logger "prefix_minus" ; Minus }
+    {  grammar_logger "prefix_minus" ; PMinus }
   | PLUS
-    {   grammar_logger "prefix_plus" ; Plus }
+    {   grammar_logger "prefix_plus" ; PPlus }
 
 %inline postfixOp:
   | TRANSPOSE
