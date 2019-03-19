@@ -261,7 +261,7 @@ let build_predecessor_graph
 (***********************************)
 (* Tests                           *)
 (***********************************)
-(*
+
 let example1_program =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -307,48 +307,213 @@ let%expect_test "Statement label map example" =
           Map.Poly.t )] ;
   [%expect
     {|
-      ((1 ((Block (2 5)) ""))
-       (2 ((SList (3 4)) "file string, line 3, columns 10-20"))
+      ((1
+        ((Block (2 5))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (2
+        ((SList (3 4))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 3) (col_num 20) (included_from ()))))))
        (3
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))
-         "file string, line 3, columns 10-20"))
-       (4 ((Assignment (Var i) (Lit Int 0)) "file string, line 3, columns 10-20"))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 3) (col_num 20) (included_from ()))))))
+       (4
+        ((Assignment
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+           (texpr_adlevel DataOnly))
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+           (texpr_adlevel DataOnly)))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 3) (col_num 20) (included_from ()))))))
        (5
-        ((IfElse (BinOp (Var i) Less (Lit Int 0)) 6 (8))
-         "file string, line 4, column 10 to line 21, column 11"))
-       (6 ((Block (7)) "file string, line 4, column 21 to line 6, column 11"))
-       (7 ((NRFunApp print ((Var i))) "file string, line 5, columns 12-21"))
-       (8 ((Block (9)) "file string, line 6, column 17 to line 21, column 11"))
+        ((IfElse
+          ((texpr_type UInt) (texpr_loc <opaque>)
+           (texpr
+            (FunApp Less__
+             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+               (texpr_adlevel DataOnly)))))
+           (texpr_adlevel DataOnly))
+          6 (8))
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 21) (col_num 11) (included_from ()))))))
+       (6
+        ((Block (7))
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 21) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 6) (col_num 11) (included_from ()))))))
+       (7
+        ((NRFunApp print
+          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 5) (col_num 12) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 5) (col_num 21) (included_from ()))))))
+       (8
+        ((Block (9))
+         ((begin_loc
+           ((filename string) (line_num 6) (col_num 17) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 21) (col_num 11) (included_from ()))))))
        (9
-        ((For (loopvar (Var j)) (lower (Lit Int 1)) (upper (Lit Int 10)) (body 10))
-         "file string, line 7, column 12 to line 20, column 13"))
+        ((For (loopvar j)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 10))
+            (texpr_adlevel DataOnly)))
+          (body 10))
+         ((begin_loc
+           ((filename string) (line_num 7) (col_num 12) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 20) (col_num 13) (included_from ()))))))
        (10
         ((Block (11 14 17 22))
-         "file string, line 7, column 28 to line 20, column 13"))
+         ((begin_loc
+           ((filename string) (line_num 7) (col_num 28) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 20) (col_num 13) (included_from ()))))))
        (11
-        ((IfElse (BinOp (Var j) Greater (Lit Int 9)) 12 ())
-         "file string, line 8, column 14 to line 10, column 15"))
-       (12 ((Block (13)) "file string, line 8, column 25 to line 10, column 15"))
-       (13 (Break "file string, line 9, columns 16-22"))
+        ((IfElse
+          ((texpr_type UInt) (texpr_loc <opaque>)
+           (texpr
+            (FunApp Greater__
+             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 9))
+               (texpr_adlevel DataOnly)))))
+           (texpr_adlevel DataOnly))
+          12 ())
+         ((begin_loc
+           ((filename string) (line_num 8) (col_num 14) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 10) (col_num 15) (included_from ()))))))
+       (12
+        ((Block (13))
+         ((begin_loc
+           ((filename string) (line_num 8) (col_num 25) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 10) (col_num 15) (included_from ()))))))
+       (13
+        (Break
+         ((begin_loc
+           ((filename string) (line_num 9) (col_num 16) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 9) (col_num 22) (included_from ()))))))
        (14
         ((IfElse
-          (BinOp (BinOp (Var j) Greater (Lit Int 8)) And
-           (BinOp (Var i) Less (FunApp Minus ((Lit Int 1)))))
+          ((texpr_type UInt) (texpr_loc <opaque>)
+           (texpr
+            (FunApp And__
+             (((texpr_type UInt) (texpr_loc <opaque>)
+               (texpr
+                (FunApp Greater__
+                 (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+                   (texpr_adlevel DataOnly))
+                  ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 8))
+                   (texpr_adlevel DataOnly)))))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>)
+               (texpr
+                (FunApp Less__
+                 (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                   (texpr_adlevel DataOnly))
+                  ((texpr_type UInt) (texpr_loc <opaque>)
+                   (texpr
+                    (FunApp PMinus__
+                     (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                       (texpr_adlevel DataOnly)))))
+                   (texpr_adlevel DataOnly)))))
+               (texpr_adlevel DataOnly)))))
+           (texpr_adlevel DataOnly))
           15 ())
-         "file string, line 11, column 14 to line 13, column 15"))
-       (15 ((Block (16)) "file string, line 11, column 35 to line 13, column 15"))
-       (16 (Continue "file string, line 12, columns 16-25"))
+         ((begin_loc
+           ((filename string) (line_num 11) (col_num 14) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 13) (col_num 15) (included_from ()))))))
+       (15
+        ((Block (16))
+         ((begin_loc
+           ((filename string) (line_num 11) (col_num 35) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 13) (col_num 15) (included_from ()))))))
+       (16
+        (Continue
+         ((begin_loc
+           ((filename string) (line_num 12) (col_num 16) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 12) (col_num 25) (included_from ()))))))
        (17
-        ((IfElse (BinOp (Var j) Greater (Lit Int 5)) 18 (20))
-         "file string, line 14, column 14 to line 18, column 15"))
-       (18 ((Block (19)) "file string, line 14, column 25 to line 16, column 15"))
-       (19 (Continue "file string, line 15, columns 16-25"))
-       (20 ((Block (21)) "file string, line 16, column 21 to line 18, column 15"))
+        ((IfElse
+          ((texpr_type UInt) (texpr_loc <opaque>)
+           (texpr
+            (FunApp Greater__
+             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 5))
+               (texpr_adlevel DataOnly)))))
+           (texpr_adlevel DataOnly))
+          18 (20))
+         ((begin_loc
+           ((filename string) (line_num 14) (col_num 14) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 18) (col_num 15) (included_from ()))))))
+       (18
+        ((Block (19))
+         ((begin_loc
+           ((filename string) (line_num 14) (col_num 25) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 16) (col_num 15) (included_from ()))))))
+       (19
+        (Continue
+         ((begin_loc
+           ((filename string) (line_num 15) (col_num 16) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 15) (col_num 25) (included_from ()))))))
+       (20
+        ((Block (21))
+         ((begin_loc
+           ((filename string) (line_num 16) (col_num 21) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 18) (col_num 15) (included_from ()))))))
        (21
-        ((NRFunApp print ((Lit Str Badger) (BinOp (Var i) Plus (Var j))))
-         "file string, line 17, columns 16-39"))
+        ((NRFunApp print
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str Badger))
+            (texpr_adlevel DataOnly))
+           ((texpr_type UInt) (texpr_loc <opaque>)
+            (texpr
+             (FunApp Plus__
+              (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                (texpr_adlevel DataOnly))
+               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
+                (texpr_adlevel DataOnly)))))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 17) (col_num 16) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 17) (col_num 39) (included_from ()))))))
        (22
-        ((NRFunApp print ((Lit Str Fin))) "file string, line 19, columns 14-27")))
+        ((NRFunApp print
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str Fin))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 19) (col_num 14) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 19) (col_num 27) (included_from ())))))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -373,7 +538,7 @@ let%expect_test "Predecessor graph example" =
        ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8))
         (10 (9 22)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
         (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
-    |}]*)
+    |}]
 
 let example2_program =
   let ast =
@@ -549,7 +714,7 @@ let%expect_test "Predecessor graph example 2" =
     |}]
 
 (* TODO: this predecessor graph is wrong! *)
-(*
+
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
@@ -557,4 +722,4 @@ let%test "Reconstructed recursive statement" =
       example1_statement_map 1
   in
   stmt = example1_program
-*)
+
