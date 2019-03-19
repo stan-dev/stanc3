@@ -180,9 +180,13 @@ let rec eval_expr (e : Mir.expr_typed_located) =
               , [{texpr= FunApp ("sum", [{texpr= FunApp ("exp", l); _}]); _}] )
               ->
                 FunApp ("log_sum_exp", l)
-            (* TODO: can only do below for reals:
-    | "log", [FunApp (FunApp ("exp", [x]),"Plus__" ,FunApp ("exp", [y]))] ->
-    FunApp ("log_sum_exp", [x;y]) *)
+            | ( "log"
+              , [ { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [ {texpr= FunApp ("exp", [x]); _}
+                          ; {texpr= FunApp ("exp", [y]); _} ] ); _ } ] ) ->
+                FunApp ("log_sum_exp", [x; y])
             | ( "multi_normal_lpdf"
               , [y; mu; {texpr= FunApp ("inverse", [tau]); _}] ) ->
                 FunApp ("multi_normal_prec_lpdf", [y; mu; tau])
@@ -209,7 +213,6 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                         , [ {texpr= Lit (Int, "1"); _}
                           ; {texpr= Lit (Int, "2"); _} ] ); _ } ] ) ->
                 FunApp ("sqrt", [x])
-            (* TODO: insert all composite functions here *)
             | "square", [{texpr= FunApp ("sd", [x]); _}] ->
                 FunApp ("variance", [x])
             | "sqrt", [{texpr= Lit (Int, "2"); _}] -> FunApp ("sqrt2", [])
@@ -252,9 +255,9 @@ let rec eval_expr (e : Mir.expr_typed_located) =
               , [{texpr= FunApp ("exp", l'); _}; {texpr= Lit (Int, "1"); _}] )
               ->
                 FunApp ("expm1", l')
-            (* TODO: can only do below for reals:
-    | FunApp (x, "Times__", y), "Plus__", z
-    | z, "Plus__", FunApp (x, "Times__",y)-> FunApp ("fma", [x;y;z]) *)
+            | "Plus__", [{texpr= FunApp ("Times__", [x; y]); _}; z]
+             |"Plus__", [z; {texpr= FunApp ("Times__", [x; y]); _}] ->
+                FunApp ("fma", [x; y; z])
             | ( "Minus__"
               , [{texpr= Lit (Int, "1"); _}; {texpr= FunApp ("gamma_p", l); _}]
               ) ->
@@ -263,13 +266,26 @@ let rec eval_expr (e : Mir.expr_typed_located) =
               , [{texpr= Lit (Int, "1"); _}; {texpr= FunApp ("gamma_q", l); _}]
               ) ->
                 FunApp ("gamma_p", l)
-            (* TODO: can only do below for t reals:       
-| FunApp("matrix_exp", [FunApp(t,"Times__" ,a)]), "Times__", b
-| FunApp("matrix_exp", [FunApp(a,"Times__" ,t)]), "Times__", b-> FunApp("scale_matrix_exp_multiply", [t;a;b]) *)
+            | ( "Times__"
+              , [ { texpr=
+                      FunApp
+                        ("matrix_exp", [{texpr= FunApp ("Times__", [t; a]); _}]); _
+                  }
+                ; b ] )
+              when t.texpr_type = UInt || t.texpr_type = UReal ->
+                FunApp ("scale_matrix_exp_multiply", [t; a; b])
+            | ( "Times__"
+              , [ { texpr=
+                      FunApp
+                        ("matrix_exp", [{texpr= FunApp ("Times__", [a; t]); _}]); _
+                  }
+                ; b ] )
+              when t.texpr_type = UInt || t.texpr_type = UReal ->
+                FunApp ("scale_matrix_exp_multiply", [t; a; b])
             | "Times__", [{texpr= FunApp ("matrix_exp", [a]); _}; b] ->
                 FunApp ("matrix_exp_multiply", [a; b])
-            (* TODO: can only do below for reals:  
-| x, "Times__", FunApp("log", [y]) -> FunApp("multiply_log", [x;y]) *)
+            | "Times__", [x; {texpr= FunApp ("log", [y]); _}] ->
+                FunApp ("multiply_log", [x; y])
             | ( "Times__"
               , [ { texpr=
                       FunApp
