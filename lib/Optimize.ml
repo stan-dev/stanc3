@@ -2892,7 +2892,9 @@ let%expect_test "partially evaluate with equality check" =
       {|
       model {
         vector[2] x;
+        vector[2] y;
         print(dot_product(x, x));
+        print(dot_product(x, y));
       }
       |}
   in
@@ -2914,11 +2916,29 @@ let%expect_test "partially evaluate with equality check" =
              ((sloc <opaque>) (stmt Skip))))))
          ((sloc <opaque>)
           (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UVector))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
            (NRFunApp print
             (((texpr_type UReal) (texpr_loc <opaque>)
               (texpr
                (FunApp dot_self
                 (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp dot_product
+                (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var y))
                   (texpr_adlevel AutoDiffable)))))
               (texpr_adlevel AutoDiffable))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
