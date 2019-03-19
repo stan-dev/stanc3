@@ -239,6 +239,62 @@ let rec eval_expr (e : Mir.expr_typed_located) =
             | ( "multi_normal_lpdf"
               , [y; mu; {texpr= FunApp ("inverse", [tau]); _}] ) ->
                 FunApp ("multi_normal_prec_lpdf", [y; mu; tau])
+            | ( "neg_binomial_2_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "exp"
+                        , [ { texpr=
+                                FunApp
+                                  ( "Plus__"
+                                  , [ alpha
+                                    ; {texpr= FunApp ("Times__", [x; beta]); _}
+                                    ] ); _ } ] ); _ }; sigma ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("neg_binomial_2_log_glm_lpmf", [y; x; alpha; beta; sigma])
+            | ( "neg_binomial_2_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "exp"
+                        , [ { texpr=
+                                FunApp
+                                  ( "Plus__"
+                                  , [ {texpr= FunApp ("Times__", [x; beta]); _}
+                                    ; alpha ] ); _ } ] ); _ }; sigma ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("neg_binomial_2_log_glm_lpmf", [y; x; alpha; beta; sigma])
+            | ( "neg_binomial_2_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "exp"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}] ); _ } ; sigma]
+              )
+              when x.texpr_type = UMatrix ->
+                FunApp ("neg_binomial_2_log_glm_lpmf", [y; x; zero; beta; sigma])
+            | ( "neg_binomial_2_log_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [alpha; {texpr= FunApp ("Times__", [x; beta]); _}] ); _
+                  }; sigma ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("neg_binomial_2_log_glm_lpmf", [y; x; alpha; beta; sigma])
+            | ( "neg_binomial_2_log_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}; alpha] ); _
+                  } ; sigma] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("neg_binomial_2_log_glm_lpmf", [y; x; alpha; beta; sigma])
+            | ( "neg_binomial_2_log_lpmf"
+              , [y; {texpr= FunApp ("Times__", [x; beta]); _}; sigma] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("neg_binomial_2_log_glm_lpmf", [y; x; zero; beta; sigma])
             | "neg_binomial_2_lpmf", [y; {texpr= FunApp ("exp", [eta]); _}; phi]
               ->
                 FunApp ("neg_binomial_2_log_lpmf", [y; eta; phi])
@@ -257,6 +313,28 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                                     ] ); _ } ] ); _ } ] )
               when x.texpr_type = UMatrix ->
                 FunApp ("poisson_log_glm_lpmf", [y; x; alpha; beta])
+            | ( "normal_lpdf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [alpha; {texpr= FunApp ("Times__", [x; beta]); _}] ); _
+                  }; sigma ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("normal_id_glm_lpdf", [y; x; alpha; beta; sigma])
+            | ( "normal_lpdf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}; alpha] ); _
+                  } ; sigma] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("normal_id_glm_lpdf", [y; x; alpha; beta; sigma])
+            | ( "normal_lpdf"
+              , [y; {texpr= FunApp ("Times__", [x; beta]); _}; sigma] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("normal_id_glm_lpdf", [y; x; zero; beta; sigma])
             | ( "poisson_lpmf"
               , [ y
                 ; { texpr=

@@ -2950,14 +2950,25 @@ let%expect_test "partially evaluate glm" =
       model {
         matrix[2,3] x;
         int y[2];
+        vector[2] y_real;
         vector[3] beta;
         vector[2] alpha;
+        real sigma;
         print(bernoulli_lpmf(y| inv_logit(alpha + x * beta)));
         print(bernoulli_logit_lpmf(y| alpha + x * beta));
         print(bernoulli_lpmf(y| inv_logit(x * beta + alpha)));
         print(bernoulli_logit_lpmf(y| x * beta + alpha));
         print(bernoulli_lpmf(y| inv_logit(x * beta)));
         print(bernoulli_logit_lpmf(y| x * beta));
+        print(neg_binomial_2_lpmf(y| exp(alpha + x * beta), sigma));
+        print(neg_binomial_2_log_lpmf(y| alpha + x * beta, sigma));
+        print(neg_binomial_2_lpmf(y| exp(x * beta + alpha), sigma));
+        print(neg_binomial_2_log_lpmf(y| x * beta + alpha, sigma));
+        print(neg_binomial_2_lpmf(y| exp(x * beta), sigma));
+        print(neg_binomial_2_log_lpmf(y| x * beta, sigma));
+        print(normal_lpdf(y_real| alpha + x * beta, sigma));
+        print(normal_lpdf(y_real| x * beta + alpha, sigma));
+        print(normal_lpdf(y_real| x * beta, sigma));
         print(poisson_lpmf(y| exp(alpha + x * beta)));
         print(poisson_log_lpmf(y| alpha + x * beta));
         print(poisson_lpmf(y| exp(x * beta + alpha)));
@@ -2996,6 +3007,14 @@ let%expect_test "partially evaluate glm" =
            (SList
             (((sloc <opaque>)
               (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id y_real)
+                (decl_type UVector))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id beta) (decl_type UVector))))
              ((sloc <opaque>) (stmt Skip))))))
          ((sloc <opaque>)
@@ -3008,6 +3027,13 @@ let%expect_test "partially evaluate glm" =
              ((sloc <opaque>) (stmt Skip))))))
          ((sloc <opaque>)
           (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type UReal))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
            (NRFunApp print
             (((texpr_type UReal) (texpr_loc <opaque>)
               (texpr
@@ -3094,6 +3120,159 @@ let%expect_test "partially evaluate glm" =
                  ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
                   (texpr_adlevel DataOnly))
                  ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp normal_id_glm_lpdf
+                (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var y_real))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp normal_id_glm_lpdf
+                (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var y_real))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp normal_id_glm_lpdf
+                (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var y_real))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sigma))
                   (texpr_adlevel AutoDiffable)))))
               (texpr_adlevel AutoDiffable))))))
          ((sloc <opaque>)
