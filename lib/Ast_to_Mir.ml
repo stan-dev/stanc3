@@ -10,8 +10,13 @@ let unwrap_return_exn = function
       raise_s [%message "Unexpected return type " (x : Ast.returntype option)]
 
 let rec op_to_funapp op args =
+  let argtypes =
+    List.map
+      ~f:(fun x -> (x.Ast.expr_typed_ad_level, x.Ast.expr_typed_type))
+      args
+  in
   { texpr= FunApp (Operators.operator_name op, trans_exprs args)
-  ; texpr_type= Operators.operator_return_type op args |> unwrap_return_exn
+  ; texpr_type= Operators.operator_return_type op argtypes |> unwrap_return_exn
   ; texpr_loc= Ast.expr_loc_lub args
   ; texpr_adlevel= Ast.expr_ad_lub args }
 

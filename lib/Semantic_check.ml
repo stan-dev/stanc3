@@ -440,7 +440,12 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let ue1 = semantic_check_expression cf e1 in
       let ue2 = semantic_check_expression cf e2 in
       let ue3 = semantic_check_expression cf e3 in
-      match operator_return_type_from_string ternary_if [ue1; ue2; ue3] with
+      match
+        operator_return_type_from_string ternary_if
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             [ue1; ue2; ue3])
+      with
       | Some (ReturnType ut) ->
           { expr_typed= TernaryIf (ue1, ue2, ue3)
           ; expr_typed_ad_level= lub_ad_e [ue1; ue2; ue3]
@@ -462,7 +467,12 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let ue1 = semantic_check_expression cf e1
       and uop = semantic_check_operator op
       and ue2 = semantic_check_expression cf e2 in
-      match operator_return_type uop [ue1; ue2] with
+      match
+        operator_return_type uop
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             [ue1; ue2])
+      with
       | Some (ReturnType ut) ->
           { expr_typed= BinOp (ue1, uop, ue2)
           ; expr_typed_ad_level= lub_ad_e [ue1; ue2]
@@ -481,7 +491,12 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
       and ue = semantic_check_expression cf e in
-      match operator_return_type uop [ue] with
+      match
+        operator_return_type uop
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             [ue])
+      with
       | Some (ReturnType ut) ->
           { expr_typed= PrefixOp (uop, ue)
           ; expr_typed_ad_level= lub_ad_e [ue]
@@ -498,7 +513,12 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression cf e in
       let uop = semantic_check_operator op in
-      match operator_return_type op [ue] with
+      match
+        operator_return_type op
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             [ue])
+      with
       | Some (ReturnType ut) ->
           { expr_typed= PostfixOp (ue, uop)
           ; expr_typed_ad_level= lub_ad_e [ue]
@@ -947,7 +967,12 @@ and semantic_check_statement cf s =
             ^ " declared in previous blocks." )
       in
       let opname = Sexp.to_string (sexp_of_assignmentoperator uassop) in
-      match operator_return_type_from_string opname [ue2; ue] with
+      match
+        operator_return_type_from_string opname
+          (List.map
+             ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
+             [ue2; ue])
+      with
       | Some Void ->
           { stmt_typed=
               Assignment

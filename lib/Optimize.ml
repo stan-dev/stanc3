@@ -2799,6 +2799,93 @@ let%expect_test "partial evaluation" =
             ())))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
+let%expect_test "try partially evaluate" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        real x;
+        real y;
+        vector[2] a;
+        vector[2] b;
+        print(log(exp(x)-exp(y)));
+        print(log(exp(a)-exp(b)));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = partial_evaluation mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UReal))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UReal))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type UVector))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UVector))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp log_diff_exp
+                (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UVector) (texpr_loc <opaque>)
+              (texpr
+               (FunApp log
+                (((texpr_type UVector) (texpr_loc <opaque>)
+                  (texpr
+                   (FunApp Minus__
+                    (((texpr_type UVector) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp exp
+                        (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var a))
+                          (texpr_adlevel AutoDiffable)))))
+                      (texpr_adlevel AutoDiffable))
+                     ((texpr_type UVector) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp exp
+                        (((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var b))
+                          (texpr_adlevel AutoDiffable)))))
+                      (texpr_adlevel AutoDiffable)))))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
 (*
