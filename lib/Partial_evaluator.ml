@@ -74,139 +74,143 @@ let rec eval_expr (e : Mir.expr_typed_located) =
       ( match e.texpr with
       | Var _ | Lit (_, _) -> e.texpr
       | FunApp (f, l) -> (
-        match (f, List.map ~f:eval_expr l) with
-        (* TODO: deal with tilde statements and unnormalized distributions properly here *)
-        
-        (* TODO: be careful here with operators which get translated to function calls *)
-        (* TODO: deal with GLM functions here. Need type information though.
+          let l = List.map ~f:eval_expr l in
+          match (f, l) with
+          (* TODO: deal with tilde statements and unnormalized distributions properly here *)
+          
+          (* TODO: be careful here with operators which get translated to function calls *)
+          (* TODO: deal with GLM functions here. Need type information though.
     | "bernoulli_logit_lpmf", [y; FunApp (alpha, "Plus__", FunApp (beta, "Times__", x))]
      |"bernoulli_logit_lpmf", [y; FunApp (FunApp (beta, "Times__", x), "Plus__", alpha)]
      |"bernoulli_logit_lpmf", [y; FunApp (alpha, "Plus__", FunApp (x, "Times__", beta))]
      |"bernoulli_logit_lpmf", [y; FunApp (FunApp (x, "Times__", beta), "Plus__", alpha)]
       ->
         FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta]) *)
-        | "bernoulli_lpmf", [y; {texpr= FunApp ("inv_logit", [alpha]); _}] ->
-            FunApp ("bernoulli_logit_lpmf", [y; alpha])
-        | "bernoulli_rng", [{texpr= FunApp ("inv_logit", [alpha]); _}] ->
-            FunApp ("bernoulli_logit_rng", [alpha])
-        | "binomial_lpmf", [y; {texpr= FunApp ("inv_logit", [n; alpha]); _}] ->
-            FunApp ("binomial_logit_lpmf", [y; n; alpha])
-        | "categorical_lpmf", [y; {texpr= FunApp ("inv_logit", [alpha]); _}] ->
-            FunApp ("categorical_logit_lpmf", [y; alpha])
-        | "categorical_rng", [{texpr= FunApp ("inv_logit", [alpha]); _}] ->
-            FunApp ("categorical_logit_rng", [alpha])
-            (* TODO: use compare rather than structural equality? *)
-        | "columns_dot_product", [x; y] when x = y ->
-            FunApp ("columns_dot_self", [x])
-        | "dot_product", [x; y] when x = y -> FunApp ("dot_self", [x])
-        | "inv", [{texpr= FunApp ("sqrt", l); _}] -> FunApp ("inv_sqrt", l)
-        | "inv", [{texpr= FunApp ("square", [x]); _}] ->
-            FunApp ("inv_square", [x])
-        | ( "log"
-          , [ { texpr=
-                  FunApp
-                    ( "Minus__"
-                    , [ {texpr= Lit (Int, "1"); _}
-                      ; {texpr= FunApp ("exp", [x]); _} ] ); _ } ] ) ->
-            FunApp ("log1m_exp", [x])
-        | ( "log"
-          , [ { texpr=
-                  FunApp
-                    ( "Minus__"
-                    , [ {texpr= Lit (Int, "1"); _}
-                      ; {texpr= FunApp ("inv_logit", [x]); _} ] ); _ } ] ) ->
-            FunApp ("log1m_inv_logit", [x])
-        | ( "log"
-          , [{texpr= FunApp ("Minus__", [{texpr= Lit (Int, "1"); _}; x]); _}] )
-          ->
-            FunApp ("log1m", [x])
-        | ( "log"
-          , [ { texpr=
-                  FunApp
-                    ( "Plus__"
-                    , [ {texpr= Lit (Int, "1"); _}
-                      ; {texpr= FunApp ("exp", [x]); _} ] ); _ } ] ) ->
-            FunApp ("log1p_exp", [x])
-        | ( "log"
-          , [{texpr= FunApp ("Plus__", [{texpr= Lit (Int, "1"); _}; x]); _}] )
-          ->
-            FunApp ("log1p", [x])
-        | ( "log"
-          , [ { texpr=
-                  FunApp ("fabs", [{texpr= FunApp ("determinant", [x]); _}]); _
-              } ] ) ->
-            FunApp ("log_determinant", [x])
-        (* TODO: can only do below for reals:
+          | "bernoulli_lpmf", [y; {texpr= FunApp ("inv_logit", [alpha]); _}] ->
+              FunApp ("bernoulli_logit_lpmf", [y; alpha])
+          | "bernoulli_rng", [{texpr= FunApp ("inv_logit", [alpha]); _}] ->
+              FunApp ("bernoulli_logit_rng", [alpha])
+          | "binomial_lpmf", [y; {texpr= FunApp ("inv_logit", [n; alpha]); _}]
+            ->
+              FunApp ("binomial_logit_lpmf", [y; n; alpha])
+          | "categorical_lpmf", [y; {texpr= FunApp ("inv_logit", [alpha]); _}]
+            ->
+              FunApp ("categorical_logit_lpmf", [y; alpha])
+          | "categorical_rng", [{texpr= FunApp ("inv_logit", [alpha]); _}] ->
+              FunApp ("categorical_logit_rng", [alpha])
+              (* TODO: use compare rather than structural equality? *)
+          | "columns_dot_product", [x; y] when x = y ->
+              FunApp ("columns_dot_self", [x])
+          | "dot_product", [x; y] when x = y -> FunApp ("dot_self", [x])
+          | "inv", [{texpr= FunApp ("sqrt", l); _}] -> FunApp ("inv_sqrt", l)
+          | "inv", [{texpr= FunApp ("square", [x]); _}] ->
+              FunApp ("inv_square", [x])
+          | ( "log"
+            , [ { texpr=
+                    FunApp
+                      ( "Minus__"
+                      , [ {texpr= Lit (Int, "1"); _}
+                        ; {texpr= FunApp ("exp", [x]); _} ] ); _ } ] ) ->
+              FunApp ("log1m_exp", [x])
+          | ( "log"
+            , [ { texpr=
+                    FunApp
+                      ( "Minus__"
+                      , [ {texpr= Lit (Int, "1"); _}
+                        ; {texpr= FunApp ("inv_logit", [x]); _} ] ); _ } ] ) ->
+              FunApp ("log1m_inv_logit", [x])
+          | ( "log"
+            , [{texpr= FunApp ("Minus__", [{texpr= Lit (Int, "1"); _}; x]); _}]
+            ) ->
+              FunApp ("log1m", [x])
+          | ( "log"
+            , [ { texpr=
+                    FunApp
+                      ( "Plus__"
+                      , [ {texpr= Lit (Int, "1"); _}
+                        ; {texpr= FunApp ("exp", [x]); _} ] ); _ } ] ) ->
+              FunApp ("log1p_exp", [x])
+          | ( "log"
+            , [{texpr= FunApp ("Plus__", [{texpr= Lit (Int, "1"); _}; x]); _}]
+            ) ->
+              FunApp ("log1p", [x])
+          | ( "log"
+            , [ { texpr=
+                    FunApp ("fabs", [{texpr= FunApp ("determinant", [x]); _}]); _
+                } ] ) ->
+              FunApp ("log_determinant", [x])
+          (* TODO: can only do below for reals:
     | "log", [FunApp (FunApp ("exp", [x]),"Minus__",FunApp ("exp", [y]))] ->
     FunApp ("log_diff_exp", [x;y]) *)
-        (* TODO: log_mix?*)
-        | "log", [{texpr= FunApp ("falling_factorial", l); _}] ->
-            FunApp ("log_falling_factorial", l)
-        | "log", [{texpr= FunApp ("rising_factorial", l); _}] ->
-            FunApp ("log_rising_factorial", l)
-        | "log", [{texpr= FunApp ("inv_logit", l); _}] ->
-            FunApp ("log_inv_logit", l)
-        | "log", [{texpr= FunApp ("softmax", l); _}] ->
-            FunApp ("log_softmax", l)
-        | "log", [{texpr= FunApp ("sum", [{texpr= FunApp ("exp", l); _}]); _}]
-          ->
-            FunApp ("log_sum_exp", l)
-        (* TODO: can only do below for reals:
+          (* TODO: log_mix?*)
+          | "log", [{texpr= FunApp ("falling_factorial", l); _}] ->
+              FunApp ("log_falling_factorial", l)
+          | "log", [{texpr= FunApp ("rising_factorial", l); _}] ->
+              FunApp ("log_rising_factorial", l)
+          | "log", [{texpr= FunApp ("inv_logit", l); _}] ->
+              FunApp ("log_inv_logit", l)
+          | "log", [{texpr= FunApp ("softmax", l); _}] ->
+              FunApp ("log_softmax", l)
+          | "log", [{texpr= FunApp ("sum", [{texpr= FunApp ("exp", l); _}]); _}]
+            ->
+              FunApp ("log_sum_exp", l)
+          (* TODO: can only do below for reals:
     | "log", [FunApp (FunApp ("exp", [x]),"Plus__" ,FunApp ("exp", [y]))] ->
     FunApp ("log_sum_exp", [x;y]) *)
-        | "multi_normal_lpdf", [y; mu; {texpr= FunApp ("inverse", [tau]); _}]
-          ->
-            FunApp ("multi_normal_prec_lpdf", [y; mu; tau])
-        | "neg_binomial_2_lpmf", [y; {texpr= FunApp ("log", [eta]); _}; phi] ->
-            FunApp ("neg_binomial_2_log_lpmf", [y; eta; phi])
-        | "neg_binomial_2_rng", [{texpr= FunApp ("log", [eta]); _}; phi] ->
-            FunApp ("neg_binomial_2_log_rng", [eta; phi])
-        | "poisson_lpmf", [y; {texpr= FunApp ("log", [eta]); _}] ->
-            FunApp ("poisson_log_lpmf", [y; eta])
-        | "poisson_rng", [{texpr= FunApp ("log", [eta]); _}] ->
-            FunApp ("poisson_log_rng", [eta])
-        | "pow", [{texpr= Lit (Int, "2"); _}; x] -> FunApp ("exp2", [x])
-        | "rows_dot_product", [x; y] when x = y -> FunApp ("rows_dot_self", [x])
-        | "pow", [x; {texpr= Lit (Int, "2"); _}] -> FunApp ("square", [x])
-        | "pow", [x; {texpr= Lit (Real, "0.5"); _}]
-         |( "pow"
-          , [ x
-            ; { texpr=
-                  FunApp
-                    ( "Divide__"
-                    , [{texpr= Lit (Int, "1"); _}; {texpr= Lit (Int, "2"); _}]
-                    ); _ } ] ) ->
-            FunApp ("sqrt", [x])
-        (* TODO: insert all composite functions here *)
-        | "square", [{texpr= FunApp ("sd", [x]); _}] -> FunApp ("variance", [x])
-        | "sqrt", [{texpr= Lit (Int, "2"); _}] -> FunApp ("sqrt2", [])
-        | ( "sum"
-          , [ { texpr=
-                  FunApp ("square", [{texpr= FunApp ("Minus__", [x; y]); _}]); _
-              } ] ) ->
-            FunApp ("squared_distance", [x; y])
-        | "sum", [{texpr= FunApp ("diagonal", l); _}] -> FunApp ("trace", l)
-        | ( "trace"
-          , [ { texpr=
-                  FunApp
-                    ( "Times__"
-                    , [ { texpr=
-                            FunApp
-                              ( "Times__"
-                              , [ { texpr=
-                                      FunApp
-                                        ( "Times__"
-                                        , [ d
-                                          ; { texpr= FunApp ("transpose", [b]); _
-                                            } ] ); _ }
-                                ; a ] ); _ }
-                      ; c ] ); _ } ] )
-          when b = c ->
-            FunApp ("trace_gen_quad_form", [d; a; b])
-        | "trace", [{texpr= FunApp ("quad_form", [a; b]); _}] ->
-            FunApp ("trace_quad_form", [a; b])
-        | op, l -> (
-          match (op, l) with
+          | "multi_normal_lpdf", [y; mu; {texpr= FunApp ("inverse", [tau]); _}]
+            ->
+              FunApp ("multi_normal_prec_lpdf", [y; mu; tau])
+          | "neg_binomial_2_lpmf", [y; {texpr= FunApp ("log", [eta]); _}; phi]
+            ->
+              FunApp ("neg_binomial_2_log_lpmf", [y; eta; phi])
+          | "neg_binomial_2_rng", [{texpr= FunApp ("log", [eta]); _}; phi] ->
+              FunApp ("neg_binomial_2_log_rng", [eta; phi])
+          | "poisson_lpmf", [y; {texpr= FunApp ("log", [eta]); _}] ->
+              FunApp ("poisson_log_lpmf", [y; eta])
+          | "poisson_rng", [{texpr= FunApp ("log", [eta]); _}] ->
+              FunApp ("poisson_log_rng", [eta])
+          | "pow", [{texpr= Lit (Int, "2"); _}; x] -> FunApp ("exp2", [x])
+          | "rows_dot_product", [x; y] when x = y ->
+              FunApp ("rows_dot_self", [x])
+          | "pow", [x; {texpr= Lit (Int, "2"); _}] -> FunApp ("square", [x])
+          | "pow", [x; {texpr= Lit (Real, "0.5"); _}]
+           |( "pow"
+            , [ x
+              ; { texpr=
+                    FunApp
+                      ( "Divide__"
+                      , [{texpr= Lit (Int, "1"); _}; {texpr= Lit (Int, "2"); _}]
+                      ); _ } ] ) ->
+              FunApp ("sqrt", [x])
+          (* TODO: insert all composite functions here *)
+          | "square", [{texpr= FunApp ("sd", [x]); _}] ->
+              FunApp ("variance", [x])
+          | "sqrt", [{texpr= Lit (Int, "2"); _}] -> FunApp ("sqrt2", [])
+          | ( "sum"
+            , [ { texpr=
+                    FunApp ("square", [{texpr= FunApp ("Minus__", [x; y]); _}]); _
+                } ] ) ->
+              FunApp ("squared_distance", [x; y])
+          | "sum", [{texpr= FunApp ("diagonal", l); _}] -> FunApp ("trace", l)
+          | ( "trace"
+            , [ { texpr=
+                    FunApp
+                      ( "Times__"
+                      , [ { texpr=
+                              FunApp
+                                ( "Times__"
+                                , [ { texpr=
+                                        FunApp
+                                          ( "Times__"
+                                          , [ d
+                                            ; { texpr= FunApp ("transpose", [b]); _
+                                              } ] ); _ }
+                                  ; a ] ); _ }
+                        ; c ] ); _ } ] )
+            when b = c ->
+              FunApp ("trace_gen_quad_form", [d; a; b])
+          | "trace", [{texpr= FunApp ("quad_form", [a; b]); _}] ->
+              FunApp ("trace_quad_form", [a; b])
           | ( "Minus__"
             , [{texpr= Lit (Int, "1"); _}; {texpr= FunApp ("erf", l); _}] ) ->
               FunApp ("erfc", l)
@@ -305,7 +309,7 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                 apply_logical_operator_real op (Float.of_string i1)
                   (Float.of_string i2)
             | _ -> FunApp (op, l) )
-          | _ -> FunApp (op, l) ) )
+          | _ -> FunApp (f, l) )
       | TernaryIf (e1, e2, e3) -> (
         match (eval_expr e1, eval_expr e2, eval_expr e3) with
         | {texpr= Lit (Int, "0"); _}, _, e3' -> e3'.texpr
