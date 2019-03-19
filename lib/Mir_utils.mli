@@ -32,3 +32,19 @@ val summation_terms : expr_typed_located -> expr_typed_located list
 
 val stmt_of_block : stmt_loc list -> stmt_loc
 (** Represent a list of statements as a single statement *)
+
+val subst_expr :
+     (string, expr_typed_located) Map.Poly.t
+  -> expr_typed_located
+  -> expr_typed_located
+(** Substitute variables in an expression according to the provided Map. *)
+
+val subst_stmt_base :
+     (string, expr_typed_located) Map.Poly.t
+  -> (expr_typed_located, 'a) statement
+  -> (expr_typed_located, 'a) statement
+(** Substitute variables occurring at the top level in statements according to the provided Map. *)
+
+val subst_stmt :
+  (string, expr_typed_located) Map.Poly.t -> stmt_loc -> stmt_loc
+(** Substitute variables occurring anywhere in a statement according to the provided Map. *)

@@ -1,6 +1,7 @@
 (* Code for optimization passes on the MIR *)
 open Core_kernel
 open Mir
+open Mir_utils
 
 let create_function_inline_map l =
   (* We only add the first definition for each function to the inline map.
@@ -34,11 +35,11 @@ let replace_fresh_local_vars s' =
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
-  Partial_evaluator.subst_stmt m s
+  subst_stmt m s
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
-  Partial_evaluator.subst_stmt m
+  subst_stmt m
 
 let handle_early_returns opt_triple b =
   let f = function
@@ -358,7 +359,7 @@ let propagation
   in
   let propagate_stmt =
     map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
-        Partial_evaluator.subst_stmt_base
+        subst_stmt_base
           (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry)
     )
   in

@@ -3,6 +3,7 @@
 open Core_kernel
 open Monotone_framework_sigs
 open Dataflow_utils
+open Mir_utils
 
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
 let inverse_flowgraph_of_stmt (stmt : Mir.stmt_loc) :
@@ -188,7 +189,7 @@ let constant_propagation_transfer
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Mir.Assignment ({texpr= Var s; _}, e) -> (
-              match Partial_evaluator.eval_subst m e with
+              match Partial_evaluator.eval_expr (subst_expr m e) with
               | {texpr= Mir.Lit (_, _); _} as e' -> Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
             | Mir.Decl {decl_id= s; _}
@@ -226,7 +227,7 @@ let expression_propagation_transfer
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Mir.Assignment ({texpr= Var s; _}, e) ->
-                Map.set m ~key:s ~data:(Partial_evaluator.eval_subst m e)
+                Map.set m ~key:s ~data:(subst_expr m e)
             | Mir.Decl {decl_id= s; _}
              |Mir.Assignment ({texpr= Indexed ({texpr= Var s; _}, _); _}, _) ->
                 Map.remove m s

@@ -3,44 +3,6 @@
 open Core_kernel
 open Mir
 
-let rec subst_expr (m : (string, expr_typed_located) Map.Poly.t)
-    (e : expr_typed_located) =
-  match e.texpr with
-  | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
-  | x -> {e with texpr= map_expr (subst_expr m) x}
-
-and subst_idx m = map_index (subst_expr m)
-
-let subst_stmt_base m b =
-  let f = subst_expr m in
-  match b with
-  | Assignment ({texpr= Var x; texpr_type; texpr_loc; texpr_adlevel}, e2) ->
-      Assignment ({texpr= Var x; texpr_type; texpr_loc; texpr_adlevel}, f e2)
-  | Assignment
-      ( { texpr=
-            Indexed
-              ( {texpr= Var x; texpr_type= t2; texpr_loc= l2; texpr_adlevel= a2}
-              , l )
-        ; texpr_type
-        ; texpr_loc
-        ; texpr_adlevel }
-      , e2 ) ->
-      Assignment
-        ( { texpr=
-              Indexed
-                ( { texpr= Var x
-                  ; texpr_type= t2
-                  ; texpr_loc= l2
-                  ; texpr_adlevel= a2 }
-                , List.map ~f:(subst_idx m) l )
-          ; texpr_type
-          ; texpr_loc
-          ; texpr_adlevel }
-        , f e2 )
-  | x -> map_statement f (fun y -> y) x
-
-let subst_stmt m = Mir.map_rec_stmt_loc (subst_stmt_base m)
-
 let apply_operator_int (op : string) i1 i2 =
   Lit
     ( Int
@@ -323,10 +285,6 @@ let rec eval_expr (e : Mir.expr_typed_located) =
           Indexed (eval_expr e, List.map ~f:eval_idx l) ) }
 
 and eval_idx i = map_index eval_expr i
-
-let eval_subst (m : (string, expr_typed_located) Map.Poly.t)
-    (e : expr_typed_located) =
-  eval_expr (subst_expr m e)
 
 let eval_stmt_base = map_statement eval_expr (fun x -> x)
 let eval_stmt = map_rec_stmt_loc eval_stmt_base
