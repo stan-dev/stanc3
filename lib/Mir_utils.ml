@@ -2,9 +2,8 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
-let fwd_traverse_statement (stmt : (expr_typed_located, 'a) statement)
-    ~init:(state : 'f) ~(f : 'f -> 'a -> 'f * 'c) :
-    'f * (expr_typed_located, 'c) statement =
+let fwd_traverse_statement (stmt : ('e, 'a) statement) ~init:(state : 'f)
+    ~(f : 'f -> 'a -> 'f * 'c) : 'f * ('e, 'c) statement =
   match stmt with
   | IfElse (pred, then_s, else_s_opt) ->
       let s', c = f state then_s in
@@ -49,7 +48,6 @@ let fwd_traverse_statement (stmt : (expr_typed_located, 'a) statement)
   | Return _ as s -> (state, s)
   | Skip as s -> (state, s)
   | Decl _ as s -> (state, s)
-
 
 (** See interface file *)
 let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =

@@ -2,8 +2,11 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
-val fwd_traverse_statement : ((expr_typed_located, 'a) statement) ->
-    init:'f -> f:('f -> 'a -> 'f * 'c) -> 'f * (expr_typed_located, 'c) statement
+val fwd_traverse_statement :
+     ('e, 'a) statement
+  -> init:'f
+  -> f:('f -> 'a -> 'f * 'c)
+  -> 'f * ('e, 'c) statement
 (**
    A traversal that simultaneously accumulates a state (type 'f) and replaces the
    substatement values from ('a to 'c). Traversal is done in-order but ignores branching,

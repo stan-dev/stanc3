@@ -4,9 +4,27 @@ open Dataflow_types
 
 val union_maps_left :
   ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t -> ('a, 'b) Map.Poly.t
+(** Union maps, preserving the left element in a collision *)
+
+val build_cf_graphs :
+     (label, ('e, label) statement * 'm) Map.Poly.t
+  -> label Set.Poly.t
+     * (label, label Set.Poly.t) Map.Poly.t
+     * (label, label Set.Poly.t) Map.Poly.t
+(**
+   Simultaneously builds the controlflow parent graph, the predecessor graph and the exit
+   set of a statement. It's advantageous to build them together because they both rely on
+   some of the same Break, Continue and Return bookkeeping.
+
+   Takes a statement map and returns the triple:
+     (exit set, predecessor graph, controlflow parent graph)
+   where
+     * (exit set, predecessor graph) is the return value of build_predecessor_graph
+     * (controlflow parent graph) is the return value of build_cf_graph
+*)
 
 val build_cf_graph :
-     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+     (label, ('e, label) statement * 'm) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the controlflow graph requires a traversal with state that includes continues,
@@ -16,7 +34,7 @@ val build_cf_graph :
 *)
 
 val build_predecessor_graph :
-     (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+     (label, ('e, label) statement * 'm) Map.Poly.t
   -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the predecessor graph requires a traversal with state that includes the
@@ -27,8 +45,8 @@ val build_predecessor_graph :
 *)
 
 val build_recursive_statement :
-     ((expr_typed_located, 's) statement -> 'm -> 's)
-  -> (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+     (('e, 's) statement -> 'm -> 's)
+  -> (label, ('e, label) statement * 'm) Map.Poly.t
   -> label
   -> 's
 (**
@@ -37,10 +55,10 @@ val build_recursive_statement :
 *)
 
 val build_statement_map :
-     ('s -> (expr_typed_located, 's) statement)
+     ('s -> ('e, 's) statement)
   -> ('s -> 'm)
   -> 's
-  -> (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
+  -> (label, ('e, label) statement * 'm) Map.Poly.t
 (**
    The statement map is built by traversing substatements recursively to replace
    substatements with their labels while building up the substatements' statement maps.
