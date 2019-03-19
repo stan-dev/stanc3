@@ -2943,6 +2943,251 @@ let%expect_test "partially evaluate with equality check" =
               (texpr_adlevel AutoDiffable))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
+let%expect_test "partially evaluate glm" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        matrix[2,3] x;
+        int y[2];
+        vector[3] beta;
+        vector[2] alpha;
+        print(bernoulli_lpmf(y| inv_logit(alpha + x * beta)));
+        print(bernoulli_logit_lpmf(y| alpha + x * beta));
+        print(bernoulli_lpmf(y| inv_logit(x * beta + alpha)));
+        print(bernoulli_logit_lpmf(y| x * beta + alpha));
+        print(bernoulli_lpmf(y| inv_logit(x * beta)));
+        print(bernoulli_logit_lpmf(y| x * beta));
+        print(poisson_lpmf(y| exp(alpha + x * beta)));
+        print(poisson_log_lpmf(y| alpha + x * beta));
+        print(poisson_lpmf(y| exp(x * beta + alpha)));
+        print(poisson_log_lpmf(y| x * beta + alpha));
+        print(poisson_lpmf(y| exp(x * beta)));
+        print(poisson_log_lpmf(y| x * beta));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = partial_evaluation mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UMatrix))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id y)
+                (decl_type (UArray UInt)))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id beta) (decl_type UVector))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id alpha)
+                (decl_type UVector))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp bernoulli_logit_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp bernoulli_logit_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp bernoulli_logit_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp bernoulli_logit_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp bernoulli_logit_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp bernoulli_logit_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp poisson_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp poisson_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp poisson_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp poisson_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var alpha))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp poisson_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UReal) (texpr_loc <opaque>)
+              (texpr
+               (FunApp poisson_log_glm_lpmf
+                (((texpr_type (UArray UInt)) (texpr_loc <opaque>) (texpr (Var y))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UMatrix) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel AutoDiffable))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UVector) (texpr_loc <opaque>) (texpr (Var beta))
+                  (texpr_adlevel AutoDiffable)))))
+              (texpr_adlevel AutoDiffable))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)
 (*

@@ -97,13 +97,62 @@ let rec eval_expr (e : Mir.expr_typed_located) =
           try_partially_evaluate_to
             ( match (f, l) with
             (* TODO: deal with tilde statements and unnormalized distributions properly here *)
-            (* TODO: deal with GLM functions here. Need type information though.
-    | "bernoulli_logit_lpmf", [y; FunApp (alpha, "Plus__", FunApp (beta, "Times__", x))]
-     |"bernoulli_logit_lpmf", [y; FunApp (FunApp (beta, "Times__", x), "Plus__", alpha)]
-     |"bernoulli_logit_lpmf", [y; FunApp (alpha, "Plus__", FunApp (x, "Times__", beta))]
-     |"bernoulli_logit_lpmf", [y; FunApp (FunApp (x, "Times__", beta), "Plus__", alpha)]
-      ->
-        FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta]) *)
+            | ( "bernoulli_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "inv_logit"
+                        , [ { texpr=
+                                FunApp
+                                  ( "Plus__"
+                                  , [ alpha
+                                    ; {texpr= FunApp ("Times__", [x; beta]); _}
+                                    ] ); _ } ] ); _ } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+            | ( "bernoulli_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "inv_logit"
+                        , [ { texpr=
+                                FunApp
+                                  ( "Plus__"
+                                  , [ {texpr= FunApp ("Times__", [x; beta]); _}
+                                    ; alpha ] ); _ } ] ); _ } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+            | ( "bernoulli_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "inv_logit"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}] ); _ } ]
+              )
+              when x.texpr_type = UMatrix ->
+                FunApp ("bernoulli_logit_glm_lpmf", [y; x; zero; beta])
+            | ( "bernoulli_logit_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [alpha; {texpr= FunApp ("Times__", [x; beta]); _}] ); _
+                  } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+            | ( "bernoulli_logit_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}; alpha] ); _
+                  } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+            | ( "bernoulli_logit_lpmf"
+              , [y; {texpr= FunApp ("Times__", [x; beta]); _}] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("bernoulli_logit_glm_lpmf", [y; x; zero; beta])
             | "bernoulli_lpmf", [y; {texpr= FunApp ("inv_logit", [alpha]); _}]
               ->
                 FunApp ("bernoulli_logit_lpmf", [y; alpha])
@@ -190,14 +239,70 @@ let rec eval_expr (e : Mir.expr_typed_located) =
             | ( "multi_normal_lpdf"
               , [y; mu; {texpr= FunApp ("inverse", [tau]); _}] ) ->
                 FunApp ("multi_normal_prec_lpdf", [y; mu; tau])
-            | "neg_binomial_2_lpmf", [y; {texpr= FunApp ("log", [eta]); _}; phi]
+            | "neg_binomial_2_lpmf", [y; {texpr= FunApp ("exp", [eta]); _}; phi]
               ->
                 FunApp ("neg_binomial_2_log_lpmf", [y; eta; phi])
-            | "neg_binomial_2_rng", [{texpr= FunApp ("log", [eta]); _}; phi] ->
+            | "neg_binomial_2_rng", [{texpr= FunApp ("exp", [eta]); _}; phi] ->
                 FunApp ("neg_binomial_2_log_rng", [eta; phi])
-            | "poisson_lpmf", [y; {texpr= FunApp ("log", [eta]); _}] ->
+            | ( "poisson_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "exp"
+                        , [ { texpr=
+                                FunApp
+                                  ( "Plus__"
+                                  , [ alpha
+                                    ; {texpr= FunApp ("Times__", [x; beta]); _}
+                                    ] ); _ } ] ); _ } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("poisson_log_glm_lpmf", [y; x; alpha; beta])
+            | ( "poisson_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "exp"
+                        , [ { texpr=
+                                FunApp
+                                  ( "Plus__"
+                                  , [ {texpr= FunApp ("Times__", [x; beta]); _}
+                                    ; alpha ] ); _ } ] ); _ } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("poisson_log_glm_lpmf", [y; x; alpha; beta])
+            | ( "poisson_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "exp"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}] ); _ } ]
+              )
+              when x.texpr_type = UMatrix ->
+                FunApp ("poisson_log_glm_lpmf", [y; x; zero; beta])
+            | ( "poisson_log_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [alpha; {texpr= FunApp ("Times__", [x; beta]); _}] ); _
+                  } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("poisson_log_glm_lpmf", [y; x; alpha; beta])
+            | ( "poisson_log_lpmf"
+              , [ y
+                ; { texpr=
+                      FunApp
+                        ( "Plus__"
+                        , [{texpr= FunApp ("Times__", [x; beta]); _}; alpha] ); _
+                  } ] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("poisson_log_glm_lpmf", [y; x; alpha; beta])
+            | ( "poisson_log_lpmf"
+              , [y; {texpr= FunApp ("Times__", [x; beta]); _}] )
+              when x.texpr_type = UMatrix ->
+                FunApp ("poisson_log_glm_lpmf", [y; x; zero; beta])
+            | "poisson_lpmf", [y; {texpr= FunApp ("exp", [eta]); _}] ->
                 FunApp ("poisson_log_lpmf", [y; eta])
-            | "poisson_rng", [{texpr= FunApp ("log", [eta]); _}] ->
+            | "poisson_rng", [{texpr= FunApp ("exp", [eta]); _}] ->
                 FunApp ("poisson_log_rng", [eta])
             | "pow", [{texpr= Lit (Int, "2"); _}; x] -> FunApp ("exp2", [x])
             | "rows_dot_product", [x; y]
