@@ -41,7 +41,9 @@ and identifier =
 (** Arithmetic and logical operators *)
 and operator =
   | Plus
+  | PPlus
   | Minus
+  | PMinus
   | Times
   | Divide
   | Modulo
@@ -57,7 +59,7 @@ and operator =
   | Leq
   | Greater
   | Geq
-  | Not
+  | PNot
   | Transpose
 
 (** Indices for array access *)
