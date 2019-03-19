@@ -368,9 +368,6 @@ let propagation
 let constant_propagation =
   propagation Monotone_framework.constant_propagation_transfer
 
-(* TODO: implement separate constant folding phase;
-   this will be very clean once we have a recursive map over expressions *)
-
 let expression_propagation =
   propagation Monotone_framework.expression_propagation_transfer
 
@@ -476,6 +473,8 @@ let dead_code_elimination (mir : typed_prog) =
   let s = dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
   let mir = update_program_statement_blocks mir s in
   mir
+
+let partial_evaluation = Partial_evaluator.eval_prog
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: implement lazy code motion. Make sure to apply it separately to each program block, rather than to the program as a whole. *)
@@ -2730,6 +2729,73 @@ let%expect_test "dead code elimination, nested" =
            (NRFunApp print
             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
               (texpr_adlevel DataOnly))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "partial evaluation" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        if (1 > 2) {
+          int i;
+          print(1+2);
+          print(i + (1+2));
+          print(log(1-i));
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = partial_evaluation mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
+                 (stmt
+                  (SList
+                   (((sloc <opaque>)
+                     (stmt
+                      (Decl (decl_adtype AutoDiffable) (decl_id i)
+                       (decl_type UInt))))
+                    ((sloc <opaque>) (stmt Skip))))))
+                ((sloc <opaque>)
+                 (stmt
+                  (NRFunApp print
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                     (texpr_adlevel DataOnly))))))
+                ((sloc <opaque>)
+                 (stmt
+                  (NRFunApp print
+                   (((texpr_type UInt) (texpr_loc <opaque>)
+                     (texpr
+                      (FunApp Plus__
+                       (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                         (texpr_adlevel DataOnly))
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                         (texpr_adlevel DataOnly)))))
+                     (texpr_adlevel DataOnly))))))
+                ((sloc <opaque>)
+                 (stmt
+                  (NRFunApp print
+                   (((texpr_type UReal) (texpr_loc <opaque>)
+                     (texpr
+                      (FunApp log1m
+                       (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                         (texpr_adlevel DataOnly)))))
+                     (texpr_adlevel DataOnly))))))))))
+            ())))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,

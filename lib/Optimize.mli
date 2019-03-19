@@ -29,3 +29,7 @@ val dead_code_elimination : Mir.typed_prog -> Mir.typed_prog
 (** Eliminate semantically redundant code branches.
     This includes removing redundant assignments (because they will be overwritten)
     and removing redundant code in program branches that will never be reached. *)
+
+val partial_evaluation : Mir.typed_prog -> Mir.typed_prog
+(** Partially evaluate expressions in the program. This includes simplification using
+    algebraic identities of logical and arithmetic operators as well as Stan math functions. *)

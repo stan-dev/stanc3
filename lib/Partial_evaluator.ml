@@ -7,22 +7,9 @@ let rec subst_expr (m : (string, expr_typed_located) Map.Poly.t)
     (e : expr_typed_located) =
   match e.texpr with
   | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
-  | Lit (_, _) -> e
-  | FunApp (f, l) -> {e with texpr= FunApp (f, List.map ~f:(subst_expr m) l)}
-  | TernaryIf (e1, e2, e3) ->
-      { e with
-        texpr= TernaryIf (subst_expr m e1, subst_expr m e2, subst_expr m e3) }
-  | Indexed (e, l) ->
-      {e with texpr= Indexed (subst_expr m e, List.map ~f:(subst_idx m) l)}
+  | x -> {e with texpr= map_expr (subst_expr m) x}
 
-and subst_idx m i =
-  match i with
-  | All -> All
-  | Single e -> Single (subst_expr m e)
-  | Upfrom e -> Upfrom (subst_expr m e)
-  | Downfrom e -> Downfrom (subst_expr m e)
-  | Between (e1, e2) -> Between (subst_expr m e1, subst_expr m e2)
-  | MultiIndex e -> MultiIndex (subst_expr m e)
+and subst_idx m = map_index (subst_expr m)
 
 let subst_stmt_base m b =
   let f = subst_expr m in
@@ -50,24 +37,9 @@ let subst_stmt_base m b =
           ; texpr_loc
           ; texpr_adlevel }
         , f e2 )
-  | TargetPE e -> TargetPE (f e)
-  | NRFunApp (s, e_list) -> NRFunApp (s, List.map e_list ~f)
-  | Check (ccfunname, ccargs) -> Check (ccfunname, List.map ccargs ~f)
-  | Return opt_e -> Return (Option.map opt_e ~f)
-  | IfElse (e, b1, b2) -> IfElse (f e, b1, b2)
-  | While (e, b) -> While (f e, b)
-  | For {loopvar; lower; upper; body} ->
-      For {loopvar; lower= f lower; upper= f upper; body}
-  | Block sl -> Block sl
-  | SList sl -> SList sl
-  | FunDef {fdrt; fdname; fdargs; fdbody} ->
-      FunDef {fdrt; fdname; fdargs; fdbody}
-  | x -> x
+  | x -> map_statement f (fun y -> y) x
 
 let subst_stmt m = Mir.map_rec_stmt_loc (subst_stmt_base m)
-
-(* TODO: parameterize statement also over expressions and then define the above with a
-   recursive map *)
 
 let apply_operator_int (op : string) i1 i2 =
   Lit
@@ -115,13 +87,13 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | _ -> Errors.fatal_error () ) )
 
-let rec eval (e : Mir.expr_typed_located) =
+let rec eval_expr (e : Mir.expr_typed_located) =
   { e with
     texpr=
       ( match e.texpr with
       | Var _ | Lit (_, _) -> e.texpr
       | FunApp (f, l) -> (
-        match (f, List.map ~f:eval l) with
+        match (f, List.map ~f:eval_expr l) with
         (* TODO: deal with tilde statements and unnormalized distributions properly here *)
         
         (* TODO: be careful here with operators which get translated to function calls *)
@@ -341,24 +313,21 @@ let rec eval (e : Mir.expr_typed_located) =
           | _ -> FunApp (op, [e1; e2]) )
         | _, l' -> FunApp (f, l') )
       | TernaryIf (e1, e2, e3) -> (
-        match (eval e1, eval e2, eval e3) with
+        match (eval_expr e1, eval_expr e2, eval_expr e3) with
         | {texpr= Lit (Int, "0"); _}, _, e3' -> e3'.texpr
         | {texpr= Lit (Int, _); _}, e2', _ -> e2'.texpr
         | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
   Note  that we could also constant fold array sizes if we keep those around on declarations. *)
-          Indexed (eval e, List.map ~f:eval_idx l) ) }
+          Indexed (eval_expr e, List.map ~f:eval_idx l) ) }
 
-and eval_idx i =
-  match i with
-  | All -> All
-  | Single e -> Single (eval e)
-  | Upfrom e -> Upfrom (eval e)
-  | Downfrom e -> Downfrom (eval e)
-  | Between (e1, e2) -> Between (eval e1, eval e2)
-  | MultiIndex e -> MultiIndex (eval e)
+and eval_idx i = map_index eval_expr i
 
 let eval_subst (m : (string, expr_typed_located) Map.Poly.t)
     (e : expr_typed_located) =
-  eval (subst_expr m e)
+  eval_expr (subst_expr m e)
+
+let eval_stmt_base = map_statement eval_expr (fun x -> x)
+let eval_stmt = map_rec_stmt_loc eval_stmt_base
+let eval_prog = map_prog eval_expr eval_stmt

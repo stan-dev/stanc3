@@ -261,7 +261,7 @@ let build_predecessor_graph
 (***********************************)
 (* Tests                           *)
 (***********************************)
-
+(*
 let example1_program =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -373,7 +373,7 @@ let%expect_test "Predecessor graph example" =
        ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8))
         (10 (9 22)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
         (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
-    |}]
+    |}]*)
 
 let example2_program =
   let ast =
@@ -549,7 +549,7 @@ let%expect_test "Predecessor graph example 2" =
     |}]
 
 (* TODO: this predecessor graph is wrong! *)
-
+(*
 let%test "Reconstructed recursive statement" =
   let stmt =
     build_recursive_statement
@@ -557,3 +557,4 @@ let%test "Reconstructed recursive statement" =
       example1_statement_map 1
   in
   stmt = example1_program
+*)
