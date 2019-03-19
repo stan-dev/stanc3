@@ -63,12 +63,10 @@ let _ =
     ~data:"assign_elt_divide"
 
 (** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name args =
+let operator_return_type_from_string op_name argtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
-    match args with
-    | [{expr_typed_type= ut1; _}; {expr_typed_type= ut2; _}]
-      when check_of_same_type_mod_array_conv "" ut1 ut2 ->
-        Some Void
+    match List.map ~f:snd argtypes with
+    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 -> Some Void
     | _ -> None
   else
     let rec try_recursive_find = function
@@ -76,9 +74,7 @@ let operator_return_type_from_string op_name args =
       | name :: names -> (
         match
           Stan_math_signatures.get_stan_math_function_return_type_opt name
-            (List.map
-               ~f:(fun x -> (x.expr_typed_ad_level, x.expr_typed_type))
-               args)
+            argtypes
         with
         | None -> try_recursive_find names
         | Some ut -> Some ut )

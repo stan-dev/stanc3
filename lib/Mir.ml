@@ -34,8 +34,8 @@ and 'e expr =
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map, compare]
 
-type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
-type autodifftype = Ast.autodifftype [@@deriving sexp, hash]
+type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash, compare]
+type autodifftype = Ast.autodifftype [@@deriving sexp, hash, compare]
 
 let no_loc = {Ast.filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {Ast.begin_loc= no_loc; end_loc= no_loc}
@@ -121,7 +121,7 @@ type expr_typed_located =
   ; texpr_loc: Ast.location_span sexp_opaque [@compare.ignore]
   ; texpr: expr_typed_located expr
   ; texpr_adlevel: autodifftype }
-[@@deriving sexp, hash]
+[@@deriving sexp, hash, compare]
 
 type stmt_loc =
   { sloc: Ast.location_span sexp_opaque [@compare.ignore]

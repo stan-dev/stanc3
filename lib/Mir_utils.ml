@@ -2,6 +2,7 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
+(** See interface file *)
 let fwd_traverse_statement (stmt : ('e, 'a) statement) ~init:(state : 'f)
     ~(f : 'f -> 'a -> 'f * 'c) : 'f * ('e, 'c) statement =
   match stmt with
