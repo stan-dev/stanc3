@@ -50,7 +50,6 @@ let fwd_traverse_statement (stmt : (expr_typed_located, 'a) statement)
   | Skip as s -> (state, s)
   | Decl _ as s -> (state, s)
 
-
 (** See interface file *)
 let vexpr_of_expr_exn (ex : expr_typed_located) : vexpr =
   match ex.texpr with

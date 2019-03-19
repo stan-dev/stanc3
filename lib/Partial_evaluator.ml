@@ -117,10 +117,11 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                 FunApp ("categorical_logit_lpmf", [y; alpha])
             | "categorical_rng", [{texpr= FunApp ("inv_logit", [alpha]); _}] ->
                 FunApp ("categorical_logit_rng", [alpha])
-                (* TODO: use compare rather than structural equality? *)
-            | "columns_dot_product", [x; y] when x = y ->
+            | "columns_dot_product", [x; y]
+              when compare_expr_typed_located x y = 0 ->
                 FunApp ("columns_dot_self", [x])
-            | "dot_product", [x; y] when x = y -> FunApp ("dot_self", [x])
+            | "dot_product", [x; y] when compare_expr_typed_located x y = 0 ->
+                FunApp ("dot_self", [x])
             | "inv", [{texpr= FunApp ("sqrt", l); _}] -> FunApp ("inv_sqrt", l)
             | "inv", [{texpr= FunApp ("square", [x]); _}] ->
                 FunApp ("inv_square", [x])
@@ -195,7 +196,8 @@ let rec eval_expr (e : Mir.expr_typed_located) =
             | "poisson_rng", [{texpr= FunApp ("log", [eta]); _}] ->
                 FunApp ("poisson_log_rng", [eta])
             | "pow", [{texpr= Lit (Int, "2"); _}; x] -> FunApp ("exp2", [x])
-            | "rows_dot_product", [x; y] when x = y ->
+            | "rows_dot_product", [x; y]
+              when compare_expr_typed_located x y = 0 ->
                 FunApp ("rows_dot_self", [x])
             | "pow", [x; {texpr= Lit (Int, "2"); _}] -> FunApp ("square", [x])
             | "pow", [x; {texpr= Lit (Real, "0.5"); _}]
@@ -234,7 +236,7 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                                                 } ] ); _ }
                                     ; a ] ); _ }
                           ; c ] ); _ } ] )
-              when b = c ->
+              when compare_expr_typed_located b c = 0 ->
                 FunApp ("trace_gen_quad_form", [d; a; b])
             | "trace", [{texpr= FunApp ("quad_form", [a; b]); _}] ->
                 FunApp ("trace_quad_form", [a; b])
@@ -278,7 +280,7 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                         ( "Times__"
                         , [a; {texpr= FunApp ("diag_matrix", [w]); _}] ); _ }
                 ] )
-              when v = w ->
+              when compare_expr_typed_located v w = 0 ->
                 FunApp ("quad_form_diag", [a; v])
             | ( "Times__"
               , [ { texpr=
@@ -291,12 +293,12 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                             }
                           ; a ] ); _ }
                 ; {texpr= FunApp ("diag_matrix", [w]); _} ] )
-              when v = w ->
+              when compare_expr_typed_located v w = 0 ->
                 FunApp ("quad_form_diag", [a; v])
             | ( "Times__"
               , [ {texpr= FunApp ("transpose", [b]); _}
                 ; {texpr= FunApp ("Times__", [a; c]); _} ] )
-              when b = c ->
+              when compare_expr_typed_located b c = 0 ->
                 FunApp ("quad_form", [a; b])
             | ( "Times__"
               , [ { texpr=
@@ -304,7 +306,7 @@ let rec eval_expr (e : Mir.expr_typed_located) =
                         ("Times__", [{texpr= FunApp ("transpose", [b]); _}; a]); _
                   }
                 ; c ] )
-              when b = c ->
+              when compare_expr_typed_located b c = 0 ->
                 FunApp ("quad_form", [a; b])
             | "Times__", [e1'; {texpr= FunApp ("diag_matrix", [v]); _}] ->
                 FunApp ("diag_post_multiply", [e1'; v])
