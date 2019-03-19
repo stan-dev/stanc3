@@ -87,9 +87,6 @@ let operator_name op = Sexp.to_string [%sexp (op : Ast.operator)] ^ "__"
 let operator_return_type op =
   operator_return_type_from_string (operator_name op)
 
-let operator_return_type_prefix op =
-  operator_return_type_from_string ("P" ^ operator_name op)
-
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
 let pretty_print_all_operator_signatures name =
   let all_names = Hashtbl.find_multi operator_names name in
@@ -97,7 +94,3 @@ let pretty_print_all_operator_signatures name =
     (List.map
        ~f:Stan_math_signatures.pretty_print_all_stan_math_function_signatures
        all_names)
-
-(** Print all the signatures of a stan math operator, for the purposes of error messages. *)
-let pretty_print_all_operator_signatures_prefix name =
-  pretty_print_all_operator_signatures ("P" ^ name)

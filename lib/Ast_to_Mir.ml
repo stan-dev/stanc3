@@ -408,3 +408,54 @@ let trans_prog filename
   ; generate_quantities
   ; prog_name= !Semantic_check.model_name
   ; prog_path= filename }
+
+let%expect_test "Prefix-Op-Example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        model {
+          int i;
+          if (i < -1) {
+            print("Badger");
+          }
+        }
+      |}
+  in
+  let mir = trans_prog "" (Semantic_check.semantic_check_program ast) in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Less__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp PMinus__
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
+                 (stmt
+                  (NRFunApp print
+                   (((texpr_type UReal) (texpr_loc <opaque>)
+                     (texpr (Lit Str Badger)) (texpr_adlevel DataOnly))))))))))
+            ())))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
