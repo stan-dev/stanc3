@@ -1,4 +1,4 @@
-(* Code for optimization passes on the MIR *)
+(* Code for optimization passes on the MIR
 
 val function_inlining : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 (** Inline all functions except for ones with forward declarations
@@ -13,3 +13,4 @@ val loop_unrolling : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 val list_collapsing : Mir.stmt_loc Mir.prog -> Mir.stmt_loc Mir.prog
 (** Remove redundant SList constructors from the Mir that might have
     been introduced by other optimizations *)
+*)
