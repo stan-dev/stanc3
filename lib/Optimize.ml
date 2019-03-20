@@ -311,6 +311,7 @@ let collapse_lists_statement =
 let list_collapsing (mir : typed_prog) =
   map_prog (fun x -> x) collapse_lists_statement mir
 
+(*
 let statement_of_program mir =
   { stmt=
       SList
@@ -365,6 +366,80 @@ let propagation
   in
   let s = propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
   update_program_statement_blocks mir s
+*)
+
+(**
+   Apply the transformation to each function body and to the rest of the program as one
+   block.
+*)
+let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
+    typed_prog =
+  let packed_prog_body =
+    transform
+      { stmt=
+          SList
+            (List.map
+               ~f:(fun x -> {stmt= SList x; sloc= Mir.no_span})
+               [ mir.prepare_data; mir.prepare_params; mir.log_prob
+               ; mir.generate_quantities ])
+      ; sloc= Mir.no_span }
+  in
+  let transformed_prog_body = transform packed_prog_body in
+  let transformed_functions =
+    List.map mir.functions_block ~f:(fun fs ->
+        match fs.stmt with
+        | FunDef args ->
+            {fs with stmt= FunDef {args with fdbody= transform args.fdbody}}
+        | _ ->
+            raise
+              (Failure
+                 "There was a non-function definition in the function block.")
+    )
+  in
+  match transformed_prog_body with
+  | { stmt=
+        SList
+          [ {stmt= SList prepare_data'; _}
+          ; {stmt= SList prepare_params'; _}
+          ; {stmt= SList log_prob'; _}
+          ; {stmt= SList generate_quantities'; _} ]; _ } ->
+      { mir with
+        functions_block= transformed_functions
+      ; prepare_data= prepare_data'
+      ; prepare_params= prepare_params'
+      ; log_prob= log_prob'
+      ; generate_quantities= generate_quantities' }
+  | _ ->
+      raise
+        (Failure "Something went wrong with program transformation packing!")
+
+let propagation
+    (propagation_transfer :
+         (int, Mir.stmt_loc_num) Map.Poly.t
+      -> (module
+          Monotone_framework_sigs.TRANSFER_FUNCTION
+            with type labels = int
+             and type properties = (string, Mir.expr_typed_located) Map.Poly.t
+                                   option)) (mir : typed_prog) =
+  let transform s =
+    let flowgraph, flowgraph_to_mir =
+      Monotone_framework.forward_flowgraph_of_stmt s
+    in
+    let (module Flowgraph) = flowgraph in
+    let values =
+      Monotone_framework.propagation_mfp mir
+        (module Flowgraph)
+        flowgraph_to_mir propagation_transfer
+    in
+    let propagate_stmt =
+      map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
+          subst_stmt_base
+            (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry)
+      )
+    in
+    propagate_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
+  transform_program mir transform
 
 let constant_propagation =
   propagation Monotone_framework.constant_propagation_transfer
@@ -399,81 +474,81 @@ let dead_code_elimination (mir : typed_prog) =
    (Obviously, this shouldn't be the case for the purposes of reaching definitions,
    constant propagation, expressions analyses. But I do think that's the right way to
    go about live variables. *)
-  let s = statement_of_program mir in
-  let rev_flowgraph, flowgraph_to_mir =
-    Monotone_framework.inverse_flowgraph_of_stmt s
-  in
-  let (module Rev_Flowgraph) = rev_flowgraph in
-  let live_variables =
-    Monotone_framework.live_variables_mfp mir
-      (module Rev_Flowgraph)
-      flowgraph_to_mir
-  in
-  let dead_code_elim_stmt_base i stmt =
-    (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
-    let live_variables_s =
-      (Map.find_exn live_variables i).Monotone_framework_sigs.entry
+  let transform s =
+    let rev_flowgraph, flowgraph_to_mir =
+      Monotone_framework.inverse_flowgraph_of_stmt s
     in
-    match stmt with
-    | Assignment ({texpr= Var x; _}, rhs) ->
-        if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
-          stmt
-        else Skip
-    | Assignment ({texpr= Indexed ({texpr= Var x; _}, is); _}, rhs) ->
-        if
-          Set.Poly.mem live_variables_s x
-          || can_side_effect_expr rhs
-          || List.exists ~f:can_side_effect_idx is
-        then stmt
-        else Skip
-    | Assignment _ -> Errors.fatal_error ()
-    (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
+    let (module Rev_Flowgraph) = rev_flowgraph in
+    let live_variables =
+      Monotone_framework.live_variables_mfp mir
+        (module Rev_Flowgraph)
+        flowgraph_to_mir
+    in
+    let dead_code_elim_stmt_base i stmt =
+      (* NOTE: entry in the reverse flowgraph, so exit in the forward flowgraph *)
+      let live_variables_s =
+        (Map.find_exn live_variables i).Monotone_framework_sigs.entry
+      in
+      match stmt with
+      | Assignment ({texpr= Var x; _}, rhs) ->
+          if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
+            stmt
+          else Skip
+      | Assignment ({texpr= Indexed ({texpr= Var x; _}, is); _}, rhs) ->
+          if
+            Set.Poly.mem live_variables_s x
+            || can_side_effect_expr rhs
+            || List.exists ~f:can_side_effect_idx is
+          then stmt
+          else Skip
+      | Assignment _ -> Errors.fatal_error ()
+      (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
            due to side effects. *)
-    | Decl _ | TargetPE _
-     |NRFunApp (_, _)
-     |Check _ | Break | Continue | Return _ | Skip ->
-        stmt
-    | IfElse (e, b1, b2) -> (
-        if
+      | Decl _ | TargetPE _
+       |NRFunApp (_, _)
+       |Check _ | Break | Continue | Return _ | Skip ->
+          stmt
+      | IfElse (e, b1, b2) -> (
+          if
+            (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
+            (not (can_side_effect_expr e))
+            && b1.stmt = Skip
+            && ( Option.map ~f:(fun x -> x.stmt) b2 = Some Skip
+               || Option.map ~f:(fun x -> x.stmt) b2 = None )
+          then Skip
+          else
+            match e.texpr with
+            | Lit (Int, "0") | Lit (Real, "0.0") -> (
+              match b2 with Some x -> x.stmt | None -> Skip )
+            | Lit (_, _) -> b1.stmt
+            | _ -> IfElse (e, b1, b2) )
+      | While (e, b) -> (
+        match e.texpr with
+        | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
+        | _ -> While (e, b) )
+      | For {loopvar; lower; upper; body} ->
           (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-          (not (can_side_effect_expr e))
-          && b1.stmt = Skip
-          && ( Option.map ~f:(fun x -> x.stmt) b2 = Some Skip
-             || Option.map ~f:(fun x -> x.stmt) b2 = None )
-        then Skip
-        else
-          match e.texpr with
-          | Lit (Int, "0") | Lit (Real, "0.0") -> (
-            match b2 with Some x -> x.stmt | None -> Skip )
-          | Lit (_, _) -> b1.stmt
-          | _ -> IfElse (e, b1, b2) )
-    | While (e, b) -> (
-      match e.texpr with
-      | Lit (Int, "0") | Lit (Real, "0.0") -> Skip
-      | _ -> While (e, b) )
-    | For {loopvar; lower; upper; body} ->
-        (* TODO: check if e has side effects, like print, reject, then don't optimize? *)
-        if
-          (not (can_side_effect_expr lower))
-          && (not (can_side_effect_expr upper))
-          && is_skip_break_continue body.stmt
-        then Skip
-        else For {loopvar; lower; upper; body}
-    | Block l ->
-        let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
-        if List.length l' = 0 then Skip else Block l'
-    | SList l ->
-        let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
-        SList l'
-    (* TODO: do dead code elimination in function body too! *)
-    | FunDef x -> FunDef x
+          if
+            (not (can_side_effect_expr lower))
+            && (not (can_side_effect_expr upper))
+            && is_skip_break_continue body.stmt
+          then Skip
+          else For {loopvar; lower; upper; body}
+      | Block l ->
+          let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
+          if List.length l' = 0 then Skip else Block l'
+      | SList l ->
+          let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
+          SList l'
+      (* TODO: do dead code elimination in function body too! *)
+      | FunDef x -> FunDef x
+    in
+    let dead_code_elim_stmt =
+      map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
+    in
+    dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1)
   in
-  let dead_code_elim_stmt =
-    map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
-  in
-  let s = dead_code_elim_stmt (Map.find_exn flowgraph_to_mir 1) in
-  let mir = update_program_statement_blocks mir s in
-  mir
+  transform_program mir transform
 
 let partial_evaluation = Partial_evaluator.eval_prog
 
