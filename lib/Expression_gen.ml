@@ -1,6 +1,22 @@
 open Core_kernel
 open Mir
 
+let functions_requiring_namespace = 
+  [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; 
+    "positive_infinity"; "negative_infinity"; "machine_precision"; 
+    "abs"; "acos"; "acosh"; "asin"; "asinh"; "atan"; "atan2"; "atanh"; 
+    "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"; "exp"; "exp2"; "expm1"; 
+    "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"; "log10"; "round"; 
+    "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"; 
+    "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
+
+let equality a b = (a = b)
+
+let contains_elt lst elt  = (List.mem lst elt ~equal:equality)
+
+let stan_namespace_qualify f = 
+  if (contains_elt functions_requiring_namespace f) then "stan::math::"^f else f
+
 (* return true if the types of the two expression are the same *)
 let types_match e1 e2 = 
   e1.texpr_type = e2.texpr_type
@@ -9,9 +25,14 @@ let types_match e1 e2 =
 let is_user_defined f = 
   not (Stan_math_signatures.is_stan_math_function_name f)
   && (not (String.is_suffix ~suffix:"__" f))
+  && (not (String.is_prefix ~prefix:"stan::math::" f))
 
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e = e.texpr_type = Ast.UInt || e.texpr_type = Ast.UReal
+
+let is_matrix e = e.texpr_type = Ast.UMatrix
+
+let is_row_vector e = e.texpr_type = Ast.URowVector
 
 (* stub *)
 let pretty_print _e = "pretty printed e"
@@ -85,21 +106,69 @@ and gen_indexes = function
     sprintf "stan::model::cons_list(%s, %s)" (gen_index idx)
       (gen_indexes idxs)
 
-and gen_logical_op op es = 
-  sprintf "(%s %s %s)"
-    (gen_expr (List.nth_exn es 0))
-    op
-    (gen_expr (List.nth_exn es 1))
+and gen_short_circuit_logical_op op es = 
+  sprintf "(stan::math::value(%s) %s stan::math::value(%s))" 
+    (gen_expr (List.nth_exn es 0)) op (gen_expr (List.nth_exn es 1))
+
+and gen_unary fm es = 
+  sprintf fm (gen_expr (List.hd_exn es))
+
+and gen_binary fm es = 
+  sprintf fm (gen_expr (first es)) (gen_expr (second es))
+
+and first es = (List.nth_exn es 0)
+
+and second es = (List.nth_exn es 1)
+
+and gen_scalar_binary scalar_fmt generic_fmt es =
+  gen_binary (if (is_scalar (first es) && is_scalar(second es)) then scalar_fmt else generic_fmt) es
+
+(* assumes everything well formed from parser checks *)
+and gen_fun_app f es = match f with
+  | "And" -> gen_short_circuit_logical_op "&&" es
+  | "Or" -> gen_short_circuit_logical_op "||" es
+  | "PMinus" -> gen_unary (if is_scalar (List.hd_exn es) then "-%s" else "minus(%s)") es
+  | "PPlus" -> gen_unary "%s" es
+  | "Transpose" -> gen_unary (if (is_scalar (List.hd_exn es)) then "transpose(%s)"  else "%s") es
+  | "PNot" -> gen_unary "logial_negation(%s)" es
+  | "Minus" -> gen_scalar_binary "(%s - %s)" "subtract(%s, %s)" es
+  | "Plus" -> gen_scalar_binary "(%s + %s)" "add(%s, %s)" es
+  | "Times" -> gen_scalar_binary "(%s * %s)" "multiply(%s, %s)" es
+  | "Divide" -> if (is_matrix (second es) && (is_matrix (first es) || is_row_vector (first es)))
+    then gen_binary "mdivide_right(%s, %s)" es
+    else gen_scalar_binary "(%s / %s)" "divide(%s, %s)" es
+  | "Modulo" -> gen_binary "modulus(%s, %s)" es
+  | "LDivide" -> gen_binary "mdivide_left(%s, %s)" es
+  | "EltTimes" -> gen_scalar_binary "(%s * %s)" "elt_multiply(%s, %s)" es
+  | "EltDivide" -> gen_scalar_binary "(%s / %s)" "elt_divide(%s, %s)" es
+  | "Pow" -> gen_binary "pow(%s, %s)" es
+  | "Equals" -> gen_binary "logical_eq(%s, %s)" es
+  | "NEquals" -> gen_binary "logical_neq(%s, %s)" es
+  | "Less" -> gen_binary "logical_lt(%s, %s)" es
+  | "Leq" -> gen_binary "logical_lte(%s, %s)" es
+  | "Greater" -> gen_binary "logical_gt(%s, %s)" es
+  | "Geq" -> gen_binary "logical_gte(%s, %s)" es
+  | "lmultiply" -> gen_binary "multiply_log(%s, %s)" es
+  | "lchoose" -> gen_binary "binomial_coefficient_log(%s, %s)" es 
+  | "target" -> "get_lp(lp__, lp_accum__)"
+  | "get_lp" -> "get_lp(lp__, lp_accum__)"
+  | "max" -> if (List.length es = 2) then gen_binary "std::max(%s, %s)" es
+    else gen_ordinary_function f es
+  | "min" -> if (List.length es = 2) then gen_binary "std::min(%s, %s)" es
+    else gen_ordinary_function f es 
+  | "ceil" -> if (is_scalar (first es)) then gen_unary "std::ceil(%s)" es
+    else gen_ordinary_function f es
+  | _ -> gen_ordinary_function (stan_namespace_qualify f) es 
+
+and gen_ordinary_function f es =
+  sprintf "%s(%s)" f (gen_sep (gen_exprs es) (gen_extra_fun_args f))
 
 and gen_expr (e : expr_typed_located) =
   match e.texpr with
   | Var s -> s
   | Lit (Str, s) -> sprintf "%S" s
   | Lit (_, s) -> s
-  | FunApp (f, es) ->
-    if f = "And__" then (gen_logical_op "&&" es)
-    else if f = "Or__" then (gen_logical_op "||" es)
-    else sprintf "%s(%s)" f (gen_sep (gen_exprs es) (gen_extra_fun_args f))
+  | FunApp (f, es) -> gen_fun_app f es
   | TernaryIf (ec, et, ef) ->
     if types_match et ef then
       sprintf "(%s ? %s : %s)" (gen_expr ec) (gen_expr et) (gen_expr ef)
@@ -164,18 +233,18 @@ let%expect_test "gen_expr4" =
 
 let%expect_test "gen_expr5" =
   printf "%s" (gen_unlocated (FunApp ("pi", [])));
-  [%expect {| pi() |}]
+  [%expect {| stan::math::pi() |}]
 
 let%expect_test "gen_expr6" =
   printf "%s" (gen_unlocated (FunApp ("sqrt", [(dummy_locate (Lit (Int, "123")))])));
-  [%expect {| sqrt(123) |}]
+  [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "gen_expr7" =
   printf "%s" 
     (gen_unlocated 
        (FunApp ("atan2", [(dummy_locate (Lit (Int, "123")));
-                        (dummy_locate (Lit(Real, "1.2")))])));
-  [%expect {| atan2(123, 1.2) |}]
+                          (dummy_locate (Lit(Real, "1.2")))])));
+  [%expect {| stan::math::atan2(123, 1.2) |}]
 
 let%expect_test "gen_expr9" =
   printf "%s" (gen_unlocated(TernaryIf  (dummy_locate (Lit (Int, "1")), 
