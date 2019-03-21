@@ -1,6 +1,12 @@
 open Core_kernel
 open Mir
 
+let ends_with suffix s =
+  String.is_suffix ~suffix:suffix s
+
+let starts_with prefix s =
+  String.is_prefix ~prefix:prefix s
+
 let functions_requiring_namespace = 
   [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; 
     "positive_infinity"; "negative_infinity"; "machine_precision"; 
@@ -24,15 +30,18 @@ let types_match e1 e2 =
 (* "__" is an illegal suffix for user functions, used for built-in operators not in signatures *)
 let is_user_defined f = 
   not (Stan_math_signatures.is_stan_math_function_name f)
-  && (not (String.is_suffix ~suffix:"__" f))
-  && (not (String.is_prefix ~prefix:"stan::math::" f))
+  && (not (ends_with "__" f))
+  && (not (starts_with "stan::math::" f))
 
 (* retun true if the tpe of the expression is integer or real *)
-let is_scalar e = e.texpr_type = Ast.UInt || e.texpr_type = Ast.UReal
+let is_scalar e = e.texpr_type = 
+  Ast.UInt || e.texpr_type = Ast.UReal
 
-let is_matrix e = e.texpr_type = Ast.UMatrix
+let is_matrix e = 
+  e.texpr_type = Ast.UMatrix
 
-let is_row_vector e = e.texpr_type = Ast.URowVector
+let is_row_vector e =
+  e.texpr_type = Ast.URowVector
 
 (* stub *)
 let pretty_print _e = "pretty printed e"
@@ -63,12 +72,6 @@ and gen_type_ut = function
 
 let gen_type e = gen_type_ut e.texpr_type
 
-let ends_with suffix s =
-  let len_suffix = String.length suffix in
-  let len_s = String.length s in
-  len_suffix <= len_s
-  && String.equal suffix
-    (String.sub s ~pos:(len_s - len_suffix) ~len:len_suffix)
 
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]
