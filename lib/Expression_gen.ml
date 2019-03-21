@@ -7,7 +7,7 @@ let ends_with suffix s =
 let starts_with prefix s =
   String.is_prefix ~prefix:prefix s
 
-let functions_requiring_namespace = 
+let functions_requiring_namespace = Set.Poly.of_list
   [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; 
     "positive_infinity"; "negative_infinity"; "machine_precision"; 
     "abs"; "acos"; "acosh"; "asin"; "asinh"; "atan"; "atan2"; "atanh"; 
@@ -16,12 +16,10 @@ let functions_requiring_namespace =
     "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"; 
     "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
 
-let equality a b = (a = b)
-
-let contains_elt lst elt  = (List.mem lst elt ~equal:equality)
+let contains_elt lst elt  = (List.mem lst elt ~equal:(=))
 
 let stan_namespace_qualify f = 
-  if (contains_elt functions_requiring_namespace f) then "stan::math::"^f else f
+  if (Set.mem functions_requiring_namespace f) then "stan::math::"^f else f
 
 (* return true if the types of the two expression are the same *)
 let types_match e1 e2 = 
