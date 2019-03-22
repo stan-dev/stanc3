@@ -155,7 +155,6 @@ let rec pp_unsizedtype ppf = function
           ) argtypes
         pp_returntype rt
 
-
   | UMathLibraryFunction ->
       (angle_brackets Fmt.string) ppf "Stan Math function"
 
@@ -217,7 +216,6 @@ let pp_fun_arg_decl ppf (autodifftype,name,unsizedtype) =
     pp_autodifftype autodifftype
     pp_unsizedtype unsizedtype
     name
-
 
 let rec pp_statement pp_e pp_s ppf = function
   | Assignment (assignee,expr) ->
@@ -330,7 +328,6 @@ let rec pp_statement pp_e pp_s ppf = function
             fdname
             Fmt.(list pp_fun_arg_decl ~sep:comma |> parens) fdargs
             pp_s fdbody
-
 
 (** A "top var" is a global variable visible to the I/O of Stan
    Local vs. Global vardecls
