@@ -136,7 +136,7 @@ let use_file filename = Stanc.(
           let _ = Debugging.typed_ast_logger typed_ast in
 
           if !dump_mir then
-            Mir.pp_typed_prog Fmt.stdout mir;
+            Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.typed_prog)];
 
           Out_channel.write_all !output_file ~data:out;
 
