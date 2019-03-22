@@ -1,6 +1,6 @@
 (executable
  (name stanc)
- (libraries stanclib)
+ (libraries stanc_frontend stanc_backend stanc_mir stanc_optimization stanc_backend_cplusplus)
  (public_name stanc)
  (preprocess (pps ppx_jane))
  )

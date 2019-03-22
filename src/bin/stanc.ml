@@ -1,7 +1,15 @@
 (** stanc console application *)
 
 open Core_kernel
-open Stanclib
+open Stanc_mir
+open Stanc_frontend
+open Compiler
+open Stanc_optimization
+open Stanc_backend_cplusplus
+
+module Stanc = Make(Backend.CPlusPlus)(Optimization.Identity)
+
+
 
 (** The main program. *)
 let version = "stanc version 3.0 alpha"
@@ -75,31 +83,69 @@ let model_file_err () =
 let add_file filename =
   if !model_file = "" then model_file := filename else model_file_err ()
 
+
+
 (** ad directives from the given file. *)
-let use_file filename =
-  let ast =
-    try Parse.parse_file Parser.Incremental.program filename
-    with Errors.SyntaxError err ->
-      Errors.report_syntax_error err ;
-      exit 1
-  in
-  let _ = Debugging.ast_logger ast in
-  if !pretty_print_program then
-    print_endline (Pretty_printing.pretty_print_program ast) ;
-  let typed_ast =
-    try Semantic_check.semantic_check_program ast
-    with Errors.SemanticError err ->
-      Errors.report_semantic_error err ;
-      exit 1
-  in
-  let _ = Debugging.typed_ast_logger typed_ast in
-  if not !pretty_print_program then (
-    let mir = Ast_to_Mir.trans_prog filename typed_ast in
-    if !dump_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.typed_prog)] ;
-    let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
-    Out_channel.write_all !output_file ~data:cpp ;
-    if !print_model_cpp then print_endline cpp )
+let use_file filename = Stanc.(
+  match compile_verbose filename with 
+  | Error (state , err) -> 
+      (match err with 
+      | Compiler.Lexing(err,loc) -> 
+          Printf.eprintf "\nSyntax error in %s, lexing error:\n"
+            (Errors.string_of_location {loc with col_num= loc.col_num - 1});
+          Printf.eprintf "%s" err;
+          (* XXX restore context mesages *)
+          exit 1
+
+      | Compiler.Include(err,loc) ->
+          Printf.eprintf "\nSyntax error in %s, include error:\n"
+            (Errors.string_of_location loc);
+          Printf.eprintf "%s" err;
+          (* XXX restore context mesages *)
+          exit 1
+
+      | Compiler.Parsing(err,loc_sp) ->
+          Printf.eprintf "\nSyntax error in %s, parsing error:\n"
+            (Errors.string_of_location_span loc_sp);
+          Printf.eprintf "%s" err;
+          (* XXX restore context mesages *)
+          exit 1
+
+      | Compiler.SemanticError(err,loc_sp) ->
+        match state.ast with 
+        | Some ast -> 
+            let _ = Debugging.ast_logger ast in
+
+            Printf.eprintf "\n%s in %s:\n" "Semantic error"
+              (Errors.string_of_location_span loc_sp);
+            Printf.eprintf "%s" err;
+            exit 1;
+
+        | _ -> 
+          exit 1
+
+      )
+
+  | Ok verbose ->
+      match (verbose.ast, verbose.typed_ast, verbose.mir, verbose.out) with
+      | Some ast, Some typed_ast, Some mir, Some out ->
+          let _ = Debugging.ast_logger ast in
+          if !pretty_print_program then
+            print_endline (Pretty_printing.pretty_print_program ast);
+
+          let _ = Debugging.typed_ast_logger typed_ast in
+
+          if !dump_mir then
+            Mir.pp_typed_prog Fmt.stdout mir;
+
+          Out_channel.write_all !output_file ~data:out;
+
+          if !print_model_cpp then 
+            print_endline out
+      | _ -> 
+        exit 1
+)
+
 
 let remove_dotstan s = String.drop_suffix s 5
 

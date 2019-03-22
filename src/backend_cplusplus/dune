@@ -1,0 +1,5 @@
+(library
+  (name stanc_backend_cplusplus)
+  (libraries stanc_mir stanc_backend)
+  (inline_tests)
+  (preprocess (pps ppx_jane ppx_deriving.map)))

@@ -40,9 +40,9 @@ and 'e expr =
 
 let pp_builtin_syntax =
   Fmt.(
-      string
-      |> styled `Yellow
-      )
+    string
+    |> styled `Yellow
+  )
 
 let rec pp_expr pp_e ppf = function
   | Var varname ->
@@ -62,19 +62,19 @@ let rec pp_expr pp_e ppf = function
       ) ppf args
 
   | TernaryIf(pred,texpr,fexpr) ->
-    Fmt.pf ppf
-      {|@[%a@ %a@,%a@,%a@ %a@]|}
-      pp_e pred
-      pp_builtin_syntax "?"
-      pp_e texpr
-      pp_builtin_syntax ":"
-      pp_e fexpr
+      Fmt.pf ppf
+        {|@[%a@ %a@,%a@,%a@ %a@]|}
+        pp_e pred
+        pp_builtin_syntax "?"
+        pp_e texpr
+        pp_builtin_syntax ":"
+        pp_e fexpr
 
   | Indexed(expr,indices) ->
-    Fmt.pf ppf
-      {|@[%a%a@]|}
-      pp_e expr
-      Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) indices
+      Fmt.pf ppf
+        {|@[%a%a@]|}
+        pp_e expr
+        Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) indices
 
 and pp_index pp_e ppf = function
   | All ->
@@ -102,11 +102,33 @@ and pp_index pp_e ppf = function
       Fmt.pf ppf {|~%a|}
         pp_e index
 
-type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 
-type autodifftype = Ast.autodifftype [@@deriving sexp, hash]
+type autodifftype = 
+  | DataOnly 
+  | AutoDiffable
+[@@deriving sexp, hash]
 
-type returntype = Ast.returntype [@@deriving sexp, hash]
+(** Unsized types for function arguments and for decorating expressions
+    during type checking; we have a separate type here for Math library
+    functions as these functions can be overloaded, so do not have a unique
+    type in the usual sense. Still, we want to assign a unique type to every
+    expression during type checking.  *)
+and unsizedtype =
+  | UInt
+  | UReal
+  | UVector
+  | URowVector
+  | UMatrix
+  | UArray of unsizedtype
+  | UFun of (autodifftype * unsizedtype) list * returntype
+  | UMathLibraryFunction
+[@@deriving sexp, hash, compare]
+(** Return types for functions *)
+and returntype = 
+  | Void 
+  | ReturnType of unsizedtype
+[@@deriving sexp, hash]
+
 
 let angle_brackets pp_v ppf v =
   Fmt.pf ppf "@[<1><%a>@]" pp_v v
@@ -116,19 +138,19 @@ let label str pp_v ppf v =
 
 let pp_keyword =
   Fmt.(
-      string
-      |> styled `Blue
-      )
+    string
+    |> styled `Blue
+  )
 
 let pp_autodifftype ppf = function
-  | Ast.DataOnly ->
+  | DataOnly ->
       pp_keyword ppf "data "
 
-  | Ast.AutoDiffable ->
+  | AutoDiffable ->
       ()
 
 let rec pp_unsizedtype ppf = function
-  | Ast.UInt ->
+  | UInt ->
       pp_keyword ppf "int"
   | UReal ->
       pp_keyword ppf "real"
@@ -152,28 +174,41 @@ let rec pp_unsizedtype ppf = function
           list
             (pair ~sep:comma pp_autodifftype pp_unsizedtype)
             ~sep:comma
-          ) argtypes
+        ) argtypes
         pp_returntype rt
 
   | UMathLibraryFunction ->
       (angle_brackets Fmt.string) ppf "Stan Math function"
 
 and pp_returntype ppf = function
-  | Ast.Void ->
+  | Void ->
       Fmt.string ppf "void"
 
-  | Ast.ReturnType ut ->
+  | ReturnType ut ->
       pp_unsizedtype ppf ut
 
+
+(** Source code locations *)
+type location =
+  { filename: string
+  ; line_num: int
+  ; col_num: int
+  ; included_from: location option 
+  }
+
 let no_loc =
-  { Ast.filename = ""
+  { filename = ""
   ; line_num = 0
   ; col_num = 0
   ; included_from = None
   }
 
+type location_span = 
+  { begin_loc : location
+  ; end_loc : location
+  }
 let no_span =
-  { Ast.begin_loc = no_loc
+  { begin_loc = no_loc
   ; end_loc = no_loc
   }
 
@@ -238,7 +273,7 @@ let rec pp_statement pp_e pp_s ppf = function
 
   | Check(ident, exprs) ->
       (* TODO: I'm not sure what a `Check` statement is so this may not make
-        sense *)
+         sense *)
       Fmt.pf ppf
         {|@[check_%s%a;@]|}
         ident
@@ -286,13 +321,13 @@ let rec pp_statement pp_e pp_s ppf = function
         pp_s stmt
 
   | For {loopvar; lower; upper; body } ->
-        Fmt.pf ppf
-          {|@[<v2>@[%a(%s in %a:%a)@] {@;%a@]@;}|}
-          pp_builtin_syntax "for"
-          loopvar
-          pp_e lower
-          pp_e upper
-          pp_s body
+      Fmt.pf ppf
+        {|@[<v2>@[%a(%s in %a:%a)@] {@;%a@]@;}|}
+        pp_builtin_syntax "for"
+        loopvar
+        pp_e lower
+        pp_e upper
+        pp_s body
 
   | Block stmts ->
       Fmt.pf ppf
@@ -303,7 +338,7 @@ let rec pp_statement pp_e pp_s ppf = function
       Fmt.(
         list pp_s ~sep:Fmt.cut
         |> vbox
-        ) ppf stmts
+      ) ppf stmts
 
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf
@@ -329,26 +364,64 @@ let rec pp_statement pp_e pp_s ppf = function
             Fmt.(list pp_fun_arg_decl ~sep:comma |> parens) fdargs
             pp_s fdbody
 
+(** Sized types, for variable declarations *)
+type 'e sizedtype =
+  | SInt
+  | SReal
+  | SVector of 'e
+  | SRowVector of 'e
+  | SMatrix of 'e * 'e
+  | SArray of 'e sizedtype * 'e
+[@@deriving sexp, compare, map, hash]
+
+let rec remove_size = function
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix _ -> UMatrix
+  | SArray (t, _) -> UArray (remove_size t)
+  
+(** Transformations (constraints) for global variable declarations *)
+type 'e transformation =
+  | Identity
+  | Lower of 'e
+  | Upper of 'e
+  | LowerUpper of 'e * 'e
+  | Offset of 'e
+  | Multiplier of 'e
+  | OffsetMultiplier of 'e * 'e
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+[@@deriving sexp, compare, map, hash]
+
 (** A "top var" is a global variable visible to the I/O of Stan
-   Local vs. Global vardecls
-   There are "local" (i.e. not top-level; not read in or written out anywhere) variable
-   declarations that do not allow transformations. These are the only kind allowed in
-   the model block, and any declarations in a Block will also be local
-   There are also then top-level ones, which are the only thing you can
-   write in both the parameters and data block. The generated quantities block allows both
-   types of variable declarations and, worse, mixes in top-level ones with normal ones
-   We'll need to scan the list of declarations for top-level ones and essentially remove them
-   from the block. The AST has an `is_global` flag that also tracks this
+    Local vs. Global vardecls
+    There are "local" (i.e. not top-level; not read in or written out anywhere) variable
+    declarations that do not allow transformations. These are the only kind allowed in
+    the model block, and any declarations in a Block will also be local
+    There are also then top-level ones, which are the only thing you can
+    write in both the parameters and data block. The generated quantities block allows both
+    types of variable declarations and, worse, mixes in top-level ones with normal ones
+    We'll need to scan the list of declarations for top-level ones and essentially remove them
+    from the block. The AST has an `is_global` flag that also tracks this
 *)
 type 'e top_var_decl =
   { tvident : string
-  ; tvtype : 'e Ast.sizedtype
-  ; tvtrans : 'e Ast.transformation
-  ; tvloc : Ast.location_span sexp_opaque [@compare.ignore] }
+  ; tvtype : 'e sizedtype
+  ; tvtrans : 'e transformation
+  ; tvloc : location_span sexp_opaque [@compare.ignore] 
+  }
 [@@deriving sexp]
 
 let pp_transformation pp_e ppf = function
-  | Ast.Identity ->
+  | Identity ->
       ()
 
   | Lower expr ->
@@ -361,8 +434,8 @@ let pp_transformation pp_e ppf = function
       (Fmt.(pair ~sep:comma
               (pp_e |> label "lower")
               (pp_e |> label "upper")
-          )
-          |> angle_brackets) ppf (lower_expr,upper_expr)
+           )
+       |> angle_brackets) ppf (lower_expr,upper_expr)
 
   | Offset expr ->
       (pp_e |> label "offet" |> angle_brackets) ppf expr
@@ -374,8 +447,8 @@ let pp_transformation pp_e ppf = function
       (Fmt.(pair ~sep:comma
               (pp_e |> label "offset")
               (pp_e |> label "multiplier")
-          )
-          |> angle_brackets) ppf (offset_expr,mult_expr)
+           )
+       |> angle_brackets) ppf (offset_expr,mult_expr)
 
   | Ordered ->
       (angle_brackets Fmt.string) ppf "ordered"
@@ -403,45 +476,45 @@ let pp_transformation pp_e ppf = function
 
 let rec pp_sizedtype pp_e ppf (st,trans)=
   match st with
-  | Ast.SInt ->
+  | SInt ->
       Fmt.pf ppf
         {|%s%a|}
         "int"
         (pp_transformation pp_e) trans
 
-  | Ast.SReal ->
+  | SReal ->
       Fmt.pf ppf
         {|%s%a|}
         "real"
         (pp_transformation pp_e) trans
 
-  | Ast.SVector expr ->
+  | SVector expr ->
       Fmt.pf ppf
         {|vector%a%a|}
         (pp_transformation pp_e) trans
         (Fmt.brackets pp_e) expr
 
-  | Ast.SRowVector expr ->
+  | SRowVector expr ->
       Fmt.pf ppf
         {|row_vector%a%a|}
         (pp_transformation pp_e) trans
         (Fmt.brackets pp_e) expr
 
-  | Ast.SMatrix(d1_expr,d2_expr) ->
+  | SMatrix(d1_expr,d2_expr) ->
       Fmt.pf ppf
         {|matrix%a%a|}
         (pp_transformation pp_e) trans
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets) (d1_expr,d2_expr)
 
-  | Ast.SArray(st,expr) ->
+  | SArray(st,expr) ->
       Fmt.pf ppf
         {|array%a%a|}
         (pp_transformation pp_e) trans
         Fmt.(pair ~sep:comma
-              (fun ppf st ->
-                pp_sizedtype pp_e ppf (st,Ast.Identity)
-              ) pp_e
-              |> brackets
+               (fun ppf st ->
+                  pp_sizedtype pp_e ppf (st,Identity)
+               ) pp_e
+             |> brackets
             ) (st,expr)
 
 let pp_top_var_decl pp_e ppf { tvident; tvtype; tvtrans; _ } =
@@ -455,8 +528,8 @@ type 'e top_var_table = (string, 'e top_var_decl) Map.Poly.t [@@deriving sexp]
 let pp_top_var_table pp_e ppf (tbl : 'e top_var_table) =
   Map.Poly.data tbl
   |> Fmt.pf ppf
-      {|@[<v>%a@]|}
-      Fmt.(list ~sep:cut (pp_top_var_decl pp_e))
+    {|@[<v>%a@]|}
+    Fmt.(list ~sep:cut (pp_top_var_decl pp_e))
 
 type ('e, 's) prog =
   { functions_block: 's list
@@ -466,9 +539,9 @@ type ('e, 's) prog =
   ; params : 'e top_var_table
   ; tparams : 'e top_var_table
   ; prepare_params : 's list
-    (* XXX too intimately tied up with stan reader.hpp and writer.hpp in codegen
-      TODO: codegen parameter constraining and unconstraining in prepare_params
-    *)
+  (* XXX too intimately tied up with stan reader.hpp and writer.hpp in codegen
+     TODO: codegen parameter constraining and unconstraining in prepare_params
+  *)
   ; log_prob : 's list
   ; gen_quant_vars : 'e top_var_table
   ; generate_quantities : 's list
@@ -537,18 +610,20 @@ let pp_prog pp_e pp_s ppf prog =
     (pp_generate_quantities pp_s) prog
 
 type expr_typed_located =
-  { texpr_type: Ast.unsizedtype
-  ; texpr_loc: Ast.location_span sexp_opaque [@compare.ignore]
+  { texpr_type: unsizedtype
+  ; texpr_loc: location_span sexp_opaque [@compare.ignore]
   ; texpr: expr_typed_located expr
-  ; texpr_adlevel: autodifftype }
+  ; texpr_adlevel: autodifftype
+  }
 [@@deriving sexp, hash]
 
 let rec pp_texpr_typed_located ppf { texpr; _ }  =
   pp_expr pp_texpr_typed_located ppf texpr
 
 type stmt_loc =
-  { sloc: Ast.location_span sexp_opaque [@compare.ignore]
-  ; stmt: (expr_typed_located, stmt_loc) statement }
+  { sloc: location_span sexp_opaque [@compare.ignore]
+  ; stmt: (expr_typed_located, stmt_loc) statement
+  }
 [@@deriving sexp, hash]
 
 let rec pp_stmt_loc ppf { stmt; _ }  =
@@ -572,11 +647,14 @@ let rec map_toplevel_stmts f {sloc; stmt} =
 let tvdecl_to_decl {tvident; tvtype; tvloc; _} = (tvident, tvtype, tvloc)
 
 let internal_expr =
-  { texpr= Var "UHOH"
-  ; texpr_loc= no_span
-  ; texpr_type= UInt
-  ; texpr_adlevel= DataOnly }
+  { texpr = Var "UHOH"
+  ; texpr_loc = no_span
+  ; texpr_type = UInt
+  ; texpr_adlevel = DataOnly }
 
 let zero =
-  { internal_expr with texpr= Lit (Int, "0")
-  ; texpr_type= UInt }
+  { internal_expr 
+    with 
+      texpr = Lit (Int, "0")
+    ; texpr_type = UInt 
+  }
