@@ -90,36 +90,24 @@ let use_file filename = Stanc.(
   match compile_verbose filename with 
   | Error (state , err) -> 
       (match err with 
-      | Compiler.Lexing(err,loc) -> 
-          Printf.eprintf "\nSyntax error in %s, lexing error:\n"
-            (Errors.string_of_location {loc with col_num= loc.col_num - 1});
-          Printf.eprintf "%s" err;
-          (* XXX restore context mesages *)
+      | Compiler.Lexing(err,loc) ->
+          Errors.report_syntax_error (Errors.Lexing(err,loc));
           exit 1
 
       | Compiler.Include(err,loc) ->
-          Printf.eprintf "\nSyntax error in %s, include error:\n"
-            (Errors.string_of_location loc);
-          Printf.eprintf "%s" err;
-          (* XXX restore context mesages *)
+          Errors.report_syntax_error (Errors.Include(err,loc));
           exit 1
 
       | Compiler.Parsing(err,loc_sp) ->
-          Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-            (Errors.string_of_location_span loc_sp);
-          Printf.eprintf "%s" err;
-          (* XXX restore context mesages *)
+          Errors.report_syntax_error (Errors.Parsing(err,loc_sp));
           exit 1
 
       | Compiler.SemanticError(err,loc_sp) ->
         match state.ast with 
         | Some ast -> 
             let _ = Debugging.ast_logger ast in
-
-            Printf.eprintf "\n%s in %s:\n" "Semantic error"
-              (Errors.string_of_location_span loc_sp);
-            Printf.eprintf "%s" err;
-            exit 1;
+            Errors.report_semantic_error (err,loc_sp);
+            exit 1
 
         | _ -> 
           exit 1
