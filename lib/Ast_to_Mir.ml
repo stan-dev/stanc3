@@ -128,8 +128,6 @@ let add_int_index e i =
 let mkfor ut bodyfn iteratee sloc =
   let idx s =
     match ut with
-    (*  | Ast.UMatrix -> MatrixSingle (Var s)
-*)
     | Ast.UVector | URowVector | UMatrix | UArray _ ->
         let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
         Ast.Single
@@ -323,7 +321,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
     { texpr= Var decl_id
-    ; texpr_type= base_type sizedtype
+    ; texpr_type= Ast.remove_size sizedtype
     ; texpr_adlevel= dadlevel
     ; texpr_loc= sloc }
   in

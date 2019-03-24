@@ -400,15 +400,11 @@ let pp_model_private ppf p =
   pf ppf "%a" (list ~sep:cut pp_decl) read_data_decls
 
 let pp_get_param_names ppf p =
-  let param_names =
-    List.filter_map
-      ~f:(function {stmt= Decl {decl_id= d; _}; _} -> Some d | _ -> None)
-      p.prepare_params
-  in
   let add_param = fmt "names.push_back(%S);" in
   pf ppf "@[<v 2>void %a const {@,%a@]@,}" pp_call_str
     ("get_param_names", ["std::vector<std::string>& names"])
-    (list ~sep:cut add_param) param_names
+    (list ~sep:cut add_param)
+    (List.map ~f:fst p.output_vars)
 
 let rec get_dims = function
   | Ast.SInt | Ast.SReal -> []
