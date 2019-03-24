@@ -203,7 +203,8 @@ let rec unsizedtype_to_string = function
         [%message "Another place where it's weird to get " (t : unsizedtype)]
 
 (* Well, when you put it like this it does seem a little crazy *)
-let constraint_to_string (c : constrainaction) = function
+let constraint_to_string t (c : constrainaction) =
+  match t with
   | Ast.Ordered -> "ordered"
   | PositiveOrdered -> "positive_ordered"
   | Simplex -> "simplex"
@@ -243,7 +244,7 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
       {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
       sloc
   in
-  let constraint_str = mkstring sloc (constraint_to_string Check decl_trans) in
+  let constraint_str = mkstring sloc (constraint_to_string decl_trans Check) in
   match decl_trans with
   | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) ->
       []
@@ -255,33 +256,27 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
    |CholeskyCov | Correlation | Covariance ->
       [chk for_eigen constraint_str []]
 
+let extract_constraint_args = function
+  | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance | Identity ->
+      []
+
 (* use nested funapp for each call to read_data with just the name and size? *)
 let gen_constraint dconstrain t arg =
   let mkstring = mkstring arg.texpr_loc in
-  match dconstrain with
-  | None -> arg
-  | Some dconstrain -> (
-      let constraint_str = constraint_to_string dconstrain t in
-      match constraint_str with
-      | "" -> arg
-      | _ ->
-          let args =
-            arg :: mkstring constraint_str
-            :: mkstring (unsizedtype_to_string arg.texpr_type)
-            :: trans_exprs
-                 ( match t with
-                 | Lower a | Upper a | Offset a | Multiplier a -> [a]
-                 | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
-                 | Ordered | PositiveOrdered | Simplex | UnitVector
-                  |CholeskyCorr | CholeskyCov | Correlation | Covariance
-                  |Identity ->
-                     [] )
-          in
-          { arg with
-            texpr=
-              FunApp
-                (sexp_of_constrainaction dconstrain |> Sexp.to_string, args) }
-      )
+  match Option.map ~f:(constraint_to_string t) dconstrain with
+  | None | Some "" -> arg
+  | Some constraint_str ->
+      let dc = Option.value_exn dconstrain in
+      let fname = sexp_of_constrainaction dc |> Sexp.to_string in
+      let args =
+        arg :: mkstring constraint_str
+        :: mkstring (unsizedtype_to_string arg.texpr_type)
+        :: trans_exprs (extract_constraint_args t)
+      in
+      {arg with texpr= FunApp (fname, args)}
 
 let rec base_type = function
   | Ast.SArray (t, _) -> base_type t
