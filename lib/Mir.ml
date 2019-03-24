@@ -48,8 +48,6 @@ and ('e, 's) statement =
   | Assignment of 'e * 'e
   | TargetPE of 'e
   | NRFunApp of string * 'e list
-  | Check of string * 'e list
-  (* XXX get rid of this and special case in gen*)
   | Break
   | Continue
   | Return of 'e option
@@ -76,19 +74,28 @@ and ('e, 's) statement =
       ; fdbody: 's }
 [@@deriving sexp, hash, map]
 
-type paramblock = Parameters | TransformedParameters | GeneratedQuantities
+type io_block =
+  | Data
+  | Parameters
+  | TransformedParameters
+  | GeneratedQuantities
 [@@deriving sexp, hash]
 
+type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
+
 type ('e, 's) prog =
-  { functions_block: 's
-  ; prepare_data: 's (* data & transformed data decls and statements *)
-  ; prepare_params: 's (* param & transformed param decls and statements *)
-  ; log_prob: 's (* model block, assuming above blocks run in scope*)
+  { functions_block: 's list
+  ; input_vars: 'e io_var list
+  ; prepare_data: 's list (* data & transformed data decls and statements *)
+  ; prepare_params:
+      's list
+      (* param & transformed param decls and statements *)
+  ; log_prob: 's list (* model block, assuming above blocks run in scope*)
   ; generate_quantities:
-      's
+      's list
       (* also assumes prepare_data and prepare_params run*)
-  ; transform_inits: 's
-  ; output_vars: (string * ('e list * paramblock)) list
+  ; transform_inits: 's list
+  ; output_vars: 'e io_var list
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp]
@@ -126,3 +133,14 @@ let internal_expr =
   ; texpr_adlevel= DataOnly }
 
 let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
+
+(* Internal function names *)
+let fnLength = "Length"
+let fnMakeArray = "MakeArray"
+let fnMakeRowVec = "MakeRowVec"
+let fnNegativeInfinity = "NegativeInfinity"
+let fnReadData = "ReadData"
+let fnReadParam = "ReadParam"
+let fnConstrain = "Constrain"
+let fnUnconstrain = "Unconstrain"
+let fnCheck = "Check"

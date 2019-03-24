@@ -1,13 +1,6 @@
 open Core_kernel
 open Mir
 
-(* TODO: make this complete by unifying with ReadParam et al*)
-type internal_functions = Length | MakeArray | MakeRowVec | NegativeInfinity
-[@@deriving sexp]
-
-let fun_name x = x |> sexp_of_internal_functions |> Sexp.to_string
-let internal_fn ifn args = FunApp (fun_name ifn, args)
-
 (* XXX fix exn *)
 let unwrap_return_exn = function
   | Some (Ast.ReturnType ut) -> ut
@@ -40,8 +33,8 @@ and trans_expr
         | FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
             FunApp (name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
-        | ArrayExpr eles -> internal_fn MakeArray (trans_exprs eles)
-        | RowVectorExpr eles -> internal_fn MakeRowVec (trans_exprs eles)
+        | ArrayExpr eles -> FunApp (fnMakeArray, trans_exprs eles)
+        | RowVectorExpr eles -> FunApp (fnMakeRowVec, trans_exprs eles)
         | Indexed (lhs, indices) ->
             Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
@@ -70,7 +63,7 @@ let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf =
   { texpr_type= UReal
   ; texpr_loc= no_span
-  ; texpr= internal_fn NegativeInfinity []
+  ; texpr= FunApp (fnNegativeInfinity, [])
   ; texpr_adlevel= Ast.DataOnly }
 
 let lbind s =
@@ -153,7 +146,7 @@ let mkfor ut bodyfn iteratee sloc =
     For
       { loopvar
       ; lower= {internal_expr with texpr= Lit (Int, "0")}
-      ; upper= {internal_expr with texpr= internal_fn Length [iteratee]}
+      ; upper= {internal_expr with texpr= FunApp (fnLength, [iteratee])}
       ; body=
           {stmt= Block [bodyfn (add_int_index iteratee (idx loopvar))]; sloc}
       }
@@ -189,6 +182,11 @@ let rec for_eigen ut bodyfn var sloc =
 
 type readaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+
+let internal_read_fn dread args =
+  match dread with
+  | ReadData -> FunApp (fnReadData, args)
+  | ReadParam -> FunApp (fnReadParam, args)
 
 type decl_context =
   { dread: readaction option
@@ -232,15 +230,22 @@ let constraint_to_string (c : constrainaction) = function
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
   | Identity -> ""
 
+(* hack(sean): strings aren't real *)
+let mkstring texpr_loc s =
+  { texpr= Lit (Str, s)
+  ; texpr_type= Ast.UReal
+  ; texpr_loc
+  ; texpr_adlevel= DataOnly }
+
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
     let texpr_type = Ast.remove_size decl_type in
     forl texpr_type
-      (fun id -> {stmt= Check (fn, id :: trans_exprs args); sloc})
+      (fun id -> {stmt= NRFunApp (fnCheck, fn :: id :: trans_exprs args); sloc})
       {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
       sloc
   in
-  let constraint_str = constraint_to_string Check decl_trans in
+  let constraint_str = mkstring sloc (constraint_to_string Check decl_trans) in
   match decl_trans with
   | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) ->
       []
@@ -251,13 +256,6 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance ->
       [chk for_eigen constraint_str []]
-
-(* hack(sean): strings aren't real *)
-let mkstring texpr_loc s =
-  { texpr= Lit (Str, s)
-  ; texpr_type= Ast.UReal
-  ; texpr_loc
-  ; texpr_adlevel= DataOnly }
 
 (* use nested funapp for each call to read_data with just the name and size? *)
 let gen_constraint dconstrain t arg =
@@ -303,10 +301,11 @@ let rec base_dims = function
    typename = SMatrix -> "matrix" vector rowvector real int
 *)
 let mkread id var dread dconstrain sizedtype transform sloc =
-  let fname = sexp_of_readaction dread |> Sexp.to_string in
   let read_base var =
     { var with
-      texpr= FunApp (fname, mkstring var.texpr_loc id :: base_dims sizedtype)
+      texpr=
+        internal_read_fn dread
+        @@ (mkstring var.texpr_loc id :: base_dims sizedtype)
     ; texpr_type= base_type sizedtype }
   in
   let constrain var = gen_constraint dconstrain transform (read_base var) in
@@ -413,7 +412,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
           (* XXX Do loops in MIR actually start at 1? *)
           { loopvar= newsym
           ; lower= wrap @@ Lit (Int, "0")
-          ; upper= wrap @@ internal_fn Length [iteratee]
+          ; upper= wrap @@ FunApp (fnLength, [iteratee])
           ; body= add_to_or_create_block assign_loopvar body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef
@@ -464,24 +463,21 @@ let trans_prog filename
         adjustments for unconstrained space: ???
 *)
   let map f list_op = Option.value ~default:[] list_op |> List.map ~f in
-  let merge_stmts ls = {stmt= SList ls; sloc= no_span} in
-  let output_vars =
-    let grab_names_sizes paramblock block =
-      let get_name_size s =
-        match s.Ast.stmt_typed with
-        | Ast.VarDecl {sizedtype; identifier; _} ->
-            Some
-              ( identifier.name
-              , (base_dims (trans_sizedtype sizedtype), paramblock) )
-        | _ -> None
-      in
-      List.map ~f:get_name_size (Option.value ~default:[] block)
+  let grab_names_sizes paramblock block =
+    let get_name_size s =
+      match s.Ast.stmt_typed with
+      | Ast.VarDecl {sizedtype; identifier; _} ->
+          Some (identifier.name, (trans_sizedtype sizedtype, paramblock))
+      | _ -> None
     in
+    List.map ~f:get_name_size (Option.value ~default:[] block)
+  in
+  let output_vars =
     [ grab_names_sizes Parameters parametersblock
     ; grab_names_sizes TransformedParameters transformedparametersblock
     ; grab_names_sizes GeneratedQuantities generatedquantitiesblock ]
     |> List.concat |> List.filter_opt
-  in
+  and input_vars = grab_names_sizes Data datablock |> List.filter_opt in
   let prepare_data =
     map
       (trans_stmt
@@ -490,7 +486,6 @@ let trans_prog filename
     @ map
         (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
         transformeddatablock
-    |> merge_stmts
   in
   let prepare_params =
     map
@@ -503,13 +498,11 @@ let trans_prog filename
         (trans_stmt
            {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
         transformedparametersblock
-    |> merge_stmts
   in
   let generate_quantities =
     map
       (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
       generatedquantitiesblock
-    |> merge_stmts
   in
   let transform_inits =
     map
@@ -518,21 +511,19 @@ let trans_prog filename
          ; dconstrain= Some Unconstrain
          ; dadlevel= DataOnly })
       parametersblock
-    |> merge_stmts
   in
   { functions_block=
       (* Should this be AutoDiffable for functions here?*)
       map
         (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
         functionblock
-      |> merge_stmts
+  ; input_vars
   ; prepare_data
   ; prepare_params
   ; log_prob=
       map
         (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
         modelblock
-      |> merge_stmts
   ; generate_quantities
   ; transform_inits
   ; output_vars
@@ -557,7 +548,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : Mir.stmt_loc)] ;
+  print_s [%sexp (op : Mir.stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
@@ -567,7 +558,7 @@ let%expect_test "Prefix-Op-Example" =
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
-  print_s [%sexp (m.prepare_data : stmt_loc)] ;
+  print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
     (((Decl (decl_adtype DataOnly) (decl_id mat)
@@ -581,7 +572,7 @@ let%expect_test "read data" =
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
-  print_s [%sexp (m.prepare_params : stmt_loc)] ;
+  print_s [%sexp (m.prepare_params : stmt_loc list)] ;
   [%expect
     {|
     (((Decl (decl_adtype AutoDiffable) (decl_id mat)
@@ -599,7 +590,7 @@ let%expect_test "gen quant" =
   let m =
     mir_from_string "generated quantities { matrix<lower=0>[10, 20] mat[5]; }"
   in
-  print_s [%sexp (m.generate_quantities : stmt_loc)] ;
+  print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
     (((Decl (decl_adtype DataOnly) (decl_id mat)
@@ -612,6 +603,7 @@ let%expect_test "gen quant" =
            (upper (FunApp Length ((Indexed (Var mat) ((Single (Var sym1__)))))))
            (body
             (Block
-             ((Check less_or_equal
-               ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+             ((NRFunApp Check
+               ((Lit Str less_or_equal)
+                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
                 (Lit Int 0))))))))))))) |}]
