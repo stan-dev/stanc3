@@ -16,6 +16,7 @@
     [3] Javascript pretty-printer https://github.com/Virum/compiler/blob/28e807b842bab5dcf11460c8193dd5b16674951f/JavaScript.ml#L112
 *)
 
+(*
 open Core_kernel
 open Mir
 open Fmt
@@ -442,23 +443,6 @@ let pp_transform_inits ppf params =
 let pp_fndef_sig ppf (rt, fname, params) =
   pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params
 
-(* constraining parameters for before log prob and write_array
-  match tvtrans with
-  | Ast.Identity -> None
-  | Lower lb -> constrain for_scalar "lb_constrain" [lb]
-  | Upper ub -> constrain for_scalar "ub_constrain" [ub]
-  | LowerUpper (lb, ub) -> constrain for_scalar "lub_constrain" [lb; ub]
-  | Offset o -> constrain for_scalar "offset_multiplier" [o; Lit (Int, "1")]
-  | Multiplier m -> constrain for_scalar "offset_multiplier" [Lit (Int, "0"); m]
-  | OffsetMultiplier (o, m) -> constrain for_scalar "offset_multiplier" [o; m]
-  | Ordered -> constrain for_eigen "ordered" []
-  | PositiveOrdered | Simplex | UnitVector -> constrain for_eigen "ordered" []
-  |CholeskyCorr -> constrain for_eigen "cholesky_factor_corr" []
-  | CholeskyCov | Correlation | Covariance ->
-      None
-
-*)
-
 let pp_log_prob ppf p =
   let text = pf ppf "%s@," in
   text "template <bool propto__, bool jacobian__, typename T__>" ;
@@ -561,3 +545,4 @@ let%expect_test "udf" =
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
     } |}]
+*)

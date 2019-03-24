@@ -253,9 +253,9 @@ public:
             current_statement_begin__ = 15;
             for (int j = 1; j <= J; ++j) {
                 current_statement_begin__ = 16;
-                stan::model::assign(theta, 
-                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), 
-                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))), 
+                stan::model::assign(theta,
+                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
+                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))),
                             "assigning variable theta");
             }
 
@@ -306,7 +306,6 @@ public:
       return log_prob<propto,jacobian,T_>(vec_params_r, vec_params_i, pstream);
     }
 
-
     void get_param_names(std::vector<std::string>& names__) const {
         names__.resize(0);
         names__.push_back("mu");
@@ -314,7 +313,6 @@ public:
         names__.push_back("theta_tilde");
         names__.push_back("theta");
     }
-
 
     void get_dims(std::vector<std::vector<size_t> >& dimss__) const {
         dimss__.resize(0);
@@ -385,9 +383,9 @@ public:
             current_statement_begin__ = 15;
             for (int j = 1; j <= J; ++j) {
                 current_statement_begin__ = 16;
-                stan::model::assign(theta, 
-                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), 
-                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))), 
+                stan::model::assign(theta,
+                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
+                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))),
                             "assigning variable theta");
             }
 
@@ -401,7 +399,7 @@ public:
                 size_t theta_k_0_max__ = J;
                 for (size_t k_0__ = 0; k_0__ < theta_k_0_max__; ++k_0__) {
                     vars__.push_back(theta[k_0__]);
-                }
+               }
             }
             if (!include_gqs__) return;
         } catch (const std::exception& e) {
@@ -502,4 +500,3 @@ public:
 }  // namespace
 
 typedef eight_schools_model_namespace::eight_schools_model stan_model;
-
