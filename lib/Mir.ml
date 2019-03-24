@@ -36,11 +36,8 @@ and 'e expr =
 [@@deriving sexp, hash, map]
 
 type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
+type 'e sizedtype = 'e Ast.sizedtype [@@deriving sexp, hash, map]
 type autodifftype = Ast.autodifftype [@@deriving sexp, hash]
-type 'e transformation = 'e Ast.transformation [@@deriving sexp, hash, map]
-
-let no_loc = {Ast.filename= ""; line_num= 0; col_num= 0; included_from= None}
-let no_span = {Ast.begin_loc= no_loc; end_loc= no_loc}
 
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
@@ -68,7 +65,10 @@ and ('e, 's) statement =
   (* An SList does not share any of Block's semantics - it is just multiple
      (ordered!) statements*)
   | SList of 's list
-  | Decl of {decl_adtype: autodifftype; decl_id: string; decl_type: unsizedtype}
+  | Decl of
+      { decl_adtype: autodifftype
+      ; decl_id: string
+      ; decl_type: 'e sizedtype }
   | FunDef of
       { fdrt: unsizedtype option
       ; fdname: string
@@ -116,6 +116,9 @@ let rec sexp_of_stmt_loc {stmt; _} =
 type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
 
 (* ===================== Some helper functions and values ====================== *)
+let no_loc = {Ast.filename= ""; line_num= 0; col_num= 0; included_from= None}
+let no_span = {Ast.begin_loc= no_loc; end_loc= no_loc}
+
 let internal_expr =
   { texpr= Var "UHOH"
   ; texpr_loc= no_span

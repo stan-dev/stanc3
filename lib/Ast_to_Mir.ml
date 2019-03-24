@@ -234,12 +234,10 @@ let constraint_to_string (c : constrainaction) = function
 
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
-    forl decl_type
+    let texpr_type = Ast.remove_size decl_type in
+    forl texpr_type
       (fun id -> {stmt= Check (fn, id :: trans_exprs args); sloc})
-      { texpr= Var decl_id
-      ; texpr_type= decl_type
-      ; texpr_loc= sloc
-      ; texpr_adlevel= adlevel }
+      {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
       sloc
   in
   let constraint_str = constraint_to_string Check decl_trans in
@@ -323,7 +321,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   let assign rhs =
     [{stmt= Assignment ({rhs with texpr= Var decl_id}, rhs); sloc}]
   in
-  let st = trans_sizedtype sizedtype in
+  let decl_type = trans_sizedtype sizedtype in
   let decl_var =
     { texpr= Var decl_id
     ; texpr_type= base_type sizedtype
@@ -332,7 +330,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   in
   let read_stmts =
     match dread with
-    | Some a -> [mkread decl_id decl_var a dconstrain st transform sloc]
+    | Some a -> [mkread decl_id decl_var a dconstrain decl_type transform sloc]
     | None -> Option.value_map ~default:[] ~f:assign rhs
   in
   let decl_adtype =
@@ -340,7 +338,6 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     | Some {texpr_adlevel; _} -> texpr_adlevel
     | None -> dadlevel
   in
-  let decl_type = Ast.remove_size st in
   let decl = Decl {decl_adtype; decl_id; decl_type} |> with_sloc in
   let checks =
     match dconstrain with
@@ -413,6 +410,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
             , Indexed (iteratee, [Single indexing_var]) |> wrap )
         in
         For
+          (* XXX Do loops in MIR actually start at 1? *)
           { loopvar= newsym
           ; lower= wrap @@ Lit (Int, "0")
           ; upper= wrap @@ internal_fn Length [iteratee]
@@ -563,7 +561,7 @@ let%expect_test "Prefix-Op-Example" =
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      (((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt)))
+      (((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt)))
        (IfElse (FunApp Less__ ((Var i) (FunApp PMinus__ ((Lit Int 1)))))
         (NRFunApp print ((Lit Str Badger))) ())) |}]
 
@@ -572,7 +570,8 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc)] ;
   [%expect
     {|
-    (((Decl (decl_adtype DataOnly) (decl_id mat) (decl_type (UArray UMatrix)))
+    (((Decl (decl_adtype DataOnly) (decl_id mat)
+       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
       (For (loopvar sym1__) (lower (Lit Int 0))
        (upper (FunApp Length ((Var mat))))
        (body
@@ -586,7 +585,7 @@ let%expect_test "read param" =
   [%expect
     {|
     (((Decl (decl_adtype AutoDiffable) (decl_id mat)
-       (decl_type (UArray UMatrix)))
+       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
       (For (loopvar sym1__) (lower (Lit Int 0))
        (upper (FunApp Length ((Var mat))))
        (body
@@ -596,8 +595,23 @@ let%expect_test "read param" =
             ((FunApp ReadParam ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
              (Lit Str lb) (Lit Str matrix) (Lit Int 0)))))))))) |}]
 
-(* problems:
-   1. need sizes on declarations now
-   2. check on constraint
-   2. moms gotta eat too
-*)
+let%expect_test "gen quant" =
+  let m =
+    mir_from_string "generated quantities { matrix<lower=0>[10, 20] mat[5]; }"
+  in
+  print_s [%sexp (m.generate_quantities : stmt_loc)] ;
+  [%expect
+    {|
+    (((Decl (decl_adtype DataOnly) (decl_id mat)
+       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (For (loopvar sym1__) (lower (Lit Int 0))
+       (upper (FunApp Length ((Var mat))))
+       (body
+        (Block
+         ((For (loopvar sym2__) (lower (Lit Int 0))
+           (upper (FunApp Length ((Indexed (Var mat) ((Single (Var sym1__)))))))
+           (body
+            (Block
+             ((Check less_or_equal
+               ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+                (Lit Int 0))))))))))))) |}]
