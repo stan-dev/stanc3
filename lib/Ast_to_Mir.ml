@@ -171,13 +171,8 @@ let rec for_eigen ut bodyfn var sloc =
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Can't for over " (ut : unsizedtype)]
 
-(*
-   Need to know:
-   1. whether to read_param, read_data, nothing
-   2. whether to check, constrain, unconstrain
-   3.
-*)
-
+(* These types signal the context for a declaration during statement translation.
+   They are only interpreted by trans_decl.*)
 type readaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
@@ -293,11 +288,6 @@ let rec base_dims = function
   | Ast.SArray (t, _) -> base_dims t
   | SInt | SReal -> []
 
-(* the constrain and unconstrain function names
-   need the base type (scalar, vector, ?) followed by maybe a lb or something
-   and then the name of th
-   typename = SMatrix -> "matrix" vector rowvector real int
-*)
 let mkread id var dread dconstrain sizedtype transform sloc =
   let read_base var =
     { var with
@@ -382,8 +372,8 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
             ; texpr_type= UReal }
         in
         SList (truncate_dist arg truncation @ [{sloc; stmt= add_dist}])
-    | Ast.Print ps -> NRFunApp ("print", trans_printables sloc ps)
-    | Ast.Reject ps -> NRFunApp ("reject", trans_printables sloc ps)
+    | Ast.Print ps -> NRFunApp (fnPrint, trans_printables sloc ps)
+    | Ast.Reject ps -> NRFunApp (fnReject, trans_printables sloc ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
         IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
     | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
@@ -552,7 +542,7 @@ let%expect_test "Prefix-Op-Example" =
     {|
       (((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt)))
        (IfElse (FunApp Less__ ((Var i) (FunApp PMinus__ ((Lit Int 1)))))
-        (NRFunApp print ((Lit Str Badger))) ())) |}]
+        (NRFunApp Print__ ((Lit Str Badger))) ())) |}]
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
