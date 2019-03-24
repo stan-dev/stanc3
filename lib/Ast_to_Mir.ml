@@ -1,6 +1,13 @@
 open Core_kernel
 open Mir
 
+(* TODO: make this complete by unifying with ReadParam et al*)
+type internal_functions = Length | MakeArray | MakeRowVec | NegativeInfinity
+[@@deriving sexp]
+
+let fun_name x = x |> sexp_of_internal_functions |> Sexp.to_string
+let internal_fn ifn args = FunApp (fun_name ifn, args)
+
 (* XXX fix exn *)
 let unwrap_return_exn = function
   | Some (Ast.ReturnType ut) -> ut
@@ -33,8 +40,8 @@ and trans_expr
         | FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
             FunApp (name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
-        | ArrayExpr eles -> FunApp ("make_array", trans_exprs eles)
-        | RowVectorExpr eles -> FunApp ("make_rowvec", trans_exprs eles)
+        | ArrayExpr eles -> internal_fn MakeArray (trans_exprs eles)
+        | RowVectorExpr eles -> internal_fn MakeRowVec (trans_exprs eles)
         | Indexed (lhs, indices) ->
             Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
@@ -63,7 +70,7 @@ let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf =
   { texpr_type= UReal
   ; texpr_loc= no_span
-  ; texpr= FunApp ("negative_infinity", [])
+  ; texpr= internal_fn NegativeInfinity []
   ; texpr_adlevel= Ast.DataOnly }
 
 let lbind s =
@@ -146,7 +153,7 @@ let mkfor ut bodyfn iteratee sloc =
     For
       { loopvar
       ; lower= {internal_expr with texpr= Lit (Int, "0")}
-      ; upper= {internal_expr with texpr= FunApp ("length", [iteratee])}
+      ; upper= {internal_expr with texpr= internal_fn Length [iteratee]}
       ; body=
           {stmt= Block [bodyfn (add_int_index iteratee (idx loopvar))]; sloc}
       }
@@ -265,7 +272,7 @@ let gen_constraint dconstrain t arg =
       | "" -> arg
       | _ ->
           let args =
-            mkstring constraint_str
+            arg :: mkstring constraint_str
             :: mkstring (unsizedtype_to_string arg.texpr_type)
             :: trans_exprs
                  ( match t with
@@ -408,7 +415,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
         For
           { loopvar= newsym
           ; lower= wrap @@ Lit (Int, "0")
-          ; upper= wrap @@ FunApp ("length", [iteratee])
+          ; upper= wrap @@ internal_fn Length [iteratee]
           ; body= add_to_or_create_block assign_loopvar body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef
@@ -567,22 +574,30 @@ let%expect_test "read data" =
     {|
     (((Decl (decl_adtype DataOnly) (decl_id mat) (decl_type (UArray UMatrix)))
       (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp length ((Var mat))))
+       (upper (FunApp Length ((Var mat))))
        (body
         (Block
          ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
            (FunApp ReadData ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
 
 let%expect_test "read param" =
-  let m = mir_from_string "parameters { matrix[10, 20] mat[5]; }" in
+  let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
   print_s [%sexp (m.prepare_params : stmt_loc)] ;
   [%expect
     {|
     (((Decl (decl_adtype AutoDiffable) (decl_id mat)
        (decl_type (UArray UMatrix)))
       (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp length ((Var mat))))
+       (upper (FunApp Length ((Var mat))))
        (body
         (Block
          ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-           (FunApp ReadParam ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
+           (FunApp Constrain
+            ((FunApp ReadParam ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
+             (Lit Str lb) (Lit Str matrix) (Lit Int 0)))))))))) |}]
+
+(* problems:
+   1. need sizes on declarations now
+   2. check on constraint
+   2. moms gotta eat too
+*)
