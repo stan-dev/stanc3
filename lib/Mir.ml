@@ -135,12 +135,12 @@ let internal_expr =
 let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
 (* Internal function names *)
-let fnLength = "Length"
-let fnMakeArray = "MakeArray"
-let fnMakeRowVec = "MakeRowVec"
-let fnNegativeInfinity = "NegativeInfinity"
-let fnReadData = "ReadData"
-let fnReadParam = "ReadParam"
-let fnConstrain = "Constrain"
-let fnUnconstrain = "Unconstrain"
-let fnCheck = "Check"
+let fnLength = "Length__"
+let fnMakeArray = "MakeArray__"
+let fnMakeRowVec = "MakeRowVec__"
+let fnNegativeInfinity = "NegativeInfinity__"
+let fnReadData = "ReadData__"
+let fnReadParam = "ReadParam__"
+let fnConstrain = "Constrain__"
+let fnUnconstrain = "Unconstrain__"
+let fnCheck = "Check__"

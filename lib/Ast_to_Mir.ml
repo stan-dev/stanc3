@@ -181,6 +181,11 @@ let rec for_eigen ut bodyfn var sloc =
 type readaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
+let constrainaction_fname = function
+  | Check -> fnCheck
+  | Constrain -> fnConstrain
+  | Unconstrain -> fnUnconstrain
+
 let internal_read_fn dread args =
   match dread with
   | ReadData -> FunApp (fnReadData, args)
@@ -270,7 +275,7 @@ let gen_constraint dconstrain t arg =
   | None | Some "" -> arg
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
-      let fname = sexp_of_constrainaction dc |> Sexp.to_string in
+      let fname = constrainaction_fname dc in
       let args =
         arg :: mkstring constraint_str
         :: mkstring (unsizedtype_to_string arg.texpr_type)
@@ -557,11 +562,11 @@ let%expect_test "read data" =
     (((Decl (decl_adtype DataOnly) (decl_id mat)
        (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
       (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp Length ((Var mat))))
+       (upper (FunApp Length__ ((Var mat))))
        (body
         (Block
          ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-           (FunApp ReadData ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
+           (FunApp ReadData__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -571,12 +576,12 @@ let%expect_test "read param" =
     (((Decl (decl_adtype AutoDiffable) (decl_id mat)
        (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
       (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp Length ((Var mat))))
+       (upper (FunApp Length__ ((Var mat))))
        (body
         (Block
          ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-           (FunApp Constrain
-            ((FunApp ReadParam ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
+           (FunApp Constrain__
+            ((FunApp ReadParam__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
              (Lit Str lb) (Lit Str matrix) (Lit Int 0)))))))))) |}]
 
 let%expect_test "gen quant" =
@@ -589,14 +594,15 @@ let%expect_test "gen quant" =
     (((Decl (decl_adtype DataOnly) (decl_id mat)
        (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
       (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp Length ((Var mat))))
+       (upper (FunApp Length__ ((Var mat))))
        (body
         (Block
          ((For (loopvar sym2__) (lower (Lit Int 0))
-           (upper (FunApp Length ((Indexed (Var mat) ((Single (Var sym1__)))))))
+           (upper
+            (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
            (body
             (Block
-             ((NRFunApp Check
+             ((NRFunApp Check__
                ((Lit Str less_or_equal)
                 (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
                 (Lit Int 0))))))))))))) |}]
