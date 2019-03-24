@@ -95,15 +95,19 @@ let unquote s =
     String.drop_suffix (String.drop_prefix s 1) 1
   else s
 
+(* hack(sean): strings aren't real
+   XXX add UString to MIR and maybe AST.
+*)
+let mkstring texpr_loc s =
+  { texpr= Lit (Str, s)
+  ; texpr_type= Ast.UReal
+  ; texpr_loc
+  ; texpr_adlevel= DataOnly }
+
 let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
-      | Ast.PString s ->
-          { texpr_adlevel= Ast.DataOnly
-          ; texpr= Lit (Str, unquote s)
-          ; texpr_loc
-          ; texpr_type= UReal }
-          (*XXX hack strings aren't real*)
+      | Ast.PString s -> mkstring texpr_loc (unquote s)
       | Ast.PExpr e -> trans_expr e)
     ps
 
@@ -228,13 +232,6 @@ let constraint_to_string t (c : constrainaction) =
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
   | Identity -> ""
-
-(* hack(sean): strings aren't real *)
-let mkstring texpr_loc s =
-  { texpr= Lit (Str, s)
-  ; texpr_type= Ast.UReal
-  ; texpr_loc
-  ; texpr_adlevel= DataOnly }
 
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
