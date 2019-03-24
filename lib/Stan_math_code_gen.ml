@@ -153,15 +153,6 @@ let%expect_test "with idx" =
   print_s [%sexp (with_idx (List.range 10 15) : (int * int) list)] ;
   [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
-(*
-std::vector<
-  std::vector<
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>>>
- matparam(K,
-   std::vector<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>>((K + 1), Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>(N, N)));
-
-*)
-
 let pp_decl ppf (vident, ut, adtype) =
   pf ppf "%a %s;" (pp_unsizedtype adtype) ut vident
 
