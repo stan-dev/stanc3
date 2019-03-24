@@ -72,7 +72,6 @@ let lbind s =
 let add_to_or_create_block source target =
   {target with stmt= Block ({target with stmt= source} :: lbind target)}
 
-let trans_trans = Ast.map_transformation trans_expr
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
@@ -229,7 +228,7 @@ let constraint_to_string (c : constrainaction) = function
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
     forl decl_type
-      (fun id -> {stmt= Check (fn, id :: args); sloc})
+      (fun id -> {stmt= Check (fn, id :: trans_exprs args); sloc})
       { texpr= Var decl_id
       ; texpr_type= decl_type
       ; texpr_loc= sloc
@@ -256,7 +255,7 @@ let mkstring texpr_loc s =
   ; texpr_adlevel= DataOnly }
 
 (* use nested funapp for each call to read_data with just the name and size? *)
-let gen_constraint dconstrain (t : 'e transformation) arg =
+let gen_constraint dconstrain t arg =
   let mkstring = mkstring arg.texpr_loc in
   match dconstrain with
   | None -> arg
@@ -268,13 +267,14 @@ let gen_constraint dconstrain (t : 'e transformation) arg =
           let args =
             mkstring constraint_str
             :: mkstring (unsizedtype_to_string arg.texpr_type)
-            ::
-            ( match t with
-            | Lower a | Upper a | Offset a | Multiplier a -> [a]
-            | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
-            | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-             |CholeskyCov | Correlation | Covariance | Identity ->
-                [] )
+            :: trans_exprs
+                 ( match t with
+                 | Lower a | Upper a | Offset a | Multiplier a -> [a]
+                 | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
+                 | Ordered | PositiveOrdered | Simplex | UnitVector
+                  |CholeskyCorr | CholeskyCov | Correlation | Covariance
+                  |Identity ->
+                     [] )
           in
           { arg with
             texpr=
@@ -422,9 +422,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
     | Ast.VarDecl
         {sizedtype; transformation; identifier; initial_value; is_global} ->
         ignore is_global ;
-        trans_decl declc sloc sizedtype
-          (trans_trans transformation)
-          identifier initial_value
+        trans_decl declc sloc sizedtype transformation identifier initial_value
     | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
     | Ast.Return e -> Return (Some (trans_expr e))
     | Ast.ReturnVoid -> Return None
@@ -574,3 +572,17 @@ let%expect_test "read data" =
         (Block
          ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
            (FunApp ReadData ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
+
+let%expect_test "read param" =
+  let m = mir_from_string "parameters { matrix[10, 20] mat[5]; }" in
+  print_s [%sexp (m.prepare_params : stmt_loc)] ;
+  [%expect
+    {|
+    (((Decl (decl_adtype AutoDiffable) (decl_id mat)
+       (decl_type (UArray UMatrix)))
+      (For (loopvar sym1__) (lower (Lit Int 0))
+       (upper (FunApp length ((Var mat))))
+       (body
+        (Block
+         ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+           (FunApp ReadParam ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
