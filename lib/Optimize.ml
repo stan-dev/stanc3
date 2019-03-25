@@ -646,13 +646,20 @@ let lazy_code_motion (mir : typed_prog) =
         Map.filter_keys subexpression_map ~f:(fun key ->
             Set.mem to_replace_in_s key )
       in
-      (* TODO: make sure that replacement already happens in assignments *)
+      let expr_subst_stmt_except_initial_assign m s =
+        match s.stmt with
+        | Assignment (e, e')
+          when Mir.compare_expr_typed_located e (Map.Poly.find_exn m e') = 0 ->
+            s
+        | _ -> expr_subst_stmt m s
+      in
       SList
-        ( assignments_to_add_to_s
-        @ [ expr_subst_stmt
-              (Map.mapi replacement_map_for_s ~f:(fun ~key ~data ->
-                   {key with texpr= Var data} ))
-              {stmt; sloc= Mir.no_span} ] )
+        (List.map
+           ~f:
+             (expr_subst_stmt_except_initial_assign
+                (Map.mapi replacement_map_for_s ~f:(fun ~key ~data ->
+                     {key with texpr= Var data} )))
+           (assignments_to_add_to_s @ [{stmt; sloc= Mir.no_span}]))
     in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
