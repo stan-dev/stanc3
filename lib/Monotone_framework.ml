@@ -851,7 +851,7 @@ let live_variables_mfp (prog : Mir.typed_prog)
 (** Instantiate all four instances of the monotone framework for lazy
     code motion, reusing code between them *)
 let lazy_expressions_mfp
-    (mir : (Mir.expr_typed_located, Mir.stmt_loc_num) Mir.prog)
+    (mir : (Mir.expr_typed_located, Mir.stmt_loc) Mir.prog)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
@@ -860,9 +860,7 @@ let lazy_expressions_mfp
   let all_expressions =
     Set.Poly.union_list
       (List.map
-         ~f:(fun x ->
-           used_expressions_stmt
-             (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir x).stmt )
+         ~f:(fun x -> used_expressions_stmt x.stmt)
          (List.concat
             [ mir.functions_block; mir.generate_quantities; mir.prepare_params
             ; mir.log_prob; mir.prepare_data ]))
@@ -931,10 +929,4 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let used_expressions_mfp = Mf4.mfp () in
-  ( used_expr
-  , anticipated_expressions_mfp
-  , available_expressions_mfp
-  , earliest_expr
-  , postponable_expressions_mfp
-  , latest_expr
-  , used_expressions_mfp )
+  (used_expr, latest_expr, used_expressions_mfp)

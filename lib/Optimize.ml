@@ -573,14 +573,37 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let (module Rev_Flowgraph) = rev_flowgraph in
-    let (module Fwd_Flowgraph) = fwd_flowgraph in
+    let used_expr, latest_expr, used_expressions_mfp =
+      Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
+        flowgraph_to_mir
+    in
+    let subexpression_map =
+      Set.Poly.fold (Monotone_framework.used_expressions_stmt s.stmt)
+        ~init:Map.Poly.empty ~f:(fun accum e ->
+          Map.Poly.set accum ~key:e ~data:(Util.gensym ()) )
+    in
+    let declarations_list =
+      Map.Poly.fold subexpression_map ~init:[] ~f:(fun ~key ~data accum ->
+          { stmt=
+              Mir.Decl
+                { decl_adtype= key.texpr_adlevel
+                ; decl_id= data
+                ; decl_type= key.texpr_type }
+          ; sloc= Mir.no_span }
+          :: accum )
+    in
     let lazy_code_motion_base _ stmt = stmt in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
     in
-    lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)
+    { stmt=
+        SList
+          ( declarations_list
+          @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
+    ; sloc= Mir.no_span }
   in
+  (* TODO: we actually would prefer to run this pass on individual program blocks
+     rather than on the program as a whole *)
   transform_program mir (fun x -> transform (preprocess_flowgraph x))
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
