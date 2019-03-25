@@ -33,8 +33,8 @@ and trans_expr
         | FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
             FunApp (name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
-        | ArrayExpr eles -> FunApp (fnMakeArray, trans_exprs eles)
-        | RowVectorExpr eles -> FunApp (fnMakeRowVec, trans_exprs eles)
+        | ArrayExpr eles -> FunApp (fn_make_array, trans_exprs eles)
+        | RowVectorExpr eles -> FunApp (fn_make_rowvec, trans_exprs eles)
         | Indexed (lhs, indices) ->
             Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
@@ -63,7 +63,7 @@ let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf =
   { texpr_type= UReal
   ; texpr_loc= no_span
-  ; texpr= FunApp (fnNegativeInfinity, [])
+  ; texpr= FunApp (fn_negative_infinity, [])
   ; texpr_adlevel= Ast.DataOnly }
 
 let lbind s =
@@ -148,7 +148,7 @@ let mkfor ut bodyfn iteratee sloc =
     For
       { loopvar
       ; lower= {internal_expr with texpr= Lit (Int, "0")}
-      ; upper= {internal_expr with texpr= FunApp (fnLength, [iteratee])}
+      ; upper= {internal_expr with texpr= FunApp (fn_length, [iteratee])}
       ; body=
           {stmt= Block [bodyfn (add_int_index iteratee (idx loopvar))]; sloc}
       }
@@ -181,14 +181,14 @@ type readaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let constrainaction_fname = function
-  | Check -> fnCheck
-  | Constrain -> fnConstrain
-  | Unconstrain -> fnUnconstrain
+  | Check -> fn_check
+  | Constrain -> fn_constrain
+  | Unconstrain -> fn_unconstrain
 
 let internal_read_fn dread args =
   match dread with
-  | ReadData -> FunApp (fnReadData, args)
-  | ReadParam -> FunApp (fnReadParam, args)
+  | ReadData -> FunApp (fn_read_data, args)
+  | ReadParam -> FunApp (fn_read_param, args)
 
 type decl_context =
   { dread: readaction option
@@ -237,7 +237,8 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
     let texpr_type = Ast.remove_size decl_type in
     forl texpr_type
-      (fun id -> {stmt= NRFunApp (fnCheck, fn :: id :: trans_exprs args); sloc})
+      (fun id ->
+        {stmt= NRFunApp (fn_check, fn :: id :: trans_exprs args); sloc} )
       {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
       sloc
   in
@@ -369,8 +370,8 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
             ; texpr_type= UReal }
         in
         SList (truncate_dist arg truncation @ [{sloc; stmt= add_dist}])
-    | Ast.Print ps -> NRFunApp (fnPrint, trans_printables sloc ps)
-    | Ast.Reject ps -> NRFunApp (fnReject, trans_printables sloc ps)
+    | Ast.Print ps -> NRFunApp (fn_print, trans_printables sloc ps)
+    | Ast.Reject ps -> NRFunApp (fn_reject, trans_printables sloc ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
         IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
     | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
@@ -397,7 +398,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
           (* XXX Do loops in MIR actually start at 1? *)
           { loopvar= newsym
           ; lower= wrap @@ Lit (Int, "0")
-          ; upper= wrap @@ FunApp (fnLength, [iteratee])
+          ; upper= wrap @@ FunApp (fn_length, [iteratee])
           ; body= add_to_or_create_block assign_loopvar body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef

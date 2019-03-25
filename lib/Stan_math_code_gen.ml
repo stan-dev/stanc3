@@ -222,7 +222,7 @@ let rec pp_statement ppf {stmt; sloc} =
       pf ppf "@[<hov 4>%a =@;%a;@]" pp_expr assignee pp_expr rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
   | NRFunApp (fname, {texpr= Lit (Str, check_name); _} :: args)
-    when fname = fnCheck ->
+    when fname = fn_check ->
       let args = {internal_expr with texpr= Var "function__"} :: args in
       pp_statement ppf {stmt= NRFunApp (check_name, args); sloc}
   | NRFunApp (fname, args) ->
@@ -457,8 +457,6 @@ let pp_log_prob ppf p =
   text "T__ lp__(0.0);" ;
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
-  pf ppf "//TODO: Unpack parameters with reader and constrain@," ;
-  (* XXX Eventually we can create a separate prepare_params method? *)
   pp_located_error ppf
     ( pp_statement
     , {stmt= Block p.prepare_params; sloc= no_span}
@@ -504,6 +502,7 @@ let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
 
+(* XXX arg templating is broken - needs T0, T1 etc in arg decl*)
 let%expect_test "udf" =
   let w e = {internal_expr with texpr= e} in
   FunDef
