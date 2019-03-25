@@ -1,5 +1,3 @@
-(** Translate from the AST to the MIR *)
-
 open Core_kernel
 open Mir
 
@@ -35,8 +33,8 @@ and trans_expr
         | FunApp ({name; _}, args) | Ast.CondDistApp ({name; _}, args) ->
             FunApp (name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
-        | ArrayExpr eles -> FunApp ("make_array", trans_exprs eles)
-        | RowVectorExpr eles -> FunApp ("make_rowvec", trans_exprs eles)
+        | ArrayExpr eles -> FunApp (fn_make_array, trans_exprs eles)
+        | RowVectorExpr eles -> FunApp (fn_make_rowvec, trans_exprs eles)
         | Indexed (lhs, indices) ->
             Indexed (trans_expr lhs, List.map ~f:trans_idx indices)
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
@@ -65,7 +63,7 @@ let trans_sizedtype = Ast.map_sizedtype trans_expr
 let neg_inf =
   { texpr_type= UReal
   ; texpr_loc= no_span
-  ; texpr= FunApp ("negative_infinity", [])
+  ; texpr= FunApp (fn_negative_infinity, [])
   ; texpr_adlevel= Ast.DataOnly }
 
 let lbind s =
@@ -74,7 +72,6 @@ let lbind s =
 let add_to_or_create_block source target =
   {target with stmt= Block ({target with stmt= source} :: lbind target)}
 
-let trans_trans = Ast.map_transformation trans_expr
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
@@ -98,21 +95,249 @@ let unquote s =
     String.drop_suffix (String.drop_prefix s 1) 1
   else s
 
+(* hack(sean): strings aren't real
+   XXX add UString to MIR and maybe AST.
+*)
+let mkstring texpr_loc s =
+  { texpr= Lit (Str, s)
+  ; texpr_type= Ast.UReal
+  ; texpr_loc
+  ; texpr_adlevel= DataOnly }
+
 let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
-      | Ast.PString s ->
-          { texpr_adlevel= Ast.DataOnly
-          ; texpr= Lit (Str, unquote s)
-          ; texpr_loc
-          ; texpr_type= UReal }
-          (*XXX hack strings aren't real*)
+      | Ast.PString s -> mkstring texpr_loc (unquote s)
       | Ast.PExpr e -> trans_expr e)
     ps
 
-let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
+(** [add_index expression index] returns an expression that (additionally)
+    indexes into the input [expression] by [index].*)
+let add_int_index e i =
+  let texpr_type =
+    Semantic_check.inferred_unsizedtype_of_indexed e.texpr_loc e.texpr_type
+      [(i, UInt)]
+  in
+  let mir_i = trans_idx i in
+  let texpr =
+    match e.texpr with
+    | Var _ -> Indexed (e, [mir_i])
+    | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
+    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
+  in
+  {e with texpr; texpr_type}
+
+(** [mkfor] returns a MIR For statement that iterates over the given expression
+    [iteratee]. *)
+let mkfor bodyfn iteratee sloc =
+  let idx s =
+    let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
+    Ast.Single
+      { Ast.expr_typed_loc= sloc
+      ; expr_typed
+      ; expr_typed_ad_level= DataOnly
+      ; expr_typed_type= UInt }
+  in
+  let loopvar, reset = Util.gensym_enter () in
+  let lower = {internal_expr with texpr= Lit (Int, "0")} in
+  let upper = {internal_expr with texpr= FunApp (fn_length, [iteratee])} in
+  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
+  reset () ;
+  {stmt= For {loopvar; lower; upper; body= {stmt; sloc}}; sloc}
+
+(** [for_scalar unsizedtype...] generates a For statement that loops
+    over the scalars in the underlying [unsizedtype].
+
+    We can call [bodyfn] directly on scalars, make a direct For loop
+    around Eigen types, or for Arrays we call mkfor but inserting a
+    recursive call into the [bodyfn] that will operate on the nested
+    type. In this way we recursively create for loops that loop over
+    the outermost layers first.
+*)
+let rec for_scalar bodyfn var sloc =
+  match var.texpr_type with
+  | Ast.UInt | UReal -> bodyfn var
+  | UVector | URowVector | UMatrix -> mkfor bodyfn var sloc
+  | UArray _ -> mkfor (fun e -> for_scalar bodyfn e sloc) var sloc
+  | UFun _ | UMathLibraryFunction ->
+      raise_s [%message "Can't for over " (var : expr_typed_located)]
+
+(** [for_eigen unsizedtype...] generates a For statement that loops
+    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
+    overarrays and running bodyfn on any eign types found within.
+
+    We can call [bodyfn] directly on scalars and Eigen types;
+    for Arrays we call mkfor but insert a
+    recursive call into the [bodyfn] that will operate on the nested
+    type. In this way we recursively create for loops that loop over
+    the outermost layers first.
+*)
+let rec for_eigen bodyfn var sloc =
+  match var.texpr_type with
+  | Ast.UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
+  | UArray _ -> mkfor (fun e -> for_eigen bodyfn e sloc) var sloc
+  | UFun _ | UMathLibraryFunction ->
+      raise_s [%message "Can't for over " (var : expr_typed_located)]
+
+(* These types signal the context for a declaration during statement translation.
+   They are only interpreted by trans_decl.*)
+type readaction = ReadData | ReadParam [@@deriving sexp]
+type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+
+let constrainaction_fname = function
+  | Check -> fn_check
+  | Constrain -> fn_constrain
+  | Unconstrain -> fn_unconstrain
+
+let internal_read_fn dread args =
+  match dread with
+  | ReadData -> FunApp (fn_read_data, args)
+  | ReadParam -> FunApp (fn_read_param, args)
+
+type decl_context =
+  { dread: readaction option
+  ; dconstrain: constrainaction option
+  ; dadlevel: autodifftype }
+
+let rec unsizedtype_to_string = function
+  | Ast.UMatrix -> "matrix"
+  | UVector -> "vector"
+  | URowVector -> "row_vector"
+  | UReal -> "real"
+  | UInt -> "int"
+  | UArray t -> unsizedtype_to_string t
+  | t ->
+      raise_s
+        [%message "Another place where it's weird to get " (t : unsizedtype)]
+
+(* Well, when you put it like this it does seem a little crazy *)
+let constraint_to_string t (c : constrainaction) =
+  match t with
+  | Ast.Ordered -> "ordered"
+  | PositiveOrdered -> "positive_ordered"
+  | Simplex -> "simplex"
+  | UnitVector -> "unit_vector"
+  | CholeskyCorr -> "cholesky_factor_corr"
+  | CholeskyCov -> "cholesky_factor"
+  | Correlation -> "corr_matrix"
+  | Covariance -> "cov_matrix"
+  | Lower _ -> (
+    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "lb" )
+  | Upper _ -> (
+    match c with
+    | Check -> "greater_or_equal"
+    | Constrain | Unconstrain -> "ub" )
+  | LowerUpper _ -> (
+    match c with
+    | Check ->
+        raise_s
+          [%message "LowerUpper is really two other checks tied together"]
+    | Constrain | Unconstrain -> "lub" )
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
+    match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
+  | Identity -> ""
+
+let rec gen_check decl_type decl_id decl_trans sloc adlevel =
+  let chk forl fn args =
+    let texpr_type = Ast.remove_size decl_type in
+    forl
+      (fun id ->
+        {stmt= NRFunApp (fn_check, fn :: id :: trans_exprs args); sloc} )
+      {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
+      sloc
+  in
+  let constraint_str = mkstring sloc (constraint_to_string decl_trans Check) in
+  match decl_trans with
+  | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) ->
+      []
+  | Lower b | Upper b -> [chk for_scalar constraint_str [b]]
+  | LowerUpper (lb, ub) ->
+      gen_check decl_type decl_id (Ast.Lower lb) sloc adlevel
+      @ gen_check decl_type decl_id (Ast.Upper ub) sloc adlevel
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance ->
+      [chk for_eigen constraint_str []]
+
+let extract_constraint_args = function
+  | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance | Identity ->
+      []
+
+(* use nested funapp for each call to read_data with just the name and size? *)
+let gen_constraint dconstrain t arg =
+  let mkstring = mkstring arg.texpr_loc in
+  match Option.map ~f:(constraint_to_string t) dconstrain with
+  | None | Some "" -> arg
+  | Some constraint_str ->
+      let dc = Option.value_exn dconstrain in
+      let fname = constrainaction_fname dc in
+      let args =
+        arg :: mkstring constraint_str
+        :: mkstring (unsizedtype_to_string arg.texpr_type)
+        :: trans_exprs (extract_constraint_args t)
+      in
+      {arg with texpr= FunApp (fname, args)}
+
+let rec base_type = function
+  | Ast.SArray (t, _) -> base_type t
+  | x -> Ast.remove_size x
+
+let rec base_dims = function
+  | Ast.SVector d | SRowVector d -> [d]
+  | Ast.SMatrix (d1, d2) -> [d1; d2]
+  | Ast.SArray (t, _) -> base_dims t
+  | SInt | SReal -> []
+
+let mkread id var dread dconstrain sizedtype transform sloc =
+  let read_base var =
+    { var with
+      texpr=
+        internal_read_fn dread
+        @@ (mkstring var.texpr_loc id :: base_dims sizedtype)
+    ; texpr_type= base_type sizedtype }
+  in
+  let constrain var = gen_constraint dconstrain transform (read_base var) in
+  let read_assign var = {stmt= Assignment (var, constrain var); sloc} in
+  for_eigen read_assign var sloc
+
+let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
+    identifier initial_value =
+  let with_sloc stmt = {stmt; sloc} in
+  let decl_id = identifier.Ast.name in
+  let rhs = Option.map ~f:trans_expr initial_value in
+  let assign rhs =
+    [{stmt= Assignment ({rhs with texpr= Var decl_id}, rhs); sloc}]
+  in
+  let decl_type = trans_sizedtype sizedtype in
+  let decl_var =
+    { texpr= Var decl_id
+    ; texpr_type= Ast.remove_size sizedtype
+    ; texpr_adlevel= dadlevel
+    ; texpr_loc= sloc }
+  in
+  let read_stmts =
+    match dread with
+    | Some a -> [mkread decl_id decl_var a dconstrain decl_type transform sloc]
+    | None -> Option.value_map ~default:[] ~f:assign rhs
+  in
+  let decl_adtype =
+    match rhs with
+    | Some {texpr_adlevel; _} -> texpr_adlevel
+    | None -> dadlevel
+  in
+  let decl = Decl {decl_adtype; decl_id; decl_type} |> with_sloc in
+  let checks =
+    match dconstrain with
+    | Some Check -> gen_check decl_type decl_id transform sloc dadlevel
+    | _ -> []
+  in
+  SList ((decl :: read_stmts) @ checks)
+
+let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
+  let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
   let texpr_loc = sloc in
-  let or_skip = Option.value ~default:Skip in
   let stmt =
     match stmt_typed with
     | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
@@ -149,8 +374,8 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
             ; texpr_type= UReal }
         in
         SList (truncate_dist arg truncation @ [{sloc; stmt= add_dist}])
-    | Ast.Print ps -> NRFunApp ("print", trans_printables sloc ps)
-    | Ast.Reject ps -> NRFunApp ("reject", trans_printables sloc ps)
+    | Ast.Print ps -> NRFunApp (fn_print, trans_printables sloc ps)
+    | Ast.Reject ps -> NRFunApp (fn_reject, trans_printables sloc ps)
     | Ast.IfThenElse (cond, ifb, elseb) ->
         IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
     | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
@@ -174,9 +399,10 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
             , Indexed (iteratee, [Single indexing_var]) |> wrap )
         in
         For
+          (* XXX Do loops in MIR actually start at 1? *)
           { loopvar= newsym
           ; lower= wrap @@ Lit (Int, "0")
-          ; upper= wrap @@ FunApp ("length", [iteratee])
+          ; upper= wrap @@ FunApp (fn_length, [iteratee])
           ; body= add_to_or_create_block assign_loopvar body }
     | Ast.FunDef {returntype; funname; arguments; body} ->
         FunDef
@@ -189,24 +415,8 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
           ; fdbody= trans_stmt body }
     | Ast.VarDecl
         {sizedtype; transformation; identifier; initial_value; is_global} ->
-        (* Should have already taken care of global and transformation-related stuff
-          in other passes over this AST.*)
-        ignore (transformation, is_global) ;
-        let name = identifier.name in
-        let assign rhs =
-          let rhs = trans_expr rhs in
-          Assignment ({rhs with texpr= Var name}, rhs)
-        in
-        SList
-          (List.map
-             ~f:(fun stmt -> {sloc; stmt})
-             [ Decl
-                 { decl_adtype=
-                     AutoDiffable
-                     (* XXX Shouldn't be autodiffable in tdata or gen quant *)
-                 ; decl_id= name
-                 ; decl_type= Ast.remove_size (trans_sizedtype sizedtype) }
-             ; Option.map ~f:assign initial_value |> or_skip ])
+        ignore is_global ;
+        trans_decl declc sloc sizedtype transformation identifier initial_value
     | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
     | Ast.Return e -> Return (Some (trans_expr e))
     | Ast.ReturnVoid -> Return None
@@ -216,158 +426,6 @@ let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
   in
   {sloc; stmt}
 
-(** [add_index expression index] returns an expression that (additionally)
-    indexes into the input [expression] by [index].*)
-let add_int_index e i =
-  let mir_i = trans_idx i in
-  let texpr =
-    match e.texpr with
-    | Var _ -> Indexed (e, [mir_i])
-    | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
-    | _ -> raise_s [%message "These should go away with Ryan's LHS"]
-  in
-  let texpr_type =
-    Semantic_check.inferred_unsizedtype_of_indexed e.texpr_loc e.texpr_type
-      [(i, UInt)]
-  in
-  {e with texpr; texpr_type}
-
-(** [mkfor] returns a MIR For statement that iterates over the given expression
-    [iteratee]. *)
-let mkfor ut bodyfn iteratee sloc =
-  let idx s =
-    match ut with
-    (*  | Ast.UMatrix -> MatrixSingle (Var s)
-*)
-    | Ast.UVector | URowVector | UMatrix | UArray _ ->
-        let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
-        Ast.Single
-          { Ast.expr_typed_loc= sloc
-          ; expr_typed
-          ; expr_typed_ad_level= DataOnly
-          ; expr_typed_type= UInt }
-    | _ ->
-        raise_s
-          [%message "Why are we making for loops around" (ut : unsizedtype)]
-  in
-  let loopvar, reset = Util.gensym_enter () in
-  let stmt =
-    For
-      { loopvar
-      ; lower= {internal_expr with texpr= Lit (Int, "0")}
-      ; upper= {internal_expr with texpr= FunApp ("length", [iteratee])}
-      ; body=
-          {stmt= Block [bodyfn (add_int_index iteratee (idx loopvar))]; sloc}
-      }
-  in
-  reset () ; {stmt; sloc}
-
-(** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype] *)
-let rec for_scalar (ut : unsizedtype) bodyfn var sloc =
-  match ut with
-  | Ast.UInt | UReal -> bodyfn var
-  | UVector | URowVector | UMatrix -> mkfor ut bodyfn var sloc
-  | UArray t -> mkfor ut (fun e -> for_scalar t bodyfn e sloc) var sloc
-  | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Can't for over " (ut : unsizedtype)]
-
-(** [for_eigen unsizedtype...] generates a For statement that loops
-    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
-    overarrays and running bodyfn on any eign types found within.*)
-let rec for_eigen ut bodyfn var sloc =
-  match ut with
-  | Ast.UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
-  | UArray t -> mkfor ut (fun e -> for_eigen t bodyfn e sloc) var sloc
-  | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Can't for over " (ut : unsizedtype)]
-
-let rec trans_checks tvd =
-  let chk forl fn args =
-    forl
-      (Ast.remove_size tvd.tvtype)
-      (fun id -> {stmt= Check (fn, id :: args); sloc= tvd.tvloc})
-      { texpr= Var tvd.tvident
-      ; texpr_type= Ast.remove_size tvd.tvtype
-      ; texpr_loc= tvd.tvloc
-      ; texpr_adlevel= DataOnly }
-      tvd.tvloc
-  in
-  match tvd.tvtrans with
-  | Ast.Identity -> []
-  | Ast.Lower lb -> [chk for_scalar "greater_or_equal" [lb]]
-  | Ast.Upper ub -> [chk for_scalar "less_or_equal" [ub]]
-  | Ast.LowerUpper (lb, ub) ->
-      trans_checks {tvd with tvtrans= Ast.Lower lb}
-      @ trans_checks {tvd with tvtrans= Ast.Upper ub}
-  | Ast.Ordered -> [chk for_eigen "ordered" []]
-  | Ast.PositiveOrdered -> [chk for_eigen "positive_ordered" []]
-  | Ast.Simplex -> [chk for_eigen "simplex" []]
-  | Ast.UnitVector -> [chk for_eigen "unit_vector" []]
-  | Ast.CholeskyCorr -> [chk for_eigen "cholesky_factor_corr" []]
-  | Ast.CholeskyCov -> [chk for_eigen "cholesky_factor" []]
-  | Ast.Correlation -> [chk for_eigen "corr_matrix" []]
-  | Ast.Covariance -> [chk for_eigen "cov_matrix" []]
-  | Ast.Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) -> []
-
-let trans_tvdecl {Ast.stmt_typed; stmt_typed_loc= tvloc; _} =
-  match stmt_typed with
-  | Ast.VarDecl
-      {sizedtype; transformation; identifier; initial_value; is_global} ->
-      ignore (initial_value, is_global) ;
-      Some
-        { tvident= identifier.name
-        ; tvtype= trans_sizedtype sizedtype
-        ; tvtrans= trans_trans transformation
-        ; tvloc }
-  | _ -> None
-
-let mktvtable lst =
-  (* Someday we may support "topvars" below the "top" level, but for now
-     we only deal with ones that are in a list at the top of the
-  *)
-  List.(filter_opt (map ~f:trans_tvdecl lst))
-  |> List.map ~f:(fun t -> (t.tvident, t))
-  |> Map.Poly.of_alist_exn
-
-(** Adds Mir statements that validate the variable once it has been read.
-    The code to read it in is emitted in the backend.contents
-    Here we intentionally only check declarations at the top level, i.e.
-    we only recurse into blocks and lists as we don't care about other declarations.
-*)
-let pull_tvdecls list_op =
-  let is_tvdecl = function
-    | {Ast.stmt_typed= VarDecl _; _} -> true
-    | _ -> false
-  in
-  match list_op with
-  | None -> (Map.Poly.empty, [])
-  | Some lst ->
-      let tvdecls, statements = List.partition_tf ~f:is_tvdecl lst in
-      (mktvtable tvdecls, List.map ~f:trans_stmt statements)
-
-(* We represent the data and parameter blocks as maps from a variable's identifier
-   to a tvdecl containing a little more information about it that we need to
-   generate data checks, read in data fields, or transform parameters.
-
-   vardecls mapping:
-   * data block -> private fields; checks in ctor
-   * tdata -> private fields; checks in ctor
-   * param -> log_prob fn params; transformations in write_array, transform_inits, log_prob
-   * tparam -> no initialization by default, checks that it has been initialized,
-               checked in log_prob, write_array,
-   * model -> no constraints allowed (not even corr_matrix et al); not visible
-   * gq -> declared and checked in write_array, shows up as param in some methods
-*)
-
-(* There are at least three places where we currently generate redundant code:
-   - checks and validation of data and bounds
-   - assignment of newly declared vars, which may immediately be filled
-   - setting the current line number
-
-   I think in general we'd like to try reifying these things in the MIR. The hope here
-   is that the optimization pass can easily and correctly determine dependencies
-   and purity for reordering, hoisting, and elimination.*)
 let trans_prog filename
     { Ast.functionblock
     ; datablock
@@ -375,87 +433,168 @@ let trans_prog filename
     ; parametersblock
     ; transformedparametersblock
     ; modelblock
-    ; generatedquantitiesblock } =
-  let map f list_op = Option.to_list list_op |> List.concat |> List.map ~f in
-  let or_empty f list_op =
-    Option.(value ~default:Map.Poly.empty (map ~f list_op))
+    ; generatedquantitiesblock } : typed_prog =
+  (*
+     1. prepare_params: add read_param calls (same call should constrain?)
+          maybe read(constrained()), constrain(read()), or read("constraint", ...)
+     1. prepare_params: add tparams 's; add checks
+     2. transform_inits: add read_param calls (same call should unconstrain?)
+     3. prepare_data: add read_data calls and checks
+     4. prepare_data: add tdata 's and checks
+     5. add write() calls to generate_quantities for params, tparams...
+             shit these are conditional depending on the flag.
+             add the flag to the call to write?
+           apparently tdata aren't written anywhere
+
+     during code gen:
+     get_param_names: scan prepare_params for Decl at top level
+     constrained_param_names: needs to tell between tparams and gqs and not
+     unconstrained param names: same, but also some funky
+        adjustments for unconstrained space: ???
+*)
+  let map f list_op = Option.value ~default:[] list_op |> List.map ~f in
+  let grab_names_sizes paramblock block =
+    let get_name_size s =
+      match s.Ast.stmt_typed with
+      | Ast.VarDecl {sizedtype; identifier; _} ->
+          Some (identifier.name, (trans_sizedtype sizedtype, paramblock))
+      | _ -> None
+    in
+    List.map ~f:get_name_size (Option.value ~default:[] block)
   in
-  let map_tvds f tvtable = Map.Poly.data tvtable |> List.map ~f in
-  let data_vars = or_empty mktvtable datablock in
-  let params = or_empty mktvtable parametersblock in
-  let tdata_vars, tdata = pull_tvdecls transformeddatablock in
-  let tparams, prepare_params = pull_tvdecls transformedparametersblock in
+  let output_vars =
+    [ grab_names_sizes Parameters parametersblock
+    ; grab_names_sizes TransformedParameters transformedparametersblock
+    ; grab_names_sizes GeneratedQuantities generatedquantitiesblock ]
+    |> List.concat |> List.filter_opt
+  and input_vars = grab_names_sizes Data datablock |> List.filter_opt in
   let prepare_data =
-    List.(
-      concat
-        (concat
-           [ map_tvds trans_checks data_vars
-           ; [tdata]
-           ; map_tvds trans_checks tdata_vars ]))
+    map
+      (trans_stmt
+         {dread= Some ReadData; dconstrain= Some Check; dadlevel= DataOnly})
+      datablock
+    @ map
+        (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
+        transformeddatablock
   in
-  let gen_quant_vars, generate_quantities =
-    pull_tvdecls generatedquantitiesblock
+  let prepare_params =
+    map
+      (trans_stmt
+         { dread= Some ReadParam
+         ; dconstrain= Some Constrain
+         ; dadlevel= AutoDiffable })
+      parametersblock
+    @ map
+        (trans_stmt
+           {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
+        transformedparametersblock
   in
-  { functions_block= map trans_stmt functionblock
-  ; data_vars
-  ; tdata_vars
+  let generate_quantities =
+    map
+      (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
+      generatedquantitiesblock
+  in
+  let transform_inits =
+    map
+      (trans_stmt
+         { dread= Some ReadParam
+         ; dconstrain= Some Unconstrain
+         ; dadlevel= DataOnly })
+      parametersblock
+  in
+  { functions_block=
+      (* Should this be AutoDiffable for functions here?*)
+      map
+        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
+        functionblock
+  ; input_vars
   ; prepare_data
-  ; params
-  ; tparams
   ; prepare_params
-  ; log_prob= map trans_stmt modelblock
-  ; gen_quant_vars
+  ; log_prob=
+      map
+        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
+        modelblock
   ; generate_quantities
+  ; transform_inits
+  ; output_vars
   ; prog_name= !Semantic_check.model_name
   ; prog_path= filename }
 
+(*===================== tests =========================================*)
+
+let mir_from_string s =
+  Parse.parse_string Parser.Incremental.program s
+  |> Semantic_check.semantic_check_program |> trans_prog ""
+
 let%expect_test "Prefix-Op-Example" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_from_string
       {|
         model {
           int i;
-          if (i < -1) {
+          if (i < -1)
             print("Badger");
-          }
         }
       |}
   in
-  let mir = trans_prog "" (Semantic_check.semantic_check_program ast) in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  let op = mir.log_prob in
+  print_s [%sexp (op : Mir.stmt_loc list)] ;
+  (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
-       (params ()) (tparams ()) (prepare_params ())
-       (log_prob
-        (((sloc <opaque>)
-          (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
-          (stmt
-           (IfElse
-            ((texpr_type UInt) (texpr_loc <opaque>)
-             (texpr
-              (FunApp Less__
-               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>)
-                 (texpr
-                  (FunApp PMinus__
-                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                     (texpr_adlevel DataOnly)))))
-                 (texpr_adlevel DataOnly)))))
-             (texpr_adlevel DataOnly))
-            ((sloc <opaque>)
-             (stmt
-              (Block
-               (((sloc <opaque>)
-                 (stmt
-                  (NRFunApp print
-                   (((texpr_type UReal) (texpr_loc <opaque>)
-                     (texpr (Lit Str Badger)) (texpr_adlevel DataOnly))))))))))
-            ())))))
-       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+      (((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt)))
+       (IfElse (FunApp Less__ ((Var i) (FunApp PMinus__ ((Lit Int 1)))))
+        (NRFunApp Print__ ((Lit Str Badger))) ())) |}]
+
+let%expect_test "read data" =
+  let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
+  print_s [%sexp (m.prepare_data : stmt_loc list)] ;
+  [%expect
+    {|
+    (((Decl (decl_adtype DataOnly) (decl_id mat)
+       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (For (loopvar sym1__) (lower (Lit Int 0))
+       (upper (FunApp Length__ ((Var mat))))
+       (body
+        (Block
+         ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+           (FunApp ReadData__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
+
+let%expect_test "read param" =
+  let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
+  print_s [%sexp (m.prepare_params : stmt_loc list)] ;
+  [%expect
+    {|
+    (((Decl (decl_adtype AutoDiffable) (decl_id mat)
+       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (For (loopvar sym1__) (lower (Lit Int 0))
+       (upper (FunApp Length__ ((Var mat))))
+       (body
+        (Block
+         ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+           (FunApp Constrain__
+            ((FunApp ReadParam__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
+             (Lit Str lb) (Lit Str matrix) (Lit Int 0)))))))))) |}]
+
+let%expect_test "gen quant" =
+  let m =
+    mir_from_string "generated quantities { matrix<lower=0>[10, 20] mat[5]; }"
+  in
+  print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
+  [%expect
+    {|
+    (((Decl (decl_adtype DataOnly) (decl_id mat)
+       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (For (loopvar sym1__) (lower (Lit Int 0))
+       (upper (FunApp Length__ ((Var mat))))
+       (body
+        (Block
+         ((For (loopvar sym2__) (lower (Lit Int 0))
+           (upper
+            (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
+           (body
+            (Block
+             ((NRFunApp Check__
+               ((Lit Str less_or_equal)
+                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+                (Lit Int 0))))))))))))) |}]
