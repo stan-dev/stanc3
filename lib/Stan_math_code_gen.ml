@@ -206,10 +206,14 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
+let math_fn_translations =
+  Map.Poly.of_alist_exn
+    [(fn_print, ("stan_print", [{internal_expr with texpr= Var "pstream__"}]))]
+
 let trans_math_fn fname =
-  match fname with
-  | "print" -> ("stan_print", [{internal_expr with texpr= Var "pstream__"}])
-  | x -> (x, [])
+  match Map.Poly.find math_fn_translations fname with
+  | Some x -> x
+  | None -> (fname, [])
 
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
@@ -224,7 +228,7 @@ let rec pp_statement ppf {stmt; sloc} =
   | NRFunApp (fname, {texpr= Lit (Str, check_name); _} :: args)
     when fname = fn_check ->
       let args = {internal_expr with texpr= Var "function__"} :: args in
-      pp_statement ppf {stmt= NRFunApp (check_name, args); sloc}
+      pp_statement ppf {stmt= NRFunApp ("check_" ^ check_name, args); sloc}
   | NRFunApp (fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
@@ -285,7 +289,7 @@ let rec pp_statement ppf {stmt; sloc} =
 let%expect_test "location propagates" =
   let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
   let loc2 = {no_span with begin_loc= {no_loc with filename= "LO"}} in
-  {sloc= loc1; stmt= Block [{stmt= NRFunApp ("print", []); sloc= loc2}]}
+  {sloc= loc1; stmt= Block [{stmt= NRFunApp (fn_print, []); sloc= loc2}]}
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
