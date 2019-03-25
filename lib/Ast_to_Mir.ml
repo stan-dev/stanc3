@@ -129,9 +129,9 @@ let add_int_index e i =
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
-let mkfor ut bodyfn iteratee sloc =
+let mkfor bodyfn iteratee sloc =
   let idx s =
-    match ut with
+    match iteratee.texpr_type with
     | Ast.UVector | URowVector | UMatrix | UArray _ ->
         let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
         Ast.Single
@@ -141,7 +141,8 @@ let mkfor ut bodyfn iteratee sloc =
           ; expr_typed_type= UInt }
     | _ ->
         raise_s
-          [%message "Why are we making for loops around" (ut : unsizedtype)]
+          [%message
+            "Why are we making for loops around" (iteratee : expr_typed_located)]
   in
   let loopvar, reset = Util.gensym_enter () in
   let stmt =
@@ -157,23 +158,23 @@ let mkfor ut bodyfn iteratee sloc =
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype] *)
-let rec for_scalar (ut : unsizedtype) bodyfn var sloc =
-  match ut with
+let rec for_scalar bodyfn var sloc =
+  match var.texpr_type with
   | Ast.UInt | UReal -> bodyfn var
-  | UVector | URowVector | UMatrix -> mkfor ut bodyfn var sloc
-  | UArray t -> mkfor ut (fun e -> for_scalar t bodyfn e sloc) var sloc
+  | UVector | URowVector | UMatrix -> mkfor bodyfn var sloc
+  | UArray _ -> mkfor (fun e -> for_scalar bodyfn e sloc) var sloc
   | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Can't for over " (ut : unsizedtype)]
+      raise_s [%message "Can't for over " (var : expr_typed_located)]
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating
     overarrays and running bodyfn on any eign types found within.*)
-let rec for_eigen ut bodyfn var sloc =
-  match ut with
+let rec for_eigen bodyfn var sloc =
+  match var.texpr_type with
   | Ast.UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
-  | UArray t -> mkfor ut (fun e -> for_eigen t bodyfn e sloc) var sloc
+  | UArray _ -> mkfor (fun e -> for_eigen bodyfn e sloc) var sloc
   | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Can't for over " (ut : unsizedtype)]
+      raise_s [%message "Can't for over " (var : expr_typed_located)]
 
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
@@ -236,7 +237,7 @@ let constraint_to_string t (c : constrainaction) =
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
     let texpr_type = Ast.remove_size decl_type in
-    forl texpr_type
+    forl
       (fun id ->
         {stmt= NRFunApp (fn_check, fn :: id :: trans_exprs args); sloc} )
       {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
@@ -296,7 +297,7 @@ let mkread id var dread dconstrain sizedtype transform sloc =
   in
   let constrain var = gen_constraint dconstrain transform (read_base var) in
   let read_assign var = {stmt= Assignment (var, constrain var); sloc} in
-  for_eigen (Ast.remove_size sizedtype) read_assign var sloc
+  for_eigen read_assign var sloc
 
 let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     identifier initial_value =
