@@ -413,6 +413,36 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
       raise
         (Failure "Something went wrong with program transformation packing!")
 
+(**
+   Apply the transformation to each function body and to each program block separately.
+*)
+let transform_program_blockwise (mir : typed_prog)
+    (transform : stmt_loc -> stmt_loc) : typed_prog =
+  let transform' s =
+    match transform {stmt= SList s; sloc= Mir.no_span} with
+    | {stmt= SList l; _} -> l
+    | _ ->
+        raise
+          (Failure "Something went wrong with program transformation packing!")
+  in
+  let transformed_functions =
+    List.map mir.functions_block ~f:(fun fs ->
+        match fs.stmt with
+        | FunDef args ->
+            {fs with stmt= FunDef {args with fdbody= transform args.fdbody}}
+        | _ ->
+            raise
+              (Failure
+                 "There was a non-function definition in the function block.")
+    )
+  in
+  { mir with
+    functions_block= transformed_functions
+  ; prepare_data= transform' mir.prepare_data
+  ; prepare_params= transform' mir.prepare_params
+  ; log_prob= transform' mir.log_prob
+  ; generate_quantities= transform' mir.generate_quantities }
+
 let propagation
     (propagation_transfer :
          (int, Mir.stmt_loc_num) Map.Poly.t
@@ -633,9 +663,7 @@ let lazy_code_motion (mir : typed_prog) =
           @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
     ; sloc= Mir.no_span }
   in
-  (* TODO: we actually would prefer to run this pass on individual program blocks
-     rather than on the program as a whole *)
-  transform_program mir (fun x -> transform (preprocess_flowgraph x))
+  transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
