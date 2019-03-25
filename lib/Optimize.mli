@@ -33,3 +33,7 @@ val dead_code_elimination : Mir.typed_prog -> Mir.typed_prog
 val partial_evaluation : Mir.typed_prog -> Mir.typed_prog
 (** Partially evaluate expressions in the program. This includes simplification using
     algebraic identities of logical and arithmetic operators as well as Stan math functions. *)
+
+val lazy_code_motion : Mir.typed_prog -> Mir.typed_prog
+(** Perform partial redundancy elmination using the lazy code motion algorithm. This
+    subsumes common subexpression elimination and loop-invariant code motion. *)

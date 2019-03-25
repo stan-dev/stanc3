@@ -552,9 +552,25 @@ let dead_code_elimination (mir : typed_prog) =
 
 let partial_evaluation = Partial_evaluator.eval_prog
 
+let lazy_code_motion (mir : typed_prog) =
+  let preprocess_flowgraph s =
+    let rev_flowgraph, flowgraph_to_mir =
+      Monotone_framework.inverse_flowgraph_of_stmt s
+    in
+    let (module Rev_Flowgraph) = rev_flowgraph in
+    let preprocess_flowgraph_base i stmt =
+      let predecessors = Map.find_exn Rev_Flowgraph.successors i in
+      if Set.length predecessors <= 1 then stmt
+      else SList [{stmt; sloc= Mir.no_span}]
+    in
+    let precrocess_flowgraph_stmt =
+      map_rec_stmt_loc_num flowgraph_to_mir preprocess_flowgraph_base
+    in
+    precrocess_flowgraph_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
+  transform_program mir preprocess_flowgraph
+
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
-(* TODO: implement lazy code motion. Make sure to apply it separately to each program block, rather than to the program as a whole. *)
-(* TODO: or maybe combine the previous two *)
 
 (* TODO: add tests *)
 
