@@ -114,6 +114,10 @@ let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
 (** [add_index expression index] returns an expression that (additionally)
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
+  let texpr_type =
+    Semantic_check.inferred_unsizedtype_of_indexed e.texpr_loc e.texpr_type
+      [(i, UInt)]
+  in
   let mir_i = trans_idx i in
   let texpr =
     match e.texpr with
@@ -121,43 +125,35 @@ let add_int_index e i =
     | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
     | _ -> raise_s [%message "These should go away with Ryan's LHS"]
   in
-  let texpr_type =
-    Semantic_check.inferred_unsizedtype_of_indexed e.texpr_loc e.texpr_type
-      [(i, UInt)]
-  in
   {e with texpr; texpr_type}
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
 let mkfor bodyfn iteratee sloc =
   let idx s =
-    match iteratee.texpr_type with
-    | Ast.UVector | URowVector | UMatrix | UArray _ ->
-        let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
-        Ast.Single
-          { Ast.expr_typed_loc= sloc
-          ; expr_typed
-          ; expr_typed_ad_level= DataOnly
-          ; expr_typed_type= UInt }
-    | _ ->
-        raise_s
-          [%message
-            "Why are we making for loops around" (iteratee : expr_typed_located)]
+    let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
+    Ast.Single
+      { Ast.expr_typed_loc= sloc
+      ; expr_typed
+      ; expr_typed_ad_level= DataOnly
+      ; expr_typed_type= UInt }
   in
   let loopvar, reset = Util.gensym_enter () in
-  let stmt =
-    For
-      { loopvar
-      ; lower= {internal_expr with texpr= Lit (Int, "0")}
-      ; upper= {internal_expr with texpr= FunApp (fn_length, [iteratee])}
-      ; body=
-          {stmt= Block [bodyfn (add_int_index iteratee (idx loopvar))]; sloc}
-      }
-  in
-  reset () ; {stmt; sloc}
+  let lower = {internal_expr with texpr= Lit (Int, "0")} in
+  let upper = {internal_expr with texpr= FunApp (fn_length, [iteratee])} in
+  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
+  reset () ;
+  {stmt= For {loopvar; lower; upper; body= {stmt; sloc}}; sloc}
 
 (** [for_scalar unsizedtype...] generates a For statement that loops
-    over the scalars in the underlying [unsizedtype] *)
+    over the scalars in the underlying [unsizedtype].
+
+    We can call [bodyfn] directly on scalars, make a direct For loop
+    around Eigen types, or for Arrays we call mkfor but inserting a
+    recursive call into the [bodyfn] that will operate on the nested
+    type. In this way we recursively create for loops that loop over
+    the outermost layers first.
+*)
 let rec for_scalar bodyfn var sloc =
   match var.texpr_type with
   | Ast.UInt | UReal -> bodyfn var
@@ -168,7 +164,14 @@ let rec for_scalar bodyfn var sloc =
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating
-    overarrays and running bodyfn on any eign types found within.*)
+    overarrays and running bodyfn on any eign types found within.
+
+    We can call [bodyfn] directly on scalars and Eigen types;
+    for Arrays we call mkfor but insert a
+    recursive call into the [bodyfn] that will operate on the nested
+    type. In this way we recursively create for loops that loop over
+    the outermost layers first.
+*)
 let rec for_eigen bodyfn var sloc =
   match var.texpr_type with
   | Ast.UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
