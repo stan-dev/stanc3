@@ -592,7 +592,38 @@ let lazy_code_motion (mir : typed_prog) =
           ; sloc= Mir.no_span }
           :: accum )
     in
-    let lazy_code_motion_base _ stmt = stmt in
+    let lazy_code_motion_base i stmt =
+      let to_assign_in_s =
+        Set.Poly.inter
+          (Map.find_exn latest_expr i)
+          (Map.find_exn used_expressions_mfp i).exit
+      in
+      let assignments_to_add_to_s =
+        Set.Poly.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
+            { stmt=
+                Assignment
+                  ({e with texpr= Var (Map.find_exn subexpression_map e)}, e)
+            ; sloc= Mir.no_span }
+            :: accum )
+      in
+      let to_replace_in_s =
+        Set.diff
+          (Set.inter (Map.find_exn used_expr i)
+             (Map.find_exn used_expressions_mfp i).exit)
+          (Map.find_exn latest_expr i)
+      in
+      let replacement_map_for_s =
+        Map.filter_keys subexpression_map ~f:(fun key ->
+            Set.mem to_replace_in_s key )
+      in
+      (* TODO: make sure that replacement already happens in assignments *)
+      SList
+        ( assignments_to_add_to_s
+        @ [ expr_subst_stmt
+              (Map.mapi replacement_map_for_s ~f:(fun ~key ~data ->
+                   {key with texpr= Var data} ))
+              {stmt; sloc= Mir.no_span} ] )
+    in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
     in
@@ -607,7 +638,8 @@ let lazy_code_motion (mir : typed_prog) =
   transform_program mir (fun x -> transform (preprocess_flowgraph x))
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
-
+(* TODO: add optimization pass to move declarations down as much as possible and introduce as
+   tight as possible local scopes *)
 (* TODO: add tests *)
 
 let%expect_test "map_rec_stmt_loc" =
