@@ -87,13 +87,9 @@ type ('e, 's) prog =
   { functions_block: 's list
   ; input_vars: 'e io_var list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
-  ; prepare_params:
-      's list
-      (* param & transformed param decls and statements *)
-  ; log_prob: 's list (* model block, assuming above blocks run in scope*)
-  ; generate_quantities:
-      's list
-      (* also assumes prepare_data and prepare_params run*)
+  ; prepare_params: 's list (* param & tparam decls and statements *)
+  ; log_prob: 's list (*assumes data & params are in scope and ready*)
+  ; generate_quantities: 's list (* assumes data & params ready & in scope*)
   ; transform_inits: 's list
   ; output_vars: 'e io_var list
   ; prog_name: string
