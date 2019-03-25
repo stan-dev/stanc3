@@ -104,8 +104,8 @@ let rec subst_expr (m : (string, expr_typed_located) Map.Poly.t)
 
 and subst_idx m = map_index (subst_expr m)
 
-let subst_stmt_base m b =
-  let f = subst_expr m in
+let subst_stmt_base_helper g h b =
+  let f = g in
   match b with
   | Assignment ({texpr= Var x; texpr_type; texpr_loc; texpr_adlevel}, e2) ->
       Assignment ({texpr= Var x; texpr_type; texpr_loc; texpr_adlevel}, f e2)
@@ -125,11 +125,24 @@ let subst_stmt_base m b =
                   ; texpr_type= t2
                   ; texpr_loc= l2
                   ; texpr_adlevel= a2 }
-                , List.map ~f:(subst_idx m) l )
+                , List.map ~f:h l )
           ; texpr_type
           ; texpr_loc
           ; texpr_adlevel }
         , f e2 )
   | x -> map_statement f (fun y -> y) x
 
+let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)
 let subst_stmt m = Mir.map_rec_stmt_loc (subst_stmt_base m)
+
+let rec expr_subst_expr m (e : expr_typed_located) =
+  match Map.find m e with
+  | Some e' -> e'
+  | None -> {e with texpr= map_expr (expr_subst_expr m) e.texpr}
+
+and expr_subst_idx m = map_index (expr_subst_expr m)
+
+let expr_subst_stmt_base m =
+  subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
+
+let expr_subst_stmt m = Mir.map_rec_stmt_loc (expr_subst_stmt_base m)

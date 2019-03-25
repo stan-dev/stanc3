@@ -239,3 +239,18 @@ let internal_expr =
   ; texpr_adlevel= DataOnly }
 
 let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
+
+(**  A custom comparator which ignores locations on expressions *)
+module ExprComparator = struct
+  type t = expr_typed_located
+
+  let sexp_of_t = sexp_of_expr_typed_located
+  let t_of_sexp = expr_typed_located_of_sexp
+  let compare = compare_expr_typed_located
+end
+
+(**  A module for sets of expressions which ignore their locations *)
+module ExprSet = Set.Make (ExprComparator)
+
+(**  A module for maps of expressions which ignore their locations *)
+module ExprMap = Map.Make (ExprComparator)
