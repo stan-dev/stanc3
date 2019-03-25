@@ -568,7 +568,20 @@ let lazy_code_motion (mir : typed_prog) =
     in
     precrocess_flowgraph_stmt (Map.find_exn flowgraph_to_mir 1)
   in
-  transform_program mir preprocess_flowgraph
+  let transform s =
+    let rev_flowgraph, flowgraph_to_mir =
+      Monotone_framework.inverse_flowgraph_of_stmt s
+    in
+    let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
+    let (module Rev_Flowgraph) = rev_flowgraph in
+    let (module Fwd_Flowgraph) = fwd_flowgraph in
+    let lazy_code_motion_base _ stmt = stmt in
+    let lazy_code_motion_stmt =
+      map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
+    in
+    lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
+  transform_program mir (fun x -> transform (preprocess_flowgraph x))
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 
