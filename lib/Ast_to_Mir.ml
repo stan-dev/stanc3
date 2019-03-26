@@ -216,11 +216,11 @@ let constraint_to_string t (c : constrainaction) =
   | Correlation -> "corr_matrix"
   | Covariance -> "cov_matrix"
   | Lower _ -> (
-    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "lb" )
-  | Upper _ -> (
     match c with
     | Check -> "greater_or_equal"
-    | Constrain | Unconstrain -> "ub" )
+    | Constrain | Unconstrain -> "lb" )
+  | Upper _ -> (
+    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "ub" )
   | LowerUpper _ -> (
     match c with
     | Check ->
@@ -603,6 +603,6 @@ let%expect_test "gen quant" =
           (body
            (Block
             ((NRFunApp Check__
-              ((Lit Str less_or_equal)
+              ((Lit Str greater_or_equal)
                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
                (Lit Int 0)))))))))))) |}]

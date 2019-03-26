@@ -39,10 +39,10 @@ class eight_schools_ncp_model : public prob_grad {
     int J;
     
     current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    J = Check__(ReadData__("J"), "less_or_equal", "int", 0);
+    J = Check__(ReadData__("J"), "greater_or_equal", "int", 0);
     current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
     current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    check_less_or_equal(function__, J, 0);
+    check_greater_or_equal(function__, J, 0);
     current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
     std::vector<double> y;
     y = std::vector<double>(J, 0);
@@ -67,18 +67,18 @@ class eight_schools_ncp_model : public prob_grad {
         stan::model::rvalue(sigma,
                             stan::model::cons_list(stan::model::index_uni(sym1__),
                             stan::model::nil_index_list()), "sigma") =
-            Check__(ReadData__("sigma"), "less_or_equal", "real", 0);
+            Check__(ReadData__("sigma"), "greater_or_equal", "real", 0);
       }
     current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
     for (size_t sym1__ = 0; sym1__ < Length__(sigma); sym1__++)
       {
         current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
         current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-        check_less_or_equal(function__,
-                            stan::model::rvalue(sigma,
-                                                stan::model::cons_list(stan::model::index_uni(sym1__),
-                                                stan::model::nil_index_list()),
-                            "sigma"), 0);
+        check_greater_or_equal(function__,
+                               stan::model::rvalue(sigma,
+                                                   stan::model::cons_list(stan::model::index_uni(sym1__),
+                                                   stan::model::nil_index_list()),
+                               "sigma"), 0);
       } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what(), current_statement__));
@@ -267,7 +267,7 @@ class one_var_per_block_model : public prob_grad {
         stan::model::rvalue(datavar,
                             stan::model::cons_list(stan::model::index_uni(sym1__),
                             stan::model::nil_index_list()), "datavar") =
-            Check__(ReadData__("datavar", N), "less_or_equal", "vector", 0);
+            Check__(ReadData__("datavar", N), "greater_or_equal", "vector", 0);
       }
     current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
     for (size_t sym1__ = 0; sym1__ < Length__(datavar); sym1__++)
@@ -281,12 +281,12 @@ class one_var_per_block_model : public prob_grad {
           {
             current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
             current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-            check_less_or_equal(function__,
-                                stan::model::rvalue(datavar,
-                                                    stan::model::cons_list(stan::model::index_uni(sym1__),
-                                                    stan::model::cons_list(stan::model::index_uni(sym2__),
-                                                    stan::model::nil_index_list())),
-                                "datavar"), 0);
+            check_greater_or_equal(function__,
+                                   stan::model::rvalue(datavar,
+                                                       stan::model::cons_list(stan::model::index_uni(sym1__),
+                                                       stan::model::cons_list(stan::model::index_uni(sym2__),
+                                                       stan::model::nil_index_list())),
+                                   "datavar"), 0);
           }
       }
     current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
@@ -307,12 +307,12 @@ class one_var_per_block_model : public prob_grad {
           {
             current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
             current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-            check_less_or_equal(function__,
-                                stan::model::rvalue(tdatavar,
-                                                    stan::model::cons_list(stan::model::index_uni(sym1__),
-                                                    stan::model::cons_list(stan::model::index_uni(sym2__),
-                                                    stan::model::nil_index_list())),
-                                "tdatavar"), 0);
+            check_greater_or_equal(function__,
+                                   stan::model::rvalue(tdatavar,
+                                                       stan::model::cons_list(stan::model::index_uni(sym1__),
+                                                       stan::model::cons_list(stan::model::index_uni(sym2__),
+                                                       stan::model::nil_index_list())),
+                                   "tdatavar"), 0);
           }
       } catch (const std::exception& e) {
       stan::lang::rethrow_located(
@@ -386,12 +386,12 @@ class one_var_per_block_model : public prob_grad {
             {
               current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
               current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-              check_less_or_equal(function__,
-                                  stan::model::rvalue(tparam,
-                                                      stan::model::cons_list(stan::model::index_uni(sym1__),
-                                                      stan::model::cons_list(stan::model::index_uni(sym2__),
-                                                      stan::model::nil_index_list())),
-                                  "tparam"), 0);
+              check_greater_or_equal(function__,
+                                     stan::model::rvalue(tparam,
+                                                         stan::model::cons_list(stan::model::index_uni(sym1__),
+                                                         stan::model::cons_list(stan::model::index_uni(sym2__),
+                                                         stan::model::nil_index_list())),
+                                     "tparam"), 0);
             }
         }
       current_statement__ = "file one_var_per_block.stan, line 18, columns 2-42";
