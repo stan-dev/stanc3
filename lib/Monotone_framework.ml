@@ -90,6 +90,31 @@ let dual_powerset_lattice (type v)
   : LATTICE
     with type properties = v Set.Poly.t )
 
+let powerset_lattice_expressions (initial : Mir.ExprSet.t) =
+  ( module struct
+    type properties = Mir.ExprSet.t
+
+    let bottom = Mir.ExprSet.empty
+    let lub s1 s2 = Mir.ExprSet.inter s1 s2
+    let leq s1 s2 = Mir.ExprSet.is_subset s2 ~of_:s1
+    let initial = initial
+  end
+  : LATTICE
+    with type properties = Mir.ExprSet.t )
+
+let dual_powerset_lattice_expressions (initial : Mir.ExprSet.t)
+    (total : Mir.ExprSet.t) =
+  ( module struct
+    type properties = Mir.ExprSet.t
+
+    let bottom = total
+    let lub s1 s2 = Mir.ExprSet.inter s1 s2
+    let leq s1 s2 = Mir.ExprSet.is_subset s2 ~of_:s1
+    let initial = initial
+  end
+  : LATTICE
+    with type properties = Mir.ExprSet.t )
+
 (**  Add a fresh bottom element to a lattice (possibly without bottom) *)
 let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   ( module struct
@@ -441,27 +466,27 @@ let live_variables_transfer
 
 (** Calculate the set of sub-expressions of an expression *)
 let rec used_expressions_expr (e : Mir.expr_typed_located) =
-  Set.Poly.union (Set.Poly.singleton e)
+  Mir.ExprSet.union (Mir.ExprSet.singleton e)
     ( match e.texpr with
-    | Mir.Var _ | Mir.Lit (_, _) -> Set.Poly.empty
+    | Mir.Var _ | Mir.Lit (_, _) -> Mir.ExprSet.empty
     | Mir.FunApp (_, l) ->
-        Set.Poly.union_list (List.map ~f:used_expressions_expr l)
+        Mir.ExprSet.union_list (List.map ~f:used_expressions_expr l)
     | Mir.TernaryIf (e1, e2, e3) ->
-        Set.Poly.union_list
+        Mir.ExprSet.union_list
           [ used_expressions_expr e1; used_expressions_expr e2
           ; used_expressions_expr e3 ]
     | Mir.Indexed (e, l) ->
-        Set.Poly.union_list
+        Mir.ExprSet.union_list
           (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
 
 (** Calculate the set of sub-expressions of an index *)
 and used_expressions_idx (i : Mir.expr_typed_located Mir.index) =
   match i with
-  | Mir.All -> Set.Poly.empty
+  | Mir.All -> Mir.ExprSet.empty
   | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
       used_expressions_expr e
   | Mir.Between (e1, e2) ->
-      Set.Poly.union (used_expressions_expr e1) (used_expressions_expr e2)
+      Mir.ExprSet.union (used_expressions_expr e1) (used_expressions_expr e2)
 
 (** Calculate the set of sub-expressions in a statement *)
 let rec used_expressions_stmt
@@ -472,33 +497,34 @@ let rec used_expressions_stmt
    |Mir.Return (Some e) ->
       used_expressions_expr e
   | Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, l); _}, e) ->
-      Set.Poly.union (used_expressions_expr e)
-        (Set.Poly.union_list (List.map ~f:used_expressions_idx l))
+      Mir.ExprSet.union (used_expressions_expr e)
+        (Mir.ExprSet.union_list (List.map ~f:used_expressions_idx l))
   | Mir.Assignment _ -> Errors.fatal_error ()
   | Mir.IfElse (e, b1, Some b2) ->
-      Set.Poly.union_list
+      Mir.ExprSet.union_list
         [ used_expressions_expr e
         ; used_expressions_stmt b1.stmt
         ; used_expressions_stmt b2.stmt ]
   | Mir.NRFunApp (_, l) | Mir.Check (_, l) ->
-      Set.Poly.union_list (List.map ~f:used_expressions_expr l)
+      Mir.ExprSet.union_list (List.map ~f:used_expressions_expr l)
   | Mir.Decl _
    |Mir.Return None
    |Mir.Break | Mir.Continue | Mir.FunDef _ | Mir.Skip ->
-      Set.Poly.empty
+      Mir.ExprSet.empty
   | Mir.IfElse (e, b, None) | Mir.While (e, b) ->
-      Set.Poly.union (used_expressions_expr e) (used_expressions_stmt b.stmt)
+      Mir.ExprSet.union (used_expressions_expr e)
+        (used_expressions_stmt b.stmt)
   | Mir.For {lower= e1; upper= e2; body= b; loopvar= s} ->
-      Set.Poly.union_list
+      Mir.ExprSet.union_list
         [ used_expressions_expr e1; used_expressions_expr e2
         ; used_expressions_stmt b.stmt
-        ; Set.Poly.singleton
+        ; Mir.ExprSet.singleton
             { Mir.texpr= Var s
             ; texpr_type= UInt
             ; texpr_adlevel= DataOnly
             ; texpr_loc= Mir.no_span } ]
   | Mir.Block l | Mir.SList l ->
-      Set.Poly.union_list
+      Mir.ExprSet.union_list
         (List.map ~f:(fun s -> used_expressions_stmt s.stmt) l)
 
 (** A variant of used_expressions_stmt where we do not count uses of expressions
@@ -513,20 +539,21 @@ let top_used_expressions_stmt (s : (Mir.expr_typed_located, int) Mir.statement)
         (Mir.statement_stmt_loc_of_statement_stmt_loc_num Map.Poly.empty s)
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> used_expressions_expr e
   | Mir.For {lower= e1; upper= e2; _} ->
-      Set.Poly.union_list [used_expressions_expr e1; used_expressions_expr e2]
-  | Mir.Block _ | Mir.SList _ -> Set.Poly.empty
+      Mir.ExprSet.union_list
+        [used_expressions_expr e1; used_expressions_expr e2]
+  | Mir.Block _ | Mir.SList _ -> Mir.ExprSet.empty
 
 (** Calculate the subset (of p) of expressions that will need to be recomputed as a
     consequence of evaluating the statement s (because of writes to variables performed
     by s) *)
-let killed_expressions_stmt (p : Mir.expr_typed_located Set.Poly.t)
+let killed_expressions_stmt (p : Mir.ExprSet.t)
     (s : (Mir.expr_typed_located, int) Mir.statement) =
-  Set.Poly.filter p ~f:(fun e ->
+  Mir.ExprSet.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here,
          but it would require us to duplicate some code. *)
       let assigned_vars = assigned_vars_stmt s in
-      not (Set.is_empty (Set.Poly.inter free_vars assigned_vars)) )
+      not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)) )
 
 (** Calculate the set of expressions that needs to be computed at each node
     in the flowgraph *)
@@ -541,10 +568,10 @@ let used (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
     code motion) *)
 let anticipated_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
-    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t) =
+    (used : (int, Mir.ExprSet.t) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr_typed_located Set.Poly.t
+    type properties = Mir.ExprSet.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
@@ -553,13 +580,11 @@ let anticipated_expressions_transfer
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Mir.expr_typed_located Set.Poly.t )
+    with type labels = int and type properties = Mir.ExprSet.t )
 
 (** A helper function for defining transfer functions in terms of gen and kill sets
     in an alternative way, that is used in some of the subanalyses of lazy code motion *)
-let transfer_gen_kill_alt p gen kill =
-  Set.Poly.diff (Set.Poly.union p gen) kill
+let transfer_gen_kill_alt p gen kill = Set.diff (Set.union p gen) kill
 
 (* NOTE: we want to implement lazy code motion. Aho describes a slightly
    more general available expression pass for that that uses the anticipated
@@ -570,11 +595,10 @@ let transfer_gen_kill_alt p gen kill =
 (** An available expressions analysis, to be used in lazy code motion *)
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t)
-    (anticipated_expressions :
-      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
+    (anticipated_expressions : (int, Mir.ExprSet.t entry_exit) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr_typed_located Set.Poly.t
+    type properties = Mir.ExprSet.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
@@ -583,16 +607,13 @@ let available_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Mir.expr_typed_located Set.Poly.t )
+    with type labels = int and type properties = Mir.ExprSet.t )
 
 (** Calculates the set of expressions that can be calculated for the first time
     at each node in the flow graph *)
 let earliest
-    (anticipated_expressions :
-      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t)
-    (available_expressions :
-      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
+    (anticipated_expressions : (int, Mir.ExprSet.t entry_exit) Map.Poly.t)
+    (available_expressions : (int, Mir.ExprSet.t entry_exit) Map.Poly.t) =
   Map.fold anticipated_expressions ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
       Map.set accum ~key
@@ -601,12 +622,11 @@ let earliest
   )
 
 (** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
-let postponable_expressions_transfer
-    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
-    (earliest : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t) =
+let postponable_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
+    (earliest : (int, Mir.ExprSet.t) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr_typed_located Set.Poly.t
+    type properties = Mir.ExprSet.t
 
     let transfer_function l p =
       let gen = Map.find_exn earliest l in
@@ -614,36 +634,33 @@ let postponable_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Mir.expr_typed_located Set.Poly.t )
+    with type labels = int and type properties = Mir.ExprSet.t )
 
 (** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
-    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
-    (earliest : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
-    (postponable_expressions :
-      (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
+    (used : (int, Mir.ExprSet.t) Map.Poly.t)
+    (earliest : (int, Mir.ExprSet.t) Map.Poly.t)
+    (postponable_expressions : (int, Mir.ExprSet.t entry_exit) Map.Poly.t) =
   let earliest_or_postponable key =
-    Set.Poly.union
+    Mir.ExprSet.union
       (Map.Poly.find_exn earliest key)
       (Map.Poly.find_exn postponable_expressions key).entry
   in
   let latest key =
-    Set.Poly.filter (earliest_or_postponable key) ~f:(fun e ->
-        Set.Poly.mem (Map.Poly.find_exn used key) e
+    Set.filter (earliest_or_postponable key) ~f:(fun e ->
+        Set.mem (Map.Poly.find_exn used key) e
         || Set.Poly.exists (Map.Poly.find_exn successors key) ~f:(fun s ->
-               not (Set.Poly.mem (earliest_or_postponable s) e) ) )
+               not (Set.mem (earliest_or_postponable s) e) ) )
   in
   Map.fold earliest ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
       Map.set accum ~key ~data:(latest key) )
 
 (** The transfer function for a used expressions analysis, as a part of lazy code motion *)
-let used_expressions_transfer
-    (used : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t)
-    (latest : (int, Mir.expr_typed_located Set.Poly.t) Map.Poly.t) =
+let used_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
+    (latest : (int, Mir.ExprSet.t) Map.Poly.t) =
   ( module struct
     type labels = int
-    type properties = Mir.expr_typed_located Set.Poly.t
+    type properties = Mir.ExprSet.t
 
     let transfer_function l p =
       let gen = Map.find_exn used l in
@@ -651,8 +668,7 @@ let used_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Mir.expr_typed_located Set.Poly.t )
+    with type labels = int and type properties = Mir.ExprSet.t )
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
@@ -857,7 +873,7 @@ let lazy_expressions_mfp
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   let all_expressions =
-    Set.Poly.union_list
+    Mir.ExprSet.union_list
       (List.map
          ~f:(fun x -> used_expressions_stmt x.stmt)
          (List.concat
@@ -867,28 +883,12 @@ let lazy_expressions_mfp
   (* TODO: we need to watch out in the lazy code motion pass that the autodiff and
      block structure imposes real boundaries on how much we can move code around. *)
   let used_expr = used flowgraph_to_mir in
-  let expressions_initial_total_type =
-    ( module struct
-      type vals = Mir.expr_typed_located
-
-      let total = all_expressions
-      let initial = all_expressions
-    end
-    : INITIALTOTALTYPE
-      with type vals = Mir.expr_typed_located )
-  in
-  let expressions_type =
-    (module struct type vals = Mir.expr_typed_located
-    end
-    : TYPE
-      with type vals = Mir.expr_typed_located )
-  in
   let (module Lattice1) =
-    dual_powerset_lattice expressions_initial_total_type
+    dual_powerset_lattice_expressions all_expressions all_expressions
   in
   (* TODO: seeing that used_variables is basically a liveness analysis for expressions,
      does that mean we should initialize to include all observable variables? *)
-  let (module Lattice2) = powerset_lattice_empty_initial expressions_type in
+  let (module Lattice2) = powerset_lattice_expressions Mir.ExprSet.empty in
   let (module Transfer1) =
     anticipated_expressions_transfer flowgraph_to_mir used_expr
   in

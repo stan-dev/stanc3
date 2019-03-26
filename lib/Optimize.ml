@@ -608,7 +608,7 @@ let lazy_code_motion (mir : typed_prog) =
         flowgraph_to_mir
     in
     let subexpression_map =
-      Set.Poly.fold (Monotone_framework.used_expressions_stmt s.stmt)
+      Set.fold (Monotone_framework.used_expressions_stmt s.stmt)
         ~init:Map.Poly.empty ~f:(fun accum e ->
           Map.Poly.set accum ~key:e ~data:(Util.gensym ()) )
     in
@@ -624,12 +624,12 @@ let lazy_code_motion (mir : typed_prog) =
     in
     let lazy_code_motion_base i stmt =
       let to_assign_in_s =
-        Set.Poly.inter
+        Set.inter
           (Map.find_exn latest_expr i)
           (Map.find_exn used_expressions_mfp i).exit
       in
       let assignments_to_add_to_s =
-        Set.Poly.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
+        Set.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
             { stmt=
                 Assignment
                   ({e with texpr= Var (Map.find_exn subexpression_map e)}, e)
@@ -3569,6 +3569,7 @@ let%expect_test "lazy code motion" =
       {|
       model {
         print({3.0});
+        print({3.0});
       }
       |}
   in
@@ -3593,6 +3594,15 @@ let%expect_test "lazy code motion" =
         (stmt
          (SList
           (((sloc <opaque>)
+            (stmt
+             (NRFunApp print
+              (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+                (texpr
+                 (FunApp make_array
+                  (((texpr_type UReal) (texpr_loc <opaque>)
+                    (texpr (Lit Real 3.0)) (texpr_adlevel DataOnly)))))
+                (texpr_adlevel DataOnly))))))
+           ((sloc <opaque>)
             (stmt
              (NRFunApp print
               (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
