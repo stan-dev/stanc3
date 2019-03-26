@@ -603,7 +603,7 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let used_expr, latest_expr, used_expressions_mfp =
+    let used_expr, _, _, _, _, latest_expr, used_expressions_mfp =
       Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
         flowgraph_to_mir
     in
@@ -623,13 +623,13 @@ let lazy_code_motion (mir : typed_prog) =
           :: accum )
     in
     let lazy_code_motion_base i stmt =
-      let _ =
+      (*let _ =
         if Set.length (Map.find_exn latest_expr i) > 0 then
           raise_s
             [%sexp
-              ( Map.map ~f:(fun x -> x.exit) used_expressions_mfp
+              (earliest_expr
                 : (int, ExprSet.t) Map.Poly.t )]
-      in
+      in*)
       let to_assign_in_s =
         Set.inter
           (Map.find_exn latest_expr i)

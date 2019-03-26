@@ -312,11 +312,13 @@ let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
 
 (* TODO: from here *)
 
-(** Calculate the set of variables that a statement can assign to *)
-let assigned_vars_stmt (s : (Mir.expr_typed_located, 'a) Mir.statement) =
+(** Calculate the set of variables that a statement can assign to or declare *)
+let assigned_or_declared_vars_stmt
+    (s : (Mir.expr_typed_located, 'a) Mir.statement) =
   match s with
   | Mir.Assignment ({texpr= Var x; _}, _)
    |Mir.Assignment ({texpr= Indexed ({texpr= Var x; _}, _); _}, _)
+   |Mir.Decl {decl_id= x; _}
    |Mir.FunDef {fdname= x; _} ->
       Set.Poly.singleton x
   | Mir.Assignment (_, _) -> Errors.fatal_error ()
@@ -327,7 +329,7 @@ let assigned_vars_stmt (s : (Mir.expr_typed_located, 'a) Mir.statement) =
    |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
    |Mir.IfElse (_, _, _)
    |Mir.While (_, _)
-   |Mir.For _ | Mir.Block _ | Mir.SList _ | Mir.Decl _ ->
+   |Mir.For _ | Mir.Block _ | Mir.SList _ ->
       Set.Poly.empty
 
 (** The transfer function for a reaching definitions analysis *)
@@ -340,7 +342,9 @@ let reaching_definitions_transfer
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
       let gen =
-        Set.Poly.map ~f:(fun x -> (x, Some l)) (assigned_vars_stmt mir_node)
+        Set.Poly.map
+          ~f:(fun x -> (x, Some l))
+          (assigned_or_declared_vars_stmt mir_node)
       in
       let kill =
         match mir_node with
@@ -560,7 +564,7 @@ let killed_expressions_stmt (p : Mir.ExprSet.t)
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here,
          but it would require us to duplicate some code. *)
-      let assigned_vars = assigned_vars_stmt s in
+      let assigned_vars = assigned_or_declared_vars_stmt s in
       not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)) )
 
 (** Calculate the set of expressions that needs to be computed at each node
@@ -935,4 +939,10 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let used_expressions_mfp = Mf4.mfp () in
-  (used_expr, latest_expr, used_expressions_mfp)
+  ( used_expr
+  , anticipated_expressions_mfp
+  , available_expressions_mfp
+  , earliest_expr
+  , postponable_expressions_mfp
+  , latest_expr
+  , used_expressions_mfp )
