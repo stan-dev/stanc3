@@ -623,6 +623,13 @@ let lazy_code_motion (mir : typed_prog) =
           :: accum )
     in
     let lazy_code_motion_base i stmt =
+      let _ =
+        if Set.length (Map.find_exn latest_expr i) > 0 then
+          raise_s
+            [%sexp
+              ( Map.map ~f:(fun x -> x.exit) used_expressions_mfp
+                : (int, ExprSet.t) Map.Poly.t )]
+      in
       let to_assign_in_s =
         Set.inter
           (Map.find_exn latest_expr i)

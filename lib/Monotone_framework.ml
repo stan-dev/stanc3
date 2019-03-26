@@ -532,16 +532,24 @@ let rec used_expressions_stmt
 let top_used_expressions_stmt (s : (Mir.expr_typed_located, int) Mir.statement)
     =
   match s with
-  | Mir.Assignment _ | Mir.Return _ | Mir.TargetPE _ | Mir.Check _
-   |Mir.NRFunApp _ | Mir.FunDef _ | Mir.Decl _ | Mir.Break | Mir.Continue
-   |Mir.Skip ->
-      used_expressions_stmt
-        (Mir.statement_stmt_loc_of_statement_stmt_loc_num Map.Poly.empty s)
+  | Mir.Assignment ({texpr= Var _; _}, e)
+   |Mir.TargetPE e
+   |Mir.Return (Some e) ->
+      used_expressions_expr e
+  | Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, l); _}, e) ->
+      Mir.ExprSet.union (used_expressions_expr e)
+        (Mir.ExprSet.union_list (List.map ~f:used_expressions_idx l))
+  | Mir.Assignment _ -> Errors.fatal_error ()
   | Mir.While (e, _) | Mir.IfElse (e, _, _) -> used_expressions_expr e
+  | Mir.NRFunApp (_, l) | Mir.Check (_, l) ->
+      Mir.ExprSet.union_list (List.map ~f:used_expressions_expr l)
+  | Mir.Block _ | Mir.SList _ | Mir.Decl _
+   |Mir.Return None
+   |Mir.Break | Mir.Continue | Mir.FunDef _ | Mir.Skip ->
+      Mir.ExprSet.empty
   | Mir.For {lower= e1; upper= e2; _} ->
       Mir.ExprSet.union_list
         [used_expressions_expr e1; used_expressions_expr e2]
-  | Mir.Block _ | Mir.SList _ -> Mir.ExprSet.empty
 
 (** Calculate the subset (of p) of expressions that will need to be recomputed as a
     consequence of evaluating the statement s (because of writes to variables performed
@@ -603,7 +611,7 @@ let available_expressions_transfer
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
       let gen = (Map.find_exn anticipated_expressions l).entry in
-      let kill = killed_expressions_stmt p mir_node in
+      let kill = killed_expressions_stmt (Mir.ExprSet.union p gen) mir_node in
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
@@ -622,8 +630,9 @@ let earliest
   )
 
 (** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
-let postponable_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
-    (earliest : (int, Mir.ExprSet.t) Map.Poly.t) =
+let postponable_expressions_transfer
+    (earliest : (int, Mir.ExprSet.t) Map.Poly.t)
+    (used : (int, Mir.ExprSet.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.ExprSet.t
@@ -638,9 +647,9 @@ let postponable_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
 
 (** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
-    (used : (int, Mir.ExprSet.t) Map.Poly.t)
     (earliest : (int, Mir.ExprSet.t) Map.Poly.t)
-    (postponable_expressions : (int, Mir.ExprSet.t entry_exit) Map.Poly.t) =
+    (postponable_expressions : (int, Mir.ExprSet.t entry_exit) Map.Poly.t)
+    (used : (int, Mir.ExprSet.t) Map.Poly.t) =
   let earliest_or_postponable key =
     Mir.ExprSet.union
       (Map.Poly.find_exn earliest key)
@@ -652,7 +661,7 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
         || Set.Poly.exists (Map.Poly.find_exn successors key) ~f:(fun s ->
                not (Set.mem (earliest_or_postponable s) e) ) )
   in
-  Map.fold earliest ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
+  Map.fold successors ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
       Map.set accum ~key ~data:(latest key) )
 
 (** The transfer function for a used expressions analysis, as a part of lazy code motion *)
@@ -880,8 +889,6 @@ let lazy_expressions_mfp
             [ mir.functions_block; mir.generate_quantities; mir.prepare_params
             ; mir.log_prob; mir.prepare_data ]))
   in
-  (* TODO: we need to watch out in the lazy code motion pass that the autodiff and
-     block structure imposes real boundaries on how much we can move code around. *)
   let used_expr = used flowgraph_to_mir in
   let (module Lattice1) =
     dual_powerset_lattice_expressions all_expressions all_expressions
@@ -910,15 +917,15 @@ let lazy_expressions_mfp
     earliest anticipated_expressions_mfp available_expressions_mfp
   in
   let (module Transfer3) =
-    postponable_expressions_transfer used_expr earliest_expr
+    postponable_expressions_transfer earliest_expr used_expr
   in
   let (module Mf3) =
     monotone_framework (module Flowgraph) (module Lattice1) (module Transfer3)
   in
   let postponable_expressions_mfp = Mf3.mfp () in
   let latest_expr =
-    latest Flowgraph.successors used_expr earliest_expr
-      postponable_expressions_mfp
+    latest Flowgraph.successors earliest_expr postponable_expressions_mfp
+      used_expr
   in
   let (module Transfer4) = used_expressions_transfer used_expr latest_expr in
   let (module Mf4) =
