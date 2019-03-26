@@ -341,17 +341,17 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
   match stmt_typed with
   | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
     ->
-      let swrap_expr expr_typed =
+      let wrap_expr expr_typed =
         { Ast.expr_typed_loc= sloc
         ; expr_typed_ad_level= assign_rhs.expr_typed_ad_level
         ; expr_typed_type= assign_rhs.expr_typed_type
         ; expr_typed }
       in
-      let assignee = swrap_expr @@ Ast.Variable assign_identifier in
+      let assignee = wrap_expr @@ Ast.Variable assign_identifier in
       let assignee =
         match assign_indices with
         | [] -> assignee
-        | lst -> swrap_expr @@ Ast.Indexed (assignee, lst)
+        | lst -> wrap_expr @@ Ast.Indexed (assignee, lst)
       in
       let rhs =
         match assign_op with
