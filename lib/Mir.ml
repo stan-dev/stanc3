@@ -129,7 +129,7 @@ let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 let fn_length = "Length__"
 let fn_make_array = "MakeArray__"
 let fn_make_rowvec = "MakeRowVec__"
-let fn_negative_infinity = "NegativeInfinity__"
+let fn_negative_infinity = "negative_infinity"
 let fn_read_data = "ReadData__"
 let fn_read_param = "ReadParam__"
 let fn_constrain = "Constrain__"

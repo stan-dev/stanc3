@@ -208,7 +208,8 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
 
 let math_fn_translations =
   Map.Poly.of_alist_exn
-    [(fn_print, ("stan_print", [{internal_expr with texpr= Var "pstream__"}]))]
+    [ (fn_print, ("stan_print", [{internal_expr with texpr= Var "pstream__"}]))
+    ; (fn_length, ("length", [])) ]
 
 let trans_math_fn fname =
   match Map.Poly.find math_fn_translations fname with
@@ -259,9 +260,9 @@ let rec pp_statement ppf {stmt; sloc} =
       (* print return type *)
       pp_returntype ppf fdargs fdrt ;
       (* XXX this is all so ugly: *)
+      (* XXX Fix templating of args here *)
       pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg) fdargs ;
-      pf ppf ", std::ostream* pstream__" ;
-      pf ppf "@]) " ;
+      pf ppf ", std::ostream* pstream__@]) " ;
       match fdbody.stmt with
       | Skip -> pf ppf ";@ "
       | _ ->
