@@ -217,7 +217,7 @@ let trans_math_fn fname =
 
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
-  | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
+  | Block _ | FunDef _ | Break | Continue | Skip -> ()
   | _ -> pp_location ppf sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
@@ -246,7 +246,6 @@ let rec pp_statement ppf {stmt; sloc} =
   | For {loopvar; lower; upper; body} ->
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
-  | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
   | FunDef {fdrt; fdname; fdargs; fdbody} -> (
@@ -352,9 +351,6 @@ let%expect_test "read int[N] y" =
     vals_i__ = context__.vals_i__("y");
     y = std::vector<int>(N, 0);
     for (size_t i_0__ = 0; i_0__ < y.size(); i_0__++) y[i_0__] = vals_i__; |}]
-
-let block_of_list s =
-  {s with stmt= (match s.stmt with SList ls -> Block ls | x -> x)}
 
 let pp_ctor ppf p =
   (* XXX:

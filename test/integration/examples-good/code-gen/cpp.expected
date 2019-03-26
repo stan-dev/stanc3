@@ -17,7 +17,9 @@ static char* current_statement__;
 class eight_schools_ncp_model : public prob_grad {
 
  private:
-  
+  int J;
+  std::vector<double> y;
+  std::vector<double> sigma;
  
  public:
   ~eight_schools_ncp_model() { }
@@ -226,7 +228,9 @@ udf1(const T__& a, const T__& b, std::ostream* pstream__) {
 class one_var_per_block_model : public prob_grad {
 
  private:
-  
+  int N;
+  int K;
+  std::vector<Eigen::Matrix<double, -1, 1>> datavar;
  
  public:
   ~one_var_per_block_model() { }

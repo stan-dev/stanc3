@@ -66,12 +66,6 @@ let neg_inf =
   ; texpr= FunApp (fn_negative_infinity, [])
   ; texpr_adlevel= Ast.DataOnly }
 
-let lbind s =
-  match s.stmt with SList ls | Block ls -> ls | Skip -> [] | _ -> [s]
-
-let add_to_or_create_block source target =
-  {target with stmt= Block ({target with stmt= source} :: lbind target)}
-
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
@@ -333,98 +327,113 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     | Some Check -> gen_check decl_type decl_id transform sloc dadlevel
     | _ -> []
   in
-  SList ((decl :: read_stmts) @ checks)
+  (decl :: read_stmts) @ checks
+
+let unwrap_block = function
+  | [({stmt= Block _; _} as b)] -> b
+  | x -> raise_s [%message "Expecting a block, not" (x : stmt_loc list)]
 
 let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
+  let trans_single_stmt s = trans_stmt s |> List.hd_exn in
+  let swrap stmt = [{stmt; sloc}] in
   let texpr_loc = sloc in
-  let stmt =
-    match stmt_typed with
-    | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
-      ->
-        let wrap_expr expr_typed =
-          { Ast.expr_typed_loc= sloc
-          ; expr_typed_ad_level= assign_rhs.expr_typed_ad_level
-          ; expr_typed_type= assign_rhs.expr_typed_type
-          ; expr_typed }
-        in
-        let assignee = wrap_expr @@ Ast.Variable assign_identifier in
-        let assignee =
-          match assign_indices with
-          | [] -> assignee
-          | lst -> wrap_expr @@ Ast.Indexed (assignee, lst)
-        in
-        let rhs =
-          match assign_op with
-          | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-          | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
-        in
-        Assignment (trans_expr assignee, rhs)
-    | Ast.NRFunApp ({name; _}, args) -> NRFunApp (name, trans_exprs args)
-    | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e)
-    | Ast.Tilde {arg; distribution; args; truncation} ->
-        let add_dist =
-          (* XXX distribution name suffix? *)
-          (* XXX Reminder to differentiate between tilde, which drops constants, and
+  match stmt_typed with
+  | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
+    ->
+      let swrap_expr expr_typed =
+        { Ast.expr_typed_loc= sloc
+        ; expr_typed_ad_level= assign_rhs.expr_typed_ad_level
+        ; expr_typed_type= assign_rhs.expr_typed_type
+        ; expr_typed }
+      in
+      let assignee = swrap_expr @@ Ast.Variable assign_identifier in
+      let assignee =
+        match assign_indices with
+        | [] -> assignee
+        | lst -> swrap_expr @@ Ast.Indexed (assignee, lst)
+      in
+      let rhs =
+        match assign_op with
+        | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+        | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
+      in
+      Assignment (trans_expr assignee, rhs) |> swrap
+  | Ast.NRFunApp ({name; _}, args) ->
+      NRFunApp (name, trans_exprs args) |> swrap
+  | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
+  | Ast.Tilde {arg; distribution; args; truncation} ->
+      let add_dist =
+        (* XXX distribution name suffix? *)
+        (* XXX Reminder to differentiate between tilde, which drops constants, and
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
-          TargetPE
-            { texpr= FunApp (distribution.name, trans_exprs (arg :: args))
-            ; texpr_loc
-            ; texpr_adlevel= Ast.expr_ad_lub (arg :: args)
-            ; texpr_type= UReal }
-        in
-        SList (truncate_dist arg truncation @ [{sloc; stmt= add_dist}])
-    | Ast.Print ps -> NRFunApp (fn_print, trans_printables sloc ps)
-    | Ast.Reject ps -> NRFunApp (fn_reject, trans_printables sloc ps)
-    | Ast.IfThenElse (cond, ifb, elseb) ->
-        IfElse (trans_expr cond, trans_stmt ifb, Option.map ~f:trans_stmt elseb)
-    | Ast.While (cond, body) -> While (trans_expr cond, trans_stmt body)
-    | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
-        For
-          { loopvar= loop_variable.Ast.name
-          ; lower= trans_expr lower_bound
-          ; upper= trans_expr upper_bound
-          ; body= trans_stmt loop_body }
-    | Ast.ForEach (loopvar, iteratee, body) ->
-        let newsym = Util.gensym () in
-        let wrap texpr =
-          {texpr; texpr_loc; texpr_type= UInt; texpr_adlevel= DataOnly}
-        in
-        let iteratee = trans_expr iteratee
-        and indexing_var = wrap (Var newsym)
-        and body = trans_stmt body in
-        let assign_loopvar =
-          Assignment
-            ( Var loopvar.name |> wrap
-            , Indexed (iteratee, [Single indexing_var]) |> wrap )
-        in
-        For
-          (* XXX Do loops in MIR actually start at 1? *)
-          { loopvar= newsym
-          ; lower= wrap @@ Lit (Int, "0")
-          ; upper= wrap @@ FunApp (fn_length, [iteratee])
-          ; body= add_to_or_create_block assign_loopvar body }
-    | Ast.FunDef {returntype; funname; arguments; body} ->
-        FunDef
-          { fdrt=
-              ( match returntype with
-              | Ast.Void -> None
-              | ReturnType ut -> Some ut )
-          ; fdname= funname.name
-          ; fdargs= List.map ~f:trans_arg arguments
-          ; fdbody= trans_stmt body }
-    | Ast.VarDecl
-        {sizedtype; transformation; identifier; initial_value; is_global} ->
-        ignore is_global ;
-        trans_decl declc sloc sizedtype transformation identifier initial_value
-    | Ast.Block stmts -> Block (List.map ~f:trans_stmt stmts)
-    | Ast.Return e -> Return (Some (trans_expr e))
-    | Ast.ReturnVoid -> Return None
-    | Ast.Break -> Break
-    | Ast.Continue -> Continue
-    | Ast.Skip -> Skip
-  in
-  {sloc; stmt}
+        TargetPE
+          { texpr= FunApp (distribution.name, trans_exprs (arg :: args))
+          ; texpr_loc
+          ; texpr_adlevel= Ast.expr_ad_lub (arg :: args)
+          ; texpr_type= UReal }
+      in
+      truncate_dist arg truncation @ [{sloc; stmt= add_dist}]
+  | Ast.Print ps -> NRFunApp (fn_print, trans_printables sloc ps) |> swrap
+  | Ast.Reject ps -> NRFunApp (fn_reject, trans_printables sloc ps) |> swrap
+  | Ast.IfThenElse (cond, ifb, elseb) ->
+      IfElse
+        ( trans_expr cond
+        , trans_single_stmt ifb
+        , Option.map ~f:trans_single_stmt elseb )
+      |> swrap
+  | Ast.While (cond, body) ->
+      While (trans_expr cond, trans_single_stmt body) |> swrap
+  | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
+      For
+        { loopvar= loop_variable.Ast.name
+        ; lower= trans_expr lower_bound
+        ; upper= trans_expr upper_bound
+        ; body= trans_single_stmt loop_body }
+      |> swrap
+  | Ast.ForEach (loopvar, iteratee, body) ->
+      let newsym = Util.gensym () in
+      let wrap texpr =
+        {texpr; texpr_loc; texpr_type= UInt; texpr_adlevel= DataOnly}
+      in
+      let iteratee = trans_expr iteratee
+      and indexing_var = wrap (Var newsym) in
+      let assign_loopvar =
+        Assignment
+          ( Var loopvar.name |> wrap
+          , Indexed (iteratee, [Single indexing_var]) |> wrap )
+      in
+      let assign_loopvar = {stmt= assign_loopvar; sloc} in
+      let body =
+        match trans_single_stmt body with
+        | {stmt= Block body_stmts; sloc} ->
+            {stmt= Block (assign_loopvar :: body_stmts); sloc}
+        | {stmt; sloc} -> {stmt= Block [assign_loopvar; {stmt; sloc}]; sloc}
+      in
+      For
+        (* XXX Do loops in MIR actually start at 1? *)
+        { loopvar= newsym
+        ; lower= wrap @@ Lit (Int, "0")
+        ; upper= wrap @@ FunApp (fn_length, [iteratee])
+        ; body }
+      |> swrap
+  | Ast.FunDef {returntype; funname; arguments; body} ->
+      let fdbody = trans_stmt body |> unwrap_block in
+      let fdrt =
+        match returntype with Ast.Void -> None | ReturnType ut -> Some ut
+      in
+      let fdargs = List.map ~f:trans_arg arguments in
+      FunDef {fdrt; fdname= funname.name; fdargs; fdbody} |> swrap
+  | Ast.VarDecl
+      {sizedtype; transformation; identifier; initial_value; is_global} ->
+      ignore is_global ;
+      trans_decl declc sloc sizedtype transformation identifier initial_value
+  | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
+  | Ast.Return e -> Return (Some (trans_expr e)) |> swrap
+  | Ast.ReturnVoid -> Return None |> swrap
+  | Ast.Break -> Break |> swrap
+  | Ast.Continue -> Continue |> swrap
+  | Ast.Skip -> Skip |> swrap
 
 let trans_prog filename
     { Ast.functionblock
@@ -452,7 +461,7 @@ let trans_prog filename
      unconstrained param names: same, but also some funky
         adjustments for unconstrained space: ???
 *)
-  let map f list_op = Option.value ~default:[] list_op |> List.map ~f in
+  let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
   let grab_names_sizes paramblock block =
     let get_name_size s =
       match s.Ast.stmt_typed with
@@ -542,7 +551,7 @@ let%expect_test "Prefix-Op-Example" =
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      (((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt)))
+      ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
        (IfElse (FunApp Less__ ((Var i) (FunApp PMinus__ ((Lit Int 1)))))
         (NRFunApp Print__ ((Lit Str Badger))) ())) |}]
 
@@ -551,30 +560,30 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    (((Decl (decl_adtype DataOnly) (decl_id mat)
-       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-      (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp Length__ ((Var mat))))
-       (body
-        (Block
-         ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-           (FunApp ReadData__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))))))))) |}]
+    ((Decl (decl_adtype DataOnly) (decl_id mat)
+      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+     (For (loopvar sym1__) (lower (Lit Int 0))
+      (upper (FunApp Length__ ((Var mat))))
+      (body
+       (Block
+        ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+          (FunApp ReadData__ ((Lit Str mat) (Lit Int 10) (Lit Int 20))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
   print_s [%sexp (m.prepare_params : stmt_loc list)] ;
   [%expect
     {|
-    (((Decl (decl_adtype AutoDiffable) (decl_id mat)
-       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-      (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp Length__ ((Var mat))))
-       (body
-        (Block
-         ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-           (FunApp Constrain__
-            ((FunApp ReadParam__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
-             (Lit Str lb) (Lit Str matrix) (Lit Int 0)))))))))) |}]
+    ((Decl (decl_adtype AutoDiffable) (decl_id mat)
+      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+     (For (loopvar sym1__) (lower (Lit Int 0))
+      (upper (FunApp Length__ ((Var mat))))
+      (body
+       (Block
+        ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+          (FunApp Constrain__
+           ((FunApp ReadParam__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
+            (Lit Str lb) (Lit Str matrix) (Lit Int 0))))))))) |}]
 
 let%expect_test "gen quant" =
   let m =
@@ -583,18 +592,17 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    (((Decl (decl_adtype DataOnly) (decl_id mat)
-       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-      (For (loopvar sym1__) (lower (Lit Int 0))
-       (upper (FunApp Length__ ((Var mat))))
-       (body
-        (Block
-         ((For (loopvar sym2__) (lower (Lit Int 0))
-           (upper
-            (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
-           (body
-            (Block
-             ((NRFunApp Check__
-               ((Lit Str less_or_equal)
-                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-                (Lit Int 0))))))))))))) |}]
+    ((Decl (decl_adtype DataOnly) (decl_id mat)
+      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+     (For (loopvar sym1__) (lower (Lit Int 0))
+      (upper (FunApp Length__ ((Var mat))))
+      (body
+       (Block
+        ((For (loopvar sym2__) (lower (Lit Int 0))
+          (upper (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
+          (body
+           (Block
+            ((NRFunApp Check__
+              ((Lit Str less_or_equal)
+               (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+               (Lit Int 0)))))))))))) |}]

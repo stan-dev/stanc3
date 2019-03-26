@@ -60,9 +60,6 @@ and ('e, 's) statement =
      variables declared within it have local scope and are garbage collected
      when the block ends.*)
   | Block of 's list
-  (* An SList does not share any of Block's semantics - it is just multiple
-     (ordered!) statements*)
-  | SList of 's list
   | Decl of
       { decl_adtype: autodifftype
       ; decl_id: string
@@ -112,9 +109,7 @@ let rec sexp_of_expr_typed_located {texpr; _} =
   sexp_of_expr sexp_of_expr_typed_located texpr
 
 let rec sexp_of_stmt_loc {stmt; _} =
-  match stmt with
-  | SList ls -> sexp_of_list sexp_of_stmt_loc ls
-  | s -> sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc s
+  sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
 
 type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
 
