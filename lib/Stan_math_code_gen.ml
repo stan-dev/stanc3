@@ -374,21 +374,15 @@ let pp_ctor ppf p =
         pp_located_error ppf (pp_statements, p.prepare_data, "inside ctor") )
     , p )
 
-let in_list = List.Assoc.mem ~equal:( = )
-
 let pp_model_private ppf p =
-  let data_decls =
-    List.concat_map
-      ~f:(function
-        | {stmt= Decl {decl_type; decl_id; _}; _} ->
-            [(decl_id, Ast.remove_size decl_type, Ast.DataOnly)]
-        | _ -> [])
-      p.prepare_data
+  let is_data decl_id = List.Assoc.mem ~equal:( = ) p.input_vars decl_id in
+  let return_decl = function
+    | {stmt= Decl {decl_type; decl_id; _}; _} when is_data decl_id ->
+        Some (decl_id, Ast.remove_size decl_type, Ast.DataOnly)
+    | _ -> None
   in
-  let read_data_decls =
-    List.filter ~f:(fun (d, _, _) -> in_list p.input_vars d) data_decls
-  in
-  pf ppf "%a" (list ~sep:cut pp_decl) read_data_decls
+  let data_decls = List.filter_map ~f:return_decl p.prepare_data in
+  pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_get_param_names ppf p =
   let add_param = fmt "names.push_back(%S);" in
