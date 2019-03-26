@@ -676,6 +676,8 @@ let lazy_code_motion (mir : typed_prog) =
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
    tight as possible local scopes *)
 (* TODO: add tests *)
+(* TODO: make sure strings are dealt with properly in lazy code motion *)
+(* TODO: don't introduce as many redundant SLists in lazy code motion *)
 
 let%expect_test "map_rec_stmt_loc" =
   let ast =
@@ -3560,6 +3562,48 @@ let%expect_test "partially evaluate glm" =
                   (texpr_adlevel AutoDiffable)))))
               (texpr_adlevel AutoDiffable))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "lazy code motion" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        print({3.0});
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+    ((functions_block ()) (data_vars ()) (tdata_vars ())
+     (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+     (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+     (log_prob
+      (((sloc <opaque>)
+        (stmt
+         (Decl (decl_adtype DataOnly) (decl_id sym24__)
+          (decl_type (UArray UReal)))))
+       ((sloc <opaque>)
+        (stmt (Decl (decl_adtype DataOnly) (decl_id sym23__) (decl_type UReal))))
+       ((sloc <opaque>)
+        (stmt
+         (SList
+          (((sloc <opaque>)
+            (stmt
+             (NRFunApp print
+              (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+                (texpr
+                 (FunApp make_array
+                  (((texpr_type UReal) (texpr_loc <opaque>)
+                    (texpr (Lit Real 3.0)) (texpr_adlevel DataOnly)))))
+                (texpr_adlevel DataOnly))))))))))))
+     (gen_quant_vars ())
+     (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+     (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)

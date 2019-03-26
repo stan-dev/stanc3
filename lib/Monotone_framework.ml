@@ -595,11 +595,10 @@ let earliest
       (int, Mir.expr_typed_located Set.Poly.t entry_exit) Map.Poly.t) =
   Map.fold anticipated_expressions ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
-      match
-        Option.map (Map.find available_expressions key) ~f:(fun x -> x.entry)
-      with
-      | Some x when x = data.entry -> Map.set accum ~key ~data:x
-      | _ -> accum )
+      Map.set accum ~key
+        ~data:
+          (Set.diff data.entry (Map.find_exn available_expressions key).entry)
+  )
 
 (** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
 let postponable_expressions_transfer
