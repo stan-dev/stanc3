@@ -614,7 +614,7 @@ let available_expressions_transfer
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
-      let gen = (Map.find_exn anticipated_expressions l).entry in
+      let gen = (Map.find_exn anticipated_expressions l).exit in
       let kill = killed_expressions_stmt (Mir.ExprSet.union p gen) mir_node in
       transfer_gen_kill_alt p gen kill
   end
@@ -630,7 +630,7 @@ let earliest
     ~f:(fun ~key ~data accum ->
       Map.set accum ~key
         ~data:
-          (Set.diff data.entry (Map.find_exn available_expressions key).entry)
+          (Set.diff data.exit (Map.find_exn available_expressions key).entry)
   )
 
 (** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
@@ -895,7 +895,7 @@ let lazy_expressions_mfp
   in
   let used_expr = used flowgraph_to_mir in
   let (module Lattice1) =
-    dual_powerset_lattice_expressions all_expressions all_expressions
+    dual_powerset_lattice_expressions Mir.ExprSet.empty all_expressions
   in
   (* TODO: seeing that used_variables is basically a liveness analysis for expressions,
      does that mean we should initialize to include all observable variables? *)

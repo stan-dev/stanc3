@@ -623,18 +623,15 @@ let lazy_code_motion (mir : typed_prog) =
           :: accum )
     in
     let lazy_code_motion_base i stmt =
-      (*let _ =
-        if Set.length (Map.find_exn latest_expr i) > 0 then
-          raise_s
-            [%sexp
-              (earliest_expr
-                : (int, ExprSet.t) Map.Poly.t )]
-      in*)
       let to_assign_in_s =
         Set.inter
           (Map.find_exn latest_expr i)
-          (Map.find_exn used_expressions_mfp i).exit
+          (Map.find_exn used_expressions_mfp i).entry
       in
+      (* TODO: debug here
+      let _ = if (Set.length (Map.find_exn latest_expr i) > 0) then raise_s [%sexp
+      ( (Map.map ~f:(fun x -> x.exit) used_expressions_mfp) : (int, ExprSet.t) Map.Poly.t)
+      ] in *)
       let assignments_to_add_to_s =
         Set.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
             { stmt=
@@ -646,7 +643,7 @@ let lazy_code_motion (mir : typed_prog) =
       let to_replace_in_s =
         Set.diff
           (Set.inter (Map.find_exn used_expr i)
-             (Map.find_exn used_expressions_mfp i).exit)
+             (Map.find_exn used_expressions_mfp i).entry)
           (Map.find_exn latest_expr i)
       in
       let replacement_map_for_s =
