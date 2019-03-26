@@ -37,29 +37,26 @@ let is_row_vector e = e.texpr_type = Ast.URowVector
 let pretty_print _e = "pretty printed e"
 
 (* stub *)
-let rec gen_return_type = function
-  | Ast.Void -> "void"
-  | Ast.ReturnType rt -> gen_type_ut rt
+let rec gen_return_type ppf = function
+  | Ast.Void -> pf ppf "void"
+  | Ast.ReturnType rt -> gen_type_ut ppf rt
 
-(* terrible quadratic implementation *)
-and gen_arg_types = function
-  | [] -> ""
-  | [(_adt, ut)] -> gen_type_ut ut
-  | (_adt, ut) :: ts -> sprintf "%s, %s" (gen_type_ut ut) (gen_arg_types ts)
-
-and gen_type_ut = function
-  | Ast.UInt -> "int"
-  | Ast.UReal -> "local_scalar_t__"
-  | Ast.UVector -> "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | Ast.URowVector -> "Eigen::Matrix<local_scalar_t, 1, -1>"
-  | Ast.UMatrix -> "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | Ast.UArray t -> sprintf "std::vector<%s>" (gen_type_ut t)
+and gen_type_ut ppf ut =
+  match ut with
+  | Ast.UInt -> pf ppf "int"
+  | Ast.UReal -> pf ppf "local_scalar_t__"
+  | Ast.UVector -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
+  | Ast.URowVector -> pf ppf "Eigen::Matrix<local_scalar_t, 1, -1>"
+  | Ast.UMatrix -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
+  | Ast.UArray t -> pf ppf "std::vector<%a>" gen_type_ut t
   | Ast.UFun (args_t, return_t) ->
-      sprintf "std::function<%s(%s)>" (gen_return_type return_t)
-        (gen_arg_types args_t)
-  | Ast.UMathLibraryFunction -> "std::function<void()>"
+      let arg_types = List.map ~f:snd args_t in
+      pf ppf "std::function<%a(%a)>" gen_return_type return_t
+        (list ~sep:(const string ", ") gen_type_ut)
+        arg_types
+  | Ast.UMathLibraryFunction -> pf ppf "std::function<void()>"
 
-let gen_type ppf e = pf ppf "%s" (gen_type_ut e.texpr_type)
+let gen_type ppf e = gen_type_ut ppf e.texpr_type
 
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]
