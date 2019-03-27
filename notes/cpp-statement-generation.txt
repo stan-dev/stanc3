@@ -1,0 +1,150 @@
+STATEMENT GENERATION
+======================================================================
+Some of this has to go into AST to MIR.
+
+No-Op Statement
+----------------------------------------------------------------------
+If no-op
+  ;
+
+
+Sampling Statements (with optional truncation)
+----------------------------------------------------------------------
+(* these just get rewritten to target += and generated from there *)
+
+If y ~ foo(theta1, ..., thetaN) Truncation
+  if y discrete
+    (target += foo_lpmf<propto__>(y,  theta1, ..., thetaN))'
+  else
+    (target += foo_lpdf<propto__>(y, theta1, ..., thetaN))'
+
+  switch Truncation
+     T[ ] :      ()
+     T[lb, ] :   (target += -foo_lccdf(lb | theta))'
+     T[ , ub] :  (target += -foo_lcdf(ub | theta))'
+     T[lb, ub] : (target += -log_diff_exp(foo_lcdf(ub | theta),
+                                          foo_lcdf(lb | theta)))
+
+Target Increment Statements
+----------------------------------------------------------------------
+If target += lp
+  lp_accum__.add(lp');   // pushes onto stack to later sum()
+
+
+Assignment Statements
+----------------------------------------------------------------------
+If a[idxs] = b
+  if (a shows up on RHS)
+    stan::model::assign(a', idxs', stan::model::deep_copy(b'),
+                        "assigning variable " + pretty_print(a'));
+  else
+    stan::model::assign(a', idxs', b',
+                        "assigning variable " + pretty_print(a'));
+
+If a = b
+  stan::math::assign(a', b')
+
+
+Expressions
+----------------------------------------------------------------------
+If expr
+  expr';
+
+
+Statement Sequence
+----------------------------------------------------------------------
+local variable definitions followed by sequence of statements
+
+If (decl1, ..., declN, S1, ..., SM)
+  if (N > 0)
+    { decl1', ..., declN', S1', ..., SM' }
+  else
+    S1', ..., SM'
+
+
+Print
+----------------------------------------------------------------------
+if print(e1, ..., eN)
+  if (pstream__) {
+    stan_print(pstream__, e1', ..., eN')
+    *pstream__ << std::endl;
+  }
+
+Reject
+----------------------------------------------------------------------
+If reject(e1, ..., eN)
+  std::stringstream errmsg_stream__;
+  errmsg_stream__ << e1' << e2' << ... << eN';
+  throw std::domain_error(errmsg_stream__.str());
+
+
+Return
+----------------------------------------------------------------------
+if return
+  return;
+else if return e
+  return stan::math::promote_scalar<fun_return_scalar_t__>(e');
+
+
+For Statement
+----------------------------------------------------------------------
+If for (i in a:b) s
+  for (int i' = a'; i' <= b'; ++i') {
+    s'
+  };
+
+Foreach statement (array)
+----------------------------------------------------------------------
+If for (v in xs) s
+  for (int loopvar(v) = 0; loopvar(v) < xs'.size; ++loopvar(v)) {
+    auto& v = xs[loopvar(v)];
+    s'
+  }
+
+where loopvar(v) = (v')_loopid__  (or use a fresh gensym)
+
+Foreach statement (matrix/vector)
+----------------------------------------------------------------------
+If for (v in xs) s
+  for (int loopvar(v) = 0; loopvar(v) < xs'.size; ++loopvar(v)) {
+    auto& v = xs(loopvar(v));
+    s'
+  }
+
+where loopvar(v) = (v')_loopid__  (or use a fresh gensym)
+
+
+While statement
+----------------------------------------------------------------------
+If while (e) s
+  while (e') {
+    s'
+  }
+
+Break statement
+----------------------------------------------------------------------
+If break
+  break;
+
+
+Continue statement
+----------------------------------------------------------------------
+If continue
+  continue;
+
+
+Conditional statement
+----------------------------------------------------------------------
+If if (cond1) then s1 else if (cond2) then s2 ... else sN
+  if (cond1') {
+    s1'
+  } else if (cond2') {
+    s2'
+  } ...
+  ...
+  else {
+    sN'
+  }
+
+Actual representation in C++ is (cond1, ..., condM) and (s1, ..., SN)
+where N = M (no else) or N = M + 1 (final else clause).
