@@ -95,8 +95,8 @@ let powerset_lattice_expressions (initial : Mir.ExprSet.t) =
     type properties = Mir.ExprSet.t
 
     let bottom = Mir.ExprSet.empty
-    let lub s1 s2 = Mir.ExprSet.inter s1 s2
-    let leq s1 s2 = Mir.ExprSet.is_subset s2 ~of_:s1
+    let lub s1 s2 = Mir.ExprSet.union s1 s2
+    let leq s1 s2 = Mir.ExprSet.is_subset s1 ~of_:s2
     let initial = initial
   end
   : LATTICE

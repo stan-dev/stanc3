@@ -3622,6 +3622,20 @@ let%expect_test "lazy code motion" =
          (SList
           (((sloc <opaque>)
             (stmt
+             (Assignment
+              ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+               (texpr (Var sym24__)) (texpr_adlevel DataOnly))
+              ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+               (texpr (Var sym24__)) (texpr_adlevel DataOnly)))))
+           ((sloc <opaque>)
+            (stmt
+             (Assignment
+              ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym23__))
+               (texpr_adlevel DataOnly))
+              ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym23__))
+               (texpr_adlevel DataOnly)))))
+           ((sloc <opaque>)
+            (stmt
              (NRFunApp print
               (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
                 (texpr (Var sym24__)) (texpr_adlevel DataOnly))))))
