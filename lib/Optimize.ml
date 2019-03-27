@@ -605,13 +605,7 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let ( used_expr
-        , anticipated_expressions_mfp
-        , available_expressions_mfp
-        , earliest_expr
-        , postponable_expressions_mfp
-        , latest_expr
-        , used_expressions_mfp ) =
+    let latest_expr, used_expressions_mfp =
       Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
         flowgraph_to_mir
     in
@@ -636,22 +630,6 @@ let lazy_code_motion (mir : typed_prog) =
           (Map.find_exn latest_expr i)
           (Map.find_exn used_expressions_mfp i).entry
       in
-      let _ =
-        ( used_expr
-        , anticipated_expressions_mfp
-        , available_expressions_mfp
-        , earliest_expr
-        , postponable_expressions_mfp
-        , latest_expr
-        , used_expressions_mfp )
-      in
-      (* TODO: REMOVE *)
-      (* let _ =
-        if Set.length (Map.find_exn latest_expr i) > 0 then
-          raise_s [%sexp ((Map.map ~f:(fun x -> x.entry) used_expressions_mfp)
-          : (int, ExprSet.t) Map.Poly.t)] 
-      in *)
-      (* NOTE: THE PROBLEM SEEMS TO BE IN the way that used_expressions_mfp.entry(2) is computed *)
       let assignments_to_add_to_s =
         Set.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
             { stmt=
@@ -671,12 +649,15 @@ let lazy_code_motion (mir : typed_prog) =
         Map.filter_keys subexpression_map ~f:(fun key ->
             Set.mem to_replace_in_s key )
       in *)
-      let expr_subst_stmt_except_initial_assign m s =
-        match s.stmt with
-        | Assignment (e, e')
-          when Mir.compare_expr_typed_located e (Map.find_exn m e') = 0 ->
-            s
-        | _ -> expr_subst_stmt m s
+      let expr_subst_stmt_except_initial_assign m =
+        let f stmt =
+          match stmt with
+          | Assignment (e, e')
+            when Mir.compare_expr_typed_located e (Map.find_exn m e') = 0 ->
+              stmt
+          | _ -> expr_subst_stmt_base m stmt
+        in
+        map_rec_stmt_loc f
       in
       SList
         (List.map
@@ -3626,13 +3607,17 @@ let%expect_test "lazy code motion" =
               ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
                (texpr (Var sym24__)) (texpr_adlevel DataOnly))
               ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-               (texpr (Var sym24__)) (texpr_adlevel DataOnly)))))
+               (texpr
+                (FunApp make_array
+                 (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Real 3.0))
+                   (texpr_adlevel DataOnly)))))
+               (texpr_adlevel DataOnly)))))
            ((sloc <opaque>)
             (stmt
              (Assignment
               ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym23__))
                (texpr_adlevel DataOnly))
-              ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym23__))
+              ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Real 3.0))
                (texpr_adlevel DataOnly)))))
            ((sloc <opaque>)
             (stmt

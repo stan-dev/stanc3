@@ -67,3 +67,9 @@ val expr_subst_expr :
 
 val expr_subst_stmt : expr_typed_located ExprMap.t -> stmt_loc -> stmt_loc
 (** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
+
+val expr_subst_stmt_base :
+     expr_typed_located ExprMap.t
+  -> (expr_typed_located, 'a) statement
+  -> (expr_typed_located, 'a) statement
+(** Substitute subexpressions occurring at the top level in statements according to the provided Map. *)
