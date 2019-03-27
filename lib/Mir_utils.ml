@@ -145,4 +145,4 @@ and expr_subst_idx m = map_index (expr_subst_expr m)
 let expr_subst_stmt_base m =
   subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
 
-let expr_subst_stmt m = Mir.map_rec_stmt_loc (expr_subst_stmt_base m)
+let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)

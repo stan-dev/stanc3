@@ -583,7 +583,7 @@ let dead_code_elimination (mir : typed_prog) =
 let partial_evaluation = Partial_evaluator.eval_prog
 
 let lazy_code_motion (mir : typed_prog) =
-(* TODO: this isn't doing the right thing yet.
+  (* TODO: this isn't doing the right thing yet.
      Lazy code motion still needs to be debugged. *)
   let preprocess_flowgraph s =
     let rev_flowgraph, flowgraph_to_mir =
@@ -611,11 +611,11 @@ let lazy_code_motion (mir : typed_prog) =
     in
     let subexpression_map =
       Set.fold (Monotone_framework.used_expressions_stmt s.stmt)
-        ~init:Map.Poly.empty ~f:(fun accum e ->
-          Map.Poly.set accum ~key:e ~data:(Util.gensym ()) )
+        ~init:ExprMap.empty ~f:(fun accum e ->
+          Map.set accum ~key:e ~data:(Util.gensym ()) )
     in
     let declarations_list =
-      Map.Poly.fold subexpression_map ~init:[] ~f:(fun ~key ~data accum ->
+      Map.fold subexpression_map ~init:[] ~f:(fun ~key ~data accum ->
           { stmt=
               Mir.Decl
                 { decl_adtype= key.texpr_adlevel
@@ -655,7 +655,7 @@ let lazy_code_motion (mir : typed_prog) =
       let expr_subst_stmt_except_initial_assign m s =
         match s.stmt with
         | Assignment (e, e')
-          when Mir.compare_expr_typed_located e (Map.Poly.find_exn m e') = 0 ->
+          when Mir.compare_expr_typed_located e (Map.find_exn m e') = 0 ->
             s
         | _ -> expr_subst_stmt m s
       in

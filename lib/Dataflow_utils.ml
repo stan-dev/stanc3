@@ -120,7 +120,8 @@ let is_ctrl_flow (stmt : ('e, 's) statement) : bool =
    some of the same Break, Continue and Return bookkeeping.
 *)
 let build_cf_graphs
-    (statement_map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     label Set.Poly.t
     * (label, label Set.Poly.t) Map.Poly.t
     * (label, label Set.Poly.t) Map.Poly.t =
@@ -156,28 +157,27 @@ let build_cf_graphs
               Set.Poly.union_list
                 (* The exit of a loop could be: *)
                 (* the loop's predecessor (in case the loop doesn't run), *)
-                [ if passthrough_possible then in_state.exits else Set.Poly.empty
-                (* a normal exit point of the body, *)
-                ; substmt_state_second.exits
-                (* a break within the body, *)
+                [ ( if passthrough_possible then in_state.exits
+                  else Set.Poly.empty (* a normal exit point of the body, *) )
+                ; substmt_state_second.exits (* a break within the body, *)
                 ; Set.Poly.diff substmt_state_second.breaks in_state.breaks
-                (* or a continue within the body. *)
+                  (* or a continue within the body. *)
                 ; Set.Poly.diff substmt_state_second.continues
                     in_state.continues ] }
         , substmt_map_second )
       in
       match stmt with
-      | For {lower={texpr=Lit (Int, l_str);_}; upper={texpr=Lit (Int, u_str);_}; _} ->
-        (* TODO: Is it safe to use int_of_string here? *)
-        let l = int_of_string l_str in
-        let u = int_of_string u_str in
-        looped_state (l > u)
-      | For _ ->
-        looped_state true
-      | While ({texpr=Lit (Int, cond_str); _}, _) ->
-        looped_state (int_of_string cond_str = 0)
-      | While _ ->
-        looped_state true
+      | For
+          { lower= {texpr= Lit (Int, l_str); _}
+          ; upper= {texpr= Lit (Int, u_str); _}; _ } ->
+          (* TODO: Is it safe to use int_of_string here? *)
+          let l = int_of_string l_str in
+          let u = int_of_string u_str in
+          looped_state (l > u)
+      | For _ -> looped_state true
+      | While ({texpr= Lit (Int, cond_str); _}, _) ->
+          looped_state (int_of_string cond_str = 0)
+      | While _ -> looped_state true
       | _ -> (substmt_state_initial, substmt_map_initial)
     in
     (* Some statements interact with the break/return/continue states
@@ -239,14 +239,16 @@ let build_cf_graphs
 
 (** See interface file *)
 let build_cf_graph
-    (statement_map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let _, _, cf_graph = build_cf_graphs statement_map in
   cf_graph
 
 (** See interface file *)
 let build_predecessor_graph
-    (statement_map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t =
   let exits, pred_graph, _ = build_cf_graphs statement_map in
   (exits, pred_graph)
@@ -289,13 +291,14 @@ let%expect_test "Loop passthrough" =
   in
   let block = Mir.Block mir.log_prob in
   let statement_map =
-    build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) {stmt= block; sloc= Mir.no_span} in
+    build_statement_map
+      (fun s -> s.stmt)
+      (fun s -> s.sloc)
+      {stmt= block; sloc= Mir.no_span}
+  in
   let exits, _ = build_predecessor_graph statement_map in
-  print_s
-    [%sexp
-      (exits : label Set.Poly.t)] ;
-  [%expect
-    {|
+  print_s [%sexp (exits : label Set.Poly.t)] ;
+  [%expect {|
       (8 9 12 18 19 22)
     |}]
 

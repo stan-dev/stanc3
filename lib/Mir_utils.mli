@@ -61,12 +61,9 @@ val subst_stmt :
 (** Substitute variables occurring anywhere in a statement according to the provided Map. *)
 
 val expr_subst_expr :
-     (expr_typed_located, expr_typed_located) Map.Poly.t
-  -> expr_typed_located
-  -> expr_typed_located
+  expr_typed_located ExprMap.t -> expr_typed_located -> expr_typed_located
 (** Substitute subexpressions in an expression according to the provided Map, trying
     to match on larger subexpressions before smaller ones. *)
 
-val expr_subst_stmt :
-  (expr_typed_located, expr_typed_located) Map.Poly.t -> stmt_loc -> stmt_loc
+val expr_subst_stmt : expr_typed_located ExprMap.t -> stmt_loc -> stmt_loc
 (** Substitute subexpressions occurring anywhere in a statement according to the provided Map. *)
