@@ -886,12 +886,14 @@ let lazy_expressions_mfp
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   let all_expressions =
-    Mir.ExprSet.union_list
-      (List.map
-         ~f:(fun x -> used_expressions_stmt x.stmt)
-         (List.concat
-            [ mir.functions_block; mir.generate_quantities; mir.prepare_params
-            ; mir.log_prob; mir.prepare_data ]))
+    Set.filter
+      ~f:(fun x -> match x.texpr with Lit (_, _) -> false | _ -> true)
+      (Mir.ExprSet.union_list
+         (List.map
+            ~f:(fun x -> used_expressions_stmt x.stmt)
+            (List.concat
+               [ mir.functions_block; mir.generate_quantities
+               ; mir.prepare_params; mir.log_prob; mir.prepare_data ])))
   in
   let used_expr = used flowgraph_to_mir in
   let (module Lattice1) =
