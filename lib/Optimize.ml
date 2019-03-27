@@ -605,7 +605,13 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let used_expr, _, _, _, _, latest_expr, used_expressions_mfp =
+    let ( used_expr
+        , anticipated_expressions_mfp
+        , available_expressions_mfp
+        , earliest_expr
+        , postponable_expressions_mfp
+        , latest_expr
+        , used_expressions_mfp ) =
       Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
         flowgraph_to_mir
     in
@@ -630,10 +636,22 @@ let lazy_code_motion (mir : typed_prog) =
           (Map.find_exn latest_expr i)
           (Map.find_exn used_expressions_mfp i).entry
       in
-      (*
-      let _ = if (Set.length (Map.find_exn latest_expr i) > 0) then raise_s [%sexp
-      ( latest_expr : (int, ExprSet.t) Map.Poly.t)
-      ] in *)
+      let _ =
+        ( used_expr
+        , anticipated_expressions_mfp
+        , available_expressions_mfp
+        , earliest_expr
+        , postponable_expressions_mfp
+        , latest_expr
+        , used_expressions_mfp )
+      in
+      (* TODO: REMOVE *)
+      (* let _ =
+        if Set.length (Map.find_exn latest_expr i) > 0 then
+          raise_s [%sexp ((Map.map ~f:(fun x -> x.entry) used_expressions_mfp)
+          : (int, ExprSet.t) Map.Poly.t)] 
+      in *)
+      (* NOTE: THE PROBLEM SEEMS TO BE IN the way that used_expressions_mfp.entry(2) is computed *)
       let assignments_to_add_to_s =
         Set.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
             { stmt=
@@ -642,6 +660,7 @@ let lazy_code_motion (mir : typed_prog) =
             ; sloc= Mir.no_span }
             :: accum )
       in
+      (* TODO: according to errata, the following should be cut out
       let to_replace_in_s =
         Set.union
           (Set.diff (Map.find_exn used_expr i) (Map.find_exn latest_expr i))
@@ -651,7 +670,7 @@ let lazy_code_motion (mir : typed_prog) =
       let replacement_map_for_s =
         Map.filter_keys subexpression_map ~f:(fun key ->
             Set.mem to_replace_in_s key )
-      in
+      in *)
       let expr_subst_stmt_except_initial_assign m s =
         match s.stmt with
         | Assignment (e, e')
@@ -663,7 +682,7 @@ let lazy_code_motion (mir : typed_prog) =
         (List.map
            ~f:
              (expr_subst_stmt_except_initial_assign
-                (Map.mapi replacement_map_for_s ~f:(fun ~key ~data ->
+                (Map.mapi subexpression_map ~f:(fun ~key ~data ->
                      {key with texpr= Var data} )))
            (assignments_to_add_to_s @ [{stmt; sloc= Mir.no_span}]))
     in
@@ -3605,11 +3624,7 @@ let%expect_test "lazy code motion" =
             (stmt
              (NRFunApp print
               (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-                (texpr
-                 (FunApp make_array
-                  (((texpr_type UReal) (texpr_loc <opaque>)
-                    (texpr (Lit Real 3.0)) (texpr_adlevel DataOnly)))))
-                (texpr_adlevel DataOnly))))))
+                (texpr (Var sym24__)) (texpr_adlevel DataOnly))))))
            ((sloc <opaque>)
             (stmt
              (NRFunApp print
