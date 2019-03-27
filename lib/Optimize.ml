@@ -630,9 +630,9 @@ let lazy_code_motion (mir : typed_prog) =
           (Map.find_exn latest_expr i)
           (Map.find_exn used_expressions_mfp i).entry
       in
-      (* TODO: debug here
+      (*
       let _ = if (Set.length (Map.find_exn latest_expr i) > 0) then raise_s [%sexp
-      ( (Map.map ~f:(fun x -> x.exit) used_expressions_mfp) : (int, ExprSet.t) Map.Poly.t)
+      ( latest_expr : (int, ExprSet.t) Map.Poly.t)
       ] in *)
       let assignments_to_add_to_s =
         Set.fold to_assign_in_s ~init:[] ~f:(fun accum e ->
@@ -643,10 +643,10 @@ let lazy_code_motion (mir : typed_prog) =
             :: accum )
       in
       let to_replace_in_s =
-        Set.diff
+        Set.union
+          (Set.diff (Map.find_exn used_expr i) (Map.find_exn latest_expr i))
           (Set.inter (Map.find_exn used_expr i)
              (Map.find_exn used_expressions_mfp i).entry)
-          (Map.find_exn latest_expr i)
       in
       let replacement_map_for_s =
         Map.filter_keys subexpression_map ~f:(fun key ->
@@ -3614,11 +3614,7 @@ let%expect_test "lazy code motion" =
             (stmt
              (NRFunApp print
               (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-                (texpr
-                 (FunApp make_array
-                  (((texpr_type UReal) (texpr_loc <opaque>)
-                    (texpr (Lit Real 3.0)) (texpr_adlevel DataOnly)))))
-                (texpr_adlevel DataOnly))))))))))))
+                (texpr (Var sym24__)) (texpr_adlevel DataOnly))))))))))))
      (gen_quant_vars ())
      (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
      (prog_path "")) |}]
