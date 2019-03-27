@@ -238,7 +238,7 @@ type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
 let pp_io_var pp_e ppf (name, (sized_ty, io_block)) =
   Fmt.pf ppf "@[<h>%a %s %a@]" (pp_sizedtype pp_e) (sized_ty, Ast.Identity)
     name
-    (angle_brackets pp_io_block)
+    (angle_brackets @@ angle_brackets pp_io_block)
     io_block
 
 let pp_block label pp_elem ppf elems =
@@ -297,7 +297,7 @@ let pp_transform_inits pp_s ppf {transform_inits; _} =
   ; prog_path: string }
    *)
 let pp_prog pp_e pp_s ppf prog =
-  Fmt.pf ppf "@[<v>@;%a@;%a@;%a@;%a@;%a@;%a@;%a@;%a@;%a@;%a@;@]"
+  Fmt.pf ppf "@[<v>@;%a@;%a@;%a@;%a@;%a@;%a@;%a@;%a@]"
     (pp_functions_block pp_s) prog (pp_input_vars pp_e) prog
     (pp_prepare_data pp_s) prog (pp_prepare_params pp_s) prog
     (pp_log_prob pp_s) prog
