@@ -583,6 +583,8 @@ let dead_code_elimination (mir : typed_prog) =
 let partial_evaluation = Partial_evaluator.eval_prog
 
 let lazy_code_motion (mir : typed_prog) =
+(* TODO: this isn't doing the right thing yet.
+     Lazy code motion still needs to be debugged. *)
   let preprocess_flowgraph s =
     let rev_flowgraph, flowgraph_to_mir =
       Monotone_framework.inverse_flowgraph_of_stmt s
@@ -3582,6 +3584,8 @@ let%expect_test "lazy code motion" =
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   print_s [%sexp (mir : Mir.typed_prog)] ;
+  (* TODO: this test isn't doing the right thing yet.
+     Lazy code motion still needs to be debugged. *)
   [%expect
     {|
     ((functions_block ()) (data_vars ()) (tdata_vars ())
