@@ -146,3 +146,27 @@ let expr_subst_stmt_base m =
   subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)
 
 let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
+
+let rec expr_depth (e : expr_typed_located) : int =
+  match e.texpr with
+  | Var _ | Lit (_, _) -> 0
+  | FunApp (_, l) ->
+      1
+      + Option.value ~default:0
+          (List.max_elt ~compare:compare_int (List.map ~f:expr_depth l))
+  | TernaryIf (e1, e2, e3) ->
+      1
+      + Option.value ~default:0
+          (List.max_elt ~compare:compare_int
+             (List.map ~f:expr_depth [e1; e2; e3]))
+  | Indexed (e, l) ->
+      1
+      + max (expr_depth e)
+          (Option.value ~default:0
+             (List.max_elt ~compare:compare_int (List.map ~f:idx_depth l)))
+
+and idx_depth (i : expr_typed_located index) : int =
+  match i with
+  | All -> 0
+  | Single e | Upfrom e | Downfrom e | MultiIndex e -> expr_depth e
+  | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)

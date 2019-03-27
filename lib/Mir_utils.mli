@@ -73,3 +73,6 @@ val expr_subst_stmt_base :
   -> (expr_typed_located, 'a) statement
   -> (expr_typed_located, 'a) statement
 (** Substitute subexpressions occurring at the top level in statements according to the provided Map. *)
+
+val expr_depth : expr_typed_located -> int
+(** Calculate how deeply nested an expression is. *)
