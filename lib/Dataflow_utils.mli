@@ -7,7 +7,7 @@ val union_maps_left :
 (** Union maps, preserving the left element in a collision *)
 
 val build_cf_graphs :
-     (label, ('e, label) statement * 'm) Map.Poly.t
+  (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
   -> label Set.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
      * (label, label Set.Poly.t) Map.Poly.t
@@ -24,7 +24,7 @@ val build_cf_graphs :
 *)
 
 val build_cf_graph :
-     (label, ('e, label) statement * 'm) Map.Poly.t
+  (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
   -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the controlflow graph requires a traversal with state that includes continues,
@@ -34,7 +34,7 @@ val build_cf_graph :
 *)
 
 val build_predecessor_graph :
-     (label, ('e, label) statement * 'm) Map.Poly.t
+  (label, (expr_typed_located, label) statement * 'm) Map.Poly.t
   -> label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t
 (**
    Building the predecessor graph requires a traversal with state that includes the

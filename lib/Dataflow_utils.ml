@@ -120,7 +120,7 @@ let is_ctrl_flow (stmt : ('e, 's) statement) : bool =
    some of the same Break, Continue and Return bookkeeping.
 *)
 let build_cf_graphs
-    (statement_map : (label, ('e, label) statement * 'm) Map.Poly.t) :
+    (statement_map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     label Set.Poly.t
     * (label, label Set.Poly.t) Map.Poly.t
     * (label, label Set.Poly.t) Map.Poly.t =
@@ -143,27 +143,41 @@ let build_cf_graphs
       (* If the statement is a loop, we need to include the loop body exits predecessors
          of the loop body *)
       let loop_body_exits = substmt_state_initial.exits in
+      let looped_state passthrough_possible =
+        let substmt_state_second, substmt_map_second =
+          branching_fold_statement stmt ~join
+            ~init:
+              ( {in_state with exits= Set.Poly.add loop_body_exits label}
+              , in_map )
+            ~f:(build_cf_graph_rec child_cf)
+        in
+        ( { substmt_state_second with
+            exits=
+              Set.Poly.union_list
+                (* The exit of a loop could be: *)
+                (* the loop's predecessor (in case the loop doesn't run), *)
+                [ if passthrough_possible then in_state.exits else Set.Poly.empty
+                (* a normal exit point of the body, *)
+                ; substmt_state_second.exits
+                (* a break within the body, *)
+                ; Set.Poly.diff substmt_state_second.breaks in_state.breaks
+                (* or a continue within the body. *)
+                ; Set.Poly.diff substmt_state_second.continues
+                    in_state.continues ] }
+        , substmt_map_second )
+      in
       match stmt with
-      | For _ | While _ ->
-          let substmt_state_second, substmt_map_second =
-            branching_fold_statement stmt ~join
-              ~init:
-                ( {in_state with exits= Set.Poly.add loop_body_exits label}
-                , in_map )
-              ~f:(build_cf_graph_rec child_cf)
-          in
-          ( { substmt_state_second with
-              exits=
-                Set.Poly.union_list
-                  (* The exit of a loop could be: *)
-                  (* the loop's predecessor (in case the loop doesn't run), *)
-                  [ in_state.exits (* a normal exit point of the body, *)
-                  ; substmt_state_second.exits (* a break within the body, *)
-                  ; Set.Poly.diff substmt_state_second.breaks in_state.breaks
-                    (* or a continue within the body. *)
-                  ; Set.Poly.diff substmt_state_second.continues
-                      in_state.continues ] }
-          , substmt_map_second )
+      | For {lower={texpr=Lit (Int, l_str);_}; upper={texpr=Lit (Int, u_str);_}; _} ->
+        (* TODO: Is it safe to use int_of_string here? *)
+        let l = int_of_string l_str in
+        let u = int_of_string u_str in
+        looped_state (l > u)
+      | For _ ->
+        looped_state true
+      | While ({texpr=Lit (Int, cond_str); _}, _) ->
+        looped_state (int_of_string cond_str = 0)
+      | While _ ->
+        looped_state true
       | _ -> (substmt_state_initial, substmt_map_initial)
     in
     (* Some statements interact with the break/return/continue states
@@ -225,14 +239,14 @@ let build_cf_graphs
 
 (** See interface file *)
 let build_cf_graph
-    (statement_map : (label, ('e, label) statement * 'm) Map.Poly.t) :
+    (statement_map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let _, _, cf_graph = build_cf_graphs statement_map in
   cf_graph
 
 (** See interface file *)
 let build_predecessor_graph
-    (statement_map : (label, ('e, label) statement * 'm) Map.Poly.t) :
+    (statement_map : (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
     label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t =
   let exits, pred_graph, _ = build_cf_graphs statement_map in
   (exits, pred_graph)
@@ -240,6 +254,50 @@ let build_predecessor_graph
 (***********************************)
 (* Tests                           *)
 (***********************************)
+
+let%expect_test "Loop passthrough" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        model {
+          if (1) {
+            if (1) {
+              for (j in 1:2) {
+                print("Badger", j);
+              }
+            } else {
+              for (j in 2:1) {
+                print("Badger", j);
+              }
+            }
+          } else {
+            if (1) {
+              while (1) {
+                print("Badger");
+              }
+            } else {
+              while (0) {
+                print("Badger");
+              }
+            }
+          }
+        }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let block = Mir.Block mir.log_prob in
+  let statement_map =
+    build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) {stmt= block; sloc= Mir.no_span} in
+  let exits, _ = build_predecessor_graph statement_map in
+  print_s
+    [%sexp
+      (exits : label Set.Poly.t)] ;
+  [%expect
+    {|
+      (8 9 12 18 19 22)
+    |}]
 
 let example1_program =
   let ast =
@@ -502,7 +560,7 @@ let%expect_test "Predecessor graph example" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((7 8 13 16 19 22)
+      ((7 13 16 19 22)
        ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8))
         (10 (9 22)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
         (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
