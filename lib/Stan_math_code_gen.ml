@@ -25,71 +25,36 @@ let rec stantype_prim_str = function
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
-let rec pp_unsizedtype_custom_scalar scalar ppf ut =
+let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
   | Ast.UInt | UReal -> string ppf scalar
   | UArray t ->
-      pf ppf "std::vector<%a>" (pp_unsizedtype_custom_scalar scalar) t
+      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
 
-let pp_unsizedtype adtype ppf ut =
-  let scalar_type =
-    match adtype with
-    | Ast.DataOnly -> stantype_prim_str ut
-    | Ast.AutoDiffable -> "T__"
-    (* XXX - these can be different in UDF parameter generation
-         - need one per param.*)
-  in
-  pp_unsizedtype_custom_scalar scalar_type ppf ut
+let local_scalar ut = function
+  | Ast.DataOnly -> stantype_prim_str ut
+  | AutoDiffable -> "local_scalar_t"
 
-let%expect_test "emit function type raises" =
-  ( match pp_unsizedtype DataOnly stdout Ast.UMathLibraryFunction with
-  | () -> ()
-  | exception e -> print_s [%sexp (e : exn)] ) ;
-  [%expect {| ((x UMathLibraryFunction) "not implemented yet") |}]
+let pp_local_unsizedtype ppf (adtype, ut) =
+  let s = local_scalar ut adtype in
+  pp_unsizedtype_custom_scalar ppf (s, ut)
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-
-let rec pp_expr ppf {texpr; _} =
-  match texpr with
-  | Var s -> string ppf s
-  | Lit (Str, s) -> pf ppf "%S" s
-  | Lit (_, s) -> string ppf s
-  | FunApp (fname, args) -> pp_call ppf (fname, pp_expr, args)
-  | TernaryIf (cond, ifb, elseb) ->
-      pf ppf "(%a) ? (%a) : (%a)" pp_expr cond pp_expr ifb pp_expr elseb
-  | Indexed (e, idcs) ->
-      pf ppf "stan::model::rvalue(@[<hov>%a,@,%a,@]@ \"%a\")" pp_expr e
-        pp_indices idcs pp_expr e
-
-and pp_index ppf idx =
-  let idx_phrase fmt idtype = pf ppf fmt ("stan::model::index_" ^ idtype) in
-  match idx with
-  | All -> idx_phrase "%s" "omni()"
-  | Single e -> idx_phrase "%s(%a)" "uni" pp_expr e
-  | Upfrom e -> idx_phrase "%s(%a)" "min" pp_expr e
-  | Downfrom e -> idx_phrase "%s(%a)" "max" pp_expr e
-  | Between (e1, e2) -> idx_phrase "%s(%a, %a)" "min_max" pp_expr e1 pp_expr e2
-  | MultiIndex e -> idx_phrase "%s(%a)" "multi" pp_expr e
-
-and pp_indices ppf = function
-  | [] -> pf ppf "stan::model::nil_index_list()"
-  | hd :: tail ->
-      pf ppf "stan::model::cons_list(%a,@ %a)" pp_index hd pp_indices tail
-
-let pp_prim_stantype ppf st = pp_unsizedtype ppf st
+let pp_unsizedtype = Expression_gen.pp_unsizedtype
+let pp_expr = Expression_gen.pp_expr
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
-let pp_set_size ppf (decl_id, st) =
+let pp_set_size ppf (decl_id, st, adtype) =
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
-      pf ppf "%a" (pp_unsizedtype DataOnly) (Ast.remove_size st)
+      pf ppf "%a" pp_local_unsizedtype (adtype, Ast.remove_size st)
     in
     match st with
     | Ast.SInt | SReal -> pf ppf "0"
@@ -104,7 +69,7 @@ let pp_set_size ppf (decl_id, st) =
 let%expect_test "set size mat array" =
   let int i = {internal_expr with texpr= Lit (Int, string_of_int i)} in
   strf "@[<v>%a@]" pp_set_size
-    ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5))
+    ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
   [%expect
     {| d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
@@ -121,7 +86,7 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
 *)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
-    { texpr= FunApp (name ^ ".size", [])
+    { texpr= FunApp (fn_length, [{internal_expr with texpr= Var name}])
     ; texpr_loc= no_span
     ; texpr_type= UInt
     ; texpr_adlevel= DataOnly }
@@ -144,9 +109,6 @@ let rec integer_el_type = function
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 
-let pp_arg ppf (adtype, name, st) =
-  pf ppf "const %a& %s" (pp_unsizedtype adtype) st name
-
 let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
 
 let%expect_test "with idx" =
@@ -154,12 +116,12 @@ let%expect_test "with idx" =
   [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
 
 let pp_decl ppf (vident, ut, adtype) =
-  pf ppf "%a %s;" (pp_unsizedtype adtype) ut vident
+  pf ppf "%a %s;" pp_local_unsizedtype (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype) =
   pf ppf "%a@,%a" pp_decl
     (vident, Ast.remove_size st, adtype)
-    pp_set_size (vident, st)
+    pp_set_size (vident, st, adtype)
 
 let with_no_loc stmt = {stmt; sloc= no_span}
 
@@ -190,9 +152,9 @@ let pp_returntype ppf arg_types rt =
       (list ~sep:comma string)
       (maybe_templated_arg_types arg_types)
   in
-  pf ppf "%a@ "
-    (option ~none:(const string "void") (pp_unsizedtype_custom_scalar scalar))
-    rt
+  match rt with
+  | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
+  | None -> pf ppf "void@,"
 
 let pp_location ppf loc =
   pf ppf "current_statement__ = %S;@;" (Errors.string_of_location_span loc)
@@ -215,6 +177,9 @@ let trans_math_fn fname =
   match Map.Poly.find math_fn_translations fname with
   | Some x -> x
   | None -> (fname, [])
+
+let pp_arg ppf (custom_scalar, (_, name, ut)) =
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
 
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
@@ -261,7 +226,8 @@ let rec pp_statement ppf {stmt; sloc} =
       pp_returntype ppf fdargs fdrt ;
       (* XXX this is all so ugly: *)
       (* XXX Fix templating of args here *)
-      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg) fdargs ;
+      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg)
+        (List.zip_exn argtypetemplates fdargs) ;
       pf ppf ", std::ostream* pstream__@]) " ;
       match fdbody.stmt with
       | Skip -> pf ppf ";@ "
@@ -338,7 +304,7 @@ let pp_read_data ppf (decl_id, st, loc) =
   let vals = var_context_container st ^ "__" in
   let pp_read ppf decl_id = pf ppf "%s = %s;" decl_id vals in
   pf ppf "%s = context__.%s(\"%s\");@;" vals vals decl_id ;
-  pp_set_size ppf (decl_id, st) ;
+  pp_set_size ppf (decl_id, st, DataOnly) ;
   pp_run_code_per_el pp_read ppf (decl_id, st) ;
   pf ppf "@;"
 
@@ -351,7 +317,7 @@ let%expect_test "read int[N] y" =
     current_statement__ = "file , line 0, column 0";
     vals_i__ = context__.vals_i__("y");
     y = std::vector<int>(N, 0);
-    for (size_t i_0__ = 0; i_0__ < y.size(); i_0__++) y[i_0__] = vals_i__; |}]
+    for (size_t i_0__ = 0; i_0__ < Length__(y); i_0__++) y[i_0__] = vals_i__; |}]
 
 let pp_ctor ppf p =
   (* XXX:
@@ -516,8 +482,8 @@ let%expect_test "udf" =
     {|
     template <typename T0__, typename T1__>
     void
-    sars(const Eigen::Matrix<double, -1, -1>& x,
-         const Eigen::Matrix<T__, 1, -1>& y, std::ostream* pstream__) {
+    sars(const Eigen::Matrix<T0__, -1, -1>& x,
+         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
       typedef typename boost::math::tools::promote_args<T0__,
               T1__>::type local_scalar_t__;
       typedef local_scalar_t__ fun_return_scalar_t__;
