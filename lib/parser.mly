@@ -2,6 +2,7 @@
 
 %{
 open Core_kernel
+open Ast_Mir_Common
 open Ast
 open Debugging
 open Errors

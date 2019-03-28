@@ -6,6 +6,7 @@ during parsing and are in fact irrelevant for building up the parse tree *)
 open Core_kernel
 open Symbol_table
 open Ast
+open Ast_Mir_Common
 open Stan_math_signatures
 open Operators
 open Errors

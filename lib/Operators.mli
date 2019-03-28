@@ -1,6 +1,7 @@
 (* -- Helpers for treatment of operators -- *)
 
 open Ast
+open Ast_Mir_Common
 
 val operator_return_type_from_string :
   string -> typed_expression list -> returntype option

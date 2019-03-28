@@ -1,6 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
 open Ast
+open Ast_Mir_Common
 
 val get_stan_math_function_return_type_opt :
   string -> typed_expression list -> returntype option

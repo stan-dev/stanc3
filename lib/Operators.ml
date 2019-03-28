@@ -3,6 +3,7 @@
 open Core_kernel
 open Type_conversion
 open Ast
+open Ast_Mir_Common
 
 let ternary_if = "TernaryIf__"
 

@@ -1,6 +1,7 @@
 (** Some functions for checking whether conversions between types are allowed *)
 
 open Ast
+open Ast_Mir_Common
 
 val check_compatible_arguments_mod_conv :
   string -> (autodifftype * unsizedtype) list -> typed_expression list -> bool

@@ -2,6 +2,7 @@
     operate on *)
 
 open Core_kernel
+open Ast_Mir_Common
 
 (*
    XXX Missing:
@@ -63,36 +64,6 @@ and pp_index pp_e ppf = function
           makes no sense... *)
       Fmt.pf ppf {|~%a|} pp_e index
 
-type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
-type 'e sizedtype = 'e Ast.sizedtype [@@deriving sexp, hash, map]
-type autodifftype = Ast.autodifftype [@@deriving sexp, hash]
-
-let angle_brackets pp_v ppf v = Fmt.pf ppf "@[<1><%a>@]" pp_v v
-let label str pp_v ppf v = Fmt.pf ppf "%s=%a" str pp_v v
-let pp_keyword = Fmt.(string |> styled `Blue)
-
-let pp_autodifftype ppf = function
-  | Ast.DataOnly -> pp_keyword ppf "data "
-  | Ast.AutoDiffable -> ()
-
-let rec pp_unsizedtype ppf = function
-  | Ast.UInt -> pp_keyword ppf "int"
-  | UReal -> pp_keyword ppf "real"
-  | UVector -> pp_keyword ppf "vector"
-  | URowVector -> pp_keyword ppf "row_vector"
-  | UMatrix -> pp_keyword ppf "matrix"
-  | UArray ut -> (Fmt.brackets pp_unsizedtype) ppf ut
-  | UFun (argtypes, rt) ->
-      Fmt.pf ppf {|%a => %a|}
-        Fmt.(list (pair ~sep:comma pp_autodifftype pp_unsizedtype) ~sep:comma)
-        argtypes pp_returntype rt
-  | UMathLibraryFunction ->
-      (angle_brackets Fmt.string) ppf "Stan Math function"
-
-and pp_returntype ppf = function
-  | Ast.Void -> Fmt.string ppf "void"
-  | Ast.ReturnType ut -> pp_unsizedtype ppf ut
-
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
@@ -132,53 +103,6 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" pp_autodifftype autodifftype pp_unsizedtype unsizedtype
     name
 
-let pp_transformation pp_e ppf = function
-  | Ast.Identity -> ()
-  | Lower expr -> (pp_e |> label "lower" |> angle_brackets) ppf expr
-  | Upper expr -> (pp_e |> label "upper" |> angle_brackets) ppf expr
-  | LowerUpper (lower_expr, upper_expr) ->
-      ( Fmt.(pair ~sep:comma (pp_e |> label "lower") (pp_e |> label "upper"))
-      |> angle_brackets )
-        ppf (lower_expr, upper_expr)
-  | Offset expr -> (pp_e |> label "offet" |> angle_brackets) ppf expr
-  | Multiplier expr -> (pp_e |> label "multiplier" |> angle_brackets) ppf expr
-  | OffsetMultiplier (offset_expr, mult_expr) ->
-      ( Fmt.(
-          pair ~sep:comma (pp_e |> label "offset") (pp_e |> label "multiplier"))
-      |> angle_brackets )
-        ppf (offset_expr, mult_expr)
-  | Ordered -> (angle_brackets Fmt.string) ppf "ordered"
-  | PositiveOrdered -> (angle_brackets Fmt.string) ppf "positive_ordered"
-  | Simplex -> (angle_brackets Fmt.string) ppf "simplex"
-  | UnitVector -> (angle_brackets Fmt.string) ppf "unit_vector"
-  | CholeskyCorr -> (angle_brackets Fmt.string) ppf "cholesky_factor_corr"
-  | CholeskyCov -> (angle_brackets Fmt.string) ppf "cholesky_factor_cov"
-  | Correlation -> (angle_brackets Fmt.string) ppf "corr_matrix"
-  | Covariance -> (angle_brackets Fmt.string) ppf "cov_matrix"
-
-let rec pp_sizedtype pp_e ppf (st, trans) =
-  match st with
-  | Ast.SInt -> Fmt.pf ppf {|%s%a|} "int" (pp_transformation pp_e) trans
-  | Ast.SReal -> Fmt.pf ppf {|%s%a|} "real" (pp_transformation pp_e) trans
-  | Ast.SVector expr ->
-      Fmt.pf ppf {|vector%a%a|} (pp_transformation pp_e) trans
-        (Fmt.brackets pp_e) expr
-  | Ast.SRowVector expr ->
-      Fmt.pf ppf {|row_vector%a%a|} (pp_transformation pp_e) trans
-        (Fmt.brackets pp_e) expr
-  | Ast.SMatrix (d1_expr, d2_expr) ->
-      Fmt.pf ppf {|matrix%a%a|} (pp_transformation pp_e) trans
-        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
-        (d1_expr, d2_expr)
-  | Ast.SArray (st, expr) ->
-      Fmt.pf ppf {|array%a%a|} (pp_transformation pp_e) trans
-        Fmt.(
-          pair ~sep:comma
-            (fun ppf st -> pp_sizedtype pp_e ppf (st, Ast.Identity))
-            pp_e
-          |> brackets)
-        (st, expr)
-
 let rec pp_statement pp_e pp_s ppf = function
   | Assignment (assignee, expr) ->
       Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} pp_e assignee pp_e expr
@@ -208,7 +132,7 @@ let rec pp_statement pp_e pp_s ppf = function
   | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_sizedtype pp_e)
-        (decl_type, Ast.Identity) decl_id
+        (decl_type, Identity) decl_id
   | FunDef {fdrt; fdname; fdargs; fdbody} -> (
     match fdrt with
     | Some rt ->
@@ -236,8 +160,7 @@ let pp_io_block ppf = function
 type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
 
 let pp_io_var pp_e ppf (name, (sized_ty, io_block)) =
-  Fmt.pf ppf "@[<h>%a %s %a;@]" (pp_sizedtype pp_e) (sized_ty, Ast.Identity)
-    name
+  Fmt.pf ppf "@[<h>%a %s %a;@]" (pp_sizedtype pp_e) (sized_ty, Identity) name
     (angle_brackets @@ angle_brackets pp_io_block)
     io_block
 
@@ -305,8 +228,8 @@ let pp_prog pp_e pp_s ppf prog =
     prog (pp_transform_inits pp_s) prog (pp_output_vars pp_e) prog
 
 type expr_typed_located =
-  { texpr_type: Ast.unsizedtype
-  ; texpr_loc: Ast.location_span sexp_opaque [@compare.ignore]
+  { texpr_type: unsizedtype
+  ; texpr_loc: location_span sexp_opaque [@compare.ignore]
   ; texpr: expr_typed_located expr
   ; texpr_adlevel: autodifftype }
 [@@deriving sexp, hash, map, of_sexp]
@@ -315,7 +238,7 @@ let rec pp_expr_typed_located ppf {texpr; _} =
   pp_expr pp_expr_typed_located ppf texpr
 
 type stmt_loc =
-  { sloc: Ast.location_span sexp_opaque [@compare.ignore]
+  { sloc: location_span sexp_opaque [@compare.ignore]
   ; stmt: (expr_typed_located, stmt_loc) statement }
 [@@deriving hash, map, of_sexp]
 
@@ -335,8 +258,8 @@ type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
 (* ===================== Some helper functions and values ====================== *)
-let no_loc = {Ast.filename= ""; line_num= 0; col_num= 0; included_from= None}
-let no_span = {Ast.begin_loc= no_loc; end_loc= no_loc}
+let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+let no_span = {begin_loc= no_loc; end_loc= no_loc}
 
 let internal_expr =
   { texpr= Var "UHOH"

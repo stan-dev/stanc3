@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Ast
+open Ast_Mir_Common
 
 val semantic_check_program : untyped_program -> typed_program
 (** Performs semantic check on AST and returns original AST embellished with type decorations *)

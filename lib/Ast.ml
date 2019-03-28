@@ -1,45 +1,15 @@
 (** Abstract syntax tree *)
 open Core_kernel
 
-(** Source code locations *)
-type location =
-  { filename: string
-  ; line_num: int
-  ; col_num: int
-  ; included_from: location option }
-
-(** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location}
-
-let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
-
-(** Flags for data only arguments to functions *)
-type autodifftype = DataOnly | AutoDiffable
-
-(** Unsized types for function arguments and for decorating expressions
-    during type checking; we have a separate type here for Math library
-    functions as these functions can be overloaded, so do not have a unique
-    type in the usual sense. Still, we want to assign a unique type to every
-    expression during type checking.  *)
-and unsizedtype =
-  | UInt
-  | UReal
-  | UVector
-  | URowVector
-  | UMatrix
-  | UArray of unsizedtype
-  | UFun of (autodifftype * unsizedtype) list * returntype
-  | UMathLibraryFunction
-
-(** Return types for functions *)
-and returntype = Void | ReturnType of unsizedtype
+open Ast_Mir_Common
 
 (** Our type for identifiers, on which we record a location *)
-and identifier =
+type identifier =
   {name: string; id_loc: location_span sexp_opaque [@compare.ignore]}
+[@@deriving sexp, hash, compare]
 
 (** Arithmetic and logical operators *)
-and operator =
+type operator =
   | Plus
   | PPlus
   | Minus
@@ -61,18 +31,20 @@ and operator =
   | Geq
   | PNot
   | Transpose
+[@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
-and 'e index =
+type 'e index =
   | All
   | Single of 'e
   | Upfrom of 'e
   | Downfrom of 'e
   | Between of 'e * 'e
+[@@deriving sexp, hash, compare, map]
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
-and 'e expression =
+type 'e expression =
   | TernaryIf of 'e * 'e * 'e
   | BinOp of 'e * operator * 'e
   | PrefixOp of operator * 'e
@@ -89,15 +61,17 @@ and 'e expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
+[@@deriving sexp, hash, compare, map]
 
 (** Untyped expressions, which have location_spans as meta-data *)
-and untyped_expression =
+type untyped_expression =
   { expr_untyped: untyped_expression expression
   ; expr_untyped_loc: location_span sexp_opaque [@compare.ignore] }
+[@@deriving sexp, compare, map, hash]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
-and typed_expression =
+type typed_expression =
   { expr_typed: typed_expression expression
   ; expr_typed_loc: location_span sexp_opaque [@compare.ignore]
   ; expr_typed_ad_level: autodifftype
@@ -125,26 +99,18 @@ type assignmentoperator =
   (* ArrowAssign is deprecated *)
   | ArrowAssign
   | OperatorAssign of operator
+[@@deriving sexp, hash, compare]
 
 (** Truncations *)
-and 'e truncation =
+type 'e truncation =
   | NoTruncate
   | TruncateUpFrom of 'e
   | TruncateDownFrom of 'e
   | TruncateBetween of 'e * 'e
+[@@deriving sexp, hash, compare, map]
 
 (** Things that can be printed *)
-and 'e printable = PString of string | PExpr of 'e
-[@@deriving sexp, compare, map, hash]
-
-(** Sized types, for variable declarations *)
-type 'e sizedtype =
-  | SInt
-  | SReal
-  | SVector of 'e
-  | SRowVector of 'e
-  | SMatrix of 'e * 'e
-  | SArray of 'e sizedtype * 'e
+type 'e printable = PString of string | PExpr of 'e
 [@@deriving sexp, compare, map, hash]
 
 (** remove_size [st] discards size information from a sizedtype
@@ -157,29 +123,10 @@ let rec remove_size = function
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (remove_size t)
 
-(** Transformations (constraints) for global variable declarations *)
-type 'e transformation =
-  | Identity
-  | Lower of 'e
-  | Upper of 'e
-  | LowerUpper of 'e * 'e
-  | Offset of 'e
-  | Multiplier of 'e
-  | OffsetMultiplier of 'e * 'e
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-[@@deriving sexp, compare, map, hash]
-
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
-and ('e, 's) statement =
+type ('e, 's) statement =
   | Assignment of
       { assign_identifier: identifier
       ; assign_indices: 'e index list
@@ -221,6 +168,7 @@ and ('e, 's) statement =
       ; funname: identifier
       ; arguments: (autodifftype * unsizedtype * identifier) list
       ; body: 's }
+[@@deriving sexp, hash, compare, map]
 
 (** Statement return types which we will decorate statements with during type
     checking: the purpose is to check that function bodies have the correct
@@ -230,20 +178,22 @@ and ('e, 's) statement =
     in it, but not one in every branch
     Complete rt corresponds to having a return statement of type rt in every branch
     AnyReturnType corresponds to statements which have an error in every branch  *)
-and statement_returntype =
+type statement_returntype =
   | NoReturnType
   | Incomplete of returntype
   | Complete of returntype
   | AnyReturnType
+[@@deriving sexp, hash, compare]
 
 (** Untyped statements, which have location_spans as meta-data *)
-and untyped_statement =
+type untyped_statement =
   { stmt_untyped: (untyped_expression, untyped_statement) statement
   ; stmt_untyped_loc: location_span sexp_opaque [@compare.ignore] }
+[@@deriving sexp, compare, map, hash]
 
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
-and typed_statement =
+type typed_statement =
   { stmt_typed: (typed_expression, typed_statement) statement
   ; stmt_typed_loc: location_span sexp_opaque [@compare.ignore]
   ; stmt_typed_returntype: statement_returntype }
@@ -259,12 +209,14 @@ type 's program =
   ; transformedparametersblock: 's list option
   ; modelblock: 's list option
   ; generatedquantitiesblock: 's list option }
+[@@deriving sexp, hash, compare, map]
 
 (** Untyped programs (before type checking) *)
-and untyped_program = untyped_statement program
+type untyped_program = untyped_statement program
+[@@deriving sexp, compare, map]
 
 (** Typed programs (after type checking) *)
-and typed_program = typed_statement program [@@deriving sexp, compare, map]
+type typed_program = typed_statement program [@@deriving sexp, compare, map]
 
 (** Forgetful function from typed to untyped expressions *)
 let rec untyped_expression_of_typed_expression {expr_typed; expr_typed_loc; _}

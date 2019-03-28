@@ -2,6 +2,7 @@
 
 open Core_kernel
 open Ast
+open Ast_Mir_Common
 
 let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true

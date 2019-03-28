@@ -6,6 +6,7 @@
 
 open Core_kernel
 open Ast
+open Ast_Mir_Common
 
 let indent_num = ref 1
 let begin_indent _ = indent_num := 1 + !indent_num
