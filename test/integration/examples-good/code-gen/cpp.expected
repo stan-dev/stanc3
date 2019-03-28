@@ -39,7 +39,9 @@ class eight_schools_ncp_model : public prob_grad {
     int J;
     
     current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    J = Check__(ReadData__("J"), "greater_or_equal", "int", 0);
+    J = context__.vals_i("J");
+    current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
+    J = Check__(J, "greater_or_equal", "int", 0);
     current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
     current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
     check_greater_or_equal(function__, J, 0);
@@ -48,25 +50,33 @@ class eight_schools_ncp_model : public prob_grad {
     y = std::vector<double>(J, 0);
     
     current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
-    for (size_t sym1__ = 0; sym1__ < Length__(y); sym1__++)
+    for (size_t sym1__ = 0; sym1__ < length(y); sym1__++)
       {
         current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
         stan::model::rvalue(y, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e") =
-            ReadData__("y");
+            context__.vals_r("y");
       }
     current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
     std::vector<double> sigma;
     sigma = std::vector<double>(J, 0);
     
     current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-    for (size_t sym1__ = 0; sym1__ < Length__(sigma); sym1__++)
+    for (size_t sym1__ = 0; sym1__ < length(sigma); sym1__++)
       {
         current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
         stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e") =
-            Check__(ReadData__("sigma"), "greater_or_equal", "real", 0);
+            context__.vals_r("sigma");
       }
     current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-    for (size_t sym1__ = 0; sym1__ < Length__(sigma); sym1__++)
+    for (size_t sym1__ = 0; sym1__ < length(sigma); sym1__++)
+      {
+        current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
+        stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e") =
+            Check__(stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
+                    "greater_or_equal", "real", 0);
+      }
+    current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
+    for (size_t sym1__ = 0; sym1__ < length(sigma); sym1__++)
       {
         current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
         current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
@@ -95,22 +105,24 @@ class eight_schools_ncp_model : public prob_grad {
       local_scalar_t mu;
       
       current_statement__ = "file eight_schools_ncp.stan, line 8, columns 2-10";
-      mu = ReadParam__("mu");
+      mu = context__.vals_r("mu");
       current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
       local_scalar_t tau;
       
       current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
-      tau = Constrain__(ReadParam__("tau"), "lb", "real", 0);
+      tau = context__.vals_r("tau");
+      current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
+      tau = Constrain__(tau, "lb", "real", 0);
       current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
       std::vector<local_scalar_t> theta_tilde;
       theta_tilde = std::vector<local_scalar_t>(J, 0);
       
       current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
-      for (size_t sym1__ = 0; sym1__ < Length__(theta_tilde); sym1__++)
+      for (size_t sym1__ = 0; sym1__ < length(theta_tilde); sym1__++)
         {
           current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
           stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e") =
-              ReadParam__("theta_tilde");
+              context__.vals_r("theta_tilde");
         }
       current_statement__ = "file eight_schools_ncp.stan, line 14, columns 2-16";
       std::vector<local_scalar_t> theta;
@@ -120,9 +132,7 @@ class eight_schools_ncp_model : public prob_grad {
       for (size_t j = 1; j < J; j++)
         current_statement__ = "file eight_schools_ncp.stan, line 16, columns 4-41";
         stan::model::rvalue(theta, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e") =
-            Plus__(mu,
-                   Times__(tau,
-                           stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
+            (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside prepare_params") + ": " + e.what(), current_statement__));
@@ -203,7 +213,7 @@ udf1(const T0__& a, const T1__& b, std::ostream* pstream__) {
   
   try {
     current_statement__ = "file one_var_per_block.stan, line 2, columns 30-43";
-    return Plus__(a, b);
+    return (a + b);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
           std::runtime_error(std::string("inside UDF udf1") + ": " + e.what(), current_statement__));
@@ -237,29 +247,49 @@ class one_var_per_block_model : public prob_grad {
     int N;
     
     current_statement__ = "file one_var_per_block.stan, line 5, columns 2-8";
-    N = ReadData__("N");
+    N = context__.vals_i("N");
     current_statement__ = "file one_var_per_block.stan, line 6, columns 2-8";
     int K;
     
     current_statement__ = "file one_var_per_block.stan, line 6, columns 2-8";
-    K = ReadData__("K");
+    K = context__.vals_i("K");
     current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
     std::vector<Eigen::Matrix<double, -1, 1>> datavar;
     datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
     
     current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-    for (size_t sym1__ = 0; sym1__ < Length__(datavar); sym1__++)
-      {
-        current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-        stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e") =
-            Check__(ReadData__("datavar", N), "greater_or_equal", "vector", 0);
-      }
-    current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-    for (size_t sym1__ = 0; sym1__ < Length__(datavar); sym1__++)
+    for (size_t sym1__ = 0; sym1__ < length(datavar); sym1__++)
       {
         current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
         for (size_t sym2__ = 0;
-             sym2__ < Length__(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+             sym2__ < length(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+             sym2__++)
+          {
+            current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
+            stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e") =
+                context__.vals_r("datavar");
+          }
+      }
+    current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
+    for (size_t sym1__ = 0; sym1__ < length(datavar); sym1__++)
+      {
+        current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
+        for (size_t sym2__ = 0;
+             sym2__ < length(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+             sym2__++)
+          {
+            current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
+            stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e") =
+                Check__(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                        "greater_or_equal", "real", 0);
+          }
+      }
+    current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
+    for (size_t sym1__ = 0; sym1__ < length(datavar); sym1__++)
+      {
+        current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
+        for (size_t sym2__ = 0;
+             sym2__ < length(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
              sym2__++)
           {
             current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
@@ -274,13 +304,13 @@ class one_var_per_block_model : public prob_grad {
     tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
     
     current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-    tdatavar = MakeArray__(MakeArray__(2.0));
+    tdatavar = {{2.0}};
     current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-    for (size_t sym1__ = 0; sym1__ < Length__(tdatavar); sym1__++)
+    for (size_t sym1__ = 0; sym1__ < length(tdatavar); sym1__++)
       {
         current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
         for (size_t sym2__ = 0;
-             sym2__ < Length__(stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+             sym2__ < length(stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
              sym2__++)
           {
             current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
@@ -312,29 +342,73 @@ class one_var_per_block_model : public prob_grad {
       param = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
       
       current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
-      for (size_t sym1__ = 0; sym1__ < Length__(param); sym1__++)
+      for (size_t sym1__ = 0; sym1__ < length(param); sym1__++)
         {
           current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
-          stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e") =
-              Constrain__(ReadParam__("param", N), "lb", "vector", 0);
+          for (size_t sym2__ = 0;
+               sym2__ < length(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+               sym2__++)
+            {
+              current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
+              stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e") =
+                  context__.vals_r("param");
+            }
+        }
+      current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
+      for (size_t sym1__ = 0; sym1__ < length(param); sym1__++)
+        {
+          current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
+          for (size_t sym2__ = 0;
+               sym2__ < length(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+               sym2__++)
+            {
+              current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
+              stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e") =
+                  Constrain__(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                              "lb", "real", 0);
+            }
         }
       current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
       std::vector<std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>> matparam;
-      matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>>(Plus__(
-      K, 1), std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>(K, Eigen::Matrix<local_scalar_t, -1, -1>(N, N)));
+      matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>(K, Eigen::Matrix<local_scalar_t, -1, -1>(N, N)));
       
       current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
-      for (size_t sym1__ = 0; sym1__ < Length__(matparam); sym1__++)
+      for (size_t sym1__ = 0; sym1__ < length(matparam); sym1__++)
         {
           current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
           for (size_t sym2__ = 0;
-               sym2__ < Length__(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+               sym2__ < length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
                sym2__++)
             {
               current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
-              stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e") =
-                  Constrain__(ReadParam__("matparam", N, N), "lb", "matrix",
-                              0);
+              for (size_t sym3__ = 0;
+                   sym3__ < length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+                   sym3__++)
+                {
+                  current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
+                  stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e") =
+                      context__.vals_r("matparam");
+                }
+            }
+        }
+      current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
+      for (size_t sym1__ = 0; sym1__ < length(matparam); sym1__++)
+        {
+          current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
+          for (size_t sym2__ = 0;
+               sym2__ < length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+               sym2__++)
+            {
+              current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
+              for (size_t sym3__ = 0;
+                   sym3__ < length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+                   sym3__++)
+                {
+                  current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
+                  stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e") =
+                      Constrain__(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+                                  "lb", "row_vector", 0);
+                }
             }
         }
       current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
@@ -342,11 +416,11 @@ class one_var_per_block_model : public prob_grad {
       tparam = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
       
       current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-      for (size_t sym1__ = 0; sym1__ < Length__(tparam); sym1__++)
+      for (size_t sym1__ = 0; sym1__ < length(tparam); sym1__++)
         {
           current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
           for (size_t sym2__ = 0;
-               sym2__ < Length__(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+               sym2__ < length(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
                sym2__++)
             {
               current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
@@ -360,8 +434,7 @@ class one_var_per_block_model : public prob_grad {
       for (size_t n = 1; n < N; n++)
         current_statement__ = "file one_var_per_block.stan, line 18, columns 17-42";
         stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e") =
-            Times__(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"),
-                    2);
+            multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside prepare_params") + ": " + e.what(), current_statement__));
@@ -377,8 +450,7 @@ class one_var_per_block_model : public prob_grad {
       for (size_t n = 1; n < N; n++)
         current_statement__ = "file one_var_per_block.stan, line 22, columns 17-47";
         stan::model::rvalue(modellocal, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e") =
-            Times__(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"),
-                    2);
+            multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
@@ -401,7 +473,7 @@ class one_var_per_block_model : public prob_grad {
     dims__.push_back(N);
     dimss__.push_back(dims__);
     dims__.resize(0);
-    dims__.push_back(Plus__(K, 1));
+    dims__.push_back((K + 1));
     
     dims__.push_back(K);
     

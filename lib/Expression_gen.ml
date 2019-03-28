@@ -120,52 +120,101 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
     es
 
 (* assumes everything well formed from parser checks *)
-and gen_fun_app ppf f es =
-  match f with
-  | "PMinus" ->
-      pp_unary ppf
-        (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
-        es
-  | "PPlus" -> pp_unary ppf "%a" es
-  | "Transpose" ->
-      pp_unary ppf
-        (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
-        es
-  | "PNot" -> pp_unary ppf "logial_negation(%a)" es
-  | "Minus" -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es
-  | "Plus" -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
-  | "Times" -> pp_scalar_binary ppf "(%a * %a)" "multiply(%a, %a)" es
-  | "Divide" ->
-      if
-        is_matrix (second es)
-        && (is_matrix (first es) || is_row_vector (first es))
-      then pp_binary ppf "mdivide_right(%a, %a)" es
-      else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es
-  | "Modulo" -> pp_binary ppf "modulus(%a, %a)" es
-  | "LDivide" -> pp_binary ppf "mdivide_left(%a, %a)" es
-  | "EltTimes" -> pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es
-  | "EltDivide" -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
-  | "Pow" -> pp_binary ppf "pow(%a, %a)" es
-  | "Equals" -> pp_binary ppf "logical_eq(%a, %a)" es
-  | "NEquals" -> pp_binary ppf "logical_neq(%a, %a)" es
-  | "Less" -> pp_binary ppf "logical_lt(%a, %a)" es
-  | "Leq" -> pp_binary ppf "logical_lte(%a, %a)" es
-  | "Greater" -> pp_binary ppf "logical_gt(%a, %a)" es
-  | "Geq" -> pp_binary ppf "logical_gte(%a, %a)" es
-  | "lmultiply" -> pp_binary ppf "multiply_log(%a, %a)" es
-  | "lchoose" -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es
-  | "target" -> pf ppf "get_lp(lp__, lp_accum__)"
-  | "get_lp" -> pf ppf "get_lp(lp__, lp_accum__)"
-  | "max" ->
-      if List.length es = 2 then pp_binary ppf "std::max(%a, %a)" es
-      else pp_ordinary_fn ppf f es
-  | "min" ->
-      if List.length es = 2 then pp_binary ppf "std::min(%a, %a)" es
-      else pp_ordinary_fn ppf f es
-  | "ceil" ->
-      if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-      else pp_ordinary_fn ppf f es
-  | _ -> pp_ordinary_fn ppf (stan_namespace_qualify f) es
+and gen_fun_app ppf ut f es =
+  (* No idea if defining these here is performant, but the mutually
+     recursive nature of the whole thing makes it hard to do otherwise *)
+  let operator_functions =
+    [ ( Ast.PMinus
+      , fun ppf es ->
+          pp_unary ppf
+            (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
+            es )
+    ; (PPlus, fun ppf es -> pp_unary ppf "%a" es)
+    ; ( Transpose
+      , fun ppf es ->
+          pp_unary ppf
+            (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
+            es )
+    ; (PNot, fun ppf es -> pp_unary ppf "logial_negation(%a)" es)
+    ; ( Minus
+      , fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es )
+    ; (Plus, fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es)
+    ; ( Times
+      , fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "multiply(%a, %a)" es )
+    ; ( Divide
+      , fun ppf es ->
+          if
+            is_matrix (second es)
+            && (is_matrix (first es) || is_row_vector (first es))
+          then pp_binary ppf "mdivide_right(%a, %a)" es
+          else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es )
+    ; (Modulo, fun ppf es -> pp_binary ppf "modulus(%a, %a)" es)
+    ; (LDivide, fun ppf es -> pp_binary ppf "mdivide_left(%a, %a)" es)
+    ; ( EltTimes
+      , fun ppf es ->
+          pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es )
+    ; ( EltDivide
+      , fun ppf es -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
+      )
+    ; (Pow, fun ppf es -> pp_binary ppf "pow(%a, %a)" es)
+    ; (Equals, fun ppf es -> pp_binary ppf "logical_eq(%a, %a)" es)
+    ; (NEquals, fun ppf es -> pp_binary ppf "logical_neq(%a, %a)" es)
+    ; (Less, fun ppf es -> pp_binary ppf "logical_lt(%a, %a)" es)
+    ; (Leq, fun ppf es -> pp_binary ppf "logical_lte(%a, %a)" es)
+    ; (Greater, fun ppf es -> pp_binary ppf "logical_gt(%a, %a)" es)
+    ; (Geq, fun ppf es -> pp_binary ppf "logical_gte(%a, %a)" es) ]
+    |> List.map ~f:(fun (k, v) -> (Operators.operator_name k, v))
+    |> Map.Poly.of_alist_exn
+  in
+  let misc_special_math_fns =
+    Map.Poly.of_alist_exn
+      [ ("lmultiply", fun ppf es -> pp_binary ppf "multiply_log(%a, %a)" es)
+      ; ( "lchoose"
+        , fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es )
+      ; ("target", fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
+      ; ("get_lp", fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
+      ; ( "max"
+        , fun ppf es ->
+            if List.length es = 2 then pp_binary ppf "std::max(%a, %a)" es
+            else pp_ordinary_fn ppf f es )
+      ; ( "min"
+        , fun ppf es ->
+            if List.length es = 2 then pp_binary ppf "std::min(%a, %a)" es
+            else pp_ordinary_fn ppf f es )
+      ; ( "ceil"
+        , fun ppf es ->
+            if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
+            else pp_ordinary_fn ppf f es ) ]
+  in
+  let read_data_or_param ppf es =
+    let i_or_r =
+      match ut with
+      | Ast.UInt -> "i"
+      | UReal -> "r"
+      | UVector | URowVector | UMatrix | UArray _
+       |UFun (_, _)
+       |UMathLibraryFunction ->
+          raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
+    in
+    pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
+  in
+  let mir_special_functions =
+    Map.Poly.of_alist_exn
+      [ (fn_length, fun ppf es -> pp_unary ppf "length(%a)" es)
+      ; ( fn_make_array
+        , fun ppf es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es )
+      ; (fn_read_data, read_data_or_param)
+      ; (fn_read_param, read_data_or_param)
+      (* XXX Fill in the rest of the functions at the bottom of Mir.ml *)
+       ]
+  in
+  let default ppf es = pp_ordinary_fn ppf (stan_namespace_qualify f) es in
+  let pp_fn =
+    [operator_functions; misc_special_math_fns; mir_special_functions]
+    |> List.find_map ~f:(fun m -> Map.Poly.find m f)
+    |> Option.value ~default
+  in
+  pp_fn ppf es
 
 and pp_ordinary_fn ppf f es =
   let extra_args = gen_extra_fun_args f in
@@ -178,7 +227,7 @@ and pp_expr ppf (e : expr_typed_located) =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (f, es) -> gen_fun_app ppf f es
+  | FunApp (f, es) -> gen_fun_app ppf e.texpr_type f es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->

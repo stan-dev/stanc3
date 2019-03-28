@@ -231,8 +231,24 @@ let constraint_to_string t (c : constrainaction) =
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
   | Identity -> ""
 
+let constraint_forl = function
+  | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier _
+   |Lower _ | Upper _ | LowerUpper _ ->
+      for_scalar
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance ->
+      for_eigen
+
+let extract_constraint_args = function
+  | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance | Identity ->
+      []
+
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
-  let chk forl fn args =
+  let forl = constraint_forl decl_trans in
+  let chk fn args =
     let texpr_type = Ast.remove_size decl_type in
     forl
       (fun id ->
@@ -241,23 +257,14 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
       sloc
   in
   let constraint_str = mkstring sloc (constraint_to_string decl_trans Check) in
+  let args = extract_constraint_args decl_trans in
   match decl_trans with
   | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) ->
       []
-  | Lower b | Upper b -> [chk for_scalar constraint_str [b]]
   | LowerUpper (lb, ub) ->
       gen_check decl_type decl_id (Ast.Lower lb) sloc adlevel
       @ gen_check decl_type decl_id (Ast.Upper ub) sloc adlevel
-  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance ->
-      [chk for_eigen constraint_str []]
-
-let extract_constraint_args = function
-  | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
-  | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
-  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance | Identity ->
-      []
+  | _ -> [chk constraint_str args]
 
 (* use nested funapp for each call to read_data with just the name and size? *)
 let gen_constraint dconstrain t arg =
@@ -276,25 +283,26 @@ let gen_constraint dconstrain t arg =
 
 let rec base_type = function
   | Ast.SArray (t, _) -> base_type t
+  | SVector _ | SRowVector _ | SMatrix _ -> Ast.UReal
   | x -> Ast.remove_size x
-
-let rec base_dims = function
-  | Ast.SVector d | SRowVector d -> [d]
-  | Ast.SMatrix (d1, d2) -> [d1; d2]
-  | Ast.SArray (t, _) -> base_dims t
-  | SInt | SReal -> []
 
 let mkread id var dread dconstrain sizedtype transform sloc =
   let read_base var =
     { var with
-      texpr=
-        internal_read_fn dread
-        @@ (mkstring var.texpr_loc id :: base_dims sizedtype)
+      texpr= internal_read_fn dread [mkstring var.texpr_loc id]
     ; texpr_type= base_type sizedtype }
   in
-  let constrain var = gen_constraint dconstrain transform (read_base var) in
-  let read_assign var = {stmt= Assignment (var, constrain var); sloc} in
-  for_eigen read_assign var sloc
+  let read_assign var = {stmt= Assignment (var, read_base var); sloc} in
+  let constrain var =
+    {stmt= Assignment (var, gen_constraint dconstrain transform var); sloc}
+  in
+  for_scalar read_assign var sloc
+  ::
+  (* XXX seems like we should have a way of letting gen_constraint return an option
+  rather than checking it here like this :( *)
+  ( match transform with
+  | Ast.Identity -> []
+  | _ -> [(constraint_forl transform) constrain var sloc] )
 
 let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     identifier initial_value =
@@ -313,7 +321,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   in
   let read_stmts =
     match dread with
-    | Some a -> [mkread decl_id decl_var a dconstrain decl_type transform sloc]
+    | Some a -> mkread decl_id decl_var a dconstrain decl_type transform sloc
     | None -> Option.value_map ~default:[] ~f:assign rhs
   in
   let decl_adtype =
@@ -323,6 +331,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   in
   let decl = Decl {decl_adtype; decl_id; decl_type} |> with_sloc in
   let checks =
+    (* XXX checks should be performed after assignment as NRFunApp*)
     match dconstrain with
     | Some Check -> gen_check decl_type decl_id transform sloc dadlevel
     | _ -> []
@@ -566,8 +575,13 @@ let%expect_test "read data" =
       (upper (FunApp Length__ ((Var mat))))
       (body
        (Block
-        ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-          (FunApp ReadData__ ((Lit Str mat) (Lit Int 10) (Lit Int 20))))))))) |}]
+        ((For (loopvar sym2__) (lower (Lit Int 0))
+          (upper (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
+          (body
+           (Block
+            ((Assignment
+              (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+              (FunApp ReadData__ ((Lit Str mat))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -580,10 +594,26 @@ let%expect_test "read param" =
       (upper (FunApp Length__ ((Var mat))))
       (body
        (Block
-        ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-          (FunApp Constrain__
-           ((FunApp ReadParam__ ((Lit Str mat) (Lit Int 10) (Lit Int 20)))
-            (Lit Str lb) (Lit Str matrix) (Lit Int 0))))))))) |}]
+        ((For (loopvar sym2__) (lower (Lit Int 0))
+          (upper (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
+          (body
+           (Block
+            ((Assignment
+              (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+              (FunApp ReadParam__ ((Lit Str mat))))))))))))
+     (For (loopvar sym1__) (lower (Lit Int 0))
+      (upper (FunApp Length__ ((Var mat))))
+      (body
+       (Block
+        ((For (loopvar sym2__) (lower (Lit Int 0))
+          (upper (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
+          (body
+           (Block
+            ((Assignment
+              (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+              (FunApp Constrain__
+               ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
+                (Lit Str lb) (Lit Str row_vector) (Lit Int 0))))))))))))) |}]
 
 let%expect_test "gen quant" =
   let m =

@@ -286,7 +286,7 @@ let%expect_test "read int[N] y" =
     current_statement__ = "file , line 0, column 0";
     vals_i__ = context__.vals_i__("y");
     y = std::vector<int>(N, 0);
-    for (size_t i_0__ = 0; i_0__ < Length__(y); i_0__++) y[i_0__] = vals_i__; |}]
+    for (size_t i_0__ = 0; i_0__ < length(y); i_0__++) y[i_0__] = vals_i__; |}]
 
 let pp_ctor ppf p =
   (* XXX:
