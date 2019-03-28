@@ -212,6 +212,7 @@ let rec pp_statement ppf {stmt; sloc} =
   | For {loopvar; lower; upper; body} ->
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
+  | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
   | FunDef {fdrt; fdname; fdargs; fdbody} -> (

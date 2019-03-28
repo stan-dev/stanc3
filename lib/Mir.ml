@@ -60,6 +60,8 @@ and ('e, 's) statement =
      variables declared within it have local scope and are garbage collected
      when the block ends.*)
   | Block of 's list
+  (* SList has no semantics, just programming convenience *)
+  | SList of 's list
   | Decl of
       { decl_adtype: autodifftype
       ; decl_id: string
