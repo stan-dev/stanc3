@@ -653,13 +653,13 @@ let lazy_code_motion (mir : typed_prog) =
           used_and_latest_i
       in
       (* TODO: it'd be more efficient to just not accumulate these constants in the static analysis *)
-      let _ =
+      (* let _ =
         if Map.length latest_expr > 1 then
           raise_s
             [%sexp
               ( Map.map ~f:(fun x -> x.exit) used_expressions_mfp
                 : (int, ExprSet.t) Map.Poly.t )]
-      in
+      in *)
       let to_assign_in_s = Set.to_list to_assign_in_s in
       let to_assign_in_s =
         List.sort
@@ -668,6 +668,8 @@ let lazy_code_motion (mir : typed_prog) =
       in
       (* TODO: is this sort doing anything or are they already stored in the right order by
          chance? *)
+      (* TODO: be careful with subexpressions vs expressions. 
+         Reread algorithm from scratch. *)
       let assignments_to_add_to_s =
         List.map
           ~f:(fun e ->
