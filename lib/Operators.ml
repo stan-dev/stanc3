@@ -5,60 +5,42 @@ open Type_conversion
 open Ast
 
 let ternary_if = "TernaryIf__"
+let operator_name op = Sexp.to_string [%sexp (op : Ast.operator)] ^ "__"
 
 (** A hash table to hold some name conversions between the AST nodes and the
     Stan Math name of the operator *)
-let operator_names = String.Table.create ()
-
-let _ = Hashtbl.add_multi operator_names ~key:"Plus__" ~data:"add"
-
-(*XXX is there a difference in Stan math for unary plus?*)
-let _ = Hashtbl.add_multi operator_names ~key:"PPlus__" ~data:"plus"
-let _ = Hashtbl.add_multi operator_names ~key:"Minus__" ~data:"subtract"
-
-(*XXX is there a difference in Stan math for unary minus?*)
-let _ = Hashtbl.add_multi operator_names ~key:"PMinus__" ~data:"minus"
-let _ = Hashtbl.add_multi operator_names ~key:"Times__" ~data:"multiply"
-let _ = Hashtbl.add_multi operator_names ~key:"Divide__" ~data:"divide"
-let _ = Hashtbl.add_multi operator_names ~key:"Divide__" ~data:"mdivide_right"
-let _ = Hashtbl.add_multi operator_names ~key:"Modulo__" ~data:"modulus"
-let _ = Hashtbl.add_multi operator_names ~key:"LDivide__" ~data:"mdivide_left"
-let _ = Hashtbl.add_multi operator_names ~key:"EltTimes__" ~data:"elt_multiply"
-let _ = Hashtbl.add_multi operator_names ~key:"EltDivide__" ~data:"elt_divide"
-let _ = Hashtbl.add_multi operator_names ~key:"Pow__" ~data:"pow"
-let _ = Hashtbl.add_multi operator_names ~key:"Equals__" ~data:"logical_eq"
-let _ = Hashtbl.add_multi operator_names ~key:"NEquals__" ~data:"logical_neq"
-let _ = Hashtbl.add_multi operator_names ~key:"Less__" ~data:"logical_lt"
-let _ = Hashtbl.add_multi operator_names ~key:"Leq__" ~data:"logical_lte"
-let _ = Hashtbl.add_multi operator_names ~key:"Greater__" ~data:"logical_gt"
-let _ = Hashtbl.add_multi operator_names ~key:"Geq__" ~data:"logical_gte"
-let _ = Hashtbl.add_multi operator_names ~key:"PNot__" ~data:"logical_negation"
-let _ = Hashtbl.add_multi operator_names ~key:"Transpose__" ~data:"transpose"
-let _ = Hashtbl.add_multi operator_names ~key:ternary_if ~data:"if_else"
-
-let _ =
-  Hashtbl.add_multi operator_names ~key:"(OperatorAssign Plus)"
-    ~data:"assign_add"
-
-let _ =
-  Hashtbl.add_multi operator_names ~key:"(OperatorAssign Minus)"
-    ~data:"assign_subtract"
-
-let _ =
-  Hashtbl.add_multi operator_names ~key:"(OperatorAssign Times)"
-    ~data:"assign_multiply"
-
-let _ =
-  Hashtbl.add_multi operator_names ~key:"(OperatorAssign Divide)"
-    ~data:"assign_divide"
-
-let _ =
-  Hashtbl.add_multi operator_names ~key:"(OperatorAssign EltTimes)"
-    ~data:"assign_elt_times"
-
-let _ =
-  Hashtbl.add_multi operator_names ~key:"(OperatorAssign EltDivide)"
-    ~data:"assign_elt_divide"
+let operator_names =
+  Map.Poly.of_alist_multi
+    [ (operator_name Plus, "add")
+    ; (operator_name PPlus, "plus")
+    ; (operator_name Minus, "subtract")
+    ; (operator_name PMinus, "minus")
+    ; (operator_name Times, "multiply")
+    ; (operator_name Divide, "mdivide_right")
+    ; (operator_name Divide, "divide")
+    ; (operator_name Modulo, "modulus")
+    ; (operator_name LDivide, "mdivide_left")
+    ; (operator_name EltTimes, "elt_multiply")
+    ; (operator_name EltDivide, "elt_divide")
+    ; (operator_name Pow, "pow")
+    ; (operator_name Or, "logical_or")
+    ; (operator_name And, "logical_and")
+    ; (operator_name Equals, "logical_eq")
+    ; (operator_name NEquals, "logical_neq")
+    ; (operator_name Less, "logical_lt")
+    ; (operator_name Leq, "logical_lte")
+    ; (operator_name Greater, "logical_gt")
+    ; (operator_name Geq, "logical_gte")
+    ; (operator_name PNot, "logical_negation")
+    ; (operator_name Transpose, "transpose")
+    ; (ternary_if, "if_else")
+      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
+    ; ("(OperatorAssign Plus)", "assign_add")
+    ; ("(OperatorAssign Minus)", "assign_subtract")
+    ; ("(OperatorAssign Times)", "assign_multiply")
+    ; ("(OperatorAssign Divide)", "assign_divide")
+    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
+    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
 
 (** Querying stan_math_signatures for operator signatures by string name *)
 let operator_return_type_from_string op_name args =
@@ -69,26 +51,15 @@ let operator_return_type_from_string op_name args =
         Some Void
     | _ -> None
   else
-    let rec try_recursive_find = function
-      | [] -> None
-      | name :: names -> (
-        match
-          Stan_math_signatures.get_stan_math_function_return_type_opt name args
-        with
-        | None -> try_recursive_find names
-        | Some ut -> Some ut )
-    in
-    try_recursive_find (Hashtbl.find_multi operator_names op_name)
-
-let operator_name op = Sexp.to_string [%sexp (op : Ast.operator)] ^ "__"
+    Map.Poly.find_multi operator_names op_name
+    |> List.find_map ~f:(fun name ->
+           Stan_math_signatures.stan_math_returntype name args )
 
 let operator_return_type op =
   operator_return_type_from_string (operator_name op)
 
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
 let pretty_print_all_operator_signatures name =
-  let all_names = Hashtbl.find_multi operator_names name in
-  String.concat ~sep:"\n"
-    (List.map
-       ~f:Stan_math_signatures.pretty_print_all_stan_math_function_signatures
-       all_names)
+  Map.Poly.find_multi operator_names name
+  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> String.concat ~sep:"\n"
