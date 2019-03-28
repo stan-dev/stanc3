@@ -80,9 +80,9 @@ and pp_indexes ppf = function
   | idx :: idxs ->
       pf ppf "stan::model::cons_list(%a, %a)" pp_index idx pp_indexes idxs
 
-and pp_logical_op ppf op es =
-  pf ppf "(stan::math::value(%a) %s stan::math::value(%a))" pp_expr
-    (List.nth_exn es 0) op pp_expr (List.nth_exn es 1)
+and pp_logical_op ppf op lhs rhs =
+  pf ppf "(stan::math::value(%a) %s stan::math::value(%a))" pp_expr lhs op
+    pp_expr rhs
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
 and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
@@ -98,8 +98,6 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   match f with
-  | "And" -> pp_logical_op ppf "&&" es
-  | "Or" -> pp_logical_op ppf "||" es
   | "PMinus" ->
       pp_unary ppf
         (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
@@ -157,6 +155,8 @@ and pp_expr ppf (e : expr_typed_located) =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (f, es) -> gen_fun_app ppf f es
+  | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
+  | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
       if types_match et ef then
         pf ppf "(%a ? %a : %a)" pp_expr ec pp_expr et pp_expr ef

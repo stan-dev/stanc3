@@ -31,7 +31,8 @@ and 'e expr =
   | Lit of litType * string
   | FunApp of string * 'e list
   | TernaryIf of 'e * 'e * 'e
-  (* XXX And and Or nodes*)
+  | And of 'e * 'e
+  | Or of 'e * 'e
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map]
 
