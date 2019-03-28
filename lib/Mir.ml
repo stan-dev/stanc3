@@ -236,10 +236,10 @@ let pp_io_block ppf = function
 type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
 
 let pp_io_var pp_e ppf (name, (sized_ty, io_block)) =
-  Fmt.pf ppf "@[<h>%a %s %a;@]" (pp_sizedtype pp_e) (sized_ty, Ast.Identity)
+  Fmt.pf ppf "@[<h>%a %a %s;@]" 
+    pp_io_block io_block
+    (pp_sizedtype pp_e) (sized_ty, Ast.Identity)
     name
-    (angle_brackets @@ angle_brackets pp_io_block)
-    io_block
 
 let pp_block label pp_elem ppf elems =
   Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
