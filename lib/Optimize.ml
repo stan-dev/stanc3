@@ -605,11 +605,26 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let latest_expr, used_expressions_mfp =
+    let ( used_expr
+        , anticipated_expressions_mfp
+        , available_expressions_mfp
+        , earliest_expr
+        , postponable_expressions_mfp
+        , latest_expr
+        , used_expressions_mfp ) =
       Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
         flowgraph_to_mir
     in
-    let subexpression_map =
+    let _ =
+      ( used_expr
+      , anticipated_expressions_mfp
+      , available_expressions_mfp
+      , earliest_expr
+      , postponable_expressions_mfp
+      , latest_expr
+      , used_expressions_mfp )
+    in
+    let expression_map =
       Set.fold (Monotone_framework.used_expressions_stmt s.stmt)
         ~init:ExprMap.empty ~f:(fun accum e ->
           match e.texpr with
@@ -617,7 +632,7 @@ let lazy_code_motion (mir : typed_prog) =
           | _ -> Map.set accum ~key:e ~data:(Util.gensym ()) )
     in
     let declarations_list =
-      Map.fold subexpression_map ~init:[] ~f:(fun ~key ~data accum ->
+      Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
           { stmt=
               Mir.Decl
                 { decl_adtype= key.texpr_adlevel
@@ -627,13 +642,24 @@ let lazy_code_motion (mir : typed_prog) =
           :: accum )
     in
     let lazy_code_motion_base i stmt =
-      let to_assign_in_s =
+      let used_and_latest_i =
         Set.inter
           (Map.find_exn latest_expr i)
           (Map.find_exn used_expressions_mfp i).entry
       in
-      (* TODO: debug here to make sure latest etc. get computed correctly. 
-         Note that in last unit test, one expression never gets assigned. *)
+      let to_assign_in_s =
+        Set.filter
+          ~f:(fun x -> match x.texpr with Lit (_, _) -> false | _ -> true)
+          used_and_latest_i
+      in
+      (* TODO: it'd be more efficient to just not accumulate these constants in the static analysis *)
+      let _ =
+        if Map.length latest_expr > 1 then
+          raise_s
+            [%sexp
+              ( Map.map ~f:(fun x -> x.exit) used_expressions_mfp
+                : (int, ExprSet.t) Map.Poly.t )]
+      in
       let to_assign_in_s = Set.to_list to_assign_in_s in
       let to_assign_in_s =
         List.sort
@@ -647,21 +673,10 @@ let lazy_code_motion (mir : typed_prog) =
           ~f:(fun e ->
             { stmt=
                 Assignment
-                  ({e with texpr= Var (Map.find_exn subexpression_map e)}, e)
+                  ({e with texpr= Var (Map.find_exn expression_map e)}, e)
             ; sloc= Mir.no_span } )
           to_assign_in_s
       in
-      (* TODO: according to errata, the following should be cut out
-      let to_replace_in_s =
-        Set.union
-          (Set.diff (Map.find_exn used_expr i) (Map.find_exn latest_expr i))
-          (Set.inter (Map.find_exn used_expr i)
-             (Map.find_exn used_expressions_mfp i).entry)
-      in
-      let replacement_map_for_s =
-        Map.filter_keys subexpression_map ~f:(fun key ->
-            Set.mem to_replace_in_s key )
-      in *)
       let expr_subst_stmt_except_initial_assign m =
         let f stmt =
           match stmt with
@@ -677,7 +692,7 @@ let lazy_code_motion (mir : typed_prog) =
         (List.map
            ~f:
              (expr_subst_stmt_except_initial_assign
-                (Map.mapi subexpression_map ~f:(fun ~key ~data ->
+                (Map.mapi expression_map ~f:(fun ~key ~data ->
                      {key with texpr= Var data} )))
            (assignments_to_add_to_s @ [{stmt; sloc= Mir.no_span}]))
     in

@@ -469,59 +469,60 @@ let live_variables_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** Calculate the set of sub-expressions of an expression *)
-let rec used_expressions_expr (e : Mir.expr_typed_located) =
+let rec used_subexpressions_expr (e : Mir.expr_typed_located) =
   Mir.ExprSet.union (Mir.ExprSet.singleton e)
     ( match e.texpr with
     | Mir.Var _ | Mir.Lit (_, _) -> Mir.ExprSet.empty
     | Mir.FunApp (_, l) ->
-        Mir.ExprSet.union_list (List.map ~f:used_expressions_expr l)
+        Mir.ExprSet.union_list (List.map ~f:used_subexpressions_expr l)
     | Mir.TernaryIf (e1, e2, e3) ->
         Mir.ExprSet.union_list
-          [ used_expressions_expr e1; used_expressions_expr e2
-          ; used_expressions_expr e3 ]
+          [ used_subexpressions_expr e1
+          ; used_subexpressions_expr e2
+          ; used_subexpressions_expr e3 ]
     | Mir.Indexed (e, l) ->
         Mir.ExprSet.union_list
-          (used_expressions_expr e :: List.map ~f:used_expressions_idx l) )
+          ( used_subexpressions_expr e
+          :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
+          ) )
 
-(** Calculate the set of sub-expressions of an index *)
-and used_expressions_idx (i : Mir.expr_typed_located Mir.index) =
+and used_expressions_idx_help f (i : Mir.expr_typed_located Mir.index) =
   match i with
   | Mir.All -> Mir.ExprSet.empty
-  | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e ->
-      used_expressions_expr e
-  | Mir.Between (e1, e2) ->
-      Mir.ExprSet.union (used_expressions_expr e1) (used_expressions_expr e2)
+  | Mir.Single e | Mir.Upfrom e | Mir.Downfrom e | Mir.MultiIndex e -> f e
+  | Mir.Between (e1, e2) -> Mir.ExprSet.union (f e1) (f e2)
 
-(** Calculate the set of sub-expressions in a statement *)
-let rec used_expressions_stmt
+(** Calculate the set of expressions of an expression *)
+let used_expressions_expr e = Mir.ExprSet.singleton e
+
+let rec used_expressions_stmt_help f
     (s : (Mir.expr_typed_located, Mir.stmt_loc) Mir.statement) =
   match s with
   | Mir.Assignment ({texpr= Var _; _}, e)
    |Mir.TargetPE e
    |Mir.Return (Some e) ->
-      used_expressions_expr e
+      f e
   | Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, l); _}, e) ->
-      Mir.ExprSet.union (used_expressions_expr e)
-        (Mir.ExprSet.union_list (List.map ~f:used_expressions_idx l))
+      Mir.ExprSet.union (f e)
+        (Mir.ExprSet.union_list (List.map ~f:(used_expressions_idx_help f) l))
   | Mir.Assignment _ -> Errors.fatal_error ()
   | Mir.IfElse (e, b1, Some b2) ->
       Mir.ExprSet.union_list
-        [ used_expressions_expr e
-        ; used_expressions_stmt b1.stmt
-        ; used_expressions_stmt b2.stmt ]
+        [ f e
+        ; used_expressions_stmt_help f b1.stmt
+        ; used_expressions_stmt_help f b2.stmt ]
   | Mir.NRFunApp (_, l) | Mir.Check (_, l) ->
-      Mir.ExprSet.union_list (List.map ~f:used_expressions_expr l)
+      Mir.ExprSet.union_list (List.map ~f l)
   | Mir.Decl _
    |Mir.Return None
    |Mir.Break | Mir.Continue | Mir.FunDef _ | Mir.Skip ->
       Mir.ExprSet.empty
   | Mir.IfElse (e, b, None) | Mir.While (e, b) ->
-      Mir.ExprSet.union (used_expressions_expr e)
-        (used_expressions_stmt b.stmt)
+      Mir.ExprSet.union (f e) (used_expressions_stmt_help f b.stmt)
   | Mir.For {lower= e1; upper= e2; body= b; loopvar= s} ->
       Mir.ExprSet.union_list
-        [ used_expressions_expr e1; used_expressions_expr e2
-        ; used_expressions_stmt b.stmt
+        [ f e1; f e2
+        ; used_expressions_stmt_help f b.stmt
         ; Mir.ExprSet.singleton
             { Mir.texpr= Var s
             ; texpr_type= UInt
@@ -529,31 +530,42 @@ let rec used_expressions_stmt
             ; texpr_loc= Mir.no_span } ]
   | Mir.Block l | Mir.SList l ->
       Mir.ExprSet.union_list
-        (List.map ~f:(fun s -> used_expressions_stmt s.stmt) l)
+        (List.map ~f:(fun s -> used_expressions_stmt_help f s.stmt) l)
 
-(** A variant of used_expressions_stmt where we do not count uses of expressions
-    recursively within substatements *)
-let top_used_expressions_stmt (s : (Mir.expr_typed_located, int) Mir.statement)
-    =
+(** Calculate the set of sub-expressions in a statement *)
+let used_subexpressions_stmt =
+  used_expressions_stmt_help used_subexpressions_expr
+
+(** Calculate the set of expressions in a statement *)
+let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
+
+let top_used_expressions_stmt_help f
+    (s : (Mir.expr_typed_located, int) Mir.statement) =
   match s with
   | Mir.Assignment ({texpr= Var _; _}, e)
    |Mir.TargetPE e
    |Mir.Return (Some e) ->
-      used_expressions_expr e
+      f e
   | Mir.Assignment ({texpr= Indexed ({texpr= Var _; _}, l); _}, e) ->
-      Mir.ExprSet.union (used_expressions_expr e)
-        (Mir.ExprSet.union_list (List.map ~f:used_expressions_idx l))
+      Mir.ExprSet.union (f e)
+        (Mir.ExprSet.union_list (List.map ~f:(used_expressions_idx_help f) l))
   | Mir.Assignment _ -> Errors.fatal_error ()
-  | Mir.While (e, _) | Mir.IfElse (e, _, _) -> used_expressions_expr e
+  | Mir.While (e, _) | Mir.IfElse (e, _, _) -> f e
   | Mir.NRFunApp (_, l) | Mir.Check (_, l) ->
-      Mir.ExprSet.union_list (List.map ~f:used_expressions_expr l)
+      Mir.ExprSet.union_list (List.map ~f l)
   | Mir.Block _ | Mir.SList _ | Mir.Decl _
    |Mir.Return None
    |Mir.Break | Mir.Continue | Mir.FunDef _ | Mir.Skip ->
       Mir.ExprSet.empty
-  | Mir.For {lower= e1; upper= e2; _} ->
-      Mir.ExprSet.union_list
-        [used_expressions_expr e1; used_expressions_expr e2]
+  | Mir.For {lower= e1; upper= e2; _} -> Mir.ExprSet.union_list [f e1; f e2]
+
+(** Calculate the set of sub-expressions at the top level in a statement *)
+let top_used_subexpressions_stmt =
+  top_used_expressions_stmt_help used_subexpressions_expr
+
+(** Calculate the set of expressions at the top level in a statement *)
+let top_used_expressions_stmt =
+  top_used_expressions_stmt_help used_expressions_expr
 
 (** Calculate the subset (of p) of expressions that will need to be recomputed as a
     consequence of evaluating the statement s (because of writes to variables performed
@@ -572,7 +584,8 @@ let killed_expressions_stmt (p : Mir.ExprSet.t)
 let used (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   Map.Poly.fold flowgraph_to_mir ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
-      Map.Poly.set accum ~key ~data:(top_used_expressions_stmt data.stmtn) )
+      Map.Poly.set accum ~key ~data:(top_used_subexpressions_stmt data.stmtn)
+  )
 
 (* TODO: figure out whether we will also want to reuse the computation of killed *)
 
@@ -886,14 +899,12 @@ let lazy_expressions_mfp
       with type labels = int)
     (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   let all_expressions =
-    Set.filter
-      ~f:(fun x -> match x.texpr with Lit (_, _) -> false | _ -> true)
-      (Mir.ExprSet.union_list
-         (List.map
-            ~f:(fun x -> used_expressions_stmt x.stmt)
-            (List.concat
-               [ mir.functions_block; mir.generate_quantities
-               ; mir.prepare_params; mir.log_prob; mir.prepare_data ])))
+    Mir.ExprSet.union_list
+      (List.map
+         ~f:(fun x -> used_expressions_stmt x.stmt)
+         (List.concat
+            [ mir.functions_block; mir.generate_quantities; mir.prepare_params
+            ; mir.log_prob; mir.prepare_data ]))
   in
   let used_expr = used flowgraph_to_mir in
   let (module Lattice1) =
@@ -941,4 +952,10 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let used_expressions_mfp = Mf4.mfp () in
-  (latest_expr, used_expressions_mfp)
+  ( used_expr
+  , anticipated_expressions_mfp
+  , available_expressions_mfp
+  , earliest_expr
+  , postponable_expressions_mfp
+  , latest_expr
+  , used_expressions_mfp )
