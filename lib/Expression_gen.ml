@@ -36,10 +36,33 @@ let is_row_vector e = e.texpr_type = Ast.URowVector
 (* stub *)
 let pretty_print _e = "pretty printed e"
 
+let rec stantype_prim_str = function
+  | Ast.UInt -> "int"
+  | UArray t -> stantype_prim_str t
+  | _ -> "double"
+
+let local_scalar ut = function
+  | Ast.DataOnly -> stantype_prim_str ut
+  | AutoDiffable -> "local_scalar_t"
+
 (* stub *)
 let rec pp_return_type ppf = function
   | Ast.Void -> pf ppf "void"
   | Ast.ReturnType rt -> pp_unsizedtype ppf rt
+
+and pp_unsizedtype_custom_scalar ppf (scalar, ut) =
+  match ut with
+  | Ast.UInt | UReal -> string ppf scalar
+  | UArray t ->
+      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
+  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
+  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
+  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
+
+and pp_unsizedtype_local ppf (adtype, ut) =
+  let s = local_scalar ut adtype in
+  pp_unsizedtype_custom_scalar ppf (s, ut)
 
 and pp_unsizedtype ppf ut =
   match ut with
@@ -56,7 +79,8 @@ and pp_unsizedtype ppf ut =
         arg_types
   | Ast.UMathLibraryFunction -> pf ppf "std::function<void()>"
 
-let pp_expr_type ppf e = pp_unsizedtype ppf e.texpr_type
+let pp_expr_type ppf e =
+  pp_unsizedtype_local ppf (e.texpr_adlevel, e.texpr_type)
 
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]

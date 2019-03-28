@@ -24,8 +24,6 @@ and 'e index =
   | Between of 'e * 'e
   | MultiIndex of 'e
 
-(** XXX
-*)
 and 'e expr =
   | Var of string
   | Lit of litType * string
@@ -36,6 +34,7 @@ and 'e expr =
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map]
 
+type operator = Ast.operator
 type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
 type 'e sizedtype = 'e Ast.sizedtype [@@deriving sexp, hash, map]
 type autodifftype = Ast.autodifftype [@@deriving sexp, hash]

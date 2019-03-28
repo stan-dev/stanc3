@@ -19,42 +19,20 @@
 open Core_kernel
 open Mir
 open Fmt
-
-let rec stantype_prim_str = function
-  | Ast.UInt -> "int"
-  | UArray t -> stantype_prim_str t
-  | _ -> "double"
-
-let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
-  match ut with
-  | Ast.UInt | UReal -> string ppf scalar
-  | UArray t ->
-      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
-  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
-  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
-  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
-
-let local_scalar ut = function
-  | Ast.DataOnly -> stantype_prim_str ut
-  | AutoDiffable -> "local_scalar_t"
-
-let pp_local_unsizedtype ppf (adtype, ut) =
-  let s = local_scalar ut adtype in
-  pp_unsizedtype_custom_scalar ppf (s, ut)
+open Expression_gen
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-let pp_unsizedtype = Expression_gen.pp_unsizedtype
-let pp_expr = Expression_gen.pp_expr
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_set_size ppf (decl_id, st, adtype) =
+  (* TODO: generate optimal adtypes for expressions and declarations *)
+  ignore adtype ;
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
-      pf ppf "%a" pp_local_unsizedtype (adtype, Ast.remove_size st)
+      pf ppf "%a" pp_unsizedtype_local (adtype, Ast.remove_size st)
     in
     match st with
     | Ast.SInt | SReal -> pf ppf "0"
@@ -109,14 +87,8 @@ let rec integer_el_type = function
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 
-let with_idx lst = List.(zip_exn lst (range 0 (length lst)))
-
-let%expect_test "with idx" =
-  print_s [%sexp (with_idx (List.range 10 15) : (int * int) list)] ;
-  [%expect {| ((10 0) (11 1) (12 2) (13 3) (14 4)) |}]
-
 let pp_decl ppf (vident, ut, adtype) =
-  pf ppf "%a %s;" pp_local_unsizedtype (adtype, ut) vident
+  pf ppf "%a %s;" pp_unsizedtype_local (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype) =
   pf ppf "%a@,%a" pp_decl
@@ -219,14 +191,10 @@ let rec pp_statement ppf {stmt; sloc} =
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
-      (* Print template line*)
       pf ppf "@[<hov>template <%a>@]@ "
         (list ~sep:comma (fmt "typename %s"))
         argtypetemplates ;
-      (* print return type *)
       pp_returntype ppf fdargs fdrt ;
-      (* XXX this is all so ugly: *)
-      (* XXX Fix templating of args here *)
       pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg)
         (List.zip_exn argtypetemplates fdargs) ;
       pf ppf ", std::ostream* pstream__@]) " ;
