@@ -709,6 +709,26 @@ let lazy_code_motion (mir : typed_prog) =
   in
   transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
+let block_fixing =
+  map_prog
+    (fun x -> x)
+    (map_rec_stmt_loc (fun stmt ->
+         match stmt with
+         | IfElse (e, {stmt= SList l; sloc}, Some {stmt= SList l'; sloc= sloc'})
+           ->
+             IfElse
+               (e, {stmt= Block l; sloc}, Some {stmt= Block l'; sloc= sloc'})
+         | IfElse (e, {stmt= SList l; sloc}, b) ->
+             IfElse (e, {stmt= Block l; sloc}, b)
+         | IfElse (e, b, Some {stmt= SList l'; sloc= sloc'}) ->
+             IfElse (e, b, Some {stmt= Block l'; sloc= sloc'})
+         | While (e, {stmt= SList l; sloc}) -> While (e, {stmt= Block l; sloc})
+         | For {loopvar; lower; upper; body= {stmt= SList l; sloc}} ->
+             For {loopvar; lower; upper; body= {stmt= Block l; sloc}}
+         | FunDef {fdrt; fdname; fdargs; fdbody= {stmt= SList l; sloc}} ->
+             FunDef {fdrt; fdname; fdargs; fdbody= {stmt= Block l; sloc}}
+         | _ -> stmt ))
+
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
    tight as possible local scopes *)
@@ -3777,6 +3797,49 @@ let%expect_test "lazy code motion, 3" =
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
+
+let%expect_test "block fixing" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+      }
+      |}
+  in
+  (* TODO: this test is still giving the wrong answer. *)
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir =
+    { mir with
+      Mir.log_prob=
+        [ { stmt=
+              IfElse
+                ( zero
+                , { stmt= While (zero, {stmt= SList []; sloc= no_span})
+                  ; sloc= no_span }
+                , None )
+          ; sloc= no_span } ] }
+  in
+  let mir = block_fixing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (While
+               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
+                (texpr_adlevel DataOnly))
+               ((sloc <opaque>) (stmt (Block ()))))))
+            ())))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 (* Let's do a simple CSE pass,
 ideally expressed as a visitor with a separate visit() function? *)

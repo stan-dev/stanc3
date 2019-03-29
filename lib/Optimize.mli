@@ -14,6 +14,11 @@ val list_collapsing : Mir.typed_prog -> Mir.typed_prog
 (** Remove redundant SList constructors from the Mir that might have
     been introduced by other optimizations *)
 
+val block_fixing : Mir.typed_prog -> Mir.typed_prog
+(** Make sure that SList constructors directly under if, for, while or fundef
+    constructors are replaced with Block constructors.
+    This should probably be run before we generate code. *)
+
 val constant_propagation : Mir.typed_prog -> Mir.typed_prog
 (** Propagate constant values through variable assignments *)
 
