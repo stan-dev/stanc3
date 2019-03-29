@@ -585,20 +585,39 @@ let partial_evaluation = Partial_evaluator.eval_prog
 let lazy_code_motion (mir : typed_prog) =
   (* TODO: this isn't doing the right thing yet.
      Lazy code motion still needs to be debugged. *)
-  let preprocess_flowgraph s =
-    let rev_flowgraph, flowgraph_to_mir =
-      Monotone_framework.inverse_flowgraph_of_stmt s
+  let preprocess_flowgraph =
+    let preprocess_flowgraph_base
+        (stmt : (expr_typed_located, stmt_loc) statement) =
+      match stmt with
+      | IfElse (e, b1, Some b2) ->
+          IfElse
+            ( e
+            , {stmt= Block [b1; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+            , Some
+                {stmt= Block [b2; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+            )
+      | IfElse (e, b, None) ->
+          IfElse
+            ( e
+            , {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+            , Some {stmt= Block [{stmt= Skip; sloc= no_span}]; sloc= no_span}
+            )
+      | While (e, b) ->
+          While
+            (e, {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span})
+      | For {loopvar; lower; upper; body= b} ->
+          For
+            { loopvar
+            ; lower
+            ; upper
+            ; body=
+                {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+            }
+      | _ -> stmt
+      (* TODO: Double check that this is enough for preprocessing. We shouldn't
+         need to insert empty blocks before break, continue and loops. *)
     in
-    let (module Rev_Flowgraph) = rev_flowgraph in
-    let preprocess_flowgraph_base i stmt =
-      let predecessors = Map.find_exn Rev_Flowgraph.successors i in
-      if Set.length predecessors <= 1 then stmt
-      else SList [{stmt; sloc= Mir.no_span}]
-    in
-    let precrocess_flowgraph_stmt =
-      map_rec_stmt_loc_num flowgraph_to_mir preprocess_flowgraph_base
-    in
-    precrocess_flowgraph_stmt (Map.find_exn flowgraph_to_mir 1)
+    map_rec_stmt_loc preprocess_flowgraph_base
   in
   let transform s =
     let rev_flowgraph, flowgraph_to_mir =
@@ -3729,9 +3748,13 @@ let%expect_test "lazy code motion, 2" =
                    (SList
                     (((sloc <opaque>)
                       (stmt
-                       (NRFunApp print
-                        (((texpr_type UInt) (texpr_loc <opaque>)
-                          (texpr (Var sym25__)) (texpr_adlevel DataOnly))))))))))))))))))))
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt
+                           (NRFunApp print
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Var sym25__)) (texpr_adlevel DataOnly))))))
+                         ((sloc <opaque>) (stmt Skip))))))))))))))))))))
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
