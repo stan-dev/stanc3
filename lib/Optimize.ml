@@ -650,6 +650,7 @@ let lazy_code_motion (mir : typed_prog) =
           | Lit (_, _) -> accum
           | _ -> Map.set accum ~key:e ~data:(Util.gensym ()) )
     in
+    (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
           { stmt=
@@ -667,11 +668,8 @@ let lazy_code_motion (mir : typed_prog) =
           (Map.find_exn used_expressions_mfp i).entry
       in
       let to_assign_in_s =
-        Set.filter
-          ~f:(fun x -> match x.texpr with Lit (_, _) -> false | _ -> true)
-          used_and_latest_i
+        Set.filter ~f:(fun x -> Map.mem expression_map x) used_and_latest_i
       in
-      (* TODO: it'd be more efficient to just not accumulate these constants in the static analysis *)
       (* let _ =
         if Map.length latest_expr > 1 then
           raise_s
@@ -687,8 +685,6 @@ let lazy_code_motion (mir : typed_prog) =
       in
       (* TODO: is this sort doing anything or are they already stored in the right order by
          chance? *)
-      (* TODO: be careful with subexpressions vs expressions. 
-         Reread algorithm from scratch. *)
       let assignments_to_add_to_s =
         List.map
           ~f:(fun e ->
@@ -709,13 +705,16 @@ let lazy_code_motion (mir : typed_prog) =
         in
         map_rec_stmt_loc f
       in
-      SList
-        (List.map
-           ~f:
-             (expr_subst_stmt_except_initial_assign
-                (Map.mapi expression_map ~f:(fun ~key ~data ->
-                     {key with texpr= Var data} )))
-           (assignments_to_add_to_s @ [{stmt; sloc= Mir.no_span}]))
+      let f =
+        expr_subst_stmt_except_initial_assign
+          (Map.mapi expression_map ~f:(fun ~key ~data ->
+               {key with texpr= Var data} ))
+      in
+      if List.length assignments_to_add_to_s = 0 then
+        (f {stmt; sloc= Mir.no_span}).stmt
+      else
+        SList
+          (List.map ~f (assignments_to_add_to_s @ [{stmt; sloc= Mir.no_span}]))
     in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
@@ -752,7 +751,6 @@ let block_fixing =
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
    tight as possible local scopes *)
 (* TODO: add tests *)
-(* TODO: don't introduce as many redundant SLists in lazy code motion *)
 
 let%expect_test "map_rec_stmt_loc" =
   let ast =
@@ -3745,16 +3743,13 @@ let%expect_test "lazy code motion, 2" =
                 (body
                  ((sloc <opaque>)
                   (stmt
-                   (SList
+                   (Block
                     (((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>)
-                          (stmt
-                           (NRFunApp print
-                            (((texpr_type UInt) (texpr_loc <opaque>)
-                              (texpr (Var sym25__)) (texpr_adlevel DataOnly))))))
-                         ((sloc <opaque>) (stmt Skip))))))))))))))))))))
+                       (NRFunApp print
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Var sym25__)) (texpr_adlevel DataOnly))))))
+                     ((sloc <opaque>) (stmt Skip))))))))))))))))
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]

@@ -579,7 +579,7 @@ let killed_expressions_stmt (p : Mir.ExprSet.t)
       let assigned_vars = assigned_or_declared_vars_stmt s in
       not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)) )
 
-(** Calculate the set of expressions that needs to be computed at each node
+(** Calculate the set of subexpressions that needs to be computed at each node
     in the flowgraph *)
 let used (flowgraph_to_mir : (int, Mir.stmt_loc_num) Map.Poly.t) =
   Map.Poly.fold flowgraph_to_mir ~init:Map.Poly.empty
@@ -901,7 +901,7 @@ let lazy_expressions_mfp
   let all_expressions =
     Mir.ExprSet.union_list
       (List.map
-         ~f:(fun x -> used_expressions_stmt x.stmt)
+         ~f:(fun x -> used_subexpressions_stmt x.stmt)
          (List.concat
             [ mir.functions_block; mir.generate_quantities; mir.prepare_params
             ; mir.log_prob; mir.prepare_data ]))
