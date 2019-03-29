@@ -952,10 +952,4 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let used_expressions_mfp = Mf4.mfp () in
-  ( used_expr
-  , anticipated_expressions_mfp
-  , available_expressions_mfp
-  , earliest_expr
-  , postponable_expressions_mfp
-  , latest_expr
-  , used_expressions_mfp )
+  (latest_expr, used_expressions_mfp)
