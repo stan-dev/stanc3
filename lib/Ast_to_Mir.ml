@@ -183,11 +183,6 @@ let constrainaction_fname = function
   | Constrain -> fn_constrain
   | Unconstrain -> fn_unconstrain
 
-let internal_read_fn dread args =
-  match dread with
-  | ReadData -> FunApp (fn_read_data, args)
-  | ReadParam -> FunApp (fn_read_param, args)
-
 type decl_context =
   { dread: readaction option
   ; dconstrain: constrainaction option
@@ -286,23 +281,27 @@ let rec base_type = function
   | SVector _ | SRowVector _ | SMatrix _ -> Ast.UReal
   | x -> Ast.remove_size x
 
-let mkread id var dread dconstrain sizedtype transform sloc =
+let mkparamread id var dconstrain sizedtype transform sloc =
   let read_base var =
     { var with
-      texpr= internal_read_fn dread [mkstring var.texpr_loc id]
+      texpr= FunApp (fn_read_param, [mkstring var.texpr_loc id])
+    ; texpr_type= base_type sizedtype }
+  in
+  let constrain var =
+    { stmt=
+        Assignment (var, gen_constraint dconstrain transform (read_base var))
+    ; sloc }
+  in
+  for_eigen constrain var sloc
+
+let mkdataread id var sizedtype sloc =
+  let read_base var =
+    { var with
+      texpr= FunApp (fn_read_data, [mkstring var.texpr_loc id])
     ; texpr_type= base_type sizedtype }
   in
   let read_assign var = {stmt= Assignment (var, read_base var); sloc} in
-  let constrain var =
-    {stmt= Assignment (var, gen_constraint dconstrain transform var); sloc}
-  in
   for_scalar read_assign var sloc
-  ::
-  (* XXX seems like we should have a way of letting gen_constraint return an option
-  rather than checking it here like this :( *)
-  ( match transform with
-  | Ast.Identity -> []
-  | _ -> [(constraint_forl transform) constrain var sloc] )
 
 let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     identifier initial_value =
@@ -310,7 +309,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let assign rhs =
-    [{stmt= Assignment ({rhs with texpr= Var decl_id}, rhs); sloc}]
+    {stmt= Assignment ({rhs with texpr= Var decl_id}, rhs); sloc}
   in
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
@@ -319,10 +318,17 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     ; texpr_adlevel= dadlevel
     ; texpr_loc= sloc }
   in
-  let read_stmts =
-    match dread with
-    | Some a -> mkread decl_id decl_var a dconstrain decl_type transform sloc
-    | None -> Option.value_map ~default:[] ~f:assign rhs
+  let read_stmt =
+    match (dread, dconstrain) with
+    | Some ReadData, Some Check -> mkdataread decl_id decl_var decl_type sloc
+    | Some ReadParam, Some Constrain | Some ReadParam, Some Unconstrain ->
+        mkparamread decl_id decl_var dconstrain decl_type transform sloc
+    | None, _ -> Option.value_map ~default:{stmt= Skip; sloc} ~f:assign rhs
+    | _ ->
+        raise_s
+          [%message
+            "unexpected dread, constrain combo: "
+              ((dread, dconstrain) : readaction option * constrainaction option)]
   in
   let decl_adtype =
     match rhs with
@@ -336,7 +342,8 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
     | Some Check -> gen_check decl_type decl_id transform sloc dadlevel
     | _ -> []
   in
-  (decl :: read_stmts) @ checks
+  decl :: read_stmt :: checks
+  |> List.filter ~f:(function {stmt= Skip; _} -> false | _ -> true)
 
 let unwrap_block = function
   | [({stmt= Block _; _} as b)] -> b
@@ -594,26 +601,10 @@ let%expect_test "read param" =
       (upper (FunApp Length__ ((Var mat))))
       (body
        (Block
-        ((For (loopvar sym2__) (lower (Lit Int 0))
-          (upper (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
-          (body
-           (Block
-            ((Assignment
-              (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-              (FunApp ReadParam__ ((Lit Str mat))))))))))))
-     (For (loopvar sym1__) (lower (Lit Int 0))
-      (upper (FunApp Length__ ((Var mat))))
-      (body
-       (Block
-        ((For (loopvar sym2__) (lower (Lit Int 0))
-          (upper (FunApp Length__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
-          (body
-           (Block
-            ((Assignment
-              (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-              (FunApp Constrain__
-               ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-                (Lit Str lb) (Lit Str row_vector) (Lit Int 0))))))))))))) |}]
+        ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+          (FunApp Constrain__
+           ((FunApp ReadParam__ ((Lit Str mat))) (Lit Str lb) (Lit Str real)
+            (Lit Int 0))))))))) |}]
 
 let%expect_test "gen quant" =
   let m =

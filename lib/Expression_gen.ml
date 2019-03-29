@@ -205,6 +205,8 @@ and gen_fun_app ppf ut f es =
         , fun ppf es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es )
       ; (fn_read_data, read_data_or_param)
       ; (fn_read_param, read_data_or_param)
+      ; (fn_constrain, pp_constrain_funapp "constrain")
+      ; (fn_unconstrain, pp_constrain_funapp "unconstrain")
       (* XXX Fill in the rest of the functions at the bottom of Mir.ml *)
        ]
   in
@@ -215,6 +217,15 @@ and gen_fun_app ppf ut f es =
     |> Option.value ~default
   in
   pp_fn ppf es
+
+(* XXX actually, for params we have to combine read and constrain into one funapp *)
+and pp_constrain_funapp constrain_or_un_str ppf = function
+  | var
+    :: {texpr= Lit (Str, constraint_flavor); _}
+       :: {texpr= Lit (Str, base_type); _} :: dims ->
+      pf ppf "%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
+        constrain_or_un_str (list ~sep:comma pp_expr) (var :: dims)
+  | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
 and pp_ordinary_fn ppf f es =
   let extra_args = gen_extra_fun_args f in
