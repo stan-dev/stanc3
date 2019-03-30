@@ -2,6 +2,27 @@ open Core_kernel
 open Mir
 open Dataflow_types
 
+type node_dep_info =
+  { predecessors: label Set.Poly.t
+  ; parents: label Set.Poly.t
+  ; reaching_defn_entry: reaching_defn Set.Poly.t
+  ; reaching_defn_exit: reaching_defn Set.Poly.t
+  }
+
+val node_immediate_dependencies :
+  (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t -> label -> label Set.Poly.t
+
+val node_dependencies :
+  (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t -> label -> label Set.Poly.t
+
+val all_node_dependencies :
+  (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t -> (label, label Set.Poly.t) Map.Poly.t
+
+val stmt_map_dependency_graph :
+  (label, (expr_typed_located, label) statement * 'm) Map.Poly.t ->
+  (label, label Set.Poly.t) Map.Poly.t
+(*
+
 (**
    ~~~~~ Still to implement: TODO ~~~~~
  * Indexed variables are currently handled as monoliths
@@ -96,4 +117,5 @@ val analysis_example : typed_prog -> string -> unit
 (**
    Builds a dataflow graph from the model block and evaluates the label and global
    variable dependencies of the "y" variable, printing results to stdout.
+*)
 *)

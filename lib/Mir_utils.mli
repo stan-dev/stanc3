@@ -33,6 +33,27 @@ val index_var_set : expr_typed_located index -> vexpr Set.Poly.t
    For use in RHS sets, not LHS assignment sets, except in a target term
 *)
 
+val stmt_rhs : (expr_typed_located, 's) statement -> ExprSet.t
+(**
+   The set of variables that can affect the value or behavior of the expression, i.e. rhs.
+
+   Using Set.Poly instead of ExprSet so that 'e can be polymorphic, it usually doesn't
+   matter if there's duplication.
+*)
+
+val union_map : 'a Set.Poly.t -> f:('a -> 'b Set.Poly.t) -> 'b Set.Poly.t
+(**
+   This is a helper function equivalent to List.concat_map but for Sets
+*)
+
+val stmt_rhs_var_set : (expr_typed_located, 's) statement -> vexpr Set.Poly.t
+(**
+   The set of variables in an expression, including inside an index.
+
+   For use in RHS sets, not LHS assignment sets, except in a target term.
+*)
+
+
 val expr_assigned_var : expr_typed_located -> vexpr
 (**
    The variable being assigned to when the expression is the LHS
