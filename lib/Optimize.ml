@@ -4321,8 +4321,7 @@ let%expect_test "lazy code motion, 7" =
                               (((sloc <opaque>)
                                 (stmt
                                  (Block
-                                  (((sloc <opaque>) (stmt Skip))
-                                   ((sloc <opaque>)
+                                  (((sloc <opaque>)
                                     (stmt
                                      (Assignment
                                       ((texpr_type UInt) (texpr_loc <opaque>)
@@ -4338,6 +4337,7 @@ let%expect_test "lazy code motion, 7" =
                                            (texpr (Var b))
                                            (texpr_adlevel DataOnly)))))
                                        (texpr_adlevel DataOnly)))))
+                                   ((sloc <opaque>) (stmt Skip))
                                    ((sloc <opaque>)
                                     (stmt
                                      (While

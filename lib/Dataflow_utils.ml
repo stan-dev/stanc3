@@ -118,7 +118,6 @@ let is_ctrl_flow (stmt : ('e, 's) statement) : bool =
    Simultaneously builds the controlflow parent graph, the predecessor graph and the exit
    set of a statement. It's advantageous to build them together because they both rely on
    some of the same Break, Continue and Return bookkeeping.
-*)
 let build_cf_graphs
     (statement_map :
       (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
@@ -223,6 +222,129 @@ let build_cf_graphs
       ; exits= substmt_state.exits }
     , Map.Poly.add_exn substmt_map ~key:label
         ~data:{parents= cf_deps; predecessors= in_state.exits} )
+  in
+  let state, edges =
+    build_cf_graph_rec None
+      ( { breaks= Set.Poly.empty
+        ; continues= Set.Poly.empty
+        ; returns= Set.Poly.empty
+        ; exits= Set.Poly.empty }
+      , Map.Poly.empty )
+      1
+  in
+  ( state.exits
+  , Map.Poly.map edges ~f:(fun e -> e.predecessors)
+  , Map.Poly.map edges ~f:(fun e -> e.parents) )
+*)
+
+(**
+   Simultaneously builds the controlflow parent graph, the predecessor graph and the exit
+   set of a statement. It's advantageous to build them together because they both rely on
+   some of the same Break, Continue and Return bookkeeping.
+*)
+let build_cf_graphs
+    (statement_map :
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t) :
+    label Set.Poly.t
+    * (label, label Set.Poly.t) Map.Poly.t
+    * (label, label Set.Poly.t) Map.Poly.t =
+  let rec build_cf_graph_rec (cf_parent : label option)
+      ((in_state, in_map) : cf_state * (label, cf_edges) Map.Poly.t)
+      (label : label) : cf_state * (label, cf_edges) Map.Poly.t =
+    let stmt, _ = Map.Poly.find_exn statement_map label in
+    (* Only control flow nodes should pass themselves down as parents *)
+    let child_cf = if is_ctrl_flow stmt then Some label else cf_parent in
+    let join (state1, map1) (state2, map2) =
+      (join_cf_states state1 state2, union_maps_left map1 map2)
+    in
+    (* The accumulated state after traversing substatements *)
+    let substmt_state_unlooped, substmt_map_unlooped =
+      branching_fold_statement stmt ~join
+        ~init:({in_state with exits= Set.Poly.singleton label}, in_map)
+        ~f:(build_cf_graph_rec child_cf)
+    in
+    (* If the statement is a loop, we need to include the loop body exits predecessors
+         of the loop body *)
+    let substmt_state, substmt_map, predecessors =
+      let looped_state passthrough_possible =
+        ( { substmt_state_unlooped with
+            exits=
+              Set.Poly.union_list
+                (* The exit of a loop could be:
+                   1. the loop's predecessor (in case the loop doesn't run),
+                   2. a normal exit point of the body,
+                   3. a break within the body,
+                   4. or a continue within the body.
+                This comment mangling brought to you by the autoformater *)
+                [ (*1*)
+                  ( if passthrough_possible then in_state.exits
+                  else Set.Poly.empty )
+                ; (*2*) substmt_state_unlooped.exits
+                ; (*3*)
+                  Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+                ; (*4*)
+                  Set.Poly.diff substmt_state_unlooped.continues
+                    in_state.continues ] }
+        , substmt_map_unlooped
+        , Set.Poly.union in_state.exits substmt_state_unlooped.exits )
+      in
+      match stmt with
+      | For
+          { lower= {texpr= Lit (Int, l_str); _}
+          ; upper= {texpr= Lit (Int, u_str); _}; _ } ->
+          (* TODO: Is it safe to use int_of_string here? *)
+          let l = int_of_string l_str in
+          let u = int_of_string u_str in
+          looped_state (l > u)
+      | For _ -> looped_state true
+      | While ({texpr= Lit (Int, cond_str); _}, _) ->
+          looped_state (int_of_string cond_str = 0)
+      | While _ -> looped_state true
+      | _ -> (substmt_state_unlooped, substmt_map_unlooped, in_state.exits)
+    in
+    (* Some statements interact with the break/return/continue states
+       E.g., loops nullify breaks and continues in their body, but are still affected by
+       breaks and input continues*)
+    let breaks_out, returns_out, continues_out, extra_cf_deps =
+      match stmt with
+      | Break ->
+          ( Set.Poly.add substmt_state.breaks label
+          , substmt_state.returns
+          , substmt_state.continues
+          , Set.Poly.empty )
+      | Return _ ->
+          ( substmt_state.breaks
+          , Set.Poly.add substmt_state.returns label
+          , substmt_state.continues
+          , Set.Poly.empty )
+      | Continue ->
+          ( substmt_state.breaks
+          , substmt_state.returns
+          , Set.Poly.add substmt_state.continues label
+          , Set.Poly.empty )
+      | While _ | For _ ->
+          ( in_state.breaks
+          , substmt_state.returns
+          , in_state.continues
+          , Set.Poly.union substmt_state.breaks substmt_state.returns )
+      | _ ->
+          ( substmt_state.breaks
+          , substmt_state.returns
+          , substmt_state.continues
+          , Set.Poly.empty )
+    in
+    let cf_parents =
+      Set.Poly.union_list
+        [ Option.value_map cf_parent ~default:Set.Poly.empty
+            ~f:Set.Poly.singleton
+        ; in_state.returns; in_state.continues; extra_cf_deps ]
+    in
+    ( { breaks= breaks_out
+      ; continues= continues_out
+      ; returns= returns_out
+      ; exits= substmt_state.exits }
+    , Map.Poly.add_exn substmt_map ~key:label
+        ~data:{parents= cf_parents; predecessors} )
   in
   let state, edges =
     build_cf_graph_rec None
@@ -564,8 +686,8 @@ let%expect_test "Predecessor graph example" =
   [%expect
     {|
       ((7 13 16 19 22)
-       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8))
-        (10 (9 22)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
+       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8 22))
+        (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
         (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
     |}]
 
@@ -580,6 +702,8 @@ let%expect_test "Controlflow graph example" =
        (22 (9 16 19)))
     |}]
 
+(* We don't actually expect to be called this way, we instead expect to be called on each
+   function body separately *)
 let example2_program =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -736,9 +860,9 @@ let%expect_test "Controlflow graph example 2" =
   print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((1 (8 9 10)) (2 (8 9 10)) (3 (8 9 10)) (4 (3 8 9 10)) (5 (3 8)) (6 (5 8))
-       (7 (5)) (8 (5)) (9 (3 8)) (10 (3 8 9)) (11 (8 9 10)) (12 (8 9 10 11))
-       (13 (8 9 10 11)) (14 (8 9 10)) (15 (8 9 10)))
+      ((1 ()) (2 ()) (3 ()) (4 (3)) (5 (3)) (6 (5)) (7 (5)) (8 (5)) (9 (3 8))
+       (10 (3 8 9)) (11 (8 9 10)) (12 (8 9 10 11)) (13 (8 9 10 11)) (14 (8 9 10))
+       (15 (8 9 10)))
     |}]
 
 let%expect_test "Predecessor graph example 2" =
