@@ -599,8 +599,7 @@ let lazy_code_motion (mir : typed_prog) =
           IfElse
             ( e
             , {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span}
-            , Some {stmt= Block [{stmt= Skip; sloc= no_span}]; sloc= no_span}
-            )
+            , Some {stmt= Skip; sloc= no_span} )
       | While (e, b) ->
           While
             (e, {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span})
@@ -623,7 +622,7 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let latest_expr, used_expressions_mfp =
+    let latest_expr, isolated_expressions_mfp =
       Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
         flowgraph_to_mir
     in
@@ -646,13 +645,13 @@ let lazy_code_motion (mir : typed_prog) =
           :: accum )
     in
     let lazy_code_motion_base i stmt =
-      let used_and_latest_i =
-        Set.inter
+      let latest_not_isolated_i =
+        Set.diff
           (Map.find_exn latest_expr i)
-          (Map.find_exn used_expressions_mfp i).entry
+          (Map.find_exn isolated_expressions_mfp i).entry
       in
       let to_assign_in_s =
-        Set.filter ~f:(fun x -> Map.mem expression_map x) used_and_latest_i
+        Set.filter ~f:(fun x -> Map.mem expression_map x) latest_not_isolated_i
       in
       let to_assign_in_s = Set.to_list to_assign_in_s in
       let to_assign_in_s =
@@ -686,8 +685,10 @@ let lazy_code_motion (mir : typed_prog) =
         expr_subst_stmt_except_initial_assign
           (Map.filter_keys
              ~f:(fun key ->
-               Set.mem (Map.find_exn used_expressions_mfp i).entry key
-               || not (Set.mem (Map.find_exn latest_expr i) key) )
+               not
+                 ( Set.mem (Map.find_exn latest_expr i) key
+                 && (Set.mem (Map.find_exn isolated_expressions_mfp i).entry)
+                      key ) )
              (Map.mapi expression_map ~f:(fun ~key ~data ->
                   {key with texpr= Var data} )))
       in
@@ -3624,6 +3625,7 @@ let%expect_test "lazy code motion" =
       model {
         print({3.0});
         print({3.0});
+        print({3.0});
       }
       |}
   in
@@ -3656,6 +3658,11 @@ let%expect_test "lazy code motion" =
                  (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Real 3.0))
                    (texpr_adlevel DataOnly)))))
                (texpr_adlevel DataOnly)))))
+           ((sloc <opaque>)
+            (stmt
+             (NRFunApp print
+              (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+                (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))
            ((sloc <opaque>)
             (stmt
              (NRFunApp print
@@ -3789,14 +3796,21 @@ let%expect_test "lazy code motion, 3" =
                   (texpr_adlevel DataOnly))))))
              ((sloc <opaque>)
               (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym27__))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp Plus__
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
+                     (texpr_adlevel DataOnly))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 7))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
                (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>)
-                  (texpr
-                   (FunApp Plus__
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
-                      (texpr_adlevel DataOnly))
-                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 7))
-                      (texpr_adlevel DataOnly)))))
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym27__))
                   (texpr_adlevel DataOnly))))))))))))
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
@@ -3925,6 +3939,472 @@ let%expect_test "lazy code motion, 4" =
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
 
+let%expect_test "lazy code motion, 5" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int b;
+        int c;
+        int x;
+        int y;
+        b = 1;
+        if (1) {
+          ;
+          ;
+          ;
+        } else {
+          if (2) x = b + c;
+          ;
+        }
+        y = b + c;
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym29__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (IfElse
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                 (texpr_adlevel DataOnly))
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (Block
+                       (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
+                        ((sloc <opaque>) (stmt Skip))))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (Assignment
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Var sym29__)) (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr
+                         (FunApp Plus__
+                          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
+                            (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                            (texpr_adlevel DataOnly)))))
+                        (texpr_adlevel DataOnly)))))
+                    ((sloc <opaque>) (stmt Skip))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt
+                           (IfElse
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Lit Int 2)) (texpr_adlevel DataOnly))
+                            ((sloc <opaque>)
+                             (stmt
+                              (Block
+                               (((sloc <opaque>)
+                                 (stmt
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym29__)) (texpr_adlevel DataOnly))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr
+                                     (FunApp Plus__
+                                      (((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Var b)) (texpr_adlevel DataOnly))
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Var c)) (texpr_adlevel DataOnly)))))
+                                    (texpr_adlevel DataOnly)))))
+                                ((sloc <opaque>)
+                                 (stmt
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var x)) (texpr_adlevel DataOnly))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym29__)) (texpr_adlevel DataOnly)))))
+                                ((sloc <opaque>) (stmt Skip))))))
+                            (((sloc <opaque>)
+                              (stmt
+                               (SList
+                                (((sloc <opaque>)
+                                  (stmt
+                                   (Assignment
+                                    ((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr (Var sym29__))
+                                     (texpr_adlevel DataOnly))
+                                    ((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr
+                                      (FunApp Plus__
+                                       (((texpr_type UInt) (texpr_loc <opaque>)
+                                         (texpr (Var b)) (texpr_adlevel DataOnly))
+                                        ((texpr_type UInt) (texpr_loc <opaque>)
+                                         (texpr (Var c)) (texpr_adlevel DataOnly)))))
+                                     (texpr_adlevel DataOnly)))))
+                                 ((sloc <opaque>) (stmt Skip))))))))))
+                         ((sloc <opaque>) (stmt Skip))))))
+                     ((sloc <opaque>) (stmt Skip))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym29__))
+                 (texpr_adlevel DataOnly)))))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "lazy code motion, 6" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int x;
+        int y;
+        if (2)
+          x = 1 + 2;
+        y = 4 + 3;
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym31__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym30__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (IfElse
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly))
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (Assignment
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Var sym30__)) (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr
+                         (FunApp Plus__
+                          (((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 1)) (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                        (texpr_adlevel DataOnly)))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (Assignment
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Var sym30__)) (texpr_adlevel DataOnly)))))
+                    ((sloc <opaque>) (stmt Skip))))))
+                (((sloc <opaque>) (stmt Skip))))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym31__))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp Plus__
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+                     (texpr_adlevel DataOnly))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym31__))
+                 (texpr_adlevel DataOnly)))))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "lazy code motion, 7" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int a;
+        int b;
+        int c;
+        int x;
+        int y;
+        int z;
+        if (1) {
+          a = c;
+          x = a + b;
+        } else ;
+        if (2) {
+          if (3) {
+            ;
+            while (4) y = a + b;
+            ;
+          } else {
+              ;
+              while (5) ;
+              y = a + b;
+            }
+            z = a + b;
+          } else ;
+          ;
+        }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym33__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym32__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (IfElse
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                 (texpr_adlevel DataOnly))
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (Block
+                       (((sloc <opaque>)
+                         (stmt
+                          (Assignment
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Var sym32__)) (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                            (texpr_adlevel DataOnly)))))
+                        ((sloc <opaque>)
+                         (stmt
+                          (Assignment
+                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var a))
+                            (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Var sym32__)) (texpr_adlevel DataOnly)))))
+                        ((sloc <opaque>)
+                         (stmt
+                          (Assignment
+                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                            (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Var sym33__)) (texpr_adlevel DataOnly)))))))))
+                    ((sloc <opaque>) (stmt Skip))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
+             ((sloc <opaque>)
+              (stmt
+               (IfElse
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly))
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (Block
+                       (((sloc <opaque>)
+                         (stmt
+                          (IfElse
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                           ((sloc <opaque>)
+                            (stmt
+                             (Block
+                              (((sloc <opaque>)
+                                (stmt
+                                 (Block
+                                  (((sloc <opaque>) (stmt Skip))
+                                   ((sloc <opaque>)
+                                    (stmt
+                                     (Assignment
+                                      ((texpr_type UInt) (texpr_loc <opaque>)
+                                       (texpr (Var sym33__))
+                                       (texpr_adlevel DataOnly))
+                                      ((texpr_type UInt) (texpr_loc <opaque>)
+                                       (texpr
+                                        (FunApp Plus__
+                                         (((texpr_type UInt) (texpr_loc <opaque>)
+                                           (texpr (Var a))
+                                           (texpr_adlevel DataOnly))
+                                          ((texpr_type UInt) (texpr_loc <opaque>)
+                                           (texpr (Var b))
+                                           (texpr_adlevel DataOnly)))))
+                                       (texpr_adlevel DataOnly)))))
+                                   ((sloc <opaque>)
+                                    (stmt
+                                     (While
+                                      ((texpr_type UInt) (texpr_loc <opaque>)
+                                       (texpr (Lit Int 4))
+                                       (texpr_adlevel DataOnly))
+                                      ((sloc <opaque>)
+                                       (stmt
+                                        (Block
+                                         (((sloc <opaque>)
+                                           (stmt
+                                            (Assignment
+                                             ((texpr_type UInt)
+                                              (texpr_loc <opaque>) (texpr (Var y))
+                                              (texpr_adlevel DataOnly))
+                                             ((texpr_type UInt)
+                                              (texpr_loc <opaque>)
+                                              (texpr (Var sym33__))
+                                              (texpr_adlevel DataOnly)))))
+                                          ((sloc <opaque>) (stmt Skip)))))))))
+                                   ((sloc <opaque>) (stmt Skip))))))
+                               ((sloc <opaque>) (stmt Skip))))))
+                           (((sloc <opaque>)
+                             (stmt
+                              (Block
+                               (((sloc <opaque>)
+                                 (stmt
+                                  (Block
+                                   (((sloc <opaque>) (stmt Skip))
+                                    ((sloc <opaque>)
+                                     (stmt
+                                      (While
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Lit Int 5))
+                                        (texpr_adlevel DataOnly))
+                                       ((sloc <opaque>)
+                                        (stmt
+                                         (Block
+                                          (((sloc <opaque>) (stmt Skip))
+                                           ((sloc <opaque>) (stmt Skip)))))))))
+                                    ((sloc <opaque>)
+                                     (stmt
+                                      (Assignment
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Var sym33__))
+                                        (texpr_adlevel DataOnly))
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr
+                                         (FunApp Plus__
+                                          (((texpr_type UInt) (texpr_loc <opaque>)
+                                            (texpr (Var a))
+                                            (texpr_adlevel DataOnly))
+                                           ((texpr_type UInt) (texpr_loc <opaque>)
+                                            (texpr (Var b))
+                                            (texpr_adlevel DataOnly)))))
+                                        (texpr_adlevel DataOnly)))))
+                                    ((sloc <opaque>)
+                                     (stmt
+                                      (Assignment
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Var y)) (texpr_adlevel DataOnly))
+                                       ((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Var sym33__))
+                                        (texpr_adlevel DataOnly)))))))))
+                                ((sloc <opaque>) (stmt Skip))))))))))
+                        ((sloc <opaque>)
+                         (stmt
+                          (Assignment
+                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                            (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Var sym33__)) (texpr_adlevel DataOnly)))))))))
+                    ((sloc <opaque>) (stmt Skip))))))
+                (((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
+             ((sloc <opaque>) (stmt Skip))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
 let%expect_test "block fixing" =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -3933,7 +4413,6 @@ let%expect_test "block fixing" =
       }
       |}
   in
-  (* TODO: this test is still giving the wrong answer. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir =

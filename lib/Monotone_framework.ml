@@ -681,17 +681,17 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
   Map.fold successors ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
       Map.set accum ~key ~data:(latest key) )
 
-(** The transfer function for a used expressions analysis, as a part of lazy code motion *)
-let used_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
+(** The transfer function for a isolated expressions analysis, as a part of lazy code motion *)
+let isolated_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
     (latest : (int, Mir.ExprSet.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.ExprSet.t
 
     let transfer_function l p =
-      let gen = Map.find_exn used l in
-      let kill = Map.find_exn latest l in
-      transfer_gen_kill_alt p gen kill
+      let gen = Map.find_exn latest l in
+      let kill = Map.find_exn used l in
+      transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Mir.ExprSet.t )
@@ -944,12 +944,14 @@ let lazy_expressions_mfp
     latest Flowgraph.successors earliest_expr postponable_expressions_mfp
       used_expr
   in
-  let (module Transfer4) = used_expressions_transfer used_expr latest_expr in
+  let (module Transfer4) =
+    isolated_expressions_transfer used_expr latest_expr
+  in
   let (module Mf4) =
     monotone_framework
       (module Rev_Flowgraph)
       (module Lattice2)
       (module Transfer4)
   in
-  let used_expressions_mfp = Mf4.mfp () in
-  (latest_expr, used_expressions_mfp)
+  let isolated_expressions_mfp = Mf4.mfp () in
+  (latest_expr, isolated_expressions_mfp)
