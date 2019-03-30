@@ -59,10 +59,7 @@ and pp_index pp_e ppf = function
   | Upfrom index -> Fmt.pf ppf {|%a:|} pp_e index
   | Downfrom index -> Fmt.pf ppf {|:%a|} pp_e index
   | Between (lower, upper) -> Fmt.pf ppf {|%a:%a|} pp_e lower pp_e upper
-  | MultiIndex index ->
-      (* TODO: I'm not sure what a multi-index is so this formatting probably
-          makes no sense... *)
-      Fmt.pf ppf {|~%a|} pp_e index
+  | MultiIndex index -> Fmt.pf ppf {|%a|} pp_e index
 
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
@@ -139,8 +136,8 @@ let rec pp_statement pp_e pp_s ppf = function
         Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody
-    | _ ->
-        Fmt.pf ppf {|@[<v2>%s%a {@ %a@]@ }|} fdname
+    | None ->
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )
 
@@ -160,9 +157,8 @@ let pp_io_block ppf = function
 type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
 
 let pp_io_var pp_e ppf (name, (sized_ty, io_block)) =
-  Fmt.pf ppf "@[<h>%a %s %a;@]" (pp_sizedtype pp_e) (sized_ty, Identity) name
-    (angle_brackets @@ angle_brackets pp_io_block)
-    io_block
+  Fmt.pf ppf "@[<h>%a %a %s;@]" pp_io_block io_block (pp_sizedtype pp_e)
+    (sized_ty, Ast.Identity) name
 
 let pp_block label pp_elem ppf elems =
   Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
@@ -208,24 +204,24 @@ let pp_generate_quantities pp_s ppf {generate_quantities; _} =
 let pp_transform_inits pp_s ppf {transform_inits; _} =
   pp_block "transform_inits" pp_s ppf transform_inits
 
-(* { functions_block: 's list
-  ; input_vars: 'e io_var list
-  ; prepare_data: 's list (* data & transformed data decls and statements *)
-  ; prepare_params: 's list (* param & tparam decls and statements *)
-  ; log_prob: 's list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 's list (* assumes data & params ready & in scope*)
-  ; transform_inits: 's list
-  ; output_vars: 'e io_var list
-  ; prog_name: string
-  ; prog_path: string }
-   *)
 let pp_prog pp_e pp_s ppf prog =
-  Fmt.pf ppf "@[<v>@;%a@;%a@;%a@;%a@;%a@;%a@;%a@;%a@]"
-    (pp_functions_block pp_s) prog (pp_input_vars pp_e) prog
-    (pp_prepare_data pp_s) prog (pp_prepare_params pp_s) prog
-    (pp_log_prob pp_s) prog
-    (pp_generate_quantities pp_s)
-    prog (pp_transform_inits pp_s) prog (pp_output_vars pp_e) prog
+  Format.open_vbox 0 ;
+  pp_functions_block pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_input_vars pp_e ppf prog ;
+  Fmt.cut ppf () ;
+  pp_prepare_data pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_prepare_params pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_log_prob pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_generate_quantities pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_transform_inits pp_s ppf prog ;
+  Fmt.cut ppf () ;
+  pp_output_vars pp_e ppf prog ;
+  Format.close_box ()
 
 type expr_typed_located =
   { texpr_type: unsizedtype
