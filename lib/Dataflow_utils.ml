@@ -350,9 +350,7 @@ let%expect_test "Statement label map example" =
   print_s
     [%sexp
       ( Map.Poly.map example1_statement_map ~f:fst
-        : ( label
-          , (expr_typed_located, label) statement )
-          Map.Poly.t )] ;
+        : (label, (expr_typed_located, label) statement) Map.Poly.t )] ;
   [%expect
     {|
       ((1 (Block (2 5))) (2 (SList (3 4)))

@@ -53,7 +53,6 @@ val stmt_rhs_var_set : (expr_typed_located, 's) statement -> vexpr Set.Poly.t
    For use in RHS sets, not LHS assignment sets, except in a target term.
 *)
 
-
 val expr_assigned_var : expr_typed_located -> vexpr
 (**
    The variable being assigned to when the expression is the LHS
