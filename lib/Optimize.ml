@@ -534,6 +534,7 @@ let dead_code_elimination (mir : typed_prog) =
       | Assignment _ -> Errors.fatal_error ()
       (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
            due to side effects. *)
+      (* TODO: maybe we should revisit that. *)
       | Decl _ | TargetPE _
        |NRFunApp (_, _)
        |Check _ | Break | Continue | Return _ | Skip ->
@@ -631,6 +632,7 @@ let lazy_code_motion (mir : typed_prog) =
         ~init:ExprMap.empty ~f:(fun accum e ->
           match e.texpr with
           | Lit (_, _) -> accum
+          | FunApp (f, _) when String.suffix f 3 = "_lp" -> accum
           | _ -> Map.set accum ~key:e ~data:(Util.gensym ()) )
     in
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
@@ -4414,6 +4416,105 @@ let%expect_test "lazy code motion, 7" =
                    (Block
                     (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
              ((sloc <opaque>) (stmt Skip))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "lazy code motion, 8, _lp functions not optimized" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        int foo_lp() { target += 1; return 24; }
+        int foo() { return 24; }
+      }
+      model {
+        print(foo_lp());
+        print(foo_lp());
+        print(foo());
+        print(foo());
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block
+        (((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname foo_lp) (fdargs ())
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (TargetPE
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                         (texpr_adlevel DataOnly)))))
+                     ((sloc <opaque>)
+                      (stmt
+                       (Return
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 24)) (texpr_adlevel DataOnly))))))))))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (FunDef (fdrt (UInt)) (fdname foo) (fdargs ())
+            (fdbody
+             ((sloc <opaque>)
+              (stmt
+               (SList
+                (((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (Return
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 24)) (texpr_adlevel DataOnly))))))))))))))))))))
+       (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym34__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
+                  (texpr_adlevel DataOnly))))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
+                  (texpr_adlevel DataOnly))))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo ()))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+                  (texpr_adlevel DataOnly))))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+                  (texpr_adlevel DataOnly))))))))))))
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
