@@ -282,21 +282,21 @@ let pp_transform_inits pp_s ppf {transform_inits; _} =
 
 let pp_prog pp_e pp_s ppf prog =
   Format.open_vbox 0 ;
-  (pp_functions_block pp_s) ppf prog ;
+  pp_functions_block pp_s ppf prog ;
   Fmt.cut ppf () ;
-  (pp_input_vars pp_e) ppf prog ;
+  pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;
-  (pp_prepare_data pp_s) ppf prog ;
+  pp_prepare_data pp_s ppf prog ;
   Fmt.cut ppf () ;
-  (pp_prepare_params pp_s) ppf prog ;
+  pp_prepare_params pp_s ppf prog ;
   Fmt.cut ppf () ;
-  (pp_log_prob pp_s) ppf prog ;
+  pp_log_prob pp_s ppf prog ;
   Fmt.cut ppf () ;
-  (pp_generate_quantities pp_s) ppf prog ;
+  pp_generate_quantities pp_s ppf prog ;
   Fmt.cut ppf () ;
-  (pp_transform_inits pp_s) ppf prog ;
+  pp_transform_inits pp_s ppf prog ;
   Fmt.cut ppf () ;
-  (pp_output_vars pp_e) ppf prog ;
+  pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
 type expr_typed_located =
