@@ -90,18 +90,6 @@ let dual_powerset_lattice (type v)
   : LATTICE
     with type properties = v Set.Poly.t )
 
-let powerset_lattice_expressions (initial : Mir.ExprSet.t) =
-  ( module struct
-    type properties = Mir.ExprSet.t
-
-    let bottom = Mir.ExprSet.empty
-    let lub s1 s2 = Mir.ExprSet.union s1 s2
-    let leq s1 s2 = Mir.ExprSet.is_subset s1 ~of_:s2
-    let initial = initial
-  end
-  : LATTICE
-    with type properties = Mir.ExprSet.t )
-
 let dual_powerset_lattice_expressions (initial : Mir.ExprSet.t)
     (total : Mir.ExprSet.t) =
   ( module struct
@@ -907,19 +895,16 @@ let lazy_expressions_mfp
             ; mir.log_prob; mir.prepare_data ]))
   in
   let used_expr = used flowgraph_to_mir in
-  let (module Lattice1) =
+  let (module Lattice) =
     dual_powerset_lattice_expressions Mir.ExprSet.empty all_expressions
   in
-  (* TODO: seeing that used_variables is basically a liveness analysis for expressions,
-     does that mean we should initialize to include all observable variables? *)
-  let (module Lattice2) = powerset_lattice_expressions Mir.ExprSet.empty in
   let (module Transfer1) =
     anticipated_expressions_transfer flowgraph_to_mir used_expr
   in
   let (module Mf1) =
     monotone_framework
       (module Rev_Flowgraph)
-      (module Lattice1)
+      (module Lattice)
       (module Transfer1)
   in
   let anticipated_expressions_mfp = Mf1.mfp () in
@@ -927,7 +912,7 @@ let lazy_expressions_mfp
     available_expressions_transfer flowgraph_to_mir anticipated_expressions_mfp
   in
   let (module Mf2) =
-    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer2)
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer2)
   in
   let available_expressions_mfp = Mf2.mfp () in
   let earliest_expr =
@@ -937,7 +922,7 @@ let lazy_expressions_mfp
     postponable_expressions_transfer earliest_expr used_expr
   in
   let (module Mf3) =
-    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer3)
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer3)
   in
   let postponable_expressions_mfp = Mf3.mfp () in
   let latest_expr =
@@ -950,7 +935,7 @@ let lazy_expressions_mfp
   let (module Mf4) =
     monotone_framework
       (module Rev_Flowgraph)
-      (module Lattice2)
+      (module Lattice)
       (module Transfer4)
   in
   let isolated_expressions_mfp = Mf4.mfp () in

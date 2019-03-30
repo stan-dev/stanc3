@@ -4275,6 +4275,19 @@ let%expect_test "lazy code motion, 7" =
                         ((sloc <opaque>)
                          (stmt
                           (Assignment
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr (Var sym33__)) (texpr_adlevel DataOnly))
+                           ((texpr_type UInt) (texpr_loc <opaque>)
+                            (texpr
+                             (FunApp Plus__
+                              (((texpr_type UInt) (texpr_loc <opaque>)
+                                (texpr (Var a)) (texpr_adlevel DataOnly))
+                               ((texpr_type UInt) (texpr_loc <opaque>)
+                                (texpr (Var b)) (texpr_adlevel DataOnly)))))
+                            (texpr_adlevel DataOnly)))))
+                        ((sloc <opaque>)
+                         (stmt
+                          (Assignment
                            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
                             (texpr_adlevel DataOnly))
                            ((texpr_type UInt) (texpr_loc <opaque>)
