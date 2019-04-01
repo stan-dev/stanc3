@@ -894,6 +894,8 @@ let lazy_expressions_mfp
             [ mir.functions_block; mir.generate_quantities; mir.prepare_params
             ; mir.log_prob; mir.prepare_data ]))
   in
+  (* TODO: compute the above from the statement we are passing in
+     (probably shouldn't use other blocks) *)
   let used_expr = used flowgraph_to_mir in
   let (module Lattice) =
     dual_powerset_lattice_expressions Mir.ExprSet.empty all_expressions
@@ -939,4 +941,5 @@ let lazy_expressions_mfp
       (module Transfer4)
   in
   let isolated_expressions_mfp = Mf4.mfp () in
-  (latest_expr, isolated_expressions_mfp)
+  (used_expr, anticipated_expressions_mfp, available_expressions_mfp, earliest_expr,
+  postponable_expressions_mfp, latest_expr, isolated_expressions_mfp)

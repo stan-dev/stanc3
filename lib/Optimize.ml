@@ -585,6 +585,8 @@ let partial_evaluation = Partial_evaluator.eval_prog
 
 let lazy_code_motion (mir : typed_prog) =
   (* TODO: clean up this code. It is not very pretty. *)
+  (* TODO: make lazy code motion operate on transformed parameters and models blocks
+     simultaneously *)
   let preprocess_flowgraph =
     let preprocess_flowgraph_base
         (stmt : (expr_typed_located, stmt_loc) statement) =
@@ -623,10 +625,13 @@ let lazy_code_motion (mir : typed_prog) =
       Monotone_framework.inverse_flowgraph_of_stmt s
     in
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let latest_expr, isolated_expressions_mfp =
+    let   (used_expr, anticipated_expressions_mfp, available_expressions_mfp, earliest_expr,
+  postponable_expressions_mfp, latest_expr, isolated_expressions_mfp)=
       Monotone_framework.lazy_expressions_mfp mir fwd_flowgraph rev_flowgraph
         flowgraph_to_mir
     in
+    let _ =   (used_expr, anticipated_expressions_mfp, available_expressions_mfp, earliest_expr,
+  postponable_expressions_mfp, latest_expr, isolated_expressions_mfp) in
     let expression_map =
       Set.fold (Monotone_framework.used_expressions_stmt s.stmt)
         ~init:ExprMap.empty ~f:(fun accum e ->
@@ -652,6 +657,9 @@ let lazy_code_motion (mir : typed_prog) =
           (Map.find_exn latest_expr i)
           (Map.find_exn isolated_expressions_mfp i).entry
       in
+      (* let _ = if Map.length latest_expr > 1 then
+      raise_s [%sexp ((Map.map ~f:(fun x -> x.entry) isolated_expressions_mfp) : 
+      (int, ExprSet.t) Map.Poly.t)] in *)
       let to_assign_in_s =
         Set.filter ~f:(fun x -> Map.mem expression_map x) latest_not_isolated_i
       in
@@ -3754,7 +3762,8 @@ let%expect_test "lazy code motion, 3" =
       }
       |}
   in
-  (* TODO: this test is still giving the wrong answer. *)
+  (* TODO: this test is still not giving the optimal answer.
+     The problem seems to be in the final isolated/used pass. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
@@ -4514,6 +4523,162 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
               (stmt
                (NRFunApp print
                 (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+                  (texpr_adlevel DataOnly))))))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
+let%expect_test "lazy code motion, 9" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int x;
+        for (i in x * 2 : max(x * 2, 15)) print("hello") ;
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym37__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym36__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym35__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym36__))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp Times__
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                     (texpr_adlevel DataOnly))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym37__))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp max
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym36__))
+                     (texpr_adlevel DataOnly))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 15))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar i)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym36__))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym37__))
+                  (texpr_adlevel DataOnly)))
+                (body
+                 ((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (NRFunApp print
+                        (((texpr_type UReal) (texpr_loc <opaque>)
+                          (texpr (Lit Str hello)) (texpr_adlevel DataOnly))))))
+                     ((sloc <opaque>) (stmt Skip))))))))))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |} ]
+
+let%expect_test "lazy code motion, 10" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int x;
+        x = 3;
+        print(x * 2);
+        x = 2;
+        print(x * 2);
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  (* TODO: this test still gives the wrong answer *)
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym38__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym38__))
+                  (texpr_adlevel DataOnly))))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (Assignment
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym38__))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp Times__
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                     (texpr_adlevel DataOnly))
+                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym38__))
                   (texpr_adlevel DataOnly))))))))))))
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
