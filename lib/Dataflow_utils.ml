@@ -673,6 +673,7 @@ let example3_program =
       {|
       model {
         while (42);
+        print("exit");
       }
       |}
   in
@@ -707,7 +708,7 @@ let%expect_test "Statement label map example 3" =
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (3
-        ((Block (4))
+        ((Block (4 6))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (4
@@ -724,23 +725,35 @@ let%expect_test "Statement label map example 3" =
          ((begin_loc
            ((filename string) (line_num 3) (col_num 18) (included_from ())))
           (end_loc
-           ((filename string) (line_num 3) (col_num 19) (included_from ())))))))
+           ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
+       (6
+        ((NRFunApp print
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str exit))
+            (texpr_adlevel DataOnly))))
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 4) (col_num 22) (included_from ())))))))
     |}]
 
 let%expect_test "Controlflow graph example 3" =
   let cf = build_cf_graph example3_statement_map in
   print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect {|
-      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)))
+      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 ()))
     |}]
 
 let%expect_test "Predecessor graph example 3" =
+  (* TODO: this is still wrong. The correct answer is
+      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
+  Similarly for for-loops.
+  ) *)
   let exits, preds = build_predecessor_graph example3_statement_map in
   print_s
     [%sexp
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect {|
-      ((5) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4))))
+      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (4))))
     |}]
 
 let example4_program =
