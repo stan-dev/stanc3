@@ -4703,6 +4703,83 @@ let%expect_test "lazy code motion, 11" =
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
 
+let%expect_test "lazy code motion, 12" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int x;
+        for (i in 1:6) {
+          print(x + 42);
+          continue;
+          x = 3;
+        }
+      }
+      |}
+  in
+  (* TODO: this isn't doing the right thing yet. 
+     I believe the flowgraph for break and continue statements is overly conservative. *)
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ())
+       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
+       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (log_prob
+        (((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym41__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym40__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (SList
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (For (loopvar i)
+                (lower
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                  (texpr_adlevel DataOnly)))
+                (upper
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
+                  (texpr_adlevel DataOnly)))
+                (body
+                 ((sloc <opaque>)
+                  (stmt
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (Block
+                        (((sloc <opaque>)
+                          (stmt
+                           (NRFunApp print
+                            (((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr
+                               (FunApp Plus__
+                                (((texpr_type UInt) (texpr_loc <opaque>)
+                                  (texpr (Var x)) (texpr_adlevel DataOnly))
+                                 ((texpr_type UInt) (texpr_loc <opaque>)
+                                  (texpr (Lit Int 42)) (texpr_adlevel DataOnly)))))
+                              (texpr_adlevel DataOnly))))))
+                         ((sloc <opaque>) (stmt Continue))
+                         ((sloc <opaque>)
+                          (stmt
+                           (Assignment
+                            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                             (texpr_adlevel DataOnly))
+                            ((texpr_type UInt) (texpr_loc <opaque>)
+                             (texpr (Lit Int 3)) (texpr_adlevel DataOnly)))))))))
+                     ((sloc <opaque>) (stmt Skip))))))))))))))))
+       (gen_quant_vars ())
+       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
+       (prog_path "")) |}]
+
 let%expect_test "block fixing" =
   let ast =
     Parse.parse_string Parser.Incremental.program
