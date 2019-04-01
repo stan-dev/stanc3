@@ -90,6 +90,18 @@ let dual_powerset_lattice (type v)
   : LATTICE
     with type properties = v Set.Poly.t )
 
+let powerset_lattice_expressions (initial : Mir.ExprSet.t) =
+  ( module struct
+    type properties = Mir.ExprSet.t
+
+    let bottom = Mir.ExprSet.empty
+    let lub s1 s2 = Mir.ExprSet.union s1 s2
+    let leq s1 s2 = Mir.ExprSet.is_subset s1 ~of_:s2
+    let initial = initial
+  end
+  : LATTICE
+    with type properties = Mir.ExprSet.t )
+
 let dual_powerset_lattice_expressions (initial : Mir.ExprSet.t)
     (total : Mir.ExprSet.t) =
   ( module struct
@@ -669,17 +681,18 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
   Map.fold successors ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
       Map.set accum ~key ~data:(latest key) )
 
-(** The transfer function for a isolated expressions analysis, as a part of lazy code motion *)
-let isolated_expressions_transfer (used : (int, Mir.ExprSet.t) Map.Poly.t)
+(** The transfer function for a used-not-latest expressions analysis, as a part of lazy code motion *)
+let used_not_latest_expressions_transfer
+    (used : (int, Mir.ExprSet.t) Map.Poly.t)
     (latest : (int, Mir.ExprSet.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = Mir.ExprSet.t
 
     let transfer_function l p =
-      let gen = Map.find_exn latest l in
-      let kill = Map.find_exn used l in
-      transfer_gen_kill p gen kill
+      let gen = Map.find_exn used l in
+      let kill = Map.find_exn latest l in
+      transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Mir.ExprSet.t )
@@ -897,16 +910,17 @@ let lazy_expressions_mfp
   (* TODO: compute the above from the statement we are passing in
      (probably shouldn't use other blocks) *)
   let used_expr = used flowgraph_to_mir in
-  let (module Lattice) =
+  let (module Lattice1) =
     dual_powerset_lattice_expressions Mir.ExprSet.empty all_expressions
   in
+  let (module Lattice2) = powerset_lattice_expressions Mir.ExprSet.empty in
   let (module Transfer1) =
     anticipated_expressions_transfer flowgraph_to_mir used_expr
   in
   let (module Mf1) =
     monotone_framework
       (module Rev_Flowgraph)
-      (module Lattice)
+      (module Lattice1)
       (module Transfer1)
   in
   let anticipated_expressions_mfp = Mf1.mfp () in
@@ -914,7 +928,7 @@ let lazy_expressions_mfp
     available_expressions_transfer flowgraph_to_mir anticipated_expressions_mfp
   in
   let (module Mf2) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer2)
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer2)
   in
   let available_expressions_mfp = Mf2.mfp () in
   let earliest_expr =
@@ -924,7 +938,7 @@ let lazy_expressions_mfp
     postponable_expressions_transfer earliest_expr used_expr
   in
   let (module Mf3) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer3)
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer3)
   in
   let postponable_expressions_mfp = Mf3.mfp () in
   let latest_expr =
@@ -932,14 +946,13 @@ let lazy_expressions_mfp
       used_expr
   in
   let (module Transfer4) =
-    isolated_expressions_transfer used_expr latest_expr
+    used_not_latest_expressions_transfer used_expr latest_expr
   in
   let (module Mf4) =
     monotone_framework
       (module Rev_Flowgraph)
-      (module Lattice)
+      (module Lattice2)
       (module Transfer4)
   in
-  let isolated_expressions_mfp = Mf4.mfp () in
-  (used_expr, anticipated_expressions_mfp, available_expressions_mfp, earliest_expr,
-  postponable_expressions_mfp, latest_expr, isolated_expressions_mfp)
+  let used_not_latest_expressions_mfp = Mf4.mfp () in
+  (latest_expr, used_not_latest_expressions_mfp)
