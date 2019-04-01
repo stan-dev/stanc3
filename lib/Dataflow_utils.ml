@@ -752,8 +752,9 @@ let%expect_test "Predecessor graph example 3" =
   print_s
     [%sexp
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
-  [%expect {|
-      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (4))))
+  [%expect
+    {|
+      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
     |}]
 
 let example4_program =

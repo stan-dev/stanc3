@@ -308,9 +308,6 @@ let collapse_lists_statement =
   in
   map_rec_stmt_loc f
 
-let list_collapsing (mir : typed_prog) =
-  map_prog (fun x -> x) collapse_lists_statement mir
-
 (*
 let statement_of_program mir =
   { stmt=
@@ -442,6 +439,9 @@ let transform_program_blockwise (mir : typed_prog)
   ; prepare_params= transform' mir.prepare_params
   ; log_prob= transform' mir.log_prob
   ; generate_quantities= transform' mir.generate_quantities }
+
+let list_collapsing (mir : typed_prog) =
+  transform_program_blockwise mir collapse_lists_statement
 
 let propagation
     (propagation_transfer :
@@ -1135,42 +1135,39 @@ let%expect_test "list collapsing" =
                     (texpr_adlevel DataOnly))))))))))))))
        ((sloc <opaque>)
         (stmt
-         (SList
-          (((sloc <opaque>)
-            (stmt
-             (Decl (decl_adtype AutoDiffable) (decl_id sym5__) (decl_type UReal))))
+         (Decl (decl_adtype AutoDiffable) (decl_id sym5__) (decl_type UReal))))
+       ((sloc <opaque>)
+        (stmt
+         (For (loopvar sym6__)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (body
            ((sloc <opaque>)
             (stmt
-             (For (loopvar sym6__)
-              (lower
-               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                (texpr_adlevel DataOnly)))
-              (upper
-               ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                (texpr_adlevel DataOnly)))
-              (body
-               ((sloc <opaque>)
+             (Block
+              (((sloc <opaque>)
                 (stmt
-                 (Block
-                  (((sloc <opaque>)
-                    (stmt
-                     (Assignment
-                      ((texpr_type UReal) (texpr_loc <opaque>)
-                       (texpr (Var sym5__)) (texpr_adlevel AutoDiffable))
-                      ((texpr_type UReal) (texpr_loc <opaque>)
-                       (texpr
-                        (FunApp Pow__
-                         (((texpr_type UInt) (texpr_loc <opaque>)
-                           (texpr (Lit Int 53)) (texpr_adlevel DataOnly))
-                          ((texpr_type UInt) (texpr_loc <opaque>)
-                           (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                 (Assignment
+                  ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym5__))
+                   (texpr_adlevel AutoDiffable))
+                  ((texpr_type UReal) (texpr_loc <opaque>)
+                   (texpr
+                    (FunApp Pow__
+                     (((texpr_type UInt) (texpr_loc <opaque>)
+                       (texpr (Lit Int 53)) (texpr_adlevel DataOnly))
+                      ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
                        (texpr_adlevel DataOnly)))))
-                   ((sloc <opaque>) (stmt Break))))))))))
-           ((sloc <opaque>)
-            (stmt
-             (NRFunApp reject
-              (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym5__))
-                (texpr_adlevel AutoDiffable))))))))))))
+                   (texpr_adlevel DataOnly)))))
+               ((sloc <opaque>) (stmt Break))))))))))
+       ((sloc <opaque>)
+        (stmt
+         (NRFunApp reject
+          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym5__))
+            (texpr_adlevel AutoDiffable))))))))
      (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path ""))
     |}]
 
@@ -3639,9 +3636,8 @@ let%expect_test "lazy code motion" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-    ((functions_block ()) (data_vars ()) (tdata_vars ())
-     (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-     (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+    ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+     (params ()) (tparams ()) (prepare_params ())
      (log_prob
       (((sloc <opaque>)
         (stmt
@@ -3649,36 +3645,31 @@ let%expect_test "lazy code motion" =
           (decl_type (UArray UReal)))))
        ((sloc <opaque>)
         (stmt
-         (SList
-          (((sloc <opaque>)
-            (stmt
-             (Assignment
-              ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-               (texpr (Var sym23__)) (texpr_adlevel DataOnly))
-              ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-               (texpr
-                (FunApp make_array
-                 (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Real 3.0))
-                   (texpr_adlevel DataOnly)))))
+         (Assignment
+          ((texpr_type (UArray UReal)) (texpr_loc <opaque>) (texpr (Var sym23__))
+           (texpr_adlevel DataOnly))
+          ((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+           (texpr
+            (FunApp make_array
+             (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Real 3.0))
                (texpr_adlevel DataOnly)))))
-           ((sloc <opaque>)
-            (stmt
-             (NRFunApp print
-              (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-                (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))
-           ((sloc <opaque>)
-            (stmt
-             (NRFunApp print
-              (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-                (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))
-           ((sloc <opaque>)
-            (stmt
-             (NRFunApp print
-              (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
-                (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))))))))
-     (gen_quant_vars ())
-     (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-     (prog_path "")) |}]
+           (texpr_adlevel DataOnly)))))
+       ((sloc <opaque>)
+        (stmt
+         (NRFunApp print
+          (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+            (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))
+       ((sloc <opaque>)
+        (stmt
+         (NRFunApp print
+          (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+            (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))
+       ((sloc <opaque>)
+        (stmt
+         (NRFunApp print
+          (((texpr_type (UArray UReal)) (texpr_loc <opaque>)
+            (texpr (Var sym23__)) (texpr_adlevel DataOnly))))))))
+     (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 2" =
   let ast =
@@ -3697,9 +3688,8 @@ let%expect_test "lazy code motion, 2" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym25__) (decl_type UInt))))
@@ -3707,42 +3697,37 @@ let%expect_test "lazy code motion, 2" =
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym24__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym25__))
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym25__))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Plus__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
                  (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>)
-                 (texpr
-                  (FunApp Plus__
-                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
-                     (texpr_adlevel DataOnly))
-                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
-                     (texpr_adlevel DataOnly)))))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
                  (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (For (loopvar i)
+            (lower
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
+            (upper
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+              (texpr_adlevel DataOnly)))
+            (body
              ((sloc <opaque>)
               (stmt
-               (For (loopvar i)
-                (lower
-                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                  (texpr_adlevel DataOnly)))
-                (upper
-                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                  (texpr_adlevel DataOnly)))
-                (body
-                 ((sloc <opaque>)
+               (Block
+                (((sloc <opaque>)
                   (stmt
-                   (Block
-                    (((sloc <opaque>)
-                      (stmt
-                       (NRFunApp print
-                        (((texpr_type UInt) (texpr_loc <opaque>)
-                          (texpr (Var sym25__)) (texpr_adlevel DataOnly))))))
-                     ((sloc <opaque>) (stmt Skip))))))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                   (NRFunApp print
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym25__))
+                      (texpr_adlevel DataOnly))))))
+                 ((sloc <opaque>) (stmt Skip))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 3" =
   let ast =
@@ -3762,9 +3747,8 @@ let%expect_test "lazy code motion, 3" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym27__) (decl_type UInt))))
@@ -3772,44 +3756,39 @@ let%expect_test "lazy code motion, 3" =
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym26__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
-                  (texpr_adlevel DataOnly))))))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Plus__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
                  (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>)
-                 (texpr
-                  (FunApp Plus__
-                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
-                     (texpr_adlevel DataOnly))
-                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 5))
-                     (texpr_adlevel DataOnly)))))
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 5))
                  (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>)
+              (texpr
+               (FunApp Plus__
                 (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
-                  (texpr_adlevel DataOnly))))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>)
-                  (texpr
-                   (FunApp Plus__
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym26__))
-                      (texpr_adlevel DataOnly))
-                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 7))
-                      (texpr_adlevel DataOnly)))))
-                  (texpr_adlevel DataOnly))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 7))
+                  (texpr_adlevel DataOnly)))))
+              (texpr_adlevel DataOnly))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 4" =
   let ast =
@@ -3840,99 +3819,93 @@ let%expect_test "lazy code motion, 4" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym28__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                 (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (IfElse
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                 (texpr_adlevel DataOnly))
-                ((sloc <opaque>)
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (Block
-                       (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
-                        ((sloc <opaque>) (stmt Skip))))))
-                    ((sloc <opaque>)
-                     (stmt
-                      (Assignment
-                       ((texpr_type UInt) (texpr_loc <opaque>)
-                        (texpr (Var sym28__)) (texpr_adlevel DataOnly))
-                       ((texpr_type UInt) (texpr_loc <opaque>)
-                        (texpr
-                         (FunApp Plus__
-                          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
-                            (texpr_adlevel DataOnly))
-                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
-                            (texpr_adlevel DataOnly)))))
-                        (texpr_adlevel DataOnly)))))
+                   (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
                     ((sloc <opaque>) (stmt Skip))))))
+                ((sloc <opaque>)
+                 (stmt
+                  (Assignment
+                   ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym28__))
+                    (texpr_adlevel DataOnly))
+                   ((texpr_type UInt) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Plus__
+                      (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                        (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly)))))
+                ((sloc <opaque>) (stmt Skip))))))
+            (((sloc <opaque>)
+              (stmt
+               (Block
                 (((sloc <opaque>)
                   (stmt
                    (Block
                     (((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>)
-                          (stmt
-                           (Assignment
-                            ((texpr_type UInt) (texpr_loc <opaque>)
-                             (texpr (Var sym28__)) (texpr_adlevel DataOnly))
-                            ((texpr_type UInt) (texpr_loc <opaque>)
-                             (texpr
-                              (FunApp Plus__
-                               (((texpr_type UInt) (texpr_loc <opaque>)
-                                 (texpr (Var b)) (texpr_adlevel DataOnly))
-                                ((texpr_type UInt) (texpr_loc <opaque>)
-                                 (texpr (Var c)) (texpr_adlevel DataOnly)))))
-                             (texpr_adlevel DataOnly)))))
-                         ((sloc <opaque>)
-                          (stmt
-                           (Assignment
-                            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                       (Assignment
+                        ((texpr_type UInt) (texpr_loc <opaque>)
+                         (texpr (Var sym28__)) (texpr_adlevel DataOnly))
+                        ((texpr_type UInt) (texpr_loc <opaque>)
+                         (texpr
+                          (FunApp Plus__
+                           (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
                              (texpr_adlevel DataOnly))
-                            ((texpr_type UInt) (texpr_loc <opaque>)
-                             (texpr (Var sym28__)) (texpr_adlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Skip))))))
-                     ((sloc <opaque>) (stmt Skip))))))))))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym28__))
-                 (texpr_adlevel DataOnly)))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                             (texpr_adlevel DataOnly)))))
+                         (texpr_adlevel DataOnly)))))
+                     ((sloc <opaque>)
+                      (stmt
+                       (Assignment
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                         (texpr_adlevel DataOnly))
+                        ((texpr_type UInt) (texpr_loc <opaque>)
+                         (texpr (Var sym28__)) (texpr_adlevel DataOnly)))))
+                     ((sloc <opaque>) (stmt Skip))))))
+                 ((sloc <opaque>) (stmt Skip))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym28__))
+             (texpr_adlevel DataOnly)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 5" =
   let ast =
@@ -3963,126 +3936,119 @@ let%expect_test "lazy code motion, 5" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym29__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                 (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (IfElse
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                 (texpr_adlevel DataOnly))
-                ((sloc <opaque>)
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (Block
-                       (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
-                        ((sloc <opaque>) (stmt Skip))))))
-                    ((sloc <opaque>)
-                     (stmt
-                      (Assignment
-                       ((texpr_type UInt) (texpr_loc <opaque>)
-                        (texpr (Var sym29__)) (texpr_adlevel DataOnly))
-                       ((texpr_type UInt) (texpr_loc <opaque>)
-                        (texpr
-                         (FunApp Plus__
-                          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
-                            (texpr_adlevel DataOnly))
-                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
-                            (texpr_adlevel DataOnly)))))
-                        (texpr_adlevel DataOnly)))))
+                   (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
                     ((sloc <opaque>) (stmt Skip))))))
+                ((sloc <opaque>)
+                 (stmt
+                  (Assignment
+                   ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym29__))
+                    (texpr_adlevel DataOnly))
+                   ((texpr_type UInt) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Plus__
+                      (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                        (texpr_adlevel DataOnly)))))
+                    (texpr_adlevel DataOnly)))))
+                ((sloc <opaque>) (stmt Skip))))))
+            (((sloc <opaque>)
+              (stmt
+               (Block
                 (((sloc <opaque>)
                   (stmt
                    (Block
                     (((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>)
-                          (stmt
-                           (IfElse
-                            ((texpr_type UInt) (texpr_loc <opaque>)
-                             (texpr (Lit Int 2)) (texpr_adlevel DataOnly))
+                       (IfElse
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                         (texpr_adlevel DataOnly))
+                        ((sloc <opaque>)
+                         (stmt
+                          (Block
+                           (((sloc <opaque>)
+                             (stmt
+                              (Assignment
+                               ((texpr_type UInt) (texpr_loc <opaque>)
+                                (texpr (Var sym29__)) (texpr_adlevel DataOnly))
+                               ((texpr_type UInt) (texpr_loc <opaque>)
+                                (texpr
+                                 (FunApp Plus__
+                                  (((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var b)) (texpr_adlevel DataOnly))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var c)) (texpr_adlevel DataOnly)))))
+                                (texpr_adlevel DataOnly)))))
                             ((sloc <opaque>)
                              (stmt
-                              (Block
-                               (((sloc <opaque>)
-                                 (stmt
-                                  (Assignment
-                                   ((texpr_type UInt) (texpr_loc <opaque>)
-                                    (texpr (Var sym29__)) (texpr_adlevel DataOnly))
-                                   ((texpr_type UInt) (texpr_loc <opaque>)
-                                    (texpr
-                                     (FunApp Plus__
-                                      (((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr (Var b)) (texpr_adlevel DataOnly))
-                                       ((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr (Var c)) (texpr_adlevel DataOnly)))))
-                                    (texpr_adlevel DataOnly)))))
-                                ((sloc <opaque>)
-                                 (stmt
-                                  (Assignment
-                                   ((texpr_type UInt) (texpr_loc <opaque>)
-                                    (texpr (Var x)) (texpr_adlevel DataOnly))
-                                   ((texpr_type UInt) (texpr_loc <opaque>)
-                                    (texpr (Var sym29__)) (texpr_adlevel DataOnly)))))
-                                ((sloc <opaque>) (stmt Skip))))))
+                              (Assignment
+                               ((texpr_type UInt) (texpr_loc <opaque>)
+                                (texpr (Var x)) (texpr_adlevel DataOnly))
+                               ((texpr_type UInt) (texpr_loc <opaque>)
+                                (texpr (Var sym29__)) (texpr_adlevel DataOnly)))))
+                            ((sloc <opaque>) (stmt Skip))))))
+                        (((sloc <opaque>)
+                          (stmt
+                           (SList
                             (((sloc <opaque>)
                               (stmt
-                               (SList
-                                (((sloc <opaque>)
-                                  (stmt
-                                   (Assignment
+                               (Assignment
+                                ((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr (Var sym29__)) (texpr_adlevel DataOnly))
+                                ((texpr_type UInt) (texpr_loc <opaque>)
+                                 (texpr
+                                  (FunApp Plus__
+                                   (((texpr_type UInt) (texpr_loc <opaque>)
+                                     (texpr (Var b)) (texpr_adlevel DataOnly))
                                     ((texpr_type UInt) (texpr_loc <opaque>)
-                                     (texpr (Var sym29__))
-                                     (texpr_adlevel DataOnly))
-                                    ((texpr_type UInt) (texpr_loc <opaque>)
-                                     (texpr
-                                      (FunApp Plus__
-                                       (((texpr_type UInt) (texpr_loc <opaque>)
-                                         (texpr (Var b)) (texpr_adlevel DataOnly))
-                                        ((texpr_type UInt) (texpr_loc <opaque>)
-                                         (texpr (Var c)) (texpr_adlevel DataOnly)))))
-                                     (texpr_adlevel DataOnly)))))
-                                 ((sloc <opaque>) (stmt Skip))))))))))
-                         ((sloc <opaque>) (stmt Skip))))))
-                     ((sloc <opaque>) (stmt Skip))))))))))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym29__))
-                 (texpr_adlevel DataOnly)))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                                     (texpr (Var c)) (texpr_adlevel DataOnly)))))
+                                 (texpr_adlevel DataOnly)))))
+                             ((sloc <opaque>) (stmt Skip))))))))))
+                     ((sloc <opaque>) (stmt Skip))))))
+                 ((sloc <opaque>) (stmt Skip))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym29__))
+             (texpr_adlevel DataOnly)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 6" =
   let ast =
@@ -4104,62 +4070,56 @@ let%expect_test "lazy code motion, 6" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym31__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym30__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt
-               (IfElse
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                 (texpr_adlevel DataOnly))
-                ((sloc <opaque>)
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
                  (stmt
-                  (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (Assignment
-                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                  (Assignment
+                   ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                    (texpr_adlevel DataOnly))
+                   ((texpr_type UInt) (texpr_loc <opaque>)
+                    (texpr
+                     (FunApp Plus__
+                      (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
                         (texpr_adlevel DataOnly))
-                       ((texpr_type UInt) (texpr_loc <opaque>)
-                        (texpr
-                         (FunApp Plus__
-                          (((texpr_type UInt) (texpr_loc <opaque>)
-                            (texpr (Lit Int 1)) (texpr_adlevel DataOnly))
-                           ((texpr_type UInt) (texpr_loc <opaque>)
-                            (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
                         (texpr_adlevel DataOnly)))))
-                    ((sloc <opaque>) (stmt Skip))))))
-                (((sloc <opaque>) (stmt Skip))))))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+                    (texpr_adlevel DataOnly)))))
+                ((sloc <opaque>) (stmt Skip))))))
+            (((sloc <opaque>) (stmt Skip))))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Plus__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
                  (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>)
-                 (texpr
-                  (FunApp Plus__
-                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
-                     (texpr_adlevel DataOnly))
-                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
-                     (texpr_adlevel DataOnly)))))
-                 (texpr_adlevel DataOnly)))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 7" =
   let ast =
@@ -4199,191 +4159,174 @@ let%expect_test "lazy code motion, 7" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym33__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym32__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt
-               (IfElse
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                 (texpr_adlevel DataOnly))
-                ((sloc <opaque>)
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
                  (stmt
                   (Block
                    (((sloc <opaque>)
                      (stmt
-                      (Block
-                       (((sloc <opaque>)
-                         (stmt
-                          (Assignment
-                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var a))
+                      (Assignment
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var a))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                        (texpr_adlevel DataOnly)))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (Assignment
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr
+                         (FunApp Plus__
+                          (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var a))
                             (texpr_adlevel DataOnly))
-                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var c))
+                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var b))
                             (texpr_adlevel DataOnly)))))
-                        ((sloc <opaque>)
-                         (stmt
-                          (Assignment
-                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                            (texpr_adlevel DataOnly))
-                           ((texpr_type UInt) (texpr_loc <opaque>)
-                            (texpr
-                             (FunApp Plus__
-                              (((texpr_type UInt) (texpr_loc <opaque>)
-                                (texpr (Var a)) (texpr_adlevel DataOnly))
-                               ((texpr_type UInt) (texpr_loc <opaque>)
-                                (texpr (Var b)) (texpr_adlevel DataOnly)))))
-                            (texpr_adlevel DataOnly)))))))))
-                    ((sloc <opaque>) (stmt Skip))))))
-                (((sloc <opaque>)
-                  (stmt
-                   (Block
-                    (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
-             ((sloc <opaque>)
+                        (texpr_adlevel DataOnly)))))))))
+                ((sloc <opaque>) (stmt Skip))))))
+            (((sloc <opaque>)
               (stmt
-               (IfElse
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                 (texpr_adlevel DataOnly))
-                ((sloc <opaque>)
+               (Block
+                (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (IfElse
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
                  (stmt
                   (Block
                    (((sloc <opaque>)
                      (stmt
-                      (Block
-                       (((sloc <opaque>)
-                         (stmt
-                          (IfElse
-                           ((texpr_type UInt) (texpr_loc <opaque>)
-                            (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
-                           ((sloc <opaque>)
+                      (IfElse
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                        (texpr_adlevel DataOnly))
+                       ((sloc <opaque>)
+                        (stmt
+                         (Block
+                          (((sloc <opaque>)
                             (stmt
                              (Block
                               (((sloc <opaque>)
                                 (stmt
-                                 (Block
-                                  (((sloc <opaque>)
-                                    (stmt
-                                     (Assignment
+                                 (Assignment
+                                  ((texpr_type UInt) (texpr_loc <opaque>)
+                                   (texpr (Var sym33__)) (texpr_adlevel DataOnly))
+                                  ((texpr_type UInt) (texpr_loc <opaque>)
+                                   (texpr
+                                    (FunApp Plus__
+                                     (((texpr_type UInt) (texpr_loc <opaque>)
+                                       (texpr (Var a)) (texpr_adlevel DataOnly))
                                       ((texpr_type UInt) (texpr_loc <opaque>)
-                                       (texpr (Var sym33__))
-                                       (texpr_adlevel DataOnly))
-                                      ((texpr_type UInt) (texpr_loc <opaque>)
-                                       (texpr
-                                        (FunApp Plus__
-                                         (((texpr_type UInt) (texpr_loc <opaque>)
-                                           (texpr (Var a))
-                                           (texpr_adlevel DataOnly))
-                                          ((texpr_type UInt) (texpr_loc <opaque>)
-                                           (texpr (Var b))
-                                           (texpr_adlevel DataOnly)))))
-                                       (texpr_adlevel DataOnly)))))
-                                   ((sloc <opaque>) (stmt Skip))
-                                   ((sloc <opaque>)
-                                    (stmt
-                                     (While
-                                      ((texpr_type UInt) (texpr_loc <opaque>)
-                                       (texpr (Lit Int 4))
-                                       (texpr_adlevel DataOnly))
-                                      ((sloc <opaque>)
+                                       (texpr (Var b)) (texpr_adlevel DataOnly)))))
+                                   (texpr_adlevel DataOnly)))))
+                               ((sloc <opaque>) (stmt Skip))
+                               ((sloc <opaque>)
+                                (stmt
+                                 (While
+                                  ((texpr_type UInt) (texpr_loc <opaque>)
+                                   (texpr (Lit Int 4)) (texpr_adlevel DataOnly))
+                                  ((sloc <opaque>)
+                                   (stmt
+                                    (Block
+                                     (((sloc <opaque>)
                                        (stmt
-                                        (Block
-                                         (((sloc <opaque>)
-                                           (stmt
-                                            (Assignment
-                                             ((texpr_type UInt)
-                                              (texpr_loc <opaque>) (texpr (Var y))
-                                              (texpr_adlevel DataOnly))
-                                             ((texpr_type UInt)
-                                              (texpr_loc <opaque>)
-                                              (texpr (Var sym33__))
-                                              (texpr_adlevel DataOnly)))))
-                                          ((sloc <opaque>) (stmt Skip)))))))))
-                                   ((sloc <opaque>) (stmt Skip))))))
+                                        (Assignment
+                                         ((texpr_type UInt) (texpr_loc <opaque>)
+                                          (texpr (Var y)) (texpr_adlevel DataOnly))
+                                         ((texpr_type UInt) (texpr_loc <opaque>)
+                                          (texpr (Var sym33__))
+                                          (texpr_adlevel DataOnly)))))
+                                      ((sloc <opaque>) (stmt Skip)))))))))
                                ((sloc <opaque>) (stmt Skip))))))
+                           ((sloc <opaque>) (stmt Skip))))))
+                       (((sloc <opaque>)
+                         (stmt
+                          (Block
                            (((sloc <opaque>)
                              (stmt
                               (Block
-                               (((sloc <opaque>)
+                               (((sloc <opaque>) (stmt Skip))
+                                ((sloc <opaque>)
                                  (stmt
-                                  (Block
-                                   (((sloc <opaque>) (stmt Skip))
-                                    ((sloc <opaque>)
-                                     (stmt
-                                      (While
+                                  (While
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Lit Int 5)) (texpr_adlevel DataOnly))
+                                   ((sloc <opaque>)
+                                    (stmt
+                                     (Block
+                                      (((sloc <opaque>) (stmt Skip))
+                                       ((sloc <opaque>) (stmt Skip)))))))))
+                                ((sloc <opaque>)
+                                 (stmt
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym33__)) (texpr_adlevel DataOnly))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr
+                                     (FunApp Plus__
+                                      (((texpr_type UInt) (texpr_loc <opaque>)
+                                        (texpr (Var a)) (texpr_adlevel DataOnly))
                                        ((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr (Lit Int 5))
-                                        (texpr_adlevel DataOnly))
-                                       ((sloc <opaque>)
-                                        (stmt
-                                         (Block
-                                          (((sloc <opaque>) (stmt Skip))
-                                           ((sloc <opaque>) (stmt Skip)))))))))
-                                    ((sloc <opaque>)
-                                     (stmt
-                                      (Assignment
-                                       ((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr (Var sym33__))
-                                        (texpr_adlevel DataOnly))
-                                       ((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr
-                                         (FunApp Plus__
-                                          (((texpr_type UInt) (texpr_loc <opaque>)
-                                            (texpr (Var a))
-                                            (texpr_adlevel DataOnly))
-                                           ((texpr_type UInt) (texpr_loc <opaque>)
-                                            (texpr (Var b))
-                                            (texpr_adlevel DataOnly)))))
-                                        (texpr_adlevel DataOnly)))))
-                                    ((sloc <opaque>)
-                                     (stmt
-                                      (Assignment
-                                       ((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr (Var y)) (texpr_adlevel DataOnly))
-                                       ((texpr_type UInt) (texpr_loc <opaque>)
-                                        (texpr (Var sym33__))
-                                        (texpr_adlevel DataOnly)))))))))
-                                ((sloc <opaque>) (stmt Skip))))))))))
-                        ((sloc <opaque>)
-                         (stmt
-                          (Assignment
-                           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
-                            (texpr_adlevel DataOnly))
-                           ((texpr_type UInt) (texpr_loc <opaque>)
-                            (texpr (Var sym33__)) (texpr_adlevel DataOnly)))))))))
-                    ((sloc <opaque>) (stmt Skip))))))
-                (((sloc <opaque>)
-                  (stmt
-                   (Block
-                    (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
-             ((sloc <opaque>) (stmt Skip))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                                        (texpr (Var b)) (texpr_adlevel DataOnly)))))
+                                    (texpr_adlevel DataOnly)))))
+                                ((sloc <opaque>)
+                                 (stmt
+                                  (Assignment
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var y)) (texpr_adlevel DataOnly))
+                                   ((texpr_type UInt) (texpr_loc <opaque>)
+                                    (texpr (Var sym33__)) (texpr_adlevel DataOnly)))))))))
+                            ((sloc <opaque>) (stmt Skip))))))))))
+                    ((sloc <opaque>)
+                     (stmt
+                      (Assignment
+                       ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var z))
+                        (texpr_adlevel DataOnly))
+                       ((texpr_type UInt) (texpr_loc <opaque>)
+                        (texpr (Var sym33__)) (texpr_adlevel DataOnly)))))))))
+                ((sloc <opaque>) (stmt Skip))))))
+            (((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
+         ((sloc <opaque>) (stmt Skip))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let ast =
@@ -4444,45 +4387,39 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
                        (Return
                         (((texpr_type UInt) (texpr_loc <opaque>)
                           (texpr (Lit Int 24)) (texpr_adlevel DataOnly))))))))))))))))))))
-       (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+       (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
+       (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym34__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
-                  (texpr_adlevel DataOnly))))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
-                  (texpr_adlevel DataOnly))))))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo ()))
-                 (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
-                  (texpr_adlevel DataOnly))))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
-                  (texpr_adlevel DataOnly))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo ()))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
+              (texpr_adlevel DataOnly))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 9" =
   let ast =
@@ -4503,41 +4440,35 @@ let%expect_test "lazy code motion, 9" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym35__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt
-               (While
-                ((texpr_type UInt) (texpr_loc <opaque>)
-                 (texpr
-                  (FunApp Times__
-                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                     (texpr_adlevel DataOnly))
-                    ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                     (texpr_adlevel DataOnly)))))
+           (While
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp Times__
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
                  (texpr_adlevel DataOnly))
-                ((sloc <opaque>)
+                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                 (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly))
+            ((sloc <opaque>)
+             (stmt
+              (Block
+               (((sloc <opaque>)
                  (stmt
-                  (Block
-                   (((sloc <opaque>)
-                     (stmt
-                      (NRFunApp print
-                       (((texpr_type UReal) (texpr_loc <opaque>)
-                         (texpr (Lit Str hello)) (texpr_adlevel DataOnly))))))
-                    ((sloc <opaque>) (stmt Skip)))))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                  (NRFunApp print
+                   (((texpr_type UReal) (texpr_loc <opaque>)
+                     (texpr (Lit Str hello)) (texpr_adlevel DataOnly))))))
+                ((sloc <opaque>) (stmt Skip)))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 10" =
   let ast =
@@ -4559,57 +4490,51 @@ let%expect_test "lazy code motion, 10" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym36__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
-                 (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>)
-                  (texpr
-                   (FunApp Times__
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                      (texpr_adlevel DataOnly))
-                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                      (texpr_adlevel DataOnly)))))
-                  (texpr_adlevel DataOnly))))))
-             ((sloc <opaque>)
-              (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                 (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (NRFunApp print
-                (((texpr_type UInt) (texpr_loc <opaque>)
-                  (texpr
-                   (FunApp Times__
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                      (texpr_adlevel DataOnly))
-                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
-                      (texpr_adlevel DataOnly)))))
-                  (texpr_adlevel DataOnly))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>)
+              (texpr
+               (FunApp Times__
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                  (texpr_adlevel DataOnly)))))
+              (texpr_adlevel DataOnly))))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+             (texpr_adlevel DataOnly))
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>)
+          (stmt
+           (NRFunApp print
+            (((texpr_type UInt) (texpr_loc <opaque>)
+              (texpr
+               (FunApp Times__
+                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                  (texpr_adlevel DataOnly))
+                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                  (texpr_adlevel DataOnly)))))
+              (texpr_adlevel DataOnly))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 11" =
   let ast =
@@ -4634,54 +4559,46 @@ let%expect_test "lazy code motion, 11" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym37__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
-           (SList
+           (Block
             (((sloc <opaque>)
-              (stmt
-               (Block
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-                 ((sloc <opaque>) (stmt Skip))
-                 ((sloc <opaque>)
-                  (stmt
-                   (NRFunApp print
-                    (((texpr_type UInt) (texpr_loc <opaque>)
-                      (texpr
-                       (FunApp Times__
-                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                          (texpr_adlevel DataOnly))
-                         ((texpr_type UInt) (texpr_loc <opaque>)
-                          (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
-                      (texpr_adlevel DataOnly))))))))))
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
              ((sloc <opaque>)
               (stmt
-               (Block
-                (((sloc <opaque>)
-                  (stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-                 ((sloc <opaque>) (stmt Skip))
-                 ((sloc <opaque>)
-                  (stmt
-                   (NRFunApp print
-                    (((texpr_type UInt) (texpr_loc <opaque>)
-                      (texpr
-                       (FunApp Times__
-                        (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                          (texpr_adlevel DataOnly))
-                         ((texpr_type UInt) (texpr_loc <opaque>)
-                          (texpr (Lit Int 2)) (texpr_adlevel DataOnly)))))
-                      (texpr_adlevel DataOnly))))))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>)
+                  (texpr
+                   (FunApp Times__
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                      (texpr_adlevel DataOnly))
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                      (texpr_adlevel DataOnly)))))
+                  (texpr_adlevel DataOnly))))))))))
+         ((sloc <opaque>)
+          (stmt
+           (Block
+            (((sloc <opaque>)
+              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+             ((sloc <opaque>) (stmt Skip))
+             ((sloc <opaque>)
+              (stmt
+               (NRFunApp print
+                (((texpr_type UInt) (texpr_loc <opaque>)
+                  (texpr
+                   (FunApp Times__
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                      (texpr_adlevel DataOnly))
+                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
+                      (texpr_adlevel DataOnly)))))
+                  (texpr_adlevel DataOnly))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 12" =
   let ast =
@@ -4706,59 +4623,125 @@ let%expect_test "lazy code motion, 12" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ())
-       (prepare_data (((sloc <opaque>) (stmt (SList ()))))) (params ())
-       (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
        (log_prob
         (((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym39__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym38__) (decl_type UInt))))
          ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
           (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
+           (For (loopvar i)
+            (lower
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
+            (upper
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
+              (texpr_adlevel DataOnly)))
+            (body
              ((sloc <opaque>)
               (stmt
-               (For (loopvar i)
-                (lower
-                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                  (texpr_adlevel DataOnly)))
-                (upper
-                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
-                  (texpr_adlevel DataOnly)))
-                (body
-                 ((sloc <opaque>)
+               (Block
+                (((sloc <opaque>)
                   (stmt
                    (Block
                     (((sloc <opaque>)
                       (stmt
-                       (Block
-                        (((sloc <opaque>)
-                          (stmt
-                           (NRFunApp print
+                       (NRFunApp print
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr
+                           (FunApp Plus__
                             (((texpr_type UInt) (texpr_loc <opaque>)
-                              (texpr
-                               (FunApp Plus__
-                                (((texpr_type UInt) (texpr_loc <opaque>)
-                                  (texpr (Var x)) (texpr_adlevel DataOnly))
-                                 ((texpr_type UInt) (texpr_loc <opaque>)
-                                  (texpr (Lit Int 42)) (texpr_adlevel DataOnly)))))
-                              (texpr_adlevel DataOnly))))))
-                         ((sloc <opaque>) (stmt Continue))
-                         ((sloc <opaque>)
-                          (stmt
-                           (Assignment
-                            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
-                             (texpr_adlevel DataOnly))
-                            ((texpr_type UInt) (texpr_loc <opaque>)
-                             (texpr (Lit Int 3)) (texpr_adlevel DataOnly)))))))))
-                     ((sloc <opaque>) (stmt Skip))))))))))))))))
-       (gen_quant_vars ())
-       (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
-       (prog_path "")) |}]
+                              (texpr (Var x)) (texpr_adlevel DataOnly))
+                             ((texpr_type UInt) (texpr_loc <opaque>)
+                              (texpr (Lit Int 42)) (texpr_adlevel DataOnly)))))
+                          (texpr_adlevel DataOnly))))))
+                     ((sloc <opaque>) (stmt Continue))
+                     ((sloc <opaque>)
+                      (stmt
+                       (Assignment
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var x))
+                         (texpr_adlevel DataOnly))
+                        ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
+                         (texpr_adlevel DataOnly)))))))))
+                 ((sloc <opaque>) (stmt Skip))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+
+let%expect_test "cool example: expression propagation + partial evaluation + \
+                 lazy code motion + dead code elimination" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        real x;
+        real y;
+        y = 1 - x;
+        for (i in 1:4)
+          print(log(y));
+      }
+      |}
+  in
+  (* TODO: this isn't doing the right thing yet. 
+     I believe the flowgraph for break and continue statements is overly conservative. *)
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = expression_propagation mir in
+  let mir = partial_evaluation mir in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  let mir = dead_code_elimination mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
+       (params ()) (tparams ()) (prepare_params ())
+       (log_prob
+        (((sloc <opaque>)
+          (stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id sym42__) (decl_type UReal))))
+         ((sloc <opaque>)
+          (stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id sym41__) (decl_type UReal))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym40__) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UReal))))
+         ((sloc <opaque>)
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UReal))))
+         ((sloc <opaque>)
+          (stmt
+           (Assignment
+            ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym42__))
+             (texpr_adlevel AutoDiffable))
+            ((texpr_type UReal) (texpr_loc <opaque>)
+             (texpr
+              (FunApp log1m
+               (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var x))
+                 (texpr_adlevel AutoDiffable)))))
+             (texpr_adlevel AutoDiffable)))))
+         ((sloc <opaque>)
+          (stmt
+           (For (loopvar i)
+            (lower
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+              (texpr_adlevel DataOnly)))
+            (upper
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+              (texpr_adlevel DataOnly)))
+            (body
+             ((sloc <opaque>)
+              (stmt
+               (Block
+                (((sloc <opaque>)
+                  (stmt
+                   (NRFunApp print
+                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym42__))
+                      (texpr_adlevel AutoDiffable))))))))))))))))
+       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "block fixing" =
   let ast =
