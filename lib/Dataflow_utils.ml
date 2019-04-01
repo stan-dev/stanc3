@@ -666,3 +666,284 @@ let%test "Reconstructed recursive statement" =
       example1_statement_map 1
   in
   stmt = example1_program
+
+let example3_program =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        while (42);
+      }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let blocks =
+    Mir.SList
+      [ {stmt= SList mir.functions_block; sloc= Mir.no_span}
+      ; {stmt= Block mir.log_prob; sloc= Mir.no_span} ]
+  in
+  {stmt= blocks; sloc= Mir.no_span}
+
+let example3_statement_map =
+  build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example3_program
+
+let%expect_test "Statement label map example 3" =
+  print_s
+    [%sexp
+      ( example3_statement_map
+        : ( label
+          , (expr_typed_located, label) statement * Ast.location_span )
+          Map.Poly.t )] ;
+  [%expect
+    {|
+      ((1
+        ((SList (2 3))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (2
+        ((SList ())
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (3
+        ((Block (4))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (4
+        ((While
+          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
+           (texpr_adlevel DataOnly))
+          5)
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
+       (5
+        (Skip
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 18) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 3) (col_num 19) (included_from ())))))))
+    |}]
+
+let%expect_test "Controlflow graph example 3" =
+  let cf = build_cf_graph example3_statement_map in
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect {|
+      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)))
+    |}]
+
+let%expect_test "Predecessor graph example 3" =
+  let exits, preds = build_predecessor_graph example3_statement_map in
+  print_s
+    [%sexp
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect {|
+      ((5) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4))))
+    |}]
+
+let example4_program =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        for (i in 1:6) {
+          continue;
+          ;
+        }
+      }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let blocks =
+    Mir.SList
+      [ {stmt= SList mir.functions_block; sloc= Mir.no_span}
+      ; {stmt= Block mir.log_prob; sloc= Mir.no_span} ]
+  in
+  {stmt= blocks; sloc= Mir.no_span}
+
+let example4_statement_map =
+  build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example4_program
+
+let%expect_test "Statement label map example 4" =
+  print_s
+    [%sexp
+      ( example4_statement_map
+        : ( label
+          , (expr_typed_located, label) statement * Ast.location_span )
+          Map.Poly.t )] ;
+  [%expect
+    {|
+      ((1
+        ((SList (2 3))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (2
+        ((SList ())
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (3
+        ((Block (4))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (4
+        ((For (loopvar i)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
+            (texpr_adlevel DataOnly)))
+          (body 5))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+       (5
+        ((Block (6 7))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 23) (included_from ())))
+          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+       (6
+        (Continue
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 4) (col_num 19) (included_from ()))))))
+       (7
+        (Skip
+         ((begin_loc
+           ((filename string) (line_num 5) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 5) (col_num 11) (included_from ())))))))
+    |}]
+
+let%expect_test "Controlflow graph example 4" =
+  let cf = build_cf_graph example4_statement_map in
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4)) (7 (4 6)))
+    |}]
+
+let%expect_test "Predecessor graph example 4" =
+  let exits, preds = build_predecessor_graph example4_statement_map in
+  (* TODO: this is still wrong. The correct answer is
+  ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6)) (5 (4)) (6 (5)) (7 ()) ) )
+  or a very conservative approximation
+  ( (7) ( (1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6)) ) )
+   *)
+  print_s
+    [%sexp
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((6 7) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6))))
+    |}]
+
+let example5_program =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        for (i in 1:6) {
+          break;
+          ;
+        }
+        ;
+      }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let blocks =
+    Mir.SList
+      [ {stmt= SList mir.functions_block; sloc= Mir.no_span}
+      ; {stmt= Block mir.log_prob; sloc= Mir.no_span} ]
+  in
+  {stmt= blocks; sloc= Mir.no_span}
+
+let example5_statement_map =
+  build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) example5_program
+
+let%expect_test "Statement label map example 5" =
+  print_s
+    [%sexp
+      ( example5_statement_map
+        : ( label
+          , (expr_typed_located, label) statement * Ast.location_span )
+          Map.Poly.t )] ;
+  [%expect
+    {|
+      ((1
+        ((SList (2 3))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (2
+        ((SList ())
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (3
+        ((Block (4 8))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (4
+        ((For (loopvar i)
+          (lower
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+            (texpr_adlevel DataOnly)))
+          (upper
+           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
+            (texpr_adlevel DataOnly)))
+          (body 5))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+       (5
+        ((Block (6 7))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 23) (included_from ())))
+          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+       (6
+        (Break
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 4) (col_num 16) (included_from ()))))))
+       (7
+        (Skip
+         ((begin_loc
+           ((filename string) (line_num 5) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 5) (col_num 11) (included_from ()))))))
+       (8
+        (Skip
+         ((begin_loc
+           ((filename string) (line_num 7) (col_num 8) (included_from ())))
+          (end_loc ((filename string) (line_num 7) (col_num 9) (included_from ())))))))
+    |}]
+
+let%expect_test "Controlflow graph example 5" =
+  let cf = build_cf_graph example5_statement_map in
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((1 ()) (2 ()) (3 ()) (4 (6)) (5 (4)) (6 (4)) (7 (4)) (8 ()))
+    |}]
+
+let%expect_test "Predecessor graph example 5" =
+  let exits, preds = build_predecessor_graph example5_statement_map in
+  (* TODO: this is still very very conservative (e.g. I'd hope for 
+  (8) ((1 ())) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6))
+  but maybe that's too much to ask for
+  ) *)
+  print_s
+    [%sexp
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((8) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6)) (8 (6 7))))
+    |}]

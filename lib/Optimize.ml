@@ -4490,10 +4490,11 @@ let%expect_test "lazy code motion, 9" =
       {|
       model {
         int x;
-        for (i in x * 2 : max(x * 2, 15)) print(x * 2) ;
+        while (x * 2) print("hello") ;
       }
       |}
   in
+  (* TODO: this isn't quite doing the right thing yet. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
@@ -4506,10 +4507,6 @@ let%expect_test "lazy code motion, 9" =
        (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
        (log_prob
         (((sloc <opaque>)
-          (stmt (Decl (decl_adtype DataOnly) (decl_id sym37__) (decl_type UInt))))
-         ((sloc <opaque>)
-          (stmt (Decl (decl_adtype DataOnly) (decl_id sym36__) (decl_type UInt))))
-         ((sloc <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym35__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
@@ -4519,9 +4516,7 @@ let%expect_test "lazy code motion, 9" =
              ((sloc <opaque>) (stmt Skip))
              ((sloc <opaque>)
               (stmt
-               (Assignment
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym36__))
-                 (texpr_adlevel DataOnly))
+               (While
                 ((texpr_type UInt) (texpr_loc <opaque>)
                  (texpr
                   (FunApp Times__
@@ -4529,32 +4524,16 @@ let%expect_test "lazy code motion, 9" =
                      (texpr_adlevel DataOnly))
                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
                      (texpr_adlevel DataOnly)))))
-                 (texpr_adlevel DataOnly)))))
-             ((sloc <opaque>)
-              (stmt
-               (For (loopvar i)
-                (lower
-                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym36__))
-                  (texpr_adlevel DataOnly)))
-                (upper
-                 ((texpr_type UInt) (texpr_loc <opaque>)
-                  (texpr
-                   (FunApp max
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym36__))
-                      (texpr_adlevel DataOnly))
-                     ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 15))
-                      (texpr_adlevel DataOnly)))))
-                  (texpr_adlevel DataOnly)))
-                (body
-                 ((sloc <opaque>)
-                  (stmt
-                   (Block
-                    (((sloc <opaque>)
-                      (stmt
-                       (NRFunApp print
-                        (((texpr_type UInt) (texpr_loc <opaque>)
-                          (texpr (Var sym36__)) (texpr_adlevel DataOnly))))))
-                     ((sloc <opaque>) (stmt Skip))))))))))))))))
+                 (texpr_adlevel DataOnly))
+                ((sloc <opaque>)
+                 (stmt
+                  (Block
+                   (((sloc <opaque>)
+                     (stmt
+                      (NRFunApp print
+                       (((texpr_type UReal) (texpr_loc <opaque>)
+                         (texpr (Lit Str hello)) (texpr_adlevel DataOnly))))))
+                    ((sloc <opaque>) (stmt Skip)))))))))))))))
        (gen_quant_vars ())
        (generate_quantities (((sloc <opaque>) (stmt (SList ()))))) (prog_name "")
        (prog_path "")) |}]
@@ -4584,7 +4563,7 @@ let%expect_test "lazy code motion, 10" =
        (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
        (log_prob
         (((sloc <opaque>)
-          (stmt (Decl (decl_adtype DataOnly) (decl_id sym38__) (decl_type UInt))))
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym36__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
            (SList
@@ -4659,7 +4638,7 @@ let%expect_test "lazy code motion, 11" =
        (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
        (log_prob
         (((sloc <opaque>)
-          (stmt (Decl (decl_adtype DataOnly) (decl_id sym39__) (decl_type UInt))))
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym37__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
            (SList
@@ -4731,9 +4710,9 @@ let%expect_test "lazy code motion, 12" =
        (tparams ()) (prepare_params (((sloc <opaque>) (stmt (SList ())))))
        (log_prob
         (((sloc <opaque>)
-          (stmt (Decl (decl_adtype DataOnly) (decl_id sym41__) (decl_type UInt))))
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym39__) (decl_type UInt))))
          ((sloc <opaque>)
-          (stmt (Decl (decl_adtype DataOnly) (decl_id sym40__) (decl_type UInt))))
+          (stmt (Decl (decl_adtype DataOnly) (decl_id sym38__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
            (SList
