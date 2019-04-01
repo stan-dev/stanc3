@@ -4494,7 +4494,8 @@ let%expect_test "lazy code motion, 9" =
       }
       |}
   in
-  (* TODO: this isn't quite doing the right thing yet. *)
+  (* TODO: this isn't quite doing the right thing yet, as the
+     flowgraph is wrong. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
