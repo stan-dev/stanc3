@@ -736,6 +736,7 @@ let block_fixing =
 (* TODO: add optimization pass to move declarations down as much as possible and introduce as
    tight as possible local scopes *)
 (* TODO: add tests *)
+(* TODO: add pass to get rid of redundant declarations? *)
 
 let%expect_test "map_rec_stmt_loc" =
   let ast =
@@ -4678,10 +4679,12 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       {|
       model {
         real x;
-        real y;
-        y = 1 - x;
-        for (i in 1:4)
-          print(log(y));
+        int y;
+        real theta;
+        for (i in 1:100000) {
+          theta = inv_logit(x);
+          target += bernoulli_lpmf(y| theta);
+        }
       }
       |}
   in
@@ -4711,16 +4714,21 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
          ((sloc <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UReal))))
          ((sloc <opaque>)
-          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UReal))))
+          (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
+         ((sloc <opaque>)
+          (stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type UReal))))
          ((sloc <opaque>)
           (stmt
            (Assignment
-            ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym42__))
+            ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym41__))
              (texpr_adlevel AutoDiffable))
             ((texpr_type UReal) (texpr_loc <opaque>)
              (texpr
-              (FunApp log1m
-               (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var x))
+              (FunApp bernoulli_logit_lpmf
+               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+                 (texpr_adlevel DataOnly))
+                ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var x))
                  (texpr_adlevel AutoDiffable)))))
              (texpr_adlevel AutoDiffable)))))
          ((sloc <opaque>)
@@ -4730,7 +4738,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
               (texpr_adlevel DataOnly)))
             (upper
-             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
+             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 100000))
               (texpr_adlevel DataOnly)))
             (body
              ((sloc <opaque>)
@@ -4738,9 +4746,12 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
                (Block
                 (((sloc <opaque>)
                   (stmt
-                   (NRFunApp print
-                    (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym42__))
-                      (texpr_adlevel AutoDiffable))))))))))))))))
+                   (Block
+                    (((sloc <opaque>)
+                      (stmt
+                       (TargetPE
+                        ((texpr_type UReal) (texpr_loc <opaque>)
+                         (texpr (Var sym41__)) (texpr_adlevel AutoDiffable)))))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "block fixing" =
