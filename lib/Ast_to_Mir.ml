@@ -335,6 +335,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   in
   SList ((decl :: read_stmts) @ checks)
 
+
 let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
   let texpr_loc = sloc in
@@ -404,15 +405,8 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
           ; lower= wrap @@ Lit (Int, "0")
           ; upper= wrap @@ FunApp (fn_length, [iteratee])
           ; body= add_to_or_create_block assign_loopvar body }
-    | Ast.FunDef {returntype; funname; arguments; body} ->
-        FunDef
-          { fdrt=
-              ( match returntype with
-              | Ast.Void -> None
-              | ReturnType ut -> Some ut )
-          ; fdname= funname.name
-          ; fdargs= List.map ~f:trans_arg arguments
-          ; fdbody= trans_stmt body }
+    | Ast.FunDef _ ->
+      raise_s [%message "Found function definition statement outside of function block"]
     | Ast.VarDecl
         {sizedtype; transformation; identifier; initial_value; is_global} ->
         ignore is_global ;
@@ -425,6 +419,23 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
     | Ast.Skip -> Skip
   in
   {sloc; stmt}
+
+let trans_fun_def declc {Ast.stmt_typed; _} = (* Function definition location? *)
+  let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
+  let stmt =
+    match stmt_typed with
+    | Ast.FunDef {returntype; funname; arguments; body} ->
+      { fdrt=
+          ( match returntype with
+            | Ast.Void -> None
+            | ReturnType ut -> Some ut )
+      ; fdname= funname.name
+      ; fdargs= List.map ~f:trans_arg arguments
+      ; fdbody= trans_stmt body }
+    | _ ->
+      raise_s [%message "Found non-function definition statement in function block"]
+  in
+  stmt
 
 let trans_prog filename
     { Ast.functionblock
@@ -505,7 +516,7 @@ let trans_prog filename
   { functions_block=
       (* Should this be AutoDiffable for functions here?*)
       map
-        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
+        (trans_fun_def {dread= None; dconstrain= None; dadlevel= AutoDiffable})
         functionblock
   ; input_vars
   ; prepare_data

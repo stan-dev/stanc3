@@ -93,9 +93,7 @@ and pp_returntype ppf = function
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
-type fun_arg_decl = (autodifftype * string * unsizedtype) list
-
-and ('e, 's) statement =
+type ('e, 's) statement =
   | Assignment of 'e * 'e
   | TargetPE of 'e
   | NRFunApp of string * 'e list
@@ -118,11 +116,16 @@ and ('e, 's) statement =
       { decl_adtype: autodifftype
       ; decl_id: string
       ; decl_type: 'e sizedtype }
-  | FunDef of
-      { fdrt: unsizedtype option
-      ; fdname: string
-      ; fdargs: fun_arg_decl
-      ; fdbody: 's }
+[@@deriving sexp, hash, map]
+
+type fun_arg_decl = (autodifftype * string * unsizedtype) list
+[@@deriving sexp, hash, map]
+
+type 's fun_def =
+    { fdrt: unsizedtype option
+    ; fdname: string
+    ; fdargs: fun_arg_decl
+    ; fdbody: 's }
 [@@deriving sexp, hash, map]
 
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
@@ -206,7 +209,9 @@ let rec pp_statement pp_e pp_s ppf = function
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_sizedtype pp_e)
         (decl_type, Ast.Identity) decl_id
-  | FunDef {fdrt; fdname; fdargs; fdbody} -> (
+
+let pp_fun_def pp_s ppf = function
+  {fdrt; fdname; fdargs; fdbody} -> (
     match fdrt with
     | Some rt ->
         Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
@@ -245,7 +250,7 @@ let pp_block label pp_elem ppf elems =
 let pp_io_var_block label pp_e = pp_block label (pp_io_var pp_e)
 
 type ('e, 's) prog =
-  { functions_block: 's list
+  { functions_block: 's fun_def list
   ; input_vars: 'e io_var list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
   ; prepare_params: 's list (* param & tparam decls and statements *)
@@ -282,7 +287,7 @@ let pp_transform_inits pp_s ppf {transform_inits; _} =
 
 let pp_prog pp_e pp_s ppf prog =
   Format.open_vbox 0 ;
-  pp_functions_block pp_s ppf prog ;
+  pp_functions_block (pp_fun_def pp_s) ppf prog ;
   Fmt.cut ppf () ;
   pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;

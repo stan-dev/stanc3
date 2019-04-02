@@ -217,7 +217,7 @@ let trans_math_fn fname =
 
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
-  | Block _ | SList _ | FunDef _ | Break | Continue | Skip -> ()
+  | Block _ | SList _ | Break | Continue | Skip -> ()
   | _ -> pp_location ppf sloc ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
@@ -249,7 +249,9 @@ let rec pp_statement ppf {stmt; sloc} =
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
-  | FunDef {fdrt; fdname; fdargs; fdbody} -> (
+
+let pp_fun_def ppf = function
+  {fdrt; fdname; fdargs; fdbody} -> (
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
@@ -502,14 +504,13 @@ using namespace stan::math; |}
 let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals
-    (list ~sep:cut pp_statement)
+    (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
 
 (* XXX arg templating is broken - needs T0, T1 etc in arg decl*)
 let%expect_test "udf" =
   let w e = {internal_expr with texpr= e} in
-  FunDef
     { fdrt= None
     ; fdname= "sars"
     ; fdargs=
@@ -518,8 +519,7 @@ let%expect_test "udf" =
         Return
           (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
         |> with_no_loc |> List.return |> Block |> with_no_loc }
-  |> with_no_loc
-  |> strf "@[<v>%a" pp_statement
+  |> strf "@[<v>%a" pp_fun_def
   |> print_endline ;
   [%expect
     {|
