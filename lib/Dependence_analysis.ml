@@ -38,18 +38,30 @@ let node_immediate_dependencies
    This is doing an explicit graph traversal with edges defined by
    node_immediate_dependencies.
 *)
+let rec node_dependencies_rec
+    (statement_map :
+      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+    (visited : label Set.Poly.t) (label : label) : label Set.Poly.t =
+  if Set.Poly.mem visited label then visited
+  else
+    let visited' = Set.Poly.add visited label in
+    let deps = node_immediate_dependencies statement_map label in
+    Set.Poly.fold deps ~init:visited' ~f:(node_dependencies_rec statement_map)
+
 let node_dependencies
     (statement_map :
       (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
     (label : label) : label Set.Poly.t =
-  let rec label_dependencies_rec visited label =
-    if Set.Poly.mem visited label then Set.Poly.empty
-    else
-      let deps = node_immediate_dependencies statement_map label in
-      let visited' = Set.Poly.add visited label in
-      Set.Poly.fold deps ~init:visited' ~f:label_dependencies_rec
-  in
-  label_dependencies_rec Set.Poly.empty label
+  node_dependencies_rec statement_map Set.Poly.empty label
+
+let node_var_dependencies
+    (statement_map :
+      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+    (var : vexpr) (label : label) : label Set.Poly.t =
+  let _, info = Map.Poly.find_exn statement_map label in
+  let var_deps = reaching_defn_lookup info.reaching_defn_entry var in
+  Set.Poly.fold var_deps ~init:Set.Poly.empty
+    ~f:(node_dependencies_rec statement_map)
 
 (*
    The strategy here is to write an update function on the whole dependency graph in terms
@@ -200,4 +212,69 @@ let%expect_test "Dependency graph example" =
        (16 (4 5 9 11 13 14)) (17 (4 5 9 11 13 14 16)) (18 (4 5 9 11 13 14 16 17))
        (19 (4 5 9 11 13 14 16 17)) (20 (4 5 9 11 13 14 16 17))
        (21 (4 5 9 11 13 14 16 17)) (22 (4 5 9 11 13 14 16 17 19)))
+    |}]
+
+let%expect_test "Reaching defns example" =
+  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
+  let deps =
+    Map.Poly.map (log_prob_build_dep_info_map example1_program)
+      ~f:(fun (_, x) ->
+        ( reaching_defn_lookup x.reaching_defn_entry (VVar "j")
+        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") ) )
+  in
+  print_s
+    [%sexp (deps : (label, label Set.Poly.t * label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((1 (() ())) (2 (() ())) (3 (() ())) (4 (() ())) (5 (() ())) (6 (() ()))
+       (7 (() ())) (8 (() ())) (9 ((9) (9))) (10 ((9) (9))) (11 ((9) (9)))
+       (12 ((9) (9))) (13 ((9) (9))) (14 ((9) (9))) (15 ((9) (9))) (16 ((9) (9)))
+       (17 ((9) (9))) (18 ((9) (9))) (19 ((9) (9))) (20 ((9) (9))) (21 ((9) (9)))
+       (22 ((9) (9))))
+    |}]
+
+let%expect_test "Reaching defns example" =
+  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
+  let deps =
+    Map.Poly.map (log_prob_build_dep_info_map example1_program)
+      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit) )
+  in
+  print_s
+    [%sexp
+      ( deps
+        : ( label
+          , reaching_defn Set.Poly.t * reaching_defn Set.Poly.t )
+          Map.Poly.t )] ;
+  [%expect
+    {|
+      ((1 (() ())) (2 (() ())) (3 (() (((VVar i) 3))))
+       (4 ((((VVar i) 3)) (((VVar i) 4)))) (5 ((((VVar i) 4)) (((VVar i) 4))))
+       (6 ((((VVar i) 4)) (((VVar i) 4)))) (7 ((((VVar i) 4)) (((VVar i) 4))))
+       (8 ((((VVar i) 4)) (((VVar i) 4))))
+       (9 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (10 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (11 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (12 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (13 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (14 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (15 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (16 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (17 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (18 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (19 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (20 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (21 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
+       (22 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9)))))
+    |}]
+
+let%expect_test "Variable dependency example" =
+  (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
+  let deps =
+    node_var_dependencies
+      (log_prob_build_dep_info_map example1_program)
+      (VVar "j") 17
+  in
+  print_s [%sexp (deps : label Set.Poly.t)] ;
+  [%expect {|
+      (4 5 9 11 13)
     |}]

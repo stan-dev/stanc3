@@ -3698,19 +3698,6 @@ let%expect_test "lazy code motion, 2" =
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym24__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt
-           (Assignment
-            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym25__))
-             (texpr_adlevel DataOnly))
-            ((texpr_type UInt) (texpr_loc <opaque>)
-             (texpr
-              (FunApp Plus__
-               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 3))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 4))
-                 (texpr_adlevel DataOnly)))))
-             (texpr_adlevel DataOnly)))))
-         ((sloc <opaque>)
-          (stmt
            (For (loopvar i)
             (lower
              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
@@ -3725,7 +3712,13 @@ let%expect_test "lazy code motion, 2" =
                 (((sloc <opaque>)
                   (stmt
                    (NRFunApp print
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym25__))
+                    (((texpr_type UInt) (texpr_loc <opaque>)
+                      (texpr
+                       (FunApp Plus__
+                        (((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 3)) (texpr_adlevel DataOnly))
+                         ((texpr_type UInt) (texpr_loc <opaque>)
+                          (texpr (Lit Int 4)) (texpr_adlevel DataOnly)))))
                       (texpr_adlevel DataOnly))))))
                  ((sloc <opaque>) (stmt Skip))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
@@ -4720,19 +4713,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
            (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type UReal))))
          ((sloc <opaque>)
           (stmt
-           (Assignment
-            ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var sym41__))
-             (texpr_adlevel AutoDiffable))
-            ((texpr_type UReal) (texpr_loc <opaque>)
-             (texpr
-              (FunApp bernoulli_logit_lpmf
-               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UReal) (texpr_loc <opaque>) (texpr (Var x))
-                 (texpr_adlevel AutoDiffable)))))
-             (texpr_adlevel AutoDiffable)))))
-         ((sloc <opaque>)
-          (stmt
            (For (loopvar i)
             (lower
              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
@@ -4751,7 +4731,13 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
                       (stmt
                        (TargetPE
                         ((texpr_type UReal) (texpr_loc <opaque>)
-                         (texpr (Var sym41__)) (texpr_adlevel AutoDiffable)))))))))))))))))))
+                         (texpr
+                          (FunApp bernoulli_logit_lpmf
+                           (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var y))
+                             (texpr_adlevel DataOnly))
+                            ((texpr_type UReal) (texpr_loc <opaque>)
+                             (texpr (Var x)) (texpr_adlevel AutoDiffable)))))
+                         (texpr_adlevel AutoDiffable)))))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "block fixing" =

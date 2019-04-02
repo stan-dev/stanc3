@@ -325,11 +325,12 @@ let assigned_or_declared_vars_stmt
   | Mir.TargetPE _ -> Set.Poly.singleton "target"
   | Mir.NRFunApp (s, _) when String.suffix s 3 = "_lp" ->
       Set.Poly.singleton "target"
+  | Mir.For {loopvar= x; _} -> Set.Poly.singleton x
   | Mir.NRFunApp (_, _)
    |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
    |Mir.IfElse (_, _, _)
    |Mir.While (_, _)
-   |Mir.For _ | Mir.Block _ | Mir.SList _ ->
+   |Mir.Block _ | Mir.SList _ ->
       Set.Poly.empty
 
 (** The transfer function for a reaching definitions analysis *)
