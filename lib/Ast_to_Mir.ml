@@ -514,10 +514,17 @@ let trans_prog filename
            {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
         transformedparametersblock
   in
+  let log_prob =
+    prepare_params
+    @ map
+        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
+        modelblock
+  in
   let generate_quantities =
-    map
-      (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
-      generatedquantitiesblock
+    prepare_params
+    @ map
+        (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
+        generatedquantitiesblock
   in
   let transform_inits =
     map
@@ -534,11 +541,7 @@ let trans_prog filename
         functionblock
   ; input_vars
   ; prepare_data
-  ; prepare_params
-  ; log_prob=
-      map
-        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
-        modelblock
+  ; log_prob
   ; generate_quantities
   ; transform_inits
   ; output_vars
@@ -592,7 +595,7 @@ let%expect_test "read data" =
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
-  print_s [%sexp (m.prepare_params : stmt_loc list)] ;
+  print_s [%sexp (m.log_prob : stmt_loc list)] ;
   [%expect
     {|
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)

@@ -388,10 +388,6 @@ let pp_log_prob ppf p =
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
   pp_located_error ppf
-    ( pp_statement
-    , {stmt= Block p.prepare_params; sloc= no_span}
-    , "inside prepare_params" ) ;
-  pp_located_error ppf
     (pp_statement, {stmt= Block p.log_prob; sloc= no_span}, "inside log_prob") ;
   pf ppf "@]@,}@,"
 

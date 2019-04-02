@@ -249,7 +249,6 @@ type ('e, 's) prog =
   { functions_block: 's list
   ; input_vars: 'e io_var list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
-  ; prepare_params: 's list (* param & tparam decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
   ; generate_quantities: 's list (* assumes data & params ready & in scope*)
   ; transform_inits: 's list
@@ -270,9 +269,6 @@ let pp_functions_block pp_s ppf {functions_block; _} =
 let pp_prepare_data pp_s ppf {prepare_data; _} =
   pp_block "prepare_data" pp_s ppf prepare_data
 
-let pp_prepare_params pp_s ppf {prepare_params; _} =
-  pp_block "prepare_params" pp_s ppf prepare_params
-
 let pp_log_prob pp_s ppf {log_prob; _} = pp_block "log_prob" pp_s ppf log_prob
 
 let pp_generate_quantities pp_s ppf {generate_quantities; _} =
@@ -288,8 +284,6 @@ let pp_prog pp_e pp_s ppf prog =
   pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;
   pp_prepare_data pp_s ppf prog ;
-  Fmt.cut ppf () ;
-  pp_prepare_params pp_s ppf prog ;
   Fmt.cut ppf () ;
   pp_log_prob pp_s ppf prog ;
   Fmt.cut ppf () ;
