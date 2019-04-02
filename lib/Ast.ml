@@ -11,6 +11,8 @@ type location =
 (** Delimited locations *)
 type location_span = {begin_loc: location; end_loc: location}
 
+let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
+
 (** Flags for data only arguments to functions *)
 type autodifftype = DataOnly | AutoDiffable
 
@@ -39,14 +41,16 @@ and identifier =
 (** Arithmetic and logical operators *)
 and operator =
   | Plus
+  | PPlus
   | Minus
+  | PMinus
   | Times
   | Divide
   | Modulo
   | LDivide
   | EltTimes
   | EltDivide
-  | Exp
+  | Pow
   | Or
   | And
   | Equals
@@ -55,7 +59,7 @@ and operator =
   | Leq
   | Greater
   | Geq
-  | Not
+  | PNot
   | Transpose
 
 (** Indices for array access *)
@@ -100,6 +104,18 @@ and typed_expression =
   ; expr_typed_type: unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
+let expr_loc_lub exprs =
+  match List.map ~f:(fun e -> e.expr_typed_loc) exprs with
+  | [] -> raise_s [%message "Can't find location lub for empty list"]
+  | [hd] -> hd
+  | x1 :: tl -> List.fold ~init:x1 ~f:merge_spans tl
+
+let expr_ad_lub exprs =
+  exprs
+  |> List.map ~f:(fun e -> e.expr_typed_ad_level)
+  |> List.max_elt ~compare
+  |> Option.value ~default:DataOnly
+
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
 
@@ -131,7 +147,8 @@ type 'e sizedtype =
   | SArray of 'e sizedtype * 'e
 [@@deriving sexp, compare, map, hash]
 
-(** remove_size [st] converts st from a sizedtype to an unsizedtype. *)
+(** remove_size [st] discards size information from a sizedtype
+    to return an unsizedtype. *)
 let rec remove_size = function
   | SInt -> UInt
   | SReal -> UReal
