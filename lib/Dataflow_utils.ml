@@ -144,26 +144,37 @@ let build_cf_graphs
          of the loop body *)
     let substmt_state, substmt_map, predecessors =
       let looped_state passthrough_possible =
+        (* Loop statements are preceded by:
+           1. The statements that come before the loop
+           2. The natural exit points of the loop body
+           3. Continue statements in the loop body
+        *)
+        let loop_predecessors =
+          Set.Poly.union_list
+            [ (*1*) in_state.exits
+            ; (*2*) substmt_state_unlooped.exits
+            ; (*3*) Set.Poly.diff substmt_state_unlooped.continues in_state.continues
+            ]
+        in
+        (* Loop exits are:
+           1. The loop node itself, since the last action of a typical loop execution is
+              to check if there are any iterations remaining
+           2. The statements that come before the loop, in case the loop didn't execute
+           3. Break statements in the loop body, since broken loops don't execute the
+              loop statement
+        *)
+        let loop_exits =
+          Set.Poly.union_list
+            [ (*1*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+            ; (*2*) Set.Poly.singleton label
+            ; (*3*) ( if passthrough_possible then in_state.exits else Set.Poly.empty )
+            ]
+        in
         ( { substmt_state_unlooped with
-            exits=
-              Set.Poly.union_list
-                (* The exit of a loop could be:
-                   1. the loop's predecessor (in case the loop doesn't run),
-                   2. a normal exit point of the body,
-                   3. a break within the body,
-                   4. or a continue within the body.
-                This comment mangling brought to you by the autoformater *)
-                [ (*1*)
-                  ( if passthrough_possible then in_state.exits
-                  else Set.Poly.empty )
-                ; (*2*) substmt_state_unlooped.exits
-                ; (*3*)
-                  Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
-                ; (*4*)
-                  Set.Poly.diff substmt_state_unlooped.continues
-                    in_state.continues ] }
+            exits= loop_exits
+          }
         , substmt_map_unlooped
-        , Set.Poly.union in_state.exits substmt_state_unlooped.exits )
+        , loop_predecessors )
       in
       match stmt with
       | For
@@ -298,7 +309,7 @@ let%expect_test "Loop passthrough" =
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
-      (8 9 12 18 19 22)
+      (6 9 10 16 19 20)
     |}]
 
 let example1_program =
@@ -465,10 +476,10 @@ let%expect_test "Predecessor graph example" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((7 13 16 19 22)
-       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5)) (9 (8 22))
-        (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14)) (16 (15))
-        (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
+      ((7 9 13)
+       ((1 ()) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 (6)) (8 (5))
+        (9 (8 16 19 22)) (10 (9)) (11 (10)) (12 (11)) (13 (12)) (14 (13)) (15 (14))
+        (16 (15)) (17 (16)) (18 (17)) (19 (18)) (20 (17)) (21 (20)) (22 (19 21))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -754,7 +765,7 @@ let%expect_test "Predecessor graph example 3" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (5))))
+      ((6) ((1 ()) (2 (1)) (3 (2)) (4 (3 5)) (5 (4)) (6 (4))))
     |}]
 
 let example4_program =
@@ -854,7 +865,7 @@ let%expect_test "Predecessor graph example 4" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((6 7) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6))))
+      ((4) ((1 ()) (2 (1)) (3 (2)) (4 (3 6 7)) (5 (4)) (6 (5)) (7 (6))))
     |}]
 
 let example5_program =
@@ -959,5 +970,5 @@ let%expect_test "Predecessor graph example 5" =
       ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
   [%expect
     {|
-      ((8) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6)) (8 (6 7))))
+      ((8) ((1 ()) (2 (1)) (3 (2)) (4 (3 7)) (5 (4)) (6 (5)) (7 (6)) (8 (4 6))))
     |}]
