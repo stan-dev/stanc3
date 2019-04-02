@@ -148,12 +148,13 @@ let build_cf_graphs
            1. The statements that come before the loop
            2. The natural exit points of the loop body
            3. Continue statements in the loop body
+           This comment mangling brought to you by the autoformatter
         *)
         let loop_predecessors =
           Set.Poly.union_list
-            [ (*1*) in_state.exits
-            ; (*2*) substmt_state_unlooped.exits
-            ; (*3*) Set.Poly.diff substmt_state_unlooped.continues in_state.continues
+            [ (*1*) in_state.exits; (*2*) substmt_state_unlooped.exits
+            ; (*3*)
+              Set.Poly.diff substmt_state_unlooped.continues in_state.continues
             ]
         in
         (* Loop exits are:
@@ -165,14 +166,13 @@ let build_cf_graphs
         *)
         let loop_exits =
           Set.Poly.union_list
-            [ (*1*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
-            ; (*2*) Set.Poly.singleton label
-            ; (*3*) ( if passthrough_possible then in_state.exits else Set.Poly.empty )
+            [ (*1*) Set.Poly.singleton label
+            ; (*2*)
+              (if passthrough_possible then in_state.exits else Set.Poly.empty)
+            ; (*3*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
             ]
         in
-        ( { substmt_state_unlooped with
-            exits= loop_exits
-          }
+        ( {substmt_state_unlooped with exits= loop_exits}
         , substmt_map_unlooped
         , loop_predecessors )
       in
