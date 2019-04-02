@@ -251,7 +251,7 @@ let rec pp_statement ppf {stmt; sloc} =
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
 
 let pp_fun_def ppf = function
-  {fdrt; fdname; fdargs; fdbody} -> (
+  | {fdrt; fdname; fdargs; fdbody} -> (
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
@@ -503,24 +503,20 @@ using namespace stan::math; |}
 
 let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings globals
-    (list ~sep:cut pp_fun_def)
+    version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
 
 (* XXX arg templating is broken - needs T0, T1 etc in arg decl*)
 let%expect_test "udf" =
   let w e = {internal_expr with texpr= e} in
-    { fdrt= None
-    ; fdname= "sars"
-    ; fdargs=
-        [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
-    ; fdbody=
-        Return
-          (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
-        |> with_no_loc |> List.return |> Block |> with_no_loc }
-  |> strf "@[<v>%a" pp_fun_def
-  |> print_endline ;
+  { fdrt= None
+  ; fdname= "sars"
+  ; fdargs= [(Ast.DataOnly, "x", UMatrix); (Ast.AutoDiffable, "y", URowVector)]
+  ; fdbody=
+      Return (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+      |> with_no_loc |> List.return |> Block |> with_no_loc }
+  |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
     template <typename T0__, typename T1__>
