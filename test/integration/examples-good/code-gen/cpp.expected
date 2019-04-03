@@ -92,18 +92,18 @@ class eight_schools_ncp_model : public prob_grad {
     
     try {
       current_statement__ = "file eight_schools_ncp.stan, line 8, columns 2-10";
-      local_scalar_t mu;
+      local_scalar_t__ mu;
       
       current_statement__ = "file eight_schools_ncp.stan, line 8, columns 2-10";
       mu = context__.vals_r("mu");
       current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
-      local_scalar_t tau;
+      local_scalar_t__ tau;
       
       current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
       tau = real_lb_constrain(context__.vals_r("tau"), 0);
       current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
-      std::vector<local_scalar_t> theta_tilde;
-      theta_tilde = std::vector<local_scalar_t>(J, 0);
+      std::vector<local_scalar_t__> theta_tilde;
+      theta_tilde = std::vector<local_scalar_t__>(J, 0);
       
       current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
       for (size_t sym1__ = 0; sym1__ < length(theta_tilde); sym1__++)
@@ -113,8 +113,8 @@ class eight_schools_ncp_model : public prob_grad {
               context__.vals_r("theta_tilde");
         }
       current_statement__ = "file eight_schools_ncp.stan, line 14, columns 2-16";
-      std::vector<local_scalar_t> theta;
-      theta = std::vector<local_scalar_t>(J, 0);
+      std::vector<local_scalar_t__> theta;
+      theta = std::vector<local_scalar_t__>(J, 0);
       
       current_statement__ = "file eight_schools_ncp.stan, line 15, column 2 to line 16, column 41";
       for (size_t j = 1; j < J; j++)
@@ -307,8 +307,8 @@ class one_var_per_block_model : public prob_grad {
     
     try {
       current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
-      std::vector<Eigen::Matrix<local_scalar_t, -1, 1>> param;
-      param = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> param;
+      param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
       current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
       for (size_t sym1__ = 0; sym1__ < length(param); sym1__++)
@@ -318,8 +318,8 @@ class one_var_per_block_model : public prob_grad {
               real_lb_constrain(context__.vals_r("param"), 0);
         }
       current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>> matparam;
-      matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t, -1, -1>>(K, Eigen::Matrix<local_scalar_t, -1, -1>(N, N)));
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
+      matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       
       current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
       for (size_t sym1__ = 0; sym1__ < length(matparam); sym1__++)
@@ -335,8 +335,8 @@ class one_var_per_block_model : public prob_grad {
             }
         }
       current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-      std::vector<Eigen::Matrix<local_scalar_t, -1, 1>> tparam;
-      tparam = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
+      tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
       current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
       for (size_t sym1__ = 0; sym1__ < length(tparam); sym1__++)
@@ -360,8 +360,8 @@ class one_var_per_block_model : public prob_grad {
             multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
       {
         current_statement__ = "file one_var_per_block.stan, line 21, columns 2-26";
-        std::vector<Eigen::Matrix<local_scalar_t, -1, 1>> modellocal;
-        modellocal = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
+        std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
+        modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
         
         current_statement__ = "file one_var_per_block.stan, line 22, columns 2-47";
         for (size_t n = 1; n < N; n++)

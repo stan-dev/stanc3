@@ -6,15 +6,13 @@ let ends_with suffix s = String.is_suffix ~suffix s
 let starts_with prefix s = String.is_prefix ~prefix s
 
 let functions_requiring_namespace =
-  Set.Poly.of_list
+  String.Set.of_list
     [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
     ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
     ; "asinh"; "atan"; "atan2"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"
     ; "erfc"; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"
     ; "log2"; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"
     ; "trunc"; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
-
-let contains_elt lst elt = List.mem lst elt ~equal:( = )
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -43,7 +41,7 @@ let rec stantype_prim_str = function
 
 let local_scalar ut = function
   | Ast.DataOnly -> stantype_prim_str ut
-  | AutoDiffable -> "local_scalar_t"
+  | AutoDiffable -> "local_scalar_t__"
 
 (* stub *)
 let rec pp_return_type ppf = function
@@ -242,13 +240,12 @@ and pp_expr ppf (e : expr_typed_located) =
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
-      if types_match et ef then
-        pf ppf "(%a ? %a : %a)" pp_expr ec pp_expr et pp_expr ef
-      else
-        pf ppf
-          "(%a ? stan::math::promote_scalar<%a>(%a) : \
-           stan::math::promote_scalar<%a>(%a)"
-          pp_expr ec pp_expr_type e pp_expr et pp_expr_type e pp_expr ef
+      let promoted ppf (t, e) =
+        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_expr_type t pp_expr e
+      in
+      let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
+      if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
+      else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, idx) ->
       pf ppf "stan::model::rvalue(%a, %a, %S)" pp_expr e pp_indexes idx
         (pretty_print e)
