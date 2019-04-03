@@ -364,6 +364,7 @@ let reaching_definitions_transfer
          |Mir.While (_, _)
          |Mir.For _ | Mir.Block _ | Mir.SList _ ->
             Set.Poly.empty
+                  (* TODO: loop identifier here? *)
       in
       transfer_gen_kill p gen kill
   end
