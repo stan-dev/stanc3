@@ -532,7 +532,8 @@ let dead_code_elimination (mir : typed_prog) =
           then stmt
           else Skip
       | Assignment _ -> Errors.fatal_error ()
-      (* NOTE: we never get rid of declarations as we might not be able to remove an assignment to a variable
+      (* NOTE: we never get rid of declarations as we might not be able to
+        remove an assignment to a variable
            due to side effects. *)
       (* TODO: maybe we should revisit that. *)
       | Decl _ | TargetPE _
@@ -4425,8 +4426,6 @@ let%expect_test "lazy code motion, 9" =
       }
       |}
   in
-  (* TODO: this isn't quite doing the right thing yet, as the
-     flowgraph is wrong. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
@@ -4441,10 +4440,11 @@ let%expect_test "lazy code motion, 9" =
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym35__) (decl_type UInt))))
          ((sloc <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
          ((sloc <opaque>)
           (stmt
-           (While
+           (Assignment
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym35__))
+             (texpr_adlevel DataOnly))
             ((texpr_type UInt) (texpr_loc <opaque>)
              (texpr
               (FunApp Times__
@@ -4452,6 +4452,12 @@ let%expect_test "lazy code motion, 9" =
                  (texpr_adlevel DataOnly))
                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 2))
                  (texpr_adlevel DataOnly)))))
+             (texpr_adlevel DataOnly)))))
+         ((sloc <opaque>) (stmt Skip))
+         ((sloc <opaque>)
+          (stmt
+           (While
+            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym35__))
              (texpr_adlevel DataOnly))
             ((sloc <opaque>)
              (stmt
@@ -4681,8 +4687,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       }
       |}
   in
-  (* TODO: this isn't doing the right thing yet. 
-     I believe the flowgraph for break and continue statements is overly conservative. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in

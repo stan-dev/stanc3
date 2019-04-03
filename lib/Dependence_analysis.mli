@@ -46,7 +46,7 @@ val node_dependencies :
 *)
 
 val node_vars_dependencies :
-  (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t
+     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t
   -> vexpr Set.Poly.t
   -> label
   -> label Set.Poly.t
@@ -55,8 +55,9 @@ val node_vars_dependencies :
    variables at single node.
 *)
 
-val log_prob_build_dep_info_map : Mir.typed_prog ->
-  (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t
+val log_prob_build_dep_info_map :
+     Mir.typed_prog
+  -> (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t
 (**
    Build the dependency information for each node in the log_prob section of a program
 *)

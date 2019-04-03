@@ -2,6 +2,7 @@ open Core_kernel
 open Mir
 open Dataflow_types
 open Mir_utils
+
 (*open Dataflow_utils*)
 open Dependence_analysis
 
@@ -11,67 +12,61 @@ type factor =
   | LPFunction of (string * expr_typed_located list)
 [@@deriving sexp, hash, compare]
 
-let extract_factors_statement
-    (stmt : (expr_typed_located, 's) statement)
-  : factor list =
+let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
+    factor list =
   match stmt with
   | Mir.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | Mir.NRFunApp ("reject", _) -> [Reject]
   | Mir.NRFunApp (s, args) when String.suffix s 3 = "_lp" ->
-    [LPFunction (s, args)]
+      [LPFunction (s, args)]
   | Mir.Assignment (_, _)
-  | Mir.NRFunApp (_, _)
-  |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
-  |Mir.IfElse (_, _, _)
-  |Mir.While (_, _)
-  |Mir.For _ | Mir.Block _ | Mir.SList _
-  |Mir.FunDef {fdname= _; _}
-  | Mir.Decl {decl_id= _; _} ->
-    []
+   |Mir.NRFunApp (_, _)
+   |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+   |Mir.IfElse (_, _, _)
+   |Mir.While (_, _)
+   |Mir.For _ | Mir.Block _ | Mir.SList _
+   |Mir.FunDef {fdname= _; _}
+   |Mir.Decl {decl_id= _; _} ->
+      []
 
 let rec extract_factors
     (statement_map :
-       (label, (expr_typed_located, label) statement * 'm) Map.Poly.t)
-    (label : label)
-  : (label * factor) list =
+      (label, (expr_typed_located, label) statement * 'm) Map.Poly.t)
+    (label : label) : (label * factor) list =
   let stmt, _ = Map.Poly.find_exn statement_map label in
-  let this_stmt = List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x)) in
+  let this_stmt =
+    List.map (extract_factors_statement stmt) ~f:(fun x -> (label, x))
+  in
   fold_statement
     (fun s _ -> s)
-    (fun state label ->
-       List.append
-         state
-         (extract_factors statement_map label))
-    this_stmt
-    stmt
+    (fun state label -> List.append state (extract_factors statement_map label))
+    this_stmt stmt
 
-let factor_rhs
-    (factor : factor) : vexpr Set.Poly.t =
+let factor_rhs (factor : factor) : vexpr Set.Poly.t =
   match factor with
-  | TargetTerm e ->
-    expr_var_set e
-  | Reject ->
-    Set.Poly.empty
-  | LPFunction (_, es) ->
-    (Set.Poly.of_list (List.map es ~f:vexpr_of_expr_exn))
+  | TargetTerm e -> expr_var_set e
+  | Reject -> Set.Poly.empty
+  | LPFunction (_, es) -> Set.Poly.of_list (List.map es ~f:vexpr_of_expr_exn)
 
 let factor_var_dependencies
     (statement_map :
-       (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
-    (label, factor : label * factor) : vexpr Set.Poly.t =
+      (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
+    ((label, factor) : label * factor) : vexpr Set.Poly.t =
   let rhs = factor_rhs factor in
   let dep_labels = node_vars_dependencies statement_map rhs label in
-  let label_vars l = stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l)) in
+  let label_vars l =
+    stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l))
+  in
   let dep_vars = union_map dep_labels ~f:label_vars in
   Set.Poly.union dep_vars rhs
 
 (* So far just extracts factors in log_prob, finds their dependencies *)
-let prog_factor_graph
-  (prog : typed_prog)
-  : (label * factor * vexpr Set.Poly.t) list =
+let prog_factor_graph (prog : typed_prog) :
+    (label * factor * vexpr Set.Poly.t) list =
   let statement_map = log_prob_build_dep_info_map prog in
   let factors = extract_factors statement_map 1 in
-  List.map factors ~f:(fun (fac, l) -> (fac, l, factor_var_dependencies statement_map (fac, l)))
+  List.map factors ~f:(fun (fac, l) ->
+      (fac, l, factor_var_dependencies statement_map (fac, l)) )
 
 let example1_program =
   let ast =
@@ -113,11 +108,10 @@ let example1_program =
 
 let%expect_test "Variable dependency example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
-  let deps =
-    prog_factor_graph example1_program
-  in
+  let deps = prog_factor_graph example1_program in
   print_s [%sexp (deps : (label * factor * vexpr Set.Poly.t) list)] ;
-  [%expect {|
+  [%expect
+    {|
       ((19 Reject ((VVar i) (VVar j)))
        (21
         (TargetTerm

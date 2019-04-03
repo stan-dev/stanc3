@@ -59,8 +59,12 @@ let node_vars_dependencies
       (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t)
     (vars : vexpr Set.Poly.t) (label : label) : label Set.Poly.t =
   let _, info = Map.Poly.find_exn statement_map label in
-  let var_deps = union_map vars ~f:(reaching_defn_lookup info.reaching_defn_entry) in
-  Set.Poly.fold (Set.union info.parents var_deps) ~init:Set.Poly.empty
+  let var_deps =
+    union_map vars ~f:(reaching_defn_lookup info.reaching_defn_entry)
+  in
+  Set.Poly.fold
+    (Set.union info.parents var_deps)
+    ~init:Set.Poly.empty
     ~f:(node_dependencies_rec statement_map)
 
 (*
@@ -272,7 +276,8 @@ let%expect_test "Variable dependency example" =
   let deps =
     node_vars_dependencies
       (log_prob_build_dep_info_map example1_program)
-      (Set.Poly.singleton (VVar "j")) 17
+      (Set.Poly.singleton (VVar "j"))
+      17
   in
   print_s [%sexp (deps : label Set.Poly.t)] ;
   [%expect {|

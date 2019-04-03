@@ -135,15 +135,15 @@ let build_cf_graphs
       (join_cf_states state1 state2, union_maps_left map1 map2)
     in
     (* The accumulated state after traversing substatements *)
-    let substmt_state_unlooped, substmt_map_unlooped =
+    let substmt_state_unlooped, substmt_map =
       branching_fold_statement stmt ~join
         ~init:({in_state with exits= Set.Poly.singleton label}, in_map)
         ~f:(build_cf_graph_rec child_cf)
     in
-    (* If the statement is a loop, we need to include the loop body exits predecessors
-         of the loop body *)
-    let substmt_state, substmt_map, predecessors =
-      let looped_state passthrough_possible =
+    (* If the statement is a loop, we need to include the loop body exits as predecessors
+         of the loop *)
+    let substmt_state, predecessors =
+      let looped_state =
         (* Loop statements are preceded by:
            1. The statements that come before the loop
            2. The natural exit points of the loop body
@@ -160,35 +160,20 @@ let build_cf_graphs
         (* Loop exits are:
            1. The loop node itself, since the last action of a typical loop execution is
               to check if there are any iterations remaining
-           2. The statements that come before the loop, in case the loop didn't execute
-           3. Break statements in the loop body, since broken loops don't execute the
+           2. Break statements in the loop body, since broken loops don't execute the
               loop statement
         *)
         let loop_exits =
           Set.Poly.union_list
             [ (*1*) Set.Poly.singleton label
-            ; (*2*)
-              (if passthrough_possible then in_state.exits else Set.Poly.empty)
-            ; (*3*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
+            ; (*2*) Set.Poly.diff substmt_state_unlooped.breaks in_state.breaks
             ]
         in
-        ( {substmt_state_unlooped with exits= loop_exits}
-        , substmt_map_unlooped
-        , loop_predecessors )
+        ({substmt_state_unlooped with exits= loop_exits}, loop_predecessors)
       in
       match stmt with
-      | For
-          { lower= {texpr= Lit (Int, l_str); _}
-          ; upper= {texpr= Lit (Int, u_str); _}; _ } ->
-          (* TODO: Is it safe to use int_of_string here? *)
-          let l = int_of_string l_str in
-          let u = int_of_string u_str in
-          looped_state (l > u)
-      | For _ -> looped_state true
-      | While ({texpr= Lit (Int, cond_str); _}, _) ->
-          looped_state (int_of_string cond_str = 0)
-      | While _ -> looped_state true
-      | _ -> (substmt_state_unlooped, substmt_map_unlooped, in_state.exits)
+      | For _ | While _ -> looped_state
+      | _ -> (substmt_state_unlooped, in_state.exits)
     in
     (* Some statements interact with the break/return/continue states
        E.g., loops nullify breaks and continues in their body, but are still affected by
@@ -309,7 +294,7 @@ let%expect_test "Loop passthrough" =
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
-      (6 9 10 16 19 20)
+      (6 10 16 20)
     |}]
 
 let example1_program =

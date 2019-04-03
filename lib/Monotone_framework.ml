@@ -351,10 +351,9 @@ let reaching_definitions_transfer
         match mir_node with
         | Mir.Decl {decl_id= x; _}
          |Mir.Assignment ({texpr= Var x; _}, _)
-         |Mir.Assignment ({texpr= Indexed ({texpr= Var x; _}, _); _}, _)
+         |Mir.For {loopvar= x; _}
          |Mir.FunDef {fdname= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
-        | Mir.Assignment (_, _) -> Errors.fatal_error ()
         | Mir.TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
         | Mir.NRFunApp (s, _) when String.suffix s 3 = "_lp" ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
@@ -362,9 +361,8 @@ let reaching_definitions_transfer
          |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
          |Mir.IfElse (_, _, _)
          |Mir.While (_, _)
-         |Mir.For _ | Mir.Block _ | Mir.SList _ ->
+         |Mir.Block _ | Mir.SList _ | Mir.Assignment _ ->
             Set.Poly.empty
-                  (* TODO: loop identifier here? *)
       in
       transfer_gen_kill p gen kill
   end
