@@ -514,11 +514,17 @@ let trans_prog filename
            {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
         transformedparametersblock
   in
+  let modelb =
+    map
+      (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
+      modelblock
+  in
   let log_prob =
     prepare_params
-    @ map
-        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
-        modelblock
+    @
+    match modelb with
+    | [] -> []
+    | hd :: _ -> [{stmt= Block modelb; sloc= hd.sloc}]
   in
   let generate_quantities =
     prepare_params
@@ -570,9 +576,10 @@ let%expect_test "Prefix-Op-Example" =
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
-       (IfElse (FunApp Less__ ((Var i) (FunApp PMinus__ ((Lit Int 1)))))
-        (NRFunApp Print__ ((Lit Str Badger))) ())) |}]
+      ((Block
+        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
+         (IfElse (FunApp Less__ ((Var i) (FunApp PMinus__ ((Lit Int 1)))))
+          (NRFunApp Print__ ((Lit Str Badger))) ())))) |}]
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in

@@ -121,21 +121,16 @@ class eight_schools_ncp_model : public prob_grad {
         current_statement__ = "file eight_schools_ncp.stan, line 16, columns 4-41";
         stan::model::rvalue(theta, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e") =
             (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside prepare_params") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
-    try {
-      current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
-      lp_accum__.add(normal(mu, 0, 5, pstream__))
-      current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
-      lp_accum__.add(cauchy(tau, 0, 5, pstream__))
-      current_statement__ = "file eight_schools_ncp.stan, line 22, columns 2-29";
-      lp_accum__.add(normal(theta_tilde, 0, 1, pstream__))
-      current_statement__ = "file eight_schools_ncp.stan, line 23, columns 2-27";
-      lp_accum__.add(normal(y, theta, sigma, pstream__))
+      {
+        current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
+        lp_accum__.add(normal(mu, 0, 5, pstream__))
+        current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
+        lp_accum__.add(cauchy(tau, 0, 5, pstream__))
+        current_statement__ = "file eight_schools_ncp.stan, line 22, columns 2-29";
+        lp_accum__.add(normal(theta_tilde, 0, 1, pstream__))
+        current_statement__ = "file eight_schools_ncp.stan, line 23, columns 2-27";
+        lp_accum__.add(normal(y, theta, sigma, pstream__))
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
@@ -363,22 +358,17 @@ class one_var_per_block_model : public prob_grad {
         current_statement__ = "file one_var_per_block.stan, line 18, columns 17-42";
         stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e") =
             multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside prepare_params") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
-    try {
-      current_statement__ = "file one_var_per_block.stan, line 21, columns 2-26";
-      std::vector<Eigen::Matrix<local_scalar_t, -1, 1>> modellocal;
-      modellocal = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
-      
-      current_statement__ = "file one_var_per_block.stan, line 22, columns 2-47";
-      for (size_t n = 1; n < N; n++)
-        current_statement__ = "file one_var_per_block.stan, line 22, columns 17-47";
-        stan::model::rvalue(modellocal, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e") =
-            multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+      {
+        current_statement__ = "file one_var_per_block.stan, line 21, columns 2-26";
+        std::vector<Eigen::Matrix<local_scalar_t, -1, 1>> modellocal;
+        modellocal = std::vector<Eigen::Matrix<local_scalar_t, -1, 1>>(K, Eigen::Matrix<local_scalar_t, -1, 1>(N));
+        
+        current_statement__ = "file one_var_per_block.stan, line 22, columns 2-47";
+        for (size_t n = 1; n < N; n++)
+          current_statement__ = "file one_var_per_block.stan, line 22, columns 17-47";
+          stan::model::rvalue(modellocal, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e") =
+              multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
