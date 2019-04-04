@@ -119,50 +119,50 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
 
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf ut f es =
-  (* No idea if defining these here is performant, but the mutually
-     recursive nature of the whole thing makes it hard to do otherwise *)
   let operator_functions =
-    [ ( Ast.PMinus
-      , fun ppf es ->
-          pp_unary ppf
-            (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
-            es )
-    ; (PPlus, fun ppf es -> pp_unary ppf "%a" es)
-    ; ( Transpose
-      , fun ppf es ->
-          pp_unary ppf
-            (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
-            es )
-    ; (PNot, fun ppf es -> pp_unary ppf "logial_negation(%a)" es)
-    ; ( Minus
-      , fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es )
-    ; (Plus, fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es)
-    ; ( Times
-      , fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "multiply(%a, %a)" es )
-    ; ( Divide
-      , fun ppf es ->
-          if
-            is_matrix (second es)
-            && (is_matrix (first es) || is_row_vector (first es))
-          then pp_binary ppf "mdivide_right(%a, %a)" es
-          else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es )
-    ; (Modulo, fun ppf es -> pp_binary ppf "modulus(%a, %a)" es)
-    ; (LDivide, fun ppf es -> pp_binary ppf "mdivide_left(%a, %a)" es)
-    ; ( EltTimes
-      , fun ppf es ->
-          pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es )
-    ; ( EltDivide
-      , fun ppf es -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
-      )
-    ; (Pow, fun ppf es -> pp_binary ppf "pow(%a, %a)" es)
-    ; (Equals, fun ppf es -> pp_binary ppf "logical_eq(%a, %a)" es)
-    ; (NEquals, fun ppf es -> pp_binary ppf "logical_neq(%a, %a)" es)
-    ; (Less, fun ppf es -> pp_binary ppf "logical_lt(%a, %a)" es)
-    ; (Leq, fun ppf es -> pp_binary ppf "logical_lte(%a, %a)" es)
-    ; (Greater, fun ppf es -> pp_binary ppf "logical_gt(%a, %a)" es)
-    ; (Geq, fun ppf es -> pp_binary ppf "logical_gte(%a, %a)" es) ]
-    |> List.map ~f:(fun (k, v) -> (Operators.operator_name k, v))
-    |> Map.Poly.of_alist_exn
+    Map.Poly.of_alist_exn
+    @@ List.map ~f:(fun (k, v) -> (Operators.operator_name k, v))
+    @@ [ ( Ast.PMinus
+         , fun ppf es ->
+             pp_unary ppf
+               (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
+               es )
+       ; (PPlus, fun ppf es -> pp_unary ppf "%a" es)
+       ; ( Transpose
+         , fun ppf es ->
+             pp_unary ppf
+               (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
+               es )
+       ; (PNot, fun ppf es -> pp_unary ppf "logial_negation(%a)" es)
+       ; ( Minus
+         , fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es
+         )
+       ; (Plus, fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es)
+       ; ( Times
+         , fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "multiply(%a, %a)" es
+         )
+       ; ( Divide
+         , fun ppf es ->
+             if
+               is_matrix (second es)
+               && (is_matrix (first es) || is_row_vector (first es))
+             then pp_binary ppf "mdivide_right(%a, %a)" es
+             else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es )
+       ; (Modulo, fun ppf es -> pp_binary ppf "modulus(%a, %a)" es)
+       ; (LDivide, fun ppf es -> pp_binary ppf "mdivide_left(%a, %a)" es)
+       ; ( EltTimes
+         , fun ppf es ->
+             pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es )
+       ; ( EltDivide
+         , fun ppf es ->
+             pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es )
+       ; (Pow, fun ppf es -> pp_binary ppf "pow(%a, %a)" es)
+       ; (Equals, fun ppf es -> pp_binary ppf "logical_eq(%a, %a)" es)
+       ; (NEquals, fun ppf es -> pp_binary ppf "logical_neq(%a, %a)" es)
+       ; (Less, fun ppf es -> pp_binary ppf "logical_lt(%a, %a)" es)
+       ; (Leq, fun ppf es -> pp_binary ppf "logical_lte(%a, %a)" es)
+       ; (Greater, fun ppf es -> pp_binary ppf "logical_gt(%a, %a)" es)
+       ; (Geq, fun ppf es -> pp_binary ppf "logical_gte(%a, %a)" es) ]
   in
   let misc_special_math_fns =
     Map.Poly.of_alist_exn
