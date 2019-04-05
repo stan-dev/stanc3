@@ -17,7 +17,7 @@ pipeline {
                 dockerfile {
                     filename 'docker/dev-ubuntu/Dockerfile'
                     //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                    args "-u 1000:1000 --entrypoint=\'\'"
                 }
             }
             steps {
@@ -49,7 +49,7 @@ pipeline {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
                     //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                    args "-u 1000:1000 --entrypoint=\'\'"
                 }
             }
             steps {
