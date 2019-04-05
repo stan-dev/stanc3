@@ -1,6 +1,5 @@
 open Core_kernel
 open Mir
-open Ast_Mir_Common
 
 let ends_with suffix s = String.is_suffix ~suffix s
 let starts_with prefix s = String.is_prefix ~prefix s

@@ -3,7 +3,6 @@
 open Core_kernel
 open Type_conversion
 open Ast
-open Ast_Mir_Common
 
 let ternary_if = "TernaryIf__"
 
@@ -69,7 +68,7 @@ let operator_return_type_from_string op_name args =
     match args with
     | [{expr_typed_type= ut1; _}; {expr_typed_type= ut2; _}]
       when check_of_same_type_mod_array_conv "" ut1 ut2 ->
-        Some Void
+        Some Mir.Void
     | _ -> None
   else
     let rec try_recursive_find = function

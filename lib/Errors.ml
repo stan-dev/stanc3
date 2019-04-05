@@ -1,7 +1,7 @@
 (** Setup of our compiler errors *)
 
 open Core_kernel
-open Ast_Mir_Common
+open Mir
 
 (** Our type of syntax error information *)
 type parse_error =

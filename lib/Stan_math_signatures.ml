@@ -1,7 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
 open Core_kernel
-open Ast_Mir_Common
+open Mir
 open Errors
 open Type_conversion
 open Pretty_printing

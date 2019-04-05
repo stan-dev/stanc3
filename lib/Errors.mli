@@ -1,5 +1,5 @@
 (** Some plumbing for our compiler errors *)
-open Ast_Mir_Common
+open Mir
 
 (** Our type of syntax error information *)
 type parse_error =

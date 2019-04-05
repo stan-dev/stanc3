@@ -1,11 +1,9 @@
 (** Abstract syntax tree *)
 open Core_kernel
 
-open Ast_Mir_Common
-
 (** Our type for identifiers, on which we record a location *)
 type identifier =
-  {name: string; id_loc: location_span sexp_opaque [@compare.ignore]}
+  {name: string; id_loc: Mir.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
 (** Arithmetic and logical operators *)
@@ -66,23 +64,23 @@ type 'e expression =
 (** Untyped expressions, which have location_spans as meta-data *)
 type untyped_expression =
   { expr_untyped: untyped_expression expression
-  ; expr_untyped_loc: location_span sexp_opaque [@compare.ignore] }
+  ; expr_untyped_loc: Mir.location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp, compare, map, hash]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expression =
   { expr_typed: typed_expression expression
-  ; expr_typed_loc: location_span sexp_opaque [@compare.ignore]
-  ; expr_typed_ad_level: autodifftype
-  ; expr_typed_type: unsizedtype }
+  ; expr_typed_loc: Mir.location_span sexp_opaque [@compare.ignore]
+  ; expr_typed_ad_level: Mir.autodifftype
+  ; expr_typed_type: Mir.unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
 let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.expr_typed_loc) exprs with
   | [] -> raise_s [%message "Can't find location lub for empty list"]
   | [hd] -> hd
-  | x1 :: tl -> List.fold ~init:x1 ~f:merge_spans tl
+  | x1 :: tl -> List.fold ~init:x1 ~f:Mir.merge_spans tl
 
 let expr_ad_lub exprs =
   exprs
@@ -113,15 +111,48 @@ type 'e truncation =
 type 'e printable = PString of string | PExpr of 'e
 [@@deriving sexp, compare, map, hash]
 
-(** remove_size [st] discards size information from a sizedtype
-    to return an unsizedtype. *)
-let rec remove_size = function
-  | SInt -> UInt
-  | SReal -> UReal
-  | SVector _ -> UVector
-  | SRowVector _ -> URowVector
-  | SMatrix _ -> UMatrix
-  | SArray (t, _) -> UArray (remove_size t)
+(** Transformations (constraints) for global variable declarations *)
+type 'e transformation =
+  | Identity
+  | Lower of 'e
+  | Upper of 'e
+  | LowerUpper of 'e * 'e
+  | Offset of 'e
+  | Multiplier of 'e
+  | OffsetMultiplier of 'e * 'e
+  | Ordered
+  | PositiveOrdered
+  | Simplex
+  | UnitVector
+  | CholeskyCorr
+  | CholeskyCov
+  | Correlation
+  | Covariance
+[@@deriving sexp, compare, map, hash]
+
+(* let pp_transformation pp_e ppf = function
+  | Identity -> ()
+  | Lower expr -> (pp_e |> label "lower" |> angle_brackets) ppf expr
+  | Upper expr -> (pp_e |> label "upper" |> angle_brackets) ppf expr
+  | LowerUpper (lower_expr, upper_expr) ->
+      ( Fmt.(pair ~sep:comma (pp_e |> label "lower") (pp_e |> label "upper"))
+      |> angle_brackets )
+        ppf (lower_expr, upper_expr)
+  | Offset expr -> (pp_e |> label "offet" |> angle_brackets) ppf expr
+  | Multiplier expr -> (pp_e |> label "multiplier" |> angle_brackets) ppf expr
+  | OffsetMultiplier (offset_expr, mult_expr) ->
+      ( Fmt.(
+          pair ~sep:comma (pp_e |> label "offset") (pp_e |> label "multiplier"))
+      |> angle_brackets )
+        ppf (offset_expr, mult_expr)
+  | Ordered -> (angle_brackets Fmt.string) ppf "ordered"
+  | PositiveOrdered -> (angle_brackets Fmt.string) ppf "positive_ordered"
+  | Simplex -> (angle_brackets Fmt.string) ppf "simplex"
+  | UnitVector -> (angle_brackets Fmt.string) ppf "unit_vector"
+  | CholeskyCorr -> (angle_brackets Fmt.string) ppf "cholesky_factor_corr"
+  | CholeskyCov -> (angle_brackets Fmt.string) ppf "cholesky_factor_cov"
+  | Correlation -> (angle_brackets Fmt.string) ppf "corr_matrix"
+  | Covariance -> (angle_brackets Fmt.string) ppf "cov_matrix" *)
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
@@ -158,15 +189,15 @@ type ('e, 's) statement =
   | ForEach of identifier * 'e * 's
   | Block of 's list
   | VarDecl of
-      { sizedtype: 'e sizedtype
+      { sizedtype: 'e Mir.sizedtype
       ; transformation: 'e transformation
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
   | FunDef of
-      { returntype: returntype
+      { returntype: Mir.returntype
       ; funname: identifier
-      ; arguments: (autodifftype * unsizedtype * identifier) list
+      ; arguments: (Mir.autodifftype * Mir.unsizedtype * identifier) list
       ; body: 's }
 [@@deriving sexp, hash, compare, map]
 
@@ -180,22 +211,22 @@ type ('e, 's) statement =
     AnyReturnType corresponds to statements which have an error in every branch  *)
 type statement_returntype =
   | NoReturnType
-  | Incomplete of returntype
-  | Complete of returntype
+  | Incomplete of Mir.returntype
+  | Complete of Mir.returntype
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
   { stmt_untyped: (untyped_expression, untyped_statement) statement
-  ; stmt_untyped_loc: location_span sexp_opaque [@compare.ignore] }
+  ; stmt_untyped_loc: Mir.location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp, compare, map, hash]
 
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
 type typed_statement =
   { stmt_typed: (typed_expression, typed_statement) statement
-  ; stmt_typed_loc: location_span sexp_opaque [@compare.ignore]
+  ; stmt_typed_loc: Mir.location_span sexp_opaque [@compare.ignore]
   ; stmt_typed_returntype: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 

@@ -1,6 +1,5 @@
 open Core_kernel
 open Mir
-open Ast_Mir_Common
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
@@ -210,7 +209,7 @@ let rec unsizedtype_to_string = function
 (* Well, when you put it like this it does seem a little crazy *)
 let constraint_to_string t (c : constrainaction) =
   match t with
-  | Ordered -> "ordered"
+  | Ast.Ordered -> "ordered"
   | PositiveOrdered -> "positive_ordered"
   | Simplex -> "simplex"
   | UnitVector -> "unit_vector"
@@ -236,7 +235,7 @@ let constraint_to_string t (c : constrainaction) =
 
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let chk forl fn args =
-    let texpr_type = Ast.remove_size decl_type in
+    let texpr_type = remove_size decl_type in
     forl
       (fun id ->
         {stmt= NRFunApp (fn_check, fn :: id :: trans_exprs args); sloc} )
@@ -255,7 +254,7 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
       [chk for_eigen constraint_str []]
 
 let extract_constraint_args = function
-  | Lower a | Upper a | Offset a | Multiplier a -> [a]
+  | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance | Identity ->
@@ -278,7 +277,7 @@ let gen_constraint dconstrain t arg =
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
-  | x -> Ast.remove_size x
+  | x -> remove_size x
 
 let rec base_dims = function
   | SVector d | SRowVector d -> [d]

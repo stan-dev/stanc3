@@ -2,7 +2,6 @@
 
 open Core_kernel
 open Ast
-open Ast_Mir_Common
 
 val semantic_check_program : untyped_program -> typed_program
 (** Performs semantic check on AST and returns original AST embellished with type decorations *)
@@ -15,10 +14,10 @@ val model_name : string ref
     clashes and used in code generation. *)
 
 val inferred_unsizedtype_of_indexed :
-     location_span
-  -> unsizedtype
-  -> (typed_expression index * unsizedtype) sexp_list
-  -> unsizedtype
+     Mir.location_span
+  -> Mir.unsizedtype
+  -> (typed_expression index * Mir.unsizedtype) sexp_list
+  -> Mir.unsizedtype
 (** [inferred_unsizedtype_of_indexed loc ut typed_idxs] is responsible for figuring
     out what the return (unsized) type of an indexing operation into an unsized
     type is.*)
