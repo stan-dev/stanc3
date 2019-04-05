@@ -27,30 +27,30 @@ let is_user_defined f =
   && not (starts_with "stan::math::" f)
 
 (* retun true if the tpe of the expression is integer or real *)
-let is_scalar e = e.texpr_type = Ast.UInt || e.texpr_type = Ast.UReal
-let is_matrix e = e.texpr_type = Ast.UMatrix
-let is_row_vector e = e.texpr_type = Ast.URowVector
+let is_scalar e = e.texpr_type = UInt || e.texpr_type = UReal
+let is_matrix e = e.texpr_type = UMatrix
+let is_row_vector e = e.texpr_type = URowVector
 
 (* stub *)
 let pretty_print _e = "pretty printed e"
 
 let rec stantype_prim_str = function
-  | Ast.UInt -> "int"
+  | UInt -> "int"
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
 let local_scalar ut = function
-  | Ast.DataOnly -> stantype_prim_str ut
+  | DataOnly -> stantype_prim_str ut
   | AutoDiffable -> "local_scalar_t__"
 
 (* stub *)
 let rec pp_return_type ppf = function
-  | Ast.Void -> pf ppf "void"
-  | Ast.ReturnType rt -> pp_unsizedtype ppf rt
+  | Void -> pf ppf "void"
+  | ReturnType rt -> pp_unsizedtype ppf rt
 
 and pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
-  | Ast.UInt | UReal -> string ppf scalar
+  | UInt | UReal -> string ppf scalar
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
@@ -64,18 +64,18 @@ and pp_unsizedtype_local ppf (adtype, ut) =
 
 and pp_unsizedtype ppf ut =
   match ut with
-  | Ast.UInt -> pf ppf "int"
-  | Ast.UReal -> pf ppf "local_scalar_t__"
-  | Ast.UVector -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | Ast.URowVector -> pf ppf "Eigen::Matrix<local_scalar_t, 1, -1>"
-  | Ast.UMatrix -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | Ast.UArray t -> pf ppf "std::vector<%a>" pp_unsizedtype t
-  | Ast.UFun (args_t, return_t) ->
+  | UInt -> pf ppf "int"
+  | UReal -> pf ppf "local_scalar_t__"
+  | UVector -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
+  | URowVector -> pf ppf "Eigen::Matrix<local_scalar_t, 1, -1>"
+  | UMatrix -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
+  | UArray t -> pf ppf "std::vector<%a>" pp_unsizedtype t
+  | UFun (args_t, return_t) ->
       let arg_types = List.map ~f:snd args_t in
       pf ppf "std::function<%a(%a)>" pp_return_type return_t
         (list ~sep:(const string ", ") pp_unsizedtype)
         arg_types
-  | Ast.UMathLibraryFunction -> pf ppf "std::function<void()>"
+  | UMathLibraryFunction -> pf ppf "std::function<void()>"
 
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf (e.texpr_adlevel, e.texpr_type)
@@ -187,7 +187,7 @@ and gen_fun_app ppf ut f es =
   let read_data_or_param ppf es =
     let i_or_r =
       match ut with
-      | Ast.UInt -> "i"
+      | UInt -> "i"
       | UReal -> "r"
       | UVector | URowVector | UMatrix | UArray _
        |UFun (_, _)

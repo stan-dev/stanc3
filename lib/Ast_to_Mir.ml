@@ -3,9 +3,8 @@ open Mir
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
-  | Some (Ast.ReturnType ut) -> ut
-  | x ->
-      raise_s [%message "Unexpected return type " (x : Ast.returntype option)]
+  | Some (ReturnType ut) -> ut
+  | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let rec op_to_funapp op args =
   { texpr= FunApp (Operators.operator_name op, trans_exprs args)
@@ -49,22 +48,22 @@ and trans_idx = function
   | Ast.Between (lb, ub) -> Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
     match e.expr_typed_type with
-    | Ast.UInt -> Single (trans_expr e)
-    | Ast.UArray _ -> MultiIndex (trans_expr e)
+    | UInt -> Single (trans_expr e)
+    | UArray _ -> MultiIndex (trans_expr e)
     | _ ->
         raise_s
-          [%message
-            "Expecting int or array" (e.expr_typed_type : Ast.unsizedtype)] )
+          [%message "Expecting int or array" (e.expr_typed_type : unsizedtype)]
+    )
 
 and trans_exprs = List.map ~f:trans_expr
 
-let trans_sizedtype = Ast.map_sizedtype trans_expr
+let trans_sizedtype = map_sizedtype trans_expr
 
 let neg_inf =
   { texpr_type= UReal
   ; texpr_loc= no_span
   ; texpr= FunApp (fn_negative_infinity, [])
-  ; texpr_adlevel= Ast.DataOnly }
+  ; texpr_adlevel= DataOnly }
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
@@ -93,10 +92,7 @@ let unquote s =
    XXX add UString to MIR and maybe AST.
 *)
 let mkstring texpr_loc s =
-  { texpr= Lit (Str, s)
-  ; texpr_type= Ast.UReal
-  ; texpr_loc
-  ; texpr_adlevel= DataOnly }
+  {texpr= Lit (Str, s); texpr_type= UReal; texpr_loc; texpr_adlevel= DataOnly}
 
 let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
   List.map
@@ -150,7 +146,7 @@ let mkfor bodyfn iteratee sloc =
 *)
 let rec for_scalar bodyfn var sloc =
   match var.texpr_type with
-  | Ast.UInt | UReal -> bodyfn var
+  | UInt | UReal -> bodyfn var
   | UVector | URowVector | UMatrix -> mkfor bodyfn var sloc
   | UArray _ -> mkfor (fun e -> for_scalar bodyfn e sloc) var sloc
   | UFun _ | UMathLibraryFunction ->
@@ -168,7 +164,7 @@ let rec for_scalar bodyfn var sloc =
 *)
 let rec for_eigen bodyfn var sloc =
   match var.texpr_type with
-  | Ast.UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
+  | UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
   | UArray _ -> mkfor (fun e -> for_eigen bodyfn e sloc) var sloc
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Can't for over " (var : expr_typed_located)]
@@ -189,7 +185,7 @@ type decl_context =
   ; dadlevel: autodifftype }
 
 let rec unsizedtype_to_string = function
-  | Ast.UMatrix -> "matrix"
+  | UMatrix -> "matrix"
   | UVector -> "vector"
   | URowVector -> "row_vector"
   | UReal -> "real"
@@ -244,7 +240,7 @@ let extract_constraint_args = function
 let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let forl = constraint_forl decl_trans in
   let chk fn args =
-    let texpr_type = Ast.remove_size decl_type in
+    let texpr_type = remove_size decl_type in
     forl
       (fun id ->
         {stmt= NRFunApp (fn_check, fn :: id :: trans_exprs args); sloc} )
@@ -254,8 +250,7 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
   let constraint_str = mkstring sloc (constraint_to_string decl_trans Check) in
   let args = extract_constraint_args decl_trans in
   match decl_trans with
-  | Ast.Identity | Offset _ | Ast.Multiplier _ | Ast.OffsetMultiplier (_, _) ->
-      []
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
       gen_check decl_type decl_id (Ast.Lower lb) sloc adlevel
       @ gen_check decl_type decl_id (Ast.Upper ub) sloc adlevel
@@ -277,9 +272,9 @@ let gen_constraint dconstrain t arg =
       {arg with texpr= FunApp (fname, args)}
 
 let rec base_type = function
-  | Ast.SArray (t, _) -> base_type t
-  | SVector _ | SRowVector _ | SMatrix _ -> Ast.UReal
-  | x -> Ast.remove_size x
+  | SArray (t, _) -> base_type t
+  | SVector _ | SRowVector _ | SMatrix _ -> UReal
+  | x -> remove_size x
 
 let mkparamread id var dconstrain sizedtype transform sloc =
   let read_base var =
@@ -314,7 +309,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
     { texpr= Var decl_id
-    ; texpr_type= Ast.remove_size sizedtype
+    ; texpr_type= remove_size sizedtype
     ; texpr_adlevel= dadlevel
     ; texpr_loc= sloc }
   in
@@ -436,7 +431,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
   | Ast.FunDef {returntype; funname; arguments; body} ->
       let fdbody = trans_stmt body |> unwrap_block in
       let fdrt =
-        match returntype with Ast.Void -> None | ReturnType ut -> Some ut
+        match returntype with Void -> None | ReturnType ut -> Some ut
       in
       let fdargs = List.map ~f:trans_arg arguments in
       FunDef {fdrt; fdname= funname.name; fdargs; fdbody} |> swrap
