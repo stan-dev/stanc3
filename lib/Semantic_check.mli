@@ -14,10 +14,10 @@ val model_name : string ref
     clashes and used in code generation. *)
 
 val inferred_unsizedtype_of_indexed :
-     location_span
-  -> unsizedtype
-  -> (typed_expression index * unsizedtype) sexp_list
-  -> unsizedtype
+     Mir.location_span
+  -> Mir.unsizedtype
+  -> (typed_expression index * Mir.unsizedtype) sexp_list
+  -> Mir.unsizedtype
 (** [inferred_unsizedtype_of_indexed loc ut typed_idxs] is responsible for figuring
     out what the return (unsized) type of an indexing operation into an unsized
     type is.*)
