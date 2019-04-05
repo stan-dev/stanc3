@@ -633,7 +633,7 @@ let lazy_code_motion (mir : typed_prog) =
         ~init:ExprMap.empty ~f:(fun accum e ->
           match e.texpr with
           | Lit (_, _) -> accum
-          | FunApp (f, _) when String.suffix f 3 = "_lp" -> accum
+          | _ when can_side_effect_expr e -> accum
           | _ -> Map.set accum ~key:e ~data:(Util.gensym ()) )
     in
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
@@ -4328,14 +4328,14 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
     Parse.parse_string Parser.Incremental.program
       {|
       functions {
-        int foo_lp() { target += 1; return 24; }
-        int foo() { return 24; }
+        int foo_lp(int x) { target += 1; return 24; }
+        int foo(int x) { return 24; }
       }
       model {
-        print(foo_lp());
-        print(foo_lp());
-        print(foo());
-        print(foo());
+        print(foo(foo_lp(1)));
+        print(foo(foo_lp(1)));
+        print(foo(foo(1)));
+        print(foo(foo(1)));
       }
       |}
   in
@@ -4349,7 +4349,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       ((functions_block
         (((sloc <opaque>)
           (stmt
-           (FunDef (fdrt (UInt)) (fdname foo_lp) (fdargs ())
+           (FunDef (fdrt (UInt)) (fdname foo_lp) (fdargs ((AutoDiffable x UInt)))
             (fdbody
              ((sloc <opaque>)
               (stmt
@@ -4369,7 +4369,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
                           (texpr (Lit Int 24)) (texpr_adlevel DataOnly))))))))))))))))))
          ((sloc <opaque>)
           (stmt
-           (FunDef (fdrt (UInt)) (fdname foo) (fdargs ())
+           (FunDef (fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable x UInt)))
             (fdbody
              ((sloc <opaque>)
               (stmt
@@ -4390,19 +4390,43 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
          ((sloc <opaque>)
           (stmt
            (NRFunApp print
-            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
+            (((texpr_type UInt) (texpr_loc <opaque>)
+              (texpr
+               (FunApp foo
+                (((texpr_type UInt) (texpr_loc <opaque>)
+                  (texpr
+                   (FunApp foo_lp
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                      (texpr_adlevel DataOnly)))))
+                  (texpr_adlevel DataOnly)))))
               (texpr_adlevel DataOnly))))))
          ((sloc <opaque>)
           (stmt
            (NRFunApp print
-            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo_lp ()))
+            (((texpr_type UInt) (texpr_loc <opaque>)
+              (texpr
+               (FunApp foo
+                (((texpr_type UInt) (texpr_loc <opaque>)
+                  (texpr
+                   (FunApp foo_lp
+                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                      (texpr_adlevel DataOnly)))))
+                  (texpr_adlevel DataOnly)))))
               (texpr_adlevel DataOnly))))))
          ((sloc <opaque>)
           (stmt
            (Assignment
             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var sym34__))
              (texpr_adlevel DataOnly))
-            ((texpr_type UInt) (texpr_loc <opaque>) (texpr (FunApp foo ()))
+            ((texpr_type UInt) (texpr_loc <opaque>)
+             (texpr
+              (FunApp foo
+               (((texpr_type UInt) (texpr_loc <opaque>)
+                 (texpr
+                  (FunApp foo
+                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
+                     (texpr_adlevel DataOnly)))))
+                 (texpr_adlevel DataOnly)))))
              (texpr_adlevel DataOnly)))))
          ((sloc <opaque>)
           (stmt
