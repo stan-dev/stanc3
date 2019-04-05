@@ -21,6 +21,12 @@ pipeline {
                 }
             }
             steps {
+
+                /* makes sure permissions on files are correct */
+                runShell("""
+                    sudo chown -R 1000:1000 *
+                """)
+
                 /* runs 'dune build @install'*/
                 runShell("""
                     eval \$(opam env)
@@ -53,6 +59,11 @@ pipeline {
                 }
             }
             steps {
+
+                /* makes sure permissions on files are correct */
+                runShell("""
+                    sudo chown -R 1000:1000 *
+                """)
 
                 /* runs 'dune build @install' command and then outputs the stdout*/
                 runShell("""
