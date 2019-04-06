@@ -15,17 +15,12 @@ pipeline {
         stage("Build & Test") {
             agent {            
                 dockerfile {
-                    filename 'docker/dev-ubuntu/Dockerfile'
+                    filename 'docker/debian/Dockerfile'
                     //Forces image to ignore entrypoint
-                    args "-u 1000:1000 --entrypoint=\'\'"
+                    args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
-
-                /* makes sure permissions on files are correct */
-                runShell("""
-                    sudo chown -R 1000:1000 *
-                """)
 
                 /* runs 'dune build @install'*/
                 runShell("""
@@ -46,7 +41,7 @@ pipeline {
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
                 //Cleans the workspace
-                deleteDir()
+                runShell("rm -rf ./*")
 
             }
         }
@@ -59,11 +54,6 @@ pipeline {
                 }
             }
             steps {
-
-                /* makes sure permissions on files are correct */
-                runShell("""
-                    sudo chown -R 1000:1000 *
-                """)
 
                 /* runs 'dune build @install' command and then outputs the stdout*/
                 runShell("""
@@ -84,7 +74,7 @@ pipeline {
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
                 //Cleans the workspace
-                deleteDir()
+                runShell("rm -rf ./*")
 
             }
         }
