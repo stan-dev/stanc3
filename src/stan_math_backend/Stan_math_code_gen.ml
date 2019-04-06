@@ -17,7 +17,7 @@
 *)
 
 open Core_kernel
-open Mir
+open Stan_mir.Mir
 open Fmt
 
 let rec stantype_prim_str = function
@@ -194,8 +194,9 @@ let pp_returntype ppf arg_types rt =
     (option ~none:(const string "void") (pp_unsizedtype_custom_scalar scalar))
     rt
 
-let pp_location ppf loc =
-  pf ppf "current_statement__ = %S;@;" (Errors.string_of_location_span loc)
+let pp_location ppf loc_span =
+  pf ppf "current_statement__ = %S;@;"
+    (Stan_mir.Mir.location_span_to_string loc_span)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location

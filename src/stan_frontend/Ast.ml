@@ -1,6 +1,8 @@
 (** Abstract syntax tree *)
 open Core_kernel
 
+open Stan_mir
+
 (** Our type for identifiers, on which we record a location *)
 type identifier =
   {name: string; id_loc: Mir.location_span sexp_opaque [@compare.ignore]}

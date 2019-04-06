@@ -351,6 +351,44 @@ let rec sexp_of_stmt_loc {stmt; _} =
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
 (* ===================== Some helper functions and values ====================== *)
+
+let rec location_to_string loc =
+  let included_from_str =
+    match loc.included_from with
+    | None -> ""
+    | Some loc2 ->
+        Format.sprintf ", included from\n%s" (location_to_string loc2)
+  in
+  Format.sprintf "file %s, line %d, column %d%s" loc.filename loc.line_num
+    loc.col_num included_from_str
+
+let file_line_col_string {begin_loc; end_loc} =
+  let bf = begin_loc.filename
+  and ef = end_loc.filename
+  and bl = begin_loc.line_num
+  and el = end_loc.line_num
+  and bc = begin_loc.col_num
+  and ec = end_loc.col_num in
+  if bf = ef then
+    sprintf "file %s, %s" bf
+      ( if bl = el then
+        sprintf "line %d, %s" bl
+          ( if bc = ec then sprintf "column %d" bc
+          else sprintf "columns %d-%d" bc ec )
+      else sprintf "line %d, column %d to line %d, column %d" bl bc el ec )
+  else
+    sprintf "file %s, line %d, column %d to file %s, line %d, column %d" bf bl
+      bc ef el ec
+
+(** Render a location_span as a string *)
+let location_span_to_string loc =
+  let included_from_str =
+    match loc.begin_loc.included_from with
+    | None -> ""
+    | Some loc -> sprintf ", included from\n%s" (location_to_string loc)
+  in
+  sprintf "%s%s" (file_line_col_string loc) included_from_str
+
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
 

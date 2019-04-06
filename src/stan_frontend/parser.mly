@@ -2,7 +2,7 @@
 
 %{
 open Core_kernel
-open Mir
+open Stan_mir.Mir
 open Ast
 open Debugging
 open Errors

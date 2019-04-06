@@ -1,5 +1,6 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
+open Stan_mir
 open Ast
 
 val get_stan_math_function_return_type_opt :

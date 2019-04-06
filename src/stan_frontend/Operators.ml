@@ -1,6 +1,7 @@
 (* -- Helpers for treatment of operators -- *)
 
 open Core_kernel
+open Stan_mir
 open Type_conversion
 open Ast
 

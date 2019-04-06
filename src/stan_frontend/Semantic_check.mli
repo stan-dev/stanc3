@@ -1,6 +1,7 @@
 (** Semantic validation of AST*)
 
 open Core_kernel
+open Stan_mir
 open Ast
 
 val semantic_check_program : untyped_program -> typed_program

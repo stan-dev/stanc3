@@ -1,7 +1,9 @@
 (** stanc console application *)
 
 open Core_kernel
-open Stanclib
+open Stan_mir
+open Stan_math_backend
+open Stan_frontend
 
 (** The main program. *)
 let version = "stanc version 3.0 alpha"

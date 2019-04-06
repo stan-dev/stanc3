@@ -4,6 +4,7 @@
 during parsing and are in fact irrelevant for building up the parse tree *)
 
 open Core_kernel
+open Stan_mir
 open Symbol_table
 open Ast
 open Stan_math_signatures

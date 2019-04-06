@@ -1,6 +1,7 @@
 (** Some functions for checking whether conversions between types are allowed *)
 
 open Ast
+open Stan_mir
 
 val check_compatible_arguments_mod_conv :
      string

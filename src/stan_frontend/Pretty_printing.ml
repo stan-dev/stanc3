@@ -5,6 +5,7 @@
 (* TODO: we could consider cutting off lines after 80 characters *)
 
 open Core_kernel
+open Stan_mir
 open Ast
 
 let indent_num = ref 1

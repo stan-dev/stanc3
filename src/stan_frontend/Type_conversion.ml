@@ -1,17 +1,17 @@
 (** Some functions for checking whether conversions between types are allowed *)
 
 open Core_kernel
-open Mir
+open Stan_mir
 open Ast
 
 let autodifftype_can_convert at1 at2 =
-  match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
+  match (at1, at2) with Mir.DataOnly, Mir.AutoDiffable -> false | _ -> true
 
 let check_of_same_type_mod_conv name t1 t2 =
   if String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
     match (t1, t2) with
-    | UReal, UInt -> true
+    | Mir.UReal, UInt -> true
     | UFun (l1, rt1), UFun (l2, rt2) ->
         rt1 = rt2
         && List.for_all
@@ -24,7 +24,7 @@ let check_of_same_type_mod_conv name t1 t2 =
 
 let rec check_of_same_type_mod_array_conv name t1 t2 =
   match (t1, t2) with
-  | UArray t1elt, UArray t2elt ->
+  | Mir.UArray t1elt, Mir.UArray t2elt ->
       check_of_same_type_mod_array_conv name t1elt t2elt
   | _ -> check_of_same_type_mod_conv name t1 t2
 
@@ -40,7 +40,7 @@ let check_compatible_arguments_mod_conv name args1 args2 =
 
 let check_of_compatible_return_type rt1 srt2 =
   match (rt1, srt2) with
-  | Void, NoReturnType
+  | Mir.Void, NoReturnType
    |Void, Incomplete Void
    |Void, Complete Void
    |Void, AnyReturnType ->

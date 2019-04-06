@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Stan_mir.Mir
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
@@ -531,7 +531,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : Mir.stmt_loc list)] ;
+  print_s [%sexp (op : stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
