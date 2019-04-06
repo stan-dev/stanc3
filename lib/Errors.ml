@@ -1,13 +1,13 @@
 (** Setup of our compiler errors *)
 
 open Core_kernel
-open Ast
+open Mir
 
 (** Our type of syntax error information *)
 type parse_error =
   | Lexing of string * location
   | Include of string * location
-  | Parsing of string * Ast.location_span
+  | Parsing of string * location_span
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error

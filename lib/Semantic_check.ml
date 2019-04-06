@@ -54,12 +54,12 @@ let type_of_expr_typed ue = ue.expr_typed_type
 
 let rec unsizedtype_contains_int ut =
   match ut with
-  | UInt -> true
+  | Mir.UInt -> true
   | UArray ut -> unsizedtype_contains_int ut
   | _ -> false
 
 let rec unsizedtype_of_sizedtype = function
-  | SInt -> UInt
+  | Mir.SInt -> Mir.UInt
   | SReal -> UReal
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
@@ -67,15 +67,15 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_ad_type = function
-  | [] -> DataOnly
+  | [] -> Mir.DataOnly
   | x :: xs ->
       let y = lub_ad_type xs in
-      if compare_autodifftype x y < 0 then y else x
+      if Mir.compare_autodifftype x y < 0 then y else x
 
 let calculate_autodifftype at ut =
   match at with
   | (Param | TParam | Model) when not (unsizedtype_contains_int ut) ->
-      AutoDiffable
+      Mir.AutoDiffable
   | _ -> DataOnly
 
 let has_int_type ue = ue.expr_typed_type = UInt
@@ -109,8 +109,9 @@ let probability_distribution_name_variants id =
 
 let lub_rt loc rt1 rt2 =
   match (rt1, rt2) with
-  | ReturnType UReal, ReturnType UInt | ReturnType UInt, ReturnType UReal ->
-      ReturnType UReal
+  | Mir.ReturnType UReal, Mir.ReturnType UInt
+   |ReturnType UInt, ReturnType UReal ->
+      Mir.ReturnType UReal
   | rt1, rt2 when rt1 = rt2 -> rt2
   | _ ->
       semantic_error ~loc
@@ -291,7 +292,7 @@ and semantic_check_autodifftype at = at
 
 (* Probably nothing to do here *)
 and semantic_check_returntype = function
-  | Void -> Void
+  | Mir.Void -> Mir.Void
   | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
 
 (* Probably nothing to do here *)
@@ -311,7 +312,7 @@ and semantic_error_e {expr_typed_loc; _} msg =
   semantic_error ~loc:expr_typed_loc msg
 
 and semantic_check_sizedtype cf = function
-  | SInt -> SInt
+  | Mir.SInt -> Mir.SInt
   | SReal -> SReal
   | SVector e ->
       let ue = semantic_check_expression_of_int_type cf e "Vector sizes" in
@@ -401,12 +402,12 @@ and inferred_unsizedtype_of_indexed loc ut typed_indexl =
   match (ut, typed_indexl) with
   (* Here, we need some special logic to deal with row and column vectors
      properly. *)
-  | UMatrix, [(All, _); (Single _, UInt)]
+  | Mir.UMatrix, [(All, _); (Single _, Mir.UInt)]
    |UMatrix, [(Upfrom _, _); (Single _, UInt)]
    |UMatrix, [(Downfrom _, _); (Single _, UInt)]
    |UMatrix, [(Between _, _); (Single _, UInt)]
    |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-      UVector
+      Mir.UVector
   | ut, [] -> ut
   | ut, typed_index :: typed_indices -> (
       let reduce_type =
@@ -521,7 +522,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       and originblock, type_ =
-        Option.value ~default:(MathLibrary, UMathLibraryFunction) ut
+        Option.value ~default:(MathLibrary, Mir.UMathLibraryFunction) ut
       in
       { expr_typed= Variable uid
       ; expr_typed_ad_level= calculate_autodifftype originblock type_
@@ -803,7 +804,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       in
       let array_type =
         if List.exists ~f:(fun x -> List.hd_exn elementtypes <> x) elementtypes
-        then UArray UReal
+        then Mir.UArray UReal
         else UArray (List.hd_exn elementtypes)
       in
       let returnblock = lub_ad_e ues in
@@ -816,7 +817,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let elementtypes = List.map ~f:(fun y -> y.expr_typed_type) ues in
       let ut =
         if List.for_all ~f:(fun x -> x = UReal || x = UInt) elementtypes then
-          URowVector
+          Mir.URowVector
         else if List.for_all ~f:(fun x -> x = URowVector) elementtypes then
           UMatrix
         else
@@ -841,7 +842,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let uindices_with_types =
         List.map
           ~f:(function
-            | Single e as i -> (i, e.expr_typed_type) | i -> (i, UInt))
+            | Single e as i -> (i, e.expr_typed_type) | i -> (i, Mir.UInt))
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
@@ -849,7 +850,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           ( at
           :: List.map
                ~f:(function
-                 | All -> DataOnly
+                 | All -> Mir.DataOnly
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                      lub_ad_type [at; ue1.expr_typed_ad_level]
                  | Between (ue1, ue2) ->
@@ -1369,7 +1370,7 @@ and semantic_check_statement cf s =
         match e.expr_typed_ad_level with AutoDiffable -> false | _ -> f ()
       in
       let rec check_sizes_data_only = function
-        | SVector ue -> not_ptq ue (fun () -> true)
+        | Mir.SVector ue -> not_ptq ue (fun () -> true)
         | SRowVector ue -> not_ptq ue (fun () -> true)
         | SMatrix (ue1, ue2) ->
             not_ptq ue1 (fun () ->
@@ -1519,7 +1520,7 @@ and semantic_check_statement cf s =
           in
           match Option.map ~f:snd (List.hd uarg_types) with
           | None -> semantic_error ~loc error_string
-          | Some UReal
+          | Some Mir.UReal
            |Some UVector
            |Some URowVector
            |Some UMatrix

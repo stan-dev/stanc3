@@ -9,5 +9,6 @@ math_iface/gen/*
 *.merlin
 test/*.log
 _build
+_opam
 .#*
 

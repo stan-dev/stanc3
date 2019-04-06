@@ -11,9 +11,62 @@ open Core_kernel
        - mark FnApps as containing print or reject
 *)
 
+(** Source code locations *)
+type location =
+  { filename: string
+  ; line_num: int
+  ; col_num: int
+  ; included_from: location option }
+
+(** Delimited locations *)
+type location_span = {begin_loc: location; end_loc: location}
+
+let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
+
+(** Unsized types for function arguments and for decorating expressions
+    during type checking; we have a separate type here for Math library
+    functions as these functions can be overloaded, so do not have a unique
+    type in the usual sense. Still, we want to assign a unique type to every
+    expression during type checking.  *)
+type unsizedtype =
+  | UInt
+  | UReal
+  | UVector
+  | URowVector
+  | UMatrix
+  | UArray of unsizedtype
+  | UFun of (autodifftype * unsizedtype) list * returntype
+  | UMathLibraryFunction
+[@@deriving sexp, hash]
+
+(** Flags for data only arguments to functions *)
+and autodifftype = DataOnly | AutoDiffable [@@deriving sexp, hash, compare]
+
+and returntype = Void | ReturnType of unsizedtype [@@deriving sexp, hash]
+
+(** Sized types, for variable declarations *)
+type 'e sizedtype =
+  | SInt
+  | SReal
+  | SVector of 'e
+  | SRowVector of 'e
+  | SMatrix of 'e * 'e
+  | SArray of 'e sizedtype * 'e
+[@@deriving sexp, compare, map, hash]
+
+(** remove_size [st] discards size information from a sizedtype
+    to return an unsizedtype. *)
+let rec remove_size = function
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix _ -> UMatrix
+  | SArray (t, _) -> UArray (remove_size t)
+
 type litType = Int | Real | Str [@@deriving sexp, hash]
 
-and 'e index =
+type 'e index =
   | All
   | Single of 'e
   (*
@@ -23,10 +76,11 @@ and 'e index =
   | Downfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e
+[@@deriving sexp, hash, map]
 
 (** XXX
 *)
-and 'e expr =
+type 'e expr =
   | Var of string
   | Lit of litType * string
   | FunApp of string * 'e list
@@ -34,61 +88,6 @@ and 'e expr =
   (* XXX And and Or nodes*)
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map]
-
-let pp_builtin_syntax = Fmt.(string |> styled `Yellow)
-
-let rec pp_expr pp_e ppf = function
-  | Var varname -> Fmt.string ppf varname
-  | Lit (Str, str) -> Fmt.pf ppf "%S" str
-  | Lit (_, str) -> Fmt.string ppf str
-  | FunApp (name, args) ->
-      Fmt.string ppf name ;
-      Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
-  | TernaryIf (pred, texpr, fexpr) ->
-      Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
-        pp_e texpr pp_builtin_syntax ":" pp_e fexpr
-  | Indexed (expr, indices) ->
-      Fmt.pf ppf {|@[%a%a@]|} pp_e expr
-        Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
-        indices
-
-and pp_index pp_e ppf = function
-  | All -> Fmt.char ppf ':'
-  | Single index -> pp_e ppf index
-  | Upfrom index -> Fmt.pf ppf {|%a:|} pp_e index
-  | Downfrom index -> Fmt.pf ppf {|:%a|} pp_e index
-  | Between (lower, upper) -> Fmt.pf ppf {|%a:%a|} pp_e lower pp_e upper
-  | MultiIndex index -> Fmt.pf ppf {|%a|} pp_e index
-
-type unsizedtype = Ast.unsizedtype [@@deriving sexp, hash]
-type 'e sizedtype = 'e Ast.sizedtype [@@deriving sexp, hash, map]
-type autodifftype = Ast.autodifftype [@@deriving sexp, hash]
-
-let angle_brackets pp_v ppf v = Fmt.pf ppf "@[<1><%a>@]" pp_v v
-let label str pp_v ppf v = Fmt.pf ppf "%s=%a" str pp_v v
-let pp_keyword = Fmt.(string |> styled `Blue)
-
-let pp_autodifftype ppf = function
-  | Ast.DataOnly -> pp_keyword ppf "data "
-  | Ast.AutoDiffable -> ()
-
-let rec pp_unsizedtype ppf = function
-  | Ast.UInt -> pp_keyword ppf "int"
-  | UReal -> pp_keyword ppf "real"
-  | UVector -> pp_keyword ppf "vector"
-  | URowVector -> pp_keyword ppf "row_vector"
-  | UMatrix -> pp_keyword ppf "matrix"
-  | UArray ut -> (Fmt.brackets pp_unsizedtype) ppf ut
-  | UFun (argtypes, rt) ->
-      Fmt.pf ppf {|%a => %a|}
-        Fmt.(list (pair ~sep:comma pp_autodifftype pp_unsizedtype) ~sep:comma)
-        argtypes pp_returntype rt
-  | UMathLibraryFunction ->
-      (angle_brackets Fmt.string) ppf "Stan Math function"
-
-and pp_returntype ppf = function
-  | Ast.Void -> Fmt.string ppf "void"
-  | Ast.ReturnType ut -> pp_unsizedtype ppf ut
 
 (* This directive silences some spurious warnings from ppx_deriving *)
 [@@@ocaml.warning "-A"]
@@ -125,56 +124,114 @@ and ('e, 's) statement =
       ; fdbody: 's }
 [@@deriving sexp, hash, map]
 
+type io_block =
+  | Data
+  | Parameters
+  | TransformedParameters
+  | GeneratedQuantities
+[@@deriving sexp, hash]
+
+type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
+
+type ('e, 's) prog =
+  { functions_block: 's list
+  ; input_vars: 'e io_var list
+  ; prepare_data: 's list (* data & transformed data decls and statements *)
+  ; prepare_params: 's list (* param & tparam decls and statements *)
+  ; log_prob: 's list (*assumes data & params are in scope and ready*)
+  ; generate_quantities: 's list (* assumes data & params ready & in scope*)
+  ; transform_inits: 's list
+  ; output_vars: 'e io_var list
+  ; prog_name: string
+  ; prog_path: string }
+[@@deriving sexp]
+
+type expr_typed_located =
+  { texpr_type: unsizedtype
+  ; texpr_loc: location_span sexp_opaque [@compare.ignore]
+  ; texpr: expr_typed_located expr
+  ; texpr_adlevel: autodifftype }
+[@@deriving sexp, hash, map, of_sexp]
+
+type stmt_loc =
+  { sloc: location_span sexp_opaque [@compare.ignore]
+  ; stmt: (expr_typed_located, stmt_loc) statement }
+[@@deriving hash, map, sexp, of_sexp]
+
+type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
+
+(* == Pretty printers ======================================================= *)
+
+let pp_builtin_syntax = Fmt.(string |> styled `Yellow)
+let pp_keyword = Fmt.(string |> styled `Blue)
+let angle_brackets pp_v ppf v = Fmt.pf ppf "@[<1><%a>@]" pp_v v
+let label str pp_v ppf v = Fmt.pf ppf "%s=%a" str pp_v v
+
+let pp_autodifftype ppf = function
+  | DataOnly -> pp_keyword ppf "data "
+  | AutoDiffable -> ()
+
+let rec pp_unsizedtype ppf = function
+  | UInt -> pp_keyword ppf "int"
+  | UReal -> pp_keyword ppf "real"
+  | UVector -> pp_keyword ppf "vector"
+  | URowVector -> pp_keyword ppf "row_vector"
+  | UMatrix -> pp_keyword ppf "matrix"
+  | UArray ut -> (Fmt.brackets pp_unsizedtype) ppf ut
+  | UFun (argtypes, rt) ->
+      Fmt.pf ppf {|%a => %a|}
+        Fmt.(list (pair ~sep:comma pp_autodifftype pp_unsizedtype) ~sep:comma)
+        argtypes pp_returntype rt
+  | UMathLibraryFunction ->
+      (angle_brackets Fmt.string) ppf "Stan Math function"
+
+and pp_returntype ppf = function
+  | Void -> Fmt.string ppf "void"
+  | ReturnType ut -> pp_unsizedtype ppf ut
+
+let rec pp_sizedtype pp_e ppf st =
+  match st with
+  | SInt -> Fmt.string ppf "int"
+  | SReal -> Fmt.string ppf "real"
+  | SVector expr -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
+  | SRowVector expr -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
+  | SMatrix (d1_expr, d2_expr) ->
+      Fmt.pf ppf {|matrix%a|}
+        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+        (d1_expr, d2_expr)
+  | SArray (st, expr) ->
+      Fmt.pf ppf {|array%a|}
+        Fmt.(
+          pair ~sep:comma (fun ppf st -> pp_sizedtype pp_e ppf st) pp_e
+          |> brackets)
+        (st, expr)
+
+let rec pp_expr pp_e ppf = function
+  | Var varname -> Fmt.string ppf varname
+  | Lit (Str, str) -> Fmt.pf ppf "%S" str
+  | Lit (_, str) -> Fmt.string ppf str
+  | FunApp (name, args) ->
+      Fmt.string ppf name ;
+      Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
+  | TernaryIf (pred, texpr, fexpr) ->
+      Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
+        pp_e texpr pp_builtin_syntax ":" pp_e fexpr
+  | Indexed (expr, indices) ->
+      Fmt.pf ppf {|@[%a%a@]|} pp_e expr
+        Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
+        indices
+
+and pp_index pp_e ppf = function
+  | All -> Fmt.char ppf ':'
+  | Single index -> pp_e ppf index
+  | Upfrom index -> Fmt.pf ppf {|%a:|} pp_e index
+  | Downfrom index -> Fmt.pf ppf {|:%a|} pp_e index
+  | Between (lower, upper) -> Fmt.pf ppf {|%a:%a|} pp_e lower pp_e upper
+  | MultiIndex index -> Fmt.pf ppf {|%a|} pp_e index
+
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" pp_autodifftype autodifftype pp_unsizedtype unsizedtype
     name
-
-let pp_transformation pp_e ppf = function
-  | Ast.Identity -> ()
-  | Lower expr -> (pp_e |> label "lower" |> angle_brackets) ppf expr
-  | Upper expr -> (pp_e |> label "upper" |> angle_brackets) ppf expr
-  | LowerUpper (lower_expr, upper_expr) ->
-      ( Fmt.(pair ~sep:comma (pp_e |> label "lower") (pp_e |> label "upper"))
-      |> angle_brackets )
-        ppf (lower_expr, upper_expr)
-  | Offset expr -> (pp_e |> label "offet" |> angle_brackets) ppf expr
-  | Multiplier expr -> (pp_e |> label "multiplier" |> angle_brackets) ppf expr
-  | OffsetMultiplier (offset_expr, mult_expr) ->
-      ( Fmt.(
-          pair ~sep:comma (pp_e |> label "offset") (pp_e |> label "multiplier"))
-      |> angle_brackets )
-        ppf (offset_expr, mult_expr)
-  | Ordered -> (angle_brackets Fmt.string) ppf "ordered"
-  | PositiveOrdered -> (angle_brackets Fmt.string) ppf "positive_ordered"
-  | Simplex -> (angle_brackets Fmt.string) ppf "simplex"
-  | UnitVector -> (angle_brackets Fmt.string) ppf "unit_vector"
-  | CholeskyCorr -> (angle_brackets Fmt.string) ppf "cholesky_factor_corr"
-  | CholeskyCov -> (angle_brackets Fmt.string) ppf "cholesky_factor_cov"
-  | Correlation -> (angle_brackets Fmt.string) ppf "corr_matrix"
-  | Covariance -> (angle_brackets Fmt.string) ppf "cov_matrix"
-
-let rec pp_sizedtype pp_e ppf (st, trans) =
-  match st with
-  | Ast.SInt -> Fmt.pf ppf {|%s%a|} "int" (pp_transformation pp_e) trans
-  | Ast.SReal -> Fmt.pf ppf {|%s%a|} "real" (pp_transformation pp_e) trans
-  | Ast.SVector expr ->
-      Fmt.pf ppf {|vector%a%a|} (pp_transformation pp_e) trans
-        (Fmt.brackets pp_e) expr
-  | Ast.SRowVector expr ->
-      Fmt.pf ppf {|row_vector%a%a|} (pp_transformation pp_e) trans
-        (Fmt.brackets pp_e) expr
-  | Ast.SMatrix (d1_expr, d2_expr) ->
-      Fmt.pf ppf {|matrix%a%a|} (pp_transformation pp_e) trans
-        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
-        (d1_expr, d2_expr)
-  | Ast.SArray (st, expr) ->
-      Fmt.pf ppf {|array%a%a|} (pp_transformation pp_e) trans
-        Fmt.(
-          pair ~sep:comma
-            (fun ppf st -> pp_sizedtype pp_e ppf (st, Ast.Identity))
-            pp_e
-          |> brackets)
-        (st, expr)
 
 let rec pp_statement pp_e pp_s ppf = function
   | Assignment (assignee, expr) ->
@@ -205,7 +262,7 @@ let rec pp_statement pp_e pp_s ppf = function
   | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_sizedtype pp_e)
-        (decl_type, Ast.Identity) decl_id
+        decl_type decl_id
   | FunDef {fdrt; fdname; fdargs; fdbody} -> (
     match fdrt with
     | Some rt ->
@@ -217,24 +274,15 @@ let rec pp_statement pp_e pp_s ppf = function
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )
 
-type io_block =
-  | Data
-  | Parameters
-  | TransformedParameters
-  | GeneratedQuantities
-[@@deriving sexp, hash]
-
 let pp_io_block ppf = function
   | Data -> Fmt.string ppf "data"
   | Parameters -> Fmt.string ppf "parameters"
   | TransformedParameters -> Fmt.string ppf "transformed_parameters"
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
-type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
-
 let pp_io_var pp_e ppf (name, (sized_ty, io_block)) =
   Fmt.pf ppf "@[<h>%a %a %s;@]" pp_io_block io_block (pp_sizedtype pp_e)
-    (sized_ty, Ast.Identity) name
+    sized_ty name
 
 let pp_block label pp_elem ppf elems =
   Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
@@ -243,19 +291,6 @@ let pp_block label pp_elem ppf elems =
   Format.pp_force_newline ppf ()
 
 let pp_io_var_block label pp_e = pp_block label (pp_io_var pp_e)
-
-type ('e, 's) prog =
-  { functions_block: 's list
-  ; input_vars: 'e io_var list
-  ; prepare_data: 's list (* data & transformed data decls and statements *)
-  ; prepare_params: 's list (* param & tparam decls and statements *)
-  ; log_prob: 's list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 's list (* assumes data & params ready & in scope*)
-  ; transform_inits: 's list
-  ; output_vars: 'e io_var list
-  ; prog_name: string
-  ; prog_path: string }
-[@@deriving sexp]
 
 let pp_input_vars pp_e ppf {input_vars; _} =
   pp_io_var_block "input_vars" pp_e ppf input_vars
@@ -299,20 +334,8 @@ let pp_prog pp_e pp_s ppf prog =
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
-type expr_typed_located =
-  { texpr_type: Ast.unsizedtype
-  ; texpr_loc: Ast.location_span sexp_opaque [@compare.ignore]
-  ; texpr: expr_typed_located expr
-  ; texpr_adlevel: autodifftype }
-[@@deriving sexp, hash, map, of_sexp]
-
 let rec pp_expr_typed_located ppf {texpr; _} =
   pp_expr pp_expr_typed_located ppf texpr
-
-type stmt_loc =
-  { sloc: Ast.location_span sexp_opaque [@compare.ignore]
-  ; stmt: (expr_typed_located, stmt_loc) statement }
-[@@deriving hash, map, of_sexp]
 
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
@@ -325,13 +348,11 @@ let rec sexp_of_stmt_loc {stmt; _} =
   | SList ls -> sexp_of_list sexp_of_stmt_loc ls
   | s -> sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc s
 
-type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
-
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
 (* ===================== Some helper functions and values ====================== *)
-let no_loc = {Ast.filename= ""; line_num= 0; col_num= 0; included_from= None}
-let no_span = {Ast.begin_loc= no_loc; end_loc= no_loc}
+let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
+let no_span = {begin_loc= no_loc; end_loc= no_loc}
 
 let internal_expr =
   { texpr= Var "UHOH"
