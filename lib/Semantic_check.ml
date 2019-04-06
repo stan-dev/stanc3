@@ -7,7 +7,6 @@ open Core_kernel
 open Symbol_table
 open Ast
 open Stan_math_signatures
-open Operators
 open Errors
 open Type_conversion
 open Pretty_printing
@@ -18,6 +17,70 @@ open Pretty_printing
 (* Top level function semantic_check_program declares the AST while operating
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
+
+let string_of_operator = Mir.mk_string_of sexp_of_operator
+let operator_of_string = Mir.mk_of_string operator_of_sexp
+let ternary_if = "TernaryIf__"
+
+let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
+let%test "good op name" = operator_of_string "Plus__" = Some Plus
+
+(** A hash table to hold some name conversions between the AST nodes and the
+    Stan Math name of the operator *)
+let string_of_operators =
+  Map.Poly.of_alist_multi
+    [ (string_of_operator Plus, "add")
+    ; (string_of_operator PPlus, "plus")
+    ; (string_of_operator Minus, "subtract")
+    ; (string_of_operator PMinus, "minus")
+    ; (string_of_operator Times, "multiply")
+    ; (string_of_operator Divide, "mdivide_right")
+    ; (string_of_operator Divide, "divide")
+    ; (string_of_operator Modulo, "modulus")
+    ; (string_of_operator LDivide, "mdivide_left")
+    ; (string_of_operator EltTimes, "elt_multiply")
+    ; (string_of_operator EltDivide, "elt_divide")
+    ; (string_of_operator Pow, "pow")
+    ; (string_of_operator Or, "logical_or")
+    ; (string_of_operator And, "logical_and")
+    ; (string_of_operator Equals, "logical_eq")
+    ; (string_of_operator NEquals, "logical_neq")
+    ; (string_of_operator Less, "logical_lt")
+    ; (string_of_operator Leq, "logical_lte")
+    ; (string_of_operator Greater, "logical_gt")
+    ; (string_of_operator Geq, "logical_gte")
+    ; (string_of_operator PNot, "logical_negation")
+    ; (string_of_operator Transpose, "transpose")
+    ; (ternary_if, "if_else")
+      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
+    ; ("(OperatorAssign Plus)", "assign_add")
+    ; ("(OperatorAssign Minus)", "assign_subtract")
+    ; ("(OperatorAssign Times)", "assign_multiply")
+    ; ("(OperatorAssign Divide)", "assign_divide")
+    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
+    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
+
+(** Querying stan_math_signatures for operator signatures by string name *)
+let operator_return_type_from_string op_name args =
+  if op_name = "Assign" || op_name = "ArrowAssign" then
+    match args with
+    | [{expr_typed_type= ut1; _}; {expr_typed_type= ut2; _}]
+      when check_of_same_type_mod_array_conv "" ut1 ut2 ->
+        Some Mir.Void
+    | _ -> None
+  else
+    Map.Poly.find_multi string_of_operators op_name
+    |> List.find_map ~f:(fun name ->
+           Stan_math_signatures.stan_math_returntype name args )
+
+let operator_return_type op =
+  operator_return_type_from_string (string_of_operator op)
+
+(** Print all the signatures of a stan math operator, for the purposes of error messages. *)
+let pretty_print_all_operator_signatures name =
+  Map.Poly.find_multi string_of_operators name
+  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> String.concat ~sep:"\n"
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -472,7 +535,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name uop)
+            ^ pretty_print_all_operator_signatures (string_of_operator uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ ", "
@@ -491,7 +554,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name uop)
+            ^ pretty_print_all_operator_signatures (string_of_operator uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
@@ -508,7 +571,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name op)
+            ^ pretty_print_all_operator_signatures (string_of_operator op)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
@@ -841,7 +904,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let uindices_with_types =
         List.map
           ~f:(function
-            | Single e as i -> (i, e.expr_typed_type) | i -> (i, Mir.UInt))
+            | Single e as i -> (i, e.expr_typed_type) | i -> (i, Mir.UInt) )
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
@@ -854,7 +917,8 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                      lub_ad_type [at; ue1.expr_typed_ad_level]
                  | Between (ue1, ue2) ->
                      lub_ad_type
-                       [at; ue1.expr_typed_ad_level; ue2.expr_typed_ad_level])
+                       [at; ue1.expr_typed_ad_level; ue2.expr_typed_ad_level]
+                 )
                uindices )
       in
       let at = inferred_ad_type_of_indexed ue.expr_typed_ad_level uindices
@@ -1372,7 +1436,8 @@ and semantic_check_statement cf s =
                 match ue2.expr_typed_ad_level with
                 | AutoDiffable -> false
                 | _ -> true )
-        | SArray (ust2, ue) -> not_ptq ue (fun () -> check_sizes_data_only ust2)
+        | SArray (ust2, ue) ->
+            not_ptq ue (fun () -> check_sizes_data_only ust2)
         | _ -> true
       in
       (* Sizes must be of level at most data. *)
@@ -1434,7 +1499,8 @@ and semantic_check_statement cf s =
                   ; assign_indices= _
                   ; assign_op= Assign
                   ; assign_rhs= ue }
-            ; stmt_typed_returntype= NoReturnType; _ } ->
+            ; stmt_typed_returntype= NoReturnType
+            ; _ } ->
               Some ue
           | _ -> fatal_error () )
       in
@@ -1456,7 +1522,7 @@ and semantic_check_statement cf s =
             | at, ut, id ->
                 ( semantic_check_autodifftype at
                 , semantic_check_unsizedtype ut
-                , semantic_check_identifier id ))
+                , semantic_check_identifier id ) )
           args
       in
       let uarg_types = List.map ~f:(function w, y, _ -> (w, y)) uargs in
@@ -1560,7 +1626,8 @@ and semantic_check_statement cf s =
         List.map2 ~f:(Symbol_table.enter vm) uarg_names
           (List.map
              ~f:(function
-               | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
+               | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut)
+               )
              uarg_types)
       in
       let ub =

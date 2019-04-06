@@ -352,15 +352,28 @@ let internal_expr =
 
 let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
-(* Internal function names *)
-let fn_length = "Length__"
-let fn_make_array = "MakeArray__"
-let fn_make_rowvec = "MakeRowVec__"
-let fn_negative_infinity = "negative_infinity"
-let fn_read_data = "ReadData__"
-let fn_read_param = "ReadParam__"
-let fn_constrain = "Constrain__"
-let fn_unconstrain = "Unconstrain__"
-let fn_check = "Check__"
-let fn_print = "Print__"
-let fn_reject = "Reject__"
+type internal_fn =
+  | FnLength
+  | FnMakeArray
+  | FnMakeRowVec
+  | FnNegInf
+  | FnReadData
+  | FnReadParam
+  | FnConstrain
+  | FnUnconstrain
+  | FnCheck
+  | FnPrint
+  | FnReject
+[@@deriving sexp]
+
+let mk_string_of sexp_of x = Sexp.to_string (sexp_of x) ^ "__"
+let string_of_internal_fn = mk_string_of sexp_of_internal_fn
+
+let mk_of_string of_sexp x =
+  try
+    String.chop_suffix_exn ~suffix:"__" x |> Sexp.of_string |> of_sexp |> Some
+  with
+  | Sexplib.Conv.Of_sexp_error _ -> None
+  | Invalid_argument _ -> None
+
+let internal_fn_of_string = mk_of_string internal_fn_of_sexp

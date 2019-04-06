@@ -64,7 +64,10 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
 *)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
-    { texpr= FunApp (fn_length, [{internal_expr with texpr= Var name}])
+    { texpr=
+        FunApp
+          ( string_of_internal_fn FnLength
+          , [{internal_expr with texpr= Var name}] )
     ; texpr_loc= no_span
     ; texpr_type= UInt
     ; texpr_adlevel= DataOnly }
@@ -109,7 +112,8 @@ let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
     match adtype with AutoDiffable -> true | _ -> false
   in
-  List.filter ~f:is_autodiff args |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
+  List.filter ~f:is_autodiff args
+  |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
@@ -140,15 +144,16 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
 
-let math_fn_translations =
-  Map.Poly.of_alist_exn
-    [ (fn_print, ("stan_print", [{internal_expr with texpr= Var "pstream__"}]))
-    ; (fn_length, ("length", [])) ]
+let math_fn_translations = function
+  | FnPrint ->
+      Some ("stan_print", [{internal_expr with texpr= Var "pstream__"}])
+  | FnLength -> Some ("length", [])
+  | _ -> None
 
 let trans_math_fn fname =
-  match Map.Poly.find math_fn_translations fname with
-  | Some x -> x
-  | None -> (fname, [])
+  Option.(
+    value ~default:(fname, [])
+      (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
@@ -164,7 +169,7 @@ let rec pp_statement ppf {stmt; sloc} =
       pf ppf "@[<hov 4>%a =@;%a;@]" pp_expr assignee pp_expr rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
   | NRFunApp (fname, {texpr= Lit (Str, check_name); _} :: args)
-    when fname = fn_check ->
+    when fname = string_of_internal_fn FnCheck ->
       let args = {internal_expr with texpr= Var "function__"} :: args in
       pp_statement ppf {stmt= NRFunApp ("check_" ^ check_name, args); sloc}
   | NRFunApp (fname, args) ->
@@ -224,7 +229,10 @@ let rec pp_statement ppf {stmt; sloc} =
 let%expect_test "location propagates" =
   let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
   let loc2 = {no_span with begin_loc= {no_loc with filename= "LO"}} in
-  {sloc= loc1; stmt= Block [{stmt= NRFunApp (fn_print, []); sloc= loc2}]}
+  { sloc= loc1
+  ; stmt=
+      Block [{stmt= NRFunApp (string_of_internal_fn FnPrint, []); sloc= loc2}]
+  }
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
