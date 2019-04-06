@@ -50,7 +50,7 @@ pipeline {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
                     //Forces image to ignore entrypoint
-                    args "-u 1000:1000 --entrypoint=\'\'"
+                    args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
