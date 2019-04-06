@@ -1,19 +1,18 @@
 open Core_kernel
 open Mir
+open Fmt
 
 let ends_with suffix s = String.is_suffix ~suffix s
 let starts_with prefix s = String.is_prefix ~prefix s
 
 let functions_requiring_namespace =
-  Set.Poly.of_list
+  String.Set.of_list
     [ "e"; "pi"; "log2"; "log10"; "sqrt2"; "not_a_number"; "positive_infinity"
     ; "negative_infinity"; "machine_precision"; "abs"; "acos"; "acosh"; "asin"
     ; "asinh"; "atan"; "atan2"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"
     ; "erfc"; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"
     ; "log2"; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"
     ; "trunc"; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
-
-let contains_elt lst elt = List.mem lst elt ~equal:( = )
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -35,30 +34,51 @@ let is_row_vector e = e.texpr_type = URowVector
 (* stub *)
 let pretty_print _e = "pretty printed e"
 
-(* stub *)
-let rec gen_return_type = function
-  | Void -> "void"
-  | ReturnType rt -> gen_type_ut rt
-
-(* terrible quadratic implementation *)
-and gen_arg_types = function
-  | [] -> ""
-  | [(_adt, ut)] -> gen_type_ut ut
-  | (_adt, ut) :: ts -> sprintf "%s, %s" (gen_type_ut ut) (gen_arg_types ts)
-
-and gen_type_ut = function
+let rec stantype_prim_str = function
   | UInt -> "int"
-  | UReal -> "local_scalar_t__"
-  | UVector -> "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | URowVector -> "Eigen::Matrix<local_scalar_t, 1, -1>"
-  | UMatrix -> "Eigen::Matrix<local_scalar_t, -1, 1>"
-  | UArray t -> sprintf "std::vector<%s>" (gen_type_ut t)
-  | UFun (args_t, return_t) ->
-      sprintf "std::function<%s(%s)>" (gen_return_type return_t)
-        (gen_arg_types args_t)
-  | UMathLibraryFunction -> "std::function<void()>"
+  | UArray t -> stantype_prim_str t
+  | _ -> "double"
 
-let gen_type e = gen_type_ut e.texpr_type
+let local_scalar ut = function
+  | DataOnly -> stantype_prim_str ut
+  | AutoDiffable -> "local_scalar_t__"
+
+(* stub *)
+let rec pp_return_type ppf = function
+  | Void -> pf ppf "void"
+  | ReturnType rt -> pp_unsizedtype ppf rt
+
+and pp_unsizedtype_custom_scalar ppf (scalar, ut) =
+  match ut with
+  | UInt | UReal -> string ppf scalar
+  | UArray t ->
+      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
+  | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
+  | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
+  | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  | x -> raise_s [%message (x : unsizedtype) "not implemented yet"]
+
+and pp_unsizedtype_local ppf (adtype, ut) =
+  let s = local_scalar ut adtype in
+  pp_unsizedtype_custom_scalar ppf (s, ut)
+
+and pp_unsizedtype ppf ut =
+  match ut with
+  | UInt -> pf ppf "int"
+  | UReal -> pf ppf "local_scalar_t__"
+  | UVector -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
+  | URowVector -> pf ppf "Eigen::Matrix<local_scalar_t, 1, -1>"
+  | UMatrix -> pf ppf "Eigen::Matrix<local_scalar_t, -1, 1>"
+  | UArray t -> pf ppf "std::vector<%a>" pp_unsizedtype t
+  | UFun (args_t, return_t) ->
+      let arg_types = List.map ~f:snd args_t in
+      pf ppf "std::function<%a(%a)>" pp_return_type return_t
+        (list ~sep:(const string ", ") pp_unsizedtype)
+        arg_types
+  | UMathLibraryFunction -> pf ppf "std::function<void()>"
+
+let pp_expr_type ppf e =
+  pp_unsizedtype_local ppf (e.texpr_adlevel, e.texpr_type)
 
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]
@@ -66,201 +86,222 @@ let suffix_args f =
   else []
 
 let user_defined_args f = if is_user_defined f then ["pstream__"] else []
+let gen_extra_fun_args f = suffix_args f @ user_defined_args f
 
-let gen_extra_fun_args f =
-  String.concat ~sep:", " (List.append (suffix_args f) (user_defined_args f))
-
-let include_sep s1 s2 = String.length s1 > 0 && String.length s2 > 0
-
-let gen_sep s1 s2 =
-  sprintf "%s%s%s" s1 (if include_sep s1 s2 then ", " else "") s2
-
-let rec gen_exprs = function
-  | [] -> ""
-  | [hd] -> gen_expr hd
-  | hd :: tl -> sprintf "%s, %s" (gen_expr hd) (gen_exprs tl)
-
-and gen_index = function
-  | All -> "stan::model::index_omni()"
-  | Single e -> sprintf "stan::model::index_uni(%s)" (gen_expr e)
-  | Upfrom e -> sprintf "stan::model::index_min(%s)" (gen_expr e)
-  | Downfrom e -> sprintf "stan::model::index_max(%s)" (gen_expr e)
+let rec pp_index ppf = function
+  | All -> pf ppf "stan::model::index_omni()"
+  | Single e -> pf ppf "stan::model::index_uni(%a)" pp_expr e
+  | Upfrom e -> pf ppf "stan::model::index_min(%a)" pp_expr e
+  | Downfrom e -> pf ppf "stan::model::index_max(%a)" pp_expr e
   | Between (e_low, e_high) ->
-      sprintf "stan::model::index_min_max(%s, %s)" (gen_expr e_low)
-        (gen_expr e_high)
-  | MultiIndex e -> sprintf "stan::model::index_multi(%s)" (gen_expr e)
+      pf ppf "stan::model::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
+  | MultiIndex e -> pf ppf "stan::model::index_multi(%a)" pp_expr e
 
-and gen_indexes = function
-  | [] -> "stan::model::nil_index_list()"
+and pp_indexes ppf = function
+  | [] -> pf ppf "stan::model::nil_index_list()"
   | idx :: idxs ->
-      sprintf "stan::model::cons_list(%s, %s)" (gen_index idx)
-        (gen_indexes idxs)
+      pf ppf "stan::model::cons_list(%a, %a)" pp_index idx pp_indexes idxs
 
-and gen_short_circuit_logical_op op es =
-  sprintf "(stan::math::value(%s) %s stan::math::value(%s))"
-    (gen_expr (List.nth_exn es 0))
-    op
-    (gen_expr (List.nth_exn es 1))
+and pp_logical_op ppf op lhs rhs =
+  pf ppf "(stan::math::value(%a) %s stan::math::value(%a))" pp_expr lhs op
+    pp_expr rhs
 
-and gen_unary fm es = sprintf fm (gen_expr (List.hd_exn es))
-and gen_binary fm es = sprintf fm (gen_expr (first es)) (gen_expr (second es))
+and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
+and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
 and first es = List.nth_exn es 0
 and second es = List.nth_exn es 1
 
-and gen_scalar_binary scalar_fmt generic_fmt es =
-  gen_binary
+and pp_scalar_binary ppf scalar_fmt generic_fmt es =
+  pp_binary ppf
     ( if is_scalar (first es) && is_scalar (second es) then scalar_fmt
     else generic_fmt )
     es
 
-(* assumes everything well formed from parser checks *)
-and gen_fun_app f es =
+and gen_operator_app = function
+  | Ast.Plus -> fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
+  | Ast.PMinus ->
+      fun ppf es ->
+        pp_unary ppf
+          (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
+          es
+  | PPlus -> fun ppf es -> pp_unary ppf "%a" es
+  | Transpose ->
+      fun ppf es ->
+        pp_unary ppf
+          (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
+          es
+  | PNot -> fun ppf es -> pp_unary ppf "logial_negation(%a)" es
+  | Minus ->
+      fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es
+  | Times ->
+      fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "multiply(%a, %a)" es
+  | Divide ->
+      fun ppf es ->
+        if
+          is_matrix (second es)
+          && (is_matrix (first es) || is_row_vector (first es))
+        then pp_binary ppf "mdivide_right(%a, %a)" es
+        else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es
+  | Modulo -> fun ppf es -> pp_binary ppf "modulus(%a, %a)" es
+  | LDivide -> fun ppf es -> pp_binary ppf "mdivide_left(%a, %a)" es
+  | And | Or ->
+      raise_s [%message "And/Or should have been converted to an expression"]
+  | EltTimes ->
+      fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es
+  | EltDivide ->
+      fun ppf es -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
+  | Pow -> fun ppf es -> pp_binary ppf "pow(%a, %a)" es
+  | Equals -> fun ppf es -> pp_binary ppf "logical_eq(%a, %a)" es
+  | NEquals -> fun ppf es -> pp_binary ppf "logical_neq(%a, %a)" es
+  | Less -> fun ppf es -> pp_binary ppf "logical_lt(%a, %a)" es
+  | Leq -> fun ppf es -> pp_binary ppf "logical_lte(%a, %a)" es
+  | Greater -> fun ppf es -> pp_binary ppf "logical_gt(%a, %a)" es
+  | Geq -> fun ppf es -> pp_binary ppf "logical_gte(%a, %a)" es
+
+and gen_misc_special_math_app f =
   match f with
-  | "And" -> gen_short_circuit_logical_op "&&" es
-  | "Or" -> gen_short_circuit_logical_op "||" es
-  | "PMinus" ->
-      gen_unary (if is_scalar (List.hd_exn es) then "-%s" else "minus(%s)") es
-  | "PPlus" -> gen_unary "%s" es
-  | "Transpose" ->
-      gen_unary
-        (if is_scalar (List.hd_exn es) then "transpose(%s)" else "%s")
-        es
-  | "PNot" -> gen_unary "logial_negation(%s)" es
-  | "Minus" -> gen_scalar_binary "(%s - %s)" "subtract(%s, %s)" es
-  | "Plus" -> gen_scalar_binary "(%s + %s)" "add(%s, %s)" es
-  | "Times" -> gen_scalar_binary "(%s * %s)" "multiply(%s, %s)" es
-  | "Divide" ->
-      if
-        is_matrix (second es)
-        && (is_matrix (first es) || is_row_vector (first es))
-      then gen_binary "mdivide_right(%s, %s)" es
-      else gen_scalar_binary "(%s / %s)" "divide(%s, %s)" es
-  | "Modulo" -> gen_binary "modulus(%s, %s)" es
-  | "LDivide" -> gen_binary "mdivide_left(%s, %s)" es
-  | "EltTimes" -> gen_scalar_binary "(%s * %s)" "elt_multiply(%s, %s)" es
-  | "EltDivide" -> gen_scalar_binary "(%s / %s)" "elt_divide(%s, %s)" es
-  | "Pow" -> gen_binary "pow(%s, %s)" es
-  | "Equals" -> gen_binary "logical_eq(%s, %s)" es
-  | "NEquals" -> gen_binary "logical_neq(%s, %s)" es
-  | "Less" -> gen_binary "logical_lt(%s, %s)" es
-  | "Leq" -> gen_binary "logical_lte(%s, %s)" es
-  | "Greater" -> gen_binary "logical_gt(%s, %s)" es
-  | "Geq" -> gen_binary "logical_gte(%s, %s)" es
-  | "lmultiply" -> gen_binary "multiply_log(%s, %s)" es
-  | "lchoose" -> gen_binary "binomial_coefficient_log(%s, %s)" es
-  | "target" -> "get_lp(lp__, lp_accum__)"
-  | "get_lp" -> "get_lp(lp__, lp_accum__)"
+  | "lmultiply" -> Some (fun ppf es -> pp_binary ppf "multiply_log(%a, %a)" es)
+  | "lchoose" ->
+      Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
+  | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
+  | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "max" ->
-      if List.length es = 2 then gen_binary "std::max(%s, %s)" es
-      else gen_ordinary_function f es
+      Some
+        (fun ppf es ->
+          if List.length es = 2 then pp_binary ppf "std::max(%a, %a)" es
+          else pp_ordinary_fn ppf f es )
   | "min" ->
-      if List.length es = 2 then gen_binary "std::min(%s, %s)" es
-      else gen_ordinary_function f es
+      Some
+        (fun ppf es ->
+          if List.length es = 2 then pp_binary ppf "std::min(%a, %a)" es
+          else pp_ordinary_fn ppf f es )
   | "ceil" ->
-      if is_scalar (first es) then gen_unary "std::ceil(%s)" es
-      else gen_ordinary_function f es
-  | _ -> gen_ordinary_function (stan_namespace_qualify f) es
+      Some
+        (fun ppf es ->
+          if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
+          else pp_ordinary_fn ppf f es )
+  | _ -> None
 
-and gen_ordinary_function f es =
-  sprintf "%s(%s)" f (gen_sep (gen_exprs es) (gen_extra_fun_args f))
+and read_data_or_param ut ppf es =
+  let i_or_r =
+    match ut with
+    | UInt -> "i"
+    | UReal -> "r"
+    | UVector | URowVector | UMatrix | UArray _
+     |UFun (_, _)
+     |UMathLibraryFunction ->
+        raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
+  in
+  pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
-and gen_expr (e : expr_typed_located) =
+and gen_mir_special_apps ut = function
+  | FnLength -> fun ppf es -> pp_unary ppf "length(%a)" es
+  | FnMakeArray -> fun ppf es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
+  | FnReadData | FnReadParam -> read_data_or_param ut
+  | FnConstrain -> pp_constrain_funapp "constrain"
+  | FnUnconstrain -> pp_constrain_funapp "unconstrain"
+  | _ -> fun ppf _ -> pf ppf "XXX TODO "
+
+(* assumes everything well formed from parser checks *)
+and gen_fun_app ppf ut f es =
+  let default ppf es = pp_ordinary_fn ppf (stan_namespace_qualify f) es in
+  let pp =
+    [ Option.map ~f:gen_operator_app (Ast.operator_of_string f)
+    ; gen_misc_special_math_app f
+    ; Option.map ~f:(gen_mir_special_apps ut) (internal_fn_of_string f) ]
+    |> List.filter_opt |> List.hd |> Option.value ~default
+  in
+  pp ppf es
+
+(* XXX actually, for params we have to combine read and constrain into one funapp *)
+and pp_constrain_funapp constrain_or_un_str ppf = function
+  | var
+    :: {texpr= Lit (Str, constraint_flavor); _}
+       :: {texpr= Lit (Str, base_type); _} :: dims ->
+      pf ppf "%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
+        constrain_or_un_str (list ~sep:comma pp_expr) (var :: dims)
+  | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
+
+and pp_ordinary_fn ppf f es =
+  let extra_args = gen_extra_fun_args f in
+  let sep = if List.is_empty extra_args then "" else ", " in
+  pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
+    (sep ^ String.concat ~sep:", " extra_args)
+
+and pp_expr ppf (e : expr_typed_located) =
   match e.texpr with
-  | Var s -> s
-  | Lit (Str, s) -> sprintf "%S" s
-  | Lit (_, s) -> s
-  | FunApp (f, es) -> gen_fun_app f es
+  | Var s -> pf ppf "%s" s
+  | Lit (Str, s) -> pf ppf "%S" s
+  | Lit (_, s) -> pf ppf "%s" s
+  | FunApp (f, es) -> gen_fun_app ppf e.texpr_type f es
+  | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
+  | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
-      if types_match et ef then
-        sprintf "(%s ? %s : %s)" (gen_expr ec) (gen_expr et) (gen_expr ef)
-      else
-        sprintf
-          "(%s ? stan::math::promote_scalar<%s>(%s) : \
-           stan::math::promote_scalar<%s>(%s)"
-          (gen_expr ec) (gen_type e) (gen_expr et) (gen_type e) (gen_expr ef)
+      let promoted ppf (t, e) =
+        pf ppf "stan::math::promote_scalar<%a>(%a)" pp_expr_type t pp_expr e
+      in
+      let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
+      if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
+      else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, idx) ->
-      sprintf "stan::model::rvalue(%s, %s, %S)" (gen_expr e) (gen_indexes idx)
+      pf ppf "stan::model::rvalue(%a, %a, %S)" pp_expr e pp_indexes idx
         (pretty_print e)
-
-let%expect_test "endswith1" =
-  printf "%B" (ends_with "" "") ;
-  [%expect {| true |}]
-
-let%expect_test "endswith2" =
-  printf "%B" (ends_with "" "a") ;
-  [%expect {| true |}]
-
-let%expect_test "endswith3" =
-  printf "%B" (ends_with "b" "") ;
-  [%expect {| false |}]
-
-let%expect_test "endswith4" =
-  printf "%B" (ends_with "c" "c") ;
-  [%expect {| true |}]
-
-let%expect_test "endswith5" =
-  printf "%B" (ends_with "_rng" "foo_rng") ;
-  [%expect {| true |}]
-
-let%expect_test "endswith5" =
-  printf "%B" (ends_with "_rng" "_r") ;
-  [%expect {| false |}]
 
 (* these functions are just for testing *)
 let dummy_locate e =
   {texpr= e; texpr_type= UInt; texpr_adlevel= DataOnly; texpr_loc= no_span}
 
-let gen_unlocated e = gen_expr (dummy_locate e)
+let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 
-let%expect_test "gen_expr1" =
-  printf "%s" (gen_unlocated (Var "a")) ;
+let%expect_test "pp_expr1" =
+  printf "%s" (pp_unlocated (Var "a")) ;
   [%expect {| a |}]
 
-let%expect_test "gen_expr2" =
-  printf "%s" (gen_unlocated (Lit (Str, "b"))) ;
+let%expect_test "pp_expr2" =
+  printf "%s" (pp_unlocated (Lit (Str, "b"))) ;
   [%expect {| "b" |}]
 
-let%expect_test "gen_expr3" =
-  printf "%s" (gen_unlocated (Lit (Int, "112"))) ;
+let%expect_test "pp_expr3" =
+  printf "%s" (pp_unlocated (Lit (Int, "112"))) ;
   [%expect {| 112 |}]
 
-let%expect_test "gen_expr4" =
-  printf "%s" (gen_unlocated (Lit (Int, "112"))) ;
+let%expect_test "pp_expr4" =
+  printf "%s" (pp_unlocated (Lit (Int, "112"))) ;
   [%expect {| 112 |}]
 
-let%expect_test "gen_expr5" =
-  printf "%s" (gen_unlocated (FunApp ("pi", []))) ;
+let%expect_test "pp_expr5" =
+  printf "%s" (pp_unlocated (FunApp ("pi", []))) ;
   [%expect {| stan::math::pi() |}]
 
-let%expect_test "gen_expr6" =
+let%expect_test "pp_expr6" =
   printf "%s"
-    (gen_unlocated (FunApp ("sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated (FunApp ("sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
-let%expect_test "gen_expr7" =
+let%expect_test "pp_expr7" =
   printf "%s"
-    (gen_unlocated
+    (pp_unlocated
        (FunApp
           ( "atan2"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan2(123, 1.2) |}]
 
-let%expect_test "gen_expr9" =
+let%expect_test "pp_expr9" =
   printf "%s"
-    (gen_unlocated
+    (pp_unlocated
        (TernaryIf
           ( dummy_locate (Lit (Int, "1"))
           , dummy_locate (Lit (Real, "1.2"))
           , dummy_locate (Lit (Real, "2.3")) ))) ;
   [%expect {| (1 ? 1.2 : 2.3) |}]
 
-let%expect_test "gen_expr10" =
-  printf "%s" (gen_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
+let%expect_test "pp_expr10" =
+  printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
   [%expect
     {| stan::model::rvalue(a, stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list()), "pretty printed e") |}]
 
-let%expect_test "gen_expr11" =
+let%expect_test "pp_expr11" =
   printf "%s"
-    (gen_unlocated (FunApp ("poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated (FunApp ("poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| poisson_rng(123, base_rng__) |}]

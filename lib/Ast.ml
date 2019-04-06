@@ -249,6 +249,8 @@ type untyped_program = untyped_statement program
 (** Typed programs (after type checking) *)
 type typed_program = typed_statement program [@@deriving sexp, compare, map]
 
+(*========================== Helper functions ===============================*)
+
 (** Forgetful function from typed to untyped expressions *)
 let rec untyped_expression_of_typed_expression {expr_typed; expr_typed_loc; _}
     =
@@ -266,3 +268,6 @@ let rec untyped_statement_of_typed_statement {stmt_typed; stmt_typed_loc; _} =
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
+
+let string_of_operator = Mir.mk_string_of sexp_of_operator
+let operator_of_string = Mir.mk_of_string operator_of_sexp
