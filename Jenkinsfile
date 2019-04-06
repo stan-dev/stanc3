@@ -15,12 +15,13 @@ pipeline {
         stage("Build & Test") {
             agent {            
                 dockerfile {
-                    filename 'docker/dev-ubuntu/Dockerfile'
+                    filename 'docker/debian/Dockerfile'
                     //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                    args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
+
                 /* runs 'dune build @install'*/
                 runShell("""
                     eval \$(opam env)
@@ -40,7 +41,7 @@ pipeline {
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
                 //Cleans the workspace
-                deleteDir()
+                runShell("rm -rf ./*")
 
             }
         }
@@ -49,7 +50,7 @@ pipeline {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
                     //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                    args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
@@ -73,7 +74,7 @@ pipeline {
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
                 //Cleans the workspace
-                deleteDir()
+                runShell("rm -rf ./*")
 
             }
         }

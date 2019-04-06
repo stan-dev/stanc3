@@ -29,8 +29,16 @@
    sudo apt-get install opam mingw-w64 gcc m4 -y
 ```
 3. Init opam, create and switch to 4.07.0, update environment shell
+
+If your distro supports `bwrap`
 ```
-   opam init --disable-sandboxing -y
+opam init
+```
+If your distro does not support `bwrap`
+```
+opam init --disable-sandboxing -y
+```
+```
    opam switch create 4.07.0
    opam switch 4.07.0
    eval $(opam env)
@@ -39,7 +47,7 @@
 ```
 opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
-5. If desired, request the compiler to be built with flambda optimizers:
+5. Request the compiler to be built with flambda optimizers:
 ```
    opam install conf-flambda-windows
 ```
@@ -94,6 +102,7 @@ Switch to the root of the project and run
    dune build @install
    dune runtest
 ```
+
 
 
 
