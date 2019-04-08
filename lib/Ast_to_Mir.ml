@@ -101,7 +101,7 @@ let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
       | Ast.PString s -> mkstring texpr_loc (unquote s)
-      | Ast.PExpr e -> trans_expr e )
+      | Ast.PExpr e -> trans_expr e)
     ps
 
 (** [add_index expression index] returns an expression that (additionally)

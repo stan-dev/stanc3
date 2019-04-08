@@ -112,8 +112,7 @@ let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
     match adtype with AutoDiffable -> true | _ -> false
   in
-  List.filter ~f:is_autodiff args
-  |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
+  List.filter ~f:is_autodiff args |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]

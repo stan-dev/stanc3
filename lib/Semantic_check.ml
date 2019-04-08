@@ -904,7 +904,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let uindices_with_types =
         List.map
           ~f:(function
-            | Single e as i -> (i, e.expr_typed_type) | i -> (i, Mir.UInt) )
+            | Single e as i -> (i, e.expr_typed_type) | i -> (i, Mir.UInt))
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
@@ -917,8 +917,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                      lub_ad_type [at; ue1.expr_typed_ad_level]
                  | Between (ue1, ue2) ->
                      lub_ad_type
-                       [at; ue1.expr_typed_ad_level; ue2.expr_typed_ad_level]
-                 )
+                       [at; ue1.expr_typed_ad_level; ue2.expr_typed_ad_level])
                uindices )
       in
       let at = inferred_ad_type_of_indexed ue.expr_typed_ad_level uindices
@@ -1436,8 +1435,7 @@ and semantic_check_statement cf s =
                 match ue2.expr_typed_ad_level with
                 | AutoDiffable -> false
                 | _ -> true )
-        | SArray (ust2, ue) ->
-            not_ptq ue (fun () -> check_sizes_data_only ust2)
+        | SArray (ust2, ue) -> not_ptq ue (fun () -> check_sizes_data_only ust2)
         | _ -> true
       in
       (* Sizes must be of level at most data. *)
@@ -1499,8 +1497,7 @@ and semantic_check_statement cf s =
                   ; assign_indices= _
                   ; assign_op= Assign
                   ; assign_rhs= ue }
-            ; stmt_typed_returntype= NoReturnType
-            ; _ } ->
+            ; stmt_typed_returntype= NoReturnType; _ } ->
               Some ue
           | _ -> fatal_error () )
       in
@@ -1522,7 +1519,7 @@ and semantic_check_statement cf s =
             | at, ut, id ->
                 ( semantic_check_autodifftype at
                 , semantic_check_unsizedtype ut
-                , semantic_check_identifier id ) )
+                , semantic_check_identifier id ))
           args
       in
       let uarg_types = List.map ~f:(function w, y, _ -> (w, y)) uargs in
@@ -1626,8 +1623,7 @@ and semantic_check_statement cf s =
         List.map2 ~f:(Symbol_table.enter vm) uarg_names
           (List.map
              ~f:(function
-               | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut)
-               )
+               | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
              uarg_types)
       in
       let ub =
