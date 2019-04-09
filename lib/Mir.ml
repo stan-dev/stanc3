@@ -94,7 +94,7 @@ and 'e expr =
 type fun_arg_decl = (autodifftype * string * unsizedtype) list
 
 and ('e, 's) statement =
-  | Assignment of 'e * 'e
+  | Assignment of string * 'e index list * 'e
   | TargetPE of 'e
   | NRFunApp of string * 'e list
   | Break
@@ -214,9 +214,12 @@ let rec pp_expr pp_e ppf = function
       Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
         pp_e texpr pp_builtin_syntax ":" pp_e fexpr
   | Indexed (expr, indices) ->
-      Fmt.pf ppf {|@[%a%a@]|} pp_e expr
-        Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
-        indices
+      pp_indexed pp_e ppf (Fmt.strf "%a" pp_e expr, indices)
+
+and pp_indexed pp_e ppf (ident, indices) =
+  Fmt.pf ppf {|@[%s%a@]|} ident
+    Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
+    indices
 
 and pp_index pp_e ppf = function
   | All -> Fmt.char ppf ':'
@@ -231,8 +234,9 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
     name
 
 let rec pp_statement pp_e pp_s ppf = function
-  | Assignment (assignee, expr) ->
-      Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} pp_e assignee pp_e expr
+  | Assignment (assignee, idcs, rhs) ->
+      Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
+        rhs
   | TargetPE expr ->
       Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
   | NRFunApp (name, args) ->

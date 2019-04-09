@@ -287,6 +287,17 @@ let rec base_type = function
   | SVector _ | SRowVector _ | SMatrix _ -> UReal
   | x -> remove_size x
 
+let expr_to_lhs {texpr; _} =
+  let throw () =
+    raise_s
+      [%message "Was expecting LHS, got " (texpr : expr_typed_located expr)]
+  in
+  match texpr with
+  | Var v -> (v, [])
+  | Indexed (v, indices) ->
+      ((match v.texpr with Var v -> v | _ -> throw ()), indices)
+  | _ -> throw ()
+
 let mkparamread id var dconstrain sizedtype transform sloc =
   let read_base var =
     { var with
@@ -294,9 +305,11 @@ let mkparamread id var dconstrain sizedtype transform sloc =
         FunApp (string_of_internal_fn FnReadParam, [mkstring var.texpr_loc id])
     ; texpr_type= base_type sizedtype }
   in
+  let vident, indices = expr_to_lhs var in
   let constrain var =
     { stmt=
-        Assignment (var, gen_constraint dconstrain transform (read_base var))
+        Assignment
+          (vident, indices, gen_constraint dconstrain transform (read_base var))
     ; sloc }
   in
   for_eigen constrain var sloc
@@ -308,7 +321,10 @@ let mkdataread id var sizedtype sloc =
         FunApp (string_of_internal_fn FnReadData, [mkstring var.texpr_loc id])
     ; texpr_type= base_type sizedtype }
   in
-  let read_assign var = {stmt= Assignment (var, read_base var); sloc} in
+  let vident, indices = expr_to_lhs var in
+  let read_assign var =
+    {stmt= Assignment (vident, indices, read_base var); sloc}
+  in
   for_scalar read_assign var sloc
 
 let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
@@ -316,9 +332,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   let with_sloc stmt = {stmt; sloc} in
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
-  let assign rhs =
-    {stmt= Assignment ({rhs with texpr= Var decl_id}, rhs); sloc}
-  in
+  let assign rhs = {stmt= Assignment (decl_id, [], rhs); sloc} in
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
     { texpr= Var decl_id
@@ -382,7 +396,9 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
         | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
         | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
       in
-      Assignment (trans_expr assignee, rhs) |> swrap
+      Assignment
+        (assign_identifier.name, List.map ~f:trans_idx assign_indices, rhs)
+      |> swrap
   | Ast.NRFunApp ({name; _}, args) ->
       NRFunApp (name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
@@ -428,8 +444,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
       and indexing_var = wrap (Var newsym) in
       let assign_loopvar =
         Assignment
-          ( Var loopvar.name |> wrap
-          , Indexed (iteratee, [Single indexing_var]) |> wrap )
+          (loopvar.name, [], Indexed (iteratee, [Single indexing_var]) |> wrap)
       in
       let assign_loopvar = {stmt= assign_loopvar; sloc} in
       let body =
@@ -608,10 +623,7 @@ let%expect_test "read data" =
           (upper
            (FunApp FnLength__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
-           (Block
-            ((Assignment
-              (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-              (FunApp FnReadData__ ((Lit Str mat))))))))))))) |}]
+           (Block ((Assignment mat () (FunApp FnReadData__ ((Lit Str mat))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -624,7 +636,7 @@ let%expect_test "read param" =
       (upper (FunApp FnLength__ ((Var mat))))
       (body
        (Block
-        ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
+        ((Assignment mat ()
           (FunApp FnConstrain__
            ((FunApp FnReadParam__ ((Lit Str mat))) (Lit Str lb) (Lit Str real)
             (Lit Int 0))))))))) |}]
