@@ -228,6 +228,9 @@ and pp_ordinary_fn ppf f es =
   pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
+and pp_indexed ppf vident =
+  pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes
+
 and pp_expr ppf (e : expr_typed_located) =
   match e.texpr with
   | Var s -> pf ppf "%s" s
@@ -244,8 +247,7 @@ and pp_expr ppf (e : expr_typed_located) =
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, idx) ->
-      pf ppf "stan::model::rvalue(%a, %a, %S)" pp_expr e pp_indexes idx
-        (pretty_print e)
+      pp_indexed ppf (strf "%a" pp_expr e) idx (pretty_print e)
 
 (* these functions are just for testing *)
 let dummy_locate e =
