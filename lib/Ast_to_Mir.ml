@@ -7,12 +7,12 @@ let unwrap_return_exn = function
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let rec op_to_funapp op args =
-  { expr= FunApp (Ast.string_of_operator op, trans_exprs args);
-        emeta={
-  expr_type=
-      Semantic_check.operator_return_type op args |> unwrap_return_exn
-  ; expr_loc= Ast.expr_loc_lub args
-  ; expr_adlevel= Ast.expr_ad_lub args }}
+  { expr= FunApp (Ast.string_of_operator op, trans_exprs args)
+  ; emeta=
+      { expr_type=
+          Semantic_check.operator_return_type op args |> unwrap_return_exn
+      ; expr_loc= Ast.expr_loc_lub args
+      ; expr_adlevel= Ast.expr_ad_lub args } }
 
 and trans_expr
     { Ast.expr_typed
@@ -43,7 +43,7 @@ and trans_expr
         | Paren _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
             raise_s [%message "Impossible!"]
       in
-      {expr; emeta={expr_type; expr_loc; expr_adlevel}}
+      {expr; emeta= {expr_type; expr_loc; expr_adlevel}}
 
 and trans_idx = function
   | Ast.All -> All
@@ -64,21 +64,20 @@ and trans_exprs = List.map ~f:trans_expr
 let trans_sizedtype = map_sizedtype trans_expr
 
 let neg_inf =
-  {expr= FunApp (string_of_internal_fn FnNegInf, []); emeta=
-  { expr_type= UReal
-  ; expr_loc= no_span
-  ; expr_adlevel= DataOnly }}
+  { expr= FunApp (string_of_internal_fn FnNegInf, [])
+  ; emeta= {expr_type= UReal; expr_loc= no_span; expr_adlevel= DataOnly} }
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
   let trunc cond_op x y =
-    let smeta= x.Ast.expr_typed_loc in
+    let smeta = x.Ast.expr_typed_loc in
     { smeta
     ; stmt=
         IfElse
-          (op_to_funapp cond_op [ast_obs; x], {smeta; stmt= TargetPE neg_inf}, y)
-    }
+          ( op_to_funapp cond_op [ast_obs; x]
+          , {smeta; stmt= TargetPE neg_inf}
+          , y ) }
   in
   match t with
   | Ast.NoTruncate -> []
@@ -96,7 +95,8 @@ let unquote s =
    XXX add UString to MIR and maybe AST.
 *)
 let mkstring expr_loc s =
-  {expr= Lit (Str, s); emeta={expr_type= UReal; expr_loc; expr_adlevel= DataOnly}}
+  { expr= Lit (Str, s)
+  ; emeta= {expr_type= UReal; expr_loc; expr_adlevel= DataOnly} }
 
 let trans_printables expr_loc (ps : Ast.typed_expression Ast.printable list) =
   List.map
@@ -109,8 +109,8 @@ let trans_printables expr_loc (ps : Ast.typed_expression Ast.printable list) =
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
   let expr_type =
-    Semantic_check.inferred_unsizedtype_of_indexed e.emeta.expr_loc e.emeta.expr_type
-      [(i, UInt)]
+    Semantic_check.inferred_unsizedtype_of_indexed e.emeta.expr_loc
+      e.emeta.expr_type [(i, UInt)]
   in
   let mir_i = trans_idx i in
   let expr =
@@ -119,7 +119,7 @@ let add_int_index e i =
     | Indexed (e, indices) -> Indexed (e, indices @ [mir_i])
     | _ -> raise_s [%message "These should go away with Ryan's LHS"]
   in
-  {expr; emeta={e.emeta with expr_type}}
+  {expr; emeta= {e.emeta with expr_type}}
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
@@ -133,9 +133,10 @@ let mkfor bodyfn iteratee smeta =
       ; expr_typed_type= UInt }
   in
   let loopvar, reset = Util.gensym_enter () in
-  let lower = {expr= Lit (Int, "0"); emeta=internal_meta} in
+  let lower = {expr= Lit (Int, "0"); emeta= internal_meta} in
   let upper =
-    {expr= FunApp (string_of_internal_fn FnLength, [iteratee]);emeta=internal_meta }
+    { expr= FunApp (string_of_internal_fn FnLength, [iteratee])
+    ; emeta= internal_meta }
   in
   let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
   reset () ;
@@ -255,10 +256,13 @@ let rec gen_check decl_type decl_id decl_trans smeta adlevel =
             NRFunApp
               (string_of_internal_fn FnCheck, fn :: id :: trans_exprs args)
         ; smeta } )
-      {expr= Var decl_id; emeta= {expr_type; expr_loc= smeta; expr_adlevel= adlevel}}
+      { expr= Var decl_id
+      ; emeta= {expr_type; expr_loc= smeta; expr_adlevel= adlevel} }
       smeta
   in
-  let constraint_str = mkstring smeta (constraint_to_string decl_trans Check) in
+  let constraint_str =
+    mkstring smeta (constraint_to_string decl_trans Check)
+  in
   let args = extract_constraint_args decl_trans in
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
@@ -280,7 +284,7 @@ let gen_constraint dconstrain t arg =
         :: mkstring (unsizedtype_to_string arg.emeta.expr_type)
         :: trans_exprs (extract_constraint_args t)
       in
-      {expr= FunApp (fname, args); emeta=arg.emeta}
+      {expr= FunApp (fname, args); emeta= arg.emeta}
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
@@ -300,10 +304,10 @@ let expr_to_lhs {expr; _} =
 
 let mkparamread id var dconstrain sizedtype transform smeta =
   let read_base var =
-    {
-      expr=
-        FunApp (string_of_internal_fn FnReadParam, [mkstring var.emeta.expr_loc id])
-    ; emeta={var.emeta with expr_type= base_type sizedtype }}
+    { expr=
+        FunApp
+          (string_of_internal_fn FnReadParam, [mkstring var.emeta.expr_loc id])
+    ; emeta= {var.emeta with expr_type= base_type sizedtype} }
   in
   let vident, indices = expr_to_lhs var in
   let constrain var =
@@ -317,9 +321,10 @@ let mkparamread id var dconstrain sizedtype transform smeta =
 
 let mkdataread id var sizedtype smeta =
   let read_base var =
-    {expr=
-        FunApp (string_of_internal_fn FnReadData, [mkstring var.emeta.expr_loc id])
-    ; emeta={var.emeta with expr_type= base_type sizedtype }}
+    { expr=
+        FunApp
+          (string_of_internal_fn FnReadData, [mkstring var.emeta.expr_loc id])
+    ; emeta= {var.emeta with expr_type= base_type sizedtype} }
   in
   let vident, indices = expr_to_lhs var in
   let read_assign var =
@@ -335,10 +340,11 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   let assign rhs = {stmt= Assignment ((decl_id, []), rhs); smeta} in
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
-    { expr= Var decl_id; emeta={
-    expr_type= remove_size sizedtype
-    ; expr_adlevel= dadlevel
-    ; expr_loc= smeta }}
+    { expr= Var decl_id
+    ; emeta=
+        { expr_type= remove_size sizedtype
+        ; expr_adlevel= dadlevel
+        ; expr_loc= smeta } }
   in
   let read_stmt =
     match (dread, dconstrain) with
@@ -354,7 +360,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   in
   let decl_adtype =
     match rhs with
-    | Some {emeta={expr_adlevel; _}; _} -> expr_adlevel
+    | Some {emeta= {expr_adlevel; _}; _} -> expr_adlevel
     | None -> dadlevel
   in
   let decl = Decl {decl_adtype; decl_id; decl_type} |> with_smeta in
@@ -409,9 +415,10 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= smeta; _} =
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
         TargetPE
           { expr= FunApp (distribution.name, trans_exprs (arg :: args))
-          ; emeta={expr_loc
-          ; expr_adlevel= Ast.expr_ad_lub (arg :: args)
-          ; expr_type= UReal }}
+          ; emeta=
+              { expr_loc
+              ; expr_adlevel= Ast.expr_ad_lub (arg :: args)
+              ; expr_type= UReal } }
       in
       truncate_dist arg truncation @ [{smeta; stmt= add_dist}]
   | Ast.Print ps ->
@@ -438,7 +445,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= smeta; _} =
   | Ast.ForEach (loopvar, iteratee, body) ->
       let newsym = Util.gensym () in
       let wrap expr =
-        {expr; emeta={expr_loc; expr_type= UInt; expr_adlevel= DataOnly}}
+        {expr; emeta= {expr_loc; expr_type= UInt; expr_adlevel= DataOnly}}
       in
       let iteratee = trans_expr iteratee
       and indexing_var = wrap (Var newsym) in

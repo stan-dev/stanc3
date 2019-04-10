@@ -214,8 +214,9 @@ and gen_fun_app ppf ut f es =
   pp ppf es
 
 (* XXX actually, for params we have to combine read and constrain into one funapp *)
-and pp_constrain_funapp : string -> Format.formatter -> 'm expr_with list -> unit
-  = fun constrain_or_un_str ppf -> function
+and pp_constrain_funapp :
+    string -> Format.formatter -> 'm expr_with list -> unit =
+ fun constrain_or_un_str ppf -> function
   | var
     :: {expr= Lit (Str, constraint_flavor); _}
        :: {expr= Lit (Str, base_type); _} :: dims ->
@@ -252,7 +253,7 @@ and pp_expr ppf e =
 
 (* these functions are just for testing *)
 let dummy_locate e =
-  {expr= e; emeta={expr_type= UInt; expr_adlevel= DataOnly; expr_loc= no_span}}
+  {expr= e; emeta= {expr_type= UInt; expr_adlevel= DataOnly; expr_loc= no_span}}
 
 let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 

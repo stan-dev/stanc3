@@ -145,23 +145,23 @@ type ('e, 's) prog =
   ; prog_path: string }
 [@@deriving sexp]
 
-type 'm expr_with = { expr: 'm expr_with expr; emeta: 'm }
-and typed_and_located =
-  {expr_type: unsizedtype;
-   expr_loc:location_span sexp_opaque [@compare.ignore];
-   expr_adlevel: autodifftype}
+type 'm expr_with = {expr: 'm expr_with expr; emeta: 'm}
 
-and expr_typed_located = typed_and_located expr_with
-[@@deriving sexp]
+and typed_and_located =
+  { expr_type: unsizedtype
+  ; expr_loc: location_span sexp_opaque [@compare.ignore]
+  ; expr_adlevel: autodifftype }
+
+and expr_typed_located = typed_and_located expr_with [@@deriving sexp]
 
 type ('e, 'm) stmt_with = {stmt: ('e, ('e, 'm) stmt_with) statement; smeta: 'm}
 
-and stmt_loc = (expr_typed_located, location_span sexp_opaque [@compare.ignore]) stmt_with
+and stmt_loc =
+  (expr_typed_located, (location_span sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
 type expr_no_meta = unit expr_with
 type stmt_no_meta = (expr_no_meta, unit) stmt_with
-
 type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
 
 (* == Pretty printers ======================================================= *)
@@ -380,10 +380,5 @@ let mk_of_string of_sexp x =
   | Invalid_argument _ -> None
 
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
-
-let internal_meta = {
-  expr_loc= no_span;
-  expr_type= UInt;
-  expr_adlevel= DataOnly }
-
-let loop_bottom = {expr=Lit(Int, "0"); emeta=internal_meta}
+let internal_meta = {expr_loc= no_span; expr_type= UInt; expr_adlevel= DataOnly}
+let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}

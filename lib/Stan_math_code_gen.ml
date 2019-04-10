@@ -45,7 +45,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
   | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
 
 let%expect_test "set size mat array" =
-  let int i = {expr= Lit (Int, string_of_int i); emeta=internal_meta} in
+  let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
   strf "@[<v>%a@]" pp_set_size
     ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
@@ -67,10 +67,8 @@ let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
     { expr=
         FunApp
           ( string_of_internal_fn FnLength
-          , [{expr= Var name; emeta=internal_meta}] )
-    ; emeta= {expr_loc= no_span
-    ; expr_type= UInt
-    ; expr_adlevel= DataOnly }}
+          , [{expr= Var name; emeta= internal_meta}] )
+    ; emeta= {expr_loc= no_span; expr_type= UInt; expr_adlevel= DataOnly} }
   in
   let loopvar = sprintf "i_%d__" d in
   let loop_0_to_size per_ele new_vident =
@@ -143,7 +141,7 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
 
 let math_fn_translations = function
   | FnPrint ->
-      Some ("stan_print", [{expr= Var "pstream__"; emeta=internal_meta}])
+      Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
   | FnLength -> Some ("length", [])
   | _ -> None
 
@@ -166,7 +164,7 @@ let rec pp_statement ppf {stmt; smeta} =
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
   | NRFunApp (fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
-      let args = {expr= Var "function__"; emeta=internal_meta} :: args in
+      let args = {expr= Var "function__"; emeta= internal_meta} :: args in
       pp_statement ppf {stmt= NRFunApp ("check_" ^ check_name, args); smeta}
   | NRFunApp (fname, args) ->
       let fname, extra_args = trans_math_fn fname in
@@ -283,7 +281,7 @@ let pp_read_data ppf (decl_id, st, loc) =
 
 let%expect_test "read int[N] y" =
   strf "@[<v>%a@]" pp_read_data
-    ("y", SArray (SInt, {expr= Var "N"; emeta=internal_meta}), no_span)
+    ("y", SArray (SInt, {expr= Var "N"; emeta= internal_meta}), no_span)
   |> print_endline ;
   [%expect
     {|
@@ -338,7 +336,7 @@ let rec get_dims = function
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
-  let v s = {expr= Var s; emeta=internal_meta} in
+  let v s = {expr= Var s; emeta= internal_meta} in
   strf "@[%a@]" (list ~sep:comma pp_expr)
     (get_dims (SArray (SMatrix (v "x", v "y"), v "z")))
   |> print_endline ;
@@ -434,8 +432,8 @@ let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
 
 (* XXX arg templating is broken - needs T0, T1 etc in arg decl*)
 let%expect_test "udf" =
-  let with_no_loc stmt = {stmt; smeta=no_span} in
-  let w e = {expr= e; emeta=internal_meta} in
+  let with_no_loc stmt = {stmt; smeta= no_span} in
+  let w e = {expr= e; emeta= internal_meta} in
   FunDef
     { fdrt= None
     ; fdname= "sars"
