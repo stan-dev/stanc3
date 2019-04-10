@@ -93,8 +93,10 @@ and 'e expr =
 
 type fun_arg_decl = (autodifftype * string * unsizedtype) list
 
+and 'e lvalue = string * 'e index list
+
 and ('e, 's) statement =
-  | Assignment of string * 'e index list * 'e
+  | Assignment of 'e lvalue * 'e
   | TargetPE of 'e
   | NRFunApp of string * 'e list
   | Break
@@ -234,7 +236,7 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
     name
 
 let rec pp_statement pp_e pp_s ppf = function
-  | Assignment (assignee, idcs, rhs) ->
+  | Assignment ((assignee, idcs), rhs) ->
       Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
         rhs
   | TargetPE expr ->
