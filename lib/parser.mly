@@ -379,7 +379,7 @@ common_expression:
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
-    {  grammar_logger "fun_app" ; FunApp (id, args) }
+    {  grammar_logger "fun_app" ; FunApp (Mir.UserDefined, id, args) }
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN

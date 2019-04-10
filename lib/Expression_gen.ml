@@ -19,12 +19,11 @@ let stan_namespace_qualify f =
 
 (* return true if the types of the two expression are the same *)
 let types_match e1 e2 = e1.texpr_type = e2.texpr_type
+let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* "__" is an illegal suffix for user functions, used for built-in operators not in signatures *)
 let is_user_defined f =
-  (not (Stan_math_signatures.is_stan_math_function_name f))
-  && (not (ends_with "__" f))
-  && not (starts_with "stan::math::" f)
+  (not (ends_with "__" f)) && not (starts_with "stan::math::" f)
 
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e = e.texpr_type = UInt || e.texpr_type = UReal
@@ -85,7 +84,7 @@ let suffix_args f =
   else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
   else []
 
-let user_defined_args f = if is_user_defined f then ["pstream__"] else []
+let user_defined_args f = if is_stan_math f then [] else ["pstream__"]
 let gen_extra_fun_args f = suffix_args f @ user_defined_args f
 
 let rec pp_index ppf = function
@@ -233,7 +232,9 @@ and pp_expr ppf (e : expr_typed_located) =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (f, es) -> gen_fun_app ppf e.texpr_type f es
+  | FunApp (Mir.StanMath, f, es) -> gen_fun_app ppf e.texpr_type f es
+  | FunApp (Mir.UserDefined, f, es) ->
+      pp_ordinary_fn ppf (stan_namespace_qualify f) es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -270,19 +271,21 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp ("pi", []))) ;
+  printf "%s" (pp_unlocated (FunApp (Mir.StanMath, "pi", []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
-    (pp_unlocated (FunApp ("sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated
+       (FunApp (Mir.StanMath, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( "atan2"
+          ( Mir.StanMath
+          , "atan2"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan2(123, 1.2) |}]
@@ -303,5 +306,7 @@ let%expect_test "pp_expr10" =
 
 let%expect_test "pp_expr11" =
   printf "%s"
-    (pp_unlocated (FunApp ("poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
-  [%expect {| poisson_rng(123, base_rng__) |}]
+    (pp_unlocated
+       (FunApp
+          (Mir.UserDefined, "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
+  [%expect {| poisson_rng(123, base_rng__, pstream__) |}]

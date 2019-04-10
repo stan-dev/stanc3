@@ -65,6 +65,7 @@ let rec remove_size = function
   | SArray (t, _) -> UArray (remove_size t)
 
 type litType = Int | Real | Str [@@deriving sexp, hash]
+type funKind = StanMath | UserDefined [@@deriving compare, sexp, hash]
 
 type 'e index =
   | All
@@ -81,7 +82,7 @@ type 'e index =
 and 'e expr =
   | Var of string
   | Lit of litType * string
-  | FunApp of string * 'e list
+  | FunApp of funKind * string * 'e list
   | TernaryIf of 'e * 'e * 'e
   | And of 'e * 'e
   | Or of 'e * 'e
@@ -207,7 +208,7 @@ let rec pp_expr pp_e ppf = function
   | Var varname -> Fmt.string ppf varname
   | Lit (Str, str) -> Fmt.pf ppf "%S" str
   | Lit (_, str) -> Fmt.string ppf str
-  | FunApp (name, args) ->
+  | FunApp (_, name, args) ->
       Fmt.string ppf name ;
       Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
   | TernaryIf (pred, texpr, fexpr) ->

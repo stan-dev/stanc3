@@ -600,7 +600,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_ad_level= DataOnly
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
-  | FunApp (id, es) -> (
+  | FunApp (_, id, es) -> (
       let uid = semantic_check_identifier id
       and ues = List.map ~f:(semantic_check_expression cf) es in
       let _ =
@@ -660,7 +660,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
             ^ ("'" ^ uid.name ^ "'")
             ^ " was supplied." )
       | Some (ReturnType ut) ->
-          { expr_typed= FunApp (uid, ues)
+          { expr_typed= FunApp (Mir.StanMath, uid, ues)
           ; expr_typed_ad_level= returnblock
           ; expr_typed_type= ut
           ; expr_typed_loc= loc }
@@ -704,7 +704,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                         (List.map ~f:type_of_expr_typed ues)
                     ^ "." )
               in
-              { expr_typed= FunApp (uid, ues)
+              { expr_typed= FunApp (Mir.UserDefined, uid, ues)
               ; expr_typed_ad_level= returnblock
               ; expr_typed_type= ut
               ; expr_typed_loc= loc }

@@ -100,7 +100,7 @@ and pretty_print_expression {expr_untyped= e_content; _} =
   | Variable id -> pretty_print_identifier id
   | IntNumeral i -> i
   | RealNumeral r -> r
-  | FunApp (id, es) ->
+  | FunApp (_, id, es) ->
       pretty_print_identifier id ^ "("
       ^ pretty_print_list_of_expression es
       ^ ")"

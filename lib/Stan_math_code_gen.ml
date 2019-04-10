@@ -19,7 +19,7 @@
 open Core_kernel
 open Mir
 open Fmt
-open Expression_gen
+module ExprGen = Expression_gen
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
@@ -32,13 +32,15 @@ let pp_set_size ppf (decl_id, st, adtype) =
   ignore adtype ;
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
-      pf ppf "%a" pp_unsizedtype_local (adtype, remove_size st)
+      pf ppf "%a" ExprGen.pp_unsizedtype_local (adtype, remove_size st)
     in
     match st with
     | SInt | SReal -> pf ppf "0"
-    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
-    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
-    | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
+    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st ExprGen.pp_expr d
+    | SMatrix (d1, d2) ->
+        pf ppf "%a(%a, %a)" pp_st st ExprGen.pp_expr d1 ExprGen.pp_expr d2
+    | SArray (t, d) ->
+        pf ppf "%a(%a, %a)" pp_st st ExprGen.pp_expr d pp_size_ctor t
   in
   match st with
   | SInt | SReal -> ()
@@ -56,7 +58,7 @@ let%expect_test "set size mat array" =
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
-    pp_expr lower loopvar pp_expr upper loopvar ;
+    ExprGen.pp_expr lower loopvar ExprGen.pp_expr upper loopvar ;
   pf ppf "@,@;<1 2>@[<v>%a@]@]" pp_body body
 
 (* XXX this is so bad, someone please rethink these concepts for us! I suspect
@@ -66,7 +68,8 @@ let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
     { texpr=
         FunApp
-          ( string_of_internal_fn FnLength
+          ( Mir.StanMath
+          , string_of_internal_fn FnLength
           , [{internal_expr with texpr= Var name}] )
     ; texpr_loc= no_span
     ; texpr_type= UInt
@@ -91,7 +94,7 @@ let rec integer_el_type = function
   | SArray (st, _) -> integer_el_type st
 
 let pp_decl ppf (vident, ut, adtype) =
-  pf ppf "%a %s;" pp_unsizedtype_local (adtype, ut) vident
+  pf ppf "%a %s;" ExprGen.pp_unsizedtype_local (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype) =
   pf ppf "%a@,%a" pp_decl
@@ -128,7 +131,7 @@ let pp_returntype ppf arg_types rt =
       (maybe_templated_arg_types arg_types)
   in
   match rt with
-  | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
+  | Some ut -> pf ppf "%a@," ExprGen.pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
 let pp_location ppf loc =
@@ -155,7 +158,8 @@ let trans_math_fn fname =
       (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
+  pf ppf "const %a& %s" ExprGen.pp_unsizedtype_custom_scalar
+    (custom_scalar, ut) name
 
 let rec pp_statement ppf {stmt; sloc} =
   ( match stmt with
@@ -165,26 +169,29 @@ let rec pp_statement ppf {stmt; sloc} =
   match stmt with
   | Assignment (assignee, rhs) ->
       (* XXX completely wrong *)
-      pf ppf "@[<hov 4>%a =@;%a;@]" pp_expr assignee pp_expr rhs
-  | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
+      pf ppf "@[<hov 4>%a =@;%a;@]" ExprGen.pp_expr assignee ExprGen.pp_expr
+        rhs
+  | TargetPE e -> pf ppf "lp_accum__.add(%a)" ExprGen.pp_expr e
   | NRFunApp (fname, {texpr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
       let args = {internal_expr with texpr= Var "function__"} :: args in
       pp_statement ppf {stmt= NRFunApp ("check_" ^ check_name, args); sloc}
   | NRFunApp (fname, args) ->
       let fname, extra_args = trans_math_fn fname in
-      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
+      pf ppf "%s(@[<hov>%a@]);" fname
+        (list ~sep:comma ExprGen.pp_expr)
         (extra_args @ args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
-  | Return e -> pf ppf "return %a;" (option pp_expr) e
+  | Return e -> pf ppf "return %a;" (option ExprGen.pp_expr) e
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
-      pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block
+      pf ppf "if (@[<hov>%a@]) %a %a" ExprGen.pp_expr cond pp_block
         (pp_statement, ifbranch) (option pp_else) elsebranch
   | While (cond, body) ->
-      pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block (pp_statement, body)
+      pf ppf "while (@[<hov>%a@]) %a" ExprGen.pp_expr cond pp_block
+        (pp_statement, body)
   | For {loopvar; lower; upper; body} ->
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
@@ -257,7 +264,8 @@ let rec basetype = function
 let rec pp_zeroing_ctor_call ppf st =
   match st with
   | SInt | SReal -> string ppf "0"
-  | SArray (t, dim) -> pf ppf "%a, %a" pp_expr dim pp_zeroing_ctor_call t
+  | SArray (t, dim) ->
+      pf ppf "%a, %a" ExprGen.pp_expr dim pp_zeroing_ctor_call t
   | SRowVector dim | SVector dim -> ignore dim ; pf ppf "%s" "XXX todo"
   | SMatrix (dim1, dim2) -> ignore (dim1, dim2)
 
@@ -342,13 +350,14 @@ let rec get_dims = function
 
 let%expect_test "dims" =
   let v s = {internal_expr with texpr= Var s} in
-  strf "@[%a@]" (list ~sep:comma pp_expr)
+  strf "@[%a@]"
+    (list ~sep:comma ExprGen.pp_expr)
     (get_dims (SArray (SMatrix (v "x", v "y"), v "z")))
   |> print_endline ;
   [%expect {| z, x, y |}]
 
 let pp_get_dims ppf p =
-  let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
+  let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," ExprGen.pp_expr dim in
   let pp_dim_sep ppf () =
     pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
   in
@@ -444,7 +453,11 @@ let%expect_test "udf" =
     ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
     ; fdbody=
         Return
-          (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+          (Some
+             ( w
+             @@ FunApp
+                  (Mir.UserDefined, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])
+             ))
         |> with_no_loc |> List.return |> Block |> with_no_loc }
   |> with_no_loc
   |> strf "@[<v>%a" pp_statement
@@ -465,7 +478,7 @@ let%expect_test "udf" =
 
       try {
         current_statement__ = "file , line 0, column 0";
-        return add(x, 1);
+        return add(x, 1, pstream__);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
               std::runtime_error(std::string("inside UDF sars") + ": " + e.what(), current_statement__));
