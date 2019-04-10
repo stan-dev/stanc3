@@ -309,7 +309,8 @@ let mkparamread id var dconstrain sizedtype transform sloc =
   let constrain var =
     { stmt=
         Assignment
-          (vident, indices, gen_constraint dconstrain transform (read_base var))
+          ( (vident, indices)
+          , gen_constraint dconstrain transform (read_base var) )
     ; sloc }
   in
   for_eigen constrain var sloc
@@ -323,7 +324,7 @@ let mkdataread id var sizedtype sloc =
   in
   let vident, indices = expr_to_lhs var in
   let read_assign var =
-    {stmt= Assignment (vident, indices, read_base var); sloc}
+    {stmt= Assignment ((vident, indices), read_base var); sloc}
   in
   for_scalar read_assign var sloc
 
@@ -332,7 +333,7 @@ let trans_decl {dread; dconstrain; dadlevel} sloc sizedtype transform
   let with_sloc stmt = {stmt; sloc} in
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
-  let assign rhs = {stmt= Assignment (decl_id, [], rhs); sloc} in
+  let assign rhs = {stmt= Assignment ((decl_id, []), rhs); sloc} in
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
     { texpr= Var decl_id
@@ -397,7 +398,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
         | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
       in
       Assignment
-        (assign_identifier.name, List.map ~f:trans_idx assign_indices, rhs)
+        ((assign_identifier.name, List.map ~f:trans_idx assign_indices), rhs)
       |> swrap
   | Ast.NRFunApp ({name; _}, args) ->
       NRFunApp (name, trans_exprs args) |> swrap
@@ -444,7 +445,8 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
       and indexing_var = wrap (Var newsym) in
       let assign_loopvar =
         Assignment
-          (loopvar.name, [], Indexed (iteratee, [Single indexing_var]) |> wrap)
+          ( (loopvar.name, [])
+          , Indexed (iteratee, [Single indexing_var]) |> wrap )
       in
       let assign_loopvar = {stmt= assign_loopvar; sloc} in
       let body =
@@ -623,7 +625,7 @@ let%expect_test "read data" =
           (upper
            (FunApp FnLength__ ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
-           (Block ((Assignment mat () (FunApp FnReadData__ ((Lit Str mat))))))))))))) |}]
+           (Block ((Assignment (mat ()) (FunApp FnReadData__ ((Lit Str mat))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -636,7 +638,7 @@ let%expect_test "read param" =
       (upper (FunApp FnLength__ ((Var mat))))
       (body
        (Block
-        ((Assignment mat ()
+        ((Assignment (mat ())
           (FunApp FnConstrain__
            ((FunApp FnReadParam__ ((Lit Str mat))) (Lit Str lb) (Lit Str real)
             (Lit Int 0))))))))) |}]
