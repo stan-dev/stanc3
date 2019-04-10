@@ -78,14 +78,13 @@ type 'e index =
   | MultiIndex of 'e
 [@@deriving sexp, hash, map]
 
-(** XXX
-*)
-type 'e expr =
+and 'e expr =
   | Var of string
   | Lit of litType * string
   | FunApp of string * 'e list
   | TernaryIf of 'e * 'e * 'e
-  (* XXX And and Or nodes*)
+  | And of 'e * 'e
+  | Or of 'e * 'e
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map]
 
@@ -110,8 +109,7 @@ and ('e, 's) statement =
      variables declared within it have local scope and are garbage collected
      when the block ends.*)
   | Block of 's list
-  (* An SList does not share any of Block's semantics - it is just multiple
-     (ordered!) statements*)
+  (* SList has no semantics, just programming convenience *)
   | SList of 's list
   | Decl of
       { decl_adtype: autodifftype
@@ -137,7 +135,6 @@ type ('e, 's) prog =
   { functions_block: 's list
   ; input_vars: 'e io_var list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
-  ; prepare_params: 's list (* param & tparam decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
   ; generate_quantities: 's list (* assumes data & params ready & in scope*)
   ; transform_inits: 's list
@@ -304,9 +301,6 @@ let pp_functions_block pp_s ppf {functions_block; _} =
 let pp_prepare_data pp_s ppf {prepare_data; _} =
   pp_block "prepare_data" pp_s ppf prepare_data
 
-let pp_prepare_params pp_s ppf {prepare_params; _} =
-  pp_block "prepare_params" pp_s ppf prepare_params
-
 let pp_log_prob pp_s ppf {log_prob; _} = pp_block "log_prob" pp_s ppf log_prob
 
 let pp_generate_quantities pp_s ppf {generate_quantities; _} =
@@ -322,8 +316,6 @@ let pp_prog pp_e pp_s ppf prog =
   pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;
   pp_prepare_data pp_s ppf prog ;
-  Fmt.cut ppf () ;
-  pp_prepare_params pp_s ppf prog ;
   Fmt.cut ppf () ;
   pp_log_prob pp_s ppf prog ;
   Fmt.cut ppf () ;
@@ -344,9 +336,7 @@ let rec sexp_of_expr_typed_located {texpr; _} =
   sexp_of_expr sexp_of_expr_typed_located texpr
 
 let rec sexp_of_stmt_loc {stmt; _} =
-  match stmt with
-  | SList ls -> sexp_of_list sexp_of_stmt_loc ls
-  | s -> sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc s
+  sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
 
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
@@ -362,15 +352,28 @@ let internal_expr =
 
 let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
-(* Internal function names *)
-let fn_length = "Length__"
-let fn_make_array = "MakeArray__"
-let fn_make_rowvec = "MakeRowVec__"
-let fn_negative_infinity = "NegativeInfinity__"
-let fn_read_data = "ReadData__"
-let fn_read_param = "ReadParam__"
-let fn_constrain = "Constrain__"
-let fn_unconstrain = "Unconstrain__"
-let fn_check = "Check__"
-let fn_print = "Print__"
-let fn_reject = "Reject__"
+type internal_fn =
+  | FnLength
+  | FnMakeArray
+  | FnMakeRowVec
+  | FnNegInf
+  | FnReadData
+  | FnReadParam
+  | FnConstrain
+  | FnUnconstrain
+  | FnCheck
+  | FnPrint
+  | FnReject
+[@@deriving sexp]
+
+let mk_string_of sexp_of x = Sexp.to_string (sexp_of x) ^ "__"
+let string_of_internal_fn = mk_string_of sexp_of_internal_fn
+
+let mk_of_string of_sexp x =
+  try
+    String.chop_suffix_exn ~suffix:"__" x |> Sexp.of_string |> of_sexp |> Some
+  with
+  | Sexplib.Conv.Of_sexp_error _ -> None
+  | Invalid_argument _ -> None
+
+let internal_fn_of_string = mk_of_string internal_fn_of_sexp

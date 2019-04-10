@@ -7,7 +7,6 @@ open Core_kernel
 open Symbol_table
 open Ast
 open Stan_math_signatures
-open Operators
 open Errors
 open Type_conversion
 open Pretty_printing
@@ -18,6 +17,70 @@ open Pretty_printing
 (* Top level function semantic_check_program declares the AST while operating
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
+
+let string_of_operator = Mir.mk_string_of sexp_of_operator
+let operator_of_string = Mir.mk_of_string operator_of_sexp
+let ternary_if = "TernaryIf__"
+
+let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
+let%test "good op name" = operator_of_string "Plus__" = Some Plus
+
+(** A hash table to hold some name conversions between the AST nodes and the
+    Stan Math name of the operator *)
+let string_of_operators =
+  Map.Poly.of_alist_multi
+    [ (string_of_operator Plus, "add")
+    ; (string_of_operator PPlus, "plus")
+    ; (string_of_operator Minus, "subtract")
+    ; (string_of_operator PMinus, "minus")
+    ; (string_of_operator Times, "multiply")
+    ; (string_of_operator Divide, "mdivide_right")
+    ; (string_of_operator Divide, "divide")
+    ; (string_of_operator Modulo, "modulus")
+    ; (string_of_operator LDivide, "mdivide_left")
+    ; (string_of_operator EltTimes, "elt_multiply")
+    ; (string_of_operator EltDivide, "elt_divide")
+    ; (string_of_operator Pow, "pow")
+    ; (string_of_operator Or, "logical_or")
+    ; (string_of_operator And, "logical_and")
+    ; (string_of_operator Equals, "logical_eq")
+    ; (string_of_operator NEquals, "logical_neq")
+    ; (string_of_operator Less, "logical_lt")
+    ; (string_of_operator Leq, "logical_lte")
+    ; (string_of_operator Greater, "logical_gt")
+    ; (string_of_operator Geq, "logical_gte")
+    ; (string_of_operator PNot, "logical_negation")
+    ; (string_of_operator Transpose, "transpose")
+    ; (ternary_if, "if_else")
+      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
+    ; ("(OperatorAssign Plus)", "assign_add")
+    ; ("(OperatorAssign Minus)", "assign_subtract")
+    ; ("(OperatorAssign Times)", "assign_multiply")
+    ; ("(OperatorAssign Divide)", "assign_divide")
+    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
+    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
+
+(** Querying stan_math_signatures for operator signatures by string name *)
+let operator_return_type_from_string op_name args =
+  if op_name = "Assign" || op_name = "ArrowAssign" then
+    match args with
+    | [{expr_typed_type= ut1; _}; {expr_typed_type= ut2; _}]
+      when check_of_same_type_mod_array_conv "" ut1 ut2 ->
+        Some Mir.Void
+    | _ -> None
+  else
+    Map.Poly.find_multi string_of_operators op_name
+    |> List.find_map ~f:(fun name ->
+           Stan_math_signatures.stan_math_returntype name args )
+
+let operator_return_type op =
+  operator_return_type_from_string (string_of_operator op)
+
+(** Print all the signatures of a stan math operator, for the purposes of error messages. *)
+let pretty_print_all_operator_signatures name =
+  Map.Poly.find_multi string_of_operators name
+  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> String.concat ~sep:"\n"
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -174,8 +237,7 @@ let check_fresh_variable_basic id is_nullary_function =
   let _ =
     if
       is_stan_math_function_name id.name
-      && ( is_nullary_function
-         || get_stan_math_function_return_type_opt id.name [] = None )
+      && (is_nullary_function || stan_math_returntype id.name [] = None)
     then
       let error_msg =
         String.concat ~sep:" "
@@ -473,7 +535,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name uop)
+            ^ pretty_print_all_operator_signatures (string_of_operator uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.expr_typed_type
             ^ ", "
@@ -492,7 +554,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name uop)
+            ^ pretty_print_all_operator_signatures (string_of_operator uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
@@ -509,7 +571,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
           semantic_error ~loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (operator_name op)
+            ^ pretty_print_all_operator_signatures (string_of_operator op)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.expr_typed_type
             ^ "." ) )
@@ -591,7 +653,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       in
       let returnblock = lub_ad_e ues in
       (* Function applications are returning functions *)
-      match get_stan_math_function_return_type_opt uid.name ues with
+      match stan_math_returntype uid.name ues with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -611,7 +673,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                 ( "Ill-typed arguments supplied to function "
                 ^ ("'" ^ uid.name ^ "'")
                 ^ ". Available signatures: "
-                ^ pretty_print_all_stan_math_function_signatures uid.name
+                ^ pretty_print_all_math_lib_fn_sigs uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes
                     (List.map ~f:type_of_expr_typed ues)
@@ -685,7 +747,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
              of functions with the suffix _lp."
       in
       let returnblock = lub_ad_e ues in
-      match get_stan_math_function_return_type_opt uid.name ues with
+      match stan_math_returntype uid.name ues with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -705,7 +767,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
                 ( "Ill-typed arguments supplied to function "
                 ^ ("'" ^ uid.name ^ "'")
                 ^ ". Available signatures: "
-                ^ pretty_print_all_stan_math_function_signatures uid.name
+                ^ pretty_print_all_math_lib_fn_sigs uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes
                     (List.map ~f:type_of_expr_typed ues)
@@ -967,7 +1029,7 @@ and semantic_check_statement cf s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match get_stan_math_function_return_type_opt uid.name ues with
+      match stan_math_returntype uid.name ues with
       | Some Void ->
           { stmt_typed= NRFunApp (uid, ues)
           ; stmt_typed_returntype= NoReturnType
@@ -985,7 +1047,7 @@ and semantic_check_statement cf s =
                 {| "Ill-typed arguments supplied to function "
                     ("'" ^ uid.name ^ "'")
                     ". Available signatures: "
-                    pretty_print_all_stan_math_function_signatures uid.name
+                    pretty_print_all_math_lib_fn_sigs uid.name
                     "\nInstead supplied arguments of incompatible type: "
                     pretty_print_unsizedtypes (List.map ~f: type_of_expr_typed ues)
                     "."  |}
@@ -1102,12 +1164,11 @@ and semantic_check_statement cf s =
       in
       (* Check typing of ~ and target += *)
       let distribution_name_is_defined name argumenttypes =
-        get_stan_math_function_return_type_opt (name ^ "_lpdf") argumenttypes
+        stan_math_returntype (name ^ "_lpdf") argumenttypes
         = Some (ReturnType UReal)
-        || get_stan_math_function_return_type_opt (name ^ "_lpmf")
-             argumenttypes
+        || stan_math_returntype (name ^ "_lpmf") argumenttypes
            = Some (ReturnType UReal)
-        || get_stan_math_function_return_type_opt (name ^ "_log") argumenttypes
+        || stan_math_returntype (name ^ "_log") argumenttypes
            = Some (ReturnType UReal)
            && name <> "binomial_coefficient"
            && name <> "multiply"
@@ -1136,7 +1197,7 @@ and semantic_check_statement cf s =
             ^ " was found with the correct signature." )
       in
       let cumulative_density_is_defined name argumenttypes =
-        ( get_stan_math_function_return_type_opt (name ^ "_lcdf") argumenttypes
+        ( stan_math_returntype (name ^ "_lcdf") argumenttypes
           = Some (ReturnType UReal)
         ||
         match Symbol_table.look vm (name ^ "_lcdf") with
@@ -1144,8 +1205,7 @@ and semantic_check_statement cf s =
             check_compatible_arguments_mod_conv name listedtypes argumenttypes
         | _ -> (
             false
-            || get_stan_math_function_return_type_opt (name ^ "_cdf_log")
-                 argumenttypes
+            || stan_math_returntype (name ^ "_cdf_log") argumenttypes
                = Some (ReturnType UReal)
             ||
             match Symbol_table.look vm (name ^ "_cdf_log") with
@@ -1153,8 +1213,7 @@ and semantic_check_statement cf s =
                 check_compatible_arguments_mod_conv name listedtypes
                   argumenttypes
             | _ -> false ) )
-        && ( get_stan_math_function_return_type_opt (name ^ "_lccdf")
-               argumenttypes
+        && ( stan_math_returntype (name ^ "_lccdf") argumenttypes
              = Some (ReturnType UReal)
            ||
            match Symbol_table.look vm (name ^ "_lccdf") with
@@ -1163,8 +1222,7 @@ and semantic_check_statement cf s =
                  argumenttypes
            | _ -> (
                false
-               || get_stan_math_function_return_type_opt (name ^ "_ccdf_log")
-                    argumenttypes
+               || stan_math_returntype (name ^ "_ccdf_log") argumenttypes
                   = Some (ReturnType UReal)
                ||
                match Symbol_table.look vm (name ^ "_ccdf_log") with

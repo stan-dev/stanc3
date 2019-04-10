@@ -10,7 +10,7 @@ open Pretty_printing
 let stan_math_signatures = String.Table.create ()
 
 (* -- Querying stan_math_signatures -- *)
-let get_stan_math_function_return_type_opt name args =
+let stan_math_returntype name args =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
@@ -27,7 +27,7 @@ let get_stan_math_function_return_type_opt name args =
 
 let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
 
-let pretty_print_all_stan_math_function_signatures name =
+let pretty_print_all_math_lib_fn_sigs name =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   if List.length namematches = 0 then ""
   else
