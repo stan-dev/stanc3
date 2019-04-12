@@ -6,10 +6,10 @@ during parsing and are in fact irrelevant for building up the parse tree *)
 open Core_kernel
 open Symbol_table
 open Ast
-open Stan_math_signatures
 open Errors
 open Type_conversion
 open Pretty_printing
+module Or_error = Core_kernel.Or_error
 
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)
@@ -236,8 +236,9 @@ let check_fresh_variable_basic id is_nullary_function =
    achieve that. *)
   let _ =
     if
-      is_stan_math_function_name id.name
-      && (is_nullary_function || stan_math_returntype id.name [] = None)
+      Stan_math_signatures.is_stan_math_function_name id.name
+      && ( is_nullary_function
+         || Stan_math_signatures.stan_math_returntype id.name [] = None )
     then
       let error_msg =
         String.concat ~sep:" "
@@ -261,205 +262,11 @@ let check_fresh_variable id is_nullary_function =
     ~f:(fun name -> check_fresh_variable_basic name is_nullary_function)
     (probability_distribution_name_variants id)
 
-(* The actual semantic checks for all AST nodes! *)
-let rec semantic_check_program
-    { functionblock= fb
-    ; datablock= db
-    ; transformeddatablock= tdb
-    ; parametersblock= pb
-    ; transformedparametersblock= tpb
-    ; modelblock= mb
-    ; generatedquantitiesblock= gb } =
-  (* NB: We always want to make sure we start with an empty symbol table, in
-     case we are processing multiple files in one run. *)
-  let _ = unsafe_clear_symbol_table vm in
-  let semantic_check_ostatements_in_block cf b =
-    Option.map
-      ~f:(List.map ~f:(semantic_check_statement {cf with current_block= b}))
-  in
-  let cf =
-    { current_block= Functions
-    ; in_fun_def= false
-    ; in_returning_fun_def= false
-    ; in_rng_fun_def= false
-    ; in_lp_fun_def= false
-    ; loop_depth= 0 }
-  in
-  let ufb = semantic_check_ostatements_in_block cf Functions fb in
-  (* Check that all declared functions have a definition *)
-  let _ =
-    if
-      Symbol_table.check_some_id_is_unassigned vm
-      && !check_that_all_functions_have_definition
-    then
-      semantic_error ~loc:(List.hd_exn (Option.value_exn ufb)).stmt_typed_loc
-        "Some function is declared without specifying a definition."
-    (* TODO: insert better location in the error above *)
-  in
-  let udb = semantic_check_ostatements_in_block cf Data db in
-  let utdb = semantic_check_ostatements_in_block cf TData tdb in
-  let upb = semantic_check_ostatements_in_block cf Param pb in
-  let utpb = semantic_check_ostatements_in_block cf TParam tpb in
-  (* Model top level variables only assigned and read in model  *)
-  let _ = Symbol_table.begin_scope vm in
-  let umb = semantic_check_ostatements_in_block cf Model mb in
-  let _ = Symbol_table.end_scope vm in
-  let ugb = semantic_check_ostatements_in_block cf GQuant gb in
-  { functionblock= ufb
-  ; datablock= udb
-  ; transformeddatablock= utdb
-  ; parametersblock= upb
-  ; transformedparametersblock= utpb
-  ; modelblock= umb
-  ; generatedquantitiesblock= ugb }
+(** Least upper bound of expression autodiff types *)
+let lub_ad_e exprs =
+  exprs |> List.map ~f:(fun x -> x.expr_typed_ad_level) |> lub_ad_type
 
-and semantic_check_identifier id =
-  let _ =
-    if id.name = !model_name then
-      Errors.semantic_error ~loc:id.id_loc
-        ("Identifier " ^ ("'" ^ id.name ^ "'") ^ " clashes with model name.")
-  in
-  let _ =
-    if
-      String.is_suffix id.name ~suffix:"__"
-      || List.exists
-           ~f:(fun str -> str = id.name)
-           [ "true"; "false"; "repeat"; "until"; "then"; "var"; "fvar"
-           ; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
-           ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH"; "alignas"; "alignof"; "and"
-           ; "and_eq"; "asm"; "auto"; "bitand"; "bitor"; "bool"; "break"
-           ; "case"; "catch"; "char"; "char16_t"; "char32_t"; "class"; "compl"
-           ; "const"; "constexpr"; "const_cast"; "continue"; "decltype"
-           ; "default"; "delete"; "do"; "double"; "dynamic_cast"; "else"
-           ; "enum"; "explicit"; "export"; "extern"; "false"; "float"; "for"
-           ; "friend"; "goto"; "if"; "inline"; "int"; "long"; "mutable"
-           ; "namespace"; "new"; "noexcept"; "not"; "not_eq"; "nullptr"
-           ; "operator"; "or"; "or_eq"; "private"; "protected"; "public"
-           ; "register"; "reinterpret_cast"; "return"; "short"; "signed"
-           ; "sizeof"; "static"; "static_assert"; "static_cast"; "struct"
-           ; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
-           ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"
-           ; "using"; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"
-           ; "xor_eq" ]
-    then
-      semantic_error ~loc:id.id_loc
-        ( "Identifier "
-        ^ ("'" ^ id.name ^ "'")
-        ^ " clashes with reserved keyword." )
-  in
-  id
-
-(* Probably nothing to do here *)
-and semantic_check_autodifftype at = at
-
-(* Probably nothing to do here *)
-and semantic_check_returntype = function
-  | Mir.Void -> Mir.Void
-  | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
-
-(* Probably nothing to do here *)
-and semantic_check_unsizedtype = function
-  | UArray ut -> UArray (semantic_check_unsizedtype ut)
-  | UFun (l, rt) ->
-      UFun
-        ( List.map
-            ~f:(fun (at, ut) ->
-              (semantic_check_autodifftype at, semantic_check_unsizedtype ut)
-              )
-            l
-        , semantic_check_returntype rt )
-  | ut -> ut
-
-and semantic_error_e {expr_typed_loc; _} msg =
-  semantic_error ~loc:expr_typed_loc msg
-
-and semantic_check_sizedtype cf = function
-  | Mir.SInt -> Mir.SInt
-  | SReal -> SReal
-  | SVector e ->
-      let ue = semantic_check_expression_of_int_type cf e "Vector sizes" in
-      SVector ue
-  | SRowVector e ->
-      let ue = semantic_check_expression_of_int_type cf e "Row vector sizes" in
-      SRowVector ue
-  | SMatrix (e1, e2) ->
-      let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
-      and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
-      SMatrix (ue1, ue2)
-  | SArray (st, e) ->
-      let ust = semantic_check_sizedtype cf st in
-      let ue = semantic_check_expression_of_int_type cf e "Array sizes" in
-      SArray (ust, ue)
-
-and semantic_check_transformation cf = function
-  | Identity -> Identity
-  | Lower e ->
-      let ue =
-        semantic_check_expression_of_int_or_real_type cf e "Lower bound"
-      in
-      Lower ue
-  | Upper e ->
-      let ue =
-        semantic_check_expression_of_int_or_real_type cf e "Upper bound"
-      in
-      Upper ue
-  | LowerUpper (e1, e2) ->
-      let ue1 =
-        semantic_check_expression_of_int_or_real_type cf e1 "Lower bound"
-      in
-      let ue2 =
-        semantic_check_expression_of_int_or_real_type cf e2 "Upper bound"
-      in
-      LowerUpper (ue1, ue2)
-  | Offset e ->
-      let ue = semantic_check_expression_of_int_or_real_type cf e "Offset" in
-      Offset ue
-  | Multiplier e ->
-      let ue =
-        semantic_check_expression_of_int_or_real_type cf e "Multiplier"
-      in
-      Multiplier ue
-  | OffsetMultiplier (e1, e2) ->
-      let ue1 = semantic_check_expression_of_int_or_real_type cf e1 "Offset" in
-      let ue2 =
-        semantic_check_expression_of_int_or_real_type cf e2 "Multiplier"
-      in
-      OffsetMultiplier (ue1, ue2)
-  | Ordered -> Ordered
-  | PositiveOrdered -> PositiveOrdered
-  | Simplex -> Simplex
-  | UnitVector -> UnitVector
-  | CholeskyCorr -> CholeskyCorr
-  | CholeskyCov -> CholeskyCov
-  | Correlation -> Correlation
-  | Covariance -> Covariance
-
-and lub_ad_e exprs =
-  lub_ad_type (List.map ~f:(fun x -> x.expr_typed_ad_level) exprs)
-
-and semantic_check_expression_of_int_or_real_type cf e name =
-  let ue = semantic_check_expression cf e in
-  let _ =
-    if not (has_int_or_real_type ue) then
-      semantic_error_e ue
-        ( name ^ " must be of type int or real. Instead found type "
-        ^ pretty_print_unsizedtype ue.expr_typed_type
-        ^ "." )
-  in
-  ue
-
-and semantic_check_expression_of_int_type cf e name =
-  let ue = semantic_check_expression cf e in
-  let _ =
-    if not (has_int_type ue) then
-      semantic_error_e ue
-        ( name ^ " must be of type int. Instead found type "
-        ^ pretty_print_unsizedtype ue.expr_typed_type
-        ^ "." )
-  in
-  ue
-
-and inferred_unsizedtype_of_indexed loc ut typed_indexl =
+let rec inferred_unsizedtype_of_indexed loc ut typed_indexl =
   let recurse = inferred_unsizedtype_of_indexed loc in
   match (ut, typed_indexl) with
   (* Here, we need some special logic to deal with row and column vectors
@@ -497,7 +304,221 @@ and inferred_unsizedtype_of_indexed loc ut typed_indexl =
             ^ pretty_print_unsizedtype ut
             ^ "." ) )
 
-and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
+(* == SEMANTIC CHECK OF PROGRAM ELEMENTS ==================================== *)
+
+(* Probably nothing to do here *)
+let semantic_check_assignmentoperator op = op
+
+(* Probably nothing to do here *)
+let semantic_check_autodifftype at = at
+
+(* Probably nothing to do here *)
+let rec semantic_check_unsizedtype = function
+  | Mir.UArray ut -> Mir.UArray (semantic_check_unsizedtype ut)
+  | UFun (l, rt) ->
+      UFun
+        ( List.map
+            ~f:(fun (at, ut) ->
+              (semantic_check_autodifftype at, semantic_check_unsizedtype ut)
+              )
+            l
+        , semantic_check_returntype rt )
+  | ut -> ut
+
+and semantic_check_returntype = function
+  | Mir.Void -> Mir.Void
+  | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
+
+let semantic_error_e {expr_typed_loc; _} msg =
+  semantic_error ~loc:expr_typed_loc msg
+
+(* -- Indentifiers ---------------------------------------------------------- *)
+let reserved_keywords =
+  [ "true"; "false"; "repeat"; "until"; "then"; "var"; "fvar"; "STAN_MAJOR"
+  ; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"; "STAN_MATH_MINOR"
+  ; "STAN_MATH_PATCH"; "alignas"; "alignof"; "and"; "and_eq"; "asm"; "auto"
+  ; "bitand"; "bitor"; "bool"; "break"; "case"; "catch"; "char"; "char16_t"
+  ; "char32_t"; "class"; "compl"; "const"; "constexpr"; "const_cast"
+  ; "continue"; "decltype"; "default"; "delete"; "do"; "double"; "dynamic_cast"
+  ; "else"; "enum"; "explicit"; "export"; "extern"; "false"; "float"; "for"
+  ; "friend"; "goto"; "if"; "inline"; "int"; "long"; "mutable"; "namespace"
+  ; "new"; "noexcept"; "not"; "not_eq"; "nullptr"; "operator"; "or"; "or_eq"
+  ; "private"; "protected"; "public"; "register"; "reinterpret_cast"; "return"
+  ; "short"; "signed"; "sizeof"; "static"; "static_assert"; "static_cast"
+  ; "struct"; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
+  ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
+  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq" ]
+
+let semantic_check_identifier id =
+  if id.name = !model_name then
+    Errors.semantic_error ~loc:id.id_loc
+      ("Identifier " ^ ("'" ^ id.name ^ "'") ^ " clashes with model name.") ;
+  if
+    String.is_suffix id.name ~suffix:"__"
+    || List.exists ~f:(fun str -> str = id.name) reserved_keywords
+  then
+    semantic_error ~loc:id.id_loc
+      ( "Identifier "
+      ^ ("'" ^ id.name ^ "'")
+      ^ " clashes with reserved keyword." ) ;
+  id
+
+(* -- Operators ------------------------------------------------------------- *)
+let semantic_check_operator i = i
+
+(* -- Expressions ----------------------------------------------------------- *)
+
+(* Function application validation checks *)
+let semantic_check_fn_map_rect ~loc (id, es) =
+  match (id.name, es) with
+  | "map_rect", {expr_typed= Variable arg1_name; _} :: _ ->
+      if
+        String.(
+          is_suffix arg1_name.name ~suffix:"_lp"
+          || is_suffix arg1_name.name ~suffix:"_rng")
+      then
+        SemanticError
+          ( Format.sprintf
+              "Mapped function cannot be an _rng or _lp function, found \
+               function name: %s"
+              arg1_name.name
+          , loc )
+        |> Or_error.of_exn
+      else Result.Ok (id, es)
+  | _ -> Result.Ok (id, es)
+
+let semantic_check_fn_conditioning ~loc (id, es) =
+  if
+    List.exists ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"] ~f:(fun x ->
+        String.is_suffix id.name ~suffix:x )
+  then
+    SemanticError
+      ( "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and _lccdf, \
+         require a vertical bar (|) between the first two arguments."
+      , loc )
+    |> Or_error.of_exn
+  else Result.Ok (id, es)
+
+(** `Target+=` can only be used in model and functions 
+    with right suffix (same for tilde etc) 
+*)
+let semantic_check_fn_target_plus_equals cf ~loc (id, es) =
+  if
+    String.is_suffix id.name ~suffix:"_lp"
+    && not (cf.in_lp_fun_def || cf.current_block = Model)
+  then
+    SemanticError
+      ( "Target can only be accessed in the model block or in definitions of \
+         functions with the suffix _lp."
+      , loc )
+    |> Or_error.of_exn
+  else Result.Ok (id, es)
+
+(** Rng functions cannot be used in Tp or Model and only 
+    in funciton defs with the right suffix 
+*)
+let semantic_check_fn_rng cf ~loc (id, es) =
+  if
+    String.is_suffix id.name ~suffix:"_rng"
+    && ( (cf.in_fun_def && not cf.in_rng_fun_def)
+       || cf.current_block = TParam || cf.current_block = Model )
+  then
+    SemanticError
+      ( "Random number generators are only allowed in transformed data block, \
+         generated quantities block or user-defined functions with names \
+         ending in _rng."
+      , loc )
+    |> Or_error.of_exn
+  else Result.Ok (id, es)
+
+(* Regular function application *)
+let semantic_check_fn_normal ~loc (id, es) =
+  match Symbol_table.look vm id.name with
+  | Some (_, Mir.UFun (_, Void)) ->
+      SemanticError
+        ( Format.sprintf
+            "A returning function was expected but a non-returning function \
+             '%s' was supplied."
+            id.name
+        , loc )
+      |> Or_error.of_exn
+  | Some (_, UFun (arg_types, _))
+    when not (check_compatible_arguments_mod_conv id.name arg_types es) ->
+      let msg =
+        Format.sprintf
+          "Ill-typed arguments supplied to function '%s'. Available \
+           signatures: %s\n\
+           Instead supplied arguments of incompatible type: %s."
+          id.name
+          (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+          (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes)
+      in
+      SemanticError (msg, loc) |> Or_error.of_exn
+  | Some (_, UFun (_, ReturnType ut)) ->
+      Result.Ok
+        { expr_typed= FunApp (Mir.UserDefined, id, es)
+        ; expr_typed_ad_level= lub_ad_e es
+        ; expr_typed_type= ut
+        ; expr_typed_loc= loc }
+  | Some _ ->
+      (* Check that Funaps are actually functions *)
+      SemanticError
+        ( Format.sprintf
+            "A returning function was expected but a non-function value '%s' \
+             was supplied."
+            id.name
+        , loc )
+      |> Or_error.of_exn
+  | None ->
+      SemanticError
+        ( Format.sprintf
+            "A returning function was expected but an undeclared identifier \
+             '%s' was supplied."
+            id.name
+        , loc )
+      |> Or_error.of_exn
+
+(** Stan-Math function application 
+*)
+let semantic_check_fn_stan_math ~loc (id, es) =
+  match Stan_math_signatures.stan_math_returntype id.name es with
+  | Some Void ->
+      id.name
+      |> Format.sprintf
+           "A returning function was expected but a non-returning function \
+            '%s' was supplied."
+      |> Or_error.error_string
+  | Some (ReturnType ut) ->
+      Result.Ok
+        { expr_typed= FunApp (Mir.StanLib, id, es)
+        ; expr_typed_ad_level= lub_ad_e es
+        ; expr_typed_type= ut
+        ; expr_typed_loc= loc }
+  | _ ->
+      let err =
+        Format.sprintf
+          "Ill-typed arguments supplied to function '%s'. Available \
+           signatures: %s\n\
+           Instead supplied arguments of incompatible type: %s."
+          id.name
+          (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+          (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes)
+      in
+      Or_error.error_string err
+
+let fn_kind_from_identifier id =
+  if Stan_math_signatures.is_stan_math_function_name id.name then Mir.StanLib
+  else if Option.is_some (Mir.internal_fn_of_string id.name) then
+    Mir.CompilerInternal
+  else Mir.UserDefined
+
+let semantic_check_fn ~loc (id, es) =
+  match fn_kind_from_identifier id with
+  | Mir.StanLib -> semantic_check_fn_stan_math ~loc (id, es)
+  | CompilerInternal -> semantic_check_fn_normal ~loc (id, es)
+  | UserDefined -> semantic_check_fn_normal ~loc (id, es)
+
+let rec semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
   | TernaryIf (e1, e2, e3) -> (
       let ue1 = semantic_check_expression cf e1 in
@@ -580,7 +601,10 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let ut = Symbol_table.look vm id.name in
       (* Check that variable in scope if used  *)
       let _ =
-        if ut = None && not (is_stan_math_function_name uid.name) then
+        if
+          ut = None
+          && not (Stan_math_signatures.is_stan_math_function_name uid.name)
+        then
           semantic_error ~loc
             ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       and originblock, type_ =
@@ -600,126 +624,15 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_ad_level= DataOnly
       ; expr_typed_type= UReal
       ; expr_typed_loc= loc }
-  | FunApp (_, id, es) -> (
+  | FunApp (_, id, es) ->
       let uid = semantic_check_identifier id
       and ues = List.map ~f:(semantic_check_expression cf) es in
-      let _ =
-        if uid.name = "map_rect" then
-          match ues with
-          | {expr_typed= Variable arg1_name; _} :: _ ->
-              if
-                String.is_suffix arg1_name.name ~suffix:"_lp"
-                || String.is_suffix arg1_name.name ~suffix:"_rng"
-              then
-                semantic_error ~loc
-                  ( "Mapped function cannot be an _rng or _lp function, found \
-                     function name: " ^ arg1_name.name )
-          | _ -> ()
-      in
-      let open String in
-      let open Pervasives in
-      let _ =
-        if
-          List.exists
-            ~f:(fun x -> is_suffix uid.name ~suffix:x)
-            ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
-        then
-          semantic_error ~loc
-            "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
-             _lccdf, require a vertical bar (|) between the first two \
-             arguments."
-      in
-      (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
-      let _ =
-        if
-          is_suffix uid.name ~suffix:"_lp"
-          && not (cf.in_lp_fun_def || cf.current_block = Model)
-        then
-          semantic_error ~loc
-            "Target can only be accessed in the model block or in definitions \
-             of functions with the suffix _lp."
-      in
-      (* Rng functions cannot be used in Tp or Model and only in funciton defs with the right suffix *)
-      let _ =
-        if
-          is_suffix uid.name ~suffix:"_rng"
-          && ( (cf.in_fun_def && not cf.in_rng_fun_def)
-             || cf.current_block = TParam || cf.current_block = Model )
-        then
-          semantic_error ~loc
-            "Random number generators are only allowed in transformed data \
-             block, generated quantities block or user-defined functions with \
-             names ending in _rng."
-      in
-      let returnblock = lub_ad_e ues in
-      (* Function applications are returning functions *)
-      match stan_math_returntype uid.name ues with
-      | Some Void ->
-          semantic_error ~loc
-            ( "A returning function was expected but a non-returning function "
-            ^ ("'" ^ uid.name ^ "'")
-            ^ " was supplied." )
-      | Some (ReturnType ut) ->
-          { expr_typed= FunApp (Mir.StanMath, uid, ues)
-          ; expr_typed_ad_level= returnblock
-          ; expr_typed_type= ut
-          ; expr_typed_loc= loc }
-      (* Check that function arguments match signature  *)
-      (* Also check whether function arguments meet data requirement. *)
-      | None -> (
-          let _ =
-            if is_stan_math_function_name uid.name then
-              semantic_error ~loc
-                ( "Ill-typed arguments supplied to function "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ ". Available signatures: "
-                ^ pretty_print_all_math_lib_fn_sigs uid.name
-                ^ "\nInstead supplied arguments of incompatible type: "
-                ^ pretty_print_unsizedtypes
-                    (List.map ~f:type_of_expr_typed ues)
-                ^ "." )
-          in
-          match Symbol_table.look vm uid.name with
-          | Some (_, UFun (_, Void)) ->
-              semantic_error ~loc
-                ( "A returning function was expected but a non-returning \
-                   function "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " was supplied." )
-          | Some (_, UFun (listedtypes, ReturnType ut)) ->
-              let _ =
-                if
-                  not
-                    (check_compatible_arguments_mod_conv uid.name listedtypes
-                       ues)
-                then
-                  semantic_error ~loc
-                    ( "Ill-typed arguments supplied to function "
-                    ^ ("'" ^ uid.name ^ "'")
-                    ^ ". Available signatures:\n"
-                    ^ pretty_print_unsizedtype
-                        (UFun (listedtypes, ReturnType ut))
-                    ^ "\nInstead supplied arguments of incompatible type: "
-                    ^ pretty_print_unsizedtypes
-                        (List.map ~f:type_of_expr_typed ues)
-                    ^ "." )
-              in
-              { expr_typed= FunApp (Mir.UserDefined, uid, ues)
-              ; expr_typed_ad_level= returnblock
-              ; expr_typed_type= ut
-              ; expr_typed_loc= loc }
-          | Some _ ->
-              (* Check that Funaps are actually functions *)
-              semantic_error ~loc
-                ( "A returning function was expected but a non-function value "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " was supplied." )
-          | None ->
-              semantic_error ~loc
-                ( "A returning function was expected but an undeclared \
-                   identifier "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " was supplied." ) ) )
+      semantic_check_fn_map_rect ~loc (uid, ues)
+      |> Or_error.bind ~f:(semantic_check_fn_conditioning ~loc)
+      |> Or_error.bind ~f:(semantic_check_fn_target_plus_equals cf ~loc)
+      |> Or_error.bind ~f:(semantic_check_fn_rng cf ~loc)
+      |> Or_error.bind ~f:(semantic_check_fn ~loc)
+      |> Or_error.ok_exn
   | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let open String in
@@ -747,7 +660,7 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
              of functions with the suffix _lp."
       in
       let returnblock = lub_ad_e ues in
-      match stan_math_returntype uid.name ues with
+      match Stan_math_signatures.stan_math_returntype uid.name ues with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -762,12 +675,13 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       (* Also check whether function arguments meet data requirement. *)
       | None -> (
           let _ =
-            if is_stan_math_function_name uid.name then
+            if Stan_math_signatures.is_stan_math_function_name uid.name then
               semantic_error ~loc
                 ( "Ill-typed arguments supplied to function "
                 ^ ("'" ^ uid.name ^ "'")
                 ^ ". Available signatures: "
-                ^ pretty_print_all_math_lib_fn_sigs uid.name
+                ^ Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+                    uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes
                     (List.map ~f:type_of_expr_typed ues)
@@ -930,10 +844,119 @@ and semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_type= ut
       ; expr_typed_loc= loc }
 
-(* Probably nothing to do here *)
-and semantic_check_operator i = i
+and semantic_check_expression_of_int_type cf e name =
+  let ue = semantic_check_expression cf e in
+  let _ =
+    if not (has_int_type ue) then
+      semantic_error_e ue
+        ( name ^ " must be of type int. Instead found type "
+        ^ pretty_print_unsizedtype ue.expr_typed_type
+        ^ "." )
+  in
+  ue
 
-and semantic_check_printable cf = function
+and semantic_check_expression_of_int_or_real_type cf e name =
+  let ue = semantic_check_expression cf e in
+  let _ =
+    if not (has_int_or_real_type ue) then
+      semantic_error_e ue
+        ( name ^ " must be of type int or real. Instead found type "
+        ^ pretty_print_unsizedtype ue.expr_typed_type
+        ^ "." )
+  in
+  ue
+
+(* -- Indices --------------------------------------------------------------- *)
+and semantic_check_index cf = function
+  | All -> All
+  (* Check that indexes have int (container) type *)
+  | Single e ->
+      let ue = semantic_check_expression cf e in
+      let loc = ue.expr_typed_loc in
+      if has_int_type ue || has_int_array_type ue then Single ue
+      else
+        semantic_error ~loc
+          ( "Index must be of type int or int[] or must be a range. Instead \
+             found type "
+          ^ pretty_print_unsizedtype ue.expr_typed_type
+          ^ "." )
+  | Upfrom e ->
+      let ue = semantic_check_expression_of_int_type cf e "Range bound" in
+      Upfrom ue
+  | Downfrom e ->
+      let ue = semantic_check_expression_of_int_type cf e "Range bound" in
+      Downfrom ue
+  | Between (e1, e2) ->
+      let ue1 = semantic_check_expression_of_int_type cf e1 "Range bound" in
+      let ue2 = semantic_check_expression_of_int_type cf e2 "Range bound" in
+      Between (ue1, ue2)
+
+(* -- Sized Types ----------------------------------------------------------- *)
+let rec semantic_check_sizedtype cf = function
+  | Mir.SInt -> Mir.SInt
+  | SReal -> SReal
+  | SVector e ->
+      let ue = semantic_check_expression_of_int_type cf e "Vector sizes" in
+      SVector ue
+  | SRowVector e ->
+      let ue = semantic_check_expression_of_int_type cf e "Row vector sizes" in
+      SRowVector ue
+  | SMatrix (e1, e2) ->
+      let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
+      and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
+      SMatrix (ue1, ue2)
+  | SArray (st, e) ->
+      let ust = semantic_check_sizedtype cf st in
+      let ue = semantic_check_expression_of_int_type cf e "Array sizes" in
+      SArray (ust, ue)
+
+(* -- Transformations ------------------------------------------------------- *)
+let semantic_check_transformation cf = function
+  | Identity -> Identity
+  | Lower e ->
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Lower bound"
+      in
+      Lower ue
+  | Upper e ->
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Upper bound"
+      in
+      Upper ue
+  | LowerUpper (e1, e2) ->
+      let ue1 =
+        semantic_check_expression_of_int_or_real_type cf e1 "Lower bound"
+      in
+      let ue2 =
+        semantic_check_expression_of_int_or_real_type cf e2 "Upper bound"
+      in
+      LowerUpper (ue1, ue2)
+  | Offset e ->
+      let ue = semantic_check_expression_of_int_or_real_type cf e "Offset" in
+      Offset ue
+  | Multiplier e ->
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Multiplier"
+      in
+      Multiplier ue
+  | OffsetMultiplier (e1, e2) ->
+      let ue1 = semantic_check_expression_of_int_or_real_type cf e1 "Offset" in
+      let ue2 =
+        semantic_check_expression_of_int_or_real_type cf e2 "Multiplier"
+      in
+      OffsetMultiplier (ue1, ue2)
+  | Ordered -> Ordered
+  | PositiveOrdered -> PositiveOrdered
+  | Simplex -> Simplex
+  | UnitVector -> UnitVector
+  | CholeskyCorr -> CholeskyCorr
+  | CholeskyCov -> CholeskyCov
+  | Correlation -> Correlation
+  | Covariance -> Covariance
+
+(* -- Printables ------------------------------------------------------------ *)
+
+let semantic_check_printable cf = function
   | PString s -> PString s
   (* Print/reject expressions cannot be of function type. *)
   | PExpr e -> (
@@ -943,7 +966,34 @@ and semantic_check_printable cf = function
           semantic_error ~loc:ue.expr_typed_loc "Functions cannot be printed."
       | _ -> PExpr ue )
 
-and semantic_check_statement cf s =
+(* -- Truncations ----------------------------------------------------------- *)
+
+let semantic_check_truncation cf = function
+  | NoTruncate -> NoTruncate
+  | TruncateUpFrom e ->
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Truncation bound"
+      in
+      TruncateUpFrom ue
+  | TruncateDownFrom e ->
+      let ue =
+        semantic_check_expression_of_int_or_real_type cf e "Truncation bound"
+      in
+      TruncateDownFrom ue
+  | TruncateBetween (e1, e2) ->
+      let ue1 =
+        semantic_check_expression_of_int_or_real_type cf e1 "Truncation bound"
+      in
+      let ue2 =
+        semantic_check_expression_of_int_or_real_type cf e2 "Truncation bound"
+      in
+      TruncateBetween (ue1, ue2)
+
+(* Probably nothing to do here *)
+
+(* -- Statements ------------------------------------------------------------ *)
+
+let rec semantic_check_statement cf s =
   let loc = s.stmt_untyped_loc in
   match s.stmt_untyped with
   | Assignment
@@ -971,7 +1021,8 @@ and semantic_check_statement cf s =
         match Option.map ~f:fst (Symbol_table.look vm uid.name) with
         | Some b -> b
         | None ->
-            if is_stan_math_function_name uid.name then MathLibrary
+            if Stan_math_signatures.is_stan_math_function_name uid.name then
+              MathLibrary
             else fatal_error ()
       in
       let _ =
@@ -1029,7 +1080,7 @@ and semantic_check_statement cf s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match stan_math_returntype uid.name ues with
+      match Stan_math_signatures.stan_math_returntype uid.name ues with
       | Some Void ->
           { stmt_typed= NRFunApp (uid, ues)
           ; stmt_typed_returntype= NoReturnType
@@ -1042,7 +1093,7 @@ and semantic_check_statement cf s =
             ^ " was supplied." )
       | None -> (
           let _ =
-            if is_stan_math_function_name uid.name then
+            if Stan_math_signatures.is_stan_math_function_name uid.name then
               semantic_error ~loc
                 {| "Ill-typed arguments supplied to function "
                     ("'" ^ uid.name ^ "'")
@@ -1164,11 +1215,14 @@ and semantic_check_statement cf s =
       in
       (* Check typing of ~ and target += *)
       let distribution_name_is_defined name argumenttypes =
-        stan_math_returntype (name ^ "_lpdf") argumenttypes
+        Stan_math_signatures.stan_math_returntype (name ^ "_lpdf")
+          argumenttypes
         = Some (ReturnType UReal)
-        || stan_math_returntype (name ^ "_lpmf") argumenttypes
+        || Stan_math_signatures.stan_math_returntype (name ^ "_lpmf")
+             argumenttypes
            = Some (ReturnType UReal)
-        || stan_math_returntype (name ^ "_log") argumenttypes
+        || Stan_math_signatures.stan_math_returntype (name ^ "_log")
+             argumenttypes
            = Some (ReturnType UReal)
            && name <> "binomial_coefficient"
            && name <> "multiply"
@@ -1197,7 +1251,8 @@ and semantic_check_statement cf s =
             ^ " was found with the correct signature." )
       in
       let cumulative_density_is_defined name argumenttypes =
-        ( stan_math_returntype (name ^ "_lcdf") argumenttypes
+        ( Stan_math_signatures.stan_math_returntype (name ^ "_lcdf")
+            argumenttypes
           = Some (ReturnType UReal)
         ||
         match Symbol_table.look vm (name ^ "_lcdf") with
@@ -1205,7 +1260,8 @@ and semantic_check_statement cf s =
             check_compatible_arguments_mod_conv name listedtypes argumenttypes
         | _ -> (
             false
-            || stan_math_returntype (name ^ "_cdf_log") argumenttypes
+            || Stan_math_signatures.stan_math_returntype (name ^ "_cdf_log")
+                 argumenttypes
                = Some (ReturnType UReal)
             ||
             match Symbol_table.look vm (name ^ "_cdf_log") with
@@ -1213,7 +1269,8 @@ and semantic_check_statement cf s =
                 check_compatible_arguments_mod_conv name listedtypes
                   argumenttypes
             | _ -> false ) )
-        && ( stan_math_returntype (name ^ "_lccdf") argumenttypes
+        && ( Stan_math_signatures.stan_math_returntype (name ^ "_lccdf")
+               argumenttypes
              = Some (ReturnType UReal)
            ||
            match Symbol_table.look vm (name ^ "_lccdf") with
@@ -1222,7 +1279,8 @@ and semantic_check_statement cf s =
                  argumenttypes
            | _ -> (
                false
-               || stan_math_returntype (name ^ "_ccdf_log") argumenttypes
+               || Stan_math_signatures.stan_math_returntype
+                    (name ^ "_ccdf_log") argumenttypes
                   = Some (ReturnType UReal)
                ||
                match Symbol_table.look vm (name ^ "_ccdf_log") with
@@ -1600,7 +1658,7 @@ and semantic_check_statement cf s =
           in
           match Option.map ~f:snd (List.hd uarg_types) with
           | None -> semantic_error ~loc error_string
-          | Some UInt | Some (UArray UInt) -> ()
+          | Some Mir.UInt | Some (UArray UInt) -> ()
           | Some x ->
               semantic_error ~loc
                 ( error_string ^ " Instead found type "
@@ -1623,7 +1681,8 @@ and semantic_check_statement cf s =
         List.map2 ~f:(Symbol_table.enter vm) uarg_names
           (List.map
              ~f:(function
-               | DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
+               | Mir.DataOnly, ut -> (Data, ut)
+               | AutoDiffable, ut -> (Param, ut))
              uarg_types)
       in
       let ub =
@@ -1652,50 +1711,54 @@ and semantic_check_statement cf s =
       ; stmt_typed_returntype= NoReturnType
       ; stmt_typed_loc= loc }
 
-and semantic_check_truncation cf = function
-  | NoTruncate -> NoTruncate
-  | TruncateUpFrom e ->
-      let ue =
-        semantic_check_expression_of_int_or_real_type cf e "Truncation bound"
-      in
-      TruncateUpFrom ue
-  | TruncateDownFrom e ->
-      let ue =
-        semantic_check_expression_of_int_or_real_type cf e "Truncation bound"
-      in
-      TruncateDownFrom ue
-  | TruncateBetween (e1, e2) ->
-      let ue1 =
-        semantic_check_expression_of_int_or_real_type cf e1 "Truncation bound"
-      in
-      let ue2 =
-        semantic_check_expression_of_int_or_real_type cf e2 "Truncation bound"
-      in
-      TruncateBetween (ue1, ue2)
-
-and semantic_check_index cf = function
-  | All -> All
-  (* Check that indexes have int (container) type *)
-  | Single e ->
-      let ue = semantic_check_expression cf e in
-      let loc = ue.expr_typed_loc in
-      if has_int_type ue || has_int_array_type ue then Single ue
-      else
-        semantic_error ~loc
-          ( "Index must be of type int or int[] or must be a range. Instead \
-             found type "
-          ^ pretty_print_unsizedtype ue.expr_typed_type
-          ^ "." )
-  | Upfrom e ->
-      let ue = semantic_check_expression_of_int_type cf e "Range bound" in
-      Upfrom ue
-  | Downfrom e ->
-      let ue = semantic_check_expression_of_int_type cf e "Range bound" in
-      Downfrom ue
-  | Between (e1, e2) ->
-      let ue1 = semantic_check_expression_of_int_type cf e1 "Range bound" in
-      let ue2 = semantic_check_expression_of_int_type cf e2 "Range bound" in
-      Between (ue1, ue2)
-
-(* Probably nothing to do here *)
-and semantic_check_assignmentoperator op = op
+(* The actual semantic checks for all AST nodes! *)
+let semantic_check_program
+    { functionblock= fb
+    ; datablock= db
+    ; transformeddatablock= tdb
+    ; parametersblock= pb
+    ; transformedparametersblock= tpb
+    ; modelblock= mb
+    ; generatedquantitiesblock= gb } =
+  (* NB: We always want to make sure we start with an empty symbol table, in
+     case we are processing multiple files in one run. *)
+  let _ = unsafe_clear_symbol_table vm in
+  let semantic_check_ostatements_in_block cf b =
+    Option.map
+      ~f:(List.map ~f:(semantic_check_statement {cf with current_block= b}))
+  in
+  let cf =
+    { current_block= Functions
+    ; in_fun_def= false
+    ; in_returning_fun_def= false
+    ; in_rng_fun_def= false
+    ; in_lp_fun_def= false
+    ; loop_depth= 0 }
+  in
+  let ufb = semantic_check_ostatements_in_block cf Functions fb in
+  (* Check that all declared functions have a definition *)
+  let _ =
+    if
+      Symbol_table.check_some_id_is_unassigned vm
+      && !check_that_all_functions_have_definition
+    then
+      semantic_error ~loc:(List.hd_exn (Option.value_exn ufb)).stmt_typed_loc
+        "Some function is declared without specifying a definition."
+    (* TODO: insert better location in the error above *)
+  in
+  let udb = semantic_check_ostatements_in_block cf Data db in
+  let utdb = semantic_check_ostatements_in_block cf TData tdb in
+  let upb = semantic_check_ostatements_in_block cf Param pb in
+  let utpb = semantic_check_ostatements_in_block cf TParam tpb in
+  (* Model top level variables only assigned and read in model  *)
+  let _ = Symbol_table.begin_scope vm in
+  let umb = semantic_check_ostatements_in_block cf Model mb in
+  let _ = Symbol_table.end_scope vm in
+  let ugb = semantic_check_ostatements_in_block cf GQuant gb in
+  { functionblock= ufb
+  ; datablock= udb
+  ; transformeddatablock= utdb
+  ; parametersblock= upb
+  ; transformedparametersblock= utpb
+  ; modelblock= umb
+  ; generatedquantitiesblock= ugb }

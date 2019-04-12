@@ -65,7 +65,10 @@ let rec remove_size = function
   | SArray (t, _) -> UArray (remove_size t)
 
 type litType = Int | Real | Str [@@deriving sexp, hash]
-type funKind = StanMath | UserDefined [@@deriving compare, sexp, hash]
+
+(**  *)
+type fun_kind = StanLib | CompilerInternal | UserDefined
+[@@deriving compare, sexp, hash]
 
 type 'e index =
   | All
@@ -82,7 +85,7 @@ type 'e index =
 and 'e expr =
   | Var of string
   | Lit of litType * string
-  | FunApp of funKind * string * 'e list
+  | FunApp of fun_kind * string * 'e list
   | TernaryIf of 'e * 'e * 'e
   | And of 'e * 'e
   | Or of 'e * 'e

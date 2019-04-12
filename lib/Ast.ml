@@ -50,7 +50,7 @@ type 'e expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of Mir.funKind * identifier * 'e list
+  | FunApp of Mir.fun_kind * identifier * 'e list
   | CondDistApp of identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP

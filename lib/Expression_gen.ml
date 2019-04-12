@@ -232,7 +232,9 @@ and pp_expr ppf (e : expr_typed_located) =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (Mir.StanMath, f, es) -> gen_fun_app ppf e.texpr_type f es
+  | FunApp (Mir.StanLib, f, es) -> gen_fun_app ppf e.texpr_type f es
+  | FunApp (Mir.CompilerInternal, f, es) ->
+      pp_ordinary_fn ppf (stan_namespace_qualify f) es
   | FunApp (Mir.UserDefined, f, es) ->
       pp_ordinary_fn ppf (stan_namespace_qualify f) es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
@@ -271,20 +273,20 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp (Mir.StanMath, "pi", []))) ;
+  printf "%s" (pp_unlocated (FunApp (Mir.StanLib, "pi", []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
     (pp_unlocated
-       (FunApp (Mir.StanMath, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+       (FunApp (Mir.StanLib, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( Mir.StanMath
+          ( Mir.StanLib
           , "atan2"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;

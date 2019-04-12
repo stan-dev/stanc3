@@ -7,7 +7,7 @@ let unwrap_return_exn = function
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let rec op_to_funapp op args =
-  { texpr= FunApp (Mir.StanMath, Ast.string_of_operator op, trans_exprs args)
+  { texpr= FunApp (Mir.StanLib, Ast.string_of_operator op, trans_exprs args)
   ; texpr_type=
       Semantic_check.operator_return_type op args |> unwrap_return_exn
   ; texpr_loc= Ast.expr_loc_lub args
@@ -33,16 +33,16 @@ and trans_expr
         | FunApp (fn_kind, {name; _}, args) ->
             FunApp (fn_kind, name, trans_exprs args)
         | Ast.CondDistApp ({name; _}, args) ->
-            FunApp (Mir.StanMath, name, trans_exprs args)
+            FunApp (Mir.StanLib, name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
         | ArrayExpr eles ->
             FunApp
-              ( Mir.StanMath
+              ( Mir.CompilerInternal
               , string_of_internal_fn FnMakeArray
               , trans_exprs eles )
         | RowVectorExpr eles ->
             FunApp
-              ( Mir.StanMath
+              ( Mir.CompilerInternal
               , string_of_internal_fn FnMakeRowVec
               , trans_exprs eles )
         | Indexed (lhs, indices) ->
@@ -73,7 +73,7 @@ let trans_sizedtype = map_sizedtype trans_expr
 let neg_inf =
   { texpr_type= UReal
   ; texpr_loc= no_span
-  ; texpr= FunApp (Mir.StanMath, string_of_internal_fn FnNegInf, [])
+  ; texpr= FunApp (Mir.CompilerInternal, string_of_internal_fn FnNegInf, [])
   ; texpr_adlevel= DataOnly }
 
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
@@ -143,8 +143,9 @@ let mkfor bodyfn iteratee sloc =
   let lower = {internal_expr with texpr= Lit (Int, "0")} in
   let upper =
     { internal_expr with
-      texpr= FunApp (Mir.StanMath, string_of_internal_fn FnLength, [iteratee])
-    }
+      texpr=
+        FunApp
+          (Mir.CompilerInternal, string_of_internal_fn FnLength, [iteratee]) }
   in
   let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
   reset () ;
@@ -289,7 +290,7 @@ let gen_constraint dconstrain t arg =
         :: mkstring (unsizedtype_to_string arg.texpr_type)
         :: trans_exprs (extract_constraint_args t)
       in
-      {arg with texpr= FunApp (Mir.StanMath, fname, args)}
+      {arg with texpr= FunApp (Mir.CompilerInternal, fname, args)}
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
@@ -301,7 +302,7 @@ let mkparamread id var dconstrain sizedtype transform sloc =
     { var with
       texpr=
         FunApp
-          ( Mir.StanMath
+          ( Mir.CompilerInternal
           , string_of_internal_fn FnReadParam
           , [mkstring var.texpr_loc id] )
     ; texpr_type= base_type sizedtype }
@@ -318,7 +319,7 @@ let mkdataread id var sizedtype sloc =
     { var with
       texpr=
         FunApp
-          ( Mir.StanMath
+          ( Mir.CompilerInternal
           , string_of_internal_fn FnReadData
           , [mkstring var.texpr_loc id] )
     ; texpr_type= base_type sizedtype }
@@ -408,8 +409,7 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
              vanilla target +=, which doesn't. Can use _unnormalized or something.*)
         TargetPE
           { texpr=
-              FunApp
-                (Mir.StanMath, distribution.name, trans_exprs (arg :: args))
+              FunApp (Mir.StanLib, distribution.name, trans_exprs (arg :: args))
           ; texpr_loc
           ; texpr_adlevel= Ast.expr_ad_lub (arg :: args)
           ; texpr_type= UReal }
@@ -461,7 +461,10 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
         ; lower= wrap @@ Lit (Int, "0")
         ; upper=
             wrap
-            @@ FunApp (Mir.StanMath, string_of_internal_fn FnLength, [iteratee])
+            @@ FunApp
+                 ( Mir.CompilerInternal
+                 , string_of_internal_fn FnLength
+                 , [iteratee] )
         ; body }
       |> swrap
   | Ast.FunDef {returntype; funname; arguments; body} ->
@@ -610,8 +613,8 @@ let%expect_test "Prefix-Op-Example" =
       ((Block
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
          (IfElse 
-          (FunApp StanMath Less__ 
-           ((Var i) (FunApp StanMath PMinus__ ((Lit Int 1)))))
+          (FunApp CompilerInternal Less__ 
+           ((Var i) (FunApp CompilerInternal PMinus__ ((Lit Int 1)))))
           (NRFunApp FnPrint__ ((Lit Str Badger))) ())))) |}]
 
 let%expect_test "read data" =
@@ -622,18 +625,18 @@ let%expect_test "read data" =
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 0))
-      (upper (FunApp StanMath FnLength__ ((Var mat))))
+      (upper (FunApp CompilerInternal FnLength__ ((Var mat))))
       (body
        (Block
         ((For (loopvar sym2__) (lower (Lit Int 0))
           (upper
-           (FunApp StanMath FnLength__ 
+           (FunApp CompilerInternal FnLength__ 
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
            (Block
             ((Assignment
               (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-              (FunApp StanMath FnReadData__ ((Lit Str mat))))))))))))) |}]
+              (FunApp CompilerInternal FnReadData__ ((Lit Str mat))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -643,12 +646,12 @@ let%expect_test "read param" =
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 0))
-      (upper (FunApp StanMath FnLength__ ((Var mat))))
+      (upper (FunApp CompilerInternal FnLength__ ((Var mat))))
       (body
        (Block
         ((Assignment (Indexed (Var mat) ((Single (Var sym1__))))
-          (FunApp StanMath FnConstrain__
-           ((FunApp StanMath FnReadParam__ ((Lit Str mat))) (Lit Str lb)
+          (FunApp CompilerInternal FnConstrain__
+           ((FunApp CompilerInternal FnReadParam__ ((Lit Str mat))) (Lit Str lb)
             (Lit Str real) (Lit Int 0))))))))) |}]
 
 let%expect_test "gen quant" =
@@ -661,12 +664,12 @@ let%expect_test "gen quant" =
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 0))
-      (upper (FunApp StanMath FnLength__ ((Var mat))))
+      (upper (FunApp CompilerInternal FnLength__ ((Var mat))))
       (body
        (Block
         ((For (loopvar sym2__) (lower (Lit Int 0))
           (upper
-           (FunApp StanMath FnLength__ 
+           (FunApp CompilerInternal FnLength__ 
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
            (Block

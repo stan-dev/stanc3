@@ -68,7 +68,7 @@ let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
     { texpr=
         FunApp
-          ( Mir.StanMath
+          ( Mir.StanLib
           , string_of_internal_fn FnLength
           , [{internal_expr with texpr= Var name}] )
     ; texpr_loc= no_span
