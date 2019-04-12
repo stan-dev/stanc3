@@ -613,8 +613,7 @@ let%expect_test "Prefix-Op-Example" =
       ((Block
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
          (IfElse 
-          (FunApp CompilerInternal Less__ 
-           ((Var i) (FunApp CompilerInternal PMinus__ ((Lit Int 1)))))
+          (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
           (NRFunApp FnPrint__ ((Lit Str Badger))) ())))) |}]
 
 let%expect_test "read data" =
