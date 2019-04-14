@@ -68,7 +68,7 @@ let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
         FunApp
           ( string_of_internal_fn FnLength
           , [{expr= Var name; emeta= internal_meta}] )
-    ; emeta= {expr_loc= no_span; expr_type= UInt; expr_adlevel= DataOnly} }
+    ; emeta= {mloc= no_span; mtype= UInt; madlevel= DataOnly} }
   in
   let loopvar = sprintf "i_%d__" d in
   let loop_0_to_size per_ele new_vident =
@@ -423,7 +423,7 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
-let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
+let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals
     (list ~sep:cut pp_statement)

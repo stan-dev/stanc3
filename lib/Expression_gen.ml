@@ -18,7 +18,7 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = e1.emeta.expr_type = e2.emeta.expr_type
+let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
 
 (* "__" is an illegal suffix for user functions, used for built-in operators not in signatures *)
 let is_user_defined f =
@@ -27,9 +27,9 @@ let is_user_defined f =
   && not (starts_with "stan::math::" f)
 
 (* retun true if the tpe of the expression is integer or real *)
-let is_scalar e = e.emeta.expr_type = UInt || e.emeta.expr_type = UReal
-let is_matrix e = e.emeta.expr_type = UMatrix
-let is_row_vector e = e.emeta.expr_type = URowVector
+let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
+let is_matrix e = e.emeta.mtype = UMatrix
+let is_row_vector e = e.emeta.mtype = URowVector
 
 (* stub *)
 let pretty_print _e = "pretty printed e"
@@ -78,7 +78,7 @@ and pp_unsizedtype ppf ut =
   | UMathLibraryFunction -> pf ppf "std::function<void()>"
 
 let pp_expr_type ppf e =
-  pp_unsizedtype_local ppf (e.emeta.expr_adlevel, e.emeta.expr_type)
+  pp_unsizedtype_local ppf (e.emeta.madlevel, e.emeta.mtype)
 
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]
@@ -215,7 +215,7 @@ and gen_fun_app ppf ut f es =
 
 (* XXX actually, for params we have to combine read and constrain into one funapp *)
 and pp_constrain_funapp :
-    string -> Format.formatter -> 'm expr_with list -> unit =
+    string -> Format.formatter -> 'm with_expr list -> unit =
  fun constrain_or_un_str ppf -> function
   | var
     :: {expr= Lit (Str, constraint_flavor); _}
@@ -238,7 +238,7 @@ and pp_expr ppf e =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (f, es) -> gen_fun_app ppf e.emeta.expr_type f es
+  | FunApp (f, es) -> gen_fun_app ppf e.emeta.mtype f es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -253,7 +253,7 @@ and pp_expr ppf e =
 
 (* these functions are just for testing *)
 let dummy_locate e =
-  {expr= e; emeta= {expr_type= UInt; expr_adlevel= DataOnly; expr_loc= no_span}}
+  {expr= e; emeta= {mtype= UInt; madlevel= DataOnly; mloc= no_span}}
 
 let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 
