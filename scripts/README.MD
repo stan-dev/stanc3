@@ -107,7 +107,3 @@ Switch to the root of the project and run
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> b98f92d6a970967bd51158c1b555bf338d4da3b7
