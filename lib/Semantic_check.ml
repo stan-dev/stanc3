@@ -6,6 +6,7 @@ during parsing and are in fact irrelevant for building up the parse tree *)
 open Core_kernel
 open Symbol_table
 open Ast
+open Stan_math_signatures
 open Errors
 open Type_conversion
 open Pretty_printing
@@ -70,8 +71,7 @@ let operator_return_type_from_string op_name args =
     | _ -> None
   else
     Map.Poly.find_multi string_of_operators op_name
-    |> List.find_map ~f:(fun name ->
-           Stan_math_signatures.stan_math_returntype name args )
+    |> List.find_map ~f:(fun name -> stan_math_returntype name args)
 
 let operator_return_type op =
   operator_return_type_from_string (string_of_operator op)
@@ -79,7 +79,7 @@ let operator_return_type op =
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
 let pretty_print_all_operator_signatures name =
   Map.Poly.find_multi string_of_operators name
-  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> List.map ~f:pretty_print_all_math_lib_fn_sigs
   |> String.concat ~sep:"\n"
 
 (** Origin blocks, to keep track of where variables are declared *)
@@ -236,9 +236,8 @@ let check_fresh_variable_basic id is_nullary_function =
    achieve that. *)
   let _ =
     if
-      Stan_math_signatures.is_stan_math_function_name id.name
-      && ( is_nullary_function
-         || Stan_math_signatures.stan_math_returntype id.name [] = None )
+      is_stan_math_function_name id.name
+      && (is_nullary_function || stan_math_returntype id.name [] = None)
     then
       let error_msg =
         String.concat ~sep:" "
@@ -450,7 +449,7 @@ let semantic_check_fn_normal ~loc (id, es) =
            signatures: %s\n\
            Instead supplied arguments of incompatible type: %s."
           id.name
-          (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+          (pretty_print_all_math_lib_fn_sigs id.name)
           (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes)
       in
       SemanticError (msg, loc) |> Or_error.of_exn
@@ -481,7 +480,7 @@ let semantic_check_fn_normal ~loc (id, es) =
 (** Stan-Math function application 
 *)
 let semantic_check_fn_stan_math ~loc (id, es) =
-  match Stan_math_signatures.stan_math_returntype id.name es with
+  match stan_math_returntype id.name es with
   | Some Void ->
       id.name
       |> Format.sprintf
@@ -501,13 +500,13 @@ let semantic_check_fn_stan_math ~loc (id, es) =
            signatures: %s\n\
            Instead supplied arguments of incompatible type: %s."
           id.name
-          (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+          (pretty_print_all_math_lib_fn_sigs id.name)
           (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes)
       in
       Or_error.error_string err
 
 let fn_kind_from_identifier id =
-  if Stan_math_signatures.is_stan_math_function_name id.name then Mir.StanLib
+  if is_stan_math_function_name id.name then Mir.StanLib
   else if Option.is_some (Mir.internal_fn_of_string id.name) then
     Mir.CompilerInternal
   else Mir.UserDefined
@@ -601,10 +600,7 @@ let rec semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       let ut = Symbol_table.look vm id.name in
       (* Check that variable in scope if used  *)
       let _ =
-        if
-          ut = None
-          && not (Stan_math_signatures.is_stan_math_function_name uid.name)
-        then
+        if ut = None && not (is_stan_math_function_name uid.name) then
           semantic_error ~loc
             ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       and originblock, type_ =
@@ -660,7 +656,7 @@ let rec semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
              of functions with the suffix _lp."
       in
       let returnblock = lub_ad_e ues in
-      match Stan_math_signatures.stan_math_returntype uid.name ues with
+      match stan_math_returntype uid.name ues with
       | Some Void ->
           semantic_error ~loc
             ( "A returning function was expected but a non-returning function "
@@ -675,13 +671,12 @@ let rec semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       (* Also check whether function arguments meet data requirement. *)
       | None -> (
           let _ =
-            if Stan_math_signatures.is_stan_math_function_name uid.name then
+            if is_stan_math_function_name uid.name then
               semantic_error ~loc
                 ( "Ill-typed arguments supplied to function "
                 ^ ("'" ^ uid.name ^ "'")
                 ^ ". Available signatures: "
-                ^ Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
-                    uid.name
+                ^ pretty_print_all_math_lib_fn_sigs uid.name
                 ^ "\nInstead supplied arguments of incompatible type: "
                 ^ pretty_print_unsizedtypes
                     (List.map ~f:type_of_expr_typed ues)
@@ -1021,8 +1016,7 @@ let rec semantic_check_statement cf s =
         match Option.map ~f:fst (Symbol_table.look vm uid.name) with
         | Some b -> b
         | None ->
-            if Stan_math_signatures.is_stan_math_function_name uid.name then
-              MathLibrary
+            if is_stan_math_function_name uid.name then MathLibrary
             else fatal_error ()
       in
       let _ =
@@ -1080,7 +1074,7 @@ let rec semantic_check_statement cf s =
             "Target can only be accessed in the model block or in definitions \
              of functions with the suffix _lp."
       in
-      match Stan_math_signatures.stan_math_returntype uid.name ues with
+      match stan_math_returntype uid.name ues with
       | Some Void ->
           { stmt_typed= NRFunApp (uid, ues)
           ; stmt_typed_returntype= NoReturnType
@@ -1093,7 +1087,7 @@ let rec semantic_check_statement cf s =
             ^ " was supplied." )
       | None -> (
           let _ =
-            if Stan_math_signatures.is_stan_math_function_name uid.name then
+            if is_stan_math_function_name uid.name then
               semantic_error ~loc
                 {| "Ill-typed arguments supplied to function "
                     ("'" ^ uid.name ^ "'")
@@ -1215,14 +1209,11 @@ let rec semantic_check_statement cf s =
       in
       (* Check typing of ~ and target += *)
       let distribution_name_is_defined name argumenttypes =
-        Stan_math_signatures.stan_math_returntype (name ^ "_lpdf")
-          argumenttypes
+        stan_math_returntype (name ^ "_lpdf") argumenttypes
         = Some (ReturnType UReal)
-        || Stan_math_signatures.stan_math_returntype (name ^ "_lpmf")
-             argumenttypes
+        || stan_math_returntype (name ^ "_lpmf") argumenttypes
            = Some (ReturnType UReal)
-        || Stan_math_signatures.stan_math_returntype (name ^ "_log")
-             argumenttypes
+        || stan_math_returntype (name ^ "_log") argumenttypes
            = Some (ReturnType UReal)
            && name <> "binomial_coefficient"
            && name <> "multiply"
@@ -1251,8 +1242,7 @@ let rec semantic_check_statement cf s =
             ^ " was found with the correct signature." )
       in
       let cumulative_density_is_defined name argumenttypes =
-        ( Stan_math_signatures.stan_math_returntype (name ^ "_lcdf")
-            argumenttypes
+        ( stan_math_returntype (name ^ "_lcdf") argumenttypes
           = Some (ReturnType UReal)
         ||
         match Symbol_table.look vm (name ^ "_lcdf") with
@@ -1260,8 +1250,7 @@ let rec semantic_check_statement cf s =
             check_compatible_arguments_mod_conv name listedtypes argumenttypes
         | _ -> (
             false
-            || Stan_math_signatures.stan_math_returntype (name ^ "_cdf_log")
-                 argumenttypes
+            || stan_math_returntype (name ^ "_cdf_log") argumenttypes
                = Some (ReturnType UReal)
             ||
             match Symbol_table.look vm (name ^ "_cdf_log") with
@@ -1269,8 +1258,7 @@ let rec semantic_check_statement cf s =
                 check_compatible_arguments_mod_conv name listedtypes
                   argumenttypes
             | _ -> false ) )
-        && ( Stan_math_signatures.stan_math_returntype (name ^ "_lccdf")
-               argumenttypes
+        && ( stan_math_returntype (name ^ "_lccdf") argumenttypes
              = Some (ReturnType UReal)
            ||
            match Symbol_table.look vm (name ^ "_lccdf") with
@@ -1279,8 +1267,7 @@ let rec semantic_check_statement cf s =
                  argumenttypes
            | _ -> (
                false
-               || Stan_math_signatures.stan_math_returntype
-                    (name ^ "_ccdf_log") argumenttypes
+               || stan_math_returntype (name ^ "_ccdf_log") argumenttypes
                   = Some (ReturnType UReal)
                ||
                match Symbol_table.look vm (name ^ "_ccdf_log") with
