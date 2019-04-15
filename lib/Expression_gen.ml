@@ -18,7 +18,7 @@ let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
 
 (* return true if the types of the two expression are the same *)
-let types_match e1 e2 = e1.texpr_type = e2.texpr_type
+let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
 
 (* "__" is an illegal suffix for user functions, used for built-in operators not in signatures *)
 let is_user_defined f =
@@ -27,9 +27,9 @@ let is_user_defined f =
   && not (starts_with "stan::math::" f)
 
 (* retun true if the tpe of the expression is integer or real *)
-let is_scalar e = e.texpr_type = UInt || e.texpr_type = UReal
-let is_matrix e = e.texpr_type = UMatrix
-let is_row_vector e = e.texpr_type = URowVector
+let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
+let is_matrix e = e.emeta.mtype = UMatrix
+let is_row_vector e = e.emeta.mtype = URowVector
 
 (* stub *)
 let pretty_print _e = "pretty printed e"
@@ -78,7 +78,7 @@ and pp_unsizedtype ppf ut =
   | UMathLibraryFunction -> pf ppf "std::function<void()>"
 
 let pp_expr_type ppf e =
-  pp_unsizedtype_local ppf (e.texpr_adlevel, e.texpr_type)
+  pp_unsizedtype_local ppf (e.emeta.madlevel, e.emeta.mtype)
 
 let suffix_args f =
   if ends_with "_rng" f then ["base_rng__"]
@@ -214,10 +214,12 @@ and gen_fun_app ppf ut f es =
   pp ppf es
 
 (* XXX actually, for params we have to combine read and constrain into one funapp *)
-and pp_constrain_funapp constrain_or_un_str ppf = function
+and pp_constrain_funapp :
+    string -> Format.formatter -> 'm with_expr list -> unit =
+ fun constrain_or_un_str ppf -> function
   | var
-    :: {texpr= Lit (Str, constraint_flavor); _}
-       :: {texpr= Lit (Str, base_type); _} :: dims ->
+    :: {expr= Lit (Str, constraint_flavor); _}
+       :: {expr= Lit (Str, base_type); _} :: dims ->
       pf ppf "%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
         constrain_or_un_str (list ~sep:comma pp_expr) (var :: dims)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
@@ -231,12 +233,12 @@ and pp_ordinary_fn ppf f es =
 and pp_indexed ppf vident =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes
 
-and pp_expr ppf (e : expr_typed_located) =
-  match e.texpr with
+and pp_expr ppf e =
+  match e.expr with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (f, es) -> gen_fun_app ppf e.texpr_type f es
+  | FunApp (f, es) -> gen_fun_app ppf e.emeta.mtype f es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -251,7 +253,7 @@ and pp_expr ppf (e : expr_typed_located) =
 
 (* these functions are just for testing *)
 let dummy_locate e =
-  {texpr= e; texpr_type= UInt; texpr_adlevel= DataOnly; texpr_loc= no_span}
+  {expr= e; emeta= {mtype= UInt; madlevel= DataOnly; mloc= no_span}}
 
 let pp_unlocated e = strf "%a" pp_expr (dummy_locate e)
 
