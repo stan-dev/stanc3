@@ -145,19 +145,24 @@ type ('e, 's) prog =
   ; prog_path: string }
 [@@deriving sexp]
 
-type expr_typed_located =
-  { texpr_type: unsizedtype
-  ; texpr_loc: location_span sexp_opaque [@compare.ignore]
-  ; texpr: expr_typed_located expr
-  ; texpr_adlevel: autodifftype }
-[@@deriving sexp, hash, map, of_sexp]
+type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
 
-type stmt_loc =
-  { sloc: location_span sexp_opaque [@compare.ignore]
-  ; stmt: (expr_typed_located, stmt_loc) statement }
-[@@deriving hash, map, sexp, of_sexp]
+and mtype_loc_ad =
+  { mtype: unsizedtype
+  ; mloc: location_span sexp_opaque [@compare.ignore]
+  ; madlevel: autodifftype }
+[@@deriving sexp]
 
-type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
+type ('e, 'm) stmt_with =
+  {stmt: ('e with_expr, ('e, 'm) stmt_with) statement; smeta: 'm}
+
+and stmt_loc =
+  (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
+[@@deriving sexp]
+
+type expr_no_meta = unit with_expr
+type stmt_no_meta = (expr_no_meta, unit) stmt_with
+type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
 
 (* == Pretty printers ======================================================= *)
 
@@ -332,14 +337,14 @@ let pp_prog pp_e pp_s ppf prog =
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
-let rec pp_expr_typed_located ppf {texpr; _} =
-  pp_expr pp_expr_typed_located ppf texpr
+let rec pp_expr_typed_located ppf {expr; _} =
+  pp_expr pp_expr_typed_located ppf expr
 
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 
-let rec sexp_of_expr_typed_located {texpr; _} =
-  sexp_of_expr sexp_of_expr_typed_located texpr
+let rec sexp_of_expr_typed_located {expr; _} =
+  sexp_of_expr sexp_of_expr_typed_located expr
 
 let rec sexp_of_stmt_loc {stmt; _} =
   sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
@@ -349,14 +354,6 @@ let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 (* ===================== Some helper functions and values ====================== *)
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
-
-let internal_expr =
-  { texpr= Var "UHOH"
-  ; texpr_loc= no_span
-  ; texpr_type= UInt
-  ; texpr_adlevel= DataOnly }
-
-let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
 type internal_fn =
   | FnLength
@@ -383,3 +380,5 @@ let mk_of_string of_sexp x =
   | Invalid_argument _ -> None
 
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
+let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
+let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
