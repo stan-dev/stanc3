@@ -13,18 +13,17 @@ let rec op_to_funapp op args =
   ; texpr_loc= Ast.expr_loc_lub args
   ; texpr_adlevel= Ast.expr_ad_lub args }
 
-and trans_expr
-    { Ast.expr_typed
-    ; expr_typed_type= texpr_type
-    ; expr_typed_loc= texpr_loc
-    ; expr_typed_ad_level= texpr_adlevel } =
-  match expr_typed with
+and trans_expr {Ast.expr; Ast.emeta} =
+  let texpr_type = emeta.Ast.type_
+  and texpr_loc = emeta.loc
+  and texpr_adlevel = emeta.ad_level in
+  match expr with
   | Ast.Paren x -> trans_expr x
   | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
   | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
   | _ ->
       let texpr =
-        match expr_typed with
+        match expr with
         | Ast.TernaryIf (cond, ifb, elseb) ->
             TernaryIf (trans_expr cond, trans_expr ifb, trans_expr elseb)
         | Variable {name; _} -> Var name
@@ -50,13 +49,12 @@ and trans_idx = function
   | Ast.Downfrom e -> Downfrom (trans_expr e)
   | Ast.Between (lb, ub) -> Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
-    match e.expr_typed_type with
+    match e.emeta.type_ with
     | UInt -> Single (trans_expr e)
     | UArray _ -> MultiIndex (trans_expr e)
     | _ ->
         raise_s
-          [%message "Expecting int or array" (e.expr_typed_type : unsizedtype)]
-    )
+          [%message "Expecting int or array" (e.emeta.type_ : unsizedtype)] )
 
 and trans_exprs = List.map ~f:trans_expr
 
@@ -71,8 +69,9 @@ let neg_inf =
 let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ast_obs t =
-  let trunc cond_op x y =
-    let sloc = x.Ast.expr_typed_loc in
+  let trunc cond_op (x : Ast.typed_expression) y =
+    let meta = x.Ast.emeta in
+    let sloc = meta.Ast.loc in
     { sloc
     ; stmt=
         IfElse
@@ -124,12 +123,10 @@ let add_int_index e i =
     [iteratee]. *)
 let mkfor bodyfn iteratee sloc =
   let idx s =
-    let expr_typed = Ast.Variable {name= s; id_loc= sloc} in
     Ast.Single
-      { Ast.expr_typed_loc= sloc
-      ; expr_typed
-      ; expr_typed_ad_level= DataOnly
-      ; expr_typed_type= UInt }
+      (Ast.mk_typed_expression
+         ~expr:(Ast.Variable {name= s; id_loc= sloc})
+         ~loc:sloc ~type_:UInt ~ad_level:DataOnly)
   in
   let loopvar, reset = Util.gensym_enter () in
   let lower = {internal_expr with texpr= Lit (Int, "0")} in
@@ -372,7 +369,8 @@ let unwrap_block = function
   | [({stmt= Block _; _} as b)] -> b
   | x -> raise_s [%message "Expecting a block, not" (x : stmt_loc list)]
 
-let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
+let rec trans_stmt declc (ts : Ast.typed_statement) =
+  let stmt_typed = ts.stmt and sloc = ts.smeta.loc in
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
   let swrap stmt = [{stmt; sloc}] in
@@ -381,10 +379,8 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
   | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
     ->
       let wrap_expr expr_typed =
-        { Ast.expr_typed_loc= sloc
-        ; expr_typed_ad_level= assign_rhs.expr_typed_ad_level
-        ; expr_typed_type= assign_rhs.expr_typed_type
-        ; expr_typed }
+        Ast.mk_typed_expression ~expr:expr_typed ~loc:sloc
+          ~ad_level:assign_rhs.emeta.ad_level ~type_:assign_rhs.emeta.type_
       in
       let assignee = wrap_expr @@ Ast.Variable assign_identifier in
       let assignee =
@@ -509,7 +505,7 @@ let trans_prog filename
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
   let grab_names_sizes paramblock block =
     let get_name_size s =
-      match s.Ast.stmt_typed with
+      match s.Ast.stmt with
       | Ast.VarDecl {sizedtype; identifier; _} ->
           Some (identifier.name, (trans_sizedtype sizedtype, paramblock))
       | _ -> None

@@ -512,22 +512,18 @@ let%expect_test "parse nested loop" =
     ((functionblock ()) (datablock ()) (transformeddatablock ())
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
-      ((((stmt_untyped
+      ((((stmt
           (For (loop_variable ((name i) (id_loc <opaque>)))
-           (lower_bound
-            ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
-           (upper_bound
-            ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>)))
+           (lower_bound ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+           (upper_bound ((expr (IntNumeral 2)) (emeta ((loc <opaque>)))))
            (loop_body
-            ((stmt_untyped
+            ((stmt
               (For (loop_variable ((name j) (id_loc <opaque>)))
-               (lower_bound
-                ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>)))
-               (upper_bound
-                ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>)))
-               (loop_body
-                ((stmt_untyped (Print ((PString "\"Badger\""))))
-                 (stmt_untyped_loc <opaque>)))))
-             (stmt_untyped_loc <opaque>)))))
-         (stmt_untyped_loc <opaque>)))))
+               (lower_bound ((expr (IntNumeral 3)) (emeta ((loc <opaque>)))))
+                (upper_bound ((expr (IntNumeral 4)) (emeta ((loc <opaque>)))))
+                (loop_body
+                 ((stmt (Print ((PString "\"Badger\""))))
+                  (smeta ((loc <opaque>)))))))
+                (smeta ((loc <opaque>)))))))
+            (smeta ((loc <opaque>)))))))
      (generatedquantitiesblock ())) |}]
