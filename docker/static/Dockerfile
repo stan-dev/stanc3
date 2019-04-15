@@ -3,9 +3,16 @@ FROM alpine:3.8
 
 #Define distro_style and install OS dependencies
 LABEL distro_style="apk"
+RUN apk update && apk upgrade && \
+  apk add build-base bzip2 git tar curl ca-certificates openssl \
+  patch rsync bash libx11-dev nano bubblewrap coreutils xz ncurses-dev m4 pcre-dev
 
-#Install os dependencies
-RUN apk update && apk add build-base bzip2 git tar curl ca-certificates openssl m4 bash
+# Build ocaml and then opam from scratch
+RUN git config --global user.email "docker@example.com" && \
+  git config --global user.name "Docker" && \
+  git clone -b 2.0 git://github.com/ocaml/opam /tmp/opam && \
+  sh -c "cd /tmp/opam && make cold && mkdir -p /usr/local/bin && cp /tmp/opam/opam /usr/local/bin/opam && cp /tmp/opam/opam-installer /usr/local/bin/opam-installer && chmod a+x /usr/local/bin/opam /usr/local/bin/opam-installer && rm -rf /tmp/opam" && \
+  strip /usr/local/bin/opam*
 
 #Init opam and switch to 4.07
 RUN opam init -y --disable-sandboxing
