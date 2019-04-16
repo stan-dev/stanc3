@@ -92,19 +92,18 @@ let%expect_test "parse conditional" =
     ((functionblock ()) (datablock ()) (transformeddatablock ())
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
-      ((((stmt_untyped
+      ((((stmt
           (IfThenElse
-           ((expr_untyped
-             (BinOp ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
-              Less ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))
-            (expr_untyped_loc <opaque>))
-           ((stmt_untyped
+           ((expr
+             (BinOp ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))) Less
+              ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))
+            (emeta ((loc <opaque>))))
+           ((stmt
              (Block
-              (((stmt_untyped (Print ((PString "\"hi\""))))
-                (stmt_untyped_loc <opaque>)))))
-            (stmt_untyped_loc <opaque>))
+              (((stmt (Print ((PString "\"hi\"")))) (smeta ((loc <opaque>))))))) 
+            (smeta ((loc <opaque>))))
            ()))
-         (stmt_untyped_loc <opaque>)))))
+         (smeta ((loc <opaque>)))))))
      (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse dangling else problem" =
@@ -119,27 +118,25 @@ let%expect_test "parse dangling else problem" =
       ((functionblock ()) (datablock ()) (transformeddatablock ())
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
-        ((((stmt_untyped
+        ((((stmt
             (IfThenElse
-             ((expr_untyped
-               (BinOp ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
-                Less ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))
-              (expr_untyped_loc <opaque>))
-             ((stmt_untyped (Print ((PString "\"I'm sorry\""))))
-              (stmt_untyped_loc <opaque>))
+             ((expr
+               (BinOp ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))) Less
+                ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))
+              (emeta ((loc <opaque>))))
+             ((stmt (Print ((PString "\"I'm sorry\"")))) (smeta ((loc <opaque>))))
              ()))
-           (stmt_untyped_loc <opaque>))
-          ((stmt_untyped
+           (smeta ((loc <opaque>))))
+          ((stmt
             (IfThenElse
-             ((expr_untyped
-               (BinOp ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))
-                Less ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>))))
-              (expr_untyped_loc <opaque>))
-             ((stmt_untyped (Print ((PString "\", Dave, \""))))
-              (stmt_untyped_loc <opaque>))
-             (((stmt_untyped (Print ((PString "\"I'm afraid I can't do that.\""))))
-               (stmt_untyped_loc <opaque>)))))
-           (stmt_untyped_loc <opaque>)))))
+             ((expr
+               (BinOp ((expr (IntNumeral 2)) (emeta ((loc <opaque>)))) Less
+                ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))))
+              (emeta ((loc <opaque>))))
+             ((stmt (Print ((PString "\", Dave, \"")))) (smeta ((loc <opaque>))))
+             (((stmt (Print ((PString "\"I'm afraid I can't do that.\""))))
+               (smeta ((loc <opaque>)))))))
+           (smeta ((loc <opaque>)))))))
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse minus unary" =
@@ -152,21 +149,21 @@ let%expect_test "parse minus unary" =
       ((functionblock ()) (datablock ()) (transformeddatablock ())
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
-        ((((stmt_untyped
+        ((((stmt
             (VarDecl (sizedtype SReal) (transformation Identity)
              (identifier ((name x) (id_loc <opaque>))) (initial_value ())
              (is_global false)))
-           (stmt_untyped_loc <opaque>))
-          ((stmt_untyped
+           (smeta ((loc <opaque>))))
+          ((stmt
             (Assignment (assign_identifier ((name x) (id_loc <opaque>)))
              (assign_indices ()) (assign_op Assign)
              (assign_rhs
-              ((expr_untyped
+              ((expr
                 (PrefixOp PMinus
-                 ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
-                  (expr_untyped_loc <opaque>))))
-               (expr_untyped_loc <opaque>)))))
-           (stmt_untyped_loc <opaque>)))))
+                 ((expr (Variable ((name x) (id_loc <opaque>))))
+                  (emeta ((loc <opaque>))))))
+               (emeta ((loc <opaque>)))))))
+           (smeta ((loc <opaque>)))))))
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse unary over binary" =
@@ -179,32 +176,32 @@ let%expect_test "parse unary over binary" =
     ((functionblock ()) (datablock ()) (transformeddatablock ())
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
-      ((((stmt_untyped
+      ((((stmt
           (VarDecl (sizedtype SReal) (transformation Identity)
            (identifier ((name x) (id_loc <opaque>)))
            (initial_value
-            (((expr_untyped
+            (((expr
                (BinOp
-                ((expr_untyped
+                ((expr
                   (BinOp
-                   ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
-                    (expr_untyped_loc <opaque>))
+                   ((expr (Variable ((name x) (id_loc <opaque>))))
+                    (emeta ((loc <opaque>))))
                    Minus
-                   ((expr_untyped
+                   ((expr
                      (PrefixOp PMinus
-                      ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
-                       (expr_untyped_loc <opaque>))))
-                    (expr_untyped_loc <opaque>))))
-                 (expr_untyped_loc <opaque>))
+                      ((expr (Variable ((name x) (id_loc <opaque>))))
+                       (emeta ((loc <opaque>))))))
+                    (emeta ((loc <opaque>))))))
+                 (emeta ((loc <opaque>))))
                 Minus
-                ((expr_untyped
+                ((expr
                   (PrefixOp PMinus
-                   ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
-                    (expr_untyped_loc <opaque>))))
-                 (expr_untyped_loc <opaque>))))
-              (expr_untyped_loc <opaque>))))
+                   ((expr (Variable ((name x) (id_loc <opaque>))))
+                    (emeta ((loc <opaque>))))))
+                 (emeta ((loc <opaque>))))))
+              (emeta ((loc <opaque>))))))
            (is_global false)))
-         (stmt_untyped_loc <opaque>)))))
+         (smeta ((loc <opaque>)))))))
      (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse indices, two different colons" =
@@ -218,38 +215,34 @@ let%expect_test "parse indices, two different colons" =
       ((functionblock ()) (datablock ()) (transformeddatablock ())
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
-        ((((stmt_untyped
+        ((((stmt
             (VarDecl
              (sizedtype
-              (SMatrix ((expr_untyped (IntNumeral 5)) (expr_untyped_loc <opaque>))
-               ((expr_untyped (IntNumeral 5)) (expr_untyped_loc <opaque>))))
+              (SMatrix ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
+               ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))))
              (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
              (initial_value ()) (is_global false)))
-           (stmt_untyped_loc <opaque>))
-          ((stmt_untyped
+           (smeta ((loc <opaque>))))
+          ((stmt
             (Print
              ((PExpr
-               ((expr_untyped
+               ((expr
                  (Indexed
-                  ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
-                   (expr_untyped_loc <opaque>))
+                  ((expr (Variable ((name x) (id_loc <opaque>))))
+                   (emeta ((loc <opaque>))))
                   ((Between
-                    ((expr_untyped
+                    ((expr
                       (TernaryIf
-                       ((expr_untyped
-                         (BinOp
-                          ((expr_untyped (IntNumeral 2))
-                           (expr_untyped_loc <opaque>))
-                          Minus
-                          ((expr_untyped (IntNumeral 3))
-                           (expr_untyped_loc <opaque>))))
-                        (expr_untyped_loc <opaque>))
-                       ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>))
-                       ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>))))
-                     (expr_untyped_loc <opaque>))
-                    ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>))))))
-                (expr_untyped_loc <opaque>))))))
-           (stmt_untyped_loc <opaque>)))))
+                       ((expr
+                         (BinOp ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))
+                          Minus ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))))
+                        (emeta ((loc <opaque>))))
+                       ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))
+                       ((expr (IntNumeral 4)) (emeta ((loc <opaque>))))))
+                     (emeta ((loc <opaque>))))
+                    ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))))
+                (emeta ((loc <opaque>))))))))
+           (smeta ((loc <opaque>)))))))
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse operator precedence" =
@@ -264,165 +257,163 @@ let%expect_test "parse operator precedence" =
       ((functionblock ()) (datablock ()) (transformeddatablock ())
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
-        ((((stmt_untyped
+        ((((stmt
             (Print
              ((PExpr
-               ((expr_untyped
+               ((expr
                  (ArrayExpr
-                  (((expr_untyped (Variable ((name a) (id_loc <opaque>))))
-                    (expr_untyped_loc <opaque>))
-                   ((expr_untyped
+                  (((expr (Variable ((name a) (id_loc <opaque>))))
+                    (emeta ((loc <opaque>))))
+                   ((expr
                      (TernaryIf
-                      ((expr_untyped (Variable ((name b) (id_loc <opaque>))))
-                       (expr_untyped_loc <opaque>))
-                      ((expr_untyped (Variable ((name c) (id_loc <opaque>))))
-                       (expr_untyped_loc <opaque>))
-                      ((expr_untyped
+                      ((expr (Variable ((name b) (id_loc <opaque>))))
+                       (emeta ((loc <opaque>))))
+                      ((expr (Variable ((name c) (id_loc <opaque>))))
+                       (emeta ((loc <opaque>))))
+                      ((expr
                         (BinOp
-                         ((expr_untyped (Variable ((name d) (id_loc <opaque>))))
-                          (expr_untyped_loc <opaque>))
+                         ((expr (Variable ((name d) (id_loc <opaque>))))
+                          (emeta ((loc <opaque>))))
                          Or
-                         ((expr_untyped
+                         ((expr
                            (BinOp
-                            ((expr_untyped (Variable ((name e) (id_loc <opaque>))))
-                             (expr_untyped_loc <opaque>))
+                            ((expr (Variable ((name e) (id_loc <opaque>))))
+                             (emeta ((loc <opaque>))))
                             And
-                            ((expr_untyped
+                            ((expr
                               (BinOp
-                               ((expr_untyped
+                               ((expr
                                  (BinOp
-                                  ((expr_untyped
-                                    (Variable ((name f) (id_loc <opaque>))))
-                                   (expr_untyped_loc <opaque>))
+                                  ((expr (Variable ((name f) (id_loc <opaque>))))
+                                   (emeta ((loc <opaque>))))
                                   Equals
-                                  ((expr_untyped
-                                    (Variable ((name g) (id_loc <opaque>))))
-                                   (expr_untyped_loc <opaque>))))
-                                (expr_untyped_loc <opaque>))
+                                  ((expr (Variable ((name g) (id_loc <opaque>))))
+                                   (emeta ((loc <opaque>))))))
+                                (emeta ((loc <opaque>))))
                                NEquals
-                               ((expr_untyped
+                               ((expr
                                  (BinOp
-                                  ((expr_untyped
+                                  ((expr
                                     (BinOp
-                                     ((expr_untyped
+                                     ((expr
                                        (BinOp
-                                        ((expr_untyped
+                                        ((expr
                                           (BinOp
-                                           ((expr_untyped
+                                           ((expr
                                              (Variable
                                               ((name h) (id_loc <opaque>))))
-                                            (expr_untyped_loc <opaque>))
+                                            (emeta ((loc <opaque>))))
                                            Leq
-                                           ((expr_untyped
+                                           ((expr
                                              (Variable
                                               ((name i) (id_loc <opaque>))))
-                                            (expr_untyped_loc <opaque>))))
-                                         (expr_untyped_loc <opaque>))
+                                            (emeta ((loc <opaque>))))))
+                                         (emeta ((loc <opaque>))))
                                         Less
-                                        ((expr_untyped
+                                        ((expr
                                           (Variable ((name j) (id_loc <opaque>))))
-                                         (expr_untyped_loc <opaque>))))
-                                      (expr_untyped_loc <opaque>))
+                                         (emeta ((loc <opaque>))))))
+                                      (emeta ((loc <opaque>))))
                                      Geq
-                                     ((expr_untyped
+                                     ((expr
                                        (Variable ((name k) (id_loc <opaque>))))
-                                      (expr_untyped_loc <opaque>))))
-                                   (expr_untyped_loc <opaque>))
+                                      (emeta ((loc <opaque>))))))
+                                   (emeta ((loc <opaque>))))
                                   Greater
-                                  ((expr_untyped
+                                  ((expr
                                     (BinOp
-                                     ((expr_untyped
+                                     ((expr
                                        (BinOp
-                                        ((expr_untyped
+                                        ((expr
                                           (Variable ((name l) (id_loc <opaque>))))
-                                         (expr_untyped_loc <opaque>))
+                                         (emeta ((loc <opaque>))))
                                         Plus
-                                        ((expr_untyped
+                                        ((expr
                                           (Variable ((name m) (id_loc <opaque>))))
-                                         (expr_untyped_loc <opaque>))))
-                                      (expr_untyped_loc <opaque>))
+                                         (emeta ((loc <opaque>))))))
+                                      (emeta ((loc <opaque>))))
                                      Minus
-                                     ((expr_untyped
+                                     ((expr
                                        (BinOp
-                                        ((expr_untyped
+                                        ((expr
                                           (BinOp
-                                           ((expr_untyped
+                                           ((expr
                                              (BinOp
-                                              ((expr_untyped
+                                              ((expr
                                                 (BinOp
-                                                 ((expr_untyped
+                                                 ((expr
                                                    (BinOp
-                                                    ((expr_untyped
+                                                    ((expr
                                                       (Variable
                                                        ((name n) (id_loc <opaque>))))
-                                                     (expr_untyped_loc <opaque>))
+                                                     (emeta ((loc <opaque>))))
                                                     Times
-                                                    ((expr_untyped
+                                                    ((expr
                                                       (Variable
                                                        ((name o) (id_loc <opaque>))))
-                                                     (expr_untyped_loc <opaque>))))
-                                                  (expr_untyped_loc <opaque>))
+                                                     (emeta ((loc <opaque>))))))
+                                                  (emeta ((loc <opaque>))))
                                                  Divide
-                                                 ((expr_untyped
+                                                 ((expr
                                                    (Variable
                                                     ((name p) (id_loc <opaque>))))
-                                                  (expr_untyped_loc <opaque>))))
-                                               (expr_untyped_loc <opaque>))
+                                                  (emeta ((loc <opaque>))))))
+                                               (emeta ((loc <opaque>))))
                                               Modulo
-                                              ((expr_untyped
+                                              ((expr
                                                 (Variable
                                                  ((name q) (id_loc <opaque>))))
-                                               (expr_untyped_loc <opaque>))))
-                                            (expr_untyped_loc <opaque>))
+                                               (emeta ((loc <opaque>))))))
+                                            (emeta ((loc <opaque>))))
                                            EltTimes
-                                           ((expr_untyped
+                                           ((expr
                                              (Variable
                                               ((name s) (id_loc <opaque>))))
-                                            (expr_untyped_loc <opaque>))))
-                                         (expr_untyped_loc <opaque>))
+                                            (emeta ((loc <opaque>))))))
+                                         (emeta ((loc <opaque>))))
                                         EltDivide
-                                        ((expr_untyped
+                                        ((expr
                                           (BinOp
-                                           ((expr_untyped
+                                           ((expr
                                              (Variable
                                               ((name t) (id_loc <opaque>))))
-                                            (expr_untyped_loc <opaque>))
+                                            (emeta ((loc <opaque>))))
                                            LDivide
-                                           ((expr_untyped
+                                           ((expr
                                              (BinOp
-                                              ((expr_untyped
+                                              ((expr
                                                 (Variable
                                                  ((name r) (id_loc <opaque>))))
-                                               (expr_untyped_loc <opaque>))
+                                               (emeta ((loc <opaque>))))
                                               Pow
-                                              ((expr_untyped
+                                              ((expr
                                                 (PostfixOp
-                                                 ((expr_untyped
+                                                 ((expr
                                                    (Indexed
-                                                    ((expr_untyped
+                                                    ((expr
                                                       (Variable
                                                        ((name u) (id_loc <opaque>))))
-                                                     (expr_untyped_loc <opaque>))
+                                                     (emeta ((loc <opaque>))))
                                                     ((Single
-                                                      ((expr_untyped
+                                                      ((expr
                                                         (Variable
                                                          ((name v)
                                                           (id_loc <opaque>))))
-                                                       (expr_untyped_loc <opaque>))))))
-                                                  (expr_untyped_loc <opaque>))
+                                                       (emeta ((loc <opaque>))))))))
+                                                  (emeta ((loc <opaque>))))
                                                  Transpose))
-                                               (expr_untyped_loc <opaque>))))
-                                            (expr_untyped_loc <opaque>))))
-                                         (expr_untyped_loc <opaque>))))
-                                      (expr_untyped_loc <opaque>))))
-                                   (expr_untyped_loc <opaque>))))
-                                (expr_untyped_loc <opaque>))))
-                             (expr_untyped_loc <opaque>))))
-                          (expr_untyped_loc <opaque>))))
-                       (expr_untyped_loc <opaque>))))
-                    (expr_untyped_loc <opaque>)))))
-                (expr_untyped_loc <opaque>))))))
-           (stmt_untyped_loc <opaque>)))))
+                                               (emeta ((loc <opaque>))))))
+                                            (emeta ((loc <opaque>))))))
+                                         (emeta ((loc <opaque>))))))
+                                      (emeta ((loc <opaque>))))))
+                                   (emeta ((loc <opaque>))))))
+                                (emeta ((loc <opaque>))))))
+                             (emeta ((loc <opaque>))))))
+                          (emeta ((loc <opaque>))))))
+                       (emeta ((loc <opaque>))))))
+                    (emeta ((loc <opaque>)))))))
+                (emeta ((loc <opaque>))))))))
+           (smeta ((loc <opaque>)))))))
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse crazy truncation example" =
@@ -442,58 +433,50 @@ let%expect_test "parse crazy truncation example" =
       ((functionblock ()) (datablock ()) (transformeddatablock ())
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
-        ((((stmt_untyped
+        ((((stmt
             (VarDecl
              (sizedtype
               (SArray
-               (SArray SReal
-                ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
-               ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))
+               (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+               ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
              (transformation Identity) (identifier ((name T) (id_loc <opaque>)))
              (initial_value
-              (((expr_untyped
+              (((expr
                  (ArrayExpr
-                  (((expr_untyped
+                  (((expr
                      (ArrayExpr
-                      (((expr_untyped (RealNumeral 42.0))
-                        (expr_untyped_loc <opaque>)))))
-                    (expr_untyped_loc <opaque>)))))
-                (expr_untyped_loc <opaque>))))
+                      (((expr (RealNumeral 42.0)) (emeta ((loc <opaque>)))))))
+                    (emeta ((loc <opaque>)))))))
+                (emeta ((loc <opaque>))))))
              (is_global false)))
-           (stmt_untyped_loc <opaque>))
-          ((stmt_untyped
-            (Tilde
-             (arg ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
+           (smeta ((loc <opaque>))))
+          ((stmt
+            (Tilde (arg ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
              (distribution ((name normal) (id_loc <opaque>)))
              (args
-              (((expr_untyped (IntNumeral 0)) (expr_untyped_loc <opaque>))
-               ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))
+              (((expr (IntNumeral 0)) (emeta ((loc <opaque>))))
+               ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
              (truncation
-              (TruncateBetween
-               ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))
-               ((expr_untyped
+              (TruncateBetween ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))
+               ((expr
                  (Indexed
-                  ((expr_untyped (Variable ((name T) (id_loc <opaque>))))
-                   (expr_untyped_loc <opaque>))
-                  ((Single
-                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
-                   (Single
-                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))))
-                (expr_untyped_loc <opaque>))))))
-           (stmt_untyped_loc <opaque>))
-          ((stmt_untyped
+                  ((expr (Variable ((name T) (id_loc <opaque>))))
+                   (emeta ((loc <opaque>))))
+                  ((Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+                   (Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))))
+                (emeta ((loc <opaque>))))))))
+           (smeta ((loc <opaque>))))
+          ((stmt
             (Print
              ((PExpr
-               ((expr_untyped
+               ((expr
                  (Indexed
-                  ((expr_untyped (Variable ((name T) (id_loc <opaque>))))
-                   (expr_untyped_loc <opaque>))
-                  ((Single
-                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
-                   (Single
-                    ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>))))))
-                (expr_untyped_loc <opaque>))))))
-           (stmt_untyped_loc <opaque>)))))
+                  ((expr (Variable ((name T) (id_loc <opaque>))))
+                   (emeta ((loc <opaque>))))
+                  ((Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+                   (Single ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))))
+                (emeta ((loc <opaque>))))))))
+           (smeta ((loc <opaque>)))))))
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse nested loop" =
@@ -512,22 +495,18 @@ let%expect_test "parse nested loop" =
     ((functionblock ()) (datablock ()) (transformeddatablock ())
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
-      ((((stmt_untyped
+      ((((stmt
           (For (loop_variable ((name i) (id_loc <opaque>)))
-           (lower_bound
-            ((expr_untyped (IntNumeral 1)) (expr_untyped_loc <opaque>)))
-           (upper_bound
-            ((expr_untyped (IntNumeral 2)) (expr_untyped_loc <opaque>)))
+           (lower_bound ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+           (upper_bound ((expr (IntNumeral 2)) (emeta ((loc <opaque>)))))
            (loop_body
-            ((stmt_untyped
+            ((stmt
               (For (loop_variable ((name j) (id_loc <opaque>)))
-               (lower_bound
-                ((expr_untyped (IntNumeral 3)) (expr_untyped_loc <opaque>)))
-               (upper_bound
-                ((expr_untyped (IntNumeral 4)) (expr_untyped_loc <opaque>)))
+               (lower_bound ((expr (IntNumeral 3)) (emeta ((loc <opaque>)))))
+               (upper_bound ((expr (IntNumeral 4)) (emeta ((loc <opaque>)))))
                (loop_body
-                ((stmt_untyped (Print ((PString "\"Badger\""))))
-                 (stmt_untyped_loc <opaque>)))))
-             (stmt_untyped_loc <opaque>)))))
-         (stmt_untyped_loc <opaque>)))))
+                ((stmt (Print ((PString "\"Badger\""))))
+                 (smeta ((loc <opaque>)))))))
+             (smeta ((loc <opaque>)))))))
+         (smeta ((loc <opaque>)))))))
      (generatedquantitiesblock ())) |}]

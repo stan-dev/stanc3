@@ -11,4 +11,4 @@ test/*.log
 _build
 _opam
 .#*
-
+node_modules/*
