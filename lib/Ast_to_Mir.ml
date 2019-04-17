@@ -451,13 +451,10 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
         ; upper= wrap @@ FunApp (string_of_internal_fn FnLength, [iteratee])
         ; body }
       |> swrap
-  | Ast.FunDef {returntype; funname; arguments; body} ->
-      let fdbody = trans_stmt body |> unwrap_block in
-      let fdrt =
-        match returntype with Void -> None | ReturnType ut -> Some ut
-      in
-      let fdargs = List.map ~f:trans_arg arguments in
-      FunDef {fdrt; fdname= funname.name; fdargs; fdbody} |> swrap
+  | Ast.FunDef _ ->
+      raise_s
+        [%message
+          "Found function definition statement outside of function block"]
   | Ast.VarDecl
       {sizedtype; transformation; identifier; initial_value; is_global} ->
       ignore is_global ;
@@ -468,6 +465,25 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
   | Ast.Break -> Break |> swrap
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
+
+let trans_fun_def declc (ts : Ast.typed_statement) =
+  let stmt_typed = ts.stmt and sloc = ts.smeta.loc in
+  let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
+  let stmt =
+    match stmt_typed with
+    | Ast.FunDef {returntype; funname; arguments; body} ->
+        { fdrt=
+            (match returntype with Void -> None | ReturnType ut -> Some ut)
+        ; fdname= funname.name
+        ; fdargs= List.map ~f:trans_arg arguments
+        ; fdbody= trans_stmt body |> unwrap_block
+        ; fdloc= sloc }
+    | _ ->
+        raise_s
+          [%message
+            "Found non-function definition statement in function block"]
+  in
+  stmt
 
 let trans_prog filename
     { Ast.functionblock
@@ -560,9 +576,11 @@ let trans_prog filename
   in
   { functions_block=
       (* Should this be AutoDiffable for functions here?*)
-      map
-        (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
-        functionblock
+      Option.value_map functionblock ~default:[] ~f:(fun fundefs ->
+          List.map fundefs ~f:(fun fundef ->
+              trans_fun_def
+                {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+                fundef ) )
   ; input_vars
   ; prepare_data
   ; log_prob
