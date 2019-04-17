@@ -469,7 +469,6 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
 let trans_fun_def declc (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and sloc = ts.smeta.loc in
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
-  (* Function definition location? *)
   let stmt =
     match stmt_typed with
     | Ast.FunDef {returntype; funname; arguments; body} ->
