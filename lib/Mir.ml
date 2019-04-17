@@ -17,9 +17,10 @@ type location =
   ; line_num: int
   ; col_num: int
   ; included_from: location option }
+[@@deriving sexp]
 
 (** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location}
+type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
@@ -95,7 +96,11 @@ type fun_arg_decl = (autodifftype * string * unsizedtype) list
 [@@deriving sexp, hash, map]
 
 type 's fun_def =
-  {fdrt: unsizedtype option; fdname: string; fdargs: fun_arg_decl; fdbody: 's}
+  { fdrt: unsizedtype option
+  ; fdname: string
+  ; fdargs: fun_arg_decl
+  ; fdbody: 's
+  ; fdloc: location_span [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
 and 'e lvalue = string * 'e index list

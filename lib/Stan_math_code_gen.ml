@@ -188,7 +188,7 @@ let rec pp_statement ppf {stmt; smeta} =
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
 
 let pp_fun_def ppf = function
-  | {fdrt; fdname; fdargs; fdbody} -> (
+  | {fdrt; fdname; fdargs; fdbody; _} -> (
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
@@ -440,7 +440,8 @@ let%expect_test "udf" =
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Return (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
-      |> with_no_loc |> List.return |> Block |> with_no_loc }
+      |> with_no_loc |> List.return |> Block |> with_no_loc
+  ; fdloc= no_span }
   |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|

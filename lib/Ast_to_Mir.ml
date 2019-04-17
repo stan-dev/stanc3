@@ -474,7 +474,7 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
   | Ast.Skip -> Skip |> swrap
 
 let trans_fun_def declc (ts : Ast.typed_statement) =
-  let stmt_typed = ts.stmt in
+  let stmt_typed = ts.stmt and sloc = ts.smeta.loc in
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
   (* Function definition location? *)
   let stmt =
@@ -484,7 +484,8 @@ let trans_fun_def declc (ts : Ast.typed_statement) =
             (match returntype with Void -> None | ReturnType ut -> Some ut)
         ; fdname= funname.name
         ; fdargs= List.map ~f:trans_arg arguments
-        ; fdbody= trans_stmt body |> unwrap_block }
+        ; fdbody= trans_stmt body |> unwrap_block
+        ; fdloc= sloc }
     | _ ->
         raise_s
           [%message
