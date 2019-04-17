@@ -92,6 +92,14 @@ and 'e expr =
 [@@@ocaml.warning "-A"]
 
 type fun_arg_decl = (autodifftype * string * unsizedtype) list
+[@@deriving sexp, hash, map]
+
+type 's fun_def =
+  {fdrt: unsizedtype option;
+   fdname: string;
+   fdargs: fun_arg_decl;
+   fdbody: 's}
+[@@deriving sexp, hash, map]
 
 and 'e lvalue = string * 'e index list
 
@@ -117,11 +125,6 @@ and ('e, 's) statement =
       { decl_adtype: autodifftype
       ; decl_id: string
       ; decl_type: 'e sizedtype }
-  | FunDef of
-      { fdrt: unsizedtype option
-      ; fdname: string
-      ; fdargs: fun_arg_decl
-      ; fdbody: 's }
 [@@deriving sexp, hash, map]
 
 type io_block =
@@ -134,7 +137,7 @@ type io_block =
 type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
 
 type ('e, 's) prog =
-  { functions_block: 's list
+  { functions_block: 's fun_def list
   ; input_vars: 'e io_var list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
@@ -240,6 +243,18 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" pp_autodifftype autodifftype pp_unsizedtype unsizedtype
     name
 
+let pp_fun_def pp_s ppf = function
+  | {fdrt; fdname; fdargs; fdbody} -> (
+      match fdrt with
+      | Some rt ->
+        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_s fdbody
+      | None ->
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_s fdbody )
+
 let rec pp_statement pp_e pp_s ppf = function
   | Assignment ((assignee, idcs), rhs) ->
       Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
@@ -271,16 +286,6 @@ let rec pp_statement pp_e pp_s ppf = function
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_sizedtype pp_e)
         decl_type decl_id
-  | FunDef {fdrt; fdname; fdargs; fdbody} -> (
-    match fdrt with
-    | Some rt ->
-        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
-          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-          fdargs pp_s fdbody
-    | None ->
-        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
-          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-          fdargs pp_s fdbody )
 
 let pp_io_block ppf = function
   | Data -> Fmt.string ppf "data"
@@ -322,7 +327,7 @@ let pp_transform_inits pp_s ppf {transform_inits; _} =
 
 let pp_prog pp_e pp_s ppf prog =
   Format.open_vbox 0 ;
-  pp_functions_block pp_s ppf prog ;
+  pp_functions_block (pp_fun_def pp_s) ppf prog ;
   Fmt.cut ppf () ;
   pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;
