@@ -452,9 +452,9 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
         ; body }
       |> swrap
   | Ast.FunDef _ ->
-    raise_s
-      [%message
-        "Found function definition statement outside of function block"]
+      raise_s
+        [%message
+          "Found function definition statement outside of function block"]
   (*TODO | Ast.FunDef {returntype; funname; arguments; body} ->
       let fdbody = trans_stmt body |> unwrap_block in
       let fdrt =
@@ -480,17 +480,15 @@ let trans_fun_def declc (ts : Ast.typed_statement) =
   let stmt =
     match stmt_typed with
     | Ast.FunDef {returntype; funname; arguments; body} ->
-      { fdrt=
-          ( match returntype with
-            | Void -> None
-            | ReturnType ut -> Some ut )
-      ; fdname= funname.name
-      ; fdargs= List.map ~f:trans_arg arguments
-      ; fdbody= trans_stmt body |> unwrap_block }
+        { fdrt=
+            (match returntype with Void -> None | ReturnType ut -> Some ut)
+        ; fdname= funname.name
+        ; fdargs= List.map ~f:trans_arg arguments
+        ; fdbody= trans_stmt body |> unwrap_block }
     | _ ->
-      raise_s
-        [%message
-          "Found non-function definition statement in function block"]
+        raise_s
+          [%message
+            "Found non-function definition statement in function block"]
   in
   stmt
 
@@ -586,10 +584,10 @@ let trans_prog filename
   { functions_block=
       (* Should this be AutoDiffable for functions here?*)
       Option.value_map functionblock ~default:[] ~f:(fun fundefs ->
-          List.map
-            fundefs
-            ~f:(fun fundef -> trans_fun_def {dread= None; dconstrain= None; dadlevel= AutoDiffable} fundef)
-          )
+          List.map fundefs ~f:(fun fundef ->
+              trans_fun_def
+                {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+                fundef ) )
   ; input_vars
   ; prepare_data
   ; log_prob

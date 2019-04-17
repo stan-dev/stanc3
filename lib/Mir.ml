@@ -95,10 +95,7 @@ type fun_arg_decl = (autodifftype * string * unsizedtype) list
 [@@deriving sexp, hash, map]
 
 type 's fun_def =
-  {fdrt: unsizedtype option;
-   fdname: string;
-   fdargs: fun_arg_decl;
-   fdbody: 's}
+  {fdrt: unsizedtype option; fdname: string; fdargs: fun_arg_decl; fdbody: 's}
 [@@deriving sexp, hash, map]
 
 and 'e lvalue = string * 'e index list
@@ -245,12 +242,12 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
 
 let pp_fun_def pp_s ppf = function
   | {fdrt; fdname; fdargs; fdbody} -> (
-      match fdrt with
-      | Some rt ->
+    match fdrt with
+    | Some rt ->
         Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody
-      | None ->
+    | None ->
         Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )

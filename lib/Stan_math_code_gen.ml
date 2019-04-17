@@ -427,8 +427,7 @@ using namespace stan::math; |}
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings globals
-    (list ~sep:cut pp_fun_def)
+    version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
 
@@ -442,8 +441,7 @@ let%expect_test "udf" =
   ; fdbody=
       Return (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Block |> with_no_loc }
-  |> strf "@[<v>%a" pp_fun_def
-  |> print_endline ;
+  |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
     template <typename T0__, typename T1__>
