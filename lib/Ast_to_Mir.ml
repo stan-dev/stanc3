@@ -455,13 +455,6 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
       raise_s
         [%message
           "Found function definition statement outside of function block"]
-  (*TODO | Ast.FunDef {returntype; funname; arguments; body} ->
-      let fdbody = trans_stmt body |> unwrap_block in
-      let fdrt =
-        match returntype with Void -> None | ReturnType ut -> Some ut
-      in
-      let fdargs = List.map ~f:trans_arg arguments in
-      FunDef {fdrt; fdname= funname.name; fdargs; fdbody} |> swrap *)
   | Ast.VarDecl
       {sizedtype; transformation; identifier; initial_value; is_global} ->
       ignore is_global ;
