@@ -40,6 +40,9 @@ type 'e index =
   | Between of 'e * 'e
 [@@deriving sexp, hash, compare, map]
 
+(** Front-end function kinds *)
+type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
+
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)
 type 'e expression =
@@ -50,7 +53,7 @@ type 'e expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of Mir.fun_kind * identifier * 'e list
+  | FunApp of fun_kind * identifier * 'e list
   | CondDistApp of identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
@@ -129,30 +132,6 @@ type 'e transformation =
   | Correlation
   | Covariance
 [@@deriving sexp, compare, map, hash]
-
-(* let pp_transformation pp_e ppf = function
-  | Identity -> ()
-  | Lower expr -> (pp_e |> label "lower" |> angle_brackets) ppf expr
-  | Upper expr -> (pp_e |> label "upper" |> angle_brackets) ppf expr
-  | LowerUpper (lower_expr, upper_expr) ->
-      ( Fmt.(pair ~sep:comma (pp_e |> label "lower") (pp_e |> label "upper"))
-      |> angle_brackets )
-        ppf (lower_expr, upper_expr)
-  | Offset expr -> (pp_e |> label "offet" |> angle_brackets) ppf expr
-  | Multiplier expr -> (pp_e |> label "multiplier" |> angle_brackets) ppf expr
-  | OffsetMultiplier (offset_expr, mult_expr) ->
-      ( Fmt.(
-          pair ~sep:comma (pp_e |> label "offset") (pp_e |> label "multiplier"))
-      |> angle_brackets )
-        ppf (offset_expr, mult_expr)
-  | Ordered -> (angle_brackets Fmt.string) ppf "ordered"
-  | PositiveOrdered -> (angle_brackets Fmt.string) ppf "positive_ordered"
-  | Simplex -> (angle_brackets Fmt.string) ppf "simplex"
-  | UnitVector -> (angle_brackets Fmt.string) ppf "unit_vector"
-  | CholeskyCorr -> (angle_brackets Fmt.string) ppf "cholesky_factor_corr"
-  | CholeskyCov -> (angle_brackets Fmt.string) ppf "cholesky_factor_cov"
-  | Correlation -> (angle_brackets Fmt.string) ppf "corr_matrix"
-  | Covariance -> (angle_brackets Fmt.string) ppf "cov_matrix" *)
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and

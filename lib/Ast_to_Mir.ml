@@ -6,6 +6,10 @@ let unwrap_return_exn = function
   | Some (ReturnType ut) -> ut
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
+let trans_fn_kind = function
+  | Ast.StanLib -> Mir.StanLib
+  | UserDefined -> UserDefined
+
 let rec op_to_funapp op args =
   { texpr= FunApp (Mir.StanLib, Ast.string_of_operator op, trans_exprs args)
   ; texpr_type=
@@ -31,7 +35,7 @@ and trans_expr
         | IntNumeral x -> Lit (Int, x)
         | RealNumeral x -> Lit (Real, x)
         | FunApp (fn_kind, {name; _}, args) ->
-            FunApp (fn_kind, name, trans_exprs args)
+            FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
         | Ast.CondDistApp ({name; _}, args) ->
             FunApp (Mir.StanLib, name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
