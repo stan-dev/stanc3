@@ -368,7 +368,7 @@ let semantic_check_operator i = i
 (* -- Expressions ----------------------------------------------------------- *)
 
 (* Function application validation checks *)
-let semantic_check_fn_map_rect ~loc (id, es) =
+let semantic_check_fn_map_rect ~loc id es =
   match (id.name, es) with
   | "map_rect", {expr_typed= Variable arg1_name; _} :: _ ->
       if
@@ -383,10 +383,10 @@ let semantic_check_fn_map_rect ~loc (id, es) =
               arg1_name.name
           , loc )
         |> Or_error.of_exn
-      else Result.Ok (id, es)
-  | _ -> Result.Ok (id, es)
+      else Result.Ok ()
+  | _ -> Result.Ok ()
 
-let semantic_check_fn_conditioning ~loc (id, es) =
+let semantic_check_fn_conditioning ~loc id =
   if
     List.exists ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"] ~f:(fun x ->
         String.is_suffix id.name ~suffix:x )
@@ -396,12 +396,12 @@ let semantic_check_fn_conditioning ~loc (id, es) =
          require a vertical bar (|) between the first two arguments."
       , loc )
     |> Or_error.of_exn
-  else Result.Ok (id, es)
+  else Result.Ok ()
 
 (** `Target+=` can only be used in model and functions 
     with right suffix (same for tilde etc) 
 *)
-let semantic_check_fn_target_plus_equals cf ~loc (id, es) =
+let semantic_check_fn_target_plus_equals cf ~loc id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not (cf.in_lp_fun_def || cf.current_block = Model)
@@ -411,12 +411,12 @@ let semantic_check_fn_target_plus_equals cf ~loc (id, es) =
          functions with the suffix _lp."
       , loc )
     |> Or_error.of_exn
-  else Result.Ok (id, es)
+  else Result.Ok ()
 
 (** Rng functions cannot be used in Tp or Model and only 
     in funciton defs with the right suffix 
 *)
-let semantic_check_fn_rng cf ~loc (id, es) =
+let semantic_check_fn_rng cf ~loc id  =
   if
     String.is_suffix id.name ~suffix:"_rng"
     && ( (cf.in_fun_def && not cf.in_rng_fun_def)
@@ -428,10 +428,10 @@ let semantic_check_fn_rng cf ~loc (id, es) =
          ending in _rng."
       , loc )
     |> Or_error.of_exn
-  else Result.Ok (id, es)
+  else Result.Ok ()
 
 (* Regular function application *)
-let semantic_check_fn_normal ~loc (id, es) =
+let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
   | Some (_, Mir.UFun (_, Void)) ->
       SemanticError
@@ -479,7 +479,7 @@ let semantic_check_fn_normal ~loc (id, es) =
 
 (** Stan-Math function application 
 *)
-let semantic_check_fn_stan_math ~loc (id, es) =
+let semantic_check_fn_stan_math ~loc id es =
   match stan_math_returntype id.name es with
   | Some Void ->
       id.name
@@ -511,11 +511,11 @@ let fn_kind_from_identifier id =
     Mir.CompilerInternal
   else Mir.UserDefined
 
-let semantic_check_fn ~loc (id, es) =
+let semantic_check_fn ~loc id es =
   match fn_kind_from_identifier id with
-  | Mir.StanLib -> semantic_check_fn_stan_math ~loc (id, es)
-  | CompilerInternal -> semantic_check_fn_normal ~loc (id, es)
-  | UserDefined -> semantic_check_fn_normal ~loc (id, es)
+  | Mir.StanLib -> semantic_check_fn_stan_math ~loc id es
+  | CompilerInternal -> semantic_check_fn_normal ~loc id es
+  | UserDefined -> semantic_check_fn_normal ~loc id es
 
 let rec semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
   match expr_untyped with
@@ -622,13 +622,16 @@ let rec semantic_check_expression cf {expr_untyped_loc= loc; expr_untyped} =
       ; expr_typed_loc= loc }
   | FunApp (_, id, es) ->
       let uid = semantic_check_identifier id
-      and ues = List.map ~f:(semantic_check_expression cf) es in
-      semantic_check_fn_map_rect ~loc (uid, ues)
-      |> Or_error.bind ~f:(semantic_check_fn_conditioning ~loc)
-      |> Or_error.bind ~f:(semantic_check_fn_target_plus_equals cf ~loc)
-      |> Or_error.bind ~f:(semantic_check_fn_rng cf ~loc)
-      |> Or_error.bind ~f:(semantic_check_fn ~loc)
-      |> Or_error.ok_exn
+      and ues = List.map ~f:(semantic_check_expression cf) es in      
+      Or_error.(
+        semantic_check_fn_map_rect ~loc uid ues
+        *> semantic_check_fn_conditioning ~loc uid
+        *> semantic_check_fn_target_plus_equals cf ~loc uid
+        *> semantic_check_fn_rng cf ~loc uid
+        *> semantic_check_fn ~loc uid ues
+        |> ok_exn 
+      )
+
   | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let open String in
