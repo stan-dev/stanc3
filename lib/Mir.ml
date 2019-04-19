@@ -230,7 +230,8 @@ let rec pp_expr pp_e ppf = function
 
 and pp_indexed pp_e ppf (ident, indices) =
   Fmt.pf ppf {|@[%s%a@]|} ident
-    Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
+    ( if List.is_empty indices then fun _ _ -> ()
+    else Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) )
     indices
 
 and pp_index pp_e ppf = function
