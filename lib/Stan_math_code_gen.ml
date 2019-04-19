@@ -187,10 +187,31 @@ let rec pp_statement ppf {stmt; smeta} =
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
 
+(** [pp_located_error_b] automatically adds a Block wrapper *)
+let pp_located_error_b ppf (body_stmts, err_msg) =
+  pp_located_error ppf
+    (pp_statement, {stmt= Block body_stmts; smeta= no_span}, err_msg)
+
 let pp_fun_def ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
+      in
+      let pp_body ppf fdbody =
+        let text = pf ppf "%s@;" in
+        pf ppf
+          "@[<hv 8>typedef typename \
+           boost::math::tools::promote_args<%a>::type local_scalar_t__;@]@,"
+          (list ~sep:comma string) argtypetemplates ;
+        text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
+        text "const static bool propto__ = true;" ;
+        text "(void) propto__;" ;
+        text
+          "local_scalar_t__ \
+           DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+        text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
+        pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
+        pf ppf "@ "
       in
       pf ppf "@[<hov>template <%a>@]@ "
         (list ~sep:comma (fmt "typename %s"))
@@ -201,26 +222,7 @@ let pp_fun_def ppf = function
       pf ppf ", std::ostream* pstream__@]) " ;
       match fdbody.stmt with
       | Skip -> pf ppf ";@ "
-      | _ ->
-          pp_block ppf
-            ( (fun ppf fdbody ->
-                let text = pf ppf "%s@;" in
-                pf ppf
-                  "@[<hv 8>typedef typename \
-                   boost::math::tools::promote_args<%a>::type \
-                   local_scalar_t__;@]@,"
-                  (list ~sep:comma string) argtypetemplates ;
-                text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
-                text "const static bool propto__ = true;" ;
-                text "(void) propto__;" ;
-                text
-                  "local_scalar_t__ \
-                   DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-                text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
-                pp_located_error ppf
-                  (pp_statement, fdbody, "inside UDF " ^ fdname) )
-            , fdbody ) ;
-          pf ppf "@ " )
+      | _ -> pp_block ppf (pp_body, fdbody) )
 
 let%expect_test "location propagates" =
   let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
@@ -255,7 +257,7 @@ let rec pp_zeroing_ctor_call ppf st =
   match st with
   | SInt | SReal -> string ppf "0"
   | SArray (t, dim) -> pf ppf "%a, %a" pp_expr dim pp_zeroing_ctor_call t
-  | SRowVector dim | SVector dim -> ignore dim ; pf ppf "%s" "XXX todo"
+  | SRowVector dim | SVector dim -> ignore dim ; pf ppf "%s" "XXX TODO"
   | SMatrix (dim1, dim2) -> ignore (dim1, dim2)
 
 let var_context_container st =
@@ -311,7 +313,7 @@ let pp_ctor ppf p =
         pf ppf "@ static const char* function__ = \"%s_namespace::%s\";"
           p.prog_name p.prog_name ;
         pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
-        pp_located_error ppf (pp_statements, p.prepare_data, "inside ctor") )
+        pp_located_error_b ppf (p.prepare_data, "inside ctor") )
     , p )
 
 let pp_model_private ppf p =
@@ -391,8 +393,7 @@ let pp_log_prob ppf p =
   text "T__ lp__(0.0);" ;
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
-  pp_located_error ppf
-    (pp_statement, {stmt= Block p.log_prob; smeta= no_span}, "inside log_prob") ;
+  pp_located_error_b ppf (p.log_prob, "inside log_prob") ;
   pf ppf "@]@,}@,"
 
 let pp_model_public ppf p =
@@ -431,7 +432,6 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
 
-(* XXX arg templating is broken - needs T0, T1 etc in arg decl*)
 let%expect_test "udf" =
   let with_no_loc stmt = {stmt; smeta= no_span} in
   let w e = {expr= e; emeta= internal_meta} in
@@ -466,4 +466,5 @@ let%expect_test "udf" =
           // Next line prevents compiler griping about no return
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
+
     } |}]
