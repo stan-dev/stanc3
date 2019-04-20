@@ -57,11 +57,10 @@ let%expect_test "set size mat array" =
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
-  pf ppf "@,@;<1 2>@[<v>%a@]@]" pp_body body
+  pf ppf " %a@]" pp_body body
 
-(* XXX this is so bad, someone please rethink these concepts for us! I suspect
-   the entire function is premised on a bad level of abstraction.
-*)
+(* pf ppf " {@;<1 2>@[<v>%a@]@;<1 2>}@]" pp_body body *)
+
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
     { expr=

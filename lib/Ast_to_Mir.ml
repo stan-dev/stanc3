@@ -243,13 +243,17 @@ let extract_constraint_args = function
 let rec gen_check decl_type decl_id decl_trans smeta adlevel =
   let forl = constraint_forl decl_trans in
   let chk fn args =
+    let check_id id =
+      let id_str =
+        { expr= Lit (Str, Fmt.strf "%a" pp_expr_typed_located id)
+        ; emeta= internal_meta }
+      in
+      let fname = string_of_internal_fn FnCheck in
+      let stmt = NRFunApp (fname, fn :: id_str :: id :: trans_exprs args) in
+      {stmt; smeta}
+    in
     let mtype = remove_size decl_type in
-    forl
-      (fun id ->
-        { stmt=
-            NRFunApp
-              (string_of_internal_fn FnCheck, fn :: id :: trans_exprs args)
-        ; smeta } )
+    forl check_id
       {expr= Var decl_id; emeta= {mtype; mloc= smeta; madlevel= adlevel}}
       smeta
   in
@@ -421,11 +425,16 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
   | Ast.While (cond, body) ->
       While (trans_expr cond, trans_single_stmt body) |> swrap
   | Ast.For {loop_variable; lower_bound; upper_bound; loop_body} ->
+      let body =
+        match trans_single_stmt loop_body with
+        | {stmt= Block _; _} as b -> b
+        | x -> {x with stmt= Block [x]}
+      in
       For
         { loopvar= loop_variable.Ast.name
         ; lower= trans_expr lower_bound
         ; upper= trans_expr upper_bound
-        ; body= trans_single_stmt loop_body }
+        ; body }
       |> swrap
   | Ast.ForEach (loopvar, iteratee, body) ->
       let newsym = Util.gensym () in
@@ -669,6 +678,6 @@ let%expect_test "gen quant" =
           (body
            (Block
             ((NRFunApp FnCheck__
-              ((Lit Str greater_or_equal)
+              ((Lit Str greater_or_equal) (Lit Str "mat[sym1__, sym2__]")
                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
                (Lit Int 0)))))))))))) |}]
