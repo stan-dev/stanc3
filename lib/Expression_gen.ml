@@ -214,14 +214,17 @@ and gen_fun_app ppf ut f es =
   pp ppf es
 
 (* XXX actually, for params we have to combine read and constrain into one funapp *)
-and pp_constrain_funapp :
-    string -> Format.formatter -> 'm with_expr list -> unit =
- fun constrain_or_un_str ppf -> function
+and pp_constrain_funapp constrain_or_un_str ppf = function
   | var
     :: {expr= Lit (Str, constraint_flavor); _}
-       :: {expr= Lit (Str, base_type); _} :: dims ->
-      pf ppf "%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
-        constrain_or_un_str (list ~sep:comma pp_expr) (var :: dims)
+       :: {expr= Lit (Str, base_type); _} :: arg :: dims ->
+      (*
+       (match arg with
+        | FunApp (f, inner_args) when (internal_fn_of_string f) = Some FnReadParam ->
+        | _ ->
+ *)
+      pf ppf "in__.%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
+        constrain_or_un_str (list ~sep:comma pp_expr) (var :: arg :: dims)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
 and pp_ordinary_fn ppf f es =

@@ -191,8 +191,8 @@ let rec unsizedtype_to_string = function
   | UMatrix -> "matrix"
   | UVector -> "vector"
   | URowVector -> "row_vector"
-  | UReal -> "real"
-  | UInt -> "int"
+  | UReal -> "scalar"
+  | UInt -> "integer"
   | UArray t -> unsizedtype_to_string t
   | t ->
       raise_s
@@ -647,7 +647,7 @@ let%expect_test "read param" =
        (Block
         ((Assignment (mat ())
           (FunApp FnConstrain__
-           ((FunApp FnReadParam__ ((Lit Str mat))) (Lit Str lb) (Lit Str real)
+           ((FunApp FnReadParam__ ((Lit Str mat))) (Lit Str lb) (Lit Str scalar)
             (Lit Int 0))))))))) |}]
 
 let%expect_test "gen quant" =
