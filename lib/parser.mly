@@ -496,7 +496,7 @@ atomic_statement:
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
-    {  grammar_logger "funapp_statement" ; NRFunApp (id, args)  }
+    {  grammar_logger "funapp_statement" ; NRFunApp (UserDefined,id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)

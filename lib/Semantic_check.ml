@@ -1059,7 +1059,7 @@ let rec semantic_check_statement cf s =
               ". Available signatures:"
               ^ pretty_print_all_operator_signatures opname
             else "" ) )
-  | NRFunApp (id, es) -> (
+  | NRFunApp (fn_kind, id, es) -> (
       let uid = semantic_check_identifier id in
       let ues = List.map ~f:(semantic_check_expression cf) es in
       let _ =
@@ -1073,7 +1073,7 @@ let rec semantic_check_statement cf s =
       in
       match stan_math_returntype uid.name ues with
       | Some Void ->
-          { stmt_typed= NRFunApp (uid, ues)
+          { stmt_typed= NRFunApp (fn_kind, uid, ues)
           ; stmt_typed_returntype= NoReturnType
           ; stmt_typed_loc= loc }
       (* Check that NRFunction applications are non-returning functions *)
@@ -1112,7 +1112,7 @@ let rec semantic_check_statement cf s =
                         (List.map ~f:type_of_expr_typed ues)
                     ^ "." )
               in
-              { stmt_typed= NRFunApp (uid, ues)
+              { stmt_typed= NRFunApp (fn_kind, uid, ues)
               ; stmt_typed_returntype= NoReturnType
               ; stmt_typed_loc= loc }
           | Some (_, UFun (_, ReturnType _)) ->

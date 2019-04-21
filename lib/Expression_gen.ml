@@ -227,6 +227,15 @@ and pp_ordinary_fn ppf f es =
   pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
+and pp_compiler_internal_fn ppf f es =
+  match Mir.internal_fn_of_string f with
+  | None -> failwith "Expecting internal function but found `%s`" f
+  | Some FnLength -> pp_unary ppf "length(%a)" es
+  | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
+  | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
+  | Some FnUnconstrain -> pp_constrain_funapp "unconstrain" ppf es
+  | _ -> pf ppf "XXX TODO "
+
 and pp_expr ppf (e : expr_typed_located) =
   match e.texpr with
   | Var s -> pf ppf "%s" s
@@ -234,7 +243,7 @@ and pp_expr ppf (e : expr_typed_located) =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (Mir.StanLib, f, es) -> gen_fun_app ppf e.texpr_type f es
   | FunApp (Mir.CompilerInternal, f, es) ->
-      pp_ordinary_fn ppf (stan_namespace_qualify f) es
+      pp_compiler_internal_fn ppf (stan_namespace_qualify f) es
   | FunApp (Mir.UserDefined, f, es) ->
       pp_ordinary_fn ppf (stan_namespace_qualify f) es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2

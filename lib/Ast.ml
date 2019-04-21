@@ -142,7 +142,7 @@ type ('e, 's) statement =
       ; assign_indices: 'e index list
       ; assign_op: assignmentoperator
       ; assign_rhs: 'e }
-  | NRFunApp of identifier * 'e list
+  | NRFunApp of fun_kind * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
   | IncrementLogProb of 'e

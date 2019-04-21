@@ -267,7 +267,9 @@ let rec gen_check decl_type decl_id decl_trans sloc adlevel =
       (fun id ->
         { stmt=
             NRFunApp
-              (string_of_internal_fn FnCheck, fn :: id :: trans_exprs args)
+              ( Mir.CompilerInternal
+              , string_of_internal_fn FnCheck
+              , fn :: id :: trans_exprs args )
         ; sloc } )
       {texpr= Var decl_id; texpr_type; texpr_loc= sloc; texpr_adlevel= adlevel}
       sloc
@@ -403,8 +405,8 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
         | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
       in
       Assignment (trans_expr assignee, rhs) |> swrap
-  | Ast.NRFunApp ({name; _}, args) ->
-      NRFunApp (name, trans_exprs args) |> swrap
+  | Ast.NRFunApp (fn_kind, {name; _}, args) ->
+      NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let add_dist =
@@ -420,10 +422,16 @@ let rec trans_stmt declc {Ast.stmt_typed; stmt_typed_loc= sloc; _} =
       in
       truncate_dist arg truncation @ [{sloc; stmt= add_dist}]
   | Ast.Print ps ->
-      NRFunApp (string_of_internal_fn FnPrint, trans_printables sloc ps)
+      NRFunApp
+        ( CompilerInternal
+        , string_of_internal_fn FnPrint
+        , trans_printables sloc ps )
       |> swrap
   | Ast.Reject ps ->
-      NRFunApp (string_of_internal_fn FnReject, trans_printables sloc ps)
+      NRFunApp
+        ( CompilerInternal
+        , string_of_internal_fn FnReject
+        , trans_printables sloc ps )
       |> swrap
   | Ast.IfThenElse (cond, ifb, elseb) ->
       IfElse
@@ -618,7 +626,7 @@ let%expect_test "Prefix-Op-Example" =
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
          (IfElse 
           (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
-          (NRFunApp FnPrint__ ((Lit Str Badger))) ())))) |}]
+          (NRFunApp CompilerInternal FnPrint__ ((Lit Str Badger))) ())))) |}]
 
 let%expect_test "read data" =
   let m = mir_from_string "data { matrix[10, 20] mat[5]; }" in
@@ -676,7 +684,7 @@ let%expect_test "gen quant" =
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
            (Block
-            ((NRFunApp FnCheck__
+            ((NRFunApp CompilerInternal FnCheck__
               ((Lit Str greater_or_equal)
                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
                (Lit Int 0)))))))))))) |}]

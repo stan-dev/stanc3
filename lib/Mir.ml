@@ -100,7 +100,7 @@ type fun_arg_decl = (autodifftype * string * unsizedtype) list
 and ('e, 's) statement =
   | Assignment of 'e * 'e
   | TargetPE of 'e
-  | NRFunApp of string * 'e list
+  | NRFunApp of fun_kind * string * 'e list
   | Break
   | Continue
   | Return of 'e option
@@ -239,7 +239,7 @@ let rec pp_statement pp_e pp_s ppf = function
       Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} pp_e assignee pp_e expr
   | TargetPE expr ->
       Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
-  | NRFunApp (name, args) ->
+  | NRFunApp (fn_kind, name, args) ->
       Fmt.pf ppf {|@[%s%a;@]|} name Fmt.(list pp_e ~sep:comma |> parens) args
   | Break -> pp_keyword ppf "break;"
   | Continue -> pp_keyword ppf "continue;"

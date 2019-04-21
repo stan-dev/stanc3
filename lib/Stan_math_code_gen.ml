@@ -68,7 +68,7 @@ let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
     { texpr=
         FunApp
-          ( Mir.StanLib
+          ( Mir.CompilerInternal
           , string_of_internal_fn FnLength
           , [{internal_expr with texpr= Var name}] )
     ; texpr_loc= no_span
@@ -172,11 +172,12 @@ let rec pp_statement ppf {stmt; sloc} =
       pf ppf "@[<hov 4>%a =@;%a;@]" ExprGen.pp_expr assignee ExprGen.pp_expr
         rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" ExprGen.pp_expr e
-  | NRFunApp (fname, {texpr= Lit (Str, check_name); _} :: args)
+  | NRFunApp (fn_kind, fname, {texpr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
       let args = {internal_expr with texpr= Var "function__"} :: args in
-      pp_statement ppf {stmt= NRFunApp ("check_" ^ check_name, args); sloc}
-  | NRFunApp (fname, args) ->
+      pp_statement ppf
+        {stmt= NRFunApp (fn_kind, "check_" ^ check_name, args); sloc}
+  | NRFunApp (_, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname
         (list ~sep:comma ExprGen.pp_expr)
@@ -237,8 +238,10 @@ let%expect_test "location propagates" =
   let loc2 = {no_span with begin_loc= {no_loc with filename= "LO"}} in
   { sloc= loc1
   ; stmt=
-      Block [{stmt= NRFunApp (string_of_internal_fn FnPrint, []); sloc= loc2}]
-  }
+      Block
+        [ { stmt=
+              NRFunApp (Mir.CompilerInternal, string_of_internal_fn FnPrint, [])
+          ; sloc= loc2 } ] }
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
