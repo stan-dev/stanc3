@@ -47,7 +47,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
   | st -> pf ppf "%s = %a;@," decl_id pp_size_ctor st
 
 let%expect_test "set size mat array" =
-  let int i = {internal_expr with texpr= Lit (Int, string_of_int i)} in
+  let int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} in
   strf "@[<v>%a@]" pp_set_size
     ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
@@ -66,18 +66,16 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
 *)
 let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
-    { texpr=
+    { expr=
         FunApp
-          ( Mir.CompilerInternal
+          ( CompilerInternal
           , string_of_internal_fn FnLength
-          , [{internal_expr with texpr= Var name}] )
-    ; texpr_loc= no_span
-    ; texpr_type= UInt
-    ; texpr_adlevel= DataOnly }
+          , [{expr= Var name; emeta= internal_meta}] )
+    ; emeta= {mloc= no_span; mtype= UInt; madlevel= DataOnly} }
   in
   let loopvar = sprintf "i_%d__" d in
   let loop_0_to_size per_ele new_vident =
-    pp_for_loop ppf (loopvar, zero, size, per_ele, new_vident)
+    pp_for_loop ppf (loopvar, loop_bottom, size, per_ele, new_vident)
   in
   match st with
   | SInt | SReal -> pf ppf "%a" pp_code_per_element name
@@ -100,8 +98,6 @@ let pp_sized_decl ppf (vident, st, adtype) =
   pf ppf "%a@,%a" pp_decl
     (vident, remove_size st, adtype)
     pp_set_size (vident, st, adtype)
-
-let with_no_loc stmt = {stmt; sloc= no_span}
 
 let pp_located_msg ppf msg =
   pf ppf
@@ -148,7 +144,7 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
 
 let math_fn_translations = function
   | FnPrint ->
-      Some ("stan_print", [{internal_expr with texpr= Var "pstream__"}])
+      Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
   | FnLength -> Some ("length", [])
   | _ -> None
 
@@ -161,22 +157,20 @@ let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" ExprGen.pp_unsizedtype_custom_scalar
     (custom_scalar, ut) name
 
-let rec pp_statement ppf {stmt; sloc} =
+let rec pp_statement ppf {stmt; smeta} =
   ( match stmt with
-  | Block _ | FunDef _ | Break | Continue | Skip -> ()
-  | _ -> pp_location ppf sloc ) ;
+  | Block _ | Break | Continue | Skip -> ()
+  | _ -> pp_location ppf smeta ) ;
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
-  | Assignment (assignee, rhs) ->
-      (* XXX completely wrong *)
-      pf ppf "@[<hov 4>%a =@;%a;@]" ExprGen.pp_expr assignee ExprGen.pp_expr
-        rhs
+  | Assignment ((assignee, idcs), rhs) ->
+      ignore (assignee, idcs, rhs) (* TODO *)
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" ExprGen.pp_expr e
-  | NRFunApp (fn_kind, fname, {texpr= Lit (Str, check_name); _} :: args)
+  | NRFunApp (fn_kind, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
-      let args = {internal_expr with texpr= Var "function__"} :: args in
+      let args = {expr= Var "function__"; emeta= internal_meta} :: args in
       pp_statement ppf
-        {stmt= NRFunApp (fn_kind, "check_" ^ check_name, args); sloc}
+        {stmt= NRFunApp (fn_kind, "check_" ^ check_name, args); smeta}
   | NRFunApp (_, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname
@@ -199,7 +193,9 @@ let rec pp_statement ppf {stmt; sloc} =
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
-  | FunDef {fdrt; fdname; fdargs; fdbody} -> (
+
+let pp_fun_def ppf = function
+  | {fdrt; fdname; fdargs; fdbody; _} -> (
       let argtypetemplates =
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
@@ -236,12 +232,11 @@ let rec pp_statement ppf {stmt; sloc} =
 let%expect_test "location propagates" =
   let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
   let loc2 = {no_span with begin_loc= {no_loc with filename= "LO"}} in
-  { sloc= loc1
+  { smeta= loc1
   ; stmt=
       Block
-        [ { stmt=
-              NRFunApp (Mir.CompilerInternal, string_of_internal_fn FnPrint, [])
-          ; sloc= loc2 } ] }
+        [ { stmt= NRFunApp (CompilerInternal, string_of_internal_fn FnPrint, [])
+          ; smeta= loc2 } ] }
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
@@ -297,7 +292,7 @@ let pp_read_data ppf (decl_id, st, loc) =
 
 let%expect_test "read int[N] y" =
   strf "@[<v>%a@]" pp_read_data
-    ("y", SArray (SInt, {internal_expr with texpr= Var "N"}), no_span)
+    ("y", SArray (SInt, {expr= Var "N"; emeta= internal_meta}), no_span)
   |> print_endline ;
   [%expect
     {|
@@ -352,7 +347,7 @@ let rec get_dims = function
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
-  let v s = {internal_expr with texpr= Var s} in
+  let v s = {expr= Var s; emeta= internal_meta} in
   strf "@[%a@]"
     (list ~sep:comma ExprGen.pp_expr)
     (get_dims (SArray (SMatrix (v "x", v "y"), v "z")))
@@ -407,7 +402,7 @@ let pp_log_prob ppf p =
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
   pp_located_error ppf
-    (pp_statement, {stmt= Block p.log_prob; sloc= no_span}, "inside log_prob") ;
+    (pp_statement, {stmt= Block p.log_prob; smeta= no_span}, "inside log_prob") ;
   pf ppf "@]@,}@,"
 
 let pp_model_public ppf p =
@@ -440,31 +435,28 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
-let pp_prog ppf (p : (expr_typed_located, stmt_loc) prog) =
+let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings globals
-    (list ~sep:cut pp_statement)
+    version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
   pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
 
 (* XXX arg templating is broken - needs T0, T1 etc in arg decl*)
 let%expect_test "udf" =
-  let w e = {internal_expr with texpr= e} in
-  FunDef
-    { fdrt= None
-    ; fdname= "sars"
-    ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
-    ; fdbody=
-        Return
-          (Some
-             ( w
-             @@ FunApp
-                  (Mir.UserDefined, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])
-             ))
-        |> with_no_loc |> List.return |> Block |> with_no_loc }
-  |> with_no_loc
-  |> strf "@[<v>%a" pp_statement
-  |> print_endline ;
+  let with_no_loc stmt = {stmt; smeta= no_span} in
+  let w e = {expr= e; emeta= internal_meta} in
+  { fdrt= None
+  ; fdname= "sars"
+  ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
+  ; fdbody=
+      Return
+        (Some
+           ( w
+           @@ FunApp (UserDefined, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])
+           ))
+      |> with_no_loc |> List.return |> Block |> with_no_loc
+  ; fdloc= no_span }
+  |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
     template <typename T0__, typename T1__>
