@@ -33,7 +33,8 @@ let check_compatible_arguments_mod_conv name args1 args2 =
   && List.for_all
        ~f:(fun y -> y = true)
        (List.map2_exn
-          ~f:(fun sign {expr_typed_ad_level= o; expr_typed_type= t; _} ->
+          ~f:(fun sign {emeta; _} ->
+            let o = emeta.ad_level and t = emeta.type_ in
             check_of_same_type_mod_conv name (snd sign) t
             && autodifftype_can_convert (fst sign) o )
           args1 args2)

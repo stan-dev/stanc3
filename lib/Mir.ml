@@ -17,9 +17,10 @@ type location =
   ; line_num: int
   ; col_num: int
   ; included_from: location option }
+[@@deriving sexp]
 
 (** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location}
+type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
@@ -96,9 +97,20 @@ and 'e expr =
 [@@@ocaml.warning "-A"]
 
 type fun_arg_decl = (autodifftype * string * unsizedtype) list
+[@@deriving sexp, hash, map]
+
+type 's fun_def =
+  { fdrt: unsizedtype option
+  ; fdname: string
+  ; fdargs: fun_arg_decl
+  ; fdbody: 's
+  ; fdloc: location_span [@compare.ignore] }
+[@@deriving sexp, hash, map]
+
+and 'e lvalue = string * 'e index list
 
 and ('e, 's) statement =
-  | Assignment of 'e * 'e
+  | Assignment of 'e lvalue * 'e
   | TargetPE of 'e
   | NRFunApp of fun_kind * string * 'e list
   | Break
@@ -119,11 +131,6 @@ and ('e, 's) statement =
       { decl_adtype: autodifftype
       ; decl_id: string
       ; decl_type: 'e sizedtype }
-  | FunDef of
-      { fdrt: unsizedtype option
-      ; fdname: string
-      ; fdargs: fun_arg_decl
-      ; fdbody: 's }
 [@@deriving sexp, hash, map]
 
 type io_block =
@@ -136,7 +143,7 @@ type io_block =
 type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
 
 type ('e, 's) prog =
-  { functions_block: 's list
+  { functions_block: 's fun_def list
   ; input_vars: 'e io_var list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
@@ -147,19 +154,24 @@ type ('e, 's) prog =
   ; prog_path: string }
 [@@deriving sexp]
 
-type expr_typed_located =
-  { texpr_type: unsizedtype
-  ; texpr_loc: location_span sexp_opaque [@compare.ignore]
-  ; texpr: expr_typed_located expr
-  ; texpr_adlevel: autodifftype }
-[@@deriving sexp, hash, map, of_sexp]
+type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
 
-type stmt_loc =
-  { sloc: location_span sexp_opaque [@compare.ignore]
-  ; stmt: (expr_typed_located, stmt_loc) statement }
-[@@deriving hash, map, sexp, of_sexp]
+and mtype_loc_ad =
+  { mtype: unsizedtype
+  ; mloc: location_span sexp_opaque [@compare.ignore]
+  ; madlevel: autodifftype }
+[@@deriving sexp]
 
-type typed_prog = (expr_typed_located, stmt_loc) prog [@@deriving sexp]
+type ('e, 'm) stmt_with =
+  {stmt: ('e with_expr, ('e, 'm) stmt_with) statement; smeta: 'm}
+
+and stmt_loc =
+  (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
+[@@deriving sexp]
+
+type expr_no_meta = unit with_expr
+type stmt_no_meta = (expr_no_meta, unit) stmt_with
+type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
 
 (* == Pretty printers ======================================================= *)
 
@@ -218,9 +230,12 @@ let rec pp_expr pp_e ppf = function
       Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
         pp_e texpr pp_builtin_syntax ":" pp_e fexpr
   | Indexed (expr, indices) ->
-      Fmt.pf ppf {|@[%a%a@]|} pp_e expr
-        Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
-        indices
+      pp_indexed pp_e ppf (Fmt.strf "%a" pp_e expr, indices)
+
+and pp_indexed pp_e ppf (ident, indices) =
+  Fmt.pf ppf {|@[%s%a@]|} ident
+    Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
+    indices
 
 and pp_index pp_e ppf = function
   | All -> Fmt.char ppf ':'
@@ -234,9 +249,22 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" pp_autodifftype autodifftype pp_unsizedtype unsizedtype
     name
 
+let pp_fun_def pp_s ppf = function
+  | {fdrt; fdname; fdargs; fdbody} -> (
+    match fdrt with
+    | Some rt ->
+        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_s fdbody
+    | None ->
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_s fdbody )
+
 let rec pp_statement pp_e pp_s ppf = function
-  | Assignment (assignee, expr) ->
-      Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} pp_e assignee pp_e expr
+  | Assignment ((assignee, idcs), rhs) ->
+      Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
+        rhs
   | TargetPE expr ->
       Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
   | NRFunApp (fn_kind, name, args) ->
@@ -264,16 +292,6 @@ let rec pp_statement pp_e pp_s ppf = function
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_sizedtype pp_e)
         decl_type decl_id
-  | FunDef {fdrt; fdname; fdargs; fdbody} -> (
-    match fdrt with
-    | Some rt ->
-        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
-          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-          fdargs pp_s fdbody
-    | None ->
-        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
-          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-          fdargs pp_s fdbody )
 
 let pp_io_block ppf = function
   | Data -> Fmt.string ppf "data"
@@ -315,7 +333,7 @@ let pp_transform_inits pp_s ppf {transform_inits; _} =
 
 let pp_prog pp_e pp_s ppf prog =
   Format.open_vbox 0 ;
-  pp_functions_block pp_s ppf prog ;
+  pp_functions_block (pp_fun_def pp_s) ppf prog ;
   Fmt.cut ppf () ;
   pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;
@@ -330,14 +348,14 @@ let pp_prog pp_e pp_s ppf prog =
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
-let rec pp_expr_typed_located ppf {texpr; _} =
-  pp_expr pp_expr_typed_located ppf texpr
+let rec pp_expr_typed_located ppf {expr; _} =
+  pp_expr pp_expr_typed_located ppf expr
 
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 
-let rec sexp_of_expr_typed_located {texpr; _} =
-  sexp_of_expr sexp_of_expr_typed_located texpr
+let rec sexp_of_expr_typed_located {expr; _} =
+  sexp_of_expr sexp_of_expr_typed_located expr
 
 let rec sexp_of_stmt_loc {stmt; _} =
   sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
@@ -347,14 +365,6 @@ let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 (* ===================== Some helper functions and values ====================== *)
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
-
-let internal_expr =
-  { texpr= Var "UHOH"
-  ; texpr_loc= no_span
-  ; texpr_type= UInt
-  ; texpr_adlevel= DataOnly }
-
-let zero = {internal_expr with texpr= Lit (Int, "0"); texpr_type= UInt}
 
 type internal_fn =
   | FnLength
@@ -381,3 +391,5 @@ let mk_of_string of_sexp x =
   | Invalid_argument _ -> None
 
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
+let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
+let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
