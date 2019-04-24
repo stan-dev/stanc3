@@ -666,7 +666,9 @@ let%expect_test "read data" =
            (FunApp CompilerInternal FnLength__ 
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
-           (Block ((Assignment (mat ()) (FunApp CompilerInternal FnReadData__ ((Lit Str mat))))))))))))) |}]
+           (Block 
+            ((Assignment (mat ()) 
+              (FunApp CompilerInternal FnReadData__ ((Lit Str mat))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
