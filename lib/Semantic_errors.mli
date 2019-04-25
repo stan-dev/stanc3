@@ -7,10 +7,12 @@ type t =
   | IdentifierInUse of location_span * string
   | IdentifierNotInScope of location_span * string
   | InvalidIndex of location_span * unsizedtype
+  | TargetOutsideModelBlock of location_span
   | IllTypedIfReturnTypes of location_span * returntype * returntype
   | IllTypedTernaryIf of
       location_span * unsizedtype * unsizedtype * unsizedtype
-  | IllTypedNRFunction of location_span * string
+  | IllTypedReturningFunction of location_span * string
+  | IllTypedNonReturningFunction of location_span * string
   | IllTypedStanLibFunApp of location_span * string * unsizedtype list
   | IllTypedUserFunApp of
       location_span
@@ -19,7 +21,9 @@ type t =
       * returntype
       * unsizedtype list
   | IllTypedNotAFunction of location_span * string
+  | IllTypedNotANRFunction of location_span * string
   | IllTypedNoSuchFunction of location_span * string
+  | IllTypedNoSuchNRFunction of location_span * string
   | IllTypedBinOp of location_span * Ast.operator * unsizedtype * unsizedtype
   | IllTypedPrefixOp of location_span * Ast.operator * unsizedtype
   | IllTypedPostfixOp of location_span * Ast.operator * unsizedtype

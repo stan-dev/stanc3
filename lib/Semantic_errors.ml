@@ -10,10 +10,12 @@ type t =
   | IdentifierInUse of location_span * string
   | IdentifierNotInScope of location_span * string
   | InvalidIndex of location_span * unsizedtype
+  | TargetOutsideModelBlock of location_span
   | IllTypedIfReturnTypes of location_span * returntype * returntype
   | IllTypedTernaryIf of
       location_span * unsizedtype * unsizedtype * unsizedtype
-  | IllTypedNRFunction of location_span * string
+  | IllTypedReturningFunction of location_span * string
+  | IllTypedNonReturningFunction of location_span * string
   | IllTypedStanLibFunApp of location_span * string * unsizedtype list
   | IllTypedUserFunApp of
       location_span
@@ -22,7 +24,9 @@ type t =
       * returntype
       * unsizedtype list
   | IllTypedNotAFunction of location_span * string
+  | IllTypedNotANRFunction of location_span * string
   | IllTypedNoSuchFunction of location_span * string
+  | IllTypedNoSuchNRFunction of location_span * string
   | IllTypedBinOp of location_span * Ast.operator * unsizedtype * unsizedtype
   | IllTypedPrefixOp of location_span * Ast.operator * unsizedtype
   | IllTypedPostfixOp of location_span * Ast.operator * unsizedtype
@@ -97,6 +101,10 @@ let to_exception = function
            "Only expressions of array, matrix, row_vector and vector type may \
             be indexed. Instead, found type %s."
            (pretty_print_unsizedtype ut))
+  | TargetOutsideModelBlock loc ->
+      Errors.semantic_error ~loc
+        "Target can only be accessed in the model block or in definitions of \
+         functions with the suffix _lp."
   | IllTypedIfReturnTypes (loc, rt1, rt2) ->
       Errors.semantic_error ~loc
         (Format.sprintf
@@ -114,10 +122,16 @@ let to_exception = function
            (pretty_print_unsizedtype ut1)
            (pretty_print_unsizedtype ut2)
            (pretty_print_unsizedtype ut3))
-  | IllTypedNRFunction (loc, name) ->
+  | IllTypedReturningFunction (loc, name) ->
       Errors.semantic_error ~loc
         (Format.sprintf
            "A returning function was expected but a non-returning function \
+            '%s' was supplied."
+           name)
+  | IllTypedNonReturningFunction (loc, name) ->
+      Errors.semantic_error ~loc
+        (Format.sprintf
+           "A non-returning function was expected but a returning function \
             '%s' was supplied."
            name)
   | IllTypedStanLibFunApp (loc, name, arg_tys) ->
@@ -142,6 +156,12 @@ let to_exception = function
   | IllTypedNotAFunction (loc, name) ->
       Errors.semantic_error ~loc
         (Format.sprintf
+           "A non-returning function was expected but a non-function value \
+            '%s' was supplied."
+           name)
+  | IllTypedNotANRFunction (loc, name) ->
+      Errors.semantic_error ~loc
+        (Format.sprintf
            "A returning function was expected but a non-function value '%s' \
             was supplied."
            name)
@@ -150,6 +170,12 @@ let to_exception = function
         (Format.sprintf
            "A returning function was expected but an undeclared identifier \
             '%s' was supplied."
+           name)
+  | IllTypedNoSuchNRFunction (loc, name) ->
+      Errors.semantic_error ~loc
+        (Format.sprintf
+           "A non-returning function was expected but an undeclared \
+            identifier '%s' was supplied."
            name)
   | IllTypedBinOp (loc, op, lt, rt) ->
       Errors.semantic_error ~loc

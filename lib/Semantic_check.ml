@@ -413,7 +413,8 @@ let semantic_check_fn_rng cf ~loc id =
 let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
   | Some (_, Mir.UFun (_, Void)) ->
-      Semantic_errors.IllTypedNRFunction (loc, id.name) |> Validate.error
+      Semantic_errors.IllTypedReturningFunction (loc, id.name)
+      |> Validate.error
   | Some (_, UFun (listed_tys, rt))
     when not (check_compatible_arguments_mod_conv id.name listed_tys es) ->
       Semantic_errors.IllTypedUserFunApp
@@ -426,7 +427,8 @@ let semantic_check_fn_normal ~loc id es =
            ~ad_level:(lub_ad_e es) ~type_:ut ~loc)
   | Some _ ->
       (* Check that Funaps are actually functions *)
-      Semantic_errors.IllTypedNRFunction (loc, id.name) |> Validate.error
+      Semantic_errors.IllTypedReturningFunction (loc, id.name)
+      |> Validate.error
   | None ->
       Semantic_errors.IllTypedNoSuchFunction (loc, id.name) |> Validate.error
 
@@ -435,7 +437,8 @@ let semantic_check_fn_normal ~loc id es =
 let semantic_check_fn_stan_math ~loc id es =
   match stan_math_returntype id.name es with
   | Some Void ->
-      Semantic_errors.IllTypedNRFunction (loc, id.name) |> Validate.error
+      Semantic_errors.IllTypedReturningFunction (loc, id.name)
+      |> Validate.error
   | Some (ReturnType ut) ->
       Validate.ok
         (mk_typed_expression
@@ -913,6 +916,49 @@ let semantic_check_truncation cf = function
 
 (* -- Statements ------------------------------------------------------------ *)
 
+let semantic_check_nrfn_target ~loc ~cf id =
+  if
+    String.is_suffix id.name ~suffix:"_lp"
+    && not (cf.in_lp_fun_def || cf.current_block = Model)
+  then TargetOutsideModelBlock loc |> Validate.error
+  else Validate.ok ()
+
+let semantic_check_nrfn_normal ~loc id es =
+  match Symbol_table.look vm id.name with
+  | Some (_, UFun (listedtypes, Void))
+    when not (check_compatible_arguments_mod_conv id.name listedtypes es) ->
+      IllTypedUserFunApp
+        (loc, id.name, listedtypes, Void, List.map ~f:type_of_expr_typed es)
+      |> Validate.error
+  | Some (_, UFun (_, Void)) ->
+      mk_typed_statement
+        ~stmt:(NRFunApp (UserDefined, id, es))
+        ~return_type:NoReturnType ~loc
+      |> Validate.ok
+  | Some (_, UFun (_, ReturnType _)) ->
+      IllTypedNonReturningFunction (loc, id.name) |> Validate.error
+  | Some _ -> IllTypedNotANRFunction (loc, id.name) |> Validate.error
+  | None -> IllTypedNoSuchNRFunction (loc, id.name) |> Validate.error
+
+let semantic_check_nrfn_stan_math ~loc id es =
+  match stan_math_returntype id.name es with
+  | Some Void ->
+      mk_typed_statement
+        ~stmt:(NRFunApp (StanLib, id, es))
+        ~return_type:NoReturnType ~loc
+      |> Validate.ok
+  | Some (ReturnType _) ->
+      Semantic_errors.IllTypedNonReturningFunction (loc, id.name)
+      |> Validate.error
+  | None ->
+      IllTypedStanLibFunApp (loc, id.name, List.map ~f:type_of_expr_typed es)
+      |> Validate.error
+
+let semantic_check_nrfn ~loc id es =
+  match fn_kind_from_identifier id with
+  | StanLib -> semantic_check_nrfn_stan_math ~loc id es
+  | UserDefined -> semantic_check_nrfn_normal ~loc id es
+
 let rec semantic_check_statement cf (s : Ast.untyped_statement) :
     Ast.typed_statement =
   let loc = s.smeta.loc in
@@ -988,80 +1034,13 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
               ". Available signatures:"
               ^ pretty_print_all_operator_signatures opname
             else "" ) )
-  | NRFunApp (fn_kind, id, es) -> (
+  | NRFunApp (_, id, es) ->
       let uid = semantic_check_identifier id in
       let ues = List.map ~f:(semantic_check_expression cf) es in
-      let _ =
-        if
-          String.is_suffix uid.name ~suffix:"_lp"
-          && not (cf.in_lp_fun_def || cf.current_block = Model)
-        then
-          semantic_error ~loc
-            "Target can only be accessed in the model block or in definitions \
-             of functions with the suffix _lp."
-      in
-      match stan_math_returntype uid.name ues with
-      | Some Void ->
-          mk_typed_statement
-            ~stmt:(NRFunApp (StanLib, uid, ues))
-            ~return_type:NoReturnType ~loc
-      (* Check that NRFunction applications are non-returning functions *)
-      | Some (ReturnType _) ->
-          semantic_error ~loc
-            ( "A non-returning function was expected but a returning function "
-            ^ ("'" ^ uid.name ^ "'")
-            ^ " was supplied." )
-      | None -> (
-          let _ =
-            if is_stan_math_function_name uid.name then
-              semantic_error ~loc
-                {| "Ill-typed arguments supplied to function "
-                    ("'" ^ uid.name ^ "'")
-                    ". Available signatures: "
-                    pretty_print_all_math_lib_fn_sigs uid.name
-                    "\nInstead supplied arguments of incompatible type: "
-                    pretty_print_unsizedtypes (List.map ~f: type_of_expr_typed ues)
-                    "."  |}
-          in
-          match Symbol_table.look vm uid.name with
-          | Some (_, UFun (listedtypes, Void)) ->
-              let _ =
-                if
-                  not
-                    (check_compatible_arguments_mod_conv uid.name listedtypes
-                       ues)
-                then
-                  semantic_error ~loc
-                    ( "Ill-typed arguments supplied to function "
-                    ^ ("'" ^ uid.name ^ "'")
-                    ^ ". Available signatures:\n"
-                    ^ pretty_print_unsizedtype (UFun (listedtypes, Void))
-                    ^ "\nInstead supplied arguments of incompatible type: "
-                    ^ pretty_print_unsizedtypes
-                        (List.map ~f:type_of_expr_typed ues)
-                    ^ "." )
-              in
-              mk_typed_statement
-                ~stmt:(NRFunApp (fn_kind, uid, ues))
-                ~return_type:NoReturnType ~loc
-          | Some (_, UFun (_, ReturnType _)) ->
-              semantic_error ~loc
-                ( "A non-returning function was expected but a returning \
-                   function "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " was supplied." )
-          | Some _ ->
-              semantic_error ~loc
-                ( "A non-returning function was expected but a non-function \
-                   value "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " was supplied." )
-          | None ->
-              semantic_error ~loc
-                ( "A non-returning function was expected but an undeclared \
-                   identifier "
-                ^ ("'" ^ uid.name ^ "'")
-                ^ " was supplied." ) ) )
+      Validate.(
+        semantic_check_nrfn_target ~loc ~cf uid
+        *> semantic_check_nrfn ~loc uid ues
+        |> get_success ~with_error:Semantic_errors.to_exception)
   | TargetPE e ->
       let ue = semantic_check_expression cf e in
       (* Check typing of ~ and target += *)
