@@ -25,61 +25,6 @@ let ternary_if = "TernaryIf__"
 let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
 let%test "good op name" = operator_of_string "Plus__" = Some Plus
 
-(** A hash table to hold some name conversions between the AST nodes and the
-    Stan Math name of the operator *)
-let string_of_operators =
-  Map.Poly.of_alist_multi
-    [ (string_of_operator Plus, "add")
-    ; (string_of_operator PPlus, "plus")
-    ; (string_of_operator Minus, "subtract")
-    ; (string_of_operator PMinus, "minus")
-    ; (string_of_operator Times, "multiply")
-    ; (string_of_operator Divide, "mdivide_right")
-    ; (string_of_operator Divide, "divide")
-    ; (string_of_operator Modulo, "modulus")
-    ; (string_of_operator LDivide, "mdivide_left")
-    ; (string_of_operator EltTimes, "elt_multiply")
-    ; (string_of_operator EltDivide, "elt_divide")
-    ; (string_of_operator Pow, "pow")
-    ; (string_of_operator Or, "logical_or")
-    ; (string_of_operator And, "logical_and")
-    ; (string_of_operator Equals, "logical_eq")
-    ; (string_of_operator NEquals, "logical_neq")
-    ; (string_of_operator Less, "logical_lt")
-    ; (string_of_operator Leq, "logical_lte")
-    ; (string_of_operator Greater, "logical_gt")
-    ; (string_of_operator Geq, "logical_gte")
-    ; (string_of_operator PNot, "logical_negation")
-    ; (string_of_operator Transpose, "transpose")
-    ; (ternary_if, "if_else")
-      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
-    ; ("(OperatorAssign Plus)", "assign_add")
-    ; ("(OperatorAssign Minus)", "assign_subtract")
-    ; ("(OperatorAssign Times)", "assign_multiply")
-    ; ("(OperatorAssign Divide)", "assign_divide")
-    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
-    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
-
-(** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name args =
-  if op_name = "Assign" || op_name = "ArrowAssign" then
-    match args with
-    | [{emeta= meta1; _}; {emeta= meta2; _}]
-      when check_of_same_type_mod_array_conv "" meta1.type_ meta2.type_ ->
-        Some Mir.Void
-    | _ -> None
-  else
-    Map.Poly.find_multi string_of_operators op_name
-    |> List.find_map ~f:(fun name -> stan_math_returntype name args)
-
-let operator_return_type op =
-  operator_return_type_from_string (string_of_operator op)
-
-let pretty_print_all_operator_signatures name =
-  Map.Poly.find_multi string_of_operators name
-  |> List.map ~f:pretty_print_all_math_lib_fn_sigs
-  |> String.concat ~sep:"\n"
-
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
   | MathLibrary
@@ -467,17 +412,20 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue1 = semantic_check_expression cf e1 in
       let ue2 = semantic_check_expression cf e2 in
       let ue3 = semantic_check_expression cf e3 in
-      match operator_return_type_from_string ternary_if [ue1; ue2; ue3] with
-      | Some (ReturnType ut) ->
+      match
+        Semantic_errors.operator_return_type_from_string ternary_if
+          [ue1; ue2; ue3]
+      with
+      | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(TernaryIf (ue1, ue2, ue3))
             ~ad_level:(lub_ad_e [ue1; ue2; ue3])
             ~type_:ut ~loc:emeta.loc
-      | Some Void | None ->
+      | Some Mir.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
-            ^ pretty_print_all_operator_signatures ternary_if
+            ^ Semantic_errors.pretty_print_all_operator_signatures ternary_if
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.emeta.type_
             ^ ", "
@@ -489,17 +437,18 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue1 = semantic_check_expression cf e1
       and uop = semantic_check_operator op
       and ue2 = semantic_check_expression cf e2 in
-      match operator_return_type uop [ue1; ue2] with
-      | Some (ReturnType ut) ->
+      match Semantic_errors.operator_return_type uop [ue1; ue2] with
+      | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(BinOp (ue1, uop, ue2))
             ~ad_level:(lub_ad_e [ue1; ue2])
             ~type_:ut ~loc:emeta.loc
-      | Some Void | None ->
+      | Some Mir.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (string_of_operator uop)
+            ^ Semantic_errors.pretty_print_all_operator_signatures
+                (string_of_operator uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.emeta.type_
             ^ ", "
@@ -508,34 +457,36 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
       and ue = semantic_check_expression cf e in
-      match operator_return_type uop [ue] with
-      | Some (ReturnType ut) ->
+      match Semantic_errors.operator_return_type uop [ue] with
+      | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PrefixOp (uop, ue))
             ~ad_level:(lub_ad_e [ue])
             ~type_:ut ~loc:emeta.loc
-      | Some Void | None ->
+      | Some Mir.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (string_of_operator uop)
+            ^ Semantic_errors.pretty_print_all_operator_signatures
+                (string_of_operator uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression cf e in
       let uop = semantic_check_operator op in
-      match operator_return_type op [ue] with
-      | Some (ReturnType ut) ->
+      match Semantic_errors.operator_return_type op [ue] with
+      | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PostfixOp (ue, uop))
             ~ad_level:(lub_ad_e [ue])
             ~type_:ut ~loc:emeta.loc
-      | Some Void | None ->
+      | Some Mir.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (string_of_operator op)
+            ^ Semantic_errors.pretty_print_all_operator_signatures
+                (string_of_operator op)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
@@ -1012,7 +963,9 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             ^ " declared in previous blocks." )
       in
       let opname = Sexp.to_string (sexp_of_assignmentoperator uassop) in
-      match operator_return_type_from_string opname [ue2; ue] with
+      match
+        Semantic_errors.operator_return_type_from_string opname [ue2; ue]
+      with
       | Some Void ->
           mk_typed_statement ~return_type:NoReturnType ~loc
             ~stmt:
@@ -1032,7 +985,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             ^
             if uassop <> Assign && uassop <> ArrowAssign then
               ". Available signatures:"
-              ^ pretty_print_all_operator_signatures opname
+              ^ Semantic_errors.pretty_print_all_operator_signatures opname
             else "" ) )
   | NRFunApp (_, id, es) ->
       let uid = semantic_check_identifier id in

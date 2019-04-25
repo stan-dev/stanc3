@@ -78,6 +78,24 @@ let pretty_print_all_operator_signatures name =
   |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
   |> String.concat ~sep:"\n"
 
+(** Querying stan_math_signatures for operator signatures by string name *)
+let operator_return_type_from_string op_name (args : Ast.typed_expression list)
+    =
+  if op_name = "Assign" || op_name = "ArrowAssign" then
+    match args with
+    | [{emeta= meta1; _}; {emeta= meta2; _}]
+      when Type_conversion.check_of_same_type_mod_array_conv "" meta1.type_
+             meta2.type_ ->
+        Some Mir.Void
+    | _ -> None
+  else
+    Map.Poly.find_multi string_of_operators op_name
+    |> List.find_map ~f:(fun name ->
+           Stan_math_signatures.stan_math_returntype name args )
+
+let operator_return_type op =
+  operator_return_type_from_string (string_of_operator op)
+
 let to_exception = function
   | IdentifierIsStanMathName (loc, name) ->
       Errors.semantic_error ~loc

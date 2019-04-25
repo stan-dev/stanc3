@@ -33,3 +33,10 @@ type t =
   | FnRng of location_span
 
 val to_exception : t -> 'a
+val pretty_print_all_operator_signatures : string -> string
+
+val operator_return_type :
+  Ast.operator -> Ast.typed_expression list -> Mir.returntype option
+
+val operator_return_type_from_string :
+  string -> Ast.typed_expression list -> Mir.returntype option

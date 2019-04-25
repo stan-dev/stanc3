@@ -13,7 +13,7 @@ let trans_fn_kind = function
 let rec op_to_funapp op args =
   { expr= FunApp (StanLib, Ast.string_of_operator op, trans_exprs args)
   ; emeta=
-      { mtype= Semantic_check.operator_return_type op args |> unwrap_return_exn
+      { mtype= Semantic_errors.operator_return_type op args |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
       ; madlevel= Ast.expr_ad_lub args } }
 

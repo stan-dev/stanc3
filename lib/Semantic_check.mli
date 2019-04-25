@@ -21,19 +21,3 @@ val inferred_unsizedtype_of_indexed :
 (** [inferred_unsizedtype_of_indexed loc ut typed_idxs] is responsible for figuring
     out what the return (unsized) type of an indexing operation into an unsized
     type is.*)
-
-val operator_return_type_from_string :
-  string -> typed_expression list -> Mir.returntype option
-(** Get an optional return type for an operator, given its name and argument types. *)
-
-val string_of_operator : Ast.operator -> string
-val operator_of_string : string -> Ast.operator option
-
-val operator_return_type :
-  Ast.operator -> typed_expression list -> Mir.returntype option
-
-val pretty_print_all_operator_signatures : string -> string
-(** Print all the signatures of a stan math operator, for the purposes of error messages. *)
-
-(* The name of the TernaryIf operator *)
-val ternary_if : string
