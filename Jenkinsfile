@@ -9,6 +9,8 @@ pipeline {
         stage("Build & Test windows binary") {
             agent { label 'windows' }
             steps {
+                bat "bash -cl \"sudo apt-get install dos2unix -y\""
+                bat "bash -cl \"dos2unix /test/*\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
             }
         }
