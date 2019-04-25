@@ -166,16 +166,20 @@ let rec pp_statement ppf {stmt; smeta} =
   | Assignment ((assignee, idcs), rhs) ->
       ignore (assignee, idcs, rhs) (* TODO *)
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" ExprGen.pp_expr e
-  | NRFunApp (fn_kind, fname, {expr= Lit (Str, check_name); _} :: args)
+  | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
       let args = {expr= Var "function__"; emeta= internal_meta} :: args in
       pp_statement ppf
-        {stmt= NRFunApp (fn_kind, "check_" ^ check_name, args); smeta}
-  | NRFunApp (_, fname, args) ->
+        {stmt= NRFunApp (CompilerInternal, "check_" ^ check_name, args); smeta}
+  | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname
         (list ~sep:comma ExprGen.pp_expr)
         (extra_args @ args)
+  | NRFunApp (StanLib, fname, args) ->
+      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma ExprGen.pp_expr) args
+  | NRFunApp (UserDefined, fname, args) ->
+      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma ExprGen.pp_expr) args
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option ExprGen.pp_expr) e
