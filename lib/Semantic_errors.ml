@@ -1,32 +1,37 @@
 open Core_kernel
 open Pretty_printing
+open Mir
 
 (** Low-level semantic errors used for validation *)
 type t =
-  | IdentifierIsKeyword of Mir.location_span * string
-  | IdentifierIsModelName of Mir.location_span * string
-  | IdentifierIsStanMathName of Mir.location_span * string
-  | IdentifierInUse of Mir.location_span * string
-  | IdentifierNotInScope of Mir.location_span * string
-  | InvalidIndex of Mir.location_span * Mir.unsizedtype
-  | IllTypedIfReturnTypes of
-      Mir.location_span * Mir.returntype * Mir.returntype
+  | IdentifierIsKeyword of location_span * string
+  | IdentifierIsModelName of location_span * string
+  | IdentifierIsStanMathName of location_span * string
+  | IdentifierInUse of location_span * string
+  | IdentifierNotInScope of location_span * string
+  | InvalidIndex of location_span * unsizedtype
+  | IllTypedIfReturnTypes of location_span * returntype * returntype
   | IllTypedTernaryIf of
-      Mir.location_span * Mir.unsizedtype * Mir.unsizedtype * Mir.unsizedtype
-  | IllTypedNRFunction of Mir.location_span * string
-  | IllTypedFunctionApp of Mir.location_span * string * Mir.unsizedtype list
-  | IllTypedNotAFunction of Mir.location_span * string
-  | IllTypedNoSuchFunction of Mir.location_span * string
-  | IllTypedBinOp of
-      Mir.location_span * Ast.operator * Mir.unsizedtype * Mir.unsizedtype
-  | IllTypedPrefixOp of Mir.location_span * Ast.operator * Mir.unsizedtype
-  | IllTypedPostfixOp of Mir.location_span * Ast.operator * Mir.unsizedtype
-  | FnMapRect of Mir.location_span * string
-  | FnConditioning of Mir.location_span
-  | FnTargetPlusEquals of Mir.location_span
-  | FnRng of Mir.location_span
+      location_span * unsizedtype * unsizedtype * unsizedtype
+  | IllTypedNRFunction of location_span * string
+  | IllTypedStanLibFunApp of location_span * string * unsizedtype list
+  | IllTypedUserFunApp of
+      location_span
+      * string
+      * (autodifftype * unsizedtype) list
+      * returntype
+      * unsizedtype list
+  | IllTypedNotAFunction of location_span * string
+  | IllTypedNoSuchFunction of location_span * string
+  | IllTypedBinOp of location_span * Ast.operator * unsizedtype * unsizedtype
+  | IllTypedPrefixOp of location_span * Ast.operator * unsizedtype
+  | IllTypedPostfixOp of location_span * Ast.operator * unsizedtype
+  | FnMapRect of location_span * string
+  | FnConditioning of location_span
+  | FnTargetPlusEquals of location_span
+  | FnRng of location_span
 
-let string_of_operator = Mir.mk_string_of Ast.sexp_of_operator
+let string_of_operator = mk_string_of Ast.sexp_of_operator
 let ternary_if = "TernaryIf__"
 
 (** A hash table to hold some name conversions between the AST nodes and the
@@ -115,7 +120,7 @@ let to_exception = function
            "A returning function was expected but a non-returning function \
             '%s' was supplied."
            name)
-  | IllTypedFunctionApp (loc, name, arg_tys) ->
+  | IllTypedStanLibFunApp (loc, name, arg_tys) ->
       Errors.semantic_error ~loc
         (Format.sprintf
            "Ill-typed arguments supplied to function '%s'. Available \
@@ -123,6 +128,16 @@ let to_exception = function
             Instead supplied arguments of incompatible type: %s."
            name
            (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs name)
+           (pretty_print_unsizedtypes arg_tys))
+  | IllTypedUserFunApp (loc, name, listed_tys, return_ty, arg_tys) ->
+      Errors.semantic_error ~loc
+        (Format.sprintf
+           "Ill-typed arguments supplied to function '%s'. Available \
+            signatures:\n\
+            %s\n\
+            Instead supplied arguments of incompatible type: %s."
+           name
+           (pretty_print_unsizedtype (UFun (listed_tys, return_ty)))
            (pretty_print_unsizedtypes arg_tys))
   | IllTypedNotAFunction (loc, name) ->
       Errors.semantic_error ~loc

@@ -1,25 +1,31 @@
+open Mir
+
 type t =
-  | IdentifierIsKeyword of Mir.location_span * string
-  | IdentifierIsModelName of Mir.location_span * string
-  | IdentifierIsStanMathName of Mir.location_span * string
-  | IdentifierInUse of Mir.location_span * string
-  | IdentifierNotInScope of Mir.location_span * string
-  | InvalidIndex of Mir.location_span * Mir.unsizedtype
-  | IllTypedIfReturnTypes of
-      Mir.location_span * Mir.returntype * Mir.returntype
+  | IdentifierIsKeyword of location_span * string
+  | IdentifierIsModelName of location_span * string
+  | IdentifierIsStanMathName of location_span * string
+  | IdentifierInUse of location_span * string
+  | IdentifierNotInScope of location_span * string
+  | InvalidIndex of location_span * unsizedtype
+  | IllTypedIfReturnTypes of location_span * returntype * returntype
   | IllTypedTernaryIf of
-      Mir.location_span * Mir.unsizedtype * Mir.unsizedtype * Mir.unsizedtype
-  | IllTypedNRFunction of Mir.location_span * string
-  | IllTypedFunctionApp of Mir.location_span * string * Mir.unsizedtype list
-  | IllTypedNotAFunction of Mir.location_span * string
-  | IllTypedNoSuchFunction of Mir.location_span * string
-  | IllTypedBinOp of
-      Mir.location_span * Ast.operator * Mir.unsizedtype * Mir.unsizedtype
-  | IllTypedPrefixOp of Mir.location_span * Ast.operator * Mir.unsizedtype
-  | IllTypedPostfixOp of Mir.location_span * Ast.operator * Mir.unsizedtype
-  | FnMapRect of Mir.location_span * string
-  | FnConditioning of Mir.location_span
-  | FnTargetPlusEquals of Mir.location_span
-  | FnRng of Mir.location_span
+      location_span * unsizedtype * unsizedtype * unsizedtype
+  | IllTypedNRFunction of location_span * string
+  | IllTypedStanLibFunApp of location_span * string * unsizedtype list
+  | IllTypedUserFunApp of
+      location_span
+      * string
+      * (autodifftype * unsizedtype) list
+      * returntype
+      * unsizedtype list
+  | IllTypedNotAFunction of location_span * string
+  | IllTypedNoSuchFunction of location_span * string
+  | IllTypedBinOp of location_span * Ast.operator * unsizedtype * unsizedtype
+  | IllTypedPrefixOp of location_span * Ast.operator * unsizedtype
+  | IllTypedPostfixOp of location_span * Ast.operator * unsizedtype
+  | FnMapRect of location_span * string
+  | FnConditioning of location_span
+  | FnTargetPlusEquals of location_span
+  | FnRng of location_span
 
 val to_exception : t -> 'a

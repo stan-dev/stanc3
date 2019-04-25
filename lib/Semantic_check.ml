@@ -414,10 +414,10 @@ let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
   | Some (_, Mir.UFun (_, Void)) ->
       Semantic_errors.IllTypedNRFunction (loc, id.name) |> Validate.error
-  | Some (_, UFun (arg_types, _))
-    when not (check_compatible_arguments_mod_conv id.name arg_types es) ->
-      Semantic_errors.IllTypedFunctionApp
-        (loc, id.name, List.map es ~f:type_of_expr_typed)
+  | Some (_, UFun (listed_tys, rt))
+    when not (check_compatible_arguments_mod_conv id.name listed_tys es) ->
+      Semantic_errors.IllTypedUserFunApp
+        (loc, id.name, listed_tys, rt, List.map es ~f:type_of_expr_typed)
       |> Validate.error
   | Some (_, UFun (_, ReturnType ut)) ->
       Validate.ok
@@ -442,7 +442,7 @@ let semantic_check_fn_stan_math ~loc id es =
            ~expr:(FunApp (StanLib, id, es))
            ~ad_level:(lub_ad_e es) ~type_:ut ~loc)
   | _ ->
-      Semantic_errors.IllTypedFunctionApp
+      Semantic_errors.IllTypedStanLibFunApp
         (loc, id.name, List.map es ~f:type_of_expr_typed)
       |> Validate.error
 
