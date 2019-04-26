@@ -102,6 +102,10 @@ and pp_logical_op ppf op lhs rhs =
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
 and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
+
+and pp_binary_f ppf f es =
+  pf ppf "%s(%a, %a)" f pp_expr (first es) pp_expr (second es)
+
 and first es = List.nth_exn es 0
 and second es = List.nth_exn es 1
 
@@ -124,7 +128,7 @@ and gen_operator_app = function
         pp_unary ppf
           (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
           es
-  | PNot -> fun ppf es -> pp_unary ppf "logial_negation(%a)" es
+  | PNot -> fun ppf es -> pp_unary ppf "logical_negation(%a)" es
   | Minus ->
       fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es
   | Times ->
@@ -134,23 +138,23 @@ and gen_operator_app = function
         if
           is_matrix (second es)
           && (is_matrix (first es) || is_row_vector (first es))
-        then pp_binary ppf "mdivide_right(%a, %a)" es
+        then pp_binary_f ppf "mdivide_right" es
         else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es
-  | Modulo -> fun ppf es -> pp_binary ppf "modulus(%a, %a)" es
-  | LDivide -> fun ppf es -> pp_binary ppf "mdivide_left(%a, %a)" es
+  | Modulo -> fun ppf es -> pp_binary_f ppf "modulus" es
+  | LDivide -> fun ppf es -> pp_binary_f ppf "mdivide_left" es
   | And | Or ->
       raise_s [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
       fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es
   | EltDivide ->
       fun ppf es -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
-  | Pow -> fun ppf es -> pp_binary ppf "pow(%a, %a)" es
-  | Equals -> fun ppf es -> pp_binary ppf "logical_eq(%a, %a)" es
-  | NEquals -> fun ppf es -> pp_binary ppf "logical_neq(%a, %a)" es
-  | Less -> fun ppf es -> pp_binary ppf "logical_lt(%a, %a)" es
-  | Leq -> fun ppf es -> pp_binary ppf "logical_lte(%a, %a)" es
-  | Greater -> fun ppf es -> pp_binary ppf "logical_gt(%a, %a)" es
-  | Geq -> fun ppf es -> pp_binary ppf "logical_gte(%a, %a)" es
+  | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
+  | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
+  | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
+  | Less -> fun ppf es -> pp_binary_f ppf "logical_lt" es
+  | Leq -> fun ppf es -> pp_binary_f ppf "logical_lte" es
+  | Greater -> fun ppf es -> pp_binary_f ppf "logical_gt" es
+  | Geq -> fun ppf es -> pp_binary_f ppf "logical_gte" es
 
 and gen_misc_special_math_app f =
   match f with
@@ -159,15 +163,10 @@ and gen_misc_special_math_app f =
       Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | "max" ->
+  | "max" | "min" ->
       Some
         (fun ppf es ->
-          if List.length es = 2 then pp_binary ppf "std::max(%a, %a)" es
-          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
-  | "min" ->
-      Some
-        (fun ppf es ->
-          if List.length es = 2 then pp_binary ppf "std::min(%a, %a)" es
+          if List.length es = 2 then pp_binary_f ppf f es
           else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | "ceil" ->
       Some
