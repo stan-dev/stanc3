@@ -373,15 +373,15 @@ let semantic_check_operator i = i
 (* Function application validation checks *)
 let semantic_check_fn_map_rect ~loc id es =
   match (id.name, es) with
-  | "map_rect", {expr= Variable arg1_name; _} :: _
+  | "map_rect", {expr= Variable arg1; _} :: _
     when String.(
-           is_suffix arg1_name.name ~suffix:"_lp"
-           || is_suffix arg1_name.name ~suffix:"_rng") ->
+           is_suffix arg1.name ~suffix:"_lp"
+           || is_suffix arg1.name ~suffix:"_rng") ->
       semantic_error ~loc
         (Format.sprintf
            "Mapped function cannot be an _rng or _lp function, found function \
             name: %s"
-           id.name)
+           arg1.name)
   | _ -> ()
 
 let semantic_check_fn_conditioning ~loc id =
@@ -394,8 +394,8 @@ let semantic_check_fn_conditioning ~loc id =
        require a vertical bar (|) between the first two arguments."
   else ()
 
-(** `Target+=` can only be used in model and functions 
-    with right suffix (same for tilde etc) 
+(** `Target+=` can only be used in model and functions
+    with right suffix (same for tilde etc)
 *)
 let semantic_check_fn_target_plus_equals cf ~loc id =
   if
@@ -407,8 +407,8 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
        functions with the suffix _lp."
   else ()
 
-(** Rng functions cannot be used in Tp or Model and only 
-    in funciton defs with the right suffix 
+(** Rng functions cannot be used in Tp or Model and only
+    in funciton defs with the right suffix
 *)
 let semantic_check_fn_rng cf ~loc id =
   if
@@ -460,7 +460,7 @@ let semantic_check_fn_normal ~loc id es =
             '%s' was supplied."
            id.name)
 
-(** Stan-Math function application 
+(** Stan-Math function application
 *)
 let semantic_check_fn_stan_math ~loc id es =
   match stan_math_returntype id.name es with
