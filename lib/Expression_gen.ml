@@ -21,10 +21,6 @@ let stan_namespace_qualify f =
 let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
-(* "__" is an illegal suffix for user functions, used for built-in operators not in signatures *)
-let is_user_defined f =
-  (not (ends_with "__" f)) && not (starts_with "stan::math::" f)
-
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
 let is_matrix e = e.emeta.mtype = UMatrix
