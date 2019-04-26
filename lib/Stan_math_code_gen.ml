@@ -66,7 +66,8 @@ let rec pp_run_code_per_el ?depth:(d = 0) pp_code_per_element ppf (name, st) =
   let size =
     { expr=
         FunApp
-          ( string_of_internal_fn FnLength
+          ( CompilerInternal
+          , string_of_internal_fn FnLength
           , [{expr= Var name; emeta= internal_meta}] )
     ; emeta= {mloc= no_span; mtype= UInt; madlevel= DataOnly} }
   in
@@ -162,14 +163,19 @@ let rec pp_statement ppf {stmt; smeta} =
   | Assignment ((assignee, idcs), rhs) ->
       ignore (assignee, idcs, rhs) (* TODO *)
   | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
-  | NRFunApp (fname, {expr= Lit (Str, check_name); _} :: args)
+  | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
       let args = {expr= Var "function__"; emeta= internal_meta} :: args in
-      pp_statement ppf {stmt= NRFunApp ("check_" ^ check_name, args); smeta}
-  | NRFunApp (fname, args) ->
+      pp_statement ppf
+        {stmt= NRFunApp (CompilerInternal, "check_" ^ check_name, args); smeta}
+  | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
+  | NRFunApp (StanLib, fname, args) ->
+      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
+  | NRFunApp (UserDefined, fname, args) ->
+      pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "return %a;" (option pp_expr) e
@@ -227,8 +233,9 @@ let%expect_test "location propagates" =
   let loc2 = {no_span with begin_loc= {no_loc with filename= "LO"}} in
   { smeta= loc1
   ; stmt=
-      Block [{stmt= NRFunApp (string_of_internal_fn FnPrint, []); smeta= loc2}]
-  }
+      Block
+        [ { stmt= NRFunApp (CompilerInternal, string_of_internal_fn FnPrint, [])
+          ; smeta= loc2 } ] }
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
   [%expect
@@ -439,7 +446,9 @@ let%expect_test "udf" =
   ; fdname= "sars"
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
-      Return (Some (w @@ FunApp ("add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+      Return
+        (Some
+           (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Block |> with_no_loc
   ; fdloc= no_span }
   |> strf "@[<v>%a" pp_fun_def |> print_endline ;

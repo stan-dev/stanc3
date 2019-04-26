@@ -100,7 +100,7 @@ and pretty_print_expression {expr= e_content; _} =
   | Variable id -> pretty_print_identifier id
   | IntNumeral i -> i
   | RealNumeral r -> r
-  | FunApp (id, es) ->
+  | FunApp (_, id, es) ->
       pretty_print_identifier id ^ "("
       ^ pretty_print_list_of_expression es
       ^ ")"
@@ -238,7 +238,7 @@ and pretty_print_statement {stmt= s_content; _} =
       ^ " "
       ^ pretty_print_assignmentoperator assop
       ^ " " ^ pretty_print_expression e ^ ";"
-  | NRFunApp (id, es) ->
+  | NRFunApp (_, id, es) ->
       pretty_print_identifier id ^ "("
       ^ pretty_print_list_of_expression es
       ^ ")" ^ ";"

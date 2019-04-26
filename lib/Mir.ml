@@ -67,6 +67,10 @@ let rec remove_size = function
 
 type litType = Int | Real | Str [@@deriving sexp, hash]
 
+(**  *)
+type fun_kind = StanLib | CompilerInternal | UserDefined
+[@@deriving compare, sexp, hash]
+
 type 'e index =
   | All
   | Single of 'e
@@ -82,7 +86,7 @@ type 'e index =
 and 'e expr =
   | Var of string
   | Lit of litType * string
-  | FunApp of string * 'e list
+  | FunApp of fun_kind * string * 'e list
   | TernaryIf of 'e * 'e * 'e
   | And of 'e * 'e
   | Or of 'e * 'e
@@ -108,7 +112,7 @@ and 'e lvalue = string * 'e index list
 and ('e, 's) statement =
   | Assignment of 'e lvalue * 'e
   | TargetPE of 'e
-  | NRFunApp of string * 'e list
+  | NRFunApp of fun_kind * string * 'e list
   | Break
   | Continue
   | Return of 'e option
@@ -219,7 +223,7 @@ let rec pp_expr pp_e ppf = function
   | Var varname -> Fmt.string ppf varname
   | Lit (Str, str) -> Fmt.pf ppf "%S" str
   | Lit (_, str) -> Fmt.string ppf str
-  | FunApp (name, args) ->
+  | FunApp (_, name, args) ->
       Fmt.string ppf name ;
       Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
   | TernaryIf (pred, texpr, fexpr) ->
@@ -263,7 +267,7 @@ let rec pp_statement pp_e pp_s ppf = function
         rhs
   | TargetPE expr ->
       Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
-  | NRFunApp (name, args) ->
+  | NRFunApp (fn_kind, name, args) ->
       Fmt.pf ppf {|@[%s%a;@]|} name Fmt.(list pp_e ~sep:comma |> parens) args
   | Break -> pp_keyword ppf "break;"
   | Continue -> pp_keyword ppf "continue;"
