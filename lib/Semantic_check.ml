@@ -25,6 +25,64 @@ let ternary_if = "TernaryIf__"
 let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
 let%test "good op name" = operator_of_string "Plus__" = Some Plus
 
+(** A hash table to hold some name conversions between the AST nodes and the
+    Stan Math name of the operator *)
+let string_of_operators =
+  Map.Poly.of_alist_multi
+    [ (string_of_operator Ast.Plus, "add")
+    ; (string_of_operator PPlus, "plus")
+    ; (string_of_operator Minus, "subtract")
+    ; (string_of_operator PMinus, "minus")
+    ; (string_of_operator Times, "multiply")
+    ; (string_of_operator Divide, "mdivide_right")
+    ; (string_of_operator Divide, "divide")
+    ; (string_of_operator Modulo, "modulus")
+    ; (string_of_operator LDivide, "mdivide_left")
+    ; (string_of_operator EltTimes, "elt_multiply")
+    ; (string_of_operator EltDivide, "elt_divide")
+    ; (string_of_operator Pow, "pow")
+    ; (string_of_operator Or, "logical_or")
+    ; (string_of_operator And, "logical_and")
+    ; (string_of_operator Equals, "logical_eq")
+    ; (string_of_operator NEquals, "logical_neq")
+    ; (string_of_operator Less, "logical_lt")
+    ; (string_of_operator Leq, "logical_lte")
+    ; (string_of_operator Greater, "logical_gt")
+    ; (string_of_operator Geq, "logical_gte")
+    ; (string_of_operator PNot, "logical_negation")
+    ; (string_of_operator Transpose, "transpose")
+    ; (ternary_if, "if_else")
+      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
+    ; ("(OperatorAssign Plus)", "assign_add")
+    ; ("(OperatorAssign Minus)", "assign_subtract")
+    ; ("(OperatorAssign Times)", "assign_multiply")
+    ; ("(OperatorAssign Divide)", "assign_divide")
+    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
+    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
+
+let pretty_print_all_operator_signatures name =
+  Map.Poly.find_multi string_of_operators name
+  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> String.concat ~sep:"\n"
+
+(** Querying stan_math_signatures for operator signatures by string name *)
+let operator_return_type_from_string op_name (args : Ast.typed_expression list)
+    =
+  if op_name = "Assign" || op_name = "ArrowAssign" then
+    match args with
+    | [{emeta= meta1; _}; {emeta= meta2; _}]
+      when Type_conversion.check_of_same_type_mod_array_conv "" meta1.type_
+             meta2.type_ ->
+        Some Mir.Void
+    | _ -> None
+  else
+    Map.Poly.find_multi string_of_operators op_name
+    |> List.find_map ~f:(fun name ->
+           Stan_math_signatures.stan_math_returntype name args )
+
+let operator_return_type op =
+  operator_return_type_from_string (string_of_operator op)
+
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
   | MathLibrary
@@ -37,10 +95,8 @@ type originblock =
   | GQuant
 
 (** Print all the signatures of a stan math operator, for the purposes of error messages. *)
-
-module Validate = Validation.Make (Semantic_errors)
-
 let check_that_all_functions_have_definition = ref true
+
 let model_name = ref ""
 let vm = Symbol_table.initialize ()
 
@@ -317,21 +373,26 @@ let semantic_check_operator i = i
 (* Function application validation checks *)
 let semantic_check_fn_map_rect ~loc id es =
   match (id.name, es) with
-  | "map_rect", {expr= Variable arg1_name; _} :: _ ->
-      if
-        String.(
-          is_suffix arg1_name.name ~suffix:"_lp"
-          || is_suffix arg1_name.name ~suffix:"_rng")
-      then Semantic_errors.FnMapRect (loc, arg1_name.name) |> Validate.error
-      else Validate.ok ()
-  | _ -> Validate.ok ()
+  | "map_rect", {expr= Variable arg1_name; _} :: _
+    when String.(
+           is_suffix arg1_name.name ~suffix:"_lp"
+           || is_suffix arg1_name.name ~suffix:"_rng") ->
+      semantic_error ~loc
+        (Format.sprintf
+           "Mapped function cannot be an _rng or _lp function, found function \
+            name: %s"
+           id.name)
+  | _ -> ()
 
 let semantic_check_fn_conditioning ~loc id =
   if
     List.exists ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"] ~f:(fun x ->
         String.is_suffix id.name ~suffix:x )
-  then Semantic_errors.FnConditioning loc |> Validate.error
-  else Validate.ok ()
+  then
+    semantic_error ~loc
+      "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and _lccdf, \
+       require a vertical bar (|) between the first two arguments."
+  else ()
 
 (** `Target+=` can only be used in model and functions 
     with right suffix (same for tilde etc) 
@@ -340,8 +401,11 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not (cf.in_lp_fun_def || cf.current_block = Model)
-  then Semantic_errors.FnTargetPlusEquals loc |> Validate.error
-  else Validate.ok ()
+  then
+    semantic_error ~loc
+      "Target can only be accessed in the model block or in definitions of \
+       functions with the suffix _lp."
+  else ()
 
 (** Rng functions cannot be used in Tp or Model and only 
     in funciton defs with the right suffix 
@@ -351,48 +415,74 @@ let semantic_check_fn_rng cf ~loc id =
     String.is_suffix id.name ~suffix:"_rng"
     && ( (cf.in_fun_def && not cf.in_rng_fun_def)
        || cf.current_block = TParam || cf.current_block = Model )
-  then Semantic_errors.FnRng loc |> Validate.error
-  else Validate.ok ()
+  then
+    semantic_error ~loc
+      "Random number generators are only allowed in transformed data block, \
+       generated quantities block or user-defined functions with names ending \
+       in _rng."
+  else ()
 
 (* Regular function application *)
 let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
   | Some (_, Mir.UFun (_, Void)) ->
-      Semantic_errors.IllTypedReturningFunction (loc, id.name)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "A returning function was expected but a non-returning function \
+            '%s' was supplied."
+           id.name)
   | Some (_, UFun (listed_tys, rt))
     when not (check_compatible_arguments_mod_conv id.name listed_tys es) ->
-      Semantic_errors.IllTypedUserFunApp
-        (loc, id.name, listed_tys, rt, List.map es ~f:type_of_expr_typed)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "Ill-typed arguments supplied to function '%s'. Available \
+            signatures:\n\
+            %s\n\
+            Instead supplied arguments of incompatible type: %s."
+           id.name
+           (pretty_print_unsizedtype (UFun (listed_tys, rt)))
+           (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes))
   | Some (_, UFun (_, ReturnType ut)) ->
-      Validate.ok
-        (mk_typed_expression
-           ~expr:(FunApp (UserDefined, id, es))
-           ~ad_level:(lub_ad_e es) ~type_:ut ~loc)
+      mk_typed_expression
+        ~expr:(FunApp (UserDefined, id, es))
+        ~ad_level:(lub_ad_e es) ~type_:ut ~loc
   | Some _ ->
       (* Check that Funaps are actually functions *)
-      Semantic_errors.IllTypedReturningFunction (loc, id.name)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "A returning function was expected but a non-returning function \
+            '%s' was supplied."
+           id.name)
   | None ->
-      Semantic_errors.IllTypedNoSuchFunction (loc, id.name) |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "A returning function was expected but an undeclared identifier \
+            '%s' was supplied."
+           id.name)
 
 (** Stan-Math function application 
 *)
 let semantic_check_fn_stan_math ~loc id es =
   match stan_math_returntype id.name es with
   | Some Void ->
-      Semantic_errors.IllTypedReturningFunction (loc, id.name)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "A returning function was expected but a non-returning function \
+            '%s' was supplied."
+           id.name)
   | Some (ReturnType ut) ->
-      Validate.ok
-        (mk_typed_expression
-           ~expr:(FunApp (StanLib, id, es))
-           ~ad_level:(lub_ad_e es) ~type_:ut ~loc)
+      mk_typed_expression
+        ~expr:(FunApp (StanLib, id, es))
+        ~ad_level:(lub_ad_e es) ~type_:ut ~loc
   | _ ->
-      Semantic_errors.IllTypedStanLibFunApp
-        (loc, id.name, List.map es ~f:type_of_expr_typed)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "Ill-typed arguments supplied to function '%s'. Available \
+            signatures: %s\n\
+            Instead supplied arguments of incompatible type: %s."
+           id.name
+           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+           (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes))
 
 let fn_kind_from_identifier id =
   if is_stan_math_function_name id.name then StanLib else UserDefined
@@ -412,10 +502,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue1 = semantic_check_expression cf e1 in
       let ue2 = semantic_check_expression cf e2 in
       let ue3 = semantic_check_expression cf e3 in
-      match
-        Semantic_errors.operator_return_type_from_string ternary_if
-          [ue1; ue2; ue3]
-      with
+      match operator_return_type_from_string ternary_if [ue1; ue2; ue3] with
       | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(TernaryIf (ue1, ue2, ue3))
@@ -425,7 +512,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
-            ^ Semantic_errors.pretty_print_all_operator_signatures ternary_if
+            ^ pretty_print_all_operator_signatures ternary_if
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.emeta.type_
             ^ ", "
@@ -437,7 +524,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue1 = semantic_check_expression cf e1
       and uop = semantic_check_operator op
       and ue2 = semantic_check_expression cf e2 in
-      match Semantic_errors.operator_return_type uop [ue1; ue2] with
+      match operator_return_type uop [ue1; ue2] with
       | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(BinOp (ue1, uop, ue2))
@@ -447,8 +534,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ Semantic_errors.pretty_print_all_operator_signatures
-                (string_of_operator uop)
+            ^ pretty_print_all_operator_signatures (string_of_operator uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.emeta.type_
             ^ ", "
@@ -457,7 +543,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
       and ue = semantic_check_expression cf e in
-      match Semantic_errors.operator_return_type uop [ue] with
+      match operator_return_type uop [ue] with
       | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PrefixOp (uop, ue))
@@ -467,15 +553,14 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ Semantic_errors.pretty_print_all_operator_signatures
-                (string_of_operator uop)
+            ^ pretty_print_all_operator_signatures (string_of_operator uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression cf e in
       let uop = semantic_check_operator op in
-      match Semantic_errors.operator_return_type op [ue] with
+      match operator_return_type op [ue] with
       | Some (Mir.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PostfixOp (ue, uop))
@@ -485,8 +570,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ Semantic_errors.pretty_print_all_operator_signatures
-                (string_of_operator op)
+            ^ pretty_print_all_operator_signatures (string_of_operator op)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
@@ -513,13 +597,11 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
   | FunApp (_, id, es) ->
       let uid = semantic_check_identifier id
       and ues = List.map ~f:(semantic_check_expression cf) es in
-      Validate.(
-        semantic_check_fn_map_rect ~loc:emeta.loc uid ues
-        *> semantic_check_fn_conditioning ~loc:emeta.loc uid
-        *> semantic_check_fn_target_plus_equals cf ~loc:emeta.loc uid
-        *> semantic_check_fn_rng cf ~loc:emeta.loc uid
-        *> semantic_check_fn ~loc:emeta.loc uid ues
-        |> get_success ~with_error:Semantic_errors.to_exception)
+      semantic_check_fn_map_rect ~loc:emeta.loc uid ues ;
+      semantic_check_fn_conditioning ~loc:emeta.loc uid ;
+      semantic_check_fn_target_plus_equals cf ~loc:emeta.loc uid ;
+      semantic_check_fn_rng cf ~loc:emeta.loc uid ;
+      semantic_check_fn ~loc:emeta.loc uid ues
   | CondDistApp (id, es) -> (
       let uid = semantic_check_identifier id in
       let open String in
@@ -871,25 +953,47 @@ let semantic_check_nrfn_target ~loc ~cf id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not (cf.in_lp_fun_def || cf.current_block = Model)
-  then TargetOutsideModelBlock loc |> Validate.error
-  else Validate.ok ()
+  then
+    semantic_error ~loc
+      "Target can only be accessed in the model block or in definitions of \
+       functions with the suffix _lp."
+  else ()
 
 let semantic_check_nrfn_normal ~loc id es =
   match Symbol_table.look vm id.name with
   | Some (_, UFun (listedtypes, Void))
     when not (check_compatible_arguments_mod_conv id.name listedtypes es) ->
-      IllTypedUserFunApp
-        (loc, id.name, listedtypes, Void, List.map ~f:type_of_expr_typed es)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "Ill-typed arguments supplied to function '%s'. Available \
+            signatures:\n\
+            %s\n\
+            Instead supplied arguments of incompatible type: %s."
+           id.name
+           (pretty_print_unsizedtype (UFun (listedtypes, Void)))
+           (List.map ~f:type_of_expr_typed es |> pretty_print_unsizedtypes))
   | Some (_, UFun (_, Void)) ->
       mk_typed_statement
         ~stmt:(NRFunApp (UserDefined, id, es))
         ~return_type:NoReturnType ~loc
-      |> Validate.ok
   | Some (_, UFun (_, ReturnType _)) ->
-      IllTypedNonReturningFunction (loc, id.name) |> Validate.error
-  | Some _ -> IllTypedNotANRFunction (loc, id.name) |> Validate.error
-  | None -> IllTypedNoSuchNRFunction (loc, id.name) |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "A non-returning function was expected but a returning function \
+            '%s' was supplied."
+           id.name)
+  | Some _ ->
+      semantic_error ~loc
+        (Format.sprintf
+           "A returning function was expected but a non-function value '%s' \
+            was supplied."
+           id.name)
+  | None ->
+      semantic_error ~loc
+        (Format.sprintf
+           "A non-returning function was expected but an undeclared \
+            identifier '%s' was supplied."
+           id.name)
 
 let semantic_check_nrfn_stan_math ~loc id es =
   match stan_math_returntype id.name es with
@@ -897,13 +1001,21 @@ let semantic_check_nrfn_stan_math ~loc id es =
       mk_typed_statement
         ~stmt:(NRFunApp (StanLib, id, es))
         ~return_type:NoReturnType ~loc
-      |> Validate.ok
   | Some (ReturnType _) ->
-      Semantic_errors.IllTypedNonReturningFunction (loc, id.name)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "A non-returning function was expected but a returning function \
+            '%s' was supplied."
+           id.name)
   | None ->
-      IllTypedStanLibFunApp (loc, id.name, List.map ~f:type_of_expr_typed es)
-      |> Validate.error
+      semantic_error ~loc
+        (Format.sprintf
+           "Ill-typed arguments supplied to function '%s'. Available \
+            signatures: %s\n\
+            Instead supplied arguments of incompatible type: %s."
+           id.name
+           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+           (List.map ~f:type_of_expr_typed es |> pretty_print_unsizedtypes))
 
 let semantic_check_nrfn ~loc id es =
   match fn_kind_from_identifier id with
@@ -963,9 +1075,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             ^ " declared in previous blocks." )
       in
       let opname = Sexp.to_string (sexp_of_assignmentoperator uassop) in
-      match
-        Semantic_errors.operator_return_type_from_string opname [ue2; ue]
-      with
+      match operator_return_type_from_string opname [ue2; ue] with
       | Some Void ->
           mk_typed_statement ~return_type:NoReturnType ~loc
             ~stmt:
@@ -985,15 +1095,13 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             ^
             if uassop <> Assign && uassop <> ArrowAssign then
               ". Available signatures:"
-              ^ Semantic_errors.pretty_print_all_operator_signatures opname
+              ^ pretty_print_all_operator_signatures opname
             else "" ) )
   | NRFunApp (_, id, es) ->
       let uid = semantic_check_identifier id in
       let ues = List.map ~f:(semantic_check_expression cf) es in
-      Validate.(
-        semantic_check_nrfn_target ~loc ~cf uid
-        *> semantic_check_nrfn ~loc uid ues
-        |> get_success ~with_error:Semantic_errors.to_exception)
+      semantic_check_nrfn_target ~loc ~cf uid ;
+      semantic_check_nrfn ~loc uid ues
   | TargetPE e ->
       let ue = semantic_check_expression cf e in
       (* Check typing of ~ and target += *)
