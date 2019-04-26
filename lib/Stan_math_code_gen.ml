@@ -468,7 +468,7 @@ let%expect_test "udf" =
 
       try {
         current_statement__ = "file , line 0, column 0";
-        return add(x, 1, pstream__);
+        return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
               std::runtime_error(std::string("inside UDF sars") + ": " + e.what(), current_statement__));

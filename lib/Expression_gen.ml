@@ -84,8 +84,7 @@ let suffix_args f =
   else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
   else []
 
-let user_defined_args f = if is_stan_math f then [] else ["pstream__"]
-let gen_extra_fun_args f = suffix_args f @ user_defined_args f
+let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
 
 let rec pp_index ppf = function
   | All -> pf ppf "stan::model::index_omni()"
@@ -168,17 +167,17 @@ and gen_misc_special_math_app f =
       Some
         (fun ppf es ->
           if List.length es = 2 then pp_binary ppf "std::max(%a, %a)" es
-          else pp_ordinary_fn ppf f es )
+          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | "min" ->
       Some
         (fun ppf es ->
           if List.length es = 2 then pp_binary ppf "std::min(%a, %a)" es
-          else pp_ordinary_fn ppf f es )
+          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | "ceil" ->
       Some
         (fun ppf es ->
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pp_ordinary_fn ppf f es )
+          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | _ -> None
 
 and read_data_or_param ut ppf es =
@@ -203,7 +202,10 @@ and gen_mir_special_apps ut = function
 
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf ut f es =
-  let default ppf es = pp_ordinary_fn ppf (stan_namespace_qualify f) es in
+  let default ppf es =
+    pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
+      (list ~sep:comma pp_expr) es
+  in
   let pp =
     [ Option.map ~f:gen_operator_app (Ast.operator_of_string f)
     ; gen_misc_special_math_app f
