@@ -21,3 +21,6 @@ val inferred_unsizedtype_of_indexed :
 (** [inferred_unsizedtype_of_indexed loc ut typed_idxs] is responsible for figuring
     out what the return (unsized) type of an indexing operation into an unsized
     type is.*)
+
+val operator_return_type :
+  Ast.operator -> Ast.typed_expression list -> Mir.returntype option

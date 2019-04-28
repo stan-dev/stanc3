@@ -127,9 +127,10 @@ function_def:
     RPAREN b=statement
     {
       grammar_logger "function_def" ;
-      {stmt_untyped=FunDef {returntype = rt; funname = name;
+      {stmt=FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;};
-       stmt_untyped_loc=loc_span_of_pos $startpos $endpos}
+       smeta={loc=loc_span_of_pos $startpos $endpos}
+      }
     }
 
 return_type:
@@ -175,13 +176,14 @@ var_decl:
     ae=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
-      {stmt_untyped=
+      {stmt=
          VarDecl {sizedtype= reducearray (sbt, sizes);
                   transformation= Identity;
                   identifier= id;
                   initial_value=Option.map ~f:snd ae;
                   is_global= false};
-       stmt_untyped_loc= loc_span_of_pos $startpos $endpos}}
+       smeta= {loc = loc_span_of_pos $startpos $endpos}}
+    }
 
 sized_basic_type:
   | INT
@@ -200,13 +202,14 @@ top_var_decl_no_assign:
     {
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
-      {stmt_untyped=
+      {stmt=
           VarDecl {sizedtype= reducearray (fst tvt, sizes);
                    transformation=  snd tvt;
                    identifier= id;
                    initial_value= None;
                    is_global= true};
-       stmt_untyped_loc= loc_span_of_pos $startpos $endpos}
+       smeta={loc= loc_span_of_pos $startpos $endpos}
+      }
     }
 
 top_var_decl:
@@ -214,13 +217,14 @@ top_var_decl:
     ass=option(pair(ASSIGN, expression)) SEMICOLON
     { grammar_logger "top_var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
-      {stmt_untyped=
+      {stmt=
               VarDecl {sizedtype= reducearray (fst tvt, sizes);
                        transformation=  snd tvt;
                        identifier= id;
                        initial_value= Option.map ~f:snd ass;
                        is_global= true};
-       stmt_untyped_loc= loc_span_of_pos $startpos $endpos}}
+       smeta= {loc=loc_span_of_pos $startpos $endpos}}
+    }
 
 top_var_type:
   | INT r=range_constraint
@@ -299,19 +303,22 @@ dims:
     {
       grammar_logger "lhs_expression" ;
       match snd l with
-        | [] -> {expr_untyped=Variable (fst l);
-                 expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+        | [] -> {expr=Variable (fst l);
+                 emeta = { loc=loc_span_of_pos $startpos $endpos}
+                }
         | i ->
-          {expr_untyped=
+          {expr =
              Indexed
-               ({expr_untyped=Variable (fst l);
-                 expr_untyped_loc=loc_span_of_pos $startpos $endpos}, i);
-           expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+               ({expr =Variable (fst l);
+                 emeta = { loc=loc_span_of_pos $startpos $endpos}
+               }, i);
+           emeta = { loc=loc_span_of_pos $startpos $endpos}
+          }
     }
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
-      {expr_untyped=e;
-       expr_untyped_loc= loc_span_of_pos $startpos $endpos}}
+      {expr=e;
+       emeta={loc= loc_span_of_pos $startpos $endpos}}}
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -324,9 +331,9 @@ non_lhs:
     { grammar_logger "postfix_expr" ; PostfixOp (e, op)}
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
-       Indexed ({expr_untyped=ue;
-                 expr_untyped_loc= loc_span_of_pos $startpos(ue)
-                                                        $endpos(ue)}, i)}
+       Indexed ({expr=ue;
+                 emeta={loc= loc_span_of_pos $startpos(ue)
+                                                        $endpos(ue)}}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -335,38 +342,39 @@ constr_expression:
   | e1=constr_expression op=arithmeticBinOp e2=constr_expression
     {
       grammar_logger "constr_expression_arithmetic" ;
-      {expr_untyped=BinOp (e1, op, e2);
-       expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+      {expr=BinOp (e1, op, e2);
+       emeta={loc=loc_span_of_pos $startpos $endpos}
+      }
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
-      {expr_untyped=PrefixOp (op, e);
-       expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+      {expr=PrefixOp (op, e);
+       emeta={loc=loc_span_of_pos $startpos $endpos}}
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
-      {expr_untyped=PostfixOp (e, op);
-       expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+      {expr=PostfixOp (e, op);
+       emeta={loc=loc_span_of_pos $startpos $endpos}}
     }
   | e=constr_expression LBRACK i=indexes RBRACK
     {
       grammar_logger "constr_expression_indexed" ;
-      {expr_untyped=Indexed (e, i);
-       expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+      {expr=Indexed (e, i);
+       emeta={loc=loc_span_of_pos $startpos $endpos}}
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
-      {expr_untyped=e;
-       expr_untyped_loc= loc_span_of_pos $startpos $endpos}
+      {expr=e;
+       emeta={loc= loc_span_of_pos $startpos $endpos}}
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
-      {expr_untyped=Variable id;
-       expr_untyped_loc=loc_span_of_pos $startpos $endpos}
+      {expr=Variable id;
+       emeta={loc=loc_span_of_pos $startpos $endpos}}
     }
 
 common_expression:
@@ -379,7 +387,7 @@ common_expression:
   | LBRACK xs=separated_nonempty_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
-    {  grammar_logger "fun_app" ; FunApp (id, args) }
+    {  grammar_logger "fun_app" ; FunApp (UserDefined, id, args) }
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN
@@ -481,12 +489,14 @@ lhs:
 statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
-       {stmt_untyped= s;
-        stmt_untyped_loc=loc_span_of_pos $startpos $endpos} }
+       {stmt= s;
+        smeta= { loc=loc_span_of_pos $startpos $endpos} }
+    }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
-       {stmt_untyped= s;
-        stmt_untyped_loc=loc_span_of_pos $startpos $endpos} }
+       {stmt= s;
+        smeta={loc = loc_span_of_pos $startpos $endpos} }
+    }
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
@@ -496,7 +506,7 @@ atomic_statement:
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
-    {  grammar_logger "funapp_statement" ; NRFunApp (id, args)  }
+    {  grammar_logger "funapp_statement" ; NRFunApp (UserDefined,id, args)  }
   | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
     {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
   | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)

@@ -87,7 +87,7 @@ and pretty_print_index = function
 and pretty_print_list_of_indices l =
   String.concat ~sep:", " (List.map ~f:pretty_print_index l)
 
-and pretty_print_expression {expr_untyped= e_content; _} =
+and pretty_print_expression {expr= e_content; _} =
   match e_content with
   | TernaryIf (e1, e2, e3) ->
       pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
@@ -100,7 +100,7 @@ and pretty_print_expression {expr_untyped= e_content; _} =
   | Variable id -> pretty_print_identifier id
   | IntNumeral i -> i
   | RealNumeral r -> r
-  | FunApp (id, es) ->
+  | FunApp (_, id, es) ->
       pretty_print_identifier id ^ "("
       ^ pretty_print_list_of_expression es
       ^ ")"
@@ -224,7 +224,7 @@ and pretty_print_array_dims = function
   | [] -> ""
   | es -> "[" ^ pretty_print_list_of_expression (List.rev es) ^ "]"
 
-and pretty_print_statement {stmt_untyped= s_content; _} =
+and pretty_print_statement {stmt= s_content; _} =
   match s_content with
   | Assignment
       { assign_identifier= id
@@ -238,7 +238,7 @@ and pretty_print_statement {stmt_untyped= s_content; _} =
       ^ " "
       ^ pretty_print_assignmentoperator assop
       ^ " " ^ pretty_print_expression e ^ ";"
-  | NRFunApp (id, es) ->
+  | NRFunApp (_, id, es) ->
       pretty_print_identifier id ^ "("
       ^ pretty_print_list_of_expression es
       ^ ")" ^ ";"
@@ -304,7 +304,7 @@ and pretty_print_statement {stmt_untyped= s_content; _} =
              args)
       ^
       match b with
-      | {stmt_untyped= Skip; _} -> ");"
+      | {stmt= Skip; _} -> ");"
       | b -> ") " ^ pretty_print_statement b )
 
 and pretty_print_list_of_statements l =
