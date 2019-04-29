@@ -56,7 +56,7 @@ and pretty_print_returntype = function
 and pretty_print_identifier id = id.name
 
 and pretty_print_operator = function
-  | Plus | PPlus -> "+"
+  | Mir.Plus | PPlus -> "+"
   | Minus | PMinus -> "-"
   | Times -> "*"
   | Divide -> "/"
@@ -194,8 +194,8 @@ and pretty_print_transformed_type st trans =
         , "[" ^ pretty_print_expression e1 ^ ", " ^ pretty_print_expression e2
           ^ "]" )
     | SArray _ -> (
-      match unwind_sized_array_type st with st, _ ->
-        (pretty_print_sizedtype st, "") )
+      match unwind_sized_array_type st with
+      | st, _ -> (pretty_print_sizedtype st, "") )
   in
   let cov_sizes_string =
     match st with
@@ -300,7 +300,7 @@ and pretty_print_statement {stmt= s_content; _} =
                | at, ut, id ->
                    pretty_print_autodifftype at
                    ^ pretty_print_unsizedtype ut
-                   ^ " " ^ pretty_print_identifier id)
+                   ^ " " ^ pretty_print_identifier id )
              args)
       ^
       match b with

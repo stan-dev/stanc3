@@ -1,7 +1,7 @@
 (** Semantic validation of AST*)
 
 (* Idea: check many of things related to identifiers that are hard to check
-during parsing and are in fact irrelevant for building up the parse tree *)
+   during parsing and are in fact irrelevant for building up the parse tree *)
 
 open Core_kernel
 open Symbol_table
@@ -18,39 +18,37 @@ open Pretty_printing
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
 
-let string_of_operator = Mir.mk_string_of sexp_of_operator
-let operator_of_string = Mir.mk_of_string operator_of_sexp
 let ternary_if = "TernaryIf__"
 
-let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
-let%test "good op name" = operator_of_string "Plus__" = Some Plus
+let%test "bad op name" = phys_equal (Mir.operator_of_string "Pluss__") None
+let%test "good op name" = Mir.operator_of_string "Plus__" = Some Plus
 
 (** A hash table to hold some name conversions between the AST nodes and the
     Stan Math name of the operator *)
 let string_of_operators =
   Map.Poly.of_alist_multi
-    [ (string_of_operator Ast.Plus, "add")
-    ; (string_of_operator PPlus, "plus")
-    ; (string_of_operator Minus, "subtract")
-    ; (string_of_operator PMinus, "minus")
-    ; (string_of_operator Times, "multiply")
-    ; (string_of_operator Divide, "mdivide_right")
-    ; (string_of_operator Divide, "divide")
-    ; (string_of_operator Modulo, "modulus")
-    ; (string_of_operator LDivide, "mdivide_left")
-    ; (string_of_operator EltTimes, "elt_multiply")
-    ; (string_of_operator EltDivide, "elt_divide")
-    ; (string_of_operator Pow, "pow")
-    ; (string_of_operator Or, "logical_or")
-    ; (string_of_operator And, "logical_and")
-    ; (string_of_operator Equals, "logical_eq")
-    ; (string_of_operator NEquals, "logical_neq")
-    ; (string_of_operator Less, "logical_lt")
-    ; (string_of_operator Leq, "logical_lte")
-    ; (string_of_operator Greater, "logical_gt")
-    ; (string_of_operator Geq, "logical_gte")
-    ; (string_of_operator PNot, "logical_negation")
-    ; (string_of_operator Transpose, "transpose")
+    [ (Mir.string_of_operator Mir.Plus, "add")
+    ; (Mir.string_of_operator PPlus, "plus")
+    ; (Mir.string_of_operator Minus, "subtract")
+    ; (Mir.string_of_operator PMinus, "minus")
+    ; (Mir.string_of_operator Times, "multiply")
+    ; (Mir.string_of_operator Divide, "mdivide_right")
+    ; (Mir.string_of_operator Divide, "divide")
+    ; (Mir.string_of_operator Modulo, "modulus")
+    ; (Mir.string_of_operator LDivide, "mdivide_left")
+    ; (Mir.string_of_operator EltTimes, "elt_multiply")
+    ; (Mir.string_of_operator EltDivide, "elt_divide")
+    ; (Mir.string_of_operator Pow, "pow")
+    ; (Mir.string_of_operator Or, "logical_or")
+    ; (Mir.string_of_operator And, "logical_and")
+    ; (Mir.string_of_operator Equals, "logical_eq")
+    ; (Mir.string_of_operator NEquals, "logical_neq")
+    ; (Mir.string_of_operator Less, "logical_lt")
+    ; (Mir.string_of_operator Leq, "logical_lte")
+    ; (Mir.string_of_operator Greater, "logical_gt")
+    ; (Mir.string_of_operator Geq, "logical_gte")
+    ; (Mir.string_of_operator PNot, "logical_negation")
+    ; (Mir.string_of_operator Transpose, "transpose")
     ; (ternary_if, "if_else")
       (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
     ; ("(OperatorAssign Plus)", "assign_add")
@@ -81,7 +79,7 @@ let operator_return_type_from_string op_name (args : Ast.typed_expression list)
            Stan_math_signatures.stan_math_returntype name args )
 
 let operator_return_type op =
-  operator_return_type_from_string (string_of_operator op)
+  operator_return_type_from_string (Mir.string_of_operator op)
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -234,9 +232,9 @@ let try_compute_block_statement_returntype loc srt1 srt2 =
 let check_fresh_variable_basic id is_nullary_function =
   (* No shadowing! *)
   (* For some strange reason, Stan allows user declared identifiers that are
-   not of nullary function types to clash with nullary library functions.
-   No other name clashes are tolerated. Here's the logic to
-   achieve that. *)
+     not of nullary function types to clash with nullary library functions.
+     No other name clashes are tolerated. Here's the logic to
+     achieve that. *)
   let _ =
     if
       is_stan_math_function_name id.name
@@ -534,7 +532,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (string_of_operator uop)
+            ^ pretty_print_all_operator_signatures (Mir.string_of_operator uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.emeta.type_
             ^ ", "
@@ -553,7 +551,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (string_of_operator uop)
+            ^ pretty_print_all_operator_signatures (Mir.string_of_operator uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
@@ -570,7 +568,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (string_of_operator op)
+            ^ pretty_print_all_operator_signatures (Mir.string_of_operator op)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
@@ -776,7 +774,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let uindices_with_types =
         List.map
           ~f:(function
-            | Single e as i -> (i, e.emeta.type_) | i -> (i, Mir.UInt))
+            | Single e as i -> (i, e.emeta.type_) | i -> (i, Mir.UInt) )
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
@@ -788,7 +786,8 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                      lub_ad_type [at; ue1.emeta.ad_level]
                  | Between (ue1, ue2) ->
-                     lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
+                     lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level]
+                 )
                uindices )
       in
       let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices
@@ -1393,7 +1392,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
       let uvdsl = List.map ~f:(semantic_check_statement cf) vdsl in
       let _ = Symbol_table.end_scope vm in
       (* Any statements after a break or continue or return or reject do not count for the return
-      type. *)
+       type. *)
       let rec list_until_escape = function
         | x1 :: ({stmt; _} as r) :: tl -> (
           match stmt with
@@ -1426,7 +1425,8 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
                 match ue2.emeta.ad_level with
                 | AutoDiffable -> false
                 | _ -> true )
-        | SArray (ust2, ue) -> not_ptq ue (fun () -> check_sizes_data_only ust2)
+        | SArray (ust2, ue) ->
+            not_ptq ue (fun () -> check_sizes_data_only ust2)
         | _ -> true
       in
       (* Sizes must be of level at most data. *)
@@ -1503,7 +1503,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             | at, ut, id ->
                 ( semantic_check_autodifftype at
                 , semantic_check_unsizedtype ut
-                , semantic_check_identifier id ))
+                , semantic_check_identifier id ) )
           args
       in
       let uarg_types = List.map ~f:(function w, y, _ -> (w, y)) uargs in
@@ -1602,13 +1602,13 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
       in
       (* TODO: Bob was suggesting that function arguments must be allowed to shadow user defined functions but not library functions. Should we allow for that? *)
       (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
-         as if they are parameters, for the purposes of type checking. *)
+       as if they are parameters, for the purposes of type checking. *)
       let _ =
         List.map2 ~f:(Symbol_table.enter vm) uarg_names
           (List.map
              ~f:(function
                | Mir.DataOnly, ut -> (Data, ut)
-               | AutoDiffable, ut -> (Param, ut))
+               | AutoDiffable, ut -> (Param, ut) )
              uarg_types)
       in
       let ub =

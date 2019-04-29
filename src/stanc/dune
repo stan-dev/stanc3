@@ -1,6 +1,6 @@
 (executable
  (name stanc)
- (libraries stanclib)
+ (libraries frontend stan_math_backend)
  (public_name stanc)
  (preprocess (pps ppx_jane))
  )

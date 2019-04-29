@@ -116,8 +116,8 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
     es
 
 and gen_operator_app = function
-  | Ast.Plus -> fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
-  | Ast.PMinus ->
+  | Plus -> fun ppf es -> pp_scalar_binary ppf "(%a + %a)" "add(%a, %a)" es
+  | PMinus ->
       fun ppf es ->
         pp_unary ppf
           (if is_scalar (List.hd_exn es) then "-%a" else "minus(%a)")
@@ -202,7 +202,7 @@ and gen_fun_app ppf ut f es =
       (list ~sep:comma pp_expr) es
   in
   let pp =
-    [ Option.map ~f:gen_operator_app (Ast.operator_of_string f)
+    [ Option.map ~f:gen_operator_app (Mir.operator_of_string f)
     ; gen_misc_special_math_app f
     ; Option.map ~f:(gen_mir_special_apps ut) (internal_fn_of_string f) ]
     |> List.filter_opt |> List.hd |> Option.value ~default
@@ -248,8 +248,8 @@ and pp_expr ppf e =
       pp_compiler_internal_fn ppf (stan_namespace_qualify f) es
   | FunApp (Mir.UserDefined, f, es) ->
       pp_ordinary_fn ppf (stan_namespace_qualify f) es
-  | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
-  | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
+  | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
+  | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
       let promoted ppf (t, e) =
         pf ppf "stan::math::promote_scalar<%a>(%a)" pp_expr_type t pp_expr e

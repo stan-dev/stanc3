@@ -24,6 +24,31 @@ type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
+(** Arithmetic and logical operators *)
+type operator =
+  | Plus
+  | PPlus
+  | Minus
+  | PMinus
+  | Times
+  | Divide
+  | Modulo
+  | LDivide
+  | EltTimes
+  | EltDivide
+  | Pow
+  | Or
+  | And
+  | Equals
+  | NEquals
+  | Less
+  | Leq
+  | Greater
+  | Geq
+  | PNot
+  | Transpose
+[@@deriving sexp, hash, compare]
+
 (** Unsized types for function arguments and for decorating expressions
     during type checking; we have a separate type here for Math library
     functions as these functions can be overloaded, so do not have a unique
@@ -88,8 +113,8 @@ and 'e expr =
   | Lit of litType * string
   | FunApp of fun_kind * string * 'e list
   | TernaryIf of 'e * 'e * 'e
-  | And of 'e * 'e
-  | Or of 'e * 'e
+  | EAnd of 'e * 'e
+  | EOr of 'e * 'e
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map]
 
@@ -393,3 +418,49 @@ let mk_of_string of_sexp x =
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
 let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
 let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
+let string_of_operator = mk_string_of sexp_of_operator
+let operator_of_string = mk_of_string operator_of_sexp
+
+(* -- Locations and spans --------------------------------------------------- *)
+
+(** Render a location as a string *)
+let rec string_of_location loc =
+  let open Format in
+  let included_from_str =
+    match loc.included_from with
+    | None -> ""
+    | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
+  in
+  sprintf "file %s, line %d, column %d%s" loc.filename loc.line_num loc.col_num
+    included_from_str
+
+(** Render a location_span as a string *)
+let string_of_location_span loc_sp =
+  match loc_sp with
+  | {begin_loc; end_loc} ->
+      let bf = begin_loc.filename in
+      let ef = end_loc.filename in
+      let bl = begin_loc.line_num in
+      let el = end_loc.line_num in
+      let bc = begin_loc.col_num in
+      let ec = end_loc.col_num in
+      let open Format in
+      let file_line_col_string =
+        if bf = ef then
+          sprintf "file %s, %s" bf
+            ( if bl = el then
+              sprintf "line %d, %s" bl
+                ( if bc = ec then sprintf "column %d" bc
+                else sprintf "columns %d-%d" bc ec )
+            else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
+            )
+        else
+          sprintf "file %s, line %d, column %d to file %s, line %d, column %d"
+            bf bl bc ef el ec
+      in
+      let included_from_str =
+        match begin_loc.included_from with
+        | None -> ""
+        | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
+      in
+      sprintf "%s%s" file_line_col_string included_from_str

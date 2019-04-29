@@ -11,7 +11,7 @@ let trans_fn_kind = function
   | UserDefined -> UserDefined
 
 let rec op_to_funapp op args =
-  { expr= FunApp (StanLib, Ast.string_of_operator op, trans_exprs args)
+  { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
       { mtype= Semantic_check.operator_return_type op args |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
@@ -90,10 +90,9 @@ let truncate_dist ast_obs t =
   in
   match t with
   | Ast.NoTruncate -> []
-  | TruncateUpFrom lb -> [trunc Ast.Less lb None]
-  | TruncateDownFrom ub -> [trunc Ast.Greater ub None]
-  | TruncateBetween (lb, ub) ->
-      [trunc Ast.Less lb (Some (trunc Ast.Greater ub None))]
+  | TruncateUpFrom lb -> [trunc Less lb None]
+  | TruncateDownFrom ub -> [trunc Greater ub None]
+  | TruncateBetween (lb, ub) -> [trunc Less lb (Some (trunc Greater ub None))]
 
 let unquote s =
   if s.[0] = '"' && s.[String.length s - 1] = '"' then
@@ -110,7 +109,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
       | Ast.PString s -> mkstring mloc (unquote s)
-      | Ast.PExpr e -> trans_expr e)
+      | Ast.PExpr e -> trans_expr e )
     ps
 
 (** [add_index expression index] returns an expression that (additionally)
@@ -419,7 +418,7 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
       let add_dist =
         (* XXX distribution name suffix? *)
         (* XXX Reminder to differentiate between tilde, which drops constants, and
-             vanilla target +=, which doesn't. Can use _unnormalized or something.*)
+         vanilla target +=, which doesn't. Can use _unnormalized or something.*)
         TargetPE
           { expr= FunApp (StanLib, distribution.name, trans_exprs (arg :: args))
           ; emeta= {mloc; madlevel= Ast.expr_ad_lub (arg :: args); mtype= UReal}

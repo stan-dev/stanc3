@@ -109,7 +109,8 @@ let maybe_templated_arg_types (args : fun_arg_decl) =
   let is_autodiff (adtype, _, _) =
     match adtype with AutoDiffable -> true | _ -> false
   in
-  List.filter ~f:is_autodiff args |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
+  List.filter ~f:is_autodiff args
+  |> List.mapi ~f:(fun i _ -> sprintf "T%d__" i)
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
@@ -129,7 +130,7 @@ let pp_returntype ppf arg_types rt =
   | None -> pf ppf "void@,"
 
 let pp_location ppf loc =
-  pf ppf "current_statement__ = %S;@;" (Errors.string_of_location_span loc)
+  pf ppf "current_statement__ = %S;@;" (Mir.string_of_location_span loc)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location

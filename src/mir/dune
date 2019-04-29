@@ -1,0 +1,5 @@
+(library
+  (name mir)
+  (libraries core_kernel str fmt)
+  (inline_tests)
+  (preprocess (pps ppx_jane ppx_deriving.map)))
