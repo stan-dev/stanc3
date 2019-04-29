@@ -19,12 +19,7 @@ let stan_namespace_qualify f =
 
 (* return true if the types of the two expression are the same *)
 let types_match e1 e2 = e1.emeta.mtype = e2.emeta.mtype
-
-(* "__" is an illegal suffix for user functions, used for built-in operators not in signatures *)
-let is_user_defined f =
-  (not (Stan_math_signatures.is_stan_math_function_name f))
-  && (not (ends_with "__" f))
-  && not (starts_with "stan::math::" f)
+let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e = e.emeta.mtype = UInt || e.emeta.mtype = UReal
@@ -85,8 +80,7 @@ let suffix_args f =
   else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
   else []
 
-let user_defined_args f = if is_user_defined f then ["pstream__"] else []
-let gen_extra_fun_args f = suffix_args f @ user_defined_args f
+let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
 
 let rec pp_index ppf = function
   | All -> pf ppf "stan::model::index_omni()"
@@ -108,6 +102,10 @@ and pp_logical_op ppf op lhs rhs =
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
 and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
+
+and pp_binary_f ppf f es =
+  pf ppf "%s(%a, %a)" f pp_expr (first es) pp_expr (second es)
+
 and first es = List.nth_exn es 0
 and second es = List.nth_exn es 1
 
@@ -130,7 +128,7 @@ and gen_operator_app = function
         pp_unary ppf
           (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
           es
-  | PNot -> fun ppf es -> pp_unary ppf "logial_negation(%a)" es
+  | PNot -> fun ppf es -> pp_unary ppf "logical_negation(%a)" es
   | Minus ->
       fun ppf es -> pp_scalar_binary ppf "(%a - %a)" "subtract(%a, %a)" es
   | Times ->
@@ -140,23 +138,23 @@ and gen_operator_app = function
         if
           is_matrix (second es)
           && (is_matrix (first es) || is_row_vector (first es))
-        then pp_binary ppf "mdivide_right(%a, %a)" es
+        then pp_binary_f ppf "mdivide_right" es
         else pp_scalar_binary ppf "(%a / %a)" "divide(%a, %a)" es
-  | Modulo -> fun ppf es -> pp_binary ppf "modulus(%a, %a)" es
-  | LDivide -> fun ppf es -> pp_binary ppf "mdivide_left(%a, %a)" es
+  | Modulo -> fun ppf es -> pp_binary_f ppf "modulus" es
+  | LDivide -> fun ppf es -> pp_binary_f ppf "mdivide_left" es
   | And | Or ->
       raise_s [%message "And/Or should have been converted to an expression"]
   | EltTimes ->
       fun ppf es -> pp_scalar_binary ppf "(%a * %a)" "elt_multiply(%a, %a)" es
   | EltDivide ->
       fun ppf es -> pp_scalar_binary ppf "(%a / %a)" "elt_divide(%a, %a)" es
-  | Pow -> fun ppf es -> pp_binary ppf "pow(%a, %a)" es
-  | Equals -> fun ppf es -> pp_binary ppf "logical_eq(%a, %a)" es
-  | NEquals -> fun ppf es -> pp_binary ppf "logical_neq(%a, %a)" es
-  | Less -> fun ppf es -> pp_binary ppf "logical_lt(%a, %a)" es
-  | Leq -> fun ppf es -> pp_binary ppf "logical_lte(%a, %a)" es
-  | Greater -> fun ppf es -> pp_binary ppf "logical_gt(%a, %a)" es
-  | Geq -> fun ppf es -> pp_binary ppf "logical_gte(%a, %a)" es
+  | Pow -> fun ppf es -> pp_binary_f ppf "pow" es
+  | Equals -> fun ppf es -> pp_binary_f ppf "logical_eq" es
+  | NEquals -> fun ppf es -> pp_binary_f ppf "logical_neq" es
+  | Less -> fun ppf es -> pp_binary_f ppf "logical_lt" es
+  | Leq -> fun ppf es -> pp_binary_f ppf "logical_lte" es
+  | Greater -> fun ppf es -> pp_binary_f ppf "logical_gt" es
+  | Geq -> fun ppf es -> pp_binary_f ppf "logical_gte" es
 
 and gen_misc_special_math_app f =
   match f with
@@ -165,21 +163,18 @@ and gen_misc_special_math_app f =
       Some (fun ppf es -> pp_binary ppf "binomial_coefficient_log(%a, %a)" es)
   | "target" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
   | "get_lp" -> Some (fun ppf _ -> pf ppf "get_lp(lp__, lp_accum__)")
-  | "max" ->
+  | "max" | "min" ->
       Some
         (fun ppf es ->
-          if List.length es = 2 then pp_binary ppf "std::max(%a, %a)" es
-          else pp_ordinary_fn ppf f es )
-  | "min" ->
-      Some
-        (fun ppf es ->
-          if List.length es = 2 then pp_binary ppf "std::min(%a, %a)" es
-          else pp_ordinary_fn ppf f es )
+          if List.length es = 2 then pp_binary_f ppf f es
+          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | "ceil" ->
       Some
         (fun ppf es ->
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
-          else pp_ordinary_fn ppf f es )
+          else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
+  | f when f = string_of_internal_fn FnLength ->
+      Some (fun ppf -> gen_fun_app ppf "length")
   | _ -> None
 
 and read_data_or_param ut ppf es =
@@ -194,21 +189,15 @@ and read_data_or_param ut ppf es =
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
-and gen_mir_special_apps ut = function
-  | FnLength -> fun ppf es -> pp_unary ppf "length(%a)" es
-  | FnMakeArray -> fun ppf es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
-  | FnReadData | FnReadParam -> read_data_or_param ut
-  | FnConstrain -> pp_constrain_funapp "constrain"
-  | FnUnconstrain -> pp_constrain_funapp "unconstrain"
-  | _ -> fun ppf _ -> pf ppf "XXX TODO "
-
 (* assumes everything well formed from parser checks *)
-and gen_fun_app ppf ut f es =
-  let default ppf es = pp_ordinary_fn ppf (stan_namespace_qualify f) es in
+and gen_fun_app ppf f es =
+  let default ppf es =
+    pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
+      (list ~sep:comma pp_expr) es
+  in
   let pp =
     [ Option.map ~f:gen_operator_app (Ast.operator_of_string f)
-    ; gen_misc_special_math_app f
-    ; Option.map ~f:(gen_mir_special_apps ut) (internal_fn_of_string f) ]
+    ; gen_misc_special_math_app f ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
@@ -233,6 +222,15 @@ and pp_ordinary_fn ppf f es =
   pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
+and pp_compiler_internal_fn ut f ppf es =
+  match Mir.internal_fn_of_string f with
+  | None -> failwith "Expecting internal function but found `%s`" f
+  | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
+  | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
+  | Some FnUnconstrain -> pp_constrain_funapp "unconstrain" ppf es
+  | Some FnReadData | Some FnReadParam -> read_data_or_param ut ppf es
+  | _ -> pf ppf "XXX TODO "
+
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
@@ -241,7 +239,10 @@ and pp_expr ppf e =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (f, es) -> gen_fun_app ppf e.emeta.mtype f es
+  | FunApp (Mir.StanLib, f, es) -> gen_fun_app ppf f es
+  | FunApp (Mir.CompilerInternal, f, es) ->
+      pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
+  | FunApp (Mir.UserDefined, f, es) -> pp_ordinary_fn ppf f es
   | And (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | Or (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -277,19 +278,21 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp ("pi", []))) ;
+  printf "%s" (pp_unlocated (FunApp (Mir.StanLib, "pi", []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
-    (pp_unlocated (FunApp ("sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated
+       (FunApp (Mir.StanLib, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( "atan2"
+          ( Mir.StanLib
+          , "atan2"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan2(123, 1.2) |}]
@@ -310,5 +313,7 @@ let%expect_test "pp_expr10" =
 
 let%expect_test "pp_expr11" =
   printf "%s"
-    (pp_unlocated (FunApp ("poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
-  [%expect {| poisson_rng(123, base_rng__) |}]
+    (pp_unlocated
+       (FunApp
+          (Mir.UserDefined, "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
+  [%expect {| poisson_rng(123, base_rng__, pstream__) |}]

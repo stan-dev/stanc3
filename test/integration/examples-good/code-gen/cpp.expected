@@ -114,13 +114,13 @@ class eight_schools_ncp_model : public prob_grad {
       }
       {
         current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
-        lp_accum__.add(normal(mu, 0, 5, pstream__))
+        lp_accum__.add(normal(mu, 0, 5))
         current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
-        lp_accum__.add(cauchy(tau, 0, 5, pstream__))
+        lp_accum__.add(cauchy(tau, 0, 5))
         current_statement__ = "file eight_schools_ncp.stan, line 22, columns 2-29";
-        lp_accum__.add(normal(theta_tilde, 0, 1, pstream__))
+        lp_accum__.add(normal(theta_tilde, 0, 1))
         current_statement__ = "file eight_schools_ncp.stan, line 23, columns 2-27";
-        lp_accum__.add(normal(y, theta, sigma, pstream__))
+        lp_accum__.add(normal(y, theta, sigma))
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
