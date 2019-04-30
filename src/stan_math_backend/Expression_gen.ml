@@ -245,9 +245,8 @@ and pp_expr ppf e =
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (Mir.StanLib, f, es) -> gen_fun_app ppf e.emeta.mtype f es
   | FunApp (Mir.CompilerInternal, f, es) ->
-    pp_compiler_internal_fn ppf f es
-  | FunApp (Mir.UserDefined, f, es) ->
-    pp_ordinary_fn ppf (stan_namespace_qualify f) es
+      pp_compiler_internal_fn ppf (stan_namespace_qualify f) es
+  | FunApp (Mir.UserDefined, f, es) -> pp_ordinary_fn ppf f es
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
