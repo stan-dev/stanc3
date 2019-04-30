@@ -3,14 +3,6 @@
 
 open Core_kernel
 
-(*
-   XXX Missing:
-   * TODO? foreach loops - matrix vs array (fine because of get_base1?)
-   * TODO during optimization:
-       - mark for loops with known bounds
-       - mark FnApps as containing print or reject
-*)
-
 (** Source code locations *)
 type location =
   { filename: string
