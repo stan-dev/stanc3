@@ -24,6 +24,31 @@ type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
+(** Arithmetic and logical operators *)
+type operator =
+  | Plus
+  | PPlus
+  | Minus
+  | PMinus
+  | Times
+  | Divide
+  | Modulo
+  | LDivide
+  | EltTimes
+  | EltDivide
+  | Pow
+  | Or
+  | And
+  | Equals
+  | NEquals
+  | Less
+  | Leq
+  | Greater
+  | Geq
+  | PNot
+  | Transpose
+[@@deriving sexp, hash, compare]
+
 (** Unsized types for function arguments and for decorating expressions
     during type checking; we have a separate type here for Math library
     functions as these functions can be overloaded, so do not have a unique
@@ -88,8 +113,8 @@ and 'e expr =
   | Lit of litType * string
   | FunApp of fun_kind * string * 'e list
   | TernaryIf of 'e * 'e * 'e
-  | And of 'e * 'e
-  | Or of 'e * 'e
+  | EAnd of 'e * 'e
+  | EOr of 'e * 'e
   | Indexed of 'e * 'e index list
 [@@deriving sexp, hash, map]
 
@@ -393,3 +418,167 @@ let mk_of_string of_sexp x =
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
 let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
 let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
+let string_of_operator = mk_string_of sexp_of_operator
+let operator_of_string = mk_of_string operator_of_sexp
+
+(* -- Locations and spans --------------------------------------------------- *)
+
+(** Render a location as a string *)
+let rec string_of_location loc =
+  let open Format in
+  let included_from_str =
+    match loc.included_from with
+    | None -> ""
+    | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
+  in
+  sprintf "file %s, line %d, column %d%s" loc.filename loc.line_num loc.col_num
+    included_from_str
+
+(** Render a location_span as a string *)
+let string_of_location_span loc_sp =
+  match loc_sp with {begin_loc; end_loc} ->
+    let bf = begin_loc.filename in
+    let ef = end_loc.filename in
+    let bl = begin_loc.line_num in
+    let el = end_loc.line_num in
+    let bc = begin_loc.col_num in
+    let ec = end_loc.col_num in
+    let open Format in
+    let file_line_col_string =
+      if bf = ef then
+        sprintf "file %s, %s" bf
+          ( if bl = el then
+            sprintf "line %d, %s" bl
+              ( if bc = ec then sprintf "column %d" bc
+              else sprintf "columns %d-%d" bc ec )
+          else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
+          )
+      else
+        sprintf "file %s, line %d, column %d to file %s, line %d, column %d" bf
+          bl bc ef el ec
+    in
+    let included_from_str =
+      match begin_loc.included_from with
+      | None -> ""
+      | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
+    in
+    sprintf "%s%s" file_line_col_string included_from_str
+
+(* The following module signatures define the parts of the compiler we 
+   can abstract over.  
+
+   The `Frontend` module defines two types of errors (syntactic and semantic)
+   and exposes functions to parse a file or string to MIR typed programs. 
+
+   These functions return a result with the typed program as success or 
+   a list of frontend errors. The module also exposes a way of rendering 
+   these errors for use from the compiler
+
+   The `Optimize` module exposes a type 'level' which represents the optimization
+   options, a function for parsing the level from a string and a function
+   which performs the actual optimization.
+
+   The `Backend` module exposes the backend representation type and two functions
+   that take MIR typed programs to that represenation or to a string.
+
+   The `Compiler.Make` functor allows you to construct a `Compiler.S` from
+   modules fulfilling these signatures.
+*)
+
+module type Frontend = sig
+  (* options for specifying the behaviour of the frontend *)
+  type frontend_opts
+
+  val frontend_opts_of_string : (frontend_opts, string) result
+  val default_frontend_opts : frontend_opts
+
+  (* the type of semantic errors *)
+  type semantic_error
+
+  (* the type of syntax errors *)
+  type syntax_error
+  type frontend_error = (syntax_error, semantic_error) Either.t
+
+  val render_error : frontend_error -> string
+
+  val mir_of_file :
+       opts:frontend_opts
+    -> file:string
+    -> (typed_prog, frontend_error list) result
+
+  val mir_of_string :
+       opts:frontend_opts
+    -> str:string
+    -> (typed_prog, frontend_error list) result
+end
+
+module type Optimize = sig
+  (* variant of possible optimization levels *)
+  type optimization_opts
+
+  (* parse level from string, for use in e.g. command line argument parser *)
+  val optimization_opts_of_string :
+    string -> (optimization_opts, string) result
+
+  val default_optimization_opts : optimization_opts
+  val optimize : opts:optimization_opts -> typed_prog -> typed_prog
+end
+
+module type Backend = sig
+  type backend_opts
+
+  val backend_opts_of_string : string -> (backend_opts, string) result
+  val default_backend_opts : backend_opts
+
+  (* the type of backend representation *)
+  type repr
+
+  val mir_to_repr : opts:backend_opts -> typed_prog -> repr
+  val mir_to_string : opts:backend_opts -> typed_prog -> string
+end
+
+module Compiler = struct
+  module type S = sig
+    type semantic_error
+    type syntax_error
+    type frontend_error
+    type compiler_opts_error
+    type compiler_opts
+
+    val default_compiler_opts : compiler_opts
+
+    val compiler_opts_of_string :
+      string -> (compiler_opts, compiler_opts_error list) result
+
+    val compile_from_file :
+      opts:compiler_opts -> file:string -> (string, frontend_error list) result
+  end
+
+  module Make (F : Frontend) (O : Optimize) (B : Backend) :
+    S
+    with type semantic_error := F.semantic_error
+     and type syntax_error := F.syntax_error
+     and type frontend_error := F.frontend_error = struct
+    type compiler_opts =
+      { frontend_opts: F.frontend_opts
+      ; optimization_opts: O.optimization_opts
+      ; backend_opts: B.backend_opts }
+
+    let default_compiler_opts =
+      { frontend_opts= F.default_frontend_opts
+      ; optimization_opts= O.default_optimization_opts
+      ; backend_opts= B.default_backend_opts }
+
+    type compiler_opts_error =
+      | Frontend_opts_error of string
+      | Optimize_opts_error of string
+      | Backend_opts_error of string
+
+    let compiler_opts_of_string str = Error [Frontend_opts_error "todo"]
+
+    let compile_from_file ~opts ~file =
+      F.mir_of_file ~opts:opts.frontend_opts ~file
+      |> Result.map ~f:(O.optimize ~opts:opts.optimization_opts)
+      |> Result.map ~f:(B.mir_to_string ~opts:opts.backend_opts)
+  end
+end

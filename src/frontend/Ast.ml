@@ -6,31 +6,6 @@ type identifier =
   {name: string; id_loc: Mir.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
-(** Arithmetic and logical operators *)
-type operator =
-  | Plus
-  | PPlus
-  | Minus
-  | PMinus
-  | Times
-  | Divide
-  | Modulo
-  | LDivide
-  | EltTimes
-  | EltDivide
-  | Pow
-  | Or
-  | And
-  | Equals
-  | NEquals
-  | Less
-  | Leq
-  | Greater
-  | Geq
-  | PNot
-  | Transpose
-[@@deriving sexp, hash, compare]
-
 (** Indices for array access *)
 type 'e index =
   | All
@@ -47,9 +22,9 @@ type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
     substitute untyped_expression or typed_expression for 'e *)
 type 'e expression =
   | TernaryIf of 'e * 'e * 'e
-  | BinOp of 'e * operator * 'e
-  | PrefixOp of operator * 'e
-  | PostfixOp of 'e * operator
+  | BinOp of 'e * Mir.operator * 'e
+  | PrefixOp of Mir.operator * 'e
+  | PostfixOp of 'e * Mir.operator
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
@@ -110,7 +85,7 @@ type assignmentoperator =
   | Assign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
-  | OperatorAssign of operator
+  | OperatorAssign of Mir.operator
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
@@ -267,6 +242,3 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
-
-let string_of_operator = Mir.mk_string_of sexp_of_operator
-let operator_of_string = Mir.mk_of_string operator_of_sexp
