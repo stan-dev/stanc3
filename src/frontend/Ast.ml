@@ -77,9 +77,6 @@ let expr_ad_lub exprs =
   |> List.max_elt ~compare
   |> Option.value ~default:DataOnly
 
-(* This directive silences some spurious warnings from ppx_deriving *)
-[@@@ocaml.warning "-A"]
-
 (** Assignment operators *)
 type assignmentoperator =
   | Assign

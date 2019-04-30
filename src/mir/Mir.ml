@@ -1,202 +1,5 @@
-(** The Middle Intermediate Representation, which program transformations
-    operate on *)
-
+include Tree
 open Core_kernel
-
-(*
-   XXX Missing:
-   * TODO? foreach loops - matrix vs array (fine because of get_base1?)
-   * TODO during optimization:
-       - mark for loops with known bounds
-       - mark FnApps as containing print or reject
-*)
-
-(** Source code locations *)
-type location =
-  { filename: string
-  ; line_num: int
-  ; col_num: int
-  ; included_from: location option }
-[@@deriving sexp]
-
-(** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
-
-let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
-
-(** Arithmetic and logical operators *)
-type operator =
-  | Plus
-  | PPlus
-  | Minus
-  | PMinus
-  | Times
-  | Divide
-  | Modulo
-  | LDivide
-  | EltTimes
-  | EltDivide
-  | Pow
-  | Or
-  | And
-  | Equals
-  | NEquals
-  | Less
-  | Leq
-  | Greater
-  | Geq
-  | PNot
-  | Transpose
-[@@deriving sexp, hash, compare]
-
-(** Unsized types for function arguments and for decorating expressions
-    during type checking; we have a separate type here for Math library
-    functions as these functions can be overloaded, so do not have a unique
-    type in the usual sense. Still, we want to assign a unique type to every
-    expression during type checking.  *)
-type unsizedtype =
-  | UInt
-  | UReal
-  | UVector
-  | URowVector
-  | UMatrix
-  | UArray of unsizedtype
-  | UFun of (autodifftype * unsizedtype) list * returntype
-  | UMathLibraryFunction
-[@@deriving sexp, hash]
-
-(** Flags for data only arguments to functions *)
-and autodifftype = DataOnly | AutoDiffable [@@deriving sexp, hash, compare]
-
-and returntype = Void | ReturnType of unsizedtype [@@deriving sexp, hash]
-
-(** Sized types, for variable declarations *)
-type 'e sizedtype =
-  | SInt
-  | SReal
-  | SVector of 'e
-  | SRowVector of 'e
-  | SMatrix of 'e * 'e
-  | SArray of 'e sizedtype * 'e
-[@@deriving sexp, compare, map, hash]
-
-(** remove_size [st] discards size information from a sizedtype
-    to return an unsizedtype. *)
-let rec remove_size = function
-  | SInt -> UInt
-  | SReal -> UReal
-  | SVector _ -> UVector
-  | SRowVector _ -> URowVector
-  | SMatrix _ -> UMatrix
-  | SArray (t, _) -> UArray (remove_size t)
-
-type litType = Int | Real | Str [@@deriving sexp, hash]
-
-(**  *)
-type fun_kind = StanLib | CompilerInternal | UserDefined
-[@@deriving compare, sexp, hash]
-
-type 'e index =
-  | All
-  | Single of 'e
-  (*
-  | MatrixSingle of 'e
- *)
-  | Upfrom of 'e
-  | Downfrom of 'e
-  | Between of 'e * 'e
-  | MultiIndex of 'e
-[@@deriving sexp, hash, map]
-
-and 'e expr =
-  | Var of string
-  | Lit of litType * string
-  | FunApp of fun_kind * string * 'e list
-  | TernaryIf of 'e * 'e * 'e
-  | EAnd of 'e * 'e
-  | EOr of 'e * 'e
-  | Indexed of 'e * 'e index list
-[@@deriving sexp, hash, map]
-
-(* This directive silences some spurious warnings from ppx_deriving *)
-[@@@ocaml.warning "-A"]
-
-type fun_arg_decl = (autodifftype * string * unsizedtype) list
-[@@deriving sexp, hash, map]
-
-type 's fun_def =
-  { fdrt: unsizedtype option
-  ; fdname: string
-  ; fdargs: fun_arg_decl
-  ; fdbody: 's
-  ; fdloc: location_span [@compare.ignore] }
-[@@deriving sexp, hash, map]
-
-and 'e lvalue = string * 'e index list
-
-and ('e, 's) statement =
-  | Assignment of 'e lvalue * 'e
-  | TargetPE of 'e
-  | NRFunApp of fun_kind * string * 'e list
-  | Break
-  | Continue
-  | Return of 'e option
-  | Skip
-  | IfElse of 'e * 's * 's option
-  | While of 'e * 's
-  (* XXX Collapse with For? *)
-  | For of {loopvar: string; lower: 'e; upper: 'e; body: 's}
-  (* A Block for now corresponds tightly with a C++ block:
-     variables declared within it have local scope and are garbage collected
-     when the block ends.*)
-  | Block of 's list
-  (* SList has no semantics, just programming convenience *)
-  | SList of 's list
-  | Decl of
-      { decl_adtype: autodifftype
-      ; decl_id: string
-      ; decl_type: 'e sizedtype }
-[@@deriving sexp, hash, map]
-
-type io_block =
-  | Data
-  | Parameters
-  | TransformedParameters
-  | GeneratedQuantities
-[@@deriving sexp, hash]
-
-type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
-
-type ('e, 's) prog =
-  { functions_block: 's fun_def list
-  ; input_vars: 'e io_var list
-  ; prepare_data: 's list (* data & transformed data decls and statements *)
-  ; log_prob: 's list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 's list (* assumes data & params ready & in scope*)
-  ; transform_inits: 's list
-  ; output_vars: 'e io_var list
-  ; prog_name: string
-  ; prog_path: string }
-[@@deriving sexp]
-
-type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
-
-and mtype_loc_ad =
-  { mtype: unsizedtype
-  ; mloc: location_span sexp_opaque [@compare.ignore]
-  ; madlevel: autodifftype }
-[@@deriving sexp]
-
-type ('e, 'm) stmt_with =
-  {stmt: ('e with_expr, ('e, 'm) stmt_with) statement; smeta: 'm}
-
-and stmt_loc =
-  (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
-[@@deriving sexp]
-
-type expr_no_meta = unit with_expr
-type stmt_no_meta = (expr_no_meta, unit) stmt_with
-type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
 
 (* == Pretty printers ======================================================= *)
 
@@ -256,6 +59,8 @@ let rec pp_expr pp_e ppf = function
         pp_e texpr pp_builtin_syntax ":" pp_e fexpr
   | Indexed (expr, indices) ->
       pp_indexed pp_e ppf (Fmt.strf "%a" pp_e expr, indices)
+  | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
+  | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
 
 and pp_indexed pp_e ppf (ident, indices) =
   Fmt.pf ppf {|@[%s%a@]|} ident
@@ -275,7 +80,7 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
     name
 
 let pp_fun_def pp_s ppf = function
-  | {fdrt; fdname; fdargs; fdbody} -> (
+  | {fdrt; fdname; fdargs; fdbody; _} -> (
     match fdrt with
     | Some rt ->
         Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
@@ -286,13 +91,13 @@ let pp_fun_def pp_s ppf = function
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )
 
-let rec pp_statement pp_e pp_s ppf = function
+let pp_statement pp_e pp_s ppf = function
   | Assignment ((assignee, idcs), rhs) ->
       Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
         rhs
   | TargetPE expr ->
       Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
-  | NRFunApp (fn_kind, name, args) ->
+  | NRFunApp (_, name, args) ->
       Fmt.pf ppf {|@[%s%a;@]|} name Fmt.(list pp_e ~sep:comma |> parens) args
   | Break -> pp_keyword ppf "break;"
   | Continue -> pp_keyword ppf "continue;"
@@ -463,122 +268,3 @@ let string_of_location_span loc_sp =
       | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
     in
     sprintf "%s%s" file_line_col_string included_from_str
-
-(* The following module signatures define the parts of the compiler we 
-   can abstract over.  
-
-   The `Frontend` module defines two types of errors (syntactic and semantic)
-   and exposes functions to parse a file or string to MIR typed programs. 
-
-   These functions return a result with the typed program as success or 
-   a list of frontend errors. The module also exposes a way of rendering 
-   these errors for use from the compiler
-
-   The `Optimize` module exposes a type 'level' which represents the optimization
-   options, a function for parsing the level from a string and a function
-   which performs the actual optimization.
-
-   The `Backend` module exposes the backend representation type and two functions
-   that take MIR typed programs to that represenation or to a string.
-
-   The `Compiler.Make` functor allows you to construct a `Compiler.S` from
-   modules fulfilling these signatures.
-*)
-
-module type Frontend = sig
-  (* options for specifying the behaviour of the frontend *)
-  type frontend_opts
-
-  val frontend_opts_of_string : (frontend_opts, string) result
-  val default_frontend_opts : frontend_opts
-
-  (* the type of semantic errors *)
-  type semantic_error
-
-  (* the type of syntax errors *)
-  type syntax_error
-  type frontend_error = (syntax_error, semantic_error) Either.t
-
-  val render_error : frontend_error -> string
-
-  val mir_of_file :
-       opts:frontend_opts
-    -> file:string
-    -> (typed_prog, frontend_error list) result
-
-  val mir_of_string :
-       opts:frontend_opts
-    -> str:string
-    -> (typed_prog, frontend_error list) result
-end
-
-module type Optimize = sig
-  (* variant of possible optimization levels *)
-  type optimization_opts
-
-  (* parse level from string, for use in e.g. command line argument parser *)
-  val optimization_opts_of_string :
-    string -> (optimization_opts, string) result
-
-  val default_optimization_opts : optimization_opts
-  val optimize : opts:optimization_opts -> typed_prog -> typed_prog
-end
-
-module type Backend = sig
-  type backend_opts
-
-  val backend_opts_of_string : string -> (backend_opts, string) result
-  val default_backend_opts : backend_opts
-
-  (* the type of backend representation *)
-  type repr
-
-  val mir_to_repr : opts:backend_opts -> typed_prog -> repr
-  val mir_to_string : opts:backend_opts -> typed_prog -> string
-end
-
-module Compiler = struct
-  module type S = sig
-    type semantic_error
-    type syntax_error
-    type frontend_error
-    type compiler_opts_error
-    type compiler_opts
-
-    val default_compiler_opts : compiler_opts
-
-    val compiler_opts_of_string :
-      string -> (compiler_opts, compiler_opts_error list) result
-
-    val compile_from_file :
-      opts:compiler_opts -> file:string -> (string, frontend_error list) result
-  end
-
-  module Make (F : Frontend) (O : Optimize) (B : Backend) :
-    S
-    with type semantic_error := F.semantic_error
-     and type syntax_error := F.syntax_error
-     and type frontend_error := F.frontend_error = struct
-    type compiler_opts =
-      { frontend_opts: F.frontend_opts
-      ; optimization_opts: O.optimization_opts
-      ; backend_opts: B.backend_opts }
-
-    let default_compiler_opts =
-      { frontend_opts= F.default_frontend_opts
-      ; optimization_opts= O.default_optimization_opts
-      ; backend_opts= B.default_backend_opts }
-
-    type compiler_opts_error =
-      | Frontend_opts_error of string
-      | Optimize_opts_error of string
-      | Backend_opts_error of string
-
-    let compiler_opts_of_string str = Error [Frontend_opts_error "todo"]
-
-    let compile_from_file ~opts ~file =
-      F.mir_of_file ~opts:opts.frontend_opts ~file
-      |> Result.map ~f:(O.optimize ~opts:opts.optimization_opts)
-      |> Result.map ~f:(B.mir_to_string ~opts:opts.backend_opts)
-  end
-end
