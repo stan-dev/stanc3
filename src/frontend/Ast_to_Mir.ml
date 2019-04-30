@@ -472,7 +472,7 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
       For
         (* XXX Do loops in MIR actually start at 1? *)
         { loopvar= newsym
-        ; lower= wrap @@ Lit (Int, "0")
+        ; lower= loop_bottom
         ; upper=
             wrap
             @@ FunApp
@@ -644,7 +644,7 @@ let%expect_test "Prefix-Op-Example" =
     {|
       ((Block
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
-         (IfElse 
+         (IfElse
           (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
           (NRFunApp CompilerInternal FnPrint__ ((Lit Str Badger))) ())))) |}]
 
@@ -661,11 +661,11 @@ let%expect_test "read data" =
        (Block
         ((For (loopvar sym2__) (lower (Lit Int 0))
           (upper
-           (FunApp StanLib FnLength__ 
+           (FunApp StanLib FnLength__
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
-           (Block 
-            ((Assignment (mat ()) 
+           (Block
+            ((Assignment (mat ())
               (FunApp CompilerInternal FnReadData__ ((Lit Str mat))))))))))))) |}]
 
 let%expect_test "read param" =
@@ -681,7 +681,7 @@ let%expect_test "read param" =
        (Block
         ((Assignment (mat ())
           (FunApp CompilerInternal FnConstrain__
-           ((FunApp CompilerInternal FnReadParam__ ((Lit Str mat))) (Lit Str lb) 
+           ((FunApp CompilerInternal FnReadParam__ ((Lit Str mat))) (Lit Str lb)
             (Lit Str real) (Lit Int 0))))))))) |}]
 
 let%expect_test "gen quant" =
@@ -699,7 +699,7 @@ let%expect_test "gen quant" =
        (Block
         ((For (loopvar sym2__) (lower (Lit Int 0))
           (upper
-           (FunApp StanLib FnLength__ 
+           (FunApp StanLib FnLength__
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
            (Block

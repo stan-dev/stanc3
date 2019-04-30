@@ -194,3 +194,17 @@ and stmt_loc =
 type expr_no_meta = unit with_expr
 type stmt_no_meta = (expr_no_meta, unit) stmt_with
 type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
+
+type internal_fn =
+  | FnLength
+  | FnMakeArray
+  | FnMakeRowVec
+  | FnNegInf
+  | FnReadData
+  | FnReadParam
+  | FnConstrain
+  | FnUnconstrain
+  | FnCheck
+  | FnPrint
+  | FnReject
+[@@deriving sexp]

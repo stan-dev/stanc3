@@ -6,7 +6,6 @@ open Core_kernel
 let pp_builtin_syntax = Fmt.(string |> styled `Yellow)
 let pp_keyword = Fmt.(string |> styled `Blue)
 let angle_brackets pp_v ppf v = Fmt.pf ppf "@[<1><%a>@]" pp_v v
-let label str pp_v ppf v = Fmt.pf ppf "%s=%a" str pp_v v
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
@@ -195,21 +194,6 @@ let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 (* ===================== Some helper functions and values ====================== *)
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
-
-type internal_fn =
-  | FnLength
-  | FnMakeArray
-  | FnMakeRowVec
-  | FnNegInf
-  | FnReadData
-  | FnReadParam
-  | FnConstrain
-  | FnUnconstrain
-  | FnCheck
-  | FnPrint
-  | FnReject
-[@@deriving sexp]
-
 let mk_string_of sexp_of x = Sexp.to_string (sexp_of x) ^ "__"
 let string_of_internal_fn = mk_string_of sexp_of_internal_fn
 
