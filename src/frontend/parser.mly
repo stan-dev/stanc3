@@ -453,6 +453,7 @@ common_expression:
     {   grammar_logger "infix_greater" ; Greater }
   | GEQ
     {   grammar_logger "infix_geq" ; Geq }
+    
 
 indexes:
   | (* nothing *)

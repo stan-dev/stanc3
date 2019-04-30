@@ -1,6 +1,6 @@
 (library
-  (name stanclib)
-  (libraries core_kernel str menhirLib fmt)
+  (name frontend)
+  (libraries core_kernel str menhirLib fmt mir)
   (inline_tests)
   (preprocess (pps ppx_jane ppx_deriving.map)))
 

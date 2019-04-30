@@ -128,7 +128,7 @@ let pp_returntype ppf arg_types rt =
   | None -> pf ppf "void@,"
 
 let pp_location ppf loc =
-  pf ppf "current_statement__ = %S;@;" (Errors.string_of_location_span loc)
+  pf ppf "current_statement__ = %S;@;" (Mir.string_of_location_span loc)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location

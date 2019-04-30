@@ -26,7 +26,7 @@ let rec try_open_in paths fname pos =
       let full_path = path ^ "/" ^ fname in
       ( In_channel.create full_path
       , sprintf "%s, included from\nfile %s" full_path
-          (Errors.string_of_location
+          (Mir.string_of_location
              (Errors.location_of_position
                 (Stack.top_exn include_stack).lex_start_p)) )
     with _ -> try_open_in rest_of_paths fname pos )

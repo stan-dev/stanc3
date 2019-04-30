@@ -56,7 +56,7 @@ and pretty_print_returntype = function
 and pretty_print_identifier id = id.name
 
 and pretty_print_operator = function
-  | Plus | PPlus -> "+"
+  | Mir.Plus | PPlus -> "+"
   | Minus | PMinus -> "-"
   | Times -> "*"
   | Divide -> "/"
