@@ -174,7 +174,7 @@ and gen_misc_special_math_app f =
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
           else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | f when f = string_of_internal_fn FnLength ->
-      Some (fun ppf -> gen_fun_app ppf "length")
+      Some (fun ppf -> gen_fun_app ppf "stan::length")
   | _ -> None
 
 and read_data_or_param ut ppf es =
