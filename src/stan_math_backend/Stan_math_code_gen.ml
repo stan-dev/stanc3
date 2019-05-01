@@ -160,10 +160,10 @@ let rec pp_statement ppf {stmt; smeta} =
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
   | Assignment ((assignee, idcs), rhs) ->
-      pf ppf "%a = %a"
+      pf ppf "%a = %a;"
         (Mir.pp_indexed Mir.pp_expr_typed_located)
         (assignee, idcs) pp_expr rhs
-  | TargetPE e -> pf ppf "lp_accum__.add(%a)" pp_expr e
+  | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
       let args = {expr= Var "function__"; emeta= internal_meta} :: args in

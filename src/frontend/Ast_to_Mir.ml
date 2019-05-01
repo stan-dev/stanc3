@@ -332,17 +332,23 @@ let mkparamread id var dconstrain sizedtype transform smeta =
   in
   for_eigen constrain var smeta
 
+(* XXX This is broken - not generating index on underlying *)
 let mkdataread id var sizedtype smeta =
-  let read_base var =
-    { expr=
-        FunApp
-          ( CompilerInternal
-          , string_of_internal_fn FnReadData
-          , [mkstring var.emeta.mloc id] )
-    ; emeta= {var.emeta with mtype= base_type sizedtype} }
+  let read_base (var : mtype_loc_ad with_expr) =
+    let indices =
+      match var.expr with
+      | Indexed (_, indices) -> indices
+      | _ -> [Single loop_bottom]
+    in
+    let rdfn =
+      internal_funapp FnReadData
+        [mkstring var.emeta.mloc id]
+        {var.emeta with mtype= base_type sizedtype}
+    in
+    {var with expr= Indexed (rdfn, indices)}
   in
-  let vident, indices = expr_to_lhs var in
   let read_assign var =
+    let vident, indices = expr_to_lhs var in
     {stmt= Assignment ((vident, indices), read_base var); smeta}
   in
   for_scalar read_assign var smeta
@@ -675,8 +681,9 @@ let%expect_test "read data" =
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
           (body
            (Block
-            ((Assignment (mat ())
-              (FunApp CompilerInternal FnReadData__ ((Lit Str mat))))))))))))) |}]
+            ((Assignment (mat ((Single (Var sym1__)) (Single (Var sym2__))))
+              (Indexed (FunApp CompilerInternal FnReadData__ ((Lit Str mat)))
+               ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in

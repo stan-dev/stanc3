@@ -206,6 +206,10 @@ let mk_of_string of_sexp x =
   | Invalid_argument _ -> None
 
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
+
+let internal_funapp ifn args emeta =
+  {expr= FunApp (CompilerInternal, string_of_internal_fn ifn, args); emeta}
+
 let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
 let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
 let string_of_operator = mk_string_of sexp_of_operator

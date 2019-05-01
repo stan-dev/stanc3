@@ -7,6 +7,7 @@ val operator_of_string : string -> operator option
 val string_of_operator : operator -> string
 val string_of_internal_fn : internal_fn -> string
 val internal_fn_of_string : string -> internal_fn option
+val internal_funapp : internal_fn -> 'a with_expr list -> 'a -> 'a with_expr
 val no_loc : location
 val no_span : location_span
 val internal_meta : mtype_loc_ad
