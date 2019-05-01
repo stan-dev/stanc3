@@ -71,7 +71,7 @@ class eight_schools_ncp_model : public prob_grad {
                                0);}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside ctor") + ": " + e.what(), current_statement__));
+          std::runtime_error(std::string("inside ctor") + ": " + e.what()), current_statement__);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -126,7 +126,7 @@ class eight_schools_ncp_model : public prob_grad {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
+          std::runtime_error(std::string("inside log_prob") + ": " + e.what()), current_statement__);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -192,7 +192,7 @@ udf1(const T0__& a, const T1__& b, std::ostream* pstream__) {
     return (a + b);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside UDF udf1") + ": " + e.what(), current_statement__));
+          std::runtime_error(std::string("inside UDF udf1") + ": " + e.what()), current_statement__);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
@@ -273,7 +273,7 @@ class one_var_per_block_model : public prob_grad {
                                  0);}}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside ctor") + ": " + e.what(), current_statement__));
+          std::runtime_error(std::string("inside ctor") + ": " + e.what()), current_statement__);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
@@ -343,7 +343,7 @@ class one_var_per_block_model : public prob_grad {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
+          std::runtime_error(std::string("inside log_prob") + ": " + e.what()), current_statement__);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }

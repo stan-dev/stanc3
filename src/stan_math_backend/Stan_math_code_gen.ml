@@ -99,7 +99,7 @@ let pp_sized_decl ppf (vident, st, adtype) =
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
-          std::runtime_error(std::string(%S) + ": " + e.what(), current_statement__));
+          std::runtime_error(std::string(%S) + ": " + e.what()), current_statement__);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
     msg
@@ -448,7 +448,7 @@ let%expect_test "udf" =
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
-              std::runtime_error(std::string("inside UDF sars") + ": " + e.what(), current_statement__));
+              std::runtime_error(std::string("inside UDF sars") + ": " + e.what()), current_statement__);
           // Next line prevents compiler griping about no return
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
