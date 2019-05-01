@@ -162,7 +162,7 @@ let%expect_test "parse minus unary" =
              (assign_indices ()) (assign_op Assign)
              (assign_rhs
               ((expr_untyped
-                (PrefixOp Minus
+                (PrefixOp PMinus
                  ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
                   (expr_untyped_loc <opaque>))))
                (expr_untyped_loc <opaque>)))))
@@ -191,14 +191,14 @@ let%expect_test "parse unary over binary" =
                     (expr_untyped_loc <opaque>))
                    Minus
                    ((expr_untyped
-                     (PrefixOp Minus
+                     (PrefixOp PMinus
                       ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
                        (expr_untyped_loc <opaque>))))
                     (expr_untyped_loc <opaque>))))
                  (expr_untyped_loc <opaque>))
                 Minus
                 ((expr_untyped
-                  (PrefixOp Minus
+                  (PrefixOp PMinus
                    ((expr_untyped (Variable ((name x) (id_loc <opaque>))))
                     (expr_untyped_loc <opaque>))))
                  (expr_untyped_loc <opaque>))))
@@ -394,7 +394,7 @@ let%expect_test "parse operator precedence" =
                                                 (Variable
                                                  ((name r) (id_loc <opaque>))))
                                                (expr_untyped_loc <opaque>))
-                                              Exp
+                                              Pow
                                               ((expr_untyped
                                                 (PostfixOp
                                                  ((expr_untyped

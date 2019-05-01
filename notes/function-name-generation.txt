@@ -1,0 +1,159 @@
+has_prob_suffix:  _lpdf, _lpmf, _lcdf, _lccdf
+has_rng_or_lp_suffix:  _rng, _lp
+
+
+Operators
+----------------------------------------------------------------------
+* If operator-(a) [PMinus]
+  if a is primitive
+    operator-(a')
+  else
+    minus(a')
+* If operator+(a) [PPlus]
+  a'
+* If operator'(a) [Transpose]
+  if (a is primitive)
+    a'
+  else
+    tranpose(a')
+* If operator!(a) [PNot]
+  logical_negation(a')
+
+* If operator-(a, b) [Minus]
+  if both args primitive operator+(a', b')
+  else subtract(a', b')
+* If operator+(a, b) [Plus]
+  if both args primitive operator+(a', b')
+  else add(a', b')
+* If operator*(a, b) [Times]
+  if both args primitive, operator*(a', b')
+  else multiply(a', b')
+* If operator/(a, b) [Divide]
+  if both args primitive and they are not both int
+    operator/(a', b')
+  else if b is a matrix, and either a is a matrix or b is a row vector,
+    mdivide_right(a', b')
+  else
+    divide(a', b')   // also handles int case
+* If operator%(a, b) [Modulo]
+  modulus(a', b')
+* If operator\(a, b) [LDivide]
+  mdivide_left(a', b')
+* If operator.*(a, b) [EltTimes]
+  if (a and b are primitive)
+    (a' * b')
+  else
+    elt_multiply(a', b')
+* If operator./(a, b) [EltDivide]
+  if (a and b are primitive)
+    (a' / b')
+  else
+    elt_divide(a', b')
+* If operator^(a, b) [Pow]
+  pow(a', b')
+
+* If operator&&(a, b)  [And]  "logical_and"
+  (stan::math::primitive_value(a') && stan::math::primitive_value(b'))
+* If operator||(a, b)  [Or]  "logical_or"
+  (stan::math::primitive_value(a') || stan::math::primitive_value(b'))
+
+* If operator==(a, b) [Equals]
+  logical_eq(a', b')
+* If operator!=(a, b)  [NEquals]
+  logical_neq(a', b')
+* If operator<(a, b)  [Less]
+  logical_lt(a', b')
+* If operator<=(a, b)   [Leq]
+  logical_lte(a', b')
+* If operator>(a, b)  [Greater]
+  logical_gt(a', b')
+* If operator>=(a, b)  [Geq]
+  logical_gte(a', b')
+
+* If operator?:(c, a, b) [TernaryIf (top-level expression type)]
+  if (type(a) == type(b))
+    (c' ? a' : b')
+  else
+    (c' ? stan::math::promote_scalar<type(a)'>(a')
+        : stan::math::promote_scalar<type(b)'>(b'))
+
+Built-in Functions
+----------------------------------------------------------------------
+* if (f == lmultiply(x, y))
+  multiply_log(x', y')
+
+* if (f == lchoose(x, y))
+  binomial_coefficient_log(x', y')
+
+* if (f == target() || f == get_lp())
+  get_lp()  // this will get its additional arguments in last stage
+
+* If f == max(a, b)
+  std::max(a', b')
+
+* If f == min(a, b)
+  std::min(a', b')
+
+* If f == ceil(a) and a is int
+  std::ceil(a)
+
+* If (built-in(f())
+    & f in { e, pi, log2, log10, sqrt2, not_a_number,
+             positive_infinity, negative_infinity, machine_precision })
+  stan::math::f
+* If (built-in(f(x))
+   & f in { abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt,
+            ceil, cos, cosh, erf, erfc, exp, exp2, expm1, fabs, floor,
+	    lgamma, log, log1p,log2, log10, round, sin, sinh, sqrt,
+	    tan, tanh, tgamma, trunc })
+  stan::math::f
+* If (built-in(f(x, y))
+   & f in { fdim, fmax, fmin, hypot })
+  stan::math::f
+* If (built-in(f(x, y, z))
+    & f in { fma })
+  stan::math::f
+
+Probability Functions
+----------------------------------------------------------------------
+get_prob_function(fname, args) {
+  if (is_user_defined(fname + "_log"))
+    fname + "_log"
+  else if (args[1] is integer or integer array)
+    fname + "_lpmf"
+  else
+    fname + "_lpdf"
+}
+
+* If (f == X_lpdf(as) || f == X_lpmf(as) || f == X_log(as))
+  if (f == unnormalized_Y_lpdf(as)
+     || f == unnormalized_Y_lpmf(as)
+     || f == unnormalize_Y_log(as))
+    get_prob_function(Y, as)<propto__>(as')
+  else
+    get_prob_function(X, as)<false>(as')  // could also skip the <false>
+
+* If (f == X_lcdf(as))
+  if (is_user_defined(X_lcdf))
+    X_lcdf(as')
+  else
+    X_cdf_log(as')
+
+* If (f == X_cdf_log(as))  // for completeness; just default behavior
+  X_cdf_log(as')
+
+* If (f == X_lccdf(as))
+  if (is_user_defined(X_lccdf))
+    X_lccdf(as')
+  else
+    X_ccdf_log(as')
+
+* If (f == X_ccdf_log(as))  // for completeness; just default behavior
+  X_ccdf_log(as')
+
+
+Extra Arguments
+----------------------------------------------------------------------
+If the function has suffix _rng, append arguments (base_rng__)
+If the function has suffix _lp, append arguments (lp__, lp_accum__)
+If the function is user-defined, append arguments (pstream__)

@@ -391,11 +391,11 @@ common_expression:
 
 %inline prefixOp:
   | BANG
-    {   grammar_logger "prefix_bang" ; Not }
+    {   grammar_logger "prefix_bang" ; PNot }
   | MINUS
-    {  grammar_logger "prefix_minus" ; Minus }
+    {  grammar_logger "prefix_minus" ; PMinus }
   | PLUS
-    {   grammar_logger "prefix_plus" ; Plus }
+    {   grammar_logger "prefix_plus" ; PPlus }
 
 %inline postfixOp:
   | TRANSPOSE
@@ -425,7 +425,7 @@ common_expression:
   | ELTDIVIDE
     {   grammar_logger "infix_eltdivide" ; EltDivide }
   | HAT
-    {  grammar_logger "infix_hat" ; Exp }
+    {  grammar_logger "infix_hat" ; Pow }
 
 %inline logicalBinOp:
   | OR

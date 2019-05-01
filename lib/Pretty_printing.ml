@@ -53,15 +53,15 @@ and pretty_print_returntype = function
 and pretty_print_identifier id = id.name
 
 and pretty_print_operator = function
-  | Plus -> "+"
-  | Minus -> "-"
+  | Plus | PPlus -> "+"
+  | Minus | PMinus -> "-"
   | Times -> "*"
   | Divide -> "/"
   | Modulo -> "%"
   | LDivide -> "\\"
   | EltTimes -> ".*"
   | EltDivide -> "./"
-  | Exp -> "^"
+  | Pow -> "^"
   | Or -> "||"
   | And -> "&&"
   | Equals -> "=="
@@ -70,7 +70,7 @@ and pretty_print_operator = function
   | Leq -> "<="
   | Greater -> ">"
   | Geq -> ">="
-  | Not -> "!"
+  | PNot -> "!"
   | Transpose -> "'"
 
 and pretty_print_index = function
