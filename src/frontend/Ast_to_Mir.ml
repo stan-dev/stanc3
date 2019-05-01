@@ -575,11 +575,15 @@ let trans_prog filename
     ; grab_names_sizes GeneratedQuantities generatedquantitiesblock ]
     |> List.concat |> List.filter_opt
   and input_vars = grab_names_sizes Data datablock |> List.filter_opt in
-  let prepare_data =
+  let datab =
     map
       (trans_stmt
          {dread= Some ReadData; dconstrain= Some Check; dadlevel= DataOnly})
       datablock
+    |> List.filter ~f:(function {stmt= Decl _; _} -> false | _ -> true)
+  in
+  let prepare_data =
+    datab
     @ map
         (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
         transformeddatablock
@@ -671,9 +675,7 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-     (For (loopvar sym1__) (lower (Lit Int 0))
+    ((For (loopvar sym1__) (lower (Lit Int 0))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
        (Block

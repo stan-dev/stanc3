@@ -271,6 +271,8 @@ let rec pp_zeroing_ctor_call ppf st =
 let var_context_container st =
   match basetype (remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
+let pp_unused = fmt "(void) %s;  // dummy to suppress unused var warning@ "
+
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
@@ -290,24 +292,22 @@ let pp_ctor ppf p =
     (list ~sep:comma string) params ;
   pp_block ppf
     ( (fun ppf p ->
-        pf ppf "typedef double local_scalar_t__;" ;
-        pf ppf "@ boost::ecuyer1988 base_rng__ = " ;
-        pf ppf "@     stan::services::util::create_rng(random_seed__, 0);" ;
-        pf ppf "@ (void) base_rng__;  // suppress unused var warning" ;
-        pf ppf "@ static const char* function__ = \"%s_namespace::%s\";"
+        pf ppf "typedef double local_scalar_t__;@ " ;
+        pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
+        pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
+        pf ppf "(void) base_rng__;  // suppress unused var warning@ " ;
+        pf ppf "static const char* function__ = \"%s_namespace::%s\";@ "
           p.prog_name p.prog_name ;
-        pf ppf "@ (void) function__;  // dummy to suppress unused var warning" ;
+        pp_unused ppf "function__" ;
         pp_located_error_b ppf (p.prepare_data, "inside ctor") )
     , p )
 
 let pp_model_private ppf p =
-  let is_data decl_id = List.Assoc.mem ~equal:( = ) p.input_vars decl_id in
-  let return_decl = function
-    | {stmt= Decl {decl_type; decl_id; _}; _} when is_data decl_id ->
-        Some (decl_id, remove_size decl_type, DataOnly)
+  let data_decl = function
+    | decl_id, (st, Data) -> Some (decl_id, remove_size st, DataOnly)
     | _ -> None
   in
-  let data_decls = List.filter_map ~f:return_decl p.prepare_data in
+  let data_decls = List.filter_map ~f:data_decl p.input_vars in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_get_param_names ppf p =
@@ -373,7 +373,7 @@ let pp_log_prob ppf p =
   text "typedef T__ local_scalar_t__;" ;
   text
     "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-  text "(void) DUMMY_VAR__;  // dummy to suppress unused var warning" ;
+  pp_unused ppf "DUMMY_VAR__" ;
   text "T__ lp__(0.0);" ;
   text "stan::math::accumulator<T__> lp_accum__;" ;
   text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
@@ -395,7 +395,7 @@ let pp_model ppf (p : typed_prog) =
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
-  pf ppf "@ %a@]@]@ }" pp_model_public p
+  pf ppf "@ %a@]@]@ };" pp_model_public p
 
 let globals = "static char* current_statement__;"
 
@@ -414,7 +414,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
-  pf ppf "@,typedef %snamespace::%s stan_model;@," p.prog_name p.prog_name
+  pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name
 
 let%expect_test "udf" =
   let with_no_loc stmt = {stmt; smeta= no_span} in

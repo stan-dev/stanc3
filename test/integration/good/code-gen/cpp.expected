@@ -35,28 +35,18 @@ class eight_schools_ncp_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // dummy to suppress unused var warning
+    
     try {
-      current_statement__ = (char*)"file eight_schools_ncp.stan, line 2, columns 2-17";
-      int J;
-      
       current_statement__ = (char*)"file eight_schools_ncp.stan, line 2, columns 2-17";
       J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
       current_statement__ = (char*)"file eight_schools_ncp.stan, line 2, columns 2-17";
       current_statement__ = (char*)"file eight_schools_ncp.stan, line 2, columns 2-17";
       check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = (char*)"file eight_schools_ncp.stan, line 3, columns 2-12";
-      std::vector<double> y;
-      y = std::vector<double>(J, 0);
-      
-      current_statement__ = (char*)"file eight_schools_ncp.stan, line 3, columns 2-12";
       for (size_t sym1__ = 0; sym1__ < stan::length(y); sym1__++) {
         current_statement__ = (char*)"file eight_schools_ncp.stan, line 3, columns 2-12";
         y[sym1__] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
       }
-      current_statement__ = (char*)"file eight_schools_ncp.stan, line 4, columns 2-25";
-      std::vector<double> sigma;
-      sigma = std::vector<double>(J, 0);
-      
       current_statement__ = (char*)"file eight_schools_ncp.stan, line 4, columns 2-25";
       for (size_t sym1__ = 0; sym1__ < stan::length(sigma); sym1__++) {
         current_statement__ = (char*)"file eight_schools_ncp.stan, line 4, columns 2-25";
@@ -157,9 +147,10 @@ class eight_schools_ncp_model : public prob_grad {
   //TODO constrained_param_names
   //TODO unconstrained_param_names
   //TODO transform_inits
+};
 }
-}
-typedef eight_schools_ncp_modelnamespace::eight_schools_ncp_model stan_model;
+
+typedef eight_schools_ncp_model_namespace::eight_schools_ncp_model stan_model;
 
   $ ../../../../../install/default/bin/stanc --print-cpp one_var_per_block.stan
 
@@ -219,21 +210,12 @@ class one_var_per_block_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
     (void) function__;  // dummy to suppress unused var warning
+    
     try {
-      current_statement__ = (char*)"file one_var_per_block.stan, line 5, columns 2-8";
-      int N;
-      
       current_statement__ = (char*)"file one_var_per_block.stan, line 5, columns 2-8";
       N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
       current_statement__ = (char*)"file one_var_per_block.stan, line 6, columns 2-8";
-      int K;
-      
-      current_statement__ = (char*)"file one_var_per_block.stan, line 6, columns 2-8";
       K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
-      current_statement__ = (char*)"file one_var_per_block.stan, line 7, columns 2-32";
-      std::vector<Eigen::Matrix<double, -1, 1>> datavar;
-      datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-      
       current_statement__ = (char*)"file one_var_per_block.stan, line 7, columns 2-32";
       for (size_t sym1__ = 0; sym1__ < stan::length(datavar); sym1__++) {
         current_statement__ = (char*)"file one_var_per_block.stan, line 7, columns 2-32";
@@ -387,7 +369,8 @@ class one_var_per_block_model : public prob_grad {
   //TODO constrained_param_names
   //TODO unconstrained_param_names
   //TODO transform_inits
+};
 }
-}
-typedef one_var_per_block_modelnamespace::one_var_per_block_model stan_model;
+
+typedef one_var_per_block_model_namespace::one_var_per_block_model stan_model;
 
