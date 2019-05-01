@@ -257,3 +257,5 @@ let string_of_location_span loc_sp =
       | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
     in
     sprintf "%s%s" file_line_col_string included_from_str
+
+let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}

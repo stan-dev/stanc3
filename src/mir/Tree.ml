@@ -14,8 +14,6 @@ type location =
 (** Delimited locations *)
 type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
 
-let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
-
 (** Arithmetic and logical operators *)
 type operator =
   | Plus

@@ -10,6 +10,7 @@ val internal_fn_of_string : string -> internal_fn option
 val internal_funapp : internal_fn -> 'a with_expr list -> 'a -> 'a with_expr
 val no_loc : location
 val no_span : location_span
+val merge_spans : location_span -> location_span -> location_span
 val internal_meta : mtype_loc_ad
 val loop_bottom : mtype_loc_ad with_expr
 val pp_indexed : 'a Fmt.t -> Format.formatter -> string * 'a index list -> unit
