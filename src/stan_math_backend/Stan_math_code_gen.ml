@@ -128,16 +128,26 @@ let pp_returntype ppf arg_types rt =
   | None -> pf ppf "void@,"
 
 let pp_location ppf loc =
-  pf ppf "current_statement__ = (char*)%S;@;" (Mir.string_of_location_span loc)
+  ignore (loc : location_span) ;
+  ignore ppf
+
+(*
+  pf ppf "current_statement__ = (char* )%S;@;"
+    (Mir.string_of_location_span loc)
+ *)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
 let pp_located_error ppf (pp_body_block, body, err_msg) =
+  ignore err_msg ; pp_body_block ppf body
+
+(*
   pf ppf "@ try %a" pp_body_block body ;
   (* XXX Figure out a good way to refactor this so it doesn't require a body block. *)
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
+ *)
 
 let math_fn_translations = function
   | FnPrint ->
@@ -241,10 +251,8 @@ let%expect_test "location propagates" =
           ; smeta= loc2 } ] }
   |> strf "@[<v>%a@]" pp_statement
   |> print_endline ;
-  [%expect
-    {|
+  [%expect {|
     {
-      current_statement__ = (char*)"file LO, line 0, column 0 to file , line 0, column 0";
       stan_print(pstream__);
     } |}]
 
@@ -442,15 +450,8 @@ let%expect_test "udf" =
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
-
-      try {
-        current_statement__ = (char*)"file , line 0, column 0";
+      {
         return add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(
-              std::runtime_error(std::string("inside UDF sars") + ": " + e.what()), current_statement__);
-          // Next line prevents compiler griping about no return
-          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
 
     } |}]

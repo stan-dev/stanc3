@@ -10,3 +10,21 @@
 (alias
  (name runtest)
  (action (diff cpp.expected cpp.output)))
+
+(rule
+  (targets eight_schools_ncp.cpp)
+  (deps (package stanc))
+  (action (run %{bin:stanc} eight_schools_ncp.stan)))
+
+;; (rule
+;;   (targets cmdstan)
+;;   (action (run git clone --recursive https://github.com/stan-dev/cmdstan)))
+
+(rule
+  (targets eight_schools_ncp)
+  (deps eight_schools_ncp.cpp)
+  (action (chdir /Users/xitrium/scm/clean/cmdstan (run make %{targets}))))
+
+(alias (name runtest)
+  (deps eight_schools_ncp)
+  (action (run %{deps})))
