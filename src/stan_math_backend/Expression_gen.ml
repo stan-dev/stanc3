@@ -177,7 +177,7 @@ and gen_misc_special_math_app f =
       Some (fun ppf -> gen_fun_app ppf "stan::length")
   | _ -> None
 
-and read_data_or_param ut ppf es =
+and read_data ut ppf es =
   let i_or_r =
     match ut with
     | UInt -> "i"
@@ -202,18 +202,13 @@ and gen_fun_app ppf f es =
   in
   pp ppf es
 
-(* XXX actually, for params we have to combine read and constrain into one funapp *)
 and pp_constrain_funapp constrain_or_un_str ppf = function
-  | var
+  | {expr= FunApp (CompilerInternal, f, _ :: dims); _}
     :: {expr= Lit (Str, constraint_flavor); _}
-       :: {expr= Lit (Str, base_type); _} :: arg :: dims ->
-      (*
-       (match arg with
-        | FunApp (f, inner_args) when (internal_fn_of_string f) = Some FnReadParam ->
-        | _ ->
- *)
+       :: {expr= Lit (Str, base_type); _} :: args
+    when internal_fn_of_string f = Some FnReadParam ->
       pf ppf "in__.%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
-        constrain_or_un_str (list ~sep:comma pp_expr) (var :: arg :: dims)
+        constrain_or_un_str (list ~sep:comma pp_expr) (args @ dims)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
 and pp_ordinary_fn ppf f es =
@@ -228,7 +223,16 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "unconstrain" ppf es
-  | Some FnReadData | Some FnReadParam -> read_data_or_param ut ppf es
+  | Some FnReadData -> read_data ut ppf es
+  | Some FnReadParam -> (
+    match es with
+    | {expr= Lit (Str, base_type); _} :: dims ->
+        pf ppf "in__.%s_constrain(@[<hov>%a@])" base_type
+          (list ~sep:comma pp_expr) dims
+    | _ ->
+        raise_s
+          [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
+    )
   | _ -> pf ppf "XXX TODO "
 
 and pp_indexed ppf (vident, indices, pretty) =

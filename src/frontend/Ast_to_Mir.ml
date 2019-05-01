@@ -313,68 +313,71 @@ let expr_to_lhs {expr; _} =
       ((match v.expr with Var v -> v | _ -> throw ()), indices)
   | _ -> throw ()
 
-let mkparamread id var dconstrain sizedtype transform smeta =
-  let read_base var =
-    { expr=
-        FunApp
-          ( CompilerInternal
-          , string_of_internal_fn FnReadParam
-          , [mkstring var.emeta.mloc id] )
-    ; emeta= {var.emeta with mtype= base_type sizedtype} }
-  in
-  let vident, indices = expr_to_lhs var in
-  let constrain var =
-    { stmt=
-        Assignment
-          ( (vident, indices)
-          , gen_constraint dconstrain transform (read_base var) )
-    ; smeta }
-  in
-  for_eigen constrain var smeta
+let internal_of_dread = function
+  | ReadParam -> FnReadParam
+  | ReadData -> FnReadData
 
-(* XXX This is broken - not generating index on underlying *)
-let mkdataread id var sizedtype smeta =
-  let read_base (var : mtype_loc_ad with_expr) =
-    let indices =
-      match var.expr with
-      | Indexed (_, indices) -> indices
-      | _ -> [Single loop_bottom]
-    in
-    let rdfn =
-      internal_funapp FnReadData
-        [mkstring var.emeta.mloc id]
-        {var.emeta with mtype= base_type sizedtype}
-    in
-    {var with expr= Indexed (rdfn, indices)}
-  in
-  let read_assign var =
-    let vident, indices = expr_to_lhs var in
-    {stmt= Assignment ((vident, indices), read_base var); smeta}
-  in
-  for_scalar read_assign var smeta
+let rec eigen_size = function
+  | SArray (t, _) -> eigen_size t
+  | SMatrix (d1, d2) -> [d1; d2]
+  | SRowVector dim | SVector dim -> [dim]
+  | SInt | SReal -> []
 
 let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     identifier initial_value =
   let with_smeta stmt = {stmt; smeta} in
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
-  let assign rhs = {stmt= Assignment ((decl_id, []), rhs); smeta} in
   let decl_type = trans_sizedtype sizedtype in
   let decl_var =
     { expr= Var decl_id
     ; emeta= {mtype= remove_size sizedtype; madlevel= dadlevel; mloc= smeta} }
   in
+  let base_type_string =
+    mkstring smeta (unsizedtype_to_string (remove_size sizedtype))
+  in
+  let read_base dread (var : mtype_loc_ad with_expr) =
+    let args =
+      match dread with
+      | ReadParam -> base_type_string :: eigen_size decl_type
+      | ReadData -> [mkstring smeta decl_id]
+    in
+    let rdfn =
+      internal_funapp (internal_of_dread dread) args
+        {var.emeta with mtype= base_type sizedtype}
+    in
+    match dread with
+    | ReadData ->
+        let indices =
+          match var.expr with
+          | Indexed (_, indices) -> indices
+          | _ -> [Single loop_bottom]
+        in
+        {var with expr= Indexed (rdfn, indices)}
+    | ReadParam -> rdfn
+  in
+  let varfn dread var =
+    match dconstrain with
+    | Some Constrain | Some Unconstrain ->
+        gen_constraint dconstrain transform (read_base dread var)
+    | _ -> read_base dread var
+  in
+  let assign varfn var =
+    let vident, indices = expr_to_lhs var in
+    {stmt= Assignment ((vident, indices), varfn var); smeta}
+  in
+  let forl =
+    match dconstrain with
+    | Some Constrain | Some Unconstrain -> for_eigen
+    | _ -> for_scalar
+  in
   let read_stmt =
-    match (dread, dconstrain) with
-    | Some ReadData, Some Check -> mkdataread decl_id decl_var decl_type smeta
-    | Some ReadParam, Some Constrain | Some ReadParam, Some Unconstrain ->
-        mkparamread decl_id decl_var dconstrain decl_type transform smeta
-    | None, _ -> Option.value_map ~default:{stmt= Skip; smeta} ~f:assign rhs
-    | _ ->
-        raise_s
-          [%message
-            "unexpected dread, constrain combo: "
-              ((dread, dconstrain) : readaction option * constrainaction option)]
+    match dread with
+    | Some dread -> forl (assign (varfn dread)) decl_var smeta
+    | None -> (
+      match rhs with
+      | Some e -> {stmt= Assignment ((decl_id, []), e); smeta}
+      | None -> {stmt= Skip; smeta} )
   in
   let decl_adtype =
     match rhs with
@@ -383,7 +386,6 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   in
   let decl = Decl {decl_adtype; decl_id; decl_type} |> with_smeta in
   let checks =
-    (* XXX checks should be performed after assignment as NRFunApp*)
     match dconstrain with
     | Some Check -> gen_check decl_type decl_id transform smeta dadlevel
     | _ -> []
@@ -615,7 +617,7 @@ let trans_prog filename
   let transform_inits =
     map
       (trans_stmt
-         { dread= Some ReadParam
+         { dread= Some ReadData
          ; dconstrain= Some Unconstrain
          ; dadlevel= DataOnly })
       parametersblock
@@ -696,10 +698,11 @@ let%expect_test "read param" =
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
        (Block
-        ((Assignment (mat ())
+        ((Assignment (mat ((Single (Var sym1__))))
           (FunApp CompilerInternal FnConstrain__
-           ((FunApp CompilerInternal FnReadParam__ ((Lit Str mat))) (Lit Str lb)
-            (Lit Str scalar) (Lit Int 0))))))))) |}]
+           ((FunApp CompilerInternal FnReadParam__
+             ((Lit Str matrix) (Lit Int 10) (Lit Int 20)))
+            (Lit Str lb) (Lit Str scalar) (Lit Int 0))))))))) |}]
 
 let%expect_test "gen quant" =
   let m =
