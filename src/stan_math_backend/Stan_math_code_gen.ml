@@ -128,7 +128,7 @@ let pp_returntype ppf arg_types rt =
   | None -> pf ppf "void@,"
 
 let pp_location ppf loc =
-  pf ppf "current_statement__ = %S;@;" (Mir.string_of_location_span loc)
+  pf ppf "current_statement__ = (char*)%S;@;" (Mir.string_of_location_span loc)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
@@ -244,7 +244,7 @@ let%expect_test "location propagates" =
   [%expect
     {|
     {
-      current_statement__ = "file LO, line 0, column 0 to file , line 0, column 0";
+      current_statement__ = (char*)"file LO, line 0, column 0 to file , line 0, column 0";
       stan_print(pstream__);
     } |}]
 
@@ -444,7 +444,7 @@ let%expect_test "udf" =
       (void) DUMMY_VAR__;  // suppress unused var warning
 
       try {
-        current_statement__ = "file , line 0, column 0";
+        current_statement__ = (char*)"file , line 0, column 0";
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(
