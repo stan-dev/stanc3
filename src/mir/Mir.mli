@@ -9,6 +9,7 @@ val string_of_internal_fn : internal_fn -> string
 val internal_fn_of_string : string -> internal_fn option
 val no_loc : location
 val no_span : location_span
+val merge_spans : location_span -> location_span -> location_span
 val internal_meta : mtype_loc_ad
 val loop_bottom : mtype_loc_ad with_expr
 
