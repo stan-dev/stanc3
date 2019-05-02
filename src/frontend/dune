@@ -1,0 +1,30 @@
+(library
+  (name frontend)
+  (libraries core_kernel str menhirLib fmt mir)
+  (inline_tests)
+  (preprocess (pps ppx_jane ppx_deriving.map)))
+
+(ocamllex lexer)
+
+(rule
+ (targets parsing_errors.ml)
+ (deps parser.mly parser.messages)
+ (action
+  (with-stdout-to %{targets}
+   (run menhir
+    --explain
+    --strict
+    --unused-tokens parser.mly --compile-errors parser.messages))))
+
+(menhir
+ (modules parser)
+ (flags :standard --table --strict --unused-tokens --fixed-exception))
+
+(rule
+ (with-stdout-to parser_updated.messages
+  (run menhir %{dep:parser.mly} --update-errors %{dep:parser.messages}))
+)
+
+(alias
+ (name update_messages)
+  (action (diff parser.messages parser_updated.messages)))
