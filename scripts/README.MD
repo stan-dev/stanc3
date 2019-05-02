@@ -59,6 +59,10 @@ opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
    opam install -y core_kernel-windows menhir-windows ppx_deriving-windows fmt-windows
 ```
+8. Install dos2unix for running the Windows tests on Jenkins
+```
+   sudo apt-get install dos2unix
+```
 
 ### Test the environment
 
