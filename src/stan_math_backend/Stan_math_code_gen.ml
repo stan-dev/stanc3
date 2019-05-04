@@ -380,7 +380,7 @@ let pp_unconstrained_param_names ppf p =
 let pp_transform_inits ppf p =
   let text = pf ppf "%s@," in
   let params =
-    [ "const std::io::var_context& context__"; "std::vector<int>& params_i__"
+    [ "const stan::io::var_context& context__"; "std::vector<int>& params_i__"
     ; "std::vector<double>& params_r__"; "std::ostream* pstream__" ]
   in
   pf ppf "void %a" pp_call_str ("transform_inits", params) ;
