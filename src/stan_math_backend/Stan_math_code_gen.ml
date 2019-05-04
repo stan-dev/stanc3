@@ -370,8 +370,15 @@ let pp_write_array ppf p =
   string ppf "//TODO write_array"
 
 let pp_constrained_param_names ppf p =
+  let params =
+    [ "std::vector<std::string>& param_names__"; "bool include_tparams__ = true"
+    ; "bool include_gqs__ = true" ]
+  in
+  pf ppf "void %a" pp_call_str ("constrained_param_names", params) ;
+  pf ppf " {@,@[<v 2>" ;
+  string ppf "//TODO constrained_param_names" ;
   ignore p ;
-  string ppf "//TODO constrained_param_names"
+  pf ppf "@]@,}@,"
 
 let pp_unconstrained_param_names ppf p =
   ignore p ;
