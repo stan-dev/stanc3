@@ -144,7 +144,6 @@ let pp_located_error ppf (pp_body_block, body, err_msg) =
 
 (*
   pf ppf "@ try %a" pp_body_block body ;
-  (* XXX Figure out a good way to refactor this so it doesn't require a body block. *)
   string ppf " catch (const std::exception& e) " ;
   pp_block ppf (pp_located_msg, err_msg)
  *)
@@ -362,9 +361,22 @@ let pp_unconstrained_param_names ppf p =
   ignore p ;
   string ppf "//TODO unconstrained_param_names"
 
-let pp_transform_inits ppf params =
-  ignore params ;
-  string ppf "//TODO transform_inits"
+let pp_transform_inits ppf p =
+  let text = pf ppf "%s@," in
+  let params = [
+    "const std::io::var_context& context__"
+  ; "std::vector<int>& params_i__"
+  ; "std::vector<double>& params_r__"
+  ; "std::ostream* pstream__"]
+  in
+  pf ppf "void %a" pp_call_str ("transform_inits", params) ;
+  pf ppf " {@,@[<v 2>" ;
+  text "typedef double local_scalar_t__;" ;
+  text "stan::io::writer<double> writer__(params_r__, params_i__);" ;
+  text "std::vector<double> vals_r__;" ;
+  text "std::vector<int> vals_i__;" ;
+  pp_located_error_b ppf (p.transform_inits, "inside transform_inits") ;
+  pf ppf "@]@,}@,"
 
 let pp_fndef_sig ppf (rt, fname, params) =
   pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params

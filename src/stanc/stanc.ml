@@ -54,7 +54,7 @@ let options =
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
-         \"$name.cpp\")" )
+         \"$name.hpp\")" )
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
@@ -112,7 +112,7 @@ let main () =
     Semantic_check.model_name :=
       remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
       ^ "_model" ;
-  if !output_file = "" then output_file := remove_dotstan !model_file ^ ".cpp" ;
+  if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 
 let () = main ()

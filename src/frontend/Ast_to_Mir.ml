@@ -397,7 +397,7 @@ let unwrap_block = function
   | [({stmt= Block _; _} as b)] -> b
   | x -> raise_s [%message "Expecting a block, not" (x : stmt_loc list)]
 
-let rec trans_stmt declc (ts : Ast.typed_statement) =
+let rec trans_stmt (declc: decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
   let trans_single_stmt s = trans_stmt s |> List.hd_exn in
@@ -618,6 +618,19 @@ let trans_prog filename
         (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
         generatedquantitiesblock
   in
+  (* XXX broken *)
+  (* ctor: read data and check
+       reads scalars, checks vary
+  *)
+  (* transform_inits: Need to read data unconstrain and write(unconstraining).
+       reads scalars even for matrices
+  *)
+  (* write_array: need to read(constrain) params and write out.
+       writes by scalars
+  *)
+  (* log prob: read and constrain params
+       reads & constrains entire eigen type at once
+  *)
   let transform_inits =
     map
       (trans_stmt
