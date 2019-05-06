@@ -376,12 +376,20 @@ let pp_get_dims ppf p =
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
-    [ "RNG& base_rng"; "Eigen::Matrix<double,Eigen::Dynamic,1>& params_r"
-    ; "Eigen::Matrix<double,Eigen::Dynamic,1>& vars"
-    ; "bool include_tparams = true"; "bool include_gqs = true"
-    ; "std::ostream* pstream = " ]
+    [ "RNG& base_rng"; "Eigen::Matrix<double,Eigen::Dynamic,1>& params_r__"
+    ; "std::vector<int>& params_i__,"
+    ; "Eigen::Matrix<double,Eigen::Dynamic,1>& vars__"
+    ; "bool include_tparams__ = true"; "bool include_gqs__ = true"
+    ; "std::ostream* pstream__ = 0" ]
   in
-  pp_method ppf "void" "write_array" params ["//TODO write_array"] (fun ppf ->
+  let intro =
+    [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
+    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+    ; strf "static const char* function__ = %S"
+        "eight_schools_model_namespace::write_array"
+    ; strf "%a" pp_unused "function__" ]
+  in
+  pp_method ppf "void" "write_array" params intro (fun ppf ->
       pp_located_error_b ppf (p.prepare_data, "inside prepare_data") ;
       pp_located_error_b ppf
         (p.generate_quantities, "inside generate_quantities") )
