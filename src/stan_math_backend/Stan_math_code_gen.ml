@@ -333,12 +333,17 @@ let pp_model_private ppf p =
   let data_decls = List.filter_map ~f:data_decl p.input_vars in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
+let pp_method ppf rt name params intro ppbody =
+  pf ppf "@[<v 2>%s %a const " rt pp_call_str (name, params) ;
+  pf ppf "{@,%a" (list ~sep:cut string) intro ;
+  pf ppf "@ " ;
+  ppbody ppf ;
+  pf ppf "@,}@,@]"
+
 let pp_get_param_names ppf p =
   let add_param = fmt "names.push_back(%S);" in
-  pf ppf "@[<v 2>void %a const {@,%a@]@,}" pp_call_str
-    ("get_param_names", ["std::vector<std::string>& names"])
-    (list ~sep:cut add_param)
-    (List.map ~f:fst p.output_vars)
+  pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names"] []
+    (fun ppf -> (list ~sep:cut add_param) ppf (List.map ~f:fst p.output_vars))
 
 let rec get_dims = function
   | SInt | SReal -> []
@@ -358,68 +363,80 @@ let pp_get_dims ppf p =
   let pp_dim_sep ppf () =
     pf ppf "dimss__.push_back(dims__);@,dims__.resize(0);@,"
   in
-  let params = ["std::vector<std::vector<size_t>>& dimss__"] in
-  pf ppf "@[<v 2>void %a const " pp_call_str ("get_dims", params) ;
-  pf ppf "{@,dimss__.resize(0);@,std::vector<size_t> dims__;@,%a%a@]@,}"
+  let pp_output_var ppf =
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
-    List.(map ~f:get_dims (map ~f:(fun (_, (st, _)) -> st) p.output_vars))
-    pp_dim_sep ()
+      ppf
+      List.(map ~f:get_dims (map ~f:(fun (_, (st, _)) -> st) p.output_vars))
+  in
+  let params = ["std::vector<std::vector<size_t>>& dimss__"] in
+  pp_method ppf "void" "get_dims" params
+    ["dimss__.resize(0);"; "std::vector<size_t> dims__;"] (fun ppf ->
+      pp_output_var ppf ; pp_dim_sep ppf () )
 
 let pp_write_array ppf p =
-  ignore p ;
-  string ppf "//TODO write_array"
+  pf ppf "template <typename RNG>@ " ;
+  let params =
+    [ "RNG& base_rng"; "Eigen::Matrix<double,Eigen::Dynamic,1>& params_r"
+    ; "Eigen::Matrix<double,Eigen::Dynamic,1>& vars"
+    ; "bool include_tparams = true"; "bool include_gqs = true"
+    ; "std::ostream* pstream = " ]
+  in
+  pp_method ppf "void" "write_array" params ["//TODO write_array"] (fun ppf ->
+      pp_located_error_b ppf (p.prepare_data, "inside prepare_data") ;
+      pp_located_error_b ppf
+        (p.generate_quantities, "inside generate_quantities") )
 
 let pp_constrained_param_names ppf p =
   let params =
     [ "std::vector<std::string>& param_names__"; "bool include_tparams__ = true"
     ; "bool include_gqs__ = true" ]
   in
-  pf ppf "void %a" pp_call_str ("constrained_param_names", params) ;
-  pf ppf " {@,@[<v 2>" ;
-  string ppf "//TODO constrained_param_names" ;
   ignore p ;
-  pf ppf "@]@,}@,"
+  pp_method ppf "void" "constrained_param_names" params
+    ["//TODO constrained_param_names"] (fun _ -> ())
 
 let pp_unconstrained_param_names ppf p =
+  let params =
+    [ "std::vector<std::string>& param_names__"; "bool include_tparams__ = true"
+    ; "bool include_gqs__ = true" ]
+  in
+  let intro = ["//TODO unconstrained_param_names"] in
   ignore p ;
-  string ppf "//TODO unconstrained_param_names"
+  pp_method ppf "void" "unconstrained_param_names" params intro (fun _ -> ())
+
+let pp_method_b ppf rt name params intro body =
+  pp_method ppf rt name params intro (fun ppf ->
+      pp_located_error_b ppf (body, "inside " ^ name) )
 
 let pp_transform_inits ppf p =
-  let text = pf ppf "%s@," in
   let params =
     [ "const stan::io::var_context& context__"; "std::vector<int>& params_i__"
     ; "std::vector<double>& params_r__"; "std::ostream* pstream__" ]
   in
-  pf ppf "void %a" pp_call_str ("transform_inits", params) ;
-  pf ppf " {@,@[<v 2>" ;
-  text "typedef double local_scalar_t__;" ;
-  text "stan::io::writer<double> writer__(params_r__, params_i__);" ;
-  text "std::vector<double> vals_r__;" ;
-  text "std::vector<int> vals_i__;" ;
-  pp_located_error_b ppf (p.transform_inits, "inside transform_inits") ;
-  pf ppf "@]@,}@,"
+  let intro =
+    [ "typedef double local_scalar_t__;"
+    ; "stan::io::writer<double> writer__(params_r__, params_i__);"
+    ; "std::vector<double> vals_r__;"; "std::vector<int> vals_i__;" ]
+  in
+  pp_method_b ppf "void" "transform_inits" params intro p.transform_inits
 
 let pp_fndef_sig ppf (rt, fname, params) =
   pf ppf "%s %s(@[<hov>%a@])" rt fname (list ~sep:comma string) params
 
 let pp_log_prob ppf p =
-  let text = pf ppf "%s@," in
-  text "template <bool propto__, bool jacobian__, typename T__>" ;
+  pf ppf "template <bool propto__, bool jacobian__, typename T__>@ " ;
   let params =
     [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
     ; "std::ostream* pstream__ = 0" ]
   in
-  pf ppf "T__ %a" pp_call_str ("log_prob", params) ;
-  pf ppf " {@,@[<v 2>" ;
-  text "typedef T__ local_scalar_t__;" ;
-  text
-    "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-  pp_unused ppf "DUMMY_VAR__" ;
-  text "T__ lp__(0.0);" ;
-  text "stan::math::accumulator<T__> lp_accum__;" ;
-  text "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ;
-  pp_located_error_b ppf (p.log_prob, "inside log_prob") ;
-  pf ppf "@]@,}@,"
+  let intro =
+    [ "typedef T__ local_scalar_t__;"
+    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
+    ; strf "%a" pp_unused "DUMMY_VAR__"
+    ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
+  in
+  pp_method_b ppf "T__" "log_prob" params intro p.log_prob
 
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
