@@ -13,6 +13,7 @@ val no_span : location_span
 val merge_spans : location_span -> location_span -> location_span
 val internal_meta : mtype_loc_ad
 val loop_bottom : mtype_loc_ad with_expr
+val zero : mtype_loc_ad with_expr
 val pp_indexed : 'a Fmt.t -> Format.formatter -> string * 'a index list -> unit
 val pp_expr_typed_located : Format.formatter -> mtype_loc_ad with_expr -> unit
 

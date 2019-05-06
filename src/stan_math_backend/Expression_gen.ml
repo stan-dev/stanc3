@@ -203,12 +203,9 @@ and gen_fun_app ppf f es =
   pp ppf es
 
 and pp_constrain_funapp constrain_or_un_str ppf = function
-  | {expr= FunApp (CompilerInternal, f, _ :: dims); _}
-    :: {expr= Lit (Str, constraint_flavor); _}
-       :: {expr= Lit (Str, base_type); _} :: args
-    when internal_fn_of_string f = Some FnReadParam ->
-      pf ppf "in__.%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
-        constrain_or_un_str (list ~sep:comma pp_expr) (args @ dims)
+  | var :: {expr= Lit (Str, constraint_flavor); _} :: args ->
+      pf ppf "%s_%s(@[<hov>%a@])" constraint_flavor constrain_or_un_str
+        (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
 and pp_ordinary_fn ppf f es =
@@ -222,18 +219,17 @@ and pp_compiler_internal_fn ut f ppf es =
   | None -> failwith "Expecting internal function but found `%s`" f
   | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
-  | Some FnUnconstrain -> pp_constrain_funapp "unconstrain" ppf es
+  | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | {expr= Lit (Str, base_type); _} :: dims ->
-        pf ppf "in__.%s_constrain(@[<hov>%a@])" base_type
-          (list ~sep:comma pp_expr) dims
+    | _ :: {expr= Lit (Str, base_type); _} :: dims ->
+        pf ppf "in__.%s(@[<hov>%a@])" base_type (list ~sep:comma pp_expr) dims
     | _ ->
         raise_s
           [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
     )
-  | _ -> pf ppf "XXX TODO "
+  | _ -> pf ppf "%S: %s(@[<hov>%a@])" "XXX TODO" f (list ~sep:comma pp_expr) es
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
