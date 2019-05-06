@@ -385,8 +385,7 @@ let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
     [ "RNG& base_rng"; "std::vector<double>& params_r__"
-    ; "std::vector<int>& params_i__"
-    ; "Eigen::Matrix<double,Eigen::Dynamic,1>& vars__"
+    ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
     ; "bool include_tparams__ = true"; "bool include_gqs__ = true"
     ; "std::ostream* pstream__ = 0" ]
   in
@@ -446,6 +445,28 @@ let pp_log_prob ppf p =
   in
   pp_method_b ppf "T__" "log_prob" params intro p.log_prob
 
+let pp_overloads ppf () =
+  pf ppf
+    {|
+    template <typename RNG>
+    void write_array(RNG& base_rng,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool include_tparams = true,
+                     bool include_gqs = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec, include_tparams, include_gqs, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+|}
+
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
@@ -454,7 +475,8 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_write_array p ;
   pf ppf "@ %a" pp_constrained_param_names p ;
   pf ppf "@ %a" pp_unconstrained_param_names p ;
-  pf ppf "@ %a" pp_transform_inits p
+  pf ppf "@ %a" pp_transform_inits p ;
+  pf ppf "@ %a" pp_overloads ()
 
 let pp_model ppf (p : typed_prog) =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
