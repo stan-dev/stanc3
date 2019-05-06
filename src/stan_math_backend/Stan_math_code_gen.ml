@@ -96,6 +96,13 @@ let pp_sized_decl ppf (vident, st, adtype) =
     (vident, remove_size st, adtype)
     pp_set_size (vident, st, adtype)
 
+let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
+
+let pp_function__ ppf (prog_name, fname) =
+  pf ppf "static const char* function__ = %S;@ "
+    (strf "%s_namespace::%s" prog_name fname) ;
+  pp_unused ppf "function__"
+
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
@@ -241,7 +248,7 @@ let pp_fun_def ppf = function
         text
           "local_scalar_t__ \
            DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-        text "(void) DUMMY_VAR__;  // suppress unused var warning" ;
+        pp_unused ppf "DUMMY_VAR__" ;
         pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
         pf ppf "@ "
       in
@@ -294,8 +301,6 @@ let rec pp_zeroing_ctor_call ppf st =
 let var_context_container st =
   match basetype (remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
-let pp_unused = fmt "(void) %s;  // dummy to suppress unused var warning@ "
-
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
@@ -318,10 +323,8 @@ let pp_ctor ppf p =
         pf ppf "typedef double local_scalar_t__;@ " ;
         pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
-        pf ppf "(void) base_rng__;  // suppress unused var warning@ " ;
-        pf ppf "static const char* function__ = \"%s_namespace::%s\";@ "
-          p.prog_name p.prog_name ;
-        pp_unused ppf "function__" ;
+        pp_unused ppf "base_rng__" ;
+        pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error_b ppf (p.prepare_data, "inside ctor") )
     , p )
 
@@ -374,11 +377,15 @@ let pp_get_dims ppf p =
     ["dimss__.resize(0);"; "std::vector<size_t> dims__;"] (fun ppf ->
       pp_output_var ppf ; pp_dim_sep ppf () )
 
+let pp_method_b ppf rt name params intro body =
+  pp_method ppf rt name params intro (fun ppf ->
+      pp_located_error_b ppf (body, "inside " ^ name) )
+
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
-    [ "RNG& base_rng"; "Eigen::Matrix<double,Eigen::Dynamic,1>& params_r__"
-    ; "std::vector<int>& params_i__,"
+    [ "RNG& base_rng"; "std::vector<double>& params_r__"
+    ; "std::vector<int>& params_i__"
     ; "Eigen::Matrix<double,Eigen::Dynamic,1>& vars__"
     ; "bool include_tparams__ = true"; "bool include_gqs__ = true"
     ; "std::ostream* pstream__ = 0" ]
@@ -386,14 +393,10 @@ let pp_write_array ppf p =
   let intro =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
-    ; strf "static const char* function__ = %S"
-        "eight_schools_model_namespace::write_array"
+    ; strf "%a" pp_function__ (p.prog_name, "write_array")
     ; strf "%a" pp_unused "function__" ]
   in
-  pp_method ppf "void" "write_array" params intro (fun ppf ->
-      pp_located_error_b ppf (p.prepare_data, "inside prepare_data") ;
-      pp_located_error_b ppf
-        (p.generate_quantities, "inside generate_quantities") )
+  pp_method_b ppf "void" "write_array" params intro p.generate_quantities
 
 let pp_constrained_param_names ppf p =
   let params =
@@ -412,10 +415,6 @@ let pp_unconstrained_param_names ppf p =
   let intro = ["//TODO unconstrained_param_names"] in
   ignore p ;
   pp_method ppf "void" "unconstrained_param_names" params intro (fun _ -> ())
-
-let pp_method_b ppf rt name params intro body =
-  pp_method ppf rt name params intro (fun ppf ->
-      pp_located_error_b ppf (body, "inside " ^ name) )
 
 let pp_transform_inits ppf p =
   let params =

@@ -34,7 +34,7 @@ class eight_schools_ncp_model : public prob_grad {
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
-    (void) function__;  // dummy to suppress unused var warning
+    (void) function__;  // suppress unused var warning
     {
       J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
       check_greater_or_equal(function__, "J", J, 0);
@@ -55,7 +55,7 @@ class eight_schools_ncp_model : public prob_grad {
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // dummy to suppress unused var warning
+    (void) DUMMY_VAR__;  // suppress unused var warning
 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -114,32 +114,20 @@ class eight_schools_ncp_model : public prob_grad {
     }
     
   template <typename RNG>
-  void write_array(RNG& base_rng,
-                   Eigen::Matrix<double,Eigen::Dynamic,1>& params_r__,
-                   std::vector<int>& params_i__,,
+  void write_array(RNG& base_rng, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__,
                    Eigen::Matrix<double,Eigen::Dynamic,1>& vars__,
                    bool include_tparams__ = true, bool include_gqs__ = true,
                    std::ostream* pstream__ = 0) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "eight_schools_model_namespace::write_array"
-    (void) function__;  // dummy to suppress unused var warning
+    static const char* function__ = "eight_schools_ncp_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
 
     {
-      J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
-      check_greater_or_equal(function__, "J", J, 0);
-      for (size_t sym1__ = 0; sym1__ < stan::length(y); sym1__++) {
-        y[sym1__] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
-      }
-      for (size_t sym1__ = 0; sym1__ < stan::length(sigma); sym1__++) {
-        sigma[sym1__] = stan::model::rvalue(context__.vals_r("sigma"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
-      }
-      for (size_t sym1__ = 0; sym1__ < stan::length(sigma); sym1__++) {
-        check_greater_or_equal(function__, "sigma[sym1__]",
-                               stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
-                               0);}
-    }{
       local_scalar_t__ mu;
       
       mu = in__.scalar();
@@ -256,7 +244,7 @@ class one_var_per_block_model : public prob_grad {
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
-    (void) function__;  // dummy to suppress unused var warning
+    (void) function__;  // suppress unused var warning
     {
       N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
       K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
@@ -288,7 +276,7 @@ class one_var_per_block_model : public prob_grad {
                std::ostream* pstream__ = 0) const {
     typedef T__ local_scalar_t__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // dummy to suppress unused var warning
+    (void) DUMMY_VAR__;  // suppress unused var warning
 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -387,43 +375,20 @@ class one_var_per_block_model : public prob_grad {
     }
     
   template <typename RNG>
-  void write_array(RNG& base_rng,
-                   Eigen::Matrix<double,Eigen::Dynamic,1>& params_r__,
-                   std::vector<int>& params_i__,,
+  void write_array(RNG& base_rng, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__,
                    Eigen::Matrix<double,Eigen::Dynamic,1>& vars__,
                    bool include_tparams__ = true, bool include_gqs__ = true,
                    std::ostream* pstream__ = 0) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "eight_schools_model_namespace::write_array"
-    (void) function__;  // dummy to suppress unused var warning
+    static const char* function__ = "one_var_per_block_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
 
     {
-      N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
-      K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(0), stan::model::nil_index_list()), "pretty printed e");
-      for (size_t sym1__ = 0; sym1__ < stan::length(datavar); sym1__++) {
-        datavar[sym1__] = stan::model::rvalue(context__.vals_r("datavar"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
-      }
-      for (size_t sym1__ = 0; sym1__ < stan::length(datavar); sym1__++) {
-        for (size_t sym2__ = 0;
-             sym2__ < stan::length(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++) {
-          check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
-                                 stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                 0);}}
-      std::vector<std::vector<double>> tdatavar;
-      tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
-      
-      tdatavar = {{2.0}};
-      for (size_t sym1__ = 0; sym1__ < stan::length(tdatavar); sym1__++) {
-        for (size_t sym2__ = 0;
-             sym2__ < stan::length(stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++) {
-          check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
-                                 stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                 0);}}
-    }{
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> param;
       param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
