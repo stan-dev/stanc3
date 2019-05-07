@@ -1,5 +1,5 @@
 all:
-	dune build stanc.exe
+	dune build
 
 TEST_DUNES := $(foreach d,$(shell find test/integration -type d),$(d)/dune)
 test: $(TEST_DUNES)
@@ -9,10 +9,10 @@ format:
 	dune build @fmt
 
 cross:
-	dune build stanc.exe -x windows
+	dune build -x windows
 
 static:
-	dune build stanc.exe --profile static
+	dune build --profile static
 
 clean:
 	dune clean

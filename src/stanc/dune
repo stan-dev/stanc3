@@ -1,0 +1,12 @@
+(executable
+ (name stanc)
+ (libraries frontend stan_math_backend)
+ (public_name stanc)
+ (preprocess (pps ppx_jane))
+ )
+
+(env
+ (static
+  (flags (-ccopt -static)))
+  (dev
+  (flags (:standard -g))))

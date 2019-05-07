@@ -3,48 +3,88 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 
+/* Functions that runs a sh command and returns the stdout */
+def runShell(String command){
+    def output = sh (returnStdout: true, script: "${command}").trim()
+    return "${output}"
+}
+
 pipeline {
     agent none
     stages {
+        stage("Build & Test windows binary") {
+            agent { label 'windows' }
+            steps {
+                bat "bash -cl \"cd test/integration\""
+                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                bat "bash -cl \"cd ..\""
+                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
+            }
+        }
         stage("Build & Test") {
-            agent {
+            agent {            
                 dockerfile {
-                    filename 'docker/dev-ubuntu/Dockerfile'
-                    args "-u root --privileged --entrypoint=\'\'" // TODO: set up a proper user in Dockerfile
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
-                sh """
-                      eval \$(opam env)
-                      dune build @install
-                   """
-                sh """
-                      eval \$(opam env)
-                      dune runtest
-                   """
-                // No idea how the build files from this docker image end
-                // up transmitting to the next docker images, so clean here
-                // (because the next image can't delete this one's files due
-                // to the root user thing)
-                sh "git clean -xffd"
+
+                /* runs 'dune build @install'*/
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+
+                /*Logs the start time of tests*/
+                runShell("echo \$(date +'%s') > time.log")
+
+                /* runs 'dune runtest' */
+                echo runShell("""
+                    eval \$(opam env)
+                    dune runtest --verbose
+                """)
+
+                /*Echoes time elapsed for tests*/
+                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+
+                //Cleans the workspace
+                runShell("rm -rf ./*")
+
             }
         }
         stage("Build & Test static linux binary") {
             agent {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
-                    args "--user root --privileged"
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
                 }
             }
             steps {
-                sh """
-                      eval \$(opam env)
-                      dune build @install --profile static
-                   """
-                sh """
-                      eval \$(opam env)
-                      dune runtest --profile static
-                   """
+
+                /* runs 'dune build @install' command and then outputs the stdout*/
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install --profile static
+                """)
+
+                /*Logs the start time of tests*/
+                runShell("echo \$(date +'%s') > time.log")
+
+                /* runs 'dune runtest' command and then outputs the stdout*/
+                echo runShell("""
+                    eval \$(opam env)
+                    dune runtest --profile static --verbose
+                """)
+
+                /*Echoes time elapsed for tests*/
+                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+
+                //Cleans the workspace
+                runShell("rm -rf ./*")
+
             }
         }
     }
@@ -53,5 +93,4 @@ pipeline {
             script {utils.mailBuildResults()}
         }
     }
-
 }

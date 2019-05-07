@@ -1,0 +1,5 @@
+(library
+  (name stan_math_backend)
+  (libraries core_kernel str fmt mir)
+  (inline_tests)
+  (preprocess (pps ppx_jane ppx_deriving.map)))
