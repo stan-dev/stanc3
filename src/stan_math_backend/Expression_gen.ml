@@ -252,8 +252,12 @@ and pp_expr ppf e =
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
-  | Indexed (e, idx) ->
-      pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e)
+  | Indexed (e, idx) -> (
+    match e.expr with
+    | FunApp (CompilerInternal, f, _)
+      when Some FnReadParam = internal_fn_of_string f ->
+        pp_expr ppf e
+    | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
 let dummy_locate e =

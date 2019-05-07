@@ -266,10 +266,17 @@ let assign_indexed vident smeta varfn var =
   in
   {stmt= Assignment ((vident, indices), varfn var); smeta}
 
+let rec eigen_size = function
+  | SArray (t, _) -> eigen_size t
+  | SMatrix (d1, d2) -> [d1; d2]
+  | SRowVector dim | SVector dim -> [dim]
+  | SInt | SReal -> []
+
 let read_decl dread decl_id sizedtype smeta decl_var =
   let args =
     [ mkstring smeta decl_id
     ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
+    @ eigen_size (trans_sizedtype sizedtype)
   in
   let readfn var =
     internal_funapp (internal_of_dread dread) args
@@ -667,7 +674,7 @@ let%expect_test "read data" =
         ((Assignment (mat ((Single (Var sym1__))))
           (Indexed
            (FunApp CompilerInternal FnReadData__
-            ((Lit Str mat) (Lit Str matrix)))
+            ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
            ((Single (Var sym1__)))))))))) |}]
 
 let%expect_test "read param" =
@@ -684,7 +691,7 @@ let%expect_test "read param" =
         ((Assignment (mat ((Single (Var sym1__))))
           (Indexed
            (FunApp CompilerInternal FnReadParam__
-            ((Lit Str mat) (Lit Str matrix)))
+            ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
            ((Single (Var sym1__)))))))))
      (For (loopvar sym1__) (lower (Lit Int 0))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
