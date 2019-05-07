@@ -80,10 +80,10 @@ class eight_schools_ncp_model : public prob_grad {
         theta[j] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
       }
       {
-        lp_accum__.add(normal(mu, 0, 5));
-        lp_accum__.add(cauchy(tau, 0, 5));
-        lp_accum__.add(normal(theta_tilde, 0, 1));
-        lp_accum__.add(normal(y, theta, sigma));
+        lp_accum__.add(normal_log(mu, 0, 5));
+        lp_accum__.add(cauchy_log(tau, 0, 5));
+        lp_accum__.add(normal_log(theta_tilde, 0, 1));
+        lp_accum__.add(normal_log(y, theta, sigma));
       }
     }
     }

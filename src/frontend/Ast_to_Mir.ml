@@ -10,6 +10,21 @@ let trans_fn_kind = function
   | Ast.StanLib -> Mir.StanLib
   | UserDefined -> UserDefined
 
+let get_prob_fun_name name =
+  let new_name =
+    ["_log"; "_lpdf"; "_lpmf"; ""]
+    |> List.map ~f:(( ^ ) name)
+    |> List.filter ~f:Stan_math_signatures.is_stan_math_function_name
+    |> List.hd
+  in
+  match new_name with
+  | Some n -> n
+  | None -> raise_s [%message "No matching functions for" (name : string)]
+
+let%expect_test "distribution name mangling" =
+  print_endline (get_prob_fun_name "normal") ;
+  [%expect {| normal_log |}]
+
 let rec op_to_funapp op args =
   { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
@@ -407,12 +422,14 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
+      let dist_name = get_prob_fun_name distribution.name in
       let add_dist =
-        (* XXX distribution name suffix? *)
         (* XXX Reminder to differentiate between tilde, which drops constants, and
-         vanilla target +=, which doesn't. Can use _unnormalized or something.*)
+         vanilla target +=, which doesn't. Can use _unnormalized or something.
+           See https://github.com/stan-dev/stanc3/issues/63
+        *)
         TargetPE
-          { expr= FunApp (StanLib, distribution.name, trans_exprs (arg :: args))
+          { expr= FunApp (StanLib, dist_name, trans_exprs (arg :: args))
           ; emeta= {mloc; madlevel= Ast.expr_ad_lub (arg :: args); mtype= UReal}
           }
       in
