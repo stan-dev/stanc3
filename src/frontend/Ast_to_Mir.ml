@@ -153,7 +153,7 @@ let mkfor bodyfn iteratee smeta =
          ~loc:smeta ~type_:UInt ~ad_level:DataOnly)
   in
   let loopvar, reset = Util.gensym_enter () in
-  let lower = {expr= Lit (Int, "0"); emeta= internal_meta} in
+  let lower = loop_bottom in
   let upper =
     { expr= FunApp (StanLib, string_of_internal_fn FnLength, [iteratee])
     ; emeta= internal_meta }
@@ -684,7 +684,7 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    ((For (loopvar sym1__) (lower (Lit Int 0))
+    ((For (loopvar sym1__) (lower (Lit Int 1))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
        (Block
@@ -701,7 +701,7 @@ let%expect_test "read param" =
     {|
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-     (For (loopvar sym1__) (lower (Lit Int 0))
+     (For (loopvar sym1__) (lower (Lit Int 1))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
        (Block
@@ -710,11 +710,11 @@ let%expect_test "read param" =
            (FunApp CompilerInternal FnReadParam__
             ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
            ((Single (Var sym1__)))))))))
-     (For (loopvar sym1__) (lower (Lit Int 0))
+     (For (loopvar sym1__) (lower (Lit Int 1))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
        (Block
-        ((For (loopvar sym2__) (lower (Lit Int 0))
+        ((For (loopvar sym2__) (lower (Lit Int 1))
           (upper
            (FunApp StanLib FnLength__
             ((Indexed (Var mat) ((Single (Var sym1__)))))))
@@ -734,11 +734,11 @@ let%expect_test "gen quant" =
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-     (For (loopvar sym1__) (lower (Lit Int 0))
+     (For (loopvar sym1__) (lower (Lit Int 1))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
        (Block
-        ((For (loopvar sym2__) (lower (Lit Int 0))
+        ((For (loopvar sym2__) (lower (Lit Int 1))
           (upper
            (FunApp StanLib FnLength__
             ((Indexed (Var mat) ((Single (Var sym1__)))))))

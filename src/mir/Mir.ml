@@ -212,7 +212,7 @@ let internal_funapp ifn args emeta =
 
 let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
 let zero = {expr= Lit (Int, "0"); emeta= internal_meta}
-let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
+let loop_bottom = {expr= Lit (Int, "1"); emeta= internal_meta}
 let string_of_operator = mk_string_of sexp_of_operator
 let operator_of_string = mk_of_string operator_of_sexp
 

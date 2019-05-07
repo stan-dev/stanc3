@@ -55,7 +55,7 @@ let%expect_test "set size mat array" =
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s < %a;@ %s++@])" loopvar
+  pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s <= %a;@ %s++@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
@@ -181,7 +181,8 @@ let rec pp_statement ppf {stmt; smeta} =
       pp_statement ppf
         { stmt=
             Assignment
-              (lhs, {expr= Indexed ({expr; emeta}, [Single zero]); emeta})
+              ( lhs
+              , {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta} )
         ; smeta }
   | Assignment ((assignee, idcs), rhs) ->
       pf ppf "%a = %a;"
@@ -342,7 +343,7 @@ let pp_method ppf rt name params intro ?(outro = []) ppbody =
   pf ppf "@ " ;
   ppbody ppf ;
   if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
-  pf ppf "@,}@,@]"
+  pf ppf "@,} // %s() @,@]" name
 
 let pp_get_param_names ppf p =
   let add_param = fmt "names.push_back(%S);" in
