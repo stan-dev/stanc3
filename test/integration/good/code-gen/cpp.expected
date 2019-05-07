@@ -86,6 +86,8 @@ class eight_schools_ncp_model : public prob_grad {
         lp_accum__.add(normal_log(y, theta, sigma));
       }
     }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
     }
     
   void get_param_names(std::vector<std::string>& names) const {
@@ -358,6 +360,8 @@ class one_var_per_block_model : public prob_grad {
         }
       }
     }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
     }
     
   void get_param_names(std::vector<std::string>& names) const {

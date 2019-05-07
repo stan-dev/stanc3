@@ -336,11 +336,12 @@ let pp_model_private ppf p =
   let data_decls = List.filter_map ~f:data_decl p.input_vars in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
-let pp_method ppf rt name params intro ppbody =
+let pp_method ppf rt name params intro ?(outro = []) ppbody =
   pf ppf "@[<v 2>%s %a const " rt pp_call_str (name, params) ;
   pf ppf "{@,%a" (list ~sep:cut string) intro ;
   pf ppf "@ " ;
   ppbody ppf ;
+  if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
   pf ppf "@,}@,@]"
 
 let pp_get_param_names ppf p =
@@ -377,9 +378,10 @@ let pp_get_dims ppf p =
     ["dimss__.resize(0);"; "std::vector<size_t> dims__;"] (fun ppf ->
       pp_output_var ppf ; pp_dim_sep ppf () )
 
-let pp_method_b ppf rt name params intro body =
-  pp_method ppf rt name params intro (fun ppf ->
-      pp_located_error_b ppf (body, "inside " ^ name) )
+let pp_method_b ppf rt name params intro ?(outro = []) body =
+  pp_method ppf rt name params intro
+    (fun ppf -> pp_located_error_b ppf (body, "inside " ^ name))
+    ~outro
 
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
@@ -443,7 +445,8 @@ let pp_log_prob ppf p =
     ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
-  pp_method_b ppf "T__" "log_prob" params intro p.log_prob
+  let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
+  pp_method_b ppf "T__" "log_prob" params intro p.log_prob ~outro
 
 let pp_overloads ppf () =
   pf ppf
