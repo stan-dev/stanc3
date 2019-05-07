@@ -11,9 +11,9 @@
  (name runtest)
  (action (diff cpp.expected cpp.output)))
 
-;; (rule
-;;   (targets %{env:cmdstan=cmdstan}/makefile)
-;;   (action (run git clone --recursive https://github.com/stan-dev/cmdstan)))
+(rule
+  (targets %{env:cmdstan=cmdstan})
+  (action (run git clone --recursive https://github.com/stan-dev/cmdstan)))
 
 (rule
   (targets eight_schools_ncp.hpp)
@@ -22,7 +22,7 @@
 
 (rule
   (targets eight_schools_ncp)
-  (deps eight_schools_ncp.hpp ;;${env:cmdstan=cmdstan}/makefile
+  (deps eight_schools_ncp.hpp %{env:cmdstan=cmdstan}
   )
   (action (chdir %{env:cmdstan=cmdstan} (run make -j4 %{targets}))))
 
