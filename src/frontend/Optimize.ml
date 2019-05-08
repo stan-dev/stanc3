@@ -3,25 +3,6 @@ open Core_kernel
 open Mir
 open Mir_utils
 
-let create_function_inline_map l =
-  (* We only add the first definition for each function to the inline map.
-   This will make sure we do not inline recursive functions. *)
-  let f accum fundef =
-    match fundef with {fdname; fdargs; fdbody; fdrt; _} -> (
-      match
-        Map.add accum ~key:fdname
-          ~data:
-            ( Option.map ~f:(fun x -> Unsized x) fdrt
-            , List.map ~f:(fun (_, name, _) -> name) fdargs
-            , fdbody )
-      with
-      | `Ok m -> m
-      | `Duplicate -> accum )
-  in
-  Map.filter
-    ~f:(fun (_, _, v) -> v.stmt <> Skip)
-    (List.fold l ~init:Map.Poly.empty ~f)
-
 let replace_fresh_local_vars s' =
   let f m = function
     | Decl {decl_adtype; decl_type; decl_id} ->
@@ -214,26 +195,45 @@ let rec inline_function_statement adt fim {stmt; smeta} =
       | Continue -> Continue )
   ; smeta }
 
+let create_function_inline_map adt l =
+  (* We only add the first definition for each function to the inline map.
+   This will make sure we do not inline recursive functions. *)
+  let f accum fundef =
+    match fundef with {fdname; fdargs; fdbody; fdrt; _} -> (
+      match
+        Map.add accum ~key:fdname
+          ~data:
+            ( Option.map ~f:(fun x -> Unsized x) fdrt
+            , List.map ~f:(fun (_, name, _) -> name) fdargs
+            , inline_function_statement adt accum fdbody )
+      with
+      | `Ok m -> m
+      | `Duplicate -> accum )
+  in
+  Map.filter
+    ~f:(fun (_, _, v) -> v.stmt <> Skip)
+    (List.fold l ~init:Map.Poly.empty ~f)
+
 let function_inlining (mir : typed_prog) =
-  let function_inline_map = create_function_inline_map mir.functions_block in
-  let inline_function_statements adt =
-    List.map ~f:(inline_function_statement adt function_inline_map)
+  let dataonly_inline_map =
+    create_function_inline_map DataOnly mir.functions_block
+  in
+  let autodiff_inline_map =
+    create_function_inline_map AutoDiffable mir.functions_block
+  in
+  let dataonly_inline_function_statements =
+    List.map ~f:(inline_function_statement DataOnly dataonly_inline_map)
+  in
+  let autodiffable_inline_function_statements =
+    List.map ~f:(inline_function_statement AutoDiffable autodiff_inline_map)
   in
   { mir with
-    functions_block=
-      List.map
-        ~f:(fun fundef ->
-          { fundef with
-            fdbody=
-              inline_function_statement Mir.DataOnly function_inline_map
-                fundef.fdbody } )
-        mir.functions_block
-  ; prepare_data= inline_function_statements Mir.DataOnly mir.prepare_data
+    prepare_data= dataonly_inline_function_statements mir.prepare_data
   ; transform_inits=
-      inline_function_statements Mir.AutoDiffable mir.transform_inits
-  ; log_prob= inline_function_statements Mir.AutoDiffable mir.log_prob
+      autodiffable_inline_function_statements mir.transform_inits
+  ; log_prob= autodiffable_inline_function_statements mir.log_prob
   ; generate_quantities=
-      inline_function_statements Mir.DataOnly mir.generate_quantities }
+      dataonly_inline_function_statements mir.generate_quantities }
 
 let rec contains_top_break_or_continue {stmt; _} =
   match stmt with
@@ -1004,6 +1004,62 @@ let%expect_test "inline functions" =
        (generate_quantities ()) (transform_inits ()) (output_vars ())
        (prog_name "") (prog_path "")) |}]
 
+let%expect_test "inline functions 2" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        void f() {
+        }
+        void g() {
+          f();
+        }
+      }
+      generated quantities {
+        g();
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block
+        (((fdrt ()) (fdname f) (fdargs ())
+          (fdbody ((stmt (Block ())) (smeta <opaque>)))
+          (fdloc
+           ((begin_loc
+             ((filename string) (line_num 3) (col_num 8) (included_from ())))
+            (end_loc
+             ((filename string) (line_num 4) (col_num 9) (included_from ()))))))
+         ((fdrt ()) (fdname g) (fdargs ())
+          (fdbody
+           ((stmt (Block (((stmt (NRFunApp UserDefined f ())) (smeta <opaque>)))))
+            (smeta <opaque>)))
+          (fdloc
+           ((begin_loc
+             ((filename string) (line_num 5) (col_num 8) (included_from ())))
+            (end_loc
+             ((filename string) (line_num 7) (col_num 9) (included_from ()))))))))
+       (input_vars ()) (prepare_data ()) (log_prob ())
+       (generate_quantities
+        (((stmt
+           (For (loopvar sym4__)
+            (lower
+             ((expr (Lit Int 1))
+              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+            (upper
+             ((expr (Lit Int 1))
+              (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+            (body
+             ((stmt
+               (Block (((stmt (NRFunApp UserDefined f ())) (smeta <opaque>)))))
+              (smeta <opaque>)))))
+          (smeta <opaque>))))
+       (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
+
 (* TODO: check test results from here *)
 
 let%expect_test "list collapsing" =
@@ -1080,7 +1136,7 @@ let%expect_test "list collapsing" =
       (((stmt
          (Block
           (((stmt
-             (For (loopvar sym4__)
+             (For (loopvar sym5__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1132,11 +1188,11 @@ let%expect_test "list collapsing" =
                 (smeta <opaque>)))))
             (smeta <opaque>))
            ((stmt
-             (Decl (decl_adtype AutoDiffable) (decl_id sym5__)
+             (Decl (decl_adtype AutoDiffable) (decl_id sym6__)
               (decl_type (Unsized UReal))))
             (smeta <opaque>))
            ((stmt
-             (For (loopvar sym6__)
+             (For (loopvar sym7__)
               (lower
                ((expr (Lit Int 1))
                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1147,7 +1203,7 @@ let%expect_test "list collapsing" =
                ((stmt
                  (Block
                   (((stmt
-                     (Assignment (sym5__ ())
+                     (Assignment (sym6__ ())
                       ((expr
                         (FunApp StanLib Pow__
                          (((expr (Lit Int 53))
@@ -1164,7 +1220,7 @@ let%expect_test "list collapsing" =
             (smeta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnReject__
-              (((expr (Var sym5__))
+              (((expr (Var sym6__))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
             (smeta <opaque>)))))
         (smeta <opaque>))))
@@ -1315,11 +1371,11 @@ let%expect_test "inline function in for loop" =
             (((stmt
                (SList
                 (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym7__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym8__)
                     (decl_type (Unsized UInt))))
                   (smeta <opaque>))
                  ((stmt
-                   (For (loopvar sym8__)
+                   (For (loopvar sym9__)
                     (lower
                      ((expr (Lit Int 1))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1338,7 +1394,7 @@ let%expect_test "inline function in for loop" =
                          ((stmt
                            (SList
                             (((stmt
-                               (Assignment (sym7__ ())
+                               (Assignment (sym8__ ())
                                 ((expr (Lit Int 42))
                                  (emeta
                                   ((mtype UInt) (mloc <opaque>)
@@ -1349,11 +1405,11 @@ let%expect_test "inline function in for loop" =
                       (smeta <opaque>)))))
                   (smeta <opaque>))
                  ((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym10__)
                     (decl_type (Unsized UInt))))
                   (smeta <opaque>))
                  ((stmt
-                   (For (loopvar sym10__)
+                   (For (loopvar sym11__)
                     (lower
                      ((expr (Lit Int 1))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1372,7 +1428,7 @@ let%expect_test "inline function in for loop" =
                          ((stmt
                            (SList
                             (((stmt
-                               (Assignment (sym9__ ())
+                               (Assignment (sym10__ ())
                                 ((expr
                                   (FunApp StanLib Plus__
                                    (((expr (Lit Int 3))
@@ -1394,11 +1450,11 @@ let%expect_test "inline function in for loop" =
                  ((stmt
                    (For (loopvar i)
                     (lower
-                     ((expr (Var sym7__))
+                     ((expr (Var sym8__))
                       (emeta
                        ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable)))))
                     (upper
-                     ((expr (Var sym9__))
+                     ((expr (Var sym10__))
                       (emeta
                        ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable)))))
                     (body
@@ -1411,11 +1467,11 @@ let%expect_test "inline function in for loop" =
                                ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
                           (smeta <opaque>))
                          ((stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
+                           (Decl (decl_adtype AutoDiffable) (decl_id sym10__)
                             (decl_type (Unsized UInt))))
                           (smeta <opaque>))
                          ((stmt
-                           (For (loopvar sym10__)
+                           (For (loopvar sym11__)
                             (lower
                              ((expr (Lit Int 1))
                               (emeta
@@ -1437,7 +1493,7 @@ let%expect_test "inline function in for loop" =
                                  ((stmt
                                    (SList
                                     (((stmt
-                                       (Assignment (sym9__ ())
+                                       (Assignment (sym10__ ())
                                         ((expr
                                           (FunApp StanLib Plus__
                                            (((expr (Lit Int 3))
@@ -1541,11 +1597,11 @@ let%expect_test "inline function in while loop" =
             (((stmt
                (SList
                 (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym12__)
                     (decl_type (Unsized UInt))))
                   (smeta <opaque>))
                  ((stmt
-                   (For (loopvar sym12__)
+                   (For (loopvar sym13__)
                     (lower
                      ((expr (Lit Int 1))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1564,7 +1620,7 @@ let%expect_test "inline function in while loop" =
                          ((stmt
                            (SList
                             (((stmt
-                               (Assignment (sym11__ ())
+                               (Assignment (sym12__ ())
                                 ((expr
                                   (FunApp StanLib Plus__
                                    (((expr (Lit Int 3))
@@ -1585,7 +1641,7 @@ let%expect_test "inline function in while loop" =
                   (smeta <opaque>))
                  ((stmt
                    (While
-                    ((expr (Var sym11__))
+                    ((expr (Var sym12__))
                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
                     ((stmt
                       (SList
@@ -1596,11 +1652,11 @@ let%expect_test "inline function in while loop" =
                               ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
                          (smeta <opaque>))
                         ((stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
+                          (Decl (decl_adtype AutoDiffable) (decl_id sym12__)
                            (decl_type (Unsized UInt))))
                          (smeta <opaque>))
                         ((stmt
-                          (For (loopvar sym12__)
+                          (For (loopvar sym13__)
                            (lower
                             ((expr (Lit Int 1))
                              (emeta
@@ -1622,7 +1678,7 @@ let%expect_test "inline function in while loop" =
                                 ((stmt
                                   (SList
                                    (((stmt
-                                      (Assignment (sym11__ ())
+                                      (Assignment (sym12__ ())
                                        ((expr
                                          (FunApp StanLib Plus__
                                           (((expr (Lit Int 3))
@@ -1726,11 +1782,11 @@ let%expect_test "inline function in if then else" =
             (((stmt
                (SList
                 (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym13__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym14__)
                     (decl_type (Unsized UInt))))
                   (smeta <opaque>))
                  ((stmt
-                   (For (loopvar sym14__)
+                   (For (loopvar sym15__)
                     (lower
                      ((expr (Lit Int 1))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1749,7 +1805,7 @@ let%expect_test "inline function in if then else" =
                          ((stmt
                            (SList
                             (((stmt
-                               (Assignment (sym13__ ())
+                               (Assignment (sym14__ ())
                                 ((expr
                                   (FunApp StanLib Plus__
                                    (((expr (Lit Int 3))
@@ -1770,7 +1826,7 @@ let%expect_test "inline function in if then else" =
                   (smeta <opaque>))
                  ((stmt
                    (IfElse
-                    ((expr (Var sym13__))
+                    ((expr (Var sym14__))
                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
                     ((stmt
                       (NRFunApp CompilerInternal FnPrint__
@@ -1894,11 +1950,11 @@ let%expect_test "inline function in ternary if " =
             (((stmt
                (SList
                 (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym15__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym16__)
                     (decl_type (Unsized UInt))))
                   (smeta <opaque>))
                  ((stmt
-                   (For (loopvar sym16__)
+                   (For (loopvar sym17__)
                     (lower
                      ((expr (Lit Int 1))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -1917,7 +1973,7 @@ let%expect_test "inline function in ternary if " =
                          ((stmt
                            (SList
                             (((stmt
-                               (Assignment (sym15__ ())
+                               (Assignment (sym16__ ())
                                 ((expr (Lit Int 42))
                                  (emeta
                                   ((mtype UInt) (mloc <opaque>)
@@ -1929,16 +1985,16 @@ let%expect_test "inline function in ternary if " =
                   (smeta <opaque>))
                  ((stmt
                    (IfElse
-                    ((expr (Var sym15__))
+                    ((expr (Var sym16__))
                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
                     ((stmt
                       (SList
                        (((stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym17__)
+                          (Decl (decl_adtype AutoDiffable) (decl_id sym18__)
                            (decl_type (Unsized UInt))))
                          (smeta <opaque>))
                         ((stmt
-                          (For (loopvar sym18__)
+                          (For (loopvar sym19__)
                            (lower
                             ((expr (Lit Int 1))
                              (emeta
@@ -1960,7 +2016,7 @@ let%expect_test "inline function in ternary if " =
                                 ((stmt
                                   (SList
                                    (((stmt
-                                      (Assignment (sym17__ ())
+                                      (Assignment (sym18__ ())
                                        ((expr
                                          (FunApp StanLib Plus__
                                           (((expr (Lit Int 3))
@@ -1983,11 +2039,11 @@ let%expect_test "inline function in ternary if " =
                     (((stmt
                        (SList
                         (((stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym19__)
+                           (Decl (decl_adtype AutoDiffable) (decl_id sym20__)
                             (decl_type (Unsized UInt))))
                           (smeta <opaque>))
                          ((stmt
-                           (For (loopvar sym20__)
+                           (For (loopvar sym21__)
                             (lower
                              ((expr (Lit Int 1))
                               (emeta
@@ -2009,7 +2065,7 @@ let%expect_test "inline function in ternary if " =
                                  ((stmt
                                    (SList
                                     (((stmt
-                                       (Assignment (sym19__ ())
+                                       (Assignment (sym20__ ())
                                         ((expr
                                           (FunApp StanLib Plus__
                                            (((expr (Lit Int 4))
@@ -2034,13 +2090,13 @@ let%expect_test "inline function in ternary if " =
                    (NRFunApp CompilerInternal FnPrint__
                     (((expr
                        (TernaryIf
-                        ((expr (Var sym15__))
+                        ((expr (Var sym16__))
                          (emeta
                           ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
-                        ((expr (Var sym17__))
+                        ((expr (Var sym18__))
                          (emeta
                           ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
-                        ((expr (Var sym19__))
+                        ((expr (Var sym20__))
                          (emeta
                           ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
@@ -2118,11 +2174,11 @@ let%expect_test "inline function in ternary if " =
             (((stmt
                (SList
                 (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym21__)
+                   (Decl (decl_adtype AutoDiffable) (decl_id sym22__)
                     (decl_type (Unsized UInt))))
                   (smeta <opaque>))
                  ((stmt
-                   (For (loopvar sym22__)
+                   (For (loopvar sym23__)
                     (lower
                      ((expr (Lit Int 1))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
@@ -2149,7 +2205,7 @@ let%expect_test "inline function in ternary if " =
                                 ((stmt
                                   (SList
                                    (((stmt
-                                      (Assignment (sym21__ ())
+                                      (Assignment (sym22__ ())
                                        ((expr (Lit Int 42))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
@@ -2163,7 +2219,7 @@ let%expect_test "inline function in ternary if " =
                          ((stmt
                            (SList
                             (((stmt
-                               (Assignment (sym21__ ())
+                               (Assignment (sym22__ ())
                                 ((expr (Lit Int 6))
                                  (emeta
                                   ((mtype UInt) (mloc <opaque>)
@@ -2175,7 +2231,7 @@ let%expect_test "inline function in ternary if " =
                   (smeta <opaque>))
                  ((stmt
                    (NRFunApp CompilerInternal FnPrint__
-                    (((expr (Var sym21__))
+                    (((expr (Var sym22__))
                       (emeta
                        ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable)))))))
                   (smeta <opaque>)))))
@@ -3841,13 +3897,13 @@ let%expect_test "lazy code motion" =
     ((functions_block ()) (input_vars ()) (prepare_data ())
      (log_prob
       (((stmt
-         (Decl (decl_adtype DataOnly) (decl_id sym23__)
+         (Decl (decl_adtype DataOnly) (decl_id sym24__)
           (decl_type (Unsized (UArray UReal)))))
         (smeta <opaque>))
        ((stmt
          (Block
           (((stmt
-             (Assignment (sym23__ ())
+             (Assignment (sym24__ ())
               ((expr
                 (FunApp CompilerInternal FnMakeArray__
                  (((expr (Lit Real 3.0))
@@ -3857,19 +3913,19 @@ let%expect_test "lazy code motion" =
             (smeta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var sym23__))
+              (((expr (Var sym24__))
                 (emeta
                  ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly)))))))
             (smeta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var sym23__))
+              (((expr (Var sym24__))
                 (emeta
                  ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly)))))))
             (smeta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnPrint__
-              (((expr (Var sym23__))
+              (((expr (Var sym24__))
                 (emeta
                  ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly)))))))
             (smeta <opaque>)))))
@@ -3897,11 +3953,11 @@ let%expect_test "lazy code motion, 2" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym25__)
+           (Decl (decl_adtype DataOnly) (decl_id sym26__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym24__)
+           (Decl (decl_adtype DataOnly) (decl_id sym25__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -3958,11 +4014,11 @@ let%expect_test "lazy code motion, 3" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym27__)
+           (Decl (decl_adtype DataOnly) (decl_id sym28__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym26__)
+           (Decl (decl_adtype DataOnly) (decl_id sym27__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -3973,7 +4029,7 @@ let%expect_test "lazy code motion, 3" =
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               (smeta <opaque>))
              ((stmt
-               (Assignment (sym26__ ())
+               (Assignment (sym27__ ())
                 ((expr
                   (FunApp StanLib Plus__
                    (((expr (Lit Int 3))
@@ -3984,14 +4040,14 @@ let%expect_test "lazy code motion, 3" =
               (smeta <opaque>))
              ((stmt
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var sym26__))
+                (((expr (Var sym27__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               (smeta <opaque>))
              ((stmt
                (NRFunApp CompilerInternal FnPrint__
                 (((expr
                    (FunApp StanLib Plus__
-                    (((expr (Var sym26__))
+                    (((expr (Var sym27__))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
                      ((expr (Lit Int 7))
                       (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
@@ -4017,129 +4073,6 @@ let%expect_test "lazy code motion, 4" =
           ;
         } else {
           x = b + c;
-          ;
-        }
-        y = b + c;
-      }
-      |}
-  in
-  let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
-  let mir = lazy_code_motion mir in
-  let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
-  [%expect
-    {|
-      ((functions_block ()) (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym28__)
-            (decl_type (Unsized UInt))))
-          (smeta <opaque>))
-         ((stmt
-           (Block
-            (((stmt
-               (Decl (decl_adtype AutoDiffable) (decl_id b)
-                (decl_type (Sized SInt))))
-              (smeta <opaque>))
-             ((stmt
-               (Decl (decl_adtype AutoDiffable) (decl_id c)
-                (decl_type (Sized SInt))))
-              (smeta <opaque>))
-             ((stmt
-               (Decl (decl_adtype AutoDiffable) (decl_id x)
-                (decl_type (Sized SInt))))
-              (smeta <opaque>))
-             ((stmt
-               (Decl (decl_adtype AutoDiffable) (decl_id y)
-                (decl_type (Sized SInt))))
-              (smeta <opaque>))
-             ((stmt
-               (Assignment (b ())
-                ((expr (Lit Int 1))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-              (smeta <opaque>))
-             ((stmt
-               (IfElse
-                ((expr (Lit Int 1))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                ((stmt
-                  (Block
-                   (((stmt
-                      (Block
-                       (((stmt Skip) (smeta <opaque>))
-                        ((stmt Skip) (smeta <opaque>))
-                        ((stmt Skip) (smeta <opaque>)))))
-                     (smeta <opaque>))
-                    ((stmt
-                      (Assignment (sym28__ ())
-                       ((expr
-                         (FunApp StanLib Plus__
-                          (((expr (Var b))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                           ((expr (Var c))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                     (smeta <opaque>))
-                    ((stmt Skip) (smeta <opaque>)))))
-                 (smeta <opaque>))
-                (((stmt
-                   (Block
-                    (((stmt
-                       (Block
-                        (((stmt
-                           (Assignment (sym28__ ())
-                            ((expr
-                              (FunApp StanLib Plus__
-                               (((expr (Var b))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))
-                                ((expr (Var c))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly)))))))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                          (smeta <opaque>))
-                         ((stmt
-                           (Assignment (x ())
-                            ((expr (Var sym28__))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-                          (smeta <opaque>))
-                         ((stmt Skip) (smeta <opaque>)))))
-                      (smeta <opaque>))
-                     ((stmt Skip) (smeta <opaque>)))))
-                  (smeta <opaque>)))))
-              (smeta <opaque>))
-             ((stmt
-               (Assignment (y ())
-                ((expr (Var sym28__))
-                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
-
-let%expect_test "lazy code motion, 5" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
-      model {
-        int b;
-        int c;
-        int x;
-        int y;
-        b = 1;
-        if (1) {
-          ;
-          ;
-          ;
-        } else {
-          if (2) x = b + c;
           ;
         }
         y = b + c;
@@ -4213,6 +4146,129 @@ let%expect_test "lazy code motion, 5" =
                     (((stmt
                        (Block
                         (((stmt
+                           (Assignment (sym29__ ())
+                            ((expr
+                              (FunApp StanLib Plus__
+                               (((expr (Var b))
+                                 (emeta
+                                  ((mtype UInt) (mloc <opaque>)
+                                   (madlevel DataOnly))))
+                                ((expr (Var c))
+                                 (emeta
+                                  ((mtype UInt) (mloc <opaque>)
+                                   (madlevel DataOnly)))))))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                          (smeta <opaque>))
+                         ((stmt
+                           (Assignment (x ())
+                            ((expr (Var sym29__))
+                             (emeta
+                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                          (smeta <opaque>))
+                         ((stmt Skip) (smeta <opaque>)))))
+                      (smeta <opaque>))
+                     ((stmt Skip) (smeta <opaque>)))))
+                  (smeta <opaque>)))))
+              (smeta <opaque>))
+             ((stmt
+               (Assignment (y ())
+                ((expr (Var sym29__))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+              (smeta <opaque>)))))
+          (smeta <opaque>))))
+       (generate_quantities ()) (transform_inits ()) (output_vars ())
+       (prog_name "") (prog_path "")) |}]
+
+let%expect_test "lazy code motion, 5" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        int b;
+        int c;
+        int x;
+        int y;
+        b = 1;
+        if (1) {
+          ;
+          ;
+          ;
+        } else {
+          if (2) x = b + c;
+          ;
+        }
+        y = b + c;
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  print_s [%sexp (mir : Mir.typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (input_vars ()) (prepare_data ())
+       (log_prob
+        (((stmt
+           (Decl (decl_adtype DataOnly) (decl_id sym30__)
+            (decl_type (Unsized UInt))))
+          (smeta <opaque>))
+         ((stmt
+           (Block
+            (((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id b)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id c)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id x)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id y)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (Assignment (b ())
+                ((expr (Lit Int 1))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+              (smeta <opaque>))
+             ((stmt
+               (IfElse
+                ((expr (Lit Int 1))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                ((stmt
+                  (Block
+                   (((stmt
+                      (Block
+                       (((stmt Skip) (smeta <opaque>))
+                        ((stmt Skip) (smeta <opaque>))
+                        ((stmt Skip) (smeta <opaque>)))))
+                     (smeta <opaque>))
+                    ((stmt
+                      (Assignment (sym30__ ())
+                       ((expr
+                         (FunApp StanLib Plus__
+                          (((expr (Var b))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                           ((expr (Var c))
+                            (emeta
+                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+                     (smeta <opaque>))
+                    ((stmt Skip) (smeta <opaque>)))))
+                 (smeta <opaque>))
+                (((stmt
+                   (Block
+                    (((stmt
+                       (Block
+                        (((stmt
                            (IfElse
                             ((expr (Lit Int 2))
                              (emeta
@@ -4220,7 +4276,7 @@ let%expect_test "lazy code motion, 5" =
                             ((stmt
                               (Block
                                (((stmt
-                                  (Assignment (sym29__ ())
+                                  (Assignment (sym30__ ())
                                    ((expr
                                      (FunApp StanLib Plus__
                                       (((expr (Var b))
@@ -4237,7 +4293,7 @@ let%expect_test "lazy code motion, 5" =
                                  (smeta <opaque>))
                                 ((stmt
                                   (Assignment (x ())
-                                   ((expr (Var sym29__))
+                                   ((expr (Var sym30__))
                                     (emeta
                                      ((mtype UInt) (mloc <opaque>)
                                       (madlevel DataOnly))))))
@@ -4247,7 +4303,7 @@ let%expect_test "lazy code motion, 5" =
                             (((stmt
                                (SList
                                 (((stmt
-                                   (Assignment (sym29__ ())
+                                   (Assignment (sym30__ ())
                                     ((expr
                                       (FunApp StanLib Plus__
                                        (((expr (Var b))
@@ -4272,7 +4328,7 @@ let%expect_test "lazy code motion, 5" =
               (smeta <opaque>))
              ((stmt
                (Assignment (y ())
-                ((expr (Var sym29__))
+                ((expr (Var sym30__))
                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
               (smeta <opaque>)))))
           (smeta <opaque>))))
@@ -4302,11 +4358,11 @@ let%expect_test "lazy code motion, 6" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym31__)
+           (Decl (decl_adtype DataOnly) (decl_id sym32__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym30__)
+           (Decl (decl_adtype DataOnly) (decl_id sym31__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -4396,11 +4452,11 @@ let%expect_test "lazy code motion, 7" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym33__)
+           (Decl (decl_adtype DataOnly) (decl_id sym34__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym32__)
+           (Decl (decl_adtype DataOnly) (decl_id sym33__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -4482,7 +4538,7 @@ let%expect_test "lazy code motion, 7" =
                               (((stmt
                                  (Block
                                   (((stmt
-                                     (Assignment (sym33__ ())
+                                     (Assignment (sym34__ ())
                                       ((expr
                                         (FunApp StanLib Plus__
                                          (((expr (Var a))
@@ -4508,7 +4564,7 @@ let%expect_test "lazy code motion, 7" =
                                         (Block
                                          (((stmt
                                             (Assignment (y ())
-                                             ((expr (Var sym33__))
+                                             ((expr (Var sym34__))
                                               (emeta
                                                ((mtype UInt) (mloc <opaque>)
                                                 (madlevel DataOnly))))))
@@ -4538,7 +4594,7 @@ let%expect_test "lazy code motion, 7" =
                                         (smeta <opaque>))))
                                      (smeta <opaque>))
                                     ((stmt
-                                      (Assignment (sym33__ ())
+                                      (Assignment (sym34__ ())
                                        ((expr
                                          (FunApp StanLib Plus__
                                           (((expr (Var a))
@@ -4555,7 +4611,7 @@ let%expect_test "lazy code motion, 7" =
                                      (smeta <opaque>))
                                     ((stmt
                                       (Assignment (y ())
-                                       ((expr (Var sym33__))
+                                       ((expr (Var sym34__))
                                         (emeta
                                          ((mtype UInt) (mloc <opaque>)
                                           (madlevel DataOnly))))))
@@ -4566,7 +4622,7 @@ let%expect_test "lazy code motion, 7" =
                          (smeta <opaque>))
                         ((stmt
                           (Assignment (z ())
-                           ((expr (Var sym33__))
+                           ((expr (Var sym34__))
                             (emeta
                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
                          (smeta <opaque>)))))
@@ -4651,7 +4707,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
        (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym34__)
+           (Decl (decl_adtype DataOnly) (decl_id sym35__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -4681,7 +4737,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               (smeta <opaque>))
              ((stmt
-               (Assignment (sym34__ ())
+               (Assignment (sym35__ ())
                 ((expr
                   (FunApp UserDefined foo
                    (((expr
@@ -4693,12 +4749,12 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
               (smeta <opaque>))
              ((stmt
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var sym34__))
+                (((expr (Var sym35__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               (smeta <opaque>))
              ((stmt
                (NRFunApp CompilerInternal FnPrint__
-                (((expr (Var sym34__))
+                (((expr (Var sym35__))
                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
               (smeta <opaque>)))))
           (smeta <opaque>))))
@@ -4725,7 +4781,7 @@ let%expect_test "lazy code motion, 9" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym35__)
+           (Decl (decl_adtype DataOnly) (decl_id sym36__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -4781,7 +4837,7 @@ let%expect_test "lazy code motion, 10" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym36__)
+           (Decl (decl_adtype DataOnly) (decl_id sym37__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -4850,7 +4906,7 @@ let%expect_test "lazy code motion, 11" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym37__)
+           (Decl (decl_adtype DataOnly) (decl_id sym38__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -4923,11 +4979,11 @@ let%expect_test "lazy code motion, 12" =
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym39__)
+           (Decl (decl_adtype DataOnly) (decl_id sym40__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym38__)
+           (Decl (decl_adtype DataOnly) (decl_id sym39__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
@@ -5008,15 +5064,15 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
         (((stmt
+           (Decl (decl_adtype AutoDiffable) (decl_id sym43__)
+            (decl_type (Unsized UReal))))
+          (smeta <opaque>))
+         ((stmt
            (Decl (decl_adtype AutoDiffable) (decl_id sym42__)
             (decl_type (Unsized UReal))))
           (smeta <opaque>))
          ((stmt
-           (Decl (decl_adtype AutoDiffable) (decl_id sym41__)
-            (decl_type (Unsized UReal))))
-          (smeta <opaque>))
-         ((stmt
-           (Decl (decl_adtype DataOnly) (decl_id sym40__)
+           (Decl (decl_adtype DataOnly) (decl_id sym41__)
             (decl_type (Unsized UInt))))
           (smeta <opaque>))
          ((stmt
