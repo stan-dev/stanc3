@@ -170,6 +170,10 @@ let trans_math_fn fname =
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
 
+let minus_one e =
+  { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
+  ; emeta= e.emeta }
+
 let rec pp_statement ppf {stmt; smeta} =
   ( match stmt with
   | Block _ | Break | Continue | Skip -> ()
@@ -185,9 +189,11 @@ let rec pp_statement ppf {stmt; smeta} =
               , {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta} )
         ; smeta }
   | Assignment ((assignee, idcs), rhs) ->
+      let idx_minus_one = map_index minus_one in
       pf ppf "%a = %a;"
-        (Middle.pp_indexed pp_expr_typed_located)
-        (assignee, idcs) pp_expr rhs
+        (Middle.pp_indexed pp_expr)
+        (assignee, List.map ~f:idx_minus_one idcs)
+        pp_expr rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->

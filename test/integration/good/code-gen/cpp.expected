@@ -43,10 +43,10 @@ class eight_schools_ncp_model : public prob_grad {
       J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
       check_greater_or_equal(function__, "J", J, 0);
       for (size_t sym1__ = 1; sym1__ <= stan::length(y); sym1__++) {
-        y[sym1__] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+        y[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
       }
       for (size_t sym1__ = 1; sym1__ <= stan::length(sigma); sym1__++) {
-        sigma[sym1__] = stan::model::rvalue(context__.vals_r("sigma"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+        sigma[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("sigma"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
       }
       for (size_t sym1__ = 1; sym1__ <= stan::length(sigma); sym1__++) {
         check_greater_or_equal(function__, "sigma[sym1__]",
@@ -76,12 +76,12 @@ class eight_schools_ncp_model : public prob_grad {
       theta_tilde = std::vector<local_scalar_t__>(J, 0);
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(theta_tilde); sym1__++) {
-        theta_tilde[sym1__] = in__.scalar();}
+        theta_tilde[(sym1__ - 1)] = in__.scalar();}
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, 0);
       
       for (size_t j = 1; j <= J; j++) {
-        theta[j] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
+        theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
       }
       {
         lp_accum__.add(normal_log(mu, 0, 5));
@@ -143,12 +143,12 @@ class eight_schools_ncp_model : public prob_grad {
       theta_tilde = std::vector<local_scalar_t__>(J, 0);
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(theta_tilde); sym1__++) {
-        theta_tilde[sym1__] = in__.scalar();}
+        theta_tilde[(sym1__ - 1)] = in__.scalar();}
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, 0);
       
       for (size_t j = 1; j <= J; j++) {
-        theta[j] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
+        theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
       }
     }
     } // write_array() 
@@ -187,7 +187,7 @@ class eight_schools_ncp_model : public prob_grad {
       theta_tilde = std::vector<double>(J, 0);
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(theta_tilde); sym1__++) {
-        theta_tilde[sym1__] = stan::model::rvalue(context__.vals_r("theta_tilde"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+        theta_tilde[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("theta_tilde"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
       }
     }
     } // transform_inits() 
@@ -285,7 +285,7 @@ class one_var_per_block_model : public prob_grad {
       N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
       K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
       for (size_t sym1__ = 1; sym1__ <= stan::length(datavar); sym1__++) {
-        datavar[sym1__] = stan::model::rvalue(context__.vals_r("datavar"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+        datavar[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("datavar"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
       }
       for (size_t sym1__ = 1; sym1__ <= stan::length(datavar); sym1__++) {
         for (size_t sym2__ = 1;
@@ -322,20 +322,21 @@ class one_var_per_block_model : public prob_grad {
       param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(param); sym1__++) {
-        param[sym1__] = in__.vector(N);}
+        param[(sym1__ - 1)] = in__.vector(N);}
       for (size_t sym1__ = 1; sym1__ <= stan::length(param); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
              sym2__++) {
-          param[sym1__, sym2__] = lb_constrain(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                               0);}}
+          param[(sym1__ - 1), (sym2__ - 1)] = lb_constrain(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                                           0);}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(matparam); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++) { matparam[sym1__, sym2__] = in__.matrix(N, N);}}
+             sym2__++) {
+          matparam[(sym1__ - 1), (sym2__ - 1)] = in__.matrix(N, N);}}
       for (size_t sym1__ = 1; sym1__ <= stan::length(matparam); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
@@ -343,8 +344,9 @@ class one_var_per_block_model : public prob_grad {
           for (size_t sym3__ = 1;
                sym3__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
                sym3__++) {
-            matparam[sym1__, sym2__, sym3__] = lb_constrain(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
-                                                            0);}}}
+            matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)] = lb_constrain(
+            stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+            0);}}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -356,14 +358,14 @@ class one_var_per_block_model : public prob_grad {
                                  stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
                                  0);}}
       for (size_t n = 1; n <= N; n++) {
-        tparam[n] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+        tparam[(n - 1)] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
       }
       {
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
         modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
         
         for (size_t n = 1; n <= N; n++) {
-          modellocal[n] = multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+          modellocal[(n - 1)] = multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
         }
       }
     }
@@ -427,20 +429,21 @@ class one_var_per_block_model : public prob_grad {
       param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(param); sym1__++) {
-        param[sym1__] = in__.vector(N);}
+        param[(sym1__ - 1)] = in__.vector(N);}
       for (size_t sym1__ = 1; sym1__ <= stan::length(param); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
              sym2__++) {
-          param[sym1__, sym2__] = lb_constrain(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                               0);}}
+          param[(sym1__ - 1), (sym2__ - 1)] = lb_constrain(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                                           0);}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(matparam); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++) { matparam[sym1__, sym2__] = in__.matrix(N, N);}}
+             sym2__++) {
+          matparam[(sym1__ - 1), (sym2__ - 1)] = in__.matrix(N, N);}}
       for (size_t sym1__ = 1; sym1__ <= stan::length(matparam); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
@@ -448,8 +451,9 @@ class one_var_per_block_model : public prob_grad {
           for (size_t sym3__ = 1;
                sym3__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
                sym3__++) {
-            matparam[sym1__, sym2__, sym3__] = lb_constrain(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
-                                                            0);}}}
+            matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)] = lb_constrain(
+            stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+            0);}}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -461,7 +465,7 @@ class one_var_per_block_model : public prob_grad {
                                  stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
                                  0);}}
       for (size_t n = 1; n <= N; n++) {
-        tparam[n] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+        tparam[(n - 1)] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
       }
       std::vector<Eigen::Matrix<double, -1, 1>> gq;
       gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
@@ -474,7 +478,7 @@ class one_var_per_block_model : public prob_grad {
                                  stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
                                  0);}}
       for (size_t n = 1; n <= N; n++) {
-        gq[n] = add(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"));
+        gq[(n - 1)] = add(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"));
       }
     }
     } // write_array() 
@@ -506,14 +510,14 @@ class one_var_per_block_model : public prob_grad {
       param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
       for (size_t sym1__ = 1; sym1__ <= stan::length(param); sym1__++) {
-        param[sym1__] = stan::model::rvalue(context__.vals_r("param"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+        param[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("param"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
       }
       for (size_t sym1__ = 1; sym1__ <= stan::length(param); sym1__++) {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
              sym2__++) {
-          param[sym1__, sym2__] = lb_free(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                          0);}}
+          param[(sym1__ - 1), (sym2__ - 1)] = lb_free(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                                      0);}}
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(N, N)));
       
@@ -521,7 +525,7 @@ class one_var_per_block_model : public prob_grad {
         for (size_t sym2__ = 1;
              sym2__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
              sym2__++) {
-          matparam[sym1__, sym2__] = stan::model::rvalue(context__.vals_r("matparam"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e");
+          matparam[(sym1__ - 1), (sym2__ - 1)] = stan::model::rvalue(context__.vals_r("matparam"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e");
         }}
       for (size_t sym1__ = 1; sym1__ <= stan::length(matparam); sym1__++) {
         for (size_t sym2__ = 1;
@@ -530,8 +534,9 @@ class one_var_per_block_model : public prob_grad {
           for (size_t sym3__ = 1;
                sym3__ <= stan::length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
                sym3__++) {
-            matparam[sym1__, sym2__, sym3__] = lb_free(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
-                                                       0);}}}
+            matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)] = lb_free(
+            stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+            0);}}}
     }
     } // transform_inits() 
     
