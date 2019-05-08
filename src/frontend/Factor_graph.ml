@@ -16,7 +16,7 @@ let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
     factor list =
   match stmt with
   | Mir.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | Mir.NRFunApp (_, "reject", _) -> [Reject]
+  | Mir.NRFunApp (_, "FnReject__", _) -> [Reject]
   | Mir.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
       [LPFunction (s, args)]
   | Mir.Assignment (_, _)
@@ -112,14 +112,6 @@ let%expect_test "Variable dependency example" =
   [%expect
     {|
       ((19 Reject ((VVar i) (VVar j)))
-       (21
-        (TargetTerm
-         ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-          (texpr_adlevel DataOnly)))
-        ((VVar i) (VVar j)))
-       (21
-        (TargetTerm
-         ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-          (texpr_adlevel DataOnly)))
-        ((VVar i) (VVar j))))
+       (21 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j)))
+       (21 (TargetTerm (Lit Int 1)) ((VVar i) (VVar j))))
     |}]

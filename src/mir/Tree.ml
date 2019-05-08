@@ -124,8 +124,7 @@ type 's fun_def =
   ; fdloc: location_span [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
-type 'e lvalue = string * 'e index list
-[@@deriving sexp, hash, map, fold]
+type 'e lvalue = string * 'e index list [@@deriving sexp, hash, map, fold]
 
 type ('e, 's) statement =
   | Assignment of 'e lvalue * 'e

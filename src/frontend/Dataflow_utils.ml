@@ -293,7 +293,7 @@ let%expect_test "Loop passthrough" =
   let exits, _ = build_predecessor_graph statement_map in
   print_s [%sexp (exits : label Set.Poly.t)] ;
   [%expect {|
-      (6 10 16 20)
+      (7 11 17 21)
     |}]
 
 let example1_program =
@@ -348,109 +348,30 @@ let%expect_test "Statement label map example" =
         : (label, (expr_typed_located, label) statement) Map.Poly.t )] ;
   [%expect
     {|
-      ((1 (Block (2 5))) (2 (SList (3 4)))
-       (3 (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt)))
-       (4
-        (Assignment
-         ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-          (texpr_adlevel DataOnly))
-         ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
-          (texpr_adlevel DataOnly))))
-       (5
-        (IfElse
-         ((texpr_type UInt) (texpr_loc <opaque>)
-          (texpr
-           (FunApp Less__
-            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-              (texpr_adlevel DataOnly))
-             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 0))
-              (texpr_adlevel DataOnly)))))
-          (texpr_adlevel DataOnly))
-         6 (8)))
-       (6 (Block (7)))
-       (7
-        (NRFunApp print
-         (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-           (texpr_adlevel DataOnly)))))
+      ((1 (Block (2))) (2 (Block (3 4 5)))
+       (3 (Decl (decl_adtype DataOnly) (decl_id i) (decl_type (Sized SInt))))
+       (4 (Assignment (i ()) (Lit Int 0)))
+       (5 (IfElse (FunApp StanLib Less__ ((Var i) (Lit Int 0))) 6 (8)))
+       (6 (Block (7))) (7 (NRFunApp CompilerInternal FnPrint__ ((Var i))))
        (8 (Block (9)))
-       (9
-        (For (loopvar j)
-         (lower
-          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-           (texpr_adlevel DataOnly)))
-         (upper
-          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 10))
-           (texpr_adlevel DataOnly)))
-         (body 10)))
+       (9 (For (loopvar j) (lower (Lit Int 1)) (upper (Lit Int 10)) (body 10)))
        (10 (Block (11 14 17 22)))
-       (11
-        (IfElse
-         ((texpr_type UInt) (texpr_loc <opaque>)
-          (texpr
-           (FunApp Greater__
-            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
-              (texpr_adlevel DataOnly))
-             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 9))
-              (texpr_adlevel DataOnly)))))
-          (texpr_adlevel DataOnly))
-         12 ()))
+       (11 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 9))) 12 ()))
        (12 (Block (13))) (13 Break)
        (14
         (IfElse
-         ((texpr_type UInt) (texpr_loc <opaque>)
-          (texpr
-           (FunApp And__
-            (((texpr_type UInt) (texpr_loc <opaque>)
-              (texpr
-               (FunApp Greater__
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
-                  (texpr_adlevel DataOnly))
-                 ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 8))
-                  (texpr_adlevel DataOnly)))))
-              (texpr_adlevel DataOnly))
-             ((texpr_type UInt) (texpr_loc <opaque>)
-              (texpr
-               (FunApp Less__
-                (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-                  (texpr_adlevel DataOnly))
-                 ((texpr_type UInt) (texpr_loc <opaque>)
-                  (texpr
-                   (FunApp PMinus__
-                    (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                      (texpr_adlevel DataOnly)))))
-                  (texpr_adlevel DataOnly)))))
-              (texpr_adlevel DataOnly)))))
-          (texpr_adlevel DataOnly))
+         (FunApp StanLib And__
+          ((FunApp StanLib Greater__ ((Var j) (Lit Int 8)))
+           (FunApp StanLib Less__
+            ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))))
          15 ()))
        (15 (Block (16))) (16 Continue)
-       (17
-        (IfElse
-         ((texpr_type UInt) (texpr_loc <opaque>)
-          (texpr
-           (FunApp Greater__
-            (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
-              (texpr_adlevel DataOnly))
-             ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 5))
-              (texpr_adlevel DataOnly)))))
-          (texpr_adlevel DataOnly))
-         18 (20)))
+       (17 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 5))) 18 (20)))
        (18 (Block (19))) (19 Continue) (20 (Block (21)))
        (21
-        (NRFunApp print
-         (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str Badger))
-           (texpr_adlevel DataOnly))
-          ((texpr_type UInt) (texpr_loc <opaque>)
-           (texpr
-            (FunApp Plus__
-             (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-               (texpr_adlevel DataOnly))
-              ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var j))
-               (texpr_adlevel DataOnly)))))
-           (texpr_adlevel DataOnly)))))
-       (22
-        (NRFunApp print
-         (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str Fin))
-           (texpr_adlevel DataOnly))))))
+        (NRFunApp CompilerInternal FnPrint__
+         ((Lit Str Badger) (FunApp StanLib Plus__ ((Var i) (Var j))))))
+       (22 (NRFunApp CompilerInternal FnPrint__ ((Lit Str Fin)))))
     |}]
 
 let%expect_test "Predecessor graph example" =
@@ -514,22 +435,21 @@ let%expect_test "Statement label map example 3" =
   [%expect
     {|
       ((1
-        ((SList (2 3))
+        ((SList (2))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (2
-        ((SList ())
+        ((Block (3))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (3
         ((Block (4 6))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (4
-        ((While
-          ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 42))
-           (texpr_adlevel DataOnly))
-          5)
+        ((While (Lit Int 42) 5)
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc
@@ -541,9 +461,7 @@ let%expect_test "Statement label map example 3" =
           (end_loc
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (6
-        ((NRFunApp print
-          (((texpr_type UReal) (texpr_loc <opaque>) (texpr (Lit Str exit))
-            (texpr_adlevel DataOnly))))
+        ((NRFunApp CompilerInternal FnPrint__ ((Lit Str exit)))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 8) (included_from ())))
           (end_loc
@@ -602,26 +520,20 @@ let%expect_test "Statement label map example 4" =
   [%expect
     {|
       ((1
-        ((SList (2 3))
+        ((SList (2))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (2
-        ((SList ())
+        ((Block (3))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (3
         ((Block (4))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
        (4
-        ((For (loopvar i)
-          (lower
-           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-            (texpr_adlevel DataOnly)))
-          (upper
-           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
-            (texpr_adlevel DataOnly)))
-          (body 5))
+        ((For (loopvar i) (lower (Lit Int 1)) (upper (Lit Int 6)) (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
@@ -699,26 +611,20 @@ let%expect_test "Statement label map example 5" =
   [%expect
     {|
       ((1
-        ((SList (2 3))
+        ((SList (2))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (2
-        ((SList ())
+        ((Block (3))
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (3
         ((Block (4 8))
-         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
-          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
        (4
-        ((For (loopvar i)
-          (lower
-           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-            (texpr_adlevel DataOnly)))
-          (upper
-           ((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 6))
-            (texpr_adlevel DataOnly)))
-          (body 5))
+        ((For (loopvar i) (lower (Lit Int 1)) (upper (Lit Int 6)) (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc ((filename string) (line_num 6) (col_num 9) (included_from ()))))))

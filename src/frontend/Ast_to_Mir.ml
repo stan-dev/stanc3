@@ -387,8 +387,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   |> List.filter ~f:(function {stmt= Skip; _} -> false | _ -> true)
 
 let unwrap_block_or_skip = function
-  | [({stmt= Block _; _} as b)]
-   | [({stmt= Skip; _} as b)] -> b
+  | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
   | x ->
       raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
@@ -651,7 +650,7 @@ let%expect_test "Prefix-Op-Example" =
   [%expect
     {|
       ((Block
-        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
+        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt)))
          (IfElse
           (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
           (NRFunApp CompilerInternal FnPrint__ ((Lit Str Badger))) ())))) |}]
@@ -662,7 +661,8 @@ let%expect_test "read data" =
   [%expect
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (For (loopvar sym1__) (lower (Lit Int 0))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
@@ -682,7 +682,8 @@ let%expect_test "read param" =
   [%expect
     {|
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (For (loopvar sym1__) (lower (Lit Int 0))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
@@ -700,7 +701,8 @@ let%expect_test "gen quant" =
   [%expect
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (For (loopvar sym1__) (lower (Lit Int 0))
       (upper (FunApp StanLib FnLength__ ((Var mat))))
       (body
@@ -732,37 +734,37 @@ let%expect_test "Prefix-Op-Example" =
   print_s [%sexp (mir : Mir.typed_prog)] ;
   [%expect
     {|
-      ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
-       (params ()) (tparams ()) (prepare_params ())
+      ((functions_block ()) (input_vars ()) (prepare_data ())
        (log_prob
-        (((sloc <opaque>)
-          (stmt
-           (SList
-            (((sloc <opaque>)
-              (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
-          (stmt
-           (IfElse
-            ((texpr_type UInt) (texpr_loc <opaque>)
-             (texpr
-              (FunApp Less__
-               (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Var i))
-                 (texpr_adlevel DataOnly))
-                ((texpr_type UInt) (texpr_loc <opaque>)
-                 (texpr
-                  (FunApp PMinus__
-                   (((texpr_type UInt) (texpr_loc <opaque>) (texpr (Lit Int 1))
-                     (texpr_adlevel DataOnly)))))
-                 (texpr_adlevel DataOnly)))))
-             (texpr_adlevel DataOnly))
-            ((sloc <opaque>)
-             (stmt
-              (Block
-               (((sloc <opaque>)
-                 (stmt
-                  (NRFunApp print
-                   (((texpr_type UReal) (texpr_loc <opaque>)
-                     (texpr (Lit Str Badger)) (texpr_adlevel DataOnly))))))))))
-            ())))))
-       (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
+        (((stmt
+           (Block
+            (((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id i)
+                (decl_type (Sized SInt))))
+              (smeta <opaque>))
+             ((stmt
+               (IfElse
+                ((expr
+                  (FunApp StanLib Less__
+                   (((expr (Var i))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                    ((expr
+                      (FunApp StanLib PMinus__
+                       (((expr (Lit Int 1))
+                         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                 (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                ((stmt
+                  (Block
+                   (((stmt
+                      (NRFunApp CompilerInternal FnPrint__
+                       (((expr (Lit Str Badger))
+                         (emeta
+                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+                     (smeta <opaque>)))))
+                 (smeta <opaque>))
+                ()))
+              (smeta <opaque>)))))
+          (smeta <opaque>))))
+       (generate_quantities ()) (transform_inits ()) (output_vars ())
+       (prog_name "") (prog_path "")) |}]

@@ -11,7 +11,7 @@ let apply_prefix_operator_int (op : string) i =
         | "PPlus__" -> i
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
-        | s -> raise_s [%sexp (s:string)] ) )
+        | s -> raise_s [%sexp (s : string)] ) )
 
 let apply_prefix_operator_real (op : string) i =
   Lit
@@ -20,7 +20,7 @@ let apply_prefix_operator_real (op : string) i =
         ( match op with
         | "PPlus__" -> i
         | "PMinus__" -> -.i
-        | s -> raise_s [%sexp (s:string)]  ) )
+        | s -> raise_s [%sexp (s : string)] ) )
 
 let apply_operator_int (op : string) i1 i2 =
   Lit
@@ -38,7 +38,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Leq__" -> Bool.to_int (i1 <= i2)
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
-        | s -> raise_s [%sexp (s:string)]  ) )
+        | s -> raise_s [%sexp (s : string)] ) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Lit
@@ -49,7 +49,7 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Minus__" -> r1 -. r2
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
-        | s -> raise_s [%sexp (s:string)]  ) )
+        | s -> raise_s [%sexp (s : string)] ) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Lit
@@ -62,7 +62,7 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Leq__" -> Bool.to_int (r1 <= r2)
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
-        | s -> raise_s [%sexp (s:string)]  ) )
+        | s -> raise_s [%sexp (s : string)] ) )
 
 let rec eval_expr (e : Mir.expr_typed_located) =
   { e with

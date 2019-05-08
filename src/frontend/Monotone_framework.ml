@@ -855,7 +855,7 @@ let lazy_expressions_mfp
   let all_expressions =
     used_subexpressions_stmt
       (Mir.stmt_loc_of_stmt_loc_num flowgraph_to_mir
-         (Map.Poly.find_exn flowgraph_to_mir 0))
+         (Map.Poly.find_exn flowgraph_to_mir 1))
         .stmt
   in
   (* TODO: this could probably be done in a nicer way *)
