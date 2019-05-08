@@ -35,6 +35,10 @@ class eight_schools_ncp_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // suppress unused var warning
+    num_params_r__ = 0U;
+    num_params_r__ += 1;
+    num_params_r__ += 1;
+    num_params_r__ += J;
     {
       J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
       check_greater_or_equal(function__, "J", J, 0);
@@ -274,6 +278,9 @@ class one_var_per_block_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
     (void) function__;  // suppress unused var warning
+    num_params_r__ = 0U;
+    num_params_r__ += K * N;
+    num_params_r__ += (K + 1) * K * N * N;
     {
       N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
       K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");

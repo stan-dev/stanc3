@@ -302,6 +302,19 @@ let rec pp_zeroing_ctor_call ppf st =
 let var_context_container st =
   match basetype (remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
+let rec get_dims = function
+  | SInt | SReal -> []
+  | SVector d | SRowVector d -> [d]
+  | SMatrix (dim1, dim2) -> [dim1; dim2]
+  | SArray (t, dim) -> dim :: get_dims t
+
+let%expect_test "dims" =
+  let v s = {expr= Var s; emeta= internal_meta} in
+  strf "@[%a@]" (list ~sep:comma pp_expr)
+    (get_dims (SArray (SMatrix (v "x", v "y"), v "z")))
+  |> print_endline ;
+  [%expect {| z, x, y |}]
+
 (* Read in data steps:
    1. context__.validate_dims() (what is this?)
    1. find vals_%s__ from context__.vals_%s(vident)
@@ -309,7 +322,7 @@ let var_context_container st =
    1. run checks on resulting vident
 *)
 
-let pp_ctor ppf p =
+let pp_ctor ppf (p : typed_prog) =
   (* XXX:
      1. Set num_params_r__
   *)
@@ -319,6 +332,17 @@ let pp_ctor ppf p =
   in
   pf ppf "%s(@[<hov 0>%a) : prob_grad(0) @]" p.prog_name
     (list ~sep:comma string) params ;
+  let pp_mul ppf () = pf ppf " * " in
+  let pp_num_param ppf dims =
+    pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
+  in
+  let get_param_st = function
+    | _, (st, Parameters) -> (
+      match get_dims st with
+      | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
+      | ls -> Some ls )
+    | _ -> None
+  in
   pp_block ppf
     ( (fun ppf p ->
         pf ppf "typedef double local_scalar_t__;@ " ;
@@ -326,6 +350,10 @@ let pp_ctor ppf p =
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
+        pf ppf "num_params_r__ = 0U;@ " ;
+        pf ppf "%a@ "
+          (list ~sep:cut pp_num_param)
+          (List.filter_map ~f:get_param_st p.output_vars) ;
         pp_located_error_b ppf (p.prepare_data, "inside ctor") )
     , p )
 
@@ -350,19 +378,6 @@ let pp_get_param_names ppf p =
   pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names"] []
     (fun ppf -> (list ~sep:cut add_param) ppf (List.map ~f:fst p.output_vars)
   )
-
-let rec get_dims = function
-  | SInt | SReal -> []
-  | SVector d | SRowVector d -> [d]
-  | SMatrix (dim1, dim2) -> [dim1; dim2]
-  | SArray (t, dim) -> dim :: get_dims t
-
-let%expect_test "dims" =
-  let v s = {expr= Var s; emeta= internal_meta} in
-  strf "@[%a@]" (list ~sep:comma pp_expr)
-    (get_dims (SArray (SMatrix (v "x", v "y"), v "z")))
-  |> print_endline ;
-  [%expect {| z, x, y |}]
 
 let pp_get_dims ppf p =
   let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
