@@ -1,4 +1,4 @@
-open Tree
+open Mir
 open Core_kernel
 
 (* The following module signatures define the parts of the compiler we

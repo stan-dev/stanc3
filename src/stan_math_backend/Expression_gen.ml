@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 open Fmt
 
 let ends_with suffix s = String.is_suffix ~suffix s
@@ -196,7 +196,7 @@ and gen_fun_app ppf f es =
       (list ~sep:comma pp_expr) es
   in
   let pp =
-    [ Option.map ~f:gen_operator_app (Mir.operator_of_string f)
+    [ Option.map ~f:gen_operator_app (operator_of_string f)
     ; gen_misc_special_math_app f ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
@@ -215,7 +215,7 @@ and pp_ordinary_fn ppf f es =
     (sep ^ String.concat ~sep:", " extra_args)
 
 and pp_compiler_internal_fn ut f ppf es =
-  match Mir.internal_fn_of_string f with
+  match internal_fn_of_string f with
   | None -> failwith "Expecting internal function but found `%s`" f
   | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
@@ -239,10 +239,10 @@ and pp_expr ppf e =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (Mir.StanLib, f, es) -> gen_fun_app ppf f es
-  | FunApp (Mir.CompilerInternal, f, es) ->
+  | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
+  | FunApp (CompilerInternal, f, es) ->
       pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
-  | FunApp (Mir.UserDefined, f, es) -> pp_ordinary_fn ppf f es
+  | FunApp (UserDefined, f, es) -> pp_ordinary_fn ppf f es
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -282,20 +282,19 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp (Mir.StanLib, "pi", []))) ;
+  printf "%s" (pp_unlocated (FunApp (StanLib, "pi", []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
-    (pp_unlocated
-       (FunApp (Mir.StanLib, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated (FunApp (StanLib, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( Mir.StanLib
+          ( StanLib
           , "atan2"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
@@ -318,6 +317,5 @@ let%expect_test "pp_expr10" =
 let%expect_test "pp_expr11" =
   printf "%s"
     (pp_unlocated
-       (FunApp
-          (Mir.UserDefined, "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
+       (FunApp (UserDefined, "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| poisson_rng(123, base_rng__, pstream__) |}]

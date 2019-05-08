@@ -20,35 +20,35 @@ open Pretty_printing
 
 let ternary_if = "TernaryIf__"
 
-let%test "bad op name" = phys_equal (Mir.operator_of_string "Pluss__") None
-let%test "good op name" = Mir.operator_of_string "Plus__" = Some Plus
+let%test "bad op name" = phys_equal (Middle.operator_of_string "Pluss__") None
+let%test "good op name" = Middle.operator_of_string "Plus__" = Some Plus
 
 (** A hash table to hold some name conversions between the AST nodes and the
     Stan Math name of the operator *)
 let string_of_operators =
   Map.Poly.of_alist_multi
-    [ (Mir.string_of_operator Mir.Plus, "add")
-    ; (Mir.string_of_operator PPlus, "plus")
-    ; (Mir.string_of_operator Minus, "subtract")
-    ; (Mir.string_of_operator PMinus, "minus")
-    ; (Mir.string_of_operator Times, "multiply")
-    ; (Mir.string_of_operator Divide, "mdivide_right")
-    ; (Mir.string_of_operator Divide, "divide")
-    ; (Mir.string_of_operator Modulo, "modulus")
-    ; (Mir.string_of_operator LDivide, "mdivide_left")
-    ; (Mir.string_of_operator EltTimes, "elt_multiply")
-    ; (Mir.string_of_operator EltDivide, "elt_divide")
-    ; (Mir.string_of_operator Pow, "pow")
-    ; (Mir.string_of_operator Or, "logical_or")
-    ; (Mir.string_of_operator And, "logical_and")
-    ; (Mir.string_of_operator Equals, "logical_eq")
-    ; (Mir.string_of_operator NEquals, "logical_neq")
-    ; (Mir.string_of_operator Less, "logical_lt")
-    ; (Mir.string_of_operator Leq, "logical_lte")
-    ; (Mir.string_of_operator Greater, "logical_gt")
-    ; (Mir.string_of_operator Geq, "logical_gte")
-    ; (Mir.string_of_operator PNot, "logical_negation")
-    ; (Mir.string_of_operator Transpose, "transpose")
+    [ (Middle.string_of_operator Middle.Plus, "add")
+    ; (Middle.string_of_operator PPlus, "plus")
+    ; (Middle.string_of_operator Minus, "subtract")
+    ; (Middle.string_of_operator PMinus, "minus")
+    ; (Middle.string_of_operator Times, "multiply")
+    ; (Middle.string_of_operator Divide, "mdivide_right")
+    ; (Middle.string_of_operator Divide, "divide")
+    ; (Middle.string_of_operator Modulo, "modulus")
+    ; (Middle.string_of_operator LDivide, "mdivide_left")
+    ; (Middle.string_of_operator EltTimes, "elt_multiply")
+    ; (Middle.string_of_operator EltDivide, "elt_divide")
+    ; (Middle.string_of_operator Pow, "pow")
+    ; (Middle.string_of_operator Or, "logical_or")
+    ; (Middle.string_of_operator And, "logical_and")
+    ; (Middle.string_of_operator Equals, "logical_eq")
+    ; (Middle.string_of_operator NEquals, "logical_neq")
+    ; (Middle.string_of_operator Less, "logical_lt")
+    ; (Middle.string_of_operator Leq, "logical_lte")
+    ; (Middle.string_of_operator Greater, "logical_gt")
+    ; (Middle.string_of_operator Geq, "logical_gte")
+    ; (Middle.string_of_operator PNot, "logical_negation")
+    ; (Middle.string_of_operator Transpose, "transpose")
     ; (ternary_if, "if_else")
       (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
     ; ("(OperatorAssign Plus)", "assign_add")
@@ -71,7 +71,7 @@ let operator_return_type_from_string op_name (args : Ast.typed_expression list)
     | [{emeta= meta1; _}; {emeta= meta2; _}]
       when Type_conversion.check_of_same_type_mod_array_conv "" meta1.type_
              meta2.type_ ->
-        Some Mir.Void
+        Some Middle.Void
     | _ -> None
   else
     Map.Poly.find_multi string_of_operators op_name
@@ -79,7 +79,7 @@ let operator_return_type_from_string op_name (args : Ast.typed_expression list)
            Stan_math_signatures.stan_math_returntype name args )
 
 let operator_return_type op =
-  operator_return_type_from_string (Mir.string_of_operator op)
+  operator_return_type_from_string (Middle.string_of_operator op)
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -118,12 +118,12 @@ let type_of_expr_typed ue = ue.emeta.type_
 
 let rec unsizedtype_contains_int ut =
   match ut with
-  | Mir.UInt -> true
+  | Middle.UInt -> true
   | UArray ut -> unsizedtype_contains_int ut
   | _ -> false
 
 let rec unsizedtype_of_sizedtype = function
-  | Mir.SInt -> Mir.UInt
+  | Middle.SInt -> Middle.UInt
   | SReal -> UReal
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
@@ -131,15 +131,15 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_ad_type = function
-  | [] -> Mir.DataOnly
+  | [] -> Middle.DataOnly
   | x :: xs ->
       let y = lub_ad_type xs in
-      if Mir.compare_autodifftype x y < 0 then y else x
+      if Middle.compare_autodifftype x y < 0 then y else x
 
 let calculate_autodifftype at ut =
   match at with
   | (Param | TParam | Model) when not (unsizedtype_contains_int ut) ->
-      Mir.AutoDiffable
+      Middle.AutoDiffable
   | _ -> DataOnly
 
 let has_int_type ue = ue.emeta.type_ = UInt
@@ -173,9 +173,9 @@ let probability_distribution_name_variants id =
 
 let lub_rt loc rt1 rt2 =
   match (rt1, rt2) with
-  | Mir.ReturnType UReal, Mir.ReturnType UInt
+  | Middle.ReturnType UReal, Middle.ReturnType UInt
    |ReturnType UInt, ReturnType UReal ->
-      Mir.ReturnType UReal
+      Middle.ReturnType UReal
   | rt1, rt2 when rt1 = rt2 -> rt2
   | _ ->
       semantic_error ~loc
@@ -271,12 +271,12 @@ let rec inferred_unsizedtype_of_indexed loc ut typed_indexl =
   match (ut, typed_indexl) with
   (* Here, we need some special logic to deal with row and column vectors
      properly. *)
-  | Mir.UMatrix, [(All, _); (Single _, Mir.UInt)]
+  | Middle.UMatrix, [(All, _); (Single _, Middle.UInt)]
    |UMatrix, [(Upfrom _, _); (Single _, UInt)]
    |UMatrix, [(Downfrom _, _); (Single _, UInt)]
    |UMatrix, [(Between _, _); (Single _, UInt)]
    |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-      Mir.UVector
+      Middle.UVector
   | ut, [] -> ut
   | ut, typed_index :: typed_indices -> (
       let reduce_type =
@@ -314,7 +314,7 @@ let semantic_check_autodifftype at = at
 
 (* Probably nothing to do here *)
 let rec semantic_check_unsizedtype = function
-  | Mir.UArray ut -> Mir.UArray (semantic_check_unsizedtype ut)
+  | Middle.UArray ut -> Middle.UArray (semantic_check_unsizedtype ut)
   | UFun (l, rt) ->
       UFun
         ( List.map
@@ -326,7 +326,7 @@ let rec semantic_check_unsizedtype = function
   | ut -> ut
 
 and semantic_check_returntype = function
-  | Mir.Void -> Mir.Void
+  | Middle.Void -> Middle.Void
   | ReturnType ut -> ReturnType (semantic_check_unsizedtype ut)
 
 let semantic_error_e ({emeta; _} : Ast.typed_expression) msg =
@@ -423,7 +423,7 @@ let semantic_check_fn_rng cf ~loc id =
 (* Regular function application *)
 let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
-  | Some (_, Mir.UFun (_, Void)) ->
+  | Some (_, Middle.UFun (_, Void)) ->
       semantic_error ~loc
         (Format.sprintf
            "A returning function was expected but a non-returning function \
@@ -501,12 +501,12 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue2 = semantic_check_expression cf e2 in
       let ue3 = semantic_check_expression cf e3 in
       match operator_return_type_from_string ternary_if [ue1; ue2; ue3] with
-      | Some (Mir.ReturnType ut) ->
+      | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(TernaryIf (ue1, ue2, ue3))
             ~ad_level:(lub_ad_e [ue1; ue2; ue3])
             ~type_:ut ~loc:emeta.loc
-      | Some Mir.Void | None ->
+      | Some Middle.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to ? : operator. Available \
                signatures: "
@@ -523,16 +523,17 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       and uop = semantic_check_operator op
       and ue2 = semantic_check_expression cf e2 in
       match operator_return_type uop [ue1; ue2] with
-      | Some (Mir.ReturnType ut) ->
+      | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(BinOp (ue1, uop, ue2))
             ~ad_level:(lub_ad_e [ue1; ue2])
             ~type_:ut ~loc:emeta.loc
-      | Some Mir.Void | None ->
+      | Some Middle.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to infix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (Mir.string_of_operator uop)
+            ^ pretty_print_all_operator_signatures
+                (Middle.string_of_operator uop)
             ^ "\nInstead supplied arguments of incompatible type: "
             ^ pretty_print_unsizedtype ue1.emeta.type_
             ^ ", "
@@ -542,16 +543,17 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let uop = semantic_check_operator op
       and ue = semantic_check_expression cf e in
       match operator_return_type uop [ue] with
-      | Some (Mir.ReturnType ut) ->
+      | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PrefixOp (uop, ue))
             ~ad_level:(lub_ad_e [ue])
             ~type_:ut ~loc:emeta.loc
-      | Some Mir.Void | None ->
+      | Some Middle.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to prefix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (Mir.string_of_operator uop)
+            ^ pretty_print_all_operator_signatures
+                (Middle.string_of_operator uop)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
@@ -559,16 +561,17 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue = semantic_check_expression cf e in
       let uop = semantic_check_operator op in
       match operator_return_type op [ue] with
-      | Some (Mir.ReturnType ut) ->
+      | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PostfixOp (ue, uop))
             ~ad_level:(lub_ad_e [ue])
             ~type_:ut ~loc:emeta.loc
-      | Some Mir.Void | None ->
+      | Some Middle.Void | None ->
           semantic_error ~loc:emeta.loc
             ( "Ill-typed arguments supplied to postfix operator "
             ^ pretty_print_operator uop ^ ". Available signatures: "
-            ^ pretty_print_all_operator_signatures (Mir.string_of_operator op)
+            ^ pretty_print_all_operator_signatures
+                (Middle.string_of_operator op)
             ^ "\nInstead supplied argument of incompatible type: "
             ^ pretty_print_unsizedtype ue.emeta.type_
             ^ "." ) )
@@ -581,7 +584,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           semantic_error ~loc:emeta.loc
             ("Identifier " ^ ("'" ^ uid.name ^ "'") ^ " not in scope.")
       and originblock, type_ =
-        Option.value ~default:(MathLibrary, Mir.UMathLibraryFunction) ut
+        Option.value ~default:(MathLibrary, Middle.UMathLibraryFunction) ut
       in
       mk_typed_expression ~expr:(Variable uid)
         ~ad_level:(calculate_autodifftype originblock type_)
@@ -742,7 +745,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       in
       let array_type =
         if List.exists ~f:(fun x -> List.hd_exn elementtypes <> x) elementtypes
-        then Mir.UArray UReal
+        then Middle.UArray UReal
         else UArray (List.hd_exn elementtypes)
       in
       let returnblock = lub_ad_e ues in
@@ -753,7 +756,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let elementtypes = List.map ~f:(fun y -> y.emeta.type_) ues in
       let ut =
         if List.for_all ~f:(fun x -> x = UReal || x = UInt) elementtypes then
-          Mir.URowVector
+          Middle.URowVector
         else if List.for_all ~f:(fun x -> x = URowVector) elementtypes then
           UMatrix
         else
@@ -774,7 +777,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let uindices_with_types =
         List.map
           ~f:(function
-            | Single e as i -> (i, e.emeta.type_) | i -> (i, Mir.UInt) )
+            | Single e as i -> (i, e.emeta.type_) | i -> (i, Middle.UInt) )
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
@@ -782,7 +785,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           ( at
           :: List.map
                ~f:(function
-                 | All -> Mir.DataOnly
+                 | All -> Middle.DataOnly
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                      lub_ad_type [at; ue1.emeta.ad_level]
                  | Between (ue1, ue2) ->
@@ -848,7 +851,7 @@ and semantic_check_index cf = function
 
 (* -- Sized Types ----------------------------------------------------------- *)
 let rec semantic_check_sizedtype cf = function
-  | Mir.SInt -> Mir.SInt
+  | Middle.SInt -> Middle.SInt
   | SReal -> SReal
   | SVector e ->
       let ue = semantic_check_expression_of_int_type cf e "Vector sizes" in
@@ -1418,7 +1421,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
         match e.emeta.ad_level with AutoDiffable -> false | _ -> f ()
       in
       let rec check_sizes_data_only = function
-        | Mir.SVector ue -> not_ptq ue (fun () -> true)
+        | Middle.SVector ue -> not_ptq ue (fun () -> true)
         | SRowVector ue -> not_ptq ue (fun () -> true)
         | SMatrix (ue1, ue2) ->
             not_ptq ue1 (fun () ->
@@ -1562,7 +1565,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
           in
           match Option.map ~f:snd (List.hd uarg_types) with
           | None -> semantic_error ~loc error_string
-          | Some Mir.UReal
+          | Some Middle.UReal
            |Some UVector
            |Some URowVector
            |Some UMatrix
@@ -1584,7 +1587,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
           in
           match Option.map ~f:snd (List.hd uarg_types) with
           | None -> semantic_error ~loc error_string
-          | Some Mir.UInt | Some (UArray UInt) -> ()
+          | Some Middle.UInt | Some (UArray UInt) -> ()
           | Some x ->
               semantic_error ~loc
                 ( error_string ^ " Instead found type "
@@ -1607,7 +1610,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
         List.map2 ~f:(Symbol_table.enter vm) uarg_names
           (List.map
              ~f:(function
-               | Mir.DataOnly, ut -> (Data, ut)
+               | Middle.DataOnly, ut -> (Data, ut)
                | AutoDiffable, ut -> (Param, ut) )
              uarg_types)
       in

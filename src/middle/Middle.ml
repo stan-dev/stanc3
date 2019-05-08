@@ -1,4 +1,4 @@
-include Tree
+include Mir
 open Core_kernel
 
 (* == Pretty printers ======================================================= *)
@@ -215,6 +215,16 @@ let zero = {expr= Lit (Int, "0"); emeta= internal_meta}
 let loop_bottom = {expr= Lit (Int, "1"); emeta= internal_meta}
 let string_of_operator = mk_string_of sexp_of_operator
 let operator_of_string = mk_of_string operator_of_sexp
+
+(** remove_size [st] discards size information from a sizedtype
+    to return an unsizedtype. *)
+let rec remove_size = function
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix _ -> UMatrix
+  | SArray (t, _) -> UArray (remove_size t)
 
 (* -- Locations and spans --------------------------------------------------- *)
 

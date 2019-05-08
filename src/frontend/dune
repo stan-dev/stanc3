@@ -1,6 +1,6 @@
 (library
   (name frontend)
-  (libraries core_kernel str menhirLib fmt mir)
+  (libraries core_kernel str menhirLib fmt middle)
   (inline_tests)
   (preprocess (pps ppx_jane ppx_deriving.map)))
 

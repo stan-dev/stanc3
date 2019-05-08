@@ -13,35 +13,35 @@ let exit_indent _ = indent_num := -1 + !indent_num
 let tabs () = String.make (2 * !indent_num) ' '
 
 let rec unwind_sized_array_type = function
-  | Mir.SArray (st, e) -> (
+  | Middle.SArray (st, e) -> (
     match unwind_sized_array_type st with st2, es -> (st2, e :: es) )
   | st -> (st, [])
 
 let rec unwind_array_type = function
-  | Mir.UArray ut -> (
+  | Middle.UArray ut -> (
     match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
 (** XXX this should use the MIR pretty printers after AST pretty printers
     are updated to use `Fmt`. *)
 let rec pretty_print_autodifftype = function
-  | Mir.DataOnly -> "data "
-  | Mir.AutoDiffable -> ""
+  | Middle.DataOnly -> "data "
+  | Middle.AutoDiffable -> ""
 
 and pretty_print_unsizedtype = function
-  | Mir.UInt -> "int"
-  | Mir.UReal -> "real"
-  | Mir.UVector -> "vector"
-  | Mir.URowVector -> "row_vector"
-  | Mir.UMatrix -> "matrix"
-  | Mir.UArray ut ->
+  | Middle.UInt -> "int"
+  | Middle.UReal -> "real"
+  | Middle.UVector -> "vector"
+  | Middle.URowVector -> "row_vector"
+  | Middle.UMatrix -> "matrix"
+  | Middle.UArray ut ->
       let ut2, d = unwind_array_type ut in
       pretty_print_unsizedtype ut2 ^ ("[" ^ String.make d ',') ^ "]"
-  | Mir.UFun (argtypes, rt) ->
+  | Middle.UFun (argtypes, rt) ->
       "("
       ^ String.concat ~sep:", " (List.map ~f:pretty_print_argtype argtypes)
       ^ ") => " ^ pretty_print_returntype rt
-  | Mir.UMathLibraryFunction -> "Stan Math function"
+  | Middle.UMathLibraryFunction -> "Stan Math function"
 
 and pretty_print_unsizedtypes l =
   String.concat ~sep:", " (List.map ~f:pretty_print_unsizedtype l)
@@ -56,7 +56,7 @@ and pretty_print_returntype = function
 and pretty_print_identifier id = id.name
 
 and pretty_print_operator = function
-  | Mir.Plus | PPlus -> "+"
+  | Middle.Plus | PPlus -> "+"
   | Minus | PMinus -> "-"
   | Times -> "*"
   | Divide -> "/"
@@ -148,14 +148,14 @@ and pretty_print_list_of_printables l =
   String.concat ~sep:", " (List.map ~f:pretty_print_printable l)
 
 and pretty_print_sizedtype = function
-  | Mir.SInt -> "int"
-  | Mir.SReal -> "real"
-  | Mir.SVector e -> "vector[" ^ pretty_print_expression e ^ "]"
-  | Mir.SRowVector e -> "row_vector[" ^ pretty_print_expression e ^ "]"
-  | Mir.SMatrix (e1, e2) ->
+  | Middle.SInt -> "int"
+  | Middle.SReal -> "real"
+  | Middle.SVector e -> "vector[" ^ pretty_print_expression e ^ "]"
+  | Middle.SRowVector e -> "row_vector[" ^ pretty_print_expression e ^ "]"
+  | Middle.SMatrix (e1, e2) ->
       "matrix[" ^ pretty_print_expression e1 ^ ", "
       ^ pretty_print_expression e2 ^ "]"
-  | Mir.SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
 
 and pretty_print_transformation = function
   | Identity -> ""
@@ -181,7 +181,7 @@ and pretty_print_transformation = function
 and pretty_print_transformed_type st trans =
   let unsizedtype_string, sizes_string =
     match st with
-    | Mir.SInt -> (pretty_print_unsizedtype UInt, "")
+    | Middle.SInt -> (pretty_print_unsizedtype UInt, "")
     | SReal -> (pretty_print_unsizedtype UReal, "")
     | SVector e ->
         ( pretty_print_unsizedtype UVector

@@ -17,7 +17,7 @@
 *)
 
 open Core_kernel
-open Mir
+open Middle
 open Fmt
 open Expression_gen
 
@@ -141,7 +141,7 @@ let pp_location ppf loc =
 
 (*
   pf ppf "current_statement__ = (char* )%S;@;"
-    (Mir.string_of_location_span loc)
+    (string_of_location_span loc)
  *)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
@@ -186,7 +186,7 @@ let rec pp_statement ppf {stmt; smeta} =
         ; smeta }
   | Assignment ((assignee, idcs), rhs) ->
       pf ppf "%a = %a;"
-        (Mir.pp_indexed Mir.pp_expr_typed_located)
+        (Middle.pp_indexed pp_expr_typed_located)
         (assignee, idcs) pp_expr rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)

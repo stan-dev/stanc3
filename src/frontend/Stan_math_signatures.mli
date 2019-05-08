@@ -3,7 +3,7 @@
 open Ast
 
 val stan_math_returntype :
-  string -> typed_expression list -> Mir.returntype option
+  string -> typed_expression list -> Middle.returntype option
 (** Get an optional return type for a Stan Math library function, given its name and argument types. *)
 
 val is_stan_math_function_name : string -> bool
