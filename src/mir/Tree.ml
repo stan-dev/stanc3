@@ -143,7 +143,7 @@ and ('e, 's) statement =
       { decl_adtype: autodifftype
       ; decl_id: string
       ; decl_type: 'e sizedtype }
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, fold]
 
 type io_block =
   | Data
@@ -183,7 +183,7 @@ type ('e, 'm) stmt_with_num = {stmtn: ('e with_expr, int) statement; smetan: 'm}
 [@@deriving sexp, hash]
 
 type expr_no_meta = unit with_expr
-type expr_typed_located = mtype_loc_ad with_expr [@@deriving sexp, compare]
+type expr_typed_located = mtype_loc_ad with_expr [@@deriving sexp, compare, hash]
 type stmt_no_meta = (expr_no_meta, unit) stmt_with
 
 type stmt_loc =

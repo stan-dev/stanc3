@@ -16,16 +16,15 @@ let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
     factor list =
   match stmt with
   | Mir.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | Mir.NRFunApp ("reject", _) -> [Reject]
-  | Mir.NRFunApp (s, args) when String.suffix s 3 = "_lp" ->
+  | Mir.NRFunApp (_, "reject", _) -> [Reject]
+  | Mir.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
       [LPFunction (s, args)]
   | Mir.Assignment (_, _)
-   |Mir.NRFunApp (_, _)
-   |Mir.Check _ | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+   |Mir.NRFunApp (_, _, _)
+   | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
    |Mir.IfElse (_, _, _)
    |Mir.While (_, _)
    |Mir.For _ | Mir.Block _ | Mir.SList _
-   |Mir.FunDef {fdname= _; _}
    |Mir.Decl {decl_id= _; _} ->
       []
 

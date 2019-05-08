@@ -237,8 +237,8 @@ let rec contains_top_break_or_continue {stmt; _} =
   | Break | Continue -> true
   | Assignment (_, _)
    |TargetPE _
-   |NRFunApp (_, _)
-   |Check _ | Return _ | FunDef _ | Decl _
+   |NRFunApp (_, _, _)
+   | Return _  | Decl _
    |While (_, _)
    |For _ | Skip ->
       false
@@ -262,9 +262,9 @@ let unroll_loops_statement =
             List.map
               ~f:(fun i ->
                 { expr= Lit (Int, Int.to_string i)
-                ; mtype= UInt
+                ; emeta={mtype= UInt
                 ; mloc= Mir.no_span
-                ; madlevel= DataOnly } )
+                ; madlevel= DataOnly }} )
               (List.range ~start:`inclusive ~stop:`inclusive
                  (Int.of_string low) (Int.of_string up))
           in
@@ -272,7 +272,7 @@ let unroll_loops_statement =
             List.map
               ~f:(fun i ->
                 subst_args_stmt [loopvar] [i]
-                  {stmt= body.stmt; sloc= Mir.no_span} )
+                  {stmt= body.stmt; smeta= Mir.no_span} )
               range
           in
           SList stmts
@@ -302,10 +302,10 @@ let statement_of_program mir =
   { stmt=
       SList
         (List.map
-           ~f:(fun x -> {stmt= SList x; sloc= Mir.no_span})
+           ~f:(fun x -> {stmt= SList x; smeta= Mir.no_span})
            [ mir.functions_block; mir.prepare_data; mir.prepare_params
            ; mir.log_prob; mir.generate_quantities ])
-  ; sloc= Mir.no_span }
+  ; smeta= Mir.no_span }
 
 let update_program_statement_blocks (mir : typed_prog) (s : stmt_loc) =
   let l =
@@ -365,34 +365,28 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
       { stmt=
           SList
             (List.map
-               ~f:(fun x -> {stmt= SList x; sloc= Mir.no_span})
-               [ mir.prepare_data; mir.prepare_params; mir.log_prob
+               ~f:(fun x -> {stmt= SList x; smeta= Mir.no_span})
+               [ mir.prepare_data; mir.transform_inits; mir.log_prob
                ; mir.generate_quantities ])
-      ; sloc= Mir.no_span }
+      ; smeta= Mir.no_span }
   in
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        match fs.stmt with
-        | FunDef args ->
-            {fs with stmt= FunDef {args with fdbody= transform args.fdbody}}
-        | _ ->
-            raise
-              (Failure
-                 "There was a non-function definition in the function block.")
+           {fs with fdbody= transform fs.fdbody}
     )
   in
   match transformed_prog_body with
   | { stmt=
         SList
           [ {stmt= SList prepare_data'; _}
-          ; {stmt= SList prepare_params'; _}
+          ; {stmt= SList transform_inits'; _}
           ; {stmt= SList log_prob'; _}
           ; {stmt= SList generate_quantities'; _} ]; _ } ->
       { mir with
         functions_block= transformed_functions
       ; prepare_data= prepare_data'
-      ; prepare_params= prepare_params'
+      ; transform_inits= transform_inits'
       ; log_prob= log_prob'
       ; generate_quantities= generate_quantities' }
   | _ ->
@@ -405,7 +399,7 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
 let transform_program_blockwise (mir : typed_prog)
     (transform : stmt_loc -> stmt_loc) : typed_prog =
   let transform' s =
-    match transform {stmt= SList s; sloc= Mir.no_span} with
+    match transform {stmt= SList s; smeta= Mir.no_span} with
     | {stmt= SList l; _} -> l
     | _ ->
         raise
@@ -413,19 +407,13 @@ let transform_program_blockwise (mir : typed_prog)
   in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        match fs.stmt with
-        | FunDef args ->
-            {fs with stmt= FunDef {args with fdbody= transform args.fdbody}}
-        | _ ->
-            raise
-              (Failure
-                 "There was a non-function definition in the function block.")
+        {fs with fdbody= transform fs.fdbody}
     )
   in
   { mir with
     functions_block= transformed_functions
   ; prepare_data= transform' mir.prepare_data
-  ; prepare_params= transform' mir.prepare_params
+  ; transform_inits= transform' mir.transform_inits
   ; log_prob= transform' mir.log_prob
   ; generate_quantities= transform' mir.generate_quantities }
 
@@ -471,11 +459,13 @@ let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
 let rec can_side_effect_expr (e : expr_typed_located) =
   match e.expr with
   | Var _ | Lit (_, _) -> false
-  | FunApp (f, es) ->
+  | FunApp (t, f, es) ->
       String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
+      (* TODO: double check that internal functions cannot side effect*)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
+  | EAnd (e1, e2) | EOr (e1, e2) -> List.exists ~f:can_side_effect_expr [e1; e2]
 
 and can_side_effect_idx (i : expr_typed_located index) =
   match i with
@@ -509,25 +499,24 @@ let dead_code_elimination (mir : typed_prog) =
         (Map.find_exn live_variables i).Monotone_framework_sigs.entry
       in
       match stmt with
-      | Assignment ({expr= Var x; _}, rhs) ->
+      | Assignment ((x, []), rhs) ->
           if Set.Poly.mem live_variables_s x || can_side_effect_expr rhs then
             stmt
           else Skip
-      | Assignment ({expr= Indexed ({expr= Var x; _}, is); _}, rhs) ->
+      | Assignment ((x, is), rhs) ->
           if
             Set.Poly.mem live_variables_s x
             || can_side_effect_expr rhs
             || List.exists ~f:can_side_effect_idx is
           then stmt
           else Skip
-      | Assignment _ -> Errors.fatal_error ()
       (* NOTE: we never get rid of declarations as we might not be able to
         remove an assignment to a variable
            due to side effects. *)
       (* TODO: maybe we should revisit that. *)
       | Decl _ | TargetPE _
-       |NRFunApp (_, _)
-       |Check _ | Break | Continue | Return _ | Skip ->
+       |NRFunApp (_, _, _)
+      | Break | Continue | Return _ | Skip ->
           stmt
       | IfElse (e, b1, b2) -> (
           if
@@ -562,7 +551,6 @@ let dead_code_elimination (mir : typed_prog) =
           let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
           SList l'
       (* TODO: do dead code elimination in function body too! *)
-      | FunDef x -> FunDef x
     in
     let dead_code_elim_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
@@ -584,25 +572,25 @@ let lazy_code_motion (mir : typed_prog) =
       | IfElse (e, b1, Some b2) ->
           IfElse
             ( e
-            , {stmt= Block [b1; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+            , {stmt= Block [b1; {stmt= Skip; smeta= no_span}]; smeta= no_span}
             , Some
-                {stmt= Block [b2; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+                {stmt= Block [b2; {stmt= Skip; smeta= no_span}]; smeta= no_span}
             )
       | IfElse (e, b, None) ->
           IfElse
             ( e
-            , {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span}
-            , Some {stmt= Skip; sloc= no_span} )
+            , {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span}
+            , Some {stmt= Skip; smeta= no_span} )
       | While (e, b) ->
           While
-            (e, {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span})
+            (e, {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span})
       | For {loopvar; lower; upper; body= b} ->
           For
             { loopvar
             ; lower
             ; upper
             ; body=
-                {stmt= Block [b; {stmt= Skip; sloc= no_span}]; sloc= no_span}
+                {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span}
             }
       | _ -> stmt
     in
@@ -630,10 +618,10 @@ let lazy_code_motion (mir : typed_prog) =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
           { stmt=
               Mir.Decl
-                { decl_adtype= key.madlevel
+                { decl_adtype= key.emeta.madlevel
                 ; decl_id= data
-                ; decl_type= key.mtype }
-          ; sloc= Mir.no_span }
+                ; decl_type= key.emeta.mtype }
+          ; smeta= Mir.no_span }
           :: accum )
     in
     let lazy_code_motion_base i stmt =
@@ -659,17 +647,17 @@ let lazy_code_motion (mir : typed_prog) =
         List.map
           ~f:(fun e ->
             { stmt=
-                Assignment
-                  ({e with expr= Var (Map.find_exn expression_map e)}, e)
-            ; sloc= Mir.no_span } )
+                Assignment (
+                  (Map.find_exn expression_map e, []), e)
+            ; smeta= Mir.no_span } )
           to_assign_in_s
       in
       let expr_subst_stmt_except_initial_assign m =
         let f stmt =
           match stmt with
-          | Assignment (e, e')
+          | Assignment ((x, []), e')
             when Map.mem m e'
-                 && Mir.compare_expr_typed_located e (Map.find_exn m e') = 0 ->
+                 && Mir.compare_expr_typed_located {e' with expr= Var x} (Map.find_exn m e') = 0 ->
               expr_subst_stmt_base (Map.remove m e') stmt
           | _ -> expr_subst_stmt_base m stmt
         in
@@ -686,10 +674,10 @@ let lazy_code_motion (mir : typed_prog) =
                   {key with expr= Var data} )))
       in
       if List.length assignments_to_add_to_s = 0 then
-        (f {stmt; sloc= Mir.no_span}).stmt
+        (f {stmt; smeta= Mir.no_span}).stmt
       else
         SList
-          (List.map ~f (assignments_to_add_to_s @ [{stmt; sloc= Mir.no_span}]))
+          (List.map ~f (assignments_to_add_to_s @ [{stmt; smeta= Mir.no_span}]))
     in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
@@ -698,7 +686,7 @@ let lazy_code_motion (mir : typed_prog) =
         SList
           ( declarations_list
           @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
-    ; sloc= Mir.no_span }
+    ; smeta= Mir.no_span }
   in
   transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
@@ -707,19 +695,17 @@ let block_fixing =
     (fun x -> x)
     (map_rec_stmt_loc (fun stmt ->
          match stmt with
-         | IfElse (e, {stmt= SList l; sloc}, Some {stmt= SList l'; sloc= sloc'})
+         | IfElse (e, {stmt= SList l; smeta}, Some {stmt= SList l'; smeta= smeta'})
            ->
              IfElse
-               (e, {stmt= Block l; sloc}, Some {stmt= Block l'; sloc= sloc'})
-         | IfElse (e, {stmt= SList l; sloc}, b) ->
-             IfElse (e, {stmt= Block l; sloc}, b)
-         | IfElse (e, b, Some {stmt= SList l'; sloc= sloc'}) ->
-             IfElse (e, b, Some {stmt= Block l'; sloc= sloc'})
-         | While (e, {stmt= SList l; sloc}) -> While (e, {stmt= Block l; sloc})
-         | For {loopvar; lower; upper; body= {stmt= SList l; sloc}} ->
-             For {loopvar; lower; upper; body= {stmt= Block l; sloc}}
-         | FunDef {fdrt; fdname; fdargs; fdbody= {stmt= SList l; sloc}} ->
-             FunDef {fdrt; fdname; fdargs; fdbody= {stmt= Block l; sloc}}
+               (e, {stmt= Block l; smeta}, Some {stmt= Block l'; smeta= smeta'})
+         | IfElse (e, {stmt= SList l; smeta}, b) ->
+             IfElse (e, {stmt= Block l; smeta}, b)
+         | IfElse (e, b, Some {stmt= SList l'; smeta= smeta'}) ->
+             IfElse (e, b, Some {stmt= Block l'; smeta= smeta'})
+         | While (e, {stmt= SList l; smeta}) -> While (e, {stmt= Block l; smeta})
+         | For {loopvar; lower; upper; body= {stmt= SList l; smeta}} ->
+             For {loopvar; lower; upper; body= {stmt= Block l; smeta}}
          | _ -> stmt ))
 
 (* TODO: implement SlicStan style optimizer for choosing best program block for each statement. *)
@@ -746,7 +732,7 @@ let%expect_test "map_rec_stmt_loc" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f = function
-    | NRFunApp ("print", [s]) -> NRFunApp ("print", [s; s])
+    | NRFunApp (StanLib, "print", [s]) -> NRFunApp (StanLib, "print", [s; s])
     | x -> x
   in
   let mir = map_prog (fun x -> x) (map_rec_stmt_loc f) mir in
@@ -756,37 +742,37 @@ let%expect_test "map_rec_stmt_loc" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
               (madlevel DataOnly))
              ((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 13))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (NRFunApp print
                    (((mtype UInt) (mloc <opaque>) (expr (Lit Int 244))
                      (madlevel DataOnly))
                     ((mtype UInt) (mloc <opaque>) (expr (Lit Int 244))
                      (madlevel DataOnly))))))
-                ((sloc <opaque>)
+                ((smeta <opaque>)
                  (stmt
                   (IfElse
                    ((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
                     (madlevel DataOnly))
-                   ((sloc <opaque>)
+                   ((smeta <opaque>)
                     (stmt
                      (Block
-                      (((sloc <opaque>)
+                      (((smeta <opaque>)
                         (stmt
                          (NRFunApp print
                           (((mtype UInt) (mloc <opaque>)
@@ -815,49 +801,49 @@ let%expect_test "map_rec_stmt_loc" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f i = function
-    | NRFunApp ("print", [s]) -> (NRFunApp ("print", [s; s]), i + 1)
+    | NRFunApp (StanLib, "print", [s]) -> (NRFunApp (StanLib, "print", [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_num =
-    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; sloc= Mir.no_span}
+    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; smeta= Mir.no_span}
   in
   print_s [%sexp (mir_num : stmt_loc * int)] ;
   [%expect
     {|
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (SList
-          (((sloc <opaque>)
+          (((smeta <opaque>)
             (stmt
              (NRFunApp print
               (((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
                 (madlevel DataOnly))
                ((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
                 (madlevel DataOnly))))))
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (IfElse
               ((mtype UInt) (mloc <opaque>) (expr (Lit Int 13))
                (madlevel DataOnly))
-              ((sloc <opaque>)
+              ((smeta <opaque>)
                (stmt
                 (Block
-                 (((sloc <opaque>)
+                 (((smeta <opaque>)
                    (stmt
                     (NRFunApp print
                      (((mtype UInt) (mloc <opaque>) (expr (Lit Int 244))
                        (madlevel DataOnly))
                       ((mtype UInt) (mloc <opaque>) (expr (Lit Int 244))
                        (madlevel DataOnly))))))
-                  ((sloc <opaque>)
+                  ((smeta <opaque>)
                    (stmt
                     (IfElse
                      ((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
                       (madlevel DataOnly))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (Block
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (NRFunApp print
                             (((mtype UInt) (mloc <opaque>)
@@ -894,32 +880,32 @@ let%expect_test "inline functions" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt ()) (fdname f)
             (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>) (expr (Var x))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UMatrix) (mloc <opaque>) (expr (Var y))
                       (madlevel AutoDiffable))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UReal) (mloc <opaque>)
@@ -933,7 +919,7 @@ let%expect_test "inline functions" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (For (loopvar sym1__)
             (lower
@@ -943,15 +929,15 @@ let%expect_test "inline functions" =
              ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
               (madlevel DataOnly)))
             (body
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UMatrix) (mloc <opaque>)
@@ -974,13 +960,13 @@ let%expect_test "inline functions" =
                               (expr (Lit Int 6)) (madlevel DataOnly)))))
                           (madlevel DataOnly)))))
                       (madlevel DataOnly))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym2__) (decl_type UReal))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym3__)
                 (lower
@@ -990,13 +976,13 @@ let%expect_test "inline functions" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UReal) (mloc <opaque>)
@@ -1009,8 +995,8 @@ let%expect_test "inline functions" =
                                 ((mtype UInt) (mloc <opaque>)
                                  (expr (Lit Int 2)) (madlevel DataOnly)))))
                              (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (NRFunApp reject
                 (((mtype UReal) (mloc <opaque>) (expr (Var sym2__))
@@ -1044,32 +1030,32 @@ let%expect_test "list collapsing" =
   [%expect
     {|
     ((functions_block
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (FunDef (fdrt ()) (fdname f)
           (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
           (fdbody
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UInt) (mloc <opaque>) (expr (Var x))
                     (madlevel DataOnly))))))
-               ((sloc <opaque>)
+               ((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UMatrix) (mloc <opaque>) (expr (Var y))
                     (madlevel AutoDiffable))))))))))))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
           (fdbody
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (Return
                   (((mtype UReal) (mloc <opaque>)
@@ -1083,7 +1069,7 @@ let%expect_test "list collapsing" =
      (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
      (prepare_params ())
      (log_prob
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (For (loopvar sym4__)
           (lower
@@ -1093,15 +1079,15 @@ let%expect_test "list collapsing" =
            ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
             (madlevel DataOnly)))
           (body
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                     (madlevel DataOnly))))))
-               ((sloc <opaque>)
+               ((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UMatrix) (mloc <opaque>)
@@ -1124,10 +1110,10 @@ let%expect_test "list collapsing" =
                             (expr (Lit Int 6)) (madlevel DataOnly)))))
                         (madlevel DataOnly)))))
                     (madlevel DataOnly))))))))))))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (Decl (decl_adtype AutoDiffable) (decl_id sym5__) (decl_type UReal))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (For (loopvar sym6__)
           (lower
@@ -1137,10 +1123,10 @@ let%expect_test "list collapsing" =
            ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
             (madlevel DataOnly)))
           (body
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (Assignment
                   ((mtype UReal) (mloc <opaque>) (expr (Var sym5__))
@@ -1153,8 +1139,8 @@ let%expect_test "list collapsing" =
                       ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                        (madlevel DataOnly)))))
                    (madlevel DataOnly)))))
-               ((sloc <opaque>) (stmt Break))))))))))
-       ((sloc <opaque>)
+               ((smeta <opaque>) (stmt Break))))))))))
+       ((smeta <opaque>)
         (stmt
          (NRFunApp reject
           (((mtype UReal) (mloc <opaque>) (expr (Var sym5__))
@@ -1184,18 +1170,18 @@ let%expect_test "do not inline recursive functions" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-            (fdbody ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+            (fdbody ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UReal) (mloc <opaque>)
@@ -1209,7 +1195,7 @@ let%expect_test "do not inline recursive functions" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (NRFunApp reject
             (((mtype UReal) (mloc <opaque>)
@@ -1246,36 +1232,36 @@ let%expect_test "inline function in for loop" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str f))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
                       (madlevel DataOnly))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str g))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>)
@@ -1289,13 +1275,13 @@ let%expect_test "inline function in for loop" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym7__) (decl_type UInt))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym8__)
                 (lower
@@ -1305,29 +1291,29 @@ let%expect_test "inline function in for loop" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UReal) (mloc <opaque>)
                           (expr (Lit Str f)) (madlevel DataOnly))))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UInt) (mloc <opaque>)
                              (expr (Var sym7__)) (madlevel AutoDiffable))
                             ((mtype UInt) (mloc <opaque>)
                              (expr (Lit Int 42)) (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym9__) (decl_type UInt))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym10__)
                 (lower
@@ -1337,18 +1323,18 @@ let%expect_test "inline function in for loop" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UReal) (mloc <opaque>)
                           (expr (Lit Str g)) (madlevel DataOnly))))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UInt) (mloc <opaque>)
@@ -1361,8 +1347,8 @@ let%expect_test "inline function in for loop" =
                                 ((mtype UInt) (mloc <opaque>)
                                  (expr (Lit Int 24)) (madlevel DataOnly)))))
                              (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (For (loopvar i)
                 (lower
@@ -1372,19 +1358,19 @@ let%expect_test "inline function in for loop" =
                  ((mtype UInt) (mloc <opaque>) (expr (Var sym9__))
                   (madlevel AutoDiffable)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (SList
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UReal) (mloc <opaque>)
                           (expr (Lit Str body)) (madlevel DataOnly))))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (Decl (decl_adtype AutoDiffable) (decl_id sym9__)
                         (decl_type UInt))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (For (loopvar sym10__)
                         (lower
@@ -1394,18 +1380,18 @@ let%expect_test "inline function in for loop" =
                          ((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 1)) (madlevel DataOnly)))
                         (body
-                         ((sloc <opaque>)
+                         ((smeta <opaque>)
                           (stmt
                            (Block
-                            (((sloc <opaque>)
+                            (((smeta <opaque>)
                               (stmt
                                (NRFunApp print
                                 (((mtype UReal) (mloc <opaque>)
                                   (expr (Lit Str g)) (madlevel DataOnly))))))
-                             ((sloc <opaque>)
+                             ((smeta <opaque>)
                               (stmt
                                (SList
-                                (((sloc <opaque>)
+                                (((smeta <opaque>)
                                   (stmt
                                    (Assignment
                                     ((mtype UInt) (mloc <opaque>)
@@ -1421,7 +1407,7 @@ let%expect_test "inline function in for loop" =
                                          (expr (Lit Int 24))
                                          (madlevel DataOnly)))))
                                      (madlevel DataOnly)))))
-                                 ((sloc <opaque>) (stmt Break))))))))))))))))))))))))))))
+                                 ((smeta <opaque>) (stmt Break))))))))))))))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in while loop" =
@@ -1450,36 +1436,36 @@ let%expect_test "inline function in while loop" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str f))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
                       (madlevel DataOnly))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str g))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>)
@@ -1493,13 +1479,13 @@ let%expect_test "inline function in while loop" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym11__) (decl_type UInt))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym12__)
                 (lower
@@ -1509,18 +1495,18 @@ let%expect_test "inline function in while loop" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UReal) (mloc <opaque>)
                           (expr (Lit Str g)) (madlevel DataOnly))))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UInt) (mloc <opaque>)
@@ -1533,25 +1519,25 @@ let%expect_test "inline function in while loop" =
                                 ((mtype UInt) (mloc <opaque>)
                                  (expr (Lit Int 24)) (madlevel DataOnly)))))
                              (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (While
                 ((mtype UInt) (mloc <opaque>) (expr (Var sym11__))
                  (madlevel AutoDiffable))
-                ((sloc <opaque>)
+                ((smeta <opaque>)
                  (stmt
                   (SList
-                   (((sloc <opaque>)
+                   (((smeta <opaque>)
                      (stmt
                       (NRFunApp print
                        (((mtype UReal) (mloc <opaque>)
                          (expr (Lit Str body)) (madlevel DataOnly))))))
-                    ((sloc <opaque>)
+                    ((smeta <opaque>)
                      (stmt
                       (Decl (decl_adtype AutoDiffable) (decl_id sym11__)
                        (decl_type UInt))))
-                    ((sloc <opaque>)
+                    ((smeta <opaque>)
                      (stmt
                       (For (loopvar sym12__)
                        (lower
@@ -1561,18 +1547,18 @@ let%expect_test "inline function in while loop" =
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                          (madlevel DataOnly)))
                        (body
-                        ((sloc <opaque>)
+                        ((smeta <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>)
+                           (((smeta <opaque>)
                              (stmt
                               (NRFunApp print
                                (((mtype UReal) (mloc <opaque>)
                                  (expr (Lit Str g)) (madlevel DataOnly))))))
-                            ((sloc <opaque>)
+                            ((smeta <opaque>)
                              (stmt
                               (SList
-                               (((sloc <opaque>)
+                               (((smeta <opaque>)
                                  (stmt
                                   (Assignment
                                    ((mtype UInt) (mloc <opaque>)
@@ -1588,7 +1574,7 @@ let%expect_test "inline function in while loop" =
                                         (expr (Lit Int 24))
                                         (madlevel DataOnly)))))
                                     (madlevel DataOnly)))))
-                                ((sloc <opaque>) (stmt Break)))))))))))))))))))))))))))
+                                ((smeta <opaque>) (stmt Break)))))))))))))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "inline function in if then else" =
@@ -1617,36 +1603,36 @@ let%expect_test "inline function in if then else" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str f))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
                       (madlevel DataOnly))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str g))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>)
@@ -1660,13 +1646,13 @@ let%expect_test "inline function in if then else" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym13__) (decl_type UInt))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym14__)
                 (lower
@@ -1676,18 +1662,18 @@ let%expect_test "inline function in if then else" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UReal) (mloc <opaque>)
                           (expr (Lit Str g)) (madlevel DataOnly))))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UInt) (mloc <opaque>)
@@ -1700,13 +1686,13 @@ let%expect_test "inline function in if then else" =
                                 ((mtype UInt) (mloc <opaque>)
                                  (expr (Lit Int 24)) (madlevel DataOnly)))))
                              (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (IfElse
                 ((mtype UInt) (mloc <opaque>) (expr (Var sym13__))
                  (madlevel AutoDiffable))
-                ((sloc <opaque>)
+                ((smeta <opaque>)
                  (stmt
                   (NRFunApp print
                    (((mtype UReal) (mloc <opaque>) (expr (Lit Str body))
@@ -1746,36 +1732,36 @@ let%expect_test "inline function in ternary if " =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str f))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
                       (madlevel DataOnly))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str g))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>)
@@ -1786,19 +1772,19 @@ let%expect_test "inline function in ternary if " =
                          ((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 24)) (madlevel DataOnly)))))
                       (madlevel DataOnly))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname h) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UReal) (mloc <opaque>) (expr (Lit Str h))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>)
@@ -1812,13 +1798,13 @@ let%expect_test "inline function in ternary if " =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym15__) (decl_type UInt))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym16__)
                 (lower
@@ -1828,38 +1814,38 @@ let%expect_test "inline function in ternary if " =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UReal) (mloc <opaque>)
                           (expr (Lit Str f)) (madlevel DataOnly))))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UInt) (mloc <opaque>)
                              (expr (Var sym15__)) (madlevel AutoDiffable))
                             ((mtype UInt) (mloc <opaque>)
                              (expr (Lit Int 42)) (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (IfElse
                 ((mtype UInt) (mloc <opaque>) (expr (Var sym15__))
                  (madlevel AutoDiffable))
-                ((sloc <opaque>)
+                ((smeta <opaque>)
                  (stmt
                   (SList
-                   (((sloc <opaque>)
+                   (((smeta <opaque>)
                      (stmt
                       (Decl (decl_adtype AutoDiffable) (decl_id sym17__)
                        (decl_type UInt))))
-                    ((sloc <opaque>)
+                    ((smeta <opaque>)
                      (stmt
                       (For (loopvar sym18__)
                        (lower
@@ -1869,18 +1855,18 @@ let%expect_test "inline function in ternary if " =
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                          (madlevel DataOnly)))
                        (body
-                        ((sloc <opaque>)
+                        ((smeta <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>)
+                           (((smeta <opaque>)
                              (stmt
                               (NRFunApp print
                                (((mtype UReal) (mloc <opaque>)
                                  (expr (Lit Str g)) (madlevel DataOnly))))))
-                            ((sloc <opaque>)
+                            ((smeta <opaque>)
                              (stmt
                               (SList
-                               (((sloc <opaque>)
+                               (((smeta <opaque>)
                                  (stmt
                                   (Assignment
                                    ((mtype UInt) (mloc <opaque>)
@@ -1896,15 +1882,15 @@ let%expect_test "inline function in ternary if " =
                                         (expr (Lit Int 24))
                                         (madlevel DataOnly)))))
                                     (madlevel DataOnly)))))
-                                ((sloc <opaque>) (stmt Break))))))))))))))))))
-                (((sloc <opaque>)
+                                ((smeta <opaque>) (stmt Break))))))))))))))))))
+                (((smeta <opaque>)
                   (stmt
                    (SList
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (Decl (decl_adtype AutoDiffable) (decl_id sym19__)
                         (decl_type UInt))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (For (loopvar sym20__)
                         (lower
@@ -1914,18 +1900,18 @@ let%expect_test "inline function in ternary if " =
                          ((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 1)) (madlevel DataOnly)))
                         (body
-                         ((sloc <opaque>)
+                         ((smeta <opaque>)
                           (stmt
                            (Block
-                            (((sloc <opaque>)
+                            (((smeta <opaque>)
                               (stmt
                                (NRFunApp print
                                 (((mtype UReal) (mloc <opaque>)
                                   (expr (Lit Str h)) (madlevel DataOnly))))))
-                             ((sloc <opaque>)
+                             ((smeta <opaque>)
                               (stmt
                                (SList
-                                (((sloc <opaque>)
+                                (((smeta <opaque>)
                                   (stmt
                                    (Assignment
                                     ((mtype UInt) (mloc <opaque>)
@@ -1941,8 +1927,8 @@ let%expect_test "inline function in ternary if " =
                                          (expr (Lit Int 4))
                                          (madlevel DataOnly)))))
                                      (madlevel DataOnly)))))
-                                 ((sloc <opaque>) (stmt Break))))))))))))))))))))))
-             ((sloc <opaque>)
+                                 ((smeta <opaque>) (stmt Break))))))))))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UInt) (mloc <opaque>)
@@ -1982,33 +1968,33 @@ let%expect_test "inline function in ternary if " =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (IfElse
                     ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                      (madlevel DataOnly))
-                    ((sloc <opaque>)
+                    ((smeta <opaque>)
                      (stmt
                       (Block
-                       (((sloc <opaque>)
+                       (((smeta <opaque>)
                          (stmt
                           (NRFunApp print
                            (((mtype UReal) (mloc <opaque>)
                              (expr (Lit Str f)) (madlevel DataOnly))))))
-                        ((sloc <opaque>)
+                        ((smeta <opaque>)
                          (stmt
                           (Return
                            (((mtype UInt) (mloc <opaque>)
                              (expr (Lit Int 42)) (madlevel DataOnly))))))))))
                     ())))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 6))
@@ -2016,13 +2002,13 @@ let%expect_test "inline function in ternary if " =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sym21__) (decl_type UInt))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (For (loopvar sym22__)
                 (lower
@@ -2032,26 +2018,26 @@ let%expect_test "inline function in ternary if " =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (IfElse
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                          (madlevel DataOnly))
-                        ((sloc <opaque>)
+                        ((smeta <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>)
+                           (((smeta <opaque>)
                              (stmt
                               (NRFunApp print
                                (((mtype UReal) (mloc <opaque>)
                                  (expr (Lit Str f)) (madlevel DataOnly))))))
-                            ((sloc <opaque>)
+                            ((smeta <opaque>)
                              (stmt
                               (SList
-                               (((sloc <opaque>)
+                               (((smeta <opaque>)
                                  (stmt
                                   (Assignment
                                    ((mtype UInt) (mloc <opaque>)
@@ -2059,20 +2045,20 @@ let%expect_test "inline function in ternary if " =
                                     (madlevel AutoDiffable))
                                    ((mtype UInt) (mloc <opaque>)
                                     (expr (Lit Int 42)) (madlevel DataOnly)))))
-                                ((sloc <opaque>) (stmt Break))))))))))
+                                ((smeta <opaque>) (stmt Break))))))))))
                         ())))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (SList
-                        (((sloc <opaque>)
+                        (((smeta <opaque>)
                           (stmt
                            (Assignment
                             ((mtype UInt) (mloc <opaque>)
                              (expr (Var sym21__)) (madlevel AutoDiffable))
                             ((mtype UInt) (mloc <opaque>)
                              (expr (Lit Int 6)) (madlevel DataOnly)))))
-                         ((sloc <opaque>) (stmt Break))))))))))))))
-             ((sloc <opaque>)
+                         ((smeta <opaque>) (stmt Break))))))))))))))
+             ((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UInt) (mloc <opaque>) (expr (Var sym21__))
@@ -2098,37 +2084,37 @@ let%expect_test "unroll nested loop" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (SList
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                       (madlevel DataOnly))
                      ((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                       (madlevel DataOnly))
                      ((mtype UInt) (mloc <opaque>) (expr (Lit Int 4))
                       (madlevel DataOnly))))))))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (SList
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                       (madlevel DataOnly))
                      ((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
@@ -2158,10 +2144,10 @@ let%expect_test "unroll nested loop with break" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (For (loopvar j)
                 (lower
@@ -2171,16 +2157,16 @@ let%expect_test "unroll nested loop with break" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 4))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 1)) (madlevel DataOnly))))))
-                     ((sloc <opaque>) (stmt Break))))))))))
-             ((sloc <opaque>)
+                     ((smeta <opaque>) (stmt Break))))))))))
+             ((smeta <opaque>)
               (stmt
                (For (loopvar j)
                 (lower
@@ -2190,15 +2176,15 @@ let%expect_test "unroll nested loop with break" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 4))
                   (madlevel DataOnly)))
                 (body
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 2)) (madlevel DataOnly))))))
-                     ((sloc <opaque>) (stmt Break))))))))))))))))
+                     ((smeta <opaque>) (stmt Break))))))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "constant propagation" =
@@ -2229,14 +2215,14 @@ let%expect_test "constant propagation" =
       ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
        (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
      (prepare_data
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (Assignment
           ((mtype UInt) (mloc <opaque>) (expr (Var i))
            (madlevel DataOnly))
           ((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
            (madlevel DataOnly)))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (Assignment
           ((mtype UInt) (mloc <opaque>) (expr (Var j))
@@ -2251,7 +2237,7 @@ let%expect_test "constant propagation" =
            (madlevel DataOnly)))))))
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (For (loopvar x)
           (lower
@@ -2261,10 +2247,10 @@ let%expect_test "constant propagation" =
            ((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
             (madlevel DataOnly)))
           (body
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UInt) (mloc <opaque>)
@@ -2307,24 +2293,24 @@ let%expect_test "constant propagation, local scope" =
      (tdata_vars
       ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
      (prepare_data
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (Assignment
           ((mtype UInt) (mloc <opaque>) (expr (Var i))
            (madlevel DataOnly))
           ((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
            (madlevel DataOnly)))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (Block
-          (((sloc <opaque>)
+          (((smeta <opaque>)
             (stmt
              (SList
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
-               ((sloc <opaque>) (stmt Skip))))))
-           ((sloc <opaque>)
+               ((smeta <opaque>) (stmt Skip))))))
+           ((smeta <opaque>)
             (stmt
              (Assignment
               ((mtype UInt) (mloc <opaque>) (expr (Var j))
@@ -2333,13 +2319,13 @@ let%expect_test "constant propagation, local scope" =
                (madlevel DataOnly)))))))))))
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (SList
-          (((sloc <opaque>)
+          (((smeta <opaque>)
             (stmt (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
-           ((sloc <opaque>) (stmt Skip))))))
-       ((sloc <opaque>)
+           ((smeta <opaque>) (stmt Skip))))))
+       ((smeta <opaque>)
         (stmt
          (For (loopvar x)
           (lower
@@ -2349,10 +2335,10 @@ let%expect_test "constant propagation, local scope" =
            ((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
             (madlevel DataOnly)))
           (body
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UInt) (mloc <opaque>)
@@ -2393,26 +2379,26 @@ let%expect_test "constant propagation, model block local scope" =
     ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (SList
-          (((sloc <opaque>)
+          (((smeta <opaque>)
             (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))
-           ((sloc <opaque>) (stmt Skip))))))
-       ((sloc <opaque>)
+           ((smeta <opaque>) (stmt Skip))))))
+       ((smeta <opaque>)
         (stmt
          (Assignment
           ((mtype UInt) (mloc <opaque>) (expr (Var i))
            (madlevel DataOnly))
           ((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
            (madlevel DataOnly)))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (SList
-          (((sloc <opaque>)
+          (((smeta <opaque>)
             (stmt (Decl (decl_adtype AutoDiffable) (decl_id j) (decl_type UInt))))
-           ((sloc <opaque>) (stmt Skip))))))
-       ((sloc <opaque>)
+           ((smeta <opaque>) (stmt Skip))))))
+       ((smeta <opaque>)
         (stmt
          (Assignment
           ((mtype UInt) (mloc <opaque>) (expr (Var j))
@@ -2423,7 +2409,7 @@ let%expect_test "constant propagation, model block local scope" =
       ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
        (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
      (generate_quantities
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (For (loopvar x)
           (lower
@@ -2433,10 +2419,10 @@ let%expect_test "constant propagation, model block local scope" =
            ((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
             (madlevel DataOnly)))
           (body
-           ((sloc <opaque>)
+           ((smeta <opaque>)
             (stmt
              (Block
-              (((sloc <opaque>)
+              (((smeta <opaque>)
                 (stmt
                  (NRFunApp print
                   (((mtype UInt) (mloc <opaque>)
@@ -2476,7 +2462,7 @@ let%expect_test "expression propagation" =
         ((i ((tvident i) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
          (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
        (prepare_data
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var j))
@@ -2491,7 +2477,7 @@ let%expect_test "expression propagation" =
              (madlevel DataOnly)))))))
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (For (loopvar x)
             (lower
@@ -2501,10 +2487,10 @@ let%expect_test "expression propagation" =
              ((mtype UInt) (mloc <opaque>) (expr (Var i))
               (madlevel DataOnly)))
             (body
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>)
@@ -2553,14 +2539,14 @@ let%expect_test "copy propagation" =
          (j ((tvident j) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))
          (k ((tvident k) (tvtype SInt) (tvtrans Identity) (tvloc <opaque>)))))
        (prepare_data
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var j))
              (madlevel DataOnly))
             ((mtype UInt) (mloc <opaque>) (expr (Var i))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var k))
@@ -2575,7 +2561,7 @@ let%expect_test "copy propagation" =
              (madlevel DataOnly)))))))
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (For (loopvar x)
             (lower
@@ -2585,10 +2571,10 @@ let%expect_test "copy propagation" =
              ((mtype UInt) (mloc <opaque>) (expr (Var i))
               (madlevel DataOnly)))
             (body
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>)
@@ -2648,7 +2634,7 @@ let%expect_test "dead code elimination" =
               (madlevel DataOnly))))
            (tvtrans Identity) (tvloc <opaque>)))))
        (prepare_data
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype (UArray UInt)) (mloc <opaque>) (expr (Var i))
@@ -2661,7 +2647,7 @@ let%expect_test "dead code elimination" =
                 ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                  (madlevel DataOnly)))))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype (UArray UInt)) (mloc <opaque>) (expr (Var j))
@@ -2674,7 +2660,7 @@ let%expect_test "dead code elimination" =
                 ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                  (madlevel DataOnly)))))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>)
@@ -2690,12 +2676,12 @@ let%expect_test "dead code elimination" =
              (madlevel DataOnly)))))))
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var i))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var j))
@@ -2729,23 +2715,23 @@ let%expect_test "dead code elimination decl" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))))
        (gen_quant_vars ())
        (generate_quantities
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (Block
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (SList
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UInt) (mloc <opaque>) (expr (Var i))
@@ -2775,21 +2761,21 @@ let%expect_test "dead code elimination functions" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UReal)) (fdname f) (fdargs ())
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (SList
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (Decl (decl_adtype AutoDiffable) (decl_id x)
                         (decl_type UInt))))))))
-                 ((sloc <opaque>)
+                 ((smeta <opaque>)
                   (stmt
                    (Return
                     (((mtype UInt) (mloc <opaque>) (expr (Lit Int 24))
@@ -2797,7 +2783,7 @@ let%expect_test "dead code elimination functions" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Lit Int 42))
@@ -2824,12 +2810,12 @@ let%expect_test "dead code elimination, for loop" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var i))
@@ -2860,22 +2846,22 @@ let%expect_test "dead code elimination, while loop" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var i))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (While
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
              (madlevel DataOnly))
-            ((sloc <opaque>) (stmt Skip)))))))
+            ((smeta <opaque>) (stmt Skip)))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "dead code elimination, if then" =
@@ -2912,28 +2898,28 @@ let%expect_test "dead code elimination, if then" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var i))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Block
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UReal) (mloc <opaque>) (expr (Lit Str hello))
                   (madlevel DataOnly))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Block
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UReal) (mloc <opaque>) (expr (Lit Str goodbye))
@@ -2962,12 +2948,12 @@ let%expect_test "dead code elimination, nested" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type UInt))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var i))
@@ -2997,28 +2983,28 @@ let%expect_test "partial evaluation" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 0))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (SList
-                   (((sloc <opaque>)
+                   (((smeta <opaque>)
                      (stmt
                       (Decl (decl_adtype AutoDiffable) (decl_id i)
                        (decl_type UInt))))
-                    ((sloc <opaque>) (stmt Skip))))))
-                ((sloc <opaque>)
+                    ((smeta <opaque>) (stmt Skip))))))
+                ((smeta <opaque>)
                  (stmt
                   (NRFunApp print
                    (((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                      (madlevel DataOnly))))))
-                ((sloc <opaque>)
+                ((smeta <opaque>)
                  (stmt
                   (NRFunApp print
                    (((mtype UInt) (mloc <opaque>)
@@ -3029,7 +3015,7 @@ let%expect_test "partial evaluation" =
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                          (madlevel DataOnly)))))
                      (madlevel DataOnly))))))
-                ((sloc <opaque>)
+                ((smeta <opaque>)
                  (stmt
                   (NRFunApp print
                    (((mtype UReal) (mloc <opaque>)
@@ -3064,35 +3050,35 @@ let%expect_test "try partially evaluate" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UReal))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UReal))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3103,7 +3089,7 @@ let%expect_test "try partially evaluate" =
                  ((mtype UReal) (mloc <opaque>) (expr (Var y))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UVector) (mloc <opaque>)
@@ -3149,21 +3135,21 @@ let%expect_test "partially evaluate with equality check" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3172,7 +3158,7 @@ let%expect_test "partially evaluate with equality check" =
                 (((mtype UVector) (mloc <opaque>) (expr (Var x))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3229,52 +3215,52 @@ let%expect_test "partially evaluate glm" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UMatrix))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id y)
                 (decl_type (UArray UInt)))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id y_real)
                 (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id beta) (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id alpha)
                 (decl_type UVector))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (SList
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt
                (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type UReal))))
-             ((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3289,7 +3275,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3304,7 +3290,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3319,7 +3305,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3334,22 +3320,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
-          (stmt
-           (NRFunApp print
-            (((mtype UReal) (mloc <opaque>)
-              (expr
-               (FunApp bernoulli_logit_glm_lpmf
-                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
-                  (madlevel DataOnly))
-                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
-                  (madlevel AutoDiffable))
-                 ((mtype UInt) (mloc <opaque>) (expr (Lit Int 0))
-                  (madlevel DataOnly))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
-                  (madlevel AutoDiffable)))))
-              (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3364,80 +3335,12 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
               (expr
-               (FunApp neg_binomial_2_log_glm_lpmf
-                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
-                  (madlevel DataOnly))
-                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
-                  (madlevel AutoDiffable))
-                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
-                  (madlevel AutoDiffable)))))
-              (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
-          (stmt
-           (NRFunApp print
-            (((mtype UReal) (mloc <opaque>)
-              (expr
-               (FunApp neg_binomial_2_log_glm_lpmf
-                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
-                  (madlevel DataOnly))
-                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
-                  (madlevel AutoDiffable))
-                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
-                  (madlevel AutoDiffable)))))
-              (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
-          (stmt
-           (NRFunApp print
-            (((mtype UReal) (mloc <opaque>)
-              (expr
-               (FunApp neg_binomial_2_log_glm_lpmf
-                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
-                  (madlevel DataOnly))
-                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
-                  (madlevel AutoDiffable))
-                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
-                  (madlevel AutoDiffable)))))
-              (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
-          (stmt
-           (NRFunApp print
-            (((mtype UReal) (mloc <opaque>)
-              (expr
-               (FunApp neg_binomial_2_log_glm_lpmf
-                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
-                  (madlevel DataOnly))
-                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
-                  (madlevel AutoDiffable))
-                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
-                  (madlevel AutoDiffable))
-                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
-                  (madlevel AutoDiffable)))))
-              (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
-          (stmt
-           (NRFunApp print
-            (((mtype UReal) (mloc <opaque>)
-              (expr
-               (FunApp neg_binomial_2_log_glm_lpmf
+               (FunApp bernoulli_logit_glm_lpmf
                 (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
                   (madlevel DataOnly))
                  ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
@@ -3445,11 +3348,77 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 0))
                   (madlevel DataOnly))
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
+                  (madlevel AutoDiffable)))))
+              (madlevel AutoDiffable))))))
+         ((smeta <opaque>)
+          (stmt
+           (NRFunApp print
+            (((mtype UReal) (mloc <opaque>)
+              (expr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
+                  (madlevel DataOnly))
+                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable))
                  ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
+          (stmt
+           (NRFunApp print
+            (((mtype UReal) (mloc <opaque>)
+              (expr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
+                  (madlevel DataOnly))
+                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
+                  (madlevel AutoDiffable))
+                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
+                  (madlevel AutoDiffable)))))
+              (madlevel AutoDiffable))))))
+         ((smeta <opaque>)
+          (stmt
+           (NRFunApp print
+            (((mtype UReal) (mloc <opaque>)
+              (expr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
+                  (madlevel DataOnly))
+                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
+                  (madlevel AutoDiffable))
+                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
+                  (madlevel AutoDiffable)))))
+              (madlevel AutoDiffable))))))
+         ((smeta <opaque>)
+          (stmt
+           (NRFunApp print
+            (((mtype UReal) (mloc <opaque>)
+              (expr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
+                  (madlevel DataOnly))
+                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var alpha))
+                  (madlevel AutoDiffable))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
+                  (madlevel AutoDiffable))
+                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
+                  (madlevel AutoDiffable)))))
+              (madlevel AutoDiffable))))))
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3466,7 +3435,24 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
+          (stmt
+           (NRFunApp print
+            (((mtype UReal) (mloc <opaque>)
+              (expr
+               (FunApp neg_binomial_2_log_glm_lpmf
+                (((mtype (UArray UInt)) (mloc <opaque>) (expr (Var y))
+                  (madlevel DataOnly))
+                 ((mtype UMatrix) (mloc <opaque>) (expr (Var x))
+                  (madlevel AutoDiffable))
+                 ((mtype UInt) (mloc <opaque>) (expr (Lit Int 0))
+                  (madlevel DataOnly))
+                 ((mtype UVector) (mloc <opaque>) (expr (Var beta))
+                  (madlevel AutoDiffable))
+                 ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
+                  (madlevel AutoDiffable)))))
+              (madlevel AutoDiffable))))))
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3483,7 +3469,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3500,7 +3486,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3517,7 +3503,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UReal) (mloc <opaque>) (expr (Var sigma))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3532,7 +3518,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3547,7 +3533,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3562,7 +3548,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3577,7 +3563,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3592,7 +3578,7 @@ let%expect_test "partially evaluate glm" =
                  ((mtype UVector) (mloc <opaque>) (expr (Var beta))
                   (madlevel AutoDiffable)))))
               (madlevel AutoDiffable))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UReal) (mloc <opaque>)
@@ -3630,11 +3616,11 @@ let%expect_test "lazy code motion" =
     ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
      (params ()) (tparams ()) (prepare_params ())
      (log_prob
-      (((sloc <opaque>)
+      (((smeta <opaque>)
         (stmt
          (Decl (decl_adtype DataOnly) (decl_id sym23__)
           (decl_type (UArray UReal)))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (Assignment
           ((mtype (UArray UReal)) (mloc <opaque>) (expr (Var sym23__))
@@ -3645,17 +3631,17 @@ let%expect_test "lazy code motion" =
              (((mtype UReal) (mloc <opaque>) (expr (Lit Real 3.0))
                (madlevel DataOnly)))))
            (madlevel DataOnly)))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (NRFunApp print
           (((mtype (UArray UReal)) (mloc <opaque>)
             (expr (Var sym23__)) (madlevel DataOnly))))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (NRFunApp print
           (((mtype (UArray UReal)) (mloc <opaque>)
             (expr (Var sym23__)) (madlevel DataOnly))))))
-       ((sloc <opaque>)
+       ((smeta <opaque>)
         (stmt
          (NRFunApp print
           (((mtype (UArray UReal)) (mloc <opaque>)
@@ -3682,11 +3668,11 @@ let%expect_test "lazy code motion, 2" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym25__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym24__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (For (loopvar i)
             (lower
@@ -3696,10 +3682,10 @@ let%expect_test "lazy code motion, 2" =
              ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
               (madlevel DataOnly)))
             (body
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (NRFunApp print
                     (((mtype UInt) (mloc <opaque>)
@@ -3710,7 +3696,7 @@ let%expect_test "lazy code motion, 2" =
                          ((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 4)) (madlevel DataOnly)))))
                       (madlevel DataOnly))))))
-                 ((sloc <opaque>) (stmt Skip))))))))))))
+                 ((smeta <opaque>) (stmt Skip))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -3734,16 +3720,16 @@ let%expect_test "lazy code motion, 3" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym27__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym26__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var sym26__))
@@ -3756,12 +3742,12 @@ let%expect_test "lazy code motion, 3" =
                 ((mtype UInt) (mloc <opaque>) (expr (Lit Int 5))
                  (madlevel DataOnly)))))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var sym26__))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>)
@@ -3806,41 +3792,41 @@ let%expect_test "lazy code motion, 4" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym28__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var b))
              (madlevel DataOnly))
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
-                    ((sloc <opaque>) (stmt Skip))))))
-                ((sloc <opaque>)
+                   (((smeta <opaque>) (stmt Skip)) ((smeta <opaque>) (stmt Skip))
+                    ((smeta <opaque>) (stmt Skip))))))
+                ((smeta <opaque>)
                  (stmt
                   (Assignment
                    ((mtype UInt) (mloc <opaque>) (expr (Var sym28__))
@@ -3853,14 +3839,14 @@ let%expect_test "lazy code motion, 4" =
                        ((mtype UInt) (mloc <opaque>) (expr (Var c))
                         (madlevel DataOnly)))))
                     (madlevel DataOnly)))))
-                ((sloc <opaque>) (stmt Skip))))))
-            (((sloc <opaque>)
+                ((smeta <opaque>) (stmt Skip))))))
+            (((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (Assignment
                         ((mtype UInt) (mloc <opaque>)
@@ -3873,16 +3859,16 @@ let%expect_test "lazy code motion, 4" =
                             ((mtype UInt) (mloc <opaque>) (expr (Var c))
                              (madlevel DataOnly)))))
                          (madlevel DataOnly)))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (Assignment
                         ((mtype UInt) (mloc <opaque>) (expr (Var x))
                          (madlevel DataOnly))
                         ((mtype UInt) (mloc <opaque>)
                          (expr (Var sym28__)) (madlevel DataOnly)))))
-                     ((sloc <opaque>) (stmt Skip))))))
-                 ((sloc <opaque>) (stmt Skip))))))))))
-         ((sloc <opaque>)
+                     ((smeta <opaque>) (stmt Skip))))))
+                 ((smeta <opaque>) (stmt Skip))))))))))
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var y))
@@ -3923,41 +3909,41 @@ let%expect_test "lazy code motion, 5" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym29__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var b))
              (madlevel DataOnly))
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))
-                    ((sloc <opaque>) (stmt Skip))))))
-                ((sloc <opaque>)
+                   (((smeta <opaque>) (stmt Skip)) ((smeta <opaque>) (stmt Skip))
+                    ((smeta <opaque>) (stmt Skip))))))
+                ((smeta <opaque>)
                  (stmt
                   (Assignment
                    ((mtype UInt) (mloc <opaque>) (expr (Var sym29__))
@@ -3970,22 +3956,22 @@ let%expect_test "lazy code motion, 5" =
                        ((mtype UInt) (mloc <opaque>) (expr (Var c))
                         (madlevel DataOnly)))))
                     (madlevel DataOnly)))))
-                ((sloc <opaque>) (stmt Skip))))))
-            (((sloc <opaque>)
+                ((smeta <opaque>) (stmt Skip))))))
+            (((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (IfElse
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                          (madlevel DataOnly))
-                        ((sloc <opaque>)
+                        ((smeta <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>)
+                           (((smeta <opaque>)
                              (stmt
                               (Assignment
                                ((mtype UInt) (mloc <opaque>)
@@ -3998,18 +3984,18 @@ let%expect_test "lazy code motion, 5" =
                                    ((mtype UInt) (mloc <opaque>)
                                     (expr (Var c)) (madlevel DataOnly)))))
                                 (madlevel DataOnly)))))
-                            ((sloc <opaque>)
+                            ((smeta <opaque>)
                              (stmt
                               (Assignment
                                ((mtype UInt) (mloc <opaque>)
                                 (expr (Var x)) (madlevel DataOnly))
                                ((mtype UInt) (mloc <opaque>)
                                 (expr (Var sym29__)) (madlevel DataOnly)))))
-                            ((sloc <opaque>) (stmt Skip))))))
-                        (((sloc <opaque>)
+                            ((smeta <opaque>) (stmt Skip))))))
+                        (((smeta <opaque>)
                           (stmt
                            (SList
-                            (((sloc <opaque>)
+                            (((smeta <opaque>)
                               (stmt
                                (Assignment
                                 ((mtype UInt) (mloc <opaque>)
@@ -4022,10 +4008,10 @@ let%expect_test "lazy code motion, 5" =
                                     ((mtype UInt) (mloc <opaque>)
                                      (expr (Var c)) (madlevel DataOnly)))))
                                  (madlevel DataOnly)))))
-                             ((sloc <opaque>) (stmt Skip))))))))))
-                     ((sloc <opaque>) (stmt Skip))))))
-                 ((sloc <opaque>) (stmt Skip))))))))))
-         ((sloc <opaque>)
+                             ((smeta <opaque>) (stmt Skip))))))))))
+                     ((smeta <opaque>) (stmt Skip))))))
+                 ((smeta <opaque>) (stmt Skip))))))))))
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var y))
@@ -4057,25 +4043,25 @@ let%expect_test "lazy code motion, 6" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym31__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym30__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (Assignment
                    ((mtype UInt) (mloc <opaque>) (expr (Var x))
@@ -4088,9 +4074,9 @@ let%expect_test "lazy code motion, 6" =
                        ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                         (madlevel DataOnly)))))
                     (madlevel DataOnly)))))
-                ((sloc <opaque>) (stmt Skip))))))
-            (((sloc <opaque>) (stmt Skip))))))
-         ((sloc <opaque>)
+                ((smeta <opaque>) (stmt Skip))))))
+            (((smeta <opaque>) (stmt Skip))))))
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var y))
@@ -4146,47 +4132,47 @@ let%expect_test "lazy code motion, 7" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym33__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym32__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id c) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
+                   (((smeta <opaque>)
                      (stmt
                       (Assignment
                        ((mtype UInt) (mloc <opaque>) (expr (Var a))
                         (madlevel DataOnly))
                        ((mtype UInt) (mloc <opaque>) (expr (Var c))
                         (madlevel DataOnly)))))
-                    ((sloc <opaque>)
+                    ((smeta <opaque>)
                      (stmt
                       (Assignment
                        ((mtype UInt) (mloc <opaque>) (expr (Var x))
@@ -4199,34 +4185,34 @@ let%expect_test "lazy code motion, 7" =
                            ((mtype UInt) (mloc <opaque>) (expr (Var b))
                             (madlevel DataOnly)))))
                         (madlevel DataOnly)))))))))
-                ((sloc <opaque>) (stmt Skip))))))
-            (((sloc <opaque>)
+                ((smeta <opaque>) (stmt Skip))))))
+            (((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
-         ((sloc <opaque>)
+                (((smeta <opaque>) (stmt Skip)) ((smeta <opaque>) (stmt Skip))))))))))
+         ((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (Block
-                   (((sloc <opaque>)
+                   (((smeta <opaque>)
                      (stmt
                       (IfElse
                        ((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                         (madlevel DataOnly))
-                       ((sloc <opaque>)
+                       ((smeta <opaque>)
                         (stmt
                          (Block
-                          (((sloc <opaque>)
+                          (((smeta <opaque>)
                             (stmt
                              (Block
-                              (((sloc <opaque>)
+                              (((smeta <opaque>)
                                 (stmt
                                  (Assignment
                                   ((mtype UInt) (mloc <opaque>)
@@ -4239,16 +4225,16 @@ let%expect_test "lazy code motion, 7" =
                                       ((mtype UInt) (mloc <opaque>)
                                        (expr (Var b)) (madlevel DataOnly)))))
                                    (madlevel DataOnly)))))
-                               ((sloc <opaque>) (stmt Skip))
-                               ((sloc <opaque>)
+                               ((smeta <opaque>) (stmt Skip))
+                               ((smeta <opaque>)
                                 (stmt
                                  (While
                                   ((mtype UInt) (mloc <opaque>)
                                    (expr (Lit Int 4)) (madlevel DataOnly))
-                                  ((sloc <opaque>)
+                                  ((smeta <opaque>)
                                    (stmt
                                     (Block
-                                     (((sloc <opaque>)
+                                     (((smeta <opaque>)
                                        (stmt
                                         (Assignment
                                          ((mtype UInt) (mloc <opaque>)
@@ -4256,27 +4242,27 @@ let%expect_test "lazy code motion, 7" =
                                          ((mtype UInt) (mloc <opaque>)
                                           (expr (Var sym33__))
                                           (madlevel DataOnly)))))
-                                      ((sloc <opaque>) (stmt Skip)))))))))
-                               ((sloc <opaque>) (stmt Skip))))))
-                           ((sloc <opaque>) (stmt Skip))))))
-                       (((sloc <opaque>)
+                                      ((smeta <opaque>) (stmt Skip)))))))))
+                               ((smeta <opaque>) (stmt Skip))))))
+                           ((smeta <opaque>) (stmt Skip))))))
+                       (((smeta <opaque>)
                          (stmt
                           (Block
-                           (((sloc <opaque>)
+                           (((smeta <opaque>)
                              (stmt
                               (Block
-                               (((sloc <opaque>) (stmt Skip))
-                                ((sloc <opaque>)
+                               (((smeta <opaque>) (stmt Skip))
+                                ((smeta <opaque>)
                                  (stmt
                                   (While
                                    ((mtype UInt) (mloc <opaque>)
                                     (expr (Lit Int 5)) (madlevel DataOnly))
-                                   ((sloc <opaque>)
+                                   ((smeta <opaque>)
                                     (stmt
                                      (Block
-                                      (((sloc <opaque>) (stmt Skip))
-                                       ((sloc <opaque>) (stmt Skip)))))))))
-                                ((sloc <opaque>)
+                                      (((smeta <opaque>) (stmt Skip))
+                                       ((smeta <opaque>) (stmt Skip)))))))))
+                                ((smeta <opaque>)
                                  (stmt
                                   (Assignment
                                    ((mtype UInt) (mloc <opaque>)
@@ -4289,27 +4275,27 @@ let%expect_test "lazy code motion, 7" =
                                        ((mtype UInt) (mloc <opaque>)
                                         (expr (Var b)) (madlevel DataOnly)))))
                                     (madlevel DataOnly)))))
-                                ((sloc <opaque>)
+                                ((smeta <opaque>)
                                  (stmt
                                   (Assignment
                                    ((mtype UInt) (mloc <opaque>)
                                     (expr (Var y)) (madlevel DataOnly))
                                    ((mtype UInt) (mloc <opaque>)
                                     (expr (Var sym33__)) (madlevel DataOnly)))))))))
-                            ((sloc <opaque>) (stmt Skip))))))))))
-                    ((sloc <opaque>)
+                            ((smeta <opaque>) (stmt Skip))))))))))
+                    ((smeta <opaque>)
                      (stmt
                       (Assignment
                        ((mtype UInt) (mloc <opaque>) (expr (Var z))
                         (madlevel DataOnly))
                        ((mtype UInt) (mloc <opaque>)
                         (expr (Var sym33__)) (madlevel DataOnly)))))))))
-                ((sloc <opaque>) (stmt Skip))))))
-            (((sloc <opaque>)
+                ((smeta <opaque>) (stmt Skip))))))
+            (((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>) (stmt Skip)) ((sloc <opaque>) (stmt Skip))))))))))
-         ((sloc <opaque>) (stmt Skip))))
+                (((smeta <opaque>) (stmt Skip)) ((smeta <opaque>) (stmt Skip))))))))))
+         ((smeta <opaque>) (stmt Skip))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -4336,37 +4322,37 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   [%expect
     {|
       ((functions_block
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname foo_lp) (fdargs ((AutoDiffable x UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (SList
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (TargetPE
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 1))
                          (madlevel DataOnly)))))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>)
                       (stmt
                        (Return
                         (((mtype UInt) (mloc <opaque>)
                           (expr (Lit Int 24)) (madlevel DataOnly))))))))))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (FunDef (fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable x UInt)))
             (fdbody
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (SList
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (Return
                         (((mtype UInt) (mloc <opaque>)
@@ -4374,9 +4360,9 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
        (data_vars ()) (tdata_vars ()) (prepare_data ()) (params ()) (tparams ())
        (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym34__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>)
@@ -4389,7 +4375,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
                       (madlevel DataOnly)))))
                   (madlevel DataOnly)))))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>)
@@ -4402,7 +4388,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
                       (madlevel DataOnly)))))
                   (madlevel DataOnly)))))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var sym34__))
@@ -4417,12 +4403,12 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
                      (madlevel DataOnly)))))
                  (madlevel DataOnly)))))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var sym34__))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>) (expr (Var sym34__))
@@ -4449,11 +4435,11 @@ let%expect_test "lazy code motion, 9" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym35__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var sym35__))
@@ -4466,21 +4452,21 @@ let%expect_test "lazy code motion, 9" =
                 ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                  (madlevel DataOnly)))))
              (madlevel DataOnly)))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (While
             ((mtype UInt) (mloc <opaque>) (expr (Var sym35__))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (Block
-               (((sloc <opaque>)
+               (((smeta <opaque>)
                  (stmt
                   (NRFunApp print
                    (((mtype UReal) (mloc <opaque>)
                      (expr (Lit Str hello)) (madlevel DataOnly))))))
-                ((sloc <opaque>) (stmt Skip)))))))))))
+                ((smeta <opaque>) (stmt Skip)))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "lazy code motion, 10" =
@@ -4506,19 +4492,19 @@ let%expect_test "lazy code motion, 10" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym36__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var x))
              (madlevel DataOnly))
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>)
@@ -4529,14 +4515,14 @@ let%expect_test "lazy code motion, 10" =
                  ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                   (madlevel DataOnly)))))
               (madlevel DataOnly))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Assignment
             ((mtype UInt) (mloc <opaque>) (expr (Var x))
              (madlevel DataOnly))
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
              (madlevel DataOnly)))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (NRFunApp print
             (((mtype UInt) (mloc <opaque>)
@@ -4575,15 +4561,15 @@ let%expect_test "lazy code motion, 11" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym37__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Block
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))
+             ((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UInt) (mloc <opaque>)
@@ -4594,13 +4580,13 @@ let%expect_test "lazy code motion, 11" =
                      ((mtype UInt) (mloc <opaque>) (expr (Lit Int 2))
                       (madlevel DataOnly)))))
                   (madlevel DataOnly))))))))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Block
-            (((sloc <opaque>)
+            (((smeta <opaque>)
               (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-             ((sloc <opaque>) (stmt Skip))
-             ((sloc <opaque>)
+             ((smeta <opaque>) (stmt Skip))
+             ((smeta <opaque>)
               (stmt
                (NRFunApp print
                 (((mtype UInt) (mloc <opaque>)
@@ -4639,14 +4625,14 @@ let%expect_test "lazy code motion, 12" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym39__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym38__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UInt))))
-         ((sloc <opaque>) (stmt Skip))
-         ((sloc <opaque>)
+         ((smeta <opaque>) (stmt Skip))
+         ((smeta <opaque>)
           (stmt
            (For (loopvar i)
             (lower
@@ -4656,13 +4642,13 @@ let%expect_test "lazy code motion, 12" =
              ((mtype UInt) (mloc <opaque>) (expr (Lit Int 6))
               (madlevel DataOnly)))
             (body
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (NRFunApp print
                         (((mtype UInt) (mloc <opaque>)
@@ -4673,15 +4659,15 @@ let%expect_test "lazy code motion, 12" =
                              ((mtype UInt) (mloc <opaque>)
                               (expr (Lit Int 42)) (madlevel DataOnly)))))
                           (madlevel DataOnly))))))
-                     ((sloc <opaque>) (stmt Continue))
-                     ((sloc <opaque>)
+                     ((smeta <opaque>) (stmt Continue))
+                     ((smeta <opaque>)
                       (stmt
                        (Assignment
                         ((mtype UInt) (mloc <opaque>) (expr (Var x))
                          (madlevel DataOnly))
                         ((mtype UInt) (mloc <opaque>) (expr (Lit Int 3))
                          (madlevel DataOnly)))))))))
-                 ((sloc <opaque>) (stmt Skip))))))))))))
+                 ((smeta <opaque>) (stmt Skip))))))))))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
@@ -4713,22 +4699,22 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (Decl (decl_adtype AutoDiffable) (decl_id sym42__) (decl_type UReal))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Decl (decl_adtype AutoDiffable) (decl_id sym41__) (decl_type UReal))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype DataOnly) (decl_id sym40__) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type UReal))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type UInt))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type UReal))))
-         ((sloc <opaque>)
+         ((smeta <opaque>)
           (stmt
            (For (loopvar i)
             (lower
@@ -4738,13 +4724,13 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
              ((mtype UInt) (mloc <opaque>) (expr (Lit Int 100000))
               (madlevel DataOnly)))
             (body
-             ((sloc <opaque>)
+             ((smeta <opaque>)
               (stmt
                (Block
-                (((sloc <opaque>)
+                (((smeta <opaque>)
                   (stmt
                    (Block
-                    (((sloc <opaque>)
+                    (((smeta <opaque>)
                       (stmt
                        (TargetPE
                         ((mtype UReal) (mloc <opaque>)
@@ -4773,10 +4759,10 @@ let%expect_test "block fixing" =
         [ { stmt=
               IfElse
                 ( zero
-                , { stmt= While (zero, {stmt= SList []; sloc= no_span})
-                  ; sloc= no_span }
+                , { stmt= While (zero, {stmt= SList []; smeta= no_span})
+                  ; smeta= no_span }
                 , None )
-          ; sloc= no_span } ] }
+          ; smeta= no_span } ] }
   in
   let mir = block_fixing mir in
   print_s [%sexp (mir : Mir.typed_prog)] ;
@@ -4785,17 +4771,17 @@ let%expect_test "block fixing" =
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())
        (params ()) (tparams ()) (prepare_params ())
        (log_prob
-        (((sloc <opaque>)
+        (((smeta <opaque>)
           (stmt
            (IfElse
             ((mtype UInt) (mloc <opaque>) (expr (Lit Int 0))
              (madlevel DataOnly))
-            ((sloc <opaque>)
+            ((smeta <opaque>)
              (stmt
               (While
                ((mtype UInt) (mloc <opaque>) (expr (Lit Int 0))
                 (madlevel DataOnly))
-               ((sloc <opaque>) (stmt (Block ()))))))
+               ((smeta <opaque>) (stmt (Block ()))))))
             ())))))
        (gen_quant_vars ()) (generate_quantities ()) (prog_name "") (prog_path "")) |}]
 

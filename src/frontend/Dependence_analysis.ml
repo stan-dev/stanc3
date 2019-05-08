@@ -140,9 +140,9 @@ let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
 
 let log_prob_build_dep_info_map (mir : Mir.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
-  let log_prob_stmt = {sloc= Mir.no_span; stmt= SList mir.log_prob} in
+  let log_prob_stmt = {smeta= Mir.no_span; stmt= SList mir.log_prob} in
   let statement_map =
-    build_statement_map (fun s -> s.stmt) (fun s -> s.sloc) log_prob_stmt
+    build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) log_prob_stmt
   in
   let _, preds, parents = build_cf_graphs statement_map in
   let rd_map = mir_reaching_definitions mir log_prob_stmt in
