@@ -11,33 +11,29 @@
  (name runtest)
  (action (diff cpp.expected cpp.output)))
 
-;; (rule
-;;   (targets %{env:cmdstan=cmdstan})
-;;   (action (run git clone --recursive https://github.com/stan-dev/cmdstan)))
+(rule
+  (targets eight_schools_ncp.hpp)
+  (deps (package stanc))
+  (action (run %{bin:stanc} eight_schools_ncp.stan)))
 
-;; (rule
-;;   (targets eight_schools_ncp.hpp)
-;;   (deps (package stanc))
-;;   (action (run %{bin:stanc} eight_schools_ncp.stan)))
-;; 
-;; (rule
-;;   (targets eight_schools_ncp)
-;;   (deps eight_schools_ncp.hpp ;; %{env:cmdstan=cmdstan}
-;;   )
-;;   (action (chdir %{env:cmdstan=cmdstan} (run make -j4 %{targets}))))
-;; 
-;; (rule
-;;  (targets eight_schools_ncp.csv)
-;;  (deps eight_schools.data.R)
-;;  (action
-;;    (run %{dep:eight_schools_ncp} random seed=1 sample data file=eight_schools.data.R output file=${targets})))
-;; 
-;; (rule
-;;  (targets eight_schools_ncp_summary.output)
-;;  (deps eight_schools_ncp.csv)
-;;  (action
-;;    (with-stdout-to %{targets}
-;;      (run %{env:cmdstan=cmdstan}/bin/stansummary %{deps}))))
-;; 
-;; (alias (name runtest)
-;;   (action (diff eight_schools_ncp_summary.expected eight_schools_ncp_summary.output)))
+(rule
+  (targets eight_schools_ncp)
+  (deps eight_schools_ncp.hpp)
+  (action (chdir %{env:cmdstan=cmdstan} (run make -j4 %{targets}))))
+
+(rule
+ (targets eight_schools_ncp.csv)
+ (deps eight_schools.data.R)
+ (action
+   (run %{dep:eight_schools_ncp} random seed=1 sample data file=eight_schools.data.R output file=${targets})))
+
+(rule
+ (targets eight_schools_ncp_summary.output)
+ (deps eight_schools_ncp.csv)
+ (action
+   (with-stdout-to %{targets}
+     (run %{env:cmdstan=cmdstan}/bin/stansummary %{deps}))))
+
+(alias (name runtest)
+  (enabled_if (<> false %{env:cmdstan=false}))
+  (action (diff eight_schools_ncp_summary.expected eight_schools_ncp_summary.output)))
