@@ -97,6 +97,11 @@ let pp_sized_decl ppf (vident, st, adtype) =
     (vident, remove_size st, adtype)
     pp_set_size (vident, st, adtype)
 
+let pp_possibly_sized_decl ppf (vident, pst, adtype) =
+  match pst with
+  | Sized st -> pp_sized_decl ppf (vident, st, adtype)
+  | Unsized ut -> pp_decl ppf (vident, ut, adtype)
+
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
@@ -191,7 +196,7 @@ let rec pp_statement ppf {stmt; smeta} =
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
+      pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
 
 let pp_fun_def ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
@@ -325,7 +330,7 @@ let pp_model_private ppf p =
   let is_data decl_id = List.Assoc.mem ~equal:( = ) p.input_vars decl_id in
   let return_decl = function
     | {stmt= Decl {decl_type; decl_id; _}; _} when is_data decl_id ->
-        Some (decl_id, remove_size decl_type, DataOnly)
+        Some (decl_id, remove_possible_size decl_type, DataOnly)
     | _ -> None
   in
   let data_decls = List.filter_map ~f:return_decl p.prepare_data in

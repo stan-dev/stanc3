@@ -374,7 +374,9 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     | Some {emeta= {madlevel; _}; _} -> madlevel
     | None -> dadlevel
   in
-  let decl = Decl {decl_adtype; decl_id; decl_type} |> with_smeta in
+  let decl =
+    Decl {decl_adtype; decl_id; decl_type= Sized decl_type} |> with_smeta
+  in
   let checks =
     (* XXX checks should be performed after assignment as NRFunApp*)
     match dconstrain with

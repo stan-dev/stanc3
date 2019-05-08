@@ -21,7 +21,7 @@ let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
       [LPFunction (s, args)]
   | Mir.Assignment (_, _)
    |Mir.NRFunApp (_, _, _)
-   | Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
+   |Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
    |Mir.IfElse (_, _, _)
    |Mir.While (_, _)
    |Mir.For _ | Mir.Block _ | Mir.SList _

@@ -46,6 +46,10 @@ let rec pp_sizedtype pp_e ppf st =
           |> brackets)
         (st, expr)
 
+let pp_possiblysizedtype pp_e ppf = function
+  | Sized st -> pp_sizedtype pp_e ppf st
+  | Unsized ust -> pp_unsizedtype ppf ust
+
 let rec pp_expr pp_e ppf = function
   | Var varname -> Fmt.string ppf varname
   | Lit (Str, str) -> Fmt.pf ppf "%S" str
@@ -119,7 +123,8 @@ let pp_statement pp_e pp_s ppf = function
   | Block stmts -> Fmt.pf ppf {|@[<v>%a@]|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
   | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
   | Decl {decl_adtype; decl_id; decl_type} ->
-      Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_sizedtype pp_e)
+      Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype
+        (pp_possiblysizedtype pp_e)
         decl_type decl_id
 
 let pp_io_block ppf = function

@@ -68,7 +68,7 @@ type 'e sizedtype =
   | SRowVector of 'e
   | SMatrix of 'e * 'e
   | SArray of 'e sizedtype * 'e
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 (** remove_size [st] discards size information from a sizedtype
     to return an unsizedtype. *)
@@ -79,6 +79,11 @@ let rec remove_size = function
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (remove_size t)
+
+type 'e possiblysizedtype = Sized of 'e sizedtype | Unsized of unsizedtype
+[@@deriving sexp, compare, map, hash, fold]
+
+let remove_possible_size = function Sized t -> remove_size t | Unsized t -> t
 
 type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
@@ -96,7 +101,7 @@ type 'e index =
   | Downfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, fold]
 
 and 'e expr =
   | Var of string
@@ -119,9 +124,10 @@ type 's fun_def =
   ; fdloc: location_span [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
-and 'e lvalue = string * 'e index list
+type 'e lvalue = string * 'e index list
+[@@deriving sexp, hash, map, fold]
 
-and ('e, 's) statement =
+type ('e, 's) statement =
   | Assignment of 'e lvalue * 'e
   | TargetPE of 'e
   | NRFunApp of fun_kind * string * 'e list
@@ -142,7 +148,7 @@ and ('e, 's) statement =
   | Decl of
       { decl_adtype: autodifftype
       ; decl_id: string
-      ; decl_type: 'e sizedtype }
+      ; decl_type: 'e possiblysizedtype }
 [@@deriving sexp, hash, map, fold]
 
 type io_block =
@@ -183,7 +189,10 @@ type ('e, 'm) stmt_with_num = {stmtn: ('e with_expr, int) statement; smetan: 'm}
 [@@deriving sexp, hash]
 
 type expr_no_meta = unit with_expr
-type expr_typed_located = mtype_loc_ad with_expr [@@deriving sexp, compare, hash]
+
+type expr_typed_located = mtype_loc_ad with_expr
+[@@deriving sexp, compare, hash]
+
 type stmt_no_meta = (expr_no_meta, unit) stmt_with
 
 type stmt_loc =

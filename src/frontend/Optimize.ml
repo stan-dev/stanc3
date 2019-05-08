@@ -7,15 +7,16 @@ let create_function_inline_map l =
   (* We only add the first definition for each function to the inline map.
    This will make sure we do not inline recursive functions. *)
   let f accum fundef =
-    match fundef with
-    |  {fdname; fdargs; fdbody; fdrt; _} -> (
+    match fundef with {fdname; fdargs; fdbody; fdrt; _} -> (
       match
         Map.add accum ~key:fdname
-          ~data:(fdrt, List.map ~f:(fun (_, name, _) -> name) fdargs, fdbody)
+          ~data:
+            ( Option.map ~f:(fun x -> Unsized x) fdrt
+            , List.map ~f:(fun (_, name, _) -> name) fdargs
+            , fdbody )
       with
       | `Ok m -> m
       | `Duplicate -> accum )
-    | _ -> Errors.fatal_error ()
   in
   Map.filter
     ~f:(fun (_, _, v) -> v.stmt <> Skip)
@@ -28,11 +29,11 @@ let replace_fresh_local_vars s' =
         ( Decl {decl_adtype; decl_id= fresh_name; decl_type}
         , Map.Poly.set m ~key:decl_id
             ~data:
-              { expr= Var fresh_name;
-              emeta={
-              mtype= remove_size decl_type
-              ; madlevel= decl_adtype
-              ; mloc= Mir.no_span }} )
+              { expr= Var fresh_name
+              ; emeta=
+                  { mtype= remove_possible_size decl_type
+                  ; madlevel= decl_adtype
+                  ; mloc= Mir.no_span } } )
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
@@ -47,13 +48,9 @@ let handle_early_returns opt_triple b =
     | Return opt_ret -> (
       match (opt_triple, opt_ret) with
       | None, None -> Break
-      | Some (Some rt, adt, name), Some e ->
+      | Some (Some _, _, name), Some e ->
           SList
-            [ { stmt=
-                  Assignment
-                    ( (name, [])
-                    , e )
-              ; smeta= Mir.no_span }
+            [ {stmt= Assignment ((name, []), e); smeta= Mir.no_span}
             ; {stmt= Break; smeta= Mir.no_span} ]
       | _, _ -> Errors.fatal_error () )
     | x -> x
@@ -62,14 +59,10 @@ let handle_early_returns opt_triple b =
     { loopvar= Util.gensym ()
     ; lower=
         { expr= Lit (Int, "1")
-        ; emeta={mtype= UInt
-        ; madlevel= DataOnly
-        ; mloc= Mir.no_span} }
+        ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Mir.no_span} }
     ; upper=
         { expr= Lit (Int, "1")
-        ; emeta={mtype= UInt
-        ; madlevel= DataOnly
-        ; mloc= Mir.no_span} }
+        ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Mir.no_span} }
     ; body= map_rec_stmt_loc f b }
 
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Mir.no_span}) l
@@ -87,7 +80,7 @@ let rec inline_function_expression adt fim e =
       let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
       let es = List.map ~f:snd se_list in
       match Map.find fim s with
-      | None -> (s_list, {e with expr =FunApp (t, s, es)})
+      | None -> (s_list, {e with expr= FunApp (t, s, es)})
       | Some (rt, args, b) ->
           let b = replace_fresh_local_vars b in
           let x = Util.gensym () in
@@ -96,10 +89,11 @@ let rec inline_function_expression adt fim e =
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
               ; (subst_args_stmt args es {stmt= b; smeta= Mir.no_span}).stmt ]
-          , { expr= Var x; emeta={
-             mtype= remove_size (Option.value_exn rt)
-            ; madlevel= adt
-            ; mloc= Mir.no_span} } ) )
+          , { expr= Var x
+            ; emeta=
+                { mtype= remove_possible_size (Option.value_exn rt)
+                ; madlevel= adt
+                ; mloc= Mir.no_span } } ) )
   | TernaryIf (e1, e2, e3) ->
       let sl1, e1 = inline_function_expression adt fim e1 in
       let sl2, e2 = inline_function_expression adt fim e2 in
@@ -115,9 +109,11 @@ let rec inline_function_expression adt fim e =
       let si_list = List.map ~f:(inline_function_index adt fim) i_list in
       let s_list = List.concat (List.rev (List.map ~f:fst si_list)) in
       (s_list @ sl, e)
-  | EAnd (_, _) -> Errors.fatal_error ~msg:("Not yet implemented") () (* TODO!! *)
-  | EOr (_, _) -> Errors.fatal_error ~msg:("Not yet implemented") () (* TODO!! *)
+  | EAnd (_, _) ->
+      Errors.fatal_error ~msg:"Not yet implemented" () (* TODO!! *)
+  | EOr (_, _) -> Errors.fatal_error ~msg:"Not yet implemented" ()
 
+(* TODO!! *)
 and inline_function_index adt fim i =
   match i with
   | All -> ([], All)
@@ -142,11 +138,15 @@ let rec inline_function_statement adt fim {stmt; smeta} =
   { stmt=
       ( match stmt with
       | Assignment ((x, l), e2) ->
-      let e1 = {e2 with expr=Indexed ({e2 with expr=Var x}, l)} in
+          let e1 = {e2 with expr= Indexed ({e2 with expr= Var x}, l)} in
           let sl1, e1 = inline_function_expression adt fim e1 in
           let sl2, e2 = inline_function_expression adt fim e2 in
-          let x, l = match e1.expr with Var x -> (x, []) | 
-          Indexed ({expr=Var x; _}, l) -> (x,l) | _ -> Errors.fatal_error () in
+          let x, l =
+            match e1.expr with
+            | Var x -> (x, [])
+            | Indexed ({expr= Var x; _}, l) -> (x, l)
+            | _ -> Errors.fatal_error ()
+          in
           slist_concat_no_loc (sl2 @ sl1) (Assignment ((x, l), e2))
       | TargetPE e ->
           let s, e = inline_function_expression adt fim e in
@@ -214,23 +214,26 @@ let rec inline_function_statement adt fim {stmt; smeta} =
       | Continue -> Continue )
   ; smeta }
 
-
-
 let function_inlining (mir : typed_prog) =
   let function_inline_map = create_function_inline_map mir.functions_block in
   let inline_function_statements adt =
     List.map ~f:(inline_function_statement adt function_inline_map)
   in
-  { mir with functions_block= 
-  List.map ~f:(fun fundef ->
-  {fundef with fdbody =  inline_function_statement Mir.DataOnly function_inline_map fundef.fdbody}) mir.functions_block
+  { mir with
+    functions_block=
+      List.map
+        ~f:(fun fundef ->
+          { fundef with
+            fdbody=
+              inline_function_statement Mir.DataOnly function_inline_map
+                fundef.fdbody } )
+        mir.functions_block
   ; prepare_data= inline_function_statements Mir.DataOnly mir.prepare_data
   ; transform_inits=
       inline_function_statements Mir.AutoDiffable mir.transform_inits
   ; log_prob= inline_function_statements Mir.AutoDiffable mir.log_prob
   ; generate_quantities=
-      inline_function_statements Mir.DataOnly mir.generate_quantities
-}
+      inline_function_statements Mir.DataOnly mir.generate_quantities }
 
 let rec contains_top_break_or_continue {stmt; _} =
   match stmt with
@@ -238,7 +241,7 @@ let rec contains_top_break_or_continue {stmt; _} =
   | Assignment (_, _)
    |TargetPE _
    |NRFunApp (_, _, _)
-   | Return _  | Decl _
+   |Return _ | Decl _
    |While (_, _)
    |For _ | Skip ->
       false
@@ -254,17 +257,14 @@ let unroll_loops_statement =
   let f stmt =
     match stmt with
     | For {loopvar; lower; upper; body} -> (
-      match
-        (contains_top_break_or_continue body, lower.expr, upper.expr)
-      with
+      match (contains_top_break_or_continue body, lower.expr, upper.expr) with
       | false, Lit (Int, low), Lit (Int, up) ->
           let range =
             List.map
               ~f:(fun i ->
                 { expr= Lit (Int, Int.to_string i)
-                ; emeta={mtype= UInt
-                ; mloc= Mir.no_span
-                ; madlevel= DataOnly }} )
+                ; emeta= {mtype= UInt; mloc= Mir.no_span; madlevel= DataOnly}
+                } )
               (List.range ~start:`inclusive ~stop:`inclusive
                  (Int.of_string low) (Int.of_string up))
           in
@@ -373,8 +373,7 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-           {fs with fdbody= transform fs.fdbody}
-    )
+        {fs with fdbody= transform fs.fdbody} )
   in
   match transformed_prog_body with
   | { stmt=
@@ -407,8 +406,7 @@ let transform_program_blockwise (mir : typed_prog)
   in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody}
-    )
+        {fs with fdbody= transform fs.fdbody} )
   in
   { mir with
     functions_block= transformed_functions
@@ -459,7 +457,7 @@ let copy_propagation = propagation Monotone_framework.copy_propagation_transfer
 let rec can_side_effect_expr (e : expr_typed_located) =
   match e.expr with
   | Var _ | Lit (_, _) -> false
-  | FunApp (t, f, es) ->
+  | FunApp (_, f, es) ->
       String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
       (* TODO: double check that internal functions cannot side effect*)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
@@ -516,7 +514,7 @@ let dead_code_elimination (mir : typed_prog) =
       (* TODO: maybe we should revisit that. *)
       | Decl _ | TargetPE _
        |NRFunApp (_, _, _)
-      | Break | Continue | Return _ | Skip ->
+       |Break | Continue | Return _ | Skip ->
           stmt
       | IfElse (e, b1, b2) -> (
           if
@@ -620,7 +618,7 @@ let lazy_code_motion (mir : typed_prog) =
               Mir.Decl
                 { decl_adtype= key.emeta.madlevel
                 ; decl_id= data
-                ; decl_type= key.emeta.mtype }
+                ; decl_type= Unsized key.emeta.mtype }
           ; smeta= Mir.no_span }
           :: accum )
     in
@@ -646,9 +644,7 @@ let lazy_code_motion (mir : typed_prog) =
       let assignments_to_add_to_s =
         List.map
           ~f:(fun e ->
-            { stmt=
-                Assignment (
-                  (Map.find_exn expression_map e, []), e)
+            { stmt= Assignment ((Map.find_exn expression_map e, []), e)
             ; smeta= Mir.no_span } )
           to_assign_in_s
       in
@@ -657,7 +653,9 @@ let lazy_code_motion (mir : typed_prog) =
           match stmt with
           | Assignment ((x, []), e')
             when Map.mem m e'
-                 && Mir.compare_expr_typed_located {e' with expr= Var x} (Map.find_exn m e') = 0 ->
+                 && Mir.compare_expr_typed_located {e' with expr= Var x}
+                      (Map.find_exn m e')
+                    = 0 ->
               expr_subst_stmt_base (Map.remove m e') stmt
           | _ -> expr_subst_stmt_base m stmt
         in
@@ -695,7 +693,8 @@ let block_fixing =
     (fun x -> x)
     (map_rec_stmt_loc (fun stmt ->
          match stmt with
-         | IfElse (e, {stmt= SList l; smeta}, Some {stmt= SList l'; smeta= smeta'})
+         | IfElse
+             (e, {stmt= SList l; smeta}, Some {stmt= SList l'; smeta= smeta'})
            ->
              IfElse
                (e, {stmt= Block l; smeta}, Some {stmt= Block l'; smeta= smeta'})
@@ -703,7 +702,8 @@ let block_fixing =
              IfElse (e, {stmt= Block l; smeta}, b)
          | IfElse (e, b, Some {stmt= SList l'; smeta= smeta'}) ->
              IfElse (e, b, Some {stmt= Block l'; smeta= smeta'})
-         | While (e, {stmt= SList l; smeta}) -> While (e, {stmt= Block l; smeta})
+         | While (e, {stmt= SList l; smeta}) ->
+             While (e, {stmt= Block l; smeta})
          | For {loopvar; lower; upper; body= {stmt= SList l; smeta}} ->
              For {loopvar; lower; upper; body= {stmt= Block l; smeta}}
          | _ -> stmt ))
@@ -801,7 +801,8 @@ let%expect_test "map_rec_stmt_loc" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let f i = function
-    | NRFunApp (StanLib, "print", [s]) -> (NRFunApp (StanLib, "print", [s; s]), i + 1)
+    | NRFunApp (StanLib, "print", [s]) ->
+        (NRFunApp (StanLib, "print", [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_num =
