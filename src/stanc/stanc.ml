@@ -95,9 +95,9 @@ let use_file filename =
   in
   let _ = Debugging.typed_ast_logger typed_ast in
   if not !pretty_print_program then (
-    let mir = Ast_to_Mir.trans_prog filename typed_ast in
+    let mir = Ast_to_Middle.trans_prog filename typed_ast in
     if !dump_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (mir : Mir.typed_prog)] ;
+      Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp )

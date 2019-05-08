@@ -3,7 +3,7 @@ open Core_kernel
 
 (** Our type for identifiers, on which we record a location *)
 type identifier =
-  {name: string; id_loc: Mir.location_span sexp_opaque [@compare.ignore]}
+  {name: string; id_loc: Middle.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
@@ -22,9 +22,9 @@ type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
     substitute untyped_expression or typed_expression for 'e *)
 type 'e expression =
   | TernaryIf of 'e * 'e * 'e
-  | BinOp of 'e * Mir.operator * 'e
-  | PrefixOp of Mir.operator * 'e
-  | PostfixOp of 'e * Mir.operator
+  | BinOp of 'e * Middle.operator * 'e
+  | PrefixOp of Middle.operator * 'e
+  | PostfixOp of 'e * Middle.operator
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
@@ -43,7 +43,7 @@ type 'm expr_with = {expr: 'm expr_with expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped expressions, which have location_spans as meta-data *)
-type located_meta = {loc: Mir.location_span sexp_opaque [@compare.ignore]}
+type located_meta = {loc: Middle.location_span sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash]
 
 type untyped_expression = located_meta expr_with
@@ -52,9 +52,9 @@ type untyped_expression = located_meta expr_with
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expr_meta =
-  { loc: Mir.location_span sexp_opaque [@compare.ignore]
-  ; ad_level: Mir.autodifftype
-  ; type_: Mir.unsizedtype }
+  { loc: Middle.location_span sexp_opaque [@compare.ignore]
+  ; ad_level: Middle.autodifftype
+  ; type_: Middle.unsizedtype }
 [@@deriving sexp, compare, map, hash]
 
 type typed_expression = typed_expr_meta expr_with
@@ -69,7 +69,7 @@ let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
   | [] -> raise_s [%message "Can't find location lub for empty list"]
   | [hd] -> hd
-  | x1 :: tl -> List.fold ~init:x1 ~f:Mir.merge_spans tl
+  | x1 :: tl -> List.fold ~init:x1 ~f:Middle.merge_spans tl
 
 let expr_ad_lub exprs =
   exprs
@@ -82,7 +82,7 @@ type assignmentoperator =
   | Assign
   (* ArrowAssign is deprecated *)
   | ArrowAssign
-  | OperatorAssign of Mir.operator
+  | OperatorAssign of Middle.operator
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
@@ -151,15 +151,15 @@ type ('e, 's) statement =
   | ForEach of identifier * 'e * 's
   | Block of 's list
   | VarDecl of
-      { sizedtype: 'e Mir.sizedtype
+      { sizedtype: 'e Middle.sizedtype
       ; transformation: 'e transformation
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
   | FunDef of
-      { returntype: Mir.returntype
+      { returntype: Middle.returntype
       ; funname: identifier
-      ; arguments: (Mir.autodifftype * Mir.unsizedtype * identifier) list
+      ; arguments: (Middle.autodifftype * Middle.unsizedtype * identifier) list
       ; body: 's }
 [@@deriving sexp, hash, compare, map]
 
@@ -173,8 +173,8 @@ type ('e, 's) statement =
     AnyReturnType corresponds to statements which have an error in every branch  *)
 type statement_returntype =
   | NoReturnType
-  | Incomplete of Mir.returntype
-  | Complete of Mir.returntype
+  | Incomplete of Middle.returntype
+  | Complete of Middle.returntype
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
@@ -189,7 +189,7 @@ type untyped_statement = (untyped_expression, located_meta) statement_with
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: Mir.location_span sexp_opaque [@compare.ignore]
+  { loc: Middle.location_span sexp_opaque [@compare.ignore]
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 

@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
@@ -7,7 +7,7 @@ let unwrap_return_exn = function
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let trans_fn_kind = function
-  | Ast.StanLib -> Mir.StanLib
+  | Ast.StanLib -> Middle.StanLib
   | UserDefined -> UserDefined
 
 let rec op_to_funapp op args =
@@ -36,16 +36,16 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
         | Ast.CondDistApp ({name; _}, args) ->
-            FunApp (Mir.StanLib, name, trans_exprs args)
+            FunApp (Middle.StanLib, name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
         | ArrayExpr eles ->
             FunApp
-              ( Mir.CompilerInternal
+              ( Middle.CompilerInternal
               , string_of_internal_fn FnMakeArray
               , trans_exprs eles )
         | RowVectorExpr eles ->
             FunApp
-              ( Mir.CompilerInternal
+              ( Middle.CompilerInternal
               , string_of_internal_fn FnMakeRowVec
               , trans_exprs eles )
         | Indexed (lhs, indices) ->
@@ -476,7 +476,7 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
         ; upper=
             wrap
             @@ FunApp
-                 ( Mir.CompilerInternal
+                 ( Middle.CompilerInternal
                  , string_of_internal_fn FnLength
                  , [iteratee] )
         ; body }
@@ -638,7 +638,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : Mir.stmt_loc list)] ;
+  print_s [%sexp (op : Middle.stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
