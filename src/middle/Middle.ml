@@ -271,3 +271,12 @@ let string_of_location_span loc_sp =
       sprintf "%s%s" file_line_col_string included_from_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
+let _counter = ref 0
+
+let gensym () =
+  _counter := !_counter + 1 ;
+  sprintf "sym%d__" !_counter
+
+let gensym_enter () =
+  let old_counter = !_counter in
+  (gensym (), fun () -> _counter := old_counter)

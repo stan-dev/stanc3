@@ -22,3 +22,5 @@ val pp_typed_prog :
   Format.formatter -> ('a with_expr, ('b, 'c) stmt_with) prog -> unit
 
 val sexp_of_expr_typed_located : 'a with_expr -> Sexp.t
+val gensym : unit -> string
+val gensym_enter : unit -> string * (unit -> unit)

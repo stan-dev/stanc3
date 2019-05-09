@@ -152,7 +152,7 @@ let mkfor bodyfn iteratee smeta =
          ~expr:(Ast.Variable {name= s; id_loc= smeta})
          ~loc:smeta ~type_:UInt ~ad_level:DataOnly)
   in
-  let loopvar, reset = Util.gensym_enter () in
+  let loopvar, reset = gensym_enter () in
   let lower = loop_bottom in
   let upper =
     { expr= FunApp (StanLib, string_of_internal_fn FnLength, [iteratee])
@@ -467,7 +467,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         ; body }
       |> swrap
   | Ast.ForEach (loopvar, iteratee, body) ->
-      let newsym = Util.gensym () in
+      let newsym = gensym () in
       let wrap expr = {expr; emeta= {mloc; mtype= UInt; madlevel= DataOnly}} in
       let iteratee = trans_expr iteratee
       and indexing_var = wrap (Var newsym) in
@@ -490,9 +490,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         ; upper=
             wrap
             @@ FunApp
-                 ( Middle.CompilerInternal
-                 , string_of_internal_fn FnLength
-                 , [iteratee] )
+                 (Middle.StanLib, string_of_internal_fn FnLength, [iteratee])
         ; body }
       |> swrap
   | Ast.FunDef _ ->
