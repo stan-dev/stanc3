@@ -1,5 +1,5 @@
 (** Some plumbing for our compiler errors *)
-open Mir
+open Middle
 
 (** Our type of syntax error information *)
 type parse_error =

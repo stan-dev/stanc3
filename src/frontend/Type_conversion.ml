@@ -1,7 +1,7 @@
 (** Some functions for checking whether conversions between types are allowed *)
 
 open Core_kernel
-open Mir
+open Middle
 open Ast
 
 let autodifftype_can_convert at1 at2 =

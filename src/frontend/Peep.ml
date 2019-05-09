@@ -1,6 +1,6 @@
 (*
 open Core_kernel
-open Mir
+open Middle
 
 let rec log1m = function
   | FnApp("log", [FnApp("minus", [Lit(_, "1"); x])]) -> FnApp("log1m", [x])
