@@ -7,6 +7,27 @@ let pp_builtin_syntax = Fmt.(string |> styled `Yellow)
 let pp_keyword = Fmt.(string |> styled `Blue)
 let angle_brackets pp_v ppf v = Fmt.pf ppf "@[<1><%a>@]" pp_v v
 
+let pp_operator ppf = function
+  | Plus | PPlus -> Fmt.pf ppf "+"
+  | Minus | PMinus -> Fmt.pf ppf "-"
+  | Times -> Fmt.pf ppf "*"
+  | Divide -> Fmt.pf ppf "/"
+  | Modulo -> Fmt.pf ppf "%%"
+  | LDivide -> Fmt.pf ppf "\\"
+  | EltTimes -> Fmt.pf ppf ".*"
+  | EltDivide -> Fmt.pf ppf "./"
+  | Pow -> Fmt.pf ppf "^"
+  | Or -> Fmt.pf ppf "||"
+  | And -> Fmt.pf ppf "&&"
+  | Equals -> Fmt.pf ppf "=="
+  | NEquals -> Fmt.pf ppf "!="
+  | Less -> Fmt.pf ppf "<"
+  | Leq -> Fmt.pf ppf "<="
+  | Greater -> Fmt.pf ppf ">"
+  | Geq -> Fmt.pf ppf ">="
+  | PNot -> Fmt.pf ppf "!"
+  | Transpose -> Fmt.pf ppf "'"
+
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
@@ -235,33 +256,32 @@ let rec string_of_location loc =
 
 (** Render a location_span as a string *)
 let string_of_location_span loc_sp =
-  match loc_sp with
-  | {begin_loc; end_loc} ->
-      let bf = begin_loc.filename in
-      let ef = end_loc.filename in
-      let bl = begin_loc.line_num in
-      let el = end_loc.line_num in
-      let bc = begin_loc.col_num in
-      let ec = end_loc.col_num in
-      let open Format in
-      let file_line_col_string =
-        if bf = ef then
-          sprintf "file %s, %s" bf
-            ( if bl = el then
-              sprintf "line %d, %s" bl
-                ( if bc = ec then sprintf "column %d" bc
-                else sprintf "columns %d-%d" bc ec )
-            else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
-            )
-        else
-          sprintf "file %s, line %d, column %d to file %s, line %d, column %d"
-            bf bl bc ef el ec
-      in
-      let included_from_str =
-        match begin_loc.included_from with
-        | None -> ""
-        | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
-      in
-      sprintf "%s%s" file_line_col_string included_from_str
+  match loc_sp with {begin_loc; end_loc} ->
+    let bf = begin_loc.filename in
+    let ef = end_loc.filename in
+    let bl = begin_loc.line_num in
+    let el = end_loc.line_num in
+    let bc = begin_loc.col_num in
+    let ec = end_loc.col_num in
+    let open Format in
+    let file_line_col_string =
+      if bf = ef then
+        sprintf "file %s, %s" bf
+          ( if bl = el then
+            sprintf "line %d, %s" bl
+              ( if bc = ec then sprintf "column %d" bc
+              else sprintf "columns %d-%d" bc ec )
+          else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
+          )
+      else
+        sprintf "file %s, line %d, column %d to file %s, line %d, column %d" bf
+          bl bc ef el ec
+    in
+    let included_from_str =
+      match begin_loc.included_from with
+      | None -> ""
+      | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
+    in
+    sprintf "%s%s" file_line_col_string included_from_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
