@@ -113,7 +113,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
       | Ast.PString s -> mkstring mloc (unquote s)
-      | Ast.PExpr e -> trans_expr e )
+      | Ast.PExpr e -> trans_expr e)
     ps
 
 (** [add_index expression index] returns an expression that (additionally)
@@ -385,8 +385,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   |> List.filter ~f:(function {stmt= Skip; _} -> false | _ -> true)
 
 let unwrap_block_or_skip = function
-  | [({stmt= Block _; _} as b)]
-   | [({stmt= Skip; _} as b)] -> b
+  | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
   | x ->
       raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
