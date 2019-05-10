@@ -7,7 +7,7 @@ open Middle
 
 (**
    A label is a unique identifier for a node in the dataflow/dependency graph, and
-   often corresponds to one node in the Middle.
+   often corresponds to one node in the Mir.
 *)
 type label = int [@@deriving sexp, hash, compare]
 
