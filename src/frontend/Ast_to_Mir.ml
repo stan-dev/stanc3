@@ -11,9 +11,13 @@ let trans_fn_kind = function
   | UserDefined -> UserDefined
 
 let rec op_to_funapp op args =
+  let argtypes =
+    List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
+  in
   { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
-      { mtype= Semantic_check.operator_return_type op args |> unwrap_return_exn
+      { mtype=
+          Semantic_check.operator_return_type op argtypes |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
       ; madlevel= Ast.expr_ad_lub args } }
 
@@ -109,7 +113,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
       | Ast.PString s -> mkstring mloc (unquote s)
-      | Ast.PExpr e -> trans_expr e )
+      | Ast.PExpr e -> trans_expr e)
     ps
 
 (** [add_index expression index] returns an expression that (additionally)

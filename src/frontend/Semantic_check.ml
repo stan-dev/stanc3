@@ -798,7 +798,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let uindices_with_types =
         List.map
           ~f:(function
-            | Single e as i -> (i, e.emeta.type_) | i -> (i, Middle.UInt) )
+            | Single e as i -> (i, e.emeta.type_) | i -> (i, Middle.UInt))
           uindices
       in
       let inferred_ad_type_of_indexed at uindices =
@@ -810,8 +810,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
                  | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                      lub_ad_type [at; ue1.emeta.ad_level]
                  | Between (ue1, ue2) ->
-                     lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level]
-                 )
+                     lub_ad_type [at; ue1.emeta.ad_level; ue2.emeta.ad_level])
                uindices )
       in
       let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices
@@ -1463,8 +1462,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
                 match ue2.emeta.ad_level with
                 | AutoDiffable -> false
                 | _ -> true )
-        | SArray (ust2, ue) ->
-            not_ptq ue (fun () -> check_sizes_data_only ust2)
+        | SArray (ust2, ue) -> not_ptq ue (fun () -> check_sizes_data_only ust2)
         | _ -> true
       in
       (* Sizes must be of level at most data. *)
@@ -1541,7 +1539,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             | at, ut, id ->
                 ( semantic_check_autodifftype at
                 , semantic_check_unsizedtype ut
-                , semantic_check_identifier id ) )
+                , semantic_check_identifier id ))
           args
       in
       let uarg_types = List.map ~f:(function w, y, _ -> (w, y)) uargs in
@@ -1646,7 +1644,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
           (List.map
              ~f:(function
                | Middle.DataOnly, ut -> (Data, ut)
-               | AutoDiffable, ut -> (Param, ut) )
+               | AutoDiffable, ut -> (Param, ut))
              uarg_types)
       in
       let ub =
