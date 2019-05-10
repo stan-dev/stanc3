@@ -112,7 +112,7 @@ let trans_printables texpr_loc (ps : Ast.typed_expression Ast.printable list) =
           ; texpr_loc
           ; texpr_type= UReal }
           (*XXX hack strings aren't real*)
-      | Ast.PExpr e -> trans_expr e )
+      | Ast.PExpr e -> trans_expr e)
     ps
 
 let rec trans_stmt {Ast.stmt_typed; stmt_typed_loc= sloc; _} =

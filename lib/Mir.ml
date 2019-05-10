@@ -104,8 +104,9 @@ type ('e, 's) prog =
   ; prepare_data: 's list
   ; params: 'e top_var_table
   ; tparams: 'e top_var_table
-  ; prepare_params: 's list
-        (* XXX too intimately tied up with stan reader.hpp and writer.hpp in codegen
+  ; prepare_params:
+      's list
+      (* XXX too intimately tied up with stan reader.hpp and writer.hpp in codegen
      TODO: codegen parameter constraining and unconstraining in prepare_params
   *)
   ; log_prob: 's list

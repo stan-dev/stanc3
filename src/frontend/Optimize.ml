@@ -207,8 +207,7 @@ let create_function_inline_map adt l =
   (* We only add the first definition for each function to the inline map.
    This will make sure we do not inline recursive functions. *)
   let f accum fundef =
-    match fundef with
-    | {fdname; fdargs; fdbody; fdrt; _} -> (
+    match fundef with {fdname; fdargs; fdbody; fdrt; _} -> (
       match
         Map.add accum ~key:fdname
           ~data:
@@ -390,8 +389,7 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
           [ {stmt= SList prepare_data'; _}
           ; {stmt= SList transform_inits'; _}
           ; {stmt= SList log_prob'; _}
-          ; {stmt= SList generate_quantities'; _} ]
-    ; _ } ->
+          ; {stmt= SList generate_quantities'; _} ]; _ } ->
       { mir with
         functions_block= transformed_functions
       ; prepare_data= prepare_data'
@@ -431,7 +429,8 @@ let list_collapsing (mir : typed_prog) =
 let propagation
     (propagation_transfer :
          (int, Middle.stmt_loc_num) Map.Poly.t
-      -> (module Monotone_framework_sigs.TRANSFER_FUNCTION
+      -> (module
+          Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
              and type properties = ( string
                                    , Middle.expr_typed_located )

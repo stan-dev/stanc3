@@ -104,10 +104,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   , "Plus__"
                                   , [ alpha
                                     ; { expr=
-                                          FunApp (StanLib, "Times__", [x; beta])
-                                      ; _ } ] )
-                            ; _ } ] )
-                  ; _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      } ] ); _ } ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
@@ -122,11 +120,9 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   ( StanLib
                                   , "Plus__"
                                   , [ { expr=
-                                          FunApp (StanLib, "Times__", [x; beta])
-                                      ; _ }
-                                    ; alpha ] )
-                            ; _ } ] )
-                  ; _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      }
+                                    ; alpha ] ); _ } ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
@@ -136,9 +132,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "inv_logit"
-                        , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}]
-                        )
-                  ; _ } ] )
+                        , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}] ); _
+                  } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; zero; beta])
             | ( "bernoulli_logit_lpmf"
@@ -149,8 +144,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Plus__"
                         , [ alpha
                           ; {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] )
-                  ; _ } ] )
+                          ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
@@ -161,8 +155,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Plus__"
                         , [ {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] )
-                  ; _ } ] )
+                          ; alpha ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
@@ -200,8 +193,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Minus__"
                         , [ {expr= Lit (Int, "1"); _}
-                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] )
-                  ; _ } ] ) ->
+                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
+              ) ->
                 FunApp (StanLib, "log1m_exp", [x])
             | ( "log"
               , [ { expr=
@@ -209,14 +202,14 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Minus__"
                         , [ {expr= Lit (Int, "1"); _}
-                          ; {expr= FunApp (StanLib, "inv_logit", [x]); _} ] )
-                  ; _ } ] ) ->
+                          ; {expr= FunApp (StanLib, "inv_logit", [x]); _} ] ); _
+                  } ] ) ->
                 FunApp (StanLib, "log1m_inv_logit", [x])
             | ( "log"
               , [ { expr=
                       FunApp
-                        (StanLib, "Minus__", [{expr= Lit (Int, "1"); _}; x])
-                  ; _ } ] ) ->
+                        (StanLib, "Minus__", [{expr= Lit (Int, "1"); _}; x]); _
+                  } ] ) ->
                 FunApp (StanLib, "log1m", [x])
             | ( "log"
               , [ { expr=
@@ -224,21 +217,21 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Plus__"
                         , [ {expr= Lit (Int, "1"); _}
-                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] )
-                  ; _ } ] ) ->
+                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
+              ) ->
                 FunApp (StanLib, "log1p_exp", [x])
             | ( "log"
               , [ { expr=
-                      FunApp (StanLib, "Plus__", [{expr= Lit (Int, "1"); _}; x])
-                  ; _ } ] ) ->
+                      FunApp (StanLib, "Plus__", [{expr= Lit (Int, "1"); _}; x]); _
+                  } ] ) ->
                 FunApp (StanLib, "log1p", [x])
             | ( "log"
               , [ { expr=
                       FunApp
                         ( StanLib
                         , "fabs"
-                        , [{expr= FunApp (StanLib, "determinant", [x]); _}] )
-                  ; _ } ] ) ->
+                        , [{expr= FunApp (StanLib, "determinant", [x]); _}] ); _
+                  } ] ) ->
                 FunApp (StanLib, "log_determinant", [x])
             | ( "log"
               , [ { expr=
@@ -246,8 +239,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Minus__"
                         , [ {expr= FunApp (StanLib, "exp", [x]); _}
-                          ; {expr= FunApp (StanLib, "exp", [y]); _} ] )
-                  ; _ } ] ) ->
+                          ; {expr= FunApp (StanLib, "exp", [y]); _} ] ); _ } ]
+              ) ->
                 FunApp (StanLib, "log_diff_exp", [x; y])
             (* TODO: log_mix?*)
             | "log", [{expr= FunApp (StanLib, "falling_factorial", l); _}] ->
@@ -263,8 +256,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "sum"
-                        , [{expr= FunApp (StanLib, "exp", l); _}] )
-                  ; _ } ] ) ->
+                        , [{expr= FunApp (StanLib, "exp", l); _}] ); _ } ] ) ->
                 FunApp (StanLib, "log_sum_exp", l)
             | ( "log"
               , [ { expr=
@@ -272,8 +264,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Plus__"
                         , [ {expr= FunApp (StanLib, "exp", [x]); _}
-                          ; {expr= FunApp (StanLib, "exp", [y]); _} ] )
-                  ; _ } ] ) ->
+                          ; {expr= FunApp (StanLib, "exp", [y]); _} ] ); _ } ]
+              ) ->
                 FunApp (StanLib, "log_sum_exp", [x; y])
             | ( "multi_normal_lpdf"
               , [y; mu; {expr= FunApp (StanLib, "inverse", [tau]); _}] ) ->
@@ -290,10 +282,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   , "Plus__"
                                   , [ alpha
                                     ; { expr=
-                                          FunApp (StanLib, "Times__", [x; beta])
-                                      ; _ } ] )
-                            ; _ } ] )
-                  ; _ }
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      } ] ); _ } ] ); _ }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -311,11 +301,9 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   ( StanLib
                                   , "Plus__"
                                   , [ { expr=
-                                          FunApp (StanLib, "Times__", [x; beta])
-                                      ; _ }
-                                    ; alpha ] )
-                            ; _ } ] )
-                  ; _ }
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      }
+                                    ; alpha ] ); _ } ] ); _ }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -328,9 +316,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "exp"
-                        , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}]
-                        )
-                  ; _ }
+                        , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}] ); _
+                  }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -345,8 +332,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Plus__"
                         , [ alpha
                           ; {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] )
-                  ; _ }
+                          ] ); _ }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -360,8 +346,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Plus__"
                         , [ {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] )
-                  ; _ }
+                          ; alpha ] ); _ }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -393,10 +378,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   , "Plus__"
                                   , [ alpha
                                     ; { expr=
-                                          FunApp (StanLib, "Times__", [x; beta])
-                                      ; _ } ] )
-                            ; _ } ] )
-                  ; _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      } ] ); _ } ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "normal_lpdf"
@@ -407,8 +390,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Plus__"
                         , [ alpha
                           ; {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] )
-                  ; _ }
+                          ] ); _ }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -420,8 +402,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Plus__"
                         , [ {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] )
-                  ; _ }
+                          ; alpha ] ); _ }
                 ; sigma ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp
@@ -442,11 +423,9 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   ( StanLib
                                   , "Plus__"
                                   , [ { expr=
-                                          FunApp (StanLib, "Times__", [x; beta])
-                                      ; _ }
-                                    ; alpha ] )
-                            ; _ } ] )
-                  ; _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      }
+                                    ; alpha ] ); _ } ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_lpmf"
@@ -455,9 +434,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "exp"
-                        , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}]
-                        )
-                  ; _ } ] )
+                        , [{expr= FunApp (StanLib, "Times__", [x; beta]); _}] ); _
+                  } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; zero; beta])
             | ( "poisson_log_lpmf"
@@ -468,8 +446,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Plus__"
                         , [ alpha
                           ; {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] )
-                  ; _ } ] )
+                          ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_log_lpmf"
@@ -479,8 +456,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Plus__"
                         , [ {expr= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] )
-                  ; _ } ] )
+                          ; alpha ] ); _ } ] )
               when x.emeta.mtype = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_log_lpmf"
@@ -506,8 +482,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         ( StanLib
                         , "Divide__"
                         , [{expr= Lit (Int, "1"); _}; {expr= Lit (Int, "2"); _}]
-                        )
-                  ; _ } ] ) ->
+                        ); _ } ] ) ->
                 FunApp (StanLib, "sqrt", [x])
             | "square", [{expr= FunApp (StanLib, "sd", [x]); _}] ->
                 FunApp (StanLib, "variance", [x])
@@ -518,8 +493,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "square"
-                        , [{expr= FunApp (StanLib, "Minus__", [x; y]); _}] )
-                  ; _ } ] ) ->
+                        , [{expr= FunApp (StanLib, "Minus__", [x; y]); _}] ); _
+                  } ] ) ->
                 FunApp (StanLib, "squared_distance", [x; y])
             | "sum", [{expr= FunApp (StanLib, "diagonal", l); _}] ->
                 FunApp (StanLib, "trace", l)
@@ -541,13 +516,9 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                                     FunApp
                                                       ( StanLib
                                                       , "transpose"
-                                                      , [b] )
-                                                ; _ } ] )
-                                      ; _ }
-                                    ; a ] )
-                            ; _ }
-                          ; c ] )
-                  ; _ } ] )
+                                                      , [b] ); _ } ] ); _ }
+                                    ; a ] ); _ }
+                          ; c ] ); _ } ] )
               when compare_expr_typed_located b c = 0 ->
                 FunApp (StanLib, "trace_gen_quad_form", [d; a; b])
             | "trace", [{expr= FunApp (StanLib, "quad_form", [a; b]); _}] ->
@@ -580,8 +551,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "matrix_exp"
-                        , [{expr= FunApp (StanLib, "Times__", [t; a]); _}] )
-                  ; _ }
+                        , [{expr= FunApp (StanLib, "Times__", [t; a]); _}] ); _
+                  }
                 ; b ] )
               when t.emeta.mtype = UInt || t.emeta.mtype = UReal ->
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
@@ -590,8 +561,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "matrix_exp"
-                        , [{expr= FunApp (StanLib, "Times__", [a; t]); _}] )
-                  ; _ }
+                        , [{expr= FunApp (StanLib, "Times__", [a; t]); _}] ); _
+                  }
                 ; b ] )
               when t.emeta.mtype = UInt || t.emeta.mtype = UReal ->
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
@@ -604,15 +575,14 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "transpose"
-                        , [{expr= FunApp (StanLib, "diag_matrix", [v]); _}] )
-                  ; _ }
+                        , [{expr= FunApp (StanLib, "diag_matrix", [v]); _}] ); _
+                  }
                 ; { expr=
                       FunApp
                         ( StanLib
                         , "Times__"
                         , [a; {expr= FunApp (StanLib, "diag_matrix", [w]); _}]
-                        )
-                  ; _ } ] )
+                        ); _ } ] )
               when compare_expr_typed_located v w = 0 ->
                 FunApp (StanLib, "quad_form_diag", [a; v])
             | ( "Times__"
@@ -625,11 +595,9 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                                   ( StanLib
                                   , "transpose"
                                   , [ { expr=
-                                          FunApp (StanLib, "diag_matrix", [v])
-                                      ; _ } ] )
-                            ; _ }
-                          ; a ] )
-                  ; _ }
+                                          FunApp (StanLib, "diag_matrix", [v]); _
+                                      } ] ); _ }
+                          ; a ] ); _ }
                 ; {expr= FunApp (StanLib, "diag_matrix", [w]); _} ] )
               when compare_expr_typed_located v w = 0 ->
                 FunApp (StanLib, "quad_form_diag", [a; v])
@@ -643,8 +611,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "Times__"
-                        , [{expr= FunApp (StanLib, "transpose", [b]); _}; a] )
-                  ; _ }
+                        , [{expr= FunApp (StanLib, "transpose", [b]); _}; a] ); _
+                  }
                 ; c ] )
               when compare_expr_typed_located b c = 0 ->
                 FunApp (StanLib, "quad_form", [a; b])

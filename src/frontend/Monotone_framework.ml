@@ -182,11 +182,9 @@ let dual_powerset_lattice_empty_initial (type v)
 let powerset_lattice_empty_initial (type v)
     (module T : TYPE with type vals = v) =
   powerset_lattice
-    ( module struct
-      type vals = T.vals
+    (module struct type vals = T.vals
 
-      let initial = Set.Poly.empty
-    end )
+                   let initial = Set.Poly.empty end)
 
 (* The specific powerset lattice we use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
@@ -453,8 +451,7 @@ let live_variables_transfer
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = string Set.Poly.t )
+    with type labels = int and type properties = string Set.Poly.t )
 
 (** Calculate the set of sub-expressions of an expression *)
 let rec used_subexpressions_expr (e : Middle.expr_typed_located) =
@@ -595,8 +592,7 @@ let anticipated_expressions_transfer
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Middle.ExprSet.t )
+    with type labels = int and type properties = Middle.ExprSet.t )
 
 (** A helper function for defining transfer functions in terms of gen and kill sets
     in an alternative way, that is used in some of the subanalyses of lazy code motion *)
@@ -625,8 +621,7 @@ let available_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Middle.ExprSet.t )
+    with type labels = int and type properties = Middle.ExprSet.t )
 
 (** Calculates the set of expressions that can be calculated for the first time
     at each node in the flow graph *)
@@ -654,8 +649,7 @@ let postponable_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Middle.ExprSet.t )
+    with type labels = int and type properties = Middle.ExprSet.t )
 
 (** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
@@ -690,8 +684,7 @@ let used_not_latest_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int
-     and type properties = Middle.ExprSet.t )
+    with type labels = int and type properties = Middle.ExprSet.t )
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
@@ -757,8 +750,7 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       analysis_in_out
   end
   : MONOTONE_FRAMEWORK
-    with type labels = l
-     and type properties = p )
+    with type labels = l and type properties = p )
 
 let rec declared_variables_stmt
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
@@ -787,7 +779,8 @@ let propagation_mfp (prog : Middle.typed_prog)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
     (propagation_transfer :
          (int, Middle.stmt_loc_num) Map.Poly.t
-      -> (module TRANSFER_FUNCTION
+      -> (module
+          TRANSFER_FUNCTION
             with type labels = int
              and type properties = ( string
                                    , Middle.expr_typed_located )
