@@ -380,9 +380,11 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   decl :: read_stmt :: checks
   |> List.filter ~f:(function {stmt= Skip; _} -> false | _ -> true)
 
-let unwrap_block = function
-  | [({stmt= Block _; _} as b)] -> b
-  | x -> raise_s [%message "Expecting a block, not" (x : stmt_loc list)]
+let unwrap_block_or_skip = function
+  | [({stmt= Block _; _} as b)]
+   | [({stmt= Skip; _} as b)] -> b
+  | x ->
+      raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
 let rec trans_stmt declc (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
@@ -506,7 +508,7 @@ let trans_fun_def declc (ts : Ast.typed_statement) =
             (match returntype with Void -> None | ReturnType ut -> Some ut)
         ; fdname= funname.name
         ; fdargs= List.map ~f:trans_arg arguments
-        ; fdbody= trans_stmt body |> unwrap_block
+        ; fdbody= trans_stmt body |> unwrap_block_or_skip
         ; fdloc= sloc }
     | _ ->
         raise_s
