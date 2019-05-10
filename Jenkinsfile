@@ -12,17 +12,8 @@ def runShell(String command){
 pipeline {
     agent none
     stages {
-        stage("Build & Test windows binary") {
-            agent { label 'windows' }
-            steps {
-                bat "bash -cl \"cd test/integration\""
-                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
-                bat "bash -cl \"cd ..\""
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
-            }
-        }
         stage("Build & Test") {
-            agent {            
+            agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
                     //Forces image to ignore entrypoint
@@ -52,6 +43,15 @@ pipeline {
                 //Cleans the workspace
                 runShell("rm -rf ./*")
 
+            }
+        }
+        stage("Build & Test windows binary") {
+            agent { label 'windows' }
+            steps {
+                bat "bash -cl \"cd test/integration\""
+                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                bat "bash -cl \"cd ..\""
+                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
             }
         }
         stage("Build & Test static linux binary") {
