@@ -112,15 +112,16 @@ let pp_statement pp_e pp_s ppf = function
         pp_builtin_syntax "if" pp_e pred pp_s s_true pp_builtin_syntax "else"
         pp_s s_false
   | IfElse (pred, s_true, _) ->
-      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]|} pp_builtin_syntax "if" pp_e
-        pred pp_s s_true
+      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]|} pp_builtin_syntax "if" pp_e pred
+        pp_s s_true
   | While (pred, stmt) ->
-      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]|} pp_builtin_syntax "while" pp_e
-        pred pp_s stmt
+      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]|} pp_builtin_syntax "while" pp_e pred
+        pp_s stmt
   | For {loopvar; lower; upper; body} ->
-      Fmt.pf ppf {|@[<v2>@[%a(%s in %a:%a)@] %a@]|} pp_builtin_syntax
-        "for" loopvar pp_e lower pp_e upper pp_s body
-  | Block stmts -> Fmt.pf ppf {|{@;@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
+      Fmt.pf ppf {|@[<v2>@[%a(%s in %a:%a)@] %a@]|} pp_builtin_syntax "for"
+        loopvar pp_e lower pp_e upper pp_s body
+  | Block stmts ->
+      Fmt.pf ppf {|{@;@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
   | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype
