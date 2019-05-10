@@ -197,6 +197,18 @@ let rec sexp_of_stmt_loc {stmt; _} =
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
 (* ===================== Some helper functions and values ====================== *)
+
+(** remove_size [st] discards size information from a sizedtype
+    to return an unsizedtype. *)
+let rec remove_size = function
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix _ -> UMatrix
+  | SArray (t, _) -> UArray (remove_size t)
+
+let remove_possible_size = function Sized t -> remove_size t | Unsized t -> t
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
 let mk_string_of sexp_of x = Sexp.to_string (sexp_of x) ^ "__"

@@ -70,20 +70,8 @@ type 'e sizedtype =
   | SArray of 'e sizedtype * 'e
 [@@deriving sexp, compare, map, hash, fold]
 
-(** remove_size [st] discards size information from a sizedtype
-    to return an unsizedtype. *)
-let rec remove_size = function
-  | SInt -> UInt
-  | SReal -> UReal
-  | SVector _ -> UVector
-  | SRowVector _ -> URowVector
-  | SMatrix _ -> UMatrix
-  | SArray (t, _) -> UArray (remove_size t)
-
 type 'e possiblysizedtype = Sized of 'e sizedtype | Unsized of unsizedtype
 [@@deriving sexp, compare, map, hash, fold]
-
-let remove_possible_size = function Sized t -> remove_size t | Unsized t -> t
 
 type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
