@@ -241,7 +241,7 @@ let%expect_test "Reaching defns example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps =
     Map.Poly.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit) )
+      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit))
   in
   print_s
     [%sexp

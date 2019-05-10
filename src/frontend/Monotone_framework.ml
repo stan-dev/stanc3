@@ -182,9 +182,11 @@ let dual_powerset_lattice_empty_initial (type v)
 let powerset_lattice_empty_initial (type v)
     (module T : TYPE with type vals = v) =
   powerset_lattice
-    (module struct type vals = T.vals
+    ( module struct
+      type vals = T.vals
 
-                   let initial = Set.Poly.empty end)
+      let initial = Set.Poly.empty
+    end )
 
 (* The specific powerset lattice we use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
@@ -217,7 +219,8 @@ let constant_propagation_transfer
               match Partial_evaluator.eval_expr (subst_expr m e) with
               | {expr= Middle.Lit (_, _); _} as e' -> Map.set m ~key:s ~data:e'
               | _ -> Map.remove m s )
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _) ->
+            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
+              ->
                 Map.remove m s
             | Middle.TargetPE _
              |Middle.NRFunApp (_, _, _)
@@ -229,8 +232,8 @@ let constant_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Middle.expr_typed_located) Map.Poly.t option
-  )
+     and type properties = (string, Middle.expr_typed_located) Map.Poly.t
+                           option )
 
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
@@ -251,7 +254,8 @@ let expression_propagation_transfer
              We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Assignment ((s, []), e) ->
                 Map.set m ~key:s ~data:(subst_expr m e)
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _) ->
+            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
+              ->
                 Map.remove m s
             | Middle.TargetPE _
              |Middle.NRFunApp (_, _, _)
@@ -263,8 +267,8 @@ let expression_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Middle.expr_typed_located) Map.Poly.t option
-  )
+     and type properties = (string, Middle.expr_typed_located) Map.Poly.t
+                           option )
 
 (** The transfer function for a copy propagation analysis *)
 let copy_propagation_transfer
@@ -282,7 +286,8 @@ let copy_propagation_transfer
             ( match mir_node with
             | Middle.Assignment ((s, []), {expr= Middle.Var t; emeta}) ->
                 Map.set m ~key:s ~data:{Middle.expr= Middle.Var t; emeta}
-            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _) ->
+            | Middle.Decl {decl_id= s; _} | Middle.Assignment ((s, _ :: _), _)
+              ->
                 Map.remove m s
             | Middle.Assignment (_, _)
              |Middle.TargetPE _
@@ -295,8 +300,8 @@ let copy_propagation_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Middle.expr_typed_located) Map.Poly.t option
-  )
+     and type properties = (string, Middle.expr_typed_located) Map.Poly.t
+                           option )
 
 (** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
@@ -374,7 +379,8 @@ let rec free_vars_expr (e : Middle.expr_typed_located) =
 and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Set.Poly.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e ->
+  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
+    ->
       free_vars_expr e
   | Middle.Between (e1, e2) ->
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
@@ -383,7 +389,8 @@ and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
 let rec free_vars_stmt
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.Return (Some e) | Middle.TargetPE e ->
+  | Middle.Assignment ((_, []), e) | Middle.Return (Some e) | Middle.TargetPE e
+    ->
       free_vars_expr e
   | Middle.Assignment ((_, l), e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
@@ -399,16 +406,20 @@ let rec free_vars_stmt
         [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.stmt]
   | Middle.Block l | Middle.SList l ->
       Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.stmt) l)
-  | Middle.Decl _ | Middle.Break | Middle.Continue | Middle.Return None | Middle.Skip ->
+  | Middle.Decl _ | Middle.Break | Middle.Continue
+   |Middle.Return None
+   |Middle.Skip ->
       Set.Poly.empty
 
 (** A variation on free_vars_stmt, where we do not recursively count free
     variables in sub statements  *)
-let top_free_vars_stmt (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+let top_free_vars_stmt
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
     (s : (Middle.expr_typed_located, int) Middle.statement) =
   match s with
-  | Middle.Assignment _ | Middle.Return _ | Middle.TargetPE _ | Middle.NRFunApp _
-   |Middle.Decl _ | Middle.Break | Middle.Continue | Middle.Skip ->
+  | Middle.Assignment _ | Middle.Return _ | Middle.TargetPE _
+   |Middle.NRFunApp _ | Middle.Decl _ | Middle.Break | Middle.Continue
+   |Middle.Skip ->
       free_vars_stmt
         (Middle.statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
   | Middle.While (e, _) | Middle.IfElse (e, _, _) -> free_vars_expr e
@@ -442,11 +453,13 @@ let live_variables_transfer
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = string Set.Poly.t )
+    with type labels = int
+     and type properties = string Set.Poly.t )
 
 (** Calculate the set of sub-expressions of an expression *)
 let rec used_subexpressions_expr (e : Middle.expr_typed_located) =
-  Middle.ExprSet.union (Middle.ExprSet.singleton e)
+  Middle.ExprSet.union
+    (Middle.ExprSet.singleton e)
     ( match e.expr with
     | Middle.Var _ | Middle.Lit (_, _) -> Middle.ExprSet.empty
     | Middle.FunApp (_, _, l) ->
@@ -468,7 +481,9 @@ let rec used_subexpressions_expr (e : Middle.expr_typed_located) =
 and used_expressions_idx_help f (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Middle.ExprSet.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e -> f e
+  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
+    ->
+      f e
   | Middle.Between (e1, e2) -> Middle.ExprSet.union (f e1) (f e2)
 
 (** Calculate the set of expressions of an expression *)
@@ -477,17 +492,22 @@ let used_expressions_expr e = Middle.ExprSet.singleton e
 let rec used_expressions_stmt_help f
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e) -> f e
+  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e)
+    ->
+      f e
   | Middle.Assignment ((_, l), e) ->
       Middle.ExprSet.union (f e)
-        (Middle.ExprSet.union_list (List.map ~f:(used_expressions_idx_help f) l))
+        (Middle.ExprSet.union_list
+           (List.map ~f:(used_expressions_idx_help f) l))
   | Middle.IfElse (e, b1, Some b2) ->
       Middle.ExprSet.union_list
         [ f e
         ; used_expressions_stmt_help f b1.stmt
         ; used_expressions_stmt_help f b2.stmt ]
   | Middle.NRFunApp (_, _, l) -> Middle.ExprSet.union_list (List.map ~f l)
-  | Middle.Decl _ | Middle.Return None | Middle.Break | Middle.Continue | Middle.Skip ->
+  | Middle.Decl _
+   |Middle.Return None
+   |Middle.Break | Middle.Continue | Middle.Skip ->
       Middle.ExprSet.empty
   | Middle.IfElse (e, b, None) | Middle.While (e, b) ->
       Middle.ExprSet.union (f e) (used_expressions_stmt_help f b.stmt)
@@ -497,8 +517,8 @@ let rec used_expressions_stmt_help f
         ; used_expressions_stmt_help f b.stmt
         ; Middle.ExprSet.singleton
             { Middle.expr= Var s
-            ; Middle.emeta= {mtype= UInt; madlevel= DataOnly; mloc= Middle.no_span}
-            } ]
+            ; Middle.emeta=
+                {mtype= UInt; madlevel= DataOnly; mloc= Middle.no_span} } ]
   | Middle.Block l | Middle.SList l ->
       Middle.ExprSet.union_list
         (List.map ~f:(fun s -> used_expressions_stmt_help f s.stmt) l)
@@ -513,17 +533,21 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Middle.expr_typed_located, int) Middle.statement) =
   match s with
-  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e) -> f e
+  | Middle.Assignment ((_, []), e) | Middle.TargetPE e | Middle.Return (Some e)
+    ->
+      f e
   | Middle.Assignment ((_, l), e) ->
       Middle.ExprSet.union (f e)
-        (Middle.ExprSet.union_list (List.map ~f:(used_expressions_idx_help f) l))
+        (Middle.ExprSet.union_list
+           (List.map ~f:(used_expressions_idx_help f) l))
   | Middle.While (e, _) | Middle.IfElse (e, _, _) -> f e
   | Middle.NRFunApp (_, _, l) -> Middle.ExprSet.union_list (List.map ~f l)
   | Middle.Block _ | Middle.SList _ | Middle.Decl _
    |Middle.Return None
    |Middle.Break | Middle.Continue | Middle.Skip ->
       Middle.ExprSet.empty
-  | Middle.For {lower= e1; upper= e2; _} -> Middle.ExprSet.union_list [f e1; f e2]
+  | Middle.For {lower= e1; upper= e2; _} ->
+      Middle.ExprSet.union_list [f e1; f e2]
 
 (** Calculate the set of sub-expressions at the top level in a statement *)
 let top_used_subexpressions_stmt =
@@ -571,7 +595,8 @@ let anticipated_expressions_transfer
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Middle.ExprSet.t )
+    with type labels = int
+     and type properties = Middle.ExprSet.t )
 
 (** A helper function for defining transfer functions in terms of gen and kill sets
     in an alternative way, that is used in some of the subanalyses of lazy code motion *)
@@ -594,11 +619,14 @@ let available_expressions_transfer
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
       let gen = (Map.find_exn anticipated_expressions l).exit in
-      let kill = killed_expressions_stmt (Middle.ExprSet.union p gen) mir_node in
+      let kill =
+        killed_expressions_stmt (Middle.ExprSet.union p gen) mir_node
+      in
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Middle.ExprSet.t )
+    with type labels = int
+     and type properties = Middle.ExprSet.t )
 
 (** Calculates the set of expressions that can be calculated for the first time
     at each node in the flow graph *)
@@ -626,7 +654,8 @@ let postponable_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Middle.ExprSet.t )
+    with type labels = int
+     and type properties = Middle.ExprSet.t )
 
 (** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
@@ -661,7 +690,8 @@ let used_not_latest_expressions_transfer
       transfer_gen_kill_alt p gen kill
   end
   : TRANSFER_FUNCTION
-    with type labels = int and type properties = Middle.ExprSet.t )
+    with type labels = int
+     and type properties = Middle.ExprSet.t )
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
@@ -727,7 +757,8 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       analysis_in_out
   end
   : MONOTONE_FRAMEWORK
-    with type labels = l and type properties = p )
+    with type labels = l
+     and type properties = p )
 
 let rec declared_variables_stmt
     (s : (Middle.expr_typed_located, Middle.stmt_loc) Middle.statement) =
@@ -756,10 +787,11 @@ let propagation_mfp (prog : Middle.typed_prog)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
     (propagation_transfer :
          (int, Middle.stmt_loc_num) Map.Poly.t
-      -> (module
-          TRANSFER_FUNCTION
+      -> (module TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Middle.expr_typed_located) Map.Poly.t
+             and type properties = ( string
+                                   , Middle.expr_typed_located )
+                                   Map.Poly.t
                                    option)) =
   let mir = Map.find_exn flowgraph_to_mir 1 in
   let domain =

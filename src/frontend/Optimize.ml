@@ -63,17 +63,16 @@ let rec inline_function_expression adt fim e =
       let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
       let es = List.map ~f:snd se_list in
       match Map.find fim s with
-      | None ->
-      (s_list, {e with expr= FunApp (t, s, es)})
+      | None -> (s_list, {e with expr= FunApp (t, s, es)})
       | Some (rt, args, b) ->
-          let b = b (* TODO: replace fresh variables here *)
-          in
+          let b = b (* TODO: replace fresh variables here *) in
           let x = Util.gensym () in
           let b = handle_early_returns (Some (rt, adt, x)) b in
           ( s_list
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ; (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt ]
+              ; (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt
+              ]
           , { expr= Var x
             ; emeta=
                 { mtype= remove_possible_size (Option.value_exn rt)
@@ -145,9 +144,11 @@ let rec inline_function_statement adt fim {stmt; smeta} =
             ( match Map.find fim s with
             | None -> NRFunApp (t, s, es)
             | Some (_, args, b) ->
-                let b = b in (* TODO: replace fresh variables here *)
+                let b = b in
+                (* TODO: replace fresh variables here *)
                 let b = handle_early_returns None b in
-                (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt )
+                (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt
+            )
       | Return e -> (
         match e with
         | None -> Return None
@@ -206,7 +207,8 @@ let create_function_inline_map adt l =
   (* We only add the first definition for each function to the inline map.
    This will make sure we do not inline recursive functions. *)
   let f accum fundef =
-    match fundef with {fdname; fdargs; fdbody; fdrt; _} -> (
+    match fundef with
+    | {fdname; fdargs; fdbody; fdrt; _} -> (
       match
         Map.add accum ~key:fdname
           ~data:
@@ -388,7 +390,8 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
           [ {stmt= SList prepare_data'; _}
           ; {stmt= SList transform_inits'; _}
           ; {stmt= SList log_prob'; _}
-          ; {stmt= SList generate_quantities'; _} ]; _ } ->
+          ; {stmt= SList generate_quantities'; _} ]
+    ; _ } ->
       { mir with
         functions_block= transformed_functions
       ; prepare_data= prepare_data'
@@ -428,10 +431,11 @@ let list_collapsing (mir : typed_prog) =
 let propagation
     (propagation_transfer :
          (int, Middle.stmt_loc_num) Map.Poly.t
-      -> (module
-          Monotone_framework_sigs.TRANSFER_FUNCTION
+      -> (module Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Middle.expr_typed_located) Map.Poly.t
+             and type properties = ( string
+                                   , Middle.expr_typed_located )
+                                   Map.Poly.t
                                    option)) (mir : typed_prog) =
   let transform s =
     let flowgraph, flowgraph_to_mir =
@@ -682,7 +686,8 @@ let lazy_code_motion (mir : typed_prog) =
         (f {stmt; smeta= Middle.no_span}).stmt
       else
         SList
-          (List.map ~f (assignments_to_add_to_s @ [{stmt; smeta= Middle.no_span}]))
+          (List.map ~f
+             (assignments_to_add_to_s @ [{stmt; smeta= Middle.no_span}]))
     in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
@@ -802,7 +807,8 @@ let%expect_test "map_rec_state_stmt_loc" =
     | x -> (x, i)
   in
   let mir_stmt, num =
-    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; smeta= Middle.no_span}
+    (map_rec_state_stmt_loc f 0)
+      {stmt= SList mir.log_prob; smeta= Middle.no_span}
   in
   let mir = {mir with log_prob= [mir_stmt]} in
   pp_typed_prog Format.std_formatter mir ;

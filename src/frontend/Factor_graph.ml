@@ -15,7 +15,8 @@ type factor =
 let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
     factor list =
   match stmt with
-  | Middle.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
+  | Middle.TargetPE e ->
+      List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | Middle.NRFunApp (_, f, _) when internal_fn_of_string f = Some FnReject ->
       [Reject]
   | Middle.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->

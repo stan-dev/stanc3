@@ -419,7 +419,9 @@ let example3_program =
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
-  let blocks = Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}] in
+  let blocks =
+    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+  in
   {stmt= blocks; smeta= Middle.no_span}
 
 let example3_statement_map =
@@ -504,7 +506,9 @@ let example4_program =
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
-  let blocks = Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}] in
+  let blocks =
+    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+  in
   {stmt= blocks; smeta= Middle.no_span}
 
 let example4_statement_map =
@@ -595,7 +599,9 @@ let example5_program =
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
-  let blocks = Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}] in
+  let blocks =
+    Middle.SList [{stmt= Block mir.log_prob; smeta= Middle.no_span}]
+  in
   {stmt= blocks; smeta= Middle.no_span}
 
 let example5_statement_map =
