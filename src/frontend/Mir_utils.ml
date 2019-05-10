@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 open Dataflow_types
 
 (** See interface file *)
@@ -111,7 +111,7 @@ let rec summation_terms (rhs : expr_typed_located) : expr_typed_located list =
   | _ -> [rhs]
 
 (** See interface file *)
-let stmt_of_block b = {stmt= SList b; smeta= Mir.no_span}
+let stmt_of_block b = {stmt= SList b; smeta= Middle.no_span}
 
 let rec subst_expr (m : (string, expr_typed_located) Map.Poly.t)
     (e : expr_typed_located) =
@@ -127,7 +127,7 @@ let subst_stmt_base_helper g h b =
   | x -> map_statement g (fun y -> y) x
 
 let subst_stmt_base m = subst_stmt_base_helper (subst_expr m) (subst_idx m)
-let subst_stmt m = Mir.map_rec_stmt_loc (subst_stmt_base m)
+let subst_stmt m = Middle.map_rec_stmt_loc (subst_stmt_base m)
 
 let rec expr_subst_expr m (e : expr_typed_located) =
   match Map.find m e with

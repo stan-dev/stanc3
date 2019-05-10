@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
@@ -7,7 +7,7 @@ let unwrap_return_exn = function
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let trans_fn_kind = function
-  | Ast.StanLib -> Mir.StanLib
+  | Ast.StanLib -> Middle.StanLib
   | UserDefined -> UserDefined
 
 let rec op_to_funapp op args =
@@ -40,16 +40,16 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
         | Ast.CondDistApp ({name; _}, args) ->
-            FunApp (Mir.StanLib, name, trans_exprs args)
+            FunApp (Middle.StanLib, name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
         | ArrayExpr eles ->
             FunApp
-              ( Mir.CompilerInternal
+              ( Middle.CompilerInternal
               , string_of_internal_fn FnMakeArray
               , trans_exprs eles )
         | RowVectorExpr eles ->
             FunApp
-              ( Mir.CompilerInternal
+              ( Middle.CompilerInternal
               , string_of_internal_fn FnMakeRowVec
               , trans_exprs eles )
         | Indexed (lhs, indices) ->
@@ -113,7 +113,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
       | Ast.PString s -> mkstring mloc (unquote s)
-      | Ast.PExpr e -> trans_expr e)
+      | Ast.PExpr e -> trans_expr e )
     ps
 
 (** [add_index expression index] returns an expression that (additionally)
@@ -483,7 +483,7 @@ let rec trans_stmt declc (ts : Ast.typed_statement) =
         ; upper=
             wrap
             @@ FunApp
-                 ( Mir.CompilerInternal
+                 ( Middle.CompilerInternal
                  , string_of_internal_fn FnLength
                  , [iteratee] )
         ; body }
@@ -645,7 +645,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : Mir.stmt_loc list)] ;
+  print_s [%sexp (op : Middle.stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
@@ -731,7 +731,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let mir = trans_prog "" (Semantic_check.semantic_check_program ast) in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())

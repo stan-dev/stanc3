@@ -1,7 +1,7 @@
 (** Translate from the AST to the MIR *)
 
 open Core_kernel
-open Mir
+open Middle
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
@@ -427,7 +427,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let mir = trans_prog "" (Semantic_check.semantic_check_program ast) in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (data_vars ()) (tdata_vars ()) (prepare_data ())

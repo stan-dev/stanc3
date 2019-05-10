@@ -1,7 +1,7 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
 open Core_kernel
-open Mir
+open Middle
 
 let apply_prefix_operator_int (op : string) i =
   Lit
@@ -64,7 +64,7 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s -> raise_s [%sexp (s : string)] ) )
 
-let rec eval_expr (e : Mir.expr_typed_located) =
+let rec eval_expr (e : Middle.expr_typed_located) =
   { e with
     expr=
       ( match e.expr with
@@ -76,7 +76,7 @@ let rec eval_expr (e : Mir.expr_typed_located) =
               List.map ~f:(fun x -> (x.emeta.madlevel, x.emeta.mtype)) l'
             in
             try
-              let op = Mir.operator_of_sexp (Sexp.of_string name) in
+              let op = Middle.operator_of_sexp (Sexp.of_string name) in
               Semantic_check.operator_return_type op argument_types
             with _ ->
               Stan_math_signatures.stan_math_returntype name argument_types

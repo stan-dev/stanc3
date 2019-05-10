@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 open Dataflow_types
 open Mir_utils
 
@@ -15,18 +15,18 @@ type factor =
 let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
     factor list =
   match stmt with
-  | Mir.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | Mir.NRFunApp (_, f, _) when internal_fn_of_string f = Some FnReject ->
+  | Middle.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
+  | Middle.NRFunApp (_, f, _) when internal_fn_of_string f = Some FnReject ->
       [Reject]
-  | Mir.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
+  | Middle.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
       [LPFunction (s, args)]
-  | Mir.Assignment (_, _)
-   |Mir.NRFunApp (_, _, _)
-   |Mir.Break | Mir.Continue | Mir.Return _ | Mir.Skip
-   |Mir.IfElse (_, _, _)
-   |Mir.While (_, _)
-   |Mir.For _ | Mir.Block _ | Mir.SList _
-   |Mir.Decl {decl_id= _; _} ->
+  | Middle.Assignment (_, _)
+   |Middle.NRFunApp (_, _, _)
+   |Middle.Break | Middle.Continue | Middle.Return _ | Middle.Skip
+   |Middle.IfElse (_, _, _)
+   |Middle.While (_, _)
+   |Middle.For _ | Middle.Block _ | Middle.SList _
+   |Middle.Decl {decl_id= _; _} ->
       []
 
 let rec extract_factors

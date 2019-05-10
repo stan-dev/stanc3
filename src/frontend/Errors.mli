@@ -1,5 +1,5 @@
 (** Some plumbing for our compiler errors *)
-open Mir
+open Middle
 
 (** Our type of syntax error information *)
 type parse_error =
@@ -25,7 +25,7 @@ val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
 
 val loc_span_of_pos : Lexing.position -> Lexing.position -> location_span
-(** Take the Mir.location_span corresponding to a pair of Lexing.position's *)
+(** Take the Middle.location_span corresponding to a pair of Lexing.position's *)
 
 val location_of_position : Lexing.position -> location
 (** Take the AST.location corresponding to a Lexing.position *)

@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 open Dataflow_types
 
 val union_maps_left :

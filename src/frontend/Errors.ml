@@ -1,7 +1,7 @@
 (** Setup of our compiler errors *)
 
 open Core_kernel
-open Mir
+open Middle
 
 (** Our type of syntax error information *)
 type parse_error =
@@ -64,7 +64,7 @@ let location_of_position = function
               | [] -> None
               | fnames :: _ -> Some (parse_location fnames) ) } )
 
-(** Take the Mir.location_span corresponding to a pair of Lexing.position's *)
+(** Take the Middle.location_span corresponding to a pair of Lexing.position's *)
 let loc_span_of_pos start_pos end_pos =
   { begin_loc= location_of_position start_pos
   ; end_loc= location_of_position end_pos }

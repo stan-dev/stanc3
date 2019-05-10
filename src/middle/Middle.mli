@@ -1,4 +1,4 @@
-include module type of Tree
+include module type of Mir
 open Core_kernel
 
 val string_of_location : location -> string
@@ -12,6 +12,7 @@ val no_span : location_span
 val merge_spans : location_span -> location_span -> location_span
 val internal_meta : mtype_loc_ad
 val loop_bottom : mtype_loc_ad with_expr
+val remove_size : 'a sizedtype -> unsizedtype
 
 val pp_typed_prog :
   Format.formatter -> ('a with_expr, ('b, 'c) stmt_with) prog -> unit

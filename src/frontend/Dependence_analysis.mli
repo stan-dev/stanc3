@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 open Dataflow_types
 
 (**
@@ -56,7 +56,7 @@ val node_vars_dependencies :
 *)
 
 val log_prob_build_dep_info_map :
-     Mir.typed_prog
+     Middle.typed_prog
   -> (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t
 (**
    Build the dependency information for each node in the log_prob section of a program
@@ -81,7 +81,7 @@ val stmt_map_dependency_graph :
 *)
 
 val log_prob_dependency_graph :
-  Mir.typed_prog -> (label, label Set.Poly.t) Map.Poly.t
+  Middle.typed_prog -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Build the dependency graph for the log_prob section of a program, where labels
    correspond to the labels built by statement_map.

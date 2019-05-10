@@ -1,6 +1,6 @@
 (* Code for optimization passes on the MIR *)
 open Core_kernel
-open Mir
+open Middle
 open Mir_utils
 
 let replace_fresh_local_vars s' =
@@ -14,7 +14,7 @@ let replace_fresh_local_vars s' =
               ; emeta=
                   { mtype= remove_possible_size decl_type
                   ; madlevel= decl_adtype
-                  ; mloc= Mir.no_span } } )
+                  ; mloc= Middle.no_span } } )
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
@@ -31,8 +31,8 @@ let handle_early_returns opt_triple b =
       | None, None -> Break
       | Some (Some _, _, name), Some e ->
           SList
-            [ {stmt= Assignment ((name, []), e); smeta= Mir.no_span}
-            ; {stmt= Break; smeta= Mir.no_span} ]
+            [ {stmt= Assignment ((name, []), e); smeta= Middle.no_span}
+            ; {stmt= Break; smeta= Middle.no_span} ]
       | _, _ -> Errors.fatal_error () )
     | x -> x
   in
@@ -40,13 +40,13 @@ let handle_early_returns opt_triple b =
     { loopvar= Util.gensym ()
     ; lower=
         { expr= Lit (Int, "1")
-        ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Mir.no_span} }
+        ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Middle.no_span} }
     ; upper=
         { expr= Lit (Int, "1")
-        ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Mir.no_span} }
+        ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Middle.no_span} }
     ; body= map_rec_stmt_loc f b }
 
-let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Mir.no_span}) l
+let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Middle.no_span}) l
 let slist_no_loc l = SList (map_no_loc l)
 
 let slist_concat_no_loc l stmt =
@@ -73,12 +73,12 @@ let rec inline_function_expression adt fim e =
           ( s_list
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ; (subst_args_stmt args es {stmt= b; smeta= Mir.no_span}).stmt ]
+              ; (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt ]
           , { expr= Var x
             ; emeta=
                 { mtype= remove_possible_size (Option.value_exn rt)
                 ; madlevel= adt
-                ; mloc= Mir.no_span } } ) )
+                ; mloc= Middle.no_span } } ) )
   | TernaryIf (e1, e2, e3) ->
       let sl1, e1 = inline_function_expression adt fim e1 in
       let sl2, e2 = inline_function_expression adt fim e2 in
@@ -86,8 +86,8 @@ let rec inline_function_expression adt fim e =
       ( sl1
         @ [ IfElse
               ( e1
-              , {stmt= slist_no_loc sl2; smeta= Mir.no_span}
-              , Some {stmt= slist_no_loc sl3; smeta= Mir.no_span} ) ]
+              , {stmt= slist_no_loc sl2; smeta= Middle.no_span}
+              , Some {stmt= slist_no_loc sl3; smeta= Middle.no_span} ) ]
       , {e with expr= TernaryIf (e1, e2, e3)} )
   | Indexed (e, i_list) ->
       let sl, e = inline_function_expression adt fim e in
@@ -147,7 +147,7 @@ let rec inline_function_statement adt fim {stmt; smeta} =
             | Some (_, args, b) ->
                 let b = b in (* TODO: replace fresh variables here *)
                 let b = handle_early_returns None b in
-                (subst_args_stmt args es {stmt= b; smeta= Mir.no_span}).stmt )
+                (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt )
       | Return e -> (
         match e with
         | None -> Return None
@@ -174,7 +174,7 @@ let rec inline_function_statement adt fim {stmt; smeta} =
                            ( [inline_function_statement adt fim s]
                            @ map_no_loc (Option.value ~default:[] (List.tl s'))
                            )
-                     ; smeta= Mir.no_span } ))
+                     ; smeta= Middle.no_span } ))
       | For {loopvar; lower; upper; body} ->
           let s_lower, lower = inline_function_expression adt fim lower in
           let s_upper, upper = inline_function_expression adt fim upper in
@@ -193,7 +193,7 @@ let rec inline_function_statement adt fim {stmt; smeta} =
                              @ map_no_loc
                                  (Option.value ~default:[] (List.tl s_upper))
                              )
-                       ; smeta= Mir.no_span } ) })
+                       ; smeta= Middle.no_span } ) })
       | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
       | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
       | Decl r -> Decl r
@@ -270,7 +270,7 @@ let unroll_loops_statement =
             List.map
               ~f:(fun i ->
                 { expr= Lit (Int, Int.to_string i)
-                ; emeta= {mtype= UInt; mloc= Mir.no_span; madlevel= DataOnly}
+                ; emeta= {mtype= UInt; mloc= Middle.no_span; madlevel= DataOnly}
                 } )
               (List.range ~start:`inclusive ~stop:`inclusive
                  (Int.of_string low) (Int.of_string up))
@@ -279,7 +279,7 @@ let unroll_loops_statement =
             List.map
               ~f:(fun i ->
                 subst_args_stmt [loopvar] [i]
-                  {stmt= body.stmt; smeta= Mir.no_span} )
+                  {stmt= body.stmt; smeta= Middle.no_span} )
               range
           in
           SList stmts
@@ -309,10 +309,10 @@ let statement_of_program mir =
   { stmt=
       SList
         (List.map
-           ~f:(fun x -> {stmt= SList x; smeta= Mir.no_span})
+           ~f:(fun x -> {stmt= SList x; smeta= Middle.no_span})
            [ mir.functions_block; mir.prepare_data; mir.prepare_params
            ; mir.log_prob; mir.generate_quantities ])
-  ; smeta= Mir.no_span }
+  ; smeta= Middle.no_span }
 
 let update_program_statement_blocks (mir : typed_prog) (s : stmt_loc) =
   let l =
@@ -335,11 +335,11 @@ let update_program_statement_blocks (mir : typed_prog) (s : stmt_loc) =
 
 let propagation
     (propagation_transfer :
-         (int, Mir.stmt_loc_num) Map.Poly.t
+         (int, Middle.stmt_loc_num) Map.Poly.t
       -> (module
           Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Mir.expr_typed_located) Map.Poly.t
+             and type properties = (string, Middle.expr_typed_located) Map.Poly.t
                                    option)) (mir : typed_prog) =
   let s = statement_of_program mir in
   let flowgraph, flowgraph_to_mir =
@@ -372,10 +372,10 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
       { stmt=
           SList
             (List.map
-               ~f:(fun x -> {stmt= SList x; smeta= Mir.no_span})
+               ~f:(fun x -> {stmt= SList x; smeta= Middle.no_span})
                [ mir.prepare_data; mir.transform_inits; mir.log_prob
                ; mir.generate_quantities ])
-      ; smeta= Mir.no_span }
+      ; smeta= Middle.no_span }
   in
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
@@ -405,7 +405,7 @@ let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
 let transform_program_blockwise (mir : typed_prog)
     (transform : stmt_loc -> stmt_loc) : typed_prog =
   let transform' s =
-    match transform {stmt= SList s; smeta= Mir.no_span} with
+    match transform {stmt= SList s; smeta= Middle.no_span} with
     | {stmt= SList l; _} -> l
     | _ ->
         raise
@@ -427,11 +427,11 @@ let list_collapsing (mir : typed_prog) =
 
 let propagation
     (propagation_transfer :
-         (int, Mir.stmt_loc_num) Map.Poly.t
+         (int, Middle.stmt_loc_num) Map.Poly.t
       -> (module
           Monotone_framework_sigs.TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Mir.expr_typed_located) Map.Poly.t
+             and type properties = (string, Middle.expr_typed_located) Map.Poly.t
                                    option)) (mir : typed_prog) =
   let transform s =
     let flowgraph, flowgraph_to_mir =
@@ -622,11 +622,11 @@ let lazy_code_motion (mir : typed_prog) =
     let declarations_list =
       Map.fold expression_map ~init:[] ~f:(fun ~key ~data accum ->
           { stmt=
-              Mir.Decl
+              Middle.Decl
                 { decl_adtype= key.emeta.madlevel
                 ; decl_id= data
                 ; decl_type= Unsized key.emeta.mtype }
-          ; smeta= Mir.no_span }
+          ; smeta= Middle.no_span }
           :: accum )
     in
     let lazy_code_motion_base i stmt =
@@ -652,7 +652,7 @@ let lazy_code_motion (mir : typed_prog) =
         List.map
           ~f:(fun e ->
             { stmt= Assignment ((Map.find_exn expression_map e, []), e)
-            ; smeta= Mir.no_span } )
+            ; smeta= Middle.no_span } )
           to_assign_in_s
       in
       let expr_subst_stmt_except_initial_assign m =
@@ -660,7 +660,7 @@ let lazy_code_motion (mir : typed_prog) =
           match stmt with
           | Assignment ((x, []), e')
             when Map.mem m e'
-                 && Mir.compare_expr_typed_located {e' with expr= Var x}
+                 && Middle.compare_expr_typed_located {e' with expr= Var x}
                       (Map.find_exn m e')
                     = 0 ->
               expr_subst_stmt_base (Map.remove m e') stmt
@@ -679,10 +679,10 @@ let lazy_code_motion (mir : typed_prog) =
                   {key with expr= Var data} )))
       in
       if List.length assignments_to_add_to_s = 0 then
-        (f {stmt; smeta= Mir.no_span}).stmt
+        (f {stmt; smeta= Middle.no_span}).stmt
       else
         SList
-          (List.map ~f (assignments_to_add_to_s @ [{stmt; smeta= Mir.no_span}]))
+          (List.map ~f (assignments_to_add_to_s @ [{stmt; smeta= Middle.no_span}]))
     in
     let lazy_code_motion_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir lazy_code_motion_base
@@ -691,7 +691,7 @@ let lazy_code_motion (mir : typed_prog) =
         SList
           ( declarations_list
           @ [lazy_code_motion_stmt (Map.find_exn flowgraph_to_mir 1)] )
-    ; smeta= Mir.no_span }
+    ; smeta= Middle.no_span }
   in
   transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
@@ -802,7 +802,7 @@ let%expect_test "map_rec_state_stmt_loc" =
     | x -> (x, i)
   in
   let mir_stmt, num =
-    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; smeta= Mir.no_span}
+    (map_rec_state_stmt_loc f 0) {stmt= SList mir.log_prob; smeta= Middle.no_span}
   in
   let mir = {mir with log_prob= [mir_stmt]} in
   pp_typed_prog Format.std_formatter mir ;
@@ -991,7 +991,7 @@ let%expect_test "list collapsing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
     ((functions_block
@@ -1451,7 +1451,7 @@ let%expect_test "inline function in if then else" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1594,7 +1594,7 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1852,7 +1852,7 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -1978,7 +1978,7 @@ let%expect_test "unroll nested loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2049,7 +2049,7 @@ let%expect_test "unroll nested loop with break" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2123,7 +2123,7 @@ let%expect_test "constant propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (input_vars ())
@@ -2203,7 +2203,7 @@ let%expect_test "constant propagation, local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (input_vars ())
@@ -2285,7 +2285,7 @@ let%expect_test "constant propagation, model block local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2365,7 +2365,7 @@ let%expect_test "expression propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ())
@@ -2447,7 +2447,7 @@ let%expect_test "copy propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = copy_propagation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ())
@@ -2536,7 +2536,7 @@ let%expect_test "dead code elimination" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ())
@@ -2626,7 +2626,7 @@ let%expect_test "dead code elimination decl" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2671,7 +2671,7 @@ let%expect_test "dead code elimination functions" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -2721,7 +2721,7 @@ let%expect_test "dead code elimination, for loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2759,7 +2759,7 @@ let%expect_test "dead code elimination, while loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2813,7 +2813,7 @@ let%expect_test "dead code elimination, if then" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2865,7 +2865,7 @@ let%expect_test "dead code elimination, nested" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2902,7 +2902,7 @@ let%expect_test "partial evaluation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -2970,7 +2970,7 @@ let%expect_test "try partially evaluate" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3060,7 +3060,7 @@ let%expect_test "partially evaluate with equality check" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3146,7 +3146,7 @@ let%expect_test "partially evaluate glm" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3616,7 +3616,7 @@ let%expect_test "lazy code motion" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
     ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3672,7 +3672,7 @@ let%expect_test "lazy code motion, 2" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3733,7 +3733,7 @@ let%expect_test "lazy code motion, 3" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3808,7 +3808,7 @@ let%expect_test "lazy code motion, 4" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -3931,7 +3931,7 @@ let%expect_test "lazy code motion, 5" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4077,7 +4077,7 @@ let%expect_test "lazy code motion, 6" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4171,7 +4171,7 @@ let%expect_test "lazy code motion, 7" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4384,7 +4384,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block
@@ -4500,7 +4500,7 @@ let%expect_test "lazy code motion, 9" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4556,7 +4556,7 @@ let%expect_test "lazy code motion, 10" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4625,7 +4625,7 @@ let%expect_test "lazy code motion, 11" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4698,7 +4698,7 @@ let%expect_test "lazy code motion, 12" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4783,7 +4783,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   let mir = dead_code_elimination mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4862,7 +4862,7 @@ let%expect_test "block fixing" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir =
     { mir with
-      Mir.log_prob=
+      Middle.log_prob=
         [ { stmt=
               IfElse
                 ( zero
@@ -4872,7 +4872,7 @@ let%expect_test "block fixing" =
           ; smeta= no_span } ] }
   in
   let mir = block_fixing mir in
-  print_s [%sexp (mir : Mir.typed_prog)] ;
+  print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
       ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -4896,7 +4896,7 @@ let%expect_test "block fixing" =
 ideally expressed as a visitor with a separate visit() function? *)
 (*
 open Core_kernel
-open Mir
+open Middle
 
 let _counter = ref 0;;
 let gensym =

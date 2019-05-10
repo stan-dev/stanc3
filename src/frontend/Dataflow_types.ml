@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 
 (***********************************)
 (* Basic datatypes                 *)
@@ -7,7 +7,7 @@ open Mir
 
 (**
    A label is a unique identifier for a node in the dataflow/dependency graph, and
-   often corresponds to one node in the Mir.
+   often corresponds to one node in the Middle.
 *)
 type label = int [@@deriving sexp, hash, compare]
 
@@ -25,10 +25,10 @@ type reaching_defn = vexpr * label [@@deriving sexp, hash, compare]
 
 (**
    Description of where a node in the dependency graph came from, where MirNode is the
-   location from an Mir.loc_stmt
+   location from an Middle.loc_stmt
  *)
 type source_loc =
-  | MirNode of Mir.location_span
+  | MirNode of Middle.location_span
   | StartOfBlock
   | TargetTerm of {term: expr_typed_located; assignment_label: label}
 [@@deriving sexp]
@@ -117,7 +117,7 @@ type dataflow_graph =
 (**
    Represents the dataflow graphs for each interesting block in the program MIR.
 
-   See Mir.prog for block descriptions.
+   See Middle.prog for block descriptions.
 *)
 type prog_df_graphs =
   {tdatab: dataflow_graph; modelb: dataflow_graph; gqb: dataflow_graph}

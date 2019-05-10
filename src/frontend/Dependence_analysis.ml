@@ -1,5 +1,5 @@
 open Core_kernel
-open Mir
+open Middle
 open Dataflow_types
 open Mir_utils
 open Dataflow_utils
@@ -138,9 +138,9 @@ let mir_reaching_definitions (mir : typed_prog) (stmt : stmt_loc) :
   Map.Poly.map rd_map ~f:(fun {entry; exit} ->
       {entry= to_rd_set entry; exit= to_rd_set exit} )
 
-let log_prob_build_dep_info_map (mir : Mir.typed_prog) :
+let log_prob_build_dep_info_map (mir : Middle.typed_prog) :
     (label, (expr_typed_located, label) statement * node_dep_info) Map.Poly.t =
-  let log_prob_stmt = {smeta= Mir.no_span; stmt= SList mir.log_prob} in
+  let log_prob_stmt = {smeta= Middle.no_span; stmt= SList mir.log_prob} in
   let statement_map =
     build_statement_map (fun s -> s.stmt) (fun s -> s.smeta) log_prob_stmt
   in
@@ -161,7 +161,7 @@ let stmt_map_dependency_graph
   let dep_info_map = build_dep_info_map statement_map in
   all_node_dependencies dep_info_map
 
-let log_prob_dependency_graph (mir : Mir.typed_prog) :
+let log_prob_dependency_graph (mir : Middle.typed_prog) :
     (label, label Set.Poly.t) Map.Poly.t =
   let dep_info_map = log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map
