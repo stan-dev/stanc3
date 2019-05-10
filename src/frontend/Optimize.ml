@@ -1,6 +1,6 @@
 (* Code for optimization passes on the MIR
 open Core_kernel
-open Mir
+open Middle
 
 let create_function_inline_map {stmt; _} =
   (* We only add the first definition for each function to the inline map.
@@ -453,9 +453,9 @@ let%expect_test "inline functions" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -548,10 +548,10 @@ let%expect_test "list collapsing" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
   let mir = list_collapsing mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
     ((functionsb
@@ -633,9 +633,9 @@ let%expect_test "do not inline recursive functions" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -685,9 +685,9 @@ let%expect_test "inline function in for loop" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -815,9 +815,9 @@ let%expect_test "inline function in while loop" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -925,9 +925,9 @@ let%expect_test "inline function in if then else" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -1016,9 +1016,9 @@ let%expect_test "inline function in ternary if " =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -1161,9 +1161,9 @@ let%expect_test "inline function in ternary if " =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb
@@ -1244,9 +1244,9 @@ let%expect_test "unroll nested loop" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb ((sloc <opaque>) (stmt Skip))) (datavars ())
@@ -1289,9 +1289,9 @@ let%expect_test "unroll nested loop with break" =
       |}
   in
   let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = Ast_to_Middle.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Mir.stmt_loc Mir.prog)] ;
+  print_s [%sexp (mir : Middle.stmt_loc Middle.prog)] ;
   [%expect
     {|
       ((functionsb ((sloc <opaque>) (stmt Skip))) (datavars ())
@@ -1329,7 +1329,7 @@ let%expect_test "unroll nested loop with break" =
 ideally expressed as a visitor with a separate visit() function? *)
 (*
 open Core_kernel
-open Mir
+open Middle
 
 let _counter = ref 0;;
 let gensym =
