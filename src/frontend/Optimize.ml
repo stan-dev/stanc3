@@ -764,11 +764,13 @@ let%expect_test "map_rec_stmt_loc" =
       }
 
       log_prob {
+        {
         FnPrint__(24, 24);
         if(13) {
           FnPrint__(244, 244);
           if(24) {
             FnPrint__(24, 24);
+            }
           }
         }
       }
@@ -828,11 +830,13 @@ let%expect_test "map_rec_state_stmt_loc" =
       }
 
       log_prob {
+        {
         FnPrint__(24, 24);
         if(13) {
           FnPrint__(244, 244);
           if(24) {
             FnPrint__(24, 24);
+            }
           }
         }
       }
@@ -875,13 +879,17 @@ let%expect_test "inline functions" =
     {|
       }
       functions {
-        void f(int x, matrix y) {
+        void f(int x, matrix y)
+          {
           FnPrint__(x);
           FnPrint__(y);
-        }
-        real g(int z) {
+          }
+
+        real g(int z)
+          {
           return Pow__(z, 2);
-        }
+          }
+
       }
 
       input_vars {
@@ -893,16 +901,18 @@ let%expect_test "inline functions" =
       }
 
       log_prob {
+        {
         for(sym1__ in 1:1) {
           FnPrint__(3);
           FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
-        }
+          }
         real sym2__;
         for(sym3__ in 1:1) {
           sym2__[] = Pow__(53, 2);
           break;
-        }
+          }
         FnReject__(sym2__);
+        }
       }
 
       generate_quantities {
@@ -939,12 +949,16 @@ let%expect_test "inline functions 2" =
     {|
       }
       functions {
-        void f() {
+        void f()
+          {
 
-        }
-        void g() {
+          }
+
+        void g()
+          {
           f();
-        }
+          }
+
       }
 
       input_vars {
@@ -963,8 +977,8 @@ let%expect_test "inline functions 2" =
         for(sym6__ in 1:1) {
           for(sym4__ in 1:1) {
 
+            }
           }
-        }
       }
 
       transform_inits {
@@ -1162,12 +1176,14 @@ let%expect_test "do not inline recursive functions" =
     {|
       }
       functions {
-        real g(int z) {
-          skip;
-        }
-        real g(int z) {
+        real g(int z)
+          ;
+
+        real g(int z)
+          {
           return Pow__(z, 2);
-        }
+          }
+
       }
 
       input_vars {
@@ -1179,7 +1195,9 @@ let%expect_test "do not inline recursive functions" =
       }
 
       log_prob {
+        {
         FnReject__(g(53));
+        }
       }
 
       generate_quantities {
@@ -1219,14 +1237,18 @@ let%expect_test "inline function in for loop" =
     {|
       }
       functions {
-        int f(int z) {
+        int f(int z)
+          {
           FnPrint__("f");
           return 42;
-        }
-        int g(int z) {
+          }
+
+        int g(int z)
+          {
           FnPrint__("g");
           return Plus__(z, 24);
-        }
+          }
+
       }
 
       input_vars {
@@ -1238,25 +1260,25 @@ let%expect_test "inline function in for loop" =
       }
 
       log_prob {
+        {
         int sym10__;
         for(sym11__ in 1:1) {
           FnPrint__("f");
           sym10__[] = 42;
           break;
-        }
+          }
         int sym12__;
         for(sym13__ in 1:1) {
           FnPrint__("g");
           sym12__[] = Plus__(3, 24);
           break;
-        }
-        for(i in sym10__:sym12__) {
-          FnPrint__("body");
-          for(sym13__ in 1:1) {
-            FnPrint__("g");
-            sym12__[] = Plus__(3, 24);
-            break;
           }
+        for(i in sym10__:sym12__) FnPrint__("body");
+                                  for(sym13__ in 1:1) {
+                                    FnPrint__("g");
+                                    sym12__[] = Plus__(3, 24);
+                                    break;
+                                    }
         }
       }
 
@@ -1299,14 +1321,18 @@ let%expect_test "inline function in for loop 2" =
     {|
       }
       functions {
-        int f(int z) {
+        int f(int z)
+          {
           FnPrint__("f");
           return 42;
-        }
-        int g(int z) {
+          }
+
+        int g(int z)
+          {
           FnPrint__("g");
           return Plus__(f(z), 24);
-        }
+          }
+
       }
 
       input_vars {
@@ -1318,12 +1344,13 @@ let%expect_test "inline function in for loop 2" =
       }
 
       log_prob {
+        {
         int sym18__;
         for(sym19__ in 1:1) {
           FnPrint__("f");
           sym18__[] = 42;
           break;
-        }
+          }
         int sym20__;
         for(sym21__ in 1:1) {
           FnPrint__("g");
@@ -1332,23 +1359,22 @@ let%expect_test "inline function in for loop 2" =
             FnPrint__("f");
             sym16__[] = 42;
             break;
-          }
+            }
           sym20__[] = Plus__(sym16__, 24);
           break;
-        }
-        for(i in sym18__:sym20__) {
-          FnPrint__("body");
-          for(sym21__ in 1:1) {
-            FnPrint__("g");
-            int sym16__;
-            for(sym17__ in 1:1) {
-              FnPrint__("f");
-              sym16__[] = 42;
-              break;
-            }
-            sym20__[] = Plus__(sym16__, 24);
-            break;
           }
+        for(i in sym18__:sym20__) FnPrint__("body");
+                                  for(sym21__ in 1:1) {
+                                    FnPrint__("g");
+                                    int sym16__;
+                                    for(sym17__ in 1:1) {
+                                      FnPrint__("f");
+                                      sym16__[] = 42;
+                                      break;
+                                      }
+                                    sym20__[] = Plus__(sym16__, 24);
+                                    break;
+                                    }
         }
       }
 
@@ -1389,14 +1415,18 @@ let%expect_test "inline function in while loop" =
     {|
       }
       functions {
-        int f(int z) {
+        int f(int z)
+          {
           FnPrint__("f");
           return 42;
-        }
-        int g(int z) {
+          }
+
+        int g(int z)
+          {
           FnPrint__("g");
           return Plus__(z, 24);
-        }
+          }
+
       }
 
       input_vars {
@@ -1408,19 +1438,19 @@ let%expect_test "inline function in while loop" =
       }
 
       log_prob {
+        {
         int sym22__;
         for(sym23__ in 1:1) {
           FnPrint__("g");
           sym22__[] = Plus__(3, 24);
           break;
-        }
-        while(sym22__) {
-          FnPrint__("body");
-          for(sym23__ in 1:1) {
-            FnPrint__("g");
-            sym22__[] = Plus__(3, 24);
-            break;
           }
+        while(sym22__) FnPrint__("body");
+                       for(sym23__ in 1:1) {
+                         FnPrint__("g");
+                         sym22__[] = Plus__(3, 24);
+                         break;
+                         }
         }
       }
 
@@ -1456,120 +1486,54 @@ let%expect_test "inline function in if then else" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-      ((functions_block
-        (((fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-          (fdbody
-           ((stmt
-             (Block
-              (((stmt
-                 (NRFunApp CompilerInternal FnPrint__
-                  (((expr (Lit Str f))
-                    (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>))
-               ((stmt
-                 (Return
-                  (((expr (Lit Int 42))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))
-          (fdloc
-           ((begin_loc
-             ((filename string) (line_num 3) (col_num 8) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
-         ((fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-          (fdbody
-           ((stmt
-             (Block
-              (((stmt
-                 (NRFunApp CompilerInternal FnPrint__
-                  (((expr (Lit Str g))
-                    (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>))
-               ((stmt
-                 (Return
-                  (((expr
-                     (FunApp StanLib Plus__
-                      (((expr (Var z))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Int 24))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))
-          (fdloc
-           ((begin_loc
-             ((filename string) (line_num 7) (col_num 8) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 10) (col_num 9) (included_from ()))))))))
-       (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Block
-            (((stmt
-               (SList
-                (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym24__)
-                    (decl_type (Unsized UInt))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (For (loopvar sym25__)
-                    (lower
-                     ((expr (Lit Int 1))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (upper
-                     ((expr (Lit Int 1))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (body
-                     ((stmt
-                       (Block
-                        (((stmt
-                           (NRFunApp CompilerInternal FnPrint__
-                            (((expr (Lit Str g))
-                              (emeta
-                               ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                          (smeta <opaque>))
-                         ((stmt
-                           (SList
-                            (((stmt
-                               (Assignment (sym24__ ())
-                                ((expr
-                                  (FunApp StanLib Plus__
-                                   (((expr (Lit Int 3))
-                                     (emeta
-                                      ((mtype UInt) (mloc <opaque>)
-                                       (madlevel DataOnly))))
-                                    ((expr (Lit Int 24))
-                                     (emeta
-                                      ((mtype UInt) (mloc <opaque>)
-                                       (madlevel DataOnly)))))))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))
-                              (smeta <opaque>))
-                             ((stmt Break) (smeta <opaque>)))))
-                          (smeta <opaque>)))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (IfElse
-                    ((expr (Var sym24__))
-                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
-                    ((stmt
-                      (NRFunApp CompilerInternal FnPrint__
-                       (((expr (Lit Str body))
-                         (emeta
-                          ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                     (smeta <opaque>))
-                    ()))
-                  (smeta <opaque>)))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path ""))
+      }
+      functions {
+        int f(int z)
+          {
+          FnPrint__("f");
+          return 42;
+          }
+
+        int g(int z)
+          {
+          FnPrint__("g");
+          return Plus__(z, 24);
+          }
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        int sym24__;
+        for(sym25__ in 1:1) {
+          FnPrint__("g");
+          sym24__[] = Plus__(3, 24);
+          break;
+          }
+        if(sym24__) FnPrint__("body");
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
 
     |}]
 
@@ -1599,244 +1563,74 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-      ((functions_block
-        (((fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-          (fdbody
-           ((stmt
-             (Block
-              (((stmt
-                 (NRFunApp CompilerInternal FnPrint__
-                  (((expr (Lit Str f))
-                    (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>))
-               ((stmt
-                 (Return
-                  (((expr (Lit Int 42))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))
-          (fdloc
-           ((begin_loc
-             ((filename string) (line_num 3) (col_num 8) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
-         ((fdrt (UInt)) (fdname g) (fdargs ((AutoDiffable z UInt)))
-          (fdbody
-           ((stmt
-             (Block
-              (((stmt
-                 (NRFunApp CompilerInternal FnPrint__
-                  (((expr (Lit Str g))
-                    (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>))
-               ((stmt
-                 (Return
-                  (((expr
-                     (FunApp StanLib Plus__
-                      (((expr (Var z))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Int 24))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))
-          (fdloc
-           ((begin_loc
-             ((filename string) (line_num 7) (col_num 8) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 10) (col_num 9) (included_from ()))))))
-         ((fdrt (UInt)) (fdname h) (fdargs ((AutoDiffable z UInt)))
-          (fdbody
-           ((stmt
-             (Block
-              (((stmt
-                 (NRFunApp CompilerInternal FnPrint__
-                  (((expr (Lit Str h))
-                    (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>))
-               ((stmt
-                 (Return
-                  (((expr
-                     (FunApp StanLib Plus__
-                      (((expr (Var z))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                       ((expr (Lit Int 4))
-                        (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))
-          (fdloc
-           ((begin_loc
-             ((filename string) (line_num 11) (col_num 8) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 14) (col_num 9) (included_from ()))))))))
-       (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Block
-            (((stmt
-               (SList
-                (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym26__)
-                    (decl_type (Unsized UInt))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (For (loopvar sym27__)
-                    (lower
-                     ((expr (Lit Int 1))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (upper
-                     ((expr (Lit Int 1))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (body
-                     ((stmt
-                       (Block
-                        (((stmt
-                           (NRFunApp CompilerInternal FnPrint__
-                            (((expr (Lit Str f))
-                              (emeta
-                               ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                          (smeta <opaque>))
-                         ((stmt
-                           (SList
-                            (((stmt
-                               (Assignment (sym26__ ())
-                                ((expr (Lit Int 42))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))
-                              (smeta <opaque>))
-                             ((stmt Break) (smeta <opaque>)))))
-                          (smeta <opaque>)))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (IfElse
-                    ((expr (Var sym26__))
-                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
-                    ((stmt
-                      (SList
-                       (((stmt
-                          (Decl (decl_adtype AutoDiffable) (decl_id sym28__)
-                           (decl_type (Unsized UInt))))
-                         (smeta <opaque>))
-                        ((stmt
-                          (For (loopvar sym29__)
-                           (lower
-                            ((expr (Lit Int 1))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                           (upper
-                            ((expr (Lit Int 1))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                           (body
-                            ((stmt
-                              (Block
-                               (((stmt
-                                  (NRFunApp CompilerInternal FnPrint__
-                                   (((expr (Lit Str g))
-                                     (emeta
-                                      ((mtype UReal) (mloc <opaque>)
-                                       (madlevel DataOnly)))))))
-                                 (smeta <opaque>))
-                                ((stmt
-                                  (SList
-                                   (((stmt
-                                      (Assignment (sym28__ ())
-                                       ((expr
-                                         (FunApp StanLib Plus__
-                                          (((expr (Lit Int 3))
-                                            (emeta
-                                             ((mtype UInt) (mloc <opaque>)
-                                              (madlevel DataOnly))))
-                                           ((expr (Lit Int 24))
-                                            (emeta
-                                             ((mtype UInt) (mloc <opaque>)
-                                              (madlevel DataOnly)))))))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly))))))
-                                     (smeta <opaque>))
-                                    ((stmt Break) (smeta <opaque>)))))
-                                 (smeta <opaque>)))))
-                             (smeta <opaque>)))))
-                         (smeta <opaque>)))))
-                     (smeta <opaque>))
-                    (((stmt
-                       (SList
-                        (((stmt
-                           (Decl (decl_adtype AutoDiffable) (decl_id sym30__)
-                            (decl_type (Unsized UInt))))
-                          (smeta <opaque>))
-                         ((stmt
-                           (For (loopvar sym31__)
-                            (lower
-                             ((expr (Lit Int 1))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                            (upper
-                             ((expr (Lit Int 1))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                            (body
-                             ((stmt
-                               (Block
-                                (((stmt
-                                   (NRFunApp CompilerInternal FnPrint__
-                                    (((expr (Lit Str h))
-                                      (emeta
-                                       ((mtype UReal) (mloc <opaque>)
-                                        (madlevel DataOnly)))))))
-                                  (smeta <opaque>))
-                                 ((stmt
-                                   (SList
-                                    (((stmt
-                                       (Assignment (sym30__ ())
-                                        ((expr
-                                          (FunApp StanLib Plus__
-                                           (((expr (Lit Int 4))
-                                             (emeta
-                                              ((mtype UInt) (mloc <opaque>)
-                                               (madlevel DataOnly))))
-                                            ((expr (Lit Int 4))
-                                             (emeta
-                                              ((mtype UInt) (mloc <opaque>)
-                                               (madlevel DataOnly)))))))
-                                         (emeta
-                                          ((mtype UInt) (mloc <opaque>)
-                                           (madlevel DataOnly))))))
-                                      (smeta <opaque>))
-                                     ((stmt Break) (smeta <opaque>)))))
-                                  (smeta <opaque>)))))
-                              (smeta <opaque>)))))
-                          (smeta <opaque>)))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (NRFunApp CompilerInternal FnPrint__
-                    (((expr
-                       (TernaryIf
-                        ((expr (Var sym26__))
-                         (emeta
-                          ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
-                        ((expr (Var sym28__))
-                         (emeta
-                          ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))
-                        ((expr (Var sym30__))
-                         (emeta
-                          ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                  (smeta <opaque>)))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
+      }
+      functions {
+        int f(int z)
+          {
+          FnPrint__("f");
+          return 42;
+          }
 
-let%expect_test "inline function in ternary if " =
+        int g(int z)
+          {
+          FnPrint__("g");
+          return Plus__(z, 24);
+          }
+
+        int h(int z)
+          {
+          FnPrint__("h");
+          return Plus__(z, 4);
+          }
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        int sym26__;
+        for(sym27__ in 1:1) {
+          FnPrint__("f");
+          sym26__[] = 42;
+          break;
+          }
+        if(sym26__) int sym28__;
+                    for(sym29__ in 1:1) {
+                      FnPrint__("g");
+                      sym28__[] = Plus__(3, 24);
+                      break;
+                      }
+         else int sym30__;
+              for(sym31__ in 1:1) {
+                FnPrint__("h");
+                sym30__[] = Plus__(4, 4);
+                break;
+                }
+        FnPrint__(sym26__ ?sym28__: sym30__);
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars { |}]
+
+let%expect_test "inline function multiple returns " =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1857,118 +1651,55 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-      ((functions_block
-        (((fdrt (UInt)) (fdname f) (fdargs ((AutoDiffable z UInt)))
-          (fdbody
-           ((stmt
-             (Block
-              (((stmt
-                 (IfElse
-                  ((expr (Lit Int 2))
-                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                  ((stmt
-                    (Block
-                     (((stmt
-                        (NRFunApp CompilerInternal FnPrint__
-                         (((expr (Lit Str f))
-                           (emeta
-                            ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-                       (smeta <opaque>))
-                      ((stmt
-                        (Return
-                         (((expr (Lit Int 42))
-                           (emeta
-                            ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                       (smeta <opaque>)))))
-                   (smeta <opaque>))
-                  ()))
-                (smeta <opaque>))
-               ((stmt
-                 (Return
-                  (((expr (Lit Int 6))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))
-          (fdloc
-           ((begin_loc
-             ((filename string) (line_num 3) (col_num 8) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 9) (col_num 9) (included_from ()))))))))
-       (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Block
-            (((stmt
-               (SList
-                (((stmt
-                   (Decl (decl_adtype AutoDiffable) (decl_id sym32__)
-                    (decl_type (Unsized UInt))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (For (loopvar sym33__)
-                    (lower
-                     ((expr (Lit Int 1))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (upper
-                     ((expr (Lit Int 1))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (body
-                     ((stmt
-                       (Block
-                        (((stmt
-                           (IfElse
-                            ((expr (Lit Int 2))
-                             (emeta
-                              ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                            ((stmt
-                              (Block
-                               (((stmt
-                                  (NRFunApp CompilerInternal FnPrint__
-                                   (((expr (Lit Str f))
-                                     (emeta
-                                      ((mtype UReal) (mloc <opaque>)
-                                       (madlevel DataOnly)))))))
-                                 (smeta <opaque>))
-                                ((stmt
-                                  (SList
-                                   (((stmt
-                                      (Assignment (sym32__ ())
-                                       ((expr (Lit Int 42))
-                                        (emeta
-                                         ((mtype UInt) (mloc <opaque>)
-                                          (madlevel DataOnly))))))
-                                     (smeta <opaque>))
-                                    ((stmt Break) (smeta <opaque>)))))
-                                 (smeta <opaque>)))))
-                             (smeta <opaque>))
-                            ()))
-                          (smeta <opaque>))
-                         ((stmt
-                           (SList
-                            (((stmt
-                               (Assignment (sym32__ ())
-                                ((expr (Lit Int 6))
-                                 (emeta
-                                  ((mtype UInt) (mloc <opaque>)
-                                   (madlevel DataOnly))))))
-                              (smeta <opaque>))
-                             ((stmt Break) (smeta <opaque>)))))
-                          (smeta <opaque>)))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (NRFunApp CompilerInternal FnPrint__
-                    (((expr (Var sym32__))
-                      (emeta
-                       ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable)))))))
-                  (smeta <opaque>)))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
+      }
+      functions {
+        int f(int z)
+          {
+          if(2) {
+            FnPrint__("f");
+            return 42;
+            }
+          return 6;
+          }
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        int sym32__;
+        for(sym33__ in 1:1) {
+          if(2) {
+            FnPrint__("f");
+            sym32__[] = 42;
+            break;
+            }
+          sym32__[] = 6;
+          break;
+          }
+        FnPrint__(sym32__);
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars { |}]
 
 let%expect_test "unroll nested loop" =
   let ast =
@@ -1983,61 +1714,40 @@ let%expect_test "unroll nested loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-      ((functions_block ()) (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Block
-            (((stmt
-               (SList
-                (((stmt
-                   (SList
-                    (((stmt
-                       (NRFunApp CompilerInternal FnPrint__
-                        (((expr (Lit Int 1))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                         ((expr (Lit Int 3))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                      (smeta <opaque>))
-                     ((stmt
-                       (NRFunApp CompilerInternal FnPrint__
-                        (((expr (Lit Int 1))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                         ((expr (Lit Int 4))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (SList
-                    (((stmt
-                       (NRFunApp CompilerInternal FnPrint__
-                        (((expr (Lit Int 2))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                         ((expr (Lit Int 3))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                      (smeta <opaque>))
-                     ((stmt
-                       (NRFunApp CompilerInternal FnPrint__
-                        (((expr (Lit Int 2))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                         ((expr (Lit Int 4))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>)))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
+      }
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        FnPrint__(1, 3);
+        FnPrint__(1, 4);
+        FnPrint__(2, 3);
+        FnPrint__(2, 4);
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars { |}]
 
 let%expect_test "unroll nested loop with break" =
   let ast =
@@ -2054,59 +1764,44 @@ let%expect_test "unroll nested loop with break" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-      ((functions_block ()) (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Block
-            (((stmt
-               (SList
-                (((stmt
-                   (For (loopvar j)
-                    (lower
-                     ((expr (Lit Int 3))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (upper
-                     ((expr (Lit Int 4))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (body
-                     ((stmt
-                       (Block
-                        (((stmt
-                           (NRFunApp CompilerInternal FnPrint__
-                            (((expr (Lit Int 1))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                          (smeta <opaque>))
-                         ((stmt Break) (smeta <opaque>)))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>))
-                 ((stmt
-                   (For (loopvar j)
-                    (lower
-                     ((expr (Lit Int 3))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (upper
-                     ((expr (Lit Int 4))
-                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                    (body
-                     ((stmt
-                       (Block
-                        (((stmt
-                           (NRFunApp CompilerInternal FnPrint__
-                            (((expr (Lit Int 2))
-                              (emeta
-                               ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                          (smeta <opaque>))
-                         ((stmt Break) (smeta <opaque>)))))
-                      (smeta <opaque>)))))
-                  (smeta <opaque>)))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
+      }
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        for(j in 3:4) {
+          FnPrint__(1);
+          break;
+          }
+        for(j in 3:4) {
+          FnPrint__(2);
+          break;
+          }
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars { |}]
 
 let%expect_test "constant propagation" =
   let ast =
@@ -2128,62 +1823,42 @@ let%expect_test "constant propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-    ((functions_block ()) (input_vars ())
-     (prepare_data
-      (((stmt (Decl (decl_adtype DataOnly) (decl_id i) (decl_type (Sized SInt))))
-        (smeta <opaque>))
-       ((stmt
-         (Assignment (i ())
-          ((expr (Lit Int 42))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-        (smeta <opaque>))
-       ((stmt (Decl (decl_adtype DataOnly) (decl_id j) (decl_type (Sized SInt))))
-        (smeta <opaque>))
-       ((stmt
-         (Assignment (j ())
-          ((expr
-            (FunApp StanLib Plus__
-             (((expr (Lit Int 2))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-              ((expr (Lit Int 42))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-        (smeta <opaque>))))
-     (log_prob
-      (((stmt
-         (Block
-          (((stmt
-             (For (loopvar x)
-              (lower
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-              (upper
-               ((expr (Lit Int 42))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-              (body
-               ((stmt
-                 (Block
-                  (((stmt
-                     (NRFunApp CompilerInternal FnPrint__
-                      (((expr
-                         (FunApp StanLib Plus__
-                          (((expr (Lit Int 42))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                           ((expr (Lit Int 44))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                        (emeta
-                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (smeta <opaque>)))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))))
-     (generate_quantities ()) (transform_inits ()) (output_vars ())
-     (prog_name "") (prog_path "")) |}]
+    }
+    functions {
+
+    }
+
+    input_vars {
+
+    }
+
+    prepare_data {
+      data int i;
+      i[] = 42;
+      data int j;
+      j[] = Plus__(2, 42);
+    }
+
+    log_prob {
+      {
+      for(x in 1:42) {
+        FnPrint__(Plus__(42, 44));
+        }
+      }
+    }
+
+    generate_quantities {
+
+    }
+
+    transform_inits {
+
+    }
+
+    output_vars { |}]
 
 let%expect_test "constant propagation, local scope" =
   let ast =
@@ -2208,65 +1883,45 @@ let%expect_test "constant propagation, local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  print_s [%sexp (mir : Middle.typed_prog)] ;
+  pp_typed_prog Format.std_formatter mir ;
   [%expect
     {|
-    ((functions_block ()) (input_vars ())
-     (prepare_data
-      (((stmt (Decl (decl_adtype DataOnly) (decl_id i) (decl_type (Sized SInt))))
-        (smeta <opaque>))
-       ((stmt
-         (Assignment (i ())
-          ((expr (Lit Int 42))
-           (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-        (smeta <opaque>))
-       ((stmt
-         (Block
-          (((stmt
-             (Decl (decl_adtype DataOnly) (decl_id j) (decl_type (Sized SInt))))
-            (smeta <opaque>))
-           ((stmt
-             (Assignment (j ())
-              ((expr (Lit Int 2))
-               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))))
-     (log_prob
-      (((stmt
-         (Block
-          (((stmt
-             (Decl (decl_adtype AutoDiffable) (decl_id j)
-              (decl_type (Sized SInt))))
-            (smeta <opaque>))
-           ((stmt
-             (For (loopvar x)
-              (lower
-               ((expr (Lit Int 1))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-              (upper
-               ((expr (Lit Int 42))
-                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-              (body
-               ((stmt
-                 (Block
-                  (((stmt
-                     (NRFunApp CompilerInternal FnPrint__
-                      (((expr
-                         (FunApp StanLib Plus__
-                          (((expr (Lit Int 42))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
-                           ((expr (Var j))
-                            (emeta
-                             ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                        (emeta
-                         ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                    (smeta <opaque>)))))
-                (smeta <opaque>)))))
-            (smeta <opaque>)))))
-        (smeta <opaque>))))
-     (generate_quantities ()) (transform_inits ()) (output_vars ())
-     (prog_name "") (prog_path "")) |}]
+    }
+    functions {
+
+    }
+
+    input_vars {
+
+    }
+
+    prepare_data {
+      data int i;
+      i[] = 42;
+      {
+      data int j;
+      j[] = 2;
+      }
+    }
+
+    log_prob {
+      {
+      int j;
+      for(x in 1:42) {
+        FnPrint__(Plus__(42, j));
+        }
+      }
+    }
+
+    generate_quantities {
+
+    }
+
+    transform_inits {
+
+    }
+
+    output_vars { |}]
 
 let%expect_test "constant propagation, model block local scope" =
   let ast =

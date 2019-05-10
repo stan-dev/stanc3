@@ -86,11 +86,11 @@ let pp_fun_def pp_s ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
     match fdrt with
     | Some rt ->
-        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
+        Fmt.pf ppf {|@[<v2>%a %s%a @ %a@]@ |} pp_unsizedtype rt fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody
     | None ->
-        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+        Fmt.pf ppf {|@[<v2>%s %s%a @ %a@]@ |} "void" fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )
 
@@ -104,23 +104,23 @@ let pp_statement pp_e pp_s ppf = function
       Fmt.pf ppf {|@[%s%a;@]|} name Fmt.(list pp_e ~sep:comma |> parens) args
   | Break -> pp_keyword ppf "break;"
   | Continue -> pp_keyword ppf "continue;"
-  | Skip -> pp_keyword ppf "skip;"
+  | Skip -> pp_keyword ppf ";"
   | Return (Some expr) -> Fmt.pf ppf {|%a %a;|} pp_keyword "return" pp_e expr
   | Return _ -> pp_keyword ppf "return;"
   | IfElse (pred, s_true, Some s_false) ->
-      Fmt.pf ppf {|@[<v2>@[%a(%a)@] {@;%a@]@;@[<v2>@[} %a@] {@;%a@]@;}|}
+      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]@;@[<v2>@[ %a@] %a@]|}
         pp_builtin_syntax "if" pp_e pred pp_s s_true pp_builtin_syntax "else"
         pp_s s_false
   | IfElse (pred, s_true, _) ->
-      Fmt.pf ppf {|@[<v2>@[%a(%a)@] {@;%a@]@;}|} pp_builtin_syntax "if" pp_e
+      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]|} pp_builtin_syntax "if" pp_e
         pred pp_s s_true
   | While (pred, stmt) ->
-      Fmt.pf ppf {|@[<v2>@[%a(%a)@] {@;%a@]@;}|} pp_builtin_syntax "while" pp_e
+      Fmt.pf ppf {|@[<v2>@[%a(%a)@] %a@]|} pp_builtin_syntax "while" pp_e
         pred pp_s stmt
   | For {loopvar; lower; upper; body} ->
-      Fmt.pf ppf {|@[<v2>@[%a(%s in %a:%a)@] {@;%a@]@;}|} pp_builtin_syntax
+      Fmt.pf ppf {|@[<v2>@[%a(%s in %a:%a)@] %a@]|} pp_builtin_syntax
         "for" loopvar pp_e lower pp_e upper pp_s body
-  | Block stmts -> Fmt.pf ppf {|@[<v>%a@]|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
+  | Block stmts -> Fmt.pf ppf {|{@;@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
   | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
   | Decl {decl_adtype; decl_id; decl_type} ->
       Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype
