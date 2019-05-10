@@ -64,19 +64,16 @@ let pretty_print_all_operator_signatures name =
   |> String.concat ~sep:"\n"
 
 (** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name (args : Ast.typed_expression list)
-    =
+let operator_return_type_from_string op_name argtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
-    match args with
-    | [{emeta= meta1; _}; {emeta= meta2; _}]
-      when Type_conversion.check_of_same_type_mod_array_conv "" meta1.type_
-             meta2.type_ ->
+    match List.map ~f:snd argtypes with
+    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 ->
         Some Middle.Void
     | _ -> None
   else
     Map.Poly.find_multi string_of_operators op_name
     |> List.find_map ~f:(fun name ->
-           Stan_math_signatures.stan_math_returntype name args )
+           Stan_math_signatures.stan_math_returntype name argtypes )
 
 let operator_return_type op =
   operator_return_type_from_string (Middle.string_of_operator op)
@@ -420,6 +417,8 @@ let semantic_check_fn_rng cf ~loc id =
        in _rng."
   else ()
 
+let get_arg_types = List.map ~f:(fun x -> (x.emeta.ad_level, x.emeta.type_))
+
 (* Regular function application *)
 let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
@@ -430,7 +429,9 @@ let semantic_check_fn_normal ~loc id es =
             '%s' was supplied."
            id.name)
   | Some (_, UFun (listed_tys, rt))
-    when not (check_compatible_arguments_mod_conv id.name listed_tys es) ->
+    when not
+           (check_compatible_arguments_mod_conv id.name listed_tys
+              (get_arg_types es)) ->
       semantic_error ~loc
         (Format.sprintf
            "Ill-typed arguments supplied to function '%s'. Available \
@@ -461,7 +462,7 @@ let semantic_check_fn_normal ~loc id es =
 (** Stan-Math function application
 *)
 let semantic_check_fn_stan_math ~loc id es =
-  match stan_math_returntype id.name es with
+  match stan_math_returntype id.name (get_arg_types es) with
   | Some Void ->
       semantic_error ~loc
         (Format.sprintf
@@ -500,7 +501,10 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue1 = semantic_check_expression cf e1 in
       let ue2 = semantic_check_expression cf e2 in
       let ue3 = semantic_check_expression cf e3 in
-      match operator_return_type_from_string ternary_if [ue1; ue2; ue3] with
+      match
+        operator_return_type_from_string ternary_if
+          (get_arg_types [ue1; ue2; ue3])
+      with
       | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(TernaryIf (ue1, ue2, ue3))
@@ -522,7 +526,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       let ue1 = semantic_check_expression cf e1
       and uop = semantic_check_operator op
       and ue2 = semantic_check_expression cf e2 in
-      match operator_return_type uop [ue1; ue2] with
+      match operator_return_type uop (get_arg_types [ue1; ue2]) with
       | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(BinOp (ue1, uop, ue2))
@@ -542,7 +546,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
   | PrefixOp (op, e) -> (
       let uop = semantic_check_operator op
       and ue = semantic_check_expression cf e in
-      match operator_return_type uop [ue] with
+      match operator_return_type uop (get_arg_types [ue]) with
       | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PrefixOp (uop, ue))
@@ -560,7 +564,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
   | PostfixOp (e, op) -> (
       let ue = semantic_check_expression cf e in
       let uop = semantic_check_operator op in
-      match operator_return_type op [ue] with
+      match operator_return_type op (get_arg_types [ue]) with
       | Some (Middle.ReturnType ut) ->
           mk_typed_expression
             ~expr:(PostfixOp (ue, uop))
@@ -630,7 +634,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              of functions with the suffix _lp."
       in
       let returnblock = lub_ad_e ues in
-      match stan_math_returntype uid.name ues with
+      match stan_math_returntype uid.name (get_arg_types ues) with
       | Some Void ->
           semantic_error ~loc:emeta.loc
             ( "A returning function was expected but a non-returning function "
@@ -667,7 +671,7 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
                 if
                   not
                     (check_compatible_arguments_mod_conv uid.name listedtypes
-                       ues)
+                       (get_arg_types ues))
                 then
                   semantic_error ~loc:emeta.loc
                     ( "Ill-typed arguments supplied to function "
@@ -964,7 +968,9 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   match Symbol_table.look vm id.name with
   | Some (_, UFun (listedtypes, Void))
-    when not (check_compatible_arguments_mod_conv id.name listedtypes es) ->
+    when not
+           (check_compatible_arguments_mod_conv id.name listedtypes
+              (get_arg_types es)) ->
       semantic_error ~loc
         (Format.sprintf
            "Ill-typed arguments supplied to function '%s'. Available \
@@ -998,7 +1004,7 @@ let semantic_check_nrfn_normal ~loc id es =
            id.name)
 
 let semantic_check_nrfn_stan_math ~loc id es =
-  match stan_math_returntype id.name es with
+  match stan_math_returntype id.name (get_arg_types es) with
   | Some Void ->
       mk_typed_statement
         ~stmt:(NRFunApp (StanLib, id, es))
@@ -1077,7 +1083,9 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             ^ " declared in previous blocks." )
       in
       let opname = Sexp.to_string (sexp_of_assignmentoperator uassop) in
-      match operator_return_type_from_string opname [ue2; ue] with
+      match
+        operator_return_type_from_string opname (get_arg_types [ue2; ue])
+      with
       | Some Void ->
           mk_typed_statement ~return_type:NoReturnType ~loc
             ~stmt:
@@ -1173,7 +1181,8 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
                Use increment_log_prob(" ^ uid.name ^ "_log(...)) instead." )
       in
       (* Check typing of ~ and target += *)
-      let distribution_name_is_defined name argumenttypes =
+      let distribution_name_is_defined name arguments =
+        let argumenttypes = get_arg_types arguments in
         stan_math_returntype (name ^ "_lpdf") argumenttypes
         = Some (ReturnType UReal)
         || stan_math_returntype (name ^ "_lpmf") argumenttypes
@@ -1206,7 +1215,8 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             ^ ("'" ^ uid.name ^ "'")
             ^ " was found with the correct signature." )
       in
-      let cumulative_density_is_defined name argumenttypes =
+      let cumulative_density_is_defined name arguments =
+        let argumenttypes = get_arg_types arguments in
         ( stan_math_returntype (name ^ "_lcdf") argumenttypes
           = Some (ReturnType UReal)
         ||
