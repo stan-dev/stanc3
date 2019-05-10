@@ -96,7 +96,7 @@ let pp_fun_def pp_s ppf = function
 
 let pp_statement pp_e pp_s ppf = function
   | Assignment ((assignee, idcs), rhs) ->
-      Fmt.pf ppf {|@[<h>%a :=@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
+      Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (pp_indexed pp_e) (assignee, idcs) pp_e
         rhs
   | TargetPE expr ->
       Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr

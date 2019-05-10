@@ -6,6 +6,10 @@ let gensym () =
   _counter := !_counter + 1 ;
   sprintf "sym%d__" !_counter
 
-let gensym_enter () =
+let gensym_checkpoint () =
   let old_counter = !_counter in
-  (gensym (), fun () -> _counter := old_counter)
+  fun () -> _counter := old_counter
+
+let gensym_enter () =
+  let reset = gensym_checkpoint () in
+  (gensym (), reset)

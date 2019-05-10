@@ -16,7 +16,8 @@ let extract_factors_statement (stmt : (expr_typed_located, 's) statement) :
     factor list =
   match stmt with
   | Mir.TargetPE e -> List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | Mir.NRFunApp (_, "FnReject__", _) -> [Reject]
+  | Mir.NRFunApp (_, f, _) when internal_fn_of_string f = Some FnReject ->
+      [Reject]
   | Mir.NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
       [LPFunction (s, args)]
   | Mir.Assignment (_, _)
