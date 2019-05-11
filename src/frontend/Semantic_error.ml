@@ -6,29 +6,29 @@ module TypeError = struct
   type t =
     | MismatchedReturnTypes of returntype * returntype
     | MismatchedArrayTypes
-    | RowVectorTypes
+    | InvalidRowVectorTypes
     | IntExpected of string * unsizedtype
     | IntOrRealExpected of string * unsizedtype
     | IntIntArrayOrRangeExpected of unsizedtype
     | IntOrRealContainerExpected of unsizedtype
     | ArrayVectorRowVectorMatrixExpected of unsizedtype
-    | Assignment of Ast.assignmentoperator * unsizedtype * unsizedtype
-    | TernaryIf of unsizedtype * unsizedtype * unsizedtype
+    | IllTypedAssignment of Ast.assignmentoperator * unsizedtype * unsizedtype
+    | IllTypedTernaryIf of unsizedtype * unsizedtype * unsizedtype
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
-    | StanLibFunctionApp of string * unsizedtype list
-    | UserDefinedFunctionApp of
+    | IllTypedStanLibFunctionApp of string * unsizedtype list
+    | IllTypedUserDefinedFunctionApp of
         string
         * (autodifftype * unsizedtype) list
         * returntype
         * unsizedtype list
-    | BinaryOperator of operator * unsizedtype * unsizedtype
-    | PrefixOperator of operator * unsizedtype
-    | PostfixOperator of operator * unsizedtype
+    | IllTypedBinaryOperator of operator * unsizedtype * unsizedtype
+    | IllTypedPrefixOperator of operator * unsizedtype
+    | IllTypedPostfixOperator of operator * unsizedtype
     | NotIndexable of unsizedtype
 
   let assignmentoperator_to_stan_math_fn = function
@@ -71,7 +71,7 @@ module TypeError = struct
           pp_returntype rt1 pp_returntype rt2
     | MismatchedArrayTypes ->
         Fmt.pf ppf "Array expression must have entries of consistent type."
-    | RowVectorTypes ->
+    | InvalidRowVectorTypes ->
         Fmt.pf ppf
           "Row_vector expression must have all int and real entries or all \
            row_vector entries."
@@ -95,7 +95,7 @@ module TypeError = struct
           "Foreach-loop must be over array, vector, row_vector or matrix. \
            Instead found expression of type %a."
           pp_unsizedtype ut
-    | Assignment ((OperatorAssign op as assignop), lt, rt) ->
+    | IllTypedAssignment ((OperatorAssign op as assignop), lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to assignment operator %s :lhs has \
            type %a and rhs has type %a. Available signatures: %s."
@@ -105,13 +105,13 @@ module TypeError = struct
           |> Option.map
                ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
           |> Option.value ~default:"no matching signatures" )
-    | Assignment (assignop, lt, rt) ->
+    | IllTypedAssignment (assignop, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to assignment operator %s :lhs has \
            type %a and rhs has type %a."
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           pp_unsizedtype lt pp_unsizedtype rt
-    | TernaryIf (ut1, ut2, ut3) ->
+    | IllTypedTernaryIf (ut1, ut2, ut3) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to ? : operator. Available \
            signatures: %s\n\
@@ -153,7 +153,7 @@ module TypeError = struct
           "A non-returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
-    | StanLibFunctionApp (name, arg_tys) ->
+    | IllTypedStanLibFunctionApp (name, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
            signatures: %s\n\
@@ -162,7 +162,7 @@ module TypeError = struct
           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs name)
           Fmt.(list pp_unsizedtype ~sep:comma)
           arg_tys
-    | UserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
+    | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available signatures:\n\
            %a\n\
@@ -171,7 +171,7 @@ module TypeError = struct
           (UFun (listed_tys, return_ty))
           Fmt.(list pp_unsizedtype ~sep:comma)
           arg_tys
-    | BinaryOperator (op, lt, rt) ->
+    | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
            signatures: %s\n\
@@ -181,7 +181,7 @@ module TypeError = struct
           |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
           |> String.concat ~sep:"\n" )
           pp_unsizedtype lt pp_unsizedtype rt
-    | PrefixOperator (op, ut) ->
+    | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
            signatures %s\n\
@@ -191,7 +191,7 @@ module TypeError = struct
           |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
           |> String.concat ~sep:"\n" )
           pp_unsizedtype ut
-    | PostfixOperator (op, ut) ->
+    | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures %s\n\
@@ -225,19 +225,19 @@ end
 
 module ExpressionError = struct
   type t =
-    | MapRect of string
-    | RngFunction
+    | InvalidMapRectFn of string
+    | InvalidRngFunction
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
 
   let pp ppf = function
-    | MapRect fn_name ->
+    | InvalidMapRectFn fn_name ->
         Fmt.pf ppf
           "Mapped function cannot be an _rng or _lp function, found function \
            name: %s"
           fn_name
-    | RngFunction ->
+    | InvalidRngFunction ->
         Fmt.pf ppf
           "Random number generators are only allowed in transformed data \
            block, generated quantities block or user-defined functions with \
@@ -257,11 +257,11 @@ module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
     | CannotAssignToGlobal of string
-    | SamplingPDForPMF
-    | SamplingCDForCCDF of string
-    | SamplingNoSuchDistribution of string
+    | InvalidSamplingPDForPMF
+    | InvalidSamplingCDForCCDF of string
+    | InvalidSamplingNoSuchDistribution of string
     | TargetPlusEqualsOutsideModelOrLogProb
-    | TruncationCDForCCDF
+    | InvalidTruncationCDForCCDF
     | BreakOutsideLoop
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
@@ -290,21 +290,21 @@ module StatementError = struct
         Fmt.pf ppf
           "Target can only be accessed in the model block or in definitions \
            of functions with the suffix _lp."
-    | SamplingPDForPMF ->
+    | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
           "Sampling statement expects a distribution name without '_lpdf' or \
            '_lpmf' suffix."
-    | SamplingCDForCCDF name ->
+    | InvalidSamplingCDForCCDF name ->
         Fmt.pf ppf
           "CDF or CCDF functions may not be used with sampling notation. Use \
            'increment_log_prob(%s_log(...))' instead."
           name
-    | SamplingNoSuchDistribution name ->
+    | InvalidSamplingNoSuchDistribution name ->
         Fmt.pf ppf
           "Ill-typed argument to '~' statement. No distributon '%s' was found \
            with the correct signature."
           name
-    | TruncationCDForCCDF ->
+    | InvalidTruncationCDForCCDF ->
         Fmt.pf ppf
           "Truncation is only defined if distribution has _lcdf and _lccdf \
            functions implemented with appropriate signature."
@@ -377,3 +377,175 @@ type t =
   | IdentifierError of location_span * IdentifierError.t
   | ExpressionError of location_span * ExpressionError.t
   | StatementError of location_span * StatementError.t
+
+let pp ppf = function
+  | TypeError (_, err) -> TypeError.pp ppf err
+  | IdentifierError (_, err) -> IdentifierError.pp ppf err
+  | ExpressionError (_, err) -> ExpressionError.pp ppf err
+  | StatementError (_, err) -> StatementError.pp ppf err
+
+let location = function
+  | TypeError (loc, _) -> loc
+  | IdentifierError (loc, _) -> loc
+  | ExpressionError (loc, _) -> loc
+  | StatementError (loc, _) -> loc
+
+(* -- Constructors ---------------------------------------------------------- *)
+
+let mismatched_return_types loc rt1 rt2 =
+  TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))
+
+let mismatched_array_types loc = TypeError (loc, TypeError.MismatchedArrayTypes)
+
+let invalid_row_vector_types loc =
+  TypeError (loc, TypeError.InvalidRowVectorTypes)
+
+let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
+
+let int_or_real_expected loc name ut =
+  TypeError (loc, TypeError.IntOrRealExpected (name, ut))
+
+let int_intarray_or_range_expected loc ut =
+  TypeError (loc, TypeError.IntIntArrayOrRangeExpected ut)
+
+let int_or_real_container_expected loc ut =
+  TypeError (loc, TypeError.IntOrRealContainerExpected ut)
+
+let array_vector_rowvector_matrix_expected loc ut =
+  TypeError (loc, TypeError.ArrayVectorRowVectorMatrixExpected ut)
+
+let illtyped_assignment loc assignop lt rt =
+  TypeError (loc, TypeError.IllTypedAssignment (assignop, lt, rt))
+
+let illtyped_ternary_if loc predt lt rt =
+  TypeError (loc, TypeError.IllTypedTernaryIf (predt, lt, rt))
+
+let returning_fn_expected_nonreturning_found loc name =
+  TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
+
+let returning_fn_expected_nonfn_found loc name =
+  TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
+
+let returning_fn_expected_undeclaredident_found loc name =
+  TypeError (loc, TypeError.ReturningFnExpectedUndeclaredIdentFound name)
+
+let nonreturning_fn_expected_returning_found loc name =
+  TypeError (loc, TypeError.NonReturningFnExpectedReturningFound name)
+
+let nonreturning_fn_expected_nonfn_found loc name =
+  TypeError (loc, TypeError.NonReturningFnExpectedNonFnFound name)
+
+let nonreturning_fn_expected_undeclaredident_found loc name =
+  TypeError (loc, TypeError.NonReturningFnExpectedUndeclaredIdentFound name)
+
+let illtyped_stanlib_fn_app loc name arg_tys =
+  TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys))
+
+let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty arg_tys =
+  TypeError
+    ( loc
+    , TypeError.IllTypedUserDefinedFunctionApp
+        (name, decl_arg_tys, decl_return_ty, arg_tys) )
+
+let illtyped_binary_op loc op lt rt =
+  TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt))
+
+let illtyped_prefix_op loc op ut =
+  TypeError (loc, TypeError.IllTypedPrefixOperator (op, ut))
+
+let illtyped_postfix_op loc op ut =
+  TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut))
+
+let not_indexable loc ut = TypeError (loc, TypeError.NotIndexable ut)
+
+let ident_is_keyword loc name =
+  IdentifierError (loc, IdentifierError.IsKeyword name)
+
+let ident_is_model_name loc name =
+  IdentifierError (loc, IdentifierError.IsModelName name)
+
+let ident_is_stanmath_name loc name =
+  IdentifierError (loc, IdentifierError.IsStanMathName name)
+
+let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
+
+let ident_not_in_scope loc name =
+  IdentifierError (loc, IdentifierError.NotInScope name)
+
+let invalid_map_rect_fn loc name =
+  ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
+
+let invalid_rng_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidRngFunction)
+
+let conditional_notation_not_allowed loc =
+  ExpressionError (loc, ExpressionError.ConditionalNotationNotAllowed)
+
+let conditioning_required loc =
+  ExpressionError (loc, ExpressionError.ConditioningRequired)
+
+let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
+
+let cannot_assign_to_read_only loc name =
+  StatementError (loc, StatementError.CannotAssignToReadOnly name)
+
+let cannot_assign_to_global loc name =
+  StatementError (loc, StatementError.CannotAssignToGlobal name)
+
+let invalid_sampling_pdf_or_pmf loc =
+  StatementError (loc, StatementError.InvalidSamplingPDForPMF)
+
+let invalid_sampling_cdf_or_ccdf loc name =
+  StatementError (loc, StatementError.InvalidSamplingCDForCCDF name)
+
+let invalid_sampling_no_such_dist loc name =
+  StatementError (loc, StatementError.InvalidSamplingNoSuchDistribution name)
+
+let target_plusequals_outisde_model_or_logprob loc =
+  StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
+
+let invalid_truncation_cdf_or_ccdf loc =
+  StatementError (loc, StatementError.InvalidTruncationCDForCCDF)
+
+let break_outside_loop loc =
+  StatementError (loc, StatementError.BreakOutsideLoop)
+
+let continue_outside_loop loc =
+  StatementError (loc, StatementError.ContinueOutsideLoop)
+
+let expression_return_outside_returning_fn loc =
+  StatementError (loc, StatementError.ExpressionReturnOutsideReturningFn)
+
+let void_ouside_nonreturning_fn loc =
+  StatementError (loc, StatementError.VoidReturnOutsideNonReturningFn)
+
+let non_data_variable_decl loc =
+  StatementError (loc, StatementError.NonDataVariableDecl)
+
+let non_int_bounds loc = StatementError (loc, StatementError.NonIntBounds)
+
+let transformed_params_int loc =
+  StatementError (loc, StatementError.TransformedParamsInt)
+
+let mismatched_fn_def_decl loc name ut_opt =
+  StatementError (loc, StatementError.MismatchFunDefDecl (name, ut_opt))
+
+let fn_decl_exists loc name =
+  StatementError (loc, StatementError.FunDeclExists name)
+
+let fn_decl_without_def loc = StatementError (loc, StatementError.FunDeclNoDefn)
+
+let non_real_prob_fn_def loc =
+  StatementError (loc, StatementError.NonRealProbFunDef)
+
+let prob_density_non_real_variate loc ut_opt =
+  StatementError (loc, StatementError.ProbDensityNonRealVariate ut_opt)
+
+let prob_mass_non_real_variate loc ut_opt =
+  StatementError (loc, StatementError.ProbMassNonIntVariate ut_opt)
+
+let duplicate_arg_names loc =
+  StatementError (loc, StatementError.DuplicateArgNames)
+
+let incompatible_return_types loc =
+  StatementError (loc, StatementError.IncompatibleReturnType)

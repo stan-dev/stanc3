@@ -1,5 +1,6 @@
 include Mir
 open Core_kernel
+module Validation = Validation
 
 (* == Pretty printers ======================================================= *)
 

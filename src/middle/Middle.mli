@@ -1,5 +1,6 @@
 include module type of Mir
 open Core_kernel
+module Validation : Validation_intf.Validation
 
 val string_of_location : location -> string
 val string_of_location_span : location_span -> string

@@ -14,6 +14,8 @@ open Pretty_printing
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)
 
+module Validate = Middle.Validation.Make (Semantic_error)
+
 (* Top level function semantic_check_program declares the AST while operating
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
