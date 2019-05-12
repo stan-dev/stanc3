@@ -26,9 +26,13 @@ let%expect_test "distribution name mangling" =
   [%expect {| normal_log |}]
 
 let rec op_to_funapp op args =
+  let argtypes =
+    List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
+  in
   { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
-      { mtype= Semantic_check.operator_return_type op args |> unwrap_return_exn
+      { mtype=
+          Semantic_check.operator_return_type op argtypes |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
       ; madlevel= Ast.expr_ad_lub args } }
 
@@ -124,7 +128,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
       | Ast.PString s -> mkstring mloc (unquote s)
-      | Ast.PExpr e -> trans_expr e )
+      | Ast.PExpr e -> trans_expr e)
     ps
 
 (** [add_index expression index] returns an expression that (additionally)
@@ -387,9 +391,10 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   in
   (decl :: read_stmts) @ constrain_stmts @ checks
 
-let unwrap_block = function
-  | [({stmt= Block _; _} as b)] -> b
-  | x -> raise_s [%message "Expecting a block, not" (x : stmt_loc list)]
+let unwrap_block_or_skip = function
+  | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b
+  | x ->
+      raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
 let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
@@ -518,7 +523,7 @@ let trans_fun_def declc (ts : Ast.typed_statement) =
             (match returntype with Void -> None | ReturnType ut -> Some ut)
         ; fdname= funname.name
         ; fdargs= List.map ~f:trans_arg arguments
-        ; fdbody= trans_stmt body |> unwrap_block
+        ; fdbody= trans_stmt body |> unwrap_block_or_skip
         ; fdloc= sloc }
     | _ ->
         raise_s

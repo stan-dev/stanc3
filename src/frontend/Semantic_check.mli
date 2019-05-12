@@ -22,4 +22,6 @@ val inferred_unsizedtype_of_indexed :
     type is.*)
 
 val operator_return_type :
-  Middle.operator -> Ast.typed_expression list -> Middle.returntype option
+     Middle.operator
+  -> (Middle.autodifftype * Middle.unsizedtype) list
+  -> Middle.returntype option

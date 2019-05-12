@@ -5,7 +5,7 @@ open Ast
 val check_compatible_arguments_mod_conv :
      string
   -> (Middle.autodifftype * Middle.unsizedtype) list
-  -> typed_expression list
+  -> (Middle.autodifftype * Middle.unsizedtype) list
   -> bool
 (** Check that the rhs list of function argument types can be converted to the
     lhs *)

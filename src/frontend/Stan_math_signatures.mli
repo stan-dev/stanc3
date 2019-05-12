@@ -1,9 +1,9 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
-open Ast
-
 val stan_math_returntype :
-  string -> typed_expression list -> Middle.returntype option
+     string
+  -> (Middle.autodifftype * Middle.unsizedtype) list
+  -> Middle.returntype option
 (** Get an optional return type for a Stan Math library function, given its name and argument types. *)
 
 val is_stan_math_function_name : string -> bool
