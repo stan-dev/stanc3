@@ -178,28 +178,7 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
-let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
-  match (srt1, srt2) with
-  | Complete rt1, Complete rt2 ->
-      lub_rt loc rt1 rt2 |> Validate.map ~f:(fun t -> Complete t)
-  | Incomplete rt1, Incomplete rt2
-   |Complete rt1, Incomplete rt2
-   |Incomplete rt1, Complete rt2 ->
-      lub_rt loc rt1 rt2 |> Validate.map ~f:(fun t -> Incomplete t)
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |NoReturnType, NoReturnType ->
-      Validate.ok NoReturnType
-  | AnyReturnType, Incomplete rt
-   |Incomplete rt, AnyReturnType
-   |Complete rt, NoReturnType
-   |NoReturnType, Complete rt
-   |NoReturnType, Incomplete rt
-   |Incomplete rt, NoReturnType ->
-      Validate.ok @@ Incomplete rt
-  | Complete rt, AnyReturnType | AnyReturnType, Complete rt ->
-      Validate.ok @@ Complete rt
-  | AnyReturnType, AnyReturnType -> Validate.ok AnyReturnType
+
 
 let try_compute_block_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
@@ -965,10 +944,19 @@ let semantic_check_nrfn_stan_math ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
-let semantic_check_nrfn ~loc id es =
+let semantic_check_nr_fnkind ~loc id es =
   match fn_kind_from_identifier id with
   | StanLib -> semantic_check_nrfn_stan_math ~loc id es
   | UserDefined -> semantic_check_nrfn_normal ~loc id es
+
+let semantic_check_nr_fn_app ~loc ~cf id es = Validate.(
+    es
+    |> List.map ~f:(semantic_check_expression cf)
+    |> sequence
+    |> apply_const (semantic_check_identifier id)
+    |> apply_const (semantic_check_nrfn_target ~loc ~cf id)
+    >>= semantic_check_nr_fnkind ~loc id
+)
 
 (* -- Assignment ------------------------------------------------------------ *)
 
@@ -1017,7 +1005,7 @@ let semantic_check_assignment_operator ~loc assop lhs rhs = Validate.(
       |> error
 )
    
-(* -- Target plus-equals ---------------------------------------------------- *)
+(* -- Target plus-equals / Increment log-prob ------------------------------- *)
 
 let semantic_check_target_pe_expr_type ~loc e = 
   match e.emeta.type_ with
@@ -1034,6 +1022,132 @@ else
     |> Validate.error
 
 
+let semantic_check_target_pe ~loc ~cf e = Validate.(
+      semantic_check_expression cf e
+      |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
+      >>= (fun ue -> 
+          semantic_check_target_pe_expr_type ~loc ue
+          |> map  ~f:(fun _ -> 
+                mk_typed_statement ~stmt:(TargetPE ue) ~return_type:NoReturnType ~loc
+          )
+      ))
+
+let semantic_check_incr_logprob ~loc ~cf e = Validate.(
+      semantic_check_expression cf e
+      |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
+      >>= (fun ue -> 
+          semantic_check_target_pe_expr_type ~loc ue
+          |> map  ~f:(fun _ -> 
+                mk_typed_statement ~stmt:(IncrementLogProb ue) ~return_type:NoReturnType ~loc
+          )
+      ))
+
+
+(* -- Tilde (Sampling notation) --------------------------------------------- *)
+
+(* -- Break ----------------------------------------------------------------- *)
+(* Break and continue only occur in loops. *)
+let semantic_check_break ~loc ~cf = Validate.(
+    if cf.loop_depth = 0 then
+      Semantic_error.break_outside_loop loc |> error
+    else
+      mk_typed_statement ~stmt:Break ~return_type:NoReturnType ~loc
+      |> ok
+)
+
+(* -- Continue -------------------------------------------------------------- *)
+
+let semantic_check_continue ~loc ~cf = Validate.(
+      (* Break and continue only occur in loops. *)
+      if cf.loop_depth = 0 then
+        Semantic_error.continue_outside_loop loc |> error
+      else
+        mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
+        |> ok
+)
+        
+(* -- Return ---------------------------------------------------------------- *)
+
+(** No returns outside of function definitions 
+    In case of void function, no return statements anywhere 
+*)
+let semantic_check_return ~loc ~cf e = Validate.(
+  if not cf.in_returning_fun_def then
+    Semantic_error.expression_return_outside_returning_fn loc
+    |> error
+  else
+    semantic_check_expression cf e
+    |> map 
+      ~f:(fun ue ->
+            mk_typed_statement ~stmt:(Return ue)
+              ~return_type:(Complete (ReturnType ue.emeta.type_)) ~loc 
+      )
+  )
+
+
+(* -- Return `void` --------------------------------------------------------- *)
+
+let semantic_check_returnvoid ~loc ~cf  = Validate.(
+    if (not cf.in_fun_def) || cf.in_returning_fun_def then
+        Semantic_error.void_ouside_nonreturning_fn loc |> error
+      else
+        mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
+        |> ok
+)
+  
+
+(* -- Print ----------------------------------------------------------------- *)
+
+let semantic_check_print ~loc ~cf ps = Validate.(
+    ps
+      |> List.map ~f:(semantic_check_printable cf)
+      |> sequence
+      |> map ~f:(fun ups ->
+             mk_typed_statement ~stmt:(Print ups) ~return_type:NoReturnType
+               ~loc )
+)
+
+(* -- Reject ---------------------------------------------------------------- *)
+
+let semantic_check_reject ~loc ~cf ps = Validate.(
+  ps
+  |> List.map ~f:(semantic_check_printable cf)
+  |> sequence
+  |> map ~f:(fun ups ->
+          mk_typed_statement ~stmt:(Reject ups) ~return_type:AnyReturnType
+            ~loc )
+)
+
+(* -- Skip ------------------------------------------------------------------ *)
+
+let semantic_check_skip ~loc = 
+  mk_typed_statement ~stmt:Skip ~return_type:NoReturnType ~loc
+  |> Validate.ok 
+
+(* -- If-Then-Else ---------------------------------------------------------- *)
+
+let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
+  match (srt1, srt2) with
+  | Complete rt1, Complete rt2 ->
+      lub_rt loc rt1 rt2 |> Validate.map ~f:(fun t -> Complete t)
+  | Incomplete rt1, Incomplete rt2
+   |Complete rt1, Incomplete rt2
+   |Incomplete rt1, Complete rt2 ->
+      lub_rt loc rt1 rt2 |> Validate.map ~f:(fun t -> Incomplete t)
+  | AnyReturnType, NoReturnType
+   |NoReturnType, AnyReturnType
+   |NoReturnType, NoReturnType ->
+      Validate.ok NoReturnType
+  | AnyReturnType, Incomplete rt
+   |Incomplete rt, AnyReturnType
+   |Complete rt, NoReturnType
+   |NoReturnType, Complete rt
+   |NoReturnType, Incomplete rt
+   |Incomplete rt, NoReturnType ->
+      Validate.ok @@ Incomplete rt
+  | Complete rt, AnyReturnType | AnyReturnType, Complete rt ->
+      Validate.ok @@ Complete rt
+  | AnyReturnType, AnyReturnType -> Validate.ok AnyReturnType
 
 
 
@@ -1058,14 +1172,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
     Ast.typed_statement Validate.t =
   let loc = s.smeta.loc in
   match s.stmt with
-  | NRFunApp (_, id, es) ->
-      Validate.(
-        es
-        |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
-        |> apply_const (semantic_check_identifier id)
-        |> apply_const (semantic_check_nrfn_target ~loc ~cf id)
-        >>= semantic_check_nrfn ~loc id)
+  | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
   | Assignment
       { assign_identifier= id
       ; assign_indices= lindex
@@ -1100,25 +1207,8 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
             |> apply_const (semantic_check_assignment_read_only ~loc id)
       )
      
-  | TargetPE e -> Validate.(
-      semantic_check_expression cf e      
-      |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
-      >>= (fun ue -> 
-          semantic_check_target_pe_expr_type ~loc ue
-          |> map  ~f:(fun _ -> 
-                mk_typed_statement ~stmt:(TargetPE ue) ~return_type:NoReturnType ~loc
-          )
-      ))
-
-  | IncrementLogProb e -> Validate.(
-      semantic_check_expression cf e
-      |> apply_const (semantic_check_target_pe_expr_type ~loc e)
-      |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
-      |> map ~f:(fun ue -> 
-                mk_typed_statement ~stmt:(IncrementLogProb ue) ~return_type:NoReturnType ~loc
-      ))
-
-
+  | TargetPE e -> semantic_check_target_pe ~loc ~cf e
+  | IncrementLogProb e -> semantic_check_incr_logprob ~loc ~cf e 
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression cf e in
       let uid = semantic_check_identifier id in
@@ -1240,54 +1330,21 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
       mk_typed_statement
         ~stmt:(Tilde {arg= ue; distribution= uid; args= ues; truncation= ut})
         ~return_type:NoReturnType ~loc
-  | Break ->
-      (* Break and continue only occur in loops. *)
-      if cf.loop_depth = 0 then
-        Semantic_error.break_outside_loop loc |> Validate.error
-      else
-        mk_typed_statement ~stmt:Break ~return_type:NoReturnType ~loc
-        |> Validate.ok
-  | Continue ->
-      (* Break and continue only occur in loops. *)
-      if cf.loop_depth = 0 then
-        Semantic_error.continue_outside_loop loc |> Validate.error
-      else
-        mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
-        |> Validate.ok
-  | Return e ->
-      (* No returns outside of function definitions *)
-      (* In case of void function, no return statements anywhere *)
-      if not cf.in_returning_fun_def then
-        Semantic_error.expression_return_outside_returning_fn loc
-        |> Validate.error
-      else
-        semantic_check_expression cf e
-        |> Validate.map ~f:(fun ue ->
-               mk_typed_statement ~stmt:(Return ue)
-                 ~return_type:(Complete (ReturnType ue.emeta.type_)) ~loc )
-  | ReturnVoid ->
-      if (not cf.in_fun_def) || cf.in_returning_fun_def then
-        Semantic_error.void_ouside_nonreturning_fn loc |> Validate.error
-      else
-        mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
-        |> Validate.ok
-  | Print ps ->
-      ps
-      |> List.map ~f:(semantic_check_printable cf)
-      |> Validate.sequence
-      |> Validate.map ~f:(fun ups ->
-             mk_typed_statement ~stmt:(Print ups) ~return_type:NoReturnType
-               ~loc )
-  | Reject ps ->
-      ps
-      |> List.map ~f:(semantic_check_printable cf)
-      |> Validate.sequence
-      |> Validate.map ~f:(fun ups ->
-             mk_typed_statement ~stmt:(Reject ups) ~return_type:AnyReturnType
-               ~loc )
-  | Skip ->
-      mk_typed_statement ~stmt:Skip ~return_type:NoReturnType ~loc
-      |> Validate.ok
+
+  | Break -> semantic_check_break ~loc ~cf
+      
+  | Continue -> semantic_check_continue ~loc ~cf
+      
+  | Return e -> semantic_check_return ~loc ~cf e
+      
+  | ReturnVoid -> semantic_check_returnvoid ~loc ~cf
+      
+  | Print ps -> semantic_check_print ~loc ~cf ps
+      
+  | Reject ps -> semantic_check_reject ~loc ~cf ps
+      
+  | Skip -> semantic_check_skip ~loc
+      
   | IfThenElse (e, s1, os2) ->
       (* For, while, for each, if constructs take expressions of valid type *)
       let us1 = semantic_check_statement cf s1
