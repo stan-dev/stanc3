@@ -35,22 +35,23 @@ class eight_schools_ncp_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // suppress unused var warning
-    {
-      J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
-      check_greater_or_equal(function__, "J", J, 0);
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        y[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
-      }
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        sigma[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("sigma"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
-      }
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        check_greater_or_equal(function__, "sigma[sym1__]",
-                               stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
-                               0);}
-    }
+    
+    J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
+    check_greater_or_equal(function__, "J", J, 0);
     y = std::vector<double>(J, 0);
+    
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      y[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+    }
     sigma = std::vector<double>(J, 0);
+    
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      sigma[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("sigma"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+    }
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      check_greater_or_equal(function__, "sigma[sym1__]",
+                             stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
+                             0);}
     num_params_r__ = 0U;
     num_params_r__ += 1;
     num_params_r__ += 1;
@@ -305,28 +306,28 @@ class one_var_per_block_model : public prob_grad {
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
     (void) function__;  // suppress unused var warning
-    {
-      N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
-      K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        datavar[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("datavar"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
-      }
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
-                                 stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                 0);}}
-      std::vector<std::vector<double>> tdatavar;
-      tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
-      
-      tdatavar = {{2.0}};
-      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
-          check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
-                                 stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                 0);}}
-    }
+    
+    N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
+    
+    K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
     datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+    
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      datavar[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("datavar"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+    }
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
+                               stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                               0);}}
+    tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
+    
+    tdatavar = {{2.0}};
+    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
+                               stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                               0);}}
     num_params_r__ = 0U;
     num_params_r__ += K * N;
     num_params_r__ += (K + 1) * K * N * N;

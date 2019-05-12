@@ -337,13 +337,12 @@ let pp_ctor ppf (p : typed_prog) =
       | ls -> Some ls )
     | _ -> None
   in
-  let get_param_zero = function
-    | decl_id, ((SArray _ as st), Data)
-     |decl_id, ((SMatrix _ as st), Data)
-     |decl_id, ((SVector _ as st), Data)
-     |decl_id, ((SRowVector _ as st), Data) ->
-        Some (decl_id, st, DataOnly)
-    | _ -> None
+  let rec pp_statement_zeroing ppf s =
+    match s.stmt with
+    | Decl {decl_id; decl_type; _} ->
+        pp_set_size ppf (decl_id, decl_type, DataOnly)
+    | Block ls | SList ls -> (list ~sep:cut pp_statement_zeroing) ppf ls
+    | _ -> pp_statement ppf s
   in
   pp_block ppf
     ( (fun ppf p ->
@@ -352,11 +351,11 @@ let pp_ctor ppf (p : typed_prog) =
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
-        pp_located_error_b ppf (p.prepare_data, "inside ctor") ;
+        pp_located_error ppf
+          ( pp_statement_zeroing
+          , {stmt= Block p.prepare_data; smeta= no_span}
+          , "inside ctor" ) ;
         cut ppf () ;
-        pf ppf "%a"
-          (list ~sep:nop pp_set_size)
-          (List.filter_map ~f:get_param_zero p.input_vars) ;
         pf ppf "num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "
           (list ~sep:cut pp_num_param)

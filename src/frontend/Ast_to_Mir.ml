@@ -595,7 +595,6 @@ let trans_prog filename
       (trans_stmt
          {dread= Some ReadData; dconstrain= Some Check; dadlevel= DataOnly})
       datablock
-    |> List.filter ~f:(function {stmt= Decl _; _} -> false | _ -> true)
   in
   let prepare_data =
     datab
@@ -709,7 +708,9 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    ((For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
+    ((Decl (decl_adtype DataOnly) (decl_id mat)
+      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
         ((Assignment (mat ((Single (Var sym1__))))
