@@ -326,9 +326,6 @@ let%expect_test "dims" =
 *)
 
 let pp_ctor ppf (p : typed_prog) =
-  (* XXX:
-     1. Set num_params_r__
-  *)
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
@@ -353,11 +350,11 @@ let pp_ctor ppf (p : typed_prog) =
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
-        pf ppf "num_params_r__ = 0U;@ " ;
+        pp_located_error_b ppf (p.prepare_data, "inside ctor") ;
+        pf ppf "@ num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "
           (list ~sep:cut pp_num_param)
-          (List.filter_map ~f:get_param_st p.output_vars) ;
-        pp_located_error_b ppf (p.prepare_data, "inside ctor") )
+          (List.filter_map ~f:get_param_st p.output_vars) )
     , p )
 
 let pp_model_private ppf p =
