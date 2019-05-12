@@ -296,13 +296,6 @@ let rec basetype = function
   | UVector -> "vector_d"
   | x -> raise_s [%message "basetype not defined for " (x : unsizedtype)]
 
-let rec pp_zeroing_ctor_call ppf st =
-  match st with
-  | SInt | SReal -> string ppf "0"
-  | SArray (t, dim) -> pf ppf "%a, %a" pp_expr dim pp_zeroing_ctor_call t
-  | SRowVector dim | SVector dim -> ignore dim ; pf ppf "%s" "XXX TODO"
-  | SMatrix (dim1, dim2) -> ignore (dim1, dim2)
-
 let var_context_container st =
   match basetype (remove_size st) with "int" -> "vals_i" | _ -> "vals_r"
 
@@ -344,6 +337,14 @@ let pp_ctor ppf (p : typed_prog) =
       | ls -> Some ls )
     | _ -> None
   in
+  let get_param_zero = function
+    | decl_id, ((SArray _ as st), Data)
+     |decl_id, ((SMatrix _ as st), Data)
+     |decl_id, ((SVector _ as st), Data)
+     |decl_id, ((SRowVector _ as st), Data) ->
+        Some (decl_id, st, DataOnly)
+    | _ -> None
+  in
   pp_block ppf
     ( (fun ppf p ->
         pf ppf "typedef double local_scalar_t__;@ " ;
@@ -352,7 +353,11 @@ let pp_ctor ppf (p : typed_prog) =
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error_b ppf (p.prepare_data, "inside ctor") ;
-        pf ppf "@ num_params_r__ = 0U;@ " ;
+        cut ppf () ;
+        pf ppf "%a"
+          (list ~sep:nop pp_set_size)
+          (List.filter_map ~f:get_param_zero p.input_vars) ;
+        pf ppf "num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "
           (list ~sep:cut pp_num_param)
           (List.filter_map ~f:get_param_st p.output_vars) )

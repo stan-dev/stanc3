@@ -49,6 +49,8 @@ class eight_schools_ncp_model : public prob_grad {
                                stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
                                0);}
     }
+    y = std::vector<double>(J, 0);
+    sigma = std::vector<double>(J, 0);
     num_params_r__ = 0U;
     num_params_r__ += 1;
     num_params_r__ += 1;
@@ -324,6 +326,7 @@ class one_var_per_block_model : public prob_grad {
                                  stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
                                  0);}}
     }
+    datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
     num_params_r__ = 0U;
     num_params_r__ += K * N;
     num_params_r__ += (K + 1) * K * N * N;
