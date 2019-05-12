@@ -218,8 +218,7 @@ let rec pp_statement (ppf : Format.formatter)
   | For
       { body=
           {stmt= Assignment (_, {expr= FunApp (CompilerInternal, f, _); _}); _}
-          as body
-      ; _ }
+          as body; _ }
     when internal_fn_of_string f = Some FnReadParam ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)
@@ -398,6 +397,7 @@ let pp_method_b ppf rt name params intro ?(outro = []) body =
     (fun ppf -> pp_located_error_b ppf (body, "inside " ^ name))
     ~outro
 
+(* XXX currently compiled Stan model crashes after getting nothing written in write_array *)
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
@@ -420,7 +420,7 @@ let separated_output_vars p =
       | id, (st, Parameters) -> `Fst (id, st)
       | id, (st, TransformedParameters) -> `Snd (id, st)
       | id, (st, GeneratedQuantities) -> `Trd (id, st)
-      | _ -> raise_s [%message "Why is there data in output_vars"] )
+      | _ -> raise_s [%message "Why is there data in output_vars"])
     p.output_vars
 
 let pp_string_lit = fmt "%S"
