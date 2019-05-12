@@ -98,12 +98,13 @@ class eight_schools_ncp_model : public prob_grad {
     return lp_accum__.sum();
     } // log_prob() 
     
-  void get_param_names(std::vector<std::string>& names) const {
+  void get_param_names(std::vector<std::string>& names__) const {
     
-    names.push_back("mu");
-    names.push_back("tau");
-    names.push_back("theta_tilde");
-    names.push_back("theta");
+    names__.resize(0);
+    names__.push_back("mu");
+    names__.push_back("tau");
+    names__.push_back("theta_tilde");
+    names__.push_back("theta");
     } // get_param_names() 
     
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
@@ -191,7 +192,23 @@ class eight_schools_ncp_model : public prob_grad {
   void unconstrained_param_names(std::vector<std::string>& param_names__,
                                  bool include_tparams__ = true,
                                  bool include_gqs__ = true) const {
-    //TODO unconstrained_param_names
+    
+    param_names__.push_back(std::string() + "mu");
+    param_names__.push_back(std::string() + "tau");
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "theta_tilde" + '.' + std::to_string(sym1__));
+      }}
+    if (include_tparams__) {
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    if (include_gqs__) {
+      
+    }
     
     } // unconstrained_param_names() 
     
@@ -389,12 +406,13 @@ class one_var_per_block_model : public prob_grad {
     return lp_accum__.sum();
     } // log_prob() 
     
-  void get_param_names(std::vector<std::string>& names) const {
+  void get_param_names(std::vector<std::string>& names__) const {
     
-    names.push_back("param");
-    names.push_back("matparam");
-    names.push_back("tparam");
-    names.push_back("gq");
+    names__.resize(0);
+    names__.push_back("param");
+    names__.push_back("matparam");
+    names__.push_back("tparam");
+    names__.push_back("gq");
     } // get_param_names() 
     
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
@@ -546,7 +564,39 @@ class one_var_per_block_model : public prob_grad {
   void unconstrained_param_names(std::vector<std::string>& param_names__,
                                  bool include_tparams__ = true,
                                  bool include_gqs__ = true) const {
-    //TODO unconstrained_param_names
+    
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }}
+    for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          {
+            for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+              param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
+          }}
+      }}
+    if (include_tparams__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }}
+    }
+    
+    if (include_gqs__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }}
+    }
     
     } // unconstrained_param_names() 
     

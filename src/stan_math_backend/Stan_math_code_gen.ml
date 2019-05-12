@@ -379,10 +379,11 @@ let pp_method ppf rt name params intro ?(outro = []) ppbody =
   pf ppf "@,} // %s() @,@]" name
 
 let pp_get_param_names ppf p =
-  let add_param = fmt "names.push_back(%S);" in
-  pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names"] []
-    (fun ppf -> (list ~sep:cut add_param) ppf (List.map ~f:fst p.output_vars)
-  )
+  let add_param = fmt "names__.push_back(%S);" in
+  pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names__"]
+    [] (fun ppf ->
+      pf ppf "names__.resize(0);@ " ;
+      (list ~sep:cut add_param) ppf (List.map ~f:fst p.output_vars) )
 
 let pp_get_dims ppf p =
   let pp_dim ppf dim = pf ppf "dims__.push_back(%a);@," pp_expr dim in
@@ -404,7 +405,6 @@ let pp_method_b ppf rt name params intro ?(outro = []) body =
     (fun ppf -> pp_located_error_b ppf (body, "inside " ^ name))
     ~outro
 
-(* XXX currently compiled Stan model crashes after getting nothing written in write_array *)
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
@@ -454,14 +454,29 @@ let pp_constrained_param_names ppf p =
       pf ppf "@,if (include_gqs__) %a@," pp_block
         (list ~sep:cut pp_param_names, gqvars) )
 
+(* XXX This is just a copy of constrained, I need to figure out which one is wrong
+   and fix it eventually. *)
 let pp_unconstrained_param_names ppf p =
   let params =
     [ "std::vector<std::string>& param_names__"; "bool include_tparams__ = true"
     ; "bool include_gqs__ = true" ]
   in
-  let intro = ["//TODO unconstrained_param_names"] in
-  ignore p ;
-  pp_method ppf "void" "unconstrained_param_names" params intro (fun _ -> ())
+  let paramvars, tparamvars, gqvars = separated_output_vars p in
+  let emit_name ppf (name, idcs) =
+    let to_string = fmt "std::to_string(%s)" in
+    pf ppf "param_names__.push_back(std::string() + %a);"
+      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
+  in
+  let pp_param_names ppf (decl_id, st) =
+    pp_for_loop_iteratee ppf (decl_id, st, emit_name)
+  in
+  pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
+      (list ~sep:cut pp_param_names) ppf paramvars ;
+      pf ppf "@,if (include_tparams__) %a@," pp_block
+        (list ~sep:cut pp_param_names, tparamvars) ;
+      pf ppf "@,if (include_gqs__) %a@," pp_block
+        (list ~sep:cut pp_param_names, gqvars) )
 
 let pp_transform_inits ppf p =
   let params =
