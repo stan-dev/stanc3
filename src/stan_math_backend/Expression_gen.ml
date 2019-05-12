@@ -221,6 +221,7 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
+  | Some FnWriteParam -> pf ppf ""
   | Some FnReadParam -> (
     match es with
     | _ :: {expr= Lit (Str, base_type); _} :: dims ->

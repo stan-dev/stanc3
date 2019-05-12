@@ -149,7 +149,7 @@ let add_int_index e i =
 
 (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
-let mkfor bodyfn iteratee smeta =
+let mkfor upper bodyfn iteratee smeta =
   let idx s =
     Ast.Single
       (Ast.mk_typed_expression
@@ -158,10 +158,6 @@ let mkfor bodyfn iteratee smeta =
   in
   let loopvar, reset = gensym_enter () in
   let lower = loop_bottom in
-  let upper =
-    { expr= FunApp (StanLib, string_of_internal_fn FnLength, [iteratee])
-    ; emeta= internal_meta }
-  in
   let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
   reset () ;
   {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
@@ -175,13 +171,16 @@ let mkfor bodyfn iteratee smeta =
     type. In this way we recursively create for loops that loop over
     the outermost layers first.
 *)
-let rec for_scalar bodyfn var smeta =
-  match var.emeta.mtype with
-  | UInt | UReal -> bodyfn var
-  | UVector | URowVector | UMatrix -> mkfor bodyfn var smeta
-  | UArray _ -> mkfor (fun e -> for_scalar bodyfn e smeta) var smeta
-  | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Can't for over " (var : mtype_loc_ad with_expr)]
+let rec for_scalar st bodyfn var smeta =
+  match st with
+  | SInt | SReal -> bodyfn var
+  | SVector d | SRowVector d -> mkfor d bodyfn var smeta
+  | SMatrix (d1, d2) ->
+      mkfor
+        { expr= FunApp (StanLib, string_of_operator Times, [d1; d2])
+        ; emeta= {mtype= UInt; mloc= smeta; madlevel= DataOnly} }
+        bodyfn var smeta
+  | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating
@@ -193,16 +192,14 @@ let rec for_scalar bodyfn var smeta =
     type. In this way we recursively create for loops that loop over
     the outermost layers first.
 *)
-let rec for_eigen bodyfn var smeta =
-  match var.emeta.mtype with
-  | UInt | UReal | UVector | URowVector | UMatrix -> bodyfn var
-  | UArray _ -> mkfor (fun e -> for_eigen bodyfn e smeta) var smeta
-  | UFun _ | UMathLibraryFunction ->
-      raise_s [%message "Can't for over " (var : expr_typed_located)]
+let rec for_eigen st bodyfn var smeta =
+  match st with
+  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
+  | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
-type readaction = ReadData | ReadParam [@@deriving sexp]
+type ioaction = ReadData | ReadParam [@@deriving sexp]
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let constrainaction_fname c =
@@ -213,7 +210,7 @@ let constrainaction_fname c =
     | Unconstrain -> FnUnconstrain )
 
 type decl_context =
-  { dread: readaction option
+  { dread: ioaction option
   ; dconstrain: constrainaction option
   ; dadlevel: autodifftype }
 
@@ -291,24 +288,23 @@ let rec eigen_size = function
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
 
-let read_decl dread decl_id sizedtype smeta decl_var =
+let read_decl readfname decl_id sizedtype smeta decl_var =
   let args =
     [ mkstring smeta decl_id
     ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
-    @ eigen_size (trans_sizedtype sizedtype)
+    @ eigen_size sizedtype
   in
   let readfn var =
-    internal_funapp (internal_of_dread dread) args
-      {var.emeta with mtype= base_type sizedtype}
+    internal_funapp readfname args {var.emeta with mtype= base_type sizedtype}
   in
   let readvar var =
     match var.expr with
     | Indexed (_, indices) -> {var with expr= Indexed (readfn var, indices)}
     | _ -> readfn var
   in
-  for_eigen (assign_indexed decl_id smeta readvar) decl_var smeta
+  for_eigen sizedtype (assign_indexed decl_id smeta readvar) decl_var smeta
 
-let constrain_decl dconstrain t decl_id decl_var smeta =
+let constrain_decl st dconstrain t decl_id decl_var smeta =
   let mkstring = mkstring decl_var.emeta.mloc in
   match Option.map ~f:(constraint_to_string t) dconstrain with
   | None | Some "" -> []
@@ -322,7 +318,7 @@ let constrain_decl dconstrain t decl_id decl_var smeta =
       let constrainvar var =
         {expr= FunApp (CompilerInternal, fname, args var); emeta= var.emeta}
       in
-      [ (constraint_forl t)
+      [ (constraint_forl t) st
           (assign_indexed decl_id smeta constrainvar)
           decl_var smeta ]
 
@@ -342,7 +338,7 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
       {stmt; smeta}
     in
     let mtype = remove_size decl_type in
-    forl check_id
+    forl decl_type check_id
       {expr= Var decl_id; emeta= {mtype; mloc= smeta; madlevel= adlevel}}
       smeta
   in
@@ -368,14 +364,15 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   in
   let read_stmts =
     match (dread, rhs) with
-    | Some dread, _ -> [read_decl dread decl_id sizedtype smeta decl_var]
+    | Some dread, _ ->
+        [read_decl (internal_of_dread dread) decl_id decl_type smeta decl_var]
     | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
     | None, None -> []
   in
   let constrain_stmts =
     match dconstrain with
     | Some Constrain | Some Unconstrain ->
-        constrain_decl dconstrain transform decl_id decl_var smeta
+        constrain_decl decl_type dconstrain transform decl_id decl_var smeta
     | _ -> []
   in
   let decl_adtype =
@@ -532,6 +529,25 @@ let trans_fun_def declc (ts : Ast.typed_statement) =
   in
   stmt
 
+let gen_write decl_id sizedtype =
+  let bodyfn var =
+    { stmt=
+        NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [var])
+    ; smeta= no_span }
+  in
+  for_scalar sizedtype bodyfn
+    { expr= Var decl_id
+    ; emeta= {internal_meta with mtype= remove_size sizedtype} }
+    no_span
+
+let gen_writes block_filter vars =
+  List.filter_map
+    ~f:(function
+      | decl_id, (st, block) when block = block_filter ->
+          Some (gen_write decl_id st)
+      | _ -> None)
+    vars
+
 let trans_prog filename
     { Ast.functionblock
     ; datablock
@@ -587,7 +603,12 @@ let trans_prog filename
         (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
         transformeddatablock
   in
-  let prepare_params =
+  let modelb =
+    map
+      (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
+      modelblock
+  in
+  let log_prob =
     map
       (trans_stmt
          { dread= Some ReadParam
@@ -598,24 +619,25 @@ let trans_prog filename
         (trans_stmt
            {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
         transformedparametersblock
-  in
-  let modelb =
-    map
-      (trans_stmt {dread= None; dconstrain= None; dadlevel= AutoDiffable})
-      modelblock
-  in
-  let log_prob =
-    prepare_params
     @
     match modelb with
     | [] -> []
     | hd :: _ -> [{stmt= Block modelb; smeta= hd.smeta}]
   in
   let generate_quantities =
-    prepare_params
+    map
+      (trans_stmt
+         {dread= Some ReadParam; dconstrain= Some Constrain; dadlevel= DataOnly})
+      parametersblock
+    @ gen_writes Parameters output_vars
+    @ map
+        (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
+        transformedparametersblock
+    @ gen_writes TransformedParameters output_vars
     @ map
         (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
         generatedquantitiesblock
+    @ gen_writes GeneratedQuantities output_vars
   in
   (* XXX broken *)
   (* ctor: read data and check
@@ -687,8 +709,7 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    ((For (loopvar sym1__) (lower (Lit Int 1))
-      (upper (FunApp StanLib FnLength__ ((Var mat))))
+    ((For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
         ((Assignment (mat ((Single (Var sym1__))))
@@ -704,8 +725,7 @@ let%expect_test "read param" =
     {|
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-     (For (loopvar sym1__) (lower (Lit Int 1))
-      (upper (FunApp StanLib FnLength__ ((Var mat))))
+     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
         ((Assignment (mat ((Single (Var sym1__))))
@@ -713,14 +733,11 @@ let%expect_test "read param" =
            (FunApp CompilerInternal FnReadParam__
             ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
            ((Single (Var sym1__)))))))))
-     (For (loopvar sym1__) (lower (Lit Int 1))
-      (upper (FunApp StanLib FnLength__ ((Var mat))))
+     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
         ((For (loopvar sym2__) (lower (Lit Int 1))
-          (upper
-           (FunApp StanLib FnLength__
-            ((Indexed (Var mat) ((Single (Var sym1__)))))))
+          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
           (body
            (Block
             ((Assignment (mat ((Single (Var sym1__)) (Single (Var sym2__))))
@@ -737,17 +754,23 @@ let%expect_test "gen quant" =
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-     (For (loopvar sym1__) (lower (Lit Int 1))
-      (upper (FunApp StanLib FnLength__ ((Var mat))))
+     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
         ((For (loopvar sym2__) (lower (Lit Int 1))
-          (upper
-           (FunApp StanLib FnLength__
-            ((Indexed (Var mat) ((Single (Var sym1__)))))))
+          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
           (body
            (Block
             ((NRFunApp CompilerInternal FnCheck__
               ((Lit Str greater_or_equal) (Lit Str "mat[sym1__, sym2__]")
                (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-               (Lit Int 0)))))))))))) |}]
+               (Lit Int 0)))))))))))
+     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
+      (body
+       (Block
+        ((For (loopvar sym2__) (lower (Lit Int 1))
+          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+          (body
+           (Block
+            ((NRFunApp CompilerInternal FnWriteParam__
+              ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))))))))))))) |}]

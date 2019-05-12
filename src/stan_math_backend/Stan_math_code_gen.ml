@@ -197,6 +197,9 @@ let rec pp_statement (ppf : Format.formatter)
       let args = {expr= Var "function__"; emeta= internal_meta} :: args in
       pp_statement ppf
         {stmt= NRFunApp (CompilerInternal, "check_" ^ check_name, args); smeta}
+  | NRFunApp (CompilerInternal, fname, [var])
+    when fname = string_of_internal_fn FnWriteParam ->
+      pf ppf "vars__.push_back(@[<hov>%a@]);" pp_expr var
   | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
