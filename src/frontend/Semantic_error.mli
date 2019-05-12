@@ -54,6 +54,7 @@ val invalid_rng_fn : location_span -> t
 val conditional_notation_not_allowed : location_span -> t
 val conditioning_required : location_span -> t
 val not_printable : location_span -> t
+val empty_array : location_span -> t
 val cannot_assign_to_read_only : location_span -> string -> t
 val cannot_assign_to_global : location_span -> string -> t
 val invalid_sampling_pdf_or_pmf : location_span -> t

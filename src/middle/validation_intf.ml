@@ -1,6 +1,7 @@
 module type Infix = sig
   type 'a t
-  val (>>=) : 'a t -> ('a -> 'b t) -> 'b t
+
+  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
   val ( <*> ) : 'a t -> ('a -> 'b) t -> 'b t
   val ( *> ) : 'a t -> 'b t -> 'b t
 end
@@ -16,7 +17,7 @@ module type S = sig
   val bind : 'a t -> f:('a -> 'b t) -> 'b t
   val liftA2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
   val liftA3 : ('a -> 'b -> 'c -> 'd) -> 'a t -> 'b t -> 'c t -> 'd t
-  val sequence : 'a t list -> 'a list t  
+  val sequence : 'a t list -> 'a list t
   val ok : 'a -> 'a t
   val error : error -> _ t
   val is_error : 'a t -> bool

@@ -24,22 +24,14 @@ end) : S with type error := X.t = struct
     | Error e1, Error e2 -> Error (append e1 e2)
 
   let apply_const a b = apply b ~f:(map a ~f:(fun _ x -> x))
-
-
-  let bind x ~f = 
-    match x with 
-    | Ok x -> f x 
-    | Error e -> Error e
-
+  let bind x ~f = match x with Ok x -> f x | Error e -> Error e
   let liftA2 f x y = apply y ~f:(apply x ~f:(pure f))
-
   let liftA3 f x y z = apply z ~f:(apply y ~f:(apply x ~f:(pure f)))
-
   let consA next rest = liftA2 List.cons next rest
   let sequence ts = List.fold_right ~init:(pure []) ~f:consA ts
 
   module Validation_infix = struct
-    let (>>=) x f =  bind x ~f
+    let ( >>= ) x f = bind x ~f
     let ( <*> ) x f = apply x ~f
     let ( *> ) x y = apply_const x y
   end

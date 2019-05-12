@@ -230,6 +230,7 @@ module ExpressionError = struct
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
+    | EmptyArray
 
   let pp ppf = function
     | InvalidMapRectFn fn_name ->
@@ -251,6 +252,8 @@ module ExpressionError = struct
           "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
            _lccdf, require a vertical bar (|) between the first two arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
+    | EmptyArray ->
+        Fmt.pf ppf "Array expressions must contain at least one element."
 end
 
 module StatementError = struct
@@ -485,6 +488,7 @@ let conditioning_required loc =
   ExpressionError (loc, ExpressionError.ConditioningRequired)
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
+let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
 
 let cannot_assign_to_read_only loc name =
   StatementError (loc, StatementError.CannotAssignToReadOnly name)
