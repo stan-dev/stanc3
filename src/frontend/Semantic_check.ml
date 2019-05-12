@@ -655,8 +655,50 @@ let inferred_ad_type_of_indexed at uindices =
 let index_with_type idx =
   match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, Middle.UInt)
 
+let rec semantic_check_indexed ~loc ~cf e indices = Validate.(
+    indices
+    |> List.map ~f:(semantic_check_index cf)
+    |> sequence
+    |> liftA2 tuple2 (semantic_check_expression cf e)
+    >>= fun (ue, uindices) ->
+    let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices in
+    uindices
+    |> List.map ~f:index_with_type
+    |> inferred_unsizedtype_of_indexed ~loc ue.emeta.type_
+    |> map ~f:(fun ut -> 
+            
+            
+            mk_typed_expression
+              ~expr:(Indexed (ue, uindices))
+              ~ad_level:at ~type_:ut ~loc)
+)
+
+and semantic_check_index cf idx =
+  match idx with
+  | All -> Validate.ok All
+  (* Check that indexes have int (container) type *)
+  | Single e ->
+      Validate.(
+        semantic_check_expression cf e
+        >>= fun ue ->
+        if has_int_type ue || has_int_array_type ue then ok @@ Single ue
+        else
+          Semantic_error.int_intarray_or_range_expected ue.emeta.loc
+            ue.emeta.type_
+          |> error)
+  | Upfrom e ->
+      semantic_check_expression_of_int_type cf e "Range bound"
+      |> Validate.map ~f:(fun e -> Upfrom e)
+  | Downfrom e ->
+      semantic_check_expression_of_int_type cf e "Range bound"
+      |> Validate.map ~f:(fun e -> Downfrom e)
+  | Between (e1, e2) ->
+      let le = semantic_check_expression_of_int_type cf e1 "Range bound"
+      and ue = semantic_check_expression_of_int_type cf e2 "Range bound" in
+      Validate.liftA2 (fun l u -> Between (l, u)) le ue
+
 (* -- Top-level expressions ------------------------------------------------- *)
-let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
+and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
     Ast.typed_expression Validate.t =
   match expr with
   | TernaryIf (e1, e2, e3) ->
@@ -762,21 +804,8 @@ let rec semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) ->
-      Validate.(
-        indices
-        |> List.map ~f:(semantic_check_index cf)
-        |> sequence
-        |> liftA2 tuple2 (semantic_check_expression cf e)
-        >>= fun (ue, uindices) ->
-        let at = inferred_ad_type_of_indexed ue.emeta.ad_level uindices in
-        uindices
-        |> List.map ~f:index_with_type
-        |> inferred_unsizedtype_of_indexed ~loc:emeta.loc ue.emeta.type_
-        |> map ~f:(fun ut ->
-               mk_typed_expression
-                 ~expr:(Indexed (ue, uindices))
-                 ~ad_level:at ~type_:ut ~loc:emeta.loc ))
-
+      semantic_check_indexed ~loc:emeta.loc ~cf e indices
+      
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
     semantic_check_expression cf e
@@ -793,30 +822,6 @@ and semantic_check_expression_of_int_or_real_type cf e name =
       Semantic_error.int_or_real_expected ue.emeta.loc name ue.emeta.type_
       |> error)
 
-(* -- Indices --------------------------------------------------------------- *)
-and semantic_check_index cf idx =
-  match idx with
-  | All -> Validate.ok All
-  (* Check that indexes have int (container) type *)
-  | Single e ->
-      Validate.(
-        semantic_check_expression cf e
-        >>= fun ue ->
-        if has_int_type ue || has_int_array_type ue then ok @@ Single ue
-        else
-          Semantic_error.int_intarray_or_range_expected ue.emeta.loc
-            ue.emeta.type_
-          |> error)
-  | Upfrom e ->
-      semantic_check_expression_of_int_type cf e "Range bound"
-      |> Validate.map ~f:(fun e -> Upfrom e)
-  | Downfrom e ->
-      semantic_check_expression_of_int_type cf e "Range bound"
-      |> Validate.map ~f:(fun e -> Downfrom e)
-  | Between (e1, e2) ->
-      let le = semantic_check_expression_of_int_type cf e1 "Range bound"
-      and ue = semantic_check_expression_of_int_type cf e2 "Range bound" in
-      Validate.liftA2 (fun l u -> Between (l, u)) le ue
 
 (* -- Sized Types ----------------------------------------------------------- *)
 let rec semantic_check_sizedtype cf = function
@@ -967,6 +972,71 @@ let semantic_check_nrfn ~loc id es =
 
 (* -- Assignment ------------------------------------------------------------ *)
 
+let semantic_check_assignment_read_only ~loc id = Validate.(
+  if Symbol_table.get_read_only vm id.name then
+          Semantic_error.cannot_assign_to_read_only loc id.name 
+          |> error
+  else  ok ()
+)
+
+(* Variables from previous blocks are read-only. 
+   In particular, data and parameters never assigned to 
+*)
+let semantic_check_assignment_global ~loc ~cf ~block id = Validate.(
+  if (not (Symbol_table.is_global vm id.name)) || block = cf.current_block then 
+    ok ()
+  else
+    Semantic_error.cannot_assign_to_global loc id.name 
+    |> error
+)
+ 
+
+let mk_assignment_from_indexed_expr assop lhs rhs = 
+  match lhs with 
+  | {expr= Indexed ({expr= Variable id; _}, idx); _} -> 
+    Assignment
+      { assign_identifier= id
+      ; assign_indices= idx
+      ; assign_op= assop
+      ; assign_rhs= rhs }
+  | _ -> 
+    fatal_error ()
+
+let semantic_check_assignment_operator ~loc assop lhs rhs = Validate.(
+  let opname = Sexp.to_string (sexp_of_assignmentoperator assop) in
+  match
+        operator_return_type_from_string opname (get_arg_types [lhs; rhs])
+  with
+  | Some Void ->
+          mk_typed_statement ~return_type:NoReturnType ~loc
+            ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
+          |> ok 
+  (* Check that assignments are type consistent *)
+  | None | Some (ReturnType _) ->
+      Semantic_error.illtyped_assignment loc assop lhs.emeta.type_ rhs.emeta.type_
+      |> error
+)
+   
+(* -- Target plus-equals ---------------------------------------------------- *)
+
+let semantic_check_target_pe_expr_type ~loc e = 
+  match e.emeta.type_ with
+  | UFun _ | UMathLibraryFunction ->
+      Semantic_error.int_or_real_container_expected loc e.emeta.type_
+      |> Validate.error
+  | _ -> Validate.ok ()
+
+let semantic_check_target_pe_usage ~loc ~cf =
+if (cf.in_lp_fun_def || cf.current_block = Model) then
+  Validate.ok () 
+else 
+    Semantic_error.target_plusequals_outisde_model_or_logprob loc
+    |> Validate.error
+
+
+
+
+
 (* -- Blocks ---------------------------------------------------------------- *)
 
 let stmt_is_escape {stmt; _} =
@@ -1000,113 +1070,55 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
       { assign_identifier= id
       ; assign_indices= lindex
       ; assign_op= assop
-      ; assign_rhs= e } -> (
-      let ute =
-        Ast.mk_untyped_expression
+      ; assign_rhs= e } ->
+      
+      let block =
+          Symbol_table.look vm id.name
+          |> Option.map ~f:fst 
+          |> Option.value 
+              ~default:(
+                if is_stan_math_function_name id.name then MathLibrary
+                else fatal_error ()
+              )
+      and lhs =
+        Ast.mk_untyped_expression ~loc
           ~expr:
             (Indexed
                ( Ast.mk_untyped_expression ~expr:(Variable id) ~loc:id.id_loc
                , lindex ))
-          ~loc
+        |> semantic_check_expression cf
+      and assop = semantic_check_assignmentoperator assop
+      and rhs = semantic_check_expression cf e
+
       in
-      let ue2 = semantic_check_expression cf ute in
-      let uid, ulindex =
-        match ue2 with
-        | {expr= Indexed ({expr= Variable uid; _}, ulindex); _} ->
-            (uid, ulindex)
-        | _ -> fatal_error ()
-      in
-      let uassop = semantic_check_assignmentoperator assop in
-      let ue = semantic_check_expression cf e in
-      let uidoblock =
-        match Option.map ~f:fst (Symbol_table.look vm uid.name) with
-        | Some b -> b
-        | None ->
-            if is_stan_math_function_name uid.name then MathLibrary
-            else fatal_error ()
-      in
-      let _ =
-        if Symbol_table.get_read_only vm uid.name then
-          semantic_error ~loc
-            ( "Cannot assign to function argument or loop identifier "
-            ^ ("'" ^ uid.name ^ "'")
-            ^ "." )
-      in
-      (* Variables from previous blocks are read-only. In particular, data and parameters never assigned to *)
-      let _ =
-        if
-          (not (Symbol_table.is_global vm uid.name))
-          || uidoblock = cf.current_block
-        then ()
-        else
-          semantic_error ~loc
-            ( "Cannot assign to global variable "
-            ^ ("'" ^ uid.name ^ "'")
-            ^ " declared in previous blocks." )
-      in
-      let opname = Sexp.to_string (sexp_of_assignmentoperator uassop) in
-      match
-        operator_return_type_from_string opname (get_arg_types [ue2; ue])
-      with
-      | Some Void ->
-          mk_typed_statement ~return_type:NoReturnType ~loc
-            ~stmt:
-              (Assignment
-                 { assign_identifier= uid
-                 ; assign_indices= ulindex
-                 ; assign_op= uassop
-                 ; assign_rhs= ue })
-      (* Check that assignments are type consistent *)
-      | None | Some (ReturnType _) ->
-          let lhs_type = pretty_print_unsizedtype ue2.emeta.type_
-          and rhs_type = pretty_print_unsizedtype ue.emeta.type_ in
-          semantic_error ~loc
-            ( "Ill-typed arguments supplied to assignment operator "
-            ^ pretty_print_assignmentoperator uassop
-            ^ ": lhs has type " ^ lhs_type ^ " and rhs has type " ^ rhs_type
-            ^
-            if uassop <> Assign && uassop <> ArrowAssign then
-              ". Available signatures:"
-              ^ pretty_print_all_operator_signatures opname
-            else "" ) )
-  | TargetPE e ->
-      let ue = semantic_check_expression cf e in
-      (* Check typing of ~ and target += *)
-      let _ =
-        match ue.emeta.type_ with
-        | UFun _ | UMathLibraryFunction ->
-            semantic_error ~loc
-              "A (container of) reals or ints needs to be supplied to \
-               increment target."
-        | _ -> ()
-      in
-      (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
-      let _ =
-        if not (cf.in_lp_fun_def || cf.current_block = Model) then
-          semantic_error ~loc
-            "Target can only be accessed in the model block or in definitions \
-             of functions with the suffix _lp."
-      in
-      mk_typed_statement ~stmt:(TargetPE ue) ~return_type:NoReturnType ~loc
-  | IncrementLogProb e ->
-      let ue = semantic_check_expression cf e in
-      let _ =
-        match ue.emeta.type_ with
-        | UFun _ | UMathLibraryFunction ->
-            semantic_error ~loc
-              "A (container of) reals or ints needs to be supplied to \
-               increment target."
-        | _ -> ()
-      in
-      (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
-      let _ =
-        if not (cf.in_lp_fun_def || cf.current_block = Model) then
-          semantic_error ~loc
-            "Target can only be accessed in the model block or in definitions \
-             of functions with the suffix _lp."
-      in
-      mk_typed_statement ~stmt:(IncrementLogProb ue) ~return_type:NoReturnType
-        ~loc
+      Validate.(
+        liftA3 tuple3 lhs assop rhs
+        >>= 
+          fun (lhs,assop,rhs) ->
+            semantic_check_assignment_operator ~loc assop lhs rhs
+            |> apply_const (semantic_check_assignment_global ~loc ~cf ~block id)
+            |> apply_const (semantic_check_assignment_read_only ~loc id)
+      )
+     
+  | TargetPE e -> Validate.(
+      semantic_check_expression cf e      
+      |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
+      >>= (fun ue -> 
+          semantic_check_target_pe_expr_type ~loc ue
+          |> map  ~f:(fun _ -> 
+                mk_typed_statement ~stmt:(TargetPE ue) ~return_type:NoReturnType ~loc
+          )
+      ))
+
+  | IncrementLogProb e -> Validate.(
+      semantic_check_expression cf e
+      |> apply_const (semantic_check_target_pe_expr_type ~loc e)
+      |> apply_const (semantic_check_target_pe_usage ~loc ~cf)
+      |> map ~f:(fun ue -> 
+                mk_typed_statement ~stmt:(IncrementLogProb ue) ~return_type:NoReturnType ~loc
+      ))
+
+
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       let ue = semantic_check_expression cf e in
       let uid = semantic_check_identifier id in
@@ -1280,10 +1292,9 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
       (* For, while, for each, if constructs take expressions of valid type *)
       let us1 = semantic_check_statement cf s1
       and uos2 =
-        match os2 with
-        | Some s2 ->
-            semantic_check_statement cf s2 |> Validate.map ~f:(fun x -> Some x)
-        | _ -> Validate.ok None
+        os2 
+        |> Option.map ~f:(fun s -> semantic_check_statement cf s |> Validate.map ~f:Option.some)
+        |> Option.value ~default:(Validate.ok None)
       and ue =
         semantic_check_expression_of_int_or_real_type cf e
           "Condition in conditional"
@@ -1342,6 +1353,7 @@ let rec semantic_check_statement cf (s : Ast.untyped_statement) :
              ; upper_bound= ue2
              ; loop_body= us })
         ~return_type:us.smeta.return_type ~loc
+        
   | ForEach (id, e, s) ->
       let uid = semantic_check_identifier id in
       let ue = semantic_check_expression cf e in
