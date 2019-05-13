@@ -549,7 +549,6 @@ let gen_writes block_filter vars =
     vars
 
 let compiler_if compiler_internal_var stmts =
-  print_s [%sexp (stmts : stmt_loc list)] ;
   let body =
     match stmts with
     | [({stmt= Block _; _} as s)] -> s
@@ -705,8 +704,6 @@ let%expect_test "Prefix-Op-Example" =
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
-      ()
-      ()
       ((Block
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
          (IfElse
@@ -718,8 +715,6 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
-    ()
-    ()
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
@@ -736,8 +731,6 @@ let%expect_test "read param" =
   print_s [%sexp (m.log_prob : stmt_loc list)] ;
   [%expect
     {|
-    ()
-    ()
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
@@ -767,29 +760,6 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1))
-          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
-          (body
-           (Block
-            ((NRFunApp CompilerInternal FnCheck__
-              ((Lit Str greater_or_equal) (Lit Str "mat[sym1__, sym2__]")
-               (Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-               (Lit Int 0)))))))))))
-     (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-      (body
-       (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1))
-          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
-          (body
-           (Block
-            ((NRFunApp CompilerInternal FnWriteParam__
-              ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))))
-    ()
     ((IfElse (Var emit_generated_quantities__)
       (Block
        ((Decl (decl_adtype DataOnly) (decl_id mat)

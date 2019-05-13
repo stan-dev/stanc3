@@ -189,6 +189,17 @@ and read_data ut ppf es =
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
+and gen_distribution_app f =
+  if
+    String.is_suffix f ~suffix:"_lpmf"
+    || String.is_suffix f ~suffix:"_lpdf"
+    || String.is_suffix f ~suffix:"_log"
+  then
+    Some
+      (fun ppf ->
+        pf ppf "%s<propto__>(@[<hov>%a@])" f (list ~sep:comma pp_expr) )
+  else None
+
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
@@ -197,7 +208,8 @@ and gen_fun_app ppf f es =
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
-    ; gen_misc_special_math_app f ]
+    ; gen_misc_special_math_app f
+    ; gen_distribution_app f ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
