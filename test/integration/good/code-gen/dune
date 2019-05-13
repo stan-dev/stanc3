@@ -1,5 +1,3 @@
-(include ../dune)
-
 (rule
  (targets cpp.output)
  (deps (package stanc) (:stanfiles eight_schools_ncp.stan one_var_per_block.stan))
