@@ -75,7 +75,9 @@ class eight_schools_ncp_model : public prob_grad {
       local_scalar_t__ tau;
       
       tau = in__.scalar();
-      tau = lb_constrain(tau, 0);
+      if (jacobian__) {
+        tau = lb_constrain(tau, 0, lp__);
+      } else tau = lb_constrain(tau, 0);
       std::vector<local_scalar_t__> theta_tilde;
       theta_tilde = std::vector<local_scalar_t__>(J, 0);
       
@@ -88,10 +90,10 @@ class eight_schools_ncp_model : public prob_grad {
         theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
       }
       {
-        lp_accum__.add(normal_log(mu, 0, 5));
-        lp_accum__.add(cauchy_log(tau, 0, 5));
-        lp_accum__.add(normal_log(theta_tilde, 0, 1));
-        lp_accum__.add(normal_log(y, theta, sigma));
+        lp_accum__.add(normal_log<propto__>(mu, 0, 5));
+        lp_accum__.add(cauchy_log<propto__>(tau, 0, 5));
+        lp_accum__.add(normal_log<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(normal_log<propto__>(y, theta, sigma));
       }
     }
     lp_accum__.add(lp__);
@@ -126,7 +128,8 @@ class eight_schools_ncp_model : public prob_grad {
   template <typename RNG>
   void write_array(RNG& base_rng, std::vector<double>& params_r__,
                    std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool include_tparams__ = true, bool include_gqs__ = true,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
                    std::ostream* pstream__ = 0) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
@@ -154,21 +157,23 @@ class eight_schools_ncp_model : public prob_grad {
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.push_back(stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
       }
-      std::vector<double> theta;
-      theta = std::vector<double>(J, 0);
-      
-      for (size_t j = 1; j <= J; ++j) {
-        theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
-      }
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        vars__.push_back(stan::model::rvalue(theta, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-      }
+      if (emit_transformed_parameters__) {
+        std::vector<double> theta;
+        theta = std::vector<double>(J, 0);
+        
+        for (size_t j = 1; j <= J; ++j) {
+          theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
+        }
+        for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+          vars__.push_back(stan::model::rvalue(theta, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+        }
+      } 
     }
     } // write_array() 
     
   void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool include_tparams__ = true,
-                               bool include_gqs__ = true) const {
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mu");
     param_names__.push_back(std::string() + "tau");
@@ -176,22 +181,22 @@ class eight_schools_ncp_model : public prob_grad {
       {
         param_names__.push_back(std::string() + "theta_tilde" + '.' + std::to_string(sym1__));
       }}
-    if (include_tparams__) {
+    if (emit_transformed_parameters__) {
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         {
           param_names__.push_back(std::string() + "theta" + '.' + std::to_string(sym1__));
         }}
     }
     
-    if (include_gqs__) {
+    if (emit_generated_quantities__) {
       
     }
     
     } // constrained_param_names() 
     
   void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool include_tparams__ = true,
-                                 bool include_gqs__ = true) const {
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
     
     param_names__.push_back(std::string() + "mu");
     param_names__.push_back(std::string() + "tau");
@@ -199,14 +204,14 @@ class eight_schools_ncp_model : public prob_grad {
       {
         param_names__.push_back(std::string() + "theta_tilde" + '.' + std::to_string(sym1__));
       }}
-    if (include_tparams__) {
+    if (emit_transformed_parameters__) {
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         {
           param_names__.push_back(std::string() + "theta" + '.' + std::to_string(sym1__));
         }}
     }
     
-    if (include_gqs__) {
+    if (emit_generated_quantities__) {
       
     }
     
@@ -242,21 +247,22 @@ class eight_schools_ncp_model : public prob_grad {
     void write_array(RNG& base_rng,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                     bool include_tparams = true,
-                     bool include_gqs = true,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
                      std::ostream* pstream = 0) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
       std::vector<double> vars_vec;
       std::vector<int> params_i_vec;
-      write_array(base_rng, params_r_vec, params_i_vec, vars_vec, include_tparams, include_gqs, pstream);
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i)
         vars(i) = vars_vec[i];
     }
 
-    template <bool propto, bool jacobian, typename T_>
+    template <bool propto__, bool jacobian__, typename T_>
     T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
                std::ostream* pstream = 0) const {
       std::vector<T_> vec_params_r;
@@ -264,7 +270,7 @@ class eight_schools_ncp_model : public prob_grad {
       for (int i = 0; i < params_r.size(); ++i)
         vec_params_r.push_back(params_r(i));
       std::vector<int> vec_params_i;
-      return log_prob<propto,jacobian,T_>(vec_params_r, vec_params_i, pstream);
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
 
 };
@@ -448,7 +454,8 @@ class one_var_per_block_model : public prob_grad {
   template <typename RNG>
   void write_array(RNG& base_rng, std::vector<double>& params_r__,
                    std::vector<int>& params_i__, std::vector<double>& vars__,
-                   bool include_tparams__ = true, bool include_gqs__ = true,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
                    std::ostream* pstream__ = 0) const {
     typedef double local_scalar_t__;
     vars__.resize(0);
@@ -489,42 +496,46 @@ class one_var_per_block_model : public prob_grad {
           for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
             vars__.push_back(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"));
           }}}
-      std::vector<Eigen::Matrix<double, -1, 1>> tparam;
-      tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-      
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          check_greater_or_equal(function__, "tparam[sym1__, sym2__]",
-                                 stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                 0);}}
-      for (size_t n = 1; n <= N; ++n) {
-        tparam[(n - 1)] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
-      }
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
-        }}
-      std::vector<Eigen::Matrix<double, -1, 1>> gq;
-      gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-      
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          check_greater_or_equal(function__, "gq[sym1__, sym2__]",
-                                 stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                 0);}}
-      for (size_t n = 1; n <= N; ++n) {
-        gq[(n - 1)] = add(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"));
-      }
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.push_back(stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
-        }}
+      if (emit_transformed_parameters__) {
+        std::vector<Eigen::Matrix<double, -1, 1>> tparam;
+        tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            check_greater_or_equal(function__, "tparam[sym1__, sym2__]",
+                                   stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                   0);}}
+        for (size_t n = 1; n <= N; ++n) {
+          tparam[(n - 1)] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+        }
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.push_back(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+          }}
+      } 
+      if (emit_generated_quantities__) {
+        std::vector<Eigen::Matrix<double, -1, 1>> gq;
+        gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            check_greater_or_equal(function__, "gq[sym1__, sym2__]",
+                                   stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                   0);}}
+        for (size_t n = 1; n <= N; ++n) {
+          gq[(n - 1)] = add(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"));
+        }
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.push_back(stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+          }}
+      } 
     }
     } // write_array() 
     
   void constrained_param_names(std::vector<std::string>& param_names__,
-                               bool include_tparams__ = true,
-                               bool include_gqs__ = true) const {
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
       {
@@ -541,7 +552,7 @@ class one_var_per_block_model : public prob_grad {
             }
           }}
       }}
-    if (include_tparams__) {
+    if (emit_transformed_parameters__) {
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         {
           for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -550,7 +561,7 @@ class one_var_per_block_model : public prob_grad {
         }}
     }
     
-    if (include_gqs__) {
+    if (emit_generated_quantities__) {
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         {
           for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -562,8 +573,8 @@ class one_var_per_block_model : public prob_grad {
     } // constrained_param_names() 
     
   void unconstrained_param_names(std::vector<std::string>& param_names__,
-                                 bool include_tparams__ = true,
-                                 bool include_gqs__ = true) const {
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
     
     for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
       {
@@ -580,7 +591,7 @@ class one_var_per_block_model : public prob_grad {
             }
           }}
       }}
-    if (include_tparams__) {
+    if (emit_transformed_parameters__) {
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         {
           for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -589,7 +600,7 @@ class one_var_per_block_model : public prob_grad {
         }}
     }
     
-    if (include_gqs__) {
+    if (emit_generated_quantities__) {
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         {
           for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -640,21 +651,22 @@ class one_var_per_block_model : public prob_grad {
     void write_array(RNG& base_rng,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                     bool include_tparams = true,
-                     bool include_gqs = true,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
                      std::ostream* pstream = 0) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
       std::vector<double> vars_vec;
       std::vector<int> params_i_vec;
-      write_array(base_rng, params_r_vec, params_i_vec, vars_vec, include_tparams, include_gqs, pstream);
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i)
         vars(i) = vars_vec[i];
     }
 
-    template <bool propto, bool jacobian, typename T_>
+    template <bool propto__, bool jacobian__, typename T_>
     T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
                std::ostream* pstream = 0) const {
       std::vector<T_> vec_params_r;
@@ -662,7 +674,7 @@ class one_var_per_block_model : public prob_grad {
       for (int i = 0; i < params_r.size(); ++i)
         vec_params_r.push_back(params_r(i));
       std::vector<int> vec_params_i;
-      return log_prob<propto,jacobian,T_>(vec_params_r, vec_params_i, pstream);
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
     }
 
 };

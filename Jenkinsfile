@@ -21,7 +21,6 @@ pipeline {
                 }
             }
             steps {
-
                 /* runs 'dune build @install'*/
                 runShell("""
                     eval \$(opam env)
@@ -42,7 +41,22 @@ pipeline {
 
                 //Cleans the workspace
                 runShell("rm -rf ./*")
-
+            }
+        }
+        stage("Run end-to-end tests") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                runShell("""
+                    eval \$(opam env)
+                    git clone --recursive https://github.com/stan-dev/cmdstan
+                    cmdstan=cmdstan dune runtest test/integration/good/code-gen
+                """)
             }
         }
         stage("Build & Test windows binary") {

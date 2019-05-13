@@ -642,6 +642,27 @@ let trans_prog filename p : typed_prog =
     | [] -> []
     | hd :: _ -> [{stmt= Block modelb; smeta= hd.smeta}]
   in
+  let log_prob =
+    List.map
+      ~f:(fun {stmt; smeta} ->
+        match stmt with
+        | Assignment (lhs, {expr= FunApp (CompilerInternal, f, args); emeta})
+          when internal_fn_of_string f = Some FnConstrain ->
+            let var n = {expr= Var n; emeta= internal_meta} in
+            let assign rhs = {stmt= Assignment (lhs, rhs); smeta} in
+            { stmt=
+                IfElse
+                  ( var "jacobian__"
+                  , assign
+                      { expr= FunApp (CompilerInternal, f, args @ [var "lp__"])
+                      ; emeta }
+                  , Some
+                      (assign {expr= FunApp (CompilerInternal, f, args); emeta})
+                  )
+            ; smeta }
+        | _ -> {stmt; smeta} )
+      log_prob
+  in
   let gen_from_block declc block =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
