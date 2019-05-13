@@ -31,10 +31,10 @@
 
 
 (rule
-  (targets eight_schools_ncp_stan2)
+  (targets stan2_eight_schools_ncp)
   (action
     (progn
-      (copy %{dep:eight_schools_ncp.stan} eight_schools_ncp_stan2.stan)
+      (copy %{dep:eight_schools_ncp.stan} stan2_eight_schools_ncp.stan)
       (chdir %{env:cmdstan=cmdstan}
         (run make -j4 %{targets})))))
 
@@ -42,17 +42,23 @@
  (targets eight_schools_ncp_summary.expected)
  (action
    (progn
-    (run %{dep:eight_schools_ncp_stan2} random seed=1 sample data file=%{dep:eight_schools.data.R} output file=eight_schools_ncp_stan2.csv)
+    (run %{dep:stan2_eight_schools_ncp} random seed=1 sample data file=%{dep:eight_schools.data.R} output file=stan2_eight_schools_ncp.csv)
     (with-stdout-to %{targets}
-      (bash "%{env:cmdstan=cmdstan}/bin/stansummary eight_schools_ncp_stan2.csv | awk 'NF{NF-=2};1' | tail -n32 "))
+      (run %{env:cmdstan=cmdstan}/bin/stansummary stan2_eight_schools_ncp.csv))
+    (with-stdout-to %{targets}
+      (run python %{dep:chop_summary.py} %{targets}))
     )))
 
 (rule
  (targets eight_schools_ncp_summary.output)
  (deps eight_schools_ncp.csv)
  (action
-   (with-stdout-to %{targets}
-     (bash "%{env:cmdstan=cmdstan}/bin/stansummary %{deps} | awk 'NF{NF-=2};1' | tail -n32 "))))
+  (progn
+    (with-stdout-to %{targets}
+      (run %{env:cmdstan=cmdstan}/bin/stansummary eight_schools_ncp.csv))
+    (with-stdout-to %{targets}
+      (run python %{dep:chop_summary.py} %{targets}))
+    )))
 
 (alias (name runtest)
   (enabled_if (<> false %{env:cmdstan=false}))
