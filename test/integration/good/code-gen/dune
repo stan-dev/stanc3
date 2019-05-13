@@ -34,7 +34,7 @@
  (deps eight_schools_ncp.csv)
  (action
    (with-stdout-to %{targets}
-     (run %{env:cmdstan=cmdstan}/bin/stansummary %{deps}))))
+     (bash "%{env:cmdstan=cmdstan}/bin/stansummary %{deps} | awk 'NF{NF-=2};1' | tail -n32 "))))
 
 (alias (name runtest)
   (enabled_if (<> false %{env:cmdstan=false}))
