@@ -522,7 +522,28 @@ let pp_log_prob ppf p =
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
-  pp_method_b ppf "T__" "log_prob" params intro p.log_prob ~outro
+  let log_prob =
+    List.map
+      ~f:(fun {stmt; smeta} ->
+        match stmt with
+        | Assignment (lhs, {expr= FunApp (CompilerInternal, f, args); emeta})
+          when internal_fn_of_string f = Some FnConstrain ->
+            let var n = {expr= Var n; emeta= internal_meta} in
+            let assign rhs = {stmt= Assignment (lhs, rhs); smeta} in
+            { stmt=
+                IfElse
+                  ( var "jacobian__"
+                  , assign
+                      { expr= FunApp (CompilerInternal, f, args @ [var "lp__"])
+                      ; emeta }
+                  , Some
+                      (assign {expr= FunApp (CompilerInternal, f, args); emeta})
+                  )
+            ; smeta }
+        | _ -> {stmt; smeta} )
+      p.log_prob
+  in
+  pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro
 
 let pp_overloads ppf () =
   pf ppf
