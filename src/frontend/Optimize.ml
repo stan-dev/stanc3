@@ -748,75 +748,9 @@ let%expect_test "map_rec_stmt_loc" =
     | x -> x
   in
   let mir = map_prog (fun x -> x) (map_rec_stmt_loc f) mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
-      log_prob {
-        {
-        FnPrint__(24, 24);
-        if(13) {
-          FnPrint__(244, 244);
-          if(24) {
-            FnPrint__(24, 24);
-            }
-          }
-        }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars { |}]
-
-let%expect_test "map_rec_state_stmt_loc" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
-      model {
-        print(24);
-        if (13) {
-          print(244);
-          if (24) {
-            print(24);
-          }
-        }
-      }
-      |}
-  in
-  let ast = Semantic_check.semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
-  let f i = function
-    | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
-    | x -> (x, i)
-  in
-  let mir_stmt, num =
-    (map_rec_state_stmt_loc f 0)
-      {stmt= SList mir.log_prob; smeta= Middle.no_span}
-  in
-  let mir = {mir with log_prob= [mir_stmt]} in
-  pp_typed_prog Format.std_formatter mir ;
-  print_endline (string_of_int num) ;
-  [%expect
-    {|
-      }
       functions {
 
       }
@@ -850,7 +784,77 @@ let%expect_test "map_rec_state_stmt_loc" =
       }
 
       output_vars {
-        3 |}]
+
+      } |}]
+
+let%expect_test "map_rec_state_stmt_loc" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        print(24);
+        if (13) {
+          print(244);
+          if (24) {
+            print(24);
+          }
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let f i = function
+    | NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
+        (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
+    | x -> (x, i)
+  in
+  let mir_stmt, num =
+    (map_rec_state_stmt_loc f 0)
+      {stmt= SList mir.log_prob; smeta= Middle.no_span}
+  in
+  let mir = {mir with log_prob= [mir_stmt]} in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  print_endline (string_of_int num) ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        FnPrint__(24, 24);
+        if(13) {
+          FnPrint__(244, 244);
+          if(24) {
+            FnPrint__(24, 24);
+            }
+          }
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      }
+
+      3 |}]
 
 let%expect_test "inline functions" =
   let ast =
@@ -874,10 +878,9 @@ let%expect_test "inline functions" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         void f(int x, matrix y)
           {
@@ -923,7 +926,9 @@ let%expect_test "inline functions" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "inline functions 2" =
   let ast =
@@ -944,10 +949,9 @@ let%expect_test "inline functions 2" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         void f()
           {
@@ -985,7 +989,9 @@ let%expect_test "inline functions 2" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "list collapsing" =
   let ast =
@@ -1171,10 +1177,9 @@ let%expect_test "do not inline recursive functions" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         real g(int z)
           ;
@@ -1208,7 +1213,9 @@ let%expect_test "do not inline recursive functions" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "inline function in for loop" =
   let ast =
@@ -1232,10 +1239,9 @@ let%expect_test "inline function in for loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int f(int z)
           {
@@ -1290,7 +1296,9 @@ let%expect_test "inline function in for loop" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 (* TODO: check test results from here *)
 
@@ -1316,10 +1324,9 @@ let%expect_test "inline function in for loop 2" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int f(int z)
           {
@@ -1386,7 +1393,9 @@ let%expect_test "inline function in for loop 2" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "inline function in while loop" =
   let ast =
@@ -1410,10 +1419,9 @@ let%expect_test "inline function in while loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int f(int z)
           {
@@ -1462,7 +1470,9 @@ let%expect_test "inline function in while loop" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "inline function in if then else" =
   let ast =
@@ -1486,10 +1496,9 @@ let%expect_test "inline function in if then else" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int f(int z)
           {
@@ -1535,6 +1544,8 @@ let%expect_test "inline function in if then else" =
 
       output_vars {
 
+      }
+
     |}]
 
 let%expect_test "inline function in ternary if " =
@@ -1563,10 +1574,9 @@ let%expect_test "inline function in ternary if " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int f(int z)
           {
@@ -1628,7 +1638,9 @@ let%expect_test "inline function in ternary if " =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "inline function multiple returns " =
   let ast =
@@ -1651,10 +1663,9 @@ let%expect_test "inline function multiple returns " =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int f(int z)
           {
@@ -1699,7 +1710,9 @@ let%expect_test "inline function multiple returns " =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "unroll nested loop" =
   let ast =
@@ -1714,10 +1727,9 @@ let%expect_test "unroll nested loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -1747,7 +1759,9 @@ let%expect_test "unroll nested loop" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "unroll nested loop with break" =
   let ast =
@@ -1764,10 +1778,9 @@ let%expect_test "unroll nested loop with break" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = loop_unrolling mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -1801,7 +1814,9 @@ let%expect_test "unroll nested loop with break" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "constant propagation" =
   let ast =
@@ -1823,10 +1838,9 @@ let%expect_test "constant propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    }
     functions {
 
     }
@@ -1858,7 +1872,9 @@ let%expect_test "constant propagation" =
 
     }
 
-    output_vars { |}]
+    output_vars {
+
+    } |}]
 
 let%expect_test "constant propagation, local scope" =
   let ast =
@@ -1883,10 +1899,9 @@ let%expect_test "constant propagation, local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    }
     functions {
 
     }
@@ -1921,7 +1936,9 @@ let%expect_test "constant propagation, local scope" =
 
     }
 
-    output_vars { |}]
+    output_vars {
+
+    } |}]
 
 let%expect_test "constant propagation, model block local scope" =
   let ast =
@@ -1945,10 +1962,9 @@ let%expect_test "constant propagation, model block local scope" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    }
     functions {
 
     }
@@ -1984,7 +2000,8 @@ let%expect_test "constant propagation, model block local scope" =
 
     output_vars {
       generated_quantities int i;
-      generated_quantities int j; |}]
+      generated_quantities int j;
+    } |}]
 
 let%expect_test "expression propagation" =
   let ast =
@@ -2005,10 +2022,9 @@ let%expect_test "expression propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2039,7 +2055,9 @@ let%expect_test "expression propagation" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "copy propagation" =
   let ast =
@@ -2062,10 +2080,9 @@ let%expect_test "copy propagation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = copy_propagation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2098,7 +2115,9 @@ let%expect_test "copy propagation" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "dead code elimination" =
   let ast =
@@ -2121,10 +2140,9 @@ let%expect_test "dead code elimination" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2156,7 +2174,9 @@ let%expect_test "dead code elimination" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "dead code elimination decl" =
   let ast =
@@ -2177,10 +2197,9 @@ let%expect_test "dead code elimination decl" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2210,7 +2229,9 @@ let%expect_test "dead code elimination decl" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "dead code elimination, for loop" =
   let ast =
@@ -2226,10 +2247,9 @@ let%expect_test "dead code elimination, for loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2257,7 +2277,9 @@ let%expect_test "dead code elimination, for loop" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "dead code elimination, while loop" =
   let ast =
@@ -2277,10 +2299,9 @@ let%expect_test "dead code elimination, while loop" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2309,7 +2330,9 @@ let%expect_test "dead code elimination, while loop" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "dead code elimination, if then" =
   let ast =
@@ -2339,10 +2362,9 @@ let%expect_test "dead code elimination, if then" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2376,7 +2398,9 @@ let%expect_test "dead code elimination, if then" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "dead code elimination, nested" =
   let ast =
@@ -2394,10 +2418,9 @@ let%expect_test "dead code elimination, nested" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2425,7 +2448,9 @@ let%expect_test "dead code elimination, nested" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "partial evaluation" =
   let ast =
@@ -2444,10 +2469,9 @@ let%expect_test "partial evaluation" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2479,7 +2503,9 @@ let%expect_test "partial evaluation" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "try partially evaluate" =
   let ast =
@@ -2498,10 +2524,9 @@ let%expect_test "try partially evaluate" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2533,7 +2558,9 @@ let%expect_test "try partially evaluate" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "partially evaluate with equality check" =
   let ast =
@@ -2550,10 +2577,9 @@ let%expect_test "partially evaluate with equality check" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2583,7 +2609,9 @@ let%expect_test "partially evaluate with equality check" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "partially evaluate glm" =
   let ast =
@@ -2623,10 +2651,9 @@ let%expect_test "partially evaluate glm" =
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = partial_evaluation mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2679,7 +2706,9 @@ let%expect_test "partially evaluate glm" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion" =
   let ast =
@@ -2696,10 +2725,9 @@ let%expect_test "lazy code motion" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-    }
     functions {
 
     }
@@ -2730,7 +2758,9 @@ let%expect_test "lazy code motion" =
 
     }
 
-    output_vars { |}]
+    output_vars {
+
+    } |}]
 
 let%expect_test "lazy code motion, 2" =
   let ast =
@@ -2747,10 +2777,9 @@ let%expect_test "lazy code motion, 2" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2782,7 +2811,9 @@ let%expect_test "lazy code motion, 2" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 3" =
   let ast =
@@ -2799,10 +2830,9 @@ let%expect_test "lazy code motion, 3" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2834,7 +2864,9 @@ let%expect_test "lazy code motion, 3" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 4" =
   let ast =
@@ -2864,10 +2896,9 @@ let%expect_test "lazy code motion, 4" =
   let mir = list_collapsing mir in
   (* TODO: make sure that these
      temporaries do not get assigned level DataOnly unless appropriate *)
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -2917,7 +2948,9 @@ let%expect_test "lazy code motion, 4" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 5" =
   let ast =
@@ -2945,10 +2978,9 @@ let%expect_test "lazy code motion, 5" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3003,7 +3035,9 @@ let%expect_test "lazy code motion, 5" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 6" =
   let ast =
@@ -3022,10 +3056,9 @@ let%expect_test "lazy code motion, 6" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3061,7 +3094,9 @@ let%expect_test "lazy code motion, 6" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 7" =
   let ast =
@@ -3098,10 +3133,9 @@ let%expect_test "lazy code motion, 7" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3181,7 +3215,9 @@ let%expect_test "lazy code motion, 7" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let ast =
@@ -3203,10 +3239,9 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
         int foo_lp(int x)
           {
@@ -3248,7 +3283,9 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 9" =
   let ast =
@@ -3264,11 +3301,10 @@ let%expect_test "lazy code motion, 9" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   (* TODO: this is wrong *)
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3300,7 +3336,9 @@ let%expect_test "lazy code motion, 9" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 10" =
   let ast =
@@ -3319,10 +3357,9 @@ let%expect_test "lazy code motion, 10" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3354,7 +3391,9 @@ let%expect_test "lazy code motion, 10" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 11" =
   let ast =
@@ -3376,10 +3415,9 @@ let%expect_test "lazy code motion, 11" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3414,7 +3452,9 @@ let%expect_test "lazy code motion, 11" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "lazy code motion, 12" =
   let ast =
@@ -3436,10 +3476,9 @@ let%expect_test "lazy code motion, 12" =
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3476,7 +3515,9 @@ let%expect_test "lazy code motion, 12" =
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
                  lazy code motion + dead code elimination" =
@@ -3501,12 +3542,11 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   let mir = dead_code_elimination mir in
-  pp_typed_prog Format.std_formatter mir ;
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   (* TODO: this is still wrong. I wonder if the flowgraph is 
      wrong for loops. *)
   [%expect
     {|
-      }
       functions {
 
       }
@@ -3543,7 +3583,9 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
 
       }
 
-      output_vars { |}]
+      output_vars {
+
+      } |}]
 
 let%expect_test "block fixing" =
   let ast =
