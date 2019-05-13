@@ -54,8 +54,9 @@ pipeline {
             steps {
                 runShell("""
                     eval \$(opam env)
-                    git clone --recursive https://github.com/stan-dev/cmdstan
-                    cmdstan=\$(readlink -f cmdstan) dune runtest test/integration/good/code-gen
+                    mkdir -p _build/default
+                    git clone --recursive https://github.com/stan-dev/cmdstan _build/default/test/integration/good/code-gen/cmdstan
+                    cmdstan=cmdstan dune runtest test/integration/good/code-gen
                 """)
             }
         }
