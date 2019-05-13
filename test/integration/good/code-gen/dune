@@ -14,18 +14,20 @@
 (rule
   (targets eight_schools_ncp.hpp)
   (deps (package stanc))
+  ;; (action (chdir %{env:cmdstan=cmdstan} (run make -j4 build)))
   (action (run %{bin:stanc} eight_schools_ncp.stan)))
 
 (rule
   (targets eight_schools_ncp)
   (deps eight_schools_ncp.hpp)
-  (action (chdir %{env:cmdstan=cmdstan} (run make -j4 build %{targets}))))
+  (action
+  (chdir %{env:cmdstan=cmdstan}
+    (run make -j4 %{targets}))))
 
 (rule
  (targets eight_schools_ncp.csv)
- (deps eight_schools.data.R)
  (action
-   (run %{dep:eight_schools_ncp} random seed=1 sample data file=eight_schools.data.R output file=%{targets})))
+   (run %{dep:eight_schools_ncp} random seed=1 sample data file=%{dep:eight_schools.data.R} output file=%{targets})))
 
 (rule
  (targets eight_schools_ncp_summary.output)

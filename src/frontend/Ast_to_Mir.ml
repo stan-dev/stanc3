@@ -548,14 +548,26 @@ let gen_writes block_filter vars =
       | _ -> None)
     vars
 
-let trans_prog filename
-    { Ast.functionblock
-    ; datablock
-    ; transformeddatablock
-    ; parametersblock
-    ; transformedparametersblock
-    ; modelblock
-    ; generatedquantitiesblock } : typed_prog =
+let compiler_if compiler_internal_var stmts =
+  print_s [%sexp (stmts : stmt_loc list)] ;
+  let body =
+    match stmts with
+    | [({stmt= Block _; _} as s)] -> s
+    | ls -> {stmt= Block ls; smeta= no_span}
+  in
+  let cond = {expr= Var compiler_internal_var; emeta= internal_meta} in
+  match stmts with
+  | [] -> []
+  | _ -> [{stmt= IfElse (cond, body, None); smeta= no_span}]
+
+let get_block block prog =
+  match block with
+  | Parameters -> prog.Ast.parametersblock
+  | TransformedParameters -> prog.transformedparametersblock
+  | GeneratedQuantities -> prog.generatedquantitiesblock
+  | Data -> prog.datablock
+
+let trans_prog filename p : typed_prog =
   (*
      1. prepare_params: add read_param calls (same call should constrain?)
           maybe read(constrained()), constrain(read()), or read("constraint", ...)
@@ -574,22 +586,30 @@ let trans_prog filename
      unconstrained param names: same, but also some funky
         adjustments for unconstrained space: ???
 *)
+  let { Ast.functionblock
+      ; datablock
+      ; transformeddatablock
+      ; parametersblock
+      ; transformedparametersblock
+      ; modelblock; _ } =
+    p
+  in
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
-  let grab_names_sizes paramblock block =
+  let grab_names_sizes block =
     let get_name_size s =
       match s.Ast.stmt with
       | Ast.VarDecl {sizedtype; identifier; _} ->
-          Some (identifier.name, (trans_sizedtype sizedtype, paramblock))
+          Some (identifier.name, (trans_sizedtype sizedtype, block))
       | _ -> None
     in
-    List.map ~f:get_name_size (Option.value ~default:[] block)
+    List.map ~f:get_name_size (Option.value ~default:[] (get_block block p))
   in
   let output_vars =
-    [ grab_names_sizes Parameters parametersblock
-    ; grab_names_sizes TransformedParameters transformedparametersblock
-    ; grab_names_sizes GeneratedQuantities generatedquantitiesblock ]
+    [ grab_names_sizes Parameters
+    ; grab_names_sizes TransformedParameters
+    ; grab_names_sizes GeneratedQuantities ]
     |> List.concat |> List.filter_opt
-  and input_vars = grab_names_sizes Data datablock |> List.filter_opt in
+  and input_vars = grab_names_sizes Data |> List.filter_opt in
   let datab =
     map
       (trans_stmt
@@ -623,34 +643,23 @@ let trans_prog filename
     | [] -> []
     | hd :: _ -> [{stmt= Block modelb; smeta= hd.smeta}]
   in
-  let generate_quantities =
-    map
-      (trans_stmt
-         {dread= Some ReadParam; dconstrain= Some Constrain; dadlevel= DataOnly})
-      parametersblock
-    @ gen_writes Parameters output_vars
-    @ map
-        (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
-        transformedparametersblock
-    @ gen_writes TransformedParameters output_vars
-    @ map
-        (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
-        generatedquantitiesblock
-    @ gen_writes GeneratedQuantities output_vars
+  let gen_from_block declc block =
+    map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
-  (* XXX broken *)
-  (* ctor: read data and check
-       reads scalars, checks vary
-  *)
-  (* transform_inits: Need to read data unconstrain and write(unconstraining).
-       reads scalars even for matrices
-  *)
-  (* write_array: need to read(constrain) params and write out.
-       writes by scalars
-  *)
-  (* log prob: read and constrain params
-       reads & constrains entire eigen type at once
-  *)
+  let generate_quantities =
+    let gen_decl_c = {dread= None; dconstrain= None; dadlevel= DataOnly} in
+    gen_from_block
+      {gen_decl_c with dread= Some ReadParam; dconstrain= Some Constrain}
+      Parameters
+    @ compiler_if "emit_transformed_parameters__"
+        (gen_from_block
+           {gen_decl_c with dconstrain= Some Check}
+           TransformedParameters)
+    @ compiler_if "emit_generated_quantities__"
+        (gen_from_block
+           {gen_decl_c with dconstrain= Some Check}
+           GeneratedQuantities)
+  in
   let transform_inits =
     map
       (trans_stmt
@@ -660,7 +669,6 @@ let trans_prog filename
       parametersblock
   in
   { functions_block=
-      (* Should this be AutoDiffable for functions here?*)
       Option.value_map functionblock ~default:[] ~f:(fun fundefs ->
           List.map fundefs ~f:(fun fundef ->
               trans_fun_def
@@ -697,6 +705,8 @@ let%expect_test "Prefix-Op-Example" =
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|
+      ()
+      ()
       ((Block
         ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
          (IfElse
@@ -708,6 +718,8 @@ let%expect_test "read data" =
   print_s [%sexp (m.prepare_data : stmt_loc list)] ;
   [%expect
     {|
+    ()
+    ()
     ((Decl (decl_adtype DataOnly) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
@@ -724,6 +736,8 @@ let%expect_test "read param" =
   print_s [%sexp (m.log_prob : stmt_loc list)] ;
   [%expect
     {|
+    ()
+    ()
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
       (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
@@ -774,4 +788,32 @@ let%expect_test "gen quant" =
           (body
            (Block
             ((NRFunApp CompilerInternal FnWriteParam__
-              ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))))))))))))) |}]
+              ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))))
+    ()
+    ((IfElse (Var emit_generated_quantities__)
+      (Block
+       ((Decl (decl_adtype DataOnly) (decl_id mat)
+         (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+        (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
+         (body
+          (Block
+           ((For (loopvar sym2__) (lower (Lit Int 1))
+             (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+             (body
+              (Block
+               ((NRFunApp CompilerInternal FnCheck__
+                 ((Lit Str greater_or_equal) (Lit Str "mat[sym1__, sym2__]")
+                  (Indexed (Var mat)
+                   ((Single (Var sym1__)) (Single (Var sym2__))))
+                  (Lit Int 0)))))))))))
+        (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
+         (body
+          (Block
+           ((For (loopvar sym2__) (lower (Lit Int 1))
+             (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+             (body
+              (Block
+               ((NRFunApp CompilerInternal FnWriteParam__
+                 ((Indexed (Var mat)
+                   ((Single (Var sym1__)) (Single (Var sym2__))))))))))))))))
+      ())) |}]

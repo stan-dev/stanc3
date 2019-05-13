@@ -189,6 +189,13 @@ let rec pp_statement (ppf : Format.formatter)
               ( lhs
               , {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta} )
         ; smeta }
+      (* XXX In stan2 this often generates:
+                stan::model::assign(theta,
+                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
+                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))),
+                            "assigning variable theta");
+            }
+        *)
   | Assignment ((assignee, idcs), rhs) ->
       pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
@@ -214,10 +221,10 @@ let rec pp_statement (ppf : Format.formatter)
   | Skip -> ()
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
-      pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block
-        (pp_statement, ifbranch) (option pp_else) elsebranch
+      pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block_s ifbranch
+        (option pp_else) elsebranch
   | While (cond, body) ->
-      pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block (pp_statement, body)
+      pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block_s body
   | For
       { body=
           {stmt= Assignment (_, {expr= FunApp (CompilerInternal, f, _); _}); _}
@@ -231,6 +238,11 @@ let rec pp_statement (ppf : Format.formatter)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
+
+and pp_block_s ppf body =
+  match body.stmt with
+  | Block ls -> pp_block ppf (list ~sep:cut pp_statement, ls)
+  | _ -> pp_block ppf (pp_statement, body)
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf (body_stmts, err_msg) =
@@ -410,8 +422,9 @@ let pp_write_array ppf p =
   let params =
     [ "RNG& base_rng"; "std::vector<double>& params_r__"
     ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
-    ; "bool include_tparams__ = true"; "bool include_gqs__ = true"
-    ; "std::ostream* pstream__ = 0" ]
+    ; "bool emit_transformed_parameters__ = true"
+    ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = 0"
+    ]
   in
   let intro =
     [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
@@ -434,8 +447,9 @@ let pp_string_lit = fmt "%S"
 
 let pp_constrained_param_names ppf p =
   let params =
-    [ "std::vector<std::string>& param_names__"; "bool include_tparams__ = true"
-    ; "bool include_gqs__ = true" ]
+    [ "std::vector<std::string>& param_names__"
+    ; "bool emit_transformed_parameters__ = true"
+    ; "bool emit_generated_quantities__ = true" ]
   in
   let paramvars, tparamvars, gqvars = separated_output_vars p in
   let emit_name ppf (name, idcs) =
@@ -449,17 +463,18 @@ let pp_constrained_param_names ppf p =
   in
   pp_method ppf "void" "constrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
-      pf ppf "@,if (include_tparams__) %a@," pp_block
+      pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
-      pf ppf "@,if (include_gqs__) %a@," pp_block
+      pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
         (list ~sep:cut pp_param_names, gqvars) )
 
 (* XXX This is just a copy of constrained, I need to figure out which one is wrong
    and fix it eventually. *)
 let pp_unconstrained_param_names ppf p =
   let params =
-    [ "std::vector<std::string>& param_names__"; "bool include_tparams__ = true"
-    ; "bool include_gqs__ = true" ]
+    [ "std::vector<std::string>& param_names__"
+    ; "bool emit_transformed_parameters__ = true"
+    ; "bool emit_generated_quantities__ = true" ]
   in
   let paramvars, tparamvars, gqvars = separated_output_vars p in
   let emit_name ppf (name, idcs) =
@@ -473,9 +488,9 @@ let pp_unconstrained_param_names ppf p =
   in
   pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
-      pf ppf "@,if (include_tparams__) %a@," pp_block
+      pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
         (list ~sep:cut pp_param_names, tparamvars) ;
-      pf ppf "@,if (include_gqs__) %a@," pp_block
+      pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
         (list ~sep:cut pp_param_names, gqvars) )
 
 let pp_transform_inits ppf p =
@@ -516,15 +531,16 @@ let pp_overloads ppf () =
     void write_array(RNG& base_rng,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                     bool include_tparams = true,
-                     bool include_gqs = true,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
                      std::ostream* pstream = 0) const {
       std::vector<double> params_r_vec(params_r.size());
       for (int i = 0; i < params_r.size(); ++i)
         params_r_vec[i] = params_r(i);
       std::vector<double> vars_vec;
       std::vector<int> params_i_vec;
-      write_array(base_rng, params_r_vec, params_i_vec, vars_vec, include_tparams, include_gqs, pstream);
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i)
         vars(i) = vars_vec[i];

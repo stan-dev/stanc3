@@ -221,7 +221,6 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
-  | Some FnWriteParam -> pf ppf ""
   | Some FnReadParam -> (
     match es with
     | _ :: {expr= Lit (Str, base_type); _} :: dims ->
@@ -230,7 +229,10 @@ and pp_compiler_internal_fn ut f ppf es =
         raise_s
           [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
     )
-  | _ -> pf ppf "%S: %s(@[<hov>%a@])" "XXX TODO" f (list ~sep:comma pp_expr) es
+  | _ ->
+      pf ppf
+        "throw std::logic_error(\"XXX TODO Not Implemented: %s(@[<hov>%a@])\""
+        f (list ~sep:comma pp_expr) es
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
