@@ -255,6 +255,73 @@ let%expect_test "Loop passthrough" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
+        transformed data {
+          for (i in 1:2) {    //2, 3
+              print("hello"); //4
+          }
+        }
+      |}
+  in
+  let mir =
+    Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  in
+  let block = Middle.Block mir.prepare_data in
+  let statement_map =
+    build_statement_map
+      (fun s -> s.stmt)
+      (fun s -> s.smeta)
+      {stmt= block; smeta= Middle.no_span}
+  in
+  let exits, preds = build_predecessor_graph statement_map in
+  print_s
+    [%sexp
+      ( statement_map
+        : ( label
+          , (mtype_loc_ad with_expr, label) statement * location_span )
+          Map.Poly.t )] ;
+  print_s [%sexp (exits : label Set.Poly.t)] ;
+  print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)] ;
+  [%expect
+    {|
+      ((1
+        ((Block (2))
+         ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
+          (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
+       (2
+        ((For (loopvar i)
+          (lower
+           ((expr (Lit Int 1))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+          (upper
+           ((expr (Lit Int 2))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+          (body 3))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 5) (col_num 11) (included_from ()))))))
+       (3
+        ((Block (4))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 25) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 5) (col_num 11) (included_from ()))))))
+       (4
+        ((NRFunApp CompilerInternal FnPrint__
+          (((expr (Lit Str hello))
+            (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 14) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 4) (col_num 29) (included_from ())))))))
+      (2)
+      ((1 ()) (2 (1 4)) (3 (2)) (4 (3)))
+    |}]
+
+let%expect_test "Loop passthrough" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
         model {
           if (1) {
             if (1) {
