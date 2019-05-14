@@ -12,6 +12,26 @@ def runShell(String command){
 pipeline {
     agent none
     stages {
+        stage("Run end-to-end tests") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh """
+                    git clone --recursive https://github.com/stan-dev/cmdstan
+                    cd cmdstan && make -j${env.PARALLEL} build && cd ..
+                """
+                sh """
+                    eval \$(opam env)
+                    ls cmdstan
+                    cmdstan=\$(readlink -f cmdstan) dune runtest test/integration/good/code-gen
+                """
+            }
+        }
         stage("Build & Test") {
             agent {
                 dockerfile {
@@ -41,28 +61,6 @@ pipeline {
 
                 //Cleans the workspace
                 runShell("rm -rf ./*")
-            }
-        }
-        stage("Run end-to-end tests") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh """
-                    mkdir -p _build/default
-                    git clone --recursive https://github.com/stan-dev/cmdstan _build/default/test/integration/good/code-gen/cmdstan
-                    cd _build/default/test/integration/good/code-gen/cmdstan && make -j${env.PARALLEL} build && cd ../../../../../../..
-                """
-                sh """
-                    eval \$(opam env)
-                    ls _build/default/test/integration/good/code-gen/cmdstan
-                    ls _build/default/test/integration/good/code-gen/cmdstan/stan/lib/stan_math
-                    cmdstan=cmdstan dune runtest test/integration/good/code-gen
-                """
             }
         }
         stage("Build & Test windows binary") {
