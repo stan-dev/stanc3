@@ -651,17 +651,16 @@ let trans_prog filename p : typed_prog =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
   let generate_quantities =
-    let gen_decl_c = {dread= None; dconstrain= None; dadlevel= DataOnly} in
     gen_from_block
-      {gen_decl_c with dread= Some ReadParam; dconstrain= Some Constrain}
+      {dread= Some ReadParam; dconstrain= Some Constrain; dadlevel= DataOnly}
       Parameters
     @ compiler_if "emit_transformed_parameters__"
         (gen_from_block
-           {gen_decl_c with dconstrain= Some Check}
+           {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
            TransformedParameters)
     @ compiler_if "emit_generated_quantities__"
         (gen_from_block
-           {gen_decl_c with dconstrain= Some Check}
+           {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
            GeneratedQuantities)
   in
   let transform_inits =
