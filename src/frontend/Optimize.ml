@@ -3302,7 +3302,6 @@ let%expect_test "lazy code motion, 9" =
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
-  (* TODO: this is wrong *)
   [%expect
     {|
       functions {

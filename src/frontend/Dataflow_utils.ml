@@ -251,21 +251,20 @@ let build_predecessor_graph
 (* Tests                           *)
 (***********************************)
 
-let%expect_test "Loop passthrough" =
+let%expect_test "Loop test" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-        transformed data {
-          for (i in 1:2) {    //2, 3
-              print("hello"); //4
-          }
-        }
+      model {
+        for (i in 1:2)
+          print(3 + 4);
+      }
       |}
   in
   let mir =
     Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
   in
-  let block = Middle.Block mir.prepare_data in
+  let block = Middle.Block mir.log_prob in
   let statement_map =
     build_statement_map
       (fun s -> s.stmt)
@@ -288,6 +287,12 @@ let%expect_test "Loop passthrough" =
          ((begin_loc ((filename "") (line_num 0) (col_num 0) (included_from ())))
           (end_loc ((filename "") (line_num 0) (col_num 0) (included_from ()))))))
        (2
+        ((Block (3))
+         ((begin_loc
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
+       (3
         ((For (loopvar i)
           (lower
            ((expr (Lit Int 1))
@@ -295,27 +300,26 @@ let%expect_test "Loop passthrough" =
           (upper
            ((expr (Lit Int 2))
             (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-          (body 3))
+          (body 4))
          ((begin_loc
-           ((filename string) (line_num 3) (col_num 10) (included_from ())))
+           ((filename string) (line_num 3) (col_num 8) (included_from ())))
           (end_loc
-           ((filename string) (line_num 5) (col_num 11) (included_from ()))))))
-       (3
-        ((Block (4))
-         ((begin_loc
-           ((filename string) (line_num 3) (col_num 25) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 5) (col_num 11) (included_from ()))))))
+           ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
        (4
         ((NRFunApp CompilerInternal FnPrint__
-          (((expr (Lit Str hello))
-            (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+          (((expr
+             (FunApp StanLib Plus__
+              (((expr (Lit Int 3))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+               ((expr (Lit Int 4))
+                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
          ((begin_loc
-           ((filename string) (line_num 4) (col_num 14) (included_from ())))
+           ((filename string) (line_num 4) (col_num 10) (included_from ())))
           (end_loc
-           ((filename string) (line_num 4) (col_num 29) (included_from ())))))))
-      (2)
-      ((1 ()) (2 (1 4)) (3 (2)) (4 (3)))
+           ((filename string) (line_num 4) (col_num 23) (included_from ())))))))
+      (3)
+      ((1 ()) (2 (1)) (3 (2 4)) (4 (3)))
     |}]
 
 let%expect_test "Loop passthrough" =
