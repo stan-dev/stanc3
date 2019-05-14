@@ -56,7 +56,7 @@ pipeline {
                     eval \$(opam env)
                     mkdir -p _build/default
                     git clone --recursive https://github.com/stan-dev/cmdstan _build/default/test/integration/good/code-gen/cmdstan
-                    pushd _build/default/test/integration/good/code-gen/cmdstan && make -j${env.PARALLEL} build && popd
+                    cd _build/default/test/integration/good/code-gen/cmdstan && make -j${env.PARALLEL} build && cd ../../../../../../..
                     cmdstan=cmdstan dune runtest test/integration/good/code-gen
                 """)
             }
