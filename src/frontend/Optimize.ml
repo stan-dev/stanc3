@@ -484,6 +484,8 @@ and can_side_effect_idx (i : expr_typed_located index) =
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
 
+(* TODO: write optimization for trying to unroll loops with one step. *)
+
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : typed_prog) =
   (* TODO: think about whether we should treat function bodies as local scopes in the statement
@@ -590,9 +592,11 @@ let lazy_code_motion (mir : typed_prog) =
             , {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span}
             , Some {stmt= Skip; smeta= no_span} )
       | While (e, b) ->
+          (* TODO: unroll loops for one step here. *)
           While
             (e, {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span})
       | For {loopvar; lower; upper; body= b} ->
+          (* TODO: unroll loops for one step here. *)
           For
             { loopvar
             ; lower
