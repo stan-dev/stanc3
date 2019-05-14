@@ -23,12 +23,12 @@ pipeline {
             steps {
                 sh """
                     git clone --recursive https://github.com/stan-dev/cmdstan
-                    cd cmdstan && make -j${env.PARALLEL} build && cd ..
+                    #cd cmdstan && make -j${env.PARALLEL} build && cd ..
                 """
                 sh """
                     eval \$(opam env)
                     ls cmdstan
-                    cmdstan=\$(readlink -f cmdstan) dune runtest test/integration/good/code-gen
+                    cmdstan=cmdstan dune runtest test/integration/good/code-gen
                 """
             }
         }
