@@ -30,7 +30,7 @@ pipeline {
                    dune --version
                    ls cmdstan
                    ls "`pwd`/cmdstan"
-                   cmdstan="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
+                   CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
                """
             }
             post { always { runShell("rm -rf ./*")} }
