@@ -1,4 +1,4 @@
-#Pull the ubuntu:bionic image 
+#Pull the ubuntu:bionic image
 FROM ubuntu:bionic
 
 #Install OS dependencies
@@ -17,6 +17,9 @@ RUN bash -x install_build_deps.sh
 #Copy our script and install dev dependencies
 COPY ./scripts/install_dev_deps.sh ./
 RUN bash -x install_dev_deps.sh
+
+#this is just used for end to end tests, maybe temporary
+RUN apt-get install -y --no-install-recommends python
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
