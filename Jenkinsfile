@@ -59,6 +59,8 @@ pipeline {
                 """
                 sh """
                     eval \$(opam env)
+                    ls _build/default/test/integration/good/code-gen/cmdstan
+                    ls _build/default/test/integration/good/code-gen/cmdstan/stan/lib/stan_math
                     cmdstan=cmdstan dune runtest test/integration/good/code-gen
                 """
             }
