@@ -52,13 +52,15 @@ pipeline {
                 }
             }
             steps {
-                runShell("""
-                    eval \$(opam env)
+                sh """
                     mkdir -p _build/default
                     git clone --recursive https://github.com/stan-dev/cmdstan _build/default/test/integration/good/code-gen/cmdstan
                     cd _build/default/test/integration/good/code-gen/cmdstan && make -j${env.PARALLEL} build && cd ../../../../../../..
+                """
+                sh """
+                    eval \$(opam env)
                     cmdstan=cmdstan dune runtest test/integration/good/code-gen
-                """)
+                """
             }
         }
         stage("Build & Test windows binary") {
