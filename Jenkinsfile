@@ -31,6 +31,7 @@ pipeline {
                     cmdstan=cmdstan dune runtest test/integration/good/code-gen
                 """
             }
+            post { always { deleteDir() } }
         }
         stage("Build & Test") {
             agent {
@@ -58,10 +59,8 @@ pipeline {
 
                 /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-
-                //Cleans the workspace
-                runShell("rm -rf ./*")
             }
+            post { always { deleteDir() } }
         }
         stage("Build & Test windows binary") {
             agent { label 'windows' }
@@ -99,11 +98,8 @@ pipeline {
 
                 /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-
-                //Cleans the workspace
-                runShell("rm -rf ./*")
-
             }
+            post { always { deleteDir() } }
         }
     }
     post {
