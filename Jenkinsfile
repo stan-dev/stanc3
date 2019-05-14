@@ -12,26 +12,26 @@ def runShell(String command){
 pipeline {
     agent none
     stages {
-        stage("Run end-to-end tests") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh """
-                    git clone --recursive https://github.com/stan-dev/cmdstan
-                    cd cmdstan && make -j${env.PARALLEL} build && cd ..
-                """
-                sh """
-                    eval \$(opam env)
-                    ls cmdstan
-                    cmdstan=\$(readlink -f cmdstan) dune runtest test/integration/good/code-gen
-                """
-            }
-        }
+//        stage("Run end-to-end tests") {
+//            agent {
+//                dockerfile {
+//                    filename 'docker/debian/Dockerfile'
+//                    //Forces image to ignore entrypoint
+//                    args "-u root --entrypoint=\'\'"
+//                }
+//            }
+//            steps {
+//                sh """
+//                    git clone --recursive https://github.com/stan-dev/cmdstan
+//                    cd cmdstan && make -j${env.PARALLEL} build && cd ..
+//                """
+//                sh """
+//                    eval \$(opam env)
+//                    ls cmdstan
+//                    cmdstan=\$(readlink -f cmdstan) dune runtest test/integration/good/code-gen
+//                """
+//            }
+//        }
         stage("Build & Test") {
             agent {
                 dockerfile {
