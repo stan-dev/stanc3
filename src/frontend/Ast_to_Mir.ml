@@ -42,6 +42,12 @@ and trans_expr {Ast.expr; Ast.emeta} =
   and madlevel = emeta.ad_level in
   match expr with
   | Ast.Paren x -> trans_expr x
+  | BinOp (lhs, And, rhs) ->
+      { expr= EAnd (trans_expr lhs, trans_expr rhs)
+      ; emeta= {madlevel; mloc; mtype} }
+  | BinOp (lhs, Or, rhs) ->
+      { expr= EOr (trans_expr lhs, trans_expr rhs)
+      ; emeta= {madlevel; mloc; mtype} }
   | BinOp (lhs, op, rhs) -> op_to_funapp op [lhs; rhs]
   | PrefixOp (op, e) | Ast.PostfixOp (e, op) -> op_to_funapp op [e]
   | _ ->
@@ -486,7 +492,6 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         | {stmt; smeta} -> {stmt= Block [assign_loopvar; {stmt; smeta}]; smeta}
       in
       For
-        (* XXX Do loops in MIR actually start at 1? *)
         { loopvar= newsym
         ; lower= loop_bottom
         ; upper=
