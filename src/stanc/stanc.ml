@@ -88,10 +88,16 @@ let use_file filename =
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
-    try Semantic_check.semantic_check_program ast
-    with Errors.SemanticError err ->
-      Errors.report_semantic_error err ;
-      exit 1
+    match Semantic_check.semantic_check_program ast with
+    | Result.Ok prog -> prog
+    | Result.Error (error :: _) ->
+        let loc = Semantic_error.location error
+        and msg = (Fmt.to_to_string Semantic_error.pp) error in
+        Errors.report_semantic_error (msg, loc) ;
+        exit 1
+    | _ ->
+        Printf.eprintf "The impossible happened" ;
+        exit 1
   in
   let _ = Debugging.typed_ast_logger typed_ast in
   if not !pretty_print_program then (

@@ -32,7 +32,7 @@ end) : S with type error := X.t = struct
 
   module Validation_infix = struct
     let ( >>= ) x f = bind x ~f
-    let ( <*> ) x f = apply x ~f
+    let ( <*> ) f x = apply x ~f
     let ( *> ) x y = apply_const x y
   end
 
@@ -53,6 +53,8 @@ end) : S with type error := X.t = struct
 
   let get_success_opt = function Ok x -> Some x | _ -> None
 
-  let get_success x ~with_error =
-    match x with Ok x -> x | Error (NonEmpty (x, _)) -> with_error x
+  let get_with x ~with_ok ~with_errors =
+    match x with
+    | Ok x -> with_ok x
+    | Error (NonEmpty (x, xs)) -> with_errors @@ (x :: xs)
 end

@@ -31,7 +31,7 @@ module TypeError = struct
     | IllTypedPostfixOperator of operator * unsizedtype
     | NotIndexable of unsizedtype
 
-  let assignmentoperator_to_stan_math_fn = function
+  (* let assignmentoperator_to_stan_math_fn = function
     | Plus -> Some "assign_add"
     | Minus -> Some "assign_subtract"
     | Times -> Some "assign_multiply"
@@ -61,7 +61,7 @@ module TypeError = struct
     | Greater -> ["logical_gt"]
     | Geq -> ["logical_gte"]
     | PNot -> ["logical_negation"]
-    | Transpose -> ["transpose"]
+    | Transpose -> ["transpose"] *)
 
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
@@ -101,9 +101,8 @@ module TypeError = struct
            type %a and rhs has type %a. Available signatures: %s."
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           pp_unsizedtype lt pp_unsizedtype rt
-          ( assignmentoperator_to_stan_math_fn op
-          |> Option.map
-               ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+          ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
+              op
           |> Option.value ~default:"no matching signatures" )
     | IllTypedAssignment (assignop, lt, rt) ->
         Fmt.pf ppf
@@ -177,8 +176,7 @@ module TypeError = struct
            signatures: %s\n\
            Instead supplied arguments of incompatible type: %a,%a."
           pp_operator op
-          ( operator_to_stan_math_fns op
-          |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
           pp_unsizedtype lt pp_unsizedtype rt
     | IllTypedPrefixOperator (op, ut) ->
@@ -187,8 +185,7 @@ module TypeError = struct
            signatures %s\n\
            Instead supplied argument of incompatible type: %a."
           pp_operator op
-          ( operator_to_stan_math_fns op
-          |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
           pp_unsizedtype ut
     | IllTypedPostfixOperator (op, ut) ->
@@ -197,8 +194,7 @@ module TypeError = struct
            signatures %s\n\
            Instead supplied argument of incompatible type: %a."
           pp_operator op
-          ( operator_to_stan_math_fns op
-          |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
           pp_unsizedtype ut
 end
@@ -545,7 +541,7 @@ let non_real_prob_fn_def loc =
 let prob_density_non_real_variate loc ut_opt =
   StatementError (loc, StatementError.ProbDensityNonRealVariate ut_opt)
 
-let prob_mass_non_real_variate loc ut_opt =
+let prob_mass_non_int_variate loc ut_opt =
   StatementError (loc, StatementError.ProbMassNonIntVariate ut_opt)
 
 let duplicate_arg_names loc =

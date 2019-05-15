@@ -2,7 +2,7 @@ module type Infix = sig
   type 'a t
 
   val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
-  val ( <*> ) : 'a t -> ('a -> 'b) t -> 'b t
+  val ( <*> ) : ('a -> 'b) t -> 'a t -> 'b t
   val ( *> ) : 'a t -> 'b t -> 'b t
 end
 
@@ -25,7 +25,9 @@ module type S = sig
   val get_errors_opt : 'a t -> error list option
   val get_first_error_opt : 'a t -> error option
   val get_success_opt : 'a t -> 'a option
-  val get_success : 'a t -> with_error:(error -> 'a) -> 'a
+
+  val get_with :
+    'a t -> with_ok:('a -> 'b) -> with_errors:(error list -> 'b) -> 'b
 
   module Validation_infix : Infix with type 'a t := 'a t
   include Infix with type 'a t := 'a t

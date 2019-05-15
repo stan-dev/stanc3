@@ -27,6 +27,47 @@ let stan_math_returntype name args =
 
 let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
 
+let assignmentoperator_to_stan_math_fn = function
+  | Plus -> Some "assign_add"
+  | Minus -> Some "assign_subtract"
+  | Times -> Some "assign_multiply"
+  | Divide -> Some "assign_divide"
+  | EltTimes -> Some "assign_elt_times"
+  | EltDivide -> Some "assign_elt_divide"
+  | _ -> None
+
+let assignmentoperator_stan_math_return_type assop arg_tys =
+  assignmentoperator_to_stan_math_fn assop
+  |> Option.bind ~f:(fun name -> stan_math_returntype name arg_tys)
+
+let operator_to_stan_math_fns = function
+  | Plus -> ["add"]
+  | PPlus -> ["plus"]
+  | Minus -> ["subtract"]
+  | PMinus -> ["minus"]
+  | Times -> ["multiply"]
+  | Divide -> ["mdivide_right"; "divide"]
+  | Modulo -> ["modulus"]
+  | LDivide -> ["mdivide_left"]
+  | EltTimes -> ["elt_multiply"]
+  | EltDivide -> ["elt_divide"]
+  | Pow -> ["pow"]
+  | Or -> ["logical_or"]
+  | And -> ["logical_and"]
+  | Equals -> ["logical_eq"]
+  | NEquals -> ["logical_neq"]
+  | Less -> ["logical_lt"]
+  | Leq -> ["logical_lte"]
+  | Greater -> ["logical_gt"]
+  | Geq -> ["logical_gte"]
+  | PNot -> ["logical_negation"]
+  | Transpose -> ["transpose"]
+
+let operator_stan_math_return_type op arg_tys =
+  operator_to_stan_math_fns op
+  |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
+  |> List.hd
+
 let pretty_print_all_math_lib_fn_sigs name =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   if List.length namematches = 0 then ""
@@ -36,6 +77,13 @@ let pretty_print_all_math_lib_fn_sigs name =
         (List.map
            ~f:(fun (x, y) -> pretty_print_unsizedtype (UFun (y, x)))
            namematches)
+
+let pretty_print_math_lib_operator_sigs op =
+  operator_to_stan_math_fns op |> List.map ~f:pretty_print_all_math_lib_fn_sigs
+
+let pretty_print_math_lib_assignmentoperator_sigs op =
+  assignmentoperator_to_stan_math_fn op
+  |> Option.map ~f:pretty_print_all_math_lib_fn_sigs
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let rec bare_array_type (t, i) =

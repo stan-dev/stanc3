@@ -17,7 +17,8 @@ let rec op_to_funapp op args =
   { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
       { mtype=
-          Semantic_check.operator_return_type op argtypes |> unwrap_return_exn
+          Stan_math_signatures.operator_stan_math_return_type op argtypes
+          |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
       ; madlevel= Ast.expr_ad_lub args } }
 
@@ -116,14 +117,48 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
       | Ast.PExpr e -> trans_expr e)
     ps
 
+let unsizedtype_of_indexed ut
+    (typed_idxs : (Ast.typed_expression Ast.index * Middle.unsizedtype) list) =
+  let rec aux k ut xs =
+    match (ut, xs) with
+    | Middle.UMatrix, [(Ast.All, _); (Single _, Middle.UInt)]
+     |UMatrix, [(Upfrom _, _); (Single _, UInt)]
+     |UMatrix, [(Downfrom _, _); (Single _, UInt)]
+     |UMatrix, [(Between _, _); (Single _, UInt)]
+     |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
+        k Middle.UVector
+    | _, [] -> k ut
+    | _, next :: rest -> (
+      match next with
+      | Single _, UInt -> (
+        match ut with
+        | Middle.UArray inner_ty -> aux k inner_ty rest
+        | UVector | URowVector -> aux k UReal rest
+        | UMatrix -> aux k URowVector rest
+        | _ ->
+            (* This should not happen since we only translate to MIR after
+          semantic checking *)
+            failwith
+              "unsizedtype_of_indexed: function applied to semantically \
+               invalid expression" )
+      | _ -> (
+        match ut with
+        | Middle.UArray inner_ty ->
+            let k' t = k @@ Middle.UArray t in
+            aux k' inner_ty rest
+        | UVector | URowVector | UMatrix -> aux k ut rest
+        | _ ->
+            failwith
+              "unsizedtype_of_indexed: function applied to semantically \
+               invalid expression" ) )
+  in
+  aux (fun x -> x) ut typed_idxs
+
 (** [add_index expression index] returns an expression that (additionally)
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
-  let mtype =
-    Semantic_check.inferred_unsizedtype_of_indexed e.emeta.mloc e.emeta.mtype
-      [(i, UInt)]
-  in
-  let mir_i = trans_idx i in
+  let mtype = unsizedtype_of_indexed e.emeta.mtype [(i, UInt)]
+  and mir_i = trans_idx i in
   let expr =
     match e.expr with
     | Var _ -> Indexed (e, [mir_i])
@@ -628,8 +663,16 @@ let trans_prog filename
 (*===================== tests =========================================*)
 
 let mir_from_string s =
-  Parse.parse_string Parser.Incremental.program s
-  |> Semantic_check.semantic_check_program |> trans_prog ""
+  let untyped_prog = Parse.parse_string Parser.Incremental.program s in
+  let typed_prog_result = Semantic_check.semantic_check_program untyped_prog in
+  let typed_prog =
+    typed_prog_result
+    |> Result.map_error ~f:(function
+         | x :: _ -> (Semantic_error.pp |> Fmt.to_to_string) x
+         | _ -> failwith "mir_from_string: can't happen" )
+    |> Result.ok_or_failwith
+  in
+  trans_prog "" typed_prog
 
 let%expect_test "Prefix-Op-Example" =
   let mir =
