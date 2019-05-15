@@ -1,6 +1,11 @@
 include Mir
 open Core_kernel
+module Mir = Mir
 module Validation = Validation
+
+module type Frontend = Frontend_intf.S
+module type Backend = Backend_intf.S
+module type Optimization = Optimization_intf.S
 
 (* == Pretty printers ======================================================= *)
 

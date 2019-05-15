@@ -1,5 +1,6 @@
 open Core_kernel
 open Middle
+open Middle.Mir
 open Fmt
 
 let ends_with suffix s = String.is_suffix ~suffix s

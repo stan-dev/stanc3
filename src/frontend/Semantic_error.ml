@@ -1,5 +1,6 @@
 open Core_kernel
 open Middle
+open Middle.Mir
 
 (** Type errors that may arise during semantic check *)
 module TypeError = struct

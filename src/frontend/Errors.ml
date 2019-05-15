@@ -5,16 +5,16 @@ open Middle
 
 (** Our type of syntax error information *)
 type parse_error =
-  | Lexing of string * location
-  | Include of string * location
-  | Parsing of string * location_span
+  | Lexing of string * Mir.location
+  | Include of string * Mir.location
+  | Parsing of string * Mir.location_span
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
 (** Exception [SemanticError (msg, loc)] indicates a semantic error with message
     [msg], occurring in location [loc]. *)
-exception SemanticError of (string * location_span)
+exception SemanticError of (string * Mir.location_span)
 
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
     [msg]. *)
@@ -28,7 +28,7 @@ let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
 (** Parse a string into a location *)
-let rec parse_location str =
+let rec parse_location str : Mir.location =
   let split_str =
     Str.bounded_split
       (Str.regexp "file \\|, line \\|, column \\|, included from\n")
@@ -48,7 +48,7 @@ let rec parse_location str =
   | _ -> fatal_error ()
 
 (** Take the AST.location corresponding to a Lexing.position *)
-let location_of_position = function
+let location_of_position : Lexing.position -> Mir.location = function
   | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
       let split_fname =
         Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
@@ -65,12 +65,12 @@ let location_of_position = function
               | fnames :: _ -> Some (parse_location fnames) ) } )
 
 (** Take the Middle.location_span corresponding to a pair of Lexing.position's *)
-let loc_span_of_pos start_pos end_pos =
+let loc_span_of_pos start_pos end_pos : Mir.location_span =
   { begin_loc= location_of_position start_pos
   ; end_loc= location_of_position end_pos }
 
 (** Return two lines before and after the specified location. *)
-let print_context {filename; line_num; col_num; _} =
+let print_context ({filename; line_num; col_num; _} : Mir.location) =
   try
     let open In_channel in
     let input = create filename in
@@ -151,7 +151,7 @@ let%expect_test "location string equivalence 1" =
       file zzz.stan, line 24, column 77 |}]
 
 let%expect_test "location string equivalence 2" =
-  let loc =
+  let loc : Mir.location =
     { filename= "xxx.stan"
     ; line_num= 35
     ; col_num= 24

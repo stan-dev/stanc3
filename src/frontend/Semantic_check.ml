@@ -5,76 +5,12 @@
 
 open Core_kernel
 open Symbol_table
+open Middle
 open Ast
 open Stan_math_signatures
 open Errors
 open Type_conversion
-
-(* There is a semantic checking function for each AST node that calls
-   the checking functions for its children left to right. *)
-
-module Validate = Middle.Validation.Make (Semantic_error)
-
-(* Top level function semantic_check_program declares the AST while operating
-   on (1) a global symbol table vm, and (2) structure of type context_flags_record
-   to communicate information down the AST. *)
-
-(* let ternary_if = "TernaryIf__"
-
-let%test "bad op name" = phys_equal (Middle.operator_of_string "Pluss__") None
-let%test "good op name" = Middle.operator_of_string "Plus__" = Some Plus
-
-(** A hash table to hold some name conversions between the AST nodes and the
-    Stan Math name of the operator *)
-let string_of_operators =
-  Map.Poly.of_alist_multi
-    [ (Middle.string_of_operator Middle.Plus, "add")
-    ; (Middle.string_of_operator PPlus, "plus")
-    ; (Middle.string_of_operator Minus, "subtract")
-    ; (Middle.string_of_operator PMinus, "minus")
-    ; (Middle.string_of_operator Times, "multiply")
-    ; (Middle.string_of_operator Divide, "mdivide_right")
-    ; (Middle.string_of_operator Divide, "divide")
-    ; (Middle.string_of_operator Modulo, "modulus")
-    ; (Middle.string_of_operator LDivide, "mdivide_left")
-    ; (Middle.string_of_operator EltTimes, "elt_multiply")
-    ; (Middle.string_of_operator EltDivide, "elt_divide")
-    ; (Middle.string_of_operator Pow, "pow")
-    ; (Middle.string_of_operator Or, "logical_or")
-    ; (Middle.string_of_operator And, "logical_and")
-    ; (Middle.string_of_operator Equals, "logical_eq")
-    ; (Middle.string_of_operator NEquals, "logical_neq")
-    ; (Middle.string_of_operator Less, "logical_lt")
-    ; (Middle.string_of_operator Leq, "logical_lte")
-    ; (Middle.string_of_operator Greater, "logical_gt")
-    ; (Middle.string_of_operator Geq, "logical_gte")
-    ; (Middle.string_of_operator PNot, "logical_negation")
-    ; (Middle.string_of_operator Transpose, "transpose")
-    ; (ternary_if, "if_else")
-      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
-    ; ("(OperatorAssign Plus)", "assign_add")
-    ; ("(OperatorAssign Minus)", "assign_subtract")
-    ; ("(OperatorAssign Times)", "assign_multiply")
-    ; ("(OperatorAssign Divide)", "assign_divide")
-    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
-    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
-
-
-
-(** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name argtypes =
-  if op_name = "Assign" || op_name = "ArrowAssign" then
-    match List.map ~f:snd argtypes with
-    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 ->
-        Some Middle.Void
-    | _ -> None
-  else
-    Map.Poly.find_multi string_of_operators op_name
-    |> List.find_map ~f:(fun name ->
-           Stan_math_signatures.stan_math_returntype name argtypes )
-
-let operator_return_type op =
-  operator_return_type_from_string (Middle.string_of_operator op) *)
+module Validate = Validation.Make (Semantic_error)
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -113,12 +49,12 @@ let type_of_expr_typed ue = ue.emeta.type_
 
 let rec unsizedtype_contains_int ut =
   match ut with
-  | Middle.UInt -> true
+  | Mir.UInt -> true
   | UArray ut -> unsizedtype_contains_int ut
   | _ -> false
 
 let rec unsizedtype_of_sizedtype = function
-  | Middle.SInt -> Middle.UInt
+  | Mir.SInt -> Mir.UInt
   | SReal -> UReal
   | SVector _ -> UVector
   | SRowVector _ -> URowVector
@@ -126,15 +62,15 @@ let rec unsizedtype_of_sizedtype = function
   | SArray (st, _) -> UArray (unsizedtype_of_sizedtype st)
 
 let rec lub_ad_type = function
-  | [] -> Middle.DataOnly
+  | [] -> Mir.DataOnly
   | x :: xs ->
       let y = lub_ad_type xs in
-      if Middle.compare_autodifftype x y < 0 then y else x
+      if Mir.compare_autodifftype x y < 0 then y else x
 
 let calculate_autodifftype at ut =
   match at with
   | (Param | TParam | Model) when not (unsizedtype_contains_int ut) ->
-      Middle.AutoDiffable
+      Mir.AutoDiffable
   | _ -> DataOnly
 
 let has_int_type ue = ue.emeta.type_ = UInt
@@ -168,9 +104,9 @@ let probability_distribution_name_variants id =
 
 let lub_rt loc rt1 rt2 =
   match (rt1, rt2) with
-  | Middle.ReturnType UReal, Middle.ReturnType UInt
+  | Mir.ReturnType UReal, Mir.ReturnType UInt
    |ReturnType UInt, ReturnType UReal ->
-      Validate.ok (Middle.ReturnType UReal)
+      Validate.ok (Mir.ReturnType UReal)
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
@@ -210,9 +146,9 @@ let semantic_check_assignmentoperator op = Validate.ok op
 let semantic_check_autodifftype at = Validate.ok at
 
 (* Probably nothing to do here *)
-let rec semantic_check_unsizedtype : Middle.unsizedtype -> unit Validate.t =
+let rec semantic_check_unsizedtype : Mir.unsizedtype -> unit Validate.t =
   function
-  | Middle.UFun (l, rt) ->
+  | Mir.UFun (l, rt) ->
       (* fold over argument types accumulating errors with initial state 
           given by validating the return type *)
       List.fold
@@ -223,11 +159,11 @@ let rec semantic_check_unsizedtype : Middle.unsizedtype -> unit Validate.t =
               (semantic_check_unsizedtype ut)) )
         ~init:(semantic_check_returntype rt)
         l
-  | Middle.UArray ut -> semantic_check_unsizedtype ut
+  | Mir.UArray ut -> semantic_check_unsizedtype ut
   | _ -> Validate.ok ()
 
-and semantic_check_returntype : Middle.returntype -> unit Validate.t = function
-  | Middle.Void -> Validate.ok ()
+and semantic_check_returntype : Mir.returntype -> unit Validate.t = function
+  | Mir.Void -> Validate.ok ()
   | ReturnType ut -> semantic_check_unsizedtype ut
 
 (* -- Indentifiers ---------------------------------------------------------- *)
@@ -308,7 +244,7 @@ let semantic_check_fn_rng cf ~loc id =
 (* Regular function application *)
 let semantic_check_fn_normal ~loc id es =
   match Symbol_table.look vm id.name with
-  | Some (_, Middle.UFun (_, Void)) ->
+  | Some (_, Mir.UFun (_, Void)) ->
       Semantic_error.returning_fn_expected_nonreturning_found loc id.name
       |> Validate.error
   | Some (_, UFun (listed_tys, rt))
@@ -371,7 +307,7 @@ let semantic_check_ternary_if loc (pe, te, fe) =
     [pe; te; fe] |> List.map ~f:arg_type
     |> Stan_math_signatures.stan_math_returntype "if_else"
     |> Option.value_map ~default:(error err) ~f:(function
-         | Middle.ReturnType type_ ->
+         | Mir.ReturnType type_ ->
              mk_typed_expression
                ~expr:(TernaryIf (pe, te, fe))
                ~ad_level:(lub_ad_e [pe; te; fe])
@@ -389,7 +325,7 @@ let semantic_check_binop loc op (le, re) =
     [le; re] |> List.map ~f:arg_type
     |> Stan_math_signatures.operator_stan_math_return_type op
     |> Option.value_map ~default:(error err) ~f:(function
-         | Middle.ReturnType type_ ->
+         | Mir.ReturnType type_ ->
              mk_typed_expression
                ~expr:(BinOp (le, op, re))
                ~ad_level:(lub_ad_e [le; re])
@@ -404,7 +340,7 @@ let semantic_check_prefixop loc op e =
     let err = Semantic_error.illtyped_prefix_op loc op e.emeta.type_ in
     Stan_math_signatures.operator_stan_math_return_type op [arg_type e]
     |> Option.value_map ~default:(error err) ~f:(function
-         | Middle.ReturnType type_ ->
+         | Mir.ReturnType type_ ->
              mk_typed_expression
                ~expr:(PrefixOp (op, e))
                ~ad_level:(lub_ad_e [e])
@@ -419,7 +355,7 @@ let semantic_check_postfixop loc op e =
     let err = Semantic_error.illtyped_postfix_op loc op e.emeta.type_ in
     Stan_math_signatures.operator_stan_math_return_type op [arg_type e]
     |> Option.value_map ~default:(error err) ~f:(function
-         | Middle.ReturnType type_ ->
+         | Mir.ReturnType type_ ->
              mk_typed_expression
                ~expr:(PostfixOp (e, op))
                ~ad_level:(lub_ad_e [e])
@@ -434,9 +370,8 @@ let semantic_check_variable loc id =
       Semantic_error.ident_not_in_scope loc id.name |> Validate.error
   | None ->
       mk_typed_expression ~expr:(Variable id)
-        ~ad_level:
-          (calculate_autodifftype MathLibrary Middle.UMathLibraryFunction)
-        ~type_:Middle.UMathLibraryFunction ~loc
+        ~ad_level:(calculate_autodifftype MathLibrary Mir.UMathLibraryFunction)
+        ~type_:Mir.UMathLibraryFunction ~loc
       |> Validate.ok
   | Some (originblock, type_) ->
       mk_typed_expression ~expr:(Variable id)
@@ -465,7 +400,7 @@ let semantic_check_target_pe ~loc ~cf id =
 
 let semantic_check_cond_dist_app_rt_stanmath_fn ~loc ~returnblock id es =
   function
-  | Middle.Void ->
+  | Mir.Void ->
       Semantic_error.returning_fn_expected_nonreturning_found loc id.name
       |> Validate.error
   | ReturnType ut ->
@@ -542,8 +477,7 @@ let semantic_check_array_expr ~loc es =
   | [] -> Semantic_error.empty_array loc |> Validate.error
   | ty :: _ as elementtypes ->
       let type_ =
-        if List.exists ~f:(fun x -> ty <> x) elementtypes then
-          Middle.UArray UReal
+        if List.exists ~f:(fun x -> ty <> x) elementtypes then Mir.UArray UReal
         else UArray ty
       and ad_level = lub_ad_e es in
       mk_typed_expression ~expr:(ArrayExpr es) ~ad_level ~type_ ~loc
@@ -556,11 +490,11 @@ let semantic_check_rowvector ~loc es =
   and ad_level = lub_ad_e es in
   if List.for_all ~f:(fun x -> x = UReal || x = UInt) elementtypes then
     mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level
-      ~type_:Middle.URowVector ~loc
+      ~type_:Mir.URowVector ~loc
     |> Validate.ok
   else if List.for_all ~f:(fun x -> x = URowVector) elementtypes then
-    mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level
-      ~type_:Middle.UMatrix ~loc
+    mk_typed_expression ~expr:(RowVectorExpr es) ~ad_level ~type_:Mir.UMatrix
+      ~loc
     |> Validate.ok
   else Semantic_error.invalid_row_vector_types loc |> Validate.error
 
@@ -572,25 +506,25 @@ let tuple3 a b c = (a, b, c)
 let inferred_unsizedtype_of_indexed ~loc ut typed_idxs =
   let rec aux k ut xs =
     match (ut, xs) with
-    | Middle.UMatrix, [(All, _); (Single _, Middle.UInt)]
+    | Mir.UMatrix, [(All, _); (Single _, Mir.UInt)]
      |UMatrix, [(Upfrom _, _); (Single _, UInt)]
      |UMatrix, [(Downfrom _, _); (Single _, UInt)]
      |UMatrix, [(Between _, _); (Single _, UInt)]
      |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k @@ Validate.ok Middle.UVector
+        k @@ Validate.ok Mir.UVector
     | _, [] -> k @@ Validate.ok ut
     | _, next :: rest -> (
       match next with
       | Single _, UInt -> (
         match ut with
-        | Middle.UArray inner_ty -> aux k inner_ty rest
+        | Mir.UArray inner_ty -> aux k inner_ty rest
         | UVector | URowVector -> aux k UReal rest
         | UMatrix -> aux k URowVector rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
       | _ -> (
         match ut with
-        | Middle.UArray inner_ty ->
-            let k' = compose k (Validate.map ~f:(fun t -> Middle.UArray t)) in
+        | Mir.UArray inner_ty ->
+            let k' = compose k (Validate.map ~f:(fun t -> Mir.UArray t)) in
             aux k' inner_ty rest
         | UVector | URowVector | UMatrix -> aux k ut rest
         | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
@@ -602,7 +536,7 @@ let inferred_ad_type_of_indexed at uindices =
     ( at
     :: List.map
          ~f:(function
-           | All -> Middle.DataOnly
+           | All -> Mir.DataOnly
            | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
                lub_ad_type [at; ue1.emeta.ad_level]
            | Between (ue1, ue2) ->
@@ -610,7 +544,7 @@ let inferred_ad_type_of_indexed at uindices =
          uindices )
 
 let index_with_type idx =
-  match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, Middle.UInt)
+  match idx with Single e -> (idx, e.emeta.type_) | _ -> (idx, Mir.UInt)
 
 let rec semantic_check_indexed ~loc ~cf e indices =
   Validate.(
@@ -780,22 +714,22 @@ and semantic_check_expression_of_int_or_real_type cf e name =
 
 (* -- Sized Types ----------------------------------------------------------- *)
 let rec semantic_check_sizedtype cf = function
-  | Middle.SInt -> Validate.ok Middle.SInt
-  | SReal -> Validate.ok Middle.SReal
+  | Mir.SInt -> Validate.ok Mir.SInt
+  | SReal -> Validate.ok Mir.SReal
   | SVector e ->
       semantic_check_expression_of_int_type cf e "Vector sizes"
-      |> Validate.map ~f:(fun ue -> Middle.SVector ue)
+      |> Validate.map ~f:(fun ue -> Mir.SVector ue)
   | SRowVector e ->
       semantic_check_expression_of_int_type cf e "Row vector sizes"
-      |> Validate.map ~f:(fun ue -> Middle.SRowVector ue)
+      |> Validate.map ~f:(fun ue -> Mir.SRowVector ue)
   | SMatrix (e1, e2) ->
       let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
       and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
-      Validate.liftA2 (fun ue1 ue2 -> Middle.SMatrix (ue1, ue2)) ue1 ue2
+      Validate.liftA2 (fun ue1 ue2 -> Mir.SMatrix (ue1, ue2)) ue1 ue2
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
-      Validate.liftA2 (fun ust ue -> Middle.SArray (ust, ue)) ust ue
+      Validate.liftA2 (fun ust ue -> Mir.SArray (ust, ue)) ust ue
 
 (* -- Transformations ------------------------------------------------------- *)
 let semantic_check_transformation cf = function
@@ -1068,7 +1002,7 @@ let semantic_check_valid_sampling_pos ~loc ~cf =
 let semantic_check_sampling_distribution ~loc id arguments =
   let name = id.name
   and argumenttypes = List.map ~f:arg_type arguments
-  and is_real_rt = function Middle.ReturnType UReal -> true | _ -> false in
+  and is_real_rt = function Mir.ReturnType UReal -> true | _ -> false in
   let is_reat_rt_for_suffix suffix =
     stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
@@ -1094,7 +1028,7 @@ let semantic_check_sampling_distribution ~loc id arguments =
 let cumulative_density_is_defined id arguments =
   let name = id.name
   and argumenttypes = List.map ~f:arg_type arguments
-  and is_real_rt = function Middle.ReturnType UReal -> true | _ -> false in
+  and is_real_rt = function Mir.ReturnType UReal -> true | _ -> false in
   let is_reat_rt_for_suffix suffix =
     stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
@@ -1291,7 +1225,7 @@ and semantic_check_loop_body ~cf loop_var loop_var_ty loop_body =
 
 and semantic_check_for ~loc ~cf loop_var lower_bound_e upper_bound_e loop_body
     =
-  let us = semantic_check_loop_body ~cf loop_var Middle.UInt loop_body
+  let us = semantic_check_loop_body ~cf loop_var Mir.UInt loop_body
   and ue1 =
     semantic_check_expression_of_int_type cf lower_bound_e
       "Lower bound of for-loop"
@@ -1317,8 +1251,8 @@ and semantic_check_for ~loc ~cf loop_var lower_bound_e upper_bound_e loop_body
 and semantic_check_foreach_loop_identifier_type ~loc ty =
   Validate.(
     match ty with
-    | Middle.UArray ut -> ok ut
-    | UVector | URowVector | UMatrix -> ok Middle.UReal
+    | Mir.UArray ut -> ok ut
+    | UVector | URowVector | UMatrix -> ok Mir.UReal
     | _ ->
         Semantic_error.array_vector_rowvector_matrix_expected loc ty |> error)
 
@@ -1395,7 +1329,7 @@ and semantic_check_size_decl ~loc is_global sized_ty =
     match e.emeta.ad_level with AutoDiffable -> false | _ -> true
   in
   let rec check_sizes_data_only = function
-    | Middle.SVector e -> not_ptq e
+    | Mir.SVector e -> not_ptq e
     | SRowVector e -> not_ptq e
     | SMatrix (e1, e2) -> not_ptq e1 && not_ptq e2
     | SArray (sized_ty, e) when not_ptq e -> check_sizes_data_only sized_ty
@@ -1409,7 +1343,7 @@ and semantic_check_size_decl ~loc is_global sized_ty =
     else ok ())
 
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
-  let is_real {emeta; _} = emeta.type_ = Middle.UReal in
+  let is_real {emeta; _} = emeta.type_ = Mir.UReal in
   let is_valid_transformation =
     match trans with
     | Lower e -> is_real e
@@ -1418,8 +1352,7 @@ and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
     | _ -> false
   in
   Validate.(
-    if is_global && sized_ty = Middle.SInt && is_valid_transformation then
-      ok ()
+    if is_global && sized_ty = Mir.SInt && is_valid_transformation then ok ()
     else Semantic_error.non_int_bounds loc |> error)
 
 and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
@@ -1514,7 +1447,7 @@ and semantic_check_fundef_dist_rt ~loc id return_ty =
     in
     if is_dist then
       match return_ty with
-      | Middle.ReturnType UReal -> ok ()
+      | Mir.ReturnType UReal -> ok ()
       | _ -> error @@ Semantic_error.non_real_prob_fn_def loc
     else ok ())
 
@@ -1522,7 +1455,7 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
   Validate.(
     (* TODO: I think these kind of functions belong with the type definition *)
     let is_real_type = function
-      | Middle.UReal | UVector | URowVector | UMatrix
+      | Mir.UReal | UVector | URowVector | UMatrix
        |UArray UReal
        |UArray UVector
        |UArray URowVector
@@ -1545,10 +1478,7 @@ and semantic_check_pdf_fundef_first_arg_ty ~loc id arg_tys =
 and semantic_check_pmf_fundef_first_arg_ty ~loc id arg_tys =
   Validate.(
     (* TODO: I think these kind of functions belong with the type definition *)
-    let is_int_type = function
-      | Middle.UInt | UArray UInt -> true
-      | _ -> false
-    in
+    let is_int_type = function Mir.UInt | UArray UInt -> true | _ -> false in
     if String.is_suffix id.name ~suffix:"_lpmf" then
       List.hd arg_tys
       |> Option.value_map
@@ -1625,8 +1555,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
       List.iter2 ~f:(Symbol_table.enter vm) uarg_names
         (List.map
            ~f:(function
-             | Middle.DataOnly, ut -> (Data, ut)
-             | AutoDiffable, ut -> (Param, ut))
+             | Mir.DataOnly, ut -> (Data, ut) | AutoDiffable, ut -> (Param, ut))
            uarg_types)
     and context =
       { cf with

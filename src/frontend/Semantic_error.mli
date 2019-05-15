@@ -1,4 +1,4 @@
-open Middle
+open Middle.Mir
 
 type t
 
