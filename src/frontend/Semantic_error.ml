@@ -269,7 +269,7 @@ module StatementError = struct
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
     | VoidReturnOutsideNonReturningFn
-    | NonDataVariableDecl
+    | NonDataVariableSizeDecl
     | NonIntBounds
     | TransformedParamsInt
     | MismatchFunDefDecl of string * unsizedtype option
@@ -323,7 +323,7 @@ module StatementError = struct
         Fmt.pf ppf
           "Void return statements may only be used inside non-returning \
            function definitions."
-    | NonDataVariableDecl ->
+    | NonDataVariableSizeDecl ->
         Fmt.pf ppf
           "Non-data variables are not allowed in top level size declarations."
     | NonIntBounds ->
@@ -523,8 +523,8 @@ let expression_return_outside_returning_fn loc =
 let void_ouside_nonreturning_fn loc =
   StatementError (loc, StatementError.VoidReturnOutsideNonReturningFn)
 
-let non_data_variable_decl loc =
-  StatementError (loc, StatementError.NonDataVariableDecl)
+let non_data_variable_size_decl loc =
+  StatementError (loc, StatementError.NonDataVariableSizeDecl)
 
 let non_int_bounds loc = StatementError (loc, StatementError.NonIntBounds)
 

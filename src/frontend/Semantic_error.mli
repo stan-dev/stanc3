@@ -66,7 +66,7 @@ val break_outside_loop : location_span -> t
 val continue_outside_loop : location_span -> t
 val expression_return_outside_returning_fn : location_span -> t
 val void_ouside_nonreturning_fn : location_span -> t
-val non_data_variable_decl : location_span -> t
+val non_data_variable_size_decl : location_span -> t
 val non_int_bounds : location_span -> t
 val transformed_params_int : location_span -> t
 val mismatched_fn_def_decl : location_span -> string -> unsizedtype option -> t
