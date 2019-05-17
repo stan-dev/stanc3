@@ -2,17 +2,7 @@ open Core_kernel
 module Mir : Mir_intf.Mir
 module Validation : Validation_intf.Validation
 
-module type Frontend = sig
-  include Frontend_intf.S
-end
-
-module type Optimization = sig
-  include Optimization_intf.S
-end
-
-module type Backend = sig
-  include Backend_intf.S
-end
+module type Frontend = Frontend_intf.Frontend
 
 val string_of_location : Mir.location -> string
 val string_of_location_span : Mir.location_span -> string

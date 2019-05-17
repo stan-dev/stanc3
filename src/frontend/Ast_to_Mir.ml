@@ -665,7 +665,12 @@ let trans_prog filename
 (*===================== tests =========================================*)
 
 let mir_from_string s =
-  let untyped_prog = Parse.parse_string Parser.Incremental.program s in
+  (* TODO : properly render syntax error *)
+  let untyped_prog =
+    Parse.parse_string Parser.Incremental.program s
+    |> Result.map_error ~f:(fun _ -> "syntax error")
+    |> Result.ok_or_failwith
+  in
   let typed_prog_result = Semantic_check.semantic_check_program untyped_prog in
   let typed_prog =
     typed_prog_result

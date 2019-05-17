@@ -4,11 +4,8 @@ include Core_kernel
 module Make
     (F : Frontend_intf.S)
     (O : Optimization_intf.S)
-    (B : Backend_intf.S) :
-  S
-  with type semantic_error := F.semantic_error
-   and type syntax_error := F.syntax_error
-   and type frontend_error := F.frontend_error = struct
+    (B : Backend_intf.S) : S with type frontend_error := F.frontend_error =
+struct
   type compiler_opts =
     { frontend_opts: F.frontend_opts
     ; optimization_opts: O.optimization_opts

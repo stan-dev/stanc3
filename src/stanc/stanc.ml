@@ -79,10 +79,13 @@ let add_file filename =
 (** ad directives from the given file. *)
 let use_file filename =
   let ast =
-    try Parse.parse_file Parser.Incremental.program filename
-    with Errors.SyntaxError err ->
-      Errors.report_syntax_error err ;
-      exit 1
+    match Parse.parse_file Parser.Incremental.program filename with
+    | Result.Ok ast -> ast
+    | Result.Error err ->
+        let loc = Parse.syntax_error_location err
+        and msg = Parse.syntax_error_message err in
+        Errors.report_parsing_error (msg, loc) ;
+        exit 1
   in
   let _ = Debugging.ast_logger ast in
   if !pretty_print_program then

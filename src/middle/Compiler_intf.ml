@@ -1,8 +1,6 @@
 open Core_kernel
 
 module type S = sig
-  type semantic_error
-  type syntax_error
   type frontend_error
   type compiler_opts_error
   type compiler_opts
@@ -13,7 +11,7 @@ module type S = sig
     string -> (compiler_opts, compiler_opts_error list) result
 
   val compile_from_file :
-    opts:compiler_opts -> file:string -> (string, frontend_error list) result
+    opts:compiler_opts -> file:string -> (string, frontend_error) result
 end
 
 module type Compiler = sig
@@ -22,9 +20,5 @@ module type Compiler = sig
   module Make
       (F : Frontend_intf.S)
       (O : Optimization_intf.S)
-      (B : Backend_intf.S) :
-    S
-    with type semantic_error := F.semantic_error
-     and type syntax_error := F.syntax_error
-     and type frontend_error := F.frontend_error
+      (B : Backend_intf.S) : S with type frontend_error := F.frontend_error
 end

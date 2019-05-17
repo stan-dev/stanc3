@@ -21,7 +21,7 @@ exception SemanticError of (string * Mir.location_span)
 exception FatalError of string
 
 (* A semantic error reported by the toplevel *)
-let semantic_error ~loc msg = raise (SemanticError (msg, loc))
+(* let semantic_error ~loc msg = raise (SemanticError (msg, loc)) *)
 
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
@@ -120,6 +120,11 @@ let report_syntax_error = function
       Printf.eprintf "\nSyntax error in %s, include error:\n"
         (string_of_location loc) ;
       print_context_and_message message loc
+
+let report_parsing_error (message, loc_span) =
+  Printf.eprintf "\nSyntax error in %s, parsing error:\n"
+    (string_of_location_span loc_span) ;
+  print_context_and_message message loc_span.end_loc
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =

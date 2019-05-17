@@ -2,7 +2,15 @@
     API *)
 
 open Core_kernel
-open Errors
+open Middle
+
+type syntax_error = Parsing of string * Mir.location_span
+
+let syntax_error_message = function Parsing (msg, _) -> msg
+let syntax_error_location = function Parsing (_, loc) -> loc
+
+(* TODO :render messages along with location! *)
+let render_syntax_error = function Parsing (msg, _) -> msg
 
 let parse parse_fun lexbuf =
   (* see the Menhir manual for the description of
@@ -15,7 +23,7 @@ let parse parse_fun lexbuf =
        (Stack.top_exn Preprocessor.include_stack))
       ()
   in
-  let success prog = prog in
+  let success prog = Result.Ok prog in
   let failure error_state =
     let env =
       match[@warning "-4"] error_state with
@@ -29,15 +37,13 @@ let parse parse_fun lexbuf =
            or \"parameters {\" or \"transformed parameters {\" or \"model {\" \
            or \"generated quantities {\".\n"
         in
-        raise
-          (SyntaxError
-             (Parsing
-                ( message
-                , Errors.loc_span_of_pos
-                    (Lexing.lexeme_start_p
-                       (Stack.top_exn Preprocessor.include_stack))
-                    (Lexing.lexeme_end_p
-                       (Stack.top_exn Preprocessor.include_stack)) )))
+        Parsing
+          ( message
+          , Errors.loc_span_of_pos
+              (Lexing.lexeme_start_p (Stack.top_exn Preprocessor.include_stack))
+              (Lexing.lexeme_end_p (Stack.top_exn Preprocessor.include_stack))
+          )
+        |> Result.Error
     | (lazy (Cons (Interp.Element (state, _, start_pos, end_pos), _))) ->
         let message =
           try
@@ -51,9 +57,8 @@ let parse parse_fun lexbuf =
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
             else ""
         in
-        raise
-          (SyntaxError
-             (Parsing (message, Errors.loc_span_of_pos start_pos end_pos)))
+        Parsing (message, Errors.loc_span_of_pos start_pos end_pos)
+        |> Result.Error
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)
 
@@ -85,6 +90,8 @@ let%expect_test "parse conditional" =
   let ast =
     parse_string Parser.Incremental.program
       "model { if (1 < 2) { print(\"hi\");}}"
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -111,6 +118,8 @@ let%expect_test "parse dangling else problem" =
     parse_string Parser.Incremental.program
       "model { if (1 < 2) print(\"I'm sorry\"); if (2 < 3) print(\", Dave, \
        \"); else print(\"I'm afraid I can't do that.\");}"
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -142,6 +151,8 @@ let%expect_test "parse dangling else problem" =
 let%expect_test "parse minus unary" =
   let ast =
     parse_string Parser.Incremental.program "model { real x; x = -x;}"
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -169,6 +180,8 @@ let%expect_test "parse minus unary" =
 let%expect_test "parse unary over binary" =
   let ast =
     parse_string Parser.Incremental.program "model { real x = x - - x - - x; }"
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -208,6 +221,8 @@ let%expect_test "parse indices, two different colons" =
   let ast =
     parse_string Parser.Incremental.program
       "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }"
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -250,6 +265,8 @@ let%expect_test "parse operator precedence" =
     parse_string Parser.Incremental.program
       "model {  \
        print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }"
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -426,6 +443,8 @@ let%expect_test "parse crazy truncation example" =
       \        print(T[1,1]);\n\
       \      }\n\
       \      "
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
@@ -488,6 +507,8 @@ let%expect_test "parse nested loop" =
       \                  print(\"Badger\");\n\
       \            }\n\
       \            "
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
   in
   print_s [%sexp (ast : Ast.untyped_program)] ;
   [%expect
