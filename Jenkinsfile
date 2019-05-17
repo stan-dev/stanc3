@@ -73,18 +73,6 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Build & Test windows binary") {
-            // when { buildingTag() }
-            agent { label 'windows' }
-            steps {
-                bat "bash -cl \"cd test/integration\""
-                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
-                bat "bash -cl \"cd ..\""
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
-
-                stash name:'windows-exe', includes:'_build/**/stanc.exe'
-            }
-        }
         stage("Build, test, release static linux binary") {
             // when { buildingTag() }
             agent {
@@ -93,9 +81,6 @@ pipeline {
                     //Forces image to ignore entrypoint
                     args "-u root --entrypoint=\'\'"
                 }
-            }
-            environment {
-                GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
             }
             steps {
                 runShell("""
@@ -116,9 +101,22 @@ pipeline {
             }
             post {always { runShell("rm -rf ./*")}}
         }
+        stage("Build & Test windows binary") {
+            // when { buildingTag() }
+            agent { label 'windows' }
+            steps {
+                bat "bash -cl \"cd test/integration\""
+                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                bat "bash -cl \"cd ..\""
+                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
+
+                stash name:'windows-exe', includes:'_build/**/stanc.exe'
+            }
+        }
         stage("Release tag") {
             // when { buildingTag() }
             agent { label 'linux' }
+            environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
