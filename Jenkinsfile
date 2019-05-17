@@ -63,9 +63,6 @@ pipeline {
                """
                 sh """
                    eval \$(opam env)
-                   dune --version
-                   ls cmdstan
-                   ls "`pwd`/cmdstan"
                    CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
                """
             }
