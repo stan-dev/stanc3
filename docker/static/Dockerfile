@@ -16,8 +16,6 @@ RUN git config --global user.email "docker@example.com" && \
 
 #Init opam and switch to 4.07
 RUN opam init -y --disable-sandboxing
-RUN opam switch create 4.07 ocaml-base-compiler.4.07.1 && \
-  opam switch 4.07
 
 # Copy script and install build dependencies
 COPY ./scripts/install_build_deps.sh ./
