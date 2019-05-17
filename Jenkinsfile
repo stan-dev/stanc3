@@ -9,6 +9,16 @@ def runShell(String command){
     return "${output}"
 }
 
+def tagName() {
+    if (env.TAG_NAME) {
+        env.TAG_NAME
+    } else if (env.BRANCH_NAME == 'master') {
+        'nightly'
+    } else {
+        'unknown-tag'
+    }
+}
+
 pipeline {
     agent none
     stages {
@@ -24,6 +34,7 @@ pipeline {
                 GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
             }
             steps {
+                sh 'printenv'
 
                 /* runs 'dune build @install' command and then outputs the stdout*/
                 runShell("""
@@ -46,8 +57,7 @@ pipeline {
                 runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
                             mv `find . -name stanc.exe` linux-stanc
-                            ./ghr_v0.12.1_linux_amd64/ghr nightly linux-stanc""")
-                archiveArtifacts artifacts:'_build/**/stanc.exe', onlyIfSuccessful: true
+                            ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} linux-stanc""")
             }
             post {always { runShell("rm -rf ./*")}}
         }
