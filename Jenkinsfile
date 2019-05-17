@@ -9,9 +9,45 @@ def runShell(String command){
     return "${output}"
 }
 
+def tagName() {
+    if (env.TAG_NAME) {
+        env.TAG_NAME
+    } else if (env.BRANCH_NAME == 'master') {
+        'nightly'
+    } else {
+        'unknown-tag'
+    }
+}
+
 pipeline {
     agent none
     stages {
+        stage("Build & Test") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+
+                runShell("echo \$(date +'%s') > time.log")
+
+                echo runShell("""
+                    eval \$(opam env)
+                    dune runtest --verbose
+                """)
+
+                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
         stage("Run end-to-end tests") {
             agent {
                 dockerfile {
@@ -35,45 +71,27 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Build & Test") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
+        stage("Build & Test Mac OS X binary") {
+            when { anyOf { buildingTag(); branch 'master' } }
+            agent { label 'osx' }
             steps {
-                /* runs 'dune build @install'*/
                 runShell("""
                     eval \$(opam env)
                     dune build @install
                 """)
 
-                /*Logs the start time of tests*/
-                runShell("echo \$(date +'%s') > time.log")
-
-                /* runs 'dune runtest' */
                 echo runShell("""
                     eval \$(opam env)
-                    dune runtest --verbose
+                    time dune runtest --verbose
                 """)
 
-                /*Echoes time elapsed for tests*/
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+                sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
             }
-            post { always { runShell("rm -rf ./*")} }
+            post {always { runShell("rm -rf ./*")}}
         }
-        stage("Build & Test windows binary") {
-            agent { label 'windows' }
-            steps {
-                bat "bash -cl \"cd test/integration\""
-                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
-                bat "bash -cl \"cd ..\""
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
-            }
-        }
-        stage("Build & Test static linux binary") {
+        stage("Build & Test a static linux binary") {
+            when { anyOf { buildingTag(); branch 'master' } }
             agent {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
@@ -82,26 +100,45 @@ pipeline {
                 }
             }
             steps {
-
-                /* runs 'dune build @install' command and then outputs the stdout*/
                 runShell("""
                     eval \$(opam env)
                     dune build @install --profile static
                 """)
 
-                /*Logs the start time of tests*/
-                runShell("echo \$(date +'%s') > time.log")
-
-                /* runs 'dune runtest' command and then outputs the stdout*/
                 echo runShell("""
                     eval \$(opam env)
-                    dune runtest --profile static --verbose
+                    time dune runtest --profile static --verbose
                 """)
 
-                /*Echoes time elapsed for tests*/
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+                sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                stash name:'linux-exe', includes:'bin/*'
             }
-            post { always { runShell("rm -rf ./*")} }
+            post {always { runShell("rm -rf ./*")}}
+        }
+        stage("Build & Test windows binary") {
+            when { anyOf { buildingTag(); branch 'master' } }
+            agent { label 'windows' }
+            steps {
+                bat "bash -cl \"cd test/integration\""
+                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                bat "bash -cl \"cd ..\""
+                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
+                bat """bash -cl "mkdir bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
+                stash name:'windows-exe', includes:'bin/*'
+            }
+        }
+        stage("Release tag") {
+            when { anyOf { buildingTag(); branch 'master' } }
+            agent { label 'linux' }
+            environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
+            steps {
+                unstash 'windows-exe'
+                unstash 'linux-exe'
+                unstash 'mac-exe'
+                runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
+                            ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} bin/ """)
+            }
         }
     }
     post {
