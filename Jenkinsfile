@@ -43,8 +43,10 @@ pipeline {
                 /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
-                runShell("""mv `find . -name stanc.exe` linux-stanc
-                            ghr nightly linux-stanc""")
+                runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
+                            mv `find . -name stanc.exe` linux-stanc
+                            ./ghr_v0.12.1_linux_amd64/ghr nightly linux-stanc""")
                 archiveArtifacts artifacts:'_build/**/stanc.exe', onlyIfSuccessful: true
             }
             post {always { runShell("rm -rf ./*")}}
