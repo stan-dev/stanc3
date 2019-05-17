@@ -21,7 +21,7 @@ pipeline {
                 }
             }
             environment {
-                GITHUB_TOKEN = credentials('0e439db3-536d-41aa-a3a0-0e80836a3913')
+                GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
             }
             steps {
 
