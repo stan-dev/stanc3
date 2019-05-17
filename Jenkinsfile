@@ -12,29 +12,6 @@ def runShell(String command){
 pipeline {
     agent none
     stages {
-        stage("Run end-to-end tests") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh """
-                   git clone --recursive https://github.com/stan-dev/cmdstan
-                   cd cmdstan && make -j${env.PARALLEL} build && cd ..
-               """
-                sh """
-                   eval \$(opam env)
-                   dune --version
-                   ls cmdstan
-                   ls "`pwd`/cmdstan"
-                   CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
-               """
-            }
-            post { always { runShell("rm -rf ./*")} }
-        }
         stage("Build & Test") {
             agent {
                 dockerfile {
@@ -64,6 +41,29 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
+        stage("Run end-to-end tests") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh """
+                   git clone --recursive https://github.com/stan-dev/cmdstan
+                   cd cmdstan && make -j${env.PARALLEL} build && cd ..
+               """
+                sh """
+                   eval \$(opam env)
+                   dune --version
+                   ls cmdstan
+                   ls "`pwd`/cmdstan"
+                   CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
+               """
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
         stage("Build & Test windows binary") {
             agent { label 'windows' }
             steps {
@@ -71,11 +71,8 @@ pipeline {
                 bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                 bat "bash -cl \"cd ..\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
-            }
-            post {
-                success {
-                    archiveArtifacts '_build/**/stanc.exe'
-                }
+
+                archiveArtifacts '_build/**/stanc.exe', onlyIfSuccessful: true
             }
         }
         stage("Build & Test static linux binary") {
@@ -105,13 +102,10 @@ pipeline {
 
                 /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+
+                archiveArtifacts '_build/**/stanc.exe', onlyIfSuccessful: true
             }
-            post {
-                always { runShell("rm -rf ./*")}
-                success {
-                    archiveArtifacts '_build/**/stanc.exe'
-                }
-            }
+            post {always { runShell("rm -rf ./*")}}
         }
     }
     post {
