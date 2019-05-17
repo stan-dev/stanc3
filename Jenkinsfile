@@ -22,58 +22,58 @@ def tagName() {
 pipeline {
     agent none
     stages {
-        stage("Build & Test") {
-            when { buildingTag() } //temp commenting out
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh 'printenv'
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                """)
+        // stage("Build & Test") {
+        //     when { buildingTag() } //temp commenting out
+        //     agent {
+        //         dockerfile {
+        //             filename 'docker/debian/Dockerfile'
+        //             //Forces image to ignore entrypoint
+        //             args "-u root --entrypoint=\'\'"
+        //         }
+        //     }
+        //     steps {
+        //         sh 'printenv'
+        //         runShell("""
+        //             eval \$(opam env)
+        //             dune build @install
+        //         """)
 
-                runShell("echo \$(date +'%s') > time.log")
+        //         runShell("echo \$(date +'%s') > time.log")
 
-                echo runShell("""
-                    eval \$(opam env)
-                    dune runtest --verbose
-                """)
+        //         echo runShell("""
+        //             eval \$(opam env)
+        //             dune runtest --verbose
+        //         """)
 
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-            }
-            post { always { runShell("rm -rf ./*")} }
-        }
-        stage("Run end-to-end tests") {
-            when { buildingTag() } //temp commenting out
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-                sh """
-                   git clone --recursive https://github.com/stan-dev/cmdstan
-                   cd cmdstan && make -j${env.PARALLEL} build && cd ..
-               """
-                sh """
-                   eval \$(opam env)
-                   dune --version
-                   ls cmdstan
-                   ls "`pwd`/cmdstan"
-                   CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
-               """
-            }
-            post { always { runShell("rm -rf ./*")} }
-        }
-        stage("Build, test, release static linux binary") {
+        //         echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+        //     }
+        //     post { always { runShell("rm -rf ./*")} }
+        // }
+        // stage("Run end-to-end tests") {
+        //     when { buildingTag() } //temp commenting out
+        //     agent {
+        //         dockerfile {
+        //             filename 'docker/debian/Dockerfile'
+        //             //Forces image to ignore entrypoint
+        //             args "-u root --entrypoint=\'\'"
+        //         }
+        //     }
+        //     steps {
+        //         sh """
+        //            git clone --recursive https://github.com/stan-dev/cmdstan
+        //            cd cmdstan && make -j${env.PARALLEL} build && cd ..
+        //        """
+        //         sh """
+        //            eval \$(opam env)
+        //            dune --version
+        //            ls cmdstan
+        //            ls "`pwd`/cmdstan"
+        //            CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
+        //        """
+        //     }
+        //     post { always { runShell("rm -rf ./*")} }
+        // }
+        stage("Build & Test a static linux binary") {
             // when { buildingTag() }
             agent {
                 dockerfile {
@@ -88,17 +88,32 @@ pipeline {
                     dune build @install --profile static
                 """)
 
-                runShell("echo \$(date +'%s') > time.log")
+                echo runShell("""
+                    eval \$(opam env)
+                    time dune runtest --profile static --verbose
+                """)
+
+                sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                stash name:'linux-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ./*")}}
+        }
+        stage("Build & Test Mac OS X binary") {
+            // when { buildingTag() }
+            agent { label 'osx' }
+            steps {
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
 
                 echo runShell("""
                     eval \$(opam env)
-                    dune runtest --profile static --verbose
+                    time dune runtest --verbose
                 """)
 
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-                sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-
-                stash name:'linux-exe', includes:'bin/*'
+                sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
             }
             post {always { runShell("rm -rf ./*")}}
         }
@@ -110,7 +125,7 @@ pipeline {
                 bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                 bat "bash -cl \"cd ..\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
-                bat """bash -cl "mkdir b _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
+                bat """bash -cl "mkdir bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                 stash name:'windows-exe', includes:'bin/*'
             }
         }
@@ -121,7 +136,7 @@ pipeline {
             steps {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
-                // TODO: unstash 'mac-exe'
+                unstash 'mac-exe'
                 runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
                             ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} bin/ """)
