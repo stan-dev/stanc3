@@ -23,7 +23,7 @@ RUN opam switch create 4.07 ocaml-base-compiler.4.07.1 && \
 COPY ./scripts/install_build_deps.sh ./
 RUN bash -x install_build_deps.sh
 
-RUN bash wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz O ghr.tar.gz && tar -zxvpf ghr.tar.gz ghr -C /usr/bin
+RUN bash curl https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz -O ghr.tar.gz && tar -zxvpf ghr.tar.gz ghr -C /usr/bin
 
 #Define our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
