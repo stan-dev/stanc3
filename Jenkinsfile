@@ -137,7 +137,7 @@ pipeline {
                 unstash 'mac-exe'
                 runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                            ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} bin/ """)
+                            ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ """)
             }
         }
     }
