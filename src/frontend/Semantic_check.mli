@@ -12,16 +12,3 @@ val check_that_all_functions_have_definition : bool ref
 val model_name : string ref
 (** A reference to hold the model name. Relevant for checking variable
     clashes and used in code generation. *)
-
-(* val inferred_unsizedtype_of_indexed :
-     Middle.location_span
-  -> Middle.unsizedtype
-  -> (Ast.typed_expression Ast.index * Middle.unsizedtype) sexp_list
-  -> Middle.unsizedtype *)
-(** [inferred_unsizedtype_of_indexed loc ut typed_idxs] is responsible for figuring
-    out what the return (unsized) type of an indexing operation into an unsized
-    type is.*)
-(* val operator_return_type :
-     Middle.operator
-  -> (Middle.autodifftype * Middle.unsizedtype) list
-  -> Middle.returntype option *)
