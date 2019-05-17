@@ -174,9 +174,11 @@ and gen_misc_special_math_app f =
         (fun ppf es ->
           if is_scalar (first es) then pp_unary ppf "std::ceil(%a)" es
           else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
+  | f when f = string_of_internal_fn FnLength ->
+      Some (fun ppf -> gen_fun_app ppf "stan::length")
   | _ -> None
 
-and read_data_or_param ut ppf es =
+and read_data ut ppf es =
   let i_or_r =
     match ut with
     | UInt -> "i"
@@ -188,16 +190,19 @@ and read_data_or_param ut ppf es =
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
-and gen_mir_special_apps ut = function
-  | FnLength -> fun ppf es -> pp_unary ppf "length(%a)" es
-  | FnMakeArray -> fun ppf es -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
-  | FnReadData | FnReadParam -> read_data_or_param ut
-  | FnConstrain -> pp_constrain_funapp "constrain"
-  | FnUnconstrain -> pp_constrain_funapp "unconstrain"
-  | _ -> fun ppf _ -> pf ppf "XXX TODO "
+and gen_distribution_app f =
+  if
+    String.is_suffix f ~suffix:"_lpmf"
+    || String.is_suffix f ~suffix:"_lpdf"
+    || String.is_suffix f ~suffix:"_log"
+  then
+    Some
+      (fun ppf ->
+        pf ppf "%s<propto__>(@[<hov>%a@])" f (list ~sep:comma pp_expr) )
+  else None
 
 (* assumes everything well formed from parser checks *)
-and gen_fun_app ppf ut f es =
+and gen_fun_app ppf f es =
   let default ppf es =
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
       (list ~sep:comma pp_expr) es
@@ -205,20 +210,15 @@ and gen_fun_app ppf ut f es =
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
     ; gen_misc_special_math_app f
-    ; Option.map ~f:(gen_mir_special_apps ut) (internal_fn_of_string f) ]
+    ; gen_distribution_app f ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pp ppf es
 
-(* XXX actually, for params we have to combine read and constrain into one funapp *)
-and pp_constrain_funapp :
-    string -> Format.formatter -> 'm with_expr list -> unit =
- fun constrain_or_un_str ppf -> function
-  | var
-    :: {expr= Lit (Str, constraint_flavor); _}
-       :: {expr= Lit (Str, base_type); _} :: dims ->
-      pf ppf "%s_%s_%s(@[<hov>%a@])" base_type constraint_flavor
-        constrain_or_un_str (list ~sep:comma pp_expr) (var :: dims)
+and pp_constrain_funapp constrain_or_un_str ppf = function
+  | var :: {expr= Lit (Str, constraint_flavor); _} :: args ->
+      pf ppf "%s_%s(@[<hov>%a@])" constraint_flavor constrain_or_un_str
+        (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : expr_typed_located list)]
 
 and pp_ordinary_fn ppf f es =
@@ -227,26 +227,37 @@ and pp_ordinary_fn ppf f es =
   pf ppf "%s(@[<hov>%a%s@])" f (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
-and pp_compiler_internal_fn ppf f es =
+and pp_compiler_internal_fn ut f ppf es =
   match internal_fn_of_string f with
   | None -> failwith "Expecting internal function but found `%s`" f
-  | Some FnLength -> pp_unary ppf "length(%a)" es
   | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
-  | Some FnUnconstrain -> pp_constrain_funapp "unconstrain" ppf es
-  | _ -> pf ppf "XXX TODO "
+  | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
+  | Some FnReadData -> read_data ut ppf es
+  | Some FnReadParam -> (
+    match es with
+    | _ :: {expr= Lit (Str, base_type); _} :: dims ->
+        pf ppf "in__.%s(@[<hov>%a@])" base_type (list ~sep:comma pp_expr) dims
+    | _ ->
+        raise_s
+          [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
+    )
+  | _ ->
+      pf ppf
+        "throw std::logic_error(\"XXX TODO Not Implemented: %s(@[<hov>%a@])\""
+        f (list ~sep:comma pp_expr) es
 
-and pp_indexed ppf vident =
-  pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes
+and pp_indexed ppf (vident, indices, pretty) =
+  pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
 and pp_expr ppf e =
   match e.expr with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
-  | FunApp (StanLib, f, es) -> gen_fun_app ppf e.emeta.mtype f es
+  | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn ppf (stan_namespace_qualify f) es
+      pp_compiler_internal_fn e.emeta.mtype (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_ordinary_fn ppf f es
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
@@ -257,8 +268,12 @@ and pp_expr ppf e =
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
-  | Indexed (e, idx) ->
-      pp_indexed ppf (strf "%a" pp_expr e) idx (pretty_print e)
+  | Indexed (e, idx) -> (
+    match e.expr with
+    | FunApp (CompilerInternal, f, _)
+      when Some FnReadParam = internal_fn_of_string f ->
+        pp_expr ppf e
+    | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
 let dummy_locate e =

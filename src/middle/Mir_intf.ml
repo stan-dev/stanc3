@@ -189,6 +189,7 @@ module type Mir = sig
     | FnNegInf
     | FnReadData
     | FnReadParam
+    | FnWriteParam
     | FnConstrain
     | FnUnconstrain
     | FnCheck

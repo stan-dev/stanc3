@@ -192,6 +192,7 @@ type internal_fn =
   | FnNegInf
   | FnReadData
   | FnReadParam
+  | FnWriteParam
   | FnConstrain
   | FnUnconstrain
   | FnCheck

@@ -1,5 +1,3 @@
-(include ../dune)
-
 (rule
  (targets cpp.output)
  (deps (package stanc) (:stanfiles eight_schools_ncp.stan one_var_per_block.stan))
@@ -10,3 +8,56 @@
 (alias
  (name runtest)
  (action (diff cpp.expected cpp.output)))
+
+(rule
+  (targets eight_schools_ncp.hpp)
+  (deps (package stanc))
+  ;; (action (chdir %{env:CMDSTAN=cmdstan} (run make -j4 build)))
+  (action (run %{bin:stanc} eight_schools_ncp.stan)))
+
+(rule
+  (targets eight_schools_ncp)
+  (deps eight_schools_ncp.hpp)
+  (action
+  (chdir %{env:CMDSTAN=cmdstan}
+    (run make -j4 %{targets}))))
+
+(rule
+ (targets eight_schools_ncp.csv)
+ (action
+   (run %{dep:eight_schools_ncp} random seed=1 sample data file=%{dep:eight_schools.data.R} output file=%{targets})))
+
+
+(rule
+  (targets stan2_eight_schools_ncp)
+  (action
+    (progn
+      (copy %{dep:eight_schools_ncp.stan} stan2_eight_schools_ncp.stan)
+      (chdir %{env:CMDSTAN=cmdstan}
+        (run make -j4 %{targets})))))
+
+(rule
+ (targets eight_schools_ncp_summary.expected)
+ (action
+   (progn
+    (run %{dep:stan2_eight_schools_ncp} random seed=1 sample data file=%{dep:eight_schools.data.R} output file=stan2_eight_schools_ncp.csv)
+    (with-stdout-to %{targets}
+      (run %{env:CMDSTAN=cmdstan}/bin/stansummary stan2_eight_schools_ncp.csv))
+    (with-stdout-to %{targets}
+      (run python %{dep:chop_summary.py} %{targets}))
+    )))
+
+(rule
+ (targets eight_schools_ncp_summary.output)
+ (deps eight_schools_ncp.csv)
+ (action
+  (progn
+    (with-stdout-to %{targets}
+      (run %{env:CMDSTAN=cmdstan}/bin/stansummary eight_schools_ncp.csv))
+    (with-stdout-to %{targets}
+      (run python %{dep:chop_summary.py} %{targets}))
+    )))
+
+(alias (name runtest)
+  (enabled_if (<> false %{env:CMDSTAN=false}))
+  (action (diff eight_schools_ncp_summary.expected eight_schools_ncp_summary.output)))
