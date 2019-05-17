@@ -77,6 +77,7 @@ pipeline {
             steps {
                 runShell("""
                     eval \$(opam env)
+                    cd scripts && bash -x install_build_deps.sh && cd ..
                     dune build @install
                 """)
 
