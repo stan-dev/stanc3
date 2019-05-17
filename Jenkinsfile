@@ -72,6 +72,11 @@ pipeline {
                 bat "bash -cl \"cd ..\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
             }
+            post {
+                success {
+                    archiveArtifacts '_build/**/stanc.exe'
+                }
+            }
         }
         stage("Build & Test static linux binary") {
             agent {
@@ -101,7 +106,12 @@ pipeline {
                 /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
             }
-            post { always { runShell("rm -rf ./*")} }
+            post {
+                always { runShell("rm -rf ./*")}
+                success {
+                    archiveArtifacts '_build/**/stanc.exe'
+                }
+            }
         }
     }
     post {
