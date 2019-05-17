@@ -73,6 +73,25 @@ pipeline {
         //     }
         //     post { always { runShell("rm -rf ./*")} }
         // }
+        stage("Build & Test Mac OS X binary") {
+            // when { buildingTag() }
+            agent { label 'osx' }
+            steps {
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+
+                echo runShell("""
+                    eval \$(opam env)
+                    time dune runtest --verbose
+                """)
+
+                sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ./*")}}
+        }
         stage("Build & Test a static linux binary") {
             // when { buildingTag() }
             agent {
@@ -95,25 +114,6 @@ pipeline {
 
                 sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                 stash name:'linux-exe', includes:'bin/*'
-            }
-            post {always { runShell("rm -rf ./*")}}
-        }
-        stage("Build & Test Mac OS X binary") {
-            // when { buildingTag() }
-            agent { label 'osx' }
-            steps {
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                """)
-
-                echo runShell("""
-                    eval \$(opam env)
-                    time dune runtest --verbose
-                """)
-
-                sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                stash name:'mac-exe', includes:'bin/*'
             }
             post {always { runShell("rm -rf ./*")}}
         }
