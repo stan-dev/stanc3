@@ -12,6 +12,43 @@ def runShell(String command){
 pipeline {
     agent none
     stages {
+        stage("Build & Test static linux binary") {
+            agent {
+                dockerfile {
+                    filename 'docker/static/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            environment {
+                GITHUB_TOKEN = credentials('0e439db3-536d-41aa-a3a0-0e80836a3913')
+            }
+            steps {
+
+                /* runs 'dune build @install' command and then outputs the stdout*/
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install --profile static
+                """)
+
+                /*Logs the start time of tests*/
+                runShell("echo \$(date +'%s') > time.log")
+
+                // /* runs 'dune runtest' command and then outputs the stdout*/
+                // echo runShell("""
+                //     eval \$(opam env)
+                //     dune runtest --profile static --verbose
+                // """)
+
+                /*Echoes time elapsed for tests*/
+                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+
+                runShell("""mv _build/default.static/src/stan/stanc.exe linux-stanc
+                            ghr nightly linux-stanc""")
+                archiveArtifacts artifacts:'_build/**/stanc.exe', onlyIfSuccessful: true
+            }
+            post {always { runShell("rm -rf ./*")}}
+        }
         stage("Build & Test") {
             agent {
                 dockerfile {
@@ -72,40 +109,8 @@ pipeline {
                 bat "bash -cl \"cd ..\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
 
-                archiveArtifacts '_build/**/stanc.exe', onlyIfSuccessful: true
+                archiveArtifacts artifacts:'_build/**/stanc.exe', onlyIfSuccessful: true
             }
-        }
-        stage("Build & Test static linux binary") {
-            agent {
-                dockerfile {
-                    filename 'docker/static/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            steps {
-
-                /* runs 'dune build @install' command and then outputs the stdout*/
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install --profile static
-                """)
-
-                /*Logs the start time of tests*/
-                runShell("echo \$(date +'%s') > time.log")
-
-                /* runs 'dune runtest' command and then outputs the stdout*/
-                echo runShell("""
-                    eval \$(opam env)
-                    dune runtest --profile static --verbose
-                """)
-
-                /*Echoes time elapsed for tests*/
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-
-                archiveArtifacts '_build/**/stanc.exe', onlyIfSuccessful: true
-            }
-            post {always { runShell("rm -rf ./*")}}
         }
     }
     post {
