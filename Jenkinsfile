@@ -22,59 +22,57 @@ def tagName() {
 pipeline {
     agent none
     stages {
-        // stage("Build & Test") {
-        //     when { buildingTag() } //temp commenting out
-        //     agent {
-        //         dockerfile {
-        //             filename 'docker/debian/Dockerfile'
-        //             //Forces image to ignore entrypoint
-        //             args "-u root --entrypoint=\'\'"
-        //         }
-        //     }
-        //     steps {
-        //         sh 'printenv'
-        //         runShell("""
-        //             eval \$(opam env)
-        //             dune build @install
-        //         """)
+        stage("Build & Test") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
 
-        //         runShell("echo \$(date +'%s') > time.log")
+                runShell("echo \$(date +'%s') > time.log")
 
-        //         echo runShell("""
-        //             eval \$(opam env)
-        //             dune runtest --verbose
-        //         """)
+                echo runShell("""
+                    eval \$(opam env)
+                    dune runtest --verbose
+                """)
 
-        //         echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-        //     }
-        //     post { always { runShell("rm -rf ./*")} }
-        // }
-        // stage("Run end-to-end tests") {
-        //     when { buildingTag() } //temp commenting out
-        //     agent {
-        //         dockerfile {
-        //             filename 'docker/debian/Dockerfile'
-        //             //Forces image to ignore entrypoint
-        //             args "-u root --entrypoint=\'\'"
-        //         }
-        //     }
-        //     steps {
-        //         sh """
-        //            git clone --recursive https://github.com/stan-dev/cmdstan
-        //            cd cmdstan && make -j${env.PARALLEL} build && cd ..
-        //        """
-        //         sh """
-        //            eval \$(opam env)
-        //            dune --version
-        //            ls cmdstan
-        //            ls "`pwd`/cmdstan"
-        //            CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
-        //        """
-        //     }
-        //     post { always { runShell("rm -rf ./*")} }
-        // }
+                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
+        stage("Run end-to-end tests") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh """
+                   git clone --recursive https://github.com/stan-dev/cmdstan
+                   cd cmdstan && make -j${env.PARALLEL} build && cd ..
+               """
+                sh """
+                   eval \$(opam env)
+                   dune --version
+                   ls cmdstan
+                   ls "`pwd`/cmdstan"
+                   CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
+               """
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
         stage("Build & Test Mac OS X binary") {
-            // when { buildingTag() }
+            when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'osx' }
             steps {
                 runShell("""
@@ -93,7 +91,7 @@ pipeline {
             post {always { runShell("rm -rf ./*")}}
         }
         stage("Build & Test a static linux binary") {
-            // when { buildingTag() }
+            when { anyOf { buildingTag(); branch 'master' } }
             agent {
                 dockerfile {
                     filename 'docker/static/Dockerfile'
@@ -118,7 +116,7 @@ pipeline {
             post {always { runShell("rm -rf ./*")}}
         }
         stage("Build & Test windows binary") {
-            // when { buildingTag() }
+            when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'windows' }
             steps {
                 bat "bash -cl \"cd test/integration\""
@@ -130,7 +128,7 @@ pipeline {
             }
         }
         stage("Release tag") {
-            // when { buildingTag() }
+            when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
