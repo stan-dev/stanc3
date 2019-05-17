@@ -79,28 +79,37 @@ let add_file filename =
 (** ad directives from the given file. *)
 let use_file filename =
   let ast =
-    match Parse.parse_file Parser.Incremental.program filename with
-    | Result.Ok ast -> ast
-    | Result.Error err ->
-        let loc = Parse.syntax_error_location err
-        and msg = Parse.syntax_error_message err in
-        Errors.report_parsing_error (msg, loc) ;
-        exit 1
+    try 
+      match Parse.parse_file Parser.Incremental.program filename with
+      | Result.Ok ast -> ast
+      | Result.Error err ->
+          let loc = Parse.syntax_error_location err
+          and msg = Parse.syntax_error_message err in
+          Errors.report_parsing_error (msg, loc) ;
+          exit 1
+    with Errors.SyntaxError err ->	    
+      Errors.report_syntax_error err ;	
+      exit 1
+
   in
   let _ = Debugging.ast_logger ast in
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
-    match Semantic_check.semantic_check_program ast with
-    | Result.Ok prog -> prog
-    | Result.Error (error :: _) ->
-        let loc = Semantic_error.location error
-        and msg = (Fmt.to_to_string Semantic_error.pp) error in
-        Errors.report_semantic_error (msg, loc) ;
-        exit 1
-    | _ ->
-        Printf.eprintf "The impossible happened" ;
-        exit 1
+    try 
+      match Semantic_check.semantic_check_program ast with
+      | Result.Ok prog -> prog
+      | Result.Error (error :: _) ->
+          let loc = Semantic_error.location error
+          and msg = (Fmt.to_to_string Semantic_error.pp) error in
+          Errors.report_semantic_error (msg, loc) ;
+          exit 1
+      | _ ->
+          Printf.eprintf "The impossible happened" ;
+          exit 1
+    with Errors.SemanticError err ->	    
+      Errors.report_semantic_error err ;
+      exit 1
   in
   let _ = Debugging.typed_ast_logger typed_ast in
   if not !pretty_print_program then (
