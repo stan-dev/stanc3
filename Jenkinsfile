@@ -63,15 +63,12 @@ pipeline {
                """
                 sh """
                    eval \$(opam env)
-                   dune --version
-                   ls cmdstan
-                   ls "`pwd`/cmdstan"
                    CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
                """
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Build & Test Mac OS X binary") {
+        stage("Build & test Mac OS X binary") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'osx' }
             steps {
@@ -91,7 +88,7 @@ pipeline {
             }
             post {always { runShell("rm -rf ./*")}}
         }
-        stage("Build & Test a static linux binary") {
+        stage("Build & test a static Linux binary") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent {
                 dockerfile {
@@ -116,19 +113,19 @@ pipeline {
             }
             post {always { runShell("rm -rf ./*")}}
         }
-        stage("Build & Test windows binary") {
+        stage("Build & test static Windows binary") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'windows' }
             steps {
                 bat "bash -cl \"cd test/integration\""
                 bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                 bat "bash -cl \"cd ..\""
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
+                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose -x windows\""
                 bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                 stash name:'windows-exe', includes:'bin/*'
             }
         }
-        stage("Release tag") {
+        stage("Release tag and publish binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
