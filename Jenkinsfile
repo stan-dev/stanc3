@@ -43,6 +43,7 @@ pipeline {
                 /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
+                runShell("find _build")
                 runShell("""mv _build/default.static/src/stan/stanc.exe linux-stanc
                             ghr nightly linux-stanc""")
                 archiveArtifacts artifacts:'_build/**/stanc.exe', onlyIfSuccessful: true
