@@ -74,6 +74,7 @@ pipeline {
             steps {
                 runShell("""
                     eval \$(opam env)
+                    cd scripts && bash -x install_build_deps.sh && cd ..
                     dune build @install
                 """)
 
@@ -120,7 +121,7 @@ pipeline {
                 bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                 bat "bash -cl \"cd ..\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose -x windows\""
-                bat """bash -cl "mkdir bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
+                bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                 stash name:'windows-exe', includes:'bin/*'
             }
         }
@@ -134,7 +135,7 @@ pipeline {
                 unstash 'mac-exe'
                 runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                             tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                            ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} bin/ """)
+                            ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/ """)
             }
         }
     }
