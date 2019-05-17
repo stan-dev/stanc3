@@ -933,7 +933,9 @@ let semantic_check_assignment ~loc ~cf assign_id assign_indices assign_op
     |> Option.value
          ~default:
            ( if is_stan_math_function_name assign_id.name then MathLibrary
-           else fatal_error () )
+           else 
+            let msg = Format.sprintf "semantic_check_assignment: %s is an unbound identifier" assign_id.name in
+            fatal_error ~msg () )
   and lhs =
     Ast.mk_untyped_expression ~loc
       ~expr:
@@ -1394,8 +1396,8 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
                match (ts.stmt, ts.smeta.return_type) with
                | Assignment {assign_rhs= ue; _}, NoReturnType -> Some ue
                | _ ->
-                   (* Should this be a named semantic error? *)
-                   fatal_error () ) )
+                   let msg = "semantic_check_var_decl: `Assignment` expected." in
+                   fatal_error ~msg () ) )
     |> Option.value ~default:(Validate.ok None)
   in
   Validate.(
@@ -1641,7 +1643,7 @@ let semantic_check_functions_have_defn function_block_stmts_opt =
       | Some ({smeta; _} :: _) ->
           (* TODO: insert better location in the error *)
           error @@ Semantic_error.fn_decl_without_def smeta.loc
-      | _ -> fatal_error ()
+      | _ -> fatal_error ~msg:"semantic_check_functions_have_defn" ()
     else ok ())
 
 (* The actual semantic checks for all AST nodes! *)
