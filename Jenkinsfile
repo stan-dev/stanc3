@@ -68,7 +68,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Build & Test Mac OS X binary") {
+        stage("Build & test Mac OS X binary") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'osx' }
             steps {
@@ -87,7 +87,7 @@ pipeline {
             }
             post {always { runShell("rm -rf ./*")}}
         }
-        stage("Build & Test a static linux binary") {
+        stage("Build & test a static Linux binary") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent {
                 dockerfile {
@@ -112,7 +112,7 @@ pipeline {
             }
             post {always { runShell("rm -rf ./*")}}
         }
-        stage("Build & Test windows binary") {
+        stage("Build & test static Windows binary") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'windows' }
             steps {
@@ -124,7 +124,7 @@ pipeline {
                 stash name:'windows-exe', includes:'bin/*'
             }
         }
-        stage("Release tag") {
+        stage("Release tag and publish binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
