@@ -22,46 +22,8 @@ def tagName() {
 pipeline {
     agent none
     stages {
-        stage("Build & Test static linux binary") {
-            agent {
-                dockerfile {
-                    filename 'docker/static/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
-            environment {
-                GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
-            }
-            steps {
-                sh 'printenv'
-
-                /* runs 'dune build @install' command and then outputs the stdout*/
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install --profile static
-                """)
-
-                /*Logs the start time of tests*/
-                runShell("echo \$(date +'%s') > time.log")
-
-                // /* runs 'dune runtest' command and then outputs the stdout*/
-                // echo runShell("""
-                //     eval \$(opam env)
-                //     dune runtest --profile static --verbose
-                // """)
-
-                /*Echoes time elapsed for tests*/
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-
-                runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                            mv `find . -name stanc.exe` linux-stanc
-                            ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} linux-stanc""")
-            }
-            post {always { runShell("rm -rf ./*")}}
-        }
         stage("Build & Test") {
+            when { buildingTag() } //temp commenting out
             agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
@@ -70,27 +32,25 @@ pipeline {
                 }
             }
             steps {
-                /* runs 'dune build @install'*/
+                sh 'printenv'
                 runShell("""
                     eval \$(opam env)
                     dune build @install
                 """)
 
-                /*Logs the start time of tests*/
                 runShell("echo \$(date +'%s') > time.log")
 
-                /* runs 'dune runtest' */
                 echo runShell("""
                     eval \$(opam env)
                     dune runtest --verbose
                 """)
 
-                /*Echoes time elapsed for tests*/
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
             }
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Run end-to-end tests") {
+            when { buildingTag() } //temp commenting out
             agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
@@ -114,6 +74,7 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Build & Test windows binary") {
+            // when { buildingTag() }
             agent { label 'windows' }
             steps {
                 bat "bash -cl \"cd test/integration\""
@@ -121,7 +82,50 @@ pipeline {
                 bat "bash -cl \"cd ..\""
                 bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest\""
 
-                archiveArtifacts artifacts:'_build/**/stanc.exe', onlyIfSuccessful: true
+                stash name:'windows-exe', includes:'_build/**/stanc.exe'
+            }
+        }
+        stage("Build, test, release static linux binary") {
+            // when { buildingTag() }
+            agent {
+                dockerfile {
+                    filename 'docker/static/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            environment {
+                GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
+            }
+            steps {
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install --profile static
+                """)
+
+                runShell("echo \$(date +'%s') > time.log")
+
+                echo runShell("""
+                    eval \$(opam env)
+                    dune runtest --profile static --verbose
+                """)
+
+                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+
+                stash name:'linux-exe', includes:'_build/**/stanc.exe'
+            }
+            post {always { runShell("rm -rf ./*")}}
+        }
+        stage("Release tag") {
+            // when { buildingTag() }
+            agent { label 'linux' }
+            steps {
+                unstash 'windows-exe'
+                unstash 'linux-exe'
+                // TODO: unstash 'mac-exe'
+                runShell("""wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
+                            ./ghr_v0.12.1_linux_amd64/ghr ${tagName()} *stanc*""")
             }
         }
     }
