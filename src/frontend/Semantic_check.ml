@@ -909,14 +909,22 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
   Validate.(
+    
     let err =
       Semantic_error.illtyped_assignment loc assop lhs.emeta.type_
         rhs.emeta.type_
     in
+
     match assop with
-    | Assign | ArrowAssign -> error err
+    | Assign | ArrowAssign -> 
+      if check_of_same_type_mod_array_conv ""  lhs.emeta.type_  rhs.emeta.type_ then 
+        mk_typed_statement ~return_type:NoReturnType ~loc
+                   ~stmt:(mk_assignment_from_indexed_expr assop lhs rhs)
+                 |> ok
+      else 
+        error err
     | OperatorAssign op ->
-        [lhs; rhs] |> List.map ~f:arg_type
+        List.map ~f:(arg_type) [lhs; rhs]
         |> Stan_math_signatures.assignmentoperator_stan_math_return_type op
         |> Option.value_map ~default:(error err) ~f:(function
              | ReturnType _ -> error err

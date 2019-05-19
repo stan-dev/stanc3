@@ -32,37 +32,6 @@ module TypeError = struct
     | IllTypedPostfixOperator of operator * unsizedtype
     | NotIndexable of unsizedtype
 
-  (* let assignmentoperator_to_stan_math_fn = function
-    | Plus -> Some "assign_add"
-    | Minus -> Some "assign_subtract"
-    | Times -> Some "assign_multiply"
-    | Divide -> Some "assign_divide"
-    | EltTimes -> Some "assign_elt_times"
-    | EltDivide -> Some "assign_elt_divide"
-    | _ -> None
-
-  let operator_to_stan_math_fns = function
-    | Plus -> ["add"]
-    | PPlus -> ["plus"]
-    | Minus -> ["subtract"]
-    | PMinus -> ["minus"]
-    | Times -> ["multiply"]
-    | Divide -> ["mdivide_right"; "divide"]
-    | Modulo -> ["modulus"]
-    | LDivide -> ["mdivide_left"]
-    | EltTimes -> ["elt_multiply"]
-    | EltDivide -> ["elt_divide"]
-    | Pow -> ["pow"]
-    | Or -> ["logical_or"]
-    | And -> ["logical_and"]
-    | Equals -> ["logical_eq"]
-    | NEquals -> ["logical_neq"]
-    | Less -> ["logical_lt"]
-    | Leq -> ["logical_lte"]
-    | Greater -> ["logical_gt"]
-    | Geq -> ["logical_gte"]
-    | PNot -> ["logical_negation"]
-    | Transpose -> ["transpose"] *)
 
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
@@ -98,8 +67,8 @@ module TypeError = struct
           pp_unsizedtype ut
     | IllTypedAssignment ((OperatorAssign op as assignop), lt, rt) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator %s :lhs has \
-           type %a and rhs has type %a. Available signatures: %s."
+          "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs has \
+           type %a and rhs has type %a. Available signatures:@]%s"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           pp_unsizedtype lt pp_unsizedtype rt
           ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
@@ -107,15 +76,15 @@ module TypeError = struct
           |> Option.value ~default:"no matching signatures" )
     | IllTypedAssignment (assignop, lt, rt) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator %s :lhs has \
-           type %a and rhs has type %a."
+          "Ill-typed arguments supplied to assignment operator %s: lhs has \
+           type %a and rhs has type %a"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           pp_unsizedtype lt pp_unsizedtype rt
     | IllTypedTernaryIf (ut1, ut2, ut3) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to ? : operator. Available \
            signatures: %s\n\
-           Instead supplied arguments of incompatible type: %a,%a,%a"
+           Instead supplied arguments of incompatible type: %a, %a, %a."
           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs "if_else")
           pp_unsizedtype ut1 pp_unsizedtype ut2 pp_unsizedtype ut3
     | NotIndexable ut ->
@@ -156,8 +125,8 @@ module TypeError = struct
     | IllTypedStanLibFunctionApp (name, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-           signatures: %s\n\
-           Instead supplied arguments of incompatible type: %a."
+           signatures: %s\
+           @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name
           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs name)
           Fmt.(list pp_unsizedtype ~sep:comma)
@@ -166,7 +135,7 @@ module TypeError = struct
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available signatures:\n\
            %a\n\
-           Instead supplied arguments of incompatible type: %a."
+           @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name pp_unsizedtype
           (UFun (listed_tys, return_ty))
           Fmt.(list pp_unsizedtype ~sep:comma)
@@ -174,8 +143,8 @@ module TypeError = struct
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: %s\n\
-           Instead supplied arguments of incompatible type: %a,%a."
+           signatures: %s\
+           @[<h>Instead supplied arguments of incompatible type: %a, %a.@]"
           pp_operator op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
@@ -183,8 +152,8 @@ module TypeError = struct
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
-           signatures %s\n\
-           Instead supplied argument of incompatible type: %a."
+           signatures: %s\
+           @[<h>Instead supplied argument of incompatible type: %a.@]"
           pp_operator op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
@@ -192,7 +161,7 @@ module TypeError = struct
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
-           signatures %s\n\
+           signatures: %s\n\
            Instead supplied argument of incompatible type: %a."
           pp_operator op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
@@ -292,16 +261,16 @@ module StatementError = struct
            of functions with the suffix _lp."
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
-          "Sampling statement expects a distribution name without '_lpdf' or \
+          "~-statement expects a distribution name without '_lpdf' or \
            '_lpmf' suffix."
     | InvalidSamplingCDForCCDF name ->
         Fmt.pf ppf
-          "CDF or CCDF functions may not be used with sampling notation. Use \
-           'increment_log_prob(%s_log(...))' instead."
+          "CDF and CCDF functions may not be used with sampling notation. Use \
+           increment_log_prob(%s_log(...)) instead."
           name
     | InvalidSamplingNoSuchDistribution name ->
         Fmt.pf ppf
-          "Ill-typed argument to '~' statement. No distributon '%s' was found \
+          "Ill-typed arguments to '~' statement. No distribution '%s' was found \
            with the correct signature."
           name
     | InvalidTruncationCDForCCDF ->
@@ -329,7 +298,7 @@ module StatementError = struct
     | TransformedParamsInt ->
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
     | MismatchFunDefDecl (name, Some ut) ->
-        Fmt.pf ppf "Function '%s' has already been declared to have type %a."
+        Fmt.pf ppf "Function '%s' has already been declared to have type %a"
           name pp_unsizedtype ut
     | MismatchFunDefDecl (name, None) ->
         Fmt.pf ppf
@@ -341,7 +310,7 @@ module StatementError = struct
           "Function '%s' has already been declared. A definition is expected."
           name
     | FunDeclNoDefn ->
-        Fmt.pf ppf "A function is declared without a corresponding definition."
+        Fmt.pf ppf "Some function is declared without specifying a definition."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
@@ -349,21 +318,21 @@ module StatementError = struct
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
-           arguments). Instead found %a."
+           argument). Instead found type %a."
           pp_unsizedtype ut
     | ProbDensityNonRealVariate _ ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
-           arguments)."
+           argument)."
     | ProbMassNonIntVariate (Some ut) ->
         Fmt.pf ppf
           "Probability mass functions require integer variates (first \
-           arguments). Instead found %a."
+           argument). Instead found type %a."
           pp_unsizedtype ut
     | ProbMassNonIntVariate _ ->
         Fmt.pf ppf
           "Probability mass functions require integer variates (first \
-           arguments)."
+           argument)."
     | DuplicateArgNames ->
         Fmt.pf ppf "All function arguments must have distinct identifiers."
     | IncompatibleReturnType ->
