@@ -1375,8 +1375,9 @@ and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
     | _ -> false
   in
   Validate.(
-    if is_global && sized_ty = Mir.SInt && is_valid_transformation then ok ()
-    else Semantic_error.non_int_bounds loc |> error)
+    if is_global && sized_ty = Mir.SInt && is_valid_transformation then 
+     Semantic_error.non_int_bounds loc |> error
+    else ok ())
 
 and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
   Validate.(
