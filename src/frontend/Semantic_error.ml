@@ -32,7 +32,6 @@ module TypeError = struct
     | IllTypedPostfixOperator of operator * unsizedtype
     | NotIndexable of unsizedtype
 
-
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
         Fmt.pf ppf
@@ -67,8 +66,8 @@ module TypeError = struct
           pp_unsizedtype ut
     | IllTypedAssignment ((OperatorAssign op as assignop), lt, rt) ->
         Fmt.pf ppf
-          "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs has \
-           type %a and rhs has type %a. Available signatures:@]%s"
+          "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs \
+           has type %a and rhs has type %a. Available signatures:@]%s"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           pp_unsizedtype lt pp_unsizedtype rt
           ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
@@ -125,8 +124,8 @@ module TypeError = struct
     | IllTypedStanLibFunctionApp (name, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-           signatures: %s\
-           @[<h>Instead supplied arguments of incompatible type: %a.@]"
+           signatures: %s@[<h>Instead supplied arguments of incompatible \
+           type: %a.@]"
           name
           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs name)
           Fmt.(list pp_unsizedtype ~sep:comma)
@@ -143,8 +142,8 @@ module TypeError = struct
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: %s\
-           @[<h>Instead supplied arguments of incompatible type: %a, %a.@]"
+           signatures: %s@[<h>Instead supplied arguments of incompatible \
+           type: %a, %a.@]"
           pp_operator op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
@@ -152,8 +151,8 @@ module TypeError = struct
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
-           signatures: %s\
-           @[<h>Instead supplied argument of incompatible type: %a.@]"
+           signatures: %s@[<h>Instead supplied argument of incompatible type: \
+           %a.@]"
           pp_operator op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
@@ -261,8 +260,8 @@ module StatementError = struct
            of functions with the suffix _lp."
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
-          "~-statement expects a distribution name without '_lpdf' or \
-           '_lpmf' suffix."
+          "~-statement expects a distribution name without '_lpdf' or '_lpmf' \
+           suffix."
     | InvalidSamplingCDForCCDF name ->
         Fmt.pf ppf
           "CDF and CCDF functions may not be used with sampling notation. Use \
@@ -270,8 +269,8 @@ module StatementError = struct
           name
     | InvalidSamplingNoSuchDistribution name ->
         Fmt.pf ppf
-          "Ill-typed arguments to '~' statement. No distribution '%s' was found \
-           with the correct signature."
+          "Ill-typed arguments to '~' statement. No distribution '%s' was \
+           found with the correct signature."
           name
     | InvalidTruncationCDForCCDF ->
         Fmt.pf ppf

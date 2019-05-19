@@ -726,7 +726,7 @@ let trans_prog filename p : typed_prog =
   ; prog_path= filename }
 
 (*===================== tests =========================================*)
-
+(* 
 let mir_from_string s =
   (* TODO : properly render syntax error *)
   let untyped_prog =
@@ -842,4 +842,4 @@ let%expect_test "gen quant" =
                ((NRFunApp CompilerInternal FnWriteParam__
                  ((Indexed (Var mat)
                    ((Single (Var sym1__)) (Single (Var sym2__))))))))))))))))
-      ())) |}]
+      ())) |}] *)

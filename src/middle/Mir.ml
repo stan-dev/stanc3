@@ -166,8 +166,7 @@ type ('e, 's) prog =
   ; prog_path: string }
 [@@deriving sexp]
 
-type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
-[@@deriving sexp]
+type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm} [@@deriving sexp]
 
 type mtype_loc_ad =
   { mtype: unsizedtype
@@ -180,7 +179,7 @@ type ('e, 'm) stmt_with =
 [@@deriving sexp]
 
 type stmt_loc =
-  (mtype_loc_ad, (location_span sexp_opaque [@compare.ignore])) stmt_with
+  (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
 type expr_no_meta = unit with_expr [@@deriving sexp]

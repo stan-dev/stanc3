@@ -79,7 +79,7 @@ let add_file filename =
 (** ad directives from the given file. *)
 let use_file filename =
   let ast =
-    try 
+    try
       match Parse.parse_file Parser.Incremental.program filename with
       | Result.Ok ast -> ast
       | Result.Error err ->
@@ -87,16 +87,15 @@ let use_file filename =
           and msg = Parse.syntax_error_message err in
           Errors.report_parsing_error (msg, loc) ;
           exit 1
-    with Errors.SyntaxError err ->	    
-      Errors.report_syntax_error err ;	
+    with Errors.SyntaxError err ->
+      Errors.report_syntax_error err ;
       exit 1
-
   in
   let _ = Debugging.ast_logger ast in
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
-    try 
+    try
       match Semantic_check.semantic_check_program ast with
       | Result.Ok prog -> prog
       | Result.Error (error :: _) ->
@@ -107,7 +106,7 @@ let use_file filename =
       | _ ->
           Printf.eprintf "The impossible happened" ;
           exit 1
-    with Errors.SemanticError err ->	    
+    with Errors.SemanticError err ->
       Errors.report_semantic_error err ;
       exit 1
   in

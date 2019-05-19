@@ -36,25 +36,25 @@ let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
 
-let pp_brackets_postfix pp_e ppf = Fmt.pf ppf {|%a[]|} pp_e 
+let pp_brackets_postfix pp_e ppf = Fmt.pf ppf {|%a[]|} pp_e
 
-let unsized_array_depth unsized_ty = 
-  let rec aux depth = function 
-  | UArray ut -> aux (depth + 1) ut 
-  | ut -> (ut,depth)
+let unsized_array_depth unsized_ty =
+  let rec aux depth = function
+    | UArray ut -> aux (depth + 1) ut
+    | ut -> (ut, depth)
   in
   aux 0 unsized_ty
- 
+
 let rec pp_unsizedtype ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
-  | UArray ut -> 
-    let (ty,depth) = unsized_array_depth ut in
-    let commas = String.make depth ',' in 
-    Fmt.pf ppf "%a[%s]" pp_unsizedtype ty commas
+  | UArray ut ->
+      let ty, depth = unsized_array_depth ut in
+      let commas = String.make depth ',' in
+      Fmt.pf ppf "%a[%s]" pp_unsizedtype ty commas
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
@@ -62,14 +62,14 @@ let rec pp_unsizedtype ppf = function
   | UMathLibraryFunction ->
       (angle_brackets Fmt.string) ppf "Stan Math function"
 
-and pp_fun_arg ppf (ad_ty,unsized_ty) = 
-  match ad_ty with 
+and pp_fun_arg ppf (ad_ty, unsized_ty) =
+  match ad_ty with
   | DataOnly -> Fmt.pf ppf {|data %a|} pp_unsizedtype unsized_ty
   | _ -> pp_unsizedtype ppf unsized_ty
+
 and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp_unsizedtype ppf ut
-
 
 (* let sized_array_depth sized_ty = 
   let rec aux depth exprs = function 
@@ -78,13 +78,13 @@ and pp_returntype ppf = function
   in
   aux 0 [] sized_ty *)
 
-
 let rec pp_sizedtype pp_e ppf st =
   match st with
   | SInt -> Fmt.string ppf "int"
   | SReal -> Fmt.string ppf "real"
   | SVector expr -> Fmt.pf ppf {|vector%a|} (pp_brackets_postfix pp_e) expr
-  | SRowVector expr -> Fmt.pf ppf {|row_vector%a|} (pp_brackets_postfix pp_e) expr
+  | SRowVector expr ->
+      Fmt.pf ppf {|row_vector%a|} (pp_brackets_postfix pp_e) expr
   | SMatrix (d1_expr, d2_expr) ->
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> pp_brackets_postfix)
