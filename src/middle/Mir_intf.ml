@@ -164,8 +164,9 @@ module type Mir = sig
   [@@deriving sexp]
 
   type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
+  [@@deriving sexp]
 
-  and mtype_loc_ad =
+  type mtype_loc_ad =
     { mtype: unsizedtype
     ; mloc: location_span sexp_opaque [@compare.ignore]
     ; madlevel: autodifftype }
@@ -173,13 +174,14 @@ module type Mir = sig
 
   type ('e, 'm) stmt_with =
     {stmt: ('e with_expr, ('e, 'm) stmt_with) statement; smeta: 'm}
+  [@@deriving sexp] 
 
-  and stmt_loc =
-    (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
+  type stmt_loc =
+    (mtype_loc_ad, (location_span sexp_opaque [@compare.ignore])) stmt_with
   [@@deriving sexp]
 
-  type expr_no_meta = unit with_expr
-  type stmt_no_meta = (expr_no_meta, unit) stmt_with
+  type expr_no_meta = unit with_expr [@@deriving sexp]
+  type stmt_no_meta = (expr_no_meta, unit) stmt_with [@@deriving sexp]
   type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
 
   type internal_fn =

@@ -1292,7 +1292,7 @@ and semantic_check_foreach ~loc ~cf loop_var foreach_expr loop_body =
     semantic_check_expression cf foreach_expr
     |> apply_const (semantic_check_identifier loop_var)
     >>= fun ue ->
-    semantic_check_foreach_loop_identifier_type ~loc ue.emeta.type_
+    semantic_check_foreach_loop_identifier_type ~loc:ue.emeta.loc ue.emeta.type_
     >>= fun loop_var_ty ->
     semantic_check_loop_body ~cf loop_var loop_var_ty loop_body
     |> map ~f:(fun us ->

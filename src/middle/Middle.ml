@@ -36,39 +36,64 @@ let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
 
+let pp_brackets_postfix pp_e ppf = Fmt.pf ppf {|%a[]|} pp_e 
+
+let unsized_array_depth unsized_ty = 
+  let rec aux depth = function 
+  | UArray ut -> aux (depth + 1) ut 
+  | ut -> (ut,depth)
+  in
+  aux 0 unsized_ty
+ 
 let rec pp_unsizedtype ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
-  | UArray ut -> (Fmt.brackets pp_unsizedtype) ppf ut
+  | UArray ut -> 
+    let (ty,depth) = unsized_array_depth ut in
+    let commas = String.make depth ',' in 
+    Fmt.pf ppf "%a[%s]" pp_unsizedtype ty commas
   | UFun (argtypes, rt) ->
-      Fmt.pf ppf {|%a => %a|}
-        Fmt.(list (pair ~sep:comma pp_autodifftype pp_unsizedtype) ~sep:comma)
+      Fmt.pf ppf {|@[<h>(%a) => %a@]|}
+        Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
   | UMathLibraryFunction ->
       (angle_brackets Fmt.string) ppf "Stan Math function"
 
+and pp_fun_arg ppf (ad_ty,unsized_ty) = 
+  match ad_ty with 
+  | DataOnly -> Fmt.pf ppf {|data %a|} pp_unsizedtype unsized_ty
+  | _ -> pp_unsizedtype ppf unsized_ty
 and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp_unsizedtype ppf ut
+
+
+(* let sized_array_depth sized_ty = 
+  let rec aux depth exprs = function 
+  | SArray (ut,e) -> aux (depth + 1) (e::exprs) ut 
+  | ut -> (ut,depth,exprs)
+  in
+  aux 0 [] sized_ty *)
+
 
 let rec pp_sizedtype pp_e ppf st =
   match st with
   | SInt -> Fmt.string ppf "int"
   | SReal -> Fmt.string ppf "real"
-  | SVector expr -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
-  | SRowVector expr -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
+  | SVector expr -> Fmt.pf ppf {|vector%a|} (pp_brackets_postfix pp_e) expr
+  | SRowVector expr -> Fmt.pf ppf {|row_vector%a|} (pp_brackets_postfix pp_e) expr
   | SMatrix (d1_expr, d2_expr) ->
       Fmt.pf ppf {|matrix%a|}
-        Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
+        Fmt.(pair ~sep:comma pp_e pp_e |> pp_brackets_postfix)
         (d1_expr, d2_expr)
   | SArray (st, expr) ->
       Fmt.pf ppf {|array%a|}
         Fmt.(
           pair ~sep:comma (fun ppf st -> pp_sizedtype pp_e ppf st) pp_e
-          |> brackets)
+          |> pp_brackets_postfix)
         (st, expr)
 
 let rec pp_expr pp_e ppf = function
