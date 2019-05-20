@@ -24,6 +24,7 @@ let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
   subst_stmt m
 
+(* TODO: only handle early returns if that's necessary *)
 let handle_early_returns opt_triple b =
   let f = function
     | Return opt_ret -> (
@@ -88,16 +89,30 @@ let rec inline_function_expression adt fim e =
               , {stmt= slist_no_loc sl2; smeta= Middle.no_span}
               , Some {stmt= slist_no_loc sl3; smeta= Middle.no_span} ) ]
       , {e with expr= TernaryIf (e1, e2, e3)} )
-  | Indexed (e, i_list) ->
-      let sl, e = inline_function_expression adt fim e in
+  | Indexed (e', i_list) ->
+      let sl, e' = inline_function_expression adt fim e' in
       let si_list = List.map ~f:(inline_function_index adt fim) i_list in
       let s_list = List.concat (List.rev (List.map ~f:fst si_list)) in
-      (s_list @ sl, e)
-  | EAnd (_, _) ->
-      Errors.fatal_error ~msg:"Not yet implemented" () (* TODO!! *)
-  | EOr (_, _) -> Errors.fatal_error ~msg:"Not yet implemented" ()
+      let i_list = List.map ~f:snd si_list in
+      (s_list @ sl, {e with expr= Indexed (e', i_list)})
+  | EAnd (e1, e2) ->
+      let sl1, e1 = inline_function_expression adt fim e1 in
+      let sl2, e2 = inline_function_expression adt fim e2 in
+      let sl2 =
+        [IfElse (e1, {stmt= Block (map_no_loc sl2); smeta= no_span}, None)]
+      in
+      (sl1 @ sl2, {e with expr= EAnd (e1, e2)})
+  | EOr (e1, e2) ->
+      let sl1, e1 = inline_function_expression adt fim e1 in
+      let sl2, e2 = inline_function_expression adt fim e2 in
+      let sl2 =
+        [ IfElse
+            ( e1
+            , {stmt= Skip; smeta= no_span}
+            , Some {stmt= Block (map_no_loc sl2); smeta= no_span} ) ]
+      in
+      (sl1 @ sl2, {e with expr= EOr (e1, e2)})
 
-(* TODO!! *)
 and inline_function_index adt fim i =
   match i with
   | All -> ([], All)
@@ -1672,6 +1687,219 @@ let%expect_test "inline function multiple returns " =
       output_vars {
 
       } |}]
+
+
+let%expect_test "inline function indices " =
+  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        int f(int z) {
+          print(z);
+          return 42;
+        }
+      }
+      model {
+        int a[2, 2];
+        print(a[f(1), f(2)]);
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+        int f(int z)
+          {
+          FnPrint__(z);
+          return 42;
+          }
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        array[array[int, 2], 2] a;
+        int sym3__;
+        for(sym4__ in 1:1) {
+          FnPrint__(2);
+          sym3__[] = 42;
+          break;
+          }
+        int sym1__;
+        for(sym2__ in 1:1) {
+          FnPrint__(1);
+          sym1__[] = 42;
+          break;
+          }
+        FnPrint__(a[sym1__, sym3__]);
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
+let%expect_test "inline function and " =
+  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        int f(int z) {
+          print(z);
+          return 42;
+        }
+      }
+      model {
+        print(f(1) && f(2));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+        int f(int z)
+          {
+          FnPrint__(z);
+          return 42;
+          }
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        int sym3__;
+        for(sym4__ in 1:1) {
+          FnPrint__(2);
+          sym3__[] = 42;
+          break;
+          }
+        int sym1__;
+        for(sym2__ in 1:1) {
+          FnPrint__(1);
+          sym1__[] = 42;
+          break;
+          }
+        FnPrint__(And__(sym1__, sym3__));
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
+let%expect_test "inline function or " =
+  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      functions {
+        int f(int z) {
+          print(z);
+          return 42;
+        }
+      }
+      model {
+        print(f(1) || f(2));
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = function_inlining mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+        int f(int z)
+          {
+          FnPrint__(z);
+          return 42;
+          }
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+        int sym3__;
+        for(sym4__ in 1:1) {
+          FnPrint__(2);
+          sym3__[] = 42;
+          break;
+          }
+        int sym1__;
+        for(sym2__ in 1:1) {
+          FnPrint__(1);
+          sym1__[] = 42;
+          break;
+          }
+        FnPrint__(Or__(sym1__, sym3__));
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
+
+
 
 let%expect_test "unroll nested loop" =
   let _ = Util.gensym_reset_danger_use_cautiously () in
