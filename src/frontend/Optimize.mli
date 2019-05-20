@@ -5,8 +5,13 @@ val function_inlining : Middle.typed_prog -> Middle.typed_prog
     (e.g. recursive functions, mutually recursive functions, and
     functions without a definition *)
 
-val loop_unrolling : Middle.typed_prog -> Middle.typed_prog
+val static_loop_unrolling : Middle.typed_prog -> Middle.typed_prog
 (** Unroll all for-loops with constant bounds, as long as they do
+    not contain break or continue statements in their body at the
+    top level *)
+
+val one_step_loop_unrolling : Middle.typed_prog -> Middle.typed_prog
+(** Unroll all loops for one iteration, as long as they do
     not contain break or continue statements in their body at the
     top level *)
 

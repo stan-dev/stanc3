@@ -276,7 +276,7 @@ let rec contains_top_break_or_continue {stmt; _} =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
-let unroll_loops_statement =
+let unroll_static_loops_statement =
   let f stmt =
     match stmt with
     | For {loopvar; lower; upper; body} -> (
@@ -304,7 +304,48 @@ let unroll_loops_statement =
   in
   map_rec_stmt_loc f
 
-let loop_unrolling = map_prog (fun x -> x) unroll_loops_statement
+let static_loop_unrolling = map_prog (fun x -> x) unroll_static_loops_statement
+
+let unroll_loop_one_step_statement =
+  let f stmt =
+    match stmt with
+    | For {loopvar; lower; upper; body} ->
+        if contains_top_break_or_continue body then stmt
+        else
+          IfElse
+            ( {lower with expr= FunApp (StanLib, "Leq__", [lower; upper])}
+            , { stmt=
+                  Block
+                    [ subst_args_stmt [loopvar] [lower]
+                        {stmt= body.stmt; smeta= Middle.no_span}
+                    ; { body with
+                        stmt=
+                          For
+                            { loopvar
+                            ; lower=
+                                { lower with
+                                  expr=
+                                    FunApp
+                                      (StanLib, "Plus__", [lower; loop_bottom])
+                                }
+                            ; upper
+                            ; body } } ]
+              ; smeta= no_span }
+            , None )
+    | While (e, body) ->
+        if contains_top_break_or_continue body then stmt
+        else
+          IfElse
+            ( e
+            , { stmt= Block [body; {body with stmt= While (e, body)}]
+              ; smeta= no_span }
+            , None )
+    | _ -> stmt
+  in
+  map_rec_stmt_loc f
+
+let one_step_loop_unrolling =
+  map_prog (fun x -> x) unroll_loop_one_step_statement
 
 let collapse_lists_statement =
   let rec collapse_lists l =
@@ -427,7 +468,6 @@ let rec can_side_effect_expr (e : expr_typed_located) =
   | Var _ | Lit (_, _) -> false
   | FunApp (_, f, es) ->
       String.suffix f 3 = "_lp" || List.exists ~f:can_side_effect_expr es
-      (* TODO: double check that internal functions cannot side effect*)
   | TernaryIf (e1, e2, e3) -> List.exists ~f:can_side_effect_expr [e1; e2; e3]
   | Indexed (e, is) ->
       can_side_effect_expr e || List.exists ~f:can_side_effect_idx is
@@ -441,8 +481,6 @@ and can_side_effect_idx (i : expr_typed_located index) =
 
 let is_skip_break_continue s =
   match s with Skip | Break | Continue -> true | _ -> false
-
-(* TODO: write optimization for trying to unroll loops with one step. *)
 
 (* TODO: could also implement partial dead code elimination *)
 let dead_code_elimination (mir : typed_prog) =
@@ -550,11 +588,9 @@ let lazy_code_motion (mir : typed_prog) =
             , {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span}
             , Some {stmt= Skip; smeta= no_span} )
       | While (e, b) ->
-          (* TODO: unroll loops for one step here. *)
           While
             (e, {stmt= Block [b; {stmt= Skip; smeta= no_span}]; smeta= no_span})
       | For {loopvar; lower; upper; body= b} ->
-          (* TODO: unroll loops for one step here. *)
           For
             { loopvar
             ; lower
@@ -1922,7 +1958,7 @@ let%expect_test "unroll nested loop" =
   in
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
-  let mir = loop_unrolling mir in
+  let mir = static_loop_unrolling mir in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
@@ -1986,7 +2022,7 @@ let%expect_test "unroll nested loop with break" =
   in
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
-  let mir = loop_unrolling mir in
+  let mir = static_loop_unrolling mir in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
@@ -3006,7 +3042,6 @@ let%expect_test "lazy code motion, 2" =
       }
       |}
   in
-  (* TODO: This is wrong *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
@@ -3715,8 +3750,6 @@ let%expect_test "lazy code motion, 12" =
       }
       |}
   in
-  (* TODO: this isn't doing the right thing yet. 
-     I believe the flowgraph for break and continue statements is overly conservative. *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = lazy_code_motion mir in
@@ -3785,12 +3818,11 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = expression_propagation mir in
   let mir = partial_evaluation mir in
+  let mir = one_step_loop_unrolling mir in
   let mir = lazy_code_motion mir in
   let mir = list_collapsing mir in
   let mir = dead_code_elimination mir in
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
-  (* TODO: this is still wrong. I wonder if the flowgraph is 
-     wrong for loops. *)
   [%expect
     {|
       functions {
@@ -3806,18 +3838,30 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       }
 
       log_prob {
-        real sym3__;
-        real sym2__;
+        real sym5__;
+        real sym4__;
+        data int sym3__;
+        data int sym2__;
         data int sym1__;
         {
         real x;
         int y;
         real theta;
-        for(i in 1:100000) {
+        if(Leq__(1, 100000)) {
           {
-          target += bernoulli_logit_lpmf(y, x);
+          {
+          sym3__ = Plus__(1, 1);
+          sym4__ = bernoulli_logit_lpmf(y, x);
+          target += sym4__;
+          }
+          for(i in sym3__:100000) {
+            {
+            target += sym4__;
+            }
+            }
           }
           }
+         else ;
         }
       }
 
@@ -3875,3 +3919,84 @@ let%expect_test "block fixing" =
           (smeta <opaque>))))
        (generate_quantities ()) (transform_inits ()) (output_vars ())
        (prog_name "") (prog_path "")) |}]
+
+let%expect_test "one-step loop unrolling" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        int x;
+        for (i in x:6) print("hello");
+        while (1<2) print("goodbye");
+        for (i in 1:1) for (j in 2:2) print("nested");
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = one_step_loop_unrolling mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+        data int x;
+        if(Leq__(x, 6)) {
+          {
+          FnPrint__("hello");
+          }
+          for(i in Plus__(x, 1):6) {
+            FnPrint__("hello");
+            }
+          }
+        if(Less__(1, 2)) {
+          FnPrint__("goodbye");
+          while(Less__(1, 2)) FnPrint__("goodbye");
+          }
+        if(Leq__(1, 1)) {
+          {
+          if(Leq__(2, 2)) {
+            {
+            FnPrint__("nested");
+            }
+            for(j in Plus__(2, 1):2) {
+              FnPrint__("nested");
+              }
+            }
+          }
+          for(i in Plus__(1, 1):1) {
+            if(Leq__(2, 2)) {
+              {
+              FnPrint__("nested");
+              }
+              for(j in Plus__(2, 1):2) {
+                FnPrint__("nested");
+                }
+              }
+            }
+          }
+      }
+
+      log_prob {
+
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
