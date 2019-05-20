@@ -49,7 +49,6 @@ let handle_early_returns opt_triple b =
 
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Middle.no_span}) l
 let slist_no_loc l = SList (map_no_loc l)
-
 let block_no_loc l = Block (map_no_loc l)
 
 let slist_concat_no_loc l stmt =
@@ -59,81 +58,94 @@ let _ = replace_fresh_local_vars
 
 let rec inline_function_expression adt fim e =
   match e.expr with
-  | Var _ -> ([], e)
-  | Lit (_, _) -> ([], e)
+  | Var _ -> ([], [], e)
+  | Lit (_, _) -> ([], [], e)
   | FunApp (t, s, es) -> (
-      let se_list = List.map ~f:(inline_function_expression adt fim) es in
-      let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
-      let es = List.map ~f:snd se_list in
+      let dse_list = List.map ~f:(inline_function_expression adt fim) es in
+      (* function arguments are evaluated from right to left in C++, so we need to reverse *)
+      let d_list =
+        List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
+      in
+      let s_list =
+        List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
+      in
+      let es = List.map ~f:(function _, _, x -> x) dse_list in
       match Map.find fim s with
-      | None -> (s_list, {e with expr= FunApp (t, s, es)})
+      | None -> (d_list, s_list, {e with expr= FunApp (t, s, es)})
       | Some (rt, args, b) ->
           let x = gensym () in
           let b = handle_early_returns (Some (rt, adt, x)) b in
           (* TODO: replace fresh variables here *)
-          ( s_list
+          ( d_list
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ; (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt
               ]
+          , s_list
+            @ [(subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt]
           , { expr= Var x
             ; emeta=
                 { mtype= remove_possible_size (Option.value_exn rt)
                 ; madlevel= adt
                 ; mloc= Middle.no_span } } ) )
   | TernaryIf (e1, e2, e3) ->
-      let sl1, e1 = inline_function_expression adt fim e1 in
-      let sl2, e2 = inline_function_expression adt fim e2 in
-      let sl3, e3 = inline_function_expression adt fim e3 in
-      ( sl1
+      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+      let dl3, sl3, e3 = inline_function_expression adt fim e3 in
+      ( dl1 @ dl2 @ dl3
+      , sl1
         @ [ IfElse
               ( e1
               , {stmt= block_no_loc sl2; smeta= Middle.no_span}
               , Some {stmt= block_no_loc sl3; smeta= Middle.no_span} ) ]
       , {e with expr= TernaryIf (e1, e2, e3)} )
   | Indexed (e', i_list) ->
-      let sl, e' = inline_function_expression adt fim e' in
-      let si_list = List.map ~f:(inline_function_index adt fim) i_list in
-      let s_list = List.concat (List.rev (List.map ~f:fst si_list)) in
-      let i_list = List.map ~f:snd si_list in
-      (s_list @ sl, {e with expr= Indexed (e', i_list)})
+      let dl, sl, e' = inline_function_expression adt fim e' in
+      let dsi_list = List.map ~f:(inline_function_index adt fim) i_list in
+      let d_list =
+        List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dsi_list))
+      in
+      let s_list =
+        List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dsi_list))
+      in
+      let i_list = List.map ~f:(function _, _, x -> x) dsi_list in
+      (d_list @ dl, s_list @ sl, {e with expr= Indexed (e', i_list)})
   | EAnd (e1, e2) ->
-      let sl1, e1 = inline_function_expression adt fim e1 in
-      let sl2, e2 = inline_function_expression adt fim e2 in
+      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
       let sl2 =
         [IfElse (e1, {stmt= Block (map_no_loc sl2); smeta= no_span}, None)]
       in
-      (sl1 @ sl2, {e with expr= EAnd (e1, e2)})
+      (dl1 @ dl2, sl1 @ sl2, {e with expr= EAnd (e1, e2)})
   | EOr (e1, e2) ->
-      let sl1, e1 = inline_function_expression adt fim e1 in
-      let sl2, e2 = inline_function_expression adt fim e2 in
+      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
       let sl2 =
         [ IfElse
             ( e1
             , {stmt= Skip; smeta= no_span}
             , Some {stmt= Block (map_no_loc sl2); smeta= no_span} ) ]
       in
-      (sl1 @ sl2, {e with expr= EOr (e1, e2)})
+      (dl1 @ dl2, sl1 @ sl2, {e with expr= EOr (e1, e2)})
 
 and inline_function_index adt fim i =
   match i with
-  | All -> ([], All)
+  | All -> ([], [], All)
   | Single e ->
-      let sl, e = inline_function_expression adt fim e in
-      (sl, Single e)
+      let dl, sl, e = inline_function_expression adt fim e in
+      (dl, sl, Single e)
   | Upfrom e ->
-      let sl, e = inline_function_expression adt fim e in
-      (sl, Upfrom e)
+      let dl, sl, e = inline_function_expression adt fim e in
+      (dl, sl, Upfrom e)
   | Downfrom e ->
-      let sl, e = inline_function_expression adt fim e in
-      (sl, Downfrom e)
+      let dl, sl, e = inline_function_expression adt fim e in
+      (dl, sl, Downfrom e)
   | Between (e1, e2) ->
-      let sl1, e1 = inline_function_expression adt fim e1 in
-      let sl2, e2 = inline_function_expression adt fim e2 in
-      (sl1 @ sl2, Between (e1, e2))
+      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+      (dl1 @ dl2, sl1 @ sl2, Between (e1, e2))
   | MultiIndex e ->
-      let sl, e = inline_function_expression adt fim e in
-      (sl, MultiIndex e)
+      let dl, sl, e = inline_function_expression adt fim e in
+      (dl, sl, MultiIndex e)
 
 let rec inline_function_statement adt fim {stmt; smeta} =
   { stmt=
@@ -141,25 +153,32 @@ let rec inline_function_statement adt fim {stmt; smeta} =
       | Assignment ((x, l), e2) ->
           let e1 = {e2 with expr= Indexed ({e2 with expr= Var x}, l)} in
           (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
-          let sl1, e1 = inline_function_expression adt fim e1 in
-          let sl2, e2 = inline_function_expression adt fim e2 in
+          let dl1, sl1, e1 = inline_function_expression adt fim e1 in
+          let dl2, sl2, e2 = inline_function_expression adt fim e2 in
           let x, l =
             match e1.expr with
             | Var x -> (x, [])
             | Indexed ({expr= Var x; _}, l) -> (x, l)
             | _ -> Errors.fatal_error ()
           in
-          slist_concat_no_loc (sl2 @ sl1) (Assignment ((x, l), e2))
+          slist_concat_no_loc (dl2 @ dl1 @ sl2 @ sl1) (Assignment ((x, l), e2))
       | TargetPE e ->
-          let s, e = inline_function_expression adt fim e in
-          slist_concat_no_loc s (TargetPE e)
+          let d, s, e = inline_function_expression adt fim e in
+          slist_concat_no_loc (d @ s) (TargetPE e)
       | NRFunApp (t, s, es) ->
-          let se_list = List.map ~f:(inline_function_expression adt fim) es in
+          let dse_list = List.map ~f:(inline_function_expression adt fim) es in
           (* function arguments are evaluated from right to left in C++, so we need to reverse *)
-          let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
-          let es = List.map ~f:snd se_list in
-                (* TODO: replace fresh variables here *)
-          slist_concat_no_loc s_list
+          let d_list =
+            List.concat
+              (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
+          in
+          let s_list =
+            List.concat
+              (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
+          in
+          let es = List.map ~f:(function _, _, x -> x) dse_list in
+          (* TODO: replace fresh variables here *)
+          slist_concat_no_loc (d_list @ s_list)
             ( match Map.find fim s with
             | None -> NRFunApp (t, s, es)
             | Some (_, args, b) ->
@@ -170,18 +189,18 @@ let rec inline_function_statement adt fim {stmt; smeta} =
         match e with
         | None -> Return None
         | Some e ->
-            let s, e = inline_function_expression adt fim e in
-            slist_concat_no_loc s (Return (Some e)) )
+            let d, s, e = inline_function_expression adt fim e in
+            slist_concat_no_loc (d @ s) (Return (Some e)) )
       | IfElse (e, s1, s2) ->
-          let s, e = inline_function_expression adt fim e in
-          slist_concat_no_loc s
+          let d, s, e = inline_function_expression adt fim e in
+          slist_concat_no_loc (d @ s)
             (IfElse
                ( e
                , inline_function_statement adt fim s1
                , Option.map ~f:(inline_function_statement adt fim) s2 ))
       | While (e, s) ->
-          let s', e = inline_function_expression adt fim e in
-          slist_concat_no_loc s'
+          let d', s', e = inline_function_expression adt fim e in
+          slist_concat_no_loc (d' @ s')
             (While
                ( e
                , match s' with
@@ -193,9 +212,14 @@ let rec inline_function_statement adt fim {stmt; smeta} =
                            @ map_no_loc s' )
                      ; smeta= Middle.no_span } ))
       | For {loopvar; lower; upper; body} ->
-          let s_lower, lower = inline_function_expression adt fim lower in
-          let s_upper, upper = inline_function_expression adt fim upper in
-          slist_concat_no_loc (s_lower @ s_upper)
+          let d_lower, s_lower, lower =
+            inline_function_expression adt fim lower
+          in
+          let d_upper, s_upper, upper =
+            inline_function_expression adt fim upper
+          in
+          slist_concat_no_loc
+            (d_lower @ d_upper @ s_lower @ s_upper)
             (For
                { loopvar
                ; lower
@@ -1274,12 +1298,12 @@ let%expect_test "inline function in for loop" =
       log_prob {
         {
         int sym1__;
+        int sym3__;
         for(sym2__ in 1:1) {
           FnPrint__("f");
           sym1__ = 42;
           break;
           }
-        int sym3__;
         for(sym4__ in 1:1) {
           FnPrint__("g");
           sym3__ = Plus__(3, 24);
@@ -1289,7 +1313,6 @@ let%expect_test "inline function in for loop" =
           {
           FnPrint__("body");
           }
-          int sym3__;
           for(sym4__ in 1:1) {
             FnPrint__("g");
             sym3__ = Plus__(3, 24);
@@ -1365,12 +1388,12 @@ let%expect_test "inline function in for loop 2" =
       log_prob {
         {
         int sym5__;
+        int sym7__;
         for(sym6__ in 1:1) {
           FnPrint__("f");
           sym5__ = 42;
           break;
           }
-        int sym7__;
         for(sym8__ in 1:1) {
           FnPrint__("g");
           int sym3__;
@@ -1386,7 +1409,6 @@ let%expect_test "inline function in for loop 2" =
           {
           FnPrint__("body");
           }
-          int sym7__;
           for(sym8__ in 1:1) {
             FnPrint__("g");
             int sym3__;
@@ -1473,7 +1495,6 @@ let%expect_test "inline function in while loop" =
           }
         while(sym1__) {
           FnPrint__("body");
-          int sym1__;
           for(sym2__ in 1:1) {
             FnPrint__("g");
             sym1__ = Plus__(3, 24);
@@ -1632,13 +1653,14 @@ let%expect_test "inline function in ternary if " =
       log_prob {
         {
         int sym1__;
+        int sym3__;
+        int sym5__;
         for(sym2__ in 1:1) {
           FnPrint__("f");
           sym1__ = 42;
           break;
           }
         if(sym1__) {
-          int sym3__;
           for(sym4__ in 1:1) {
             FnPrint__("g");
             sym3__ = Plus__(3, 24);
@@ -1646,7 +1668,6 @@ let%expect_test "inline function in ternary if " =
             }
           }
          else {
-          int sym5__;
           for(sym6__ in 1:1) {
             FnPrint__("h");
             sym5__ = Plus__(4, 4);
@@ -1786,12 +1807,12 @@ let%expect_test "inline function indices " =
         {
         array[array[int, 2], 2] a;
         int sym3__;
+        int sym1__;
         for(sym4__ in 1:1) {
           FnPrint__(2);
           sym3__ = 42;
           break;
           }
-        int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
           sym1__ = 42;
@@ -1856,13 +1877,13 @@ let%expect_test "inline function and " =
       log_prob {
         {
         int sym1__;
+        int sym3__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
           sym1__ = 42;
           break;
           }
         if(sym1__) {
-          int sym3__;
           for(sym4__ in 1:1) {
             FnPrint__(2);
             sym3__ = 42;
@@ -1927,6 +1948,7 @@ let%expect_test "inline function or " =
       log_prob {
         {
         int sym1__;
+        int sym3__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
           sym1__ = 42;
@@ -1934,7 +1956,6 @@ let%expect_test "inline function or " =
           }
         if(sym1__) ;
          else {
-          int sym3__;
           for(sym4__ in 1:1) {
             FnPrint__(2);
             sym3__ = 42;
