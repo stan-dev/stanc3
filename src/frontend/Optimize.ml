@@ -50,6 +50,8 @@ let handle_early_returns opt_triple b =
 let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Middle.no_span}) l
 let slist_no_loc l = SList (map_no_loc l)
 
+let block_no_loc l = Block (map_no_loc l)
+
 let slist_concat_no_loc l stmt =
   match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
 
@@ -66,9 +68,9 @@ let rec inline_function_expression adt fim e =
       match Map.find fim s with
       | None -> (s_list, {e with expr= FunApp (t, s, es)})
       | Some (rt, args, b) ->
-          let b = b (* TODO: replace fresh variables here *) in
           let x = gensym () in
           let b = handle_early_returns (Some (rt, adt, x)) b in
+          (* TODO: replace fresh variables here *)
           ( s_list
             @ [ Decl
                   {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
@@ -86,8 +88,8 @@ let rec inline_function_expression adt fim e =
       ( sl1
         @ [ IfElse
               ( e1
-              , {stmt= slist_no_loc sl2; smeta= Middle.no_span}
-              , Some {stmt= slist_no_loc sl3; smeta= Middle.no_span} ) ]
+              , {stmt= block_no_loc sl2; smeta= Middle.no_span}
+              , Some {stmt= block_no_loc sl3; smeta= Middle.no_span} ) ]
       , {e with expr= TernaryIf (e1, e2, e3)} )
   | Indexed (e', i_list) ->
       let sl, e' = inline_function_expression adt fim e' in
@@ -138,6 +140,7 @@ let rec inline_function_statement adt fim {stmt; smeta} =
       ( match stmt with
       | Assignment ((x, l), e2) ->
           let e1 = {e2 with expr= Indexed ({e2 with expr= Var x}, l)} in
+          (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
           let sl1, e1 = inline_function_expression adt fim e1 in
           let sl2, e2 = inline_function_expression adt fim e2 in
           let x, l =
@@ -155,12 +158,11 @@ let rec inline_function_statement adt fim {stmt; smeta} =
           (* function arguments are evaluated from right to left in C++, so we need to reverse *)
           let s_list = List.concat (List.rev (List.map ~f:fst se_list)) in
           let es = List.map ~f:snd se_list in
+                (* TODO: replace fresh variables here *)
           slist_concat_no_loc s_list
             ( match Map.find fim s with
             | None -> NRFunApp (t, s, es)
             | Some (_, args, b) ->
-                let b = b in
-                (* TODO: replace fresh variables here *)
                 let b = handle_early_returns None b in
                 (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt
             )
@@ -186,10 +188,9 @@ let rec inline_function_statement adt fim {stmt; smeta} =
                  | [] -> inline_function_statement adt fim s
                  | _ ->
                      { stmt=
-                         SList
+                         Block
                            ( [inline_function_statement adt fim s]
-                           @ map_no_loc (Option.value ~default:[] (List.tl s'))
-                           )
+                           @ map_no_loc s' )
                      ; smeta= Middle.no_span } ))
       | For {loopvar; lower; upper; body} ->
           let s_lower, lower = inline_function_expression adt fim lower in
@@ -204,11 +205,9 @@ let rec inline_function_statement adt fim {stmt; smeta} =
                    | [] -> inline_function_statement adt fim body
                    | _ ->
                        { stmt=
-                           SList
+                           Block
                              ( [inline_function_statement adt fim body]
-                             @ map_no_loc
-                                 (Option.value ~default:[] (List.tl s_upper))
-                             )
+                             @ map_no_loc s_upper )
                        ; smeta= Middle.no_span } ) })
       | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
       | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
@@ -1287,13 +1286,16 @@ let%expect_test "inline function in for loop" =
           break;
           }
         for(i in sym1__:sym3__) {
-                                FnPrint__("body");
-                                }
-                                for(sym4__ in 1:1) {
-                                  FnPrint__("g");
-                                  sym3__ = Plus__(3, 24);
-                                  break;
-                                  }
+          {
+          FnPrint__("body");
+          }
+          int sym3__;
+          for(sym4__ in 1:1) {
+            FnPrint__("g");
+            sym3__ = Plus__(3, 24);
+            break;
+            }
+          }
         }
       }
 
@@ -1381,19 +1383,22 @@ let%expect_test "inline function in for loop 2" =
           break;
           }
         for(i in sym5__:sym7__) {
-                                FnPrint__("body");
-                                }
-                                for(sym8__ in 1:1) {
-                                  FnPrint__("g");
-                                  int sym3__;
-                                  for(sym4__ in 1:1) {
-                                    FnPrint__("f");
-                                    sym3__ = 42;
-                                    break;
-                                    }
-                                  sym7__ = Plus__(sym3__, 24);
-                                  break;
-                                  }
+          {
+          FnPrint__("body");
+          }
+          int sym7__;
+          for(sym8__ in 1:1) {
+            FnPrint__("g");
+            int sym3__;
+            for(sym4__ in 1:1) {
+              FnPrint__("f");
+              sym3__ = 42;
+              break;
+              }
+            sym7__ = Plus__(sym3__, 24);
+            break;
+            }
+          }
         }
       }
 
@@ -1466,12 +1471,15 @@ let%expect_test "inline function in while loop" =
           sym1__ = Plus__(3, 24);
           break;
           }
-        while(sym1__) FnPrint__("body");
-                      for(sym2__ in 1:1) {
-                        FnPrint__("g");
-                        sym1__ = Plus__(3, 24);
-                        break;
-                        }
+        while(sym1__) {
+          FnPrint__("body");
+          int sym1__;
+          for(sym2__ in 1:1) {
+            FnPrint__("g");
+            sym1__ = Plus__(3, 24);
+            break;
+            }
+          }
         }
       }
 
@@ -1629,18 +1637,22 @@ let%expect_test "inline function in ternary if " =
           sym1__ = 42;
           break;
           }
-        if(sym1__) int sym3__;
-                   for(sym4__ in 1:1) {
-                     FnPrint__("g");
-                     sym3__ = Plus__(3, 24);
-                     break;
-                     }
-         else int sym5__;
-              for(sym6__ in 1:1) {
-                FnPrint__("h");
-                sym5__ = Plus__(4, 4);
-                break;
-                }
+        if(sym1__) {
+          int sym3__;
+          for(sym4__ in 1:1) {
+            FnPrint__("g");
+            sym3__ = Plus__(3, 24);
+            break;
+            }
+          }
+         else {
+          int sym5__;
+          for(sym6__ in 1:1) {
+            FnPrint__("h");
+            sym5__ = Plus__(4, 4);
+            break;
+            }
+          }
         FnPrint__(sym1__ ?sym3__: sym5__);
         }
       }
