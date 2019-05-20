@@ -90,8 +90,7 @@ let stmt_rhs stmt =
   | Return None | Break | Continue | Skip | Decl _ | Block _ | SList _ ->
       ExprSet.empty
 
-let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) :
-    'b Set.Poly.t =
+let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
   Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.Poly.union s (f a))
 
 let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
@@ -119,7 +118,7 @@ let rec subst_expr (m : (string, expr_typed_located) Map.Poly.t)
   | Var s -> ( match Map.find m s with Some e' -> e' | None -> e )
   | x -> {e with expr= map_expr (subst_expr m) x}
 
-and subst_idx m = map_index (subst_expr m)
+let subst_idx m = map_index (subst_expr m)
 
 let subst_stmt_base_helper g h b =
   match b with
@@ -134,7 +133,7 @@ let rec expr_subst_expr m (e : expr_typed_located) =
   | Some e' -> e'
   | None -> {e with expr= map_expr (expr_subst_expr m) e.expr}
 
-and expr_subst_idx m = map_index (expr_subst_expr m)
+let expr_subst_idx m = map_index (expr_subst_expr m)
 
 let expr_subst_stmt_base m =
   subst_stmt_base_helper (expr_subst_expr m) (expr_subst_idx m)

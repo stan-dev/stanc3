@@ -3,6 +3,76 @@ open Core_kernel
 open Middle
 open Mir_utils
 
+
+(**
+   Apply the transformation to each function body and to the rest of the program as one
+   block.
+*)
+let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
+    typed_prog =
+  let packed_prog_body =
+    transform
+      { stmt=
+          SList
+            (List.map
+               ~f:(fun x -> {stmt= SList x; smeta= Middle.no_span})
+               [ mir.prepare_data; mir.transform_inits; mir.log_prob
+               ; mir.generate_quantities ])
+      ; smeta= Middle.no_span }
+  in
+  let transformed_prog_body = transform packed_prog_body in
+  let transformed_functions =
+    List.map mir.functions_block ~f:(fun fs ->
+        {fs with fdbody= transform fs.fdbody} )
+  in
+  match transformed_prog_body with
+  | { stmt=
+        SList
+          [ {stmt= SList prepare_data'; _}
+          ; {stmt= SList transform_inits'; _}
+          ; {stmt= SList log_prob'; _}
+          ; {stmt= SList generate_quantities'; _} ]; _ } ->
+      { mir with
+        functions_block= transformed_functions
+      ; prepare_data= prepare_data'
+      ; transform_inits= transform_inits'
+      ; log_prob= log_prob'
+      ; generate_quantities= generate_quantities' }
+  | _ ->
+      raise
+        (Failure "Something went wrong with program transformation packing!")
+
+(**
+   Apply the transformation to each function body and to each program block separately.
+*)
+let transform_program_blockwise (mir : typed_prog)
+    (transform : stmt_loc -> stmt_loc) : typed_prog =
+  let transform' s =
+    match transform {stmt= SList s; smeta= Middle.no_span} with
+    | {stmt= SList l; _} -> l
+    | _ ->
+        raise
+          (Failure "Something went wrong with program transformation packing!")
+  in
+  let transformed_functions =
+    List.map mir.functions_block ~f:(fun fs ->
+        {fs with fdbody= transform fs.fdbody} )
+  in
+  { mir with
+    functions_block= transformed_functions
+  ; prepare_data= transform' mir.prepare_data
+  ; transform_inits= transform' mir.transform_inits
+  ; log_prob= transform' mir.log_prob
+  ; generate_quantities= transform' mir.generate_quantities }
+
+
+let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Middle.no_span}) l
+let slist_no_loc l = SList (map_no_loc l)
+let block_no_loc l = Block (map_no_loc l)
+
+let slist_concat_no_loc l stmt =
+  match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
+
 let replace_fresh_local_vars s' =
   let f m = function
     | Decl {decl_adtype; decl_type; decl_id} ->
@@ -18,7 +88,24 @@ let replace_fresh_local_vars s' =
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
+  let _ = print_s[%sexp (m : (string, mtype_loc_ad with_expr) Map.Poly.t) ]in
   subst_stmt m s
+
+let replace_fresh_local_vars_triple (d_list, s_list, e) =
+  let s =
+    slist_no_loc
+      ([slist_no_loc d_list] @ [slist_no_loc s_list] @ [Return (Some e)])
+  in
+  let s = (replace_fresh_local_vars {stmt= s; smeta= no_span}).stmt in
+  match s with
+  | SList
+      [ {stmt= SList d_list; _}
+      ; {stmt= SList s_list; _}
+      ; {stmt= Return (Some e); _} ] ->
+      ( List.map ~f:(fun x -> x.stmt) d_list
+      , List.map ~f:(fun x -> x.stmt) s_list
+      , e )
+  | _ -> Errors.fatal_error ()
 
 let subst_args_stmt args es =
   let m = Map.Poly.of_alist_exn (List.zip_exn args es) in
@@ -47,15 +134,6 @@ let handle_early_returns opt_triple b =
         ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Middle.no_span} }
     ; body= map_rec_stmt_loc f b }
 
-let map_no_loc l = List.map ~f:(fun s -> {stmt= s; smeta= Middle.no_span}) l
-let slist_no_loc l = SList (map_no_loc l)
-let block_no_loc l = Block (map_no_loc l)
-
-let slist_concat_no_loc l stmt =
-  match l with [] -> stmt | l -> slist_no_loc (l @ [stmt])
-
-let _ = replace_fresh_local_vars
-
 let rec inline_function_expression adt fim e =
   match e.expr with
   | Var _ -> ([], [], e)
@@ -75,18 +153,23 @@ let rec inline_function_expression adt fim e =
       | Some (rt, args, b) ->
           let x = gensym () in
           let b = handle_early_returns (Some (rt, adt, x)) b in
-          (* TODO: replace fresh variables here *)
-          ( d_list
-            @ [ Decl
-                  {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ]
-          , s_list
-            @ [(subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt]
-          , { expr= Var x
-            ; emeta=
-                { mtype= remove_possible_size (Option.value_exn rt)
-                ; madlevel= adt
-                ; mloc= Middle.no_span } } ) )
+          let d_list2, s_list2, e =
+            replace_fresh_local_vars_triple
+              ( [ Decl
+                    { decl_adtype= adt
+                    ; decl_id= x
+                    ; decl_type= Option.value_exn rt } ]
+              , [ (subst_args_stmt args es {stmt= b; smeta= Middle.no_span})
+                    .stmt ]
+              , { expr= Var x
+                ; emeta=
+                    { mtype= remove_possible_size (Option.value_exn rt)
+                    ; madlevel= adt
+                    ; mloc= Middle.no_span } } )
+          in
+          let d_list = d_list @ d_list2 in
+          let s_list = s_list @ s_list2 in
+          (d_list, s_list, e) )
   | TernaryIf (e1, e2, e3) ->
       let dl1, sl1, e1 = inline_function_expression adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression adt fim e2 in
@@ -177,11 +260,11 @@ let rec inline_function_statement adt fim {stmt; smeta} =
               (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
           in
           let es = List.map ~f:(function _, _, x -> x) dse_list in
-          (* TODO: replace fresh variables here *)
           slist_concat_no_loc (d_list @ s_list)
             ( match Map.find fim s with
             | None -> NRFunApp (t, s, es)
             | Some (_, args, b) ->
+                let b = replace_fresh_local_vars b in
                 let b = handle_early_returns None b in
                 (subst_args_stmt args es {stmt= b; smeta= Middle.no_span}).stmt
             )
@@ -327,7 +410,8 @@ let unroll_static_loops_statement =
   in
   map_rec_stmt_loc f
 
-let static_loop_unrolling = map_prog (fun x -> x) unroll_static_loops_statement
+let static_loop_unrolling mir = transform_program_blockwise mir
+unroll_static_loops_statement
 
 let unroll_loop_one_step_statement =
   let f stmt =
@@ -367,8 +451,8 @@ let unroll_loop_one_step_statement =
   in
   map_rec_stmt_loc f
 
-let one_step_loop_unrolling =
-  map_prog (fun x -> x) unroll_loop_one_step_statement
+let one_step_loop_unrolling mir =
+  transform_program_blockwise mir unroll_loop_one_step_statement
 
 let collapse_lists_statement =
   let rec collapse_lists l =
@@ -383,67 +467,6 @@ let collapse_lists_statement =
     | x -> x
   in
   map_rec_stmt_loc f
-
-(**
-   Apply the transformation to each function body and to the rest of the program as one
-   block.
-*)
-let transform_program (mir : typed_prog) (transform : stmt_loc -> stmt_loc) :
-    typed_prog =
-  let packed_prog_body =
-    transform
-      { stmt=
-          SList
-            (List.map
-               ~f:(fun x -> {stmt= SList x; smeta= Middle.no_span})
-               [ mir.prepare_data; mir.transform_inits; mir.log_prob
-               ; mir.generate_quantities ])
-      ; smeta= Middle.no_span }
-  in
-  let transformed_prog_body = transform packed_prog_body in
-  let transformed_functions =
-    List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody} )
-  in
-  match transformed_prog_body with
-  | { stmt=
-        SList
-          [ {stmt= SList prepare_data'; _}
-          ; {stmt= SList transform_inits'; _}
-          ; {stmt= SList log_prob'; _}
-          ; {stmt= SList generate_quantities'; _} ]; _ } ->
-      { mir with
-        functions_block= transformed_functions
-      ; prepare_data= prepare_data'
-      ; transform_inits= transform_inits'
-      ; log_prob= log_prob'
-      ; generate_quantities= generate_quantities' }
-  | _ ->
-      raise
-        (Failure "Something went wrong with program transformation packing!")
-
-(**
-   Apply the transformation to each function body and to each program block separately.
-*)
-let transform_program_blockwise (mir : typed_prog)
-    (transform : stmt_loc -> stmt_loc) : typed_prog =
-  let transform' s =
-    match transform {stmt= SList s; smeta= Middle.no_span} with
-    | {stmt= SList l; _} -> l
-    | _ ->
-        raise
-          (Failure "Something went wrong with program transformation packing!")
-  in
-  let transformed_functions =
-    List.map mir.functions_block ~f:(fun fs ->
-        {fs with fdbody= transform fs.fdbody} )
-  in
-  { mir with
-    functions_block= transformed_functions
-  ; prepare_data= transform' mir.prepare_data
-  ; transform_inits= transform' mir.transform_inits
-  ; log_prob= transform' mir.log_prob
-  ; generate_quantities= transform' mir.generate_quantities }
 
 let list_collapsing (mir : typed_prog) =
   transform_program_blockwise mir collapse_lists_statement
@@ -720,9 +743,8 @@ let lazy_code_motion (mir : typed_prog) =
   in
   transform_program_blockwise mir (fun x -> transform (preprocess_flowgraph x))
 
-let block_fixing =
-  map_prog
-    (fun x -> x)
+let block_fixing mir =
+  transform_program_blockwise mir
     (map_rec_stmt_loc (fun stmt ->
          match stmt with
          | IfElse
@@ -905,6 +927,10 @@ let%expect_test "inline functions" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ()
+      ((sym2__
+        ((expr (Var sym4__))
+         (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         void f(int x, matrix y)
           {
@@ -933,12 +959,12 @@ let%expect_test "inline functions" =
           FnPrint__(3);
           FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
           }
-        real sym2__;
+        real sym4__;
         for(sym3__ in 1:1) {
           sym2__ = Pow__(53, 2);
           break;
           }
-        FnReject__(sym2__);
+        FnReject__(sym4__);
         }
       }
 
@@ -977,6 +1003,9 @@ let%expect_test "inline functions 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ()
+      ()
+      ()
       functions {
         void f()
           {
@@ -1047,6 +1076,10 @@ let%expect_test "list collapsing" =
   print_s [%sexp (mir : Middle.typed_prog)] ;
   [%expect
     {|
+    ()
+    ((sym2__
+      ((expr (Var sym4__))
+       (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
     ((functions_block
       (((fdrt ()) (fdname f)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
@@ -1147,7 +1180,7 @@ let%expect_test "list collapsing" =
                 (smeta <opaque>)))))
             (smeta <opaque>))
            ((stmt
-             (Decl (decl_adtype AutoDiffable) (decl_id sym2__)
+             (Decl (decl_adtype AutoDiffable) (decl_id sym4__)
               (decl_type (Unsized UReal))))
             (smeta <opaque>))
            ((stmt
@@ -1179,7 +1212,7 @@ let%expect_test "list collapsing" =
             (smeta <opaque>))
            ((stmt
              (NRFunApp CompilerInternal FnReject__
-              (((expr (Var sym2__))
+              (((expr (Var sym4__))
                 (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
             (smeta <opaque>)))))
         (smeta <opaque>))))
@@ -1272,6 +1305,12 @@ let%expect_test "inline function in for loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym4__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1297,25 +1336,25 @@ let%expect_test "inline function in for loop" =
 
       log_prob {
         {
-        int sym1__;
         int sym3__;
+        int sym6__;
         for(sym2__ in 1:1) {
           FnPrint__("f");
           sym1__ = 42;
           break;
           }
-        for(sym4__ in 1:1) {
+        for(sym5__ in 1:1) {
           FnPrint__("g");
-          sym3__ = Plus__(3, 24);
+          sym4__ = Plus__(3, 24);
           break;
           }
-        for(i in sym1__:sym3__) {
+        for(i in sym3__:sym6__) {
           {
           FnPrint__("body");
           }
-          for(sym4__ in 1:1) {
+          for(sym5__ in 1:1) {
             FnPrint__("g");
-            sym3__ = Plus__(3, 24);
+            sym4__ = Plus__(3, 24);
             break;
             }
           }
@@ -1362,6 +1401,21 @@ let%expect_test "inline function in for loop 2" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+      ((sym4__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym7__
+        ((expr (Var sym9__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym10__
+        ((expr (Var sym12__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable)))))
+       (sym6__
+        ((expr (Var sym13__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1387,37 +1441,37 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
-        int sym5__;
-        int sym7__;
-        for(sym6__ in 1:1) {
+        int sym9__;
+        int sym12__;
+        for(sym8__ in 1:1) {
           FnPrint__("f");
-          sym5__ = 42;
+          sym7__ = 42;
           break;
           }
-        for(sym8__ in 1:1) {
+        for(sym11__ in 1:1) {
           FnPrint__("g");
-          int sym3__;
-          for(sym4__ in 1:1) {
+          int sym13__;
+          for(sym5__ in 1:1) {
             FnPrint__("f");
-            sym3__ = 42;
+            sym4__ = 42;
             break;
             }
-          sym7__ = Plus__(sym3__, 24);
+          sym10__ = Plus__(sym13__, 24);
           break;
           }
-        for(i in sym5__:sym7__) {
+        for(i in sym9__:sym12__) {
           {
           FnPrint__("body");
           }
-          for(sym8__ in 1:1) {
+          for(sym11__ in 1:1) {
             FnPrint__("g");
-            int sym3__;
-            for(sym4__ in 1:1) {
+            int sym13__;
+            for(sym5__ in 1:1) {
               FnPrint__("f");
-              sym3__ = 42;
+              sym4__ = 42;
               break;
               }
-            sym7__ = Plus__(sym3__, 24);
+            sym10__ = Plus__(sym13__, 24);
             break;
             }
           }
@@ -1462,6 +1516,9 @@ let%expect_test "inline function in while loop" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1487,13 +1544,13 @@ let%expect_test "inline function in while loop" =
 
       log_prob {
         {
-        int sym1__;
+        int sym3__;
         for(sym2__ in 1:1) {
           FnPrint__("g");
           sym1__ = Plus__(3, 24);
           break;
           }
-        while(sym1__) {
+        while(sym3__) {
           FnPrint__("body");
           for(sym2__ in 1:1) {
             FnPrint__("g");
@@ -1542,6 +1599,9 @@ let%expect_test "inline function in if then else" =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1567,13 +1627,13 @@ let%expect_test "inline function in if then else" =
 
       log_prob {
         {
-        int sym1__;
+        int sym3__;
         for(sym2__ in 1:1) {
           FnPrint__("g");
           sym1__ = Plus__(3, 24);
           break;
           }
-        if(sym1__) FnPrint__("body");
+        if(sym3__) FnPrint__("body");
         }
       }
 
@@ -1621,6 +1681,15 @@ let%expect_test "inline function in ternary if " =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym4__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym7__
+        ((expr (Var sym9__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1652,29 +1721,29 @@ let%expect_test "inline function in ternary if " =
 
       log_prob {
         {
-        int sym1__;
         int sym3__;
-        int sym5__;
+        int sym6__;
+        int sym9__;
         for(sym2__ in 1:1) {
           FnPrint__("f");
           sym1__ = 42;
           break;
           }
-        if(sym1__) {
-          for(sym4__ in 1:1) {
+        if(sym3__) {
+          for(sym5__ in 1:1) {
             FnPrint__("g");
-            sym3__ = Plus__(3, 24);
+            sym4__ = Plus__(3, 24);
             break;
             }
           }
          else {
-          for(sym6__ in 1:1) {
+          for(sym8__ in 1:1) {
             FnPrint__("h");
-            sym5__ = Plus__(4, 4);
+            sym7__ = Plus__(4, 4);
             break;
             }
           }
-        FnPrint__(sym1__ ?sym3__: sym5__);
+        FnPrint__(sym3__ ?sym6__: sym9__);
         }
       }
 
@@ -1715,6 +1784,9 @@ let%expect_test "inline function multiple returns " =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1737,7 +1809,7 @@ let%expect_test "inline function multiple returns " =
 
       log_prob {
         {
-        int sym1__;
+        int sym3__;
         for(sym2__ in 1:1) {
           if(2) {
             FnPrint__("f");
@@ -1747,7 +1819,7 @@ let%expect_test "inline function multiple returns " =
           sym1__ = 6;
           break;
           }
-        FnPrint__(sym1__);
+        FnPrint__(sym3__);
         }
       }
 
@@ -1786,6 +1858,12 @@ let%expect_test "inline function indices " =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym4__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1806,11 +1884,11 @@ let%expect_test "inline function indices " =
       log_prob {
         {
         array[array[int, 2], 2] a;
+        int sym6__;
         int sym3__;
-        int sym1__;
-        for(sym4__ in 1:1) {
+        for(sym5__ in 1:1) {
           FnPrint__(2);
-          sym3__ = 42;
+          sym4__ = 42;
           break;
           }
         for(sym2__ in 1:1) {
@@ -1818,7 +1896,7 @@ let%expect_test "inline function indices " =
           sym1__ = 42;
           break;
           }
-        FnPrint__(a[sym1__, sym3__]);
+        FnPrint__(a[sym3__, sym6__]);
         }
       }
 
@@ -1857,6 +1935,12 @@ let%expect_test "inline function and " =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym4__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1876,21 +1960,21 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-        int sym1__;
         int sym3__;
+        int sym6__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
           sym1__ = 42;
           break;
           }
-        if(sym1__) {
-          for(sym4__ in 1:1) {
+        if(sym3__) {
+          for(sym5__ in 1:1) {
             FnPrint__(2);
-            sym3__ = 42;
+            sym4__ = 42;
             break;
             }
           }
-        FnPrint__(sym1__ && sym3__);
+        FnPrint__(sym3__ && sym6__);
         }
       }
 
@@ -1928,6 +2012,12 @@ let%expect_test "inline function or " =
   Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
   [%expect
     {|
+      ((sym1__
+        ((expr (Var sym3__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
+      ((sym4__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel AutoDiffable))))))
       functions {
         int f(int z)
           {
@@ -1947,22 +2037,22 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-        int sym1__;
         int sym3__;
+        int sym6__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
           sym1__ = 42;
           break;
           }
-        if(sym1__) ;
+        if(sym3__) ;
          else {
-          for(sym4__ in 1:1) {
+          for(sym5__ in 1:1) {
             FnPrint__(2);
-            sym3__ = 42;
+            sym4__ = 42;
             break;
             }
           }
-        FnPrint__(sym1__ || sym3__);
+        FnPrint__(sym3__ || sym6__);
         }
       }
 
@@ -4033,3 +4123,184 @@ let%expect_test "one-step loop unrolling" =
       output_vars {
 
       } |}]
+
+
+let%expect_test "replace fresh variables" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+        real x;
+        print(x);
+        int y;
+        for (i in 1:4) {
+          real c;
+          print(c);
+          real d[2];
+          reject(d, c);
+          reject(d, c);
+          print(x);
+        }
+        print(x);
+        print(y);
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = transform_program mir replace_fresh_local_vars in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      ((c
+        ((expr (Var sym3__))
+         (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))
+       (d
+        ((expr (Var sym4__))
+         (emeta ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly)))))
+       (x
+        ((expr (Var sym1__))
+         (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))
+       (y
+        ((expr (Var sym2__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+      ((sym1__
+        ((expr (Var sym5__))
+         (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))
+       (sym2__
+        ((expr (Var sym6__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (sym3__
+        ((expr (Var sym7__))
+         (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))
+       (sym4__
+        ((expr (Var sym8__))
+         (emeta ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))))
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+        data real sym5__;
+        FnPrint__(sym5__);
+        data int sym6__;
+        for(i in 1:4) {
+          data real sym7__;
+          FnPrint__(sym7__);
+          data array[real, 2] sym8__;
+          FnReject__(sym8__, sym7__);
+          FnReject__(sym8__, sym7__);
+          FnPrint__(sym5__);
+          }
+        FnPrint__(sym5__);
+        FnPrint__(sym6__);
+      }
+
+      log_prob {
+
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
+let%expect_test "replace fresh variables 2" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed data {
+              {
+        int x;
+        int y;
+        for(z in 1:1) {
+          print(1);
+          x = 42;
+          break;
+          }
+        if(x) ;
+         else {
+          for(z in 1:1) {
+            print(2);
+            y = 42;
+            break;
+            }
+          }
+        print(x || y);
+        }
+      }
+      |}
+  in
+  (* TODO: this is still doing the wrong thing. This is related to the bug in function inlining.
+     It seems that substitution is not happening for variables that appeared at the top level.
+     I wonder if this is a bug in map_rec_state_stmt_loc  *)
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = map_prog (fun x -> x) replace_fresh_local_vars mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      ((x
+        ((expr (Var sym1__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (y
+        ((expr (Var sym2__))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+        {
+        data int sym1__;
+        data int sym2__;
+        for(z in 1:1) {
+          FnPrint__(1);
+          x = 42;
+          break;
+          }
+        if(sym1__) ;
+         else {
+          for(z in 1:1) {
+            FnPrint__(2);
+            y = 42;
+            break;
+            }
+          }
+        FnPrint__(sym1__ || sym2__);
+        }
+      }
+
+      log_prob {
+
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
