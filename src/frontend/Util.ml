@@ -13,3 +13,5 @@ let gensym_checkpoint () =
 let gensym_enter () =
   let reset = gensym_checkpoint () in
   (gensym (), reset)
+
+let gensym_reset_danger_use_cautiously () = _counter := 0
