@@ -305,63 +305,6 @@ let collapse_lists_statement =
   in
   map_rec_stmt_loc f
 
-(*
-let statement_of_program mir =
-  { stmt=
-      SList
-        (List.map
-           ~f:(fun x -> {stmt= SList x; smeta= Middle.no_span})
-           [ mir.functions_block; mir.prepare_data; mir.prepare_params
-           ; mir.log_prob; mir.generate_quantities ])
-  ; smeta= Middle.no_span }
-
-let update_program_statement_blocks (mir : typed_prog) (s : stmt_loc) =
-  let l =
-    match s.stmt with
-    | SList l ->
-        List.map
-          ~f:(fun x ->
-            match x.stmt with
-            | SList l -> l
-            | _ -> raise_s [%sexp (x : stmt_loc)] )
-          l
-    | _ -> raise_s [%sexp (s : stmt_loc)]
-  in
-  { mir with
-    functions_block= List.nth_exn l 0
-  ; prepare_data= List.nth_exn l 1
-  ; prepare_params= List.nth_exn l 2
-  ; log_prob= List.nth_exn l 3
-  ; generate_quantities= List.nth_exn l 4 }
-
-let propagation
-    (propagation_transfer :
-         (int, Middle.stmt_loc_num) Map.Poly.t
-      -> (module
-          Monotone_framework_sigs.TRANSFER_FUNCTION
-            with type labels = int
-             and type properties = (string, Middle.expr_typed_located) Map.Poly.t
-                                   option)) (mir : typed_prog) =
-  let s = statement_of_program mir in
-  let flowgraph, flowgraph_to_mir =
-    Monotone_framework.forward_flowgraph_of_stmt s
-  in
-  let (module Flowgraph) = flowgraph in
-  let values =
-    Monotone_framework.propagation_mfp mir
-      (module Flowgraph)
-      flowgraph_to_mir propagation_transfer
-  in
-  let propagate_stmt =
-    map_rec_stmt_loc_num flowgraph_to_mir (fun i ->
-        subst_stmt_base
-          (Option.value ~default:Map.Poly.empty (Map.find_exn values i).entry)
-    )
-  in
-  let s = propagate_stmt (Map.find_exn flowgraph_to_mir 1) in
-  update_program_statement_blocks mir s
-*)
-
 (**
    Apply the transformation to each function body and to the rest of the program as one
    block.
