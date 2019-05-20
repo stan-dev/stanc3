@@ -34,113 +34,81 @@ class eight_schools_ncp_model : public prob_grad {
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
-    (void) function__;  // dummy to suppress unused var warning
-    try current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    int J;
+    (void) function__;  // suppress unused var warning
     
-    current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    
-    current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    current_statement__ = "file eight_schools_ncp.stan, line 2, columns 2-17";
-    check_greater_or_equal(function__, J, 0);
-    current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
-    std::vector<double> y;
+    J = stan::model::rvalue(context__.vals_i("J"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
+    check_greater_or_equal(function__, "J", J, 0);
     y = std::vector<double>(J, 0);
     
-    current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
-    for (size_t sym1__ = 0; sym1__ < length(y); sym1__++)
-      {
-        current_statement__ = "file eight_schools_ncp.stan, line 3, columns 2-12";
-        
-      }
-    current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-    std::vector<double> sigma;
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      y[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("y"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+    }
     sigma = std::vector<double>(J, 0);
     
-    current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-    for (size_t sym1__ = 0; sym1__ < length(sigma); sym1__++)
-      {
-        current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-        
-      }
-    current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-    for (size_t sym1__ = 0; sym1__ < length(sigma); sym1__++)
-      {
-        current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-        current_statement__ = "file eight_schools_ncp.stan, line 4, columns 2-25";
-        check_greater_or_equal(function__,
-                               stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
-                               0);
-      } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside ctor") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      sigma[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("sigma"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
     }
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      check_greater_or_equal(function__, "sigma[sym1__]",
+                             stan::model::rvalue(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"),
+                             0);}
+    num_params_r__ = 0U;
+    num_params_r__ += 1;
+    num_params_r__ += 1;
+    num_params_r__ += J;
+    
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) {
-  typedef T__ local_scalar_t__;
+               std::ostream* pstream__ = 0) const {
+    typedef T__ local_scalar_t__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // dummy to suppress unused var warning
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    
-    try {
-      current_statement__ = "file eight_schools_ncp.stan, line 8, columns 2-10";
+    {
       local_scalar_t__ mu;
       
-      current_statement__ = "file eight_schools_ncp.stan, line 8, columns 2-10";
-      
-      current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
+      mu = in__.scalar();
       local_scalar_t__ tau;
       
-      current_statement__ = "file eight_schools_ncp.stan, line 9, columns 2-20";
-      
-      current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
+      tau = in__.scalar();
+      if (jacobian__) {
+        tau = lb_constrain(tau, 0, lp__);
+      } else tau = lb_constrain(tau, 0);
       std::vector<local_scalar_t__> theta_tilde;
       theta_tilde = std::vector<local_scalar_t__>(J, 0);
       
-      current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
-      for (size_t sym1__ = 0; sym1__ < length(theta_tilde); sym1__++)
-        {
-          current_statement__ = "file eight_schools_ncp.stan, line 10, columns 2-22";
-          
-        }
-      current_statement__ = "file eight_schools_ncp.stan, line 14, columns 2-16";
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        theta_tilde[(sym1__ - 1)] = in__.scalar();}
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, 0);
       
-      current_statement__ = "file eight_schools_ncp.stan, line 15, column 2 to line 16, column 41";
-      for (size_t j = 1; j < J; j++)
-        current_statement__ = "file eight_schools_ncp.stan, line 16, columns 4-41";
-        
-      {
-        current_statement__ = "file eight_schools_ncp.stan, line 20, columns 2-20";
-        lp_accum__.add(normal(mu, 0, 5))
-        current_statement__ = "file eight_schools_ncp.stan, line 21, columns 2-21";
-        lp_accum__.add(cauchy(tau, 0, 5))
-        current_statement__ = "file eight_schools_ncp.stan, line 22, columns 2-29";
-        lp_accum__.add(normal(theta_tilde, 0, 1))
-        current_statement__ = "file eight_schools_ncp.stan, line 23, columns 2-27";
-        lp_accum__.add(normal(y, theta, sigma))
+      for (size_t j = 1; j <= J; ++j) {
+        theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+      {
+        lp_accum__.add(normal_log<propto__>(mu, 0, 5));
+        lp_accum__.add(cauchy_log<propto__>(tau, 0, 5));
+        lp_accum__.add(normal_log<propto__>(theta_tilde, 0, 1));
+        lp_accum__.add(normal_log<propto__>(y, theta, sigma));
+      }
     }
-  }
-  
-  void get_param_names(std::vector<std::string>& names) const {
-    names.push_back("mu");
-    names.push_back("tau");
-    names.push_back("theta_tilde");
-    names.push_back("theta");
-  }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("mu");
+    names__.push_back("tau");
+    names__.push_back("theta_tilde");
+    names__.push_back("theta");
+    } // get_param_names() 
+    
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
@@ -155,14 +123,160 @@ class eight_schools_ncp_model : public prob_grad {
     dimss__.push_back(dims__);
     dims__.resize(0);
     
-  }
-  //TODO write_array
-  //TODO constrained_param_names
-  //TODO unconstrained_param_names
-  //TODO transform_inits
+    } // get_dims() 
+    
+  template <typename RNG>
+  void write_array(RNG& base_rng, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__, std::vector<double>& vars__,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
+                   std::ostream* pstream__ = 0) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "eight_schools_ncp_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    {
+      double mu;
+      
+      mu = in__.scalar();
+      double tau;
+      
+      tau = in__.scalar();
+      tau = lb_constrain(tau, 0);
+      std::vector<double> theta_tilde;
+      theta_tilde = std::vector<double>(J, 0);
+      
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        theta_tilde[(sym1__ - 1)] = in__.scalar();}
+      vars__.push_back(mu);
+      vars__.push_back(tau);
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        vars__.push_back(stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+      }
+      if (emit_transformed_parameters__) {
+        std::vector<double> theta;
+        theta = std::vector<double>(J, 0);
+        
+        for (size_t j = 1; j <= J; ++j) {
+          theta[(j - 1)] = (mu + (tau * stan::model::rvalue(theta_tilde, stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()), "pretty printed e")));
+        }
+        for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+          vars__.push_back(stan::model::rvalue(theta, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
+        }
+      } 
+    }
+    } // write_array() 
+    
+  void constrained_param_names(std::vector<std::string>& param_names__,
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
+    
+    param_names__.push_back(std::string() + "mu");
+    param_names__.push_back(std::string() + "tau");
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "theta_tilde" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
+    
+    param_names__.push_back(std::string() + "mu");
+    param_names__.push_back(std::string() + "tau");
+    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      {
+        param_names__.push_back(std::string() + "theta_tilde" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        {
+          param_names__.push_back(std::string() + "theta" + '.' + std::to_string(sym1__));
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& params_r__,
+                       std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    stan::io::writer<double> writer__(params_r__, params_i__);
+    std::vector<double> vals_r__;
+    std::vector<int> vals_i__;
+    {
+      double mu;
+      
+      mu = stan::model::rvalue(context__.vals_r("mu"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
+      double tau;
+      
+      tau = stan::model::rvalue(context__.vals_r("tau"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
+      tau = lb_free(tau, 0);
+      std::vector<double> theta_tilde;
+      theta_tilde = std::vector<double>(J, 0);
+      
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        theta_tilde[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("theta_tilde"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+      }
+    }
+    } // transform_inits() 
+    
+  
+    template <typename RNG>
+    void write_array(RNG& base_rng,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+};
 }
-}
-typedef eight_schools_ncp_modelnamespace::eight_schools_ncp_model stan_model;
+
+typedef eight_schools_ncp_model_namespace::eight_schools_ncp_model stan_model;
 
   $ ../../../../../install/default/bin/stanc --print-cpp one_var_per_block.stan
 
@@ -189,18 +303,11 @@ udf1(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    current_statement__ = "file one_var_per_block.stan, line 2, columns 30-43";
+  {
     return (a + b);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside UDF udf1") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
+  
 }
-
 class one_var_per_block_model : public prob_grad {
 
  private:
@@ -221,159 +328,99 @@ class one_var_per_block_model : public prob_grad {
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
-    (void) function__;  // dummy to suppress unused var warning
-    try current_statement__ = "file one_var_per_block.stan, line 5, columns 2-8";
-    int N;
+    (void) function__;  // suppress unused var warning
     
-    current_statement__ = "file one_var_per_block.stan, line 5, columns 2-8";
+    N = stan::model::rvalue(context__.vals_i("N"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
     
-    current_statement__ = "file one_var_per_block.stan, line 6, columns 2-8";
-    int K;
-    
-    current_statement__ = "file one_var_per_block.stan, line 6, columns 2-8";
-    
-    current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-    std::vector<Eigen::Matrix<double, -1, 1>> datavar;
+    K = stan::model::rvalue(context__.vals_i("K"), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list()), "pretty printed e");
     datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
     
-    current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-    for (size_t sym1__ = 0; sym1__ < length(datavar); sym1__++)
-      {
-        current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-        for (size_t sym2__ = 0;
-             sym2__ < length(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++)
-          {
-            current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-            
-          }
-      }
-    current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-    for (size_t sym1__ = 0; sym1__ < length(datavar); sym1__++)
-      {
-        current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-        for (size_t sym2__ = 0;
-             sym2__ < length(stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++)
-          {
-            current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-            current_statement__ = "file one_var_per_block.stan, line 7, columns 2-32";
-            check_greater_or_equal(function__,
-                                   stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                   0);
-          }
-      }
-    current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-    std::vector<std::vector<double>> tdatavar;
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      datavar[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("datavar"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+    }
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
+                               stan::model::rvalue(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                               0);}}
     tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
     
-    current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
+    tdatavar = {{2.0}};
+    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+      for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+        check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
+                               stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                               0);}}
+    num_params_r__ = 0U;
+    num_params_r__ += K * N;
+    num_params_r__ += (K + 1) * K * N * N;
     
-    current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-    for (size_t sym1__ = 0; sym1__ < length(tdatavar); sym1__++)
-      {
-        current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-        for (size_t sym2__ = 0;
-             sym2__ < length(stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-             sym2__++)
-          {
-            current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-            current_statement__ = "file one_var_per_block.stan, line 10, columns 2-41";
-            check_greater_or_equal(function__,
-                                   stan::model::rvalue(tdatavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                   0);
-          }
-      } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside ctor") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   template <bool propto__, bool jacobian__, typename T__>
   T__ log_prob(std::vector<T__>& params_r__, std::vector<int>& params_i__,
-               std::ostream* pstream__ = 0) {
-  typedef T__ local_scalar_t__;
+               std::ostream* pstream__ = 0) const {
+    typedef T__ local_scalar_t__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // dummy to suppress unused var warning
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    
-    try {
-      current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
+    {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> param;
       param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
-      current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
-      for (size_t sym1__ = 0; sym1__ < length(param); sym1__++)
-        {
-          current_statement__ = "file one_var_per_block.stan, line 13, columns 2-30";
-          
-        }
-      current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        param[(sym1__ - 1)] = in__.vector(N);}
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param[(sym1__ - 1), (sym2__ - 1)] = lb_constrain(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                                           0);}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       
-      current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
-      for (size_t sym1__ = 0; sym1__ < length(matparam); sym1__++)
-        {
-          current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
-          for (size_t sym2__ = 0;
-               sym2__ < length(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-               sym2__++)
-            {
-              current_statement__ = "file one_var_per_block.stan, line 14, columns 2-39";
-              
-            }
-        }
-      current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          matparam[(sym1__ - 1), (sym2__ - 1)] = in__.matrix(N, N);}}
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+            matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)] = lb_constrain(
+            stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+            0);}}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
-      current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-      for (size_t sym1__ = 0; sym1__ < length(tparam); sym1__++)
-        {
-          current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-          for (size_t sym2__ = 0;
-               sym2__ < length(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e"));
-               sym2__++)
-            {
-              current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-              current_statement__ = "file one_var_per_block.stan, line 17, columns 2-31";
-              check_greater_or_equal(function__,
-                                     stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                                     0);
-            }
-        }
-      current_statement__ = "file one_var_per_block.stan, line 18, columns 2-42";
-      for (size_t n = 1; n < N; n++)
-        current_statement__ = "file one_var_per_block.stan, line 18, columns 17-42";
-        
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          check_greater_or_equal(function__, "tparam[sym1__, sym2__]",
+                                 stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                 0);}}
+      for (size_t n = 1; n <= N; ++n) {
+        tparam[(n - 1)] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+      }
       {
-        current_statement__ = "file one_var_per_block.stan, line 21, columns 2-26";
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
         modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
         
-        current_statement__ = "file one_var_per_block.stan, line 22, columns 2-47";
-        for (size_t n = 1; n < N; n++)
-          current_statement__ = "file one_var_per_block.stan, line 22, columns 17-47";
-          
+        for (size_t n = 1; n <= N; ++n) {
+          modellocal[(n - 1)] = multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+        }
       }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside log_prob") + ": " + e.what(), current_statement__));
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-  }
-  
-  void get_param_names(std::vector<std::string>& names) const {
-    names.push_back("param");
-    names.push_back("matparam");
-    names.push_back("tparam");
-    names.push_back("gq");
-  }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("param");
+    names__.push_back("matparam");
+    names__.push_back("tparam");
+    names__.push_back("gq");
+    } // get_param_names() 
+    
   void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.resize(0);
     std::vector<size_t> dims__;
@@ -402,12 +449,236 @@ class one_var_per_block_model : public prob_grad {
     dimss__.push_back(dims__);
     dims__.resize(0);
     
-  }
-  //TODO write_array
-  //TODO constrained_param_names
-  //TODO unconstrained_param_names
-  //TODO transform_inits
+    } // get_dims() 
+    
+  template <typename RNG>
+  void write_array(RNG& base_rng, std::vector<double>& params_r__,
+                   std::vector<int>& params_i__, std::vector<double>& vars__,
+                   bool emit_transformed_parameters__ = true,
+                   bool emit_generated_quantities__ = true,
+                   std::ostream* pstream__ = 0) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "one_var_per_block_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    {
+      std::vector<Eigen::Matrix<double, -1, 1>> param;
+      param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+      
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        param[(sym1__ - 1)] = in__.vector(N);}
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param[(sym1__ - 1), (sym2__ - 1)] = lb_constrain(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                                           0);}}
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
+      matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(N, N)));
+      
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          matparam[(sym1__ - 1), (sym2__ - 1)] = in__.matrix(N, N);}}
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+            matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)] = lb_constrain(
+            stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+            0);}}}
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          vars__.push_back(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+            vars__.push_back(stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"));
+          }}}
+      if (emit_transformed_parameters__) {
+        std::vector<Eigen::Matrix<double, -1, 1>> tparam;
+        tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            check_greater_or_equal(function__, "tparam[sym1__, sym2__]",
+                                   stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                   0);}}
+        for (size_t n = 1; n <= N; ++n) {
+          tparam[(n - 1)] = multiply(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2);
+        }
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.push_back(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+          }}
+      } 
+      if (emit_generated_quantities__) {
+        std::vector<Eigen::Matrix<double, -1, 1>> gq;
+        gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            check_greater_or_equal(function__, "gq[sym1__, sym2__]",
+                                   stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                   0);}}
+        for (size_t n = 1; n <= N; ++n) {
+          gq[(n - 1)] = add(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"));
+        }
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            vars__.push_back(stan::model::rvalue(gq, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"));
+          }}
+      } 
+    }
+    } // write_array() 
+    
+  void constrained_param_names(std::vector<std::string>& param_names__,
+                               bool emit_transformed_parameters__ = true,
+                               bool emit_generated_quantities__ = true) const {
+    
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }}
+    for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          {
+            for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+              param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
+          }}
+      }}
+    if (emit_transformed_parameters__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }}
+    }
+    
+    } // constrained_param_names() 
+    
+  void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                 bool emit_transformed_parameters__ = true,
+                                 bool emit_generated_quantities__ = true) const {
+    
+    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }}
+    for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+      {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          {
+            for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+              param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
+          }}
+      }}
+    if (emit_transformed_parameters__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }}
+    }
+    
+    if (emit_generated_quantities__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        {
+          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+            param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }}
+    }
+    
+    } // unconstrained_param_names() 
+    
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& params_r__,
+                       std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    stan::io::writer<double> writer__(params_r__, params_i__);
+    std::vector<double> vals_r__;
+    std::vector<int> vals_i__;
+    {
+      std::vector<Eigen::Matrix<double, -1, 1>> param;
+      param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+      
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        param[(sym1__ - 1)] = stan::model::rvalue(context__.vals_r("param"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), "pretty printed e");
+      }
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          param[(sym1__ - 1), (sym2__ - 1)] = lb_free(stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                                      0);}}
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
+      matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(N, N)));
+      
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          matparam[(sym1__ - 1), (sym2__ - 1)] = stan::model::rvalue(context__.vals_r("matparam"), stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e");
+        }}
+      for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+            matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)] = lb_free(
+            stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+            0);}}}
+    }
+    } // transform_inits() 
+    
+  
+    template <typename RNG>
+    void write_array(RNG& base_rng,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool emit_transformed_parameters__ = true,
+                     bool emit_generated_quantities__ = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+};
 }
-}
-typedef one_var_per_block_modelnamespace::one_var_per_block_model stan_model;
+
+typedef one_var_per_block_model_namespace::one_var_per_block_model stan_model;
 

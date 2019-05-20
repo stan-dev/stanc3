@@ -67,7 +67,8 @@ let rec pp_expr pp_e ppf = function
 
 and pp_indexed pp_e ppf (ident, indices) =
   Fmt.pf ppf {|@[%s%a@]|} ident
-    Fmt.(list (pp_index pp_e) ~sep:comma |> brackets)
+    ( if List.is_empty indices then fun _ _ -> ()
+    else Fmt.(list (pp_index pp_e) ~sep:comma |> brackets) )
     indices
 
 and pp_index pp_e ppf = function
@@ -223,8 +224,13 @@ let mk_of_string of_sexp x =
   | Invalid_argument _ -> None
 
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
+
+let internal_funapp ifn args emeta =
+  {expr= FunApp (CompilerInternal, string_of_internal_fn ifn, args); emeta}
+
 let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
-let loop_bottom = {expr= Lit (Int, "0"); emeta= internal_meta}
+let zero = {expr= Lit (Int, "0"); emeta= internal_meta}
+let loop_bottom = {expr= Lit (Int, "1"); emeta= internal_meta}
 let string_of_operator = mk_string_of sexp_of_operator
 let operator_of_string = mk_of_string operator_of_sexp
 
@@ -313,10 +319,6 @@ let unnumbered_prog_of_numbered_prog
     (flowgraph_to_mir : (int, stmt_loc_num) Map.Poly.t) p =
   map_prog (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p
 
-let zero =
-  { expr= Lit (Int, "0")
-  ; emeta= {mloc= no_span; mtype= UInt; madlevel= DataOnly} }
-
 (* -- Locations and spans --------------------------------------------------- *)
 
 (** Render a location as a string *)
@@ -361,3 +363,14 @@ let string_of_location_span loc_sp =
     sprintf "%s%s" file_line_col_string included_from_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
+let _counter = ref 0
+
+let gensym () =
+  _counter := !_counter + 1 ;
+  sprintf "sym%d__" !_counter
+
+let gensym_enter () =
+  let old_counter = !_counter in
+  (gensym (), fun () -> _counter := old_counter)
+
+let gensym_reset_danger_use_cautiously () = _counter := 0

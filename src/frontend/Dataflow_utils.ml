@@ -306,6 +306,12 @@ let%expect_test "Loop test" =
           (end_loc
            ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
        (4
+        ((Block (5))
+         ((begin_loc
+           ((filename string) (line_num 4) (col_num 10) (included_from ())))
+          (end_loc
+           ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
+       (5
         ((NRFunApp CompilerInternal FnPrint__
           (((expr
              (FunApp StanLib Plus__
@@ -319,7 +325,7 @@ let%expect_test "Loop test" =
           (end_loc
            ((filename string) (line_num 4) (col_num 23) (included_from ())))))))
       (3)
-      ((1 ()) (2 (1)) (3 (2 4)) (4 (3)))
+      ((1 ()) (2 (1)) (3 (2 5)) (4 (3)) (5 (4)))
     |}]
 
 let%expect_test "Loop passthrough" =
@@ -431,10 +437,8 @@ let%expect_test "Statement label map example" =
        (12 (Block (13))) (13 Break)
        (14
         (IfElse
-         (FunApp StanLib And__
-          ((FunApp StanLib Greater__ ((Var j) (Lit Int 8)))
-           (FunApp StanLib Less__
-            ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))))
+         (EAnd (FunApp StanLib Greater__ ((Var j) (Lit Int 8)))
+          (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1))))))
          15 ()))
        (15 (Block (16))) (16 Continue)
        (17 (IfElse (FunApp StanLib Greater__ ((Var j) (Lit Int 5))) 18 (20)))

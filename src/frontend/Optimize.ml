@@ -6,7 +6,7 @@ open Mir_utils
 let replace_fresh_local_vars s' =
   let f m = function
     | Decl {decl_adtype; decl_type; decl_id} ->
-        let fresh_name = Util.gensym () in
+        let fresh_name = gensym () in
         ( Decl {decl_adtype; decl_id= fresh_name; decl_type}
         , Map.Poly.set m ~key:decl_id
             ~data:
@@ -38,7 +38,7 @@ let handle_early_returns opt_triple b =
     | x -> x
   in
   For
-    { loopvar= Util.gensym ()
+    { loopvar= gensym ()
     ; lower=
         { expr= Lit (Int, "1")
         ; emeta= {mtype= UInt; madlevel= DataOnly; mloc= Middle.no_span} }
@@ -67,7 +67,7 @@ let rec inline_function_expression adt fim e =
       | None -> (s_list, {e with expr= FunApp (t, s, es)})
       | Some (rt, args, b) ->
           let b = b (* TODO: replace fresh variables here *) in
-          let x = Util.gensym () in
+          let x = gensym () in
           let b = handle_early_returns (Some (rt, adt, x)) b in
           ( s_list
             @ [ Decl
@@ -581,7 +581,7 @@ let lazy_code_motion (mir : typed_prog) =
           match e.expr with
           | Lit (_, _) -> accum
           | _ when can_side_effect_expr e -> accum
-          | _ -> Map.set accum ~key:e ~data:(Util.gensym ()) )
+          | _ -> Map.set accum ~key:e ~data:(gensym ()) )
     in
     (* TODO: it'd be more efficient to just not accumulate constants in the static analysis *)
     let declarations_list =
@@ -688,7 +688,7 @@ let block_fixing =
 (* TODO: add pass to get rid of redundant declarations? *)
 
 let%expect_test "map_rec_stmt_loc" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -751,7 +751,7 @@ let%expect_test "map_rec_stmt_loc" =
       } |}]
 
 let%expect_test "map_rec_state_stmt_loc" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -821,7 +821,7 @@ let%expect_test "map_rec_state_stmt_loc" =
       3 |}]
 
 let%expect_test "inline functions" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -876,7 +876,7 @@ let%expect_test "inline functions" =
           }
         real sym2__;
         for(sym3__ in 1:1) {
-          sym2__[] = Pow__(53, 2);
+          sym2__ = Pow__(53, 2);
           break;
           }
         FnReject__(sym2__);
@@ -896,7 +896,7 @@ let%expect_test "inline functions" =
       } |}]
 
 let%expect_test "inline functions 2" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -944,9 +944,11 @@ let%expect_test "inline functions 2" =
       }
 
       generate_quantities {
-        for(sym3__ in 1:1) {
-          for(sym1__ in 1:1) {
+        if(emit_generated_quantities__) {
+          for(sym3__ in 1:1) {
+            for(sym1__ in 1:1) {
 
+              }
             }
           }
       }
@@ -960,7 +962,7 @@ let%expect_test "inline functions 2" =
       } |}]
 
 let%expect_test "list collapsing" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1127,7 +1129,7 @@ let%expect_test "list collapsing" =
     |}]
 
 let%expect_test "do not inline recursive functions" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1186,7 +1188,7 @@ let%expect_test "do not inline recursive functions" =
       } |}]
 
 let%expect_test "inline function in for loop" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1239,19 +1241,21 @@ let%expect_test "inline function in for loop" =
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__("f");
-          sym1__[] = 42;
+          sym1__ = 42;
           break;
           }
         int sym3__;
         for(sym4__ in 1:1) {
           FnPrint__("g");
-          sym3__[] = Plus__(3, 24);
+          sym3__ = Plus__(3, 24);
           break;
           }
-        for(i in sym1__:sym3__) FnPrint__("body");
+        for(i in sym1__:sym3__) {
+                                FnPrint__("body");
+                                }
                                 for(sym4__ in 1:1) {
                                   FnPrint__("g");
-                                  sym3__[] = Plus__(3, 24);
+                                  sym3__ = Plus__(3, 24);
                                   break;
                                   }
         }
@@ -1272,7 +1276,7 @@ let%expect_test "inline function in for loop" =
 (* TODO: check test results from here *)
 
 let%expect_test "inline function in for loop 2" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1325,7 +1329,7 @@ let%expect_test "inline function in for loop 2" =
         int sym5__;
         for(sym6__ in 1:1) {
           FnPrint__("f");
-          sym5__[] = 42;
+          sym5__ = 42;
           break;
           }
         int sym7__;
@@ -1334,22 +1338,24 @@ let%expect_test "inline function in for loop 2" =
           int sym3__;
           for(sym4__ in 1:1) {
             FnPrint__("f");
-            sym3__[] = 42;
+            sym3__ = 42;
             break;
             }
-          sym7__[] = Plus__(sym3__, 24);
+          sym7__ = Plus__(sym3__, 24);
           break;
           }
-        for(i in sym5__:sym7__) FnPrint__("body");
+        for(i in sym5__:sym7__) {
+                                FnPrint__("body");
+                                }
                                 for(sym8__ in 1:1) {
                                   FnPrint__("g");
                                   int sym3__;
                                   for(sym4__ in 1:1) {
                                     FnPrint__("f");
-                                    sym3__[] = 42;
+                                    sym3__ = 42;
                                     break;
                                     }
-                                  sym7__[] = Plus__(sym3__, 24);
+                                  sym7__ = Plus__(sym3__, 24);
                                   break;
                                   }
         }
@@ -1368,7 +1374,7 @@ let%expect_test "inline function in for loop 2" =
       } |}]
 
 let%expect_test "inline function in while loop" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1421,13 +1427,13 @@ let%expect_test "inline function in while loop" =
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__("g");
-          sym1__[] = Plus__(3, 24);
+          sym1__ = Plus__(3, 24);
           break;
           }
         while(sym1__) FnPrint__("body");
                       for(sym2__ in 1:1) {
                         FnPrint__("g");
-                        sym1__[] = Plus__(3, 24);
+                        sym1__ = Plus__(3, 24);
                         break;
                         }
         }
@@ -1446,7 +1452,7 @@ let%expect_test "inline function in while loop" =
       } |}]
 
 let%expect_test "inline function in if then else" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1499,7 +1505,7 @@ let%expect_test "inline function in if then else" =
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__("g");
-          sym1__[] = Plus__(3, 24);
+          sym1__ = Plus__(3, 24);
           break;
           }
         if(sym1__) FnPrint__("body");
@@ -1521,7 +1527,7 @@ let%expect_test "inline function in if then else" =
     |}]
 
 let%expect_test "inline function in ternary if " =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1584,19 +1590,19 @@ let%expect_test "inline function in ternary if " =
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__("f");
-          sym1__[] = 42;
+          sym1__ = 42;
           break;
           }
         if(sym1__) int sym3__;
                    for(sym4__ in 1:1) {
                      FnPrint__("g");
-                     sym3__[] = Plus__(3, 24);
+                     sym3__ = Plus__(3, 24);
                      break;
                      }
          else int sym5__;
               for(sym6__ in 1:1) {
                 FnPrint__("h");
-                sym5__[] = Plus__(4, 4);
+                sym5__ = Plus__(4, 4);
                 break;
                 }
         FnPrint__(sym1__ ?sym3__: sym5__);
@@ -1616,7 +1622,7 @@ let%expect_test "inline function in ternary if " =
       } |}]
 
 let%expect_test "inline function multiple returns " =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1666,10 +1672,10 @@ let%expect_test "inline function multiple returns " =
         for(sym2__ in 1:1) {
           if(2) {
             FnPrint__("f");
-            sym1__[] = 42;
+            sym1__ = 42;
             break;
             }
-          sym1__[] = 6;
+          sym1__ = 6;
           break;
           }
         FnPrint__(sym1__);
@@ -1688,9 +1694,8 @@ let%expect_test "inline function multiple returns " =
 
       } |}]
 
-
 let%expect_test "inline function indices " =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1735,13 +1740,13 @@ let%expect_test "inline function indices " =
         int sym3__;
         for(sym4__ in 1:1) {
           FnPrint__(2);
-          sym3__[] = 42;
+          sym3__ = 42;
           break;
           }
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
-          sym1__[] = 42;
+          sym1__ = 42;
           break;
           }
         FnPrint__(a[sym1__, sym3__]);
@@ -1761,7 +1766,7 @@ let%expect_test "inline function indices " =
       } |}]
 
 let%expect_test "inline function and " =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1776,6 +1781,7 @@ let%expect_test "inline function and " =
       }
       |}
   in
+  (* TODO: these declarations are still in the wrong place *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = function_inlining mir in
@@ -1801,19 +1807,21 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-        int sym3__;
-        for(sym4__ in 1:1) {
-          FnPrint__(2);
-          sym3__[] = 42;
-          break;
-          }
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
-          sym1__[] = 42;
+          sym1__ = 42;
           break;
           }
-        FnPrint__(And__(sym1__, sym3__));
+        if(sym1__) {
+          int sym3__;
+          for(sym4__ in 1:1) {
+            FnPrint__(2);
+            sym3__ = 42;
+            break;
+            }
+          }
+        FnPrint__(sym1__ && sym3__);
         }
       }
 
@@ -1830,7 +1838,7 @@ let%expect_test "inline function and " =
       } |}]
 
 let%expect_test "inline function or " =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -1870,19 +1878,22 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-        int sym3__;
-        for(sym4__ in 1:1) {
-          FnPrint__(2);
-          sym3__[] = 42;
-          break;
-          }
         int sym1__;
         for(sym2__ in 1:1) {
           FnPrint__(1);
-          sym1__[] = 42;
+          sym1__ = 42;
           break;
           }
-        FnPrint__(Or__(sym1__, sym3__));
+        if(sym1__) ;
+         else {
+          int sym3__;
+          for(sym4__ in 1:1) {
+            FnPrint__(2);
+            sym3__ = 42;
+            break;
+            }
+          }
+        FnPrint__(sym1__ || sym3__);
         }
       }
 
@@ -1898,11 +1909,8 @@ let%expect_test "inline function or " =
 
       } |}]
 
-
-
-
 let%expect_test "unroll nested loop" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1932,10 +1940,22 @@ let%expect_test "unroll nested loop" =
 
       log_prob {
         {
+        {
+        {
         FnPrint__(1, 3);
+        }
+        {
         FnPrint__(1, 4);
+        }
+        }
+        {
+        {
         FnPrint__(2, 3);
+        }
+        {
         FnPrint__(2, 4);
+        }
+        }
         }
       }
 
@@ -1952,7 +1972,7 @@ let%expect_test "unroll nested loop" =
       } |}]
 
 let%expect_test "unroll nested loop with break" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|      model {
@@ -1984,14 +2004,18 @@ let%expect_test "unroll nested loop with break" =
 
       log_prob {
         {
+        {
         for(j in 3:4) {
           FnPrint__(1);
           break;
           }
+        }
+        {
         for(j in 3:4) {
           FnPrint__(2);
           break;
           }
+        }
         }
       }
 
@@ -2008,7 +2032,7 @@ let%expect_test "unroll nested loop with break" =
       } |}]
 
 let%expect_test "constant propagation" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2041,9 +2065,9 @@ let%expect_test "constant propagation" =
 
     prepare_data {
       data int i;
-      i[] = 42;
+      i = 42;
       data int j;
-      j[] = Plus__(2, 42);
+      j = Plus__(2, 42);
     }
 
     log_prob {
@@ -2067,7 +2091,7 @@ let%expect_test "constant propagation" =
     } |}]
 
 let%expect_test "constant propagation, local scope" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2103,10 +2127,10 @@ let%expect_test "constant propagation, local scope" =
 
     prepare_data {
       data int i;
-      i[] = 42;
+      i = 42;
       {
       data int j;
-      j[] = 2;
+      j = 2;
       }
     }
 
@@ -2132,7 +2156,7 @@ let%expect_test "constant propagation, local scope" =
     } |}]
 
 let%expect_test "constant propagation, model block local scope" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2172,17 +2196,21 @@ let%expect_test "constant propagation, model block local scope" =
     log_prob {
       {
       int i;
-      i[] = 42;
+      i = 42;
       int j;
-      j[] = 2;
+      j = 2;
       }
     }
 
     generate_quantities {
-      data int i;
-      data int j;
-      for(x in 1:i) {
-        FnPrint__(Plus__(i, j));
+      if(emit_generated_quantities__) {
+        data int i;
+        data int j;
+        for(x in 1:i) {
+          FnPrint__(Plus__(i, j));
+          }
+        FnWriteParam__(i);
+        FnWriteParam__(j);
         }
     }
 
@@ -2196,7 +2224,7 @@ let%expect_test "constant propagation, model block local scope" =
     } |}]
 
 let%expect_test "expression propagation" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2229,7 +2257,7 @@ let%expect_test "expression propagation" =
       prepare_data {
         data int i;
         data int j;
-        j[] = Plus__(2, i);
+        j = Plus__(2, i);
       }
 
       log_prob {
@@ -2253,7 +2281,7 @@ let%expect_test "expression propagation" =
       } |}]
 
 let%expect_test "copy propagation" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2288,9 +2316,9 @@ let%expect_test "copy propagation" =
       prepare_data {
         data int i;
         data int j;
-        j[] = i;
+        j = i;
         data int k;
-        k[] = Times__(2, i);
+        k = Times__(2, i);
       }
 
       log_prob {
@@ -2314,7 +2342,7 @@ let%expect_test "copy propagation" =
       } |}]
 
 let%expect_test "dead code elimination" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2348,9 +2376,9 @@ let%expect_test "dead code elimination" =
 
       prepare_data {
         data array[int, 2] i;
-        i[] = FnMakeArray__(3, 2);
+        i = FnMakeArray__(3, 2);
         data array[int, 2] j;
-        j[] = FnMakeArray__(3, 2);
+        j = FnMakeArray__(3, 2);
         j[1] = 2;
       }
 
@@ -2374,7 +2402,7 @@ let%expect_test "dead code elimination" =
       } |}]
 
 let%expect_test "dead code elimination decl" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2415,10 +2443,10 @@ let%expect_test "dead code elimination decl" =
       }
 
       generate_quantities {
-        {
-        data int i;
-        FnPrint__(i);
-        }
+        if(emit_generated_quantities__) {
+          data int i;
+          FnPrint__(i);
+          }
       }
 
       transform_inits {
@@ -2430,7 +2458,7 @@ let%expect_test "dead code elimination decl" =
       } |}]
 
 let%expect_test "dead code elimination, for loop" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2479,7 +2507,7 @@ let%expect_test "dead code elimination, for loop" =
       } |}]
 
 let%expect_test "dead code elimination, while loop" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2533,7 +2561,7 @@ let%expect_test "dead code elimination, while loop" =
       } |}]
 
 let%expect_test "dead code elimination, if then" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2602,7 +2630,7 @@ let%expect_test "dead code elimination, if then" =
       } |}]
 
 let%expect_test "dead code elimination, nested" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2653,7 +2681,7 @@ let%expect_test "dead code elimination, nested" =
       } |}]
 
 let%expect_test "partial evaluation" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2709,7 +2737,7 @@ let%expect_test "partial evaluation" =
       } |}]
 
 let%expect_test "try partially evaluate" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2765,7 +2793,7 @@ let%expect_test "try partially evaluate" =
       } |}]
 
 let%expect_test "partially evaluate with equality check" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2817,7 +2845,7 @@ let%expect_test "partially evaluate with equality check" =
       } |}]
 
 let%expect_test "partially evaluate glm" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2915,7 +2943,7 @@ let%expect_test "partially evaluate glm" =
       } |}]
 
 let%expect_test "lazy code motion" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -2948,7 +2976,7 @@ let%expect_test "lazy code motion" =
     log_prob {
       data [real] sym1__;
       {
-      sym1__[] = FnMakeArray__(3.0);
+      sym1__ = FnMakeArray__(3.0);
       FnPrint__(sym1__);
       FnPrint__(sym1__);
       FnPrint__(sym1__);
@@ -2968,7 +2996,7 @@ let%expect_test "lazy code motion" =
     } |}]
 
 let%expect_test "lazy code motion, 2" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3003,7 +3031,9 @@ let%expect_test "lazy code motion, 2" =
         data int sym1__;
         {
         for(i in 1:2) {
+          {
           FnPrint__(Plus__(3, 4));
+          }
           ;
           }
         }
@@ -3022,7 +3052,7 @@ let%expect_test "lazy code motion, 2" =
       } |}]
 
 let%expect_test "lazy code motion, 3" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3057,7 +3087,7 @@ let%expect_test "lazy code motion, 3" =
         data int sym1__;
         {
         FnPrint__(3);
-        sym1__[] = Plus__(3, 5);
+        sym1__ = Plus__(3, 5);
         FnPrint__(sym1__);
         FnPrint__(Plus__(sym1__, 7));
         }
@@ -3076,7 +3106,7 @@ let%expect_test "lazy code motion, 3" =
       } |}]
 
 let%expect_test "lazy code motion, 4" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3126,25 +3156,25 @@ let%expect_test "lazy code motion, 4" =
         int c;
         int x;
         int y;
-        b[] = 1;
+        b = 1;
         if(1) {
           {
           ;
           ;
           ;
           }
-          sym1__[] = Plus__(b, c);
+          sym1__ = Plus__(b, c);
           ;
           }
          else {
           {
-          sym1__[] = Plus__(b, c);
-          x[] = sym1__;
+          sym1__ = Plus__(b, c);
+          x = sym1__;
           ;
           }
           ;
           }
-        y[] = sym1__;
+        y = sym1__;
         }
       }
 
@@ -3161,7 +3191,7 @@ let%expect_test "lazy code motion, 4" =
       } |}]
 
 let%expect_test "lazy code motion, 5" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3209,30 +3239,30 @@ let%expect_test "lazy code motion, 5" =
         int c;
         int x;
         int y;
-        b[] = 1;
+        b = 1;
         if(1) {
           {
           ;
           ;
           ;
           }
-          sym1__[] = Plus__(b, c);
+          sym1__ = Plus__(b, c);
           ;
           }
          else {
           {
           if(2) {
-            sym1__[] = Plus__(b, c);
-            x[] = sym1__;
+            sym1__ = Plus__(b, c);
+            x = sym1__;
             ;
             }
-           else sym1__[] = Plus__(b, c);
+           else sym1__ = Plus__(b, c);
                 ;
           ;
           }
           ;
           }
-        y[] = sym1__;
+        y = sym1__;
         }
       }
 
@@ -3249,7 +3279,7 @@ let%expect_test "lazy code motion, 5" =
       } |}]
 
 let%expect_test "lazy code motion, 6" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3288,11 +3318,11 @@ let%expect_test "lazy code motion, 6" =
         int x;
         int y;
         if(2) {
-          x[] = Plus__(1, 2);
+          x = Plus__(1, 2);
           ;
           }
          else ;
-        y[] = Plus__(4, 3);
+        y = Plus__(4, 3);
         }
       }
 
@@ -3309,7 +3339,7 @@ let%expect_test "lazy code motion, 6" =
       } |}]
 
 let%expect_test "lazy code motion, 7" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3371,8 +3401,8 @@ let%expect_test "lazy code motion, 7" =
         int z;
         if(1) {
           {
-          a[] = c;
-          x[] = Plus__(a, b);
+          a = c;
+          x = Plus__(a, b);
           }
           ;
           }
@@ -3384,10 +3414,10 @@ let%expect_test "lazy code motion, 7" =
           {
           if(3) {
             {
-            sym2__[] = Plus__(a, b);
+            sym2__ = Plus__(a, b);
             ;
             while(4) {
-              y[] = sym2__;
+              y = sym2__;
               ;
               }
             ;
@@ -3401,12 +3431,12 @@ let%expect_test "lazy code motion, 7" =
               ;
               ;
               }
-            sym2__[] = Plus__(a, b);
-            y[] = sym2__;
+            sym2__ = Plus__(a, b);
+            y = sym2__;
             }
             ;
             }
-          z[] = sym2__;
+          z = sym2__;
           }
           ;
           }
@@ -3431,7 +3461,7 @@ let%expect_test "lazy code motion, 7" =
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3481,7 +3511,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
         {
         FnPrint__(foo(foo_lp(1)));
         FnPrint__(foo(foo_lp(1)));
-        sym1__[] = foo(foo(1));
+        sym1__ = foo(foo(1));
         FnPrint__(sym1__);
         FnPrint__(sym1__);
         }
@@ -3500,7 +3530,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       } |}]
 
 let%expect_test "lazy code motion, 9" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3553,7 +3583,7 @@ let%expect_test "lazy code motion, 9" =
       } |}]
 
 let%expect_test "lazy code motion, 10" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3589,9 +3619,9 @@ let%expect_test "lazy code motion, 10" =
         data int sym1__;
         {
         int x;
-        x[] = 3;
+        x = 3;
         FnPrint__(Times__(x, 2));
-        x[] = 2;
+        x = 2;
         FnPrint__(Times__(x, 2));
         }
       }
@@ -3609,7 +3639,7 @@ let%expect_test "lazy code motion, 10" =
       } |}]
 
 let%expect_test "lazy code motion, 11" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3671,7 +3701,7 @@ let%expect_test "lazy code motion, 11" =
       } |}]
 
 let%expect_test "lazy code motion, 12" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3715,7 +3745,7 @@ let%expect_test "lazy code motion, 12" =
           {
           FnPrint__(Plus__(x, 42));
           continue;
-          x[] = 3;
+          x = 3;
           }
           ;
           }
@@ -3736,7 +3766,7 @@ let%expect_test "lazy code motion, 12" =
 
 let%expect_test "cool example: expression propagation + partial evaluation + \
                  lazy code motion + dead code elimination" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
@@ -3804,7 +3834,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       } |}]
 
 let%expect_test "block fixing" =
-  let _ = Util.gensym_reset_danger_use_cautiously () in
+  let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
