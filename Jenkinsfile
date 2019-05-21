@@ -58,7 +58,7 @@ pipeline {
             }
             steps {
                 sh """
-                   wget https://github.com/stan-dev/cmdstan/releases/download/v2.19.1/cmdstan-2.19.1.tar.gz
+                   curl https://github.com/stan-dev/cmdstan/releases/download/v2.19.1/cmdstan-2.19.1.tar.gz -O
                    tar -zxpf cmdstan-2.19.tar.gz
                    cd cmdstan-2.19 && make -j${env.PARALLEL} build && cd ..
                """
