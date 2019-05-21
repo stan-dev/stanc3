@@ -1,4 +1,6 @@
 include Mir
+include Stan_math_signatures
+include Type_conversion
 open Core_kernel
 
 (* == Pretty printers ======================================================= *)
@@ -216,6 +218,9 @@ let loop_bottom = {expr= Lit (Int, "1"); emeta= internal_meta}
 let string_of_operator = mk_string_of sexp_of_operator
 let operator_of_string = mk_of_string operator_of_sexp
 
+let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
+let%test "good op name" = operator_of_string "Plus__" = Some Plus
+
 (** remove_size [st] discards size information from a sizedtype
     to return an unsizedtype. *)
 let rec remove_size = function
@@ -279,3 +284,53 @@ let gensym () =
 let gensym_enter () =
   let old_counter = !_counter in
   (gensym (), fun () -> _counter := old_counter)
+
+let ternary_if = "TernaryIf__"
+
+(** A hash table to hold some name conversions between the AST nodes and the
+    Stan Math name of the operator *)
+let string_of_operators =
+  Map.Poly.of_alist_multi
+    [ (string_of_operator Plus, "add")
+    ; (string_of_operator PPlus, "plus")
+    ; (string_of_operator Minus, "subtract")
+    ; (string_of_operator PMinus, "minus")
+    ; (string_of_operator Times, "multiply")
+    ; (string_of_operator Divide, "mdivide_right")
+    ; (string_of_operator Divide, "divide")
+    ; (string_of_operator Modulo, "modulus")
+    ; (string_of_operator LDivide, "mdivide_left")
+    ; (string_of_operator EltTimes, "elt_multiply")
+    ; (string_of_operator EltDivide, "elt_divide")
+    ; (string_of_operator Pow, "pow")
+    ; (string_of_operator Or, "logical_or")
+    ; (string_of_operator And, "logical_and")
+    ; (string_of_operator Equals, "logical_eq")
+    ; (string_of_operator NEquals, "logical_neq")
+    ; (string_of_operator Less, "logical_lt")
+    ; (string_of_operator Leq, "logical_lte")
+    ; (string_of_operator Greater, "logical_gt")
+    ; (string_of_operator Geq, "logical_gte")
+    ; (string_of_operator PNot, "logical_negation")
+    ; (string_of_operator Transpose, "transpose")
+    ; (ternary_if, "if_else")
+      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
+    ; ("(OperatorAssign Plus)", "assign_add")
+    ; ("(OperatorAssign Minus)", "assign_subtract")
+    ; ("(OperatorAssign Times)", "assign_multiply")
+    ; ("(OperatorAssign Divide)", "assign_divide")
+    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
+    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
+
+(** Querying stan_math_signatures for operator signatures by string name *)
+let operator_return_type_from_string op_name argtypes =
+  if op_name = "Assign" || op_name = "ArrowAssign" then
+    match List.map ~f:snd argtypes with
+    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 -> Some Void
+    | _ -> None
+  else
+    Map.Poly.find_multi string_of_operators op_name
+    |> List.find_map ~f:(fun name -> stan_math_returntype name argtypes)
+
+let operator_return_type op =
+  operator_return_type_from_string (string_of_operator op)

@@ -5,10 +5,9 @@
 
 open Core_kernel
 open Symbol_table
+open Middle
 open Ast
-open Stan_math_signatures
 open Errors
-open Type_conversion
 open Pretty_printing
 
 (* There is a semantic checking function for each AST node that calls
@@ -18,65 +17,29 @@ open Pretty_printing
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
 
-let ternary_if = "TernaryIf__"
+let check_of_compatible_return_type rt1 srt2 =
+  match (rt1, srt2) with
+  | Void, NoReturnType
+   |Void, Incomplete Void
+   |Void, Complete Void
+   |Void, AnyReturnType ->
+      true
+  | ReturnType UReal, Complete (ReturnType UInt) -> true
+  | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
+  | ReturnType _, AnyReturnType -> true
+  | _ -> false
 
-let%test "bad op name" = phys_equal (Middle.operator_of_string "Pluss__") None
-let%test "good op name" = Middle.operator_of_string "Plus__" = Some Plus
-
-(** A hash table to hold some name conversions between the AST nodes and the
-    Stan Math name of the operator *)
-let string_of_operators =
-  Map.Poly.of_alist_multi
-    [ (Middle.string_of_operator Middle.Plus, "add")
-    ; (Middle.string_of_operator PPlus, "plus")
-    ; (Middle.string_of_operator Minus, "subtract")
-    ; (Middle.string_of_operator PMinus, "minus")
-    ; (Middle.string_of_operator Times, "multiply")
-    ; (Middle.string_of_operator Divide, "mdivide_right")
-    ; (Middle.string_of_operator Divide, "divide")
-    ; (Middle.string_of_operator Modulo, "modulus")
-    ; (Middle.string_of_operator LDivide, "mdivide_left")
-    ; (Middle.string_of_operator EltTimes, "elt_multiply")
-    ; (Middle.string_of_operator EltDivide, "elt_divide")
-    ; (Middle.string_of_operator Pow, "pow")
-    ; (Middle.string_of_operator Or, "logical_or")
-    ; (Middle.string_of_operator And, "logical_and")
-    ; (Middle.string_of_operator Equals, "logical_eq")
-    ; (Middle.string_of_operator NEquals, "logical_neq")
-    ; (Middle.string_of_operator Less, "logical_lt")
-    ; (Middle.string_of_operator Leq, "logical_lte")
-    ; (Middle.string_of_operator Greater, "logical_gt")
-    ; (Middle.string_of_operator Geq, "logical_gte")
-    ; (Middle.string_of_operator PNot, "logical_negation")
-    ; (Middle.string_of_operator Transpose, "transpose")
-    ; (ternary_if, "if_else")
-      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
-    ; ("(OperatorAssign Plus)", "assign_add")
-    ; ("(OperatorAssign Minus)", "assign_subtract")
-    ; ("(OperatorAssign Times)", "assign_multiply")
-    ; ("(OperatorAssign Divide)", "assign_divide")
-    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
-    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
+let pretty_print_all_math_lib_fn_sigs name =
+  let matches =
+    List.map ~f:pretty_print_unsizedtype (list_all_math_lib_fn_sigs name)
+  in
+  if List.length matches = 0 then ""
+  else "\n" ^ String.concat ~sep:"\n" matches
 
 let pretty_print_all_operator_signatures name =
   Map.Poly.find_multi string_of_operators name
-  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> List.map ~f:pretty_print_all_math_lib_fn_sigs
   |> String.concat ~sep:"\n"
-
-(** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name argtypes =
-  if op_name = "Assign" || op_name = "ArrowAssign" then
-    match List.map ~f:snd argtypes with
-    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 ->
-        Some Middle.Void
-    | _ -> None
-  else
-    Map.Poly.find_multi string_of_operators op_name
-    |> List.find_map ~f:(fun name ->
-           Stan_math_signatures.stan_math_returntype name argtypes )
-
-let operator_return_type op =
-  operator_return_type_from_string (Middle.string_of_operator op)
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -480,7 +443,7 @@ let semantic_check_fn_stan_math ~loc id es =
             signatures: %s\n\
             Instead supplied arguments of incompatible type: %s."
            id.name
-           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+           (pretty_print_all_math_lib_fn_sigs id.name)
            (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes))
 
 let fn_kind_from_identifier id =
@@ -1021,7 +984,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
             signatures: %s\n\
             Instead supplied arguments of incompatible type: %s."
            id.name
-           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+           (pretty_print_all_math_lib_fn_sigs id.name)
            (List.map ~f:type_of_expr_typed es |> pretty_print_unsizedtypes))
 
 let semantic_check_nrfn ~loc id es =
