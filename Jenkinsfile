@@ -58,8 +58,9 @@ pipeline {
             }
             steps {
                 sh """
-                   git clone --recursive https://github.com/stan-dev/cmdstan
-                   cd cmdstan && make -j${env.PARALLEL} build && cd ..
+                   wget https://github.com/stan-dev/cmdstan/releases/download/v2.19.1/cmdstan-2.19.1.tar.gz
+                   tar -zxpf cmdstan-2.19.tar.gz
+                   cd cmdstan-2.19 && make -j${env.PARALLEL} build && cd ..
                """
                 sh """
                    eval \$(opam env)
