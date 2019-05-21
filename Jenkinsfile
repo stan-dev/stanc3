@@ -58,7 +58,7 @@ pipeline {
             }
             steps {
                 sh """
-                   git clone --recursive --depth 1 --branch develop https://github.com/stan-dev/cmdstan
+                   git clone -j${env.PARALLEL} --shallow-submodules --recursive --depth 1 --branch develop https://github.com/stan-dev/cmdstan
                    cd cmdstan && make -j${env.PARALLEL} build && cd ..
                """
                 sh """
