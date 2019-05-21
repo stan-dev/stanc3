@@ -88,7 +88,7 @@ let replace_fresh_local_vars s' =
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
-  let _ = print_s[%sexp (m : (string, mtype_loc_ad with_expr) Map.Poly.t) ]in
+  let _ = print_s[%sexp (m : (string, mtype_loc_ad with_expr) Map.Poly.t) ] in
   subst_stmt m s
 
 let replace_fresh_local_vars_triple (d_list, s_list, e) =
@@ -4246,7 +4246,7 @@ let%expect_test "replace fresh variables 2" =
   in
   (* TODO: this is still doing the wrong thing. This is related to the bug in function inlining.
      It seems that substitution is not happening for variables that appeared at the top level.
-     I wonder if this is a bug in map_rec_state_stmt_loc  *)
+     It seems like the bug is in substitution  *)
   let ast = Semantic_check.semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = map_prog (fun x -> x) replace_fresh_local_vars mir in
