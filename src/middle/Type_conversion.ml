@@ -1,8 +1,7 @@
 (** Some functions for checking whether conversions between types are allowed *)
 
 open Core_kernel
-open Middle
-open Ast
+open Mir
 
 let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
@@ -37,15 +36,3 @@ let check_compatible_arguments_mod_conv name args1 args2 =
             check_of_same_type_mod_conv name (snd sign1) (snd sign2)
             && autodifftype_can_convert (fst sign1) (fst sign2) )
           args1 args2)
-
-let check_of_compatible_return_type rt1 srt2 =
-  match (rt1, srt2) with
-  | Void, NoReturnType
-   |Void, Incomplete Void
-   |Void, Complete Void
-   |Void, AnyReturnType ->
-      true
-  | ReturnType UReal, Complete (ReturnType UInt) -> true
-  | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
-  | ReturnType _, AnyReturnType -> true
-  | _ -> false

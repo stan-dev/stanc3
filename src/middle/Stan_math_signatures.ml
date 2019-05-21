@@ -1,10 +1,8 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 
 open Core_kernel
-open Middle
-open Errors
 open Type_conversion
-open Pretty_printing
+open Mir
 
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
@@ -27,15 +25,9 @@ let stan_math_returntype name args =
 
 let is_stan_math_function_name name = Hashtbl.mem stan_math_signatures name
 
-let pretty_print_all_math_lib_fn_sigs name =
+let list_all_math_lib_fn_sigs name =
   let namematches = Hashtbl.find_multi stan_math_signatures name in
-  if List.length namematches = 0 then ""
-  else
-    "\n"
-    ^ String.concat ~sep:"\n"
-        (List.map
-           ~f:(fun (x, y) -> pretty_print_unsizedtype (UFun (y, x)))
-           namematches)
+  List.map ~f:(fun (x, y) -> UFun (y, x)) namematches
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let rec bare_array_type (t, i) =
@@ -47,7 +39,7 @@ let bare_types = function
   | 2 -> UVector
   | 3 -> URowVector
   | 4 -> UMatrix
-  | _ -> fatal_error ()
+  | i -> raise_s [%sexp (i : int)]
 
 let bare_types_size = 5
 
@@ -56,17 +48,22 @@ let vector_types = function
   | 1 -> UArray UReal
   | 2 -> UVector
   | 3 -> URowVector
-  | _ -> fatal_error ()
+  | i -> raise_s [%sexp (i : int)]
 
 let vector_types_size = 4
 
 let int_vector_types = function
   | 0 -> UInt
   | 1 -> UArray UInt
-  | _ -> fatal_error ()
+  | i -> raise_s [%sexp (i : int)]
 
 let int_vector_types_size = 2
-let primitive_types = function 0 -> UInt | 1 -> UReal | _ -> fatal_error ()
+
+let primitive_types = function
+  | 0 -> UInt
+  | 1 -> UReal
+  | i -> raise_s [%sexp (i : int)]
+
 let primitive_types_size = 2
 
 let all_vector_types = function
@@ -76,7 +73,7 @@ let all_vector_types = function
   | 3 -> URowVector
   | 4 -> UInt
   | 5 -> UArray UInt
-  | _ -> fatal_error ()
+  | i -> raise_s [%sexp (i : int)]
 
 let all_vector_types_size = 6
 
@@ -85,7 +82,7 @@ let eigen_vector_types = function
   | 1 -> UArray UVector
   | 2 -> URowVector
   | 3 -> UArray URowVector
-  | _ -> fatal_error ()
+  | i -> raise_s [%sexp (i : int)]
 
 let eigen_vector_types_size = 4
 let is_primitive = function UReal -> true | UInt -> true | _ -> false

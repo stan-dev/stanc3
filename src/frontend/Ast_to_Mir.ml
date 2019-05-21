@@ -14,7 +14,7 @@ let get_prob_fun_name name =
   let new_name =
     ["_log"; "_lpdf"; "_lpmf"; ""]
     |> List.map ~f:(( ^ ) name)
-    |> List.filter ~f:Stan_math_signatures.is_stan_math_function_name
+    |> List.filter ~f:Middle.is_stan_math_function_name
     |> List.hd
   in
   match new_name with
