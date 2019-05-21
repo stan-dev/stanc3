@@ -2,6 +2,7 @@ open Core_kernel
 open Frontend
 open Analysis_and_optimization.Optimize
 open Middle
+open Analysis_and_optimization.Mir_utils
 
 let%expect_test "map_rec_stmt_loc" =
   let _ = gensym_reset_danger_use_cautiously () in

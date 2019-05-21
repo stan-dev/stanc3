@@ -419,7 +419,7 @@ let top_free_vars_stmt
    |Middle.NRFunApp _ | Middle.Decl _ | Middle.Break | Middle.Continue
    |Middle.Skip ->
       free_vars_stmt
-        (Middle.statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
+        (statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
   | Middle.While (e, _) | Middle.IfElse (e, _, _) -> free_vars_expr e
   | Middle.For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
@@ -796,7 +796,7 @@ let propagation_mfp (prog : Middle.typed_prog)
           [ Set.Poly.of_list (List.map ~f:fst prog.input_vars)
           ; Set.Poly.of_list (List.map ~f:fst prog.output_vars)
           ; declared_variables_stmt
-              (Middle.stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
+              (stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).stmt ]
     end
     : TOTALTYPE
       with type vals = string )
@@ -879,7 +879,7 @@ let lazy_expressions_mfp
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
   let all_expressions =
     used_subexpressions_stmt
-      (Middle.stmt_loc_of_stmt_loc_num flowgraph_to_mir
+      (stmt_loc_of_stmt_loc_num flowgraph_to_mir
          (Map.Poly.find_exn flowgraph_to_mir 1))
         .stmt
   in
