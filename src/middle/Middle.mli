@@ -47,3 +47,12 @@ val is_stan_math_function_name : string -> bool
 
 val list_all_math_lib_fn_sigs : string -> unsizedtype list
 (** List all the signatures of a math library function, for the purposes of error messages. *)
+
+val operator_return_type_from_string :
+  string -> (autodifftype * unsizedtype) sexp_list -> returntype option
+
+val operator_return_type :
+  operator -> (autodifftype * unsizedtype) sexp_list -> returntype option
+
+val string_of_operators : (string, string sexp_list) Map.Poly.t
+val ternary_if : string

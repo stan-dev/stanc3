@@ -36,64 +36,10 @@ let pretty_print_all_math_lib_fn_sigs name =
   if List.length matches = 0 then ""
   else "\n" ^ String.concat ~sep:"\n" matches
 
-let ternary_if = "TernaryIf__"
-
-let%test "bad op name" = phys_equal (Middle.operator_of_string "Pluss__") None
-let%test "good op name" = Middle.operator_of_string "Plus__" = Some Plus
-
-(** A hash table to hold some name conversions between the AST nodes and the
-    Stan Math name of the operator *)
-let string_of_operators =
-  Map.Poly.of_alist_multi
-    [ (Middle.string_of_operator Middle.Plus, "add")
-    ; (Middle.string_of_operator PPlus, "plus")
-    ; (Middle.string_of_operator Minus, "subtract")
-    ; (Middle.string_of_operator PMinus, "minus")
-    ; (Middle.string_of_operator Times, "multiply")
-    ; (Middle.string_of_operator Divide, "mdivide_right")
-    ; (Middle.string_of_operator Divide, "divide")
-    ; (Middle.string_of_operator Modulo, "modulus")
-    ; (Middle.string_of_operator LDivide, "mdivide_left")
-    ; (Middle.string_of_operator EltTimes, "elt_multiply")
-    ; (Middle.string_of_operator EltDivide, "elt_divide")
-    ; (Middle.string_of_operator Pow, "pow")
-    ; (Middle.string_of_operator Or, "logical_or")
-    ; (Middle.string_of_operator And, "logical_and")
-    ; (Middle.string_of_operator Equals, "logical_eq")
-    ; (Middle.string_of_operator NEquals, "logical_neq")
-    ; (Middle.string_of_operator Less, "logical_lt")
-    ; (Middle.string_of_operator Leq, "logical_lte")
-    ; (Middle.string_of_operator Greater, "logical_gt")
-    ; (Middle.string_of_operator Geq, "logical_gte")
-    ; (Middle.string_of_operator PNot, "logical_negation")
-    ; (Middle.string_of_operator Transpose, "transpose")
-    ; (ternary_if, "if_else")
-      (* XXX I don't think the following are able to be looked up at all as they aren't Ast.operators *)
-    ; ("(OperatorAssign Plus)", "assign_add")
-    ; ("(OperatorAssign Minus)", "assign_subtract")
-    ; ("(OperatorAssign Times)", "assign_multiply")
-    ; ("(OperatorAssign Divide)", "assign_divide")
-    ; ("(OperatorAssign EltTimes)", "assign_elt_times")
-    ; ("(OperatorAssign EltDivide)", "assign_elt_divide") ]
-
 let pretty_print_all_operator_signatures name =
   Map.Poly.find_multi string_of_operators name
   |> List.map ~f:pretty_print_all_math_lib_fn_sigs
   |> String.concat ~sep:"\n"
-
-(** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name argtypes =
-  if op_name = "Assign" || op_name = "ArrowAssign" then
-    match List.map ~f:snd argtypes with
-    | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 ->
-        Some Middle.Void
-    | _ -> None
-  else
-    Map.Poly.find_multi string_of_operators op_name
-    |> List.find_map ~f:(fun name -> stan_math_returntype name argtypes)
-
-let operator_return_type op =
-  operator_return_type_from_string (Middle.string_of_operator op)
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =

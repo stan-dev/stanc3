@@ -31,8 +31,7 @@ let rec op_to_funapp op args =
   in
   { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
-      { mtype=
-          Semantic_check.operator_return_type op argtypes |> unwrap_return_exn
+      { mtype= operator_return_type op argtypes |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
       ; madlevel= Ast.expr_ad_lub args } }
 
