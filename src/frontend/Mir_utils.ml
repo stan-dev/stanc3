@@ -122,6 +122,8 @@ let subst_idx m = map_index (subst_expr m)
 
 let subst_stmt_base_helper g h b =
   match b with
+  (* TODO: this also needs to substitute the variable x, possibly, but to do so, we'd
+     need to know its type and AD-level. *)
   | Assignment ((x, l), e2) -> Assignment ((x, List.map ~f:h l), g e2)
   | x -> map_statement g (fun y -> y) x
 
