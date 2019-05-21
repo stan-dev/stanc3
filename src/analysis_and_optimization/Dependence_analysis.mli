@@ -86,3 +86,6 @@ val log_prob_dependency_graph :
    Build the dependency graph for the log_prob section of a program, where labels
    correspond to the labels built by statement_map.
 *)
+
+val reaching_defn_lookup :
+  reaching_defn Set.Poly.t -> vexpr -> label Set.Poly.t

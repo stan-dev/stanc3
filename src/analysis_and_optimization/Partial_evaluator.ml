@@ -78,8 +78,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             try
               let op = Middle.operator_of_sexp (Sexp.of_string name) in
               operator_return_type op argument_types
-            with _ ->
-              Middle.stan_math_returntype name argument_types
+            with _ -> Middle.stan_math_returntype name argument_types
           in
           let try_partially_evaluate_to e =
             match e with
