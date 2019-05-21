@@ -79,7 +79,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               let op = Middle.operator_of_sexp (Sexp.of_string name) in
               Semantic_check.operator_return_type op argument_types
             with _ ->
-              Stan_math_signatures.stan_math_returntype name argument_types
+              Middle.stan_math_returntype name argument_types
           in
           let try_partially_evaluate_to e =
             match e with

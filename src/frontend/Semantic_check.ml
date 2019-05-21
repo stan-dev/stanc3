@@ -5,10 +5,9 @@
 
 open Core_kernel
 open Symbol_table
+open Middle
 open Ast
-open Stan_math_signatures
 open Errors
-open Type_conversion
 open Pretty_printing
 
 (* There is a semantic checking function for each AST node that calls
@@ -17,6 +16,25 @@ open Pretty_printing
 (* Top level function semantic_check_program declares the AST while operating
    on (1) a global symbol table vm, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
+
+let check_of_compatible_return_type rt1 srt2 =
+  match (rt1, srt2) with
+  | Void, NoReturnType
+   |Void, Incomplete Void
+   |Void, Complete Void
+   |Void, AnyReturnType ->
+      true
+  | ReturnType UReal, Complete (ReturnType UInt) -> true
+  | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
+  | ReturnType _, AnyReturnType -> true
+  | _ -> false
+
+let pretty_print_all_math_lib_fn_sigs name =
+  let matches =
+    List.map ~f:pretty_print_unsizedtype (list_all_math_lib_fn_sigs name)
+  in
+  if List.length matches = 0 then ""
+  else "\n" ^ String.concat ~sep:"\n" matches
 
 let ternary_if = "TernaryIf__"
 
@@ -60,7 +78,7 @@ let string_of_operators =
 
 let pretty_print_all_operator_signatures name =
   Map.Poly.find_multi string_of_operators name
-  |> List.map ~f:Stan_math_signatures.pretty_print_all_math_lib_fn_sigs
+  |> List.map ~f:pretty_print_all_math_lib_fn_sigs
   |> String.concat ~sep:"\n"
 
 (** Querying stan_math_signatures for operator signatures by string name *)
@@ -72,8 +90,7 @@ let operator_return_type_from_string op_name argtypes =
     | _ -> None
   else
     Map.Poly.find_multi string_of_operators op_name
-    |> List.find_map ~f:(fun name ->
-           Stan_math_signatures.stan_math_returntype name argtypes )
+    |> List.find_map ~f:(fun name -> stan_math_returntype name argtypes)
 
 let operator_return_type op =
   operator_return_type_from_string (Middle.string_of_operator op)
@@ -480,7 +497,7 @@ let semantic_check_fn_stan_math ~loc id es =
             signatures: %s\n\
             Instead supplied arguments of incompatible type: %s."
            id.name
-           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+           (pretty_print_all_math_lib_fn_sigs id.name)
            (List.map es ~f:type_of_expr_typed |> pretty_print_unsizedtypes))
 
 let fn_kind_from_identifier id =
@@ -1021,7 +1038,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
             signatures: %s\n\
             Instead supplied arguments of incompatible type: %s."
            id.name
-           (Stan_math_signatures.pretty_print_all_math_lib_fn_sigs id.name)
+           (pretty_print_all_math_lib_fn_sigs id.name)
            (List.map ~f:type_of_expr_typed es |> pretty_print_unsizedtypes))
 
 let semantic_check_nrfn ~loc id es =

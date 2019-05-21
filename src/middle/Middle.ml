@@ -1,4 +1,6 @@
 include Mir
+include Stan_math_signatures
+include Type_conversion
 open Core_kernel
 
 (* == Pretty printers ======================================================= *)

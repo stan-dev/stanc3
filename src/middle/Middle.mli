@@ -86,3 +86,26 @@ val unnumbered_prog_of_numbered_prog :
 val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
 val gensym_reset_danger_use_cautiously : unit -> unit
+
+val check_compatible_arguments_mod_conv :
+     string
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> bool
+(** Check that the rhs list of function argument types can be converted to the
+    lhs *)
+
+val check_of_same_type_mod_array_conv :
+  string -> Mir.unsizedtype -> Mir.unsizedtype -> bool
+(** Check that the rhs type can be converted to the lhs, where we allow
+    conversion inside an array constructor *)
+
+val stan_math_returntype :
+  string -> (Mir.autodifftype * Mir.unsizedtype) list -> Mir.returntype option
+(** Get an optional return type for a Stan Math library function, given its name and argument types. *)
+
+val is_stan_math_function_name : string -> bool
+(** Check whether a string is the name of a Stan Math library function. *)
+
+val list_all_math_lib_fn_sigs : string -> unsizedtype list
+(** List all the signatures of a math library function, for the purposes of error messages. *)
