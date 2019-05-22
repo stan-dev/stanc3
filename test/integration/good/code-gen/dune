@@ -63,54 +63,54 @@
   (action (diff eight_schools_ncp_summary.expected eight_schools_ncp_summary.output)))
 
 ;; begin mother model
-(rule
-  (targets mother.hpp)
-  (deps (package stanc))
-  ;; (action (chdir %{env:CMDSTAN=cmdstan} (run make -j4 build)))
-  (action (run %{bin:stanc} mother.stan)))
-
-(rule
-  (targets mother)
-  (deps mother.hpp)
-  (action
-  (chdir %{env:CMDSTAN=cmdstan}
-    (run make -j4 %{targets}))))
-
-(rule
- (targets mother.csv)
- (action
-   (run %{dep:mother} random seed=1 sample output file=%{targets})))
-
-(rule
-  (targets stan2_mother)
-  (action
-    (progn
-      (copy %{dep:mother.stan} stan2_mother.stan)
-      (chdir %{env:CMDSTAN=cmdstan}
-        (run make -j4 %{targets})))))
-
-(rule
- (targets mother_summary.expected)
- (action
-   (progn
-    (run %{dep:stan2_mother} random seed=1 sample output file=stan2_mother.csv)
-    (with-stdout-to %{targets}
-      (run %{env:CMDSTAN=cmdstan}/bin/stansummary stan2_mother.csv))
-    (with-stdout-to %{targets}
-      (run python %{dep:chop_summary.py} %{targets}))
-    )))
-
-(rule
- (targets mother_summary.output)
- (deps mother.csv)
- (action
-  (progn
-    (with-stdout-to %{targets}
-      (run %{env:CMDSTAN=cmdstan}/bin/stansummary mother.csv))
-    (with-stdout-to %{targets}
-      (run python %{dep:chop_summary.py} %{targets}))
-    )))
-
-(alias (name runtest)
-  (enabled_if (<> false %{env:CMDSTAN=false}))
-  (action (diff mother_summary.expected mother_summary.output)))
+;; (rule
+;;   (targets mother.hpp)
+;;   (deps (package stanc))
+;;   ;; (action (chdir %{env:CMDSTAN=cmdstan} (run make -j4 build)))
+;;   (action (run %{bin:stanc} mother.stan)))
+;;
+;; (rule
+;;   (targets mother)
+;;   (deps mother.hpp)
+;;   (action
+;;   (chdir %{env:CMDSTAN=cmdstan}
+;;     (run make -j4 %{targets}))))
+;;
+;; (rule
+;;  (targets mother.csv)
+;;  (action
+;;    (run %{dep:mother} random seed=1 sample output file=%{targets})))
+;;
+;; (rule
+;;   (targets stan2_mother)
+;;   (action
+;;     (progn
+;;       (copy %{dep:mother.stan} stan2_mother.stan)
+;;       (chdir %{env:CMDSTAN=cmdstan}
+;;         (run make -j4 %{targets})))))
+;;
+;; (rule
+;;  (targets mother_summary.expected)
+;;  (action
+;;    (progn
+;;     (run %{dep:stan2_mother} random seed=1 sample output file=stan2_mother.csv)
+;;     (with-stdout-to %{targets}
+;;       (run %{env:CMDSTAN=cmdstan}/bin/stansummary stan2_mother.csv))
+;;     (with-stdout-to %{targets}
+;;       (run python %{dep:chop_summary.py} %{targets}))
+;;     )))
+;;
+;; (rule
+;;  (targets mother_summary.output)
+;;  (deps mother.csv)
+;;  (action
+;;   (progn
+;;     (with-stdout-to %{targets}
+;;       (run %{env:CMDSTAN=cmdstan}/bin/stansummary mother.csv))
+;;     (with-stdout-to %{targets}
+;;       (run python %{dep:chop_summary.py} %{targets}))
+;;     )))
+;;
+;; (alias (name runtest)
+;;   (enabled_if (<> false %{env:CMDSTAN=false}))
+;;   (action (diff mother_summary.expected mother_summary.output)))
