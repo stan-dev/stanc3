@@ -1300,7 +1300,8 @@ and stmt_is_escape {stmt; _} =
 
 and list_until_escape xs =
   let rec aux accu = function
-    | next :: _ when stmt_is_escape next -> List.rev @@ (next :: accu)
+    | next :: next' :: _ when stmt_is_escape next' ->
+        List.rev (next' :: next :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu
   in
@@ -1345,7 +1346,8 @@ and semantic_check_block ~loc ~cf stmts =
     let return_ty =
       List.map ~f:(fun s -> s.smeta.return_type) xs
       |> List.fold ~init:(ok NoReturnType) ~f:(fun accu x ->
-             accu >>= try_compute_block_statement_returntype loc x )
+             accu >>= fun y -> try_compute_block_statement_returntype loc y x
+         )
     in
     map return_ty ~f:(fun return_type ->
         mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
@@ -1554,8 +1556,8 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
   in
   Validate.(
     uargs
-    |> apply_const (semantic_check_returntype return_ty)
     |> apply_const (semantic_check_identifier id)
+    |> apply_const (semantic_check_returntype return_ty)
     >>= fun uargs ->
     let urt = return_ty in
     let uarg_types = List.map ~f:(fun (w, y, _) -> (w, y)) uargs in
@@ -1600,7 +1602,8 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
       ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
       ; in_returning_fun_def= urt <> Void }
     in
-    semantic_check_statement context body
+    let body' = semantic_check_statement context body in
+    body'
     >>= fun ub ->
     semantic_check_fundef_return_tys ~loc id urt ub
     |> map ~f:(fun _ ->
