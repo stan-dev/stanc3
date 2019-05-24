@@ -9,7 +9,6 @@ type syntax_error = Parsing of string * location_span
 let syntax_error_message = function Parsing (msg, _) -> msg
 let syntax_error_location = function Parsing (_, loc) -> loc
 
-(* TODO :render messages along with location! *)
 let pp_syntax_error ppf = function
   | Parsing (msg, loc_span) ->
       Fmt.pf ppf "\nSyntax error in %s, parsing error:\n%a"
