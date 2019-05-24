@@ -7,10 +7,27 @@ open Core_kernel
 open Symbol_table
 open Middle
 open Ast
-open Stan_math_signatures
 open Errors
-open Type_conversion
 module Validate = Validation.Make (Semantic_error)
+
+(* There is a semantic checking function for each AST node that calls
+   the checking functions for its children left to right. *)
+
+(* Top level function semantic_check_program declares the AST while operating
+   on (1) a global symbol table vm, and (2) structure of type context_flags_record
+   to communicate information down the AST. *)
+
+let check_of_compatible_return_type rt1 srt2 =
+  match (rt1, srt2) with
+  | Void, NoReturnType
+   |Void, Incomplete Void
+   |Void, Complete Void
+   |Void, AnyReturnType ->
+      true
+  | ReturnType UReal, Complete (ReturnType UInt) -> true
+  | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
+  | ReturnType _, AnyReturnType -> true
+  | _ -> false
 
 (** Origin blocks, to keep track of where variables are declared *)
 type originblock =
@@ -307,7 +324,7 @@ let semantic_check_ternary_if loc (pe, te, fe) =
         fe.emeta.type_
     in
     [pe; te; fe] |> List.map ~f:arg_type
-    |> Stan_math_signatures.stan_math_returntype "if_else"
+    |> stan_math_returntype "if_else"
     |> Option.value_map ~default:(error err) ~f:(function
          | ReturnType type_ ->
              mk_typed_expression
@@ -325,7 +342,7 @@ let semantic_check_binop loc op (le, re) =
       Semantic_error.illtyped_binary_op loc op le.emeta.type_ re.emeta.type_
     in
     [le; re] |> List.map ~f:arg_type
-    |> Stan_math_signatures.operator_stan_math_return_type op
+    |> operator_stan_math_return_type op
     |> Option.value_map ~default:(error err) ~f:(function
          | ReturnType type_ ->
              mk_typed_expression
@@ -340,7 +357,7 @@ let semantic_check_binop loc op (le, re) =
 let semantic_check_prefixop loc op e =
   Validate.(
     let err = Semantic_error.illtyped_prefix_op loc op e.emeta.type_ in
-    Stan_math_signatures.operator_stan_math_return_type op [arg_type e]
+    operator_stan_math_return_type op [arg_type e]
     |> Option.value_map ~default:(error err) ~f:(function
          | ReturnType type_ ->
              mk_typed_expression
@@ -355,7 +372,7 @@ let semantic_check_prefixop loc op e =
 let semantic_check_postfixop loc op e =
   Validate.(
     let err = Semantic_error.illtyped_postfix_op loc op e.emeta.type_ in
-    Stan_math_signatures.operator_stan_math_return_type op [arg_type e]
+    operator_stan_math_return_type op [arg_type e]
     |> Option.value_map ~default:(error err) ~f:(function
          | ReturnType type_ ->
              mk_typed_expression
@@ -919,7 +936,7 @@ let semantic_check_assignment_operator ~loc assop lhs rhs =
         else error err
     | OperatorAssign op ->
         List.map ~f:arg_type [lhs; rhs]
-        |> Stan_math_signatures.assignmentoperator_stan_math_return_type op
+        |> assignmentoperator_stan_math_return_type op
         |> Option.value_map ~default:(error err) ~f:(function
              | ReturnType _ -> error err
              | Void ->

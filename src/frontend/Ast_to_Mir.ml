@@ -16,7 +16,7 @@ let get_prob_fun_name name =
   let new_name =
     ["_log"; "_lpdf"; "_lpmf"; ""]
     |> List.map ~f:(( ^ ) name)
-    |> List.filter ~f:Stan_math_signatures.is_stan_math_function_name
+    |> List.filter ~f:Middle.is_stan_math_function_name
     |> List.hd
   in
   match new_name with
@@ -33,9 +33,7 @@ let rec op_to_funapp op args =
   in
   { expr= FunApp (StanLib, string_of_operator op, trans_exprs args)
   ; emeta=
-      { mtype=
-          Stan_math_signatures.operator_stan_math_return_type op argtypes
-          |> unwrap_return_exn
+      { mtype= operator_return_type op argtypes |> unwrap_return_exn
       ; mloc= Ast.expr_loc_lub args
       ; madlevel= Ast.expr_ad_lub args } }
 

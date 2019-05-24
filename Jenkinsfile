@@ -58,7 +58,7 @@ pipeline {
             }
             steps {
                 sh """
-                   git clone --recursive https://github.com/stan-dev/cmdstan
+                   git clone -j${env.PARALLEL} --shallow-submodules --recursive --depth 1 --branch develop https://github.com/stan-dev/cmdstan
                    cd cmdstan && make -j${env.PARALLEL} build && cd ..
                """
                 sh """
@@ -120,7 +120,7 @@ pipeline {
                 bat "bash -cl \"cd test/integration\""
                 bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                 bat "bash -cl \"cd ..\""
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose -x windows\""
+                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
                 bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                 stash name:'windows-exe', includes:'bin/*'
             }

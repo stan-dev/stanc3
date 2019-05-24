@@ -1,5 +1,6 @@
 open Core_kernel
 include module type of Mir
+include module type of Mir_pretty_printer
 module Validation : Validation_intf.Validation
 
 module type Frontend = Frontend_intf.Frontend
@@ -44,3 +45,49 @@ val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
 val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
 val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
+
+val check_compatible_arguments_mod_conv :
+     string
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> bool
+(** Check that the rhs list of function argument types can be converted to the
+    lhs *)
+
+val check_of_same_type_mod_array_conv :
+  string -> Mir.unsizedtype -> Mir.unsizedtype -> bool
+(** Check that the rhs type can be converted to the lhs, where we allow
+    conversion inside an array constructor *)
+
+val stan_math_returntype :
+  string -> (Mir.autodifftype * Mir.unsizedtype) list -> Mir.returntype option
+(** Get an optional return type for a Stan Math library function, given its name and argument types. *)
+
+val assignmentoperator_stan_math_return_type :
+     Mir.operator
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> Mir.returntype option
+
+val operator_stan_math_return_type :
+     Mir.operator
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> Mir.returntype option
+
+val pretty_print_math_lib_operator_sigs : Mir.operator -> string list
+
+val pretty_print_math_lib_assignmentoperator_sigs :
+  Mir.operator -> string option
+
+val pretty_print_all_math_lib_fn_sigs : string -> string
+
+val is_stan_math_function_name : string -> bool
+(** Check whether a string is the name of a Stan Math library function. *)
+
+val operator_return_type_from_string :
+  string -> (autodifftype * unsizedtype) sexp_list -> returntype option
+
+val operator_return_type :
+  operator -> (autodifftype * unsizedtype) sexp_list -> returntype option
+
+val string_of_operators : (string, string sexp_list) Map.Poly.t
+val ternary_if : string
