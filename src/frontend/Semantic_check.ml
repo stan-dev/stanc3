@@ -1731,8 +1731,10 @@ let semantic_check_program
     ; modelblock= umb
     ; generatedquantitiesblock= ugb }
   in
+  let apply_to x f = Validate.apply ~f x in
   Validate.(
-    ok mk_typed_prog <*> ufb <*> udb <*> utdb <*> upb <*> utpb <*> umb <*> ugb
+    ok mk_typed_prog |> apply_to ufb |> apply_to udb |> apply_to utdb
+    |> apply_to upb |> apply_to utpb |> apply_to umb |> apply_to ugb
     |> get_with
          ~with_ok:(fun ok -> Result.Ok ok)
          ~with_errors:(fun errs -> Result.Error errs))
