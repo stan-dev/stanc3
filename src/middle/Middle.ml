@@ -320,6 +320,41 @@ let string_of_location_span loc_sp =
     sprintf "%s%s" file_line_col_string included_from_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
+
+(** Return two lines before and after the specified location. *)
+let pp_context ppf ({filename; line_num; col_num; _} : Mir.location) =
+  try
+    let open In_channel in
+    let input = create filename in
+    for _ = 1 to line_num - 3 do
+      ignore (input_line_exn input)
+    done ;
+    let get_line num =
+      if num > 0 then
+        match input_line input with
+        | Some input -> Printf.sprintf "%6d:  %s\n" num input
+        | _ -> ""
+      else ""
+    in
+    let line_2_before = get_line (line_num - 2) in
+    let line_before = get_line (line_num - 1) in
+    let our_line = get_line line_num in
+    let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
+    let line_after = get_line (line_num + 1) in
+    let line_2_after = get_line (line_num + 2) in
+    close input ;
+    Fmt.pf ppf
+      "   -------------------------------------------------\n\
+       %s%s%s%s%s%s   -------------------------------------------------\n"
+      line_2_before line_before our_line cursor_line line_after line_2_after
+  with _ -> ()
+
+(** Return two lines before and after the specified location
+    and print a message *)
+let pp_message_with_location ppf (message, loc) =
+  Fmt.pf ppf "%a\n%s\n\n" pp_context loc message
+
+(*-- mutable counter for symbol names --*)
 let _counter = ref 0
 
 let gensym () =

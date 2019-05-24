@@ -37,6 +37,9 @@ val pp_typed_prog :
   -> ('a Mir.with_expr, ('b, 'c) Mir.stmt_with) Mir.prog
   -> unit
 
+val pp_message_with_location :
+  Format.formatter -> string * Mir.location -> unit
+
 val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
 val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
 val gensym : unit -> string

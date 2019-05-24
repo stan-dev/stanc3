@@ -10,7 +10,13 @@ let syntax_error_message = function Parsing (msg, _) -> msg
 let syntax_error_location = function Parsing (_, loc) -> loc
 
 (* TODO :render messages along with location! *)
-let render_syntax_error = function Parsing (msg, _) -> msg
+let pp_syntax_error ppf = function
+  | Parsing (msg, loc_span) ->
+      Fmt.pf ppf "\nSyntax error in %s, parsing error:\n%a"
+        (string_of_location_span loc_span)
+        pp_message_with_location (msg, loc_span.end_loc)
+
+let render_syntax_error = Fmt.to_to_string pp_syntax_error
 
 let parse parse_fun lexbuf =
   (* see the Menhir manual for the description of
