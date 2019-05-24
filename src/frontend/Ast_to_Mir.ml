@@ -722,7 +722,7 @@ let trans_prog filename p : typed_prog =
   ; prog_path= filename }
 
 (*===================== tests =========================================*)
-(* 
+
 let mir_from_string s =
   (* TODO : properly render syntax error *)
   let untyped_prog =
@@ -751,7 +751,7 @@ let%expect_test "Prefix-Op-Example" =
         }
       |}
   in
-  let op = Middle.log_prob in
+  let op = mir.log_prob in
   print_s [%sexp (op : Middle.stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
@@ -838,4 +838,4 @@ let%expect_test "gen quant" =
                ((NRFunApp CompilerInternal FnWriteParam__
                  ((Indexed (Var mat)
                    ((Single (Var sym1__)) (Single (Var sym2__))))))))))))))))
-      ())) |}] *)
+      ())) |}]
