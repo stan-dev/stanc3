@@ -132,8 +132,8 @@ module TypeError = struct
           arg_tys
     | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available signatures:\n\
-           %a\n\
+          "Ill-typed arguments supplied to function '%s'. Available \
+           signatures:%a\n\
            @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name pp_unsizedtype
           (UFun (listed_tys, return_ty))

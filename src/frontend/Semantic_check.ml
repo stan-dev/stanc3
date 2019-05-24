@@ -1090,7 +1090,7 @@ let semantic_check_tilde ~loc ~cf distribution truncation arg args =
     and ut = semantic_check_truncation cf truncation in
     liftA3 tuple3 ut ue ues
     |> apply_const (semantic_check_identifier distribution)
-    |> apply_const (semantic_check_sampling_pdf_pmf  distribution)
+    |> apply_const (semantic_check_sampling_pdf_pmf distribution)
     |> apply_const (semantic_check_valid_sampling_pos ~loc ~cf)
     |> apply_const (semantic_check_sampling_cdf_ccdf ~loc distribution)
     >>= fun (truncation, arg, args) ->
@@ -1302,7 +1302,7 @@ and list_until_escape xs =
   let rec aux accu = function
     | next :: _ when stmt_is_escape next -> List.rev @@ (next :: accu)
     | next :: rest -> aux (next :: accu) rest
-    | _ -> List.rev accu
+    | [] -> List.rev accu
   in
   aux [] xs
 
@@ -1330,21 +1330,25 @@ and try_compute_block_statement_returntype loc srt1 srt2 =
 
 and semantic_check_block ~loc ~cf stmts =
   Symbol_table.begin_scope vm ;
+  (* Any statements after a break or continue or return or reject 
+     do not count for the return type. 
+  *)
   let validated_stmts =
-    List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
+    List.map ~f:(semantic_check_statement cf) stmts
+    |> Validate.sequence
+    |> Validate.map ~f:list_until_escape
   in
   Symbol_table.end_scope vm ;
-  (* Any statements after a break or continue or return or reject do not count for the return
-       type. *)
   Validate.(
     validated_stmts
     >>= fun xs ->
-    xs |> list_until_escape
-    |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:(ok NoReturnType) ~f:(fun accu x ->
-           accu >>= fun y -> try_compute_block_statement_returntype loc y x )
-    |> map ~f:(fun return_type ->
-           mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
+    let return_ty =
+      List.map ~f:(fun s -> s.smeta.return_type) xs
+      |> List.fold ~init:(ok NoReturnType) ~f:(fun accu x ->
+             accu >>= try_compute_block_statement_returntype loc x )
+    in
+    map return_ty ~f:(fun return_type ->
+        mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
 
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_size_decl ~loc is_global sized_ty =
