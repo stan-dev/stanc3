@@ -1,20 +1,19 @@
 (** Setup of our compiler errors *)
 
 open Core_kernel
-open Middle
 
 (** Our type of syntax error information *)
 type parse_error =
-  | Lexing of string * Mir.location
-  | Include of string * Mir.location
-  | Parsing of string * Mir.location_span
+  | Lexing of string * Middle.location
+  | Include of string * Middle.location
+  | Parsing of string * Middle.location_span
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of parse_error
 
 (** Exception [SemanticError (msg, loc)] indicates a semantic error with message
     [msg], occurring in location [loc]. *)
-exception SemanticError of (string * Mir.location_span)
+exception SemanticError of (string * Middle.location_span)
 
 (** Exception [FatalError [msg]] indicates an error that should never happen with message
     [msg]. *)
@@ -25,7 +24,7 @@ let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
 (** Parse a string into a location *)
-let rec parse_location str : Mir.location =
+let rec parse_location str : Middle.location =
   let split_str =
     Str.bounded_split
       (Str.regexp "file \\|, line \\|, column \\|, included from\n")
@@ -45,7 +44,7 @@ let rec parse_location str : Mir.location =
   | _ -> fatal_error ()
 
 (** Take the AST.location corresponding to a Lexing.position *)
-let location_of_position : Lexing.position -> Mir.location = function
+let location_of_position : Lexing.position -> Middle.location = function
   | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
       let split_fname =
         Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
@@ -62,12 +61,12 @@ let location_of_position : Lexing.position -> Mir.location = function
               | fnames :: _ -> Some (parse_location fnames) ) } )
 
 (** Take the Middle.location_span corresponding to a pair of Lexing.position's *)
-let loc_span_of_pos start_pos end_pos : Mir.location_span =
+let loc_span_of_pos start_pos end_pos : Middle.location_span =
   { begin_loc= location_of_position start_pos
   ; end_loc= location_of_position end_pos }
 
 (** Return two lines before and after the specified location. *)
-let print_context ({filename; line_num; col_num; _} : Mir.location) =
+let print_context ({filename; line_num; col_num; _} : Middle.location) =
   try
     let open In_channel in
     let input = create filename in
@@ -107,26 +106,26 @@ let print_context_and_message message loc =
 let report_syntax_error = function
   | Parsing (message, loc_span) ->
       Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-        (string_of_location_span loc_span) ;
+        (Middle.string_of_location_span loc_span) ;
       print_context_and_message message loc_span.end_loc
   | Lexing (_, loc) ->
       Printf.eprintf "\nSyntax error in %s, lexing error:\n"
-        (string_of_location {loc with col_num= loc.col_num - 1}) ;
+        (Middle.string_of_location {loc with col_num= loc.col_num - 1}) ;
       print_context_and_message "Invalid character found." loc
   | Include (message, loc) ->
       Printf.eprintf "\nSyntax error in %s, include error:\n"
-        (string_of_location loc) ;
+        (Middle.string_of_location loc) ;
       print_context_and_message message loc
 
 let report_parsing_error (message, loc_span) =
   Printf.eprintf "\nSyntax error in %s, parsing error:\n"
-    (string_of_location_span loc_span) ;
+    (Middle.string_of_location_span loc_span) ;
   print_context_and_message message loc_span.end_loc
 
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =
   Printf.eprintf "\n%s in %s:\n" "Semantic error"
-    (string_of_location_span loc_span) ;
+    (Middle.string_of_location_span loc_span) ;
   print_context_and_message message loc_span.begin_loc
 
 (* Warn that a language feature is deprecated *)
@@ -135,7 +134,7 @@ let warn_deprecated (pos, message) =
     location_of_position {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
   in
   Printf.eprintf "\nWarning: deprecated language construct used in %s:\n"
-    (string_of_location loc) ;
+    (Middle.string_of_location loc) ;
   print_context_and_message message loc
 
 (* TESTS *)
@@ -145,7 +144,7 @@ let%expect_test "location string equivalence 1" =
      file yyy.stan, line 666, column 42, included from\n\
      file zzz.stan, line 24, column 77"
   in
-  print_endline (string_of_location (parse_location str)) ;
+  print_endline (Middle.string_of_location (parse_location str)) ;
   [%expect
     {|
       file xxx.stan, line 245, column 13, included from
@@ -153,7 +152,7 @@ let%expect_test "location string equivalence 1" =
       file zzz.stan, line 24, column 77 |}]
 
 let%expect_test "location string equivalence 2" =
-  let loc : Mir.location =
+  let loc : Middle.location =
     { filename= "xxx.stan"
     ; line_num= 35
     ; col_num= 24
@@ -164,7 +163,8 @@ let%expect_test "location string equivalence 2" =
           ; col_num= 214
           ; included_from= None } }
   in
-  print_endline (string_of_location (parse_location (string_of_location loc))) ;
+  print_endline
+    (Middle.string_of_location (parse_location (Middle.string_of_location loc))) ;
   [%expect
     {|
       file xxx.stan, line 35, column 24, included from

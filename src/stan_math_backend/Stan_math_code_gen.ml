@@ -18,7 +18,6 @@
 
 open Core_kernel
 open Middle
-open Middle.Mir
 open Fmt
 open Expression_gen
 

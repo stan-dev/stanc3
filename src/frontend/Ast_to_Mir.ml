@@ -1,15 +1,15 @@
 open Core_kernel
 open Middle
-open Middle.Mir
 
 (* XXX fix exn *)
 let unwrap_return_exn = function
-  | Some (Mir.ReturnType ut) -> ut
+  | Some (Middle.ReturnType ut) -> ut
   | x ->
-      raise_s [%message "Unexpected return type " (x : Mir.returntype option)]
+      raise_s
+        [%message "Unexpected return type " (x : Middle.returntype option)]
 
 let trans_fn_kind = function
-  | Ast.StanLib -> Mir.StanLib
+  | Ast.StanLib -> Middle.StanLib
   | UserDefined -> UserDefined
 
 let get_prob_fun_name name =
@@ -64,16 +64,16 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
         | Ast.CondDistApp ({name; _}, args) ->
-            FunApp (Mir.StanLib, name, trans_exprs args)
+            FunApp (Middle.StanLib, name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
         | ArrayExpr eles ->
             FunApp
-              ( Mir.CompilerInternal
+              ( Middle.CompilerInternal
               , string_of_internal_fn FnMakeArray
               , trans_exprs eles )
         | RowVectorExpr eles ->
             FunApp
-              ( Mir.CompilerInternal
+              ( Middle.CompilerInternal
               , string_of_internal_fn FnMakeRowVec
               , trans_exprs eles )
         | Indexed (lhs, indices) ->
@@ -141,21 +141,21 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
     ps
 
 let unsizedtype_of_indexed ut
-    (typed_idxs : (Ast.typed_expression Ast.index * Mir.unsizedtype) list) =
+    (typed_idxs : (Ast.typed_expression Ast.index * Middle.unsizedtype) list) =
   let rec aux k ut xs =
     match (ut, xs) with
-    | Mir.UMatrix, [(Ast.All, _); (Single _, Mir.UInt)]
+    | Middle.UMatrix, [(Ast.All, _); (Single _, Middle.UInt)]
      |UMatrix, [(Upfrom _, _); (Single _, UInt)]
      |UMatrix, [(Downfrom _, _); (Single _, UInt)]
      |UMatrix, [(Between _, _); (Single _, UInt)]
      |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k Mir.UVector
+        k Middle.UVector
     | _, [] -> k ut
     | _, next :: rest -> (
       match next with
       | Single _, UInt -> (
         match ut with
-        | Mir.UArray inner_ty -> aux k inner_ty rest
+        | Middle.UArray inner_ty -> aux k inner_ty rest
         | UVector | URowVector -> aux k UReal rest
         | UMatrix -> aux k URowVector rest
         | _ ->
@@ -166,8 +166,8 @@ let unsizedtype_of_indexed ut
                invalid expression" )
       | _ -> (
         match ut with
-        | Mir.UArray inner_ty ->
-            let k' t = k @@ Mir.UArray t in
+        | Middle.UArray inner_ty ->
+            let k' t = k @@ Middle.UArray t in
             aux k' inner_ty rest
         | UVector | URowVector | UMatrix -> aux k ut rest
         | _ ->
@@ -534,9 +534,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         ; upper=
             wrap
             @@ FunApp
-                 ( Middle.Mir.StanLib
-                 , string_of_internal_fn FnLength
-                 , [iteratee] )
+                 (Middle.StanLib, string_of_internal_fn FnLength, [iteratee])
         ; body }
       |> swrap
   | Ast.FunDef _ ->
@@ -755,7 +753,7 @@ let%expect_test "Prefix-Op-Example" =
         }
       |}
   in
-  let op = mir.log_prob in
+  let op = Middle.log_prob in
   print_s [%sexp (op : Middle.stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect

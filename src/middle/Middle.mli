@@ -1,5 +1,5 @@
 open Core_kernel
-module Mir : Mir_intf.Mir
+include module type of Mir
 module Validation : Validation_intf.Validation
 
 module type Frontend = Frontend_intf.Frontend

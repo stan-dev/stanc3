@@ -4,7 +4,7 @@
 open Core_kernel
 open Middle
 
-type syntax_error = Parsing of string * Mir.location_span
+type syntax_error = Parsing of string * location_span
 
 let syntax_error_message = function Parsing (msg, _) -> msg
 let syntax_error_location = function Parsing (_, loc) -> loc
