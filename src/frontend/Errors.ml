@@ -20,9 +20,6 @@ exception SemanticError of (string * Mir.location_span)
     [msg]. *)
 exception FatalError of string
 
-(* A semantic error reported by the toplevel *)
-(* let semantic_error ~loc msg = raise (SemanticError (msg, loc)) *)
-
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
