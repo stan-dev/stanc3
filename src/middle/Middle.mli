@@ -3,8 +3,6 @@ include module type of Mir
 include module type of Mir_pretty_printer
 module Validation : Validation_intf.Validation
 
-module type Frontend = Frontend_intf.Frontend
-
 val string_of_location : Mir.location -> string
 val string_of_location_span : Mir.location_span -> string
 val operator_of_string : string -> Mir.operator option

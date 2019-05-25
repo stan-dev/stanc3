@@ -5,8 +5,6 @@ include Type_conversion
 open Core_kernel
 module Validation = Validation
 
-module type Frontend = Frontend_intf.Frontend
-
 (* ===================== Some helper functions and values ====================== *)
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
