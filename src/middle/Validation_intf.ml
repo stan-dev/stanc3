@@ -2,8 +2,6 @@ module type Infix = sig
   type 'a t
 
   val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
-  val ( <*> ) : ('a -> 'b) t -> 'a t -> 'b t
-  val ( *> ) : 'a t -> 'b t -> 'b t
 end
 
 module type S = sig

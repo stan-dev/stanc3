@@ -30,12 +30,7 @@ end) : S with type error := X.t = struct
   let consA next rest = liftA2 List.cons next rest
   let sequence ts = List.fold_right ~init:(pure []) ~f:consA ts
 
-  module Validation_infix = struct
-    let ( >>= ) x f = bind x ~f
-    let ( <*> ) f x = apply x ~f
-    let ( *> ) x y = apply_const x y
-  end
-
+  module Validation_infix = struct let ( >>= ) x f = bind x ~f end
   include Validation_infix
 
   let ok x = pure x
