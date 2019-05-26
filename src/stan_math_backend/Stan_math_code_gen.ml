@@ -205,7 +205,7 @@ Assignment Statements
 ----------------------------------------------------------------------
 If a[idxs] = b
   if (a shows up on RHS)
-    stan::model::assign(a', idxs', stan::model::deep_copy(b'),
+    stan::model::assign(a', idxs', stan::model::deep_copy(b'),   XXX TODO not handling deep copy yet
                         "assigning variable " + pretty_print(a'));
   else
     stan::model::assign(a', idxs', b',
@@ -394,11 +394,11 @@ let pp_ctor ppf (p : typed_prog) =
     , p )
 
 let pp_model_private ppf p =
-  let data_decl = function
-    | decl_id, (st, Data) -> Some (decl_id, remove_size st, DataOnly)
+  let decl = function
+    | {stmt= Decl d; _} -> Some (d.decl_id, remove_size d.decl_type, DataOnly)
     | _ -> None
   in
-  let data_decls = List.filter_map ~f:data_decl p.input_vars in
+  let data_decls = List.filter_map ~f:decl p.prepare_data in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
