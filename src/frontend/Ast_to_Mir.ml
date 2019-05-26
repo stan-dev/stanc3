@@ -352,12 +352,12 @@ let read_decl dread decl_id transform sizedtype smeta decl_var =
     | Indexed (_, indices) -> {var with expr= Indexed (readfn var, indices)}
     | _ -> readfn var
   in
-  let st =
+  let forl, st =
     match dread with
-    | ReadData -> sizedtype
-    | ReadParam -> param_size transform sizedtype
+    | ReadData -> (for_scalar, sizedtype)
+    | ReadParam -> (for_eigen, param_size transform sizedtype)
   in
-  for_eigen st (assign_indexed decl_id smeta readvar) decl_var smeta
+  forl st (assign_indexed decl_id smeta readvar) decl_var smeta
 
 let constrain_decl st dconstrain t decl_id decl_var smeta =
   let mkstring = mkstring decl_var.emeta.mloc in
@@ -770,11 +770,15 @@ let%expect_test "read data" =
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
-        ((Assignment (mat ((Single (Var sym1__))))
-          (Indexed
-           (FunApp CompilerInternal FnReadData__
-            ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
-           ((Single (Var sym1__)))))))))) |}]
+        ((For (loopvar sym2__) (lower (Lit Int 1))
+          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+          (body
+           (Block
+            ((Assignment (mat ((Single (Var sym1__)) (Single (Var sym2__))))
+              (Indexed
+               (FunApp CompilerInternal FnReadData__
+                ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
+               ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
