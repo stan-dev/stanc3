@@ -231,7 +231,6 @@ let rec unsizedtype_to_string = function
       raise_s
         [%message "Another place where it's weird to get " (t : unsizedtype)]
 
-(* Well, when you put it like this it does seem a little crazy *)
 let constraint_to_string t (c : constrainaction) =
   match t with
   | Ast.Ordered -> "ordered"
@@ -396,16 +395,13 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
       {expr= Var decl_id; emeta= {mtype; mloc= smeta; madlevel= adlevel}}
       smeta
   in
-  let constraint_str =
-    mkstring smeta (constraint_to_string decl_trans Check)
-  in
   let args = extract_constraint_args decl_trans in
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
       check_decl decl_type decl_id (Ast.Lower lb) smeta adlevel
       @ check_decl decl_type decl_id (Ast.Upper ub) smeta adlevel
-  | _ -> [chk constraint_str args]
+  | _ -> [chk (mkstring smeta (constraint_to_string decl_trans Check)) args]
 
 let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     identifier initial_value =
