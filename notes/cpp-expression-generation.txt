@@ -1,5 +1,5 @@
-has_prob_suffix:  _lpdf, _lpmf, _lcdf, _lccdf
-has_rng_or_lp_suffix:  _rng, _lp
+C++ EXPRESSION GENERATION
+======================================================================
 
 
 Operators
