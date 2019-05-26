@@ -437,7 +437,7 @@ let pp_method_b ppf rt name params intro ?(outro = []) body =
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
-    [ "RNG& base_rng"; "std::vector<double>& params_r__"
+    [ "RNG& base_rng__"; "std::vector<double>& params_r__"
     ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = 0"
@@ -580,7 +580,7 @@ let pp_overloads ppf () =
   pf ppf
     {|
     template <typename RNG>
-    void write_array(RNG& base_rng,
+    void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
@@ -591,7 +591,7 @@ let pp_overloads ppf () =
         params_r_vec[i] = params_r(i);
       std::vector<double> vars_vec;
       std::vector<int> params_i_vec;
-      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
           emit_transformed_parameters__, emit_generated_quantities__, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i)

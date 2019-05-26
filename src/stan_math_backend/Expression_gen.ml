@@ -203,8 +203,13 @@ and gen_distribution_app f =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
+    let extra =
+      List.map
+        ~f:(fun s -> {expr= Var s; emeta= internal_meta})
+        (suffix_args f)
+    in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
-      (list ~sep:comma pp_expr) es
+      (list ~sep:comma pp_expr) (es @ extra)
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
