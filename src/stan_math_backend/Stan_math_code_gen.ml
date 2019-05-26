@@ -177,21 +177,12 @@ let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
-  | Assignment
-      ( lhs
-      , { expr=
-            FunApp
-              (CompilerInternal, f,  (*_ :: {expr=Lit(Str, basetype); _} :: *)
-              _) as expr
-        ; emeta } )
-    when internal_fn_of_string f = Some FnReadData
-         (*   && basetype = "scalar"*) ->
-      pp_statement ppf
-        { stmt=
-            Assignment
-              ( lhs
-              , {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta} )
-        ; smeta }
+  | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
+    when internal_fn_of_string f = Some FnReadData ->
+      let with_vestigial_idx =
+        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
+      in
+      pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
       (* XXX In stan2 this often generates:
                 stan::model::assign(theta,
                             stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
@@ -199,6 +190,13 @@ let rec pp_statement (ppf : Format.formatter)
                             "assigning variable theta");
             }
         *)
+  | Assignment (lhs, {expr= Lit (Str, s); _}) ->
+      pf ppf "%a = %S;" pp_indexed_simple lhs s
+  | Assignment (lhs, {expr= Lit (_, s); _}) ->
+      pf ppf "%a = %s;" pp_indexed_simple lhs s
+  | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
+    when internal_fn_of_string f = Some FnMakeArray ->
+      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
       (*
 Assignment Statements
