@@ -550,6 +550,7 @@ let pp_log_prob ppf p =
     ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
     ; strf "%a" pp_unused "DUMMY_VAR__"
     ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+    ; strf "%a" pp_function__ (p.prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
