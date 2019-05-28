@@ -208,6 +208,12 @@ and gen_fun_app ppf f es =
         ~f:(fun s -> {expr= Var s; emeta= internal_meta})
         (suffix_args f)
     in
+    let convert_hof_vars = function
+      | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
+          {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
+      | e -> e
+    in
+    let es = List.map ~f:convert_hof_vars es in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
       (list ~sep:comma pp_expr) (es @ extra)
   in

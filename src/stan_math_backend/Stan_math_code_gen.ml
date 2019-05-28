@@ -29,7 +29,6 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
-  ignore adtype ;
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
       pf ppf "%a" pp_unsizedtype_local (adtype, remove_size st)
@@ -269,6 +268,7 @@ let pp_located_error_b ppf (body_stmts, err_msg) =
 let pp_fun_def ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
       let argtypetemplates =
+        (* TODO: If one contains ints, we don't need to template it *)
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
       let pp_body ppf fdbody =
@@ -287,16 +287,24 @@ let pp_fun_def ppf = function
         pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
         pf ppf "@ "
       in
-      pf ppf "@[<hov>template <%a>@]@ "
-        (list ~sep:comma (fmt "typename %s"))
-        argtypetemplates ;
-      pp_returntype ppf fdargs fdrt ;
-      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg)
-        (List.zip_exn argtypetemplates fdargs) ;
-      pf ppf ", std::ostream* pstream__@]) " ;
+      let pp_sig ppf name =
+        pf ppf "@[<hov>template <%a>@]@ "
+          (list ~sep:comma (fmt "typename %s"))
+          argtypetemplates ;
+        pp_returntype ppf fdargs fdrt ;
+        pf ppf "%s(@[<hov>%a" name (list ~sep:comma pp_arg)
+          (List.zip_exn argtypetemplates fdargs) ;
+        pf ppf ", std::ostream* pstream__@]) "
+      in
+      pp_sig ppf fdname ;
       match fdbody.stmt with
       | Skip -> pf ppf ";@ "
-      | _ -> pp_block ppf (pp_body, fdbody) )
+      | _ ->
+          pp_block ppf (pp_body, fdbody) ;
+          pf ppf "@,@,struct %s_functor__ {@,%a const @,{@,return %a;@,}@,};@,"
+            fdname pp_sig "operator()" pp_call_str
+            ( fdname
+            , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
 
 let%expect_test "location propagates" =
   let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
@@ -678,4 +686,14 @@ let%expect_test "udf" =
         return add(x, 1);
       }
 
-    } |}]
+    }
+
+    struct sars_functor__ {
+    template <typename T0__, typename T1__>
+    void
+    operator()(const Eigen::Matrix<T0__, -1, -1>& x,
+               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
+    {
+    return sars(x, y, pstream__);
+    }
+    }; |}]
