@@ -476,7 +476,21 @@ let pp_constrained_param_names ppf p =
         (list ~sep:cut pp_param_names, gqvars) )
 
 (* XXX This is just a copy of constrained, I need to figure out which one is wrong
-   and fix it eventually. *)
+   and fix it eventually. From Bob,
+
+   Off the top of my head, I think the four that change sizes
+   from constrained to unconstrained are:
+
+   simplex:  K -> (K - 1)
+   covar_matrix:  K^2 -> (K choose 2) + K
+   corr_matrix:  K^2 -> (K choose 2)
+   cholesky_corr: (K choose 2) + K -> (K choose 2)
+
+   cholesky_cov does not change size (it's (K choose 2) + K).
+   Now that our unit vector uses the normal thing, that also doesn't
+   change size.  The ordered types and constrained types don't
+   change sizes either.
+*)
 let pp_unconstrained_param_names ppf p =
   let params =
     [ "std::vector<std::string>& param_names__"
