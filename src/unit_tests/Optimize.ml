@@ -45,11 +45,11 @@ let%expect_test "map_rec_stmt_loc" =
 
       log_prob {
         {
-        FnPrint__(24, 24);
-        if(13) {
-          FnPrint__(244, 244);
-          if(24) {
-            FnPrint__(24, 24);
+          FnPrint__(24, 24);
+          if(13) {
+            FnPrint__(244, 244);
+            if(24) {
+              FnPrint__(24, 24);
             }
           }
         }
@@ -113,11 +113,11 @@ let%expect_test "map_rec_state_stmt_loc" =
 
       log_prob {
         {
-        FnPrint__(24, 24);
-        if(13) {
-          FnPrint__(244, 244);
-          if(24) {
-            FnPrint__(24, 24);
+          FnPrint__(24, 24);
+          if(13) {
+            FnPrint__(244, 244);
+            if(24) {
+              FnPrint__(24, 24);
             }
           }
         }
@@ -166,13 +166,13 @@ let%expect_test "inline functions" =
       functions {
         void f(int x, matrix y)
           {
-          FnPrint__(x);
-          FnPrint__(y);
+            FnPrint__(x);
+            FnPrint__(y);
           }
 
         real g(int z)
           {
-          return Pow__(z, 2);
+            return Pow__(z, 2);
           }
 
       }
@@ -187,16 +187,16 @@ let%expect_test "inline functions" =
 
       log_prob {
         {
-        for(sym1__ in 1:1) {
-          FnPrint__(3);
-          FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
+          for(sym1__ in 1:1) {
+            FnPrint__(3);
+            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(3, 2), FnMakeRowVec__(4, 6)));
           }
-        real sym4__;
-        for(sym3__ in 1:1) {
-          sym2__ = Pow__(53, 2);
-          break;
+          real sym4__;
+          for(sym3__ in 1:1) {
+            sym2__ = Pow__(53, 2);
+            break;
           }
-        FnReject__(sym4__);
+          FnReject__(sym4__);
         }
       }
 
@@ -243,7 +243,7 @@ let%expect_test "inline functions 2" =
 
         void g()
           {
-          f();
+            f();
           }
 
       }
@@ -265,9 +265,9 @@ let%expect_test "inline functions 2" =
           for(sym3__ in 1:1) {
             for(sym1__ in 1:1) {
 
-              }
             }
           }
+        }
       }
 
       transform_inits {
@@ -473,7 +473,7 @@ let%expect_test "do not inline recursive functions" =
 
         real g(int z)
           {
-          return Pow__(z, 2);
+            return Pow__(z, 2);
           }
 
       }
@@ -488,7 +488,7 @@ let%expect_test "do not inline recursive functions" =
 
       log_prob {
         {
-        FnReject__(g(53));
+          FnReject__(g(53));
         }
       }
 
@@ -533,14 +533,14 @@ let%expect_test "inline function in for loop" =
       functions {
         int f(int z)
           {
-          FnPrint__("f");
-          return 42;
+            FnPrint__("f");
+            return 42;
           }
 
         int g(int z)
           {
-          FnPrint__("g");
-          return Plus__(z, 24);
+            FnPrint__("g");
+            return Plus__(z, 24);
           }
 
       }
@@ -555,26 +555,26 @@ let%expect_test "inline function in for loop" =
 
       log_prob {
         {
-        int sym3__;
-        int sym6__;
-        for(sym2__ in 1:1) {
-          FnPrint__("f");
-          sym1__ = 42;
-          break;
-          }
-        for(sym5__ in 1:1) {
-          FnPrint__("g");
-          sym4__ = Plus__(3, 24);
-          break;
-          }
-        for(i in sym3__:sym6__) {
-          {
-          FnPrint__("body");
+          int sym3__;
+          int sym6__;
+          for(sym2__ in 1:1) {
+            FnPrint__("f");
+            sym1__ = 42;
+            break;
           }
           for(sym5__ in 1:1) {
             FnPrint__("g");
             sym4__ = Plus__(3, 24);
             break;
+          }
+          for(i in sym3__:sym6__) {
+            {
+              FnPrint__("body");
+            }
+            for(sym5__ in 1:1) {
+              FnPrint__("g");
+              sym4__ = Plus__(3, 24);
+              break;
             }
           }
         }
@@ -623,14 +623,14 @@ let%expect_test "inline function in for loop 2" =
       functions {
         int f(int z)
           {
-          FnPrint__("f");
-          return 42;
+            FnPrint__("f");
+            return 42;
           }
 
         int g(int z)
           {
-          FnPrint__("g");
-          return Plus__(f(z), 24);
+            FnPrint__("g");
+            return Plus__(f(z), 24);
           }
 
       }
@@ -645,27 +645,12 @@ let%expect_test "inline function in for loop 2" =
 
       log_prob {
         {
-        int sym9__;
-        int sym12__;
-        for(sym8__ in 1:1) {
-          FnPrint__("f");
-          sym7__ = 42;
-          break;
-          }
-        for(sym11__ in 1:1) {
-          FnPrint__("g");
-          int sym13__;
-          for(sym5__ in 1:1) {
+          int sym9__;
+          int sym12__;
+          for(sym8__ in 1:1) {
             FnPrint__("f");
-            sym4__ = 42;
+            sym7__ = 42;
             break;
-            }
-          sym10__ = Plus__(sym13__, 24);
-          break;
-          }
-        for(i in sym9__:sym12__) {
-          {
-          FnPrint__("body");
           }
           for(sym11__ in 1:1) {
             FnPrint__("g");
@@ -674,9 +659,24 @@ let%expect_test "inline function in for loop 2" =
               FnPrint__("f");
               sym4__ = 42;
               break;
-              }
+            }
             sym10__ = Plus__(sym13__, 24);
             break;
+          }
+          for(i in sym9__:sym12__) {
+            {
+              FnPrint__("body");
+            }
+            for(sym11__ in 1:1) {
+              FnPrint__("g");
+              int sym13__;
+              for(sym5__ in 1:1) {
+                FnPrint__("f");
+                sym4__ = 42;
+                break;
+              }
+              sym10__ = Plus__(sym13__, 24);
+              break;
             }
           }
         }
@@ -723,14 +723,14 @@ let%expect_test "inline function in while loop" =
       functions {
         int f(int z)
           {
-          FnPrint__("f");
-          return 42;
+            FnPrint__("f");
+            return 42;
           }
 
         int g(int z)
           {
-          FnPrint__("g");
-          return Plus__(z, 24);
+            FnPrint__("g");
+            return Plus__(z, 24);
           }
 
       }
@@ -745,18 +745,18 @@ let%expect_test "inline function in while loop" =
 
       log_prob {
         {
-        int sym3__;
-        for(sym2__ in 1:1) {
-          FnPrint__("g");
-          sym1__ = Plus__(3, 24);
-          break;
-          }
-        while(sym3__) {
-          FnPrint__("body");
+          int sym3__;
           for(sym2__ in 1:1) {
             FnPrint__("g");
             sym1__ = Plus__(3, 24);
             break;
+          }
+          while(sym3__) {
+            FnPrint__("body");
+            for(sym2__ in 1:1) {
+              FnPrint__("g");
+              sym1__ = Plus__(3, 24);
+              break;
             }
           }
         }
@@ -803,14 +803,14 @@ let%expect_test "inline function in if then else" =
       functions {
         int f(int z)
           {
-          FnPrint__("f");
-          return 42;
+            FnPrint__("f");
+            return 42;
           }
 
         int g(int z)
           {
-          FnPrint__("g");
-          return Plus__(z, 24);
+            FnPrint__("g");
+            return Plus__(z, 24);
           }
 
       }
@@ -825,13 +825,13 @@ let%expect_test "inline function in if then else" =
 
       log_prob {
         {
-        int sym3__;
-        for(sym2__ in 1:1) {
-          FnPrint__("g");
-          sym1__ = Plus__(3, 24);
-          break;
+          int sym3__;
+          for(sym2__ in 1:1) {
+            FnPrint__("g");
+            sym1__ = Plus__(3, 24);
+            break;
           }
-        if(sym3__) FnPrint__("body");
+          if(sym3__) FnPrint__("body");
         }
       }
 
@@ -882,20 +882,20 @@ let%expect_test "inline function in ternary if " =
       functions {
         int f(int z)
           {
-          FnPrint__("f");
-          return 42;
+            FnPrint__("f");
+            return 42;
           }
 
         int g(int z)
           {
-          FnPrint__("g");
-          return Plus__(z, 24);
+            FnPrint__("g");
+            return Plus__(z, 24);
           }
 
         int h(int z)
           {
-          FnPrint__("h");
-          return Plus__(z, 4);
+            FnPrint__("h");
+            return Plus__(z, 4);
           }
 
       }
@@ -910,29 +910,28 @@ let%expect_test "inline function in ternary if " =
 
       log_prob {
         {
-        int sym3__;
-        int sym6__;
-        int sym9__;
-        for(sym2__ in 1:1) {
-          FnPrint__("f");
-          sym1__ = 42;
-          break;
-          }
-        if(sym3__) {
-          for(sym5__ in 1:1) {
-            FnPrint__("g");
-            sym4__ = Plus__(3, 24);
+          int sym3__;
+          int sym6__;
+          int sym9__;
+          for(sym2__ in 1:1) {
+            FnPrint__("f");
+            sym1__ = 42;
             break;
+          }
+          if(sym3__) {
+            for(sym5__ in 1:1) {
+              FnPrint__("g");
+              sym4__ = Plus__(3, 24);
+              break;
+            }
+          } else {
+            for(sym8__ in 1:1) {
+              FnPrint__("h");
+              sym7__ = Plus__(4, 4);
+              break;
             }
           }
-         else {
-          for(sym8__ in 1:1) {
-            FnPrint__("h");
-            sym7__ = Plus__(4, 4);
-            break;
-            }
-          }
-        FnPrint__(sym3__ ?sym6__: sym9__);
+          FnPrint__(sym3__ ?sym6__: sym9__);
         }
       }
 
@@ -976,11 +975,11 @@ let%expect_test "inline function multiple returns " =
       functions {
         int f(int z)
           {
-          if(2) {
-            FnPrint__("f");
-            return 42;
+            if(2) {
+              FnPrint__("f");
+              return 42;
             }
-          return 6;
+            return 6;
           }
 
       }
@@ -995,17 +994,17 @@ let%expect_test "inline function multiple returns " =
 
       log_prob {
         {
-        int sym3__;
-        for(sym2__ in 1:1) {
-          if(2) {
-            FnPrint__("f");
-            sym1__ = 42;
-            break;
+          int sym3__;
+          for(sym2__ in 1:1) {
+            if(2) {
+              FnPrint__("f");
+              sym1__ = 42;
+              break;
             }
-          sym1__ = 6;
-          break;
+            sym1__ = 6;
+            break;
           }
-        FnPrint__(sym3__);
+          FnPrint__(sym3__);
         }
       }
 
@@ -1047,8 +1046,8 @@ let%expect_test "inline function indices " =
       functions {
         int f(int z)
           {
-          FnPrint__(z);
-          return 42;
+            FnPrint__(z);
+            return 42;
           }
 
       }
@@ -1063,20 +1062,20 @@ let%expect_test "inline function indices " =
 
       log_prob {
         {
-        array[array[int, 2], 2] a;
-        int sym6__;
-        int sym3__;
-        for(sym5__ in 1:1) {
-          FnPrint__(2);
-          sym4__ = 42;
-          break;
+          array[array[int, 2], 2] a;
+          int sym6__;
+          int sym3__;
+          for(sym5__ in 1:1) {
+            FnPrint__(2);
+            sym4__ = 42;
+            break;
           }
-        for(sym2__ in 1:1) {
-          FnPrint__(1);
-          sym1__ = 42;
-          break;
+          for(sym2__ in 1:1) {
+            FnPrint__(1);
+            sym1__ = 42;
+            break;
           }
-        FnPrint__(a[sym3__, sym6__]);
+          FnPrint__(a[sym3__, sym6__]);
         }
       }
 
@@ -1118,8 +1117,8 @@ let%expect_test "inline function and " =
       functions {
         int f(int z)
           {
-          FnPrint__(z);
-          return 42;
+            FnPrint__(z);
+            return 42;
           }
 
       }
@@ -1134,21 +1133,21 @@ let%expect_test "inline function and " =
 
       log_prob {
         {
-        int sym3__;
-        int sym6__;
-        for(sym2__ in 1:1) {
-          FnPrint__(1);
-          sym1__ = 42;
-          break;
-          }
-        if(sym3__) {
-          for(sym5__ in 1:1) {
-            FnPrint__(2);
-            sym4__ = 42;
+          int sym3__;
+          int sym6__;
+          for(sym2__ in 1:1) {
+            FnPrint__(1);
+            sym1__ = 42;
             break;
+          }
+          if(sym3__) {
+            for(sym5__ in 1:1) {
+              FnPrint__(2);
+              sym4__ = 42;
+              break;
             }
           }
-        FnPrint__(sym3__ && sym6__);
+          FnPrint__(sym3__ && sym6__);
         }
       }
 
@@ -1189,8 +1188,8 @@ let%expect_test "inline function or " =
       functions {
         int f(int z)
           {
-          FnPrint__(z);
-          return 42;
+            FnPrint__(z);
+            return 42;
           }
 
       }
@@ -1205,22 +1204,21 @@ let%expect_test "inline function or " =
 
       log_prob {
         {
-        int sym3__;
-        int sym6__;
-        for(sym2__ in 1:1) {
-          FnPrint__(1);
-          sym1__ = 42;
-          break;
-          }
-        if(sym3__) ;
-         else {
-          for(sym5__ in 1:1) {
-            FnPrint__(2);
-            sym4__ = 42;
+          int sym3__;
+          int sym6__;
+          for(sym2__ in 1:1) {
+            FnPrint__(1);
+            sym1__ = 42;
             break;
+          }
+          if(sym3__) ; else {
+            for(sym5__ in 1:1) {
+              FnPrint__(2);
+              sym4__ = 42;
+              break;
             }
           }
-        FnPrint__(sym3__ || sym6__);
+          FnPrint__(sym3__ || sym6__);
         }
       }
 
@@ -1267,22 +1265,22 @@ let%expect_test "unroll nested loop" =
 
       log_prob {
         {
-        {
-        {
-        FnPrint__(1, 3);
-        }
-        {
-        FnPrint__(1, 4);
-        }
-        }
-        {
-        {
-        FnPrint__(2, 3);
-        }
-        {
-        FnPrint__(2, 4);
-        }
-        }
+          {
+            {
+              FnPrint__(1, 3);
+            }
+            {
+              FnPrint__(1, 4);
+            }
+          }
+          {
+            {
+              FnPrint__(2, 3);
+            }
+            {
+              FnPrint__(2, 4);
+            }
+          }
         }
       }
 
@@ -1331,18 +1329,18 @@ let%expect_test "unroll nested loop with break" =
 
       log_prob {
         {
-        {
-        for(j in 3:4) {
-          FnPrint__(1);
-          break;
+          {
+            for(j in 3:4) {
+              FnPrint__(1);
+              break;
+            }
           }
-        }
-        {
-        for(j in 3:4) {
-          FnPrint__(2);
-          break;
+          {
+            for(j in 3:4) {
+              FnPrint__(2);
+              break;
+            }
           }
-        }
         }
       }
 
@@ -1399,8 +1397,8 @@ let%expect_test "constant propagation" =
 
     log_prob {
       {
-      for(x in 1:42) {
-        FnPrint__(Plus__(42, 44));
+        for(x in 1:42) {
+          FnPrint__(Plus__(42, 44));
         }
       }
     }
@@ -1456,16 +1454,16 @@ let%expect_test "constant propagation, local scope" =
       data int i;
       i = 42;
       {
-      data int j;
-      j = 2;
+        data int j;
+        j = 2;
       }
     }
 
     log_prob {
       {
-      int j;
-      for(x in 1:42) {
-        FnPrint__(Plus__(42, j));
+        int j;
+        for(x in 1:42) {
+          FnPrint__(Plus__(42, j));
         }
       }
     }
@@ -1522,10 +1520,10 @@ let%expect_test "constant propagation, model block local scope" =
 
     log_prob {
       {
-      int i;
-      i = 42;
-      int j;
-      j = 2;
+        int i;
+        i = 42;
+        int j;
+        j = 2;
       }
     }
 
@@ -1535,10 +1533,10 @@ let%expect_test "constant propagation, model block local scope" =
         data int j;
         for(x in 1:i) {
           FnPrint__(Plus__(i, j));
-          }
+        }
         FnWriteParam__(i);
         FnWriteParam__(j);
-        }
+      }
     }
 
     transform_inits {
@@ -1589,8 +1587,8 @@ let%expect_test "expression propagation" =
 
       log_prob {
         {
-        for(x in 1:i) {
-          FnPrint__(Plus__(i, Plus__(2, i)));
+          for(x in 1:i) {
+            FnPrint__(Plus__(i, Plus__(2, i)));
           }
         }
       }
@@ -1650,8 +1648,8 @@ let%expect_test "copy propagation" =
 
       log_prob {
         {
-        for(x in 1:i) {
-          FnPrint__(Plus__(Plus__(i, i), k));
+          for(x in 1:i) {
+            FnPrint__(Plus__(Plus__(i, i), k));
           }
         }
       }
@@ -1711,8 +1709,8 @@ let%expect_test "dead code elimination" =
 
       log_prob {
         {
-        FnPrint__(i);
-        FnPrint__(j);
+          FnPrint__(i);
+          FnPrint__(j);
         }
       }
 
@@ -1765,7 +1763,7 @@ let%expect_test "dead code elimination decl" =
 
       log_prob {
         {
-        int i;
+          int i;
         }
       }
 
@@ -1773,7 +1771,7 @@ let%expect_test "dead code elimination decl" =
         if(emit_generated_quantities__) {
           data int i;
           FnPrint__(i);
-          }
+        }
       }
 
       transform_inits {
@@ -1816,8 +1814,8 @@ let%expect_test "dead code elimination, for loop" =
 
       log_prob {
         {
-        int i;
-        FnPrint__(i);
+          int i;
+          FnPrint__(i);
         }
       }
 
@@ -1869,9 +1867,9 @@ let%expect_test "dead code elimination, while loop" =
 
       log_prob {
         {
-        int i;
-        FnPrint__(i);
-        while(1) ;
+          int i;
+          FnPrint__(i);
+          while(1) ;
         }
       }
 
@@ -1933,14 +1931,14 @@ let%expect_test "dead code elimination, if then" =
 
       log_prob {
         {
-        int i;
-        FnPrint__(i);
-        {
-        FnPrint__("hello");
-        }
-        {
-        FnPrint__("goodbye");
-        }
+          int i;
+          FnPrint__(i);
+          {
+            FnPrint__("hello");
+          }
+          {
+            FnPrint__("goodbye");
+          }
         }
       }
 
@@ -1990,8 +1988,8 @@ let%expect_test "dead code elimination, nested" =
 
       log_prob {
         {
-        int i;
-        FnPrint__(i);
+          int i;
+          FnPrint__(i);
         }
       }
 
@@ -2042,11 +2040,11 @@ let%expect_test "partial evaluation" =
 
       log_prob {
         {
-        if(0) {
-          int i;
-          FnPrint__(3);
-          FnPrint__(Plus__(i, 3));
-          FnPrint__(log1m(i));
+          if(0) {
+            int i;
+            FnPrint__(3);
+            FnPrint__(Plus__(i, 3));
+            FnPrint__(log1m(i));
           }
         }
       }
@@ -2098,12 +2096,12 @@ let%expect_test "try partially evaluate" =
 
       log_prob {
         {
-        real x;
-        real y;
-        vector[2] a;
-        vector[2] b;
-        FnPrint__(log_diff_exp(x, y));
-        FnPrint__(log(Minus__(exp(a), exp(b))));
+          real x;
+          real y;
+          vector[2] a;
+          vector[2] b;
+          FnPrint__(log_diff_exp(x, y));
+          FnPrint__(log(Minus__(exp(a), exp(b))));
         }
       }
 
@@ -2152,10 +2150,10 @@ let%expect_test "partially evaluate with equality check" =
 
       log_prob {
         {
-        vector[2] x;
-        vector[2] y;
-        FnPrint__(dot_self(x));
-        FnPrint__(dot_product(x, y));
+          vector[2] x;
+          vector[2] y;
+          FnPrint__(dot_self(x));
+          FnPrint__(dot_product(x, y));
         }
       }
 
@@ -2227,33 +2225,33 @@ let%expect_test "partially evaluate glm" =
 
       log_prob {
         {
-        matrix[2, 3] x;
-        array[int, 2] y;
-        vector[2] y_real;
-        vector[3] beta;
-        vector[2] alpha;
-        real sigma;
-        FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
-        FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
-        FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-        FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-        FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-        FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-        FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
-        FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
-        FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
-        FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
-        FnPrint__(normal_id_glm_lpdf(y_real, x, 0, beta, sigma));
-        FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-        FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
-        FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
+          matrix[2, 3] x;
+          array[int, 2] y;
+          vector[2] y_real;
+          vector[3] beta;
+          vector[2] alpha;
+          real sigma;
+          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
+          FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
+          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
+          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
+          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
+          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
+          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
+          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
+          FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
+          FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
+          FnPrint__(normal_id_glm_lpdf(y_real, x, 0, beta, sigma));
+          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
+          FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
+          FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
         }
       }
 
@@ -2303,10 +2301,10 @@ let%expect_test "lazy code motion" =
     log_prob {
       data [real] sym1__;
       {
-      sym1__ = FnMakeArray__(3.0);
-      FnPrint__(sym1__);
-      FnPrint__(sym1__);
-      FnPrint__(sym1__);
+        sym1__ = FnMakeArray__(3.0);
+        FnPrint__(sym1__);
+        FnPrint__(sym1__);
+        FnPrint__(sym1__);
       }
     }
 
@@ -2356,11 +2354,11 @@ let%expect_test "lazy code motion, 2" =
         data int sym2__;
         data int sym1__;
         {
-        for(i in 1:2) {
-          {
-          FnPrint__(Plus__(3, 4));
-          }
-          ;
+          for(i in 1:2) {
+            {
+              FnPrint__(Plus__(3, 4));
+            }
+            ;
           }
         }
       }
@@ -2412,10 +2410,10 @@ let%expect_test "lazy code motion, 3" =
         data int sym2__;
         data int sym1__;
         {
-        FnPrint__(3);
-        sym1__ = Plus__(3, 5);
-        FnPrint__(sym1__);
-        FnPrint__(Plus__(sym1__, 7));
+          FnPrint__(3);
+          sym1__ = Plus__(3, 5);
+          FnPrint__(sym1__);
+          FnPrint__(Plus__(sym1__, 7));
         }
       }
 
@@ -2478,29 +2476,28 @@ let%expect_test "lazy code motion, 4" =
       log_prob {
         data int sym1__;
         {
-        int b;
-        int c;
-        int x;
-        int y;
-        b = 1;
-        if(1) {
-          {
-          ;
-          ;
-          ;
+          int b;
+          int c;
+          int x;
+          int y;
+          b = 1;
+          if(1) {
+            {
+              ;
+              ;
+              ;
+            }
+            sym1__ = Plus__(b, c);
+            ;
+          } else {
+            {
+              sym1__ = Plus__(b, c);
+              x = sym1__;
+              ;
+            }
+            ;
           }
-          sym1__ = Plus__(b, c);
-          ;
-          }
-         else {
-          {
-          sym1__ = Plus__(b, c);
-          x = sym1__;
-          ;
-          }
-          ;
-          }
-        y = sym1__;
+          y = sym1__;
         }
       }
 
@@ -2561,34 +2558,32 @@ let%expect_test "lazy code motion, 5" =
       log_prob {
         data int sym1__;
         {
-        int b;
-        int c;
-        int x;
-        int y;
-        b = 1;
-        if(1) {
-          {
-          ;
-          ;
-          ;
-          }
-          sym1__ = Plus__(b, c);
-          ;
-          }
-         else {
-          {
-          if(2) {
-            sym1__ = Plus__(b, c);
-            x = sym1__;
-            ;
+          int b;
+          int c;
+          int x;
+          int y;
+          b = 1;
+          if(1) {
+            {
+              ;
+              ;
+              ;
             }
-           else sym1__ = Plus__(b, c);
+            sym1__ = Plus__(b, c);
+            ;
+          } else {
+            {
+              if(2) {
+                sym1__ = Plus__(b, c);
+                x = sym1__;
                 ;
-          ;
+              } else sym1__ = Plus__(b, c);
+                     ;
+              ;
+            }
+            ;
           }
-          ;
-          }
-        y = sym1__;
+          y = sym1__;
         }
       }
 
@@ -2641,14 +2636,13 @@ let%expect_test "lazy code motion, 6" =
         data int sym2__;
         data int sym1__;
         {
-        int x;
-        int y;
-        if(2) {
-          x = Plus__(1, 2);
-          ;
-          }
-         else ;
-        y = Plus__(4, 3);
+          int x;
+          int y;
+          if(2) {
+            x = Plus__(1, 2);
+            ;
+          } else ;
+          y = Plus__(4, 3);
         }
       }
 
@@ -2719,58 +2713,55 @@ let%expect_test "lazy code motion, 7" =
         data int sym2__;
         data int sym1__;
         {
-        int a;
-        int b;
-        int c;
-        int x;
-        int y;
-        int z;
-        if(1) {
-          {
-          a = c;
-          x = Plus__(a, b);
-          }
-          ;
-          }
-         else {
-          ;
-          ;
-          }
-        if(2) {
-          {
-          if(3) {
+          int a;
+          int b;
+          int c;
+          int x;
+          int y;
+          int z;
+          if(1) {
             {
-            sym2__ = Plus__(a, b);
-            ;
-            while(4) {
-              y = sym2__;
-              ;
-              }
-            ;
+              a = c;
+              x = Plus__(a, b);
             }
             ;
-            }
-           else {
+          } else {
+            ;
+            ;
+          }
+          if(2) {
             {
-            ;
-            while(5) {
-              ;
-              ;
+              if(3) {
+                {
+                  sym2__ = Plus__(a, b);
+                  ;
+                  while(4) {
+                    y = sym2__;
+                    ;
+                  }
+                  ;
+                }
+                ;
+              } else {
+                {
+                  ;
+                  while(5) {
+                    ;
+                    ;
+                  }
+                  sym2__ = Plus__(a, b);
+                  y = sym2__;
+                }
+                ;
               }
-            sym2__ = Plus__(a, b);
-            y = sym2__;
+              z = sym2__;
             }
             ;
-            }
-          z = sym2__;
+          } else {
+            ;
+            ;
           }
           ;
-          }
-         else {
-          ;
-          ;
-          }
-        ;
         }
       }
 
@@ -2813,13 +2804,13 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       functions {
         int foo_lp(int x)
           {
-          target += 1;
-          return 24;
+            target += 1;
+            return 24;
           }
 
         int foo(int x)
           {
-          return 24;
+            return 24;
           }
 
       }
@@ -2835,11 +2826,11 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       log_prob {
         data int sym1__;
         {
-        FnPrint__(foo(foo_lp(1)));
-        FnPrint__(foo(foo_lp(1)));
-        sym1__ = foo(foo(1));
-        FnPrint__(sym1__);
-        FnPrint__(sym1__);
+          FnPrint__(foo(foo_lp(1)));
+          FnPrint__(foo(foo_lp(1)));
+          sym1__ = foo(foo(1));
+          FnPrint__(sym1__);
+          FnPrint__(sym1__);
         }
       }
 
@@ -2888,10 +2879,10 @@ let%expect_test "lazy code motion, 9" =
       log_prob {
         data int sym1__;
         {
-        int x;
-        while(Times__(x, 2)) {
-          FnPrint__("hello");
-          ;
+          int x;
+          while(Times__(x, 2)) {
+            FnPrint__("hello");
+            ;
           }
         }
       }
@@ -2944,11 +2935,11 @@ let%expect_test "lazy code motion, 10" =
       log_prob {
         data int sym1__;
         {
-        int x;
-        x = 3;
-        FnPrint__(Times__(x, 2));
-        x = 2;
-        FnPrint__(Times__(x, 2));
+          int x;
+          x = 3;
+          FnPrint__(Times__(x, 2));
+          x = 2;
+          FnPrint__(Times__(x, 2));
         }
       }
 
@@ -3003,14 +2994,14 @@ let%expect_test "lazy code motion, 11" =
       log_prob {
         data int sym1__;
         {
-        {
-        int x;
-        FnPrint__(Times__(x, 2));
-        }
-        {
-        int x;
-        FnPrint__(Times__(x, 2));
-        }
+          {
+            int x;
+            FnPrint__(Times__(x, 2));
+          }
+          {
+            int x;
+            FnPrint__(Times__(x, 2));
+          }
         }
       }
 
@@ -3064,14 +3055,14 @@ let%expect_test "lazy code motion, 12" =
         data int sym2__;
         data int sym1__;
         {
-        int x;
-        for(i in 1:6) {
-          {
-          FnPrint__(Plus__(x, 42));
-          continue;
-          x = 3;
-          }
-          ;
+          int x;
+          for(i in 1:6) {
+            {
+              FnPrint__(Plus__(x, 42));
+              continue;
+              x = 3;
+            }
+            ;
           }
         }
       }
@@ -3135,24 +3126,23 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
         data int sym2__;
         data int sym1__;
         {
-        real x;
-        int y;
-        real theta;
-        if(Leq__(1, 100000)) {
-          {
-          {
-          sym3__ = Plus__(1, 1);
-          sym4__ = bernoulli_logit_lpmf(y, x);
-          target += sym4__;
-          }
-          for(i in sym3__:100000) {
+          real x;
+          int y;
+          real theta;
+          if(Leq__(1, 100000)) {
             {
-            target += sym4__;
+              {
+                sym3__ = Plus__(1, 1);
+                sym4__ = bernoulli_logit_lpmf(y, x);
+                target += sym4__;
+              }
+              for(i in sym3__:100000) {
+                {
+                  target += sym4__;
+                }
+              }
             }
-            }
-          }
-          }
-         else ;
+          } else ;
         }
       }
 
@@ -3242,38 +3232,38 @@ let%expect_test "one-step loop unrolling" =
         data int x;
         if(Leq__(x, 6)) {
           {
-          FnPrint__("hello");
+            FnPrint__("hello");
           }
           for(i in Plus__(x, 1):6) {
             FnPrint__("hello");
-            }
           }
+        }
         if(Less__(1, 2)) {
           FnPrint__("goodbye");
           while(Less__(1, 2)) FnPrint__("goodbye");
-          }
+        }
         if(Leq__(1, 1)) {
           {
-          if(Leq__(2, 2)) {
-            {
-            FnPrint__("nested");
-            }
-            for(j in Plus__(2, 1):2) {
-              FnPrint__("nested");
+            if(Leq__(2, 2)) {
+              {
+                FnPrint__("nested");
+              }
+              for(j in Plus__(2, 1):2) {
+                FnPrint__("nested");
               }
             }
           }
           for(i in Plus__(1, 1):1) {
             if(Leq__(2, 2)) {
               {
-              FnPrint__("nested");
+                FnPrint__("nested");
               }
               for(j in Plus__(2, 1):2) {
                 FnPrint__("nested");
-                }
               }
             }
           }
+        }
       }
 
       log_prob {
