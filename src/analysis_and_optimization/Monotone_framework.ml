@@ -136,6 +136,32 @@ let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
   : LATTICE
     with type properties = p option )
 
+(** Partial function lattice, ordered pointwise *)
+let partial_function_lattice (type dv cv)
+    (module Dom : TOTALTYPE with type vals = dv)
+    (module Codom : LATTICE with type properties = cv) =
+  ( module struct
+    type properties = (Dom.vals, Codom.properties) Map.Poly.t
+
+    let lub s1 s2 =
+      Map.Poly.fold2 s1 s2 ~init:Map.Poly.empty ~f:(fun ~key ~data accum ->
+          match data with
+          | `Left x | `Right x -> Map.Poly.set accum ~key ~data:x
+          | `Both (x, y) -> Map.Poly.set accum ~key ~data:(Codom.lub x y) )
+
+    let leq s1 s2 =
+      Set.for_all Dom.total ~f:(fun k ->
+          match (Map.find s1 k, Map.find s2 k) with
+          | Some x, Some y -> Codom.leq x y
+          | Some _, None -> false
+          | None, Some _ | None, None -> true )
+
+    let initial = Map.Poly.empty
+    let bottom = Map.Poly.empty
+  end
+  : LATTICE
+    with type properties = (dv, cv) Map.Poly.t )
+
 (** The lattice (without bottom) of partial functions, ordered under
     inverse graph inclusion, with intersection *)
 let dual_partial_function_lattice (type dv cv)
