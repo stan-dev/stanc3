@@ -804,8 +804,16 @@ let optimize_ad_levels mir =
         (module Rev_Flowgraph)
         flowgraph_to_mir
     in
-    let _ = ad_levels in
-    let optimize_ad_levels_stmt_base _ stmt = stmt in
+    let optimize_ad_levels_stmt_base i stmt =
+      let autodiffable_variables = (Map.find_exn ad_levels i).exit in
+      let autodifftype_subst_map = Set.fold autodiffable_variables ~init:ExprMap.empty ~f:(fun accum -> 
+      fun var ->
+      let key = {expr=Var var; emeta={mtype=UInt; mloc=no_span; madlevel=DataOnly}} in (* TODO: fix type and location here *)
+      let data = {expr=Var var; emeta={mtype=UInt; mloc=no_span; madlevel=AutoDiffable}} in (* TODO: fix type and location here *)
+      ExprMap.set accum ~key ~data
+      )  in
+      expr_subst_stmt_base autodifftype_subst_map stmt (* TODO: propagate up ad-levels here *)
+    in
     let optimize_ad_levels_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir optimize_ad_levels_stmt_base
     in
