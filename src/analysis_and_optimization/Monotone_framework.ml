@@ -690,6 +690,8 @@ let used_not_latest_expressions_transfer
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Middle.ExprSet.t )
 
+let ad_level_of_expr _ e = Middle.AutoDiffable
+
 (** The transfer function for the forward analysis part of determining optimal ad-levels for variables *)
 let autodiff_level_fwd_transfer
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
@@ -699,10 +701,14 @@ let autodiff_level_fwd_transfer
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
-      let gen = Set.Poly.empty in
+      let gen =
+      match mir_node with
+      | Middle.Assignment ((x, _), e) when ad_level_of_expr l e = Middle.AutoDiffable->
+      Set.Poly.singleton x
+      | _ -> Set.Poly.empty in
       let kill =
         match mir_node with
-        | Middle.Decl {decl_id; decl_type; _} -> Set.Poly.singleton decl_id
+        | Middle.Decl {decl_id; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
       transfer_gen_kill p gen kill
@@ -711,6 +717,25 @@ let autodiff_level_fwd_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** The transfer function for the reverse analysis part of determining optimal ad-levels for variables *)
+let autodiff_level_rev_transfer
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+    (fwd_ad_levels : (int, string Set.Poly.t) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = string Set.Poly.t
+
+    let transfer_function l p =
+      let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
+      let gen = Map.find_exn fwd_ad_levels l in
+      let kill =
+        match mir_node with
+        | Middle.Decl {decl_id; _} -> Set.Poly.singleton decl_id
+        | _ -> Set.Poly.empty
+      in
+      transfer_gen_kill_alt p gen kill
+  end
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = string Set.Poly.t )
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
