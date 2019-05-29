@@ -124,9 +124,9 @@ let pp_statement pp_e pp_s ppf = function
       Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|} Fmt.(list pp_s ~sep:Fmt.cut) stmts
   | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
   | Decl {decl_adtype; decl_id; decl_type} ->
-      Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype (pp_possiblysizedtype pp_e)
+      Fmt.pf ppf {|%a%a %s;|} pp_autodifftype decl_adtype
+        (pp_possiblysizedtype pp_e)
         decl_type decl_id
-
 
 let pp_io_block ppf = function
   | Data -> Fmt.string ppf "data"
