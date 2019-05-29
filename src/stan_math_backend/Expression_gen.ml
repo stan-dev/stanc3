@@ -203,8 +203,19 @@ and gen_distribution_app f =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
+    let extra =
+      List.map
+        ~f:(fun s -> {expr= Var s; emeta= internal_meta})
+        (suffix_args f)
+    in
+    let convert_hof_vars = function
+      | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
+          {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
+      | e -> e
+    in
+    let es = List.map ~f:convert_hof_vars es in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
-      (list ~sep:comma pp_expr) es
+      (list ~sep:comma pp_expr) (es @ extra)
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
@@ -249,6 +260,14 @@ and pp_compiler_internal_fn ut f ppf es =
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
+and pp_indexed_simple ppf (vident, idcs) =
+  let minus_one e =
+    { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
+    ; emeta= e.emeta }
+  in
+  let idx_minus_one = map_index minus_one in
+  (Middle.pp_indexed pp_expr) ppf (vident, List.map ~f:idx_minus_one idcs)
+
 and pp_expr ppf e =
   match e.expr with
   | Var s -> pf ppf "%s" s
@@ -272,6 +291,9 @@ and pp_expr ppf e =
     | FunApp (CompilerInternal, f, _)
       when Some FnReadParam = internal_fn_of_string f ->
         pp_expr ppf e
+    | FunApp (CompilerInternal, f, _)
+      when Some FnReadData = internal_fn_of_string f ->
+        pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
 (* these functions are just for testing *)
