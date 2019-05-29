@@ -702,10 +702,12 @@ let autodiff_level_fwd_transfer
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
       let gen =
-      match mir_node with
-      | Middle.Assignment ((x, _), e) when ad_level_of_expr l e = Middle.AutoDiffable->
-      Set.Poly.singleton x
-      | _ -> Set.Poly.empty in
+        match mir_node with
+        | Middle.Assignment ((x, _), e)
+          when ad_level_of_expr l e = Middle.AutoDiffable ->
+            Set.Poly.singleton x
+        | _ -> Set.Poly.empty
+      in
       let kill =
         match mir_node with
         | Middle.Decl {decl_id; _} -> Set.Poly.singleton decl_id
@@ -982,3 +984,29 @@ let lazy_expressions_mfp
   in
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
+
+(** Perform the analysis for ad-levels, using both the fwd and reverse pass *)
+let autodiff_level_mfp
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
+  let (module Lattice) = autodiff_level_lattice in
+  let (module Transfer1) = autodiff_level_fwd_transfer flowgraph_to_mir in
+  let (module Mf1) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer1)
+  in
+  let fwd_ad_levels_mfp = Mf1.mfp () in
+  let (module Transfer2) =
+    autodiff_level_rev_transfer flowgraph_to_mir
+      (Map.map ~f:(fun x -> x.exit) fwd_ad_levels_mfp)
+  in
+  let (module Mf2) =
+    monotone_framework
+      (module Rev_Flowgraph)
+      (module Lattice)
+      (module Transfer2)
+  in
+  let rev_ad_levels = Mf2.mfp () in
+  rev_ad_levels
