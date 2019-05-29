@@ -83,6 +83,14 @@ let replace_fresh_local_vars s' =
                   { mtype= remove_possible_size decl_type
                   ; madlevel= decl_adtype
                   ; mloc= Middle.no_span } } )
+    | Assignment ((var_name, l), e) ->
+        let var_name =
+          match Map.Poly.find m var_name with
+          | None -> var_name
+          | Some {expr= Var var_name; _} -> var_name
+          | Some e -> raise_s [%sexp (e : expr_typed_located)]
+        in
+        (Assignment ((var_name, l), e), m)
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
