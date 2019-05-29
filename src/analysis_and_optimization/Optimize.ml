@@ -822,3 +822,4 @@ let optimize_ad_levels mir =
   transform_program mir transform
 
 let _ = optimize_ad_levels
+(* TODO: question - can we raise the adlevel through control flow dependencies? *)

@@ -47,3 +47,6 @@ val partial_evaluation : Middle.typed_prog -> Middle.typed_prog
 val lazy_code_motion : Middle.typed_prog -> Middle.typed_prog
 (** Perform partial redundancy elmination using the lazy code motion algorithm. This
     subsumes common subexpression elimination and loop-invariant code motion. *)
+
+val optimize_ad_levels : Middle.typed_prog -> Middle.typed_prog
+(** Assign the optimal ad-levels to local variables. *)

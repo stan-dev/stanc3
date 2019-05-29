@@ -3281,3 +3281,85 @@ let%expect_test "one-step loop unrolling" =
       output_vars {
 
       } |}]
+
+let%expect_test "adlevel_optimization" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed parameters {
+        real w;
+        {
+          int x;
+          real y;
+          real z;
+          real z_data;
+          if (1 > 2)
+            y = y + x;
+          else
+            y = y + w;
+          if (2 > 1)
+            z = w;
+          print(z);
+          print(z_data);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = optimize_ad_levels mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        real w;
+        {
+          int x;
+          real y;
+          real z;
+          real z_data;
+          if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
+          if(Greater__(2, 1)) z = w;
+          FnPrint__(z);
+          FnPrint__(z_data);
+        }
+      }
+
+      generate_quantities {
+        if(emit_transformed_parameters__) {
+          data real w;
+          {
+            data int x;
+            data real y;
+            data real z;
+            data real z_data;
+            if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
+            if(Greater__(2, 1)) z = w;
+            FnPrint__(z);
+            FnPrint__(z_data);
+          }
+          FnWriteParam__(w);
+        }
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+        transformed_parameters real w;
+      } |}]
+(* TODO: add more tests for adlevel optimization - assignments to components - local vs global variable behaviour *)
