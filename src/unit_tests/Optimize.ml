@@ -164,17 +164,17 @@ let%expect_test "inline functions" =
   [%expect
     {|
       functions {
-        void f(int x, matrix y)
+        void f(int x, matrix y) {
           {
             FnPrint__(x);
             FnPrint__(y);
           }
-
-        real g(int z)
+        }
+        real g(int z) {
           {
             return Pow__(z, 2);
           }
-
+        }
       }
 
       input_vars {
@@ -236,16 +236,16 @@ let%expect_test "inline functions 2" =
   [%expect
     {|
       functions {
-        void f()
+        void f() {
           {
 
           }
-
-        void g()
+        }
+        void g() {
           {
             f();
           }
-
+        }
       }
 
       input_vars {
@@ -468,14 +468,14 @@ let%expect_test "do not inline recursive functions" =
   [%expect
     {|
       functions {
-        real g(int z)
+        real g(int z) {
           ;
-
-        real g(int z)
+        }
+        real g(int z) {
           {
             return Pow__(z, 2);
           }
-
+        }
       }
 
       input_vars {
@@ -531,18 +531,18 @@ let%expect_test "inline function in for loop" =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__("f");
             return 42;
           }
-
-        int g(int z)
+        }
+        int g(int z) {
           {
             FnPrint__("g");
             return Plus__(z, 24);
           }
-
+        }
       }
 
       input_vars {
@@ -621,18 +621,18 @@ let%expect_test "inline function in for loop 2" =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__("f");
             return 42;
           }
-
-        int g(int z)
+        }
+        int g(int z) {
           {
             FnPrint__("g");
             return Plus__(f(z), 24);
           }
-
+        }
       }
 
       input_vars {
@@ -721,18 +721,18 @@ let%expect_test "inline function in while loop" =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__("f");
             return 42;
           }
-
-        int g(int z)
+        }
+        int g(int z) {
           {
             FnPrint__("g");
             return Plus__(z, 24);
           }
-
+        }
       }
 
       input_vars {
@@ -801,18 +801,18 @@ let%expect_test "inline function in if then else" =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__("f");
             return 42;
           }
-
-        int g(int z)
+        }
+        int g(int z) {
           {
             FnPrint__("g");
             return Plus__(z, 24);
           }
-
+        }
       }
 
       input_vars {
@@ -880,24 +880,24 @@ let%expect_test "inline function in ternary if " =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__("f");
             return 42;
           }
-
-        int g(int z)
+        }
+        int g(int z) {
           {
             FnPrint__("g");
             return Plus__(z, 24);
           }
-
-        int h(int z)
+        }
+        int h(int z) {
           {
             FnPrint__("h");
             return Plus__(z, 4);
           }
-
+        }
       }
 
       input_vars {
@@ -973,7 +973,7 @@ let%expect_test "inline function multiple returns " =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             if(2) {
               FnPrint__("f");
@@ -981,7 +981,7 @@ let%expect_test "inline function multiple returns " =
             }
             return 6;
           }
-
+        }
       }
 
       input_vars {
@@ -1044,12 +1044,12 @@ let%expect_test "inline function indices " =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__(z);
             return 42;
           }
-
+        }
       }
 
       input_vars {
@@ -1115,12 +1115,12 @@ let%expect_test "inline function and " =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__(z);
             return 42;
           }
-
+        }
       }
 
       input_vars {
@@ -1186,12 +1186,12 @@ let%expect_test "inline function or " =
   [%expect
     {|
       functions {
-        int f(int z)
+        int f(int z) {
           {
             FnPrint__(z);
             return 42;
           }
-
+        }
       }
 
       input_vars {
@@ -2802,17 +2802,17 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
   [%expect
     {|
       functions {
-        int foo_lp(int x)
+        int foo_lp(int x) {
           {
             target += 1;
             return 24;
           }
-
-        int foo(int x)
+        }
+        int foo(int x) {
           {
             return 24;
           }
-
+        }
       }
 
       input_vars {

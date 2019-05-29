@@ -89,11 +89,11 @@ let pp_fun_def pp_s ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
     match fdrt with
     | Some rt ->
-        Fmt.pf ppf {|@[<v2>%a %s%a @ %a@]@ |} pp_unsizedtype rt fdname
+        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} pp_unsizedtype rt fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody
     | None ->
-        Fmt.pf ppf {|@[<v2>%s %s%a @ %a@]@ |} "void" fdname
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
           Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
           fdargs pp_s fdbody )
 
