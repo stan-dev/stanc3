@@ -3328,8 +3328,8 @@ let%expect_test "adlevel_optimization" =
         data real w;
         {
           data int x;
-          data real y;
-          data real z;
+          real y;
+          real z;
           data real z_data;
           if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
           if(Greater__(2, 1)) z = w;
@@ -3343,8 +3343,8 @@ let%expect_test "adlevel_optimization" =
           data real w;
           {
             data int x;
-            data real y;
-            data real z;
+            real y;
+            real z;
             data real z_data;
             if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
             if(Greater__(2, 1)) z = w;

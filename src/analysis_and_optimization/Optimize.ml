@@ -805,7 +805,7 @@ let optimize_ad_levels mir =
         flowgraph_to_mir
     in
     let optimize_ad_levels_stmt_base i stmt =
-      let autodiffable_variables = (Map.find_exn ad_levels i).exit in
+      let autodiffable_variables = (Map.find_exn ad_levels i).entry in
       let autodifftype_subst_map =
         Set.fold autodiffable_variables ~init:ExprMap.empty
           ~f:(fun accum var ->
