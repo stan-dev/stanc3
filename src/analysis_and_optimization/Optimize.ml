@@ -806,13 +806,31 @@ let optimize_ad_levels mir =
     in
     let optimize_ad_levels_stmt_base i stmt =
       let autodiffable_variables = (Map.find_exn ad_levels i).exit in
-      let autodifftype_subst_map = Set.fold autodiffable_variables ~init:ExprMap.empty ~f:(fun accum -> 
-      fun var ->
-      let key = {expr=Var var; emeta={mtype=UInt; mloc=no_span; madlevel=DataOnly}} in (* TODO: fix type and location here *)
-      let data = {expr=Var var; emeta={mtype=UInt; mloc=no_span; madlevel=AutoDiffable}} in (* TODO: fix type and location here *)
-      ExprMap.set accum ~key ~data
-      )  in
-      expr_subst_stmt_base autodifftype_subst_map stmt (* TODO: propagate up ad-levels here *)
+      let autodifftype_subst_map =
+        Set.fold autodiffable_variables ~init:ExprMap.empty
+          ~f:(fun accum var ->
+            let key =
+              { expr= Var var
+              ; emeta= {mtype= UInt; mloc= no_span; madlevel= DataOnly} }
+            in
+            (* TODO: fix type and location here *)
+            let data =
+              { expr= Var var
+              ; emeta= {mtype= UInt; mloc= no_span; madlevel= AutoDiffable} }
+            in
+            (* TODO: fix type and location here *)
+            ExprMap.set accum ~key ~data )
+      in
+      match
+        expr_subst_stmt_base autodifftype_subst_map stmt
+        (* TODO: propagate up ad-levels here *)
+      with
+      | Decl {decl_id; decl_type; _}
+        when Set.mem autodiffable_variables decl_id ->
+          Decl {decl_adtype= AutoDiffable; decl_id; decl_type}
+      | Decl {decl_id; decl_type; _} ->
+          Decl {decl_adtype= DataOnly; decl_id; decl_type} (* TODO: only do this optimization for local variables*)
+      | s -> s
     in
     let optimize_ad_levels_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir optimize_ad_levels_stmt_base
@@ -822,4 +840,5 @@ let optimize_ad_levels mir =
   transform_program mir transform
 
 let _ = optimize_ad_levels
+
 (* TODO: question - can we raise the adlevel through control flow dependencies? *)

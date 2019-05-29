@@ -1010,5 +1010,6 @@ let autodiff_level_mfp
       (module Lattice)
       (module Transfer2)
   in
+  (* TODO: add extra fwd pass which does basically nothing, other than propagation ad-levels forward. *)
   let rev_ad_levels = Mf2.mfp () in
   rev_ad_levels
