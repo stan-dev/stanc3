@@ -789,3 +789,28 @@ let block_fixing mir =
    (meaning that we effectively just propagate back the AD-levels).
    Then, as the optimization, we use the information computed by this analysis to update the AD-levels of all
    declarations and expressions in the program. *)
+
+let optimize_ad_levels mir =
+  let transform s =
+    let rev_flowgraph, flowgraph_to_mir =
+      Monotone_framework.inverse_flowgraph_of_stmt s
+    in
+    let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
+    let (module Rev_Flowgraph) = rev_flowgraph in
+    let (module Fwd_Flowgraph) = fwd_flowgraph in
+    let ad_levels =
+      Monotone_framework.autodiff_level_mfp
+        (module Fwd_Flowgraph)
+        (module Rev_Flowgraph)
+        flowgraph_to_mir
+    in
+    let _ = ad_levels in
+    let optimize_ad_levels_stmt_base _ stmt = stmt in
+    let optimize_ad_levels_stmt =
+      map_rec_stmt_loc_num flowgraph_to_mir optimize_ad_levels_stmt_base
+    in
+    optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1)
+  in
+  transform_program mir transform
+
+let _ = optimize_ad_levels
