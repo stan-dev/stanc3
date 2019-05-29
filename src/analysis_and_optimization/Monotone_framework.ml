@@ -197,6 +197,10 @@ let reaching_definitions_lattice (type v l)
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end )
 
+(* Autodiff-level lattice *)
+let autodiff_level_lattice =
+  powerset_lattice_empty_initial (module struct type vals = string end)
+
 (* The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
@@ -685,6 +689,28 @@ let used_not_latest_expressions_transfer
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Middle.ExprSet.t )
+
+(** The transfer function for the forward analysis part of determining optimal ad-levels for variables *)
+let autodiff_level_fwd_transfer
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = string Set.Poly.t
+
+    let transfer_function l p =
+      let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
+      let gen = Set.Poly.empty in
+      let kill =
+        match mir_node with
+        | Middle.Decl {decl_id; decl_type; _} -> Set.Poly.singleton decl_id
+        | _ -> Set.Poly.empty
+      in
+      transfer_gen_kill p gen kill
+  end
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = string Set.Poly.t )
+
+(** The transfer function for the reverse analysis part of determining optimal ad-levels for variables *)
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
