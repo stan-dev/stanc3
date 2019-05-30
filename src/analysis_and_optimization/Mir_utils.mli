@@ -155,3 +155,8 @@ val expr_subst_stmt_base :
 
 val expr_depth : expr_typed_located -> int
 (** Calculate how deeply nested an expression is. *)
+
+val update_expr_ad_levels :
+  string Set.Poly.t -> mtype_loc_ad with_expr -> mtype_loc_ad with_expr
+(** Recompute all AD-levels in the metadata of an expression from the bottom up, making the variables
+    in the first argument autodiffable *)

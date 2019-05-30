@@ -690,10 +690,6 @@ let used_not_latest_expressions_transfer
   : TRANSFER_FUNCTION
     with type labels = int and type properties = Middle.ExprSet.t )
 
-let ad_level_of_expr _ _ = Middle.AutoDiffable
-
-(* TODO!! *)
-
 (** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
 let autodiff_level_fwd1_transfer
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
@@ -706,7 +702,8 @@ let autodiff_level_fwd1_transfer
       let gen =
         match mir_node with
         | Middle.Assignment ((x, _), e)
-          when ad_level_of_expr l e = Middle.AutoDiffable ->
+          when (update_expr_ad_levels p e).emeta.madlevel = Middle.AutoDiffable
+          ->
             Set.Poly.singleton x
         | _ -> Set.Poly.empty
       in

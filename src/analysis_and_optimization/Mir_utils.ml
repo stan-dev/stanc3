@@ -298,5 +298,3 @@ let rec update_expr_ad_levels autodiffable_variables e =
 
 and update_idx_ad_levels autodiffable_variables =
   map_index (update_expr_ad_levels autodiffable_variables)
-
-let _ = update_expr_ad_levels
