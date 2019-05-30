@@ -252,3 +252,51 @@ and idx_depth (i : expr_typed_located index) : int =
   | All -> 0
   | Single e | Upfrom e | Downfrom e | MultiIndex e -> expr_depth e
   | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)
+
+let ad_level_sup l =
+  if List.exists l ~f:(fun x -> x.emeta.madlevel = AutoDiffable) then
+    AutoDiffable
+  else DataOnly
+
+let rec update_expr_ad_levels autodiffable_variables e =
+  match e.expr with
+  | Var x ->
+      if Set.Poly.mem autodiffable_variables x then
+        {e with emeta= {e.emeta with madlevel= AutoDiffable}}
+      else e
+  | Lit (_, _) -> {e with emeta= {e.emeta with madlevel= DataOnly}}
+  | FunApp (o, f, l) ->
+      let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
+      {expr= FunApp (o, f, l); emeta= {e.emeta with madlevel= ad_level_sup l}}
+  | TernaryIf (e1, e2, e3) ->
+      let e1 = update_expr_ad_levels autodiffable_variables e1 in
+      let e2 = update_expr_ad_levels autodiffable_variables e2 in
+      let e3 = update_expr_ad_levels autodiffable_variables e3 in
+      { expr= TernaryIf (e1, e2, e3)
+      ; emeta= {e.emeta with madlevel= ad_level_sup [e1; e2; e3]} }
+  | EAnd (e1, e2) ->
+      let e1 = update_expr_ad_levels autodiffable_variables e1 in
+      let e2 = update_expr_ad_levels autodiffable_variables e2 in
+      { expr= EAnd (e1, e2)
+      ; emeta= {e.emeta with madlevel= ad_level_sup [e1; e2]} }
+  | EOr (e1, e2) ->
+      let e1 = update_expr_ad_levels autodiffable_variables e1 in
+      let e2 = update_expr_ad_levels autodiffable_variables e2 in
+      { expr= EOr (e1, e2)
+      ; emeta= {e.emeta with madlevel= ad_level_sup [e1; e2]} }
+  | Indexed (e, i_list) ->
+      let e = update_expr_ad_levels autodiffable_variables e in
+      let i_list =
+        List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list
+      in
+      { expr= Indexed (e, i_list)
+      ; emeta=
+          { e.emeta with
+            madlevel=
+              ad_level_sup (e :: List.concat (List.map ~f:expr_from_idx i_list))
+          } }
+
+and update_idx_ad_levels autodiffable_variables =
+  map_index (update_expr_ad_levels autodiffable_variables)
+
+let _ = update_expr_ad_levels

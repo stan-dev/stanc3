@@ -778,17 +778,6 @@ let block_fixing mir =
    tight as possible local scopes *)
 (* TODO: add tests *)
 (* TODO: add pass to get rid of redundant declarations? *)
-(* TODO: add pass to assign optimal AD-levels. This can be done with the monotone framework.
-   This should be a forward analysis followed by a reverse analysis.
-   the property lattice should consist of the (non-dual) lattice of Maps from variable names to AD-levels
-   (where the join is the pointwise join where dataonly<autodiffable). The transfer function
-   for the forward analysis should reset local variables to DataOnly upon declaration and should bump them up to at least the
-   level of the RHS (which will need to be recomputed every time, as it might change due to dependence on local variables)
-   on each assignment (including indexed assignments).
-   The transfer function for the reverse analysis resets to dataonly upon declaration and does nothing else
-   (meaning that we effectively just propagate back the AD-levels).
-   Then, as the optimization, we use the information computed by this analysis to update the AD-levels of all
-   declarations and expressions in the program. *)
 
 let optimize_ad_levels mir =
   let transform s =

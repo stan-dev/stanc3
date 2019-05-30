@@ -199,6 +199,12 @@ let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
 (* ===================== Some helper functions and values ====================== *)
 
+let expr_from_idx (i : expr_typed_located index) =
+  match i with
+  | All -> []
+  | Single e | Upfrom e | Downfrom e | MultiIndex e -> [e]
+  | Between (e1, e2) -> [e1; e2]
+
 (** remove_size [st] discards size information from a sizedtype
     to return an unsizedtype. *)
 let rec remove_size = function
