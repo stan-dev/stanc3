@@ -47,7 +47,7 @@ pipeline {
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
                 sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stan"
-                stash name:'ubuntu-exe', includes:'bin/stan, working-models.txt'
+                stash name:'ubuntu-exe', includes:'bin/stan, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
         }
@@ -58,8 +58,8 @@ pipeline {
                 sh """
           git clone -j${env.PARALLEL} --recursive --shallow-submodules --branch develop https://github.com/stan-dev/performance-tests-cmdstan
           cd performance-tests-cmdstan
-          mv ../bin/stan cmdstan/bin/stan
-          ./compare-git-hashes.sh "--tests-file ../working-models.txt" develop stanc3-dev develop develop
+          cp ../bin/stan cmdstan/bin/stan
+          ./compare-git-hashes.sh "--tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
