@@ -3291,7 +3291,7 @@ let%expect_test "adlevel_optimization" =
           else
             y = y + w;
           if (2 > 1)
-            z = w;
+            z = y;
           if (3 > 1)
             z_data = x;
           print(z);
@@ -3326,7 +3326,7 @@ let%expect_test "adlevel_optimization" =
           real z;
           data real z_data;
           if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
-          if(Greater__(2, 1)) z = w;
+          if(Greater__(2, 1)) z = y;
           if(Greater__(3, 1)) z_data = x;
           FnPrint__(z);
           FnPrint__(z_data);
@@ -3342,7 +3342,7 @@ let%expect_test "adlevel_optimization" =
             data real z;
             data real z_data;
             if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
-            if(Greater__(2, 1)) z = w;
+            if(Greater__(2, 1)) z = y;
             if(Greater__(3, 1)) z_data = x;
             FnPrint__(z);
             FnPrint__(z_data);
@@ -3359,7 +3359,7 @@ let%expect_test "adlevel_optimization" =
         transformed_parameters real w;
       } |}]
 
-let%expect_test "adlevel_optimization" =
+let%expect_test "adlevel_optimization expressions" =
   let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -3376,7 +3376,7 @@ let%expect_test "adlevel_optimization" =
           else
             y = y + w;
           if (2 > 1)
-            z = w;
+            z = y;
           if (3 > 1)
             z_data = x;
           print(z);
@@ -3461,7 +3461,7 @@ let%expect_test "adlevel_optimization" =
                (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
               ((stmt
                 (Assignment (z ())
-                 ((expr (Var w))
+                 ((expr (Var y))
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
                (smeta <opaque>))
               ()))
@@ -3494,4 +3494,87 @@ let%expect_test "adlevel_optimization" =
             (smeta <opaque>)))))
         (smeta <opaque>))) |}]
 
-(* TODO: add more tests for adlevel optimization - assignments to components - local vs global variable behaviour *)
+let%expect_test "adlevel_optimization 2" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed parameters {
+        real w;
+        {
+          int x;
+          real y[2];
+          real z;
+          real z_data;
+          if (1 > 2)
+            y[1] = y[1] + x;
+          else
+            y[2] = y[2] + w;
+          if (2 > 1)
+            z = y[1];
+          if (3 > 1)
+            z_data = x;
+          print(z);
+          print(z_data);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = optimize_ad_levels mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        real w;
+        {
+          data int x;
+          array[real, 2] y;
+          real z;
+          data real z_data;
+          if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
+          if(Greater__(2, 1)) z = y[1];
+          if(Greater__(3, 1)) z_data = x;
+          FnPrint__(z);
+          FnPrint__(z_data);
+        }
+      }
+
+      generate_quantities {
+        data real w;
+        if(emit_transformed_parameters__) {
+          {
+            data int x;
+            data array[real, 2] y;
+            data real z;
+            data real z_data;
+            if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
+            if(Greater__(2, 1)) z = y[1];
+            if(Greater__(3, 1)) z_data = x;
+            FnPrint__(z);
+            FnPrint__(z_data);
+          }
+          FnWriteParam__(w);
+        }
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+        transformed_parameters real w;
+      } |}]
