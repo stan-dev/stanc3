@@ -109,7 +109,7 @@ type 's fun_def =
   ; fdname: string
   ; fdargs: fun_arg_decl
   ; fdbody: 's
-  ; fdloc: location_span [@compare.ignore] }
+  ; fdloc: location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
 type 'e lvalue = string * 'e index list [@@deriving sexp, hash, map, fold]

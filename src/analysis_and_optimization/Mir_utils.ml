@@ -263,7 +263,7 @@ let rec update_expr_ad_levels autodiffable_variables e =
   | Var x ->
       if Set.Poly.mem autodiffable_variables x then
         {e with emeta= {e.emeta with madlevel= AutoDiffable}}
-      else e
+      else {e with emeta= {e.emeta with madlevel= DataOnly}}
   | Lit (_, _) -> {e with emeta= {e.emeta with madlevel= DataOnly}}
   | FunApp (o, f, l) ->
       let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in

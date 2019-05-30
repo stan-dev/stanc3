@@ -787,39 +787,34 @@ let optimize_ad_levels mir =
     let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
     let (module Rev_Flowgraph) = rev_flowgraph in
     let (module Fwd_Flowgraph) = fwd_flowgraph in
+    let initial_ad_variables =
+      Set.Poly.of_list
+        (List.filter_map
+           ~f:(fun (v, (_, b)) ->
+             match b with
+             | Parameters | TransformedParameters -> Some v
+             | _ -> None )
+           mir.output_vars)
+    in
     let ad_levels =
       Monotone_framework.autodiff_level_mfp
         (module Fwd_Flowgraph)
         (module Rev_Flowgraph)
-        flowgraph_to_mir
+        flowgraph_to_mir initial_ad_variables
     in
     let optimize_ad_levels_stmt_base i stmt =
       let autodiffable_variables = (Map.find_exn ad_levels i).exit in
-      let autodifftype_subst_map =
-        Set.fold autodiffable_variables ~init:ExprMap.empty
-          ~f:(fun accum var ->
-            let key =
-              { expr= Var var
-              ; emeta= {mtype= UInt; mloc= no_span; madlevel= DataOnly} }
-            in
-            (* TODO: fix type and location here *)
-            let data =
-              { expr= Var var
-              ; emeta= {mtype= UInt; mloc= no_span; madlevel= AutoDiffable} }
-            in
-            (* TODO: fix type and location here *)
-            ExprMap.set accum ~key ~data )
-      in
       match
-        expr_subst_stmt_base autodifftype_subst_map stmt
-        (* TODO: propagate up ad-levels here *)
+        map_statement
+          (update_expr_ad_levels autodiffable_variables)
+          (fun x -> x)
+          stmt
       with
       | Decl {decl_id; decl_type; _}
         when Set.mem autodiffable_variables decl_id ->
           Decl {decl_adtype= AutoDiffable; decl_id; decl_type}
       | Decl {decl_id; decl_type; _} ->
           Decl {decl_adtype= DataOnly; decl_id; decl_type}
-          (* TODO: only do this optimization for local variables*)
       | s -> s
     in
     let optimize_ad_levels_stmt =
@@ -828,7 +823,5 @@ let optimize_ad_levels mir =
     optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1)
   in
   transform_program mir transform
-
-let _ = optimize_ad_levels
 
 (* TODO: question - can we raise the adlevel through control flow dependencies? *)

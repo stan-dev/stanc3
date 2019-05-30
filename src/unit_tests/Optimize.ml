@@ -323,11 +323,7 @@ let%expect_test "list collapsing" =
                    ((mtype UMatrix) (mloc <opaque>) (madlevel AutoDiffable)))))))
               (smeta <opaque>)))))
           (smeta <opaque>)))
-        (fdloc
-         ((begin_loc
-           ((filename string) (line_num 3) (col_num 8) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 6) (col_num 9) (included_from ()))))))
+        (fdloc <opaque>))
        ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
         (fdbody
          ((stmt
@@ -343,11 +339,7 @@ let%expect_test "list collapsing" =
                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
               (smeta <opaque>)))))
           (smeta <opaque>)))
-        (fdloc
-         ((begin_loc
-           ((filename string) (line_num 7) (col_num 8) (included_from ())))
-          (end_loc
-           ((filename string) (line_num 9) (col_num 9) (included_from ()))))))))
+        (fdloc <opaque>))))
      (input_vars ()) (prepare_data ())
      (log_prob
       (((stmt
@@ -3300,6 +3292,8 @@ let%expect_test "adlevel_optimization" =
             y = y + w;
           if (2 > 1)
             z = w;
+          if (3 > 1)
+            z_data = x;
           print(z);
           print(z_data);
         }
@@ -3325,7 +3319,7 @@ let%expect_test "adlevel_optimization" =
       }
 
       log_prob {
-        data real w;
+        real w;
         {
           data int x;
           real y;
@@ -3333,6 +3327,7 @@ let%expect_test "adlevel_optimization" =
           data real z_data;
           if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
           if(Greater__(2, 1)) z = w;
+          if(Greater__(3, 1)) z_data = x;
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3343,11 +3338,12 @@ let%expect_test "adlevel_optimization" =
         if(emit_transformed_parameters__) {
           {
             data int x;
-            real y;
-            real z;
+            data real y;
+            data real z;
             data real z_data;
             if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
             if(Greater__(2, 1)) z = w;
+            if(Greater__(3, 1)) z_data = x;
             FnPrint__(z);
             FnPrint__(z_data);
           }
@@ -3362,5 +3358,140 @@ let%expect_test "adlevel_optimization" =
       output_vars {
         transformed_parameters real w;
       } |}]
+
+let%expect_test "adlevel_optimization" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      transformed parameters {
+        real w;
+        {
+          int x;
+          real y;
+          real z;
+          real z_data;
+          if (1 > 2)
+            y = y + x;
+          else
+            y = y + w;
+          if (2 > 1)
+            z = w;
+          if (3 > 1)
+            z_data = x;
+          print(z);
+          print(z_data);
+        }
+      }
+      |}
+  in
+  let ast = Semantic_check.semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = optimize_ad_levels mir in
+  print_s
+    [%sexp
+      ( mir.log_prob
+        : ( mtype_loc_ad
+          , (location_span sexp_opaque[@compare.ignore]) )
+          stmt_with
+          list )] ;
+  [%expect
+    {|
+      (((stmt
+         (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
+        (smeta <opaque>))
+       ((stmt
+         (Block
+          (((stmt
+             (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))))
+            (smeta <opaque>))
+           ((stmt
+             (Decl (decl_adtype AutoDiffable) (decl_id y)
+              (decl_type (Sized SReal))))
+            (smeta <opaque>))
+           ((stmt
+             (Decl (decl_adtype AutoDiffable) (decl_id z)
+              (decl_type (Sized SReal))))
+            (smeta <opaque>))
+           ((stmt
+             (Decl (decl_adtype DataOnly) (decl_id z_data)
+              (decl_type (Sized SReal))))
+            (smeta <opaque>))
+           ((stmt
+             (IfElse
+              ((expr
+                (FunApp StanLib Greater__
+                 (((expr (Lit Int 1))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                  ((expr (Lit Int 2))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+              ((stmt
+                (Assignment (y ())
+                 ((expr
+                   (FunApp StanLib Plus__
+                    (((expr (Var y))
+                      (emeta
+                       ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                     ((expr (Var x))
+                      (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+               (smeta <opaque>))
+              (((stmt
+                 (Assignment (y ())
+                  ((expr
+                    (FunApp StanLib Plus__
+                     (((expr (Var y))
+                       (emeta
+                        ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))
+                      ((expr (Var w))
+                       (emeta
+                        ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+                   (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+                (smeta <opaque>)))))
+            (smeta <opaque>))
+           ((stmt
+             (IfElse
+              ((expr
+                (FunApp StanLib Greater__
+                 (((expr (Lit Int 2))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                  ((expr (Lit Int 1))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+              ((stmt
+                (Assignment (z ())
+                 ((expr (Var w))
+                  (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable))))))
+               (smeta <opaque>))
+              ()))
+            (smeta <opaque>))
+           ((stmt
+             (IfElse
+              ((expr
+                (FunApp StanLib Greater__
+                 (((expr (Lit Int 3))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+                  ((expr (Lit Int 1))
+                   (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+               (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))
+              ((stmt
+                (Assignment (z_data ())
+                 ((expr (Var x))
+                  (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+               (smeta <opaque>))
+              ()))
+            (smeta <opaque>))
+           ((stmt
+             (NRFunApp CompilerInternal FnPrint__
+              (((expr (Var z))
+                (emeta ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+            (smeta <opaque>))
+           ((stmt
+             (NRFunApp CompilerInternal FnPrint__
+              (((expr (Var z_data))
+                (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+            (smeta <opaque>)))))
+        (smeta <opaque>))) |}]
 
 (* TODO: add more tests for adlevel optimization - assignments to components - local vs global variable behaviour *)

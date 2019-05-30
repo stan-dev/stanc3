@@ -198,8 +198,11 @@ let reaching_definitions_lattice (type v l)
     end )
 
 (* Autodiff-level lattice *)
-let autodiff_level_lattice =
-  powerset_lattice_empty_initial (module struct type vals = string end)
+let autodiff_level_lattice autodiff_variables =
+  powerset_lattice
+    (module struct type vals = string
+
+                   let initial = autodiff_variables end)
 
 (* The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer
@@ -709,7 +712,8 @@ let autodiff_level_fwd1_transfer
       in
       let kill =
         match mir_node with
-        | Middle.Decl {decl_id; _} -> Set.Poly.singleton decl_id
+        | Middle.Decl {decl_id; decl_adtype= DataOnly; _} ->
+            Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
       transfer_gen_kill p gen kill
@@ -1011,21 +1015,23 @@ let autodiff_level_mfp
       with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
-    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
-  let (module Lattice) = autodiff_level_lattice in
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+    (autodiff_variables : string Set.Poly.t) =
+  let (module Lattice1) = autodiff_level_lattice autodiff_variables in
+  let (module Lattice2) = autodiff_level_lattice Set.Poly.empty in
   let (module Transfer1) = autodiff_level_fwd1_transfer flowgraph_to_mir in
   let (module Mf1) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer1)
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
   in
-  let fwd_ad_levels_mfp = Mf1.mfp () in
+  let fwd1_ad_levels_mfp = Mf1.mfp () in
   let (module Transfer2) =
     autodiff_level_rev_transfer flowgraph_to_mir
-      (Map.map ~f:(fun x -> x.exit) fwd_ad_levels_mfp)
+      (Map.map ~f:(fun x -> x.exit) fwd1_ad_levels_mfp)
   in
   let (module Mf2) =
     monotone_framework
       (module Rev_Flowgraph)
-      (module Lattice)
+      (module Lattice2)
       (module Transfer2)
   in
   let rev_ad_levels_mfp = Mf2.mfp () in
@@ -1034,7 +1040,7 @@ let autodiff_level_mfp
       (Map.map ~f:(fun x -> x.entry) rev_ad_levels_mfp)
   in
   let (module Mf3) =
-    monotone_framework (module Flowgraph) (module Lattice) (module Transfer3)
+    monotone_framework (module Flowgraph) (module Lattice2) (module Transfer3)
   in
   let fwd2_ad_levels_mfp = Mf3.mfp () in
   fwd2_ad_levels_mfp
