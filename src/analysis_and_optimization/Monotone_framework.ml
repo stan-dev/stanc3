@@ -705,7 +705,8 @@ let autodiff_level_fwd1_transfer
       let gen =
         match mir_node with
         | Middle.Assignment ((x, _), e)
-          when (update_expr_ad_levels p e).emeta.madlevel = Middle.AutoDiffable
+          when (update_expr_ad_levels p e).emeta.madlevel = Middle.AutoDiffable (* TODO: probably we want to add an
+          or when the assignment is happening in a control flow context that has updated_expr_ad_level that is autodiffable *)
           ->
             Set.Poly.singleton x
         | _ -> Set.Poly.empty
