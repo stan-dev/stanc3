@@ -59,7 +59,7 @@ pipeline {
           git clone --recursive --shallow-submodules --branch develop https://github.com/stan-dev/performance-tests-cmdstan
           cd performance-tests-cmdstan
           cp ../bin/stan cmdstan/bin/stan
-          ./compare-git-hashes.sh "--tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
+          ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
