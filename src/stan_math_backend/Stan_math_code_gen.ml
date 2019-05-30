@@ -29,7 +29,6 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
-  ignore adtype ;
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
       pf ppf "%a" pp_unsizedtype_local (adtype, remove_size st)
@@ -51,14 +50,6 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect
     {| d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
-
-let pp_indexed_simple ppf (vident, idcs) =
-  let minus_one e =
-    { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
-    ; emeta= e.emeta }
-  in
-  let idx_minus_one = map_index minus_one in
-  (Middle.pp_indexed pp_expr) ppf (vident, List.map ~f:idx_minus_one idcs)
 
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
@@ -182,18 +173,20 @@ let trans_math_fn fname =
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
 
+let to_indexed assignee idcs =
+  { expr= Indexed ({expr= Var assignee; emeta= internal_meta}, idcs)
+  ; emeta= internal_meta }
+
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
   match stmt with
   | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
     when internal_fn_of_string f = Some FnReadData ->
-      pp_statement ppf
-        { stmt=
-            Assignment
-              ( lhs
-              , {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta} )
-        ; smeta }
+      let with_vestigial_idx =
+        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
+      in
+      pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
       (* XXX In stan2 this often generates:
                 stan::model::assign(theta,
                             stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
@@ -201,8 +194,31 @@ let rec pp_statement (ppf : Format.formatter)
                             "assigning variable theta");
             }
         *)
+  | Assignment (lhs, {expr= Lit (Str, s); _}) ->
+      pf ppf "%a = %S;" pp_indexed_simple lhs s
+  | Assignment (lhs, {expr= Lit (_, s); _}) ->
+      pf ppf "%a = %s;" pp_indexed_simple lhs s
+  | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
+    when internal_fn_of_string f = Some FnMakeArray ->
+      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
-      pf ppf "%a = %a;" pp_indexed_simple (assignee, idcs) pp_expr rhs
+      (*
+Assignment Statements
+----------------------------------------------------------------------
+If a[idxs] = b
+  if (a shows up on RHS)
+    stan::model::assign(a', idxs', stan::model::deep_copy(b'),   XXX TODO not handling deep copy yet
+                        "assigning variable " + pretty_print(a'));
+  else
+    stan::model::assign(a', idxs', b',
+                        "assigning variable " + pretty_print(a'));
+
+If a = b
+  stan::math::assign(a', b')
+*)
+      pf ppf "stan::model::assign(@[<hov>%s, %a, %a, %S@]);" assignee
+        pp_indexes idcs pp_expr rhs
+        (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
@@ -257,6 +273,7 @@ let pp_located_error_b ppf (body_stmts, err_msg) =
 let pp_fun_def ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
       let argtypetemplates =
+        (* TODO: If one contains ints, we don't need to template it *)
         List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs
       in
       let pp_body ppf fdbody =
@@ -275,16 +292,24 @@ let pp_fun_def ppf = function
         pp_located_error ppf (pp_statement, fdbody, "inside UDF " ^ fdname) ;
         pf ppf "@ "
       in
-      pf ppf "@[<hov>template <%a>@]@ "
-        (list ~sep:comma (fmt "typename %s"))
-        argtypetemplates ;
-      pp_returntype ppf fdargs fdrt ;
-      pf ppf "%s(@[<hov>%a" fdname (list ~sep:comma pp_arg)
-        (List.zip_exn argtypetemplates fdargs) ;
-      pf ppf ", std::ostream* pstream__@]) " ;
+      let pp_sig ppf name =
+        pf ppf "@[<hov>template <%a>@]@ "
+          (list ~sep:comma (fmt "typename %s"))
+          argtypetemplates ;
+        pp_returntype ppf fdargs fdrt ;
+        pf ppf "%s(@[<hov>%a" name (list ~sep:comma pp_arg)
+          (List.zip_exn argtypetemplates fdargs) ;
+        pf ppf ", std::ostream* pstream__@]) "
+      in
+      pp_sig ppf fdname ;
       match fdbody.stmt with
       | Skip -> pf ppf ";@ "
-      | _ -> pp_block ppf (pp_body, fdbody) )
+      | _ ->
+          pp_block ppf (pp_body, fdbody) ;
+          pf ppf "@,@,struct %s_functor__ {@,%a const @,{@,return %a;@,}@,};@,"
+            fdname pp_sig "operator()" pp_call_str
+            ( fdname
+            , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
 
 let%expect_test "location propagates" =
   let loc1 = {no_span with begin_loc= {no_loc with filename= "HI"}} in
@@ -301,7 +326,7 @@ let%expect_test "location propagates" =
       stan_print(pstream__);
     } |}]
 
-let version = "// Code generated by Stan version 2.18.0"
+let version = "// Code generated by stanc3 version 0.0.1"
 let includes = "#include <stan/model/model_header.hpp>"
 
 let rec basetype = function
@@ -382,11 +407,11 @@ let pp_ctor ppf (p : typed_prog) =
     , p )
 
 let pp_model_private ppf p =
-  let data_decl = function
-    | decl_id, (st, Data) -> Some (decl_id, remove_size st, DataOnly)
+  let decl = function
+    | {stmt= Decl d; _} -> Some (d.decl_id, remove_possible_size d.decl_type, DataOnly)
     | _ -> None
   in
-  let data_decls = List.filter_map ~f:data_decl p.input_vars in
+  let data_decls = List.filter_map ~f:decl p.prepare_data in
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 let pp_method ppf rt name params intro ?(outro = []) ppbody =
@@ -427,7 +452,7 @@ let pp_method_b ppf rt name params intro ?(outro = []) body =
 let pp_write_array ppf p =
   pf ppf "template <typename RNG>@ " ;
   let params =
-    [ "RNG& base_rng"; "std::vector<double>& params_r__"
+    [ "RNG& base_rng__"; "std::vector<double>& params_r__"
     ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true"; "std::ostream* pstream__ = 0"
@@ -540,6 +565,7 @@ let pp_log_prob ppf p =
     ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
     ; strf "%a" pp_unused "DUMMY_VAR__"
     ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
+    ; strf "%a" pp_function__ (p.prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);" ]
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
@@ -570,7 +596,7 @@ let pp_overloads ppf () =
   pf ppf
     {|
     template <typename RNG>
-    void write_array(RNG& base_rng,
+    void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
                      bool emit_transformed_parameters__ = true,
@@ -581,7 +607,7 @@ let pp_overloads ppf () =
         params_r_vec[i] = params_r(i);
       std::vector<double> vars_vec;
       std::vector<int> params_i_vec;
-      write_array(base_rng, params_r_vec, params_i_vec, vars_vec,
+      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
           emit_transformed_parameters__, emit_generated_quantities__, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i)
@@ -667,4 +693,14 @@ let%expect_test "udf" =
         return add(x, 1);
       }
 
-    } |}]
+    }
+
+    struct sars_functor__ {
+    template <typename T0__, typename T1__>
+    void
+    operator()(const Eigen::Matrix<T0__, -1, -1>& x,
+               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
+    {
+    return sars(x, y, pstream__);
+    }
+    }; |}]

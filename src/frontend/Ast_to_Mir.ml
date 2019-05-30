@@ -351,12 +351,12 @@ let read_decl dread decl_id transform sizedtype smeta decl_var =
     | Indexed (_, indices) -> {var with expr= Indexed (readfn var, indices)}
     | _ -> readfn var
   in
-  let st =
+  let forl, st =
     match dread with
-    | ReadData -> sizedtype
-    | ReadParam -> param_size transform sizedtype
+    | ReadData -> (for_scalar, sizedtype)
+    | ReadParam -> (for_eigen, param_size transform sizedtype)
   in
-  for_eigen st (assign_indexed decl_id smeta readvar) decl_var smeta
+  forl st (assign_indexed decl_id smeta readvar) decl_var smeta
 
 let constrain_decl st dconstrain t decl_id decl_var smeta =
   let mkstring = mkstring decl_var.emeta.mloc in
@@ -424,14 +424,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
         constrain_decl decl_type dconstrain transform decl_id decl_var smeta
     | _ -> []
   in
-  let decl_adtype =
-    match rhs with
-    | Some {emeta= {madlevel; _}; _} -> madlevel
-    | None -> dadlevel
-  in
-  let decl =
-    {stmt= Decl {decl_adtype; decl_id; decl_type= Sized decl_type}; smeta}
-  in
+  let decl = {stmt= Decl {decl_adtype= dadlevel; decl_id; decl_type= Sized decl_type}; smeta} in
   let checks =
     match dconstrain with
     | Some Check -> check_decl decl_type decl_id transform smeta dadlevel
@@ -562,24 +555,21 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
 
-let trans_fun_def declc (ts : Ast.typed_statement) =
-  let stmt_typed = ts.stmt and sloc = ts.smeta.loc in
-  let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
-  let stmt =
-    match stmt_typed with
-    | Ast.FunDef {returntype; funname; arguments; body} ->
-        { fdrt=
-            (match returntype with Void -> None | ReturnType ut -> Some ut)
-        ; fdname= funname.name
-        ; fdargs= List.map ~f:trans_arg arguments
-        ; fdbody= trans_stmt body |> unwrap_block_or_skip
-        ; fdloc= sloc }
-    | _ ->
-        raise_s
-          [%message
-            "Found non-function definition statement in function block"]
-  in
-  stmt
+let trans_fun_def (ts : Ast.typed_statement) =
+  match ts.stmt with
+  | Ast.FunDef {returntype; funname; arguments; body} ->
+      { fdrt= (match returntype with Void -> None | ReturnType ut -> Some ut)
+      ; fdname= funname.name
+      ; fdargs= List.map ~f:trans_arg arguments
+      ; fdbody=
+          trans_stmt
+            {dread= None; dconstrain= None; dadlevel= AutoDiffable}
+            body
+          |> unwrap_block_or_skip
+      ; fdloc= ts.smeta.loc }
+  | _ ->
+      raise_s
+        [%message "Found non-function definition statement in function block"]
 
 let gen_write decl_id sizedtype =
   let bodyfn var =
@@ -697,18 +687,23 @@ let trans_prog filename p : typed_prog =
   let gen_from_block declc block =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
+  let part_decls block =
+    List.partition_tf
+      ~f:(function {stmt= Decl _; _} -> true | _ -> false)
+      (gen_from_block
+         {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
+         block)
+  in
+  let txparam_decls, txparam_stmts = part_decls TransformedParameters in
+  let gq_decls, gq_stmts = part_decls GeneratedQuantities in
   let generate_quantities =
     gen_from_block
       {dread= Some ReadParam; dconstrain= Some Constrain; dadlevel= DataOnly}
       Parameters
-    @ compiler_if "emit_transformed_parameters__"
-        (gen_from_block
-           {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
-           TransformedParameters)
-    @ compiler_if "emit_generated_quantities__"
-        (gen_from_block
-           {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
-           GeneratedQuantities)
+    @ txparam_decls
+    @ compiler_if "emit_transformed_parameters__" txparam_stmts
+    @ gq_decls
+    @ compiler_if "emit_generated_quantities__" gq_stmts
   in
   let transform_inits =
     map
@@ -719,11 +714,7 @@ let trans_prog filename p : typed_prog =
       parametersblock
   in
   { functions_block=
-      Option.value_map functionblock ~default:[] ~f:(fun fundefs ->
-          List.map fundefs ~f:(fun fundef ->
-              trans_fun_def
-                {dread= None; dconstrain= None; dadlevel= AutoDiffable}
-                fundef ) )
+      Option.value_map functionblock ~default:[] ~f:(List.map ~f:trans_fun_def)
   ; input_vars
   ; prepare_data
   ; log_prob
@@ -772,11 +763,15 @@ let%expect_test "read data" =
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
-        ((Assignment (mat ((Single (Var sym1__))))
-          (Indexed
-           (FunApp CompilerInternal FnReadData__
-            ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
-           ((Single (Var sym1__)))))))))) |}]
+        ((For (loopvar sym2__) (lower (Lit Int 1))
+          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+          (body
+           (Block
+            ((Assignment (mat ((Single (Var sym1__)) (Single (Var sym2__))))
+              (Indexed
+               (FunApp CompilerInternal FnReadData__
+                ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
+               ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -813,12 +808,12 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    ((IfElse (Var emit_generated_quantities__)
+    ((Decl (decl_adtype DataOnly) (decl_id mat)
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
+     (IfElse (Var emit_generated_quantities__)
       (Block
-       ((Decl (decl_adtype DataOnly) (decl_id mat)
-         (decl_type
-          (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-        (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
+       ((For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
          (body
           (Block
            ((For (loopvar sym2__) (lower (Lit Int 1))
