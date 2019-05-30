@@ -66,7 +66,7 @@ pipeline {
         }
         stage("Build & test Mac OS X binary") {
             when { anyOf { buildingTag(); branch 'master' } }
-            agent { label 'osx' }
+            agent { label 'osx && ocaml' }
             steps {
                 runShell("""
                     eval \$(opam env)
