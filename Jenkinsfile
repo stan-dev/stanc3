@@ -56,10 +56,10 @@ pipeline {
             steps {
                 unstash 'ubuntu-exe'
                 sh """
-                   git clone -j${env.PARALLEL} --recursive --shallow-submodules --branch develop https://github.com/stan-dev/performance-tests-cmdstan
-                   cd performance-tests-cmdstan
-                   mv ../bin/stan cmdstan/bin/stan
-                   ./compare-git-hashes.sh "--tests-file ../working-models.txt" develop stanc3-dev develop develop
+          git clone -j${env.PARALLEL} --recursive --shallow-submodules --branch develop https://github.com/stan-dev/performance-tests-cmdstan
+          cd performance-tests-cmdstan
+          mv ../bin/stan cmdstan/bin/stan
+          ./compare-git-hashes.sh "--tests-file ../working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
