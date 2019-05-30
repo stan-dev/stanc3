@@ -424,7 +424,10 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
         constrain_decl decl_type dconstrain transform decl_id decl_var smeta
     | _ -> []
   in
-  let decl = {stmt= Decl {decl_adtype= dadlevel; decl_id; decl_type= Sized decl_type}; smeta} in
+  let decl =
+    { stmt= Decl {decl_adtype= dadlevel; decl_id; decl_type= Sized decl_type}
+    ; smeta }
+  in
   let checks =
     match dconstrain with
     | Some Check -> check_decl decl_type decl_id transform smeta dadlevel

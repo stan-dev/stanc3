@@ -408,7 +408,8 @@ let pp_ctor ppf (p : typed_prog) =
 
 let pp_model_private ppf p =
   let decl = function
-    | {stmt= Decl d; _} -> Some (d.decl_id, remove_possible_size d.decl_type, DataOnly)
+    | {stmt= Decl d; _} ->
+        Some (d.decl_id, remove_possible_size d.decl_type, DataOnly)
     | _ -> None
   in
   let data_decls = List.filter_map ~f:decl p.prepare_data in

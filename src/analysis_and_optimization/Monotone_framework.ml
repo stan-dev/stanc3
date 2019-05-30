@@ -691,11 +691,10 @@ let used_not_latest_expressions_transfer
     with type labels = int and type properties = Middle.ExprSet.t )
 
 let ad_level_of_expr _ _ = Middle.AutoDiffable
-
 (* TODO!! *)
 
-(** The transfer function for the forward analysis part of determining optimal ad-levels for variables *)
-let autodiff_level_fwd_transfer
+(** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
+let autodiff_level_fwd1_transfer
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -737,6 +736,27 @@ let autodiff_level_rev_transfer
         | _ -> Set.Poly.empty
       in
       transfer_gen_kill_alt p gen kill
+  end
+  : TRANSFER_FUNCTION
+    with type labels = int and type properties = string Set.Poly.t )
+
+(** The transfer function for the second forward analysis part of determining optimal ad-levels for variables *)
+let autodiff_level_fwd2_transfer
+    (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t)
+    (rev_ad_levels : (int, string Set.Poly.t) Map.Poly.t) =
+  ( module struct
+    type labels = int
+    type properties = string Set.Poly.t
+
+    let transfer_function l p =
+      let mir_node = (Map.find_exn flowgraph_to_mir l).stmtn in
+      let gen = Map.find_exn rev_ad_levels l in
+      let kill =
+        match mir_node with
+        | Middle.Decl {decl_id; _} -> Set.Poly.singleton decl_id
+        | _ -> Set.Poly.empty
+      in
+      transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
@@ -995,7 +1015,7 @@ let autodiff_level_mfp
       with type labels = int)
     (flowgraph_to_mir : (int, Middle.stmt_loc_num) Map.Poly.t) =
   let (module Lattice) = autodiff_level_lattice in
-  let (module Transfer1) = autodiff_level_fwd_transfer flowgraph_to_mir in
+  let (module Transfer1) = autodiff_level_fwd1_transfer flowgraph_to_mir in
   let (module Mf1) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer1)
   in
@@ -1010,6 +1030,13 @@ let autodiff_level_mfp
       (module Lattice)
       (module Transfer2)
   in
-  (* TODO: add extra fwd pass which does basically nothing, other than propagation ad-levels forward. *)
-  let rev_ad_levels = Mf2.mfp () in
-  rev_ad_levels
+  let rev_ad_levels_mfp = Mf2.mfp () in
+  let (module Transfer3) =
+    autodiff_level_fwd2_transfer flowgraph_to_mir
+      (Map.map ~f:(fun x -> x.entry) rev_ad_levels_mfp)
+  in
+  let (module Mf3) =
+    monotone_framework (module Flowgraph) (module Lattice) (module Transfer3)
+  in
+  let fwd2_ad_levels_mfp = Mf3.mfp () in
+  fwd2_ad_levels_mfp
