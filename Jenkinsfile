@@ -56,7 +56,7 @@ pipeline {
             steps {
                 unstash 'ubuntu-exe'
                 sh """
-          git clone --recursive --shallow-submodules --branch develop https://github.com/stan-dev/performance-tests-cmdstan
+          git clone --recursive --shallow-submodules https://github.com/stan-dev/performance-tests-cmdstan
           cd performance-tests-cmdstan
           cp ../bin/stan cmdstan/bin/stan
           ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
