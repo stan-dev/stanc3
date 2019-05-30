@@ -58,6 +58,7 @@ pipeline {
                 sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
           cd performance-tests-cmdstan
+          mkdir -p cmdstan/bin
           cp ../bin/stan cmdstan/bin/stan
           ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
