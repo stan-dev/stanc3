@@ -2,68 +2,79 @@ include Validation_intf
 include Core_kernel
 
 (**
-  It is common need in a compiler to check for certain errors e.g. syntax errors, type errors, 
-  other semantic errors, etc. Some typical ways of doing this include exceptions or representing 
-  success/failure with `Result.t`. In both of these approaches, the computation will 'fail' when
-  we reach the first error condition. 
+  It is common need in a compiler to check for certain errors e.g. syntax 
+  errors, type errors, other semantic errors, etc. Some typical ways of doing 
+  this include exceptions or representing success/failure with `Result.t`. 
+  In both of these approaches, the computation will 'fail' when we reach the 
+  first error condition. 
   
-  In some situations, it may be preferable to report _all_ of these errors to a user in one go.
-  `Validation` gives us this ability*.
+  In some situations, it may be preferable to report _all_ of these errors to a 
+  user in one go. `Validation` gives us this ability*.
 
-  The implementation below is an example of an OCaml `functor` i.e.  a module that is 
-  _parametrized_ by another module. Our `Valiation.Make` functor is parameterized over another 
-  module containing the type of errors.
+  The implementation below is an example of an OCaml `functor` i.e. a module 
+  that is _parametrized_ by another module. Our `Valiation.Make` functor is 
+  parameterized over another module containing the type of errors.
   
-  When applied, the functor returns a module with signature `Validation.S` but with the underlying
-  error type fixed at the type `t` contained in the module `X`. As an example, we use this functor
-  with the module `Semantic_error` (in `frontend`) so the type `error` is made equal to `Semantic_error.t`
+  When applied, the functor returns a module with signature `Validation.S` but 
+  with the underlying error type fixed at the type `t` contained in the module `X`.
+  As an example, we use this functor with the module `Semantic_error` 
+  (defined in `frontend`) so the type `error` is made equal to `Semantic_error.t`
   
-  Under the hood, `Validation` is just a `Result.t` with a `NonEmpty` list of `error`s. The main workhorse
-  of the module is the `apply` function. The function accepts a value lifted into our result type `'a t` 
-  and a _function_ lifted into the result type `('a -> 'b) t`. `apply` 'unwraps' the function and the value
-  and performs different actions depending on whether an error has occured. Because we have to arguments
-  each of which can be in two states, we have to check for four conditions:
+  Under the hood, `Validation` is just a `Result.t` with a `NonEmpty` list of 
+  `error`s. The main workhorse of the module is the `apply` function. 
+  The function accepts a value lifted into our result type `'a t` and a 
+  _function_ lifted into the result type `('a -> 'b) t`. 
   
   ```
   let apply x ~f = 
     match (f,x) with
   ```
+
+  `apply` 'unwraps' the function and the value and performs different actions 
+  depending on whether an error has occured. Because we have two arguments each 
+  of which can be in two states, we have to check for four conditions:
   
-  The first condition is that both the function `f` and the value `x` are `Ok`; in this case we can 
-  simply apply the function to the value and lift is back into the result type:
+  The first condition is that both the function `f` and the value `x` are `Ok`; 
+  in this case we can simply apply the function to the value and lift is back 
+  into the result type:
   
   ```
     | Ok f , Ok x -> Ok (f x)
   ```
   
-  The second situation is the the function is an `Error`; in this case we can't apply the function
-  so we simply return the same error:
+  The second situation is the the function is an `Error`; in this case we can't
+  apply the function so we simply return the same error:
   
   ```
     | Error e , Ok _ -> Error e
   ```
   
-  The third situation is that the function `f` is `Ok` but he value `x` is an `Error`; again, we can't
-  apply the function so we return the error:
+  The third situation is that the function `f` is `Ok` but he value `x` is an 
+  `Error`; again, we can't apply the function so we return the error:
   
   ```
     | Ok _ , Error e -> Error e
   ```
   
-  The final situation is that both `f` and `x` are errors; because our error type is a `NonEmpty` list,
-  we can combine them using the `append` function and track both:
+  The final situation is that both `f` and `x` are errors; because our error 
+  type is a `NonEmpty` list, we can combine them using the `append` function and
+  track both:
   
   ```
     | Error e1 , Error e2 -> Error(append e1 e2)
   ```
   
-  The module hides the implementation of `'a t` but exposes the functions `ok` and `error` to construct
-  this type.
+  The module hides the implementation of `'a t` but exposes the functions `ok` 
+  and `error` to construct this type.
   
-  * This is true so long as we restrict our usage to `apply` (and related) functions i.e. the 
-    _applicative_ interface. As soon as we use `bind` (i.e. the _monadic_ interface) we lose 
-    this ability. Technically, `Validation` _isn't_ a monad since it violates the law
-    that `liftM2 f m1 m2 === apply f a1 s2`.
+  * This is true so long as we restrict our usage to `apply` (and related) 
+  functions i.e. the _applicative_ interface.As soon as we use `bind` 
+  (i.e. the _monadic_ interface) we lose this ability. Technically, `Validation` 
+  doesn't constitute a monad since it violates the law:
+  
+  ```
+  liftM2 f m1 m2 === apply f a1 s2
+  ```
 *)
 module Make (X : sig
   type t
