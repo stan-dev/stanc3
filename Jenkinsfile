@@ -56,10 +56,15 @@ pipeline {
             steps {
                 unstash 'ubuntu-exe'
                 sh """
+          printenv
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+          cd performance-tests-cmdstan/cmdstan
+          git checkout stanc3-dev
+                   """
+                sh """
           cd performance-tests-cmdstan
-          mkdir -p cmdstan/bin
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
+          echo "CXXFLAGS+=-march=native" > cmdstan/make/local
+          STANC=\$(readlink -f ../bin/stanc) ./runPerformanceTests.py --check-golds-exact 1e-8 stat_comp_benchmarks --tests-file ../notes/working-models.txt
                """
             }
             post { always { runShell("rm -rf ./*")} }
