@@ -136,46 +136,12 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
       | Ast.PExpr e -> trans_expr e)
     ps
 
-let unsizedtype_of_indexed ut typed_idxs =
-  let rec aux k ut xs =
-    match (ut, xs) with
-    | UMatrix, [(Ast.All, _); (Single _, UInt)]
-     |UMatrix, [(Upfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Downfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Between _, _); (Single _, UInt)]
-     |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k UVector
-    | _, [] -> k ut
-    | _, next :: rest -> (
-      match next with
-      | Single _, UInt -> (
-        match ut with
-        | UArray inner_ty -> aux k inner_ty rest
-        | UVector | URowVector -> aux k UReal rest
-        | UMatrix -> aux k URowVector rest
-        | _ ->
-            (* This should not happen since we only translate to MIR after
-          semantic checking *)
-            failwith
-              "unsizedtype_of_indexed: function applied to semantically \
-               invalid expression" )
-      | _ -> (
-        match ut with
-        | UArray inner_ty ->
-            let k' t = k @@ UArray t in
-            aux k' inner_ty rest
-        | UVector | URowVector | UMatrix -> aux k ut rest
-        | _ ->
-            failwith
-              "unsizedtype_of_indexed: function applied to semantically \
-               invalid expression" ) )
-  in
-  aux (fun x -> x) ut typed_idxs
-
 (** [add_index expression index] returns an expression that (additionally)
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
-  let mtype = unsizedtype_of_indexed e.emeta.mtype [(i, UInt)]
+  let mtype =
+    Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
+      e.emeta.mtype [(i, UInt)]
   and mir_i = trans_idx i in
   let expr =
     match e.expr with

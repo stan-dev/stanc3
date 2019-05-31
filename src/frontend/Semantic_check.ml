@@ -555,6 +555,12 @@ let inferred_unsizedtype_of_indexed ~loc ut typed_idxs =
   in
   aux (fun x -> x) ut typed_idxs
 
+let inferred_unsizedtype_of_indexed_exn ~loc ut typed_idxs =
+  inferred_unsizedtype_of_indexed ~loc ut typed_idxs
+  |> Validate.to_result
+  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
+  |> Result.ok_or_failwith
+
 let inferred_ad_type_of_indexed at uindices =
   lub_ad_type
     ( at

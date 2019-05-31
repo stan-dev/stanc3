@@ -127,4 +127,7 @@ end) : S with type error := X.t = struct
     match x with
     | Ok x -> with_ok x
     | Error (NonEmpty (x, xs)) -> with_errors @@ (x :: xs)
+
+  let to_result x =
+    match x with Ok x -> Ok x | Error (NonEmpty (x, xs)) -> Error (x :: xs)
 end

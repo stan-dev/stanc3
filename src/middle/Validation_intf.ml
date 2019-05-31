@@ -27,6 +27,8 @@ module type S = sig
   val get_with :
     'a t -> with_ok:('a -> 'b) -> with_errors:(error list -> 'b) -> 'b
 
+  val to_result : 'a t -> ('a, error list) result
+
   module Validation_infix : Infix with type 'a t := 'a t
   include Infix with type 'a t := 'a t
 end

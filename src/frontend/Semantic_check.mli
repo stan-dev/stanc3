@@ -2,6 +2,13 @@
 
 open Core_kernel
 
+val inferred_unsizedtype_of_indexed_exn :
+     loc:Middle.location_span
+  -> Middle.unsizedtype
+  -> ('a Ast.index * Middle.unsizedtype) list
+  -> Middle.unsizedtype
+(** Infers unsized type of an `Indexed` expression  *)
+
 val semantic_check_program :
   Ast.untyped_program -> (Ast.typed_program, Semantic_error.t list) result
 (** Performs semantic check on AST and returns original AST embellished with type decorations *)
