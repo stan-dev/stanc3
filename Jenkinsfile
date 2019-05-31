@@ -65,61 +65,63 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Build & test Mac OS X binary") {
+        stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
-            agent { label 'osx && ocaml' }
-            steps {
-                runShell("""
+            parallel {
+                stage("Build & test Mac OS X binary") {
+                    agent { label 'osx && ocaml' }
+                    steps {
+                        runShell("""
                     eval \$(opam env)
                     cd scripts && bash -x install_build_deps.sh && cd ..
                     dune build @install
                 """)
 
-                echo runShell("""
+                        echo runShell("""
                     eval \$(opam env)
                     time dune runtest --verbose
                 """)
 
-                sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                stash name:'mac-exe', includes:'bin/*'
-            }
-            post {always { runShell("rm -rf ./*")}}
-        }
-        stage("Build & test a static Linux binary") {
-            when { anyOf { buildingTag(); branch 'master' } }
-            agent {
-                dockerfile {
-                    filename 'docker/static/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
+                        sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                        stash name:'mac-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
                 }
-            }
-            steps {
-                runShell("""
+                stage("Build & test a static Linux binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        runShell("""
                     eval \$(opam env)
                     dune build @install --profile static
                 """)
 
-                echo runShell("""
+                        echo runShell("""
                     eval \$(opam env)
                     time dune runtest --profile static --verbose
                 """)
 
-                sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                stash name:'linux-exe', includes:'bin/*'
-            }
-            post {always { runShell("rm -rf ./*")}}
-        }
-        stage("Build & test static Windows binary") {
-            when { anyOf { buildingTag(); branch 'master' } }
-            agent { label 'windows' }
-            steps {
-                bat "bash -cl \"cd test/integration\""
-                bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
-                bat "bash -cl \"cd ..\""
-                bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
-                bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
-                stash name:'windows-exe', includes:'bin/*'
+                        sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                        stash name:'linux-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test static Windows binary") {
+                    agent { label 'windows' }
+                    steps {
+                        bat "bash -cl \"cd test/integration\""
+                        bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
+                        bat "bash -cl \"cd ..\""
+                        bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
+                        bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
+                        stash name:'windows-exe', includes:'bin/*'
+                    }
+                }
             }
         }
         stage("Release tag and publish binaries") {
