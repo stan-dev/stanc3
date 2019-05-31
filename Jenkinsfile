@@ -57,8 +57,9 @@ pipeline {
                 unstash 'ubuntu-exe'
                 sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
+                sh """
           cd performance-tests-cmdstan
-          mkdir -p cmdstan/bin
           STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
