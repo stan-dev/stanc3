@@ -74,6 +74,7 @@ pipeline {
                         runShell("""
                     eval \$(opam env)
                     cd scripts && bash -x install_build_deps.sh && cd ..
+                    dune subst
                     dune build @install
                 """)
 
@@ -98,6 +99,7 @@ pipeline {
                     steps {
                         runShell("""
                     eval \$(opam env)
+                    dune subst
                     dune build @install --profile static
                 """)
 
@@ -117,6 +119,7 @@ pipeline {
                         bat "bash -cl \"cd test/integration\""
                         bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                         bat "bash -cl \"cd ..\""
+                        bat "bash -cl \"dune subst\""
                         bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
                         bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                         stash name:'windows-exe', includes:'bin/*'
