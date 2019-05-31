@@ -1,28 +1,47 @@
-include module type of Mir
 open Core_kernel
+include module type of Mir
+include module type of Mir_pretty_printer
+module Validation : module type of Validation
 
-val string_of_location : location -> string
-val string_of_location_span : location_span -> string
-val operator_of_string : string -> operator option
-val string_of_operator : operator -> string
-val string_of_internal_fn : internal_fn -> string
-val internal_fn_of_string : string -> internal_fn option
-val internal_funapp : internal_fn -> 'a with_expr list -> 'a -> 'a with_expr
-val no_loc : location
-val no_span : location_span
-val merge_spans : location_span -> location_span -> location_span
-val internal_meta : mtype_loc_ad
-val loop_bottom : mtype_loc_ad with_expr
-val zero : mtype_loc_ad with_expr
-val pp_indexed : 'a Fmt.t -> Format.formatter -> string * 'a index list -> unit
-val pp_expr_typed_located : Format.formatter -> mtype_loc_ad with_expr -> unit
-val remove_size : 'a sizedtype -> unsizedtype
+val string_of_location : Mir.location -> string
+val string_of_location_span : Mir.location_span -> string
+val operator_of_string : string -> Mir.operator option
+val string_of_operator : Mir.operator -> string
+val string_of_internal_fn : Mir.internal_fn -> string
+val internal_fn_of_string : string -> Mir.internal_fn option
+
+val internal_funapp :
+  Mir.internal_fn -> 'a Mir.with_expr list -> 'a -> 'a Mir.with_expr
+
+val no_loc : Mir.location
+val no_span : Mir.location_span
+val merge_spans : Mir.location_span -> Mir.location_span -> Mir.location_span
+val internal_meta : Mir.mtype_loc_ad
+val loop_bottom : Mir.mtype_loc_ad Mir.with_expr
+val remove_size : 'a Mir.sizedtype -> Mir.unsizedtype
+val zero : Mir.mtype_loc_ad Mir.with_expr
+
+val pp_indexed :
+  'a Fmt.t -> Format.formatter -> string * 'a Mir.index list -> unit
+
+val pp_expr_typed_located :
+  Format.formatter -> Mir.mtype_loc_ad Mir.with_expr -> unit
+
+val pp_operator : Format.formatter -> Mir.operator -> unit
+val pp_unsizedtype : Format.formatter -> Mir.unsizedtype -> unit
+val pp_returntype : Format.formatter -> Mir.returntype -> unit
 val remove_possible_size : 'a possiblysizedtype -> unsizedtype
 
 val pp_typed_prog :
-  Format.formatter -> ('a with_expr, ('b, 'c) stmt_with) prog -> unit
+     Format.formatter
+  -> ('a Mir.with_expr, ('b, 'c) Mir.stmt_with) Mir.prog
+  -> unit
 
-val sexp_of_expr_typed_located : 'a with_expr -> Sexp.t
+val pp_message_with_location :
+  Format.formatter -> string * Mir.location -> unit
+
+val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
+val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
 val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
 val gensym_reset_danger_use_cautiously : unit -> unit
@@ -44,11 +63,25 @@ val stan_math_returntype :
   string -> (Mir.autodifftype * Mir.unsizedtype) list -> Mir.returntype option
 (** Get an optional return type for a Stan Math library function, given its name and argument types. *)
 
+val assignmentoperator_stan_math_return_type :
+     Mir.operator
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> Mir.returntype option
+
+val operator_stan_math_return_type :
+     Mir.operator
+  -> (Mir.autodifftype * Mir.unsizedtype) list
+  -> Mir.returntype option
+
+val pretty_print_math_lib_operator_sigs : Mir.operator -> string list
+
+val pretty_print_math_lib_assignmentoperator_sigs :
+  Mir.operator -> string option
+
+val pretty_print_all_math_lib_fn_sigs : string -> string
+
 val is_stan_math_function_name : string -> bool
 (** Check whether a string is the name of a Stan Math library function. *)
-
-val list_all_math_lib_fn_sigs : string -> unsizedtype list
-(** List all the signatures of a math library function, for the purposes of error messages. *)
 
 val operator_return_type_from_string :
   string -> (autodifftype * unsizedtype) sexp_list -> returntype option

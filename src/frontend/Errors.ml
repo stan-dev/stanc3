@@ -20,9 +20,6 @@ exception SemanticError of (string * location_span)
     [msg]. *)
 exception FatalError of string
 
-(* A semantic error reported by the toplevel *)
-let semantic_error ~loc msg = raise (SemanticError (msg, loc))
-
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
@@ -121,6 +118,11 @@ let report_syntax_error = function
         (string_of_location loc) ;
       print_context_and_message message loc
 
+let report_parsing_error (message, loc_span) =
+  Printf.eprintf "\nSyntax error in %s, parsing error:\n"
+    (string_of_location_span loc_span) ;
+  print_context_and_message message loc_span.end_loc
+
 (** A semantic error message used when handling a SemanticError *)
 let report_semantic_error (message, loc_span) =
   Printf.eprintf "\n%s in %s:\n" "Semantic error"
@@ -151,7 +153,7 @@ let%expect_test "location string equivalence 1" =
       file zzz.stan, line 24, column 77 |}]
 
 let%expect_test "location string equivalence 2" =
-  let loc =
+  let loc : location =
     { filename= "xxx.stan"
     ; line_num= 35
     ; col_num= 24

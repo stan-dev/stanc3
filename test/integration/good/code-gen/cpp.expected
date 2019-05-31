@@ -415,9 +415,13 @@ class one_var_per_block_model : public prob_grad {
                             N), "assigning variable param[(sym1__ - 1)]");}
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), lb_constrain(
-                              stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
-                              0), "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
+          if (jacobian__) {
+            stan::model::assign(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), lb_constrain(
+                                stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                0, lp__), "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
+          } else stan::model::assign(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), lb_constrain(
+                                     stan::model::rvalue(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), "pretty printed e"),
+                                     0), "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
         }}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>((K + 1), std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
@@ -430,9 +434,13 @@ class one_var_per_block_model : public prob_grad {
       for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
           for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
-            stan::model::assign(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), lb_constrain(
-                                stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
-                                0), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)]");
+            if (jacobian__) {
+              stan::model::assign(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), lb_constrain(
+                                  stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+                                  0, lp__), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)]");
+            } else stan::model::assign(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), lb_constrain(
+                                       stan::model::rvalue(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), "pretty printed e"),
+                                       0), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)]");
           }}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));

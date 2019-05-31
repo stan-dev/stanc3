@@ -1,26 +1,4 @@
-open Mir
-open Core_kernel
-
-(* The following module signatures define the parts of the compiler we
-   can abstract over.
-
-   The `Frontend` module defines two types of errors (syntactic and semantic)
-   and exposes functions to parse a file or string to MIR typed programs.
-
-   These functions return a result with the typed program as success or
-   a list of frontend errors. The module also exposes a way of rendering
-   these errors for use from the compiler
-
-   The `Optimize` module exposes a type 'level' which represents the optimization
-   options, a function for parsing the level from a string and a function
-   which performs the actual optimization.
-
-   The `Backend` module exposes the backend representation type and two functions
-   that take MIR typed programs to that represenation or to a string.
-
-   The `Compiler.Make` functor allows you to construct a `Compiler.S` from
-   modules fulfilling these signatures.
-*)
+include Core_kernel
 
 module type Frontend = sig
   (* options for specifying the behaviour of the frontend *)
@@ -29,36 +7,17 @@ module type Frontend = sig
   val frontend_opts_of_string : (frontend_opts, string) result
   val default_frontend_opts : frontend_opts
 
-  (* the type of semantic errors *)
-  type semantic_error
-
-  (* the type of syntax errors *)
-  type syntax_error
-  type frontend_error = (syntax_error, semantic_error) Either.t
+  type frontend_error
 
   val render_error : frontend_error -> string
 
   val mir_of_file :
        opts:frontend_opts
     -> file:string
-    -> (typed_prog, frontend_error list) result
+    -> (Mir.typed_prog, frontend_error) result
 
   val mir_of_string :
-       opts:frontend_opts
-    -> str:string
-    -> (typed_prog, frontend_error list) result
-end
-
-module type Optimize = sig
-  (* variant of possible optimization levels *)
-  type optimization_opts
-
-  (* parse level from string, for use in e.g. command line argument parser *)
-  val optimization_opts_of_string :
-    string -> (optimization_opts, string) result
-
-  val default_optimization_opts : optimization_opts
-  val optimize : opts:optimization_opts -> typed_prog -> typed_prog
+    opts:frontend_opts -> str:string -> (Mir.typed_prog, frontend_error) result
 end
 
 module type Backend = sig
@@ -70,14 +29,24 @@ module type Backend = sig
   (* the type of backend representation *)
   type repr
 
-  val mir_to_repr : opts:backend_opts -> typed_prog -> repr
-  val mir_to_string : opts:backend_opts -> typed_prog -> string
+  val mir_to_repr : opts:backend_opts -> Mir.typed_prog -> repr
+  val mir_to_string : opts:backend_opts -> Mir.typed_prog -> string
+end
+
+module type Optimization = sig
+  (* variant of possible optimization levels *)
+  type optimization_opts
+
+  (* parse level from string, for use in e.g. command line argument parser *)
+  val optimization_opts_of_string :
+    string -> (optimization_opts, string) result
+
+  val default_optimization_opts : optimization_opts
+  val optimize : opts:optimization_opts -> Mir.typed_prog -> Mir.typed_prog
 end
 
 module Compiler = struct
   module type S = sig
-    type semantic_error
-    type syntax_error
     type frontend_error
     type compiler_opts_error
     type compiler_opts
@@ -88,14 +57,11 @@ module Compiler = struct
       string -> (compiler_opts, compiler_opts_error list) result
 
     val compile_from_file :
-      opts:compiler_opts -> file:string -> (string, frontend_error list) result
+      opts:compiler_opts -> file:string -> (string, frontend_error) result
   end
 
-  module Make (F : Frontend) (O : Optimize) (B : Backend) :
-    S
-    with type semantic_error := F.semantic_error
-     and type syntax_error := F.syntax_error
-     and type frontend_error := F.frontend_error = struct
+  module Make (F : Frontend) (O : Optimization) (B : Backend) :
+    S with type frontend_error := F.frontend_error = struct
     type compiler_opts =
       { frontend_opts: F.frontend_opts
       ; optimization_opts: O.optimization_opts

@@ -3,6 +3,12 @@ open Analysis_and_optimization.Factor_graph
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
+let semantic_check_program ast =
+  Option.value_exn
+    (Result.ok
+       (Semantic_check.semantic_check_program
+          (Option.value_exn (Result.ok ast))))
+
 let example1_program =
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -39,7 +45,7 @@ let example1_program =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (Semantic_check.semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Variable dependency example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
