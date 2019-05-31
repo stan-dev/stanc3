@@ -791,9 +791,7 @@ let optimize_ad_levels mir =
       Set.Poly.of_list
         (List.filter_map
            ~f:(fun (v, (_, b)) ->
-             match b with
-             | Parameters | TransformedParameters -> Some v
-             | _ -> None )
+             match b with Parameters -> Some v | _ -> None )
            mir.output_vars)
     in
     let ad_levels =
@@ -822,6 +820,4 @@ let optimize_ad_levels mir =
     in
     optimize_ad_levels_stmt (Map.find_exn flowgraph_to_mir 1)
   in
-  transform_program mir transform
-
-(* TODO: question - can we raise the adlevel through control flow dependencies? *)
+  transform_program_blockwise mir transform

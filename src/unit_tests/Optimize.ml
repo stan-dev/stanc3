@@ -3279,8 +3279,10 @@ let%expect_test "adlevel_optimization" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      transformed parameters {
+      parameters {
         real w;
+      }
+      transformed parameters {
         {
           int x;
           real y;
@@ -3320,6 +3322,7 @@ let%expect_test "adlevel_optimization" =
 
       log_prob {
         real w;
+        w = FnReadParam__("w", "scalar");
         {
           data int x;
           real y;
@@ -3335,28 +3338,28 @@ let%expect_test "adlevel_optimization" =
 
       generate_quantities {
         data real w;
+        w = FnReadParam__("w", "scalar");
+        FnWriteParam__(w);
         if(emit_transformed_parameters__) {
-          {
-            data int x;
-            data real y;
-            data real z;
-            data real z_data;
-            if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
-            if(Greater__(2, 1)) z = y;
-            if(Greater__(3, 1)) z_data = x;
-            FnPrint__(z);
-            FnPrint__(z_data);
-          }
-          FnWriteParam__(w);
+          data int x;
+          data real y;
+          data real z;
+          data real z_data;
+          if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
+          if(Greater__(2, 1)) z = y;
+          if(Greater__(3, 1)) z_data = x;
+          FnPrint__(z);
+          FnPrint__(z_data);
         }
       }
 
       transform_inits {
-
+        data real w;
+        w = FnReadData__("w", "scalar");
       }
 
       output_vars {
-        transformed_parameters real w;
+        parameters real w;
       } |}]
 
 let%expect_test "adlevel_optimization expressions" =
@@ -3364,8 +3367,10 @@ let%expect_test "adlevel_optimization expressions" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      transformed parameters {
+      parameters {
         real w;
+      }
+      transformed parameters {
         {
           int x;
           real y;
@@ -3399,6 +3404,16 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((stmt
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
+        (smeta <opaque>))
+       ((stmt
+         (Assignment (w ())
+          ((expr
+            (FunApp CompilerInternal FnReadParam__
+             (((expr (Lit Str w))
+               (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
+              ((expr (Lit Str scalar))
+               (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
+           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
         (smeta <opaque>))
        ((stmt
          (Block
@@ -3499,8 +3514,10 @@ let%expect_test "adlevel_optimization 2" =
   let ast =
     Parse.parse_string Parser.Incremental.program
       {|
-      transformed parameters {
+      parameters {
         real w;
+      }
+      transformed parameters {
         {
           int x;
           real y[2];
@@ -3540,6 +3557,7 @@ let%expect_test "adlevel_optimization 2" =
 
       log_prob {
         real w;
+        w = FnReadParam__("w", "scalar");
         {
           data int x;
           array[real, 2] y;
@@ -3555,26 +3573,26 @@ let%expect_test "adlevel_optimization 2" =
 
       generate_quantities {
         data real w;
+        w = FnReadParam__("w", "scalar");
+        FnWriteParam__(w);
         if(emit_transformed_parameters__) {
-          {
-            data int x;
-            data array[real, 2] y;
-            data real z;
-            data real z_data;
-            if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
-            if(Greater__(2, 1)) z = y[1];
-            if(Greater__(3, 1)) z_data = x;
-            FnPrint__(z);
-            FnPrint__(z_data);
-          }
-          FnWriteParam__(w);
+          data int x;
+          data array[real, 2] y;
+          data real z;
+          data real z_data;
+          if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
+          if(Greater__(2, 1)) z = y[1];
+          if(Greater__(3, 1)) z_data = x;
+          FnPrint__(z);
+          FnPrint__(z_data);
         }
       }
 
       transform_inits {
-
+        data real w;
+        w = FnReadData__("w", "scalar");
       }
 
       output_vars {
-        transformed_parameters real w;
+        parameters real w;
       } |}]

@@ -49,4 +49,6 @@ val lazy_code_motion : Middle.typed_prog -> Middle.typed_prog
     subsumes common subexpression elimination and loop-invariant code motion. *)
 
 val optimize_ad_levels : Middle.typed_prog -> Middle.typed_prog
-(** Assign the optimal ad-levels to local variables. *)
+(** Assign the optimal ad-levels to local variables. That means, make sure that
+    variables only ever get treated as autodiff variables if they have some
+    dependency on a parameter *)
