@@ -67,9 +67,10 @@ pipeline {
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
+            failFast true
             parallel {
                 stage("Build & test Mac OS X binary") {
-                    agent { label 'osx && ocaml' }
+                    agent { label "osx && ocaml" }
                     steps {
                         runShell("""
                     eval \$(opam env)
@@ -114,7 +115,7 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
                 stage("Build & test static Windows binary") {
-                    agent { label 'windows && WSL' }
+                    agent { label "windows && WSL" }
                     steps {
                         bat "bash -cl \"cd test/integration\""
                         bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
