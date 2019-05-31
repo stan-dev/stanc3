@@ -46,8 +46,8 @@ pipeline {
 
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
-                sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stan"
-                stash name:'ubuntu-exe', includes:'bin/stan, notes/working-models.txt'
+                sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
         }
@@ -59,8 +59,7 @@ pipeline {
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
           cd performance-tests-cmdstan
           mkdir -p cmdstan/bin
-          cp ../bin/stan cmdstan/bin/stan
-          ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
+          STANC3=$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
