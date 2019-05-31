@@ -1,7 +1,7 @@
 open Core_kernel
 include module type of Mir
 include module type of Mir_pretty_printer
-module Validation : Validation_intf.Validation
+module Validation : module type of Validation
 
 val string_of_location : Mir.location -> string
 val string_of_location_span : Mir.location_span -> string
