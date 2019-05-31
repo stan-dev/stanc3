@@ -7,14 +7,14 @@ let unwrap_return_exn = function
   | x -> raise_s [%message "Unexpected return type " (x : returntype option)]
 
 let trans_fn_kind = function
-  | Ast.StanLib -> Middle.StanLib
+  | Ast.StanLib -> StanLib
   | UserDefined -> UserDefined
 
 let get_prob_fun_name name =
   let new_name =
     ["_log"; "_lpdf"; "_lpmf"; ""]
     |> List.map ~f:(( ^ ) name)
-    |> List.filter ~f:Middle.is_stan_math_function_name
+    |> List.filter ~f:is_stan_math_function_name
     |> List.hd
   in
   match new_name with
@@ -60,16 +60,16 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
         | Ast.CondDistApp ({name; _}, args) ->
-            FunApp (Middle.StanLib, name, trans_exprs args)
+            FunApp (StanLib, name, trans_exprs args)
         | GetLP | GetTarget -> Var "target"
         | ArrayExpr eles ->
             FunApp
-              ( Middle.CompilerInternal
+              ( CompilerInternal
               , string_of_internal_fn FnMakeArray
               , trans_exprs eles )
         | RowVectorExpr eles ->
             FunApp
-              ( Middle.CompilerInternal
+              ( CompilerInternal
               , string_of_internal_fn FnMakeRowVec
               , trans_exprs eles )
         | Indexed (lhs, indices) ->
@@ -140,10 +140,9 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
     indexes into the input [expression] by [index].*)
 let add_int_index e i =
   let mtype =
-    Semantic_check.inferred_unsizedtype_of_indexed e.emeta.mloc e.emeta.mtype
-      [(i, UInt)]
-  in
-  let mir_i = trans_idx i in
+    Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
+      e.emeta.mtype [(i, UInt)]
+  and mir_i = trans_idx i in
   let expr =
     match e.expr with
     | Var _ -> Indexed (e, [mir_i])
@@ -533,9 +532,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         { loopvar= newsym
         ; lower= loop_bottom
         ; upper=
-            wrap
-            @@ FunApp
-                 (Middle.StanLib, string_of_internal_fn FnLength, [iteratee])
+            wrap @@ FunApp (StanLib, string_of_internal_fn FnLength, [iteratee])
         ; body }
       |> swrap
   | Ast.FunDef _ ->
@@ -727,8 +724,20 @@ let trans_prog filename p : typed_prog =
 (*===================== tests =========================================*)
 
 let mir_from_string s =
-  Parse.parse_string Parser.Incremental.program s
-  |> Semantic_check.semantic_check_program |> trans_prog ""
+  let untyped_prog =
+    Parse.parse_string Parser.Incremental.program s
+    |> Result.map_error ~f:Parse.render_syntax_error
+    |> Result.ok_or_failwith
+  in
+  let typed_prog_result = Semantic_check.semantic_check_program untyped_prog in
+  let typed_prog =
+    typed_prog_result
+    |> Result.map_error ~f:(function
+         | x :: _ -> (Semantic_error.pp |> Fmt.to_to_string) x
+         | _ -> failwith "mir_from_string: can't happen" )
+    |> Result.ok_or_failwith
+  in
+  trans_prog "" typed_prog
 
 let%expect_test "Prefix-Op-Example" =
   let mir =
@@ -742,7 +751,7 @@ let%expect_test "Prefix-Op-Example" =
       |}
   in
   let op = mir.log_prob in
-  print_s [%sexp (op : Middle.stmt_loc list)] ;
+  print_s [%sexp (op : stmt_loc list)] ;
   (* Perhaps this is producing too many nested lists. XXX*)
   [%expect
     {|

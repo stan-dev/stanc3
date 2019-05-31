@@ -18,9 +18,6 @@ exception SemanticError of (string * location_span)
     so we can trace their origin. *)
 exception FatalError of string
 
-val semantic_error : loc:location_span -> string -> 'a
-(** Throw a semantic error reported by the toplevel *)
-
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
 
@@ -32,6 +29,8 @@ val location_of_position : Lexing.position -> location
 
 val report_syntax_error : parse_error -> unit
 (** A syntax error message used when handling a SyntaxError *)
+
+val report_parsing_error : string * location_span -> unit
 
 val report_semantic_error : string * location_span -> unit
 (** A semantic error message used when handling a SemanticError *)
