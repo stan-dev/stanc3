@@ -45,25 +45,22 @@ pipeline {
                 """)
 
                 echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
+
+                sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Run end-to-end tests") {
-            agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
-                }
-            }
+            agent { label 'linux' }
             steps {
+                unstash 'ubuntu-exe'
                 sh """
-                   git clone -j${env.PARALLEL} --recursive --branch develop https://github.com/stan-dev/cmdstan
-                   cd cmdstan && make -j${env.PARALLEL} build && cd ..
-               """
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
                 sh """
-                   eval \$(opam env)
-                   CMDSTAN="`pwd`/cmdstan" dune runtest test/integration/good/code-gen
+          cd performance-tests-cmdstan
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
