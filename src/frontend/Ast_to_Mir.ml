@@ -469,12 +469,12 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let dist_name = get_prob_fun_name distribution.name in
       let add_dist =
-        (* XXX Reminder to differentiate between tilde, which drops constants, and
-         vanilla target +=, which doesn't. Can use _unnormalized or something.
-           See https://github.com/stan-dev/stanc3/issues/63
-        *)
         TargetPE
-          { expr= FunApp (StanLib, dist_name, trans_exprs (arg :: args))
+          { expr=
+              FunApp
+                ( StanLib
+                , dist_name ^ "_unnormalized"
+                , trans_exprs (arg :: args) )
           ; emeta= {mloc; madlevel= Ast.expr_ad_lub (arg :: args); mtype= UReal}
           }
       in

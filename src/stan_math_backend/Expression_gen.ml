@@ -190,14 +190,23 @@ and read_data ut ppf es =
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
 and gen_distribution_app f =
+  let sfx = "_unnormalized" in
   if
+    String.is_suffix f ~suffix:("_lpmf" ^ sfx)
+    || String.is_suffix f ~suffix:("_lpdf" ^ sfx)
+    || String.is_suffix f ~suffix:("_log" ^ sfx)
+  then
+    Some
+      (fun ppf ->
+        let f = String.chop_suffix_exn ~suffix:sfx f in
+        pf ppf "%s<propto__>(@[<hov>%a@])" f (list ~sep:comma pp_expr) )
+  else if
     String.is_suffix f ~suffix:"_lpmf"
     || String.is_suffix f ~suffix:"_lpdf"
     || String.is_suffix f ~suffix:"_log"
   then
     Some
-      (fun ppf ->
-        pf ppf "%s<propto__>(@[<hov>%a@])" f (list ~sep:comma pp_expr) )
+      (fun ppf -> pf ppf "%s<false>(@[<hov>%a@])" f (list ~sep:comma pp_expr))
   else None
 
 (* assumes everything well formed from parser checks *)
