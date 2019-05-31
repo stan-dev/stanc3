@@ -3518,6 +3518,7 @@ let%expect_test "adlevel_optimization 2" =
         real w;
       }
       transformed parameters {
+        real w_trans = 1;
         {
           int x;
           real y[2];
@@ -3558,6 +3559,8 @@ let%expect_test "adlevel_optimization 2" =
       log_prob {
         real w;
         w = FnReadParam__("w", "scalar");
+        data real w_trans;
+        w_trans = 1;
         {
           data int x;
           array[real, 2] y;
@@ -3575,16 +3578,21 @@ let%expect_test "adlevel_optimization 2" =
         data real w;
         w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
+        data real w_trans;
         if(emit_transformed_parameters__) {
-          data int x;
-          data array[real, 2] y;
-          data real z;
-          data real z_data;
-          if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
-          if(Greater__(2, 1)) z = y[1];
-          if(Greater__(3, 1)) z_data = x;
-          FnPrint__(z);
-          FnPrint__(z_data);
+          w_trans = 1;
+          {
+            data int x;
+            data array[real, 2] y;
+            data real z;
+            data real z_data;
+            if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
+            if(Greater__(2, 1)) z = y[1];
+            if(Greater__(3, 1)) z_data = x;
+            FnPrint__(z);
+            FnPrint__(z_data);
+          }
+          FnWriteParam__(w_trans);
         }
       }
 
@@ -3595,4 +3603,5 @@ let%expect_test "adlevel_optimization 2" =
 
       output_vars {
         parameters real w;
+        transformed_parameters real w_trans;
       } |}]
