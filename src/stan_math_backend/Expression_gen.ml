@@ -190,6 +190,13 @@ and read_data ut ppf es =
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
 and gen_distribution_app f =
+  (* TODO: centralized Utils package containing non-domain specific stuff like this *)
+  let replace_last ~pattern ~with_ s =
+    String.(
+      s |> rev
+      |> substr_replace_first ~pattern:(rev pattern) ~with_:(rev with_)
+      |> rev)
+  in
   let ifx = Middle.proportional_to_distribution_infix in
   if
     String.is_suffix f ~suffix:(ifx ^ "_lpmf")
@@ -198,7 +205,7 @@ and gen_distribution_app f =
   then
     Some
       (fun ppf ->
-        let f = String.substr_replace_first ~pattern:ifx ~with_:"" f in
+        let f = replace_last ~pattern:ifx ~with_:"" f in
         pf ppf "%s<propto__>(@[<hov>%a@])" f (list ~sep:comma pp_expr) )
   else if
     String.is_suffix f ~suffix:"_lpmf"
