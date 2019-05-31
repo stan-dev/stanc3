@@ -20,6 +20,7 @@ transformed parameters {
 model {
   vector[N] modellocal[K];
   for (n in 1:N) modellocal[n] = tparam[n] * 2;
+  target += normal_lpdf(0 | 0, 1); // check <propto_>
 }
 generated quantities {
   vector<lower=0>[N] gq[K];
