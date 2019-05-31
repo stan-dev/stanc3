@@ -67,13 +67,15 @@ pipeline {
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
+            failFast true
             parallel {
                 stage("Build & test Mac OS X binary") {
-                    agent { label 'osx && ocaml' }
+                    agent { label "osx && ocaml" }
                     steps {
                         runShell("""
                     eval \$(opam env)
                     cd scripts && bash -x install_build_deps.sh && cd ..
+                    dune subst
                     dune build @install
                 """)
 
@@ -98,6 +100,7 @@ pipeline {
                     steps {
                         runShell("""
                     eval \$(opam env)
+                    dune subst
                     dune build @install --profile static
                 """)
 
@@ -112,12 +115,12 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
                 stage("Build & test static Windows binary") {
-                    agent { label 'windows && WSL' }
+                    agent { label "windows && WSL" }
                     steps {
                         bat "bash -cl \"cd test/integration\""
                         bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                         bat "bash -cl \"cd ..\""
-                        bat "bash -cl \"eval \$(opam env) make clean; dune build -x windows; dune runtest --verbose\""
+                        bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
                         bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                         stash name:'windows-exe', includes:'bin/*'
                     }

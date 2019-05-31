@@ -1354,16 +1354,15 @@ and semantic_check_block ~loc ~cf stmts =
      do not count for the return type. 
   *)
   let validated_stmts =
-    List.map ~f:(semantic_check_statement cf) stmts
-    |> Validate.sequence
-    |> Validate.map ~f:list_until_escape
+    List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
   in
   Symbol_table.end_scope vm ;
   Validate.(
     validated_stmts
     >>= fun xs ->
     let return_ty =
-      List.map ~f:(fun s -> s.smeta.return_type) xs
+      xs |> list_until_escape
+      |> List.map ~f:(fun s -> s.smeta.return_type)
       |> List.fold ~init:(ok NoReturnType) ~f:(fun accu x ->
              accu >>= fun y -> try_compute_block_statement_returntype loc y x
          )

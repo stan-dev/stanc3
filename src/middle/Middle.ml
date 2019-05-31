@@ -5,12 +5,6 @@ include Type_conversion
 open Core_kernel
 module Validation = Validation
 
-let rec sexp_of_expr_typed_located {expr; _} =
-  sexp_of_expr sexp_of_expr_typed_located expr
-
-let rec sexp_of_stmt_loc {stmt; _} =
-  sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
-
 (* ===================== Some helper functions and values ====================== *)
 
 let expr_from_idx (i : expr_typed_located index) =
