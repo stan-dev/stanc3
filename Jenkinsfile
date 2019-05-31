@@ -59,7 +59,7 @@ pipeline {
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
           cd performance-tests-cmdstan
           mkdir -p cmdstan/bin
-          STANC3=$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
+          STANC3=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
