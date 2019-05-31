@@ -200,3 +200,5 @@ type internal_fn =
   | FnPrint
   | FnReject
 [@@deriving sexp]
+
+let proportional_to_distribution_infix = "_propto"

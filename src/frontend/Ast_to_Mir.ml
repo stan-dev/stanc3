@@ -10,20 +10,19 @@ let trans_fn_kind = function
   | Ast.StanLib -> StanLib
   | UserDefined -> UserDefined
 
-let get_prob_fun_name name =
-  let new_name =
+let get_prob_fun_suffix name =
+  let sfx =
     ["_log"; "_lpdf"; "_lpmf"; ""]
-    |> List.map ~f:(( ^ ) name)
-    |> List.filter ~f:is_stan_math_function_name
+    |> List.filter ~f:(fun sfx -> is_stan_math_function_name (name ^ sfx))
     |> List.hd
   in
-  match new_name with
+  match sfx with
   | Some n -> n
   | None -> raise_s [%message "No matching functions for" (name : string)]
 
 let%expect_test "distribution name mangling" =
-  print_endline (get_prob_fun_name "normal") ;
-  [%expect {| normal_log |}]
+  print_endline (get_prob_fun_suffix "normal") ;
+  [%expect {| _log |}]
 
 let rec op_to_funapp op args =
   let argtypes =
@@ -467,14 +466,13 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
-      let dist_name = get_prob_fun_name distribution.name in
+      let suffix = get_prob_fun_suffix distribution.name in
+      let name =
+        distribution.name ^ proportional_to_distribution_infix ^ suffix
+      in
       let add_dist =
         TargetPE
-          { expr=
-              FunApp
-                ( StanLib
-                , dist_name ^ "_unnormalized"
-                , trans_exprs (arg :: args) )
+          { expr= FunApp (StanLib, name, trans_exprs (arg :: args))
           ; emeta= {mloc; madlevel= Ast.expr_ad_lub (arg :: args); mtype= UReal}
           }
       in
