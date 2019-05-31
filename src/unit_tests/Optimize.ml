@@ -2297,7 +2297,7 @@ let%expect_test "lazy code motion" =
     }
 
     log_prob {
-      data [real] sym1__;
+      data real[] sym1__;
       {
         sym1__ = FnMakeArray__(3.0);
         FnPrint__(sym1__);
@@ -3024,7 +3024,6 @@ let%expect_test "lazy code motion, 12" =
         int x;
         for (i in 1:6) {
           print(x + 42);
-          continue;
           x = 3;
         }
       }
@@ -3057,7 +3056,6 @@ let%expect_test "lazy code motion, 12" =
           for(i in 1:6) {
             {
               FnPrint__(Plus__(x, 42));
-              continue;
               x = 3;
             }
             ;
