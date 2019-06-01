@@ -1,6 +1,6 @@
 # A New Stan-to-C++ Compiler
-This repo contains work in progress on a new compiler for Stan, written in OCaml. To read more about why we're building this, see this [introductory blog post.](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
-We're currently able to successfully compile, link, and run the 8 schools model, but not much else.
+This repo contains work in progress on a new compiler for Stan, written in OCaml. To read more about why we're building this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
+We're currently able to successfully compile, link, and run [these models](https://github.com/stan-dev/stanc3/blob/master/notes/working-models.txt), but not much else.
 
 [![Build Status](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/badge/icon)](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/)
 
