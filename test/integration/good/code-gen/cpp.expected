@@ -460,6 +460,7 @@ class one_var_per_block_model : public prob_grad {
         for (size_t n = 1; n <= N; ++n) {
           stan::model::assign(modellocal, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), multiply(stan::model::rvalue(tparam, stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), "pretty printed e"), 2), "assigning variable modellocal[(n - 1)]");
         }
+        lp_accum__.add(normal_lpdf<false>(0, 0, 1));
       }
     }
     lp_accum__.add(lp__);
