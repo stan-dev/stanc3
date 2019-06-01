@@ -224,12 +224,6 @@ let rec pp_expr_typed_located ppf {expr; _} =
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 
-let rec sexp_of_expr_typed_located {expr; _} =
-  sexp_of_expr sexp_of_expr_typed_located expr
-
-let rec sexp_of_stmt_loc {stmt; _} =
-  sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
-
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
 
 (** Return two lines before and after the specified location. *)

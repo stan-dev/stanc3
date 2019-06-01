@@ -28,6 +28,11 @@ let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
 
+let stan_distribution_name_suffix name =
+  Utils.distribution_suffices
+  |> List.filter ~f:(fun sfx -> is_stan_math_function_name (name ^ sfx))
+  |> List.hd_exn
+
 let assignmentoperator_to_stan_math_fn = function
   | Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"
