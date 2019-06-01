@@ -494,7 +494,7 @@ let%expect_test "Controlflow graph example 5" =
 
 let%expect_test "Predecessor graph example 5" =
   let exits, preds = build_predecessor_graph example5_statement_map in
-  (* TODO: this is still very very conservative (e.g. I'd hope for 
+  (* TODO: this is still very very conservative (e.g. I'd hope for
   (8) ((1 ())) (2 (1)) (3 (2)) (4 (3)) (5 (4)) (6 (5)) (7 ()) (8 (6))
   but maybe that's too much to ask for
   ) *)
