@@ -4358,6 +4358,11 @@ model {
   y ~ normal(Y, sigma_obs);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
+model {
+  target += normal_propto_lpdf(1| 0, 1);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
 functions {
   real foo_rng(real mu, real sigma) {
