@@ -7,32 +7,9 @@ open Mir
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()
 
-(** Name manging to get propto versions of distributions to also type check *)
-let remove_propto_infix ~suffix str =
-  Option.map
-    ~f:(fun x -> x ^ suffix)
-    (String.chop_suffix str
-       ~suffix:(proportional_to_distribution_infix ^ suffix))
-
-let propto_name_manging name =
-  Option.value
-    (remove_propto_infix name ~suffix:"_log")
-    ~default:
-      (Option.value
-         (remove_propto_infix name ~suffix:"_lpdf")
-         ~default:
-           (Option.value
-              (remove_propto_infix name ~suffix:"_lpmf")
-              ~default:name))
-
-let%expect_test "propto name mangling" =
-  let name = propto_name_manging "normal_propto_lpdf" in
-  print_s [%sexp (name : string)] ;
-  [%expect {| normal_lpdf |}]
-
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype name args =
-  let name = propto_name_manging name in
+  let name = Utils.stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter
@@ -48,7 +25,7 @@ let stan_math_returntype name args =
             (List.map ~f:fst filteredmatches)))
 
 let is_stan_math_function_name name =
-  let name = propto_name_manging name in
+  let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
 
 let assignmentoperator_to_stan_math_fn = function
@@ -93,7 +70,7 @@ let operator_stan_math_return_type op arg_tys =
   |> List.hd
 
 let pretty_print_all_math_lib_fn_sigs name =
-  let name = propto_name_manging name in
+  let name = Utils.stdlib_distribution_name name in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   if List.length namematches = 0 then ""
   else

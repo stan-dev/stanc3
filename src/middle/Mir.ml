@@ -217,4 +217,3 @@ module ExprSet = Set.Make (ExprComparator)
 
 (**  A module for maps of expressions which ignore their locations *)
 module ExprMap = Map.Make (ExprComparator)
-let proportional_to_distribution_infix = "_propto"

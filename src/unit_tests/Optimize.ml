@@ -2,6 +2,7 @@ open Core_kernel
 open Frontend
 open Analysis_and_optimization.Optimize
 open Middle
+open Middle.Pretty
 open Analysis_and_optimization.Mir_utils
 
 let semantic_check_program ast =

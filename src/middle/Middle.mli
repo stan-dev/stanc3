@@ -1,7 +1,8 @@
 open Core_kernel
 include module type of Mir
-include module type of Mir_pretty_printer
+module Pretty : module type of Mir_pretty_printer
 module Validation : module type of Validation
+module Utils : module type of Utils
 
 val string_of_location : Mir.location -> string
 val string_of_location_span : Mir.location_span -> string
@@ -20,26 +21,7 @@ val internal_meta : Mir.mtype_loc_ad
 val loop_bottom : Mir.mtype_loc_ad Mir.with_expr
 val remove_size : 'a Mir.sizedtype -> Mir.unsizedtype
 val zero : Mir.mtype_loc_ad Mir.with_expr
-
-val pp_indexed :
-  'a Fmt.t -> Format.formatter -> string * 'a Mir.index list -> unit
-
-val pp_expr_typed_located :
-  Format.formatter -> Mir.mtype_loc_ad Mir.with_expr -> unit
-
-val pp_operator : Format.formatter -> Mir.operator -> unit
-val pp_unsizedtype : Format.formatter -> Mir.unsizedtype -> unit
-val pp_returntype : Format.formatter -> Mir.returntype -> unit
 val remove_possible_size : 'a possiblysizedtype -> unsizedtype
-
-val pp_typed_prog :
-     Format.formatter
-  -> ('a Mir.with_expr, ('b, 'c) Mir.stmt_with) Mir.prog
-  -> unit
-
-val pp_message_with_location :
-  Format.formatter -> string * Mir.location -> unit
-
 val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
 val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
 val gensym : unit -> string
