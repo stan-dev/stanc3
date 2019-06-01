@@ -95,6 +95,11 @@ let pp_sized_decl ppf (vident, st, adtype) =
     (vident, remove_size st, adtype)
     pp_set_size (vident, st, adtype)
 
+let pp_possibly_sized_decl ppf (vident, pst, adtype) =
+  match pst with
+  | Sized st -> pp_sized_decl ppf (vident, st, adtype)
+  | Unsized ut -> pp_decl ppf (vident, ut, adtype)
+
 let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
 
 let pp_function__ ppf (prog_name, fname) =
@@ -253,7 +258,7 @@ If a = b
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_sized_decl ppf (decl_id, decl_type, decl_adtype)
+      pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
 
 and pp_block_s ppf body =
   match body.stmt with
@@ -376,8 +381,10 @@ let pp_ctor ppf (p : typed_prog) =
   in
   let rec pp_statement_zeroing ppf s =
     match s.stmt with
-    | Decl {decl_id; decl_type; _} ->
-        pp_set_size ppf (decl_id, decl_type, DataOnly)
+    | Decl {decl_id; decl_type; _} -> (
+      match decl_type with
+      | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
+      | Unsized _ -> () )
     | Block ls | SList ls -> (list ~sep:cut pp_statement_zeroing) ppf ls
     | _ -> pp_statement ppf s
   in
@@ -401,7 +408,8 @@ let pp_ctor ppf (p : typed_prog) =
 
 let pp_model_private ppf p =
   let decl = function
-    | {stmt= Decl d; _} -> Some (d.decl_id, remove_size d.decl_type, DataOnly)
+    | {stmt= Decl d; _} ->
+        Some (d.decl_id, remove_possible_size d.decl_type, DataOnly)
     | _ -> None
   in
   let data_decls = List.filter_map ~f:decl p.prepare_data in

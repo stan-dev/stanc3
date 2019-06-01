@@ -2,4 +2,4 @@
   (name stan_math_backend)
   (libraries core_kernel str fmt middle)
   (inline_tests)
-  (preprocess (pps ppx_jane ppx_deriving.map)))
+  (preprocess (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))

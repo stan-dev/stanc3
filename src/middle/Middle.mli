@@ -30,6 +30,7 @@ val pp_expr_typed_located :
 val pp_operator : Format.formatter -> Mir.operator -> unit
 val pp_unsizedtype : Format.formatter -> Mir.unsizedtype -> unit
 val pp_returntype : Format.formatter -> Mir.returntype -> unit
+val remove_possible_size : 'a possiblysizedtype -> unsizedtype
 
 val pp_typed_prog :
      Format.formatter
@@ -43,6 +44,7 @@ val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
 val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
 val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
+val gensym_reset_danger_use_cautiously : unit -> unit
 
 val check_compatible_arguments_mod_conv :
      string
@@ -89,3 +91,4 @@ val operator_return_type :
 
 val string_of_operators : (string, string sexp_list) Map.Poly.t
 val ternary_if : string
+val expr_from_idx : expr_typed_located index -> expr_typed_located sexp_list

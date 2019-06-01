@@ -6,6 +6,24 @@ open Core_kernel
 module Validation = Validation
 
 (* ===================== Some helper functions and values ====================== *)
+
+let expr_from_idx (i : expr_typed_located index) =
+  match i with
+  | All -> []
+  | Single e | Upfrom e | Downfrom e | MultiIndex e -> [e]
+  | Between (e1, e2) -> [e1; e2]
+
+(** remove_size [st] discards size information from a sizedtype
+    to return an unsizedtype. *)
+let rec remove_size = function
+  | SInt -> UInt
+  | SReal -> UReal
+  | SVector _ -> UVector
+  | SRowVector _ -> URowVector
+  | SMatrix _ -> UMatrix
+  | SArray (t, _) -> UArray (remove_size t)
+
+let remove_possible_size = function Sized t -> remove_size t | Unsized t -> t
 let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 let no_span = {begin_loc= no_loc; end_loc= no_loc}
 let mk_string_of sexp_of x = Sexp.to_string (sexp_of x) ^ "__"
@@ -131,6 +149,7 @@ let gensym_enter () =
   let old_counter = !_counter in
   (gensym (), fun () -> _counter := old_counter)
 
+let gensym_reset_danger_use_cautiously () = _counter := 0
 let ternary_if = "TernaryIf__"
 
 (** A hash table to hold some name conversions between the AST nodes and the

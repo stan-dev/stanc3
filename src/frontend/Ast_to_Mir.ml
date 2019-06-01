@@ -422,7 +422,10 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
         constrain_decl decl_type dconstrain transform decl_id decl_var smeta
     | _ -> []
   in
-  let decl = {stmt= Decl {decl_adtype= dadlevel; decl_id; decl_type}; smeta} in
+  let decl =
+    { stmt= Decl {decl_adtype= dadlevel; decl_id; decl_type= Sized decl_type}
+    ; smeta }
+  in
   let checks =
     match dconstrain with
     | Some Check -> check_decl decl_type decl_id transform smeta dadlevel
@@ -754,7 +757,7 @@ let%expect_test "Prefix-Op-Example" =
   [%expect
     {|
       ((Block
-        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type SInt))
+        ((Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt)))
          (IfElse
           (FunApp StanLib Less__ ((Var i) (FunApp StanLib PMinus__ ((Lit Int 1)))))
           (NRFunApp CompilerInternal FnPrint__ ((Lit Str Badger))) ())))) |}]
@@ -765,7 +768,8 @@ let%expect_test "read data" =
   [%expect
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
@@ -785,7 +789,8 @@ let%expect_test "read param" =
   [%expect
     {|
     ((Decl (decl_adtype AutoDiffable) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
@@ -814,7 +819,8 @@ let%expect_test "gen quant" =
   [%expect
     {|
     ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5))))
+      (decl_type
+       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
      (IfElse (Var emit_generated_quantities__)
       (Block
        ((For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))

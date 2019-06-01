@@ -68,19 +68,12 @@ type 'e sizedtype =
   | SRowVector of 'e
   | SMatrix of 'e * 'e
   | SArray of 'e sizedtype * 'e
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
-(** remove_size [st] discards size information from a sizedtype
-    to return an unsizedtype. *)
-let rec remove_size = function
-  | SInt -> UInt
-  | SReal -> UReal
-  | SVector _ -> UVector
-  | SRowVector _ -> URowVector
-  | SMatrix _ -> UMatrix
-  | SArray (t, _) -> UArray (remove_size t)
+type 'e possiblysizedtype = Sized of 'e sizedtype | Unsized of unsizedtype
+[@@deriving sexp, compare, map, hash, fold]
 
-type litType = Int | Real | Str [@@deriving sexp, hash]
+type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
 (**  *)
 type fun_kind = StanLib | CompilerInternal | UserDefined
@@ -96,7 +89,7 @@ type 'e index =
   | Downfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, fold]
 
 and 'e expr =
   | Var of string
@@ -106,7 +99,7 @@ and 'e expr =
   | EAnd of 'e * 'e
   | EOr of 'e * 'e
   | Indexed of 'e * 'e index list
-[@@deriving sexp, hash, map]
+[@@deriving sexp, hash, map, compare]
 
 type fun_arg_decl = (autodifftype * string * unsizedtype) list
 [@@deriving sexp, hash, map]
@@ -116,12 +109,12 @@ type 's fun_def =
   ; fdname: string
   ; fdargs: fun_arg_decl
   ; fdbody: 's
-  ; fdloc: location_span [@compare.ignore] }
+  ; fdloc: location_span sexp_opaque [@compare.ignore] }
 [@@deriving sexp, hash, map]
 
-and 'e lvalue = string * 'e index list
+type 'e lvalue = string * 'e index list [@@deriving sexp, hash, map, fold]
 
-and ('e, 's) statement =
+type ('e, 's) statement =
   | Assignment of 'e lvalue * 'e
   | TargetPE of 'e
   | NRFunApp of fun_kind * string * 'e list
@@ -142,8 +135,8 @@ and ('e, 's) statement =
   | Decl of
       { decl_adtype: autodifftype
       ; decl_id: string
-      ; decl_type: 'e sizedtype }
-[@@deriving sexp, hash, map]
+      ; decl_type: 'e possiblysizedtype }
+[@@deriving sexp, hash, map, fold]
 
 type io_block =
   | Data
@@ -152,7 +145,7 @@ type io_block =
   | GeneratedQuantities
 [@@deriving sexp, hash]
 
-type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp]
+type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp, map]
 
 type ('e, 's) prog =
   { functions_block: 's fun_def list
@@ -164,26 +157,39 @@ type ('e, 's) prog =
   ; output_vars: 'e io_var list
   ; prog_name: string
   ; prog_path: string }
-[@@deriving sexp]
+[@@deriving sexp, map]
 
-type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm} [@@deriving sexp]
+type 'm with_expr = {expr: 'm with_expr expr; emeta: 'm}
+[@@deriving compare, sexp, hash]
 
 type mtype_loc_ad =
   { mtype: unsizedtype
   ; mloc: location_span sexp_opaque [@compare.ignore]
   ; madlevel: autodifftype }
-[@@deriving sexp]
+[@@deriving compare, sexp, hash]
 
 type ('e, 'm) stmt_with =
   {stmt: ('e with_expr, ('e, 'm) stmt_with) statement; smeta: 'm}
 [@@deriving sexp]
 
+type ('e, 'm) stmt_with_num = {stmtn: ('e with_expr, int) statement; smetan: 'm}
+[@@deriving sexp, hash]
+
+type expr_no_meta = unit with_expr
+
+type expr_typed_located = mtype_loc_ad with_expr
+[@@deriving sexp, compare, hash]
+
+type stmt_no_meta = (expr_no_meta, unit) stmt_with
+
 type stmt_loc =
   (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
-type expr_no_meta = unit with_expr [@@deriving sexp]
-type stmt_no_meta = (expr_no_meta, unit) stmt_with [@@deriving sexp]
+type stmt_loc_num =
+  (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with_num
+[@@deriving sexp]
+
 type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
 
 type internal_fn =
@@ -201,4 +207,14 @@ type internal_fn =
   | FnReject
 [@@deriving sexp]
 
+(**  A custom comparator which ignores locations on expressions *)
+module ExprComparator = struct
+  type t = expr_typed_located [@@deriving sexp, compare]
+end
+
+(**  A module for sets of expressions which ignore their locations *)
+module ExprSet = Set.Make (ExprComparator)
+
+(**  A module for maps of expressions which ignore their locations *)
+module ExprMap = Map.Make (ExprComparator)
 let proportional_to_distribution_infix = "_propto"
