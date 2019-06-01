@@ -472,7 +472,10 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
+let escape_name = String.substr_replace_all ~pattern:"." ~with_:"_"
+
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  let p = {p with prog_name= escape_name p.prog_name} in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
