@@ -472,7 +472,98 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
+let rec expr_contains_fn fname _ e =
+  match e.expr with
+  | FunApp (_, name, _) when name = fname -> true
+  | x -> fold_expr (expr_contains_fn fname) false x
+
+let%test "expr contains fn" =
+  internal_funapp FnReadData [] ()
+  |> expr_contains_fn (string_of_internal_fn FnReadData) false
+
+let rec contains_fn fname _ {stmt; _} =
+  fold_statement (expr_contains_fn fname)
+    (fun accum s ->
+      fold_statement (expr_contains_fn fname) (contains_fn fname) accum s.stmt
+      )
+    false stmt
+
+let fake_for body emeta =
+  let swrap stmt = {stmt; smeta= ()} in
+  let ten = {expr= Lit (Int, "10"); emeta} in
+  For {loopvar= "lv"; lower= ten; upper= ten; body} |> swrap
+
+let%test "contains fn" =
+  fake_for
+    {stmt= Assignment (("v", []), internal_funapp FnReadData [] ()); smeta= ()}
+    ()
+  |> contains_fn (string_of_internal_fn FnReadData) false
+
+let rec xform_readdata sizes s =
+  let get_single_size = function
+    | Single e -> e
+    | x ->
+        raise_s
+          [%message
+            "expecting ReadData to just have Single indices"
+              (x : mtype_loc_ad with_expr index)]
+  in
+  let get_index_sizes idcs = List.map ~f:get_single_size idcs in
+  match s.stmt with
+  | For {upper; body; _}
+    when contains_fn (string_of_internal_fn FnReadData) false s -> (
+    match body.stmt with
+    | Assignment ((vident, idcs), rhs) ->
+        let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
+        let open List in
+        let index =
+          zip_exn (sizes @ [one]) (get_index_sizes idcs)
+          |> fold ~init:one ~f:(fun a (v, i) -> binop a Plus (binop v Times i))
+          |> Single
+        in
+        {stmt= Assignment ((vident, [index]), rhs); smeta= s.smeta}
+    | x ->
+        { stmt= map_statement Fn.id (xform_readdata (sizes @ [upper])) x
+        ; smeta= s.smeta } )
+  | x -> {stmt= map_statement Fn.id (xform_readdata sizes) x; smeta= s.smeta}
+
+let%expect_test "xform_readdata" =
+  (* let idx i = *)
+  let f =
+    fake_for
+      (fake_for
+         { stmt=
+             Assignment (("v", []), internal_funapp FnReadData [] internal_meta)
+         ; smeta= () }
+         internal_meta)
+      internal_meta
+  in
+  print_s [%sexp (xform_readdata [] f : (mtype_loc_ad, unit) stmt_with)] ;
+  [%expect
+    {|
+    ((stmt
+      (For (loopvar lv)
+       (lower
+        ((expr (Lit Int 10))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (upper
+        ((expr (Lit Int 10))
+         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+       (body
+        ((stmt
+          (Assignment (v ())
+           ((expr (FunApp CompilerInternal FnReadData__ ()))
+            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
+         (smeta ())))))
+     (smeta ())) |}]
+
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  (* First, do some transformations on the MIR itself before we begin printing it.*)
+  let p =
+    { p with
+      prepare_data= List.map ~f:(xform_readdata []) p.prepare_data
+    ; transform_inits= List.map ~f:(xform_readdata []) p.transform_inits }
+  in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;

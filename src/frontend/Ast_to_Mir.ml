@@ -297,10 +297,6 @@ let param_size transform sizedtype =
             "Expecting SMatrix, got " (st : mtype_loc_ad with_expr sizedtype)]
   in
   let int num = {expr= Lit (Int, string_of_int num); emeta= internal_meta} in
-  let binop e1 binop e2 =
-    { expr= FunApp (StanLib, string_of_operator binop, [e1; e2])
-    ; emeta= internal_meta }
-  in
   let k_choose_2 k =
     binop (binop k Times (binop k Minus (int 1))) Divide (int 2)
   in

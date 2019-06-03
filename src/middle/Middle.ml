@@ -7,7 +7,6 @@ module Pretty = Mir_pretty_printer
 module Utils = Utils
 
 (* ===================== Some helper functions and values ====================== *)
-
 let expr_from_idx (i : expr_typed_located index) =
   match i with
   | All -> []
@@ -50,6 +49,10 @@ let operator_of_string = mk_of_string operator_of_sexp
 
 let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
 let%test "good op name" = operator_of_string "Plus__" = Some Plus
+
+let binop e1 binop e2 =
+  { expr= FunApp (StanLib, string_of_operator binop, [e1; e2])
+  ; emeta= internal_meta }
 
 (** remove_size [st] discards size information from a sizedtype
     to return an unsizedtype. *)

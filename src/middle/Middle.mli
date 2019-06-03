@@ -76,3 +76,9 @@ val operator_return_type :
 val string_of_operators : (string, string sexp_list) Map.Poly.t
 val ternary_if : string
 val expr_from_idx : expr_typed_located index -> expr_typed_located sexp_list
+
+val binop :
+     mtype_loc_ad with_expr
+  -> operator
+  -> mtype_loc_ad with_expr
+  -> mtype_loc_ad with_expr
