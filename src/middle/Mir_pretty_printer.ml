@@ -224,10 +224,37 @@ let rec pp_expr_typed_located ppf {expr; _} =
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 
-let rec sexp_of_expr_typed_located {expr; _} =
-  sexp_of_expr sexp_of_expr_typed_located expr
-
-let rec sexp_of_stmt_loc {stmt; _} =
-  sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
-
 let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
+
+(** Return two lines before and after the specified location. *)
+let pp_context ppf ({filename; line_num; col_num; _} : Mir.location) =
+  try
+    let open In_channel in
+    let input = create filename in
+    for _ = 1 to line_num - 3 do
+      ignore (input_line_exn input)
+    done ;
+    let get_line num =
+      if num > 0 then
+        match input_line input with
+        | Some input -> Printf.sprintf "%6d:  %s\n" num input
+        | _ -> ""
+      else ""
+    in
+    let line_2_before = get_line (line_num - 2) in
+    let line_before = get_line (line_num - 1) in
+    let our_line = get_line line_num in
+    let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
+    let line_after = get_line (line_num + 1) in
+    let line_2_after = get_line (line_num + 2) in
+    close input ;
+    Fmt.pf ppf
+      "   -------------------------------------------------\n\
+       %s%s%s%s%s%s   -------------------------------------------------\n"
+      line_2_before line_before our_line cursor_line line_after line_2_after
+  with _ -> ()
+
+(** Return two lines before and after the specified location
+    and print a message *)
+let pp_message_with_location ppf (message, loc) =
+  Fmt.pf ppf "%a\n%s\n\n" pp_context loc message

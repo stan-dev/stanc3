@@ -10,20 +10,6 @@ let trans_fn_kind = function
   | Ast.StanLib -> StanLib
   | UserDefined -> UserDefined
 
-let get_prob_fun_suffix name =
-  let sfx =
-    ["_log"; "_lpdf"; "_lpmf"; ""]
-    |> List.filter ~f:(fun sfx -> is_stan_math_function_name (name ^ sfx))
-    |> List.hd
-  in
-  match sfx with
-  | Some n -> n
-  | None -> raise_s [%message "No matching functions for" (name : string)]
-
-let%expect_test "distribution name mangling" =
-  print_endline (get_prob_fun_suffix "normal") ;
-  [%expect {| _log |}]
-
 let rec op_to_funapp op args =
   let argtypes =
     List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
@@ -378,7 +364,7 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
   let chk fn args =
     let check_id id =
       let id_str =
-        { expr= Lit (Str, Fmt.strf "%a" pp_expr_typed_located id)
+        { expr= Lit (Str, Fmt.strf "%a" Pretty.pp_expr_typed_located id)
         ; emeta= internal_meta }
       in
       let fname = string_of_internal_fn FnCheck in
@@ -469,9 +455,9 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
-      let suffix = get_prob_fun_suffix distribution.name in
+      let suffix = stan_distribution_name_suffix distribution.name in
       let name =
-        distribution.name ^ proportional_to_distribution_infix ^ suffix
+        distribution.name ^ Utils.proportional_to_distribution_infix ^ suffix
       in
       let add_dist =
         TargetPE

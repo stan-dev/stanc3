@@ -13,7 +13,7 @@ let pp_syntax_error ppf = function
   | Parsing (msg, loc_span) ->
       Fmt.pf ppf "\nSyntax error in %s, parsing error:\n%a"
         (string_of_location_span loc_span)
-        pp_message_with_location (msg, loc_span.end_loc)
+        Pretty.pp_message_with_location (msg, loc_span.end_loc)
 
 let render_syntax_error = Fmt.to_to_string pp_syntax_error
 
@@ -112,7 +112,7 @@ let%expect_test "parse conditional" =
             (emeta ((loc <opaque>))))
            ((stmt
              (Block
-              (((stmt (Print ((PString "\"hi\"")))) (smeta ((loc <opaque>))))))) 
+              (((stmt (Print ((PString "\"hi\"")))) (smeta ((loc <opaque>)))))))
             (smeta ((loc <opaque>))))
            ()))
          (smeta ((loc <opaque>)))))))
