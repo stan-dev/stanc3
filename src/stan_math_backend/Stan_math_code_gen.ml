@@ -472,32 +472,6 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
-let rec expr_contains_fn fname _ e =
-  match e.expr with
-  | FunApp (_, name, _) when name = fname -> true
-  | x -> fold_expr (expr_contains_fn fname) false x
-
-let%test "expr contains fn" =
-  internal_funapp FnReadData [] ()
-  |> expr_contains_fn (string_of_internal_fn FnReadData) false
-
-let rec contains_fn fname _ {stmt; _} =
-  fold_statement (expr_contains_fn fname)
-    (fun accum s ->
-      fold_statement (expr_contains_fn fname) (contains_fn fname) accum s.stmt
-      )
-    false stmt
-
-let fake_for emeta body =
-  let swrap stmt = {stmt; smeta= ()} in
-  let ten = {expr= Lit (Int, "10"); emeta} in
-  For {loopvar= "lv"; lower= ten; upper= ten; body} |> swrap
-
-let%test "contains fn" =
-  fake_for ()
-    {stmt= Assignment (("v", []), internal_funapp FnReadData [] ()); smeta= ()}
-  |> contains_fn (string_of_internal_fn FnReadData) false
-
 let rec xform_readdata sizes s =
   let get_single_size = function
     | Single e -> e
@@ -535,15 +509,18 @@ let rec xform_readdata sizes s =
   | x -> {stmt= map_statement Fn.id (xform_readdata sizes) x; smeta= s.smeta}
 
 let%expect_test "xform_readdata" =
+  let fake_for body =
+    let swrap stmt = {stmt; smeta= ()} in
+    let ten = {expr= Lit (Int, "10"); emeta= internal_meta} in
+    For {loopvar= "lv"; lower= ten; upper= ten; body} |> swrap
+  in
   let idx v = Single {expr= Var v; emeta= internal_meta} in
   let read = internal_funapp FnReadData [] internal_meta in
   let we expr = {expr; emeta= internal_meta} in
   let idcs = [idx "i"; idx "j"] in
   let indexed = Indexed (read, idcs) in
   let f =
-    fake_for internal_meta
-      (fake_for internal_meta
-         {stmt= Assignment (("v", idcs), we indexed); smeta= ()})
+    fake_for (fake_for {stmt= Assignment (("v", idcs), we indexed); smeta= ()})
   in
   xform_readdata [] f |> strf "%a" Pretty.pp_stmt_loc |> print_endline ;
   [%expect
