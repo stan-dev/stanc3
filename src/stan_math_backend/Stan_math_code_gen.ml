@@ -488,15 +488,14 @@ let rec contains_fn fname _ {stmt; _} =
       )
     false stmt
 
-let fake_for body emeta =
+let fake_for emeta body =
   let swrap stmt = {stmt; smeta= ()} in
   let ten = {expr= Lit (Int, "10"); emeta} in
   For {loopvar= "lv"; lower= ten; upper= ten; body} |> swrap
 
 let%test "contains fn" =
-  fake_for
+  fake_for ()
     {stmt= Assignment (("v", []), internal_funapp FnReadData [] ()); smeta= ()}
-    ()
   |> contains_fn (string_of_internal_fn FnReadData) false
 
 let rec xform_readdata sizes s =
@@ -510,16 +509,26 @@ let rec xform_readdata sizes s =
   in
   let get_index_sizes idcs = List.map ~f:get_single_size idcs in
   match s.stmt with
-  | Assignment ((vident, idcs), rhs)
-    when contains_fn (string_of_internal_fn FnReadData) false s ->
+  | Assignment
+      ( lhs
+      , { expr=
+            Indexed
+              (({expr= FunApp (CompilerInternal, f, _); emeta} as fnapp), idcs); _
+        } )
+    when internal_fn_of_string f = Some FnReadData ->
       let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
+      let index_sizes = get_index_sizes idcs in
       let open List in
       let index =
-        zip_exn (Utils.all_but_last_n sizes 1 @ [one]) (get_index_sizes idcs)
+        zip_exn
+          (Utils.all_but_last_n sizes 1)
+          (Utils.all_but_last_n index_sizes 1)
         |> fold ~init:one ~f:(fun a (v, i) -> binop a Plus (binop v Times i))
+        |> binop (List.last_exn index_sizes) Plus
         |> Single
       in
-      {stmt= Assignment ((vident, [index]), rhs); smeta= s.smeta}
+      { stmt= Assignment (lhs, {expr= Indexed (fnapp, [index]); emeta})
+      ; smeta= s.smeta }
   | For {upper; _} as f ->
       { stmt= map_statement Fn.id (xform_readdata (sizes @ [upper])) f
       ; smeta= s.smeta }
@@ -527,21 +536,19 @@ let rec xform_readdata sizes s =
 
 let%expect_test "xform_readdata" =
   let idx v = Single {expr= Var v; emeta= internal_meta} in
+  let read = internal_funapp FnReadData [] internal_meta in
+  let we expr = {expr; emeta= internal_meta} in
+  let idcs = [idx "i"; idx "j"] in
+  let indexed = Indexed (read, idcs) in
   let f =
-    fake_for
-      (fake_for
-         { stmt=
-             Assignment
-               ( ("v", [idx "i"; idx "j"])
-               , internal_funapp FnReadData [] internal_meta )
-         ; smeta= () }
-         internal_meta)
-      internal_meta
+    fake_for internal_meta
+      (fake_for internal_meta
+         {stmt= Assignment (("v", idcs), we indexed); smeta= ()})
   in
   xform_readdata [] f |> strf "%a" Pretty.pp_stmt_loc |> print_endline ;
   [%expect
     {|
-    for(lv in 10:10) for(lv in 10:10) v[1 + 10 * i + 1 * j] = FnReadData__(); |}]
+    for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[j + 1 + 10 * i]; |}]
 
 let escape_name str =
   str
