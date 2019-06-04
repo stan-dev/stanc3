@@ -516,13 +516,12 @@ let%expect_test "xform_readdata" =
   in
   let idx v = Single {expr= Var v; emeta= internal_meta} in
   let read = internal_funapp FnReadData [] internal_meta in
-  let we expr = {expr; emeta= internal_meta} in
   let idcs = [idx "i"; idx "j"] in
-  let indexed = Indexed (read, idcs) in
-  let f =
-    fake_for (fake_for {stmt= Assignment (("v", idcs), we indexed); smeta= ()})
-  in
-  xform_readdata [] f |> strf "%a" Pretty.pp_stmt_loc |> print_endline ;
+  let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
+  fake_for (fake_for {stmt= Assignment (("v", idcs), indexed); smeta= ()})
+  |> xform_readdata []
+  |> strf "%a" Pretty.pp_stmt_loc
+  |> print_endline ;
   [%expect
     {|
     for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[j + 1 + 10 * i]; |}]
