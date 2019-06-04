@@ -510,52 +510,37 @@ let rec xform_readdata sizes s =
   in
   let get_index_sizes idcs = List.map ~f:get_single_size idcs in
   match s.stmt with
-  | For {upper; body; _}
-    when contains_fn (string_of_internal_fn FnReadData) false s -> (
-    match body.stmt with
-    | Assignment ((vident, idcs), rhs) ->
-        let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
-        let open List in
-        let index =
-          zip_exn (sizes @ [one]) (get_index_sizes idcs)
-          |> fold ~init:one ~f:(fun a (v, i) -> binop a Plus (binop v Times i))
-          |> Single
-        in
-        {stmt= Assignment ((vident, [index]), rhs); smeta= s.smeta}
-    | x ->
-        { stmt= map_statement Fn.id (xform_readdata (sizes @ [upper])) x
-        ; smeta= s.smeta } )
+  | For {upper; body= {stmt= Assignment ((vident, idcs), rhs); _}; _}
+    when contains_fn (string_of_internal_fn FnReadData) false s ->
+      let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
+      let open List in
+      let index =
+        zip_exn (sizes @ [upper]) (get_index_sizes idcs)
+        |> fold ~init:one ~f:(fun a (v, i) -> binop a Plus (binop v Times i))
+        |> Single
+      in
+      {stmt= Assignment ((vident, [index]), rhs); smeta= s.smeta}
+  | For {upper; _} as f ->
+      { stmt= map_statement Fn.id (xform_readdata (sizes @ [upper])) f
+      ; smeta= s.smeta }
   | x -> {stmt= map_statement Fn.id (xform_readdata sizes) x; smeta= s.smeta}
 
 let%expect_test "xform_readdata" =
-  (* let idx i = *)
+  let idx v = Single {expr= Var v; emeta= internal_meta} in
   let f =
     fake_for
       (fake_for
          { stmt=
-             Assignment (("v", []), internal_funapp FnReadData [] internal_meta)
+             Assignment
+               ( ("v", [idx "i"; idx "j"])
+               , internal_funapp FnReadData [] internal_meta )
          ; smeta= () }
          internal_meta)
       internal_meta
   in
-  print_s [%sexp (xform_readdata [] f : (mtype_loc_ad, unit) stmt_with)] ;
-  [%expect
-    {|
-    ((stmt
-      (For (loopvar lv)
-       (lower
-        ((expr (Lit Int 10))
-         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-       (upper
-        ((expr (Lit Int 10))
-         (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-       (body
-        ((stmt
-          (Assignment (v ())
-           ((expr (FunApp CompilerInternal FnReadData__ ()))
-            (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))
-         (smeta ())))))
-     (smeta ())) |}]
+  xform_readdata [] f |> strf "%a" Pretty.pp_stmt_loc |> print_endline ;
+  [%expect {|
+    for(lv in 10:10) v[1 + 10 * i + 10 * j] = FnReadData__(); |}]
 
 let escape_name str =
   str

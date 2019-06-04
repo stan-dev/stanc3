@@ -179,7 +179,7 @@ let%expect_test "inline functions" =
         }
         real g(int z) {
           {
-            return Pow__(z, 2);
+            return z ^ 2;
           }
         }
       }
@@ -200,7 +200,7 @@ let%expect_test "inline functions" =
           }
           real sym4__;
           for(sym3__ in 1:1) {
-            sym4__ = Pow__(53, 2);
+            sym4__ = 53 ^ 2;
             break;
           }
           FnReject__(sym4__);
@@ -472,7 +472,7 @@ let%expect_test "do not inline recursive functions" =
         }
         real g(int z) {
           {
-            return Pow__(z, 2);
+            return z ^ 2;
           }
         }
       }
@@ -539,7 +539,7 @@ let%expect_test "inline function in for loop" =
         int g(int z) {
           {
             FnPrint__("g");
-            return Plus__(z, 24);
+            return z + 24;
           }
         }
       }
@@ -563,7 +563,7 @@ let%expect_test "inline function in for loop" =
           }
           for(sym5__ in 1:1) {
             FnPrint__("g");
-            sym6__ = Plus__(3, 24);
+            sym6__ = 3 + 24;
             break;
           }
           for(i in sym3__:sym6__) {
@@ -572,7 +572,7 @@ let%expect_test "inline function in for loop" =
             }
             for(sym5__ in 1:1) {
               FnPrint__("g");
-              sym6__ = Plus__(3, 24);
+              sym6__ = 3 + 24;
               break;
             }
           }
@@ -629,7 +629,7 @@ let%expect_test "inline function in for loop 2" =
         int g(int z) {
           {
             FnPrint__("g");
-            return Plus__(f(z), 24);
+            return f(z) + 24;
           }
         }
       }
@@ -659,7 +659,7 @@ let%expect_test "inline function in for loop 2" =
               sym13__ = 42;
               break;
             }
-            sym12__ = Plus__(sym13__, 24);
+            sym12__ = sym13__ + 24;
             break;
           }
           for(i in sym9__:sym12__) {
@@ -674,7 +674,7 @@ let%expect_test "inline function in for loop 2" =
                 sym13__ = 42;
                 break;
               }
-              sym12__ = Plus__(sym13__, 24);
+              sym12__ = sym13__ + 24;
               break;
             }
           }
@@ -729,7 +729,7 @@ let%expect_test "inline function in while loop" =
         int g(int z) {
           {
             FnPrint__("g");
-            return Plus__(z, 24);
+            return z + 24;
           }
         }
       }
@@ -747,14 +747,14 @@ let%expect_test "inline function in while loop" =
           int sym3__;
           for(sym2__ in 1:1) {
             FnPrint__("g");
-            sym3__ = Plus__(3, 24);
+            sym3__ = 3 + 24;
             break;
           }
           while(sym3__) {
             FnPrint__("body");
             for(sym2__ in 1:1) {
               FnPrint__("g");
-              sym3__ = Plus__(3, 24);
+              sym3__ = 3 + 24;
               break;
             }
           }
@@ -809,7 +809,7 @@ let%expect_test "inline function in if then else" =
         int g(int z) {
           {
             FnPrint__("g");
-            return Plus__(z, 24);
+            return z + 24;
           }
         }
       }
@@ -827,7 +827,7 @@ let%expect_test "inline function in if then else" =
           int sym3__;
           for(sym2__ in 1:1) {
             FnPrint__("g");
-            sym3__ = Plus__(3, 24);
+            sym3__ = 3 + 24;
             break;
           }
           if(sym3__) FnPrint__("body");
@@ -888,13 +888,13 @@ let%expect_test "inline function in ternary if " =
         int g(int z) {
           {
             FnPrint__("g");
-            return Plus__(z, 24);
+            return z + 24;
           }
         }
         int h(int z) {
           {
             FnPrint__("h");
-            return Plus__(z, 4);
+            return z + 4;
           }
         }
       }
@@ -920,13 +920,13 @@ let%expect_test "inline function in ternary if " =
           if(sym3__) {
             for(sym5__ in 1:1) {
               FnPrint__("g");
-              sym6__ = Plus__(3, 24);
+              sym6__ = 3 + 24;
               break;
             }
           } else {
             for(sym8__ in 1:1) {
               FnPrint__("h");
-              sym9__ = Plus__(4, 4);
+              sym9__ = 4 + 4;
               break;
             }
           }
@@ -1391,13 +1391,13 @@ let%expect_test "constant propagation" =
       data int i;
       i = 42;
       data int j;
-      j = Plus__(2, 42);
+      j = 2 + 42;
     }
 
     log_prob {
       {
         for(x in 1:42) {
-          FnPrint__(Plus__(42, 44));
+          FnPrint__(42 + 44);
         }
       }
     }
@@ -1462,7 +1462,7 @@ let%expect_test "constant propagation, local scope" =
       {
         int j;
         for(x in 1:42) {
-          FnPrint__(Plus__(42, j));
+          FnPrint__(42 + j);
         }
       }
     }
@@ -1531,7 +1531,7 @@ let%expect_test "constant propagation, model block local scope" =
       data int j;
       if(emit_generated_quantities__) {
         for(x in 1:i) {
-          FnPrint__(Plus__(i, j));
+          FnPrint__(i + j);
         }
         FnWriteParam__(i);
         FnWriteParam__(j);
@@ -1581,13 +1581,13 @@ let%expect_test "expression propagation" =
       prepare_data {
         data int i;
         data int j;
-        j = Plus__(2, i);
+        j = 2 + i;
       }
 
       log_prob {
         {
           for(x in 1:i) {
-            FnPrint__(Plus__(i, Plus__(2, i)));
+            FnPrint__(i + 2 + i);
           }
         }
       }
@@ -1642,13 +1642,13 @@ let%expect_test "copy propagation" =
         data int j;
         j = i;
         data int k;
-        k = Times__(2, i);
+        k = 2 * i;
       }
 
       log_prob {
         {
           for(x in 1:i) {
-            FnPrint__(Plus__(Plus__(i, i), k));
+            FnPrint__(i + i + k);
           }
         }
       }
@@ -2042,7 +2042,7 @@ let%expect_test "partial evaluation" =
           if(0) {
             int i;
             FnPrint__(3);
-            FnPrint__(Plus__(i, 3));
+            FnPrint__(i + 3);
             FnPrint__(log1m(i));
           }
         }
@@ -2100,7 +2100,7 @@ let%expect_test "try partially evaluate" =
           vector[2] a;
           vector[2] b;
           FnPrint__(log_diff_exp(x, y));
-          FnPrint__(log(Minus__(exp(a), exp(b))));
+          FnPrint__(log(exp(a) - exp(b)));
         }
       }
 
@@ -2355,7 +2355,7 @@ let%expect_test "lazy code motion, 2" =
         {
           for(i in 1:2) {
             {
-              FnPrint__(Plus__(3, 4));
+              FnPrint__(3 + 4);
             }
             ;
           }
@@ -2410,9 +2410,9 @@ let%expect_test "lazy code motion, 3" =
         data int sym1__;
         {
           FnPrint__(3);
-          sym1__ = Plus__(3, 5);
+          sym1__ = 3 + 5;
           FnPrint__(sym1__);
-          FnPrint__(Plus__(sym1__, 7));
+          FnPrint__(sym1__ + 7);
         }
       }
 
@@ -2486,11 +2486,11 @@ let%expect_test "lazy code motion, 4" =
               ;
               ;
             }
-            sym1__ = Plus__(b, c);
+            sym1__ = b + c;
             ;
           } else {
             {
-              sym1__ = Plus__(b, c);
+              sym1__ = b + c;
               x = sym1__;
               ;
             }
@@ -2568,15 +2568,15 @@ let%expect_test "lazy code motion, 5" =
               ;
               ;
             }
-            sym1__ = Plus__(b, c);
+            sym1__ = b + c;
             ;
           } else {
             {
               if(2) {
-                sym1__ = Plus__(b, c);
+                sym1__ = b + c;
                 x = sym1__;
                 ;
-              } else sym1__ = Plus__(b, c);
+              } else sym1__ = b + c;
                      ;
               ;
             }
@@ -2638,10 +2638,10 @@ let%expect_test "lazy code motion, 6" =
           int x;
           int y;
           if(2) {
-            x = Plus__(1, 2);
+            x = 1 + 2;
             ;
           } else ;
-          y = Plus__(4, 3);
+          y = 4 + 3;
         }
       }
 
@@ -2721,7 +2721,7 @@ let%expect_test "lazy code motion, 7" =
           if(1) {
             {
               a = c;
-              x = Plus__(a, b);
+              x = a + b;
             }
             ;
           } else {
@@ -2732,7 +2732,7 @@ let%expect_test "lazy code motion, 7" =
             {
               if(3) {
                 {
-                  sym2__ = Plus__(a, b);
+                  sym2__ = a + b;
                   ;
                   while(4) {
                     y = sym2__;
@@ -2748,7 +2748,7 @@ let%expect_test "lazy code motion, 7" =
                     ;
                     ;
                   }
-                  sym2__ = Plus__(a, b);
+                  sym2__ = a + b;
                   y = sym2__;
                 }
                 ;
@@ -2879,7 +2879,7 @@ let%expect_test "lazy code motion, 9" =
         data int sym1__;
         {
           int x;
-          while(Times__(x, 2)) {
+          while(x * 2) {
             FnPrint__("hello");
             ;
           }
@@ -2936,9 +2936,9 @@ let%expect_test "lazy code motion, 10" =
         {
           int x;
           x = 3;
-          FnPrint__(Times__(x, 2));
+          FnPrint__(x * 2);
           x = 2;
-          FnPrint__(Times__(x, 2));
+          FnPrint__(x * 2);
         }
       }
 
@@ -2995,11 +2995,11 @@ let%expect_test "lazy code motion, 11" =
         {
           {
             int x;
-            FnPrint__(Times__(x, 2));
+            FnPrint__(x * 2);
           }
           {
             int x;
-            FnPrint__(Times__(x, 2));
+            FnPrint__(x * 2);
           }
         }
       }
@@ -3056,7 +3056,7 @@ let%expect_test "lazy code motion, 12" =
           int x;
           for(i in 1:6) {
             {
-              FnPrint__(Plus__(x, 42));
+              FnPrint__(x + 42);
               x = 3;
             }
             ;
@@ -3126,10 +3126,10 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
           real x;
           int y;
           real theta;
-          if(Leq__(1, 100000)) {
+          if(1 <= 100000) {
             {
               {
-                sym3__ = Plus__(1, 1);
+                sym3__ = 1 + 1;
                 sym4__ = bernoulli_logit_lpmf(y, x);
                 target += sym4__;
               }
@@ -3227,35 +3227,35 @@ let%expect_test "one-step loop unrolling" =
 
       prepare_data {
         data int x;
-        if(Leq__(x, 6)) {
+        if(x <= 6) {
           {
             FnPrint__("hello");
           }
-          for(i in Plus__(x, 1):6) {
+          for(i in x + 1:6) {
             FnPrint__("hello");
           }
         }
-        if(Less__(1, 2)) {
+        if(1 < 2) {
           FnPrint__("goodbye");
-          while(Less__(1, 2)) FnPrint__("goodbye");
+          while(1 < 2) FnPrint__("goodbye");
         }
-        if(Leq__(1, 1)) {
+        if(1 <= 1) {
           {
-            if(Leq__(2, 2)) {
+            if(2 <= 2) {
               {
                 FnPrint__("nested");
               }
-              for(j in Plus__(2, 1):2) {
+              for(j in 2 + 1:2) {
                 FnPrint__("nested");
               }
             }
           }
-          for(i in Plus__(1, 1):1) {
-            if(Leq__(2, 2)) {
+          for(i in 1 + 1:1) {
+            if(2 <= 2) {
               {
                 FnPrint__("nested");
               }
-              for(j in Plus__(2, 1):2) {
+              for(j in 2 + 1:2) {
                 FnPrint__("nested");
               }
             }
@@ -3333,9 +3333,9 @@ let%expect_test "adlevel_optimization" =
           real y;
           real z;
           data real z_data;
-          if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
-          if(Greater__(2, 1)) z = y;
-          if(Greater__(3, 1)) z_data = x;
+          if(1 > 2) y = y + x; else y = y + w;
+          if(2 > 1) z = y;
+          if(3 > 1) z_data = x;
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3350,9 +3350,9 @@ let%expect_test "adlevel_optimization" =
           data real y;
           data real z;
           data real z_data;
-          if(Greater__(1, 2)) y = Plus__(y, x); else y = Plus__(y, w);
-          if(Greater__(2, 1)) z = y;
-          if(Greater__(3, 1)) z_data = x;
+          if(1 > 2) y = y + x; else y = y + w;
+          if(2 > 1) z = y;
+          if(3 > 1) z_data = x;
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3571,9 +3571,9 @@ let%expect_test "adlevel_optimization 2" =
           array[real, 2] y;
           real z;
           data real z_data;
-          if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
-          if(Greater__(2, 1)) z = y[1];
-          if(Greater__(3, 1)) z_data = x;
+          if(1 > 2) y[1] = y[1] + x; else y[2] = y[2] + w;
+          if(2 > 1) z = y[1];
+          if(3 > 1) z_data = x;
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3591,9 +3591,9 @@ let%expect_test "adlevel_optimization 2" =
             data array[real, 2] y;
             data real z;
             data real z_data;
-            if(Greater__(1, 2)) y[1] = Plus__(y[1], x); else y[2] = Plus__(y[2], w);
-            if(Greater__(2, 1)) z = y[1];
-            if(Greater__(3, 1)) z_data = x;
+            if(1 > 2) y[1] = y[1] + x; else y[2] = y[2] + w;
+            if(2 > 1) z = y[1];
+            if(3 > 1) z_data = x;
             FnPrint__(z);
             FnPrint__(z_data);
           }
