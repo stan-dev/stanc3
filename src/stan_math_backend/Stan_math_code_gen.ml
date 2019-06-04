@@ -510,12 +510,12 @@ let rec xform_readdata sizes s =
   in
   let get_index_sizes idcs = List.map ~f:get_single_size idcs in
   match s.stmt with
-  | For {upper; body= {stmt= Assignment ((vident, idcs), rhs); _}; _}
+  | Assignment ((vident, idcs), rhs)
     when contains_fn (string_of_internal_fn FnReadData) false s ->
       let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
       let open List in
       let index =
-        zip_exn (sizes @ [upper]) (get_index_sizes idcs)
+        zip_exn (Utils.all_but_last_n sizes 1 @ [one]) (get_index_sizes idcs)
         |> fold ~init:one ~f:(fun a (v, i) -> binop a Plus (binop v Times i))
         |> Single
       in
@@ -539,8 +539,9 @@ let%expect_test "xform_readdata" =
       internal_meta
   in
   xform_readdata [] f |> strf "%a" Pretty.pp_stmt_loc |> print_endline ;
-  [%expect {|
-    for(lv in 10:10) v[1 + 10 * i + 10 * j] = FnReadData__(); |}]
+  [%expect
+    {|
+    for(lv in 10:10) for(lv in 10:10) v[1 + 10 * i + 1 * j] = FnReadData__(); |}]
 
 let escape_name str =
   str
