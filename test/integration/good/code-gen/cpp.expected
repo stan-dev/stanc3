@@ -43,13 +43,13 @@ class eight_schools_ncp_model : public prob_grad {
     
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       stan::model::assign(y, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), 
-                          context__.vals_r("y")[(sym1__ - 1)], "assigning variable y[(sym1__ - 1)]");
+                          context__.vals_r("y")[((sym1__ + 1) - 1)], "assigning variable y[(sym1__ - 1)]");
     }
     sigma = std::vector<double>(J, 0);
     
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       stan::model::assign(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), 
-                          context__.vals_r("sigma")[(sym1__ - 1)], "assigning variable sigma[(sym1__ - 1)]");
+                          context__.vals_r("sigma")[((sym1__ + 1) - 1)], "assigning variable sigma[(sym1__ - 1)]");
     }
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       check_greater_or_equal(function__, "sigma[sym1__]",
@@ -258,7 +258,7 @@ class eight_schools_ncp_model : public prob_grad {
       
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         stan::model::assign(theta_tilde, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), 
-                            context__.vals_r("theta_tilde")[(sym1__ - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
+                            context__.vals_r("theta_tilde")[((sym1__ + 1) - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
       }
     }
     } // transform_inits() 
@@ -372,8 +372,7 @@ class one_var_per_block_model : public prob_grad {
     for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
       for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         stan::model::assign(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), 
-                            context__.vals_r("datavar")[(sym1__ - 1),
-                                                        (sym2__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
+                            context__.vals_r("datavar")[((sym2__ + (1 + (K * sym1__))) - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
       }}
     for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
       for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -687,8 +686,7 @@ class one_var_per_block_model : public prob_grad {
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
           stan::model::assign(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), 
-                              context__.vals_r("param")[(sym1__ - 1),
-                                                        (sym2__ - 1)], "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
+                              context__.vals_r("param")[((sym2__ + (1 + (K * sym1__))) - 1)], "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
         }}
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -703,9 +701,7 @@ class one_var_per_block_model : public prob_grad {
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
           for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
             stan::model::assign(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), 
-                                context__.vals_r("matparam")[(sym1__ - 1),
-                                                             (sym2__ - 1),
-                                                             (sym3__ - 1)], "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)]");
+                                context__.vals_r("matparam")[((sym3__ + ((1 + ((K + 1) * sym1__)) + (K * sym2__))) - 1)], "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)]");
           }}}
       for (size_t sym1__ = 1; sym1__ <= (K + 1); ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
