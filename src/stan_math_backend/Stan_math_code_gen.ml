@@ -472,7 +472,10 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
-let escape_name = String.substr_replace_all ~pattern:"." ~with_:"_"
+let escape_name str =
+  str
+  |> String.substr_replace_all ~pattern:"." ~with_:"_"
+  |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   let p = {p with prog_name= escape_name p.prog_name} in
