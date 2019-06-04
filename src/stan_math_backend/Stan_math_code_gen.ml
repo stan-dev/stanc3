@@ -557,11 +557,17 @@ let%expect_test "xform_readdata" =
          (smeta ())))))
      (smeta ())) |}]
 
+let escape_name str =
+  str
+  |> String.substr_replace_all ~pattern:"." ~with_:"_"
+  |> String.substr_replace_all ~pattern:"-" ~with_:"_"
+
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p =
     { p with
-      prepare_data= List.map ~f:(xform_readdata []) p.prepare_data
+      prog_name= escape_name p.prog_name
+    ; prepare_data= List.map ~f:(xform_readdata []) p.prepare_data
     ; transform_inits= List.map ~f:(xform_readdata []) p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"

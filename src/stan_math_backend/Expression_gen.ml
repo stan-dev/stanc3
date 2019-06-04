@@ -175,6 +175,8 @@ and gen_misc_special_math_app f =
           else pf ppf "%s(@[<hov>%a@])" f (list ~sep:comma pp_expr) es )
   | f when f = string_of_internal_fn FnLength ->
       Some (fun ppf -> gen_fun_app ppf "stan::length")
+  | f when f = string_of_internal_fn FnNegInf ->
+      Some (fun ppf -> gen_fun_app ppf "stan::math::negative_infinity")
   | _ -> None
 
 and read_data ut ppf es =
