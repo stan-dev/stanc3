@@ -43,13 +43,13 @@ class eight_schools_ncp_model : public prob_grad {
     
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       stan::model::assign(y, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), 
-                          context__.vals_r("y")[((sym1__ + 1) - 1)], "assigning variable y[(sym1__ - 1)]");
+                          context__.vals_r("y")[(sym1__ - 1)], "assigning variable y[(sym1__ - 1)]");
     }
     sigma = std::vector<double>(J, 0);
     
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       stan::model::assign(sigma, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), 
-                          context__.vals_r("sigma")[((sym1__ + 1) - 1)], "assigning variable sigma[(sym1__ - 1)]");
+                          context__.vals_r("sigma")[(sym1__ - 1)], "assigning variable sigma[(sym1__ - 1)]");
     }
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       check_greater_or_equal(function__, "sigma[sym1__]",
@@ -258,7 +258,7 @@ class eight_schools_ncp_model : public prob_grad {
       
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
         stan::model::assign(theta_tilde, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::nil_index_list()), 
-                            context__.vals_r("theta_tilde")[((sym1__ + 1) - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
+                            context__.vals_r("theta_tilde")[(sym1__ - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
       }
     }
     } // transform_inits() 

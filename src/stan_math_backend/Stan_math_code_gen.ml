@@ -487,11 +487,11 @@ let rec xform_readdata sizes s =
       ( lhs
       , { expr=
             Indexed
-              (({expr= FunApp (CompilerInternal, f, _); emeta} as fnapp), idcs); _
-        } )
+              ( ({expr= FunApp (CompilerInternal, f, _); emeta} as fnapp)
+              , idc1 :: idc2 :: idcs ); _ } )
     when internal_fn_of_string f = Some FnReadData ->
       let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
-      let index_sizes = get_index_sizes idcs in
+      let index_sizes = get_index_sizes (idc1 :: idc2 :: idcs) in
       let open List in
       let index =
         zip_exn
