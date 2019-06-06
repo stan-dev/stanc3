@@ -524,7 +524,7 @@ let%expect_test "xform_readdata" =
   |> print_endline ;
   [%expect
     {|
-    for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[j + 1 + 10 * i]; |}]
+    for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[(j + (1 + (10 * i)))]; |}]
 
 let escape_name str =
   str

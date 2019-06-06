@@ -93,7 +93,7 @@ let rec pp_expr pp_e ppf = function
   | Lit (_, str) -> Fmt.string ppf str
   | FunApp (StanLib, name, [lhs; rhs])
     when Option.is_some (Mir_utils.operator_of_string name) ->
-      Fmt.pf ppf "%a %a %a" pp_e lhs pp_operator
+      Fmt.pf ppf "(%a %a %a)" pp_e lhs pp_operator
         (Option.value_exn (Mir_utils.operator_of_string name))
         pp_e rhs
   | FunApp (_, name, args) ->
