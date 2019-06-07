@@ -52,6 +52,7 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Run stat_comp_benchmarks end-to-end") {
+            when { not { anyOf { buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -65,7 +66,8 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run all working models end-to-end on PR merge") {
+        stage("Run all working models end-to-end") {
+            when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
