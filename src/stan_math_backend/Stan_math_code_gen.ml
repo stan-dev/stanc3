@@ -490,15 +490,17 @@ let rec xform_readdata sizes s =
               ( ({expr= FunApp (CompilerInternal, f, _); emeta} as fnapp)
               , idc1 :: idc2 :: idcs ); _ } )
     when internal_fn_of_string f = Some FnReadData ->
-      let one = {expr= Lit (Int, "1"); emeta= internal_meta} in
       let index_sizes = get_index_sizes (idc1 :: idc2 :: idcs) in
+      let all_but_last_index_sizes =
+        Utils.all_but_last_n index_sizes 1
+        |> List.map ~f:(fun e ->
+               binop e Minus {expr= Lit (Int, "1"); emeta= internal_meta} )
+      in
       let open List in
       let index =
-        zip_exn
-          (Utils.all_but_last_n sizes 1)
-          (Utils.all_but_last_n index_sizes 1)
-        |> fold ~init:one ~f:(fun a (v, i) -> binop a Plus (binop v Times i))
-        |> binop (List.last_exn index_sizes) Plus
+        zip_exn (Utils.all_but_last_n sizes 1) all_but_last_index_sizes
+        |> fold ~init:(last_exn index_sizes) ~f:(fun a (v, i) ->
+               binop a Plus (binop v Times i) )
         |> Single
       in
       { stmt= Assignment (lhs, {expr= Indexed (fnapp, [index]); emeta})
@@ -524,7 +526,7 @@ let%expect_test "xform_readdata" =
   |> print_endline ;
   [%expect
     {|
-    for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[(j + (1 + (10 * i)))]; |}]
+    for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[(j + (10 * (i - 1)))]; |}]
 
 let escape_name str =
   str
