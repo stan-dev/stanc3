@@ -99,7 +99,7 @@ and 'e expr =
   | EAnd of 'e * 'e
   | EOr of 'e * 'e
   | Indexed of 'e * 'e index list
-[@@deriving sexp, hash, map, compare]
+[@@deriving sexp, hash, map, compare, fold]
 
 type fun_arg_decl = (autodifftype * string * unsizedtype) list
 [@@deriving sexp, hash, map]
@@ -175,12 +175,12 @@ type ('e, 'm) stmt_with =
 type ('e, 'm) stmt_with_num = {stmtn: ('e with_expr, int) statement; smetan: 'm}
 [@@deriving sexp, hash]
 
-type expr_no_meta = unit with_expr
+type expr_no_meta = unit with_expr [@@deriving sexp]
 
 type expr_typed_located = mtype_loc_ad with_expr
 [@@deriving sexp, compare, hash]
 
-type stmt_no_meta = (expr_no_meta, unit) stmt_with
+type stmt_no_meta = (expr_no_meta, unit) stmt_with [@@deriving sexp]
 
 type stmt_loc =
   (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with

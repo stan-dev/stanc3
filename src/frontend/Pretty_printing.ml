@@ -14,7 +14,7 @@ let tabs () = String.make (2 * !indent_num) ' '
 
 let rec unwind_sized_array_type = function
   | Middle.SArray (st, e) -> (
-    match unwind_sized_array_type st with st2, es -> (st2, e :: es) )
+    match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
   | st -> (st, [])
 
 let rec unwind_array_type = function

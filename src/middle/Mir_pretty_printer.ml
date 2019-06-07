@@ -91,6 +91,11 @@ let rec pp_expr pp_e ppf = function
   | Var varname -> Fmt.string ppf varname
   | Lit (Str, str) -> Fmt.pf ppf "%S" str
   | Lit (_, str) -> Fmt.string ppf str
+  | FunApp (StanLib, name, [lhs; rhs])
+    when Option.is_some (Mir_utils.operator_of_string name) ->
+      Fmt.pf ppf "(%a %a %a)" pp_e lhs pp_operator
+        (Option.value_exn (Mir_utils.operator_of_string name))
+        pp_e rhs
   | FunApp (_, name, args) ->
       Fmt.string ppf name ;
       Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
