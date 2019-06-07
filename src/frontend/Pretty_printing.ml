@@ -104,7 +104,7 @@ and pretty_print_expression {expr= e_content; _} =
       pretty_print_identifier id ^ "("
       ^ pretty_print_list_of_expression es
       ^ ")"
-  | CondDistApp (id, es) ->
+  | CondDistApp (_, id, es) ->
       pretty_print_identifier id ^ "("
       ^ ( match es with
         | [] -> Errors.fatal_error ()

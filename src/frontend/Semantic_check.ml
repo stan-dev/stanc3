@@ -589,7 +589,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       |> Validate.ok
   | FunApp (_, id, es) ->
       semantic_check_funapp ~is_cond_dist:false id es cf emeta
-  | CondDistApp (id, es) ->
+  | CondDistApp (_, id, es) ->
       semantic_check_funapp ~is_cond_dist:true id es cf emeta
   | GetLP ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
@@ -651,12 +651,18 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     |> sequence
     >>= fun ues ->
     semantic_check_fn ~loc:emeta.loc id ues
-    >>= (fun e -> ok {e with expr= CondDistApp (id, ues)})
     |> apply_const (semantic_check_identifier id)
     |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
+    >>= fun e ->
+    ok
+      { e with
+        expr=
+          ( match e.expr with
+          | FunApp (fun_kind, id, ues) -> CondDistApp (fun_kind, id, ues)
+          | _ -> raise_s [%sexp ("This should never happen!" : string)] ) })
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
