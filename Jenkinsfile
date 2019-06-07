@@ -51,7 +51,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run end-to-end tests") {
+        stage("Run stat_comp_benchmarks end-to-end") {
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -60,7 +60,21 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks --tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh stat_comp_benchmarks develop stanc3-dev develop develop
+               """
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
+        stage("Run all working models end-to-end on PR merge") {
+            agent { label 'linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
+                sh """
+          cd performance-tests-cmdstan
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
