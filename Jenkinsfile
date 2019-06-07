@@ -19,6 +19,9 @@ def tagName() {
     }
 }
 
+// TODO: On merge, run ALL shotgun and stat comp models without failing if they fail just to see what works.
+// And then collect the results with Jenkins so we can GRAPH it OVER TIME
+
 pipeline {
     agent none
     stages {
@@ -37,21 +40,17 @@ pipeline {
                     dune build @install
                 """)
 
-                runShell("echo \$(date +'%s') > time.log")
-
                 echo runShell("""
                     eval \$(opam env)
                     dune runtest --verbose
                 """)
-
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
 
                 sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run stat_comp_benchmarks end-to-end") {
+        stage("Run (working) stat_comp_benchmarks end-to-end") {
             when { not { anyOf { buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
@@ -61,7 +60,7 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh stat_comp_benchmarks develop stanc3-dev develop develop
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
                """
             }
             post { always { runShell("rm -rf ./*")} }
