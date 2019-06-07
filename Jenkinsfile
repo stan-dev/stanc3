@@ -84,7 +84,7 @@ pipeline {
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --fixed-time=10" develop stanc3-dev develop develop || true
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=100" develop stanc3-dev develop develop || true
                """
                 junit 'performance-tests-cmdstan/performance.xml'
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
