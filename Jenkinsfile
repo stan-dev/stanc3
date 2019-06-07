@@ -61,8 +61,16 @@ pipeline {
                 sh """
           cd performance-tests-cmdstan
           STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
+           cd ..
                """
-                junit 'performance.xml'
+                junit 'performance-tests-cmdstan/performance.xml'
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport
+                    modePerformancePerTestCase: true,
+                    modeOfThreshold: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false,
+                    configType: 'PRT'
             }
             post { always { runShell("rm -rf ./*")} }
         }
@@ -78,6 +86,14 @@ pipeline {
           cd performance-tests-cmdstan
           STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
                """
+                junit 'performance-tests-cmdstan/performance.xml'
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport
+                    modePerformancePerTestCase: true,
+                    modeOfThreshold: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false,
+                    configType: 'PRT'
             }
             post { always { runShell("rm -rf ./*")} }
         }
