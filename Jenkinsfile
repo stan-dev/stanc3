@@ -65,8 +65,7 @@ pipeline {
                """
                 junit 'performance-tests-cmdstan/performance.xml'
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport
-                    modePerformancePerTestCase: true,
+                perfReport modePerformancePerTestCase: true,
                     modeOfThreshold: true,
                     sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
                     modeThroughput: false,
@@ -88,8 +87,7 @@ pipeline {
                """
                 junit 'performance-tests-cmdstan/performance.xml'
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport
-                    modePerformancePerTestCase: true,
+                perfReport modePerformancePerTestCase: true,
                     modeOfThreshold: true,
                     sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
                     modeThroughput: false,
