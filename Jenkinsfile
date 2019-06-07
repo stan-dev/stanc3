@@ -62,6 +62,7 @@ pipeline {
           cd performance-tests-cmdstan
           STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
                """
+                junit 'performance.xml'
             }
             post { always { runShell("rm -rf ./*")} }
         }
