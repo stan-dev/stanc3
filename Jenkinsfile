@@ -50,31 +50,31 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run (working) stat_comp_benchmarks end-to-end") {
-            when { not { anyOf { buildingTag(); branch 'master' } } }
-            agent { label 'linux' }
-            steps {
-                unstash 'ubuntu-exe'
-                sh """
-          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                   """
-                sh """
-          cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
-           cd ..
-               """
-                junit 'performance-tests-cmdstan/performance.xml'
-                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport modePerformancePerTestCase: true,
-                    modeOfThreshold: true,
-                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false,
-                    configType: 'PRT'
-            }
-            post { always { runShell("rm -rf ./*")} }
-        }
+        // stage("Run (working) stat_comp_benchmarks end-to-end") {
+        //     when { not { anyOf { buildingTag(); branch 'master' } } }
+        //     agent { label 'linux' }
+        //     steps {
+        //         unstash 'ubuntu-exe'
+        //         sh """
+        //   git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+        //            """
+        //         sh """
+        //   cd performance-tests-cmdstan
+        //   STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
+        //    cd ..
+        //        """
+        //         junit 'performance-tests-cmdstan/performance.xml'
+        //         archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+        //         perfReport modePerformancePerTestCase: true,
+        //             modeOfThreshold: true,
+        //             sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+        //             modeThroughput: false,
+        //             configType: 'PRT'
+        //     }
+        //     post { always { runShell("rm -rf ./*")} }
+        // }
         stage("Try to run all models end-to-end") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            // when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -84,7 +84,7 @@ pipeline {
                 sh """
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests" develop stanc3-dev develop develop || true
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --fixed-time=10" develop stanc3-dev develop develop || true
                """
                 junit 'performance-tests-cmdstan/performance.xml'
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
