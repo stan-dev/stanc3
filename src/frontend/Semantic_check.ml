@@ -411,7 +411,6 @@ let semantic_check_conddist_name ~loc id =
     then ok ()
     else Semantic_error.conditional_notation_not_allowed loc |> error)
 
-
 (* -- Array Expressions ----------------------------------------------------- *)
 
 (* Array expressions must be of uniform type. (Or mix of int and real) *)
@@ -589,32 +588,9 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         ~loc:emeta.loc
       |> Validate.ok
   | FunApp (_, id, es) ->
-      Validate.(
-        es
-        |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
-        >>= fun ues ->
-        semantic_check_fn ~loc:emeta.loc id ues
-        |> apply_const (semantic_check_identifier id)
-        |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
-        |> apply_const (semantic_check_fn_conditioning ~loc:emeta.loc id)
-        |> apply_const
-             (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-        |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
+      semantic_check_funapp ~is_cond_dist:false id es cf emeta
   | CondDistApp (id, es) ->
-        Validate.(
-        es
-        |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
-        >>= fun ues ->(
-         (semantic_check_fn ~loc:emeta.loc id ues)
-        >>= (fun e -> ok {e with expr = CondDistApp (id, ues)} )
-        |> apply_const (semantic_check_identifier id)
-        |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
-        |> apply_const (semantic_check_conddist_name ~loc:emeta.loc id)
-        |> apply_const
-             (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-        |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)))
+      semantic_check_funapp ~is_cond_dist:true id es cf emeta
   | GetLP ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
@@ -663,6 +639,24 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) -> semantic_check_indexed ~loc:emeta.loc ~cf e indices
+
+and semantic_check_funapp ~is_cond_dist id es cf emeta =
+  let name_check =
+    if is_cond_dist then semantic_check_conddist_name
+    else semantic_check_fn_conditioning
+  in
+  Validate.(
+    es
+    |> List.map ~f:(semantic_check_expression cf)
+    |> sequence
+    >>= fun ues ->
+    semantic_check_fn ~loc:emeta.loc id ues
+    >>= (fun e -> ok {e with expr= CondDistApp (id, ues)})
+    |> apply_const (semantic_check_identifier id)
+    |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
+    |> apply_const (name_check ~loc:emeta.loc id)
+    |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
