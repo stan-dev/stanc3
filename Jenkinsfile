@@ -86,7 +86,7 @@ pipeline {
           cat all.tests
           STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=100" develop stanc3-dev develop develop || true
                """
-                junit 'performance-tests-cmdstan/performance.xml'
+                junit testResults: 'performance-tests-cmdstan/performance.xml', healthScaleFactor: 0.0
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
                 perfReport modePerformancePerTestCase: true,
                     modeOfThreshold: true,
