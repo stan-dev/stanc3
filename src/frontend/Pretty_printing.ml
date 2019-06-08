@@ -60,7 +60,9 @@ and pp_returntype ppf = function
 
 and pretty_print_returntype rt = wrap_fmt pp_returntype rt
 
-and pretty_print_identifier id = id.name
+and pp_identifier ppf id = Fmt.pf ppf "%s" id.name
+
+and pretty_print_identifier i = wrap_fmt pp_identifier i
 
 and pp_operator ppf = function
   | Middle.Plus | PPlus -> Fmt.pf ppf "+"
@@ -85,55 +87,54 @@ and pp_operator ppf = function
 
 and pretty_print_operator op = wrap_fmt pp_operator op
 
-and pretty_print_index = function
-  | All -> " : "
-  | Single e -> pretty_print_expression e
-  | Upfrom e -> pretty_print_expression e ^ " : "
-  | Downfrom e -> " : " ^ pretty_print_expression e
-  | Between (e1, e2) ->
-      pretty_print_expression e1 ^ " : " ^ pretty_print_expression e2
+and pp_index ppf = function
+  | All -> Fmt.pf ppf " : "
+  | Single e -> pp_expression ppf e
+  | Upfrom e -> Fmt.pf ppf "%a : " pp_expression e
+  | Downfrom e -> Fmt.pf ppf " : %a" pp_expression e
+  | Between (e1, e2) -> Fmt.pf ppf "%a : %a" pp_expression e1 pp_expression e2
 
-and pretty_print_list_of_indices l =
-  String.concat ~sep:", " (List.map ~f:pretty_print_index l)
+and pp_list_of_indices ppf l =
+  Fmt.(list ~sep:comma pp_index) ppf l
 
-and pretty_print_expression {expr= e_content; _} =
+and pretty_print_list_of_indices is = wrap_fmt pp_list_of_indices is
+
+and pp_expression ppf {expr= e_content; _} =
   match e_content with
   | TernaryIf (e1, e2, e3) ->
-      pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
-      ^ pretty_print_expression e3
+     Fmt.pf ppf "%a ? %a : %a" pp_expression e1 pp_expression e2 pp_expression e3
   | BinOp (e1, op, e2) ->
-      pretty_print_expression e1 ^ " " ^ (pretty_print_operator op) ^ " "
-      ^ pretty_print_expression e2
-  | PrefixOp (op, e) -> pretty_print_operator op ^ pretty_print_expression e
-  | PostfixOp (e, op) -> pretty_print_expression e ^ pretty_print_operator op
-  | Variable id -> pretty_print_identifier id
-  | IntNumeral i -> i
-  | RealNumeral r -> r
-  | FunApp (_, id, es) ->
-      pretty_print_identifier id ^ "("
-      ^ pretty_print_list_of_expression es
-      ^ ")"
-  | CondDistApp (id, es) ->
-      pretty_print_identifier id ^ "("
-      ^ ( match es with
-        | [] -> Errors.fatal_error ()
-        | e :: es' ->
-            pretty_print_expression e ^ "| "
-            ^ pretty_print_list_of_expression es' )
-      ^ ")"
+     Fmt.pf ppf "%a %a %a" pp_expression e1 pp_operator op pp_expression e2
+  | PrefixOp (op, e) -> Fmt.pf ppf "%a%a" pp_operator op pp_expression e
+  | PostfixOp (e, op) -> Fmt.pf ppf "%a%a" pp_expression e pp_operator op
+  | Variable id -> pp_identifier ppf id
+  | IntNumeral i -> Fmt.pf ppf "%s" i
+  | RealNumeral r -> Fmt.pf ppf "%s" r
+  | FunApp (_, id, es) -> Fmt.pf ppf "%a(%a)" pp_identifier id pp_list_of_expression es
+  | CondDistApp (id, es) -> (
+    match es with
+    | [] -> Errors.fatal_error ()
+    | e :: es' -> Fmt.pf ppf "%a(%a| %a)"
+                    pp_identifier id
+                    pp_expression e
+                    pp_list_of_expression es')
   (* GetLP is deprecated *)
-  | GetLP -> "get_lp()"
-  | GetTarget -> "target()"
-  | ArrayExpr es -> "{" ^ pretty_print_list_of_expression es ^ "}"
-  | RowVectorExpr es -> "[" ^ pretty_print_list_of_expression es ^ "]"
-  | Paren e -> "(" ^ pretty_print_expression e ^ ")"
-  | Indexed (e, l) -> (
-      pretty_print_expression e
-      ^
-      match l with [] -> "" | l -> "[" ^ pretty_print_list_of_indices l ^ "]" )
+  | GetLP -> Fmt.pf ppf "get_lp()"
+  | GetTarget -> Fmt.pf ppf "target()"
+  | ArrayExpr es -> Fmt.pf ppf "{%a}" pp_list_of_expression es
+  | RowVectorExpr es -> Fmt.pf ppf "[%a]" pp_list_of_expression es
+  | Paren e -> Fmt.pf ppf "(%a)" pp_expression e
+  | Indexed (e, l) ->
+    match l with
+    | [] -> Fmt.pf ppf "%a" pp_expression e
+    | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
 
-and pretty_print_list_of_expression es =
-  String.concat ~sep:", " (List.map ~f:pretty_print_expression es)
+and pretty_print_expression e = wrap_fmt pp_expression e
+
+and pp_list_of_expression ppf es =
+  Fmt.(list ~sep:comma pp_expression) ppf es
+
+and pretty_print_list_of_expression es = wrap_fmt pp_list_of_expression es
 
 and pretty_print_assignmentoperator = function
   | Assign -> "="
