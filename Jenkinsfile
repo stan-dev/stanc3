@@ -41,7 +41,7 @@ pipeline {
                     dune runtest --verbose
                 """)
 
-                sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
@@ -115,7 +115,7 @@ pipeline {
                     time dune runtest --verbose
                 """)
 
-                        sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         stash name:'mac-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
@@ -140,7 +140,7 @@ pipeline {
                     time dune runtest --profile static --verbose
                 """)
 
-                        sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         stash name:'linux-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
