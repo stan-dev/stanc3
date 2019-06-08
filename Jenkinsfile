@@ -36,10 +36,7 @@ pipeline {
                     dune build @install
                 """)
 
-                echo runShell("""
-                    eval \$(opam env)
-                    dune runtest --verbose
-                """)
+                echo runShell("eval \$(opam env); dune runtest --verbose")
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
@@ -62,16 +59,15 @@ pipeline {
                 junit 'performance-tests-cmdstan/performance.xml'
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
                 perfReport modePerformancePerTestCase: true,
-                    modeOfThreshold: true,
                     sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false,
-                    configType: 'PRT'
+                    modeThroughput: false
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        // This stage is just gonna try to run all the models we normally do for regression testing
-        // and log all the failures. It'll make a big nasty red graph that becomes blue over time as we
-        // fix more models :)
+        // This stage is just gonna try to run all the models we normally
+        // do for regression testing
+        // and log all the failures. It'll make a big nasty red graph
+        // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
@@ -86,15 +82,24 @@ pipeline {
           cat all.tests
           STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=100" develop stanc3-dev develop develop || true
                """
-                junit testResults: 'performance-tests-cmdstan/performance.xml', healthScaleFactor: 0.0
+
+                xunit([GoogleTest(
+                    deleteOutputFiles: false,
+                    failIfNotNew: true,
+                    pattern: 'performance-tests-cmdstan/performance.xml',
+                    skipNoTestFiles: false,
+                    stopProcessingIfError: false)])
                 archiveArtifacts 'performance-tests-cmdstan/performance.xml'
                 perfReport modePerformancePerTestCase: true,
-                    modeOfThreshold: true,
                     sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
                     modeThroughput: false,
-                    configType: 'PRT'
+                    excludeResponseTime: true,
+                    errorFailedThreshold: 100,
+                    errorUnstableThreshold: 100
             }
-            post { always { runShell("rm -rf ./*")} }
+            post { always {
+                runShell("rm -rf ./*")
+            } }
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
