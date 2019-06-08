@@ -12,6 +12,8 @@ let begin_indent _ = indent_num := 1 + !indent_num
 let exit_indent _ = indent_num := -1 + !indent_num
 let tabs () = String.make (2 * !indent_num) ' '
 
+let wrap_fmt fmt x = x |> fmt Format.str_formatter |> Format.flush_str_formatter
+
 let rec unwind_sized_array_type = function
   | Middle.SArray (st, e) -> (
     match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
@@ -24,57 +26,64 @@ let rec unwind_array_type = function
 
 (** XXX this should use the MIR pretty printers after AST pretty printers
     are updated to use `Fmt`. *)
-let rec pretty_print_autodifftype = function
-  | Middle.DataOnly -> "data "
-  | Middle.AutoDiffable -> ""
+let rec pp_autodifftype ppf = function
+  | Middle.DataOnly -> Fmt.pf ppf "data "
+  | Middle.AutoDiffable -> Fmt.pf ppf ""
 
-and pretty_print_unsizedtype = function
-  | Middle.UInt -> "int"
-  | Middle.UReal -> "real"
-  | Middle.UVector -> "vector"
-  | Middle.URowVector -> "row_vector"
-  | Middle.UMatrix -> "matrix"
+and pretty_print_autodifftype autodifftype = autodifftype |> pp_autodifftype Format.str_formatter |> Format.flush_str_formatter
+
+and pp_unsizedtype ppf = function
+  | Middle.UInt -> Fmt.pf ppf "int"
+  | Middle.UReal -> Fmt.pf ppf "real"
+  | Middle.UVector -> Fmt.pf ppf "vector"
+  | Middle.URowVector -> Fmt.pf ppf "row_vector"
+  | Middle.UMatrix -> Fmt.pf ppf "matrix"
   | Middle.UArray ut ->
-      let ut2, d = unwind_array_type ut in
-      pretty_print_unsizedtype ut2 ^ ("[" ^ String.make d ',') ^ "]"
+     let ut2, d = unwind_array_type ut in
+     let array_str = "[" ^ (String.make d ',') ^ "]" in
+     Fmt.(suffix (const string array_str) pp_unsizedtype ppf ut2)
   | Middle.UFun (argtypes, rt) ->
-      "("
-      ^ String.concat ~sep:", " (List.map ~f:pretty_print_argtype argtypes)
-      ^ ") => " ^ pretty_print_returntype rt
-  | Middle.UMathLibraryFunction -> "Stan Math function"
+     Fmt.pf ppf "{|@[<h>(%a) => %a@]|}" Fmt.(list ~sep:comma pp_argtype) argtypes pp_returntype rt
+  | Middle.UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
 
-and pretty_print_unsizedtypes l =
-  String.concat ~sep:", " (List.map ~f:pretty_print_unsizedtype l)
+and pretty_print_unsizedtype ut = wrap_fmt pp_unsizedtype ut
 
-and pretty_print_argtype = function
-  | at, ut -> pretty_print_autodifftype at ^ pretty_print_unsizedtype ut
+and pp_unsizedtypes ppf l =
+  Fmt.(list ~sep:comma pp_unsizedtype) ppf l
 
-and pretty_print_returntype = function
-  | ReturnType x -> pretty_print_unsizedtype x
-  | Void -> "void"
+and pp_argtype ppf = function
+  | at, ut -> Fmt.append pp_autodifftype pp_unsizedtype ppf (at, ut)
+
+and pp_returntype ppf = function
+  | ReturnType x -> pp_unsizedtype ppf x
+  | Void -> Fmt.pf ppf "void"
+
+and pretty_print_returntype rt = wrap_fmt pp_returntype rt
 
 and pretty_print_identifier id = id.name
 
-and pretty_print_operator = function
-  | Middle.Plus | PPlus -> "+"
-  | Minus | PMinus -> "-"
-  | Times -> "*"
-  | Divide -> "/"
-  | Modulo -> "%"
-  | LDivide -> "\\"
-  | EltTimes -> ".*"
-  | EltDivide -> "./"
-  | Pow -> "^"
-  | Or -> "||"
-  | And -> "&&"
-  | Equals -> "=="
-  | NEquals -> "!="
-  | Less -> "<"
-  | Leq -> "<="
-  | Greater -> ">"
-  | Geq -> ">="
-  | PNot -> "!"
-  | Transpose -> "'"
+and pp_operator ppf = function
+  | Middle.Plus | PPlus -> Fmt.pf ppf "+"
+  | Minus | PMinus -> Fmt.pf ppf "-"
+  | Times -> Fmt.pf ppf "*"
+  | Divide -> Fmt.pf ppf "/"
+  | Modulo -> Fmt.pf ppf "%%"
+  | LDivide -> Fmt.pf ppf "\\"
+  | EltTimes -> Fmt.pf ppf ".*"
+  | EltDivide -> Fmt.pf ppf "./"
+  | Pow -> Fmt.pf ppf "^"
+  | Or -> Fmt.pf ppf "||"
+  | And -> Fmt.pf ppf "&&"
+  | Equals -> Fmt.pf ppf "=="
+  | NEquals -> Fmt.pf ppf "!="
+  | Less -> Fmt.pf ppf "<"
+  | Leq -> Fmt.pf ppf "<="
+  | Greater -> Fmt.pf ppf ">"
+  | Geq -> Fmt.pf ppf ">="
+  | PNot -> Fmt.pf ppf "!"
+  | Transpose -> Fmt.pf ppf "'"
+
+and pretty_print_operator op = wrap_fmt pp_operator op
 
 and pretty_print_index = function
   | All -> " : "
@@ -93,7 +102,7 @@ and pretty_print_expression {expr= e_content; _} =
       pretty_print_expression e1 ^ " ? " ^ pretty_print_expression e2 ^ " : "
       ^ pretty_print_expression e3
   | BinOp (e1, op, e2) ->
-      pretty_print_expression e1 ^ " " ^ pretty_print_operator op ^ " "
+      pretty_print_expression e1 ^ " " ^ (pretty_print_operator op) ^ " "
       ^ pretty_print_expression e2
   | PrefixOp (op, e) -> pretty_print_operator op ^ pretty_print_expression e
   | PostfixOp (e, op) -> pretty_print_expression e ^ pretty_print_operator op
