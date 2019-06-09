@@ -489,17 +489,22 @@ let rec contains_fn fname accum {stmt; _} =
     accum stmt
 
 let fake_stmt stmt = {stmt; smeta= no_span}
+let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
-let fake_for emeta body =
-  let ten = {expr= Lit (Int, "10"); emeta} in
-  For {loopvar= "lv"; lower= ten; upper= ten; body= fake_stmt (Block [body])}
+let fake_for i body =
+  For
+    { loopvar= "lv"
+    ; lower= mir_int 0
+    ; upper= mir_int i
+    ; body= fake_stmt (Block [body]) }
   |> fake_stmt
 
 let%test "contains fn" =
   let f =
-    fake_for ()
-      (fake_for ()
-         (fake_stmt (Assignment (("v", []), internal_funapp FnReadData [] ()))))
+    fake_for 8
+      (fake_for 9
+         (fake_stmt
+            (Assignment (("v", []), internal_funapp FnReadData [] internal_meta))))
   in
   contains_fn
     (string_of_internal_fn FnReadData)
@@ -507,7 +512,6 @@ let%test "contains fn" =
     (fake_stmt (Block [f; fake_stmt Break]))
 
 let pos = "pos__"
-let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
 let add_pos_reset ({stmt; smeta} as s) =
   match stmt with
@@ -515,6 +519,44 @@ let add_pos_reset ({stmt; smeta} as s) =
     when contains_fn (string_of_internal_fn FnReadData) false body ->
       [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
   | _ -> [s]
+
+let invert_read_fors ({stmt; smeta} as s) =
+  let rec unwind s =
+    match s.stmt with
+    | For {loopvar; lower; upper; body= {stmt= Block (bdhd :: bdtl); _}} ->
+        let final, args = unwind bdhd in
+        (final @ bdtl, (loopvar, lower, upper) :: args)
+    | _ -> ([s], [])
+  in
+  match stmt with
+  | For {body; _}
+    when contains_fn (string_of_internal_fn FnReadData) false body ->
+      let final, args = unwind s in
+      List.fold ~init:final
+        ~f:(fun accum (loopvar, lower, upper) ->
+          [ { smeta
+            ; stmt=
+                For {loopvar; lower; upper; body= {stmt= Block accum; smeta}}
+            } ] )
+        args
+  | _ -> [s]
+
+let%expect_test "invert read fors" =
+  fake_for 8
+    (fake_for 9
+       { stmt=
+           NRFunApp
+             (StanLib, "print", [internal_funapp FnReadData [] internal_meta])
+       ; smeta= no_span })
+  |> invert_read_fors
+  |> strf "%a" (list ~sep:comma Pretty.pp_stmt_loc)
+  |> print_endline ;
+  [%expect
+    {|
+    for(lv in 0:9) { for(lv in 0:8) {
+                       print(FnReadData__());
+                     }
+    } |}]
 
 let rec use_pos_in_readdata {stmt; smeta} =
   let swrap stmt = {stmt; smeta} in
@@ -540,21 +582,20 @@ let%expect_test "xform_readdata" =
   let read = internal_funapp FnReadData [] internal_meta in
   let idcs = [idx "i"; idx "j"; idx "k"] in
   let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
-  fake_for internal_meta
-    (fake_for internal_meta
-       (fake_for internal_meta
-          {stmt= Assignment (("v", idcs), indexed); smeta= no_span}))
+  fake_for 7
+    (fake_for 8
+       (fake_for 9 {stmt= Assignment (("v", idcs), indexed); smeta= no_span}))
   |> use_pos_in_readdata
   |> strf "@[<h>%a@]" Pretty.pp_stmt_loc
   |> print_endline ;
   [%expect
     {|
-    for(lv in 10:10) { for(lv in 10:10) {
-                         for(lv in 10:10) {
-                           v[i, j, k] = FnReadData__()[pos__];
-                           pos__ = (pos__ + 1);
-                         }
-                       } } |}]
+    for(lv in 0:7) { for(lv in 0:8) {
+                       for(lv in 0:9) {
+                         v[i, j, k] = FnReadData__()[pos__];
+                         pos__ = (pos__ + 1);
+                       }
+                     } } |}]
 
 let escape_name str =
   str
@@ -568,6 +609,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     ; smeta= no_span }
     :: List.concat_map ~f:add_pos_reset stmts
     |> List.map ~f:use_pos_in_readdata
+    |> List.concat_map ~f:invert_read_fors
   in
   let p =
     { p with

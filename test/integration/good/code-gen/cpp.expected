@@ -382,8 +382,8 @@ class one_var_per_block_model : public prob_grad {
     datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
     
     pos__ = 1;
-    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+    for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         stan::model::assign(datavar, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), 
                             context__.vals_r("datavar")[(pos__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
         stan::model::assign(pos__, stan::model::nil_index_list(), (pos__ + 1), "assigning variable pos__");
@@ -700,8 +700,8 @@ class one_var_per_block_model : public prob_grad {
       param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
       pos__ = 1;
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
           stan::model::assign(param, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::nil_index_list())), 
                               context__.vals_r("param")[(pos__ - 1)], "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
           stan::model::assign(pos__, stan::model::nil_index_list(), (pos__ + 1), "assigning variable pos__");
@@ -716,9 +716,9 @@ class one_var_per_block_model : public prob_grad {
       matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
       
       pos__ = 1;
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
         for (size_t sym2__ = 1; sym2__ <= (K + 1); ++sym2__) {
-          for (size_t sym3__ = 1; sym3__ <= (N * N); ++sym3__) {
+          for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
             stan::model::assign(matparam, stan::model::cons_list(stan::model::index_uni(sym1__), stan::model::cons_list(stan::model::index_uni(sym2__), stan::model::cons_list(stan::model::index_uni(sym3__), stan::model::nil_index_list()))), 
                                 context__.vals_r("matparam")[(pos__ - 1)], "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1)]");
             stan::model::assign(pos__, stan::model::nil_index_list(), (pos__ + 1), "assigning variable pos__");
