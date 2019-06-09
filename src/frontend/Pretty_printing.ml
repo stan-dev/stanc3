@@ -11,7 +11,6 @@ let indent_num = ref 1
 let begin_indent _ = indent_num := 1 + !indent_num
 let exit_indent _ = indent_num := -1 + !indent_num
 let tabs () = String.make (2 * !indent_num) ' '
-
 let wrap_fmt fmt x = x |> fmt Format.str_formatter |> Format.flush_str_formatter
 
 let rec unwind_sized_array_type = function
@@ -30,8 +29,6 @@ let rec pp_autodifftype ppf = function
   | Middle.DataOnly -> Fmt.pf ppf "data "
   | Middle.AutoDiffable -> Fmt.pf ppf ""
 
-and pretty_print_autodifftype autodifftype = autodifftype |> pp_autodifftype Format.str_formatter |> Format.flush_str_formatter
-
 and pp_unsizedtype ppf = function
   | Middle.UInt -> Fmt.pf ppf "int"
   | Middle.UReal -> Fmt.pf ppf "real"
@@ -46,8 +43,6 @@ and pp_unsizedtype ppf = function
      Fmt.pf ppf "{|@[<h>(%a) => %a@]|}" Fmt.(list ~sep:comma pp_argtype) argtypes pp_returntype rt
   | Middle.UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
 
-and pretty_print_unsizedtype ut = wrap_fmt pp_unsizedtype ut
-
 and pp_unsizedtypes ppf l =
   Fmt.(list ~sep:comma pp_unsizedtype) ppf l
 
@@ -58,11 +53,7 @@ and pp_returntype ppf = function
   | ReturnType x -> pp_unsizedtype ppf x
   | Void -> Fmt.pf ppf "void"
 
-and pretty_print_returntype rt = wrap_fmt pp_returntype rt
-
 and pp_identifier ppf id = Fmt.pf ppf "%s" id.name
-
-and pretty_print_identifier i = wrap_fmt pp_identifier i
 
 and pp_operator ppf = function
   | Middle.Plus | PPlus -> Fmt.pf ppf "+"
@@ -85,8 +76,6 @@ and pp_operator ppf = function
   | PNot -> Fmt.pf ppf "!"
   | Transpose -> Fmt.pf ppf "'"
 
-and pretty_print_operator op = wrap_fmt pp_operator op
-
 and pp_index ppf = function
   | All -> Fmt.pf ppf " : "
   | Single e -> pp_expression ppf e
@@ -96,8 +85,6 @@ and pp_index ppf = function
 
 and pp_list_of_indices ppf l =
   Fmt.(list ~sep:comma pp_index) ppf l
-
-and pretty_print_list_of_indices is = wrap_fmt pp_list_of_indices is
 
 and pp_expression ppf {expr= e_content; _} =
   match e_content with
@@ -129,12 +116,8 @@ and pp_expression ppf {expr= e_content; _} =
     | [] -> Fmt.pf ppf "%a" pp_expression e
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
 
-and pretty_print_expression e = wrap_fmt pp_expression e
-
 and pp_list_of_expression ppf es =
   Fmt.(list ~sep:comma pp_expression) ppf es
-
-and pretty_print_list_of_expression es = wrap_fmt pp_list_of_expression es
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="
@@ -151,16 +134,12 @@ and pp_truncation ppf = function
   | TruncateBetween (e1, e2) ->
      Fmt.pf ppf " T[%a, %a]" pp_expression e1 pp_expression e2
 
-and pretty_print_truncation t = wrap_fmt pp_truncation t
-
 and pp_printable ppf = function
   | PString s -> Fmt.pf ppf "%s" s
   | PExpr e -> pp_expression ppf e
 
 and pp_list_of_printables ppf l =
   Fmt.(list ~sep:comma pp_printable) ppf l
-
-and pretty_print_list_of_printables l = wrap_fmt pp_list_of_printables l
 
 and pp_sizedtype ppf = function
   | Middle.SInt -> Fmt.pf ppf "int"
@@ -169,8 +148,6 @@ and pp_sizedtype ppf = function
   | Middle.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | Middle.SMatrix (e1, e2) -> Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
-
-and pretty_print_sizedtype st = wrap_fmt pp_sizedtype st
 
 and pp_transformation ppf = function
   | Identity -> Fmt.pf ppf ""
@@ -190,8 +167,6 @@ and pp_transformation ppf = function
   | CholeskyCov -> Fmt.pf ppf ""
   | Correlation -> Fmt.pf ppf ""
   | Covariance -> Fmt.pf ppf ""
-
-and pretty_print_transformation t = wrap_fmt pp_transformation t
 
 and pp_transformed_type ppf (st, trans) =
   let unsizedtype_fmt, sizes_fmt =
@@ -232,13 +207,9 @@ and pp_transformed_type ppf (st, trans) =
   | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
   | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt ()
 
-and pretty_print_transformed_type st trans = wrap_fmt pp_transformed_type (st, trans)
-
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
   | es -> Fmt.pf ppf "[%a]" pp_list_of_expression (List.rev es)
-
-and pretty_print_array_dims d = wrap_fmt pp_array_dims d
 
 and pp_statement ppf {stmt= s_content; _} =
   match s_content with
@@ -351,8 +322,6 @@ and pp_list_of_statements ppf l =
   Format.pp_print_list pp_statement ppf l ;
   Format.pp_print_cut ppf ();
   Format.pp_close_box ppf () ;
-
-and pretty_print_list_of_statements ss = wrap_fmt pp_list_of_statements ss
 
 and pp_program ppf = function
   | { functionblock= bf
