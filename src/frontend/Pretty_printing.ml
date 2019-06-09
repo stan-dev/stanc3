@@ -286,10 +286,10 @@ and pp_statement ppf {stmt= s_content; _} =
        pp_expression e
        pp_statement s
   | IfThenElse (e, s1, Some s2) ->
-     Fmt.pf ppf "if (%a) %a"
-       pp_expression e
-       pp_statement s1;
      with_vbox ppf 0 (fun () ->
+         Fmt.pf ppf "if (%a) %a"
+           pp_expression e
+           pp_statement s1;
          Format.pp_print_cut ppf () ;
          Fmt.pf ppf "else %a" pp_statement s2;)
   | While (e, s) ->
