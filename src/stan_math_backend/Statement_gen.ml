@@ -124,20 +124,20 @@ let rec pp_statement (ppf : Format.formatter)
     when internal_fn_of_string f = Some FnMakeArray ->
       pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
-      (*
-Assignment Statements
-----------------------------------------------------------------------
-If a[idxs] = b
-  if (a shows up on RHS)
-    stan::model::assign(a', idxs', stan::model::deep_copy(b'),   XXX TODO not handling deep copy yet
-                        "assigning variable " + pretty_print(a'));
-  else
-    stan::model::assign(a', idxs', b',
-                        "assigning variable " + pretty_print(a'));
-
-If a = b
-  stan::math::assign(a', b')
-*)
+      let rec maybe_deep_copy vident = function
+        | {expr= Var v; _} as e when v = vident ->
+            { e with
+              expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
+        | {expr; emeta} -> {expr= map_expr (maybe_deep_copy vident) expr; emeta}
+      in
+      let rhs =
+        match rhs.expr with
+        | FunApp (CompilerInternal, f, _)
+          when f = string_of_internal_fn FnConstrain
+               || f = string_of_internal_fn FnUnconstrain ->
+            rhs
+        | _ -> maybe_deep_copy assignee rhs
+      in
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
         (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))

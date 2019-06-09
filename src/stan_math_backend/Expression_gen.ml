@@ -240,7 +240,6 @@ and pp_ordinary_fn ppf f es =
 
 and pp_compiler_internal_fn ut f ppf es =
   match internal_fn_of_string f with
-  | None -> failwith "Expecting internal function but found `%s`" f
   | Some FnMakeArray -> pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
@@ -253,10 +252,7 @@ and pp_compiler_internal_fn ut f ppf es =
         raise_s
           [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
     )
-  | _ ->
-      pf ppf
-        "throw std::logic_error(\"XXX TODO Not Implemented: %s(@[<hov>%a@])\""
-        f (list ~sep:comma pp_expr) es
+  | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
