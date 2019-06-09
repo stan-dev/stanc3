@@ -241,7 +241,7 @@ and pp_ordinary_fn ppf f es =
 and pp_compiler_internal_fn ut f ppf es =
   match internal_fn_of_string f with
   | None -> failwith "Expecting internal function but found `%s`" f
-  | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
+  | Some FnMakeArray -> pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
