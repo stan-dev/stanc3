@@ -517,6 +517,7 @@ let add_pos_reset ({stmt; smeta} as s) =
   | _ -> [s]
 
 let rec use_pos_in_readdata {stmt; smeta} =
+  let swrap stmt = {stmt; smeta} in
   match stmt with
   | Block
       [ { stmt=
@@ -526,50 +527,34 @@ let rec use_pos_in_readdata {stmt; smeta} =
                     Indexed
                       ( ( {expr= FunApp (CompilerInternal, f, _); emeta} as
                         fnapp )
-                      , _ ); _ } )
-        ; smeta } ]
+                      , _ ); _ } ); _ } ]
     when internal_fn_of_string f = Some FnReadData ->
       let pos_var = {expr= Var pos; emeta= internal_meta} in
-      { stmt=
-          Block
-            [ { stmt=
-                  Assignment
-                    (lhs, {expr= Indexed (fnapp, [Single pos_var]); emeta})
-              ; smeta }
-            ; { stmt= Assignment ((pos, []), binop pos_var Plus (mir_int 1))
-              ; smeta } ]
-      ; smeta }
+      [ Assignment (lhs, {expr= Indexed (fnapp, [Single pos_var]); emeta})
+      ; Assignment ((pos, []), binop pos_var Plus (mir_int 1)) ]
+      |> List.map ~f:swrap |> Block |> swrap
   | x -> {stmt= map_statement Fn.id use_pos_in_readdata x; smeta}
 
 let%expect_test "xform_readdata" =
-  let fake_for i body =
-    let swrap stmt = {stmt; smeta= ()} in
-    let ten = {expr= Lit (Int, i); emeta= internal_meta} in
-    For
-      { loopvar= "lv"
-      ; lower= ten
-      ; upper= ten
-      ; body= {stmt= Block [body]; smeta= ()} }
-    |> swrap
-  in
   let idx v = Single {expr= Var v; emeta= internal_meta} in
   let read = internal_funapp FnReadData [] internal_meta in
   let idcs = [idx "i"; idx "j"; idx "k"] in
   let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
-  fake_for "7"
-    (fake_for "8"
-       (fake_for "9" {stmt= Assignment (("v", idcs), indexed); smeta= ()}))
+  fake_for internal_meta
+    (fake_for internal_meta
+       (fake_for internal_meta
+          {stmt= Assignment (("v", idcs), indexed); smeta= no_span}))
   |> use_pos_in_readdata
   |> strf "@[<h>%a@]" Pretty.pp_stmt_loc
   |> print_endline ;
   [%expect
     {|
-    for(lv in 7:7) { for(lv in 8:8) {
-                       for(lv in 9:9) {
-                         v[i, j, k] = FnReadData__()[pos__];
-                         pos__ = (pos__ + 1);
-                       }
-                     } } |}]
+    for(lv in 10:10) { for(lv in 10:10) {
+                         for(lv in 10:10) {
+                           v[i, j, k] = FnReadData__()[pos__];
+                           pos__ = (pos__ + 1);
+                         }
+                       } } |}]
 
 let escape_name str =
   str
