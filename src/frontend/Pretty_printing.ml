@@ -227,7 +227,7 @@ and pp_transformed_type ppf (st, trans) =
   match trans with
   | Identity -> pp_sizedtype ppf st
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
-    |OffsetMultiplier _ -> Fmt.pf ppf "%a%a%a" unsizedtype_fmt () sizes_fmt () pp_transformation trans
+    |OffsetMultiplier _ -> Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt ()
   | Ordered -> Fmt.pf ppf "ordered%a" sizes_fmt ()
   | PositiveOrdered -> Fmt.pf ppf "positive_ordered%a" sizes_fmt ()
   | Simplex -> Fmt.pf ppf "simplex%a" sizes_fmt ()
