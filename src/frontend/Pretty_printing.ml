@@ -252,11 +252,12 @@ and pp_statement ppf {stmt= s_content; _} =
      let inds_fmt ppf lindex = match lindex with
        | [] -> Fmt.nop ppf ()
        | l -> Fmt.pf ppf "[%a]" pp_list_of_indices l in
-     Fmt.pf ppf "%a%a %a %a;"
-       pp_identifier id
-       inds_fmt lindex
-       pp_assignmentoperator assop
-       pp_expression e
+     with_hbox ppf (fun () ->
+         Fmt.pf ppf "%a%a %a %a;"
+           pp_identifier id
+           inds_fmt lindex
+           pp_assignmentoperator assop
+           pp_expression e)
   | NRFunApp (_, id, es) ->
      Fmt.pf ppf "%a(%a);"
        pp_identifier id
