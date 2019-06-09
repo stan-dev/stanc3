@@ -116,6 +116,7 @@ let rec pp_statement (ppf : Format.formatter)
                             "assigning variable theta");
             }
         *)
+  | Assignment ((vident, []), rhs) -> pf ppf "%s = %a;" vident pp_expr rhs
   | Assignment (lhs, {expr= Lit (Str, s); _}) ->
       pf ppf "%a = %S;" pp_indexed_simple lhs s
   | Assignment (lhs, {expr= Lit (_, s); _}) ->
