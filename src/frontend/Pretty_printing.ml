@@ -287,7 +287,7 @@ and pp_statement ppf {stmt= s_content; _} =
        pp_expression e
        pp_statement s1;
      Format.pp_open_vbox ppf 0;
-     Format.print_cut() ;
+     Format.pp_print_cut ppf () ;
      Fmt.pf ppf "else %a" pp_statement s2;
      Format.close_box () ;
   | While (e, s) ->
@@ -308,7 +308,7 @@ and pp_statement ppf {stmt= s_content; _} =
   | Block vdsl ->
      Format.pp_open_vbox ppf 0 ;
      Fmt.pf ppf "{" ;
-     Format.print_cut () ;
+     Format.pp_print_cut ppf () ;
      Format.pp_open_hovbox ppf 2 ;
      pp_list_of_statements ppf vdsl ;
      Format.pp_close_box ppf () ;
@@ -349,12 +349,12 @@ and pp_args ppf (at, ut, id) =
 and pp_list_of_statements ppf l =
   Format.pp_open_vbox ppf 0 ;
   Format.pp_print_list pp_statement ppf l ;
-  Format.print_cut ();
+  Format.pp_print_cut ppf ();
   Format.pp_close_box ppf () ;
 
 and pretty_print_list_of_statements ss = wrap_fmt pp_list_of_statements ss
 
-and pretty_print_program = function
+and pp_program ppf = function
   | { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -362,35 +362,70 @@ and pretty_print_program = function
     ; transformedparametersblock= btp
     ; modelblock= bm
     ; generatedquantitiesblock= bgq } -> (
+    Format.pp_open_vbox ppf 0;
       ( match bf with
-      | None -> ""
-      | Some x -> "functions {\n" ^ pretty_print_list_of_statements x ^ "}\n"
-      )
-      ^ ( match bd with
-        | None -> ""
-        | Some x -> "data {\n" ^ pretty_print_list_of_statements x ^ "}\n" )
-      ^ ( match btd with
-        | None -> ""
-        | Some x ->
-            "transformed data {\n" ^ pretty_print_list_of_statements x ^ "}\n"
-        )
-      ^ ( match bp with
-        | None -> ""
-        | Some x ->
-            "parameters {\n" ^ pretty_print_list_of_statements x ^ "}\n" )
-      ^ ( match btp with
-        | None -> ""
-        | Some x ->
-            "transformed parameters {\n"
-            ^ pretty_print_list_of_statements x
-            ^ "}\n" )
-      ^ ( match bm with
-        | None -> ""
-        | Some x -> "model {\n" ^ pretty_print_list_of_statements x ^ "}\n" )
-      ^
-      match bgq with
-      | None -> ""
+      | None -> Fmt.pf ppf "";
       | Some x ->
-          "generated quantities {\n"
-          ^ pretty_print_list_of_statements x
-          ^ "}\n" )
+         Fmt.pf ppf "functions {" ;
+         Format.pp_print_cut ppf () ;
+         pp_list_of_statements ppf x ;
+         Fmt.pf ppf "}";
+         Format.pp_print_cut ppf () ;
+      ) ;
+      ( match bd with
+        | None -> Fmt.pf ppf ""
+        | Some x ->
+           Fmt.pf ppf "data {" ;
+           Format.print_cut ();
+           pp_list_of_statements ppf x ;
+           Fmt.pf ppf "}" ;
+           Format.print_cut ();
+      );
+      ( match btd with
+        | None -> Fmt.pf ppf ""
+        | Some x ->
+           Fmt.pf ppf "transformed data {" ;
+           Format.pp_print_cut ppf ();
+           pp_list_of_statements ppf x;
+           Fmt.pf ppf "}";
+           Format.pp_print_cut ppf ();
+        ) ;
+      ( match bp with
+        | None -> Fmt.pf ppf "";
+        | Some x ->
+           Fmt.pf ppf "parameters {";
+           Format.pp_print_cut ppf ();
+           pp_list_of_statements ppf x;
+           Fmt.pf ppf "}";
+           Format.pp_print_cut ppf ();
+      ) ;
+      ( match btp with
+        | None -> Fmt.pf ppf ""
+        | Some x ->
+           Fmt.pf ppf "transformed parameters {";
+           Format.pp_print_cut ppf ();
+           pp_list_of_statements ppf x;
+           Fmt.pf ppf "}";
+           Format.print_cut ();
+      ) ;
+      ( match bm with
+        | None -> Fmt.pf ppf ""
+        | Some x ->
+           Fmt.pf ppf "model {";
+           Format.pp_print_cut ppf ();
+           pp_list_of_statements ppf x;
+           Fmt.pf ppf "}";
+           Format.pp_print_cut ppf ();
+      ) ;
+      ( match bgq with
+        | None -> Fmt.pf ppf ""
+        | Some x ->
+           Fmt.pf ppf "generated quantities {" ;
+           Format.print_cut ();
+           pp_list_of_statements ppf x;
+           Fmt.pf ppf "}" ;
+           Format.print_cut ();
+      ) ;
+      Format.pp_close_box ppf ();
+  )
+and pretty_print_program p = wrap_fmt pp_program p
