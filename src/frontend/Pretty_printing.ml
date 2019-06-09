@@ -113,7 +113,8 @@ and pp_index ppf = function
   | Between (e1, e2) -> Fmt.pf ppf "%a : %a" pp_expression e1 pp_expression e2
 
 and pp_list_of_indices ppf l =
-  Fmt.(list ~sep:comma pp_index) ppf l
+  with_hbox ppf (fun () ->
+      Fmt.(list ~sep:comma pp_index) ppf l; ())
 
 and pp_expression ppf {expr= e_content; _} =
   match e_content with
