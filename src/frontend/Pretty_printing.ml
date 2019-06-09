@@ -240,59 +240,80 @@ and pp_array_dims ppf = function
 
 and pretty_print_array_dims d = wrap_fmt pp_array_dims d
 
-and pretty_print_statement {stmt= s_content; _} =
+and pp_statement ppf {stmt= s_content; _} =
   match s_content with
   | Assignment
       { assign_identifier= id
       ; assign_indices= lindex
       ; assign_op= assop
       ; assign_rhs= e } ->
-      pretty_print_identifier id
-      ^ ( match lindex with
-        | [] -> ""
-        | l -> "[" ^ pretty_print_list_of_indices l ^ "]" )
-      ^ " "
-      ^ pretty_print_assignmentoperator assop
-      ^ " " ^ pretty_print_expression e ^ ";"
+     let inds_fmt ppf lindex = match lindex with
+       | [] -> Fmt.nop ppf ()
+       | l -> Fmt.pf ppf "[%a]" pp_list_of_indices l in
+     Fmt.pf ppf "%a%a %a %a;"
+       pp_identifier id
+       inds_fmt lindex
+       pp_assignmentoperator assop
+       pp_expression e
   | NRFunApp (_, id, es) ->
-      pretty_print_identifier id ^ "("
-      ^ pretty_print_list_of_expression es
-      ^ ")" ^ ";"
-  | TargetPE e -> "target += " ^ pretty_print_expression e ^ ";"
+     Fmt.pf ppf "%a(%a);"
+       pp_identifier id
+       pp_list_of_expression es
+  | TargetPE e ->
+     Fmt.pf ppf "target += %a;"
+       pp_expression e
   | IncrementLogProb e ->
-      "increment_log_prob(" ^ pretty_print_expression e ^ ");"
+     Fmt.pf ppf "increment_log_prob(%a);"
+       pp_expression e
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-      pretty_print_expression e ^ " ~ " ^ pretty_print_identifier id ^ "("
-      ^ pretty_print_list_of_expression es
-      ^ ")" ^ pretty_print_truncation t ^ ";"
-  | Break -> "break;"
-  | Continue -> "continue;"
-  | Return e -> "return " ^ pretty_print_expression e ^ ";"
-  | ReturnVoid -> "return;"
-  | Print ps -> "print(" ^ pretty_print_list_of_printables ps ^ ");"
-  | Reject ps -> "reject(" ^ pretty_print_list_of_printables ps ^ ");"
-  | Skip -> ";"
+     Fmt.pf ppf "%a ~ %a(%a)%a;"
+       pp_expression e
+       pp_identifier id
+       pp_list_of_expression es
+       pp_truncation t
+  | Break -> Fmt.pf ppf "break;"
+  | Continue -> Fmt.pf ppf "continue;"
+  | Return e -> Fmt.pf ppf "return %a;" pp_expression e
+  | ReturnVoid -> Fmt.pf ppf "return;"
+  | Print ps -> Fmt.pf ppf "print(%a);" pp_list_of_printables ps
+  | Reject ps -> Fmt.pf ppf "reject(%a);" pp_list_of_printables ps
+  | Skip -> Fmt.pf ppf ";"
   | IfThenElse (e, s, None) ->
-      "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
+     Fmt.pf ppf "if (%a) %a"
+       pp_expression e
+       pp_statement s
   | IfThenElse (e, s1, Some s2) ->
-      "if (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s1
-      ^ "\n" ^ tabs () ^ "else " ^ pretty_print_statement s2
+     Fmt.pf ppf "if (%a) %a"
+       pp_expression e
+       pp_statement s1;
+     Format.pp_open_vbox ppf 0;
+     Format.print_cut() ;
+     Fmt.pf ppf "else %a" pp_statement s2;
+     Format.close_box () ;
   | While (e, s) ->
-      "while (" ^ pretty_print_expression e ^ ") " ^ pretty_print_statement s
+     Fmt.pf ppf "while(%a) %a"
+       pp_expression e
+       pp_statement s
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
-      "for (" ^ pretty_print_identifier id ^ " in "
-      ^ pretty_print_expression e1 ^ " : " ^ pretty_print_expression e2 ^ ") "
-      ^ pretty_print_statement s
+     Fmt.pf ppf "for (%a in %a : %a) %a"
+       pp_identifier id
+       pp_expression e1
+       pp_expression e2
+       pp_statement s
   | ForEach (id, e, s) ->
-      "for (" ^ pretty_print_identifier id ^ " in " ^ pretty_print_expression e
-      ^ ") " ^ pretty_print_statement s
+     Fmt.pf ppf "for (%a in %a) %a"
+       pp_identifier id
+       pp_expression e
+       pp_statement s
   | Block vdsl ->
-      let s1 = "{\n" in
-      let _ = begin_indent () in
-      let s2 = pretty_print_list_of_statements vdsl in
-      let _ = exit_indent () in
-      let s3 = tabs () ^ "}" in
-      s1 ^ s2 ^ s3
+     Format.pp_open_vbox ppf 0 ;
+     Fmt.pf ppf "{" ;
+     Format.print_cut () ;
+     Format.pp_open_hovbox ppf 2 ;
+     pp_list_of_statements ppf vdsl ;
+     Format.pp_close_box ppf () ;
+     Fmt.pf ppf "}" ;
+     Format.pp_close_box ppf () ;
   | VarDecl
       { sizedtype= st
       ; transformation= trans
@@ -300,33 +321,38 @@ and pretty_print_statement {stmt= s_content; _} =
       ; initial_value= init
       ; is_global= _ } ->
       let st2, es = unwind_sized_array_type st in
-      let init_string =
+      let pp_init ppf init =
         match init with
-        | None -> ""
-        | Some e -> " = " ^ pretty_print_expression e
+        | None -> Fmt.pf ppf ""
+        | Some e -> Fmt.pf ppf " = %a" pp_expression e
       in
-      pretty_print_transformed_type st2 trans
-      ^ " " ^ pretty_print_identifier id ^ pretty_print_array_dims es
-      ^ init_string ^ ";"
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
-      pretty_print_returntype rt ^ " " ^ pretty_print_identifier id ^ "("
-      ^ String.concat ~sep:", "
-          (List.map
-             ~f:(function
-               | at, ut, id ->
-                   pretty_print_autodifftype at
-                   ^ pretty_print_unsizedtype ut
-                   ^ " " ^ pretty_print_identifier id)
-             args)
-      ^
-      match b with
-      | {stmt= Skip; _} -> ");"
-      | b -> ") " ^ pretty_print_statement b )
+      Fmt.pf ppf "%a %a %a %a;"
+        pp_transformed_type (st2, trans)
+        pp_identifier id
+        pp_array_dims es
+        pp_init init
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
+     Fmt.pf ppf "%a %a(%a"
+       pp_returntype rt
+       pp_identifier id
+       (Fmt.list ~sep:Fmt.comma pp_args) args;
+     match b with
+     | {stmt= Skip; _} -> Fmt.pf ppf ");"
+     | b -> Fmt.pf ppf ") %a" pp_statement b ;
 
-and pretty_print_list_of_statements l =
-  String.concat ~sep:"\n"
-    (List.map ~f:(fun x -> tabs () ^ pretty_print_statement x) l)
-  ^ "\n"
+and pp_args ppf (at, ut, id) =
+  Fmt.pf ppf "%a%a %a"
+    pp_autodifftype at
+    pp_unsizedtype ut
+    pp_identifier id
+
+and pp_list_of_statements ppf l =
+  Format.pp_open_vbox ppf 0 ;
+  Format.pp_print_list pp_statement ppf l ;
+  Format.print_cut ();
+  Format.pp_close_box ppf () ;
+
+and pretty_print_list_of_statements ss = wrap_fmt pp_list_of_statements ss
 
 and pretty_print_program = function
   | { functionblock= bf
