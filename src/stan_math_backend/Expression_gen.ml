@@ -205,19 +205,18 @@ and gen_distribution_app f =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
-    let extra =
-      List.map
-        ~f:(fun s -> {expr= Var s; emeta= internal_meta})
-        (suffix_args f)
-    in
     let convert_hof_vars = function
       | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
           {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
       | e -> e
     in
-    let es = List.map ~f:convert_hof_vars es in
+    let converted_es = List.map ~f:convert_hof_vars es in
+    let extra =
+      (suffix_args f @ if es = converted_es then [] else ["pstream__"])
+      |> List.map ~f:(fun s -> {expr= Var s; emeta= internal_meta})
+    in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
-      (list ~sep:comma pp_expr) (es @ extra)
+      (list ~sep:comma pp_expr) (converted_es @ extra)
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
