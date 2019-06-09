@@ -293,7 +293,7 @@ and pp_statement ppf {stmt= s_content; _} =
          Format.pp_print_cut ppf () ;
          Fmt.pf ppf "else %a" pp_statement s2;)
   | While (e, s) ->
-     Fmt.pf ppf "while(%a) %a"
+     Fmt.pf ppf "while (%a) %a"
        pp_expression e
        pp_statement s
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
