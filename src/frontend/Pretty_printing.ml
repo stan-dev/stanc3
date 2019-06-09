@@ -12,21 +12,35 @@ let begin_indent _ = indent_num := 1 + !indent_num
 let exit_indent _ = indent_num := -1 + !indent_num
 let tabs () = String.make (2 * !indent_num) ' '
 let wrap_fmt fmt x = x |> fmt Format.str_formatter |> Format.flush_str_formatter
+
 let with_hbox ppf f =
   Format.pp_open_hbox ppf ();
   f ();
   Format.pp_close_box ppf ();
   ()
+
 let with_box ppf offset f =
   Format.pp_open_box ppf offset;
   f ();
   Format.pp_close_box ppf ();
   ()
+
 let with_vbox ppf offset f =
   Format.pp_open_vbox ppf offset;
   f ();
   Format.pp_close_box ppf ();
   ()
+
+let with_indented_box ppf indentation offset f =
+  let rec pp_print_n_spaces ppf = function
+    | 0 -> ()
+    | i ->
+       Format.pp_print_space ppf ();
+       pp_print_n_spaces ppf (i-1)
+  in with_hbox ppf (fun () ->
+         pp_print_n_spaces ppf indentation;
+         with_box ppf offset f);
+     ()
 
 let rec unwind_sized_array_type = function
   | Middle.SArray (st, e) -> (
@@ -357,10 +371,8 @@ and pp_program ppf = function
       | Some x ->
          Fmt.pf ppf "data {" ;
          Format.pp_print_cut ppf ();
-         with_hbox ppf (fun () ->
-             Format.pp_print_space ppf ();
-             Format.pp_print_space ppf ();
-             with_box ppf 0 (fun () -> pp_list_of_statements ppf x; ()));
+         with_indented_box ppf 2 0 (fun () ->
+             pp_list_of_statements ppf x; ());
          Format.pp_print_cut ppf ();
          Fmt.pf ppf "}" ;
          Format.pp_print_cut ppf ();
