@@ -136,103 +136,109 @@ and pp_list_of_expression ppf es =
 
 and pretty_print_list_of_expression es = wrap_fmt pp_list_of_expression es
 
-and pretty_print_assignmentoperator = function
-  | Assign -> "="
+and pp_assignmentoperator ppf = function
+  | Assign -> Fmt.pf ppf "="
   (* ArrowAssign is deprecated *)
-  | ArrowAssign -> "<-"
-  | OperatorAssign op -> pretty_print_operator op ^ "="
+  | ArrowAssign -> Fmt.pf ppf "<-"
+  | OperatorAssign op -> Fmt.pf ppf "%a=" pp_operator op
 
-and pretty_print_truncation = function
-  | NoTruncate -> ""
-  | TruncateUpFrom e -> " T[" ^ pretty_print_expression e ^ ", ]"
-  | TruncateDownFrom e -> " T[ , " ^ pretty_print_expression e ^ "]"
+and pretty_print_assignmentoperator op = wrap_fmt pp_assignmentoperator op
+
+and pp_truncation ppf = function
+  | NoTruncate -> Fmt.pf ppf ""
+  | TruncateUpFrom e -> Fmt.pf ppf " T[%a, ]" pp_expression e
+  | TruncateDownFrom e -> Fmt.pf ppf " T[ , %a]" pp_expression e
   | TruncateBetween (e1, e2) ->
-      " T[" ^ pretty_print_expression e1 ^ ", " ^ pretty_print_expression e2
-      ^ "]"
+     Fmt.pf ppf " T[%a, %a]" pp_expression e1 pp_expression e2
 
-and pretty_print_printable = function
-  | PString s -> s
-  | PExpr e -> pretty_print_expression e
+and pretty_print_truncation t = wrap_fmt pp_truncation t
 
-and pretty_print_list_of_printables l =
-  String.concat ~sep:", " (List.map ~f:pretty_print_printable l)
+and pp_printable ppf = function
+  | PString s -> Fmt.pf ppf "%s" s
+  | PExpr e -> pp_expression ppf e
 
-and pretty_print_sizedtype = function
-  | Middle.SInt -> "int"
-  | Middle.SReal -> "real"
-  | Middle.SVector e -> "vector[" ^ pretty_print_expression e ^ "]"
-  | Middle.SRowVector e -> "row_vector[" ^ pretty_print_expression e ^ "]"
-  | Middle.SMatrix (e1, e2) ->
-      "matrix[" ^ pretty_print_expression e1 ^ ", "
-      ^ pretty_print_expression e2 ^ "]"
+and pp_list_of_printables ppf l =
+  Fmt.(list ~sep:comma pp_printable) ppf l
+
+and pretty_print_list_of_printables l = wrap_fmt pp_list_of_printables l
+
+and pp_sizedtype ppf = function
+  | Middle.SInt -> Fmt.pf ppf "int"
+  | Middle.SReal -> Fmt.pf ppf "real"
+  | Middle.SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
+  | Middle.SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
+  | Middle.SMatrix (e1, e2) -> Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | Middle.SArray _ -> raise (Errors.FatalError "This should never happen.")
 
-and pretty_print_transformation = function
-  | Identity -> ""
-  | Lower e -> "<lower=" ^ pretty_print_expression e ^ ">"
-  | Upper e -> "<upper=" ^ pretty_print_expression e ^ ">"
-  | LowerUpper (e1, e2) ->
-      "<lower=" ^ pretty_print_expression e1 ^ ", upper="
-      ^ pretty_print_expression e2 ^ ">"
-  | Offset e -> "<offset=" ^ pretty_print_expression e ^ ">"
-  | Multiplier e -> "<multiplier=" ^ pretty_print_expression e ^ ">"
-  | OffsetMultiplier (e1, e2) ->
-      "<offset=" ^ pretty_print_expression e1 ^ ", multiplier="
-      ^ pretty_print_expression e2 ^ ">"
-  | Ordered -> ""
-  | PositiveOrdered -> ""
-  | Simplex -> ""
-  | UnitVector -> ""
-  | CholeskyCorr -> ""
-  | CholeskyCov -> ""
-  | Correlation -> ""
-  | Covariance -> ""
+and pretty_print_sizedtype st = wrap_fmt pp_sizedtype st
 
-and pretty_print_transformed_type st trans =
-  let unsizedtype_string, sizes_string =
+and pp_transformation ppf = function
+  | Identity -> Fmt.pf ppf ""
+  | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
+  | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
+  | LowerUpper (e1, e2) ->
+      Fmt.pf ppf "<lower=%a, upper=%a>" pp_expression e1 pp_expression e2
+  | Offset e -> Fmt.pf ppf "<offset=%a>" pp_expression e
+  | Multiplier e -> Fmt.pf ppf "<multiplier=%a>" pp_expression e
+  | OffsetMultiplier (e1, e2) ->
+     Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression e1 pp_expression e2
+  | Ordered -> Fmt.pf ppf ""
+  | PositiveOrdered -> Fmt.pf ppf ""
+  | Simplex -> Fmt.pf ppf ""
+  | UnitVector -> Fmt.pf ppf ""
+  | CholeskyCorr -> Fmt.pf ppf ""
+  | CholeskyCov -> Fmt.pf ppf ""
+  | Correlation -> Fmt.pf ppf ""
+  | Covariance -> Fmt.pf ppf ""
+
+and pretty_print_transformation t = wrap_fmt pp_transformation t
+
+and pp_transformed_type ppf (st, trans) =
+  let unsizedtype_fmt, sizes_fmt =
     match st with
-    | Middle.SInt -> (pretty_print_unsizedtype UInt, "")
-    | SReal -> (pretty_print_unsizedtype UReal, "")
+    | Middle.SInt -> (Fmt.const pp_unsizedtype UInt, Fmt.nop)
+    | SReal -> (Fmt.const pp_unsizedtype UReal, Fmt.nop)
     | SVector e ->
-        ( pretty_print_unsizedtype UVector
-        , "[" ^ pretty_print_expression e ^ "]" )
+        ( Fmt.const pp_unsizedtype UVector
+        , Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e)
     | SRowVector e ->
-        ( pretty_print_unsizedtype URowVector
-        , "[" ^ pretty_print_expression e ^ "]" )
+        ( Fmt.const pp_unsizedtype URowVector
+        , Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e)
     | SMatrix (e1, e2) ->
-        ( pretty_print_unsizedtype UMatrix
-        , "[" ^ pretty_print_expression e1 ^ ", " ^ pretty_print_expression e2
-          ^ "]" )
+        ( Fmt.const pp_unsizedtype UMatrix
+        , Fmt.const (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2)
     | SArray _ -> (
       match unwind_sized_array_type st with st, _ ->
-        (pretty_print_sizedtype st, "") )
+        (Fmt.const pp_sizedtype st, Fmt.nop) )
   in
-  let cov_sizes_string =
+  let cov_sizes_fmt =
     match st with
     | SMatrix (e1, e2) ->
-        if e1 = e2 then "[" ^ pretty_print_expression e1 ^ "]"
+        if e1 = e2 then Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e1
         else
-          "[" ^ pretty_print_expression e1 ^ ", " ^ pretty_print_expression e2
-          ^ "]"
-    | _ -> ""
+          Fmt.const (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
+    | _ -> Fmt.nop
   in
   match trans with
-  | Identity -> pretty_print_sizedtype st
+  | Identity -> pp_sizedtype ppf st
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
-   |OffsetMultiplier _ ->
-      unsizedtype_string ^ pretty_print_transformation trans ^ sizes_string
-  | Ordered -> "ordered" ^ sizes_string
-  | PositiveOrdered -> "positive_ordered" ^ sizes_string
-  | Simplex -> "simplex" ^ sizes_string
-  | UnitVector -> "unit_vector" ^ sizes_string
-  | CholeskyCorr -> "cholesky_factor_corr" ^ cov_sizes_string
-  | CholeskyCov -> "cholesky_factor_cov" ^ cov_sizes_string
-  | Correlation -> "corr_matrix" ^ cov_sizes_string
-  | Covariance -> "cov_matrix" ^ cov_sizes_string
+    |OffsetMultiplier _ -> Fmt.pf ppf "%a%a%a" unsizedtype_fmt () sizes_fmt () pp_transformation trans
+  | Ordered -> Fmt.pf ppf "ordered%a" sizes_fmt ()
+  | PositiveOrdered -> Fmt.pf ppf "positive_ordered%a" sizes_fmt ()
+  | Simplex -> Fmt.pf ppf "simplex%a" sizes_fmt ()
+  | UnitVector -> Fmt.pf ppf "unit_vector%a" sizes_fmt ()
+  | CholeskyCorr -> Fmt.pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
+  | CholeskyCov -> Fmt.pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
+  | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
+  | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt ()
 
-and pretty_print_array_dims = function
-  | [] -> ""
-  | es -> "[" ^ pretty_print_list_of_expression (List.rev es) ^ "]"
+and pretty_print_transformed_type st trans = wrap_fmt pp_transformed_type (st, trans)
+
+and pp_array_dims ppf = function
+  | [] -> Fmt.pf ppf ""
+  | es -> Fmt.pf ppf "[%a]" pp_list_of_expression (List.rev es)
+
+and pretty_print_array_dims d = wrap_fmt pp_array_dims d
 
 and pretty_print_statement {stmt= s_content; _} =
   match s_content with
