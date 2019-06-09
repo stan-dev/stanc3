@@ -38,7 +38,7 @@ class eight_schools_ncp_model : public prob_grad {
     (void) function__;  // suppress unused var warning
     
     
-    J = context__.vals_i("J")[(1 - 1)];
+    J = context__.vals_i("J")[0];
     check_greater_or_equal(function__, "J", J, 0);
     y = std::vector<double>(J, 0);
     
@@ -241,10 +241,10 @@ class eight_schools_ncp_model : public prob_grad {
     {
       double mu;
       
-      mu = context__.vals_r("mu")[(1 - 1)];
+      mu = context__.vals_r("mu")[0];
       double tau;
       
-      tau = context__.vals_r("tau")[(1 - 1)];
+      tau = context__.vals_r("tau")[0];
       tau = lb_free(tau, 0);
       std::vector<double> theta_tilde;
       theta_tilde = std::vector<double>(J, 0);
@@ -358,9 +358,9 @@ class one_var_per_block_model : public prob_grad {
     (void) function__;  // suppress unused var warning
     
     
-    N = context__.vals_i("N")[(1 - 1)];
+    N = context__.vals_i("N")[0];
     
-    K = context__.vals_i("K")[(1 - 1)];
+    K = context__.vals_i("K")[0];
     datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
     
     pos__ = 1;

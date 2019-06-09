@@ -291,6 +291,8 @@ and pp_expr ppf e =
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
+  | Indexed (e, [Single {expr= Lit (Int, i); _}]) ->
+      pf ppf "%a[%d]" pp_expr e (int_of_string i - 1)
   | Indexed (e, idx) -> (
     match e.expr with
     | FunApp (CompilerInternal, f, _)
