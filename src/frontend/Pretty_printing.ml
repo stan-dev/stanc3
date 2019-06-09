@@ -296,22 +296,24 @@ and pp_statement ppf {stmt= s_content; _} =
        pp_expression e
        pp_statement s
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
-     Fmt.pf ppf "for (%a in %a : %a) %a"
-       pp_identifier id
-       pp_expression e1
-       pp_expression e2
-       pp_statement s
+     with_vbox ppf 0 (fun () ->
+         Fmt.pf ppf "for (%a in %a : %a) %a"
+           pp_identifier id
+           pp_expression e1
+           pp_expression e2
+           pp_statement s);
   | ForEach (id, e, s) ->
      Fmt.pf ppf "for (%a in %a) %a"
        pp_identifier id
        pp_expression e
        pp_statement s
   | Block vdsl ->
-     with_vbox ppf 0 (fun () ->
-         Fmt.pf ppf "{";
-         Format.pp_print_cut ppf ();
-         pp_list_of_statements ppf vdsl;
-         Fmt.pf ppf "}";)
+     Fmt.pf ppf "{";
+     Format.pp_print_cut ppf ();
+     with_indented_box ppf 2 0 (fun () ->
+         pp_list_of_statements ppf vdsl;);
+     Format.pp_print_cut ppf ();
+     Fmt.pf ppf "}";
   | VarDecl
       { sizedtype= st
       ; transformation= trans
