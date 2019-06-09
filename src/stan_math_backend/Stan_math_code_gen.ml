@@ -605,16 +605,18 @@ let escape_name str =
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
-    { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; smeta= no_span }
-    :: List.concat_map ~f:add_pos_reset stmts
+    List.concat_map ~f:add_pos_reset stmts
     |> List.map ~f:use_pos_in_readdata
     |> List.concat_map ~f:invert_read_fors
   in
   let p =
     { p with
       prog_name= escape_name p.prog_name
-    ; prepare_data= fix_data_reads p.prepare_data
+    ; prepare_data=
+        { stmt=
+            Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
+        ; smeta= no_span }
+        :: fix_data_reads p.prepare_data
     ; transform_inits= fix_data_reads p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
