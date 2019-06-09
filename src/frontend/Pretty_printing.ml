@@ -360,9 +360,12 @@ and pp_program ppf = function
       | None ->
          Fmt.pf ppf "";
       | Some x ->
-         Fmt.pf ppf "functions {" ;
-         Format.pp_print_cut ppf () ;
-         pp_list_of_statements ppf x ;
+         Fmt.pf ppf "functions {";
+         Format.pp_print_cut ppf ();
+         with_indented_box ppf 2 0 (fun () ->
+             pp_list_of_statements ppf x;
+             ());
+         Format.pp_print_cut ppf ();
          Fmt.pf ppf "}";
          Format.pp_print_cut ppf ()
     );
@@ -382,7 +385,10 @@ and pp_program ppf = function
       | Some x ->
          Fmt.pf ppf "transformed data {" ;
          Format.pp_print_cut ppf ();
-         pp_list_of_statements ppf x;
+         with_indented_box ppf 2 0 (fun () ->
+             pp_list_of_statements ppf x;
+             ());
+         Format.pp_print_cut ppf ();
          Fmt.pf ppf "}";
          Format.pp_print_cut ppf ();
     ) ;
@@ -403,7 +409,10 @@ and pp_program ppf = function
       | Some x ->
          Fmt.pf ppf "transformed parameters {";
          Format.pp_print_cut ppf ();
-         pp_list_of_statements ppf x;
+         with_indented_box ppf 2 0 (fun () ->
+             pp_list_of_statements ppf x;
+             ());
+         Format.pp_print_cut ppf ();
          Fmt.pf ppf "}";
          Format.pp_print_cut ppf ();
     ) ;
@@ -424,7 +433,10 @@ and pp_program ppf = function
       | Some x ->
          Fmt.pf ppf "generated quantities {" ;
          Format.pp_print_cut ppf ();
-         pp_list_of_statements ppf x;
+         with_indented_box ppf 2 0 (fun () ->
+             pp_list_of_statements ppf x;
+             ());
+         Format.pp_print_cut ppf ();
          Fmt.pf ppf "}" ;
          Format.pp_print_cut ppf ();
     ) ;
