@@ -239,8 +239,6 @@ class eight_schools_ncp_model : public prob_grad {
     std::vector<double> vals_r__;
     std::vector<int> vals_i__;
     {
-      int pos__;
-      
       double mu;
       
       mu = context__.vals_r("mu")[(1 - 1)];
@@ -677,8 +675,6 @@ class one_var_per_block_model : public prob_grad {
     std::vector<double> vals_r__;
     std::vector<int> vals_i__;
     {
-      int pos__;
-      
       std::vector<Eigen::Matrix<double, -1, 1>> param;
       param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
