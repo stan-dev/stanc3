@@ -226,6 +226,9 @@ let pp_prog pp_e pp_s ppf prog =
 let rec pp_expr_typed_located ppf {expr; _} =
   pp_expr pp_expr_typed_located ppf expr
 
+let pp_indexed_typed ppf (vident, idcs) =
+  pp_indexed pp_expr_typed_located ppf (vident, idcs)
+
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 

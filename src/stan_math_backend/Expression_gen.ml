@@ -38,6 +38,18 @@ let local_scalar ut = function
   | DataOnly -> stantype_prim_str ut
   | AutoDiffable -> "local_scalar_t__"
 
+let rec unwind_unsized_type ut =
+  match ut with
+  | UArray t -> ut :: unwind_unsized_type t
+  | UMatrix -> [ut; ut]
+  | URowVector | UVector -> [ut]
+  | _ -> []
+
+let%expect_test "unwind_unsized_type" =
+  [%sexp (unwind_unsized_type (UArray (UArray UMatrix)) : unsizedtype list)]
+  |> Sexp.to_string_hum |> print_endline ;
+  [%expect {| ((UArray (UArray UMatrix)) (UArray UMatrix) UMatrix UMatrix) |}]
+
 (* stub *)
 let rec pp_return_type ppf = function
   | Void -> pf ppf "void"
@@ -179,16 +191,16 @@ and gen_misc_special_math_app f =
   | _ -> None
 
 and read_data ut ppf es =
-  let i_or_r =
+  let rec i_or_r ut =
     match ut with
     | UInt -> "i"
     | UReal -> "r"
-    | UVector | URowVector | UMatrix | UArray _
-     |UFun (_, _)
-     |UMathLibraryFunction ->
+    | UVector | URowVector | UMatrix -> "r"
+    | UArray t -> i_or_r t
+    | UFun (_, _) | UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : unsizedtype)]
   in
-  pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
+  pf ppf "context__.vals_%s(%a)" (i_or_r ut) pp_expr (List.hd_exn es)
 
 and gen_distribution_app f =
   if Utils.is_propto_distribution f then
@@ -262,15 +274,28 @@ and pp_compiler_internal_fn ut f ppf es =
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
-and pp_indexed_simple ppf (vident, idcs) =
+and pp_indexed_single ppf (var, idcs) =
   let minus_one e =
-    { expr= FunApp (StanLib, string_of_operator Minus, [e; loop_bottom])
-    ; emeta= e.emeta }
+    { e with
+      expr=
+        ( match e.expr with
+        | Lit (Int, i) -> Lit (Int, string_of_int (int_of_string i - 1))
+        | _ -> FunApp (StanLib, string_of_operator Minus, [e; loop_bottom]) )
+    }
   in
-  let idx_minus_one = map_index minus_one in
-  (Middle.Pretty.pp_indexed pp_expr)
-    ppf
-    (vident, List.map ~f:idx_minus_one idcs)
+  let pp_idx ppf (t, idx) =
+    match t with
+    | UMatrix | UVector | URowVector -> pf ppf ".coeff(%a)" pp_expr idx
+    | _ -> pf ppf "[%a]" pp_expr idx
+  in
+  pf ppf "%a%a" pp_expr var (list ~sep:nop pp_idx)
+    List.(
+      idcs
+      |> map ~f:(function
+           | Single e -> e
+           | _ -> raise_s [%message "only works with Single indices"] )
+      |> map ~f:minus_one
+      |> zip_exn (take (unwind_unsized_type var.emeta.mtype) (length idcs)))
 
 and pp_expr ppf e =
   match e.expr with
@@ -290,17 +315,18 @@ and pp_expr ppf e =
       let tform ppf = pf ppf "(@[<hov>%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
-  | Indexed (e, [Single {expr= Lit (Int, i); _}]) ->
-      pf ppf "%a[%d]" pp_expr e (int_of_string i - 1)
-  | Indexed (e, idx) -> (
-    match e.expr with
-    | FunApp (CompilerInternal, f, _)
-      when Some FnReadParam = internal_fn_of_string f ->
-        pp_expr ppf e
-    | FunApp (CompilerInternal, f, _)
-      when Some FnReadData = internal_fn_of_string f ->
-        pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
-    | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
+  | Indexed (e, []) -> pp_expr ppf e
+  | Indexed (({expr= FunApp (CompilerInternal, f, _); _} as e), _)
+    when Some FnReadParam = internal_fn_of_string f ->
+      pp_expr ppf e
+  | Indexed (({expr= FunApp (CompilerInternal, f, _); _} as e), idx)
+    when Some FnReadData = internal_fn_of_string f ->
+      pp_indexed_single ppf (e, idx)
+  | Indexed (e, idcs)
+    when List.for_all ~f:(function Single _ -> true | _ -> false) idcs ->
+      pp_indexed_single ppf (e, idcs)
+  | Indexed (e, idcs) ->
+      pp_indexed ppf (strf "%a" pp_expr e, idcs, pretty_print e)
 
 (* these functions are just for testing *)
 let dummy_locate e =

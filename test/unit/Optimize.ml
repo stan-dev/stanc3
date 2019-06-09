@@ -3418,7 +3418,7 @@ let%expect_test "adlevel_optimization expressions" =
                (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))
               ((expr (Lit Str scalar))
                (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly)))))))
-           (emeta ((mtype UReal) (mloc <opaque>) (madlevel DataOnly))))))
+           (emeta ((mtype (UArray UReal)) (mloc <opaque>) (madlevel DataOnly))))))
         (smeta <opaque>))
        ((stmt
          (Block

@@ -119,13 +119,6 @@ let rec pp_statement (ppf : Format.formatter)
   | Assignment ((vident, []), rhs) -> pf ppf "%s = %a;" vident pp_expr rhs
   | Assignment ((vident, [Single {expr= Lit (Int, i); _}]), rhs) ->
       pf ppf "%s[%d] = %a;" vident (int_of_string i - 1) pp_expr rhs
-  | Assignment (lhs, {expr= Lit (Str, s); _}) ->
-      pf ppf "%a = %S;" pp_indexed_simple lhs s
-  | Assignment (lhs, {expr= Lit (_, s); _}) ->
-      pf ppf "%a = %s;" pp_indexed_simple lhs s
-  | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
-    when internal_fn_of_string f = Some FnMakeArray ->
-      pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
       (*
 Assignment Statements
@@ -143,7 +136,7 @@ If a = b
 *)
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
-        (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
+        (strf "assigning variable %a" Pretty.pp_indexed_typed (assignee, idcs))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->

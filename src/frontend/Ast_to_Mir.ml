@@ -324,7 +324,8 @@ let read_decl dread decl_id transform sizedtype smeta decl_var =
   in
   let readfname = internal_of_dread dread in
   let readfn var =
-    internal_funapp readfname args {var.emeta with mtype= base_type sizedtype}
+    internal_funapp readfname args
+      {var.emeta with mtype= UArray (base_type sizedtype)}
   in
   let readvar var =
     match var.expr with
