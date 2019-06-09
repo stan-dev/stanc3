@@ -12,6 +12,21 @@ let begin_indent _ = indent_num := 1 + !indent_num
 let exit_indent _ = indent_num := -1 + !indent_num
 let tabs () = String.make (2 * !indent_num) ' '
 let wrap_fmt fmt x = x |> fmt Format.str_formatter |> Format.flush_str_formatter
+let with_hbox ppf f =
+  Format.pp_open_hbox ppf ();
+  f ();
+  Format.pp_close_box ppf ();
+  ()
+let with_box ppf offset f =
+  Format.pp_open_box ppf offset;
+  f ();
+  Format.pp_close_box ppf ();
+  ()
+let with_vbox ppf offset f =
+  Format.pp_open_vbox ppf offset;
+  f ();
+  Format.pp_close_box ppf ();
+  ()
 
 let rec unwind_sized_array_type = function
   | Middle.SArray (st, e) -> (
@@ -257,10 +272,9 @@ and pp_statement ppf {stmt= s_content; _} =
      Fmt.pf ppf "if (%a) %a"
        pp_expression e
        pp_statement s1;
-     Format.pp_open_vbox ppf 0;
-     Format.pp_print_cut ppf () ;
-     Fmt.pf ppf "else %a" pp_statement s2;
-     Format.close_box () ;
+     with_vbox ppf 0 (fun () ->
+         Format.pp_print_cut ppf () ;
+         Fmt.pf ppf "else %a" pp_statement s2;)
   | While (e, s) ->
      Fmt.pf ppf "while(%a) %a"
        pp_expression e
@@ -277,14 +291,11 @@ and pp_statement ppf {stmt= s_content; _} =
        pp_expression e
        pp_statement s
   | Block vdsl ->
-     Format.pp_open_vbox ppf 0 ;
-     Fmt.pf ppf "{" ;
-     Format.pp_print_cut ppf () ;
-     Format.pp_open_hovbox ppf 2 ;
-     pp_list_of_statements ppf vdsl ;
-     Format.pp_close_box ppf () ;
-     Fmt.pf ppf "}" ;
-     Format.pp_close_box ppf () ;
+     with_vbox ppf 0 (fun () ->
+         Fmt.pf ppf "{";
+         Format.pp_print_cut ppf ();
+         pp_list_of_statements ppf vdsl;
+         Fmt.pf ppf "}";)
   | VarDecl
       { sizedtype= st
       ; transformation= trans
@@ -318,10 +329,8 @@ and pp_args ppf (at, ut, id) =
     pp_identifier id
 
 and pp_list_of_statements ppf l =
-  Format.pp_open_vbox ppf 0 ;
-  Format.pp_print_list pp_statement ppf l ;
-  Format.pp_print_cut ppf ();
-  Format.pp_close_box ppf () ;
+  with_vbox ppf 0 (fun () ->
+      Format.pp_print_list pp_statement ppf l;)
 
 and pp_program ppf = function
   | { functionblock= bf
@@ -347,7 +356,11 @@ and pp_program ppf = function
       | Some x ->
          Fmt.pf ppf "data {" ;
          Format.pp_print_cut ppf ();
-         pp_list_of_statements ppf x ;
+         with_hbox ppf (fun () ->
+             Format.pp_print_space ppf ();
+             Format.pp_print_space ppf ();
+             with_box ppf 0 (fun () -> pp_list_of_statements ppf x; ()));
+         Format.pp_print_cut ppf ();
          Fmt.pf ppf "}" ;
          Format.pp_print_cut ppf ();
     );
