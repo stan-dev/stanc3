@@ -18,7 +18,6 @@ def tagName() {
         'unknown-tag'
     }
 }
-
 pipeline {
     agent none
     stages {
@@ -37,21 +36,14 @@ pipeline {
                     dune build @install
                 """)
 
-                runShell("echo \$(date +'%s') > time.log")
+                echo runShell("eval \$(opam env); dune runtest --verbose")
 
-                echo runShell("""
-                    eval \$(opam env)
-                    dune runtest --verbose
-                """)
-
-                echo runShell("echo \"It took \$((\$(date +'%s') - \$(cat time.log))) seconds to run the tests\"")
-
-                sh "mkdir bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run stat_comp_benchmarks end-to-end") {
+        stage("Run (working) stat_comp_benchmarks end-to-end") {
             when { not { anyOf { buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
@@ -61,12 +53,22 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh stat_comp_benchmarks develop stanc3-dev develop develop
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
+           cd ..
                """
+                junit 'performance-tests-cmdstan/performance.xml'
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run all working models end-to-end") {
+        // This stage is just gonna try to run all the models we normally
+        // do for regression testing
+        // and log all the failures. It'll make a big nasty red graph
+        // that becomes blue over time as we fix more models :)
+        stage("Try to run all models end-to-end") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
@@ -76,10 +78,28 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file ../notes/working-models.txt" develop stanc3-dev develop develop
+          cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
+          cat all.tests
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=100" develop stanc3-dev develop develop || true
                """
+
+                xunit([GoogleTest(
+                    deleteOutputFiles: false,
+                    failIfNotNew: true,
+                    pattern: 'performance-tests-cmdstan/performance.xml',
+                    skipNoTestFiles: false,
+                    stopProcessingIfError: false)])
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false,
+                    excludeResponseTime: true,
+                    errorFailedThreshold: 100,
+                    errorUnstableThreshold: 100
             }
-            post { always { runShell("rm -rf ./*")} }
+            post { always {
+                runShell("rm -rf ./*")
+            } }
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
@@ -100,7 +120,7 @@ pipeline {
                     time dune runtest --verbose
                 """)
 
-                        sh "mkdir bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         stash name:'mac-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
@@ -125,7 +145,7 @@ pipeline {
                     time dune runtest --profile static --verbose
                 """)
 
-                        sh "mkdir bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         stash name:'linux-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
