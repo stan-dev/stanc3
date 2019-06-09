@@ -116,9 +116,13 @@ let rec pp_statement (ppf : Format.formatter)
                             "assigning variable theta");
             }
         *)
-  | Assignment ((vident, []), rhs) -> pf ppf "%s = %a;" vident pp_expr rhs
-  | Assignment ((vident, [Single {expr= Lit (Int, i); _}]), rhs) ->
-      pf ppf "%s[%d] = %a;" vident (int_of_string i - 1) pp_expr rhs
+  | Assignment ((vident, []), rhs) ->
+      pf ppf "%s = %a;" vident pp_expr rhs
+      (* XXX fix this once we get good types on LHS
+  | Assignment ((vident, idcs), rhs)
+     when List.for_all ~f:(function Single _ -> true | _ -> false) idcs ->
+      pp_indexed_single ppf ({expr=Var vident; emeta= ????}, idcs)
+                                  *)
   | Assignment ((assignee, idcs), rhs) ->
       (*
 Assignment Statements
