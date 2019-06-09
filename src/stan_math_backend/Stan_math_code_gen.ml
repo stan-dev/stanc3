@@ -523,9 +523,9 @@ let add_pos_reset ({stmt; smeta} as s) =
 let invert_read_fors ({stmt; smeta} as s) =
   let rec unwind s =
     match s.stmt with
-    | For {loopvar; lower; upper; body= {stmt= Block (bdhd :: bdtl); _}} ->
-        let final, args = unwind bdhd in
-        (final @ bdtl, (loopvar, lower, upper) :: args)
+    | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
+        let final, args = unwind body in
+        (final, (loopvar, lower, upper) :: args)
     | _ -> ([s], [])
   in
   match stmt with
@@ -605,9 +605,10 @@ let escape_name str =
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
-    List.concat_map ~f:add_pos_reset stmts
-    |> List.map ~f:use_pos_in_readdata
+    stmts
     |> List.concat_map ~f:invert_read_fors
+    |> List.concat_map ~f:add_pos_reset
+    |> List.map ~f:use_pos_in_readdata
   in
   let p =
     { p with
