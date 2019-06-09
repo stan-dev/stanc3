@@ -472,61 +472,104 @@ using stan::math::lgamma;
 using stan::model::prob_grad;
 using namespace stan::math; |}
 
-let rec xform_readdata sizes s =
-  let get_single_size = function
-    | Single e -> e
-    | x ->
-        raise_s
-          [%message
-            "expecting ReadData to just have Single indices"
-              (x : mtype_loc_ad with_expr index)]
+let rec expr_contains_fn fname accum e =
+  match e.expr with
+  | FunApp (_, name, _) when name = fname -> true
+  | x -> fold_expr (expr_contains_fn fname) accum x
+
+let%test "expr contains fn" =
+  internal_funapp FnReadData [] ()
+  |> expr_contains_fn (string_of_internal_fn FnReadData) false
+
+let rec contains_fn fname accum {stmt; _} =
+  fold_statement (expr_contains_fn fname)
+    (fun accum s ->
+      fold_statement (expr_contains_fn fname) (contains_fn fname) accum s.stmt
+      )
+    accum stmt
+
+let fake_stmt stmt = {stmt; smeta= no_span}
+
+let fake_for emeta body =
+  let ten = {expr= Lit (Int, "10"); emeta} in
+  For {loopvar= "lv"; lower= ten; upper= ten; body= fake_stmt (Block [body])}
+  |> fake_stmt
+
+let%test "contains fn" =
+  let f =
+    fake_for ()
+      (fake_for ()
+         (fake_stmt (Assignment (("v", []), internal_funapp FnReadData [] ()))))
   in
-  let get_index_sizes idcs = List.map ~f:get_single_size idcs in
-  match s.stmt with
-  | Assignment
-      ( lhs
-      , { expr=
-            Indexed
-              ( ({expr= FunApp (CompilerInternal, f, _); emeta} as fnapp)
-              , idc1 :: idc2 :: idcs ); _ } )
+  contains_fn
+    (string_of_internal_fn FnReadData)
+    false
+    (fake_stmt (Block [f; fake_stmt Break]))
+
+let pos = "pos__"
+let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
+
+let add_pos_reset ({stmt; smeta} as s) =
+  match stmt with
+  | For {body; _}
+    when contains_fn (string_of_internal_fn FnReadData) false body ->
+      [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
+  | _ -> [s]
+
+let rec use_pos_in_readdata {stmt; smeta} =
+  match stmt with
+  | Block
+      [ { stmt=
+            Assignment
+              ( lhs
+              , { expr=
+                    Indexed
+                      ( ( {expr= FunApp (CompilerInternal, f, _); emeta} as
+                        fnapp )
+                      , _ ); _ } )
+        ; smeta } ]
     when internal_fn_of_string f = Some FnReadData ->
-      let index_sizes = get_index_sizes (idc1 :: idc2 :: idcs) in
-      let all_but_last_index_sizes =
-        Utils.all_but_last_n index_sizes 1
-        |> List.map ~f:(fun e ->
-               binop e Minus {expr= Lit (Int, "1"); emeta= internal_meta} )
-      in
-      let open List in
-      let index =
-        zip_exn (Utils.all_but_last_n sizes 1) all_but_last_index_sizes
-        |> fold ~init:(last_exn index_sizes) ~f:(fun a (v, i) ->
-               binop a Plus (binop v Times i) )
-        |> Single
-      in
-      { stmt= Assignment (lhs, {expr= Indexed (fnapp, [index]); emeta})
-      ; smeta= s.smeta }
-  | For {upper; _} as f ->
-      { stmt= map_statement Fn.id (xform_readdata (sizes @ [upper])) f
-      ; smeta= s.smeta }
-  | x -> {stmt= map_statement Fn.id (xform_readdata sizes) x; smeta= s.smeta}
+      let pos_var = {expr= Var pos; emeta= internal_meta} in
+      { stmt=
+          Block
+            [ { stmt=
+                  Assignment
+                    (lhs, {expr= Indexed (fnapp, [Single pos_var]); emeta})
+              ; smeta }
+            ; { stmt= Assignment ((pos, []), binop pos_var Plus (mir_int 1))
+              ; smeta } ]
+      ; smeta }
+  | x -> {stmt= map_statement Fn.id use_pos_in_readdata x; smeta}
 
 let%expect_test "xform_readdata" =
-  let fake_for body =
+  let fake_for i body =
     let swrap stmt = {stmt; smeta= ()} in
-    let ten = {expr= Lit (Int, "10"); emeta= internal_meta} in
-    For {loopvar= "lv"; lower= ten; upper= ten; body} |> swrap
+    let ten = {expr= Lit (Int, i); emeta= internal_meta} in
+    For
+      { loopvar= "lv"
+      ; lower= ten
+      ; upper= ten
+      ; body= {stmt= Block [body]; smeta= ()} }
+    |> swrap
   in
   let idx v = Single {expr= Var v; emeta= internal_meta} in
   let read = internal_funapp FnReadData [] internal_meta in
-  let idcs = [idx "i"; idx "j"] in
+  let idcs = [idx "i"; idx "j"; idx "k"] in
   let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
-  fake_for (fake_for {stmt= Assignment (("v", idcs), indexed); smeta= ()})
-  |> xform_readdata []
-  |> strf "%a" Pretty.pp_stmt_loc
+  fake_for "7"
+    (fake_for "8"
+       (fake_for "9" {stmt= Assignment (("v", idcs), indexed); smeta= ()}))
+  |> use_pos_in_readdata
+  |> strf "@[<h>%a@]" Pretty.pp_stmt_loc
   |> print_endline ;
   [%expect
     {|
-    for(lv in 10:10) for(lv in 10:10) v[i, j] = FnReadData__()[(j + (10 * (i - 1)))]; |}]
+    for(lv in 7:7) { for(lv in 8:8) {
+                       for(lv in 9:9) {
+                         v[i, j, k] = FnReadData__()[pos__];
+                         pos__ = (pos__ + 1);
+                       }
+                     } } |}]
 
 let escape_name str =
   str
@@ -535,11 +578,17 @@ let escape_name str =
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
+  let fix_data_reads stmts =
+    { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
+    ; smeta= no_span }
+    :: List.concat_map ~f:add_pos_reset stmts
+    |> List.map ~f:use_pos_in_readdata
+  in
   let p =
     { p with
       prog_name= escape_name p.prog_name
-    ; prepare_data= List.map ~f:(xform_readdata []) p.prepare_data
-    ; transform_inits= List.map ~f:(xform_readdata []) p.transform_inits }
+    ; prepare_data= fix_data_reads p.prepare_data
+    ; transform_inits= fix_data_reads p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
