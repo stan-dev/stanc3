@@ -488,28 +488,28 @@ let rec contains_fn fname accum {stmt; _} =
       )
     accum stmt
 
-let fake_stmt stmt = {stmt; smeta= no_span}
+let mock_stmt stmt = {stmt; smeta= no_span}
 let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
-let fake_for i body =
+let mock_for i body =
   For
     { loopvar= "lv"
     ; lower= mir_int 0
     ; upper= mir_int i
-    ; body= fake_stmt (Block [body]) }
-  |> fake_stmt
+    ; body= mock_stmt (Block [body]) }
+  |> mock_stmt
 
 let%test "contains fn" =
   let f =
-    fake_for 8
-      (fake_for 9
-         (fake_stmt
+    mock_for 8
+      (mock_for 9
+         (mock_stmt
             (Assignment (("v", []), internal_funapp FnReadData [] internal_meta))))
   in
   contains_fn
     (string_of_internal_fn FnReadData)
     false
-    (fake_stmt (Block [f; fake_stmt Break]))
+    (mock_stmt (Block [f; mock_stmt Break]))
 
 let pos = "pos__"
 
@@ -542,8 +542,8 @@ let invert_read_fors ({stmt; smeta} as s) =
   | _ -> [s]
 
 let%expect_test "invert read fors" =
-  fake_for 8
-    (fake_for 9
+  mock_for 8
+    (mock_for 9
        { stmt=
            NRFunApp
              (StanLib, "print", [internal_funapp FnReadData [] internal_meta])
@@ -582,9 +582,9 @@ let%expect_test "xform_readdata" =
   let read = internal_funapp FnReadData [] internal_meta in
   let idcs = [idx "i"; idx "j"; idx "k"] in
   let indexed = {expr= Indexed (read, idcs); emeta= internal_meta} in
-  fake_for 7
-    (fake_for 8
-       (fake_for 9 {stmt= Assignment (("v", idcs), indexed); smeta= no_span}))
+  mock_for 7
+    (mock_for 8
+       (mock_for 9 {stmt= Assignment (("v", idcs), indexed); smeta= no_span}))
   |> use_pos_in_readdata
   |> strf "@[<h>%a@]" Pretty.pp_stmt_loc
   |> print_endline ;
@@ -605,16 +605,18 @@ let escape_name str =
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
-    { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; smeta= no_span }
-    :: List.concat_map ~f:add_pos_reset stmts
+    List.concat_map ~f:add_pos_reset stmts
     |> List.map ~f:use_pos_in_readdata
     |> List.concat_map ~f:invert_read_fors
   in
   let p =
     { p with
       prog_name= escape_name p.prog_name
-    ; prepare_data= fix_data_reads p.prepare_data
+    ; prepare_data=
+        { stmt=
+            Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
+        ; smeta= no_span }
+        :: fix_data_reads p.prepare_data
     ; transform_inits= fix_data_reads p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
