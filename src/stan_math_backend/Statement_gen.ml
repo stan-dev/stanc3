@@ -141,8 +141,8 @@ If a[idxs] = b
 If a = b
   stan::math::assign(a', b')
 *)
-      pf ppf "stan::model::assign(@[<hov>%s, %a, %a, %S@]);" assignee
-        pp_indexes idcs pp_expr rhs
+      pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
+        pp_expr rhs
         (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)

@@ -470,6 +470,15 @@ using std::vector;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::prob_grad;
+using stan::model::assign;
+using stan::model::cons_list;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::nil_index_list;
 using namespace stan::math; |}
 
 let rec expr_contains_fn fname accum e =
