@@ -117,6 +117,8 @@ let rec pp_statement (ppf : Format.formatter)
             }
         *)
   | Assignment ((vident, []), rhs) -> pf ppf "%s = %a;" vident pp_expr rhs
+  | Assignment ((vident, [Single {expr= Lit (Int, i); _}]), rhs) ->
+      pf ppf "%s[%d] = %a;" vident (int_of_string i - 1) pp_expr rhs
   | Assignment (lhs, {expr= Lit (Str, s); _}) ->
       pf ppf "%a = %S;" pp_indexed_simple lhs s
   | Assignment (lhs, {expr= Lit (_, s); _}) ->
