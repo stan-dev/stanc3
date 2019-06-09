@@ -83,18 +83,17 @@ let suffix_args f =
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
 
 let rec pp_index ppf = function
-  | All -> pf ppf "stan::model::index_omni()"
-  | Single e -> pf ppf "stan::model::index_uni(%a)" pp_expr e
-  | Upfrom e -> pf ppf "stan::model::index_min(%a)" pp_expr e
-  | Downfrom e -> pf ppf "stan::model::index_max(%a)" pp_expr e
+  | All -> pf ppf "index_omni()"
+  | Single e -> pf ppf "index_uni(%a)" pp_expr e
+  | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
+  | Downfrom e -> pf ppf "index_max(%a)" pp_expr e
   | Between (e_low, e_high) ->
-      pf ppf "stan::model::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
-  | MultiIndex e -> pf ppf "stan::model::index_multi(%a)" pp_expr e
+      pf ppf "index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
+  | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
-  | [] -> pf ppf "stan::model::nil_index_list()"
-  | idx :: idxs ->
-      pf ppf "stan::model::cons_list(%a, %a)" pp_index idx pp_indexes idxs
+  | [] -> pf ppf "nil_index_list()"
+  | idx :: idxs -> pf ppf "cons_list(%a, %a)" pp_index idx pp_indexes idxs
 
 and pp_logical_op ppf op lhs rhs =
   pf ppf "(stan::math::value(%a) %s stan::math::value(%a))" pp_expr lhs op
@@ -354,7 +353,7 @@ let%expect_test "pp_expr9" =
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
   [%expect
-    {| stan::model::rvalue(a, stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list()), "pretty printed e") |}]
+    {| stan::model::rvalue(a, cons_list(index_omni(), nil_index_list()), "pretty printed e") |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"
