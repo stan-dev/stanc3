@@ -308,7 +308,7 @@ and pp_statement ppf {stmt= s_content; _} =
         | None -> Fmt.pf ppf ""
         | Some e -> Fmt.pf ppf " = %a" pp_expression e
       in
-      Fmt.pf ppf "%a %a %a %a;"
+      Fmt.pf ppf "%a %a%a%a;"
         pp_transformed_type (st2, trans)
         pp_identifier id
         pp_array_dims es
