@@ -869,11 +869,11 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
   match lhs with
   | {expr= Indexed ({expr= Variable id; _}, idx); emeta= {loc; ad_level; type_}}
     ->
-      ignore ad_level ;
-      ignore type_ ;
       Assignment
         { assign_lhs=
-            {assign_identifier= id; assign_indices= idx; assign_meta= {loc}}
+            { assign_identifier= id
+            ; assign_indices= idx
+            ; assign_meta= {loc; ad_level; type_} }
         ; assign_op= assop
         ; assign_rhs= rhs }
   | _ -> fatal_error ()
