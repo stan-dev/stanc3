@@ -164,10 +164,7 @@ let rec for_scalar st bodyfn var smeta =
   | SInt | SReal -> bodyfn var
   | SVector d | SRowVector d -> mkfor d bodyfn var smeta
   | SMatrix (d1, d2) ->
-      mkfor
-        { expr= FunApp (StanLib, string_of_operator Times, [d1; d2])
-        ; emeta= {mtype= UInt; mloc= smeta; madlevel= DataOnly} }
-        bodyfn var smeta
+      mkfor d1 (fun e -> for_scalar (SVector d2) bodyfn e smeta) var smeta
   | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
@@ -762,15 +759,21 @@ let%expect_test "read data" =
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1))
-          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+        ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
           (body
            (Block
-            ((Assignment (mat ((Single (Var sym1__)) (Single (Var sym2__))))
-              (Indexed
-               (FunApp CompilerInternal FnReadData__
-                ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
-               ((Single (Var sym1__)) (Single (Var sym2__)))))))))))))) |}]
+            ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
+              (body
+               (Block
+                ((Assignment
+                  (mat
+                   ((Single (Var sym1__)) (Single (Var sym2__))
+                    (Single (Var sym3__))))
+                  (Indexed
+                   (FunApp CompilerInternal FnReadData__
+                    ((Lit Str mat) (Lit Str matrix) (Lit Int 10) (Lit Int 20)))
+                   ((Single (Var sym1__)) (Single (Var sym2__))
+                    (Single (Var sym3__)))))))))))))))))) |}]
 
 let%expect_test "read param" =
   let m = mir_from_string "parameters { matrix<lower=0>[10, 20] mat[5]; }" in
@@ -791,14 +794,21 @@ let%expect_test "read param" =
      (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
       (body
        (Block
-        ((For (loopvar sym2__) (lower (Lit Int 1))
-          (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+        ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
           (body
            (Block
-            ((Assignment (mat ((Single (Var sym1__)) (Single (Var sym2__))))
-              (FunApp CompilerInternal FnConstrain__
-               ((Indexed (Var mat) ((Single (Var sym1__)) (Single (Var sym2__))))
-                (Lit Str lb) (Lit Int 0))))))))))))) |}]
+            ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
+              (body
+               (Block
+                ((Assignment
+                  (mat
+                   ((Single (Var sym1__)) (Single (Var sym2__))
+                    (Single (Var sym3__))))
+                  (FunApp CompilerInternal FnConstrain__
+                   ((Indexed (Var mat)
+                     ((Single (Var sym1__)) (Single (Var sym2__))
+                      (Single (Var sym3__))))
+                    (Lit Str lb) (Lit Int 0))))))))))))))))) |}]
 
 let%expect_test "gen quant" =
   let m =
@@ -815,23 +825,30 @@ let%expect_test "gen quant" =
        ((For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
          (body
           (Block
-           ((For (loopvar sym2__) (lower (Lit Int 1))
-             (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+           ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
              (body
               (Block
-               ((NRFunApp CompilerInternal FnCheck__
-                 ((Lit Str greater_or_equal) (Lit Str "mat[sym1__, sym2__]")
-                  (Indexed (Var mat)
-                   ((Single (Var sym1__)) (Single (Var sym2__))))
-                  (Lit Int 0)))))))))))
+               ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
+                 (body
+                  (Block
+                   ((NRFunApp CompilerInternal FnCheck__
+                     ((Lit Str greater_or_equal)
+                      (Lit Str "mat[sym1__, sym2__, sym3__]")
+                      (Indexed (Var mat)
+                       ((Single (Var sym1__)) (Single (Var sym2__))
+                        (Single (Var sym3__))))
+                      (Lit Int 0)))))))))))))))
         (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
          (body
           (Block
-           ((For (loopvar sym2__) (lower (Lit Int 1))
-             (upper (FunApp StanLib Times__ ((Lit Int 10) (Lit Int 20))))
+           ((For (loopvar sym2__) (lower (Lit Int 1)) (upper (Lit Int 10))
              (body
               (Block
-               ((NRFunApp CompilerInternal FnWriteParam__
-                 ((Indexed (Var mat)
-                   ((Single (Var sym1__)) (Single (Var sym2__))))))))))))))))
+               ((For (loopvar sym3__) (lower (Lit Int 1)) (upper (Lit Int 20))
+                 (body
+                  (Block
+                   ((NRFunApp CompilerInternal FnWriteParam__
+                     ((Indexed (Var mat)
+                       ((Single (Var sym1__)) (Single (Var sym2__))
+                        (Single (Var sym3__))))))))))))))))))))
       ())) |}]
