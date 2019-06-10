@@ -712,6 +712,74 @@ let trans_prog filename p : typed_prog =
 
 (*===================== tests =========================================*)
 
+let%expect_test "Operator-assign example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        model {
+          real r;
+          vector[2] x[4];
+          x[1] ./= r;
+        }
+      |}
+  in
+  let semantic_check_program_exn ast =
+    Option.value_exn
+      (Result.ok
+         (Semantic_check.semantic_check_program
+            (Option.value_exn (Result.ok ast))))
+  in
+  let mir = trans_prog "" (semantic_check_program_exn ast) in
+  print_s [%sexp (mir : typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (input_vars ()) (prepare_data ())
+       (log_prob
+        (((stmt
+           (Block
+            (((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id r)
+                (decl_type (Sized SReal))))
+              (smeta <opaque>))
+             ((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id x)
+                (decl_type
+                 (Sized
+                  (SArray
+                   (SVector
+                    ((expr (Lit Int 2))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                   ((expr (Lit Int 4))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+              (smeta <opaque>))
+             ((stmt
+               (Assignment
+                (x
+                 ((Single
+                   ((expr (Lit Int 1))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                ((expr
+                  (FunApp StanLib EltDivide__
+                   (((expr
+                      (Indexed
+                       ((expr (Var x))
+                        (emeta
+                         ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+                       ((Single
+                         ((expr (Lit Int 1))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                     (emeta
+                      ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+                    ((expr (Var r))
+                     (emeta
+                      ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+                 (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+              (smeta <opaque>)))))
+          (smeta <opaque>))))
+       (generate_quantities ()) (transform_inits ()) (output_vars ())
+       (prog_name "") (prog_path "")) |}]
+
 let mir_from_string s =
   let untyped_prog =
     Parse.parse_string Parser.Incremental.program s
