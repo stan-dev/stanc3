@@ -48,7 +48,6 @@ class eight_schools_ncp_model : public prob_grad {
     
     
     assign(J, nil_index_list(), context__.vals_i("J")[(1 - 1)], "assigning variable J");
-    check_greater_or_equal(function__, "J", J, 0);
     y = std::vector<double>(J, 0);
     
     pos__ = 1;
@@ -65,6 +64,7 @@ class eight_schools_ncp_model : public prob_grad {
                                                                     [(pos__ - 1)], "assigning variable sigma[(sym1__ - 1)]");
       assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
     }
+    check_greater_or_equal(function__, "J", J, 0);
     for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
       check_greater_or_equal(function__, "sigma[sym1__]",
                              stan::model::rvalue(sigma, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"),
@@ -391,14 +391,14 @@ class one_var_per_block_model : public prob_grad {
                context__.vals_r("datavar")[(pos__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
         assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
       }}
+    tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
+    
+    tdatavar = {{2.0}};
     for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
       for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
                                stan::model::rvalue(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
                                0);}}
-    tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
-    
-    tdatavar = {{2.0}};
     for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
       for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
         check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
@@ -461,14 +461,14 @@ class one_var_per_block_model : public prob_grad {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
+      for (size_t n = 1; n <= N; ++n) {
+        assign(tparam, cons_list(index_uni(n), nil_index_list()), multiply(stan::model::rvalue(param, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), 2), "assigning variable tparam[(n - 1)]");
+      }
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
           check_greater_or_equal(function__, "tparam[sym1__, sym2__]",
                                  stan::model::rvalue(tparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
                                  0);}}
-      for (size_t n = 1; n <= N; ++n) {
-        assign(tparam, cons_list(index_uni(n), nil_index_list()), multiply(stan::model::rvalue(param, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), 2), "assigning variable tparam[(n - 1)]");
-      }
       {
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
         modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
