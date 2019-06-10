@@ -53,7 +53,7 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'

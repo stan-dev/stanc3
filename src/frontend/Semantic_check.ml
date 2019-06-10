@@ -266,13 +266,14 @@ let semantic_check_fn_normal ~loc id es =
     | Some (_, UFun (_, Void)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listed_tys, rt))
+    | Some (_, UFun (listedtypes, rt))
       when not
-             (check_compatible_arguments_mod_conv id.name listed_tys
+             (check_compatible_arguments_mod_conv id.name listedtypes
                 (get_arg_types es)) ->
         es
-        |> List.map ~f:(fun e -> e.emeta.type_)
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listed_tys rt
+        |> List.map ~f:type_of_expr_typed
+        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
+             rt
         |> error
     | Some (_, UFun (_, ReturnType ut)) ->
         mk_typed_expression
@@ -409,72 +410,6 @@ let semantic_check_conddist_name ~loc id =
         ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
     then ok ()
     else Semantic_error.conditional_notation_not_allowed loc |> error)
-
-let semantic_check_target_pe ~loc ~cf id =
-  Validate.(
-    if
-      String.is_suffix id.name ~suffix:"_lp"
-      && not (cf.in_lp_fun_def || cf.current_block = Model)
-    then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
-    else ok ())
-
-let semantic_check_cond_dist_app_rt_stanmath_fn ~loc ~returnblock id es =
-  function
-  | Void ->
-      Semantic_error.returning_fn_expected_nonreturning_found loc id.name
-      |> Validate.error
-  | ReturnType ut ->
-      mk_typed_expression
-        ~expr:(CondDistApp (id, es))
-        ~ad_level:returnblock ~type_:ut ~loc
-      |> Validate.ok
-
-let semantic_check_cond_dist_nonrt_stanmath_fn ~loc id es =
-  Validate.(
-    if is_stan_math_function_name id.name then
-      es
-      |> List.map ~f:type_of_expr_typed
-      |> Semantic_error.illtyped_stanlib_fn_app loc id.name
-      |> error
-    else ok ())
-
-(* Check that function arguments match signature  *)
-(* Also check whether function arguments meet data requirement. *)
-let semantic_check_cond_dist_normal_fn ~loc ~returnblock id es =
-  Validate.(
-    match Symbol_table.look vm id.name with
-    | Some (_, UFun (_, Void)) ->
-        Semantic_error.returning_fn_expected_nonreturning_found loc id.name
-        |> error
-    | Some (_, UFun (listedtypes, rt))
-      when not
-             (check_compatible_arguments_mod_conv id.name listedtypes
-                (get_arg_types es)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             rt
-        |> error
-    | Some (_, UFun (_, ReturnType ut)) ->
-        mk_typed_expression
-          ~expr:(CondDistApp (id, es))
-          ~ad_level:returnblock ~type_:ut ~loc
-        |> ok
-    | Some _ ->
-        (* Check that Funaps are actually functions *)
-        Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
-    | None ->
-        Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
-        |> error)
-
-let semantic_check_cond_dist_app ~loc ~returnblock id es =
-  match stan_math_returntype id.name (get_arg_types es) with
-  | Some rt ->
-      semantic_check_cond_dist_app_rt_stanmath_fn ~loc ~returnblock id es rt
-  | _ ->
-      semantic_check_cond_dist_normal_fn ~loc ~returnblock id es
-      |> Validate.apply_const
-           (semantic_check_cond_dist_nonrt_stanmath_fn ~loc id es)
 
 (* -- Array Expressions ----------------------------------------------------- *)
 
@@ -653,29 +588,9 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         ~loc:emeta.loc
       |> Validate.ok
   | FunApp (_, id, es) ->
-      Validate.(
-        es
-        |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
-        >>= fun ues ->
-        semantic_check_fn ~loc:emeta.loc id ues
-        |> apply_const (semantic_check_identifier id)
-        |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
-        |> apply_const (semantic_check_fn_conditioning ~loc:emeta.loc id)
-        |> apply_const
-             (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-        |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
-  | CondDistApp (id, es) ->
-      Validate.(
-        es
-        |> List.map ~f:(semantic_check_expression cf)
-        |> sequence
-        |> apply_const (semantic_check_identifier id)
-        |> apply_const (semantic_check_conddist_name ~loc:emeta.loc id)
-        |> apply_const (semantic_check_target_pe ~loc:emeta.loc ~cf id)
-        >>= fun ues ->
-        let returnblock = lub_ad_e ues in
-        semantic_check_cond_dist_app ~loc:emeta.loc ~returnblock id ues)
+      semantic_check_funapp ~is_cond_dist:false id es cf emeta
+  | CondDistApp (_, id, es) ->
+      semantic_check_funapp ~is_cond_dist:true id es cf emeta
   | GetLP ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
@@ -724,6 +639,30 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) -> semantic_check_indexed ~loc:emeta.loc ~cf e indices
+
+and semantic_check_funapp ~is_cond_dist id es cf emeta =
+  let name_check =
+    if is_cond_dist then semantic_check_conddist_name
+    else semantic_check_fn_conditioning
+  in
+  Validate.(
+    es
+    |> List.map ~f:(semantic_check_expression cf)
+    |> sequence
+    >>= fun ues ->
+    semantic_check_fn ~loc:emeta.loc id ues
+    |> apply_const (semantic_check_identifier id)
+    |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
+    |> apply_const (name_check ~loc:emeta.loc id)
+    |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
+    >>= fun e ->
+    ok
+      { e with
+        expr=
+          ( match e.expr with
+          | FunApp (fun_kind, id, ues) -> CondDistApp (fun_kind, id, ues)
+          | _ -> raise_s [%sexp ("This should never happen!" : string)] ) })
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(

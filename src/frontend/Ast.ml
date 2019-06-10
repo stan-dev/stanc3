@@ -29,7 +29,7 @@ type 'e expression =
   | IntNumeral of string
   | RealNumeral of string
   | FunApp of fun_kind * identifier * 'e list
-  | CondDistApp of identifier * 'e list
+  | CondDistApp of fun_kind * identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
