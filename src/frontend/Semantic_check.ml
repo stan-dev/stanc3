@@ -282,8 +282,7 @@ let semantic_check_fn_normal ~loc id es =
         |> ok
     | Some _ ->
         (* Check that Funaps are actually functions *)
-        Semantic_error.returning_fn_expected_nonreturning_found loc id.name
-        |> error
+        Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
     | None ->
         Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
         |> error)
