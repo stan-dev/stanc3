@@ -82,3 +82,11 @@ val binop :
   -> operator
   -> mtype_loc_ad with_expr
   -> mtype_loc_ad with_expr
+
+val contains_fn : string -> bool -> ('a, 'b) stmt_with -> bool
+val mir_int : int -> mtype_loc_ad with_expr
+
+val mock_for :
+     int
+  -> (mtype_loc_ad, location_span) stmt_with
+  -> (mtype_loc_ad, location_span) stmt_with
