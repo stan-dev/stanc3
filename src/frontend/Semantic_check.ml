@@ -1591,7 +1591,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
   match s.stmt with
   | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
   | Assignment
-      { assign_lhs= {assign_identifier; assign_indices; assign_meta= {loc}}
+      { assign_lhs= {assign_identifier; assign_indices; _}
       ; assign_op
       ; assign_rhs } ->
       semantic_check_assignment ~loc ~cf assign_identifier assign_indices
