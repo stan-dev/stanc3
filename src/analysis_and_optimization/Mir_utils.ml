@@ -299,7 +299,23 @@ let rec update_expr_ad_levels autodiffable_variables e =
 and update_idx_ad_levels autodiffable_variables =
   map_index (update_expr_ad_levels autodiffable_variables)
 
-let rec number_locations_stmt ({stmt; smeta} : stmt_loc) : stmt_num =
+let rec number_locations_stmt label_to_location location_to_label {stmt; smeta}
+    =
+  let recurse {stmt; smeta} =
+    fst
+      (number_locations_stmt label_to_location location_to_label {stmt; smeta})
+  in
+  let stmt = map_statement (fun x -> x) recurse stmt in
+  ( ( match Hashtbl.find location_to_label smeta with
+    | Some i -> {stmt; smeta= i}
+    | None ->
+        let new_label = Hashtbl.length label_to_location + 1 in
+        let _ = Hashtbl.add label_to_location ~key:new_label ~data:smeta in
+        let _ = Hashtbl.add location_to_label ~key:smeta ~data:new_label in
+        {stmt; smeta= new_label} )
+  , (label_to_location, location_to_label) )
+
+let number_locations_prog (mir : typed_prog) : typed_prog =
   let module LocSp = struct
     type t = location_span
 
@@ -307,16 +323,6 @@ let rec number_locations_stmt ({stmt; smeta} : stmt_loc) : stmt_num =
     let hash = hash_location_span
     let sexp_of_t = sexp_of_location_span
   end in
-  let label_to_location = Int.Table.create () in
-  let location_to_label = Hashtbl.create (module LocSp) in
-  match Hashtbl.find location_to_label smeta with
-  | Some i ->
-      {stmt= map_statement (fun x -> x) number_locations_stmt stmt; smeta= i}
-  | None ->
-      let new_label = Hashtbl.length label_to_location + 1 in
-      let _ = Hashtbl.add label_to_location ~key:new_label ~data:smeta in
-      let _ = Hashtbl.add location_to_label ~key:smeta ~data:new_label in
-      { stmt= map_statement (fun x -> x) number_locations_stmt stmt
-      ; smeta= new_label }
-
-let _ = number_locations_stmt
+  let _ = Int.Table.create () in
+  let _ = Hashtbl.create (module LocSp) in
+  mir
