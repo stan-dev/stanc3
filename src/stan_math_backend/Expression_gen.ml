@@ -34,8 +34,9 @@ let rec stantype_prim_str = function
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
-let local_scalar ut ad =
+let rec local_scalar ut ad =
   match (ut, ad) with
+  | UArray t, _ -> local_scalar t ad
   | _, DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
 
