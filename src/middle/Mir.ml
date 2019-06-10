@@ -9,10 +9,11 @@ type location =
   ; line_num: int
   ; col_num: int
   ; included_from: location option }
-[@@deriving sexp]
+[@@deriving sexp, hash, compare]
 
 (** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
+type location_span = {begin_loc: location; end_loc: location}
+[@@deriving sexp, hash, compare]
 
 (** Arithmetic and logical operators *)
 type operator =
@@ -186,11 +187,15 @@ type stmt_loc =
   (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
+type stmt_num = (mtype_loc_ad, (int sexp_opaque[@compare.ignore])) stmt_with
+[@@deriving sexp]
+
 type stmt_loc_num =
   (mtype_loc_ad, (location_span sexp_opaque[@compare.ignore])) stmt_with_num
 [@@deriving sexp]
 
 type typed_prog = (mtype_loc_ad with_expr, stmt_loc) prog [@@deriving sexp]
+type typed_prog_num = (mtype_loc_ad with_expr, stmt_num) prog [@@deriving sexp]
 
 type internal_fn =
   | FnLength
