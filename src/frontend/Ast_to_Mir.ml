@@ -588,6 +588,11 @@ let get_block block prog =
   | GeneratedQuantities -> prog.generatedquantitiesblock
   | Data -> prog.datablock
 
+let migrate_checks_to_end_of_block stmts =
+  let is_check = contains_fn (string_of_internal_fn FnCheck) in
+  let checks, not_checks = List.partition_tf ~f:is_check stmts in
+  not_checks @ checks
+
 let trans_prog filename p : typed_prog =
   (*
      1. prepare_params: add read_param calls (same call should constrain?)
@@ -636,12 +641,14 @@ let trans_prog filename p : typed_prog =
       (trans_stmt
          {dread= Some ReadData; dconstrain= Some Check; dadlevel= DataOnly})
       datablock
+    |> migrate_checks_to_end_of_block
   in
   let prepare_data =
     datab
     @ map
         (trans_stmt {dread= None; dconstrain= Some Check; dadlevel= DataOnly})
         transformeddatablock
+    |> migrate_checks_to_end_of_block
   in
   let modelb =
     map
@@ -655,10 +662,11 @@ let trans_prog filename p : typed_prog =
          ; dconstrain= Some Constrain
          ; dadlevel= AutoDiffable })
       parametersblock
-    @ map
-        (trans_stmt
-           {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
-        transformedparametersblock
+    @ ( map
+          (trans_stmt
+             {dread= None; dconstrain= Some Check; dadlevel= AutoDiffable})
+          transformedparametersblock
+      |> migrate_checks_to_end_of_block )
     @
     match modelb with
     | [] -> []

@@ -294,7 +294,6 @@ let separated_output_vars p =
     p.output_vars
 
 let pp_string_lit = fmt "%S"
-let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
 let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
   let iter d pp_body =
@@ -502,69 +501,11 @@ using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math; |}
 
-let rec expr_contains_fn fname accum e =
-  accum
-  ||
-  match e.expr with
-  | FunApp (_, name, _) when name = fname -> true
-  | x -> fold_expr (expr_contains_fn fname) accum x
-
-let%test "expr contains fn" =
-  internal_funapp FnReadData [] ()
-  |> expr_contains_fn (string_of_internal_fn FnReadData) false
-
-let rec contains_fn fname accum {stmt; _} =
-  accum
-  ||
-  match stmt with
-  | NRFunApp (_, fname', _) when fname' = fname -> true
-  | _ -> fold_statement (expr_contains_fn fname) (contains_fn fname) accum stmt
-
-let mock_stmt stmt = {stmt; smeta= no_span}
-
-let mock_for i body =
-  For
-    { loopvar= "lv"
-    ; lower= mir_int 0
-    ; upper= mir_int i
-    ; body= mock_stmt (Block [body]) }
-  |> mock_stmt
-
-let%test "contains fn" =
-  let f =
-    mock_for 8
-      (mock_for 9
-         (mock_stmt
-            (Assignment (("v", []), internal_funapp FnReadData [] internal_meta))))
-  in
-  contains_fn
-    (string_of_internal_fn FnReadData)
-    false
-    (mock_stmt (Block [f; mock_stmt Break]))
-
-let%test "contains nrfn" =
-  let f =
-    mock_for 8
-      (mock_for 9
-         (mock_stmt
-            (NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, []))))
-  in
-  contains_fn
-    (string_of_internal_fn FnWriteParam)
-    false
-    (mock_stmt
-       (Block
-          [ mock_stmt
-              (NRFunApp
-                 (CompilerInternal, string_of_internal_fn FnWriteParam, []))
-          ; f ]))
-
 let pos = "pos__"
 
 let add_pos_reset ({stmt; smeta} as s) =
   match stmt with
-  | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) false body ->
+  | For {body; _} when contains_fn (string_of_internal_fn FnReadData) body ->
       [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
   | _ -> [s]
 
@@ -578,8 +519,8 @@ let rec invert_read_fors ({stmt; smeta} as s) =
   in
   match stmt with
   | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) false body
-         || contains_fn (string_of_internal_fn FnWriteParam) false body ->
+    when contains_fn (string_of_internal_fn FnReadData) body
+         || contains_fn (string_of_internal_fn FnWriteParam) body ->
       let final, args = unwind s in
       List.fold ~init:final
         ~f:(fun accum (loopvar, lower, upper) ->
