@@ -590,6 +590,12 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  (* XXX Need to deal with the fact that we should be reading a smaller-sized vector in
+     for many of these matrix transformations.
+     One idea: add a temporary variable with a derived name that we then pass to
+     the cov_matrix_constrain or whatever function (and freeing also returns the smaller
+     thing, fuck)
+  *)
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}

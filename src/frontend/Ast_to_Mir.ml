@@ -244,12 +244,27 @@ let constraint_forl = function
    |CholeskyCov | Correlation | Covariance ->
       for_eigen
 
-let extract_constraint_args = function
+let rec eigen_size (st : mtype_loc_ad with_expr sizedtype) =
+  match st with
+  | SArray (t, _) -> eigen_size t
+  | SMatrix (d1, d2) -> [d1; d2]
+  | SRowVector dim | SVector dim -> [dim]
+  | SInt | SReal -> []
+
+let extract_transform_args = function
   | Ast.Lower a | Upper a | Offset a | Multiplier a -> [a]
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) -> [a1; a2]
-  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance | Identity ->
+  | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
+   |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
+
+let extra_constraint_args st = function
+  | Ast.Lower _ | Upper _ | Offset _ | Multiplier _ | LowerUpper _
+   |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector
+   |Identity ->
+      []
+  | Covariance | Correlation | CholeskyCov | CholeskyCorr ->
+      eigen_size st |> List.last_exn |> List.return
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
@@ -265,12 +280,6 @@ let assign_indexed vident smeta varfn var =
     match var.expr with Indexed (_, indices) -> indices | _ -> []
   in
   {stmt= Assignment ((vident, indices), varfn var); smeta}
-
-let rec eigen_size = function
-  | SArray (t, _) -> eigen_size t
-  | SMatrix (d1, d2) -> [d1; d2]
-  | SRowVector dim | SVector dim -> [dim]
-  | SInt | SReal -> []
 
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
@@ -341,8 +350,14 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
       let fname = constrainaction_fname dc in
+      let extra_args =
+        match dconstrain with
+        | Some Constrain -> extra_constraint_args st t
+        | _ -> []
+      in
       let args var =
-        var :: mkstring constraint_str :: extract_constraint_args t
+        (var :: mkstring constraint_str :: extract_transform_args t)
+        @ extra_args
       in
       let constrainvar var =
         {expr= FunApp (CompilerInternal, fname, args var); emeta= var.emeta}
@@ -370,7 +385,7 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
       {expr= Var decl_id; emeta= {mtype; mloc= smeta; madlevel= adlevel}}
       smeta
   in
-  let args = extract_constraint_args decl_trans in
+  let args = extract_transform_args decl_trans in
   match decl_trans with
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
