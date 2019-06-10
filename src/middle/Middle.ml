@@ -95,12 +95,15 @@ let%test "expr contains fn" =
   internal_funapp FnReadData [] ()
   |> expr_contains_fn (string_of_internal_fn FnReadData) false
 
-let rec contains_fn fname accum {stmt; _} =
-  accum
-  ||
-  match stmt with
-  | NRFunApp (_, fname', _) when fname' = fname -> true
-  | _ -> fold_statement (expr_contains_fn fname) (contains_fn fname) accum stmt
+let contains_fn fname s =
+  let rec contains_fn_go fname accum {stmt; _} =
+    match stmt with
+    | NRFunApp (_, fname', _) when fname' = fname -> true
+    | _ ->
+        fold_statement (expr_contains_fn fname) (contains_fn_go fname) accum
+          stmt
+  in
+  contains_fn_go fname false s
 
 let mock_stmt stmt = {stmt; smeta= no_span}
 let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
@@ -122,7 +125,6 @@ let%test "contains fn" =
   in
   contains_fn
     (string_of_internal_fn FnReadData)
-    false
     (mock_stmt (Block [f; mock_stmt Break]))
 
 let%test "contains nrfn" =
@@ -134,7 +136,6 @@ let%test "contains nrfn" =
   in
   contains_fn
     (string_of_internal_fn FnWriteParam)
-    false
     (mock_stmt
        (Block
           [ mock_stmt

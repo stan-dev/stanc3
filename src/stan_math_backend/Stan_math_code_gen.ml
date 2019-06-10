@@ -505,8 +505,7 @@ let pos = "pos__"
 
 let add_pos_reset ({stmt; smeta} as s) =
   match stmt with
-  | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) false body ->
+  | For {body; _} when contains_fn (string_of_internal_fn FnReadData) body ->
       [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
   | _ -> [s]
 
@@ -520,8 +519,8 @@ let rec invert_read_fors ({stmt; smeta} as s) =
   in
   match stmt with
   | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) false body
-         || contains_fn (string_of_internal_fn FnWriteParam) false body ->
+    when contains_fn (string_of_internal_fn FnReadData) body
+         || contains_fn (string_of_internal_fn FnWriteParam) body ->
       let final, args = unwind s in
       List.fold ~init:final
         ~f:(fun accum (loopvar, lower, upper) ->
