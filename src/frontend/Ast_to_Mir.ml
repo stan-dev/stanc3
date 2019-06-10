@@ -427,8 +427,9 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment
-      {assign_lhs= {assign_identifier; assign_indices}; assign_rhs; assign_op}
-    ->
+      { assign_lhs= {assign_identifier; assign_indices; _}
+      ; assign_rhs
+      ; assign_op } ->
       let wrap_expr expr_typed =
         Ast.mk_typed_expression ~expr:expr_typed ~loc:smeta
           ~ad_level:assign_rhs.emeta.ad_level ~type_:assign_rhs.emeta.type_

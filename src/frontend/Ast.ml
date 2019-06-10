@@ -116,7 +116,13 @@ type 'e transformation =
   | Covariance
 [@@deriving sexp, compare, map, hash]
 
-type 'e lhs = {assign_identifier: identifier; assign_indices: 'e index list}
+type ('e, 'm) lhs_with =
+  { assign_identifier: identifier
+  ; assign_indices: 'e index list
+  ; assign_meta: 'm }
+[@@deriving sexp, hash, compare, map]
+
+type 'e untyped_lhs = ('e, located_meta) lhs_with
 [@@deriving sexp, hash, compare, map]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
@@ -124,7 +130,7 @@ type 'e lhs = {assign_identifier: identifier; assign_indices: 'e index list}
     typed_statement to get typed_statement    *)
 type ('e, 's) statement =
   | Assignment of
-      { assign_lhs: 'e lhs
+      { assign_lhs: 'e untyped_lhs
       ; assign_op: assignmentoperator
       ; assign_rhs: 'e }
   | NRFunApp of fun_kind * identifier * 'e list

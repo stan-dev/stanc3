@@ -227,7 +227,7 @@ and pretty_print_array_dims = function
 and pretty_print_statement {stmt= s_content; _} =
   match s_content with
   | Assignment
-      { assign_lhs= {assign_identifier= id; assign_indices= lindex}
+      { assign_lhs= {assign_identifier= id; assign_indices= lindex; _}
       ; assign_op= assop
       ; assign_rhs= e } ->
       pretty_print_identifier id
