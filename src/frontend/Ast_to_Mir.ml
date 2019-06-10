@@ -412,9 +412,6 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     | Some Check -> check_decl decl_type decl_id transform smeta dadlevel
     | _ -> []
   in
-  (* XXX Currently working on sigma_y in hepatitisME.stan
-     the sigma definition only occurs much later.
-  *)
   (decl :: read_stmts) @ constrain_stmts @ checks
 
 let unwrap_block_or_skip = function
@@ -614,9 +611,6 @@ let trans_prog filename p : typed_prog =
      unconstrained param names: same, but also some funky
         adjustments for unconstrained space: ???
 *)
-  (* XXX need to write a function for moving checks to the end of transformed parameters,
-  transformed data blocks before merging into other blocks.
-  *)
   let { Ast.functionblock
       ; datablock
       ; transformeddatablock
