@@ -282,8 +282,7 @@ let semantic_check_fn_normal ~loc id es =
         |> ok
     | Some _ ->
         (* Check that Funaps are actually functions *)
-        Semantic_error.returning_fn_expected_nonreturning_found loc id.name
-        |> error
+        Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
     | None ->
         Semantic_error.returning_fn_expected_undeclaredident_found loc id.name
         |> error)
@@ -305,14 +304,24 @@ let semantic_check_fn_stan_math ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
       |> Validate.error
 
-let fn_kind_from_identifier id =
-  if is_stan_math_function_name id.name then StanLib else UserDefined
+let fn_kind_from_application id es =
+  (* We need to check an application here, rather than a mere name of the 
+   function because, technically, user defined functions can shadow
+   constants in StanLib. *)
+  if
+    stan_math_returntype id.name
+      (List.map ~f:(fun x -> (x.emeta.ad_level, x.emeta.type_)) es)
+    <> None
+    || Symbol_table.look vm id.name = None
+       && is_stan_math_function_name id.name
+  then StanLib
+  else UserDefined
 
 (** Determines the function kind based on the identifier and performs the
     corresponding semantic check
 *)
 let semantic_check_fn ~loc id es =
-  match fn_kind_from_identifier id with
+  match fn_kind_from_application id es with
   | StanLib -> semantic_check_fn_stan_math ~loc id es
   | UserDefined -> semantic_check_fn_normal ~loc id es
 
@@ -825,7 +834,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
         |> error)
 
 let semantic_check_nr_fnkind ~loc id es =
-  match fn_kind_from_identifier id with
+  match fn_kind_from_application id es with
   | StanLib -> semantic_check_nrfn_stan_math ~loc id es
   | UserDefined -> semantic_check_nrfn_normal ~loc id es
 
