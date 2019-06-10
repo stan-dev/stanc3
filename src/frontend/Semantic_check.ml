@@ -869,8 +869,7 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
   match lhs with
   | {expr= Indexed ({expr= Variable id; _}, idx); _} ->
       Assignment
-        { assign_identifier= id
-        ; assign_indices= idx
+        { assign_lhs= {assign_identifier= id; assign_indices= idx}
         ; assign_op= assop
         ; assign_rhs= rhs }
   | _ -> fatal_error ()
@@ -1366,8 +1365,7 @@ and semantic_check_var_decl_initial_value ~loc ~cf id init_val_opt =
   |> Option.value_map ~default:(Validate.ok None) ~f:(fun e ->
          let stmt =
            Assignment
-             { assign_identifier= id
-             ; assign_indices= []
+             { assign_lhs= {assign_identifier= id; assign_indices= []}
              ; assign_op= Assign
              ; assign_rhs= e }
          in
@@ -1587,7 +1585,9 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
   let loc = s.smeta.loc in
   match s.stmt with
   | NRFunApp (_, id, es) -> semantic_check_nr_fn_app ~loc ~cf id es
-  | Assignment {assign_identifier; assign_indices; assign_op; assign_rhs} ->
+  | Assignment
+      {assign_lhs= {assign_identifier; assign_indices}; assign_op; assign_rhs}
+    ->
       semantic_check_assignment ~loc ~cf assign_identifier assign_indices
         assign_op assign_rhs
   | TargetPE e -> semantic_check_target_pe ~loc ~cf e
