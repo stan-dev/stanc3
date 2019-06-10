@@ -482,6 +482,8 @@ using stan::model::nil_index_list;
 using namespace stan::math; |}
 
 let rec expr_contains_fn fname accum e =
+  accum
+  ||
   match e.expr with
   | FunApp (_, name, _) when name = fname -> true
   | x -> fold_expr (expr_contains_fn fname) accum x
@@ -491,11 +493,11 @@ let%test "expr contains fn" =
   |> expr_contains_fn (string_of_internal_fn FnReadData) false
 
 let rec contains_fn fname accum {stmt; _} =
-  fold_statement (expr_contains_fn fname)
-    (fun accum s ->
-      fold_statement (expr_contains_fn fname) (contains_fn fname) accum s.stmt
-      )
-    accum stmt
+  accum
+  ||
+  match stmt with
+  | NRFunApp (_, fname', _) when fname' = fname -> true
+  | _ -> fold_statement (expr_contains_fn fname) (contains_fn fname) accum stmt
 
 let mock_stmt stmt = {stmt; smeta= no_span}
 let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
@@ -520,6 +522,23 @@ let%test "contains fn" =
     false
     (mock_stmt (Block [f; mock_stmt Break]))
 
+let%test "contains nrfn" =
+  let f =
+    mock_for 8
+      (mock_for 9
+         (mock_stmt
+            (NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, []))))
+  in
+  contains_fn
+    (string_of_internal_fn FnWriteParam)
+    false
+    (mock_stmt
+       (Block
+          [ mock_stmt
+              (NRFunApp
+                 (CompilerInternal, string_of_internal_fn FnWriteParam, []))
+          ; f ]))
+
 let pos = "pos__"
 
 let add_pos_reset ({stmt; smeta} as s) =
@@ -529,43 +548,43 @@ let add_pos_reset ({stmt; smeta} as s) =
       [{stmt= Assignment ((pos, []), loop_bottom); smeta}; s]
   | _ -> [s]
 
-let invert_read_fors ({stmt; smeta} as s) =
+let rec invert_read_fors ({stmt; smeta} as s) =
   let rec unwind s =
     match s.stmt with
     | For {loopvar; lower; upper; body= {stmt= Block [body]; _}} ->
         let final, args = unwind body in
         (final, (loopvar, lower, upper) :: args)
-    | _ -> ([s], [])
+    | _ -> (s, [])
   in
   match stmt with
   | For {body; _}
-    when contains_fn (string_of_internal_fn FnReadData) false body ->
+    when contains_fn (string_of_internal_fn FnReadData) false body
+         || contains_fn (string_of_internal_fn FnWriteParam) false body ->
       let final, args = unwind s in
       List.fold ~init:final
         ~f:(fun accum (loopvar, lower, upper) ->
-          [ { smeta
-            ; stmt=
-                For {loopvar; lower; upper; body= {stmt= Block accum; smeta}}
-            } ] )
+            let sw stmt = {smeta; stmt} in
+            For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
         args
-  | _ -> [s]
+  | _ -> {stmt=map_statement Fn.id invert_read_fors stmt; smeta}
 
-let%expect_test "invert read fors" =
+let%expect_test "invert write fors" =
   mock_for 8
     (mock_for 9
        { stmt=
            NRFunApp
-             (StanLib, "print", [internal_funapp FnReadData [] internal_meta])
+             (CompilerInternal, (string_of_internal_fn FnWriteParam), [])
        ; smeta= no_span })
   |> invert_read_fors
-  |> strf "%a" (list ~sep:comma Pretty.pp_stmt_loc)
+  |> strf "%a" Pretty.pp_stmt_loc
   |> print_endline ;
   [%expect
     {|
     for(lv in 0:9) { for(lv in 0:8) {
-                       print(FnReadData__());
+                       FnWriteParam__();
                      }
     } |}]
+
 
 let rec use_pos_in_readdata {stmt; smeta} =
   let swrap stmt = {stmt; smeta} in
@@ -617,7 +636,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
     ; smeta= no_span }
     :: stmts
-    |> List.concat_map ~f:invert_read_fors
+    |> List.map ~f:invert_read_fors
     |> List.concat_map ~f:add_pos_reset
     |> List.map ~f:use_pos_in_readdata
   in
@@ -625,6 +644,8 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     { p with
       prog_name= escape_name p.prog_name
     ; prepare_data= fix_data_reads p.prepare_data
+    ; generate_quantities=
+        List.map ~f:invert_read_fors p.generate_quantities
     ; transform_inits= fix_data_reads p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
