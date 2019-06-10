@@ -294,6 +294,25 @@ let separated_output_vars p =
     p.output_vars
 
 let pp_string_lit = fmt "%S"
+let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
+
+let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
+  let iter d pp_body =
+    let loopvar, gensym_exit = gensym_enter () in
+    pp_for_loop ppf
+      ( loopvar
+      , loop_bottom
+      , d
+      , pp_block
+      , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
+    gensym_exit ()
+  in
+  match dims with
+  | [] -> pp_body ppf (iteratee, index_ids)
+  | dim :: dims ->
+      iter dim (fun ppf (i, idcs) ->
+          pf ppf "%a" pp_block
+            (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
 let pp_constrained_param_names ppf p =
   let params =
@@ -309,7 +328,8 @@ let pp_constrained_param_names ppf p =
       (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
   in
   let pp_param_names ppf (decl_id, st) =
-    pp_for_loop_iteratee ppf (decl_id, st, emit_name)
+    let dims = List.rev (get_dims st) in
+    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   pp_method ppf "void" "constrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
@@ -348,7 +368,8 @@ let pp_unconstrained_param_names ppf p =
       (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
   in
   let pp_param_names ppf (decl_id, st) =
-    pp_for_loop_iteratee ppf (decl_id, st, emit_name)
+    let dims = List.rev (get_dims st) in
+    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   pp_method ppf "void" "unconstrained_param_names" params [] (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
@@ -500,7 +521,6 @@ let rec contains_fn fname accum {stmt; _} =
   | _ -> fold_statement (expr_contains_fn fname) (contains_fn fname) accum stmt
 
 let mock_stmt stmt = {stmt; smeta= no_span}
-let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
 
 let mock_for i body =
   For
@@ -563,17 +583,16 @@ let rec invert_read_fors ({stmt; smeta} as s) =
       let final, args = unwind s in
       List.fold ~init:final
         ~f:(fun accum (loopvar, lower, upper) ->
-            let sw stmt = {smeta; stmt} in
-            For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
+          let sw stmt = {smeta; stmt} in
+          For {loopvar; lower; upper; body= sw (Block [accum])} |> sw )
         args
-  | _ -> {stmt=map_statement Fn.id invert_read_fors stmt; smeta}
+  | _ -> {stmt= map_statement Fn.id invert_read_fors stmt; smeta}
 
 let%expect_test "invert write fors" =
   mock_for 8
     (mock_for 9
        { stmt=
-           NRFunApp
-             (CompilerInternal, (string_of_internal_fn FnWriteParam), [])
+           NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, [])
        ; smeta= no_span })
   |> invert_read_fors
   |> strf "%a" Pretty.pp_stmt_loc
@@ -584,7 +603,6 @@ let%expect_test "invert write fors" =
                        FnWriteParam__();
                      }
     } |}]
-
 
 let rec use_pos_in_readdata {stmt; smeta} =
   let swrap stmt = {stmt; smeta} in
@@ -644,8 +662,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     { p with
       prog_name= escape_name p.prog_name
     ; prepare_data= fix_data_reads p.prepare_data
-    ; generate_quantities=
-        List.map ~f:invert_read_fors p.generate_quantities
+    ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
     ; transform_inits= fix_data_reads p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"

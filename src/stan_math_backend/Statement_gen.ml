@@ -40,30 +40,6 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
-let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, st, pp_body) =
-  let iter d pp_body =
-    let loopvar, gensym_exit = gensym_enter () in
-    pp_for_loop ppf
-      ( loopvar
-      , loop_bottom
-      , d
-      , pp_block
-      , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
-    gensym_exit ()
-  in
-  match st with
-  | SReal | SInt -> pp_body ppf (iteratee, index_ids)
-  | SRowVector d | SVector d -> iter d pp_body
-  | SMatrix (d1, d2) ->
-      iter
-        { expr= FunApp (StanLib, string_of_operator Times, [d1; d2])
-        ; emeta= internal_meta }
-        pp_body
-  | SArray (t, d) ->
-      iter d (fun ppf (i, idcs) ->
-          pf ppf "%a" pp_block
-            (pp_for_loop_iteratee ~index_ids:idcs, (i, t, pp_body)) )
-
 let rec integer_el_type = function
   | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
   | SInt -> true
