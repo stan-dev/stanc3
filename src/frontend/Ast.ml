@@ -125,7 +125,15 @@ type ('e, 'm) lhs_with =
 type 'e untyped_lhs = ('e, located_meta) lhs_with
 [@@deriving sexp, hash, compare, map]
 
-type 'e typed_lhs = ('e, typed_expr_meta) lhs_with
+type typed_lhs_meta =
+  { loc: Middle.location_span sexp_opaque [@compare.ignore]
+  ; id_ad_level: Middle.autodifftype
+  ; id_type_: Middle.unsizedtype
+  ; lhs_ad_level: Middle.autodifftype
+  ; lhs_type_: Middle.unsizedtype }
+[@@deriving sexp, compare, map, hash]
+
+type 'e typed_lhs = ('e, typed_lhs_meta) lhs_with
 [@@deriving sexp, hash, compare, map]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement

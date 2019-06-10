@@ -430,7 +430,8 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       { assign_lhs=
           { assign_identifier
           ; assign_indices
-          ; assign_meta= {ad_level; type_; loc} }
+          ; assign_meta= {id_ad_level; id_type_; lhs_ad_level; lhs_type_; loc}
+          }
       ; assign_rhs
       ; assign_op } ->
       let assignee =
@@ -440,10 +441,12 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
             | _ ->
                 Ast.Indexed
                   ( { expr= Ast.Variable assign_identifier
-                    ; emeta= {Ast.loc= no_span; ad_level; type_} }
-                    (* TODO: these types are still wrong. *)
+                    ; emeta=
+                        { Ast.loc= no_span
+                        ; ad_level= id_ad_level
+                        ; type_= id_type_ } }
                   , assign_indices ) )
-        ; emeta= {Ast.loc; ad_level; type_} }
+        ; emeta= {Ast.loc; ad_level= lhs_ad_level; type_= lhs_type_} }
       in
       let rhs =
         match assign_op with
@@ -764,7 +767,8 @@ let%expect_test "Operator-assign example" =
                       (Indexed
                        ((expr (Var x))
                         (emeta
-                         ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+                         ((mtype (UArray UVector)) (mloc <opaque>)
+                          (madlevel AutoDiffable))))
                        ((Single
                          ((expr (Lit Int 1))
                           (emeta
