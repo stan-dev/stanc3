@@ -426,17 +426,27 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   let swrap stmt = [{stmt; smeta}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment {assign_indices; assign_rhs; assign_identifier; assign_op}
-    ->
-      let wrap_expr expr_typed =
-        Ast.mk_typed_expression ~expr:expr_typed ~loc:smeta
-          ~ad_level:assign_rhs.emeta.ad_level ~type_:assign_rhs.emeta.type_
-      in
-      let assignee = wrap_expr @@ Ast.Variable assign_identifier in
+  | Ast.Assignment
+      { assign_lhs=
+          { assign_identifier
+          ; assign_indices
+          ; assign_meta= {id_ad_level; id_type_; lhs_ad_level; lhs_type_; loc}
+          }
+      ; assign_rhs
+      ; assign_op } ->
       let assignee =
-        match assign_indices with
-        | [] -> assignee
-        | lst -> wrap_expr @@ Ast.Indexed (assignee, lst)
+        { Ast.expr=
+            ( match assign_indices with
+            | [] -> Ast.Variable assign_identifier
+            | _ ->
+                Ast.Indexed
+                  ( { expr= Ast.Variable assign_identifier
+                    ; emeta=
+                        { Ast.loc= no_span
+                        ; ad_level= id_ad_level
+                        ; type_= id_type_ } }
+                  , assign_indices ) )
+        ; emeta= {Ast.loc; ad_level= lhs_ad_level; type_= lhs_type_} }
       in
       let rhs =
         match assign_op with
@@ -712,6 +722,75 @@ let trans_prog filename p : typed_prog =
   ; prog_path= filename }
 
 (*===================== tests =========================================*)
+
+let%expect_test "Operator-assign example" =
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+        model {
+          real r;
+          vector[2] x[4];
+          x[1] ./= r;
+        }
+      |}
+  in
+  let semantic_check_program_exn ast =
+    Option.value_exn
+      (Result.ok
+         (Semantic_check.semantic_check_program
+            (Option.value_exn (Result.ok ast))))
+  in
+  let mir = trans_prog "" (semantic_check_program_exn ast) in
+  print_s [%sexp (mir : typed_prog)] ;
+  [%expect
+    {|
+      ((functions_block ()) (input_vars ()) (prepare_data ())
+       (log_prob
+        (((stmt
+           (Block
+            (((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id r)
+                (decl_type (Sized SReal))))
+              (smeta <opaque>))
+             ((stmt
+               (Decl (decl_adtype AutoDiffable) (decl_id x)
+                (decl_type
+                 (Sized
+                  (SArray
+                   (SVector
+                    ((expr (Lit Int 2))
+                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
+                   ((expr (Lit Int 4))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
+              (smeta <opaque>))
+             ((stmt
+               (Assignment
+                (x
+                 ((Single
+                   ((expr (Lit Int 1))
+                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
+                ((expr
+                  (FunApp StanLib EltDivide__
+                   (((expr
+                      (Indexed
+                       ((expr (Var x))
+                        (emeta
+                         ((mtype (UArray UVector)) (mloc <opaque>)
+                          (madlevel AutoDiffable))))
+                       ((Single
+                         ((expr (Lit Int 1))
+                          (emeta
+                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
+                     (emeta
+                      ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
+                    ((expr (Var r))
+                     (emeta
+                      ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
+                 (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
+              (smeta <opaque>)))))
+          (smeta <opaque>))))
+       (generate_quantities ()) (transform_inits ()) (output_vars ())
+       (prog_name "") (prog_path "")) |}]
 
 let mir_from_string s =
   let untyped_prog =
