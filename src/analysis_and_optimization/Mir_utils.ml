@@ -300,7 +300,7 @@ and update_idx_ad_levels autodiffable_variables =
   map_index (update_expr_ad_levels autodiffable_variables)
 
 let number_locations_prog (mir : typed_prog) :
-    typed_prog_num * string Int.Table.t =
+    typed_prog_num * (int, string) Map.Poly.t =
   let module LocSp = struct
     type t = location_span
 
@@ -321,6 +321,11 @@ let number_locations_prog (mir : typed_prog) :
         {stmt; smeta= new_label}
   in
   let mir = map_prog (fun x -> x) number_locations_stmt mir in
-  (mir, Hashtbl.map ~f:string_of_location_span label_to_location)
+  let immutable_label_to_location =
+    Hashtbl.fold label_to_location ~init:Map.Poly.empty
+      ~f:(fun ~key ~data accum ->
+        Map.set accum ~key ~data:(string_of_location_span data) )
+  in
+  (mir, immutable_label_to_location)
 
 let _ = number_locations_prog
