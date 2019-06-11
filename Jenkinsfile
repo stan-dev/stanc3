@@ -51,7 +51,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run (working) stat_comp_benchmarks end-to-end") {
+        stage("Run stat_comp_benchmarks end-to-end") {
             when { not { anyOf { buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
@@ -61,7 +61,7 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
+          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 stat_comp_benchmarks/" develop stanc3-dev develop develop
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'
