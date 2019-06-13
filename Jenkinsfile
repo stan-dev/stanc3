@@ -21,7 +21,7 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        bool(defaultValue: false, name: 'all_tests',
+        booleanParam(defaultValue: false, name: 'all_tests',
                description: "Check this box if you want to run all end-to-end tests.")
     }
     stages {
@@ -81,7 +81,7 @@ pipeline {
         // and log all the failures. It'll make a big nasty red graph
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
-            when { anyOf { params.all_tests; buildingTag(); branch 'master' } }
+            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
