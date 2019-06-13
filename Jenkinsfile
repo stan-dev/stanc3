@@ -79,7 +79,7 @@ pipeline {
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             // when { anyOf { buildingTag(); branch 'master' } }
-            agent { label 'distribution-tests' }
+            agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
                 sh """
