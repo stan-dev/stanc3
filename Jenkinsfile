@@ -83,7 +83,7 @@ pipeline {
             steps {
                 unstash 'ubuntu-exe'
                 sh """
-          wget https://github.com/stan-dev/performance-tests-cmdstan/releases/stanc3-tests-2019-06-13/performance-tests-cmdstan.tar.gz
+          wget https://github.com/stan-dev/performance-tests-cmdstan/releases/download/stanc3-tests-2019-06-13/performance-tests-cmdstan.tar.gz
           tar -zxpf performance-tests-cmdstan.tar.gz
                    """
                 sh """
