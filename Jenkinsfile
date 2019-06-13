@@ -52,7 +52,8 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Run stat_comp_benchmarks end-to-end") {
-            when { not { anyOf { buildingTag(); branch 'master' } } }
+            // when { not { anyOf { buildingTag(); branch 'master' } } }
+            when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -77,8 +78,8 @@ pipeline {
         // and log all the failures. It'll make a big nasty red graph
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
-            when { anyOf { buildingTag(); branch 'master' } }
-            agent { label 'linux' }
+            // when { anyOf { buildingTag(); branch 'master' } }
+            agent { label 'distribution-tests' }
             steps {
                 unstash 'ubuntu-exe'
                 sh """
