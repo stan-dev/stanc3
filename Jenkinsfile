@@ -21,7 +21,7 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        bool(defaultValue: false, name: 'all_tests',
+        booleanParam(defaultValue: false, name: 'all_tests',
                description: "Check this box if you want to run all end-to-end tests.")
     }
     stages {
