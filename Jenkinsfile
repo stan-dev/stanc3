@@ -61,7 +61,7 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 stat_comp_benchmarks/" develop stanc3-dev develop develop
+          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 stat_comp_benchmarks/" develop stanc3-dev develop develop
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'
@@ -88,7 +88,7 @@ pipeline {
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=20" develop stanc3-dev develop develop || true
+          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=10" develop stanc3-dev develop develop || true
                """
 
                 xunit([GoogleTest(
