@@ -1,7 +1,6 @@
 open Middle
 
 type loc_t
-type stmt_num
 type typed_prog_num
 type state_t
 
