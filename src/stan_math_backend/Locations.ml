@@ -43,9 +43,7 @@ let pp_globals ppf (mir, location_map) =
   raise_s [%sexp ("not yet implemented" : string)]
 
 let pp_smeta ppf location_num =
-  ignore ppf ;
-  ignore location_num ;
-  raise_s [%sexp ("not yet implemented" : string)]
+  Fmt.pf ppf "current_statement__ = %d;@;" location_num
 
 let _ = prepare_prog
 let _ = pp_globals
