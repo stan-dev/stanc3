@@ -44,7 +44,7 @@ pipeline {
                     dune build @install
                 """)
 
-                echo runShell("eval \$(opam env); dune runtest --verbose")
+                //  echo runShell("eval \$(opam env); dune runtest --verbose")
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
