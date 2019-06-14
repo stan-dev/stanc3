@@ -45,8 +45,8 @@ let pp_globals ppf location_map =
       (Map.to_alist ~key_order:`Increasing location_map)
   in
   Fmt.pf ppf
-    "@ int current_statement__ = 0;@ std::vector<char*> locations_array__ = \
-     {%a};@ "
+    "@ static int current_statement__ = 0;@ static const std::vector<string> locations_array__ = \
+     {@[<hov>%a@]};@ "
     Fmt.(list ~sep:comma (fmt "%S"))
     location_list
 
