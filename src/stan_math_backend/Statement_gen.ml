@@ -78,8 +78,9 @@ let trans_math_fn fname =
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
+  let _ = pf ppf "{@;<1 2>@[<v>" in
   let _ = Locations.pp_smeta ppf smeta in
-  match stmt with
+  (match stmt with
   | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
     when internal_fn_of_string f = Some FnReadData ->
       let with_vestigial_idx =
@@ -157,7 +158,8 @@ let rec pp_statement (ppf : Format.formatter)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
+      pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)) ;
+       pf ppf "@]@,}" 
 
 and pp_block_s ppf body =
   match body.stmt with
