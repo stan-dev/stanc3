@@ -461,8 +461,6 @@ let pp_model ppf (p : Locations.typed_prog_num) =
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
 
-let globals = "static char* current_statement__;"
-
 let usings =
   {|
 using std::istream;
@@ -572,7 +570,7 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
-  let p, _ = Locations.prepare_prog p in
+  let p, s = Locations.prepare_prog p in
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
@@ -589,7 +587,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
     ; transform_inits= fix_data_reads p.transform_inits }
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
-    p.functions_block pp_model p ;
+  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
+    version includes p.prog_name usings Locations.pp_globals (p, s)
+    (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name
