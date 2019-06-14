@@ -38,7 +38,7 @@ let%expect_test "set size mat array" =
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s <= %a;@ ++%s@])" loopvar
     pp_expr lower loopvar pp_expr upper loopvar ;
-  pf ppf " %a@]" pp_body body
+  pf ppf " {%a}@]" pp_body body
 
 let rec integer_el_type = function
   | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
@@ -144,11 +144,11 @@ let rec pp_statement (ppf : Format.formatter)
     | Return e -> pf ppf "return %a;" (option pp_expr) e
     | Skip -> ()
     | IfElse (cond, ifbranch, elsebranch) ->
-        let pp_else ppf x = pf ppf "else %a" pp_statement x in
-        pf ppf "if (@[<hov>%a@]) %a %a" pp_expr cond pp_block_s ifbranch
+        let pp_else ppf x = pf ppf "else {%a}" pp_statement x in
+        pf ppf "if (@[<hov>%a@]) {%a} %a" pp_expr cond pp_block_s ifbranch
           (option pp_else) elsebranch
     | While (cond, body) ->
-        pf ppf "while (@[<hov>%a@]) %a" pp_expr cond pp_block_s body
+        pf ppf "while (@[<hov>%a@]) {%a}" pp_expr cond pp_block_s body
     | For
         { body=
             { stmt= Assignment (_, {expr= FunApp (CompilerInternal, f, _); _}); _
@@ -166,7 +166,7 @@ let rec pp_statement (ppf : Format.formatter)
   match stmt with
   | Decl _ -> pp_statement_body ppf stmt
   | _ ->
-      pf ppf "{@;<1 2>@[<v>%a%a@]@,}" Locations.pp_smeta smeta
+      pf ppf "@;<1 2>@[<v>%a%a@]@," Locations.pp_smeta smeta
         pp_statement_body stmt
 
 and pp_block_s ppf body =
