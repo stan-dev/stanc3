@@ -19,6 +19,8 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   end in
   let label_to_location = Int.Table.create () in
   let location_to_label = Hashtbl.create (module LocSp) in
+  let _ = Hashtbl.add label_to_location ~key:0 ~data:no_span in
+  let _ = Hashtbl.add location_to_label ~key:no_span ~data:0 in
   let rec number_locations_stmt ({stmt; smeta} : stmt_loc) : stmt_num =
     let stmt = map_statement (fun x -> x) number_locations_stmt stmt in
     match Hashtbl.find location_to_label smeta with
@@ -45,6 +47,7 @@ let pp_globals ppf (mir, location_map) =
 let pp_smeta ppf location_num =
   Fmt.pf ppf "current_statement__ = %d;@;" location_num
 
+let no_span_num = 0
 let _ = prepare_prog
 let _ = pp_globals
 let _ = pp_smeta

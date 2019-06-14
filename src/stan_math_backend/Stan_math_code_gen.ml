@@ -64,11 +64,6 @@ let pp_location ppf loc =
   ignore (loc : location_span) ;
   ignore ppf
 
-(*
-  pf ppf "current_statement__ = (char* )%S;@;"
-    (string_of_location_span loc)
- *)
-
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
@@ -85,7 +80,9 @@ let to_indexed assignee idcs =
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf (body_stmts, err_msg) =
   pp_located_error ppf
-    (pp_statement, {stmt= Block body_stmts; smeta= no_span}, err_msg)
+    ( pp_statement
+    , {stmt= Block body_stmts; smeta= Locations.no_span_num}
+    , err_msg )
 
 let pp_fun_def ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
@@ -163,7 +160,7 @@ let%expect_test "dims" =
    1. run checks on resulting vident
 *)
 
-let pp_ctor ppf (p : typed_prog) =
+let pp_ctor ppf (p : Locations.typed_prog_num) =
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
@@ -199,7 +196,7 @@ let pp_ctor ppf (p : typed_prog) =
         pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error ppf
           ( pp_statement_zeroing
-          , {stmt= Block p.prepare_data; smeta= no_span}
+          , {stmt= Block p.prepare_data; smeta= Locations.no_span_num}
           , "inside ctor" ) ;
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
@@ -457,7 +454,7 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_transform_inits p ;
   pf ppf "@ %a" pp_overloads ()
 
-let pp_model ppf (p : typed_prog) =
+let pp_model ppf (p : Locations.typed_prog_num) =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
@@ -575,10 +572,11 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  let p, _ = Locations.prepare_prog p in
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; smeta= no_span }
+    ; smeta= Locations.no_span_num }
     :: stmts
     |> List.map ~f:invert_read_fors
     |> List.concat_map ~f:add_pos_reset
