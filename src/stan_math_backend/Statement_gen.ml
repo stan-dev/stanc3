@@ -163,8 +163,11 @@ let rec pp_statement (ppf : Format.formatter)
     | Decl {decl_adtype; decl_id; decl_type} ->
         pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
   in
-  pf ppf "{@;<1 2>@[<v>%a%a@]@,}" Locations.pp_smeta smeta pp_statement_body
-    stmt
+  match stmt with
+  | Decl _ -> pp_statement_body ppf stmt
+  | _ ->
+      pf ppf "{@;<1 2>@[<v>%a%a@]@,}" Locations.pp_smeta smeta
+        pp_statement_body stmt
 
 and pp_block_s ppf body =
   match body.stmt with

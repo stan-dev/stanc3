@@ -159,20 +159,14 @@ class eight_schools_ncp_model : public prob_grad {
     {
       current_statement__ = 0;
       {
-        {
-          current_statement__ = 2;
-          local_scalar_t__ mu;
-          
-        }
+        local_scalar_t__ mu;
+        
         {
           current_statement__ = 2;
           assign(mu, nil_index_list(), in__.scalar(), "assigning variable mu");
         }
-        {
-          current_statement__ = 3;
-          local_scalar_t__ tau;
-          
-        }
+        local_scalar_t__ tau;
+        
         {
           current_statement__ = 3;
           assign(tau, nil_index_list(), in__.scalar(), "assigning variable tau");
@@ -189,12 +183,9 @@ class eight_schools_ncp_model : public prob_grad {
             assign(tau, nil_index_list(), lb_constrain(tau, 0), "assigning variable tau");
           }
         }
-        {
-          current_statement__ = 4;
-          std::vector<local_scalar_t__> theta_tilde;
-          theta_tilde = std::vector<local_scalar_t__>(J, 0);
-          
-        }
+        std::vector<local_scalar_t__> theta_tilde;
+        theta_tilde = std::vector<local_scalar_t__>(J, 0);
+        
         {
           current_statement__ = 4;
           for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
@@ -207,12 +198,9 @@ class eight_schools_ncp_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 5;
-          std::vector<local_scalar_t__> theta;
-          theta = std::vector<local_scalar_t__>(J, 0);
-          
-        }
+        std::vector<local_scalar_t__> theta;
+        theta = std::vector<local_scalar_t__>(J, 0);
+        
         {
           current_statement__ = 7;
           for (size_t j = 1; j <= J; ++j) {
@@ -293,20 +281,14 @@ class eight_schools_ncp_model : public prob_grad {
     {
       current_statement__ = 0;
       {
-        {
-          current_statement__ = 2;
-          double mu;
-          
-        }
+        double mu;
+        
         {
           current_statement__ = 2;
           assign(mu, nil_index_list(), in__.scalar(), "assigning variable mu");
         }
-        {
-          current_statement__ = 3;
-          double tau;
-          
-        }
+        double tau;
+        
         {
           current_statement__ = 3;
           assign(tau, nil_index_list(), in__.scalar(), "assigning variable tau");
@@ -315,12 +297,9 @@ class eight_schools_ncp_model : public prob_grad {
           current_statement__ = 3;
           assign(tau, nil_index_list(), lb_constrain(tau, 0), "assigning variable tau");
         }
-        {
-          current_statement__ = 4;
-          std::vector<double> theta_tilde;
-          theta_tilde = std::vector<double>(J, 0);
-          
-        }
+        std::vector<double> theta_tilde;
+        theta_tilde = std::vector<double>(J, 0);
+        
         {
           current_statement__ = 4;
           for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
@@ -352,12 +331,9 @@ class eight_schools_ncp_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 5;
-          std::vector<double> theta;
-          theta = std::vector<double>(J, 0);
-          
-        }
+        std::vector<double> theta;
+        theta = std::vector<double>(J, 0);
+        
         {
           current_statement__ = 0;
           if (emit_transformed_parameters__) {
@@ -446,16 +422,10 @@ class eight_schools_ncp_model : public prob_grad {
     {
       current_statement__ = 0;
       {
-        {
-          current_statement__ = 0;
-          int pos__;
-          
-        }
-        {
-          current_statement__ = 2;
-          double mu;
-          
-        }
+        int pos__;
+        
+        double mu;
+        
         {
           current_statement__ = 2;
           {
@@ -463,11 +433,8 @@ class eight_schools_ncp_model : public prob_grad {
             assign(mu, nil_index_list(), context__.vals_r("mu")[(1 - 1)], "assigning variable mu");
           }
         }
-        {
-          current_statement__ = 3;
-          double tau;
-          
-        }
+        double tau;
+        
         {
           current_statement__ = 3;
           {
@@ -479,12 +446,9 @@ class eight_schools_ncp_model : public prob_grad {
           current_statement__ = 3;
           assign(tau, nil_index_list(), lb_free(tau, 0), "assigning variable tau");
         }
-        {
-          current_statement__ = 4;
-          std::vector<double> theta_tilde;
-          theta_tilde = std::vector<double>(J, 0);
-          
-        }
+        std::vector<double> theta_tilde;
+        theta_tilde = std::vector<double>(J, 0);
+        
         {
           current_statement__ = 4;
           pos__ = 1;
@@ -767,12 +731,9 @@ class one_var_per_block_model : public prob_grad {
     {
       current_statement__ = 0;
       {
-        {
-          current_statement__ = 2;
-          std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> param;
-          param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-          
-        }
+        std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> param;
+        param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+        
         {
           current_statement__ = 2;
           for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -815,12 +776,9 @@ class one_var_per_block_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 3;
-          std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
-          matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>((K + 1), Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
-          
-        }
+        std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> matparam;
+        matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>((K + 1), Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+        
         {
           current_statement__ = 3;
           for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -884,12 +842,9 @@ class one_var_per_block_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 4;
-          std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
-          tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-          
-        }
+        std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
+        tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+        
         {
           current_statement__ = 6;
           for (size_t n = 1; n <= N; ++n) {
@@ -928,12 +883,9 @@ class one_var_per_block_model : public prob_grad {
         {
           current_statement__ = 10;
           {
-            {
-              current_statement__ = 10;
-              std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
-              modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-              
-            }
+            std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
+            modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+            
             {
               current_statement__ = 12;
               for (size_t n = 1; n <= N; ++n) {
@@ -1013,12 +965,9 @@ class one_var_per_block_model : public prob_grad {
     {
       current_statement__ = 0;
       {
-        {
-          current_statement__ = 2;
-          std::vector<Eigen::Matrix<double, -1, 1>> param;
-          param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-          
-        }
+        std::vector<Eigen::Matrix<double, -1, 1>> param;
+        param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
         {
           current_statement__ = 2;
           for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -1051,12 +1000,9 @@ class one_var_per_block_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 3;
-          std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
-          matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
-          
-        }
+        std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
+        matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
+        
         {
           current_statement__ = 3;
           for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -1160,12 +1106,9 @@ class one_var_per_block_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 4;
-          std::vector<Eigen::Matrix<double, -1, 1>> tparam;
-          tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-          
-        }
+        std::vector<Eigen::Matrix<double, -1, 1>> tparam;
+        tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
         {
           current_statement__ = 0;
           if (emit_transformed_parameters__) {
@@ -1224,12 +1167,9 @@ class one_var_per_block_model : public prob_grad {
             }
           } 
         }
-        {
-          current_statement__ = 7;
-          std::vector<Eigen::Matrix<double, -1, 1>> gq;
-          gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-          
-        }
+        std::vector<Eigen::Matrix<double, -1, 1>> gq;
+        gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
         {
           current_statement__ = 0;
           if (emit_generated_quantities__) {
@@ -1395,17 +1335,11 @@ class one_var_per_block_model : public prob_grad {
     {
       current_statement__ = 0;
       {
-        {
-          current_statement__ = 0;
-          int pos__;
-          
-        }
-        {
-          current_statement__ = 2;
-          std::vector<Eigen::Matrix<double, -1, 1>> param;
-          param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-          
-        }
+        int pos__;
+        
+        std::vector<Eigen::Matrix<double, -1, 1>> param;
+        param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+        
         {
           current_statement__ = 2;
           pos__ = 1;
@@ -1454,12 +1388,9 @@ class one_var_per_block_model : public prob_grad {
               }
             }}
         }
-        {
-          current_statement__ = 3;
-          std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
-          matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
-          
-        }
+        std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
+        matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
+        
         {
           current_statement__ = 3;
           pos__ = 1;
