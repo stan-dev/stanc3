@@ -409,7 +409,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     | Some Check -> check_decl dt decl_id transform smeta dadlevel
     | _ -> []
   in
-  let decl_var, unconstrained_decl =
+  let (temp_decl_id, temp_decl_var, temp_dt), unconstrained_decl =
     let unconstrained_decl =
       match transform with
       | Ast.Identity | Ast.Lower _ | Ast.Upper _
@@ -424,21 +424,22 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
           let st = param_size transform dt in
           let emeta = {decl_var.emeta with mtype= remove_size st} in
           let stmt = Decl {decl_adtype; decl_id; decl_type= Sized st} in
-          Some ({expr= Var decl_id; emeta}, [{stmt; smeta}])
+          Some ((decl_id, {expr= Var decl_id; emeta}, st), [{stmt; smeta}])
     in
     match (dconstrain, unconstrained_decl) with
     | Some Constrain, Some ud -> ud
-    | _ -> (decl_var, [])
+    | _ -> ((decl_id, decl_var, dt), [])
   in
   let constrain_stmts =
     match dconstrain with
     | Some Constrain | Some Unconstrain ->
-        constrain_decl dt dconstrain transform decl_id decl_var smeta
+        constrain_decl dt dconstrain transform decl_id temp_decl_var smeta
     | _ -> []
   in
   let read_stmts =
     match (dread, rhs) with
-    | Some dread, _ -> [read_decl dread decl_id transform dt smeta decl_var]
+    | Some dread, _ ->
+        [read_decl dread temp_decl_id transform temp_dt smeta temp_decl_var]
     | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
     | None, None -> []
   in
