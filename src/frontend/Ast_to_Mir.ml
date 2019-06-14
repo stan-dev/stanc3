@@ -397,34 +397,52 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
     identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
-  let decl_type = trans_sizedtype sizedtype in
+  let dt = trans_sizedtype sizedtype in
+  let decl_adtype = dadlevel in
   let decl_var =
     { expr= Var decl_id
     ; emeta= {mtype= remove_size sizedtype; madlevel= dadlevel; mloc= smeta} }
   in
-  let read_stmts =
-    match (dread, rhs) with
-    | Some dread, _ ->
-        [read_decl dread decl_id transform decl_type smeta decl_var]
-    | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
-    | None, None -> []
+  let decl = {stmt= Decl {decl_adtype; decl_id; decl_type= Sized dt}; smeta} in
+  let checks =
+    match dconstrain with
+    | Some Check -> check_decl dt decl_id transform smeta dadlevel
+    | _ -> []
+  in
+  let decl_var, unconstrained_decl =
+    let unconstrained_decl =
+      match transform with
+      | Ast.Identity | Ast.Lower _ | Ast.Upper _
+       |Ast.LowerUpper (_, _)
+       |Ast.Offset _ | Ast.Multiplier _
+       |Ast.OffsetMultiplier (_, _)
+       |Ast.Ordered | Ast.PositiveOrdered ->
+          None
+      | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
+       |Ast.Correlation | Ast.Covariance ->
+          let decl_id = decl_id ^ "_" ^ gensym () in
+          let st = param_size transform dt in
+          let emeta = {decl_var.emeta with mtype= remove_size st} in
+          let stmt = Decl {decl_adtype; decl_id; decl_type= Sized st} in
+          Some ({expr= Var decl_id; emeta}, [{stmt; smeta}])
+    in
+    match (dconstrain, unconstrained_decl) with
+    | Some Constrain, Some ud -> ud
+    | _ -> (decl_var, [])
   in
   let constrain_stmts =
     match dconstrain with
     | Some Constrain | Some Unconstrain ->
-        constrain_decl decl_type dconstrain transform decl_id decl_var smeta
+        constrain_decl dt dconstrain transform decl_id decl_var smeta
     | _ -> []
   in
-  let decl =
-    { stmt= Decl {decl_adtype= dadlevel; decl_id; decl_type= Sized decl_type}
-    ; smeta }
+  let read_stmts =
+    match (dread, rhs) with
+    | Some dread, _ -> [read_decl dread decl_id transform dt smeta decl_var]
+    | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
+    | None, None -> []
   in
-  let checks =
-    match dconstrain with
-    | Some Check -> check_decl decl_type decl_id transform smeta dadlevel
-    | _ -> []
-  in
-  (decl :: read_stmts) @ constrain_stmts @ checks
+  (unconstrained_decl @ (decl :: read_stmts)) @ constrain_stmts @ checks
 
 let unwrap_block_or_skip = function
   | [({stmt= Block _; _} as b)] | [({stmt= Skip; _} as b)] -> b

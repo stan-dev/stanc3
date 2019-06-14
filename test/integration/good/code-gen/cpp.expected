@@ -407,6 +407,7 @@ class one_var_per_block_model : public prob_grad {
     num_params_r__ = 0U;
     num_params_r__ += K * N;
     num_params_r__ += K * (K + 1) * N * N;
+    num_params_r__ += K * (K + 1) * N * N;
     
   }
   template <bool propto__, bool jacobian__, typename T__>
@@ -459,6 +460,27 @@ class one_var_per_block_model : public prob_grad {
                             stan::model::rvalue(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"),
                             0), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1),\n                            (sym4__ - 1)]");
             }}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> cov_matparam_sym1__;
+      cov_matparam_sym1__ = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>((K + 1), Eigen::Matrix<local_scalar_t__, -1, 1>((N + ((N * (N - 1)) / 2)))));
+      
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> cov_matparam;
+      cov_matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>((K + 1), Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+          assign(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), in__.vector(
+                 N, N), "assigning variable cov_matparam[(sym2__ - 1), (sym3__ - 1)]");
+        }}
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+          if (jacobian__) {
+            assign(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), cov_matrix_constrain(
+                   stan::model::rvalue(cov_matparam_sym1__, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
+                   N, lp__), "assigning variable cov_matparam[(sym2__ - 1), (sym3__ - 1)]");
+          } else assign(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), cov_matrix_constrain(
+                        stan::model::rvalue(cov_matparam_sym1__, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
+                        N), "assigning variable cov_matparam[(sym2__ - 1), (sym3__ - 1)]");
+        }}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -489,6 +511,7 @@ class one_var_per_block_model : public prob_grad {
     names__.resize(0);
     names__.push_back("param");
     names__.push_back("matparam");
+    names__.push_back("cov_matparam");
     names__.push_back("tparam");
     names__.push_back("gq");
     } // get_param_names() 
@@ -497,6 +520,15 @@ class one_var_per_block_model : public prob_grad {
     dimss__.resize(0);
     std::vector<size_t> dims__;
     dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(K);
+    
+    dims__.push_back((K + 1));
+    
+    dims__.push_back(N);
     
     dims__.push_back(N);
     dimss__.push_back(dims__);
@@ -541,73 +573,96 @@ class one_var_per_block_model : public prob_grad {
       std::vector<Eigen::Matrix<double, -1, 1>> param;
       param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        assign(param, cons_list(index_uni(sym1__), nil_index_list()), in__.vector(
-               N), "assigning variable param[(sym1__ - 1)]");}
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          assign(param, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), lb_constrain(
-                 stan::model::rvalue(param, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                 0), "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        assign(param, cons_list(index_uni(sym2__), nil_index_list()), in__.vector(
+               N), "assigning variable param[(sym2__ - 1)]");}
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
+          assign(param, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), lb_constrain(
+                 stan::model::rvalue(param, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
+                 0), "assigning variable param[(sym2__ - 1), (sym3__ - 1)]");
         }}
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
       
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= (K + 1); ++sym2__) {
-          assign(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), in__.matrix(
-                 N, N), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1)]");
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+          assign(matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), in__.matrix(
+                 N, N), "assigning variable matparam[(sym2__ - 1), (sym3__ - 1)]");
         }}
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= (K + 1); ++sym2__) {
-          for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              assign(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), lb_constrain(
-                     stan::model::rvalue(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"),
-                     0), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1),\n                            (sym4__ - 1)]");
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+          for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+            for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+              assign(matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), lb_constrain(
+                     stan::model::rvalue(matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"),
+                     0), "assigning variable matparam[(sym2__ - 1), (sym3__ - 1), (sym4__ - 1),\n                            (sym5__ - 1)]");
             }}}}
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-          vars__.push_back(stan::model::rvalue(param, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> cov_matparam_sym2__;
+      cov_matparam_sym2__ = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(K, std::vector<Eigen::Matrix<double, -1, 1>>((K + 1), Eigen::Matrix<double, -1, 1>((N + ((N * (N - 1)) / 2)))));
+      
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> cov_matparam;
+      cov_matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
+      
+      for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+        for (size_t sym4__ = 1; sym4__ <= (K + 1); ++sym4__) {
+          assign(cov_matparam, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), in__.vector(
+                 N, N), "assigning variable cov_matparam[(sym3__ - 1), (sym4__ - 1)]");
         }}
-      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= (K + 1); ++sym2__) {
-            for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-              vars__.push_back(stan::model::rvalue(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"));
+      for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+        for (size_t sym4__ = 1; sym4__ <= (K + 1); ++sym4__) {
+          assign(cov_matparam, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), cov_matrix_constrain(
+                 stan::model::rvalue(cov_matparam_sym2__, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), "pretty printed e"),
+                 N), "assigning variable cov_matparam[(sym3__ - 1), (sym4__ - 1)]");
+        }}
+      for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          vars__.push_back(stan::model::rvalue(param, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+        for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+          for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+            for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+              vars__.push_back(stan::model::rvalue(matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+        for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+          for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+            for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+              vars__.push_back(stan::model::rvalue(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
             }}}}
       std::vector<Eigen::Matrix<double, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
       if (emit_transformed_parameters__) {
-        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            check_greater_or_equal(function__, "tparam[sym1__, sym2__]",
-                                   stan::model::rvalue(tparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
+            check_greater_or_equal(function__, "tparam[sym2__, sym3__]",
+                                   stan::model::rvalue(tparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
                                    0);}}
         for (size_t n = 1; n <= N; ++n) {
           assign(tparam, cons_list(index_uni(n), nil_index_list()), multiply(stan::model::rvalue(param, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), 2), "assigning variable tparam[(n - 1)]");
         }
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-            vars__.push_back(stan::model::rvalue(tparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
+          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+            vars__.push_back(stan::model::rvalue(tparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
           }}
       } 
       std::vector<Eigen::Matrix<double, -1, 1>> gq;
       gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
       if (emit_generated_quantities__) {
-        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-          for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-            check_greater_or_equal(function__, "gq[sym1__, sym2__]",
-                                   stan::model::rvalue(gq, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
+            check_greater_or_equal(function__, "gq[sym2__, sym3__]",
+                                   stan::model::rvalue(gq, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
                                    0);}}
         for (size_t n = 1; n <= N; ++n) {
           assign(gq, cons_list(index_uni(n), nil_index_list()), add(stan::model::rvalue(tparam, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), stan::model::rvalue(param, cons_list(index_uni(n), nil_index_list()), "pretty printed e")), "assigning variable gq[(n - 1)]");
         }
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-            vars__.push_back(stan::model::rvalue(gq, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
+        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
+          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+            vars__.push_back(stan::model::rvalue(gq, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
           }}
       } 
     }
@@ -617,42 +672,55 @@ class one_var_per_block_model : public prob_grad {
                                bool emit_transformed_parameters__ = true,
                                bool emit_generated_quantities__ = true) const {
     
-    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym5__ = 1; sym5__ <= K; ++sym5__) {
           {
-            param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
           }}
       }}
-    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
           {
-            for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+            for (size_t sym6__ = 1; sym6__ <= (K + 1); ++sym6__) {
               {
-                for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
+                for (size_t sym7__ = 1; sym7__ <= K; ++sym7__) {
                   {
-                    param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                    param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym7__) + '.' + std::to_string(sym6__) + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
+                  }}
+              }}
+          }}
+      }}
+    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+      {
+        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+          {
+            for (size_t sym6__ = 1; sym6__ <= (K + 1); ++sym6__) {
+              {
+                for (size_t sym7__ = 1; sym7__ <= K; ++sym7__) {
+                  {
+                    param_names__.push_back(std::string() + "cov_matparam" + '.' + std::to_string(sym7__) + '.' + std::to_string(sym6__) + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
                   }}
               }}
           }}
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym5__ = 1; sym5__ <= K; ++sym5__) {
             {
-              param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
             }}
         }}
     }
     
     if (emit_generated_quantities__) {
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym5__ = 1; sym5__ <= K; ++sym5__) {
             {
-              param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
             }}
         }}
     }
@@ -663,42 +731,55 @@ class one_var_per_block_model : public prob_grad {
                                  bool emit_transformed_parameters__ = true,
                                  bool emit_generated_quantities__ = true) const {
     
-    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        for (size_t sym5__ = 1; sym5__ <= K; ++sym5__) {
           {
-            param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.push_back(std::string() + "param" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
           }}
       }}
-    for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
       {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
           {
-            for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+            for (size_t sym6__ = 1; sym6__ <= (K + 1); ++sym6__) {
               {
-                for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
+                for (size_t sym7__ = 1; sym7__ <= K; ++sym7__) {
                   {
-                    param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+                    param_names__.push_back(std::string() + "matparam" + '.' + std::to_string(sym7__) + '.' + std::to_string(sym6__) + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
+                  }}
+              }}
+          }}
+      }}
+    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+      {
+        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+          {
+            for (size_t sym6__ = 1; sym6__ <= (K + 1); ++sym6__) {
+              {
+                for (size_t sym7__ = 1; sym7__ <= K; ++sym7__) {
+                  {
+                    param_names__.push_back(std::string() + "cov_matparam" + '.' + std::to_string(sym7__) + '.' + std::to_string(sym6__) + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
                   }}
               }}
           }}
       }}
     if (emit_transformed_parameters__) {
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym5__ = 1; sym5__ <= K; ++sym5__) {
             {
-              param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.push_back(std::string() + "tparam" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
             }}
         }}
     }
     
     if (emit_generated_quantities__) {
-      for (size_t sym1__ = 1; sym1__ <= N; ++sym1__) {
+      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
         {
-          for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (size_t sym5__ = 1; sym5__ <= K; ++sym5__) {
             {
-              param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              param_names__.push_back(std::string() + "gq" + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
             }}
         }}
     }
@@ -720,38 +801,55 @@ class one_var_per_block_model : public prob_grad {
       param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
       pos__ = 1;
-      for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-          assign(param, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), 
-                 context__.vals_r("param")[(pos__ - 1)], "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
+      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+        for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+          assign(param, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), 
+                 context__.vals_r("param")[(pos__ - 1)], "assigning variable param[(sym3__ - 1), (sym4__ - 1)]");
           assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
         }}
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          assign(param, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), lb_free(
-                 stan::model::rvalue(param, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                 0), "assigning variable param[(sym1__ - 1), (sym2__ - 1)]");
+      for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+        for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+          assign(param, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), lb_free(
+                 stan::model::rvalue(param, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), "pretty printed e"),
+                 0), "assigning variable param[(sym3__ - 1), (sym4__ - 1)]");
         }}
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> matparam;
       matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
       
       pos__ = 1;
-      for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-        for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          for (size_t sym2__ = 1; sym2__ <= (K + 1); ++sym2__) {
-            for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-              assign(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), 
-                     context__.vals_r("matparam")[(pos__ - 1)], "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1),\n                            (sym4__ - 1)]");
+      for (size_t sym6__ = 1; sym6__ <= N; ++sym6__) {
+        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+          for (size_t sym4__ = 1; sym4__ <= (K + 1); ++sym4__) {
+            for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+              assign(matparam, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), nil_index_list())))), 
+                     context__.vals_r("matparam")[(pos__ - 1)], "assigning variable matparam[(sym3__ - 1), (sym4__ - 1), (sym5__ - 1),\n                            (sym6__ - 1)]");
               assign(pos__, nil_index_list(), (stan::model::deep_copy(
                      pos__) + 1), "assigning variable pos__");}}}}
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (size_t sym2__ = 1; sym2__ <= (K + 1); ++sym2__) {
-          for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-              assign(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), lb_free(
-                     stan::model::rvalue(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"),
-                     0), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1),\n                            (sym4__ - 1)]");
+      for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
+        for (size_t sym4__ = 1; sym4__ <= (K + 1); ++sym4__) {
+          for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+            for (size_t sym6__ = 1; sym6__ <= N; ++sym6__) {
+              assign(matparam, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), nil_index_list())))), lb_free(
+                     stan::model::rvalue(matparam, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), nil_index_list())))), "pretty printed e"),
+                     0), "assigning variable matparam[(sym3__ - 1), (sym4__ - 1), (sym5__ - 1),\n                            (sym6__ - 1)]");
             }}}}
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> cov_matparam;
+      cov_matparam = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(K, std::vector<Eigen::Matrix<double, -1, -1>>((K + 1), Eigen::Matrix<double, -1, -1>(N, N)));
+      
+      pos__ = 1;
+      for (size_t sym7__ = 1; sym7__ <= N; ++sym7__) {
+        for (size_t sym6__ = 1; sym6__ <= N; ++sym6__) {
+          for (size_t sym5__ = 1; sym5__ <= (K + 1); ++sym5__) {
+            for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
+              assign(cov_matparam, cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), cons_list(index_uni(sym7__), nil_index_list())))), 
+                     context__.vals_r("cov_matparam")[(pos__ - 1)], "assigning variable cov_matparam[(sym4__ - 1), (sym5__ - 1), (sym6__ - 1),\n                                (sym7__ - 1)]");
+              assign(pos__, nil_index_list(), (stan::model::deep_copy(
+                     pos__) + 1), "assigning variable pos__");}}}}
+      for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
+        for (size_t sym5__ = 1; sym5__ <= (K + 1); ++sym5__) {
+          assign(cov_matparam, cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())), cov_matrix_free(
+                 stan::model::rvalue(cov_matparam, cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())), "pretty printed e")), "assigning variable cov_matparam[(sym4__ - 1), (sym5__ - 1)]");
+        }}
     }
     } // transform_inits() 
     

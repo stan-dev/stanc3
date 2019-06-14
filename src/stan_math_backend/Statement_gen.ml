@@ -58,12 +58,6 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
   | Sized st -> pp_sized_decl ppf (vident, st, adtype)
   | Unsized ut -> pp_decl ppf (vident, ut, adtype)
 
-(*
-  pf ppf "@ try %a" pp_body_block body ;
-  string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located_msg, err_msg)
- *)
-
 let math_fn_translations = function
   | FnPrint ->
       Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
@@ -85,13 +79,6 @@ let rec pp_statement (ppf : Format.formatter)
         {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
       in
       pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
-      (* XXX In stan2 this often generates:
-                stan::model::assign(theta,
-                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
-                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))),
-                            "assigning variable theta");
-            }
-        *)
   | Assignment (lhs, {expr= Lit (Str, s); _}) ->
       pf ppf "%a = %S;" pp_indexed_simple lhs s
   | Assignment (lhs, {expr= Lit (_, s); _}) ->
