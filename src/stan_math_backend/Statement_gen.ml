@@ -95,7 +95,8 @@ let rec block_wrapping {stmt; smeta} =
 
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
-  let {stmt; smeta} = block_wrapping {stmt; smeta} in (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before *)
+  let {stmt; smeta} = block_wrapping {stmt; smeta} in
+  (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   let _ =
     match stmt with

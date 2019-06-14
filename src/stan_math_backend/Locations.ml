@@ -7,7 +7,7 @@ type stmt_num = (mtype_loc_ad, (loc_t sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
 type typed_prog_num = (mtype_loc_ad with_expr, stmt_num) prog [@@deriving sexp]
-type state_t = (loc_t, location_span) Map.Poly.t
+type state_t = location_span List.t
 
 let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   let module LocSp = struct
@@ -32,18 +32,16 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
         {stmt; smeta= new_label}
   in
   let mir = map_prog (fun x -> x) number_locations_stmt mir in
-  let immutable_label_to_location =
-    Hashtbl.fold label_to_location ~init:Map.Poly.empty
-      ~f:(fun ~key ~data accum -> Map.set accum ~key ~data )
-  in
-  (mir, immutable_label_to_location)
-
-let pp_globals ppf location_map =
   let location_list =
-    List.map
-      ~f:(fun (_, v) -> string_of_location_span v)
-      (Map.to_alist ~key_order:`Increasing location_map)
+    List.map ~f:snd
+      (List.sort
+         ~compare:(fun x y -> compare_int (fst x) (fst y))
+         (Hashtbl.to_alist label_to_location))
   in
+  (mir, location_list)
+
+let pp_globals ppf location_list =
+  let location_list = List.map ~f:string_of_location_span location_list in
   Fmt.pf ppf
     "@ static int current_statement__ = 0;@ static const std::vector<string> \
      locations_array__ = {@[<hov>%a@]};@ "
