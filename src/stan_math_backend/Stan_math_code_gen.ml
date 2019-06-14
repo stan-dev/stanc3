@@ -589,14 +589,7 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"." ~with_:"_"
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
-let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
-  (* XXX Need to deal with the fact that we should be reading a smaller-sized vector in
-     for many of these matrix transformations.
-     One idea: add a temporary variable with a derived name that we then pass to
-     the cov_matrix_constrain or whatever function (and freeing also returns the smaller
-     thing, fuck)
-  *)
-  (* First, do some transformations on the MIR itself before we begin printing it.*)
+let trans_prog p =
   let fix_data_reads stmts =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
     ; smeta= no_span }
@@ -605,13 +598,15 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     |> List.concat_map ~f:add_pos_reset
     |> List.map ~f:use_pos_in_readdata
   in
-  let p =
-    { p with
-      prog_name= escape_name p.prog_name
-    ; prepare_data= fix_data_reads p.prepare_data
-    ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
-    ; transform_inits= fix_data_reads p.transform_inits }
-  in
+  { p with
+    prog_name= escape_name p.prog_name
+  ; prepare_data= fix_data_reads p.prepare_data
+  ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
+  ; transform_inits= fix_data_reads p.transform_inits }
+
+let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  (* First, do some transformations on the MIR itself before we begin printing it.*)
+  let p = trans_prog p in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
     version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
     p.functions_block pp_model p ;
