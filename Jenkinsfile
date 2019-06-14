@@ -20,6 +20,10 @@ def tagName() {
 }
 pipeline {
     agent none
+    parameters {
+        booleanParam(defaultValue: false, name: 'all_tests',
+               description: "Check this box if you want to run all end-to-end tests.")
+    }
     stages {
         stage('Kill previous builds') {
             when {
@@ -61,7 +65,7 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 stat_comp_benchmarks/" develop stanc3-dev develop develop
+          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 stat_comp_benchmarks/" develop stanc3-dev develop develop
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'
@@ -77,7 +81,7 @@ pipeline {
         // and log all the failures. It'll make a big nasty red graph
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -88,7 +92,7 @@ pipeline {
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=20" develop stanc3-dev develop develop || true
+          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=10" develop stanc3-dev develop develop || true
                """
 
                 xunit([GoogleTest(
