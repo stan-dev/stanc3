@@ -9,6 +9,25 @@ type stmt_num = (mtype_loc_ad, (loc_t sexp_opaque[@compare.ignore])) stmt_with
 type typed_prog_num = (mtype_loc_ad with_expr, stmt_num) prog [@@deriving sexp]
 type state_t = (loc_t, location_span) Map.Poly.t
 
+let block_wrapping =
+  let in_block {stmt; smeta} =
+    { stmt=
+        ( match stmt with
+        | Block l -> Block l
+        | SList l -> Block l
+        | stmt -> Block [{stmt; smeta}] )
+    ; smeta }
+  in
+  let block_wrapping_base = function
+    | IfElse (e, b1, None) -> IfElse (e, in_block b1, None)
+    | IfElse (e, b1, Some b2) -> IfElse (e, in_block b1, Some (in_block b2))
+    | While (e, b) -> While (e, in_block b)
+    | For {loopvar; lower; upper; body} ->
+        For {loopvar; lower; upper; body= in_block body}
+    | stmt -> stmt
+  in
+  Analysis_and_optimization.Mir_utils.map_rec_stmt_loc block_wrapping_base
+
 let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   let module LocSp = struct
     type t = location_span
@@ -31,6 +50,7 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
         let _ = Hashtbl.add location_to_label ~key:smeta ~data:new_label in
         {stmt; smeta= new_label}
   in
+  let mir = map_prog (fun x -> x) block_wrapping mir in
   let mir = map_prog (fun x -> x) number_locations_stmt mir in
   let immutable_label_to_location =
     Hashtbl.fold label_to_location ~init:Map.Poly.empty
