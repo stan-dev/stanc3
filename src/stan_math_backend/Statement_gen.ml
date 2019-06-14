@@ -75,8 +75,27 @@ let trans_math_fn fname =
     value ~default:(fname, [])
       (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
+let rec block_wrapping {stmt; smeta} =
+  let in_block {stmt; smeta} =
+    { stmt=
+        ( match stmt with
+        | Block l -> Block l
+        | SList l -> Block l
+        | stmt -> Block [{stmt; smeta}] )
+    ; smeta }
+  in
+  let block_wrapping_base stmt =
+    match stmt with
+    | IfElse (_, _, _) | While (_, _) | For _ ->
+        map_statement (fun x -> x) in_block stmt
+    | _ -> stmt
+  in
+  { stmt= block_wrapping_base (map_statement (fun x -> x) block_wrapping stmt)
+  ; smeta }
+
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
+  let {stmt; smeta} = block_wrapping {stmt; smeta} in (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   let _ =
     match stmt with
