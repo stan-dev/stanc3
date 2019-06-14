@@ -32,7 +32,7 @@ let pp_function__ ppf (prog_name, fname) =
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
-          std::runtime_error(std::string(%S) + ": " + e.what()), current_statement__);
+          std::runtime_error(std::string(%S) + ": " + e.what()), locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
     msg
@@ -588,6 +588,6 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     ; transform_inits= fix_data_reads p.transform_inits }
   in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings Locations.pp_globals (p, s)
+    version includes p.prog_name usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name

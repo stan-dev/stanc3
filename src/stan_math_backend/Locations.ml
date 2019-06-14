@@ -38,15 +38,15 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   in
   (mir, immutable_label_to_location)
 
-let pp_globals ppf (mir, location_map) =
-  ignore ppf ;
-  ignore mir ;
+let pp_globals ppf location_map =
   let location_list =
     List.map
       ~f:(fun (_, v) -> string_of_location_span v)
       (Map.to_alist ~key_order:`Increasing location_map)
   in
-  Fmt.pf ppf "@ std::vector<char*> locations_array__ = {%a};@ "
+  Fmt.pf ppf
+    "@ int current_statement__ = 0;@ std::vector<char*> locations_array__ = \
+     {%a};@ "
     Fmt.(list ~sep:comma (fmt "%S"))
     location_list
 
