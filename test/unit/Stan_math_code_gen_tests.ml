@@ -5,7 +5,7 @@ open Fmt
 open Stan_math_code_gen
 
 let%expect_test "udf" =
-  let with_no_loc stmt = {stmt; smeta= no_span} in
+  let with_no_loc stmt = {stmt; smeta= Locations.no_span_num} in
   let w e = {expr= e; emeta= internal_meta} in
   { fdrt= None
   ; fdname= "sars"
@@ -30,7 +30,9 @@ let%expect_test "udf" =
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
+      current_statement__ = 0;
       {
+        current_statement__ = 0;
         return add(x, 1);
       }
 

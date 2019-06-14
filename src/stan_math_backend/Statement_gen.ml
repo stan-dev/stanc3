@@ -78,6 +78,7 @@ let trans_math_fn fname =
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
+  let _ = Locations.pp_smeta ppf smeta in
   match stmt with
   | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
     when internal_fn_of_string f = Some FnReadData ->
