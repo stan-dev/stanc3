@@ -62,7 +62,7 @@ class eight_schools_ncp_model : public prob_grad {
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // suppress unused var warning
     
-    try 
+    try {
     
     current_statement__ = 12;
     current_statement__ = 12;
@@ -100,7 +100,7 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = 14;
       check_greater_or_equal(function__, "sigma[sym1__]",
                              stan::model::rvalue(sigma, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"),
-                             0);} catch (const std::exception& e) {
+                             0);}} catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -499,7 +499,7 @@ class one_var_per_block_model : public prob_grad {
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
     (void) function__;  // suppress unused var warning
     
-    try 
+    try {
     
     current_statement__ = 14;
     current_statement__ = 14;
@@ -543,7 +543,7 @@ class one_var_per_block_model : public prob_grad {
         current_statement__ = 17;
         check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
                                stan::model::rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                               0);}} catch (const std::exception& e) {
+                               0);}}} catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

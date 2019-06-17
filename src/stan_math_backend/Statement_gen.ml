@@ -58,12 +58,6 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
   | Sized st -> pp_sized_decl ppf (vident, st, adtype)
   | Unsized ut -> pp_decl ppf (vident, ut, adtype)
 
-(*
-  pf ppf "@ try %a" pp_body_block body ;
-  string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located_msg, err_msg)
- *)
-
 let math_fn_translations = function
   | FnPrint ->
       Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
