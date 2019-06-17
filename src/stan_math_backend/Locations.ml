@@ -7,7 +7,7 @@ type stmt_num = (mtype_loc_ad, (loc_t sexp_opaque[@compare.ignore])) stmt_with
 [@@deriving sexp]
 
 type typed_prog_num = (mtype_loc_ad with_expr, stmt_num) prog [@@deriving sexp]
-type state_t = string List.t
+type state_t = location_span List.t
 
 let no_span_num = 0
 
@@ -35,10 +35,7 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   in
   let mir = map_prog (fun x -> x) number_locations_stmt mir in
   let location_list =
-    List.map
-      ~f:(fun x ->
-        if fst x = 0 then "Found before start of program."
-        else x |> snd |> string_of_location_span )
+    List.map ~f:snd
       (List.sort
          ~compare:(fun x y -> compare_int (fst x) (fst y))
          (Hashtbl.to_alist label_to_location))
@@ -46,6 +43,13 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   (mir, location_list)
 
 let pp_globals ppf location_list =
+  let location_list =
+    List.map
+      ~f:(fun x ->
+        if x = no_span then "Found before start of program."
+        else string_of_location_span x )
+      location_list
+  in
   Fmt.pf ppf
     "@ static int current_statement__ = 0;@ static const std::vector<string> \
      locations_array__ = {@[<hov>%a@]};@ "
