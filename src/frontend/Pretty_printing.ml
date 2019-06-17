@@ -360,9 +360,12 @@ and pp_list_of_statements ppf l =
 and pp_block block_name ppf block_stmts =
   Fmt.pf ppf "%s {" block_name;
   Format.pp_print_cut ppf ();
-  with_indented_box ppf 2 0 (fun () ->
-      pp_list_of_statements ppf block_stmts; (););
-  Format.pp_print_cut ppf ();
+  if List.length block_stmts > 0
+  then (
+    with_indented_box ppf 2 0 (fun () ->
+        pp_list_of_statements ppf block_stmts; (););
+    Format.pp_print_cut ppf ();
+  ) else (Format.pp_print_cut ppf (););
   Fmt.pf ppf "}";
   Format.pp_print_cut ppf ()
 
