@@ -351,6 +351,18 @@ and pp_list_of_statements ppf l =
   with_vbox ppf 0 (fun () ->
       Format.pp_print_list pp_statement ppf l;)
 
+and pp_block block_name ppf block_stmts =
+  Fmt.pf ppf "%s {" block_name;
+  Format.pp_print_cut ppf ();
+  with_indented_box ppf 2 0 (fun () ->
+      pp_list_of_statements ppf block_stmts; (););
+  Format.pp_print_cut ppf ();
+  Fmt.pf ppf "}";
+  Format.pp_print_cut ppf ()
+
+and pp_opt_block ppf block_name opt_block =
+  Fmt.option ~none:Fmt.nop (pp_block block_name) ppf opt_block
+
 and pp_program ppf = function
   | { functionblock= bf
     ; datablock= bd
@@ -360,90 +372,13 @@ and pp_program ppf = function
     ; modelblock= bm
     ; generatedquantitiesblock= bgq } -> (
     Format.pp_open_vbox ppf 0;
-    ( match bf with
-      | None ->
-         Fmt.pf ppf "";
-      | Some x ->
-         Fmt.pf ppf "functions {";
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x;
-             ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}";
-         Format.pp_print_cut ppf ()
-    );
-    ( match bd with
-      | None -> Fmt.pf ppf ""
-      | Some x ->
-         Fmt.pf ppf "data {" ;
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x; ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}" ;
-         Format.pp_print_cut ppf ();
-    );
-    ( match btd with
-      | None -> Fmt.pf ppf ""
-      | Some x ->
-         Fmt.pf ppf "transformed data {" ;
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x;
-             ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}";
-         Format.pp_print_cut ppf ();
-    ) ;
-    ( match bp with
-      | None -> Fmt.pf ppf "";
-      | Some x ->
-         Fmt.pf ppf "parameters {";
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x;
-             ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}";
-         Format.pp_print_cut ppf ();
-    ) ;
-    ( match btp with
-      | None -> Fmt.pf ppf ""
-      | Some x ->
-         Fmt.pf ppf "transformed parameters {";
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x;
-             ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}";
-         Format.pp_print_cut ppf ();
-    ) ;
-    ( match bm with
-      | None -> Fmt.pf ppf ""
-      | Some x ->
-         Fmt.pf ppf "model {";
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x;
-             ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}";
-         Format.pp_print_cut ppf ();
-    ) ;
-    ( match bgq with
-      | None -> Fmt.pf ppf ""
-      | Some x ->
-         Fmt.pf ppf "generated quantities {" ;
-         Format.pp_print_cut ppf ();
-         with_indented_box ppf 2 0 (fun () ->
-             pp_list_of_statements ppf x;
-             ());
-         Format.pp_print_cut ppf ();
-         Fmt.pf ppf "}" ;
-         Format.pp_print_cut ppf ();
-    ) ;
+    pp_opt_block ppf "functions" bf;
+    pp_opt_block ppf "data" bd;
+    pp_opt_block ppf "transformed data" btd;
+    pp_opt_block ppf "parameters" bp;
+    pp_opt_block ppf "transformed parameters" btp;
+    pp_opt_block ppf "model" bm;
+    pp_opt_block ppf "generated quantities" bgq;
     Format.pp_close_box ppf ();
   )
 
