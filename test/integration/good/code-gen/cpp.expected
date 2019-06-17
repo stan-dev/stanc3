@@ -62,6 +62,7 @@ class eight_schools_ncp_model : public prob_grad {
     static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // suppress unused var warning
     
+    try 
     
     current_statement__ = 12;
     current_statement__ = 12;
@@ -99,7 +100,12 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = 14;
       check_greater_or_equal(function__, "sigma[sym1__]",
                              stan::model::rvalue(sigma, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"),
-                             0);}
+                             0);} catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
     num_params_r__ = 0U;
     num_params_r__ += 1;
     num_params_r__ += 1;
@@ -119,7 +125,8 @@ class eight_schools_ncp_model : public prob_grad {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    {
+    
+    try {
       local_scalar_t__ mu;
       
       current_statement__ = 2;
@@ -162,6 +169,11 @@ class eight_schools_ncp_model : public prob_grad {
         current_statement__ = 11;
         lp_accum__.add(normal_log<propto__>(y, theta, sigma));
       }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside log_prob") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -206,7 +218,8 @@ class eight_schools_ncp_model : public prob_grad {
 
     (void) function__;  // suppress unused var warning
 
-    {
+    
+    try {
       double mu;
       
       current_statement__ = 2;
@@ -250,6 +263,11 @@ class eight_schools_ncp_model : public prob_grad {
           vars__.push_back(stan::model::rvalue(theta, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
         }
       } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array() 
     
@@ -307,7 +325,8 @@ class eight_schools_ncp_model : public prob_grad {
     stan::io::writer<double> writer__(params_r__, params_i__);
     std::vector<double> vals_r__;
     std::vector<int> vals_i__;
-    {
+    
+    try {
       int pos__;
       
       double mu;
@@ -335,6 +354,11 @@ class eight_schools_ncp_model : public prob_grad {
         current_statement__ = 4;
         assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
       }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits() 
     
@@ -429,9 +453,15 @@ udf1(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  {
+  
+  try {
     current_statement__ = 18;
     return (a + b);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside UDF udf1") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -469,6 +499,7 @@ class one_var_per_block_model : public prob_grad {
     static const char* function__ = "one_var_per_block_model_namespace::one_var_per_block_model";
     (void) function__;  // suppress unused var warning
     
+    try 
     
     current_statement__ = 14;
     current_statement__ = 14;
@@ -512,7 +543,12 @@ class one_var_per_block_model : public prob_grad {
         current_statement__ = 17;
         check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
                                stan::model::rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                               0);}}
+                               0);}} catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
     num_params_r__ = 0U;
     num_params_r__ += K * N;
     num_params_r__ += K * (K + 1) * N * N;
@@ -531,7 +567,8 @@ class one_var_per_block_model : public prob_grad {
 (void) function__;  // suppress unused var warning
 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    {
+    
+    try {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> param;
       param = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -616,6 +653,11 @@ class one_var_per_block_model : public prob_grad {
         current_statement__ = 13;
         lp_accum__.add(normal_lpdf<false>(0, 0, 1));
       }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside log_prob") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -674,7 +716,8 @@ class one_var_per_block_model : public prob_grad {
 
     (void) function__;  // suppress unused var warning
 
-    {
+    
+    try {
       std::vector<Eigen::Matrix<double, -1, 1>> param;
       param = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
@@ -788,6 +831,11 @@ class one_var_per_block_model : public prob_grad {
             vars__.push_back(stan::model::rvalue(gq, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"));
           }}
       } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside write_array") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array() 
     
@@ -891,7 +939,8 @@ class one_var_per_block_model : public prob_grad {
     stan::io::writer<double> writer__(params_r__, params_i__);
     std::vector<double> vals_r__;
     std::vector<int> vals_i__;
-    {
+    
+    try {
       int pos__;
       
       std::vector<Eigen::Matrix<double, -1, 1>> param;
@@ -950,6 +999,11 @@ class one_var_per_block_model : public prob_grad {
                      stan::model::rvalue(matparam, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"),
                      0), "assigning variable matparam[(sym1__ - 1), (sym2__ - 1), (sym3__ - 1),\n                            (sym4__ - 1)]");
             }}}}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits() 
     

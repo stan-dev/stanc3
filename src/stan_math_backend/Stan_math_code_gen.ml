@@ -60,15 +60,13 @@ let pp_returntype ppf arg_types rt =
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
-let pp_location ppf loc =
-  ignore (loc : location_span) ;
-  ignore ppf
-
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
 let pp_located_error ppf (pp_body_block, body, err_msg) =
-  ignore err_msg ; pp_body_block ppf body
+  pf ppf "@ try %a" pp_body_block body ;
+  string ppf " catch (const std::exception& e) " ;
+  pp_block ppf (pp_located_msg, err_msg)
 
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
