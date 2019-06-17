@@ -31,6 +31,8 @@ let with_vbox ppf offset f =
   Format.pp_close_box ppf ();
   ()
 
+let comma_no_break = Fmt.unit ", "
+
 let with_indented_box ppf indentation offset f =
   let rec pp_print_n_spaces ppf = function
     | 0 -> ()
@@ -69,11 +71,11 @@ and pp_unsizedtype ppf = function
      let array_str = "[" ^ (String.make d ',') ^ "]" in
      Fmt.(suffix (const string array_str) pp_unsizedtype ppf ut2)
   | Middle.UFun (argtypes, rt) ->
-     Fmt.pf ppf "{|@[<h>(%a) => %a@]|}" Fmt.(list ~sep:comma pp_argtype) argtypes pp_returntype rt
+     Fmt.pf ppf "{|@[<h>(%a) => %a@]|}" Fmt.(list ~sep:comma_no_break pp_argtype) argtypes pp_returntype rt
   | Middle.UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
 
 and pp_unsizedtypes ppf l =
-  Fmt.(list ~sep:comma pp_unsizedtype) ppf l
+  Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
 
 and pp_argtype ppf = function
   | at, ut -> Fmt.append pp_autodifftype pp_unsizedtype ppf (at, ut)
@@ -113,8 +115,7 @@ and pp_index ppf = function
   | Between (e1, e2) -> Fmt.pf ppf "%a : %a" pp_expression e1 pp_expression e2
 
 and pp_list_of_indices ppf l =
-  with_hbox ppf (fun () ->
-      Fmt.(list ~sep:comma pp_index) ppf l; ())
+  Fmt.(list ~sep:comma_no_break pp_index) ppf l; ()
 
 and pp_expression ppf {expr= e_content; _} =
   match e_content with
@@ -127,14 +128,17 @@ and pp_expression ppf {expr= e_content; _} =
   | Variable id -> pp_identifier ppf id
   | IntNumeral i -> Fmt.pf ppf "%s" i
   | RealNumeral r -> Fmt.pf ppf "%s" r
-  | FunApp (_, id, es) -> Fmt.pf ppf "%a(%a)" pp_identifier id pp_list_of_expression es
+  | FunApp (_, id, es) -> with_hbox ppf (fun () -> Fmt.pf ppf "%a(%a)" pp_identifier id pp_list_of_expression es)
   | CondDistApp (id, es) -> (
     match es with
     | [] -> Errors.fatal_error ()
-    | e :: es' -> Fmt.pf ppf "%a(%a| %a)"
-                    pp_identifier id
-                    pp_expression e
-                    pp_list_of_expression es')
+    | e :: es' ->
+       with_hbox ppf (fun () ->
+           Fmt.pf ppf "%a(%a| %a)"
+             pp_identifier id
+             pp_expression e
+             pp_list_of_expression es')
+  )
   (* GetLP is deprecated *)
   | GetLP -> Fmt.pf ppf "get_lp()"
   | GetTarget -> Fmt.pf ppf "target()"
@@ -148,7 +152,7 @@ and pp_expression ppf {expr= e_content; _} =
 
 and pp_list_of_expression ppf es =
   with_hbox ppf (fun () ->
-      Fmt.(list ~sep:comma pp_expression) ppf es)
+      Fmt.(list ~sep:comma_no_break pp_expression) ppf es)
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="
@@ -170,7 +174,7 @@ and pp_printable ppf = function
   | PExpr e -> pp_expression ppf e
 
 and pp_list_of_printables ppf l =
-  Fmt.(list ~sep:comma pp_printable) ppf l
+  Fmt.(list ~sep:comma_no_break pp_printable) ppf l
 
 and pp_sizedtype ppf = function
   | Middle.SInt -> Fmt.pf ppf "int"
@@ -266,14 +270,16 @@ and pp_statement ppf {stmt= s_content; _} =
      Fmt.pf ppf "target += %a;"
        pp_expression e
   | IncrementLogProb e ->
-     Fmt.pf ppf "increment_log_prob(%a);"
-       pp_expression e
+     with_hbox ppf (fun () ->
+         Fmt.pf ppf "increment_log_prob(%a);"
+           pp_expression e)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-     Fmt.pf ppf "%a ~ %a(%a)%a;"
-       pp_expression e
-       pp_identifier id
-       pp_list_of_expression es
-       pp_truncation t
+     with_hbox ppf (fun () ->
+         Fmt.pf ppf "%a ~ %a(%a)%a;"
+           pp_expression e
+           pp_identifier id
+           pp_list_of_expression es
+           pp_truncation t)
   | Break -> Fmt.pf ppf "break;"
   | Continue -> Fmt.pf ppf "continue;"
   | Return e -> Fmt.pf ppf "return %a;" pp_expression e
@@ -336,7 +342,7 @@ and pp_statement ppf {stmt= s_content; _} =
      Fmt.pf ppf "%a %a(%a"
        pp_returntype rt
        pp_identifier id
-       (Fmt.list ~sep:Fmt.comma pp_args) args;
+       (Fmt.list ~sep:comma_no_break pp_args) args;
      match b with
      | {stmt= Skip; _} -> Fmt.pf ppf ");"
      | b -> Fmt.pf ppf ") %a" pp_statement b ;
