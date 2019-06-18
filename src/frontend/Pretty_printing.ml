@@ -306,7 +306,8 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
            pp_truncation t)
   | Break -> Fmt.pf ppf "break;"
   | Continue -> Fmt.pf ppf "continue;"
-  | Return e -> Fmt.pf ppf "return %a;" pp_expression e
+  | Return e -> with_hbox ppf (fun () ->
+                    Fmt.pf ppf "return %a;" pp_expression e);
   | ReturnVoid -> Fmt.pf ppf "return;"
   | Print ps -> Fmt.pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> Fmt.pf ppf "reject(%a);" pp_list_of_printables ps

@@ -1429,13 +1429,11 @@ functions {
     return eta;
   }
   real inv_gaussian(vector y, vector mu, real lambda, real sum_log_y, vector sqrt_y) {
-    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * 
-    dot_self((y - mu) ./ (mu .* sqrt_y));
+    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * dot_self((y - mu) ./ (mu .* sqrt_y));
   }
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link, vector log_y, vector sqrt_y) {
     vector[rows(y)] mu = linkinv_inv_gaussian(eta, link);
-    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * 
-    log(lambda / 6.283185307179586232) - 1.5 * log_y;
+    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
   real inv_gaussian_rng(real mu, real lambda) {
     real mu2 = square(mu);
@@ -1526,11 +1524,9 @@ functions {
   }
   vector SS_biexp(vector input, matrix Phi_) {
     if (rows(Phi_) > 1) 
-      return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input) + Phi_[ : , 3] .* 
-      exp(-exp(Phi_[ : , 4]) .* input);
+      return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input) + Phi_[ : , 3] .* exp(-exp(Phi_[ : , 4]) .* input);
     else 
-      return Phi_[1, 1] * exp(-exp(Phi_[1, 2]) * input) + Phi_[1, 3] * 
-      exp(-exp(Phi_[1, 4]) * input);
+      return Phi_[1, 1] * exp(-exp(Phi_[1, 2]) * input) + Phi_[1, 3] * exp(-exp(Phi_[1, 4]) * input);
   }
   vector SS_fol(vector Dose, vector input, matrix Phi_) {
     int Phi__rows = rows(Phi_);
@@ -1539,16 +1535,14 @@ functions {
       vector[Phi__rows] lKa = Phi_[ : , 2];
       vector[Phi__rows] exp_lKe = exp(lKe);
       vector[Phi__rows] exp_lKa = exp(lKa);
-      return Dose .* exp(lKe + lKa - Phi_[ : , 3]) .* (exp(-exp_lKe .* input) - 
-      exp(-exp_lKa .* input)) ./ (exp_lKa - exp_lKe);
+      return Dose .* exp(lKe + lKa - Phi_[ : , 3]) .* (exp(-exp_lKe .* input) - exp(-exp_lKa .* input)) ./ (exp_lKa - exp_lKe);
     }
     else {
       real lKe = Phi_[1, 1];
       real lKa = Phi_[1, 2];
       real exp_lKe = exp(lKe);
       real exp_lKa = exp(lKa);
-      return Dose * exp(lKe + lKa - Phi_[1, 3]) .* (exp(-exp_lKe * input) - 
-      exp(-exp_lKa * input)) / (exp_lKa - exp_lKe);
+      return Dose * exp(lKe + lKa - Phi_[1, 3]) .* (exp(-exp_lKe * input) - exp(-exp_lKa * input)) / (exp_lKa - exp_lKe);
     }
   }
   vector SS_fpl(vector input, matrix Phi_) {
@@ -3253,13 +3247,11 @@ functions {
     return eta;
   }
   real inv_gaussian(vector y, vector mu, real lambda, real sum_log_y, vector sqrt_y) {
-    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * 
-    dot_self((y - mu) ./ (mu .* sqrt_y));
+    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * dot_self((y - mu) ./ (mu .* sqrt_y));
   }
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link, vector log_y, vector sqrt_y) {
     vector[rows(y)] mu = linkinv_inv_gaussian(eta, link);
-    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * 
-    log(lambda / 6.283185307179586232) - 1.5 * log_y;
+    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
   real inv_gaussian_rng(real mu, real lambda) {
     real mu2 = square(mu);
@@ -5121,13 +5113,11 @@ functions {
     return eta;
   }
   real inv_gaussian(vector y, vector mu, real lambda, real sum_log_y, vector sqrt_y) {
-    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * 
-    dot_self((y - mu) ./ (mu .* sqrt_y));
+    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * dot_self((y - mu) ./ (mu .* sqrt_y));
   }
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link, vector log_y, vector sqrt_y) {
     vector[rows(y)] mu = linkinv_inv_gaussian(eta, link);
-    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * 
-    log(lambda / 6.283185307179586232) - 1.5 * log_y;
+    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
   real inv_gaussian_rng(real mu, real lambda) {
     real mu2 = square(mu);
