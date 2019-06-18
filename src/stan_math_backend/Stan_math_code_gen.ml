@@ -32,7 +32,7 @@ let pp_function__ ppf (prog_name, fname) =
 let pp_located_msg ppf msg =
   pf ppf
     {|stan::lang::rethrow_located(
-          std::runtime_error(std::string(%S) + ": " + e.what()), current_statement__);
+          std::runtime_error(std::string(%S) + ": " + e.what()), locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
     msg
@@ -60,20 +60,13 @@ let pp_returntype ppf arg_types rt =
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
 
-let pp_location ppf loc =
-  ignore (loc : location_span) ;
-  ignore ppf
-
-(*
-  pf ppf "current_statement__ = (char* )%S;@;"
-    (string_of_location_span loc)
- *)
-
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
     from the [body_block] (required to be a [stmt_loc Block] variant).*)
 let pp_located_error ppf (pp_body_block, body, err_msg) =
-  ignore err_msg ; pp_body_block ppf body
+  pf ppf "@ try %a" pp_body_block body ;
+  string ppf " catch (const std::exception& e) " ;
+  pp_block ppf (pp_located_msg, err_msg)
 
 let pp_arg ppf (custom_scalar, (_, name, ut)) =
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (custom_scalar, ut) name
@@ -85,7 +78,9 @@ let to_indexed assignee idcs =
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf (body_stmts, err_msg) =
   pp_located_error ppf
-    (pp_statement, {stmt= Block body_stmts; smeta= no_span}, err_msg)
+    ( pp_statement
+    , {stmt= Block body_stmts; smeta= Locations.no_span_num}
+    , err_msg )
 
 let pp_fun_def ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
@@ -163,7 +158,7 @@ let%expect_test "dims" =
    1. run checks on resulting vident
 *)
 
-let pp_ctor ppf (p : typed_prog) =
+let pp_ctor ppf (p : Locations.typed_prog_num) =
   let params =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
@@ -182,12 +177,19 @@ let pp_ctor ppf (p : typed_prog) =
     | _ -> None
   in
   let rec pp_statement_zeroing ppf s =
+    let pp_statement_list_zeroing ls =
+      (list ~sep:cut pp_statement_zeroing) ppf ls
+    in
     match s.stmt with
     | Decl {decl_id; decl_type; _} -> (
       match decl_type with
       | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
-    | Block ls | SList ls -> (list ~sep:cut pp_statement_zeroing) ppf ls
+    | Block ls ->
+        pf ppf "{" ;
+        pp_statement_list_zeroing ls ;
+        pf ppf "}"
+    | SList ls -> pp_statement_list_zeroing ls
     | _ -> pp_statement ppf s
   in
   pp_block ppf
@@ -199,7 +201,7 @@ let pp_ctor ppf (p : typed_prog) =
         pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error ppf
           ( pp_statement_zeroing
-          , {stmt= Block p.prepare_data; smeta= no_span}
+          , {stmt= Block p.prepare_data; smeta= Locations.no_span_num}
           , "inside ctor" ) ;
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
@@ -457,14 +459,12 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_transform_inits p ;
   pf ppf "@ %a" pp_overloads ()
 
-let pp_model ppf (p : typed_prog) =
+let pp_model ppf (p : Locations.typed_prog_num) =
   pf ppf "class %s : public prob_grad {" p.prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" p.prog_name ;
   pf ppf "@ @ static std::string model_name() { return \"%s\"; }" p.prog_name ;
   pf ppf "@ %a@]@]@ };" pp_model_public p
-
-let globals = "static char* current_statement__;"
 
 let usings =
   {|
@@ -575,10 +575,11 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  let p, s = Locations.prepare_prog p in
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let fix_data_reads stmts =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; smeta= no_span }
+    ; smeta= Locations.no_span_num }
     :: stmts
     |> List.map ~f:invert_read_fors
     |> List.concat_map ~f:add_pos_reset
@@ -591,7 +592,7 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
     ; transform_inits= fix_data_reads p.transform_inits }
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %s@ %a@ %a@ }@ @]"
-    version includes p.prog_name usings globals (list ~sep:cut pp_fun_def)
-    p.functions_block pp_model p ;
+  pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
+    version includes p.prog_name usings Locations.pp_globals s
+    (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;
   pf ppf "@,typedef %s_namespace::%s stan_model;@," p.prog_name p.prog_name

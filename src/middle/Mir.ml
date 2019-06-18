@@ -9,10 +9,11 @@ type location =
   ; line_num: int
   ; col_num: int
   ; included_from: location option }
-[@@deriving sexp]
+[@@deriving sexp, hash, compare]
 
 (** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
+type location_span = {begin_loc: location; end_loc: location}
+[@@deriving sexp, hash, compare]
 
 (** Arithmetic and logical operators *)
 type operator =

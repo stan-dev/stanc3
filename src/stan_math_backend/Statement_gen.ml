@@ -58,12 +58,6 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
   | Sized st -> pp_sized_decl ppf (vident, st, adtype)
   | Unsized ut -> pp_decl ppf (vident, ut, adtype)
 
-(*
-  pf ppf "@ try %a" pp_body_block body ;
-  string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located_msg, err_msg)
- *)
-
 let math_fn_translations = function
   | FnPrint ->
       Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
@@ -75,9 +69,35 @@ let trans_math_fn fname =
     value ~default:(fname, [])
       (bind (internal_fn_of_string fname) ~f:math_fn_translations))
 
+let rec block_wrapping {stmt; smeta} =
+  let in_block {stmt; smeta} =
+    { stmt=
+        ( match stmt with
+        | Block l | SList l -> Block l
+        | stmt -> Block [{stmt; smeta}] )
+    ; smeta }
+  in
+  let block_wrapping_base stmt =
+    match stmt with
+    | IfElse (_, _, _) | While (_, _) | For _ ->
+        map_statement (fun x -> x) in_block stmt
+    | _ -> stmt
+  in
+  { stmt= block_wrapping_base (map_statement (fun x -> x) block_wrapping stmt)
+  ; smeta }
+
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
+  let {stmt; smeta} = block_wrapping {stmt; smeta} in
+  (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before.
+     Note that this should not change the semantics as we are only inserting blocks around the whole body of a for-, while- or if-body. 
+     These are already local scopes.
+     The blocks make sure that the program with the inserted location update is still well-formed C++ though.
+   *)
   let pp_stmt_list = list ~sep:cut pp_statement in
+  ( match stmt with
+  | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
+  | _ -> Locations.pp_smeta ppf smeta ) ;
   match stmt with
   | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
     when internal_fn_of_string f = Some FnReadData ->
