@@ -352,11 +352,12 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
         | None -> Fmt.pf ppf ""
         | Some e -> Fmt.pf ppf " = %a" pp_expression e
       in
-      Fmt.pf ppf "%a %a%a%a;"
-        pp_transformed_type (st2, trans)
-        pp_identifier id
-        pp_array_dims es
-        pp_init init
+      with_hbox ppf (fun () ->
+          Fmt.pf ppf "%a %a%a%a;"
+            pp_transformed_type (st2, trans)
+            pp_identifier id
+            pp_array_dims es
+            pp_init init);
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
      Fmt.pf ppf "%a %a(%a"
        pp_returntype rt
