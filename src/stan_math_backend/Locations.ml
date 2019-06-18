@@ -47,7 +47,7 @@ let pp_globals ppf location_list =
     List.map
       ~f:(fun x ->
         if x = no_span then "Found before start of program."
-        else string_of_location_span x )
+        else "At " ^ string_of_location_span x )
       location_list
   in
   Fmt.pf ppf
