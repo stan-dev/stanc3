@@ -177,7 +177,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
     | _ -> None
   in
   let rec pp_statement_zeroing ppf s =
-    let pp_statement_list_zeroing ls =
+    let pp_statement_list_zeroing ppf ls =
       (list ~sep:cut pp_statement_zeroing) ppf ls
     in
     match s.stmt with
@@ -185,11 +185,8 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
       match decl_type with
       | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
-    | Block ls ->
-        pf ppf "{" ;
-        pp_statement_list_zeroing ls ;
-        pf ppf "}"
-    | SList ls -> pp_statement_list_zeroing ls
+    | Block ls -> pp_block ppf (pp_statement_list_zeroing, ls)
+    | SList ls -> pp_statement_list_zeroing ppf ls
     | _ -> pp_statement ppf s
   in
   pp_block ppf

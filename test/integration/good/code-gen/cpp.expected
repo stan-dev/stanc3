@@ -63,44 +63,46 @@ class eight_schools_ncp_model : public prob_grad {
     (void) function__;  // suppress unused var warning
     
     try {
-    
-    current_statement__ = 12;
-    current_statement__ = 12;
-    assign(J, nil_index_list(), context__.vals_i("J")[(1 - 1)], "assigning variable J");
-    y = std::vector<double>(J, 0);
-    
-    current_statement__ = 13;
-    pos__ = 1;
-    current_statement__ = 13;
-    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      
+      
+      current_statement__ = 12;
+      current_statement__ = 12;
+      assign(J, nil_index_list(), context__.vals_i("J")[(1 - 1)], "assigning variable J");
+      y = std::vector<double>(J, 0);
+      
       current_statement__ = 13;
-      assign(y, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y")
-                                                                [(pos__ - 1)], "assigning variable y[(sym1__ - 1)]");
+      pos__ = 1;
       current_statement__ = 13;
-      assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-    }
-    sigma = std::vector<double>(J, 0);
-    
-    current_statement__ = 14;
-    pos__ = 1;
-    current_statement__ = 14;
-    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 13;
+        assign(y, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y")
+                                                                  [(pos__ - 1)], "assigning variable y[(sym1__ - 1)]");
+        current_statement__ = 13;
+        assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
+      }
+      sigma = std::vector<double>(J, 0);
+      
       current_statement__ = 14;
-      assign(sigma, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("sigma")
-                                                                    [(pos__ - 1)], "assigning variable sigma[(sym1__ - 1)]");
+      pos__ = 1;
       current_statement__ = 14;
-      assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-    }
-    current_statement__ = 12;
-    current_statement__ = 12;
-    check_greater_or_equal(function__, "J", J, 0);
-    current_statement__ = 14;
-    for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 14;
+        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()), 
+               context__.vals_r("sigma")[(pos__ - 1)], "assigning variable sigma[(sym1__ - 1)]");
+        current_statement__ = 14;
+        assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
+      }
+      current_statement__ = 12;
+      current_statement__ = 12;
+      check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 14;
-      current_statement__ = 14;
-      check_greater_or_equal(function__, "sigma[sym1__]",
-                             stan::model::rvalue(sigma, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"),
-                             0);}} catch (const std::exception& e) {
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 14;
+        current_statement__ = 14;
+        check_greater_or_equal(function__, "sigma[sym1__]",
+                               stan::model::rvalue(sigma, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"),
+                               0);}
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -500,50 +502,52 @@ class one_var_per_block_model : public prob_grad {
     (void) function__;  // suppress unused var warning
     
     try {
-    
-    current_statement__ = 14;
-    current_statement__ = 14;
-    assign(N, nil_index_list(), context__.vals_i("N")[(1 - 1)], "assigning variable N");
-    
-    current_statement__ = 15;
-    current_statement__ = 15;
-    assign(K, nil_index_list(), context__.vals_i("K")[(1 - 1)], "assigning variable K");
-    datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
-    
-    current_statement__ = 16;
-    pos__ = 1;
-    current_statement__ = 16;
-    for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+      
+      
+      current_statement__ = 14;
+      current_statement__ = 14;
+      assign(N, nil_index_list(), context__.vals_i("N")[(1 - 1)], "assigning variable N");
+      
+      current_statement__ = 15;
+      current_statement__ = 15;
+      assign(K, nil_index_list(), context__.vals_i("K")[(1 - 1)], "assigning variable K");
+      datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
+      
       current_statement__ = 16;
-      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 16;
-        assign(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), 
-               context__.vals_r("datavar")[(pos__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
-        current_statement__ = 16;
-        assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-      }}
-    tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
-    
-    current_statement__ = 17;
-    tdatavar = {{2.0}};
-    current_statement__ = 16;
-    for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+      pos__ = 1;
       current_statement__ = 16;
       for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
         current_statement__ = 16;
-        current_statement__ = 16;
-        check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
-                               stan::model::rvalue(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                               0);}}
-    current_statement__ = 17;
-    for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+          current_statement__ = 16;
+          assign(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), 
+                 context__.vals_r("datavar")[(pos__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
+          current_statement__ = 16;
+          assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
+        }}
+      tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
+      
       current_statement__ = 17;
-      for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      tdatavar = {{2.0}};
+      current_statement__ = 16;
+      for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
+        current_statement__ = 16;
+        for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
+          current_statement__ = 16;
+          current_statement__ = 16;
+          check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
+                                 stan::model::rvalue(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                                 0);}}
+      current_statement__ = 17;
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
         current_statement__ = 17;
-        current_statement__ = 17;
-        check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
-                               stan::model::rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                               0);}}} catch (const std::exception& e) {
+        for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+          current_statement__ = 17;
+          current_statement__ = 17;
+          check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
+                                 stan::model::rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                                 0);}}
+    } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
