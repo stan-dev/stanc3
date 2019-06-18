@@ -21,16 +21,16 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
   end in
   let label_to_location = Int.Table.create () in
   let location_to_label = Hashtbl.create (module LocSp) in
-  let _ = Hashtbl.add label_to_location ~key:no_span_num ~data:no_span in
-  let _ = Hashtbl.add location_to_label ~key:no_span ~data:no_span_num in
+  Hashtbl.set label_to_location ~key:no_span_num ~data:no_span ;
+  Hashtbl.set location_to_label ~key:no_span ~data:no_span_num ;
   let rec number_locations_stmt ({stmt; smeta} : stmt_loc) : stmt_num =
     let stmt = map_statement (fun x -> x) number_locations_stmt stmt in
     match Hashtbl.find location_to_label smeta with
     | Some i -> {stmt; smeta= i}
     | None ->
         let new_label = Hashtbl.length label_to_location + 1 in
-        let _ = Hashtbl.add label_to_location ~key:new_label ~data:smeta in
-        let _ = Hashtbl.add location_to_label ~key:smeta ~data:new_label in
+        Hashtbl.set label_to_location ~key:new_label ~data:smeta ;
+        Hashtbl.set location_to_label ~key:smeta ~data:new_label ;
         {stmt; smeta= new_label}
   in
   let mir = map_prog (fun x -> x) number_locations_stmt mir in

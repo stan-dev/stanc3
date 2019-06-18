@@ -92,11 +92,9 @@ let rec pp_statement (ppf : Format.formatter)
   let {stmt; smeta} = block_wrapping {stmt; smeta} in
   (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before *)
   let pp_stmt_list = list ~sep:cut pp_statement in
-  let _ =
-    match stmt with
-    | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
-    | _ -> Locations.pp_smeta ppf smeta
-  in
+  ( match stmt with
+  | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
+  | _ -> Locations.pp_smeta ppf smeta ) ;
   match stmt with
   | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
     when internal_fn_of_string f = Some FnReadData ->
