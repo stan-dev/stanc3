@@ -23,7 +23,7 @@ using stan::model::nil_index_list;
 using namespace stan::math; 
 
 static int current_statement__ = 0;
-static const std::vector<string> locations_array__ = {"file , line 0, column 0",
+static const std::vector<string> locations_array__ = {"Found before start of program.",
                                                       "file eight_schools_ncp.stan, line 8, columns 2-10",
                                                       "file eight_schools_ncp.stan, line 9, columns 2-20",
                                                       "file eight_schools_ncp.stan, line 10, columns 2-22",
@@ -423,7 +423,7 @@ using stan::model::nil_index_list;
 using namespace stan::math; 
 
 static int current_statement__ = 0;
-static const std::vector<string> locations_array__ = {"file , line 0, column 0",
+static const std::vector<string> locations_array__ = {"Found before start of program.",
                                                       "file one_var_per_block.stan, line 13, columns 2-30",
                                                       "file one_var_per_block.stan, line 14, columns 2-39",
                                                       "file one_var_per_block.stan, line 17, columns 2-31",
