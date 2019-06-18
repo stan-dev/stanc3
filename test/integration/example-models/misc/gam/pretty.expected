@@ -50,7 +50,8 @@ functions {
         vector[n - k + 1] u;
         x <- R[k : n, k];
         u <- sqrt(x' * x) * e[1 : (n - k + 1)] + x;
-        if (x[1] < 0) u <- -u;
+        if (x[1] < 0) 
+          u <- -u;
         u <- u / sqrt(u' * u);
         {
           matrix[n - k + 1, m - k + 1] tmp;

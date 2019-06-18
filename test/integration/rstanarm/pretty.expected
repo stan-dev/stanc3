@@ -137,24 +137,28 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) 
-                 for (i in 1 : t) {
-                   V[i, j] = v[pos] + 1;
-                   pos += 1;
-                 }
+    if (t > 0) 
+      for (j in 1 : N) 
+        for (i in 1 : t) {
+          V[i, j] = v[pos] + 1;
+          pos += 1;
+        }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
   real make_lower(int family, int link) {
-    if (family == 1) return negative_infinity();
+    if (family == 1) 
+      return negative_infinity();
     if (family <= 3) {
-      if (link == 2) return negative_infinity();
+      if (link == 2) 
+        return negative_infinity();
       return 0;
     }
     return negative_infinity();
   }
   real make_upper(int family, int link) {
-    if (family == 4 && link == 5) return 0;
+    if (family == 4 && link == 5) 
+      return 0;
     return positive_infinity();
   }
   vector linkinv_bern(vector eta, int link) {
@@ -215,10 +219,13 @@ functions {
   }
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
   real log_clogit_denom(int N_j, int D_j, vector eta_j) {
-    if (D_j == 1 && N_j == rows(eta_j)) return log_sum_exp(eta_j);
-    if (D_j == 0) return 0;
+    if (D_j == 1 && N_j == rows(eta_j)) 
+      return log_sum_exp(eta_j);
+    if (D_j == 0) 
+      return 0;
     if (N_j == D_j) {
-      if (D_j == 1) return eta_j[N_j];
+      if (D_j == 1) 
+        return eta_j[N_j];
       return sum(segment(eta_j, N_j - 1, 2));
     }
     else {
@@ -356,10 +363,12 @@ transformed data {
     successes[j] = 0;
     failures[j] = 0;
   }
-  if (J > 0) for (i in 1 : N[2]) 
-               successes[strata[i]] += 1;
-  if (J > 0) for (i in (N[2] + 1) : NN) 
-               failures[strata[i]] += 1;
+  if (J > 0) 
+    for (i in 1 : N[2]) 
+      successes[strata[i]] += 1;
+  if (J > 0) 
+    for (i in (N[2] + 1) : NN) 
+      failures[strata[i]] += 1;
   for (j in 1 : J) 
     observations[j] = failures[j] + successes[j];
 }
@@ -426,7 +435,8 @@ transformed parameters {
   }
   if (K_smooth) {
     smooth_sd = prior_mean_for_smooth + prior_scale_for_smooth .* smooth_sd_raw;
-    if (is_continuous && family == 1) smooth_sd *= aux;
+    if (is_continuous && family == 1) 
+      smooth_sd *= aux;
     beta_smooth = z_beta_smooth .* smooth_sd[smooth_map];
   }
   if (t > 0) {
@@ -783,24 +793,28 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) 
-                 for (i in 1 : t) {
-                   V[i, j] = v[pos] + 1;
-                   pos += 1;
-                 }
+    if (t > 0) 
+      for (j in 1 : N) 
+        for (i in 1 : t) {
+          V[i, j] = v[pos] + 1;
+          pos += 1;
+        }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
   real make_lower(int family, int link) {
-    if (family == 1) return negative_infinity();
+    if (family == 1) 
+      return negative_infinity();
     if (family <= 3) {
-      if (link == 2) return negative_infinity();
+      if (link == 2) 
+        return negative_infinity();
       return 0;
     }
     return negative_infinity();
   }
   real make_upper(int family, int link) {
-    if (family == 4 && link == 5) return 0;
+    if (family == 4 && link == 5) 
+      return 0;
     return positive_infinity();
   }
   vector linkinv_binom(vector eta, int link) {
@@ -1013,7 +1027,8 @@ transformed parameters {
   }
   if (K_smooth) {
     smooth_sd = prior_mean_for_smooth + prior_scale_for_smooth .* smooth_sd_raw;
-    if (is_continuous && family == 1) smooth_sd *= aux;
+    if (is_continuous && family == 1) 
+      smooth_sd *= aux;
     beta_smooth = z_beta_smooth .* smooth_sd[smooth_map];
   }
   if (t > 0) {
@@ -1045,8 +1060,10 @@ model {
   }
   else 
     eta = rep_vector(0.0, N);
-  if (has_offset == 1) eta += offset_;
-  if (K_smooth) eta += S * beta_smooth;
+  if (has_offset == 1) 
+    eta += offset_;
+  if (K_smooth) 
+    eta += S * beta_smooth;
   if (t > 0) {
     if (special_case) 
       for (i in 1 : t) 
@@ -1146,8 +1163,10 @@ generated quantities {
     }
     else 
       eta = rep_vector(0.0, N);
-    if (has_offset == 1) eta += offset_;
-    if (K_smooth) eta += S * beta_smooth;
+    if (has_offset == 1) 
+      eta += offset_;
+    if (K_smooth) 
+      eta += S * beta_smooth;
     if (t > 0) {
       if (special_case) 
         for (i in 1 : t) 
@@ -1313,24 +1332,28 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) 
-                 for (i in 1 : t) {
-                   V[i, j] = v[pos] + 1;
-                   pos += 1;
-                 }
+    if (t > 0) 
+      for (j in 1 : N) 
+        for (i in 1 : t) {
+          V[i, j] = v[pos] + 1;
+          pos += 1;
+        }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
   real make_lower(int family, int link) {
-    if (family == 1) return negative_infinity();
+    if (family == 1) 
+      return negative_infinity();
     if (family <= 3) {
-      if (link == 2) return negative_infinity();
+      if (link == 2) 
+        return negative_infinity();
       return 0;
     }
     return negative_infinity();
   }
   real make_upper(int family, int link) {
-    if (family == 4 && link == 5) return 0;
+    if (family == 4 && link == 5) 
+      return 0;
     return positive_infinity();
   }
   vector linkinv_gauss(vector eta, int link) {
@@ -1582,7 +1605,8 @@ functions {
   matrix reshape_vec(vector x, int Rows, int Cols) {
     matrix[Rows, Cols] out;
     int pos = 1;
-    if (rows(x) != Rows * Cols) reject("x is the wrong length");
+    if (rows(x) != Rows * Cols) 
+      reject("x is the wrong length");
     for (c in 1 : Cols) 
       for (r in 1 : Rows) {
         out[r, c] = x[pos];
@@ -1797,7 +1821,8 @@ transformed parameters {
   }
   if (K_smooth) {
     smooth_sd = prior_mean_for_smooth + prior_scale_for_smooth .* smooth_sd_raw;
-    if (is_continuous && family == 1) smooth_sd *= aux;
+    if (is_continuous && family == 1) 
+      smooth_sd *= aux;
     beta_smooth = z_beta_smooth .* smooth_sd[smooth_map];
   }
   if (prior_dist_z == 0) 
@@ -1834,7 +1859,8 @@ transformed parameters {
     aux = aux_unscaled;
   else {
     aux = prior_scale_for_aux * aux_unscaled;
-    if (prior_dist_for_aux <= 2) aux += prior_mean_for_aux;
+    if (prior_dist_for_aux <= 2) 
+      aux += prior_mean_for_aux;
   }
   if (t > 0) {
     if (special_case == 1) {
@@ -1866,8 +1892,10 @@ model {
   }
   else 
     eta = rep_vector(0.0, N);
-  if (has_offset == 1) eta += offset_;
-  if (K_smooth) eta += S * beta_smooth;
+  if (has_offset == 1) 
+    eta += offset_;
+  if (K_smooth) 
+    eta += S * beta_smooth;
   if (t > 0) {
     if (special_case) 
       for (i in 1 : t) 
@@ -2119,8 +2147,10 @@ generated quantities {
     }
     else 
       eta = rep_vector(0.0, N);
-    if (has_offset == 1) eta += offset_;
-    if (K_smooth) eta += S * beta_smooth;
+    if (has_offset == 1) 
+      eta += offset_;
+    if (K_smooth) 
+      eta += S * beta_smooth;
     if (t > 0) {
       if (special_case) 
         for (i in 1 : t) 
@@ -2390,24 +2420,28 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) 
-                 for (i in 1 : t) {
-                   V[i, j] = v[pos] + 1;
-                   pos += 1;
-                 }
+    if (t > 0) 
+      for (j in 1 : N) 
+        for (i in 1 : t) {
+          V[i, j] = v[pos] + 1;
+          pos += 1;
+        }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
   real make_lower(int family, int link) {
-    if (family == 1) return negative_infinity();
+    if (family == 1) 
+      return negative_infinity();
     if (family <= 3) {
-      if (link == 2) return negative_infinity();
+      if (link == 2) 
+        return negative_infinity();
       return 0;
     }
     return negative_infinity();
   }
   real make_upper(int family, int link) {
-    if (family == 4 && link == 5) return 0;
+    if (family == 4 && link == 5) 
+      return 0;
     return positive_infinity();
   }
   vector linkinv_count(vector eta, int link) {
@@ -2601,14 +2635,16 @@ transformed parameters {
   }
   if (K_smooth) {
     smooth_sd = prior_mean_for_smooth + prior_scale_for_smooth .* smooth_sd_raw;
-    if (is_continuous && family == 1) smooth_sd *= aux;
+    if (is_continuous && family == 1) 
+      smooth_sd *= aux;
     beta_smooth = z_beta_smooth .* smooth_sd[smooth_map];
   }
   if (family > 6 && (prior_dist_for_aux == 0 || prior_scale_for_aux <= 0)) 
     aux = aux_unscaled[1];
   else if (family > 6) {
     aux = prior_scale_for_aux * aux_unscaled[1];
-    if (prior_dist_for_aux <= 2) aux += prior_mean_for_aux;
+    if (prior_dist_for_aux <= 2) 
+      aux += prior_mean_for_aux;
   }
   if (t > 0) {
     if (special_case == 1) {
@@ -2642,8 +2678,10 @@ model {
   }
   else 
     eta = rep_vector(0.0, N);
-  if (has_offset == 1) eta += offset_;
-  if (K_smooth) eta += S * beta_smooth;
+  if (has_offset == 1) 
+    eta += offset_;
+  if (K_smooth) 
+    eta += S * beta_smooth;
   if (t > 0) {
     if (special_case) 
       for (i in 1 : t) 
@@ -2751,7 +2789,8 @@ model {
         target += exponential_lpdf(smooth_sd_raw| 1);
     }
   }
-  if (family == 8) target += gamma_lpdf(noise[1]| aux, 1);
+  if (family == 8) 
+    target += gamma_lpdf(noise[1]| aux, 1);
   if (t > 0) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta, shape, t, p);
   }
@@ -2776,8 +2815,10 @@ generated quantities {
     }
     else 
       eta = rep_vector(0.0, N);
-    if (has_offset == 1) eta += offset_;
-    if (K_smooth) eta += S * beta_smooth;
+    if (has_offset == 1) 
+      eta += offset_;
+    if (K_smooth) 
+      eta += S * beta_smooth;
     if (t > 0) {
       if (special_case) 
         for (i in 1 : t) 
@@ -2970,24 +3011,28 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) 
-                 for (i in 1 : t) {
-                   V[i, j] = v[pos] + 1;
-                   pos += 1;
-                 }
+    if (t > 0) 
+      for (j in 1 : N) 
+        for (i in 1 : t) {
+          V[i, j] = v[pos] + 1;
+          pos += 1;
+        }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
   real make_lower(int family, int link) {
-    if (family == 1) return negative_infinity();
+    if (family == 1) 
+      return negative_infinity();
     if (family <= 3) {
-      if (link == 2) return negative_infinity();
+      if (link == 2) 
+        return negative_infinity();
       return 0;
     }
     return negative_infinity();
   }
   real make_upper(int family, int link) {
-    if (family == 4 && link == 5) return 0;
+    if (family == 4 && link == 5) 
+      return 0;
     return positive_infinity();
   }
   vector linkinv_bern(vector eta, int link) {
@@ -3048,10 +3093,13 @@ functions {
   }
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
   real log_clogit_denom(int N_j, int D_j, vector eta_j) {
-    if (D_j == 1 && N_j == rows(eta_j)) return log_sum_exp(eta_j);
-    if (D_j == 0) return 0;
+    if (D_j == 1 && N_j == rows(eta_j)) 
+      return log_sum_exp(eta_j);
+    if (D_j == 0) 
+      return 0;
     if (N_j == D_j) {
-      if (D_j == 1) return eta_j[N_j];
+      if (D_j == 1) 
+        return eta_j[N_j];
       return sum(segment(eta_j, N_j - 1, 2));
     }
     else {
@@ -3343,7 +3391,8 @@ functions {
       aux = aux_unscaled;
     else {
       aux = prior_scale * aux_unscaled;
-      if (prior_dist <= 2) aux += prior_mean;
+      if (prior_dist <= 2) 
+        aux += prior_mean;
     }
     return aux;
   }
@@ -3601,7 +3650,8 @@ functions {
       aux = aux_unscaled;
     else {
       aux = prior_scale .* aux_unscaled;
-      if (prior_dist <= 2) aux += prior_mean;
+      if (prior_dist <= 2) 
+        aux += prior_mean;
     }
     return aux;
   }
@@ -3997,8 +4047,10 @@ transformed data {
     }
   }
   if (prior_dist_for_cov == 2) {
-    if (bK1 > 0) bCov1_idx = lower_tri_indices(bK1);
-    if (bK2 > 0) bCov2_idx = lower_tri_indices(bK2);
+    if (bK1 > 0) 
+      bCov1_idx = lower_tri_indices(bK1);
+    if (bK2 > 0) 
+      bCov2_idx = lower_tri_indices(bK2);
   }
 }
 parameters {
@@ -4068,28 +4120,36 @@ transformed parameters {
   matrix[bK2 > 0 ? bN2 : 0, bK2] bMat2;
   if (has_aux[1] == 1) {
     yAux1[1] = make_aux(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_mean_for_aux[1], y_prior_scale_for_aux[1]);
-    if (yAux1[1] > yAuxMaximum) yAuxMaximum = yAux1[1];
+    if (yAux1[1] > yAuxMaximum) 
+      yAuxMaximum = yAux1[1];
   }
-  if (yK[1] > 0) yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1, y_prior_scale1, y_prior_df1, y_global_prior_scale[1], yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1], y_slab_scale[1], y_caux1);
+  if (yK[1] > 0) 
+    yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1, y_prior_scale1, y_prior_df1, y_global_prior_scale[1], yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1], y_slab_scale[1], y_caux1);
   if (M > 1) {
     if (has_aux[2] == 1) {
       yAux2[1] = make_aux(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_mean_for_aux[2], y_prior_scale_for_aux[2]);
-      if (yAux2[1] > yAuxMaximum) yAuxMaximum = yAux2[1];
+      if (yAux2[1] > yAuxMaximum) 
+        yAuxMaximum = yAux2[1];
     }
-    if (yK[2] > 0) yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2, y_prior_scale2, y_prior_df2, y_global_prior_scale[2], yGlobal2, yLocal2, yOol2, yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
+    if (yK[2] > 0) 
+      yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2, y_prior_scale2, y_prior_df2, y_global_prior_scale[2], yGlobal2, yLocal2, yOol2, yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
   }
   if (M > 2) {
     if (has_aux[3] == 1) {
       yAux3[1] = make_aux(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_mean_for_aux[3], y_prior_scale_for_aux[3]);
-      if (yAux3[1] > yAuxMaximum) yAuxMaximum = yAux3[1];
+      if (yAux3[1] > yAuxMaximum) 
+        yAuxMaximum = yAux3[1];
     }
-    if (yK[3] > 0) yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3, y_prior_scale3, y_prior_df3, y_global_prior_scale[3], yGlobal3, yLocal3, yOol3, yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
+    if (yK[3] > 0) 
+      yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3, y_prior_scale3, y_prior_df3, y_global_prior_scale[3], yGlobal3, yLocal3, yOol3, yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
   }
   if (prior_dist_for_cov == 1) {
     int mark = 1;
     theta_L = make_theta_L(len_theta_L, p, yAuxMaximum, tau, b_prior_scale, zeta, rho, z_T);
-    if (bK1 > 0) bMat1 = make_b_matrix(z_b, theta_L, p, l, 1);
-    if (bK2 > 0) bMat2 = make_b_matrix(z_b, theta_L, p, l, 2);
+    if (bK1 > 0) 
+      bMat1 = make_b_matrix(z_b, theta_L, p, l, 1);
+    if (bK2 > 0) 
+      bMat2 = make_b_matrix(z_b, theta_L, p, l, 2);
   }
   else if (prior_dist_for_cov == 2) {
     if (bK1 == 1) 
@@ -4126,8 +4186,10 @@ model {
   }
   if (prior_PD == 0) {
     glm_lp(yReal1, yInt1, yEta1, yAux1, family[1], link[1], sum_log_y1, sqrt_y1, log_y1);
-    if (M > 1) glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2, sqrt_y2, log_y2);
-    if (M > 2) glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3, sqrt_y3, log_y3);
+    if (M > 1) 
+      glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2, sqrt_y2, log_y2);
+    if (M > 2) 
+      glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3, sqrt_y3, log_y3);
   }
   {
     vector[nrow_e_Xq] e_eta_q;
@@ -4489,15 +4551,24 @@ model {
       }
     }
   }
-  if (has_aux[1] == 1) aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
-  if (M > 1 && has_aux[2] == 1) aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
-  if (M > 2 && has_aux[3] == 1) aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
-  if (intercept_type[1] > 0) gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1], y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1], y_prior_df_for_intercept[1]);
-  if (M > 1 && intercept_type[2] > 0) gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2], y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2], y_prior_df_for_intercept[2]);
-  if (M > 2 && intercept_type[3] > 0) gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3], y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3], y_prior_df_for_intercept[3]);
-  if (yK[1] > 0) beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1, y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1], y_caux1);
-  if (M > 1 && yK[2] > 0) beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2, y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2], y_caux2);
-  if (M > 2 && yK[3] > 0) beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3, y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3], y_caux3);
+  if (has_aux[1] == 1) 
+    aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
+  if (M > 1 && has_aux[2] == 1) 
+    aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
+  if (M > 2 && has_aux[3] == 1) 
+    aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
+  if (intercept_type[1] > 0) 
+    gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1], y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1], y_prior_df_for_intercept[1]);
+  if (M > 1 && intercept_type[2] > 0) 
+    gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2], y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2], y_prior_df_for_intercept[2]);
+  if (M > 2 && intercept_type[3] > 0) 
+    gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3], y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3], y_prior_df_for_intercept[3]);
+  if (yK[1] > 0) 
+    beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1, y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1], y_caux1);
+  if (M > 1 && yK[2] > 0) 
+    beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2, y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2], y_caux2);
+  if (M > 2 && yK[3] > 0) 
+    beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3, y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3], y_caux3);
   if (prior_dist_for_cov == 1) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization, delta, b_prior_shape, t, p);
   }
@@ -4505,18 +4576,21 @@ model {
     if (bK1 > 0) {
       target += student_t_lpdf(bSd1| b1_prior_df, 0, b1_prior_scale);
       target += normal_lpdf(to_vector(z_bMat1)| 0, 1);
-      if (bK1 > 1) target += lkj_corr_cholesky_lpdf(bCholesky1| b1_prior_regularization);
+      if (bK1 > 1) 
+        target += lkj_corr_cholesky_lpdf(bCholesky1| b1_prior_regularization);
     }
     if (bK2 > 0) {
       target += student_t_lpdf(bSd2| b2_prior_df, 0, b2_prior_scale);
       target += normal_lpdf(to_vector(z_bMat2)| 0, 1);
-      if (bK2 > 1) target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
+      if (bK2 > 1) 
+        target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
     }
   }
   beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df, e_global_prior_df, e_local, e_global, e_mix, e_ool, e_slab_df, e_caux);
   beta_lp(a_z_beta, a_prior_dist, a_prior_scale, a_prior_df, a_global_prior_df, a_local, a_global, a_mix, a_ool, a_slab_df, a_caux);
   basehaz_lp(e_aux_unscaled, e_prior_dist_for_aux, e_prior_scale_for_aux, e_prior_df_for_aux);
-  if (e_has_intercept == 1) gamma_lp(e_gamma[1], e_prior_dist_for_intercept, e_prior_mean_for_intercept, e_prior_scale_for_intercept, e_prior_df_for_intercept);
+  if (e_has_intercept == 1) 
+    gamma_lp(e_gamma[1], e_prior_dist_for_intercept, e_prior_mean_for_intercept, e_prior_scale_for_intercept, e_prior_df_for_intercept);
 }
 generated quantities {
   real e_alpha;
@@ -4550,9 +4624,12 @@ generated quantities {
       mean_PPD[3] = mean_PPD_rng(yEta3, yAux3, family[3]);
     }
   }
-  if (intercept_type[1] > 0) yAlpha1[1] = yGamma1[1] - dot_product(yXbar1, yBeta1);
-  if (M > 1 && intercept_type[2] > 0) yAlpha2[1] = yGamma2[1] - dot_product(yXbar2, yBeta2);
-  if (M > 2 && intercept_type[3] > 0) yAlpha3[1] = yGamma3[1] - dot_product(yXbar3, yBeta3);
+  if (intercept_type[1] > 0) 
+    yAlpha1[1] = yGamma1[1] - dot_product(yXbar1, yBeta1);
+  if (M > 1 && intercept_type[2] > 0) 
+    yAlpha2[1] = yGamma2[1] - dot_product(yXbar2, yBeta2);
+  if (M > 2 && intercept_type[3] > 0) 
+    yAlpha3[1] = yGamma3[1] - dot_product(yXbar3, yBeta3);
   if (prior_dist_for_cov == 2 && bK1 == 1) {
     bCov1[1] = bSd1[1] * bSd1[1];
   }
@@ -4643,7 +4720,8 @@ model {
       dummy = ll_mvn_ols_qr_lp(theta[j], Rb[j], has_intercept == 1 ? alpha[j] + shift : shift, ybar[j], SSR[j], sigma[j], N[j]);
     }
   }
-  if (has_intercept == 1 && prior_dist_for_intercept > 0) target += normal_lpdf(z_alpha| 0, 1);
+  if (has_intercept == 1 && prior_dist_for_intercept > 0) 
+    target += normal_lpdf(z_alpha| 0, 1);
   if (prior_dist == 1) {
     if (K > 1) 
       target += beta_lpdf(R2| half_K, eta);
@@ -4801,24 +4879,28 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) 
-                 for (i in 1 : t) {
-                   V[i, j] = v[pos] + 1;
-                   pos += 1;
-                 }
+    if (t > 0) 
+      for (j in 1 : N) 
+        for (i in 1 : t) {
+          V[i, j] = v[pos] + 1;
+          pos += 1;
+        }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
   real make_lower(int family, int link) {
-    if (family == 1) return negative_infinity();
+    if (family == 1) 
+      return negative_infinity();
     if (family <= 3) {
-      if (link == 2) return negative_infinity();
+      if (link == 2) 
+        return negative_infinity();
       return 0;
     }
     return negative_infinity();
   }
   real make_upper(int family, int link) {
-    if (family == 4 && link == 5) return 0;
+    if (family == 4 && link == 5) 
+      return 0;
     return positive_infinity();
   }
   vector linkinv_bern(vector eta, int link) {
@@ -4879,10 +4961,13 @@ functions {
   }
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
   real log_clogit_denom(int N_j, int D_j, vector eta_j) {
-    if (D_j == 1 && N_j == rows(eta_j)) return log_sum_exp(eta_j);
-    if (D_j == 0) return 0;
+    if (D_j == 1 && N_j == rows(eta_j)) 
+      return log_sum_exp(eta_j);
+    if (D_j == 0) 
+      return 0;
     if (N_j == D_j) {
-      if (D_j == 1) return eta_j[N_j];
+      if (D_j == 1) 
+        return eta_j[N_j];
       return sum(segment(eta_j, N_j - 1, 2));
     }
     else {
@@ -5174,7 +5259,8 @@ functions {
       aux = aux_unscaled;
     else {
       aux = prior_scale * aux_unscaled;
-      if (prior_dist <= 2) aux += prior_mean;
+      if (prior_dist <= 2) 
+        aux += prior_mean;
     }
     return aux;
   }
@@ -5557,8 +5643,10 @@ transformed data {
     }
   }
   if (prior_dist_for_cov == 2) {
-    if (bK1 > 0) bCov1_idx = lower_tri_indices(bK1);
-    if (bK2 > 0) bCov2_idx = lower_tri_indices(bK2);
+    if (bK1 > 0) 
+      bCov1_idx = lower_tri_indices(bK1);
+    if (bK2 > 0) 
+      bCov2_idx = lower_tri_indices(bK2);
   }
 }
 parameters {
@@ -5611,28 +5699,36 @@ transformed parameters {
   matrix[bK2 > 0 ? bN2 : 0, bK2] bMat2;
   if (has_aux[1] == 1) {
     yAux1[1] = make_aux(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_mean_for_aux[1], y_prior_scale_for_aux[1]);
-    if (yAux1[1] > yAuxMaximum) yAuxMaximum = yAux1[1];
+    if (yAux1[1] > yAuxMaximum) 
+      yAuxMaximum = yAux1[1];
   }
-  if (yK[1] > 0) yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1, y_prior_scale1, y_prior_df1, y_global_prior_scale[1], yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1], y_slab_scale[1], y_caux1);
+  if (yK[1] > 0) 
+    yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1, y_prior_scale1, y_prior_df1, y_global_prior_scale[1], yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1], y_slab_scale[1], y_caux1);
   if (M > 1) {
     if (has_aux[2] == 1) {
       yAux2[1] = make_aux(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_mean_for_aux[2], y_prior_scale_for_aux[2]);
-      if (yAux2[1] > yAuxMaximum) yAuxMaximum = yAux2[1];
+      if (yAux2[1] > yAuxMaximum) 
+        yAuxMaximum = yAux2[1];
     }
-    if (yK[2] > 0) yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2, y_prior_scale2, y_prior_df2, y_global_prior_scale[2], yGlobal2, yLocal2, yOol2, yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
+    if (yK[2] > 0) 
+      yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2, y_prior_scale2, y_prior_df2, y_global_prior_scale[2], yGlobal2, yLocal2, yOol2, yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
   }
   if (M > 2) {
     if (has_aux[3] == 1) {
       yAux3[1] = make_aux(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_mean_for_aux[3], y_prior_scale_for_aux[3]);
-      if (yAux3[1] > yAuxMaximum) yAuxMaximum = yAux3[1];
+      if (yAux3[1] > yAuxMaximum) 
+        yAuxMaximum = yAux3[1];
     }
-    if (yK[3] > 0) yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3, y_prior_scale3, y_prior_df3, y_global_prior_scale[3], yGlobal3, yLocal3, yOol3, yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
+    if (yK[3] > 0) 
+      yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3, y_prior_scale3, y_prior_df3, y_global_prior_scale[3], yGlobal3, yLocal3, yOol3, yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
   }
   if (prior_dist_for_cov == 1) {
     int mark = 1;
     theta_L = make_theta_L(len_theta_L, p, yAuxMaximum, tau, b_prior_scale, zeta, rho, z_T);
-    if (bK1 > 0) bMat1 = make_b_matrix(z_b, theta_L, p, l, 1);
-    if (bK2 > 0) bMat2 = make_b_matrix(z_b, theta_L, p, l, 2);
+    if (bK1 > 0) 
+      bMat1 = make_b_matrix(z_b, theta_L, p, l, 1);
+    if (bK2 > 0) 
+      bMat2 = make_b_matrix(z_b, theta_L, p, l, 2);
   }
   else if (prior_dist_for_cov == 2) {
     if (bK1 == 1) 
@@ -5666,18 +5762,29 @@ model {
   }
   if (prior_PD == 0) {
     glm_lp(yReal1, yInt1, yEta1, yAux1, family[1], link[1], sum_log_y1, sqrt_y1, log_y1);
-    if (M > 1) glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2, sqrt_y2, log_y2);
-    if (M > 2) glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3, sqrt_y3, log_y3);
+    if (M > 1) 
+      glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2, sqrt_y2, log_y2);
+    if (M > 2) 
+      glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3, sqrt_y3, log_y3);
   }
-  if (has_aux[1] == 1) aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
-  if (M > 1 && has_aux[2] == 1) aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
-  if (M > 2 && has_aux[3] == 1) aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
-  if (intercept_type[1] > 0) gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1], y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1], y_prior_df_for_intercept[1]);
-  if (M > 1 && intercept_type[2] > 0) gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2], y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2], y_prior_df_for_intercept[2]);
-  if (M > 2 && intercept_type[3] > 0) gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3], y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3], y_prior_df_for_intercept[3]);
-  if (yK[1] > 0) beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1, y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1], y_caux1);
-  if (M > 1 && yK[2] > 0) beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2, y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2], y_caux2);
-  if (M > 2 && yK[3] > 0) beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3, y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3], y_caux3);
+  if (has_aux[1] == 1) 
+    aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
+  if (M > 1 && has_aux[2] == 1) 
+    aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
+  if (M > 2 && has_aux[3] == 1) 
+    aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
+  if (intercept_type[1] > 0) 
+    gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1], y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1], y_prior_df_for_intercept[1]);
+  if (M > 1 && intercept_type[2] > 0) 
+    gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2], y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2], y_prior_df_for_intercept[2]);
+  if (M > 2 && intercept_type[3] > 0) 
+    gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3], y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3], y_prior_df_for_intercept[3]);
+  if (yK[1] > 0) 
+    beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1, y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1], y_caux1);
+  if (M > 1 && yK[2] > 0) 
+    beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2, y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2], y_caux2);
+  if (M > 2 && yK[3] > 0) 
+    beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3, y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3], y_caux3);
   if (prior_dist_for_cov == 1) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization, delta, b_prior_shape, t, p);
   }
@@ -5685,12 +5792,14 @@ model {
     if (bK1 > 0) {
       target += student_t_lpdf(bSd1| b1_prior_df, 0, b1_prior_scale);
       target += normal_lpdf(to_vector(z_bMat1)| 0, 1);
-      if (bK1 > 1) target += lkj_corr_cholesky_lpdf(bCholesky1| b1_prior_regularization);
+      if (bK1 > 1) 
+        target += lkj_corr_cholesky_lpdf(bCholesky1| b1_prior_regularization);
     }
     if (bK2 > 0) {
       target += student_t_lpdf(bSd2| b2_prior_df, 0, b2_prior_scale);
       target += normal_lpdf(to_vector(z_bMat2)| 0, 1);
-      if (bK2 > 1) target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
+      if (bK2 > 1) 
+        target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
     }
   }
 }
@@ -5725,9 +5834,12 @@ generated quantities {
       mean_PPD[3] = mean_PPD_rng(yEta3, yAux3, family[3]);
     }
   }
-  if (intercept_type[1] > 0) yAlpha1[1] = yGamma1[1] - dot_product(yXbar1, yBeta1);
-  if (M > 1 && intercept_type[2] > 0) yAlpha2[1] = yGamma2[1] - dot_product(yXbar2, yBeta2);
-  if (M > 2 && intercept_type[3] > 0) yAlpha3[1] = yGamma3[1] - dot_product(yXbar3, yBeta3);
+  if (intercept_type[1] > 0) 
+    yAlpha1[1] = yGamma1[1] - dot_product(yXbar1, yBeta1);
+  if (M > 1 && intercept_type[2] > 0) 
+    yAlpha2[1] = yGamma2[1] - dot_product(yXbar2, yBeta2);
+  if (M > 2 && intercept_type[3] > 0) 
+    yAlpha3[1] = yGamma3[1] - dot_product(yXbar3, yBeta3);
   if (prior_dist_for_cov == 2 && bK1 == 1) {
     bCov1[1] = bSd1[1] * bSd1[1];
   }
@@ -5763,7 +5875,8 @@ functions {
     int N = rows(eta);
     int J = rows(cutpoints) + 1;
     vector[N] ll;
-    if (link < 1 || link > 5) reject("Invalid link");
+    if (link < 1 || link > 5) 
+      reject("Invalid link");
     if (alpha == 1) 
       for (n in 1 : N) {
         if (y[n] == 1) 
@@ -5820,7 +5933,8 @@ functions {
   real draw_ystar_rng(real lower_, real upper_, real eta, int link) {
     int iter = 0;
     real ystar = not_a_number();
-    if (lower_ >= upper_) reject("lower_ must be less than upper_");
+    if (lower_ >= upper_) 
+      reject("lower_ must be less than upper_");
     if (link == 1) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta, 1);
     else if (link == 2) 
@@ -5877,7 +5991,8 @@ transformed data {
   int<lower=0, upper=1> is_constant = 1;
   vector[0] beta_smooth;
   for (j in 1 : J) 
-    if (prior_counts[j] != 1) is_constant = 0;
+    if (prior_counts[j] != 1) 
+      is_constant = 0;
 }
 parameters {
   simplex[J] pi;
@@ -5911,8 +6026,10 @@ model {
   }
   else 
     eta = rep_vector(0.0, N);
-  if (has_offset == 1) eta += offset_;
-  if (K_smooth) eta += S * beta_smooth;
+  if (has_offset == 1) 
+    eta += offset_;
+  if (K_smooth) 
+    eta += S * beta_smooth;
   if (has_weights == 0 && prior_PD == 0) {
     if (is_skewed == 0) 
       target += pw_polr(y, eta, cutpoints, link, 1.0);
@@ -5925,14 +6042,16 @@ model {
     else 
       target += dot_product(weights, pw_polr(y, eta, cutpoints, link, alpha[1]));
   }
-  if (is_constant == 0) target += dirichlet_lpdf(pi| prior_counts);
+  if (is_constant == 0) 
+    target += dirichlet_lpdf(pi| prior_counts);
   if (prior_dist == 1) {
     if (K > 1) 
       target += beta_lpdf(R2| half_K, regularization);
     else 
       target += beta_lpdf(square(R2)| half_K, regularization) + log(fabs(R2));
   }
-  if (is_skewed == 1) target += gamma_lpdf(alpha| shape, rate);
+  if (is_skewed == 1) 
+    target += gamma_lpdf(alpha| shape, rate);
 }
 generated quantities {
   vector[J > 2 ? J : 1] mean_PPD = rep_vector(0, J > 2 ? J : 1);
@@ -5942,7 +6061,8 @@ generated quantities {
     zeta = cutpoints + dot_product(xbar, beta);
   else 
     zeta = cutpoints;
-  if (J == 2) zeta *= -1.0;
+  if (J == 2) 
+    zeta *= -1.0;
   {
     vector[N] eta;
     if (K > 0) {
@@ -5953,8 +6073,10 @@ generated quantities {
     }
     else 
       eta = rep_vector(0.0, N);
-    if (has_offset == 1) eta += offset_;
-    if (K_smooth) eta += S * beta_smooth;
+    if (has_offset == 1) 
+      eta += offset_;
+    if (K_smooth) 
+      eta += S * beta_smooth;
     for (n in 1 : N) {
       int y_tilde;
       vector[J] theta;

@@ -13,8 +13,10 @@ transformed data {
   for (i in 1 : I) {
     for (k in 1 : K) {
       if (X[i, k] == 1) {
-        if (k < first[i]) first[i] <- k;
-        if (k > last[i]) last[i] <- k;
+        if (k < first[i]) 
+          first[i] <- k;
+        if (k > last[i]) 
+          last[i] <- k;
       }
     }
   }

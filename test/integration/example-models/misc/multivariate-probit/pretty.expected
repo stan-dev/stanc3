@@ -36,7 +36,8 @@ model {
           z[d] = inv_Phi(t);
           target += log(bound);
         }
-        if (d < D) prev = L_Omega[d + 1, 1 : d] * head(z, d);
+        if (d < D) 
+          prev = L_Omega[d + 1, 1 : d] * head(z, d);
       }
     }
   }

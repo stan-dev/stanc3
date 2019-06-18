@@ -4,8 +4,10 @@ functions {
     real s[min(n) + 1];
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
-    if (size(n) != 2) reject("Size of n must be 2.");
-    if (p < 0 || p > 1) reject("p must be in [0,1].");
+    if (size(n) != 2) 
+      reject("Size of n must be 2.");
+    if (p < 0 || p > 1) 
+      reject("p must be in [0,1].");
     for (u in 0 : min(n)) 
       s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1) + poisson_log_lpmf(n[2] - u| log_theta_1) + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
@@ -90,14 +92,17 @@ functions {
     real s[min(n) + 1];
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
-    if (size(n) != 2) reject("Size of n must be 2.");
-    if (p < 0 || p > 1) reject("p must be in [0,1].");
+    if (size(n) != 2) 
+      reject("Size of n must be 2.");
+    if (p < 0 || p > 1) 
+      reject("p must be in [0,1].");
     for (u in 0 : min(n)) 
       s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1) + poisson_log_lpmf(n[2] - u| log_theta_1) + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
   real poisbin_lpmf(int[] y, int n, real log_lambda, real p) {
-    if (max(y) > n) return negative_infinity();
+    if (max(y) > n) 
+      return negative_infinity();
     return poisson_log_lpmf(n| log_lambda) + binomial_lpmf(y| n, p);
   }
 }
@@ -202,8 +207,10 @@ generated quantities {
 functions {
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
     real s[min(n) + 1];
-    if (size(n) != 2) reject("Size of n must be 2.");
-    if (p[1] < 0 || p[1] > 1 || p[2] < 0 || p[2] > 1) reject("p must be in [0,1].");
+    if (size(n) != 2) 
+      reject("Size of n must be 2.");
+    if (p[1] < 0 || p[1] > 1 || p[2] < 0 || p[2] > 1) 
+      reject("p must be in [0,1].");
     for (u in 0 : min(n)) 
       s[u + 1] = poisson_log_lpmf(n[1] - u| log_lambda + log(p[1]) + log1m(p[2])) + poisson_log_lpmf(n[2] - u| log_lambda + log(p[2]) + log1m(p[1])) + poisson_log_lpmf(u| log_lambda + log(p[1]) + log(p[2]));
     return log_sum_exp(s);

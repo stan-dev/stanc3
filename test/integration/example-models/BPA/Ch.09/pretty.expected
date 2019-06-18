@@ -2,7 +2,8 @@
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 4) return k;
+      if (y_i[k] != 4) 
+        return k;
     return 0;
   }
 }
@@ -118,7 +119,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 3) return k;
+      if (y_i[k] != 3) 
+        return k;
     return 0;
   }
 }
@@ -212,7 +214,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 3) return k;
+      if (y_i[k] != 3) 
+        return k;
     return 0;
   }
 }
@@ -302,7 +305,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 3) return k;
+      if (y_i[k] != 3) 
+        return k;
     return 0;
   }
 }
@@ -385,7 +389,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 4) return k;
+      if (y_i[k] != 4) 
+        return k;
     return 0;
   }
   vector softmax_0(vector lp) {
@@ -489,7 +494,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 3) return k;
+      if (y_i[k] != 3) 
+        return k;
     return 0;
   }
 }
@@ -570,7 +576,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] != 3) return k;
+      if (y_i[k] != 3) 
+        return k;
     return 0;
   }
 }
@@ -637,7 +644,8 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k] == 1) return k;
+      if (y_i[k] == 1) 
+        return k;
     return 0;
   }
 }

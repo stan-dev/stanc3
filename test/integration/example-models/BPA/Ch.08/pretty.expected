@@ -116,13 +116,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }

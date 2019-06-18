@@ -10,7 +10,8 @@ transformed data {
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
-    if (s[i] > 0) C = C + 1;
+    if (s[i] > 0) 
+      C = C + 1;
   }
 }
 parameters {
@@ -41,7 +42,8 @@ transformed data {
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
-    if (s[i] > 0) C = C + 1;
+    if (s[i] > 0) 
+      C = C + 1;
   }
 }
 parameters {
@@ -80,7 +82,8 @@ transformed data {
   int<lower=0> C;
   C = 0;
   for (i in 1 : M) {
-    if (y[i] > 0) C = C + 1;
+    if (y[i] > 0) 
+      C = C + 1;
   }
 }
 parameters {
@@ -128,7 +131,8 @@ transformed data {
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
-    if (s[i] > 0) C = C + 1;
+    if (s[i] > 0) 
+      C = C + 1;
   }
 }
 parameters {
@@ -219,7 +223,8 @@ transformed data {
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
-    if (s[i] > 0) C = C + 1;
+    if (s[i] > 0) 
+      C = C + 1;
   }
 }
 parameters {
@@ -275,7 +280,8 @@ transformed data {
   C = 0;
   for (i in 1 : M) {
     s[i] = sum(y[i]);
-    if (s[i] > 0) C = C + 1;
+    if (s[i] > 0) 
+      C = C + 1;
   }
 }
 parameters {

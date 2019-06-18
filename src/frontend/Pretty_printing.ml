@@ -253,6 +253,23 @@ and pp_indent_unless_block ppf s = match s.stmt with
          with_indented_box ppf 2 0 (fun () ->
              Fmt.pf ppf "%a" pp_statement s;)
 
+(* This function helps write chained if-then-else-if-... blocks
+ * correctly. Without it, each IfThenElse would trigger a new
+ * vbox in front of the if, adding spaces for each level of IfThenElse.
+ *)
+and pp_recursive_ifthenelse ppf s = match s.stmt with
+  | (IfThenElse (e, s, None)) ->
+     Fmt.pf ppf "if (%a) %a"
+       pp_expression e
+       pp_indent_unless_block s;
+  | (IfThenElse (e, s1, Some s2)) ->
+     Fmt.pf ppf "if (%a) %a"
+       pp_expression e
+       pp_indent_unless_block s1;
+     Format.pp_print_cut ppf ();
+     Fmt.pf ppf "else %a" pp_recursive_ifthenelse s2;
+  | _ -> pp_indent_unless_block ppf s;
+
 and pp_statement ppf ({stmt= s_content; _} as ss) =
   match s_content with
   | Assignment
@@ -294,27 +311,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
   | Print ps -> Fmt.pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> Fmt.pf ppf "reject(%a);" pp_list_of_printables ps
   | Skip -> Fmt.pf ppf ";"
-  | IfThenElse (e, s, None) ->
-     Fmt.pf ppf "if (%a) %a"
-       pp_expression e
-       pp_statement s
-  | IfThenElse (_, _, Some _) ->
-     (* This function helps write chained if-then-else-if-... blocks
-      * correctly. Without it, each IfThenElse would trigger a new
-      * vbox in front of the if, adding spaces for each level of IfThenElse.
-      *)
-     let rec pp_recursive_ifthenelse ppf s = match s.stmt with
-       | (IfThenElse (e, s, None)) ->
-          Fmt.pf ppf "if (%a) %a"
-            pp_expression e
-            pp_indent_unless_block s;
-       | (IfThenElse (e, s1, Some s2)) ->
-          Fmt.pf ppf "if (%a) %a"
-            pp_expression e
-            pp_indent_unless_block s1;
-          Format.pp_print_cut ppf ();
-          Fmt.pf ppf "else %a" pp_recursive_ifthenelse s2;
-       | _ -> pp_indent_unless_block ppf s; in
+  | IfThenElse (_, _, _) ->
      with_vbox ppf 0 (fun () ->
          pp_recursive_ifthenelse ppf ss)
   | While (e, s) ->

@@ -272,7 +272,8 @@ functions {
     real V = x_r[2];
     real dose = 0;
     real elim = (V_m / V) * y[1] / (K_m + y[1]);
-    if (t > 0) dose = exp(-k_a * t) * D * k_a / V;
+    if (t > 0) 
+      dose = exp(-k_a * t) * D * k_a / V;
     dydt[1] = dose - elim;
     return dydt;
   }
@@ -328,7 +329,8 @@ functions {
     real V = x_r[2];
     real dose = 0;
     real elim = (V_m / V) * y[1] / (K_m + y[1]);
-    if (t > 0) dose = exp(-k_a * t) * D * k_a / V;
+    if (t > 0) 
+      dose = exp(-k_a * t) * D * k_a / V;
     dydt[1] = dose - elim;
     return dydt;
   }

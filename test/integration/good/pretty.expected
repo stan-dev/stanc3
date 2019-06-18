@@ -2298,7 +2298,8 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format fun-return-typ2.stan
 functions {
   real foo() {
-    if (1) reject("");
+    if (1) 
+      reject("");
     reject("");
   }
 }
@@ -2498,7 +2499,8 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 functions {
   int foo(int n);
   int foo(int n) {
-    if (n == 0) return 1;
+    if (n == 0) 
+      return 1;
     return n * foo(n - 1);
   }
 }
@@ -2860,7 +2862,8 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
 functions {
   real foo() {
-    if (215) return 24;
+    if (215) 
+      return 24;
     return 24;
   }
 }
@@ -2868,14 +2871,16 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes2.stan
 functions {
   void foo() {
-    if (215) return;
+    if (215) 
+      return;
   }
 }
 
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes3.stan
 functions {
   real foo() {
-    if (215) return 24;
+    if (215) 
+      return 24;
     reject("");
   }
 }

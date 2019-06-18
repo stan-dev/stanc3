@@ -111,13 +111,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -236,7 +238,8 @@ generated quantities {
     b = cprob / psi;
     for (i in 1 : M) {
       int f = first_capture(z[i,  : ]);
-      if (f > 0) recruit[i, f] = 1;
+      if (f > 0) 
+        recruit[i, f] = 1;
     }
     for (t in 1 : n_occasions) {
       N[t] = sum(z[ : , t]);
@@ -254,13 +257,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -380,7 +385,8 @@ generated quantities {
     int Nalive[M];
     for (i in 1 : M) {
       int f = first_capture(z[i,  : ]);
-      if (f > 0) recruit[i, f] = 1;
+      if (f > 0) 
+        recruit[i, f] = 1;
     }
     for (t in 1 : n_occasions) {
       N[t] = sum(z[ : , t]);
@@ -398,13 +404,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -528,7 +536,8 @@ generated quantities {
     int Nalive[M];
     for (i in 1 : M) {
       int f = first_capture(z[i,  : ]);
-      if (f > 0) recruit[i, f] = 1;
+      if (f > 0) 
+        recruit[i, f] = 1;
     }
     for (t in 1 : n_occasions) {
       N[t] = sum(z[ : , t]);
@@ -546,13 +555,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -677,7 +688,8 @@ generated quantities {
     b = cprob / psi;
     for (i in 1 : M) {
       int f = first_capture(z[i,  : ]);
-      if (f > 0) recruit[i, f] = 1;
+      if (f > 0) 
+        recruit[i, f] = 1;
     }
     for (t in 1 : n_occasions) {
       N[t] = sum(z[ : , t]);

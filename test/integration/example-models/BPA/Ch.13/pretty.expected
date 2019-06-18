@@ -147,7 +147,8 @@ transformed data {
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
-    if (sum_y[i]) occ_obs = occ_obs + 1;
+    if (sum_y[i]) 
+      occ_obs = occ_obs + 1;
   }
   DATES2 = DATES .* DATES;
   HOURS2 = HOURS .* HOURS;
@@ -243,7 +244,8 @@ model {
     for (k in 1 : 3) {
       lp[k] = categorical_lpmf(k| phi[s]);
       for (t in 1 : T) {
-        if (y[s, t]) lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
+        if (y[s, t]) 
+          lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
       }
     }
     target += log_sum_exp(lp);
@@ -306,7 +308,8 @@ model {
     for (k in 1 : 3) {
       lp[k] = categorical_lpmf(k| phi[s]);
       for (t in 1 : T) {
-        if (y[s, t]) lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
+        if (y[s, t]) 
+          lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
       }
     }
     target += log_sum_exp(lp);
@@ -337,7 +340,8 @@ transformed data {
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
-    if (sum_y[i]) occ_obs = occ_obs + 1;
+    if (sum_y[i]) 
+      occ_obs = occ_obs + 1;
   }
 }
 parameters {
@@ -375,7 +379,8 @@ transformed data {
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
-    if (sum_y[i]) occ_obs = occ_obs + 1;
+    if (sum_y[i]) 
+      occ_obs = occ_obs + 1;
   }
 }
 parameters {

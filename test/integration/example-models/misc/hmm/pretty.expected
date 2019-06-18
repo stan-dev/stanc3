@@ -147,7 +147,8 @@ generated quantities {
     }
     log_p_y_star <- max(best_logp[T_unsup]);
     for (k in 1 : K) 
-      if (best_logp[T_unsup, k] == log_p_y_star) y_star[T_unsup] <- k;
+      if (best_logp[T_unsup, k] == log_p_y_star) 
+        y_star[T_unsup] <- k;
     for (t in 1 : (T_unsup - 1)) 
       y_star[T_unsup - t] <- back_ptr[T_unsup - t + 1, y_star[T_unsup - t + 1]];
   }

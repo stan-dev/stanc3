@@ -2,13 +2,15 @@
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -92,13 +94,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -167,13 +171,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -240,13 +246,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -281,7 +289,8 @@ transformed data {
   n_captured = rep_vector(0, n_occasions);
   for (t in 1 : n_occasions) 
     for (i in 1 : nind) 
-      if (y[i, t]) n_captured[t] = n_captured[t] + 1;
+      if (y[i, t]) 
+        n_captured[t] = n_captured[t] + 1;
 }
 parameters {
   real beta;
@@ -331,13 +340,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -406,13 +417,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -491,13 +504,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -743,13 +758,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -816,13 +833,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -901,13 +920,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -975,13 +996,15 @@ model {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -1057,13 +1080,15 @@ generated quantities {
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) 
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
