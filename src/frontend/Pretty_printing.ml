@@ -120,7 +120,8 @@ and pp_list_of_indices ppf l =
 and pp_expression ppf {expr= e_content; _} =
   match e_content with
   | TernaryIf (e1, e2, e3) ->
-     Fmt.pf ppf "%a ? %a : %a" pp_expression e1 pp_expression e2 pp_expression e3
+     with_hbox ppf (fun () ->
+         Fmt.pf ppf "%a ? %a : %a" pp_expression e1 pp_expression e2 pp_expression e3);
   | BinOp (e1, op, e2) ->
      Fmt.pf ppf "%a %a %a" pp_expression e1 pp_operator op pp_expression e2
   | PrefixOp (op, e) -> Fmt.pf ppf "%a%a" pp_operator op pp_expression e
