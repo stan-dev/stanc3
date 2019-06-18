@@ -73,8 +73,7 @@ let rec block_wrapping {stmt; smeta} =
   let in_block {stmt; smeta} =
     { stmt=
         ( match stmt with
-        | Block l -> Block l
-        | SList l -> Block l
+        | Block l | SList l -> Block l
         | stmt -> Block [{stmt; smeta}] )
     ; smeta }
   in
@@ -90,7 +89,11 @@ let rec block_wrapping {stmt; smeta} =
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let {stmt; smeta} = block_wrapping {stmt; smeta} in
-  (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before *)
+  (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before.
+     Note that this should not change the semantics as we are only inserting blocks around the whole body of a for-, while- or if-body. 
+     These are already local scopes.
+     The blocks make sure that the program with the inserted location update is still well-formed C++ though.
+   *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match stmt with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
