@@ -246,7 +246,7 @@ and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
   | es -> Fmt.pf ppf "[%a]" pp_list_of_expression (List.rev es)
 
-and pp_statement ppf {stmt= s_content; _} =
+and pp_statement ppf ({stmt= s_content; _} as ss) =
   match s_content with
   | Assignment
       { assign_identifier= id
@@ -291,13 +291,21 @@ and pp_statement ppf {stmt= s_content; _} =
      Fmt.pf ppf "if (%a) %a"
        pp_expression e
        pp_statement s
-  | IfThenElse (e, s1, Some s2) ->
+  | IfThenElse (_, _, Some _) ->
+     (* This function helps write chained if-then-else-if-... blocks
+      * correctly. Without it, each IfThenElse would trigger a new
+      * vbox in front of the if, adding spaces for each level of IfThenElse.
+      *)
+     let rec pp_recursive_ifthenelse ppf s = match s.stmt with
+       | (IfThenElse (e, s1, Some s2)) ->
+          Fmt.pf ppf "if (%a) %a"
+            pp_expression e
+            pp_statement s1;
+          Format.pp_print_cut ppf ();
+          Fmt.pf ppf "else %a" pp_recursive_ifthenelse s2;
+       | _ -> pp_statement ppf s; in
      with_vbox ppf 0 (fun () ->
-         Fmt.pf ppf "if (%a) %a"
-           pp_expression e
-           pp_statement s1;
-         Format.pp_print_cut ppf () ;
-         Fmt.pf ppf "else %a" pp_statement s2;)
+         pp_recursive_ifthenelse ppf ss)
   | While (e, s) ->
      Fmt.pf ppf "while (%a) %a"
        pp_expression e
