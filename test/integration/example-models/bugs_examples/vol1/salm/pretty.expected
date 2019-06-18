@@ -12,10 +12,13 @@ transformed data {
   real centered_x[Ndoses];
   real centered_logx[Ndoses];
   mean_x <- mean(x);
-  for (dose in 1 : Ndoses) centered_x[dose] <- x[dose] - mean_x;
-  for (dose in 1 : Ndoses) logx[dose] <- log(x[dose] + 10);
+  for (dose in 1 : Ndoses) 
+    centered_x[dose] <- x[dose] - mean_x;
+  for (dose in 1 : Ndoses) 
+    logx[dose] <- log(x[dose] + 10);
   mean_logx <- mean(logx);
-  for (dose in 1 : Ndoses) centered_logx[dose] <- logx[dose] - mean_logx;
+  for (dose in 1 : Ndoses) 
+    centered_logx[dose] <- logx[dose] - mean_logx;
 }
 parameters {
   real alpha_star;

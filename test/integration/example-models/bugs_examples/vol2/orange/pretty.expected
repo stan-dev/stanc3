@@ -20,7 +20,8 @@ transformed parameters {
     phi[k, 2] <- exp(theta[k, 2]) - 1;
     phi[k, 3] <- -exp(theta[k, 3]);
   }
-  for (j in 1 : 3) sigma[j] <- 1 / sqrt(tau[j]);
+  for (j in 1 : 3) 
+    sigma[j] <- 1 / sqrt(tau[j]);
   sigma_C <- 1 / sqrt(tau_C);
 }
 model {
@@ -32,7 +33,8 @@ model {
   for (k in 1 : K) {
     real m[N];
     theta[k] ~ normal(mu, sigma);
-    for (n in 1 : N) m[n] <- phi[k, 1] / (1 + phi[k, 2] * exp(phi[k, 3] * x[n]));
+    for (n in 1 : N) 
+      m[n] <- phi[k, 1] / (1 + phi[k, 2] * exp(phi[k, 3] * x[n]));
     Y[k] ~ normal(m, sigma_C);
   }
 }

@@ -41,7 +41,8 @@ generated quantities {
   real y_rep[N, 2];
   for (k in 1 : 2) {
     y_init_rep[k] = lognormal_rng(log(z_init[k]), sigma[k]);
-    for (n in 1 : N) y_rep[n, k] = lognormal_rng(log(z[n, k]), sigma[k]);
+    for (n in 1 : N) 
+      y_rep[n, k] = lognormal_rng(log(z[n, k]), sigma[k]);
   }
 }
 

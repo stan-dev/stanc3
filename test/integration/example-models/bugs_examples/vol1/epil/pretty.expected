@@ -23,8 +23,10 @@ transformed data {
   log_Base4_c <- log_Base4 - log_Base4_bar;
   log_Age_c <- log_Age - log_Age_bar;
   BT_c <- BT - BT_bar;
-  for (i in 1 : T) V4_c[i] <- V4[i] - V4_bar;
-  for (i in 1 : N) Trt_c[i] <- Trt[i] - Trt_bar;
+  for (i in 1 : T) 
+    V4_c[i] <- V4[i] - V4_bar;
+  for (i in 1 : N) 
+    Trt_c[i] <- Trt[i] - Trt_bar;
 }
 parameters {
   real a0;

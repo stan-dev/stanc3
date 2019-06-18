@@ -161,7 +161,8 @@ functions {
   $ ../../../../../install/default/bin/stanc --auto-format local_var_gqs.stan
 generated quantities {
   real p2;
-  for (x in 1 : 10) p2 = x;
+  for (x in 1 : 10) 
+    p2 = x;
   {
     int a;
     real b[20, 30];
@@ -189,7 +190,8 @@ transformed data {
   $ ../../../../../install/default/bin/stanc --auto-format local_var_transformed_param_block.stan
 transformed parameters {
   real p2;
-  for (x in 1 : 10) p2 = x;
+  for (x in 1 : 10) 
+    p2 = x;
   {
     int a;
     int vs[2];

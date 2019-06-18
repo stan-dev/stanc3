@@ -336,7 +336,8 @@ model {
   }
   Yvec1 ~ normal(m, sigma_y);
   mu0 ~ normal(theta, sigma_mu0);
-  for (n in 1 : N) y0[n] ~ normal(mu0[n], sigma_y);
+  for (n in 1 : N) 
+    y0[n] ~ normal(mu0[n], sigma_y);
   alpha ~ normal(alpha0, sigma_alpha);
   beta ~ normal(beta0, sigma_beta);
   sigmasq_y ~ inv_gamma(.001, .001);

@@ -14,11 +14,15 @@ parameters {
 }
 transformed parameters {
   real<upper=0> soft_z[N, K];
-  for (n in 1 : N) for (k in 1 : K) soft_z[n, k] <- neg_log_K - 0.5 * dot_self(mu[k] - y[n]);
+  for (n in 1 : N) 
+    for (k in 1 : K) 
+      soft_z[n, k] <- neg_log_K - 0.5 * dot_self(mu[k] - y[n]);
 }
 model {
-  for (k in 1 : K) mu[k] ~ normal(0, 1);
-  for (n in 1 : N) increment_log_prob(log_sum_exp(soft_z[n]));
+  for (k in 1 : K) 
+    mu[k] ~ normal(0, 1);
+  for (n in 1 : N) 
+    increment_log_prob(log_sum_exp(soft_z[n]));
 }
 
 

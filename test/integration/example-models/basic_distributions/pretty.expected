@@ -447,7 +447,9 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format wishart.stan
 transformed data {
   cov_matrix[2] S;
-  for (i in 1 : 2) for (j in 1 : 2) S[i, j] <- 0.0;
+  for (i in 1 : 2) 
+    for (j in 1 : 2) 
+      S[i, j] <- 0.0;
   S[1, 1] <- 2.0;
   S[2, 2] <- 0.5;
 }
@@ -510,7 +512,9 @@ transformed data {
   S[3, 3] <- 11.676181;
   S[3, 4] <- -3.5866852;
   S[4, 4] <- 1.4482736;
-  for (m in 1 : 4) for (n in 1 : (m - 1)) S[m, n] <- S[n, m];
+  for (m in 1 : 4) 
+    for (n in 1 : (m - 1)) 
+      S[m, n] <- S[n, m];
 }
 parameters {
   cov_matrix[4] W;
@@ -665,7 +669,9 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../install/default/bin/stanc --auto-format wishart2x2.stan
 transformed data {
   cov_matrix[2] S;
-  for (i in 1 : 2) for (j in 1 : 2) S[i, j] <- 0.0;
+  for (i in 1 : 2) 
+    for (j in 1 : 2) 
+      S[i, j] <- 0.0;
   S[1, 1] <- 2.0;
   S[2, 2] <- 0.5;
 }

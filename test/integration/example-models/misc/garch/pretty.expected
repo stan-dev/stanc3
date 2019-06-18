@@ -9,7 +9,8 @@ parameters {
   real<lower=0, upper=1> alpha1;
 }
 model {
-  for (t in 2 : T) r[t] ~ normal(mu, sqrt(alpha0 + alpha1 * pow(r[t - 1] - mu, 2)));
+  for (t in 2 : T) 
+    r[t] ~ normal(mu, sqrt(alpha0 + alpha1 * pow(r[t - 1] - mu, 2)));
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format garch1_1.stan
@@ -28,7 +29,8 @@ parameters {
 transformed parameters {
   real<lower=0> sigma[T];
   sigma[1] = sigma1;
-  for (t in 2 : T) sigma[t] = sqrt(alpha0 + +alpha1 * square(r[t - 1] - mu) + beta1 * square(sigma[t - 1]));
+  for (t in 2 : T) 
+    sigma[t] = sqrt(alpha0 + +alpha1 * square(r[t - 1] - mu) + beta1 * square(sigma[t - 1]));
 }
 model {
   r ~ normal(mu, sigma);
@@ -61,6 +63,7 @@ model {
   beta ~ cauchy(0, 5);
   lambda ~ uniform(0, 1);
   sigma ~ cauchy(0, 5);
-  for (t in 2 : T) y[t] ~ normal(alpha + beta * x[t] + lambda * y[t - 1], sigma);
+  for (t in 2 : T) 
+    y[t] ~ normal(alpha + beta * x[t] + lambda * y[t - 1], sigma);
 }
 

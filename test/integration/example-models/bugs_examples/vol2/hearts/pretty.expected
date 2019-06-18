@@ -21,8 +21,10 @@ model {
   alpha ~ normal(0, 100);
   delta ~ normal(0, 100);
   for (i in 1 : N) {
-    if (y[i] == 0) increment_log_prob(log(theta + (1 - theta) * pow(1 - p, t[i])));
-    else increment_log_prob(log1m_theta + binomial_log(y[i], t[i], p));
+    if (y[i] == 0) 
+      increment_log_prob(log(theta + (1 - theta) * pow(1 - p, t[i])));
+    else 
+      increment_log_prob(log1m_theta + binomial_log(y[i], t[i], p));
   }
 }
 generated quantities {

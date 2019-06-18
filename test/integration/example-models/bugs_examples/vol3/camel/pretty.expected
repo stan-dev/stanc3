@@ -47,7 +47,8 @@ model {
   Y[11, 2] <- -2;
   Y[12, 2] <- -2;
   increment_log_prob(-1.5 * log(determinant(Sigma)));
-  for (n in 1 : 12) Y[n] ~ multi_normal(mu, Sigma);
+  for (n in 1 : 12) 
+    Y[n] ~ multi_normal(mu, Sigma);
 }
 generated quantities {
   real<lower=-1, upper=1> rho;
@@ -507,7 +508,8 @@ transformed parameters {
   rho <- Sigma[1, 2] / sqrt(Sigma[1, 1] * Sigma[2, 2]);
 }
 model {
-  for (n in 1 : 4) Y[n] ~ multi_normal(mu, Sigma);
+  for (n in 1 : 4) 
+    Y[n] ~ multi_normal(mu, Sigma);
   Y1 ~ normal(0, sqrt(Sigma[1, 1]));
   Y2 ~ normal(0, sqrt(Sigma[2, 2]));
   increment_log_prob(-1.5 * log(determinant(Sigma)));

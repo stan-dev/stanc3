@@ -21,9 +21,12 @@ model {
   Sigma_beta <- diag_matrix(tau) * Omega * diag_matrix(tau);
   tau ~ cauchy(0, 2.5);
   Omega ~ lkj_corr(2);
-  for (l in 1 : L) gamma[l] ~ normal(0, 5);
-  for (j in 1 : J) beta[j] ~ multi_normal((u[j] * gamma)', Sigma_beta);
-  for (n in 1 : N) y[n] ~ normal(x[n] * beta[jj[n]], sigma);
+  for (l in 1 : L) 
+    gamma[l] ~ normal(0, 5);
+  for (j in 1 : J) 
+    beta[j] ~ multi_normal((u[j] * gamma)', Sigma_beta);
+  for (n in 1 : N) 
+    y[n] ~ normal(x[n] * beta[jj[n]], sigma);
 }
 
 

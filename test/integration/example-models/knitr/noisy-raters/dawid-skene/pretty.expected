@@ -13,10 +13,13 @@ parameters {
 }
 model {
   pi ~ dirichlet(alpha);
-  for (j in 1 : J) for (k in 1 : K) theta[j, k] ~ dirichlet(beta[k]);
+  for (j in 1 : J) 
+    for (k in 1 : K) 
+      theta[j, k] ~ dirichlet(beta[k]);
   for (i in 1 : I) {
     vector[K] log_q = log(pi);
-    for (j in 1 : J) log_q += to_vector(log(theta[j,  : , y[i, j]]));
+    for (j in 1 : J) 
+      log_q += to_vector(log(theta[j,  : , y[i, j]]));
     target += log_sum_exp(log_q);
   }
 }
@@ -24,7 +27,8 @@ generated quantities {
   vector[K] log_Pr_z[I];
   for (i in 1 : I) {
     vector[K] log_q = log(pi);
-    for (j in 1 : J) log_q += to_vector(log(theta[j,  : , y[i, j]]));
+    for (j in 1 : J) 
+      log_q += to_vector(log(theta[j,  : , y[i, j]]));
     log_Pr_z[i] = log_q - log_sum_exp(log_q);
   }
 }

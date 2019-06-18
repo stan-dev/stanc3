@@ -31,7 +31,9 @@ model {
   sigmasq_beta ~ inv_gamma(0.001, 0.001);
   alpha ~ normal(mu_alpha, sigma_alpha);
   beta ~ normal(mu_beta, sigma_beta);
-  for (n in 1 : N) for (t in 1 : T) y[n, t] ~ normal(alpha[n] + beta[n] * (x[t] - xbar), sigma_y);
+  for (n in 1 : N) 
+    for (t in 1 : T) 
+      y[n, t] ~ normal(alpha[n] + beta[n] * (x[t] - xbar), sigma_y);
 }
 generated quantities {
   real alpha0;
@@ -257,8 +259,11 @@ data {
 transformed data {
   real x_minus_xbar[T];
   real y_linear[N * T];
-  for (t in 1 : T) x_minus_xbar[t] <- x[t] - xbar;
-  for (n in 1 : N) for (t in 1 : T) y_linear[(n - 1) * T + t] <- y[n, t];
+  for (t in 1 : T) 
+    x_minus_xbar[t] <- x[t] - xbar;
+  for (n in 1 : N) 
+    for (t in 1 : T) 
+      y_linear[(n - 1) * T + t] <- y[n, t];
 }
 parameters {
   real alpha[N];
@@ -279,7 +284,9 @@ transformed parameters {
 }
 model {
   real pred[N * T];
-  for (n in 1 : N) for (t in 1 : T) pred[(n - 1) * T + t] <- fma(beta[n], x_minus_xbar[t], alpha[n]);
+  for (n in 1 : N) 
+    for (t in 1 : T) 
+      pred[(n - 1) * T + t] <- fma(beta[n], x_minus_xbar[t], alpha[n]);
   mu_alpha ~ normal(0, 100);
   mu_beta ~ normal(0, 100);
   sigmasq_y ~ inv_gamma(0.001, 0.001);
@@ -428,7 +435,8 @@ model {
   sigmasq_beta ~ inv_gamma(0.001, 0.001);
   alpha_z ~ normal(0, 1);
   beta_z ~ normal(0, 1);
-  for (t in 1 : T) col(y, t) ~ normal(alpha + beta * (x[t] - xbar), sigma_y);
+  for (t in 1 : T) 
+    col(y, t) ~ normal(alpha + beta * (x[t] - xbar), sigma_y);
 }
 generated quantities {
   real alpha0;

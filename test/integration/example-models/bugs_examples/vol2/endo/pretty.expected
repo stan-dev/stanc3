@@ -581,7 +581,8 @@ parameters {
 model {
   beta ~ normal(0, 1000);
   beta0 ~ normal(0, 1000);
-  for (j in 1 : J) Y[j] ~ poisson_log(beta0 + beta * est[j]);
+  for (j in 1 : J) 
+    Y[j] ~ poisson_log(beta0 + beta * est[j]);
 }
 
 

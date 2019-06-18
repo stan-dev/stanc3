@@ -15,13 +15,17 @@ transformed parameters {
   r = rep_vector(mean_r, n_occasions);
   for (t in 1 : n_occasions) {
     pr[t, t] = (1 - s[t]) * r[t];
-    for (j in (t + 1) : n_occasions) pr[t, j] = prod(s[t : (j - 1)]) * (1 - s[j]) * r[j];
-    for (j in 1 : (t - 1)) pr[t, j] = 0;
+    for (j in (t + 1) : n_occasions) 
+      pr[t, j] = prod(s[t : (j - 1)]) * (1 - s[j]) * r[j];
+    for (j in 1 : (t - 1)) 
+      pr[t, j] = 0;
   }
-  for (t in 1 : n_occasions) pr[t, n_occasions + 1] = 1 - sum(pr[t,  : n_occasions]);
+  for (t in 1 : n_occasions) 
+    pr[t, n_occasions + 1] = 1 - sum(pr[t,  : n_occasions]);
 }
 model {
-  for (t in 1 : n_occasions) marr[t] ~ multinomial(pr[t]);
+  for (t in 1 : n_occasions) 
+    marr[t] ~ multinomial(pr[t]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl_age.stan
@@ -51,17 +55,24 @@ transformed parameters {
   }
   for (t in 1 : n_occasions) {
     pr_j[t, t] = (1 - sj[t]) * rj[t];
-    for (j in (t + 2) : n_occasions) pr_j[t, j] = sj[t] * prod(segment(sa, t + 1, j - t - 1)) * (1 - sa[j]) * ra[j];
-    for (j in 1 : (t - 1)) pr_j[t, j] = 0;
+    for (j in (t + 2) : n_occasions) 
+      pr_j[t, j] = sj[t] * prod(segment(sa, t + 1, j - t - 1)) * (1 - sa[j]) * ra[j];
+    for (j in 1 : (t - 1)) 
+      pr_j[t, j] = 0;
   }
-  for (t in 1 : (n_occasions - 1)) pr_j[t, t + 1] = sj[t] * (1 - sa[t + 1]) * ra[t + 1];
-  for (t in 1 : n_occasions) pr_j[t, n_occasions + 1] = 1 - sum(pr_j[t,  : n_occasions]);
+  for (t in 1 : (n_occasions - 1)) 
+    pr_j[t, t + 1] = sj[t] * (1 - sa[t + 1]) * ra[t + 1];
+  for (t in 1 : n_occasions) 
+    pr_j[t, n_occasions + 1] = 1 - sum(pr_j[t,  : n_occasions]);
   for (t in 1 : n_occasions) {
     pr_a[t, t] = (1 - sa[t]) * ra[t];
-    for (j in (t + 1) : n_occasions) pr_a[t, j] = prod(sa[t : (j - 1)]) * (1 - sa[j]) * ra[j];
-    for (j in 1 : (t - 1)) pr_a[t, j] = 0;
+    for (j in (t + 1) : n_occasions) 
+      pr_a[t, j] = prod(sa[t : (j - 1)]) * (1 - sa[j]) * ra[j];
+    for (j in 1 : (t - 1)) 
+      pr_a[t, j] = 0;
   }
-  for (t in 1 : n_occasions) pr_a[t, n_occasions + 1] = 1 - sum(pr_a[t,  : n_occasions]);
+  for (t in 1 : n_occasions) 
+    pr_a[t, n_occasions + 1] = 1 - sum(pr_a[t,  : n_occasions]);
 }
 model {
   for (t in 1 : n_occasions) {
@@ -88,9 +99,11 @@ transformed parameters {
   simplex[n_age + 1] pr_j;
   pr_j[1] = (1 - sjuv) * rjuv;
   pr_j[2] = sjuv * (1 - ssub) * rad;
-  for (t in 3 : n_age) pr_j[t] = sjuv * ssub * pow(sad, t - 3) * (1 - sad) * rad;
+  for (t in 3 : n_age) 
+    pr_j[t] = sjuv * ssub * pow(sad, t - 3) * (1 - sad) * rad;
   pr_j[n_age + 1] = 1 - sum(pr_j[ : n_age]);
-  for (t in 1 : n_age) pr_a[t] = pow(sad, t - 1) * (1 - sad) * rad;
+  for (t in 1 : n_age) 
+    pr_a[t] = pow(sad, t - 1) * (1 - sad) * rad;
   pr_a[n_age + 1] = 1 - sum(pr_a[ : n_age]);
 }
 model {
@@ -102,7 +115,8 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format mr_ss.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) return k;
     return 0;
   }
   int last_capture(int[] y_i) {
@@ -115,9 +129,12 @@ functions {
   real cell_prob(int n_occasions, row_vector s, row_vector r, int first, int last) {
     vector[n_occasions] pr;
     pr[first] = (1 - s[first]) * r[first];
-    for (j in (first + 1) : n_occasions - 1) pr[j] = prod(s[first : (j - 1)]) * (1 - s[j]) * r[j];
-    for (j in 1 : (first - 1)) pr[j] = 0;
-    for (t in 1 : n_occasions - 1) pr[n_occasions] = 1 - sum(pr[ : (n_occasions - 1)]);
+    for (j in (first + 1) : n_occasions - 1) 
+      pr[j] = prod(s[first : (j - 1)]) * (1 - s[j]) * r[j];
+    for (j in 1 : (first - 1)) 
+      pr[j] = 0;
+    for (t in 1 : n_occasions - 1) 
+      pr[n_occasions] = 1 - sum(pr[ : (n_occasions - 1)]);
     return pr[last];
   }
 }
@@ -130,8 +147,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_s;
@@ -155,8 +174,10 @@ model {
   for (i in 1 : nind) {
     real pr;
     if (first[i] > 0) {
-      if (last[i] > first[i]) pr = cell_prob(n_occasions, s[i], r[i], first[i], last[i] - 1);
-      else pr = cell_prob(n_occasions, s[i], r[i], first[i], n_occasions);
+      if (last[i] > first[i]) 
+        pr = cell_prob(n_occasions, s[i], r[i], first[i], last[i] - 1);
+      else 
+        pr = cell_prob(n_occasions, s[i], r[i], first[i], n_occasions);
       1 ~ bernoulli(pr);
     }
   }

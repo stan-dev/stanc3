@@ -16,10 +16,16 @@ parameters {
 model {
   real gamma[M, K];
   theta ~ dirichlet(alpha);
-  for (k in 1 : K) phi[k] ~ dirichlet(beta);
-  for (m in 1 : M) for (k in 1 : K) gamma[m, k] <- categorical_log(k, theta);
-  for (n in 1 : N) for (k in 1 : K) gamma[doc[n], k] <- gamma[doc[n], k] + categorical_log(w[n], phi[k]);
-  for (m in 1 : M) increment_log_prob(log_sum_exp(gamma[m]));
+  for (k in 1 : K) 
+    phi[k] ~ dirichlet(beta);
+  for (m in 1 : M) 
+    for (k in 1 : K) 
+      gamma[m, k] <- categorical_log(k, theta);
+  for (n in 1 : N) 
+    for (k in 1 : K) 
+      gamma[doc[n], k] <- gamma[doc[n], k] + categorical_log(w[n], phi[k]);
+  for (m in 1 : M) 
+    increment_log_prob(log_sum_exp(gamma[m]));
 }
 
 
@@ -79,8 +85,11 @@ parameters {
 }
 model {
   theta ~ dirichlet(alpha);
-  for (k in 1 : K) phi[k] ~ dirichlet(beta);
-  for (m in 1 : M) z[m] ~ categorical(theta);
-  for (n in 1 : N) w[n] ~ categorical(phi[z[doc[n]]]);
+  for (k in 1 : K) 
+    phi[k] ~ dirichlet(beta);
+  for (m in 1 : M) 
+    z[m] ~ categorical(theta);
+  for (n in 1 : N) 
+    w[n] ~ categorical(phi[z[doc[n]]]);
 }
 

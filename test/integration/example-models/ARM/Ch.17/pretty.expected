@@ -23,7 +23,8 @@ model {
   mu ~ normal(0, 100);
   gamma ~ normal(0, sigma_gamma);
   delta ~ normal(0, sigma_delta);
-  for (i in 1 : N) y_hat[i] = mu + gamma[treatment[i]] + delta[airport[i]];
+  for (i in 1 : N) 
+    y_hat[i] = mu + gamma[treatment[i]] + delta[airport[i]];
   y ~ normal(y_hat, sigma);
 }
 
@@ -76,10 +77,12 @@ model {
   b_edu ~ normal(0, sigma_edu);
   b_region ~ normal(0, sigma_region);
   for (j in 1 : n_age) {
-    for (i in 1 : n_edu) b_age_edu[j, i] ~ normal(0, sigma_age_edu);
+    for (i in 1 : n_edu) 
+      b_age_edu[j, i] ~ normal(0, sigma_age_edu);
   }
   b_v_prev ~ normal(0, 100);
-  for (j in 1 : n_state) b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
+  for (j in 1 : n_state) 
+    b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
   b_state ~ normal(b_state_hat, sigma_state);
   for (i in 1 : N) {
     Xbeta[i] = b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_state[state[i]];
@@ -138,12 +141,15 @@ model {
   b_edu ~ normal(0, sigma_edu);
   b_region ~ normal(0, sigma_region);
   for (j in 1 : n_age) {
-    for (i in 1 : n_edu) b_age_edu[j, i] ~ normal(0, sigma_age_edu);
+    for (i in 1 : n_edu) 
+      b_age_edu[j, i] ~ normal(0, sigma_age_edu);
   }
   b_v_prev ~ normal(0, 100);
-  for (j in 1 : n_state) b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
+  for (j in 1 : n_state) 
+    b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
   b_hat ~ normal(b_state_hat, sigma_state);
-  for (i in 1 : N) p[i] = fmax(0, fmin(1, inv_logit(b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_hat[state[i]])));
+  for (i in 1 : N) 
+    p[i] = fmax(0, fmin(1, inv_logit(b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_hat[state[i]])));
   y ~ bernoulli(p);
 }
 
@@ -176,12 +182,15 @@ model {
     s[i] ~ lognormal(mu_log_s, sigma_log_s) T[1, 100];
   }
   for (i in 1 : N) {
-    for (i_cut in 1 : n_cut) Q[i, i_cut] = inv_logit((x[i] - C[player[i], i_cut]) / s[player[i]]);
+    for (i_cut in 1 : n_cut) 
+      Q[i, i_cut] = inv_logit((x[i] - C[player[i], i_cut]) / s[player[i]]);
     P[i, 1] = 1 - Q[i, 1];
     P[i, n_cut + 1] = Q[i, n_cut];
-    for (i_cut in 2 : n_cut) P[i, i_cut] = Q[i, i_cut - 1] - Q[i, i_cut];
+    for (i_cut in 2 : n_cut) 
+      P[i, i_cut] = Q[i, i_cut - 1] - Q[i, i_cut];
   }
-  for (i in 1 : N) y[i] ~ categorical(transpose(row(P, i)));
+  for (i in 1 : N) 
+    y[i] ~ categorical(transpose(row(P, i)));
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format multilevel_poisson_17.5.stan
@@ -215,7 +224,8 @@ model {
   b_precint ~ normal(0, sigma_precint);
   b_precint_adj = b_precint - mean(b_precint);
   epsilon ~ normal(0, sigma_epsilon);
-  for (i in 1 : N) lambda[i] = offeset[i] + mu + b_eth[eth[i]] + b_precint[precint[i]] + epsilon[i];
+  for (i in 1 : N) 
+    lambda[i] = offeset[i] + mu + b_eth[eth[i]] + b_precint[precint[i]] + epsilon[i];
   stops ~ poisson_log(lambda);
 }
 
@@ -264,7 +274,8 @@ model {
     a[j] = B[1, j];
     b[j] = B[2, j];
   }
-  for (i in 1 : N) y_hat[i] = a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[county[i]] + b[county[i]] * x[i];
   y ~ normal(y_hat, sigma);
 }
 
@@ -313,7 +324,8 @@ model {
     a[j] = B[j, 1];
     b[j] = B[j, 2];
   }
-  for (i in 1 : N) y_hat[i] = a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[county[i]] + b[county[i]] * x[i];
   y ~ normal(y_hat, sigma);
 }
 
@@ -355,10 +367,12 @@ model {
     }
   }
   for (k in 1 : K) {
-    for (k_prime in 1 : K) rho_b[k, k_prime] = Sigma_b_raw[k, k_prime] / sqrt(Sigma_b_raw[k, k] * Sigma_b_raw[k_prime, k_prime]);
+    for (k_prime in 1 : K) 
+      rho_b[k, k_prime] = Sigma_b_raw[k, k_prime] / sqrt(Sigma_b_raw[k, k] * Sigma_b_raw[k_prime, k_prime]);
     sigma_b[k] = fabs(xi[k]) * sqrt(Sigma_b_raw[k, k]);
   }
-  for (i in 1 : N) y_hat[i] = dot_product(row(B, county[i]), row(X, i));
+  for (i in 1 : N) 
+    y_hat[i] = dot_product(row(B, county[i]), row(X, i));
   y ~ normal(y_hat, sigma);
 }
 
@@ -393,23 +407,30 @@ model {
   xi ~ uniform(0, 100);
   Tau_b_raw ~ wishart(K + 1, W);
   Sigma_b_raw = inverse(Tau_b_raw);
-  for (k in 1 : K) for (j in 1 : J) B[j, k] = xi[k] * B_raw[j, k];
+  for (k in 1 : K) 
+    for (j in 1 : J) 
+      B[j, k] = xi[k] * B_raw[j, k];
   for (k in 1 : K) {
     for (l in 1 : L) {
       G_raw[k, l] ~ normal(0, 100);
       G[k, l] = xi[k] + G_raw[k, l];
     }
   }
-  for (j in 1 : J) for (k in 1 : K) B_raw_hat[j, k] = dot_product(row(G_raw, k), U);
+  for (j in 1 : J) 
+    for (k in 1 : K) 
+      B_raw_hat[j, k] = dot_product(row(G_raw, k), U);
   for (j in 1 : J) {
     B_raw_temp ~ multi_normal(transpose(row(B_raw_hat, j)), Sigma_b_raw);
-    for (k in 1 : K) B_raw[j, k] = B_raw_temp[k];
+    for (k in 1 : K) 
+      B_raw[j, k] = B_raw_temp[k];
   }
   for (k in 1 : K) {
     sigma_b[k] = fabs(xi[k]) * sqrt(Sigma_b_raw[k, k]);
-    for (k_prime in 1 : K) rho_b[k, k_prime] = Sigma_b_raw[k, k_prime] / sqrt(Sigma_b_raw[k, k] * Sigma_b_raw[k_prime, k_prime]);
+    for (k_prime in 1 : K) 
+      rho_b[k, k_prime] = Sigma_b_raw[k, k_prime] / sqrt(Sigma_b_raw[k, k] * Sigma_b_raw[k_prime, k_prime]);
   }
-  for (i in 1 : N) y_hat[i] = dot_product(row(B, county[i]), row(X, i));
+  for (i in 1 : N) 
+    y_hat[i] = dot_product(row(B, county[i]), row(X, i));
   y ~ normal(y_hat, sigma);
 }
 
@@ -432,7 +453,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[county[i]] + b[county[i]] * x[i];
 }
 model {
   mu_a ~ normal(0, 100);
@@ -466,7 +488,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[county[i]] + b[county[i]] * x[i];
 }
 model {
   vector[N] a_hat;
@@ -536,7 +559,8 @@ model {
     a[j] = xi_a * B_raw[j, 1];
     b[j] = xi_b * B_raw[j, 2];
   }
-  for (i in 1 : N) y_hat[i] = b_0 + a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = b_0 + a[county[i]] + b[county[i]] * x[i];
   y ~ normal(y_hat, sigma);
 }
 
@@ -590,7 +614,8 @@ model {
     a[j] = xi_a * B_raw[j, 1];
     b[j] = xi_b * B_raw[j, 2];
   }
-  for (i in 1 : N) y_hat[i] = a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[county[i]] + b[county[i]] * x[i];
   y ~ normal(y_hat, sigma);
 }
 
@@ -649,7 +674,8 @@ model {
     a[j] = xi_a * B_raw[j, 1];
     b[j] = xi_b * B_raw[j, 2];
   }
-  for (i in 1 : N) y_hat[i] = a[county[i]] + b[county[i]] * x[i];
+  for (i in 1 : N) 
+    y_hat[i] = a[county[i]] + b[county[i]] * x[i];
   y ~ normal(y_hat, sigma);
 }
 
@@ -704,10 +730,12 @@ model {
   b_edu ~ normal(0, sigma_edu);
   b_region ~ normal(0, sigma_region);
   for (j in 1 : n_age) {
-    for (i in 1 : n_edu) b_age_edu[j, i] ~ normal(0, sigma_age_edu);
+    for (i in 1 : n_edu) 
+      b_age_edu[j, i] ~ normal(0, sigma_age_edu);
   }
   b_v_prev ~ normal(0, 100);
-  for (j in 1 : n_state) b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
+  for (j in 1 : n_state) 
+    b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
   b_state ~ normal(b_state_hat, sigma_state);
   for (i in 1 : N) {
     Xbeta[i] = b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_state[state[i]];

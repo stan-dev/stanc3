@@ -18,7 +18,8 @@ model {
   beta ~ normal(0, 5);
   sigma ~ cauchy(0, 5);
   for (k in 1 : N) {
-    for (n in 1 : N) mu[n] <- alpha + if_else(n <= k, beta[1], beta[2]) * (x[n] - x[k]);
+    for (n in 1 : N) 
+      mu[n] <- alpha + if_else(n <= k, beta[1], beta[2]) * (x[n] - x[k]);
     log_probs[k] <- log(theta[k]) + normal_log(Y, mu, sigma);
   }
   increment_log_prob(log_sum_exp(log_probs));
@@ -90,7 +91,8 @@ model {
   alpha ~ normal(0, 5);
   beta ~ normal(0, 5);
   sigma ~ cauchy(0, 5);
-  for (n in 1 : N) mu[n] <- alpha + if_else(x[n] < x_change, beta[1], beta[2]) * (x[n] - x_change);
+  for (n in 1 : N) 
+    mu[n] <- alpha + if_else(x[n] < x_change, beta[1], beta[2]) * (x[n] - x_change);
   Y ~ normal(mu, sigma);
 }
 

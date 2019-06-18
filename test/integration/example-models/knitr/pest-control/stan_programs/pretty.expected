@@ -238,7 +238,8 @@ data {
 }
 transformed data {
   real mo_gp_vec[M];
-  for (m in 1 : M) mo_gp_vec[m] = m;
+  for (m in 1 : M) 
+    mo_gp_vec[m] = m;
 }
 parameters {
   real alpha;
@@ -267,7 +268,8 @@ transformed parameters {
     matrix[M, M] C = cov_exp_quad(mo_gp_vec, sigma_gp, gp_len);
     real var_noise = square(sigma_noise);
     matrix[M, M] L_C;
-    for (m in 1 : M) C[m, m] += 1e-12;
+    for (m in 1 : M) 
+      C[m, m] += 1e-12;
     L_C = cholesky_decompose(C);
     gp_exp_quad = L_C * gp_raw;
   }
@@ -292,7 +294,8 @@ model {
 }
 generated quantities {
   int y_rep[N];
-  for (n in 1 : N) y_rep[n] = neg_binomial_2_log_safe_rng(mu[building_idx[n]] + kappa[building_idx[n]] * traps[n] + gp[mo_idx[n]] + log_sq_foot[n], phi);
+  for (n in 1 : N) 
+    y_rep[n] = neg_binomial_2_log_safe_rng(mu[building_idx[n]] + kappa[building_idx[n]] * traps[n] + gp[mo_idx[n]] + log_sq_foot[n], phi);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos_predict.stan
@@ -320,7 +323,8 @@ data {
 transformed data {
   int N_hypo_traps = 21;
   int hypo_traps[N_hypo_traps];
-  for (i in 1 : N_hypo_traps) hypo_traps[i] = i - 1;
+  for (i in 1 : N_hypo_traps) 
+    hypo_traps[i] = i - 1;
 }
 parameters {
   real<lower=0> inv_phi;
@@ -373,7 +377,8 @@ generated quantities {
       int y_pred_by_month[M_forward];
       vector[M_forward] mo_forward;
       mo_forward[1] = normal_rng(rho * mo[M], sigma_mo);
-      for (m in 2 : M_forward) mo_forward[m] = normal_rng(rho * mo_forward[m - 1], sigma_mo);
+      for (m in 2 : M_forward) 
+        mo_forward[m] = normal_rng(rho * mo_forward[m - 1], sigma_mo);
       for (m in 1 : M_forward) {
         real eta = mu[j] + kappa[j] * hypo_traps[i] + mo_forward[m] + log_sq_foot_pred[j];
         y_pred_by_month[m] = neg_binomial_2_log_safe_rng(eta, phi);
@@ -483,7 +488,8 @@ model {
 }
 generated quantities {
   int y_rep[N];
-  for (n in 1 : N) y_rep[n] = neg_binomial_2_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n], phi);
+  for (n in 1 : N) 
+    y_rep[n] = neg_binomial_2_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n], phi);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression_dgp.stan
@@ -538,7 +544,8 @@ model {
 }
 generated quantities {
   int y_rep[N];
-  for (n in 1 : N) y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n]);
+  for (n in 1 : N) 
+    y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n]);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format multiple_poisson_regression_dgp.stan
@@ -588,7 +595,8 @@ model {
 }
 generated quantities {
   int y_rep[N];
-  for (n in 1 : N) y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n]);
+  for (n in 1 : N) 
+    y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n]);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format simple_poisson_regression_dgp.stan

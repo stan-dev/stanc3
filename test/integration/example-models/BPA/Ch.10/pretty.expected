@@ -62,7 +62,8 @@ model {
     gam[1, 3] = 0.0;
     for (t in 2 : n_occasions) {
       for (k in 1 : 3) {
-        for (j in 1 : 3) acc[j] = gam[t - 1, j] * ps[j, i, t - 1, k] * po[k, i, t - 1, y[i, t]];
+        for (j in 1 : 3) 
+          acc[j] = gam[t - 1, j] * ps[j, i, t - 1, k] * po[k, i, t - 1, y[i, t]];
         gam[t, k] = sum(acc);
       }
     }
@@ -78,7 +79,8 @@ generated quantities {
   int<lower=1, upper=3> z[M, n_occasions];
   for (i in 1 : M) {
     z[i, 1] = 1;
-    for (t in 2 : n_occasions) z[i, t] = categorical_rng(ps[z[i, t - 1], i, t - 1]);
+    for (t in 2 : n_occasions) 
+      z[i, t] = categorical_rng(ps[z[i, t - 1], i, t - 1]);
   }
   {
     vector[n_occ_minus_1] cprob = seq_cprob(gamma[ : n_occ_minus_1]);
@@ -89,15 +91,18 @@ generated quantities {
     psi = sum(cprob);
     b = cprob / psi;
     for (i in 1 : M) {
-      for (t in 2 : n_occasions) al[i, t - 1] = (z[i, t] == 2);
-      for (t in 1 : n_occ_minus_1) d[i, t] = (z[i, t] == al[i, t]);
+      for (t in 2 : n_occasions) 
+        al[i, t - 1] = (z[i, t] == 2);
+      for (t in 1 : n_occ_minus_1) 
+        d[i, t] = (z[i, t] == al[i, t]);
       alive[i] = sum(al[i]);
     }
     for (t in 1 : n_occ_minus_1) {
       N[t] = sum(al[ : , t]);
       B[t] = sum(d[ : , t]);
     }
-    for (i in 1 : M) w[i] = 1 - !alive[i];
+    for (i in 1 : M) 
+      w[i] = 1 - !alive[i];
     Nsuper = sum(w);
   }
 }
@@ -105,7 +110,8 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format js_rest_occ.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) return k;
     return 0;
   }
   int last_capture(int[] y_i) {
@@ -142,7 +148,8 @@ functions {
         else {
           vector[first[i]] lp;
           lp[1] = bernoulli_lpmf(1| gamma[1]) + bernoulli_lpmf(1| prod(qp[1 : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, 1 : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
-          for (t in 2 : (first[i] - 1)) lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
+          for (t in 2 : (first[i] - 1)) 
+            lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
           lp[first[i]] = bernoulli_lpmf(1| prod(qgamma[1 : (first[i] - 1)])) + bernoulli_lpmf(1| gamma[first[i]]) + bernoulli_lpmf(1| p[i, first[i]]);
           target += log_sum_exp(lp);
         }
@@ -155,7 +162,8 @@ functions {
       else {
         vector[n_occasions + 1] lp;
         lp[1] = bernoulli_lpmf(1| gamma[1]) + bernoulli_lpmf(0| p[i, 1]) + bernoulli_lpmf(1| chi[i, 1]);
-        for (t in 2 : n_occasions) lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
+        for (t in 2 : n_occasions) 
+          lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
         lp[n_occasions + 1] = bernoulli_lpmf(1| prod(qgamma));
         target += log_sum_exp(lp);
       }
@@ -181,8 +189,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[M];
   int<lower=0, upper=n_occasions> last[M];
-  for (i in 1 : M) first[i] = first_capture(y[i]);
-  for (i in 1 : M) last[i] = last_capture(y[i]);
+  for (i in 1 : M) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : M) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -243,7 +253,8 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format js_super.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) return k;
     return 0;
   }
   int last_capture(int[] y_i) {
@@ -281,7 +292,8 @@ functions {
         else {
           vector[first[i]] lp;
           lp[1] = bernoulli_lpmf(1| nu[1]) + bernoulli_lpmf(1| prod(qp[1 : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, 1 : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
-          for (t in 2 : (first[i] - 1)) lp[t] = bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
+          for (t in 2 : (first[i] - 1)) 
+            lp[t] = bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
           lp[first[i]] = bernoulli_lpmf(1| prod(qnu[1 : (first[i] - 1)])) + bernoulli_lpmf(1| nu[first[i]]) + bernoulli_lpmf(1| p[i, first[i]]);
           target += log_sum_exp(lp);
         }
@@ -294,7 +306,8 @@ functions {
       else {
         vector[n_occasions + 1] lp;
         lp[1] = bernoulli_lpmf(1| psi) + bernoulli_lpmf(1| nu[1]) + bernoulli_lpmf(0| p[i, 1]) + bernoulli_lpmf(1| chi[i, 1]);
-        for (t in 2 : n_occasions) lp[t] = bernoulli_lpmf(1| psi) + bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
+        for (t in 2 : n_occasions) 
+          lp[t] = bernoulli_lpmf(1| psi) + bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
         lp[n_occasions + 1] = bernoulli_lpmf(0| psi);
         target += log_sum_exp(lp);
       }
@@ -310,8 +323,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[M];
   int<lower=0, upper=n_occasions> last[M];
-  for (i in 1 : M) first[i] = first_capture(y[i]);
-  for (i in 1 : M) last[i] = last_capture(y[i]);
+  for (i in 1 : M) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : M) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -382,7 +397,8 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format js_super_indran.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) return k;
     return 0;
   }
   int last_capture(int[] y_i) {
@@ -420,7 +436,8 @@ functions {
         else {
           vector[first[i]] lp;
           lp[1] = bernoulli_lpmf(1| nu[1]) + bernoulli_lpmf(1| prod(qp[1 : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, 1 : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
-          for (t in 2 : (first[i] - 1)) lp[t] = bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
+          for (t in 2 : (first[i] - 1)) 
+            lp[t] = bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
           lp[first[i]] = bernoulli_lpmf(1| prod(qnu[1 : (first[i] - 1)])) + bernoulli_lpmf(1| nu[first[i]]) + bernoulli_lpmf(1| p[i, first[i]]);
           target += log_sum_exp(lp);
         }
@@ -433,7 +450,8 @@ functions {
       else {
         vector[n_occasions + 1] lp;
         lp[1] = bernoulli_lpmf(1| psi) + bernoulli_lpmf(1| nu[1]) + bernoulli_lpmf(0| p[i, 1]) + bernoulli_lpmf(1| chi[i, 1]);
-        for (t in 2 : n_occasions) lp[t] = bernoulli_lpmf(1| psi) + bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
+        for (t in 2 : n_occasions) 
+          lp[t] = bernoulli_lpmf(1| psi) + bernoulli_lpmf(1| prod(qnu[1 : (t - 1)])) + bernoulli_lpmf(1| nu[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
         lp[n_occasions + 1] = bernoulli_lpmf(0| psi);
         target += log_sum_exp(lp);
       }
@@ -448,8 +466,10 @@ data {
 transformed data {
   int<lower=0, upper=n_occasions> first[M];
   int<lower=0, upper=n_occasions> last[M];
-  for (i in 1 : M) first[i] = first_capture(y[i]);
-  for (i in 1 : M) last[i] = last_capture(y[i]);
+  for (i in 1 : M) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : M) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -466,7 +486,8 @@ transformed parameters {
   vector<lower=0, upper=1>[n_occasions] nu;
   matrix<lower=0, upper=1>[M, n_occasions] chi;
   phi = rep_matrix(mean_phi, M, n_occasions - 1);
-  for (t in 1 : n_occasions) p[ : , t] = inv_logit(logit(mean_p) + epsilon);
+  for (t in 1 : n_occasions) 
+    p[ : , t] = inv_logit(logit(mean_p) + epsilon);
   b = beta / sum(beta);
   {
     real cum_b = b[1];
@@ -494,7 +515,8 @@ generated quantities {
   for (i in 1 : M) {
     if (bernoulli_rng(psi)) {
       z[i, 1] = bernoulli_rng(nu[1]);
-      for (t in 2 : n_occasions) z[i, t] = bernoulli_rng(z[i, t - 1] * phi[i, t - 1] + (1 - z[i, t - 1]) * nu[t]);
+      for (t in 2 : n_occasions) 
+        z[i, t] = bernoulli_rng(z[i, t - 1] * phi[i, t - 1] + (1 - z[i, t - 1]) * nu[t]);
     }
     else {
       z[i,  : ] = rep_array(0, n_occasions);
@@ -523,7 +545,8 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format js_tempran.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) return k;
     return 0;
   }
   int last_capture(int[] y_i) {
@@ -560,7 +583,8 @@ functions {
         else {
           vector[first[i]] lp;
           lp[1] = bernoulli_lpmf(1| gamma[1]) + bernoulli_lpmf(1| prod(qp[1 : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, 1 : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
-          for (t in 2 : (first[i] - 1)) lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
+          for (t in 2 : (first[i] - 1)) 
+            lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(1| prod(qp[t : (first[i] - 1)])) + bernoulli_lpmf(1| prod(phi[i, t : (first[i] - 1)])) + bernoulli_lpmf(1| p[i, first[i]]);
           lp[first[i]] = bernoulli_lpmf(1| prod(qgamma[1 : (first[i] - 1)])) + bernoulli_lpmf(1| gamma[first[i]]) + bernoulli_lpmf(1| p[i, first[i]]);
           target += log_sum_exp(lp);
         }
@@ -573,7 +597,8 @@ functions {
       else {
         vector[n_occasions + 1] lp;
         lp[1] = bernoulli_lpmf(1| gamma[1]) + bernoulli_lpmf(0| p[i, 1]) + bernoulli_lpmf(1| chi[i, 1]);
-        for (t in 2 : n_occasions) lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
+        for (t in 2 : n_occasions) 
+          lp[t] = bernoulli_lpmf(1| prod(qgamma[1 : (t - 1)])) + bernoulli_lpmf(1| gamma[t]) + bernoulli_lpmf(0| p[i, t]) + bernoulli_lpmf(1| chi[i, t]);
         lp[n_occasions + 1] = bernoulli_lpmf(1| prod(qgamma));
         target += log_sum_exp(lp);
       }
@@ -598,8 +623,10 @@ data {
 transformed data {
   int<lower=0, upper=n_occasions> first[M];
   int<lower=0, upper=n_occasions> last[M];
-  for (i in 1 : M) first[i] = first_capture(y[i]);
-  for (i in 1 : M) last[i] = last_capture(y[i]);
+  for (i in 1 : M) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : M) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -612,7 +639,9 @@ transformed parameters {
   matrix<lower=0, upper=1>[M, n_occasions - 1] phi;
   matrix<lower=0, upper=1>[M, n_occasions] p;
   matrix<lower=0, upper=1>[M, n_occasions] chi;
-  for (t in 1 : (n_occasions - 1)) for (i in 1 : M) phi[i, t] = inv_logit(logit(mean_phi) + epsilon[t]);
+  for (t in 1 : (n_occasions - 1)) 
+    for (i in 1 : M) 
+      phi[i, t] = inv_logit(logit(mean_phi) + epsilon[t]);
   p = rep_matrix(mean_p, M, n_occasions);
   chi = prob_uncaptured(p, phi);
 }

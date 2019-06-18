@@ -268,7 +268,8 @@ model {
 }
 generated quantities {
   vector[N] pred;
-  for (i in 1 : N) pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i] + beta[3] * c_arsenic[i] + beta[4] * c_educ4[i] + beta[5] * da_inter[i] + beta[6] * de_inter[i] + beta[7] * ae_inter[i]);
+  for (i in 1 : N) 
+    pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i] + beta[3] * c_arsenic[i] + beta[4] * c_educ4[i] + beta[5] * da_inter[i] + beta[6] * de_inter[i] + beta[7] * ae_inter[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_predicted_log.stan
@@ -303,6 +304,7 @@ model {
 }
 generated quantities {
   vector[N] pred;
-  for (i in 1 : N) pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i] + beta[3] * c_log_arsenic[i] + beta[4] * c_educ4[i] + beta[5] * da_inter[i] + beta[6] * de_inter[i] + beta[7] * ae_inter[i]);
+  for (i in 1 : N) 
+    pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i] + beta[3] * c_log_arsenic[i] + beta[4] * c_educ4[i] + beta[5] * da_inter[i] + beta[6] * de_inter[i] + beta[7] * ae_inter[i]);
 }
 

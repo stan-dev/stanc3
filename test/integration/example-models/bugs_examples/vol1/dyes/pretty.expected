@@ -21,7 +21,8 @@ model {
   tau_between ~ gamma(.001, .001);
   tau_within ~ gamma(.001, .001);
   mu ~ normal(theta, sigma_between);
-  for (n in 1 : BATCHES) y[n] ~ normal(mu[n], sigma_within);
+  for (n in 1 : BATCHES) 
+    y[n] ~ normal(mu[n], sigma_within);
 }
 generated quantities {
   real sigmasq_between;

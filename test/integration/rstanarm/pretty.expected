@@ -33,14 +33,16 @@ functions {
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
           z_T_mark += r;
           std_dev = sqrt(pi[rp1] * trace_T_i);
-          for (c in 1 : r) T_i[rp1, c] = T_row[c] * scale_factor;
+          for (c in 1 : r) 
+            T_i[rp1, c] = T_row[c] * scale_factor;
           T_i[rp1, rp1] = sqrt(1.0 - rho[rho_mark]) * std_dev;
           rho_mark += 1;
         }
-        for (c in 1 : nc) for (r in c : nc) {
-          theta_L[theta_L_mark] = T_i[r, c];
-          theta_L_mark += 1;
-        }
+        for (c in 1 : nc) 
+          for (r in c : nc) {
+            theta_L[theta_L_mark] = T_i[r, c];
+            theta_L_mark += 1;
+          }
       }
     }
     return theta_L;
@@ -53,7 +55,8 @@ functions {
       int nc = p[i];
       if (nc == 1) {
         real theta_L_start = theta_L[theta_L_mark];
-        for (s in b_mark : (b_mark + l[i] - 1)) b[s] = theta_L_start * z_b[s];
+        for (s in b_mark : (b_mark + l[i] - 1)) 
+          b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
       }
@@ -70,7 +73,8 @@ functions {
         for (j in 1 : l[i]) {
           vector[nc] temp = T_i * segment(z_b, b_mark, nc);
           b_mark -= 1;
-          for (s in 1 : nc) b[b_mark + s] = temp[s];
+          for (s in 1 : nc) 
+            b[b_mark + s] = temp[s];
           b_mark += nc + 1;
         }
       }
@@ -82,21 +86,22 @@ functions {
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
     target += normal_lpdf(z_T| 0, 1);
-    for (i in 1 : t) if (p[i] > 1) {
-      vector[p[i] - 1] shape1;
-      vector[p[i] - 1] shape2;
-      real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
-      pos_reg += 1;
-      shape1[1] = nu;
-      shape2[1] = nu;
-      for (j in 2 : (p[i] - 1)) {
-        nu -= 0.5;
-        shape1[j] = 0.5 * j;
-        shape2[j] = nu;
+    for (i in 1 : t) 
+      if (p[i] > 1) {
+        vector[p[i] - 1] shape1;
+        vector[p[i] - 1] shape2;
+        real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
+        pos_reg += 1;
+        shape1[1] = nu;
+        shape2[1] = nu;
+        for (j in 2 : (p[i] - 1)) {
+          nu -= 0.5;
+          shape1[j] = 0.5 * j;
+          shape2[j] = nu;
+        }
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        pos_rho += p[i] - 1;
       }
-      target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
-      pos_rho += p[i] - 1;
-    }
     target += gamma_lpdf(zeta| delta, 1);
     target += gamma_lpdf(tau| shape, 1);
     return target();
@@ -132,10 +137,11 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) for (i in 1 : t) {
-      V[i, j] = v[pos] + 1;
-      pos += 1;
-    }
+    if (t > 0) for (j in 1 : N) 
+                 for (i in 1 : t) {
+                   V[i, j] = v[pos] + 1;
+                   pos += 1;
+                 }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -152,12 +158,18 @@ functions {
     return positive_infinity();
   }
   vector linkinv_bern(vector eta, int link) {
-    if (link == 1) return (inv_logit(eta));
-    else if (link == 2) return (Phi(eta));
-    else if (link == 3) return (atan(eta) / pi() + 0.5);
-    else if (link == 4) return (exp(eta));
-    else if (link == 5) return (inv_cloglog(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(eta));
+    else if (link == 2) 
+      return (Phi(eta));
+    else if (link == 3) 
+      return (atan(eta) / pi() + 0.5);
+    else if (link == 4) 
+      return (exp(eta));
+    else if (link == 5) 
+      return (inv_cloglog(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   real ll_bern_lp(vector eta0, vector eta1, int link, int[] N) {
@@ -181,20 +193,24 @@ functions {
       target += log1m_exp(-exp(eta1));
       target += -exp(eta0);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return target();
   }
   vector pw_bern(int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      for (n in 1 : N) ll[n] = bernoulli_logit_lpmf(y| eta[n]);
+      for (n in 1 : N) 
+        ll[n] = bernoulli_logit_lpmf(y| eta[n]);
     }
     else if (link <= 5) {
       vector[N] pi = linkinv_bern(eta, link);
-      for (n in 1 : N) ll[n] = bernoulli_lpmf(y| pi[n]);
+      for (n in 1 : N) 
+        ll[n] = bernoulli_lpmf(y| pi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
@@ -318,10 +334,14 @@ transformed data {
   int<lower=1> pos = 1;
   real<lower=0> delta[len_concentration];
   int<lower=0> hs;
-  if (prior_dist <= 2) hs = 0;
-  else if (prior_dist == 3) hs = 2;
-  else if (prior_dist == 4) hs = 4;
-  else hs = 0;
+  if (prior_dist <= 2) 
+    hs = 0;
+  else if (prior_dist == 3) 
+    hs = 2;
+  else if (prior_dist == 4) 
+    hs = 4;
+  else 
+    hs = 0;
   for (i in 1 : t) {
     if (p[i] > 1) {
       for (j in 1 : p[i]) {
@@ -329,15 +349,19 @@ transformed data {
         pos += 1;
       }
     }
-    for (j in 3 : p[i]) len_z_T += p[i] - 1;
+    for (j in 3 : p[i]) 
+      len_z_T += p[i] - 1;
   }
   for (j in 1 : J) {
     successes[j] = 0;
     failures[j] = 0;
   }
-  if (J > 0) for (i in 1 : N[2]) successes[strata[i]] += 1;
-  if (J > 0) for (i in (N[2] + 1) : NN) failures[strata[i]] += 1;
-  for (j in 1 : J) observations[j] = failures[j] + successes[j];
+  if (J > 0) for (i in 1 : N[2]) 
+               successes[strata[i]] += 1;
+  if (J > 0) for (i in (N[2] + 1) : NN) 
+               failures[strata[i]] += 1;
+  for (j in 1 : J) 
+    observations[j] = failures[j] + successes[j];
 }
 parameters {
   real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma[has_intercept];
@@ -361,23 +385,32 @@ transformed parameters {
   vector[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd;
   vector[q] b;
   vector[len_theta_L] theta_L;
-  if (prior_dist == 0) beta = z_beta;
-  else if (prior_dist == 1) beta = z_beta .* prior_scale + prior_mean;
-  else if (prior_dist == 2) for (k in 1 : K) {
-    beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
-  }
+  if (prior_dist == 0) 
+    beta = z_beta;
+  else if (prior_dist == 1) 
+    beta = z_beta .* prior_scale + prior_mean;
+  else if (prior_dist == 2) 
+    for (k in 1 : K) {
+      beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
+    }
   else if (prior_dist == 3) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
   else if (prior_dist == 4) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
-  else if (prior_dist == 5) beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6) beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 5) 
+    beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 6) 
+    beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
     int z_pos = 1;
     for (k in 1 : K) {
@@ -400,12 +433,14 @@ transformed parameters {
     if (special_case) {
       int start = 1;
       theta_L = scale .* tau;
-      if (t == 1) b = theta_L[1] * z_b;
-      else for (i in 1 : t) {
-        int end = start + l[i] - 1;
-        b[start : end] = theta_L[i] * z_b[start : end];
-        start = end + 1;
-      }
+      if (t == 1) 
+        b = theta_L[1] * z_b;
+      else 
+        for (i in 1 : t) {
+          int end = start + l[i] - 1;
+          b[start : end] = theta_L[i] * z_b[start : end];
+          start = end + 1;
+        }
     }
     else {
       theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
@@ -443,10 +478,11 @@ model {
     eta0 += S0 * beta_smooth;
     eta1 += S1 * beta_smooth;
   }
-  if (special_case) for (i in 1 : t) {
-    eta0 += b[V0[i]];
-    eta1 += b[V1[i]];
-  }
+  if (special_case) 
+    for (i in 1 : t) {
+      eta0 += b[V0[i]];
+      eta1 += b[V1[i]];
+    }
   else if (t > 0) {
     eta0 += csr_matrix_times_vector2(N[1], q, w0, v0, u0, b);
     eta1 += csr_matrix_times_vector2(N[2], q, w1, v1, u1, b);
@@ -472,8 +508,10 @@ model {
     target += dot_product(weights0, pw_bern(0, eta0, link));
     target += dot_product(weights1, pw_bern(1, eta1, link));
   }
-  if (prior_dist == 1) target += normal_lpdf(z_beta| 0, 1);
-  else if (prior_dist == 2) target += normal_lpdf(z_beta| 0, 1);
+  if (prior_dist == 1) 
+    target += normal_lpdf(z_beta| 0, 1);
+  else if (prior_dist == 2) 
+    target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 3) {
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
@@ -507,16 +545,21 @@ model {
     target += normal_lpdf(z_beta| 0, 1);
   }
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1) target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2) target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+    if (prior_dist_for_intercept == 1) 
+      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+    else if (prior_dist_for_intercept == 2) 
+      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
   }
   if (K_smooth) {
     target += normal_lpdf(z_beta_smooth| 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
-      if (prior_dist_for_smooth == 1) target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 2) target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 3) target += exponential_lpdf(smooth_sd_raw| 1);
+      if (prior_dist_for_smooth == 1) 
+        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 2) 
+        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 3) 
+        target += exponential_lpdf(smooth_sd_raw| 1);
     }
   }
   if (t > 0) {
@@ -527,8 +570,10 @@ generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
   real alpha[has_intercept];
   if (has_intercept == 1) {
-    if (dense_X) alpha[1] = gamma[1] - dot_product(xbar, beta);
-    else alpha[1] = gamma[1];
+    if (dense_X) 
+      alpha[1] = gamma[1] - dot_product(xbar, beta);
+    else 
+      alpha[1] = gamma[1];
   }
   if (compute_mean_PPD) {
     vector[N[1]] pi0;
@@ -562,10 +607,11 @@ generated quantities {
       eta0 += S0 * beta_smooth;
       eta1 += S1 * beta_smooth;
     }
-    if (special_case) for (i in 1 : t) {
-      eta0 += b[V0[i]];
-      eta1 += b[V1[i]];
-    }
+    if (special_case) 
+      for (i in 1 : t) {
+        eta0 += b[V0[i]];
+        eta1 += b[V1[i]];
+      }
     else if (t > 0) {
       eta0 += csr_matrix_times_vector2(N[1], q, w0, v0, u0, b);
       eta1 += csr_matrix_times_vector2(N[2], q, w1, v1, u1, b);
@@ -583,12 +629,16 @@ generated quantities {
         alpha[1] -= shift;
       }
     }
-    if (clogit) for (j in 1 : J) mean_PPD += successes[j];
+    if (clogit) 
+      for (j in 1 : J) 
+        mean_PPD += successes[j];
     else {
       pi0 = linkinv_bern(eta0, link);
       pi1 = linkinv_bern(eta1, link);
-      for (n in 1 : N[1]) mean_PPD += bernoulli_rng(pi0[n]);
-      for (n in 1 : N[2]) mean_PPD += bernoulli_rng(pi1[n]);
+      for (n in 1 : N[1]) 
+        mean_PPD += bernoulli_rng(pi0[n]);
+      for (n in 1 : N[2]) 
+        mean_PPD += bernoulli_rng(pi1[n]);
     }
     mean_PPD /= NN;
   }
@@ -629,14 +679,16 @@ functions {
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
           z_T_mark += r;
           std_dev = sqrt(pi[rp1] * trace_T_i);
-          for (c in 1 : r) T_i[rp1, c] = T_row[c] * scale_factor;
+          for (c in 1 : r) 
+            T_i[rp1, c] = T_row[c] * scale_factor;
           T_i[rp1, rp1] = sqrt(1.0 - rho[rho_mark]) * std_dev;
           rho_mark += 1;
         }
-        for (c in 1 : nc) for (r in c : nc) {
-          theta_L[theta_L_mark] = T_i[r, c];
-          theta_L_mark += 1;
-        }
+        for (c in 1 : nc) 
+          for (r in c : nc) {
+            theta_L[theta_L_mark] = T_i[r, c];
+            theta_L_mark += 1;
+          }
       }
     }
     return theta_L;
@@ -649,7 +701,8 @@ functions {
       int nc = p[i];
       if (nc == 1) {
         real theta_L_start = theta_L[theta_L_mark];
-        for (s in b_mark : (b_mark + l[i] - 1)) b[s] = theta_L_start * z_b[s];
+        for (s in b_mark : (b_mark + l[i] - 1)) 
+          b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
       }
@@ -666,7 +719,8 @@ functions {
         for (j in 1 : l[i]) {
           vector[nc] temp = T_i * segment(z_b, b_mark, nc);
           b_mark -= 1;
-          for (s in 1 : nc) b[b_mark + s] = temp[s];
+          for (s in 1 : nc) 
+            b[b_mark + s] = temp[s];
           b_mark += nc + 1;
         }
       }
@@ -678,21 +732,22 @@ functions {
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
     target += normal_lpdf(z_T| 0, 1);
-    for (i in 1 : t) if (p[i] > 1) {
-      vector[p[i] - 1] shape1;
-      vector[p[i] - 1] shape2;
-      real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
-      pos_reg += 1;
-      shape1[1] = nu;
-      shape2[1] = nu;
-      for (j in 2 : (p[i] - 1)) {
-        nu -= 0.5;
-        shape1[j] = 0.5 * j;
-        shape2[j] = nu;
+    for (i in 1 : t) 
+      if (p[i] > 1) {
+        vector[p[i] - 1] shape1;
+        vector[p[i] - 1] shape2;
+        real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
+        pos_reg += 1;
+        shape1[1] = nu;
+        shape2[1] = nu;
+        for (j in 2 : (p[i] - 1)) {
+          nu -= 0.5;
+          shape1[j] = 0.5 * j;
+          shape2[j] = nu;
+        }
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        pos_rho += p[i] - 1;
       }
-      target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
-      pos_rho += p[i] - 1;
-    }
     target += gamma_lpdf(zeta| delta, 1);
     target += gamma_lpdf(tau| shape, 1);
     return target();
@@ -728,10 +783,11 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) for (i in 1 : t) {
-      V[i, j] = v[pos] + 1;
-      pos += 1;
-    }
+    if (t > 0) for (j in 1 : N) 
+                 for (i in 1 : t) {
+                   V[i, j] = v[pos] + 1;
+                   pos += 1;
+                 }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -748,17 +804,25 @@ functions {
     return positive_infinity();
   }
   vector linkinv_binom(vector eta, int link) {
-    if (link == 1) return (inv_logit(eta));
-    else if (link == 2) return (Phi(eta));
-    else if (link == 3) return (atan(eta) / pi() + 0.5);
-    else if (link == 4) return (exp(eta));
-    else if (link == 5) return (inv_cloglog(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(eta));
+    else if (link == 2) 
+      return (Phi(eta));
+    else if (link == 3) 
+      return (atan(eta) / pi() + 0.5);
+    else if (link == 4) 
+      return (exp(eta));
+    else if (link == 5) 
+      return (inv_cloglog(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
-    if (link == 1) target += binomial_logit_lpmf(y| trials, eta);
-    else if (link < 4) target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
+    if (link == 1) 
+      target += binomial_logit_lpmf(y| trials, eta);
+    else if (link < 4) 
+      target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
     else if (link == 4) {
       for (n in 1 : num_elements(y)) {
         target += y[n] * eta[n];
@@ -774,20 +838,24 @@ functions {
         target += lchoose(trials[n], y[n]);
       }
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return target();
   }
   vector pw_binom(int[] y, int[] trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      for (n in 1 : N) ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
+      for (n in 1 : N) 
+        ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
     }
     else if (link <= 5) {
       vector[N] pi = linkinv_binom(eta, link);
-      for (n in 1 : N) ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
+      for (n in 1 : N) 
+        ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
 }
@@ -863,10 +931,14 @@ transformed data {
   int<lower=1> pos = 1;
   real<lower=0> delta[len_concentration];
   int<lower=0> hs;
-  if (prior_dist <= 2) hs = 0;
-  else if (prior_dist == 3) hs = 2;
-  else if (prior_dist == 4) hs = 4;
-  else hs = 0;
+  if (prior_dist <= 2) 
+    hs = 0;
+  else if (prior_dist == 3) 
+    hs = 2;
+  else if (prior_dist == 4) 
+    hs = 4;
+  else 
+    hs = 0;
   for (i in 1 : t) {
     if (p[i] > 1) {
       for (j in 1 : p[i]) {
@@ -874,7 +946,8 @@ transformed data {
         pos += 1;
       }
     }
-    for (j in 3 : p[i]) len_z_T += p[i] - 1;
+    for (j in 3 : p[i]) 
+      len_z_T += p[i] - 1;
   }
 }
 parameters {
@@ -899,23 +972,32 @@ transformed parameters {
   vector[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd;
   vector[q] b;
   vector[len_theta_L] theta_L;
-  if (prior_dist == 0) beta = z_beta;
-  else if (prior_dist == 1) beta = z_beta .* prior_scale + prior_mean;
-  else if (prior_dist == 2) for (k in 1 : K) {
-    beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
-  }
+  if (prior_dist == 0) 
+    beta = z_beta;
+  else if (prior_dist == 1) 
+    beta = z_beta .* prior_scale + prior_mean;
+  else if (prior_dist == 2) 
+    for (k in 1 : K) {
+      beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
+    }
   else if (prior_dist == 3) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
   else if (prior_dist == 4) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
-  else if (prior_dist == 5) beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6) beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 5) 
+    beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 6) 
+    beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
     int z_pos = 1;
     for (k in 1 : K) {
@@ -938,12 +1020,14 @@ transformed parameters {
     if (special_case == 1) {
       int start = 1;
       theta_L = scale .* tau;
-      if (t == 1) b = theta_L[1] * z_b;
-      else for (i in 1 : t) {
-        int end = start + l[i] - 1;
-        b[start : end] = theta_L[i] * z_b[start : end];
-        start = end + 1;
-      }
+      if (t == 1) 
+        b = theta_L[1] * z_b;
+      else 
+        for (i in 1 : t) {
+          int end = start + l[i] - 1;
+          b[start : end] = theta_L[i] * z_b[start : end];
+          start = end + 1;
+        }
     }
     else {
       theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
@@ -954,19 +1038,27 @@ transformed parameters {
 model {
   vector[N] eta;
   if (K > 0) {
-    if (dense_X) eta = X[1] * beta;
-    else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+    if (dense_X) 
+      eta = X[1] * beta;
+    else 
+      eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
   }
-  else eta = rep_vector(0.0, N);
+  else 
+    eta = rep_vector(0.0, N);
   if (has_offset == 1) eta += offset_;
   if (K_smooth) eta += S * beta_smooth;
   if (t > 0) {
-    if (special_case) for (i in 1 : t) eta += b[V[i]];
-    else eta += csr_matrix_times_vector2(N, q, w, v, u, b);
+    if (special_case) 
+      for (i in 1 : t) 
+        eta += b[V[i]];
+    else 
+      eta += csr_matrix_times_vector2(N, q, w, v, u, b);
   }
   if (has_intercept == 1) {
-    if (link != 4) eta += gamma[1];
-    else eta += gamma[1] - max(eta);
+    if (link != 4) 
+      eta += gamma[1];
+    else 
+      eta += gamma[1] - max(eta);
   }
   else {
     eta += dot_product(xbar, beta);
@@ -974,9 +1066,12 @@ model {
   if (has_weights == 0 && prior_PD == 0) {
     real dummy = ll_binom_lp(y, trials, eta, link);
   }
-  else if (prior_PD == 0) target += dot_product(weights, pw_binom(y, trials, eta, link));
-  if (prior_dist == 1) target += normal_lpdf(z_beta| 0, 1);
-  else if (prior_dist == 2) target += normal_lpdf(z_beta| 0, 1);
+  else if (prior_PD == 0) 
+    target += dot_product(weights, pw_binom(y, trials, eta, link));
+  if (prior_dist == 1) 
+    target += normal_lpdf(z_beta| 0, 1);
+  else if (prior_dist == 2) 
+    target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 3) {
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
@@ -1010,16 +1105,21 @@ model {
     target += normal_lpdf(z_beta| 0, 1);
   }
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1) target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2) target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+    if (prior_dist_for_intercept == 1) 
+      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+    else if (prior_dist_for_intercept == 2) 
+      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
   }
   if (K_smooth) {
     target += normal_lpdf(z_beta_smooth| 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
-      if (prior_dist_for_smooth == 1) target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 2) target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 3) target += exponential_lpdf(smooth_sd_raw| 1);
+      if (prior_dist_for_smooth == 1) 
+        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 2) 
+        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 3) 
+        target += exponential_lpdf(smooth_sd_raw| 1);
     }
   }
   if (t > 0) {
@@ -1030,25 +1130,34 @@ generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
   real alpha[has_intercept];
   if (has_intercept == 1) {
-    if (dense_X) alpha[1] = gamma[1] - dot_product(xbar, beta);
-    else alpha[1] = gamma[1];
+    if (dense_X) 
+      alpha[1] = gamma[1] - dot_product(xbar, beta);
+    else 
+      alpha[1] = gamma[1];
   }
   if (compute_mean_PPD) {
     vector[N] pi;
     vector[N] eta;
     if (K > 0) {
-      if (dense_X) eta = X[1] * beta;
-      else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+      if (dense_X) 
+        eta = X[1] * beta;
+      else 
+        eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
     }
-    else eta = rep_vector(0.0, N);
+    else 
+      eta = rep_vector(0.0, N);
     if (has_offset == 1) eta += offset_;
     if (K_smooth) eta += S * beta_smooth;
     if (t > 0) {
-      if (special_case) for (i in 1 : t) eta += b[V[i]];
-      else eta += csr_matrix_times_vector2(N, q, w, v, u, b);
+      if (special_case) 
+        for (i in 1 : t) 
+          eta += b[V[i]];
+      else 
+        eta += csr_matrix_times_vector2(N, q, w, v, u, b);
     }
     if (has_intercept == 1) {
-      if (link != 4) eta += gamma[1];
+      if (link != 4) 
+        eta += gamma[1];
       else {
         real shift = max(eta);
         eta += gamma[1] - shift;
@@ -1059,7 +1168,8 @@ generated quantities {
       eta += dot_product(xbar, beta);
     }
     pi = linkinv_binom(eta, link);
-    for (n in 1 : N) mean_PPD += binomial_rng(trials[n], pi[n]);
+    for (n in 1 : N) 
+      mean_PPD += binomial_rng(trials[n], pi[n]);
     mean_PPD /= N;
   }
 }
@@ -1099,14 +1209,16 @@ functions {
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
           z_T_mark += r;
           std_dev = sqrt(pi[rp1] * trace_T_i);
-          for (c in 1 : r) T_i[rp1, c] = T_row[c] * scale_factor;
+          for (c in 1 : r) 
+            T_i[rp1, c] = T_row[c] * scale_factor;
           T_i[rp1, rp1] = sqrt(1.0 - rho[rho_mark]) * std_dev;
           rho_mark += 1;
         }
-        for (c in 1 : nc) for (r in c : nc) {
-          theta_L[theta_L_mark] = T_i[r, c];
-          theta_L_mark += 1;
-        }
+        for (c in 1 : nc) 
+          for (r in c : nc) {
+            theta_L[theta_L_mark] = T_i[r, c];
+            theta_L_mark += 1;
+          }
       }
     }
     return theta_L;
@@ -1119,7 +1231,8 @@ functions {
       int nc = p[i];
       if (nc == 1) {
         real theta_L_start = theta_L[theta_L_mark];
-        for (s in b_mark : (b_mark + l[i] - 1)) b[s] = theta_L_start * z_b[s];
+        for (s in b_mark : (b_mark + l[i] - 1)) 
+          b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
       }
@@ -1136,7 +1249,8 @@ functions {
         for (j in 1 : l[i]) {
           vector[nc] temp = T_i * segment(z_b, b_mark, nc);
           b_mark -= 1;
-          for (s in 1 : nc) b[b_mark + s] = temp[s];
+          for (s in 1 : nc) 
+            b[b_mark + s] = temp[s];
           b_mark += nc + 1;
         }
       }
@@ -1148,21 +1262,22 @@ functions {
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
     target += normal_lpdf(z_T| 0, 1);
-    for (i in 1 : t) if (p[i] > 1) {
-      vector[p[i] - 1] shape1;
-      vector[p[i] - 1] shape2;
-      real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
-      pos_reg += 1;
-      shape1[1] = nu;
-      shape2[1] = nu;
-      for (j in 2 : (p[i] - 1)) {
-        nu -= 0.5;
-        shape1[j] = 0.5 * j;
-        shape2[j] = nu;
+    for (i in 1 : t) 
+      if (p[i] > 1) {
+        vector[p[i] - 1] shape1;
+        vector[p[i] - 1] shape2;
+        real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
+        pos_reg += 1;
+        shape1[1] = nu;
+        shape2[1] = nu;
+        for (j in 2 : (p[i] - 1)) {
+          nu -= 0.5;
+          shape1[j] = 0.5 * j;
+          shape2[j] = nu;
+        }
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        pos_rho += p[i] - 1;
       }
-      target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
-      pos_rho += p[i] - 1;
-    }
     target += gamma_lpdf(zeta| delta, 1);
     target += gamma_lpdf(tau| shape, 1);
     return target();
@@ -1198,10 +1313,11 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) for (i in 1 : t) {
-      V[i, j] = v[pos] + 1;
-      pos += 1;
-    }
+    if (t > 0) for (j in 1 : N) 
+                 for (i in 1 : t) {
+                   V[i, j] = v[pos] + 1;
+                   pos += 1;
+                 }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -1218,28 +1334,40 @@ functions {
     return positive_infinity();
   }
   vector linkinv_gauss(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_gauss(vector y, vector eta, real sigma, int link) {
     return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(eta, link)) / sigma);
   }
   vector linkinv_gamma(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   real GammaReg(vector y, vector eta, real shape, int link, real sum_log_y) {
     real ret = rows(y) * (shape * log(shape) - lgamma(shape)) + (shape - 1) * sum_log_y;
-    if (link == 2) ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
-    else if (link == 1) ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
-    else if (link == 3) ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
-    else reject("Invalid link");
+    if (link == 2) 
+      ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
+    else if (link == 1) 
+      ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
+    else if (link == 3) 
+      ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
+    else 
+      reject("Invalid link");
     return ret;
   }
   vector pw_gamma(vector y, vector eta, real shape, int link) {
@@ -1260,47 +1388,68 @@ functions {
         ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
       }
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector linkinv_inv_gaussian(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else if (link == 4) return inv_sqrt(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else if (link == 4) 
+      return inv_sqrt(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   real inv_gaussian(vector y, vector mu, real lambda, real sum_log_y, vector sqrt_y) {
-    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * dot_self((y - mu) ./ (mu .* sqrt_y));
+    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * 
+    dot_self((y - mu) ./ (mu .* sqrt_y));
   }
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link, vector log_y, vector sqrt_y) {
     vector[rows(y)] mu = linkinv_inv_gaussian(eta, link);
-    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
+    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * 
+    log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
   real inv_gaussian_rng(real mu, real lambda) {
     real mu2 = square(mu);
     real z = uniform_rng(0, 1);
     real y = square(normal_rng(0, 1));
     real x = mu + (mu2 * y - mu * sqrt(4 * mu * lambda * y + mu2 * square(y))) / (2 * lambda);
-    if (z <= (mu / (mu + x))) return x;
-    else return mu2 / x;
+    if (z <= (mu / (mu + x))) 
+      return x;
+    else 
+      return mu2 / x;
   }
   vector linkinv_beta(vector eta, int link) {
-    if (link == 1) return inv_logit(eta);
-    else if (link == 2) return Phi(eta);
-    else if (link == 3) return inv_cloglog(eta);
-    else if (link == 4) return 0.5 + atan(eta) / pi();
-    else if (link == 5) return exp(eta);
-    else if (link == 6) return 1 - inv_cloglog(-eta);
-    else reject("invalid link");
+    if (link == 1) 
+      return inv_logit(eta);
+    else if (link == 2) 
+      return Phi(eta);
+    else if (link == 3) 
+      return inv_cloglog(eta);
+    else if (link == 4) 
+      return 0.5 + atan(eta) / pi();
+    else if (link == 5) 
+      return exp(eta);
+    else if (link == 6) 
+      return 1 - inv_cloglog(-eta);
+    else 
+      reject("invalid link");
     return eta;
   }
   vector linkinv_beta_z(vector eta, int link) {
-    if (link == 1) return exp(eta);
-    else if (link == 2) return eta;
-    else if (link == 3) return square(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return exp(eta);
+    else if (link == 2) 
+      return eta;
+    else if (link == 3) 
+      return square(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_beta(vector y, vector eta, real dispersion, int link) {
@@ -1341,16 +1490,24 @@ functions {
     }
   }
   vector SS_asympOff(vector input, matrix Phi_) {
-    if (rows(Phi_) > 1) return Phi_[ : , 1] .* (1 - exp(-exp(Phi_[ : , 2]) .* (input - Phi_[ : , 3])));
-    else return Phi_[1, 1] * (1 - exp(-exp(Phi_[1, 2]) * (input - Phi_[1, 3])));
+    if (rows(Phi_) > 1) 
+      return Phi_[ : , 1] .* (1 - exp(-exp(Phi_[ : , 2]) .* (input - Phi_[ : , 3])));
+    else 
+      return Phi_[1, 1] * (1 - exp(-exp(Phi_[1, 2]) * (input - Phi_[1, 3])));
   }
   vector SS_asympOrig(vector input, matrix Phi_) {
-    if (rows(Phi_) > 1) return Phi_[ : , 1] .* (1 - exp(-exp(Phi_[ : , 2]) .* input));
-    else return Phi_[1, 1] * (1 - exp(-exp(Phi_[1, 2]) * input));
+    if (rows(Phi_) > 1) 
+      return Phi_[ : , 1] .* (1 - exp(-exp(Phi_[ : , 2]) .* input));
+    else 
+      return Phi_[1, 1] * (1 - exp(-exp(Phi_[1, 2]) * input));
   }
   vector SS_biexp(vector input, matrix Phi_) {
-    if (rows(Phi_) > 1) return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input) + Phi_[ : , 3] .* exp(-exp(Phi_[ : , 4]) .* input);
-    else return Phi_[1, 1] * exp(-exp(Phi_[1, 2]) * input) + Phi_[1, 3] * exp(-exp(Phi_[1, 4]) * input);
+    if (rows(Phi_) > 1) 
+      return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input) + Phi_[ : , 3] .* 
+      exp(-exp(Phi_[ : , 4]) .* input);
+    else 
+      return Phi_[1, 1] * exp(-exp(Phi_[1, 2]) * input) + Phi_[1, 3] * 
+      exp(-exp(Phi_[1, 4]) * input);
   }
   vector SS_fol(vector Dose, vector input, matrix Phi_) {
     int Phi__rows = rows(Phi_);
@@ -1359,14 +1516,16 @@ functions {
       vector[Phi__rows] lKa = Phi_[ : , 2];
       vector[Phi__rows] exp_lKe = exp(lKe);
       vector[Phi__rows] exp_lKa = exp(lKa);
-      return Dose .* exp(lKe + lKa - Phi_[ : , 3]) .* (exp(-exp_lKe .* input) - exp(-exp_lKa .* input)) ./ (exp_lKa - exp_lKe);
+      return Dose .* exp(lKe + lKa - Phi_[ : , 3]) .* (exp(-exp_lKe .* input) - 
+      exp(-exp_lKa .* input)) ./ (exp_lKa - exp_lKe);
     }
     else {
       real lKe = Phi_[1, 1];
       real lKa = Phi_[1, 2];
       real exp_lKe = exp(lKe);
       real exp_lKa = exp(lKa);
-      return Dose * exp(lKe + lKa - Phi_[1, 3]) .* (exp(-exp_lKe * input) - exp(-exp_lKa * input)) / (exp_lKa - exp_lKe);
+      return Dose * exp(lKe + lKa - Phi_[1, 3]) .* (exp(-exp_lKe * input) - 
+      exp(-exp_lKa * input)) / (exp_lKa - exp_lKe);
     }
   }
   vector SS_fpl(vector input, matrix Phi_) {
@@ -1381,32 +1540,42 @@ functions {
   }
   vector SS_gompertz(vector x, matrix Phi_) {
     vector[rows(x)] out;
-    if (rows(Phi_) > 1) for (i in 1 : rows(x)) out[i] = Phi_[i, 1] * exp(-Phi_[i, 2] * Phi_[i, 3] ^ x[i]);
+    if (rows(Phi_) > 1) 
+      for (i in 1 : rows(x)) 
+        out[i] = Phi_[i, 1] * exp(-Phi_[i, 2] * Phi_[i, 3] ^ x[i]);
     else {
       real Asym = Phi_[1, 1];
       real b2 = Phi_[1, 2];
       real b3 = Phi_[1, 3];
-      for (i in 1 : rows(x)) out[i] = Asym * exp(-b2 * b3 ^ x[i]);
+      for (i in 1 : rows(x)) 
+        out[i] = Asym * exp(-b2 * b3 ^ x[i]);
     }
     return out;
   }
   vector SS_logis(vector input, matrix Phi_) {
-    if (rows(Phi_) > 1) return Phi_[ : , 1] ./ (1 + exp((Phi_[ : , 2] - input) ./ exp(Phi_[ : , 3])));
-    else return rep_vector(Phi_[1, 1], rows(input)) ./ (1 + exp((Phi_[1, 2] - input) / exp(Phi_[1, 3])));
+    if (rows(Phi_) > 1) 
+      return Phi_[ : , 1] ./ (1 + exp((Phi_[ : , 2] - input) ./ exp(Phi_[ : , 3])));
+    else 
+      return rep_vector(Phi_[1, 1], rows(input)) ./ (1 + exp((Phi_[1, 2] - input) / exp(Phi_[1, 3])));
   }
   vector SS_micmen(vector input, matrix Phi_) {
-    if (rows(Phi_) > 1) return Phi_[ : , 1] .* input ./ (Phi_[ : , 2] + input);
-    else return Phi_[1, 1] * input ./ (Phi_[1, 2] + input);
+    if (rows(Phi_) > 1) 
+      return Phi_[ : , 1] .* input ./ (Phi_[ : , 2] + input);
+    else 
+      return Phi_[1, 1] * input ./ (Phi_[1, 2] + input);
   }
   vector SS_weibull(vector x, matrix Phi_) {
     vector[rows(x)] out;
-    if (rows(Phi_) > 1) for (i in 1 : rows(x)) out[i] = Phi_[i, 1] - Phi_[i, 2] * exp(-exp(Phi_[i, 3]) * x[i] ^ Phi_[i, 4]);
+    if (rows(Phi_) > 1) 
+      for (i in 1 : rows(x)) 
+        out[i] = Phi_[i, 1] - Phi_[i, 2] * exp(-exp(Phi_[i, 3]) * x[i] ^ Phi_[i, 4]);
     else {
       real Asym = Phi_[1, 1];
       real Drop = Phi_[1, 2];
       real lrc = Phi_[1, 3];
       real pwr = Phi_[1, 4];
-      for (i in 1 : rows(x)) out[i] = Asym - Drop * exp(-exp(lrc) * x[i] ^ pwr);
+      for (i in 1 : rows(x)) 
+        out[i] = Asym - Drop * exp(-exp(lrc) * x[i] ^ pwr);
     }
     return out;
   }
@@ -1414,10 +1583,11 @@ functions {
     matrix[Rows, Cols] out;
     int pos = 1;
     if (rows(x) != Rows * Cols) reject("x is the wrong length");
-    for (c in 1 : Cols) for (r in 1 : Rows) {
-      out[r, c] = x[pos];
-      pos += 1;
-    }
+    for (c in 1 : Cols) 
+      for (r in 1 : Rows) {
+        out[r, c] = x[pos];
+        pos += 1;
+      }
     return out;
   }
   vector test_csr_matrix_times_vector(int m, int n, vector w, int[] v, int[] u, vector b) {
@@ -1522,10 +1692,14 @@ transformed data {
   int<lower=1> pos = 1;
   real<lower=0> delta[len_concentration];
   int<lower=0> hs;
-  if (prior_dist <= 2) hs = 0;
-  else if (prior_dist == 3) hs = 2;
-  else if (prior_dist == 4) hs = 4;
-  else hs = 0;
+  if (prior_dist <= 2) 
+    hs = 0;
+  else if (prior_dist == 3) 
+    hs = 2;
+  else if (prior_dist == 4) 
+    hs = 4;
+  else 
+    hs = 0;
   for (i in 1 : t) {
     if (p[i] > 1) {
       for (j in 1 : p[i]) {
@@ -1533,12 +1707,17 @@ transformed data {
         pos += 1;
       }
     }
-    for (j in 3 : p[i]) len_z_T += p[i] - 1;
+    for (j in 3 : p[i]) 
+      len_z_T += p[i] - 1;
   }
-  if (prior_dist_z <= 2) hs_z = 0;
-  else if (prior_dist_z == 3) hs_z = 2;
-  else if (prior_dist_z == 4) hs_z = 4;
-  else hs_z = 0;
+  if (prior_dist_z <= 2) 
+    hs_z = 0;
+  else if (prior_dist_z == 3) 
+    hs_z = 2;
+  else if (prior_dist_z == 4) 
+    hs_z = 4;
+  else 
+    hs_z = 0;
   is_continuous = 1;
   if (family == 3) {
     sqrt_y = sqrt(y);
@@ -1577,23 +1756,32 @@ transformed parameters {
   vector[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd;
   vector[q] b;
   vector[len_theta_L] theta_L;
-  if (prior_dist == 0) beta = z_beta;
-  else if (prior_dist == 1) beta = z_beta .* prior_scale + prior_mean;
-  else if (prior_dist == 2) for (k in 1 : K) {
-    beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
-  }
+  if (prior_dist == 0) 
+    beta = z_beta;
+  else if (prior_dist == 1) 
+    beta = z_beta .* prior_scale + prior_mean;
+  else if (prior_dist == 2) 
+    for (k in 1 : K) {
+      beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
+    }
   else if (prior_dist == 3) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
   else if (prior_dist == 4) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
-  else if (prior_dist == 5) beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6) beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 5) 
+    beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 6) 
+    beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
     int z_pos = 1;
     for (k in 1 : K) {
@@ -1612,16 +1800,23 @@ transformed parameters {
     if (is_continuous && family == 1) smooth_sd *= aux;
     beta_smooth = z_beta_smooth .* smooth_sd[smooth_map];
   }
-  if (prior_dist_z == 0) omega = z_omega;
-  else if (prior_dist_z == 1) omega = z_omega .* prior_scale_z + prior_mean_z;
-  else if (prior_dist_z == 2) for (k in 1 : z_dim) {
-    real left = CFt(omega[k], prior_df_z[k]);
-    omega[k] = left * prior_scale_z[k] + prior_mean_z[k];
-  }
-  else if (prior_dist_z == 3) omega = hs_prior(z_omega, global_z, local_z, global_prior_scale, 1, square(slab_scale_z) * caux_z[1]);
-  else if (prior_dist_z == 4) omega = hsplus_prior(z_omega, global_z, local_z, global_prior_scale, 1, square(slab_scale_z) * caux_z[1]);
-  else if (prior_dist_z == 5) omega = prior_mean_z + prior_scale_z .* sqrt(2 * S_z[1]) .* z_omega;
-  else if (prior_dist_z == 6) omega = prior_mean_z + one_over_lambda_z[1] * prior_scale_z .* sqrt(2 * S_z[1]) .* z_omega;
+  if (prior_dist_z == 0) 
+    omega = z_omega;
+  else if (prior_dist_z == 1) 
+    omega = z_omega .* prior_scale_z + prior_mean_z;
+  else if (prior_dist_z == 2) 
+    for (k in 1 : z_dim) {
+      real left = CFt(omega[k], prior_df_z[k]);
+      omega[k] = left * prior_scale_z[k] + prior_mean_z[k];
+    }
+  else if (prior_dist_z == 3) 
+    omega = hs_prior(z_omega, global_z, local_z, global_prior_scale, 1, square(slab_scale_z) * caux_z[1]);
+  else if (prior_dist_z == 4) 
+    omega = hsplus_prior(z_omega, global_z, local_z, global_prior_scale, 1, square(slab_scale_z) * caux_z[1]);
+  else if (prior_dist_z == 5) 
+    omega = prior_mean_z + prior_scale_z .* sqrt(2 * S_z[1]) .* z_omega;
+  else if (prior_dist_z == 6) 
+    omega = prior_mean_z + one_over_lambda_z[1] * prior_scale_z .* sqrt(2 * S_z[1]) .* z_omega;
   else if (prior_dist_z == 7) {
     int z_pos = 1;
     for (k in 1 : z_dim) {
@@ -1635,7 +1830,8 @@ transformed parameters {
       omega[k] += prior_mean_z[k];
     }
   }
-  if (prior_dist_for_aux == 0) aux = aux_unscaled;
+  if (prior_dist_for_aux == 0) 
+    aux = aux_unscaled;
   else {
     aux = prior_scale_for_aux * aux_unscaled;
     if (prior_dist_for_aux <= 2) aux += prior_mean_for_aux;
@@ -1644,12 +1840,14 @@ transformed parameters {
     if (special_case == 1) {
       int start = 1;
       theta_L = scale .* tau * aux;
-      if (t == 1) b = theta_L[1] * z_b;
-      else for (i in 1 : t) {
-        int end = start + l[i] - 1;
-        b[start : end] = theta_L[i] * z_b[start : end];
-        start = end + 1;
-      }
+      if (t == 1) 
+        b = theta_L[1] * z_b;
+      else 
+        for (i in 1 : t) {
+          int end = start + l[i] - 1;
+          b[start : end] = theta_L[i] * z_b[start : end];
+          start = end + 1;
+        }
     }
     else {
       theta_L = make_theta_L(len_theta_L, p, aux, tau, scale, zeta, rho, z_T);
@@ -1661,20 +1859,29 @@ model {
   vector[N] eta_z;
   vector[N] eta;
   if (K > 0) {
-    if (dense_X) eta = X[1] * beta;
-    else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+    if (dense_X) 
+      eta = X[1] * beta;
+    else 
+      eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
   }
-  else eta = rep_vector(0.0, N);
+  else 
+    eta = rep_vector(0.0, N);
   if (has_offset == 1) eta += offset_;
   if (K_smooth) eta += S * beta_smooth;
   if (t > 0) {
-    if (special_case) for (i in 1 : t) eta += b[V[i]];
-    else eta += csr_matrix_times_vector2(N, q, w, v, u, b);
+    if (special_case) 
+      for (i in 1 : t) 
+        eta += b[V[i]];
+    else 
+      eta += csr_matrix_times_vector2(N, q, w, v, u, b);
   }
   if (has_intercept == 1) {
-    if ((family == 1 || link == 2) || (family == 4 && link != 5)) eta += gamma[1];
-    else if (family == 4 && link == 5) eta += gamma[1] - max(eta);
-    else eta += gamma[1] - min(eta);
+    if ((family == 1 || link == 2) || (family == 4 && link != 5)) 
+      eta += gamma[1];
+    else if (family == 4 && link == 5) 
+      eta += gamma[1] - max(eta);
+    else 
+      eta += gamma[1] - min(eta);
   }
   else {
     eta += dot_product(xbar, beta);
@@ -1683,25 +1890,35 @@ model {
     matrix[len_y, K] P = reshape_vec(eta, len_y, K);
     if (SSfun < 5) {
       if (SSfun <= 2) {
-        if (SSfun == 1) target += normal_lpdf(y| SS_asymp(input, P), aux);
-        else target += normal_lpdf(y| SS_asympOff(input, P), aux);
+        if (SSfun == 1) 
+          target += normal_lpdf(y| SS_asymp(input, P), aux);
+        else 
+          target += normal_lpdf(y| SS_asympOff(input, P), aux);
       }
-      else if (SSfun == 3) target += normal_lpdf(y| SS_asympOrig(input, P), aux);
+      else if (SSfun == 3) 
+        target += normal_lpdf(y| SS_asympOrig(input, P), aux);
       else {
-        for (i in 1 : len_y) P[i, 1] += exp(P[i, 3]);
+        for (i in 1 : len_y) 
+          P[i, 1] += exp(P[i, 3]);
         target += normal_lpdf(y| SS_biexp(input, P), aux);
       }
     }
     else {
       if (SSfun <= 7) {
-        if (SSfun == 5) target += normal_lpdf(y| SS_fol(Dose, input, P), aux);
-        else if (SSfun == 6) target += normal_lpdf(y| SS_fpl(input, P), aux);
-        else target += normal_lpdf(y| SS_gompertz(input, P), aux);
+        if (SSfun == 5) 
+          target += normal_lpdf(y| SS_fol(Dose, input, P), aux);
+        else if (SSfun == 6) 
+          target += normal_lpdf(y| SS_fpl(input, P), aux);
+        else 
+          target += normal_lpdf(y| SS_gompertz(input, P), aux);
       }
       else {
-        if (SSfun == 8) target += normal_lpdf(y| SS_logis(input, P), aux);
-        else if (SSfun == 9) target += normal_lpdf(y| SS_micmen(input, P), aux);
-        else target += normal_lpdf(y| SS_weibull(input, P), aux);
+        if (SSfun == 8) 
+          target += normal_lpdf(y| SS_logis(input, P), aux);
+        else if (SSfun == 9) 
+          target += normal_lpdf(y| SS_micmen(input, P), aux);
+        else 
+          target += normal_lpdf(y| SS_weibull(input, P), aux);
       }
     }
   }
@@ -1729,9 +1946,12 @@ model {
       }
     }
     if (family == 1) {
-      if (link == 1) target += normal_lpdf(y| eta, aux);
-      else if (link == 2) target += normal_lpdf(y| exp(eta), aux);
-      else target += normal_lpdf(y| inv(eta), aux);
+      if (link == 1) 
+        target += normal_lpdf(y| eta, aux);
+      else if (link == 2) 
+        target += normal_lpdf(y| exp(eta), aux);
+      else 
+        target += normal_lpdf(y| inv(eta), aux);
     }
     else if (family == 2) {
       target += GammaReg(y, eta, aux, link, sum_log_y);
@@ -1754,21 +1974,31 @@ model {
   }
   else if (prior_PD == 0) {
     vector[N] summands;
-    if (family == 1) summands = pw_gauss(y, eta, aux, link);
-    else if (family == 2) summands = pw_gamma(y, eta, aux, link);
-    else if (family == 3) summands = pw_inv_gaussian(y, eta, aux, link, log_y, sqrt_y);
-    else if (family == 4 && link_phi == 0) summands = pw_beta(y, eta, aux, link);
-    else if (family == 4 && link_phi > 0) summands = pw_beta_z(y, eta, eta_z, link, link_phi);
+    if (family == 1) 
+      summands = pw_gauss(y, eta, aux, link);
+    else if (family == 2) 
+      summands = pw_gamma(y, eta, aux, link);
+    else if (family == 3) 
+      summands = pw_inv_gaussian(y, eta, aux, link, log_y, sqrt_y);
+    else if (family == 4 && link_phi == 0) 
+      summands = pw_beta(y, eta, aux, link);
+    else if (family == 4 && link_phi > 0) 
+      summands = pw_beta_z(y, eta, eta_z, link, link_phi);
     target += dot_product(weights, summands);
   }
   if (prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
-    if (prior_dist_for_aux == 1) target += normal_lpdf(aux_unscaled| 0, 1) - log_half;
-    else if (prior_dist_for_aux == 2) target += student_t_lpdf(aux_unscaled| prior_df_for_aux, 0, 1) - log_half;
-    else target += exponential_lpdf(aux_unscaled| 1);
+    if (prior_dist_for_aux == 1) 
+      target += normal_lpdf(aux_unscaled| 0, 1) - log_half;
+    else if (prior_dist_for_aux == 2) 
+      target += student_t_lpdf(aux_unscaled| prior_df_for_aux, 0, 1) - log_half;
+    else 
+      target += exponential_lpdf(aux_unscaled| 1);
   }
-  if (prior_dist == 1) target += normal_lpdf(z_beta| 0, 1);
-  else if (prior_dist == 2) target += normal_lpdf(z_beta| 0, 1);
+  if (prior_dist == 1) 
+    target += normal_lpdf(z_beta| 0, 1);
+  else if (prior_dist == 2) 
+    target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 3) {
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
@@ -1802,20 +2032,27 @@ model {
     target += normal_lpdf(z_beta| 0, 1);
   }
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1) target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2) target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+    if (prior_dist_for_intercept == 1) 
+      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+    else if (prior_dist_for_intercept == 2) 
+      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
   }
   if (K_smooth) {
     target += normal_lpdf(z_beta_smooth| 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
-      if (prior_dist_for_smooth == 1) target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 2) target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 3) target += exponential_lpdf(smooth_sd_raw| 1);
+      if (prior_dist_for_smooth == 1) 
+        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 2) 
+        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 3) 
+        target += exponential_lpdf(smooth_sd_raw| 1);
     }
   }
-  if (prior_dist_z == 1) target += normal_lpdf(z_omega| 0, 1);
-  else if (prior_dist_z == 2) target += normal_lpdf(z_omega| 0, 1);
+  if (prior_dist_z == 1) 
+    target += normal_lpdf(z_omega| 0, 1);
+  else if (prior_dist_z == 2) 
+    target += normal_lpdf(z_omega| 0, 1);
   else if (prior_dist_z == 3) {
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_omega| 0, 1);
@@ -1849,8 +2086,10 @@ model {
     target += normal_lpdf(z_omega| 0, 1);
   }
   if (has_intercept_z == 1) {
-    if (prior_dist_for_intercept_z == 1) target += normal_lpdf(gamma_z| prior_mean_for_intercept_z, prior_scale_for_intercept_z);
-    else if (prior_dist_for_intercept_z == 2) target += student_t_lpdf(gamma_z| prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+    if (prior_dist_for_intercept_z == 1) 
+      target += normal_lpdf(gamma_z| prior_mean_for_intercept_z, prior_scale_for_intercept_z);
+    else if (prior_dist_for_intercept_z == 2) 
+      target += student_t_lpdf(gamma_z| prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
   }
   if (t > 0) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta, shape, t, p);
@@ -1861,8 +2100,10 @@ generated quantities {
   real alpha[has_intercept];
   real omega_int[has_intercept_z];
   if (has_intercept == 1) {
-    if (dense_X) alpha[1] = gamma[1] - dot_product(xbar, beta);
-    else alpha[1] = gamma[1];
+    if (dense_X) 
+      alpha[1] = gamma[1] - dot_product(xbar, beta);
+    else 
+      alpha[1] = gamma[1];
   }
   if (has_intercept_z == 1) {
     omega_int[1] = gamma_z[1] - dot_product(zbar, omega);
@@ -1871,18 +2112,26 @@ generated quantities {
     vector[N] eta_z;
     vector[N] eta;
     if (K > 0) {
-      if (dense_X) eta = X[1] * beta;
-      else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+      if (dense_X) 
+        eta = X[1] * beta;
+      else 
+        eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
     }
-    else eta = rep_vector(0.0, N);
+    else 
+      eta = rep_vector(0.0, N);
     if (has_offset == 1) eta += offset_;
     if (K_smooth) eta += S * beta_smooth;
     if (t > 0) {
-      if (special_case) for (i in 1 : t) eta += b[V[i]];
-      else eta += csr_matrix_times_vector2(N, q, w, v, u, b);
+      if (special_case) 
+        for (i in 1 : t) 
+          eta += b[V[i]];
+      else 
+        eta += csr_matrix_times_vector2(N, q, w, v, u, b);
     }
     if (has_intercept == 1) {
-      if (make_lower(family, link) == negative_infinity() && make_upper(family, link) == positive_infinity()) eta += gamma[1];
+      if (make_lower(family, link) == negative_infinity() && make_upper(family, link) == 
+      positive_infinity()) 
+        eta += gamma[1];
       else if (family == 4 && link == 5) {
         real max_eta = max(eta);
         alpha[1] -= max_eta;
@@ -1926,45 +2175,62 @@ generated quantities {
       P = reshape_vec(eta, len_y, K);
       if (SSfun < 5) {
         if (SSfun <= 2) {
-          if (SSfun == 1) eta_nlmer = SS_asymp(input, P);
-          else eta_nlmer = SS_asympOff(input, P);
+          if (SSfun == 1) 
+            eta_nlmer = SS_asymp(input, P);
+          else 
+            eta_nlmer = SS_asympOff(input, P);
         }
-        else if (SSfun == 3) eta_nlmer = SS_asympOrig(input, P);
-        else eta_nlmer = SS_biexp(input, P);
+        else if (SSfun == 3) 
+          eta_nlmer = SS_asympOrig(input, P);
+        else 
+          eta_nlmer = SS_biexp(input, P);
       }
       else {
         if (SSfun <= 7) {
-          if (SSfun == 5) eta_nlmer = SS_fol(Dose, input, P);
-          else if (SSfun == 6) eta_nlmer = SS_fpl(input, P);
-          else eta_nlmer = SS_gompertz(input, P);
+          if (SSfun == 5) 
+            eta_nlmer = SS_fol(Dose, input, P);
+          else if (SSfun == 6) 
+            eta_nlmer = SS_fpl(input, P);
+          else 
+            eta_nlmer = SS_gompertz(input, P);
         }
         else {
-          if (SSfun == 8) eta_nlmer = SS_logis(input, P);
-          else if (SSfun == 9) eta_nlmer = SS_micmen(input, P);
-          else eta_nlmer = SS_weibull(input, P);
+          if (SSfun == 8) 
+            eta_nlmer = SS_logis(input, P);
+          else if (SSfun == 9) 
+            eta_nlmer = SS_micmen(input, P);
+          else 
+            eta_nlmer = SS_weibull(input, P);
         }
       }
-      for (n in 1 : len_y) mean_PPD += normal_rng(eta_nlmer[n], aux);
+      for (n in 1 : len_y) 
+        mean_PPD += normal_rng(eta_nlmer[n], aux);
     }
     else if (family == 1) {
       vector[N] mu = link > 1 ? linkinv_gauss(eta, link) : eta;
-      for (n in 1 : len_y) mean_PPD += normal_rng(mu[n], aux);
+      for (n in 1 : len_y) 
+        mean_PPD += normal_rng(mu[n], aux);
     }
     else if (family == 2) {
       vector[N] mu = link > 1 ? linkinv_gamma(eta, link) : eta;
-      for (n in 1 : len_y) mean_PPD += gamma_rng(aux, aux / mu[n]);
+      for (n in 1 : len_y) 
+        mean_PPD += gamma_rng(aux, aux / mu[n]);
     }
     else if (family == 3) {
       vector[N] mu = link > 1 ? linkinv_inv_gaussian(eta, link) : eta;
-      for (n in 1 : len_y) mean_PPD += inv_gaussian_rng(mu[n], aux);
+      for (n in 1 : len_y) 
+        mean_PPD += inv_gaussian_rng(mu[n], aux);
     }
     else if (family == 4 && link_phi == 0) {
       vector[N] mu = linkinv_beta(eta, link);
       for (n in 1 : N) {
         real mu_n = mu[n];
-        if (aux <= 0) mean_PPD += bernoulli_rng(0.5);
-        else if (mu_n >= 1) mean_PPD += 1;
-        else if (mu_n > 0) mean_PPD += beta_rng(mu_n * aux, (1 - mu_n) * aux);
+        if (aux <= 0) 
+          mean_PPD += bernoulli_rng(0.5);
+        else if (mu_n >= 1) 
+          mean_PPD += 1;
+        else if (mu_n > 0) 
+          mean_PPD += beta_rng(mu_n * aux, (1 - mu_n) * aux);
       }
     }
     else if (family == 4 && link_phi > 0) {
@@ -1973,9 +2239,12 @@ generated quantities {
       for (n in 1 : N) {
         real mu_n = mu[n];
         real aux_n = phi[n];
-        if (aux_n <= 0) mean_PPD += bernoulli_rng(0.5);
-        else if (mu_n >= 1) mean_PPD += 1;
-        else if (mu_n > 0) mean_PPD += beta_rng(mu_n * aux_n, (1 - mu_n) * aux_n);
+        if (aux_n <= 0) 
+          mean_PPD += bernoulli_rng(0.5);
+        else if (mu_n >= 1) 
+          mean_PPD += 1;
+        else if (mu_n > 0) 
+          mean_PPD += beta_rng(mu_n * aux_n, (1 - mu_n) * aux_n);
       }
     }
     mean_PPD /= len_y;
@@ -2017,14 +2286,16 @@ functions {
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
           z_T_mark += r;
           std_dev = sqrt(pi[rp1] * trace_T_i);
-          for (c in 1 : r) T_i[rp1, c] = T_row[c] * scale_factor;
+          for (c in 1 : r) 
+            T_i[rp1, c] = T_row[c] * scale_factor;
           T_i[rp1, rp1] = sqrt(1.0 - rho[rho_mark]) * std_dev;
           rho_mark += 1;
         }
-        for (c in 1 : nc) for (r in c : nc) {
-          theta_L[theta_L_mark] = T_i[r, c];
-          theta_L_mark += 1;
-        }
+        for (c in 1 : nc) 
+          for (r in c : nc) {
+            theta_L[theta_L_mark] = T_i[r, c];
+            theta_L_mark += 1;
+          }
       }
     }
     return theta_L;
@@ -2037,7 +2308,8 @@ functions {
       int nc = p[i];
       if (nc == 1) {
         real theta_L_start = theta_L[theta_L_mark];
-        for (s in b_mark : (b_mark + l[i] - 1)) b[s] = theta_L_start * z_b[s];
+        for (s in b_mark : (b_mark + l[i] - 1)) 
+          b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
       }
@@ -2054,7 +2326,8 @@ functions {
         for (j in 1 : l[i]) {
           vector[nc] temp = T_i * segment(z_b, b_mark, nc);
           b_mark -= 1;
-          for (s in 1 : nc) b[b_mark + s] = temp[s];
+          for (s in 1 : nc) 
+            b[b_mark + s] = temp[s];
           b_mark += nc + 1;
         }
       }
@@ -2066,21 +2339,22 @@ functions {
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
     target += normal_lpdf(z_T| 0, 1);
-    for (i in 1 : t) if (p[i] > 1) {
-      vector[p[i] - 1] shape1;
-      vector[p[i] - 1] shape2;
-      real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
-      pos_reg += 1;
-      shape1[1] = nu;
-      shape2[1] = nu;
-      for (j in 2 : (p[i] - 1)) {
-        nu -= 0.5;
-        shape1[j] = 0.5 * j;
-        shape2[j] = nu;
+    for (i in 1 : t) 
+      if (p[i] > 1) {
+        vector[p[i] - 1] shape1;
+        vector[p[i] - 1] shape2;
+        real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
+        pos_reg += 1;
+        shape1[1] = nu;
+        shape2[1] = nu;
+        for (j in 2 : (p[i] - 1)) {
+          nu -= 0.5;
+          shape1[j] = 0.5 * j;
+          shape2[j] = nu;
+        }
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        pos_rho += p[i] - 1;
       }
-      target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
-      pos_rho += p[i] - 1;
-    }
     target += gamma_lpdf(zeta| delta, 1);
     target += gamma_lpdf(tau| shape, 1);
     return target();
@@ -2116,10 +2390,11 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) for (i in 1 : t) {
-      V[i, j] = v[pos] + 1;
-      pos += 1;
-    }
+    if (t > 0) for (j in 1 : N) 
+                 for (i in 1 : t) {
+                   V[i, j] = v[pos] + 1;
+                   pos += 1;
+                 }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -2136,28 +2411,37 @@ functions {
     return positive_infinity();
   }
   vector linkinv_count(vector eta, int link) {
-    if (link == 1) return exp(eta);
-    else if (link == 2) return eta;
-    else if (link == 3) return (square(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return exp(eta);
+    else if (link == 2) 
+      return eta;
+    else if (link == 3) 
+      return (square(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_pois(int[] y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
-    if (link == 1) for (n in 1 : N) ll[n] = poisson_log_lpmf(y[n]| eta[n]);
+    if (link == 1) 
+      for (n in 1 : N) 
+        ll[n] = poisson_log_lpmf(y[n]| eta[n]);
     else if (link <= 3) {
       vector[N] phi = linkinv_count(eta, link);
-      for (n in 1 : N) ll[n] = poisson_lpmf(y[n]| phi[n]);
+      for (n in 1 : N) 
+        ll[n] = poisson_lpmf(y[n]| phi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector pw_nb(int[] y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link);
     vector[N] ll;
-    for (n in 1 : N) ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
+    for (n in 1 : N) 
+      ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
     return ll;
   }
 }
@@ -2232,10 +2516,14 @@ transformed data {
   int<lower=1> pos = 1;
   real<lower=0> delta[len_concentration];
   int<lower=0> hs;
-  if (prior_dist <= 2) hs = 0;
-  else if (prior_dist == 3) hs = 2;
-  else if (prior_dist == 4) hs = 4;
-  else hs = 0;
+  if (prior_dist <= 2) 
+    hs = 0;
+  else if (prior_dist == 3) 
+    hs = 2;
+  else if (prior_dist == 4) 
+    hs = 4;
+  else 
+    hs = 0;
   for (i in 1 : t) {
     if (p[i] > 1) {
       for (j in 1 : p[i]) {
@@ -2243,7 +2531,8 @@ transformed data {
         pos += 1;
       }
     }
-    for (j in 3 : p[i]) len_z_T += p[i] - 1;
+    for (j in 3 : p[i]) 
+      len_z_T += p[i] - 1;
   }
 }
 parameters {
@@ -2271,23 +2560,32 @@ transformed parameters {
   vector[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd;
   vector[q] b;
   vector[len_theta_L] theta_L;
-  if (prior_dist == 0) beta = z_beta;
-  else if (prior_dist == 1) beta = z_beta .* prior_scale + prior_mean;
-  else if (prior_dist == 2) for (k in 1 : K) {
-    beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
-  }
+  if (prior_dist == 0) 
+    beta = z_beta;
+  else if (prior_dist == 1) 
+    beta = z_beta .* prior_scale + prior_mean;
+  else if (prior_dist == 2) 
+    for (k in 1 : K) {
+      beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
+    }
   else if (prior_dist == 3) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
   else if (prior_dist == 4) {
     real c2 = square(slab_scale) * caux[1];
-    if (is_continuous == 1 && family == 1) beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
-    else beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
+    if (is_continuous == 1 && family == 1) 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
+    else 
+      beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
   }
-  else if (prior_dist == 5) beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6) beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 5) 
+    beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+  else if (prior_dist == 6) 
+    beta = prior_mean + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
     int z_pos = 1;
     for (k in 1 : K) {
@@ -2306,7 +2604,8 @@ transformed parameters {
     if (is_continuous && family == 1) smooth_sd *= aux;
     beta_smooth = z_beta_smooth .* smooth_sd[smooth_map];
   }
-  if (family > 6 && (prior_dist_for_aux == 0 || prior_scale_for_aux <= 0)) aux = aux_unscaled[1];
+  if (family > 6 && (prior_dist_for_aux == 0 || prior_scale_for_aux <= 0)) 
+    aux = aux_unscaled[1];
   else if (family > 6) {
     aux = prior_scale_for_aux * aux_unscaled[1];
     if (prior_dist_for_aux <= 2) aux += prior_mean_for_aux;
@@ -2315,16 +2614,20 @@ transformed parameters {
     if (special_case == 1) {
       int start = 1;
       theta_L = scale .* (family == 6 ? tau : tau * aux);
-      if (t == 1) b = theta_L[1] * z_b;
-      else for (i in 1 : t) {
-        int end = start + l[i] - 1;
-        b[start : end] = theta_L[i] * z_b[start : end];
-        start = end + 1;
-      }
+      if (t == 1) 
+        b = theta_L[1] * z_b;
+      else 
+        for (i in 1 : t) {
+          int end = start + l[i] - 1;
+          b[start : end] = theta_L[i] * z_b[start : end];
+          start = end + 1;
+        }
     }
     else {
-      if (family == 6) theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
-      else theta_L = make_theta_L(len_theta_L, p, aux, tau, scale, zeta, rho, z_T);
+      if (family == 6) 
+        theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
+      else 
+        theta_L = make_theta_L(len_theta_L, p, aux, tau, scale, zeta, rho, z_T);
       b = make_b(z_b, theta_L, p, l);
     }
   }
@@ -2332,51 +2635,72 @@ transformed parameters {
 model {
   vector[N] eta;
   if (K > 0) {
-    if (dense_X) eta = X[1] * beta;
-    else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+    if (dense_X) 
+      eta = X[1] * beta;
+    else 
+      eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
   }
-  else eta = rep_vector(0.0, N);
+  else 
+    eta = rep_vector(0.0, N);
   if (has_offset == 1) eta += offset_;
   if (K_smooth) eta += S * beta_smooth;
   if (t > 0) {
-    if (special_case) for (i in 1 : t) eta += b[V[i]];
-    else eta += csr_matrix_times_vector2(N, q, w, v, u, b);
+    if (special_case) 
+      for (i in 1 : t) 
+        eta += b[V[i]];
+    else 
+      eta += csr_matrix_times_vector2(N, q, w, v, u, b);
   }
   if (has_intercept == 1) {
-    if (link == 1) eta += gamma[1];
-    else eta += gamma[1] - min(eta);
+    if (link == 1) 
+      eta += gamma[1];
+    else 
+      eta += gamma[1] - min(eta);
   }
   else {
     eta += dot_product(xbar, beta);
   }
   if (family == 8) {
-    if (link == 1) eta += log(aux) + log(noise[1]);
+    if (link == 1) 
+      eta += log(aux) + log(noise[1]);
     else if (link == 2) {
       eta *= aux;
       eta .*= noise[1];
     }
-    else eta += sqrt(aux) + sqrt(noise[1]);
+    else 
+      eta += sqrt(aux) + sqrt(noise[1]);
   }
   if (has_weights == 0 && prior_PD == 0) {
     if (family != 7) {
-      if (link == 1) target += poisson_log_lpmf(y| eta);
-      else target += poisson_lpmf(y| linkinv_count(eta, link));
+      if (link == 1) 
+        target += poisson_log_lpmf(y| eta);
+      else 
+        target += poisson_lpmf(y| linkinv_count(eta, link));
     }
     else {
-      if (link == 1) target += neg_binomial_2_log_lpmf(y| eta, aux);
-      else target += neg_binomial_2_lpmf(y| linkinv_count(eta, link), aux);
+      if (link == 1) 
+        target += neg_binomial_2_log_lpmf(y| eta, aux);
+      else 
+        target += neg_binomial_2_lpmf(y| linkinv_count(eta, link), aux);
     }
   }
-  else if (family != 7 && prior_PD == 0) target += dot_product(weights, pw_pois(y, eta, link));
-  else if (prior_PD == 0) target += dot_product(weights, pw_nb(y, eta, aux, link));
+  else if (family != 7 && prior_PD == 0) 
+    target += dot_product(weights, pw_pois(y, eta, link));
+  else if (prior_PD == 0) 
+    target += dot_product(weights, pw_nb(y, eta, aux, link));
   if (family > 6 && prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
-    if (prior_dist_for_aux == 1) target += normal_lpdf(aux_unscaled| 0, 1) - log_half;
-    else if (prior_dist_for_aux == 2) target += student_t_lpdf(aux_unscaled| prior_df_for_aux, 0, 1) - log_half;
-    else target += exponential_lpdf(aux_unscaled| 1);
+    if (prior_dist_for_aux == 1) 
+      target += normal_lpdf(aux_unscaled| 0, 1) - log_half;
+    else if (prior_dist_for_aux == 2) 
+      target += student_t_lpdf(aux_unscaled| prior_df_for_aux, 0, 1) - log_half;
+    else 
+      target += exponential_lpdf(aux_unscaled| 1);
   }
-  if (prior_dist == 1) target += normal_lpdf(z_beta| 0, 1);
-  else if (prior_dist == 2) target += normal_lpdf(z_beta| 0, 1);
+  if (prior_dist == 1) 
+    target += normal_lpdf(z_beta| 0, 1);
+  else if (prior_dist == 2) 
+    target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 3) {
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
@@ -2410,16 +2734,21 @@ model {
     target += normal_lpdf(z_beta| 0, 1);
   }
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1) target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2) target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
+    if (prior_dist_for_intercept == 1) 
+      target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
+    else if (prior_dist_for_intercept == 2) 
+      target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
   }
   if (K_smooth) {
     target += normal_lpdf(z_beta_smooth| 0, 1);
     if (prior_dist_for_smooth > 0) {
       real log_half = -0.693147180559945286;
-      if (prior_dist_for_smooth == 1) target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 2) target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
-      else if (prior_dist_for_smooth == 3) target += exponential_lpdf(smooth_sd_raw| 1);
+      if (prior_dist_for_smooth == 1) 
+        target += normal_lpdf(smooth_sd_raw| 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 2) 
+        target += student_t_lpdf(smooth_sd_raw| prior_df_for_smooth, 0, 1) - log_half;
+      else if (prior_dist_for_smooth == 3) 
+        target += exponential_lpdf(smooth_sd_raw| 1);
     }
   }
   if (family == 8) target += gamma_lpdf(noise[1]| aux, 1);
@@ -2431,25 +2760,34 @@ generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
   real alpha[has_intercept];
   if (has_intercept == 1) {
-    if (dense_X) alpha[1] = gamma[1] - dot_product(xbar, beta);
-    else alpha[1] = gamma[1];
+    if (dense_X) 
+      alpha[1] = gamma[1] - dot_product(xbar, beta);
+    else 
+      alpha[1] = gamma[1];
   }
   if (compute_mean_PPD) {
     vector[N] nu;
     vector[N] eta;
     if (K > 0) {
-      if (dense_X) eta = X[1] * beta;
-      else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+      if (dense_X) 
+        eta = X[1] * beta;
+      else 
+        eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
     }
-    else eta = rep_vector(0.0, N);
+    else 
+      eta = rep_vector(0.0, N);
     if (has_offset == 1) eta += offset_;
     if (K_smooth) eta += S * beta_smooth;
     if (t > 0) {
-      if (special_case) for (i in 1 : t) eta += b[V[i]];
-      else eta += csr_matrix_times_vector2(N, q, w, v, u, b);
+      if (special_case) 
+        for (i in 1 : t) 
+          eta += b[V[i]];
+      else 
+        eta += csr_matrix_times_vector2(N, q, w, v, u, b);
     }
     if (has_intercept == 1) {
-      if (link == 1) eta += gamma[1];
+      if (link == 1) 
+        eta += gamma[1];
       else {
         real shift = min(eta);
         eta += gamma[1] - shift;
@@ -2460,25 +2798,35 @@ generated quantities {
       eta += dot_product(xbar, beta);
     }
     if (family == 8) {
-      if (link == 1) eta += log(aux) + log(noise[1]);
+      if (link == 1) 
+        eta += log(aux) + log(noise[1]);
       else if (link == 2) {
         eta *= aux;
         eta .*= noise[1];
       }
-      else eta += sqrt(aux) + sqrt(noise[1]);
+      else 
+        eta += sqrt(aux) + sqrt(noise[1]);
     }
     nu = linkinv_count(eta, link);
-    if (family != 7) for (n in 1 : N) {
-      if (nu[n] < poisson_max) mean_PPD += poisson_rng(nu[n]);
-      else mean_PPD += normal_rng(nu[n], sqrt(nu[n]));
-    }
-    else for (n in 1 : N) {
-      real gamma_temp;
-      if (is_inf(aux)) gamma_temp = nu[n];
-      else gamma_temp = gamma_rng(aux, aux / nu[n]);
-      if (gamma_temp < poisson_max) mean_PPD += poisson_rng(gamma_temp);
-      else mean_PPD += normal_rng(gamma_temp, sqrt(gamma_temp));
-    }
+    if (family != 7) 
+      for (n in 1 : N) {
+        if (nu[n] < poisson_max) 
+          mean_PPD += poisson_rng(nu[n]);
+        else 
+          mean_PPD += normal_rng(nu[n], sqrt(nu[n]));
+      }
+    else 
+      for (n in 1 : N) {
+        real gamma_temp;
+        if (is_inf(aux)) 
+          gamma_temp = nu[n];
+        else 
+          gamma_temp = gamma_rng(aux, aux / nu[n]);
+        if (gamma_temp < poisson_max) 
+          mean_PPD += poisson_rng(gamma_temp);
+        else 
+          mean_PPD += normal_rng(gamma_temp, sqrt(gamma_temp));
+      }
     mean_PPD /= N;
   }
 }
@@ -2518,14 +2866,16 @@ functions {
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
           z_T_mark += r;
           std_dev = sqrt(pi[rp1] * trace_T_i);
-          for (c in 1 : r) T_i[rp1, c] = T_row[c] * scale_factor;
+          for (c in 1 : r) 
+            T_i[rp1, c] = T_row[c] * scale_factor;
           T_i[rp1, rp1] = sqrt(1.0 - rho[rho_mark]) * std_dev;
           rho_mark += 1;
         }
-        for (c in 1 : nc) for (r in c : nc) {
-          theta_L[theta_L_mark] = T_i[r, c];
-          theta_L_mark += 1;
-        }
+        for (c in 1 : nc) 
+          for (r in c : nc) {
+            theta_L[theta_L_mark] = T_i[r, c];
+            theta_L_mark += 1;
+          }
       }
     }
     return theta_L;
@@ -2538,7 +2888,8 @@ functions {
       int nc = p[i];
       if (nc == 1) {
         real theta_L_start = theta_L[theta_L_mark];
-        for (s in b_mark : (b_mark + l[i] - 1)) b[s] = theta_L_start * z_b[s];
+        for (s in b_mark : (b_mark + l[i] - 1)) 
+          b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
       }
@@ -2555,7 +2906,8 @@ functions {
         for (j in 1 : l[i]) {
           vector[nc] temp = T_i * segment(z_b, b_mark, nc);
           b_mark -= 1;
-          for (s in 1 : nc) b[b_mark + s] = temp[s];
+          for (s in 1 : nc) 
+            b[b_mark + s] = temp[s];
           b_mark += nc + 1;
         }
       }
@@ -2567,21 +2919,22 @@ functions {
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
     target += normal_lpdf(z_T| 0, 1);
-    for (i in 1 : t) if (p[i] > 1) {
-      vector[p[i] - 1] shape1;
-      vector[p[i] - 1] shape2;
-      real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
-      pos_reg += 1;
-      shape1[1] = nu;
-      shape2[1] = nu;
-      for (j in 2 : (p[i] - 1)) {
-        nu -= 0.5;
-        shape1[j] = 0.5 * j;
-        shape2[j] = nu;
+    for (i in 1 : t) 
+      if (p[i] > 1) {
+        vector[p[i] - 1] shape1;
+        vector[p[i] - 1] shape2;
+        real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
+        pos_reg += 1;
+        shape1[1] = nu;
+        shape2[1] = nu;
+        for (j in 2 : (p[i] - 1)) {
+          nu -= 0.5;
+          shape1[j] = 0.5 * j;
+          shape2[j] = nu;
+        }
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        pos_rho += p[i] - 1;
       }
-      target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
-      pos_rho += p[i] - 1;
-    }
     target += gamma_lpdf(zeta| delta, 1);
     target += gamma_lpdf(tau| shape, 1);
     return target();
@@ -2617,10 +2970,11 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) for (i in 1 : t) {
-      V[i, j] = v[pos] + 1;
-      pos += 1;
-    }
+    if (t > 0) for (j in 1 : N) 
+                 for (i in 1 : t) {
+                   V[i, j] = v[pos] + 1;
+                   pos += 1;
+                 }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -2637,12 +2991,18 @@ functions {
     return positive_infinity();
   }
   vector linkinv_bern(vector eta, int link) {
-    if (link == 1) return (inv_logit(eta));
-    else if (link == 2) return (Phi(eta));
-    else if (link == 3) return (atan(eta) / pi() + 0.5);
-    else if (link == 4) return (exp(eta));
-    else if (link == 5) return (inv_cloglog(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(eta));
+    else if (link == 2) 
+      return (Phi(eta));
+    else if (link == 3) 
+      return (atan(eta) / pi() + 0.5);
+    else if (link == 4) 
+      return (exp(eta));
+    else if (link == 5) 
+      return (inv_cloglog(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   real ll_bern_lp(vector eta0, vector eta1, int link, int[] N) {
@@ -2666,20 +3026,24 @@ functions {
       target += log1m_exp(-exp(eta1));
       target += -exp(eta0);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return target();
   }
   vector pw_bern(int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      for (n in 1 : N) ll[n] = bernoulli_logit_lpmf(y| eta[n]);
+      for (n in 1 : N) 
+        ll[n] = bernoulli_logit_lpmf(y| eta[n]);
     }
     else if (link <= 5) {
       vector[N] pi = linkinv_bern(eta, link);
-      for (n in 1 : N) ll[n] = bernoulli_lpmf(y| pi[n]);
+      for (n in 1 : N) 
+        ll[n] = bernoulli_lpmf(y| pi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
@@ -2714,17 +3078,25 @@ functions {
     return target();
   }
   vector linkinv_binom(vector eta, int link) {
-    if (link == 1) return (inv_logit(eta));
-    else if (link == 2) return (Phi(eta));
-    else if (link == 3) return (atan(eta) / pi() + 0.5);
-    else if (link == 4) return (exp(eta));
-    else if (link == 5) return (inv_cloglog(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(eta));
+    else if (link == 2) 
+      return (Phi(eta));
+    else if (link == 3) 
+      return (atan(eta) / pi() + 0.5);
+    else if (link == 4) 
+      return (exp(eta));
+    else if (link == 5) 
+      return (inv_cloglog(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
-    if (link == 1) target += binomial_logit_lpmf(y| trials, eta);
-    else if (link < 4) target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
+    if (link == 1) 
+      target += binomial_logit_lpmf(y| trials, eta);
+    else if (link < 4) 
+      target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
     else if (link == 4) {
       for (n in 1 : num_elements(y)) {
         target += y[n] * eta[n];
@@ -2740,45 +3112,61 @@ functions {
         target += lchoose(trials[n], y[n]);
       }
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return target();
   }
   vector pw_binom(int[] y, int[] trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      for (n in 1 : N) ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
+      for (n in 1 : N) 
+        ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
     }
     else if (link <= 5) {
       vector[N] pi = linkinv_binom(eta, link);
-      for (n in 1 : N) ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
+      for (n in 1 : N) 
+        ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector linkinv_gauss(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_gauss(vector y, vector eta, real sigma, int link) {
     return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(eta, link)) / sigma);
   }
   vector linkinv_gamma(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   real GammaReg(vector y, vector eta, real shape, int link, real sum_log_y) {
     real ret = rows(y) * (shape * log(shape) - lgamma(shape)) + (shape - 1) * sum_log_y;
-    if (link == 2) ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
-    else if (link == 1) ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
-    else if (link == 3) ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
-    else reject("Invalid link");
+    if (link == 2) 
+      ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
+    else if (link == 1) 
+      ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
+    else if (link == 3) 
+      ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
+    else 
+      reject("Invalid link");
     return ret;
   }
   vector pw_gamma(vector y, vector eta, real shape, int link) {
@@ -2799,47 +3187,68 @@ functions {
         ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
       }
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector linkinv_inv_gaussian(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else if (link == 4) return inv_sqrt(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else if (link == 4) 
+      return inv_sqrt(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   real inv_gaussian(vector y, vector mu, real lambda, real sum_log_y, vector sqrt_y) {
-    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * dot_self((y - mu) ./ (mu .* sqrt_y));
+    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * 
+    dot_self((y - mu) ./ (mu .* sqrt_y));
   }
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link, vector log_y, vector sqrt_y) {
     vector[rows(y)] mu = linkinv_inv_gaussian(eta, link);
-    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
+    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * 
+    log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
   real inv_gaussian_rng(real mu, real lambda) {
     real mu2 = square(mu);
     real z = uniform_rng(0, 1);
     real y = square(normal_rng(0, 1));
     real x = mu + (mu2 * y - mu * sqrt(4 * mu * lambda * y + mu2 * square(y))) / (2 * lambda);
-    if (z <= (mu / (mu + x))) return x;
-    else return mu2 / x;
+    if (z <= (mu / (mu + x))) 
+      return x;
+    else 
+      return mu2 / x;
   }
   vector linkinv_beta(vector eta, int link) {
-    if (link == 1) return inv_logit(eta);
-    else if (link == 2) return Phi(eta);
-    else if (link == 3) return inv_cloglog(eta);
-    else if (link == 4) return 0.5 + atan(eta) / pi();
-    else if (link == 5) return exp(eta);
-    else if (link == 6) return 1 - inv_cloglog(-eta);
-    else reject("invalid link");
+    if (link == 1) 
+      return inv_logit(eta);
+    else if (link == 2) 
+      return Phi(eta);
+    else if (link == 3) 
+      return inv_cloglog(eta);
+    else if (link == 4) 
+      return 0.5 + atan(eta) / pi();
+    else if (link == 5) 
+      return exp(eta);
+    else if (link == 6) 
+      return 1 - inv_cloglog(-eta);
+    else 
+      reject("invalid link");
     return eta;
   }
   vector linkinv_beta_z(vector eta, int link) {
-    if (link == 1) return exp(eta);
-    else if (link == 2) return eta;
-    else if (link == 3) return square(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return exp(eta);
+    else if (link == 2) 
+      return eta;
+    else if (link == 3) 
+      return square(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_beta(vector y, vector eta, real dispersion, int link) {
@@ -2860,46 +3269,61 @@ functions {
     return ll;
   }
   vector linkinv_count(vector eta, int link) {
-    if (link == 1) return exp(eta);
-    else if (link == 2) return eta;
-    else if (link == 3) return (square(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return exp(eta);
+    else if (link == 2) 
+      return eta;
+    else if (link == 3) 
+      return (square(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_pois(int[] y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
-    if (link == 1) for (n in 1 : N) ll[n] = poisson_log_lpmf(y[n]| eta[n]);
+    if (link == 1) 
+      for (n in 1 : N) 
+        ll[n] = poisson_log_lpmf(y[n]| eta[n]);
     else if (link <= 3) {
       vector[N] phi = linkinv_count(eta, link);
-      for (n in 1 : N) ll[n] = poisson_lpmf(y[n]| phi[n]);
+      for (n in 1 : N) 
+        ll[n] = poisson_lpmf(y[n]| phi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector pw_nb(int[] y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link);
     vector[N] ll;
-    for (n in 1 : N) ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
+    for (n in 1 : N) 
+      ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
     return ll;
   }
   int get_nvars_for_hs(int prior_dist) {
     int hs = 0;
-    if (prior_dist == 3) hs = 2;
-    else if (prior_dist == 4) hs = 4;
+    if (prior_dist == 3) 
+      hs = 2;
+    else if (prior_dist == 4) 
+      hs = 4;
     return hs;
   }
   real lb(int intercept_type) {
     real lb_;
-    if (intercept_type == 2) lb_ = 0;
-    else lb_ = negative_infinity();
+    if (intercept_type == 2) 
+      lb_ = 0;
+    else 
+      lb_ = negative_infinity();
     return lb_;
   }
   real ub(int intercept_type) {
     real ub_;
-    if (intercept_type == 3) ub_ = 0;
-    else ub_ = positive_infinity();
+    if (intercept_type == 3) 
+      ub_ = 0;
+    else 
+      ub_ = positive_infinity();
     return ub_;
   }
   int[] lower_tri_indices(int dim) {
@@ -2915,7 +3339,8 @@ functions {
   }
   real make_aux(real aux_unscaled, int prior_dist, real prior_mean, real prior_scale) {
     real aux;
-    if (prior_dist == 0) aux = aux_unscaled;
+    if (prior_dist == 0) 
+      aux = aux_unscaled;
     else {
       aux = prior_scale * aux_unscaled;
       if (prior_dist <= 2) aux += prior_mean;
@@ -2924,23 +3349,32 @@ functions {
   }
   vector make_beta(vector z_beta, int prior_dist, vector prior_mean, vector prior_scale, vector prior_df, real global_prior_scale, real[] global, vector[] local, real[] ool, vector[] mix, real[] aux, int family, real slab_scale, real[] caux) {
     vector[rows(z_beta)] beta;
-    if (prior_dist == 0) beta = z_beta;
-    else if (prior_dist == 1) beta = z_beta .* prior_scale + prior_mean;
-    else if (prior_dist == 2) for (k in 1 : rows(prior_mean)) {
-      beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
-    }
+    if (prior_dist == 0) 
+      beta = z_beta;
+    else if (prior_dist == 1) 
+      beta = z_beta .* prior_scale + prior_mean;
+    else if (prior_dist == 2) 
+      for (k in 1 : rows(prior_mean)) {
+        beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
+      }
     else if (prior_dist == 3) {
       real c2 = square(slab_scale) * caux[1];
-      if (family == 1) beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
-      else beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
+      if (family == 1) 
+        beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+      else 
+        beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
     else if (prior_dist == 4) {
       real c2 = square(slab_scale) * caux[1];
-      if (family == 1) beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
-      else beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
+      if (family == 1) 
+        beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+      else 
+        beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
-    else if (prior_dist == 5) beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-    else if (prior_dist == 6) beta = prior_mean + ool[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+    else if (prior_dist == 5) 
+      beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+    else if (prior_dist == 6) 
+      beta = prior_mean + ool[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
     return beta;
   }
   matrix make_b_matrix(vector z_b, vector theta_L, int[] p, int[] l, int i) {
@@ -2956,7 +3390,8 @@ functions {
     }
     if (nc == 1) {
       real theta_L_start = theta_L[theta_L_mark];
-      for (s in b_mark : (b_mark + l[i] - 1)) b_matrix[nc, s] = theta_L_start * z_b[s];
+      for (s in b_mark : (b_mark + l[i] - 1)) 
+        b_matrix[nc, s] = theta_L_start * z_b[s];
     }
     else {
       matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
@@ -2982,36 +3417,54 @@ functions {
     int p1 = size(Z1);
     int p2 = size(Z2);
     vector[N] eta;
-    if (K > 0) eta = X * beta;
-    else eta = rep_vector(0.0, N);
+    if (K > 0) 
+      eta = X * beta;
+    else 
+      eta = rep_vector(0.0, N);
     if (intercept_type > 0) {
-      if (intercept_type == 1) eta += gamma[1];
-      else if (intercept_type == 2) eta += gamma[1] - max(eta);
-      else if (intercept_type == 3) eta += gamma[1] - min(eta);
+      if (intercept_type == 1) 
+        eta += gamma[1];
+      else if (intercept_type == 2) 
+        eta += gamma[1] - max(eta);
+      else if (intercept_type == 3) 
+        eta += gamma[1] - min(eta);
     }
     if (p1 > 0) {
-      for (k in 1 : p1) for (n in 1 : N) eta[n] += (b1Mat[Z1_id[n], k + b1Mat_colshift]) * Z1[k, n];
+      for (k in 1 : p1) 
+        for (n in 1 : N) 
+          eta[n] += (b1Mat[Z1_id[n], k + b1Mat_colshift]) * Z1[k, n];
     }
     if (p2 > 0) {
-      for (k in 1 : p2) for (n in 1 : N) eta[n] += (b2Mat[Z2_id[n], k + b2Mat_colshift]) * Z2[k, n];
+      for (k in 1 : p2) 
+        for (n in 1 : N) 
+          eta[n] += (b2Mat[Z2_id[n], k + b2Mat_colshift]) * Z2[k, n];
     }
     return eta;
   }
   vector evaluate_mu(vector eta, int family, int link) {
     vector[rows(eta)] mu;
-    if (family == 1) mu = linkinv_gauss(eta, link);
-    else if (family == 2) mu = linkinv_gamma(eta, link);
-    else if (family == 3) mu = linkinv_inv_gaussian(eta, link);
-    else if (family == 4) mu = linkinv_bern(eta, link);
-    else if (family == 5) mu = linkinv_binom(eta, link);
-    else if (family == 6 || family == 7 || family == 8) mu = linkinv_count(eta, link);
+    if (family == 1) 
+      mu = linkinv_gauss(eta, link);
+    else if (family == 2) 
+      mu = linkinv_gamma(eta, link);
+    else if (family == 3) 
+      mu = linkinv_inv_gaussian(eta, link);
+    else if (family == 4) 
+      mu = linkinv_bern(eta, link);
+    else if (family == 5) 
+      mu = linkinv_binom(eta, link);
+    else if (family == 6 || family == 7 || family == 8) 
+      mu = linkinv_count(eta, link);
     return mu;
   }
   void glm_lp(vector y_real, int[] y_integer, vector eta, real[] aux, int family, int link, real sum_log_y, vector sqrt_y, vector log_y) {
     if (family == 1) {
-      if (link == 1) target += normal_lpdf(y_real| eta, aux[1]);
-      else if (link == 2) target += lognormal_lpdf(y_real| eta, aux[1]);
-      else target += normal_lpdf(y_real| inv(eta), aux[1]);
+      if (link == 1) 
+        target += normal_lpdf(y_real| eta, aux[1]);
+      else if (link == 2) 
+        target += lognormal_lpdf(y_real| eta, aux[1]);
+      else 
+        target += normal_lpdf(y_real| inv(eta), aux[1]);
     }
     else if (family == 2) {
       target += GammaReg(y_real, eta, aux[1], link, sum_log_y);
@@ -3020,25 +3473,34 @@ functions {
       target += inv_gaussian(y_real, linkinv_inv_gaussian(eta, link), aux[1], sum_log_y, sqrt_y);
     }
     else if (family == 4) {
-      if (link == 1) target += bernoulli_logit_lpmf(y_integer| eta);
-      else target += bernoulli_lpmf(y_integer| linkinv_bern(eta, link));
+      if (link == 1) 
+        target += bernoulli_logit_lpmf(y_integer| eta);
+      else 
+        target += bernoulli_lpmf(y_integer| linkinv_bern(eta, link));
     }
     else if (family == 5) {
       reject("Binomial with >1 trials not allowed.");
     }
     else if (family == 6 || family == 8) {
-      if (link == 1) target += poisson_log_lpmf(y_integer| eta);
-      else target += poisson_lpmf(y_integer| linkinv_count(eta, link));
+      if (link == 1) 
+        target += poisson_log_lpmf(y_integer| eta);
+      else 
+        target += poisson_lpmf(y_integer| linkinv_count(eta, link));
     }
     else if (family == 7) {
-      if (link == 1) target += neg_binomial_2_log_lpmf(y_integer| eta, aux[1]);
-      else target += neg_binomial_2_lpmf(y_integer| linkinv_count(eta, link), aux[1]);
+      if (link == 1) 
+        target += neg_binomial_2_log_lpmf(y_integer| eta, aux[1]);
+      else 
+        target += neg_binomial_2_lpmf(y_integer| linkinv_count(eta, link), aux[1]);
     }
-    else reject("Invalid family.");
+    else 
+      reject("Invalid family.");
   }
   void beta_lp(vector z_beta, int prior_dist, vector prior_scale, vector prior_df, real global_prior_df, vector[] local, real[] global, vector[] mix, real[] one_over_lambda, real slab_df, real[] caux) {
-    if (prior_dist == 1) target += normal_lpdf(z_beta| 0, 1);
-    else if (prior_dist == 2) target += normal_lpdf(z_beta| 0, 1);
+    if (prior_dist == 1) 
+      target += normal_lpdf(z_beta| 0, 1);
+    else if (prior_dist == 2) 
+      target += normal_lpdf(z_beta| 0, 1);
     else if (prior_dist == 3) {
       target += normal_lpdf(z_beta| 0, 1);
       target += normal_lpdf(local[1]| 0, 1);
@@ -3071,30 +3533,39 @@ functions {
     }
   }
   void gamma_lp(real gamma, int dist, real mean_, real scale, real df) {
-    if (dist == 1) target += normal_lpdf(gamma| mean_, scale);
-    else if (dist == 2) target += student_t_lpdf(gamma| df, mean_, scale);
+    if (dist == 1) 
+      target += normal_lpdf(gamma| mean_, scale);
+    else if (dist == 2) 
+      target += student_t_lpdf(gamma| df, mean_, scale);
   }
   void aux_lp(real aux_unscaled, int dist, real scale, real df) {
     if (dist > 0 && scale > 0) {
-      if (dist == 1) target += normal_lpdf(aux_unscaled| 0, 1);
-      else if (dist == 2) target += student_t_lpdf(aux_unscaled| df, 0, 1);
-      else target += exponential_lpdf(aux_unscaled| 1);
+      if (dist == 1) 
+        target += normal_lpdf(aux_unscaled| 0, 1);
+      else if (dist == 2) 
+        target += student_t_lpdf(aux_unscaled| df, 0, 1);
+      else 
+        target += exponential_lpdf(aux_unscaled| 1);
     }
   }
   real mean_PPD_rng(vector mu, real[] aux, int family) {
     int N = rows(mu);
     real mean_PPD = 0;
     if (family == 1) {
-      for (n in 1 : N) mean_PPD += normal_rng(mu[n], aux[1]);
+      for (n in 1 : N) 
+        mean_PPD += normal_rng(mu[n], aux[1]);
     }
     else if (family == 2) {
-      for (n in 1 : N) mean_PPD += gamma_rng(aux[1], aux[1] / mu[n]);
+      for (n in 1 : N) 
+        mean_PPD += gamma_rng(aux[1], aux[1] / mu[n]);
     }
     else if (family == 3) {
-      for (n in 1 : N) mean_PPD += inv_gaussian_rng(mu[n], aux[1]);
+      for (n in 1 : N) 
+        mean_PPD += inv_gaussian_rng(mu[n], aux[1]);
     }
     else if (family == 4) {
-      for (n in 1 : N) mean_PPD += bernoulli_rng(mu[n]);
+      for (n in 1 : N) 
+        mean_PPD += bernoulli_rng(mu[n]);
     }
     else if (family == 5) {
       reject("Binomial with >1 trials not allowed.");
@@ -3102,25 +3573,32 @@ functions {
     else if (family == 6 || family == 8) {
       real poisson_max = pow(2.0, 30.0);
       for (n in 1 : N) {
-        if (mu[n] < poisson_max) mean_PPD += poisson_rng(mu[n]);
-        else mean_PPD += normal_rng(mu[n], sqrt(mu[n]));
+        if (mu[n] < poisson_max) 
+          mean_PPD += poisson_rng(mu[n]);
+        else 
+          mean_PPD += normal_rng(mu[n], sqrt(mu[n]));
       }
     }
     else if (family == 7) {
       real poisson_max = pow(2.0, 30.0);
       for (n in 1 : N) {
         real gamma_temp;
-        if (is_inf(aux[1])) gamma_temp = mu[n];
-        else gamma_temp = gamma_rng(aux[1], aux[1] / mu[n]);
-        if (gamma_temp < poisson_max) mean_PPD += poisson_rng(gamma_temp);
-        else mean_PPD += normal_rng(gamma_temp, sqrt(gamma_temp));
+        if (is_inf(aux[1])) 
+          gamma_temp = mu[n];
+        else 
+          gamma_temp = gamma_rng(aux[1], aux[1] / mu[n]);
+        if (gamma_temp < poisson_max) 
+          mean_PPD += poisson_rng(gamma_temp);
+        else 
+          mean_PPD += normal_rng(gamma_temp, sqrt(gamma_temp));
       }
     }
     return mean_PPD / N;
   }
   vector make_basehaz_coef(vector aux_unscaled, int prior_dist, vector prior_mean, vector prior_scale) {
     vector[rows(aux_unscaled)] aux;
-    if (prior_dist == 0) aux = aux_unscaled;
+    if (prior_dist == 0) 
+      aux = aux_unscaled;
     else {
       aux = prior_scale .* aux_unscaled;
       if (prior_dist <= 2) aux += prior_mean;
@@ -3129,25 +3607,32 @@ functions {
   }
   void basehaz_lp(vector aux_unscaled, int dist, vector scale, vector df) {
     if (dist > 0) {
-      if (dist == 1) target += normal_lpdf(aux_unscaled| 0, 1);
-      else if (dist == 2) target += student_t_lpdf(aux_unscaled| df, 0, 1);
-      else target += exponential_lpdf(aux_unscaled| 1);
+      if (dist == 1) 
+        target += normal_lpdf(aux_unscaled| 0, 1);
+      else if (dist == 2) 
+        target += student_t_lpdf(aux_unscaled| df, 0, 1);
+      else 
+        target += exponential_lpdf(aux_unscaled| 1);
     }
   }
   vector collapse_within_groups(vector eta, int[,] grp_idx, int grp_assoc) {
     int N = size(grp_idx);
     vector[N] val;
     if (grp_assoc == 1) {
-      for (n in 1 : N) val[n] = sum(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
+      for (n in 1 : N) 
+        val[n] = sum(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
     }
     else if (grp_assoc == 2) {
-      for (n in 1 : N) val[n] = mean(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
+      for (n in 1 : N) 
+        val[n] = mean(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
     }
     else if (grp_assoc == 3) {
-      for (n in 1 : N) val[n] = min(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
+      for (n in 1 : N) 
+        val[n] = min(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
     }
     else if (grp_assoc == 4) {
-      for (n in 1 : N) val[n] = max(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
+      for (n in 1 : N) 
+        val[n] = max(eta[grp_idx[n, 1] : grp_idx[n, 2]]);
     }
     return val;
   }
@@ -3157,8 +3642,10 @@ functions {
     int end_store;
     matrix[Npat, sum_size_which_b] temp;
     matrix[(Npat * (qnodes + 1)), sum_size_which_b] x_assoc_shared_b;
-    if (t_i == 1) prior_shift = 0;
-    else prior_shift = sum(l[1 : (t_i - 1)]);
+    if (t_i == 1) 
+      prior_shift = 0;
+    else 
+      prior_shift = sum(l[1 : (t_i - 1)]);
     for (i in 1 : Npat) {
       int mark;
       int start_collect;
@@ -3198,8 +3685,10 @@ functions {
     int end_store;
     matrix[Npat, sum_size_which_coef] temp;
     matrix[(Npat * (qnodes + 1)), sum_size_which_coef] x_assoc_shared_coef;
-    if (t_i == 1) t_shift = 0;
-    else t_shift = sum(l[1 : (t_i - 1)]);
+    if (t_i == 1) 
+      t_shift = 0;
+    else 
+      t_shift = sum(l[1 : (t_i - 1)]);
     for (i in 1 : Npat) {
       int mark;
       int i_shift;
@@ -3239,14 +3728,18 @@ functions {
             beta_collect = shift_beta + beta_collect_m;
             coef = b[b_collect];
             if ((has_intercept[m] == 1) && (beta_collect == 1)) {
-              if (has_intercept_nob[m] == 1) coef += gamma_nob[sum(has_intercept_nob[1 : m])];
-              else if (has_intercept_lob[m] == 1) coef += gamma_lob[sum(has_intercept_lob[1 : m])];
-              else if (has_intercept_upb[m] == 1) coef += gamma_upb[sum(has_intercept_upb[1 : m])];
+              if (has_intercept_nob[m] == 1) 
+                coef += gamma_nob[sum(has_intercept_nob[1 : m])];
+              else if (has_intercept_lob[m] == 1) 
+                coef += gamma_lob[sum(has_intercept_lob[1 : m])];
+              else if (has_intercept_upb[m] == 1) 
+                coef += gamma_upb[sum(has_intercept_upb[1 : m])];
             }
             else if (has_intercept[m] == 1) {
               coef += beta[(beta_collect - 1)];
             }
-            else coef += beta[beta_collect];
+            else 
+              coef += beta[beta_collect];
             temp[i, mark] = coef;
             mark += 1;
           }
@@ -3499,7 +3992,8 @@ transformed data {
           pos += 1;
         }
       }
-      for (j in 3 : p[i]) len_z_T += p[i] - 1;
+      for (j in 3 : p[i]) 
+        len_z_T += p[i] - 1;
     }
   }
   if (prior_dist_for_cov == 2) {
@@ -3598,10 +4092,14 @@ transformed parameters {
     if (bK2 > 0) bMat2 = make_b_matrix(z_b, theta_L, p, l, 2);
   }
   else if (prior_dist_for_cov == 2) {
-    if (bK1 == 1) bMat1 = (bSd1[1] * z_bMat1)';
-    else if (bK1 > 1) bMat1 = (diag_pre_multiply(bSd1, bCholesky1) * z_bMat1)';
-    if (bK2 == 1) bMat2 = (bSd2[1] * z_bMat2)';
-    else if (bK2 > 1) bMat2 = (diag_pre_multiply(bSd2, bCholesky2) * z_bMat2)';
+    if (bK1 == 1) 
+      bMat1 = (bSd1[1] * z_bMat1)';
+    else if (bK1 > 1) 
+      bMat1 = (diag_pre_multiply(bSd1, bCholesky1) * z_bMat1)';
+    if (bK2 == 1) 
+      bMat2 = (bSd2[1] * z_bMat2)';
+    else if (bK2 > 1) 
+      bMat2 = (diag_pre_multiply(bSd2, bCholesky2) * z_bMat2)';
   }
   e_beta = make_beta(e_z_beta, e_prior_dist, e_prior_mean, e_prior_scale, e_prior_df, e_global_prior_scale, e_global, e_local, e_ool, e_mix, rep_array(1.0, 0), 0, e_slab_scale, e_caux);
   a_beta = make_beta(a_z_beta, a_prior_dist, a_prior_mean, a_prior_scale, a_prior_df, a_global_prior_scale, a_global, a_local, a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale, a_caux);
@@ -3633,8 +4131,10 @@ model {
   }
   {
     vector[nrow_e_Xq] e_eta_q;
-    if (e_K > 0) e_eta_q = e_Xq * e_beta;
-    else e_eta_q = rep_vector(0.0, nrow_e_Xq);
+    if (e_K > 0) 
+      e_eta_q = e_Xq * e_beta;
+    else 
+      e_eta_q = rep_vector(0.0, nrow_e_Xq);
     if (assoc == 1) {
       int mark = 0;
       int mark2 = 0;
@@ -3974,8 +4474,10 @@ model {
       vector[nrow_e_Xq] log_haz_q;
       vector[Nevents] log_haz_etimes;
       vector[Npat_times_qnodes] log_haz_qtimes;
-      if (basehaz_type == 1) log_basehaz = norm_const + log(e_aux[1]) + basehaz_X * (e_aux - 1) + e_gamma[1];
-      else log_basehaz = norm_const + basehaz_X * e_aux;
+      if (basehaz_type == 1) 
+        log_basehaz = norm_const + log(e_aux[1]) + basehaz_X * (e_aux - 1) + e_gamma[1];
+      else 
+        log_basehaz = norm_const + basehaz_X * e_aux;
       log_haz_q = log_basehaz + e_eta_q;
       log_haz_etimes = head(log_haz_q, Nevents);
       log_haz_qtimes = tail(log_haz_q, Npat_times_qnodes);
@@ -4063,14 +4565,17 @@ generated quantities {
   else if (prior_dist_for_cov == 2 && bK2 > 1) {
     bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(bCholesky2), bSd2))[bCov2_idx];
   }
-  if (e_has_intercept == 1) e_alpha = e_gamma[1] + norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar, a_beta);
-  else e_alpha = norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar, a_beta);
+  if (e_has_intercept == 1) 
+    e_alpha = e_gamma[1] + norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar, a_beta);
+  else 
+    e_alpha = norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar, a_beta);
 }
 
   $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined lm.stan
 functions {
   real ll_mvn_ols_qr_lp(vector theta, vector b, real intercept, real ybar, real SSR, real sigma, int N) {
-    target += -0.5 * (dot_self(theta - b) + N * square(intercept - ybar) + SSR) / square(sigma) - N * (log(sigma) + 0.91893853320467267);
+    target += -0.5 * (dot_self(theta - b) + N * square(intercept - ybar) + SSR) / 
+    square(sigma) - N * (log(sigma) + 0.91893853320467267);
     return target();
   }
 }
@@ -4114,13 +4619,18 @@ transformed parameters {
   real<lower=0> sigma[J];
   for (j in 1 : J) {
     real Delta_y = prior_PD == 0 ? s_Y[j] * exp(log_omega[j]) : 1;
-    if (K > 1) theta[j] = u[j] * sqrt(R2[j]) * sqrt_Nm1[j] * Delta_y;
-    else theta[j, 1] = R2[j] * sqrt_Nm1[j] * Delta_y;
+    if (K > 1) 
+      theta[j] = u[j] * sqrt(R2[j]) * sqrt_Nm1[j] * Delta_y;
+    else 
+      theta[j, 1] = R2[j] * sqrt_Nm1[j] * Delta_y;
     sigma[j] = Delta_y * sqrt(1 - R2[j]);
     if (has_intercept == 1) {
-      if (prior_dist_for_intercept == 0) alpha[j] = z_alpha[j];
-      else if (prior_scale_for_intercept == 0) alpha[j] = z_alpha[j] * Delta_y * sqrt_inv_N[j] + prior_mean_for_intercept;
-      else alpha[j] = z_alpha[j] * prior_scale_for_intercept + prior_mean_for_intercept;
+      if (prior_dist_for_intercept == 0) 
+        alpha[j] = z_alpha[j];
+      else if (prior_scale_for_intercept == 0) 
+        alpha[j] = z_alpha[j] * Delta_y * sqrt_inv_N[j] + prior_mean_for_intercept;
+      else 
+        alpha[j] = z_alpha[j] * prior_scale_for_intercept + prior_mean_for_intercept;
     }
   }
 }
@@ -4135,8 +4645,10 @@ model {
   }
   if (has_intercept == 1 && prior_dist_for_intercept > 0) target += normal_lpdf(z_alpha| 0, 1);
   if (prior_dist == 1) {
-    if (K > 1) target += beta_lpdf(R2| half_K, eta);
-    else target += beta_lpdf(square(R2)| half_K, eta) + sum(log(fabs(R2)));
+    if (K > 1) 
+      target += beta_lpdf(R2| half_K, eta);
+    else 
+      target += beta_lpdf(square(R2)| half_K, eta) + sum(log(fabs(R2)));
   }
 }
 generated quantities {
@@ -4185,14 +4697,16 @@ functions {
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
           z_T_mark += r;
           std_dev = sqrt(pi[rp1] * trace_T_i);
-          for (c in 1 : r) T_i[rp1, c] = T_row[c] * scale_factor;
+          for (c in 1 : r) 
+            T_i[rp1, c] = T_row[c] * scale_factor;
           T_i[rp1, rp1] = sqrt(1.0 - rho[rho_mark]) * std_dev;
           rho_mark += 1;
         }
-        for (c in 1 : nc) for (r in c : nc) {
-          theta_L[theta_L_mark] = T_i[r, c];
-          theta_L_mark += 1;
-        }
+        for (c in 1 : nc) 
+          for (r in c : nc) {
+            theta_L[theta_L_mark] = T_i[r, c];
+            theta_L_mark += 1;
+          }
       }
     }
     return theta_L;
@@ -4205,7 +4719,8 @@ functions {
       int nc = p[i];
       if (nc == 1) {
         real theta_L_start = theta_L[theta_L_mark];
-        for (s in b_mark : (b_mark + l[i] - 1)) b[s] = theta_L_start * z_b[s];
+        for (s in b_mark : (b_mark + l[i] - 1)) 
+          b[s] = theta_L_start * z_b[s];
         b_mark += l[i];
         theta_L_mark += 1;
       }
@@ -4222,7 +4737,8 @@ functions {
         for (j in 1 : l[i]) {
           vector[nc] temp = T_i * segment(z_b, b_mark, nc);
           b_mark -= 1;
-          for (s in 1 : nc) b[b_mark + s] = temp[s];
+          for (s in 1 : nc) 
+            b[b_mark + s] = temp[s];
           b_mark += nc + 1;
         }
       }
@@ -4234,21 +4750,22 @@ functions {
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
     target += normal_lpdf(z_T| 0, 1);
-    for (i in 1 : t) if (p[i] > 1) {
-      vector[p[i] - 1] shape1;
-      vector[p[i] - 1] shape2;
-      real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
-      pos_reg += 1;
-      shape1[1] = nu;
-      shape2[1] = nu;
-      for (j in 2 : (p[i] - 1)) {
-        nu -= 0.5;
-        shape1[j] = 0.5 * j;
-        shape2[j] = nu;
+    for (i in 1 : t) 
+      if (p[i] > 1) {
+        vector[p[i] - 1] shape1;
+        vector[p[i] - 1] shape2;
+        real nu = regularization[pos_reg] + 0.5 * (p[i] - 2);
+        pos_reg += 1;
+        shape1[1] = nu;
+        shape2[1] = nu;
+        for (j in 2 : (p[i] - 1)) {
+          nu -= 0.5;
+          shape1[j] = 0.5 * j;
+          shape2[j] = nu;
+        }
+        target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
+        pos_rho += p[i] - 1;
       }
-      target += beta_lpdf(rho[pos_rho : (pos_rho + p[i] - 2)]| shape1, shape2);
-      pos_rho += p[i] - 1;
-    }
     target += gamma_lpdf(zeta| delta, 1);
     target += gamma_lpdf(tau| shape, 1);
     return target();
@@ -4284,10 +4801,11 @@ functions {
   int[,] make_V(int N, int t, int[] v) {
     int V[t, N];
     int pos = 1;
-    if (t > 0) for (j in 1 : N) for (i in 1 : t) {
-      V[i, j] = v[pos] + 1;
-      pos += 1;
-    }
+    if (t > 0) for (j in 1 : N) 
+                 for (i in 1 : t) {
+                   V[i, j] = v[pos] + 1;
+                   pos += 1;
+                 }
     return V;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -4304,12 +4822,18 @@ functions {
     return positive_infinity();
   }
   vector linkinv_bern(vector eta, int link) {
-    if (link == 1) return (inv_logit(eta));
-    else if (link == 2) return (Phi(eta));
-    else if (link == 3) return (atan(eta) / pi() + 0.5);
-    else if (link == 4) return (exp(eta));
-    else if (link == 5) return (inv_cloglog(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(eta));
+    else if (link == 2) 
+      return (Phi(eta));
+    else if (link == 3) 
+      return (atan(eta) / pi() + 0.5);
+    else if (link == 4) 
+      return (exp(eta));
+    else if (link == 5) 
+      return (inv_cloglog(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   real ll_bern_lp(vector eta0, vector eta1, int link, int[] N) {
@@ -4333,20 +4857,24 @@ functions {
       target += log1m_exp(-exp(eta1));
       target += -exp(eta0);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return target();
   }
   vector pw_bern(int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      for (n in 1 : N) ll[n] = bernoulli_logit_lpmf(y| eta[n]);
+      for (n in 1 : N) 
+        ll[n] = bernoulli_logit_lpmf(y| eta[n]);
     }
     else if (link <= 5) {
       vector[N] pi = linkinv_bern(eta, link);
-      for (n in 1 : N) ll[n] = bernoulli_lpmf(y| pi[n]);
+      for (n in 1 : N) 
+        ll[n] = bernoulli_lpmf(y| pi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   real log_clogit_denom(int N_j, int D_j, vector eta_j);
@@ -4381,17 +4909,25 @@ functions {
     return target();
   }
   vector linkinv_binom(vector eta, int link) {
-    if (link == 1) return (inv_logit(eta));
-    else if (link == 2) return (Phi(eta));
-    else if (link == 3) return (atan(eta) / pi() + 0.5);
-    else if (link == 4) return (exp(eta));
-    else if (link == 5) return (inv_cloglog(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(eta));
+    else if (link == 2) 
+      return (Phi(eta));
+    else if (link == 3) 
+      return (atan(eta) / pi() + 0.5);
+    else if (link == 4) 
+      return (exp(eta));
+    else if (link == 5) 
+      return (inv_cloglog(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
-    if (link == 1) target += binomial_logit_lpmf(y| trials, eta);
-    else if (link < 4) target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
+    if (link == 1) 
+      target += binomial_logit_lpmf(y| trials, eta);
+    else if (link < 4) 
+      target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
     else if (link == 4) {
       for (n in 1 : num_elements(y)) {
         target += y[n] * eta[n];
@@ -4407,45 +4943,61 @@ functions {
         target += lchoose(trials[n], y[n]);
       }
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return target();
   }
   vector pw_binom(int[] y, int[] trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      for (n in 1 : N) ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
+      for (n in 1 : N) 
+        ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
     }
     else if (link <= 5) {
       vector[N] pi = linkinv_binom(eta, link);
-      for (n in 1 : N) ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
+      for (n in 1 : N) 
+        ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector linkinv_gauss(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_gauss(vector y, vector eta, real sigma, int link) {
     return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(eta, link)) / sigma);
   }
   vector linkinv_gamma(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   real GammaReg(vector y, vector eta, real shape, int link, real sum_log_y) {
     real ret = rows(y) * (shape * log(shape) - lgamma(shape)) + (shape - 1) * sum_log_y;
-    if (link == 2) ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
-    else if (link == 1) ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
-    else if (link == 3) ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
-    else reject("Invalid link");
+    if (link == 2) 
+      ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
+    else if (link == 1) 
+      ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
+    else if (link == 3) 
+      ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
+    else 
+      reject("Invalid link");
     return ret;
   }
   vector pw_gamma(vector y, vector eta, real shape, int link) {
@@ -4466,47 +5018,68 @@ functions {
         ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
       }
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector linkinv_inv_gaussian(vector eta, int link) {
-    if (link == 1) return eta;
-    else if (link == 2) return exp(eta);
-    else if (link == 3) return inv(eta);
-    else if (link == 4) return inv_sqrt(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return eta;
+    else if (link == 2) 
+      return exp(eta);
+    else if (link == 3) 
+      return inv(eta);
+    else if (link == 4) 
+      return inv_sqrt(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   real inv_gaussian(vector y, vector mu, real lambda, real sum_log_y, vector sqrt_y) {
-    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * dot_self((y - mu) ./ (mu .* sqrt_y));
+    return 0.5 * rows(y) * log(lambda / 6.283185307179586232) - 1.5 * sum_log_y - 0.5 * lambda * 
+    dot_self((y - mu) ./ (mu .* sqrt_y));
   }
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link, vector log_y, vector sqrt_y) {
     vector[rows(y)] mu = linkinv_inv_gaussian(eta, link);
-    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
+    return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y)) + 0.5 * 
+    log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
   real inv_gaussian_rng(real mu, real lambda) {
     real mu2 = square(mu);
     real z = uniform_rng(0, 1);
     real y = square(normal_rng(0, 1));
     real x = mu + (mu2 * y - mu * sqrt(4 * mu * lambda * y + mu2 * square(y))) / (2 * lambda);
-    if (z <= (mu / (mu + x))) return x;
-    else return mu2 / x;
+    if (z <= (mu / (mu + x))) 
+      return x;
+    else 
+      return mu2 / x;
   }
   vector linkinv_beta(vector eta, int link) {
-    if (link == 1) return inv_logit(eta);
-    else if (link == 2) return Phi(eta);
-    else if (link == 3) return inv_cloglog(eta);
-    else if (link == 4) return 0.5 + atan(eta) / pi();
-    else if (link == 5) return exp(eta);
-    else if (link == 6) return 1 - inv_cloglog(-eta);
-    else reject("invalid link");
+    if (link == 1) 
+      return inv_logit(eta);
+    else if (link == 2) 
+      return Phi(eta);
+    else if (link == 3) 
+      return inv_cloglog(eta);
+    else if (link == 4) 
+      return 0.5 + atan(eta) / pi();
+    else if (link == 5) 
+      return exp(eta);
+    else if (link == 6) 
+      return 1 - inv_cloglog(-eta);
+    else 
+      reject("invalid link");
     return eta;
   }
   vector linkinv_beta_z(vector eta, int link) {
-    if (link == 1) return exp(eta);
-    else if (link == 2) return eta;
-    else if (link == 3) return square(eta);
-    else reject("Invalid link");
+    if (link == 1) 
+      return exp(eta);
+    else if (link == 2) 
+      return eta;
+    else if (link == 3) 
+      return square(eta);
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_beta(vector y, vector eta, real dispersion, int link) {
@@ -4527,46 +5100,61 @@ functions {
     return ll;
   }
   vector linkinv_count(vector eta, int link) {
-    if (link == 1) return exp(eta);
-    else if (link == 2) return eta;
-    else if (link == 3) return (square(eta));
-    else reject("Invalid link");
+    if (link == 1) 
+      return exp(eta);
+    else if (link == 2) 
+      return eta;
+    else if (link == 3) 
+      return (square(eta));
+    else 
+      reject("Invalid link");
     return eta;
   }
   vector pw_pois(int[] y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
-    if (link == 1) for (n in 1 : N) ll[n] = poisson_log_lpmf(y[n]| eta[n]);
+    if (link == 1) 
+      for (n in 1 : N) 
+        ll[n] = poisson_log_lpmf(y[n]| eta[n]);
     else if (link <= 3) {
       vector[N] phi = linkinv_count(eta, link);
-      for (n in 1 : N) ll[n] = poisson_lpmf(y[n]| phi[n]);
+      for (n in 1 : N) 
+        ll[n] = poisson_lpmf(y[n]| phi[n]);
     }
-    else reject("Invalid link");
+    else 
+      reject("Invalid link");
     return ll;
   }
   vector pw_nb(int[] y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link);
     vector[N] ll;
-    for (n in 1 : N) ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
+    for (n in 1 : N) 
+      ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
     return ll;
   }
   int get_nvars_for_hs(int prior_dist) {
     int hs = 0;
-    if (prior_dist == 3) hs = 2;
-    else if (prior_dist == 4) hs = 4;
+    if (prior_dist == 3) 
+      hs = 2;
+    else if (prior_dist == 4) 
+      hs = 4;
     return hs;
   }
   real lb(int intercept_type) {
     real lb_;
-    if (intercept_type == 2) lb_ = 0;
-    else lb_ = negative_infinity();
+    if (intercept_type == 2) 
+      lb_ = 0;
+    else 
+      lb_ = negative_infinity();
     return lb_;
   }
   real ub(int intercept_type) {
     real ub_;
-    if (intercept_type == 3) ub_ = 0;
-    else ub_ = positive_infinity();
+    if (intercept_type == 3) 
+      ub_ = 0;
+    else 
+      ub_ = positive_infinity();
     return ub_;
   }
   int[] lower_tri_indices(int dim) {
@@ -4582,7 +5170,8 @@ functions {
   }
   real make_aux(real aux_unscaled, int prior_dist, real prior_mean, real prior_scale) {
     real aux;
-    if (prior_dist == 0) aux = aux_unscaled;
+    if (prior_dist == 0) 
+      aux = aux_unscaled;
     else {
       aux = prior_scale * aux_unscaled;
       if (prior_dist <= 2) aux += prior_mean;
@@ -4591,23 +5180,32 @@ functions {
   }
   vector make_beta(vector z_beta, int prior_dist, vector prior_mean, vector prior_scale, vector prior_df, real global_prior_scale, real[] global, vector[] local, real[] ool, vector[] mix, real[] aux, int family, real slab_scale, real[] caux) {
     vector[rows(z_beta)] beta;
-    if (prior_dist == 0) beta = z_beta;
-    else if (prior_dist == 1) beta = z_beta .* prior_scale + prior_mean;
-    else if (prior_dist == 2) for (k in 1 : rows(prior_mean)) {
-      beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
-    }
+    if (prior_dist == 0) 
+      beta = z_beta;
+    else if (prior_dist == 1) 
+      beta = z_beta .* prior_scale + prior_mean;
+    else if (prior_dist == 2) 
+      for (k in 1 : rows(prior_mean)) {
+        beta[k] = CFt(z_beta[k], prior_df[k]) * prior_scale[k] + prior_mean[k];
+      }
     else if (prior_dist == 3) {
       real c2 = square(slab_scale) * caux[1];
-      if (family == 1) beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
-      else beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
+      if (family == 1) 
+        beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+      else 
+        beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
     else if (prior_dist == 4) {
       real c2 = square(slab_scale) * caux[1];
-      if (family == 1) beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
-      else beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
+      if (family == 1) 
+        beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+      else 
+        beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
-    else if (prior_dist == 5) beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-    else if (prior_dist == 6) beta = prior_mean + ool[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+    else if (prior_dist == 5) 
+      beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
+    else if (prior_dist == 6) 
+      beta = prior_mean + ool[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
     return beta;
   }
   matrix make_b_matrix(vector z_b, vector theta_L, int[] p, int[] l, int i) {
@@ -4623,7 +5221,8 @@ functions {
     }
     if (nc == 1) {
       real theta_L_start = theta_L[theta_L_mark];
-      for (s in b_mark : (b_mark + l[i] - 1)) b_matrix[nc, s] = theta_L_start * z_b[s];
+      for (s in b_mark : (b_mark + l[i] - 1)) 
+        b_matrix[nc, s] = theta_L_start * z_b[s];
     }
     else {
       matrix[nc, nc] T_i = rep_matrix(0, nc, nc);
@@ -4649,36 +5248,54 @@ functions {
     int p1 = size(Z1);
     int p2 = size(Z2);
     vector[N] eta;
-    if (K > 0) eta = X * beta;
-    else eta = rep_vector(0.0, N);
+    if (K > 0) 
+      eta = X * beta;
+    else 
+      eta = rep_vector(0.0, N);
     if (intercept_type > 0) {
-      if (intercept_type == 1) eta += gamma[1];
-      else if (intercept_type == 2) eta += gamma[1] - max(eta);
-      else if (intercept_type == 3) eta += gamma[1] - min(eta);
+      if (intercept_type == 1) 
+        eta += gamma[1];
+      else if (intercept_type == 2) 
+        eta += gamma[1] - max(eta);
+      else if (intercept_type == 3) 
+        eta += gamma[1] - min(eta);
     }
     if (p1 > 0) {
-      for (k in 1 : p1) for (n in 1 : N) eta[n] += (b1Mat[Z1_id[n], k + b1Mat_colshift]) * Z1[k, n];
+      for (k in 1 : p1) 
+        for (n in 1 : N) 
+          eta[n] += (b1Mat[Z1_id[n], k + b1Mat_colshift]) * Z1[k, n];
     }
     if (p2 > 0) {
-      for (k in 1 : p2) for (n in 1 : N) eta[n] += (b2Mat[Z2_id[n], k + b2Mat_colshift]) * Z2[k, n];
+      for (k in 1 : p2) 
+        for (n in 1 : N) 
+          eta[n] += (b2Mat[Z2_id[n], k + b2Mat_colshift]) * Z2[k, n];
     }
     return eta;
   }
   vector evaluate_mu(vector eta, int family, int link) {
     vector[rows(eta)] mu;
-    if (family == 1) mu = linkinv_gauss(eta, link);
-    else if (family == 2) mu = linkinv_gamma(eta, link);
-    else if (family == 3) mu = linkinv_inv_gaussian(eta, link);
-    else if (family == 4) mu = linkinv_bern(eta, link);
-    else if (family == 5) mu = linkinv_binom(eta, link);
-    else if (family == 6 || family == 7 || family == 8) mu = linkinv_count(eta, link);
+    if (family == 1) 
+      mu = linkinv_gauss(eta, link);
+    else if (family == 2) 
+      mu = linkinv_gamma(eta, link);
+    else if (family == 3) 
+      mu = linkinv_inv_gaussian(eta, link);
+    else if (family == 4) 
+      mu = linkinv_bern(eta, link);
+    else if (family == 5) 
+      mu = linkinv_binom(eta, link);
+    else if (family == 6 || family == 7 || family == 8) 
+      mu = linkinv_count(eta, link);
     return mu;
   }
   void glm_lp(vector y_real, int[] y_integer, vector eta, real[] aux, int family, int link, real sum_log_y, vector sqrt_y, vector log_y) {
     if (family == 1) {
-      if (link == 1) target += normal_lpdf(y_real| eta, aux[1]);
-      else if (link == 2) target += lognormal_lpdf(y_real| eta, aux[1]);
-      else target += normal_lpdf(y_real| inv(eta), aux[1]);
+      if (link == 1) 
+        target += normal_lpdf(y_real| eta, aux[1]);
+      else if (link == 2) 
+        target += lognormal_lpdf(y_real| eta, aux[1]);
+      else 
+        target += normal_lpdf(y_real| inv(eta), aux[1]);
     }
     else if (family == 2) {
       target += GammaReg(y_real, eta, aux[1], link, sum_log_y);
@@ -4687,25 +5304,34 @@ functions {
       target += inv_gaussian(y_real, linkinv_inv_gaussian(eta, link), aux[1], sum_log_y, sqrt_y);
     }
     else if (family == 4) {
-      if (link == 1) target += bernoulli_logit_lpmf(y_integer| eta);
-      else target += bernoulli_lpmf(y_integer| linkinv_bern(eta, link));
+      if (link == 1) 
+        target += bernoulli_logit_lpmf(y_integer| eta);
+      else 
+        target += bernoulli_lpmf(y_integer| linkinv_bern(eta, link));
     }
     else if (family == 5) {
       reject("Binomial with >1 trials not allowed.");
     }
     else if (family == 6 || family == 8) {
-      if (link == 1) target += poisson_log_lpmf(y_integer| eta);
-      else target += poisson_lpmf(y_integer| linkinv_count(eta, link));
+      if (link == 1) 
+        target += poisson_log_lpmf(y_integer| eta);
+      else 
+        target += poisson_lpmf(y_integer| linkinv_count(eta, link));
     }
     else if (family == 7) {
-      if (link == 1) target += neg_binomial_2_log_lpmf(y_integer| eta, aux[1]);
-      else target += neg_binomial_2_lpmf(y_integer| linkinv_count(eta, link), aux[1]);
+      if (link == 1) 
+        target += neg_binomial_2_log_lpmf(y_integer| eta, aux[1]);
+      else 
+        target += neg_binomial_2_lpmf(y_integer| linkinv_count(eta, link), aux[1]);
     }
-    else reject("Invalid family.");
+    else 
+      reject("Invalid family.");
   }
   void beta_lp(vector z_beta, int prior_dist, vector prior_scale, vector prior_df, real global_prior_df, vector[] local, real[] global, vector[] mix, real[] one_over_lambda, real slab_df, real[] caux) {
-    if (prior_dist == 1) target += normal_lpdf(z_beta| 0, 1);
-    else if (prior_dist == 2) target += normal_lpdf(z_beta| 0, 1);
+    if (prior_dist == 1) 
+      target += normal_lpdf(z_beta| 0, 1);
+    else if (prior_dist == 2) 
+      target += normal_lpdf(z_beta| 0, 1);
     else if (prior_dist == 3) {
       target += normal_lpdf(z_beta| 0, 1);
       target += normal_lpdf(local[1]| 0, 1);
@@ -4738,30 +5364,39 @@ functions {
     }
   }
   void gamma_lp(real gamma, int dist, real mean_, real scale, real df) {
-    if (dist == 1) target += normal_lpdf(gamma| mean_, scale);
-    else if (dist == 2) target += student_t_lpdf(gamma| df, mean_, scale);
+    if (dist == 1) 
+      target += normal_lpdf(gamma| mean_, scale);
+    else if (dist == 2) 
+      target += student_t_lpdf(gamma| df, mean_, scale);
   }
   void aux_lp(real aux_unscaled, int dist, real scale, real df) {
     if (dist > 0 && scale > 0) {
-      if (dist == 1) target += normal_lpdf(aux_unscaled| 0, 1);
-      else if (dist == 2) target += student_t_lpdf(aux_unscaled| df, 0, 1);
-      else target += exponential_lpdf(aux_unscaled| 1);
+      if (dist == 1) 
+        target += normal_lpdf(aux_unscaled| 0, 1);
+      else if (dist == 2) 
+        target += student_t_lpdf(aux_unscaled| df, 0, 1);
+      else 
+        target += exponential_lpdf(aux_unscaled| 1);
     }
   }
   real mean_PPD_rng(vector mu, real[] aux, int family) {
     int N = rows(mu);
     real mean_PPD = 0;
     if (family == 1) {
-      for (n in 1 : N) mean_PPD += normal_rng(mu[n], aux[1]);
+      for (n in 1 : N) 
+        mean_PPD += normal_rng(mu[n], aux[1]);
     }
     else if (family == 2) {
-      for (n in 1 : N) mean_PPD += gamma_rng(aux[1], aux[1] / mu[n]);
+      for (n in 1 : N) 
+        mean_PPD += gamma_rng(aux[1], aux[1] / mu[n]);
     }
     else if (family == 3) {
-      for (n in 1 : N) mean_PPD += inv_gaussian_rng(mu[n], aux[1]);
+      for (n in 1 : N) 
+        mean_PPD += inv_gaussian_rng(mu[n], aux[1]);
     }
     else if (family == 4) {
-      for (n in 1 : N) mean_PPD += bernoulli_rng(mu[n]);
+      for (n in 1 : N) 
+        mean_PPD += bernoulli_rng(mu[n]);
     }
     else if (family == 5) {
       reject("Binomial with >1 trials not allowed.");
@@ -4769,18 +5404,24 @@ functions {
     else if (family == 6 || family == 8) {
       real poisson_max = pow(2.0, 30.0);
       for (n in 1 : N) {
-        if (mu[n] < poisson_max) mean_PPD += poisson_rng(mu[n]);
-        else mean_PPD += normal_rng(mu[n], sqrt(mu[n]));
+        if (mu[n] < poisson_max) 
+          mean_PPD += poisson_rng(mu[n]);
+        else 
+          mean_PPD += normal_rng(mu[n], sqrt(mu[n]));
       }
     }
     else if (family == 7) {
       real poisson_max = pow(2.0, 30.0);
       for (n in 1 : N) {
         real gamma_temp;
-        if (is_inf(aux[1])) gamma_temp = mu[n];
-        else gamma_temp = gamma_rng(aux[1], aux[1] / mu[n]);
-        if (gamma_temp < poisson_max) mean_PPD += poisson_rng(gamma_temp);
-        else mean_PPD += normal_rng(gamma_temp, sqrt(gamma_temp));
+        if (is_inf(aux[1])) 
+          gamma_temp = mu[n];
+        else 
+          gamma_temp = gamma_rng(aux[1], aux[1] / mu[n]);
+        if (gamma_temp < poisson_max) 
+          mean_PPD += poisson_rng(gamma_temp);
+        else 
+          mean_PPD += normal_rng(gamma_temp, sqrt(gamma_temp));
       }
     }
     return mean_PPD / N;
@@ -4911,7 +5552,8 @@ transformed data {
           pos += 1;
         }
       }
-      for (j in 3 : p[i]) len_z_T += p[i] - 1;
+      for (j in 3 : p[i]) 
+        len_z_T += p[i] - 1;
     }
   }
   if (prior_dist_for_cov == 2) {
@@ -4993,10 +5635,14 @@ transformed parameters {
     if (bK2 > 0) bMat2 = make_b_matrix(z_b, theta_L, p, l, 2);
   }
   else if (prior_dist_for_cov == 2) {
-    if (bK1 == 1) bMat1 = (bSd1[1] * z_bMat1)';
-    else if (bK1 > 1) bMat1 = (diag_pre_multiply(bSd1, bCholesky1) * z_bMat1)';
-    if (bK2 == 1) bMat2 = (bSd2[1] * z_bMat2)';
-    else if (bK2 > 1) bMat2 = (diag_pre_multiply(bSd2, bCholesky2) * z_bMat2)';
+    if (bK1 == 1) 
+      bMat1 = (bSd1[1] * z_bMat1)';
+    else if (bK1 > 1) 
+      bMat1 = (diag_pre_multiply(bSd1, bCholesky1) * z_bMat1)';
+    if (bK2 == 1) 
+      bMat2 = (bSd2[1] * z_bMat2)';
+    else if (bK2 > 1) 
+      bMat2 = (diag_pre_multiply(bSd2, bCholesky2) * z_bMat2)';
   }
 }
 model {
@@ -5099,12 +5745,18 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined polr.stan
 functions {
   real CDF_polr(real x, int link) {
-    if (link == 1) return (inv_logit(x));
-    else if (link == 2) return (Phi(x));
-    else if (link == 3) return (gumbel_cdf(x, 0, 1));
-    else if (link == 4) return (inv_cloglog(x));
-    else if (link == 5) return (cauchy_cdf(x, 0, 1));
-    else reject("Invalid link");
+    if (link == 1) 
+      return (inv_logit(x));
+    else if (link == 2) 
+      return (Phi(x));
+    else if (link == 3) 
+      return (gumbel_cdf(x, 0, 1));
+    else if (link == 4) 
+      return (inv_cloglog(x));
+    else if (link == 5) 
+      return (cauchy_cdf(x, 0, 1));
+    else 
+      reject("Invalid link");
     return x;
   }
   vector pw_polr(int[] y, vector eta, vector cutpoints, int link, real alpha) {
@@ -5112,55 +5764,75 @@ functions {
     int J = rows(cutpoints) + 1;
     vector[N] ll;
     if (link < 1 || link > 5) reject("Invalid link");
-    if (alpha == 1) for (n in 1 : N) {
-      if (y[n] == 1) ll[n] = CDF_polr(cutpoints[1] - eta[n], link);
-      else if (y[n] == J) ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link);
-      else ll[n] = CDF_polr(cutpoints[y[n]] - eta[n], link) - CDF_polr(cutpoints[y[n] - 1] - eta[n], link);
-    }
-    else for (n in 1 : N) {
-      if (y[n] == 1) ll[n] = CDF_polr(cutpoints[1] - eta[n], link) ^ alpha;
-      else if (y[n] == J) ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link) ^ alpha;
-      else reject("alpha not allowed with more than 2 outcome categories");
-    }
+    if (alpha == 1) 
+      for (n in 1 : N) {
+        if (y[n] == 1) 
+          ll[n] = CDF_polr(cutpoints[1] - eta[n], link);
+        else if (y[n] == J) 
+          ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link);
+        else 
+          ll[n] = CDF_polr(cutpoints[y[n]] - eta[n], link) - CDF_polr(cutpoints[y[n] - 1] - eta[n], link);
+      }
+    else 
+      for (n in 1 : N) {
+        if (y[n] == 1) 
+          ll[n] = CDF_polr(cutpoints[1] - eta[n], link) ^ alpha;
+        else if (y[n] == J) 
+          ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link) ^ alpha;
+        else 
+          reject("alpha not allowed with more than 2 outcome categories");
+      }
     return log(ll);
   }
   vector make_cutpoints(vector probabilities, real scale, int link) {
     int C = rows(probabilities) - 1;
     vector[C] cutpoints;
     real running_sum = 0;
-    if (link == 1) for (c in 1 : C) {
-      running_sum += probabilities[c];
-      cutpoints[c] = logit(running_sum);
-    }
-    else if (link == 2) for (c in 1 : C) {
-      running_sum += probabilities[c];
-      cutpoints[c] = inv_Phi(running_sum);
-    }
-    else if (link == 3) for (c in 1 : C) {
-      running_sum += probabilities[c];
-      cutpoints[c] = -log(-log(running_sum));
-    }
-    else if (link == 4) for (c in 1 : C) {
-      running_sum += probabilities[c];
-      cutpoints[c] = log(-log1m(running_sum));
-    }
-    else if (link == 5) for (c in 1 : C) {
-      running_sum += probabilities[c];
-      cutpoints[c] = tan(pi() * (running_sum - 0.5));
-    }
-    else reject("invalid link");
+    if (link == 1) 
+      for (c in 1 : C) {
+        running_sum += probabilities[c];
+        cutpoints[c] = logit(running_sum);
+      }
+    else if (link == 2) 
+      for (c in 1 : C) {
+        running_sum += probabilities[c];
+        cutpoints[c] = inv_Phi(running_sum);
+      }
+    else if (link == 3) 
+      for (c in 1 : C) {
+        running_sum += probabilities[c];
+        cutpoints[c] = -log(-log(running_sum));
+      }
+    else if (link == 4) 
+      for (c in 1 : C) {
+        running_sum += probabilities[c];
+        cutpoints[c] = log(-log1m(running_sum));
+      }
+    else if (link == 5) 
+      for (c in 1 : C) {
+        running_sum += probabilities[c];
+        cutpoints[c] = tan(pi() * (running_sum - 0.5));
+      }
+    else 
+      reject("invalid link");
     return scale * cutpoints;
   }
   real draw_ystar_rng(real lower_, real upper_, real eta, int link) {
     int iter = 0;
     real ystar = not_a_number();
     if (lower_ >= upper_) reject("lower_ must be less than upper_");
-    if (link == 1) while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta, 1);
-    else if (link == 2) while (!(ystar > lower_ && ystar < upper_)) ystar = normal_rng(eta, 1);
-    else if (link == 3) while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
-    else if (link == 4) while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(uniform_rng(0, 1)));
-    else if (link == 5) while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
-    else reject("invalid link");
+    if (link == 1) 
+      while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta, 1);
+    else if (link == 2) 
+      while (!(ystar > lower_ && ystar < upper_)) ystar = normal_rng(eta, 1);
+    else if (link == 3) 
+      while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
+    else if (link == 4) 
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(uniform_rng(0, 1)));
+    else if (link == 5) 
+      while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
+    else 
+      reject("invalid link");
     return ystar;
   }
   vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u, vector b);
@@ -5204,7 +5876,8 @@ transformed data {
   real<lower=0> sqrt_Nm1 = sqrt(N - 1.0);
   int<lower=0, upper=1> is_constant = 1;
   vector[0] beta_smooth;
-  for (j in 1 : J) if (prior_counts[j] != 1) is_constant = 0;
+  for (j in 1 : J) 
+    if (prior_counts[j] != 1) is_constant = 0;
 }
 parameters {
   simplex[J] pi;
@@ -5231,24 +5904,33 @@ transformed parameters {
 model {
   vector[N] eta;
   if (K > 0) {
-    if (dense_X) eta = X[1] * beta;
-    else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+    if (dense_X) 
+      eta = X[1] * beta;
+    else 
+      eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
   }
-  else eta = rep_vector(0.0, N);
+  else 
+    eta = rep_vector(0.0, N);
   if (has_offset == 1) eta += offset_;
   if (K_smooth) eta += S * beta_smooth;
   if (has_weights == 0 && prior_PD == 0) {
-    if (is_skewed == 0) target += pw_polr(y, eta, cutpoints, link, 1.0);
-    else target += pw_polr(y, eta, cutpoints, link, alpha[1]);
+    if (is_skewed == 0) 
+      target += pw_polr(y, eta, cutpoints, link, 1.0);
+    else 
+      target += pw_polr(y, eta, cutpoints, link, alpha[1]);
   }
   else if (prior_PD == 0) {
-    if (is_skewed == 0) target += dot_product(weights, pw_polr(y, eta, cutpoints, link, 1.0));
-    else target += dot_product(weights, pw_polr(y, eta, cutpoints, link, alpha[1]));
+    if (is_skewed == 0) 
+      target += dot_product(weights, pw_polr(y, eta, cutpoints, link, 1.0));
+    else 
+      target += dot_product(weights, pw_polr(y, eta, cutpoints, link, alpha[1]));
   }
   if (is_constant == 0) target += dirichlet_lpdf(pi| prior_counts);
   if (prior_dist == 1) {
-    if (K > 1) target += beta_lpdf(R2| half_K, regularization);
-    else target += beta_lpdf(square(R2)| half_K, regularization) + log(fabs(R2));
+    if (K > 1) 
+      target += beta_lpdf(R2| half_K, regularization);
+    else 
+      target += beta_lpdf(square(R2)| half_K, regularization) + log(fabs(R2));
   }
   if (is_skewed == 1) target += gamma_lpdf(alpha| shape, rate);
 }
@@ -5256,16 +5938,21 @@ generated quantities {
   vector[J > 2 ? J : 1] mean_PPD = rep_vector(0, J > 2 ? J : 1);
   vector[do_residuals ? N : 0] residuals;
   vector[J - 1] zeta;
-  if (dense_X) zeta = cutpoints + dot_product(xbar, beta);
-  else zeta = cutpoints;
+  if (dense_X) 
+    zeta = cutpoints + dot_product(xbar, beta);
+  else 
+    zeta = cutpoints;
   if (J == 2) zeta *= -1.0;
   {
     vector[N] eta;
     if (K > 0) {
-      if (dense_X) eta = X[1] * beta;
-      else eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
+      if (dense_X) 
+        eta = X[1] * beta;
+      else 
+        eta = csr_matrix_times_vector2(N, K, w_X, v_X, u_X, beta);
     }
-    else eta = rep_vector(0.0, N);
+    else 
+      eta = rep_vector(0.0, N);
     if (has_offset == 1) eta += offset_;
     if (K_smooth) eta += S * beta_smooth;
     for (n in 1 : N) {
@@ -5274,17 +5961,21 @@ generated quantities {
       real previous;
       real first = CDF_polr(cutpoints[1] - eta[n], link);
       previous = first;
-      if (is_skewed) theta[1] = first ^ alpha[1];
-      else theta[1] = first;
+      if (is_skewed) 
+        theta[1] = first ^ alpha[1];
+      else 
+        theta[1] = first;
       for (j in 2 : (J - 1)) {
         real current = CDF_polr(cutpoints[j] - eta[n], link);
         theta[j] = current - previous;
         previous = current;
       }
-      if (is_skewed == 0) theta[J] = 1 - previous;
-      else theta[J] = 1 - previous ^ alpha[1];
+      if (is_skewed == 0) 
+        theta[J] = 1 - previous;
+      else 
+        theta[J] = 1 - previous ^ alpha[1];
       if (previous <= 0 || previous >= 1) {
-
+        
       }
       else if (J == 2) {
         mean_PPD[1] += bernoulli_rng(theta[J]);
@@ -5295,9 +5986,12 @@ generated quantities {
       }
       if (do_residuals) {
         real ystar;
-        if (y[n] == 1) ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n], link);
-        else if (y[n] == J) ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(), eta[n], link);
-        else ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]], eta[n], link);
+        if (y[n] == 1) 
+          ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n], link);
+        else if (y[n] == J) 
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(), eta[n], link);
+        else 
+          ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]], eta[n], link);
         residuals[n] = ystar - eta[n];
       }
     }

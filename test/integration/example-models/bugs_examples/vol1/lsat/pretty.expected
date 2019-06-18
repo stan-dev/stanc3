@@ -21,7 +21,8 @@ transformed data {
       }
     }
   }
-  for (i in 1 : N) ones[i] <- 1.0;
+  for (i in 1 : N) 
+    ones[i] <- 1.0;
 }
 parameters {
   real alpha[T];
@@ -32,13 +33,15 @@ model {
   alpha ~ normal(0, 100.);
   theta ~ normal(0, 1);
   beta ~ normal(0.0, 100.);
-  for (k in 1 : T) r[k] ~ bernoulli_logit(beta * theta - alpha[k] * ones);
+  for (k in 1 : T) 
+    r[k] ~ bernoulli_logit(beta * theta - alpha[k] * ones);
 }
 generated quantities {
   real mean_alpha;
   real a[T];
   mean_alpha <- mean(alpha);
-  for (t in 1 : T) a[t] <- alpha[t] - mean_alpha;
+  for (t in 1 : T) 
+    a[t] <- alpha[t] - mean_alpha;
 }
 
 

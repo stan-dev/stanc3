@@ -26,7 +26,8 @@ model {
 }
 generated quantities {
   real<lower=0, upper=1> p[nyears];
-  for (i in 1 : nyears) p[i] = inv_logit(logit_p[i]);
+  for (i in 1 : nyears) 
+    p[i] = inv_logit(logit_p[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLM_Poisson.stan

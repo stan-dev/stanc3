@@ -40,7 +40,8 @@ generated quantities {
   for (j in 1 : NT) {
     real s;
     s <- 0;
-    for (i in 1 : j) s <- s + dL0[i];
+    for (i in 1 : j) 
+      s <- s + dL0[i];
     S_treat[j] <- pow(exp(-s), exp(beta * -0.5));
     S_placebo[j] <- pow(exp(-s), exp(beta * 0.5));
   }

@@ -19,7 +19,8 @@ generated quantities {
   int<lower=1, upper=K> ranking[K];
   {
     int ranked_index[K] = sort_indices_desc(alpha);
-    for (k in 1 : K) ranking[ranked_index[k]] = k;
+    for (k in 1 : K) 
+      ranking[ranked_index[k]] = k;
   }
 }
 
@@ -63,7 +64,8 @@ generated quantities {
   int<lower=1, upper=K> ranking[K];
   {
     int ranked_index[K] = sort_indices_desc(alpha);
-    for (k in 1 : K) ranking[ranked_index[k]] = k;
+    for (k in 1 : K) 
+      ranking[ranked_index[k]] = k;
   }
 }
 
@@ -88,13 +90,15 @@ transformed parameters {
 model {
   sigma ~ lognormal(0, 0.5);
   alpha_std ~ normal(0, 1);
-  for (n in 1 : N) y[n] ~ bernoulli_logit(sum(alpha[team1[n]]) - sum(alpha[team0[n]]));
+  for (n in 1 : N) 
+    y[n] ~ bernoulli_logit(sum(alpha[team1[n]]) - sum(alpha[team0[n]]));
 }
 generated quantities {
   int<lower=1, upper=K> ranking[K];
   {
     int ranked_index[K] = sort_indices_desc(alpha);
-    for (k in 1 : K) ranking[ranked_index[k]] = k;
+    for (k in 1 : K) 
+      ranking[ranked_index[k]] = k;
   }
 }
 

@@ -16,7 +16,8 @@ parameters {
   cov_matrix[5] Sigma[10];
 }
 model {
-  for (i in 1 : 10) y[i] ~ multi_normal(mu[i], Sigma[i]);
+  for (i in 1 : 10) 
+    y[i] ~ multi_normal(mu[i], Sigma[i]);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format good_fun_name.stan
@@ -80,7 +81,8 @@ model {
   y ~ normal(0, 1);
   for (i in 1 : 10) {
     real x[i];
-    for (j in 1 : i) x[j] = j * j;
+    for (j in 1 : i) 
+      x[j] = j * j;
   }
   for (i in 1 : 5) {
     vector[i] v;

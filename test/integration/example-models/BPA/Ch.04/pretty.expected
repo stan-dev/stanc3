@@ -19,11 +19,13 @@ transformed parameters {
 }
 model {
   alpha ~ normal(0, 10);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLM1.stan
@@ -47,11 +49,13 @@ transformed parameters {
 }
 model {
   alpha ~ normal(0, 10);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLM2.stan
@@ -80,11 +84,13 @@ transformed parameters {
 model {
   alpha ~ normal(0, 10);
   eps2 ~ normal(0, 10);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM1.stan
@@ -111,11 +117,13 @@ transformed parameters {
 model {
   alpha ~ normal(mu_alpha, sd_alpha);
   mu_alpha ~ normal(0, 10);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM2.stan
@@ -145,11 +153,13 @@ model {
   mu ~ normal(0, 10);
   alpha ~ normal(0, sd_alpha);
   eps ~ normal(0, sd_eps);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM3.stan
@@ -175,18 +185,22 @@ parameters {
 }
 transformed parameters {
   matrix[nyear, nsite] log_lambda;
-  for (j in 1 : nsite) for (i in 1 : nyear) log_lambda[i, j] = mu + beta2 * first[i, j] + alpha[j] + eps[i];
+  for (j in 1 : nsite) 
+    for (i in 1 : nyear) 
+      log_lambda[i, j] = mu + beta2 * first[i, j] + alpha[j] + eps[i];
 }
 model {
   mu ~ normal(0, 10);
   beta2 ~ normal(0, 10);
   alpha ~ normal(0, sd_alpha);
   eps ~ normal(0, sd_eps);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM4.stan
@@ -214,7 +228,9 @@ parameters {
 }
 transformed parameters {
   matrix[nyear, nsite] log_lambda;
-  for (j in 1 : nsite) for (i in 1 : nyear) log_lambda[i, j] = mu + beta1 * year[i] + beta2 * first[i, j] + alpha[j] + eps[i];
+  for (j in 1 : nsite) 
+    for (i in 1 : nyear) 
+      log_lambda[i, j] = mu + beta1 * year[i] + beta2 * first[i, j] + alpha[j] + eps[i];
 }
 model {
   mu ~ normal(0, 10);
@@ -222,11 +238,13 @@ model {
   beta2 ~ normal(0, 10);
   alpha ~ normal(0, sd_alpha);
   eps ~ normal(0, sd_eps);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM5.stan
@@ -258,7 +276,9 @@ parameters {
 }
 transformed parameters {
   matrix[nyear, nsite] log_lambda;
-  for (j in 1 : nsite) for (i in 1 : nyear) log_lambda[i, j] = mu + beta1 * year[i] + beta2 * first[i, j] + alpha[j] + gamma[newobs[i, j]] + eps[i];
+  for (j in 1 : nsite) 
+    for (i in 1 : nyear) 
+      log_lambda[i, j] = mu + beta1 * year[i] + beta2 * first[i, j] + alpha[j] + gamma[newobs[i, j]] + eps[i];
 }
 model {
   mu ~ normal(0, 10);
@@ -267,11 +287,13 @@ model {
   alpha ~ normal(0, sd_alpha);
   eps ~ normal(0, sd_eps);
   gamma ~ normal(0, sd_gamma);
-  for (i in 1 : nobs) obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
+  for (i in 1 : nobs) 
+    obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
   int<lower=0> mis[nmis];
-  for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
+  for (i in 1 : nmis) 
+    mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM_Poisson.stan
@@ -335,7 +357,8 @@ parameters {
 }
 transformed parameters {
   vector[nsite] log_lambda[nyear];
-  for (i in 1 : nyear) log_lambda[i] = alpha + beta[1] * year[i] + beta[2] * year_squared[i] + beta[3] * year_cubed[i] + eps[i];
+  for (i in 1 : nyear) 
+    log_lambda[i] = alpha + beta[1] * year[i] + beta[2] * year_squared[i] + beta[3] * year_cubed[i] + eps[i];
 }
 model {
   alpha ~ normal(mu, sd_alpha);

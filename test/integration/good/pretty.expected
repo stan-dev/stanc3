@@ -985,21 +985,27 @@ functions {
   int foo(int a) {
     while (1) break;
     while (0) continue;
-    for (i in 1 : 10) break;
-    for (i in 1 : 10) continue;
+    for (i in 1 : 10) 
+      break;
+    for (i in 1 : 10) 
+      continue;
     while (1) {
       int b;
       b = 5;
       break;
     }
     while (1) {
-      if (0) break;
-      else if (1) break;
-      else break;
+      if (0) 
+        break;
+      else if (1) 
+        break;
+      else 
+        break;
     }
     while (1) while (0) break;
     while (1) {
-      for (i in 1 : 10) break;
+      for (i in 1 : 10) 
+        break;
     }
     while (1) {
       int vs[2, 3];
@@ -1067,13 +1073,13 @@ functions {
     }
     while (1) {
       while (1) {
-
+        
       }
       break;
     }
     while (1) {
       while (1) {
-
+        
       }
       continue;
     }
@@ -1111,9 +1117,12 @@ parameters {
 }
 model {
   int x;
-  if (x) y ~ normal(0, 1);
-  else if (!x) y ~ normal(0, 1);
-  else y ~ normal(0, 1);
+  if (x) 
+    y ~ normal(0, 1);
+  else if (!x) 
+    y ~ normal(0, 1);
+  else 
+    y ~ normal(0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format conditional_op_fun_promote.stan
@@ -1399,7 +1408,8 @@ transformed parameters {
 }
 model {
   theta ~ beta(1, 1);
-  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  for (n in 1 : N) 
+    y[n] ~ bernoulli(theta);
 }
 generated quantities {
   int gq_i1 = 1 ? N : N;
@@ -1766,7 +1776,8 @@ model {
   real lm2 = 2.0;
   real lm3 = tp2;
   theta ~ beta(1, 1);
-  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  for (n in 1 : N) 
+    y[n] ~ bernoulli(theta);
 }
 generated quantities {
   real gq_d_tp1 = 1.0;
@@ -2300,10 +2311,13 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format fun-return-typ4.stan
 functions {
   real foo() {
-    if (1) reject("");
+    if (1) 
+      reject("");
     else {
-      if (1) ;
-      else reject("");
+      if (1) 
+        ;
+      else 
+        reject("");
     }
     reject("");
   }
@@ -2445,7 +2459,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format fun_as_stmt.stan
 functions {
   void foo_lp() {
-
+    
   }
 }
 model {
@@ -2579,8 +2593,10 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format functions-promote-return.stan
 functions {
   vector foo(vector x, real y) {
-    if (y < 10) return log(x);
-    else return log(y * x);
+    if (y < 10) 
+      return log(x);
+    else 
+      return log(y * x);
   }
 }
 transformed data {
@@ -2867,8 +2883,10 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes4.stan
 functions {
   real foo() {
-    if (215) return 24;
-    else reject("");
+    if (215) 
+      return 24;
+    else 
+      reject("");
   }
 }
 
@@ -3591,7 +3609,8 @@ model {
   if (1 > 2) {
     a ~ normal(0, 1);
   }
-  else if2 ~ normal(0, 1);
+  else 
+    if2 ~ normal(0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format keywords-else.stan
@@ -4134,7 +4153,8 @@ transformed parameters {
   y_hat = integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
 }
 model {
-  for (t in 1 : 10) y[t] ~ normal(y_hat[t], sigma);
+  for (t in 1 : 10) 
+    y[t] ~ normal(y_hat[t], sigma);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
@@ -4390,7 +4410,8 @@ data {
 }
 transformed data {
   vector[N] y;
-  for (n in 1 : N) y[n] = normal_rng(0, 1);
+  for (n in 1 : N) 
+    y[n] = normal_rng(0, 1);
   print(y);
 }
 parameters {
@@ -5043,7 +5064,8 @@ parameters {
   vector[10] y;
 }
 model {
-  for (n in 1 : 10) y ~ normal(0, 1);
+  for (n in 1 : 10) 
+    y ~ normal(0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning1.stan

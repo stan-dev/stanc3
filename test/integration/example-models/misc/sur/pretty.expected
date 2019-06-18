@@ -14,7 +14,8 @@ parameters {
 model {
   vector[K] mu[N];
   matrix[K, K] L_Sigma;
-  for (n in 1 : N) mu[n] <- beta * x[n];
+  for (n in 1 : N) 
+    mu[n] <- beta * x[n];
   L_Sigma <- diag_post_multiply(L_Omega, L_sigma);
   to_vector(beta) ~ normal(0, 5);
   L_Omega ~ lkj_corr_cholesky(4);
@@ -62,7 +63,8 @@ parameters {
 }
 model {
   vector[K] mu[N];
-  for (n in 1 : N) mu[n] <- beta * x[n];
+  for (n in 1 : N) 
+    mu[n] <- beta * x[n];
   y ~ multi_normal(mu, Sigma);
 }
 

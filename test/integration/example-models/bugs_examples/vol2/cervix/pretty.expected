@@ -27,7 +27,9 @@ model {
   q ~ uniform(0, 1);
   beta0C ~ normal(0, 320);
   beta ~ normal(0, 320);
-  for (i in 1 : 2) for (j in 1 : 2) phi[i, j] ~ uniform(0, 1);
+  for (i in 1 : 2) 
+    for (j in 1 : 2) 
+      phi[i, j] ~ uniform(0, 1);
 }
 generated quantities {
   real gamma1;

@@ -18,7 +18,8 @@ transformed parameters {
 }
 model {
   real m[N];
-  for (i in 1 : N) m[i] <- alpha - beta * pow(lambda, x[i]);
+  for (i in 1 : N) 
+    m[i] <- alpha - beta * pow(lambda, x[i]);
   Y ~ normal(m, sigma);
   alpha ~ normal(0.0, 1000);
   beta ~ normal(0.0, 1000);

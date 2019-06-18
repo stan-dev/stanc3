@@ -17,7 +17,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = a1[person[i]] + a2[person[i]] * time[i];
+  for (i in 1 : N) 
+    y_hat[i] = a1[person[i]] + a2[person[i]] * time[i];
 }
 model {
   mu_a1 ~ normal(0, 1);
@@ -50,7 +51,8 @@ transformed parameters {
   vector[N] y_hat;
   a1 = mu_a1 + sigma_a1 * eta1;
   a2 = 0.1 * mu_a2 + sigma_a2 * eta2;
-  for (i in 1 : N) y_hat[i] = a1[person[i]] + a2[person[i]] * time[i];
+  for (i in 1 : N) 
+    y_hat[i] = a1[person[i]] + a2[person[i]] * time[i];
 }
 model {
   mu_a1 ~ normal(0, 1);
@@ -81,7 +83,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = beta * time[i] * treatment[i] + a1[person[i]] + a2[person[i]] * time[i];
+  for (i in 1 : N) 
+    y_hat[i] = beta * time[i] * treatment[i] + a1[person[i]] + a2[person[i]] * time[i];
 }
 model {
   mu_a1 ~ normal(0, 1);
@@ -117,7 +120,8 @@ transformed parameters {
   vector[N] y_hat;
   a1 = 10 * mu_a1 + sigma_a1 * eta1;
   a2 = 0.1 * mu_a2 + sigma_a2 * eta2;
-  for (i in 1 : N) y_hat[i] = beta * time[i] * treatment[i] + a1[person[i]] + a2[person[i]] * time[i];
+  for (i in 1 : N) 
+    y_hat[i] = beta * time[i] * treatment[i] + a1[person[i]] + a2[person[i]] * time[i];
 }
 model {
   mu_a1 ~ normal(0, 1);

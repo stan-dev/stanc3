@@ -17,7 +17,8 @@ model {
 }
 generated quantities {
   vector[N] theta;
-  for (n in 1 : N) theta[n] <- inv_logit(alpha[n]);
+  for (n in 1 : N) 
+    theta[n] <- inv_logit(alpha[n]);
 }
 
 
@@ -80,21 +81,30 @@ generated quantities {
   int p_max;
   int p_mean;
   int p_sd;
-  for (n in 1 : N) theta[n] <- inv_logit(mu + sigma * alpha_std[n]);
+  for (n in 1 : N) 
+    theta[n] <- inv_logit(mu + sigma * alpha_std[n]);
   log_p_new <- 0;
-  for (n in 1 : N) log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
-  for (n in 1 : N) z[n] <- binomial_rng(K_new[n], theta[n]);
+  for (n in 1 : N) 
+    log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
+  for (n in 1 : N) 
+    z[n] <- binomial_rng(K_new[n], theta[n]);
   some_ability_gt_350 <- (max(theta) > 0.35);
-  for (n in 1 : N) avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
-  for (n in 1 : N) ability_gt_400[n] <- (theta[n] > 0.400);
+  for (n in 1 : N) 
+    avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
+  for (n in 1 : N) 
+    ability_gt_400[n] <- (theta[n] > 0.400);
   {
     int dsc[N];
     dsc <- sort_indices_desc(theta);
-    for (n in 1 : N) rnk[dsc[n]] <- n;
+    for (n in 1 : N) 
+      rnk[dsc[n]] <- n;
   }
-  for (n in 1 : N) is_best[n] <- (rnk[n] == 1);
-  for (n in 1 : N) y_rep[n] <- binomial_rng(K[n], theta[n]);
-  for (n in 1 : N) y_pop_rep[n] <- binomial_rng(K[n], inv_logit(normal_rng(mu, sigma)));
+  for (n in 1 : N) 
+    is_best[n] <- (rnk[n] == 1);
+  for (n in 1 : N) 
+    y_rep[n] <- binomial_rng(K[n], theta[n]);
+  for (n in 1 : N) 
+    y_pop_rep[n] <- binomial_rng(K[n], inv_logit(normal_rng(mu, sigma)));
   min_y_rep <- min(y_rep);
   max_y_rep <- max(y_rep);
   mean_y_rep <- mean(to_vector(y_rep));
@@ -463,19 +473,27 @@ generated quantities {
   int p_mean;
   int p_sd;
   log_p_new <- 0;
-  for (n in 1 : N) log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
-  for (n in 1 : N) z[n] <- binomial_rng(K_new[n], theta[n]);
+  for (n in 1 : N) 
+    log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
+  for (n in 1 : N) 
+    z[n] <- binomial_rng(K_new[n], theta[n]);
   some_ability_gt_350 <- (max(theta) > 0.35);
-  for (n in 1 : N) avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
-  for (n in 1 : N) ability_gt_400[n] <- (theta[n] > 0.400);
+  for (n in 1 : N) 
+    avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
+  for (n in 1 : N) 
+    ability_gt_400[n] <- (theta[n] > 0.400);
   {
     int dsc[N];
     dsc <- sort_indices_desc(theta);
-    for (n in 1 : N) rnk[dsc[n]] <- n;
+    for (n in 1 : N) 
+      rnk[dsc[n]] <- n;
   }
-  for (n in 1 : N) is_best[n] <- (rnk[n] == 1);
-  for (n in 1 : N) y_rep[n] <- binomial_rng(K[n], theta[n]);
-  for (n in 1 : N) y_pop_rep[n] <- binomial_rng(K[n], beta_rng(phi * kappa, (1 - phi) * kappa));
+  for (n in 1 : N) 
+    is_best[n] <- (rnk[n] == 1);
+  for (n in 1 : N) 
+    y_rep[n] <- binomial_rng(K[n], theta[n]);
+  for (n in 1 : N) 
+    y_pop_rep[n] <- binomial_rng(K[n], beta_rng(phi * kappa, (1 - phi) * kappa));
   min_y_rep <- min(y_rep);
   max_y_rep <- max(y_rep);
   mean_y_rep <- mean(to_vector(y_rep));
@@ -826,18 +844,25 @@ generated quantities {
   int p_mean;
   int p_sd;
   log_p_new <- 0;
-  for (n in 1 : N) log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
-  for (n in 1 : N) z[n] <- binomial_rng(K_new[n], theta[n]);
+  for (n in 1 : N) 
+    log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
+  for (n in 1 : N) 
+    z[n] <- binomial_rng(K_new[n], theta[n]);
   some_ability_gt_350 <- (max(theta) > 0.35);
-  for (n in 1 : N) avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
-  for (n in 1 : N) ability_gt_400[n] <- (theta[n] > 0.400);
+  for (n in 1 : N) 
+    avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
+  for (n in 1 : N) 
+    ability_gt_400[n] <- (theta[n] > 0.400);
   {
     int dsc[N];
     dsc <- sort_indices_desc(theta);
-    for (n in 1 : N) rnk[dsc[n]] <- n;
+    for (n in 1 : N) 
+      rnk[dsc[n]] <- n;
   }
-  for (n in 1 : N) is_best[n] <- (rnk[n] == 1);
-  for (n in 1 : N) y_rep[n] <- binomial_rng(K[n], theta[n]);
+  for (n in 1 : N) 
+    is_best[n] <- (rnk[n] == 1);
+  for (n in 1 : N) 
+    y_rep[n] <- binomial_rng(K[n], theta[n]);
   min_y_rep <- min(y_rep);
   max_y_rep <- max(y_rep);
   mean_y_rep <- mean(to_vector(y_rep));
@@ -1175,12 +1200,17 @@ generated quantities {
   int<lower=0, upper=1> p_sd;
   theta <- rep_vector(phi, N);
   log_p_new <- 0;
-  for (n in 1 : N) log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
-  for (n in 1 : N) z[n] <- binomial_rng(K_new[n], theta[n]);
+  for (n in 1 : N) 
+    log_p_new <- log_p_new + binomial_log(y_new[n], K_new[n], theta[n]);
+  for (n in 1 : N) 
+    z[n] <- binomial_rng(K_new[n], theta[n]);
   some_ability_gt_350 <- (max(theta) > 0.35);
-  for (n in 1 : N) avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
-  for (n in 1 : N) ability_gt_400[n] <- (theta[n] > 0.400);
-  for (n in 1 : N) y_rep[n] <- binomial_rng(K[n], theta[n]);
+  for (n in 1 : N) 
+    avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
+  for (n in 1 : N) 
+    ability_gt_400[n] <- (theta[n] > 0.400);
+  for (n in 1 : N) 
+    y_rep[n] <- binomial_rng(K[n], theta[n]);
   min_y_rep <- min(y_rep);
   max_y_rep <- max(y_rep);
   mean_y_rep <- mean(to_vector(y_rep));
