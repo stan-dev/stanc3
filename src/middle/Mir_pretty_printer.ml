@@ -169,14 +169,14 @@ let pp_statement pp_e pp_s ppf = function
         decl_type decl_id
 
 let pp_io_block ppf = function
-  | Data -> Fmt.string ppf "data"
   | Parameters -> Fmt.string ppf "parameters"
   | TransformedParameters -> Fmt.string ppf "transformed_parameters"
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
-let pp_io_var pp_e ppf (name, (sized_ty, io_block)) =
-  Fmt.pf ppf "@[<h>%a %a %s;@]" pp_io_block io_block (pp_sizedtype pp_e)
-    sized_ty name
+let pp_output_var pp_e ppf
+    (name, {out_unconstrained_st; out_constrained_st; out_block}) =
+  Fmt.pf ppf "@[<h>%a %a %s;@]" pp_io_block out_block (pp_sizedtype pp_e)
+    out_constrained_st name
 
 let pp_block label pp_elem ppf elems =
   Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
@@ -184,13 +184,14 @@ let pp_block label pp_elem ppf elems =
     elems ;
   Format.pp_force_newline ppf ()
 
-let pp_io_var_block label pp_e = pp_block label (pp_io_var pp_e)
+let pp_input_var pp_e ppf (name, sized_ty)=
+  Fmt.pf ppf "@[<h>%a %s;@]" (pp_sizedtype pp_e) sized_ty name
 
 let pp_input_vars pp_e ppf {input_vars; _} =
-  pp_io_var_block "input_vars" pp_e ppf input_vars
+  pp_block "input_vars" (pp_input_var pp_e) ppf input_vars
 
 let pp_output_vars pp_e ppf {output_vars; _} =
-  pp_io_var_block "output_vars" pp_e ppf output_vars
+  pp_block "output_vars" (pp_output_var pp_e) ppf output_vars
 
 let pp_functions_block pp_s ppf {functions_block; _} =
   pp_block "functions" pp_s ppf functions_block
