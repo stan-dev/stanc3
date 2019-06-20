@@ -1002,16 +1002,13 @@ class one_var_per_block_model : public prob_grad {
               }}
           }}
       }}
-    for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
+    for (size_t sym4__ = 1; sym4__ <= (N + ((N * (N - 1)) / 2)); ++sym4__) {
       {
-        for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
+        for (size_t sym5__ = 1; sym5__ <= (K + 1); ++sym5__) {
           {
-            for (size_t sym6__ = 1; sym6__ <= (K + 1); ++sym6__) {
+            for (size_t sym6__ = 1; sym6__ <= K; ++sym6__) {
               {
-                for (size_t sym7__ = 1; sym7__ <= K; ++sym7__) {
-                  {
-                    param_names__.push_back(std::string() + "cov_matparam" + '.' + std::to_string(sym7__) + '.' + std::to_string(sym6__) + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
-                  }}
+                param_names__.push_back(std::string() + "cov_matparam" + '.' + std::to_string(sym6__) + '.' + std::to_string(sym5__) + '.' + std::to_string(sym4__));
               }}
           }}
       }}
