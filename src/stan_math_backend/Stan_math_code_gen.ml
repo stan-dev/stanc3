@@ -170,7 +170,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
   in
   let get_param_st = function
-    | _, (st, Parameters) -> (
+    | _, {out_block= Parameters; out_unconstrained_st= st; _} -> (
       match get_dims st with
       | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
       | ls -> Some ls )
@@ -239,7 +239,9 @@ let pp_get_dims ppf p =
   let pp_output_var ppf =
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
       ppf
-      List.(map ~f:get_dims (map ~f:(fun (_, (st, _)) -> st) p.output_vars))
+      List.(
+        map ~f:get_dims
+          (map ~f:(fun (_, {out_constrained_st= st; _}) -> st) p.output_vars))
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   pp_method ppf "void" "get_dims" params
@@ -268,15 +270,6 @@ let pp_write_array ppf p =
   in
   pp_method_b ppf "void" "write_array" params intro p.generate_quantities
 
-let separated_output_vars p =
-  List.partition3_map
-    ~f:(function
-      | id, (st, Parameters) -> `Fst (id, st)
-      | id, (st, TransformedParameters) -> `Snd (id, st)
-      | id, (st, GeneratedQuantities) -> `Trd (id, st)
-      | _ -> raise_s [%message "Why is there data in output_vars"])
-    p.output_vars
-
 let pp_string_lit = fmt "%S"
 
 let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
@@ -303,7 +296,17 @@ let pp_constrained_param_names ppf p =
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true" ]
   in
-  let paramvars, tparamvars, gqvars = separated_output_vars p in
+  let paramvars, tparamvars, gqvars =
+    List.partition3_map
+      ~f:(function
+        | id, {out_block= Parameters; out_constrained_st= st; _} ->
+            `Fst (id, st)
+        | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+            `Snd (id, st)
+        | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+            `Trd (id, st))
+      p.output_vars
+  in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
     pf ppf "param_names__.push_back(std::string() + %a);"
@@ -343,7 +346,18 @@ let pp_unconstrained_param_names ppf p =
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true" ]
   in
-  let paramvars, tparamvars, gqvars = separated_output_vars p in
+  let paramvars, tparamvars, gqvars =
+    List.partition3_map
+      ~f:(function
+        | id, {out_block= Parameters; out_unconstrained_st= st; _} ->
+            `Fst (id, st)
+        | id, {out_block= TransformedParameters; out_unconstrained_st= st; _}
+          ->
+            `Snd (id, st)
+        | id, {out_block= GeneratedQuantities; out_unconstrained_st= st; _} ->
+            `Trd (id, st))
+      p.output_vars
+  in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
     pf ppf "param_names__.push_back(std::string() + %a);"
@@ -571,9 +585,7 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"." ~with_:"_"
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
-let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
-  let p, s = Locations.prepare_prog p in
-  (* First, do some transformations on the MIR itself before we begin printing it.*)
+let trans_prog p =
   let fix_data_reads stmts =
     { stmt= Decl {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
     ; smeta= Locations.no_span_num }
@@ -582,13 +594,16 @@ let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
     |> List.concat_map ~f:add_pos_reset
     |> List.map ~f:use_pos_in_readdata
   in
-  let p =
-    { p with
-      prog_name= escape_name p.prog_name
-    ; prepare_data= fix_data_reads p.prepare_data
-    ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
-    ; transform_inits= fix_data_reads p.transform_inits }
-  in
+  { p with
+    prog_name= escape_name p.prog_name
+  ; prepare_data= fix_data_reads p.prepare_data
+  ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
+  ; transform_inits= fix_data_reads p.transform_inits }
+
+let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
+  (* First, do some transformations on the MIR itself before we begin printing it.*)
+  let p, s = Locations.prepare_prog p in
+  let p = trans_prog p in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
     version includes p.prog_name usings Locations.pp_globals s
     (list ~sep:cut pp_fun_def) p.functions_block pp_model p ;

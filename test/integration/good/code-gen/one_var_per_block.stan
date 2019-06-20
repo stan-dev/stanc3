@@ -12,6 +12,7 @@ transformed data {
 parameters {
   vector<lower=0>[N] param[K];
   matrix<lower=0>[N,N] matparam[K,K+1];
+  cov_matrix[N] cov_matparam[K,K+1];
 }
 transformed parameters {
   vector<lower=0>[N] tparam[K];

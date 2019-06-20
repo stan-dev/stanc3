@@ -790,8 +790,8 @@ let optimize_ad_levels mir =
     let initial_ad_variables =
       Set.Poly.of_list
         (List.filter_map
-           ~f:(fun (v, (_, b)) ->
-             match b with Parameters -> Some v | _ -> None )
+           ~f:(fun (v, {out_block; _}) ->
+             match out_block with Parameters -> Some v | _ -> None )
            mir.output_vars)
     in
     let ad_levels =

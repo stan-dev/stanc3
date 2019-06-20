@@ -90,7 +90,7 @@ let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let {stmt; smeta} = block_wrapping {stmt; smeta} in
   (* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before.
-     Note that this should not change the semantics as we are only inserting blocks around the whole body of a for-, while- or if-body. 
+     Note that this should not change the semantics as we are only inserting blocks around the whole body of a for-, while- or if-body.
      These are already local scopes.
      The blocks make sure that the program with the inserted location update is still well-formed C++ though.
    *)
@@ -105,16 +105,9 @@ let rec pp_statement (ppf : Format.formatter)
         {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
       in
       pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
-      (* XXX In stan2 this often generates:
-                stan::model::assign(theta,
-                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
-                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))),
-                            "assigning variable theta");
-            }
-        *)
   | Assignment (lhs, {expr= Lit (Str, s); _}) ->
       pf ppf "%a = %S;" pp_indexed_simple lhs s
-  | Assignment (lhs, {expr= Lit (_, s); _}) ->
+  | Assignment (((_, []) as lhs), {expr= Lit (_, s); _}) ->
       pf ppf "%a = %s;" pp_indexed_simple lhs s
   | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
     when internal_fn_of_string f = Some FnMakeArray ->

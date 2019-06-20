@@ -1543,8 +1543,8 @@ let%expect_test "constant propagation, model block local scope" =
     }
 
     output_vars {
-      generated_quantities int i;
-      generated_quantities int j;
+      generated_quantities int i; //int
+      generated_quantities int j; //int
     } |}]
 
 let%expect_test "expression propagation" =
@@ -3364,7 +3364,7 @@ let%expect_test "adlevel_optimization" =
       }
 
       output_vars {
-        parameters real w;
+        parameters real w; //real
       } |}]
 
 let%expect_test "adlevel_optimization expressions" =
@@ -3607,6 +3607,6 @@ let%expect_test "adlevel_optimization 2" =
       }
 
       output_vars {
-        parameters real w;
-        transformed_parameters real w_trans;
+        parameters real w; //real
+        transformed_parameters real w_trans; //real
       } |}]
