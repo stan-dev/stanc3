@@ -486,6 +486,7 @@ using std::vector;
 using stan::io::dump;
 using stan::math::lgamma;
 using stan::model::prob_grad;
+using stan::model::rvalue;
 using stan::model::assign;
 using stan::model::cons_list;
 using stan::model::index_uni;

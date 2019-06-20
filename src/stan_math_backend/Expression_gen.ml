@@ -257,7 +257,7 @@ and pp_compiler_internal_fn ut f ppf es =
   | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
+  pf ppf "rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
 and pp_indexed_simple ppf (vident, idcs) =
   let minus_one e =
@@ -350,7 +350,7 @@ let%expect_test "pp_expr9" =
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
   [%expect
-    {| stan::model::rvalue(a, cons_list(index_omni(), nil_index_list()), "pretty printed e") |}]
+    {| rvalue(a, cons_list(index_omni(), nil_index_list()), "pretty printed e") |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"
