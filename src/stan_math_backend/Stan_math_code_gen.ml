@@ -170,7 +170,7 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
   in
   let get_param_st = function
-    | _, {out_block= Parameters; out_constrained_st= st; _} -> (
+    | _, {out_block= Parameters; out_unconstrained_st= st; _} -> (
       match get_dims st with
       | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
       | ls -> Some ls )
