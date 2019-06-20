@@ -557,7 +557,7 @@ class one_var_per_block_model : public prob_grad {
     num_params_r__ = 0U;
     num_params_r__ += K * N;
     num_params_r__ += K * (K + 1) * N * N;
-    num_params_r__ += K * (K + 1) * N * N;
+    num_params_r__ += K * (K + 1) * (N + ((N * (N - 1)) / 2));
     
   }
   template <bool propto__, bool jacobian__, typename T__>
