@@ -190,7 +190,7 @@ let pp_ctor ppf (p : typed_prog) =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
   in
   let get_param_st = function
-    | _, (st, Parameters) -> (
+    | _, {out_block= Parameters; out_constrained_st= st; _} -> (
       match get_dims st with
       | [] -> Some [{expr= Lit (Int, "1"); emeta= internal_meta}]
       | ls -> Some ls )
@@ -255,7 +255,9 @@ let pp_get_dims ppf p =
   let pp_output_var ppf =
     (list ~sep:pp_dim_sep (list ~sep:cut pp_dim))
       ppf
-      List.(map ~f:get_dims (map ~f:(fun (_, (st, _)) -> st) p.output_vars))
+      List.(
+        map ~f:get_dims
+          (map ~f:(fun (_, {out_constrained_st= st; _}) -> st) p.output_vars))
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   pp_method ppf "void" "get_dims" params
@@ -287,10 +289,11 @@ let pp_write_array ppf p =
 let separated_output_vars p =
   List.partition3_map
     ~f:(function
-      | id, (st, Parameters) -> `Fst (id, st)
-      | id, (st, TransformedParameters) -> `Snd (id, st)
-      | id, (st, GeneratedQuantities) -> `Trd (id, st)
-      | _ -> raise_s [%message "Why is there data in output_vars"])
+      | id, {out_block= Parameters; out_constrained_st= st; _} -> `Fst (id, st)
+      | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+          `Snd (id, st)
+      | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+          `Trd (id, st))
     p.output_vars
 
 let pp_string_lit = fmt "%S"

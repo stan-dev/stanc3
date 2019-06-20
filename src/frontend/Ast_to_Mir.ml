@@ -595,8 +595,9 @@ let gen_write decl_id sizedtype =
 let gen_writes block_filter vars =
   List.filter_map
     ~f:(function
-      | decl_id, (st, block) when block = block_filter ->
-          Some (gen_write decl_id st)
+      | decl_id, {out_block; out_constrained_st; _}
+        when out_block = block_filter ->
+          Some (gen_write decl_id out_constrained_st)
       | _ -> None)
     vars
 
@@ -616,7 +617,6 @@ let get_block block prog =
   | Parameters -> prog.Ast.parametersblock
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
-  | Data -> prog.datablock
 
 let migrate_checks_to_end_of_block stmts =
   let is_check = contains_fn (string_of_internal_fn FnCheck) in
@@ -651,21 +651,30 @@ let trans_prog filename p : typed_prog =
     p
   in
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
+  let get_name_size s =
+    match s.Ast.stmt with
+    | Ast.VarDecl {sizedtype; identifier; transformation; _} ->
+        [(identifier.name, trans_sizedtype sizedtype, transformation)]
+    | _ -> []
+  in
   let grab_names_sizes block =
-    let get_name_size s =
-      match s.Ast.stmt with
-      | Ast.VarDecl {sizedtype; identifier; _} ->
-          Some (identifier.name, (trans_sizedtype sizedtype, block))
-      | _ -> None
-    in
     List.map ~f:get_name_size (Option.value ~default:[] (get_block block p))
+    |> List.concat_map
+         ~f:
+           (List.map ~f:(fun (n, s, t) ->
+                ( n
+                , { out_constrained_st= s
+                  ; out_unconstrained_st= param_size t s
+                  ; out_block= block } ) ))
   in
   let output_vars =
     [ grab_names_sizes Parameters
     ; grab_names_sizes TransformedParameters
     ; grab_names_sizes GeneratedQuantities ]
-    |> List.concat |> List.filter_opt
-  and input_vars = grab_names_sizes Data |> List.filter_opt in
+    |> List.concat
+  and input_vars =
+    map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
+  in
   let datab =
     map
       (trans_stmt

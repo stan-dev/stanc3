@@ -168,30 +168,11 @@ let pp_statement pp_e pp_s ppf = function
         (pp_possiblysizedtype pp_e)
         decl_type decl_id
 
-let pp_io_block ppf = function
-  | Parameters -> Fmt.string ppf "parameters"
-  | TransformedParameters -> Fmt.string ppf "transformed_parameters"
-  | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
-
-let pp_output_var pp_e ppf
-    (name, {out_unconstrained_st; out_constrained_st; out_block}) =
-  Fmt.pf ppf "@[<h>%a %a %s;@]" pp_io_block out_block (pp_sizedtype pp_e)
-    out_constrained_st name
-
 let pp_block label pp_elem ppf elems =
   Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label
     Fmt.(list ~sep:cut pp_elem)
     elems ;
   Format.pp_force_newline ppf ()
-
-let pp_input_var pp_e ppf (name, sized_ty)=
-  Fmt.pf ppf "@[<h>%a %s;@]" (pp_sizedtype pp_e) sized_ty name
-
-let pp_input_vars pp_e ppf {input_vars; _} =
-  pp_block "input_vars" (pp_input_var pp_e) ppf input_vars
-
-let pp_output_vars pp_e ppf {output_vars; _} =
-  pp_block "output_vars" (pp_output_var pp_e) ppf output_vars
 
 let pp_functions_block pp_s ppf {functions_block; _} =
   pp_block "functions" pp_s ppf functions_block
@@ -207,11 +188,9 @@ let pp_generate_quantities pp_s ppf {generate_quantities; _} =
 let pp_transform_inits pp_s ppf {transform_inits; _} =
   pp_block "transform_inits" pp_s ppf transform_inits
 
-let pp_prog pp_e pp_s ppf prog =
+let pp_prog pp_s ppf prog =
   Format.open_vbox 0 ;
   pp_functions_block (pp_fun_def pp_s) ppf prog ;
-  Fmt.cut ppf () ;
-  pp_input_vars pp_e ppf prog ;
   Fmt.cut ppf () ;
   pp_prepare_data pp_s ppf prog ;
   Fmt.cut ppf () ;
@@ -220,8 +199,6 @@ let pp_prog pp_e pp_s ppf prog =
   pp_generate_quantities pp_s ppf prog ;
   Fmt.cut ppf () ;
   pp_transform_inits pp_s ppf prog ;
-  Fmt.cut ppf () ;
-  pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
 let rec pp_expr_typed_located ppf {expr; _} =
@@ -230,7 +207,7 @@ let rec pp_expr_typed_located ppf {expr; _} =
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 
-let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
+let pp_typed_prog ppf prog = pp_prog pp_stmt_loc ppf prog
 
 (** Return two lines before and after the specified location. *)
 let pp_context ppf ({filename; line_num; col_num; _} : Mir.location) =

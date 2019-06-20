@@ -42,10 +42,6 @@ let%expect_test "map_rec_stmt_loc" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -67,10 +63,6 @@ let%expect_test "map_rec_stmt_loc" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -110,10 +102,6 @@ let%expect_test "map_rec_state_stmt_loc" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -135,10 +123,6 @@ let%expect_test "map_rec_state_stmt_loc" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       }
 
@@ -184,10 +168,6 @@ let%expect_test "inline functions" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -212,10 +192,6 @@ let%expect_test "inline functions" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -255,10 +231,6 @@ let%expect_test "inline functions 2" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -278,10 +250,6 @@ let%expect_test "inline functions 2" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -477,10 +445,6 @@ let%expect_test "do not inline recursive functions" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -496,10 +460,6 @@ let%expect_test "do not inline recursive functions" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -544,10 +504,6 @@ let%expect_test "inline function in for loop" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -584,10 +540,6 @@ let%expect_test "inline function in for loop" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -632,10 +584,6 @@ let%expect_test "inline function in for loop 2" =
             return (f(z) + 24);
           }
         }
-      }
-
-      input_vars {
-
       }
 
       prepare_data {
@@ -687,10 +635,6 @@ let%expect_test "inline function in for loop 2" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "inline function in while loop" =
@@ -734,10 +678,6 @@ let%expect_test "inline function in while loop" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -766,10 +706,6 @@ let%expect_test "inline function in while loop" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -814,10 +750,6 @@ let%expect_test "inline function in if then else" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -839,10 +771,6 @@ let%expect_test "inline function in if then else" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       }
 
@@ -899,10 +827,6 @@ let%expect_test "inline function in ternary if " =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -939,10 +863,6 @@ let%expect_test "inline function in ternary if " =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -983,10 +903,6 @@ let%expect_test "inline function multiple returns " =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1012,10 +928,6 @@ let%expect_test "inline function multiple returns " =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1051,10 +963,6 @@ let%expect_test "inline function indices " =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1083,10 +991,6 @@ let%expect_test "inline function indices " =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1122,10 +1026,6 @@ let%expect_test "inline function and " =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1155,10 +1055,6 @@ let%expect_test "inline function and " =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1193,10 +1089,6 @@ let%expect_test "inline function or " =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1227,10 +1119,6 @@ let%expect_test "inline function or " =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop" =
@@ -1251,10 +1139,6 @@ let%expect_test "unroll nested loop" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -1289,10 +1173,6 @@ let%expect_test "unroll nested loop" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "unroll nested loop with break" =
@@ -1315,10 +1195,6 @@ let%expect_test "unroll nested loop with break" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -1348,10 +1224,6 @@ let%expect_test "unroll nested loop with break" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1383,10 +1255,6 @@ let%expect_test "constant propagation" =
 
     }
 
-    input_vars {
-
-    }
-
     prepare_data {
       data int i;
       i = 42;
@@ -1407,10 +1275,6 @@ let%expect_test "constant propagation" =
     }
 
     transform_inits {
-
-    }
-
-    output_vars {
 
     } |}]
 
@@ -1445,10 +1309,6 @@ let%expect_test "constant propagation, local scope" =
 
     }
 
-    input_vars {
-
-    }
-
     prepare_data {
       data int i;
       i = 42;
@@ -1472,10 +1332,6 @@ let%expect_test "constant propagation, local scope" =
     }
 
     transform_inits {
-
-    }
-
-    output_vars {
 
     } |}]
 
@@ -1509,10 +1365,6 @@ let%expect_test "constant propagation, model block local scope" =
 
     }
 
-    input_vars {
-
-    }
-
     prepare_data {
 
     }
@@ -1540,11 +1392,6 @@ let%expect_test "constant propagation, model block local scope" =
 
     transform_inits {
 
-    }
-
-    output_vars {
-      generated_quantities int i;
-      generated_quantities int j;
     } |}]
 
 let%expect_test "expression propagation" =
@@ -1574,10 +1421,6 @@ let%expect_test "expression propagation" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
         data int i;
         data int j;
@@ -1597,10 +1440,6 @@ let%expect_test "expression propagation" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1633,10 +1472,6 @@ let%expect_test "copy propagation" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
         data int i;
         data int j;
@@ -1658,10 +1493,6 @@ let%expect_test "copy propagation" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1694,10 +1525,6 @@ let%expect_test "dead code elimination" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
         data array[int, 2] i;
         i = FnMakeArray__(3, 2);
@@ -1718,10 +1545,6 @@ let%expect_test "dead code elimination" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1752,10 +1575,6 @@ let%expect_test "dead code elimination decl" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1774,10 +1593,6 @@ let%expect_test "dead code elimination decl" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1803,10 +1618,6 @@ let%expect_test "dead code elimination, for loop" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1823,10 +1634,6 @@ let%expect_test "dead code elimination, for loop" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1856,10 +1663,6 @@ let%expect_test "dead code elimination, while loop" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1877,10 +1680,6 @@ let%expect_test "dead code elimination, while loop" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1920,10 +1719,6 @@ let%expect_test "dead code elimination, if then" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1946,10 +1741,6 @@ let%expect_test "dead code elimination, if then" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -1977,10 +1768,6 @@ let%expect_test "dead code elimination, nested" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -1997,10 +1784,6 @@ let%expect_test "dead code elimination, nested" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2029,10 +1812,6 @@ let%expect_test "partial evaluation" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2053,10 +1832,6 @@ let%expect_test "partial evaluation" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2085,10 +1860,6 @@ let%expect_test "try partially evaluate" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2109,10 +1880,6 @@ let%expect_test "try partially evaluate" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2139,10 +1906,6 @@ let%expect_test "partially evaluate with equality check" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2161,10 +1924,6 @@ let%expect_test "partially evaluate with equality check" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2214,10 +1973,6 @@ let%expect_test "partially evaluate glm" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2260,10 +2015,6 @@ let%expect_test "partially evaluate glm" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion" =
@@ -2289,10 +2040,6 @@ let%expect_test "lazy code motion" =
 
     }
 
-    input_vars {
-
-    }
-
     prepare_data {
 
     }
@@ -2312,10 +2059,6 @@ let%expect_test "lazy code motion" =
     }
 
     transform_inits {
-
-    }
-
-    output_vars {
 
     } |}]
 
@@ -2338,10 +2081,6 @@ let%expect_test "lazy code motion, 2" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -2368,10 +2107,6 @@ let%expect_test "lazy code motion, 2" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 3" =
@@ -2397,10 +2132,6 @@ let%expect_test "lazy code motion, 3" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2421,10 +2152,6 @@ let%expect_test "lazy code motion, 3" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2461,10 +2188,6 @@ let%expect_test "lazy code motion, 4" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -2506,10 +2229,6 @@ let%expect_test "lazy code motion, 4" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 5" =
@@ -2543,10 +2262,6 @@ let%expect_test "lazy code motion, 5" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -2592,10 +2307,6 @@ let%expect_test "lazy code motion, 5" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 6" =
@@ -2623,10 +2334,6 @@ let%expect_test "lazy code motion, 6" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2650,10 +2357,6 @@ let%expect_test "lazy code motion, 6" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2697,10 +2400,6 @@ let%expect_test "lazy code motion, 7" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -2770,10 +2469,6 @@ let%expect_test "lazy code motion, 7" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "lazy code motion, 8, _lp functions not optimized" =
@@ -2814,10 +2509,6 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
         }
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2838,10 +2529,6 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2867,10 +2554,6 @@ let%expect_test "lazy code motion, 9" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2891,10 +2574,6 @@ let%expect_test "lazy code motion, 9" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2923,10 +2602,6 @@ let%expect_test "lazy code motion, 10" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -2947,10 +2622,6 @@ let%expect_test "lazy code motion, 10" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -2982,10 +2653,6 @@ let%expect_test "lazy code motion, 11" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -3009,10 +2676,6 @@ let%expect_test "lazy code motion, 11" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -3041,10 +2704,6 @@ let%expect_test "lazy code motion, 12" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -3069,10 +2728,6 @@ let%expect_test "lazy code motion, 12" =
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -3105,10 +2760,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -3148,10 +2799,6 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
       }
 
       transform_inits {
-
-      }
-
-      output_vars {
 
       } |}]
 
@@ -3221,10 +2868,6 @@ let%expect_test "one-step loop unrolling" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
         data int x;
         if((x <= 6)) {
@@ -3273,10 +2916,6 @@ let%expect_test "one-step loop unrolling" =
 
       transform_inits {
 
-      }
-
-      output_vars {
-
       } |}]
 
 let%expect_test "adlevel_optimization" =
@@ -3314,10 +2953,6 @@ let%expect_test "adlevel_optimization" =
   [%expect
     {|
       functions {
-
-      }
-
-      input_vars {
 
       }
 
@@ -3361,10 +2996,6 @@ let%expect_test "adlevel_optimization" =
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
-      }
-
-      output_vars {
-        parameters real w;
       } |}]
 
 let%expect_test "adlevel_optimization expressions" =
@@ -3553,10 +3184,6 @@ let%expect_test "adlevel_optimization 2" =
 
       }
 
-      input_vars {
-
-      }
-
       prepare_data {
 
       }
@@ -3604,9 +3231,4 @@ let%expect_test "adlevel_optimization 2" =
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
-      }
-
-      output_vars {
-        parameters real w;
-        transformed_parameters real w_trans;
       } |}]
