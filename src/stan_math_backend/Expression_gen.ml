@@ -127,7 +127,7 @@ and gen_operator_app = function
   | Transpose ->
       fun ppf es ->
         pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
+          (if is_scalar (List.hd_exn es) then "%a" else "transpose(%a)")
           es
   | PNot -> fun ppf es -> pp_unary ppf "logical_negation(%a)" es
   | Minus ->
