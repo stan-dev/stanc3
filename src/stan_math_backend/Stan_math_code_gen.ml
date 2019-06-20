@@ -270,16 +270,6 @@ let pp_write_array ppf p =
   in
   pp_method_b ppf "void" "write_array" params intro p.generate_quantities
 
-let separated_output_vars p =
-  List.partition3_map
-    ~f:(function
-      | id, {out_block= Parameters; out_constrained_st= st; _} -> `Fst (id, st)
-      | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
-          `Snd (id, st)
-      | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
-          `Trd (id, st))
-    p.output_vars
-
 let pp_string_lit = fmt "%S"
 
 let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
@@ -306,7 +296,17 @@ let pp_constrained_param_names ppf p =
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true" ]
   in
-  let paramvars, tparamvars, gqvars = separated_output_vars p in
+  let paramvars, tparamvars, gqvars =
+    List.partition3_map
+      ~f:(function
+        | id, {out_block= Parameters; out_constrained_st= st; _} ->
+            `Fst (id, st)
+        | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+            `Snd (id, st)
+        | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+            `Trd (id, st))
+      p.output_vars
+  in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
     pf ppf "param_names__.push_back(std::string() + %a);"
@@ -346,7 +346,18 @@ let pp_unconstrained_param_names ppf p =
     ; "bool emit_transformed_parameters__ = true"
     ; "bool emit_generated_quantities__ = true" ]
   in
-  let paramvars, tparamvars, gqvars = separated_output_vars p in
+  let paramvars, tparamvars, gqvars =
+    List.partition3_map
+      ~f:(function
+        | id, {out_block= Parameters; out_unconstrained_st= st; _} ->
+            `Fst (id, st)
+        | id, {out_block= TransformedParameters; out_unconstrained_st= st; _}
+          ->
+            `Snd (id, st)
+        | id, {out_block= GeneratedQuantities; out_unconstrained_st= st; _} ->
+            `Trd (id, st))
+      p.output_vars
+  in
   let emit_name ppf (name, idcs) =
     let to_string = fmt "std::to_string(%s)" in
     pf ppf "param_names__.push_back(std::string() + %a);"
