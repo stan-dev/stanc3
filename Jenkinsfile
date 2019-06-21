@@ -143,7 +143,8 @@ pipeline {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
                             //args "-u root --entrypoint=\'\'"
-                            //args "--entrypoint=\'\'"
+                            args "-u opam"
+                            //args "-u opam --entrypoint=\'\'"
                         }
                     }
                     steps {
