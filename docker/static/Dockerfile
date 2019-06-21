@@ -19,6 +19,8 @@ FROM ocaml/opam2:alpine
 # RUN opam switch create 4.07 ocaml-base-compiler.4.07.1 && \
 #   opam switch 4.07
 
+RUN opam update
+
 # Copy script and install build dependencies
 COPY ./scripts/install_build_deps.sh ./
 RUN bash -x install_build_deps.sh
