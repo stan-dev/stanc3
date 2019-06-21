@@ -56,7 +56,7 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Run stat_comp_benchmarks end-to-end") {
-            when { not { anyOf { buildingTag(); branch 'master' } } }
+            when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
