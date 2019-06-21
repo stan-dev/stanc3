@@ -280,19 +280,23 @@ and pp_indexed_single ppf (var, idcs) =
         | _ -> FunApp (StanLib, string_of_operator Minus, [e; loop_bottom]) )
     }
   in
-  let pp_idx ppf (t, idx) =
-    match t with
-    | UMatrix | UVector | URowVector -> pf ppf ".coeff(%a)" pp_expr idx
-    | _ -> pf ppf "[%a]" pp_expr idx
+  let rec pp_idx ppf = function
+    | UMatrix, [idx] -> pf ppf ".row(%a)" pp_expr idx
+    | UMatrix, [idx1; idx2] ->
+        pf ppf ".coeff(%a, %a)" pp_expr idx1 pp_expr idx2
+    | UVector, [idx] | URowVector, [idx] -> pf ppf ".coeff(%a)" pp_expr idx
+    | UArray t, idx :: idcs -> pf ppf "[%a]%a" pp_expr idx pp_idx (t, idcs)
+    | _, [] -> ()
+    | _ -> raise_s [%message "poorly formed Indexed"]
   in
-  pf ppf "%a%a" pp_expr var (list ~sep:nop pp_idx)
-    List.(
-      idcs
-      |> map ~f:(function
-           | Single e -> e
-           | _ -> raise_s [%message "only works with Single indices"] )
-      |> map ~f:minus_one
-      |> zip_exn (take (unwind_unsized_type var.emeta.mtype) (length idcs)))
+  pf ppf "%a%a" pp_expr var pp_idx
+    ( var.emeta.mtype
+    , List.(
+        idcs
+        |> map ~f:(function
+             | Single e -> e
+             | _ -> raise_s [%message "only works with Single indices"] )
+        |> map ~f:minus_one) )
 
 and pp_expr ppf e =
   match e.expr with
