@@ -2,10 +2,10 @@
 FROM ocaml/opam2:alpine-3.9-ocaml-4.07
 
 # #Define distro_style and install OS dependencies
-# LABEL distro_style="apk"
-# RUN apk update && apk upgrade && \
-#   apk add build-base bzip2 git tar curl ca-certificates openssl \
-#   patch rsync bash libx11-dev nano bubblewrap coreutils xz ncurses-dev m4 pcre-dev
+LABEL distro_style="apk"
+RUN apk update && apk upgrade && \
+  apk add build-base bzip2 git tar curl ca-certificates openssl \
+  patch rsync bash libx11-dev nano bubblewrap coreutils xz ncurses-dev m4 pcre-dev
 #
 # # Build ocaml and then opam from scratch
 # RUN git config --global user.email "docker@example.com" && \
