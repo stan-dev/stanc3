@@ -118,13 +118,13 @@ pipeline {
             failFast true
             parallel {
                 //stage("Build & test Mac OS X binary") {
-                    agent { label "osx && ocaml" }
-                    steps {
-                        runShell("""
-                    eval \$(opam env)
-                    cd scripts && bash -x install_build_deps.sh && cd ..
-                    dune subst
-                    dune build @install
+                //    agent { label "osx && ocaml" }
+                //    steps {
+                //        runShell("""
+                //    eval \$(opam env)
+                //    cd scripts && bash -x install_build_deps.sh && cd ..
+                //    dune subst
+                //    dune build @install
                 //""")
 
                 //        echo runShell("""
