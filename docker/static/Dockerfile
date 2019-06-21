@@ -1,6 +1,6 @@
 #Use Official Docker Images for OCAML/OPAM
 #https://github.com/ocaml/infrastructure/wiki/Containers
-FROM ocaml/opam2:alpine
+FROM ocaml/opam2:alpine-3.9-ocaml-4.07
 
 #Switch to root user so we can install apk packages
 USER root
