@@ -25,14 +25,14 @@ pipeline {
                description: "Check this box if you want to run all end-to-end tests.")
     }
     stages {
-        // stage('Kill previous builds') {
-        //     when {
-        //         not { branch 'develop' }
-        //         not { branch 'master' }
-        //         not { branch 'downstream_tests' }
-        //     }
-        //     steps { script { utils.killOldBuilds() } }
-        // }
+        stage('Kill previous builds') {
+            when {
+                not { branch 'develop' }
+                not { branch 'master' }
+                not { branch 'downstream_tests' }
+            }
+            steps { script { utils.killOldBuilds() } }
+        }
         // stage("Build & Test") {
         //     agent {
         //         dockerfile {
