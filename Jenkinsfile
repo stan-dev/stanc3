@@ -126,12 +126,10 @@ pipeline {
                     dune subst
                     dune build @install
                 """)
-
                         echo runShell("""
                     eval \$(opam env)
                     time dune runtest --verbose
                 """)
-
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         stash name:'mac-exe', includes:'bin/*'
                     }
@@ -142,7 +140,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u root --entrypoint=\'\'"
+                            args "-u opam"
                         }
                     }
                     steps {
