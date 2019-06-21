@@ -171,8 +171,11 @@ let%expect_test "parse minus unary" =
              (is_global false)))
            (smeta ((loc <opaque>))))
           ((stmt
-            (Assignment (assign_identifier ((name x) (id_loc <opaque>)))
-             (assign_indices ()) (assign_op Assign)
+            (Assignment
+             (assign_lhs
+              ((assign_identifier ((name x) (id_loc <opaque>))) (assign_indices ())
+               (assign_meta ((loc <opaque>)))))
+             (assign_op Assign)
              (assign_rhs
               ((expr
                 (PrefixOp PMinus
