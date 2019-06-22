@@ -3361,6 +3361,7 @@ let%expect_test "adlevel_optimization" =
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
+        FnWriteParam__(w);
       }
 
       output_vars {
@@ -3604,6 +3605,7 @@ let%expect_test "adlevel_optimization 2" =
       transform_inits {
         data real w;
         w = FnReadData__("w", "scalar");
+        FnWriteParam__(w);
       }
 
       output_vars {

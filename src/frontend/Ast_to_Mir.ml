@@ -743,12 +743,9 @@ let trans_prog filename p : typed_prog =
     @ compiler_if "emit_generated_quantities__" gq_stmts
   in
   let transform_inits =
-    map
-      (trans_stmt
-         { dread= Some ReadData
-         ; dconstrain= Some Unconstrain
-         ; dadlevel= DataOnly })
-      parametersblock
+    gen_from_block
+      {dread= Some ReadData; dconstrain= Some Unconstrain; dadlevel= DataOnly}
+      Parameters
   in
   { functions_block=
       Option.value_map functionblock ~default:[] ~f:(List.map ~f:trans_fun_def)
