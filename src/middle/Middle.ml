@@ -32,7 +32,7 @@ let string_of_location_span loc_sp =
     let open Format in
     let file_line_col_string =
       if bf = ef then
-        sprintf "file %s, %s" bf
+        sprintf "'%s', %s" bf
           ( if bl = el then
             sprintf "line %d, %s" bl
               ( if bc = ec then sprintf "column %d" bc
@@ -40,8 +40,8 @@ let string_of_location_span loc_sp =
           else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
           )
       else
-        sprintf "file %s, line %d, column %d to file %s, line %d, column %d" bf
-          bl bc ef el ec
+        sprintf "'%s', line %d, column %d to file %s, line %d, column %d" bf bl
+          bc ef el ec
     in
     let included_from_str =
       match begin_loc.included_from with
