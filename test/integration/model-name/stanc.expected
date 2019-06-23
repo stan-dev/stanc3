@@ -1,6 +1,6 @@
   $ ../../../../install/default/bin/stanc --name=foo  bad.stan
 
-Semantic error in file bad.stan, line 3, columns 6-9:
+Semantic error in 'bad.stan', line 3, columns 6-9:
    -------------------------------------------------
      1:  data {
      2:    // declare matching model name should fail

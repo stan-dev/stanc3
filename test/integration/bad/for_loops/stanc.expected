@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc assign_to_loop_var1.stan
 
-Semantic error in file assign_to_loop_var1.stan, line 5, columns 18-24:
+Semantic error in 'assign_to_loop_var1.stan', line 5, columns 18-24:
    -------------------------------------------------
      3:      int vs[2];
      4:      int y;
@@ -14,7 +14,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var2.stan
 
-Semantic error in file assign_to_loop_var2.stan, line 5, columns 18-24:
+Semantic error in 'assign_to_loop_var2.stan', line 5, columns 18-24:
    -------------------------------------------------
      3:      int vs[2,3];
      4:      int y;
@@ -28,7 +28,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var3.stan
 
-Semantic error in file assign_to_loop_var3.stan, line 6, columns 6-15:
+Semantic error in 'assign_to_loop_var3.stan', line 6, columns 6-15:
    -------------------------------------------------
      4:      int vs[2, 3];
      5:      for (v in vs) {
@@ -42,7 +42,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var4.stan
 
-Semantic error in file assign_to_loop_var4.stan, line 5, columns 6-12:
+Semantic error in 'assign_to_loop_var4.stan', line 5, columns 6-12:
    -------------------------------------------------
      3:      vector[2] vs;
      4:      for (v in vs) {
@@ -56,7 +56,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var5.stan
 
-Semantic error in file assign_to_loop_var5.stan, line 5, columns 6-14:
+Semantic error in 'assign_to_loop_var5.stan', line 5, columns 6-14:
    -------------------------------------------------
      3:      row_vector[2] vs;
      4:      for (v in vs) {
@@ -70,7 +70,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var6.stan
 
-Semantic error in file assign_to_loop_var6.stan, line 4, columns 4-12:
+Semantic error in 'assign_to_loop_var6.stan', line 4, columns 4-12:
    -------------------------------------------------
      2:    vector[2] vs;
      3:    for (v in vs) {
@@ -84,7 +84,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc assign_to_loop_var7.stan
 
-Semantic error in file assign_to_loop_var7.stan, line 4, columns 4-15:
+Semantic error in 'assign_to_loop_var7.stan', line 4, columns 4-15:
    -------------------------------------------------
      2:    matrix[2, 2] vs;
      3:    for (v in vs) {
@@ -98,7 +98,7 @@ Only expressions of array, matrix, row_vector and vector type may be indexed. In
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices0.stan
 
-Semantic error in file for_statements_bad_indices0.stan, line 5, columns 20-28:
+Semantic error in 'for_statements_bad_indices0.stan', line 5, columns 20-28:
    -------------------------------------------------
      3:      while (1) {
      4:        int vs[2];
@@ -112,7 +112,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices1.stan
 
-Semantic error in file for_statements_bad_indices1.stan, line 5, columns 20-29:
+Semantic error in 'for_statements_bad_indices1.stan', line 5, columns 20-29:
    -------------------------------------------------
      3:      while (1) {
      4:        int vs[2];
@@ -126,7 +126,7 @@ Only expressions of array, matrix, row_vector and vector type may be indexed. In
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices2.stan
 
-Semantic error in file for_statements_bad_indices2.stan, line 5, columns 20-26:
+Semantic error in 'for_statements_bad_indices2.stan', line 5, columns 20-26:
    -------------------------------------------------
      3:      while (1) {
      4:        int vs[2,3];
@@ -140,7 +140,7 @@ Cannot assign to function argument or loop identifier 'v'.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices3.stan
 
-Semantic error in file for_statements_bad_indices3.stan, line 5, columns 16-18:
+Semantic error in 'for_statements_bad_indices3.stan', line 5, columns 16-18:
    -------------------------------------------------
      3:      while (1) {
      4:        int xx = 3;
@@ -154,7 +154,7 @@ Foreach-loop must be over array, vector, row_vector or matrix. Instead found exp
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices4.stan
 
-Semantic error in file for_statements_bad_indices4.stan, line 6, columns 18-19:
+Semantic error in 'for_statements_bad_indices4.stan', line 6, columns 18-19:
    -------------------------------------------------
      4:        matrix[2,3] vs;
      5:        for (v in vs) {
