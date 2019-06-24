@@ -1,12 +1,12 @@
 open Core_kernel
 open Middle
 open Ast
+open Fmt
 
 let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 
 let rec generate_value (st : untyped_expression sizedtype) : untyped_expression
     =
-  ignore t ;
   let int_two = {expr= IntNumeral "2"; emeta= {loc= no_span}} in
   let real_two = {int_two with expr= RealNumeral "2."} in
   let row_vector_twos n =
@@ -33,3 +33,29 @@ let rec generate_value (st : untyped_expression sizedtype) : untyped_expression
   | SArray (st, e) ->
       let element = generate_value st in
       array element (get_length_exn e)
+
+let flatten e = failwith " not yet implemented "
+
+let rec print_value_r (e : untyped_expression) =
+  let expr = e.expr in
+  match expr with
+  | PostfixOp (e, Transpose) -> print_value_r e
+  | IntNumeral s -> s
+  | RealNumeral s -> s
+  | ArrayExpr _ ->
+      let vals, dims = flatten e in
+      let flattened_str = "c(" ^ String.concat ~sep:", " vals ^ ")" in
+      if List.length dims <= 1 then flattened_str
+      else
+        "structure(" ^ flattened_str ^ ", .Dim=" ^ "c("
+        ^ String.concat ~sep:", " dims
+        ^ ")" ^ ")"
+  | RowVectorExpr _ ->
+      let vals, dims = flatten e in
+      let flattened_str = "c(" ^ String.concat ~sep:", " vals ^ ")" in
+      if List.length dims <= 1 then flattened_str
+      else
+        "structure(" ^ flattened_str ^ ", .Dim=" ^ "c("
+        ^ String.concat ~sep:", " dims
+        ^ ")" ^ ")"
+  | _ -> failwith "This should never happen."
