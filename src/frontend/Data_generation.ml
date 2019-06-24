@@ -35,41 +35,43 @@ let rec generate_value (st : untyped_expression sizedtype) : untyped_expression
       array element (get_length_exn e)
 
 let rec flatten (e : untyped_expression) =
-  let expr = e.expr in
   let flatten_expr_list l =
-    List.fold (List.map ~f:flatten l) ~init:([], [])
-      ~f:(fun (vals, dims) (new_vals, _) ->
-        (vals @ new_vals, dims @ [Int.to_string (List.length l)]) )
+    List.fold (List.map ~f:flatten l) ~init:[] ~f:(fun vals new_vals ->
+        vals @ new_vals )
   in
-  match expr with
-  | IntNumeral s -> ([s], [])
-  | RealNumeral s -> ([s], [])
+  match e.expr with
+  | IntNumeral s -> [s]
+  | RealNumeral s -> [s]
   | ArrayExpr l -> flatten_expr_list l
-  | RowVectorExpr _ -> flatten_expr_list l
+  | RowVectorExpr l -> flatten_expr_list l
+  | _ -> failwith "This should never happen."
+
+let rec dims e =
+  let list_dims l = Int.to_string (List.length l) :: dims (List.hd_exn l) in
+  match e.expr with
+  | IntNumeral _ -> []
+  | RealNumeral _ -> []
+  | ArrayExpr l -> list_dims l
+  | RowVectorExpr l -> list_dims l
   | _ -> failwith "This should never happen."
 
 (* TODO: insert partial evaluation *)
 
 let rec print_value_r (e : untyped_expression) =
   let expr = e.expr in
+  let print_container e =
+    let vals, dims = (flatten e, dims e) in
+    let flattened_str = "c(" ^ String.concat ~sep:", " vals ^ ")" in
+    if List.length dims <= 1 then flattened_str
+    else
+      "structure(" ^ flattened_str ^ ", .Dim=" ^ "c("
+      ^ String.concat ~sep:", " dims
+      ^ ")" ^ ")"
+  in
   match expr with
   | PostfixOp (e, Transpose) -> print_value_r e
   | IntNumeral s -> s
   | RealNumeral s -> s
-  | ArrayExpr _ ->
-      let vals, dims = flatten e in
-      let flattened_str = "c(" ^ String.concat ~sep:", " vals ^ ")" in
-      if List.length dims <= 1 then flattened_str
-      else
-        "structure(" ^ flattened_str ^ ", .Dim=" ^ "c("
-        ^ String.concat ~sep:", " dims
-        ^ ")" ^ ")"
-  | RowVectorExpr _ ->
-      let vals, dims = flatten e in
-      let flattened_str = "c(" ^ String.concat ~sep:", " vals ^ ")" in
-      if List.length dims <= 1 then flattened_str
-      else
-        "structure(" ^ flattened_str ^ ", .Dim=" ^ "c("
-        ^ String.concat ~sep:", " dims
-        ^ ")" ^ ")"
+  | ArrayExpr _ -> print_container e
+  | RowVectorExpr _ -> print_container e
   | _ -> failwith "This should never happen."
