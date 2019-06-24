@@ -160,8 +160,10 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = 7;
       for (size_t j = 1; j <= J; ++j) {
         current_statement__ = 6;
-        assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"))), "assigning variable theta[(j - 1)]");
-      }
+        assign(theta, cons_list(index_uni(j), nil_index_list()), stan::math::fma(
+               tau,
+               rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"),
+               mu), "assigning variable theta[(j - 1)]");}
       {
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(mu, 0, 5));
@@ -258,8 +260,10 @@ class eight_schools_ncp_model : public prob_grad {
         current_statement__ = 7;
         for (size_t j = 1; j <= J; ++j) {
           current_statement__ = 6;
-          assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"))), "assigning variable theta[(j - 1)]");
-        }
+          assign(theta, cons_list(index_uni(j), nil_index_list()), stan::math::fma(
+                 tau,
+                 rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"),
+                 mu), "assigning variable theta[(j - 1)]");}
         current_statement__ = 0;
         for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
           current_statement__ = 0;
@@ -531,7 +535,7 @@ class one_var_per_block_model : public prob_grad {
       tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
       
       current_statement__ = 18;
-      tdatavar = {{2.0}};
+      tdatavar = {FnMakeArray__(2.0)};
       current_statement__ = 17;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         current_statement__ = 17;
