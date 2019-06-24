@@ -113,6 +113,7 @@ let use_file filename =
   let _ = Debugging.typed_ast_logger typed_ast in
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
+    let mir = Analysis_and_optimization.Optimize.static_loop_unrolling mir in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
