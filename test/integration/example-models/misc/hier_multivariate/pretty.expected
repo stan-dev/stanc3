@@ -27,7 +27,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file hier_multivariate.stan, line 20, column 14:
+Warning: deprecated language construct used in 'hier_multivariate.stan', line 20, column 14:
    -------------------------------------------------
     18:  model {
     19:    matrix[K,K] Sigma_beta;

@@ -42,7 +42,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file lsat.stan, line 1, column 0:
+Warning: deprecated language construct used in 'lsat.stan', line 1, column 0:
    -------------------------------------------------
      1:  # LSAT: item response
          ^
@@ -53,7 +53,7 @@ Warning: deprecated language construct used in file lsat.stan, line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file lsat.stan, line 2, column 0:
+Warning: deprecated language construct used in 'lsat.stan', line 2, column 0:
    -------------------------------------------------
      1:  # LSAT: item response
      2:  # http://www.openbugs.net/Examples/Lsat.html
@@ -65,7 +65,7 @@ Warning: deprecated language construct used in file lsat.stan, line 2, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file lsat.stan, line 18, column 14:
+Warning: deprecated language construct used in 'lsat.stan', line 18, column 14:
    -------------------------------------------------
     16:    for (j in 1:culm[1]) {
     17:      for (k in 1:T) {
@@ -78,7 +78,7 @@ Warning: deprecated language construct used in file lsat.stan, line 18, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file lsat.stan, line 24, column 16:
+Warning: deprecated language construct used in 'lsat.stan', line 24, column 16:
    -------------------------------------------------
     22:      for (j in (culm[i-1] + 1):culm[i]) {
     23:        for (k in 1:T) {
@@ -91,7 +91,7 @@ Warning: deprecated language construct used in file lsat.stan, line 24, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file lsat.stan, line 29, column 13:
+Warning: deprecated language construct used in 'lsat.stan', line 29, column 13:
    -------------------------------------------------
     27:    }
     28:    for (i in 1:N)
@@ -104,7 +104,7 @@ Warning: deprecated language construct used in file lsat.stan, line 29, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file lsat.stan, line 47, column 14:
+Warning: deprecated language construct used in 'lsat.stan', line 47, column 14:
    -------------------------------------------------
     45:    real mean_alpha; 
     46:    real a[T]; 
@@ -117,7 +117,7 @@ Warning: deprecated language construct used in file lsat.stan, line 47, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file lsat.stan, line 48, column 22:
+Warning: deprecated language construct used in 'lsat.stan', line 48, column 22:
    -------------------------------------------------
     46:    real a[T]; 
     47:    mean_alpha <- mean(alpha);

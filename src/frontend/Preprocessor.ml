@@ -25,7 +25,7 @@ let rec try_open_in paths fname pos =
     try
       let full_path = path ^ "/" ^ fname in
       ( In_channel.create full_path
-      , sprintf "%s, included from\nfile %s" full_path
+      , sprintf "%s, included from\n%s" full_path
           (Middle.string_of_location
              (Errors.location_of_position
                 (Stack.top_exn include_stack).lex_start_p)) )
@@ -48,7 +48,7 @@ let try_get_new_lexbuf fname pos =
   in
   let _ = new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p in
   let _ =
-    if dup_exists (Str.split (Str.regexp ", included from\nfile ") path) then
+    if dup_exists (Str.split (Str.regexp ", included from\n") path) then
       raise
         (Errors.SyntaxError
            (Include

@@ -25,19 +25,19 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'eight_schools_ncp.stan', line 8, columns 2-10)",
-                                                      " (in 'eight_schools_ncp.stan', line 9, columns 2-20)",
-                                                      " (in 'eight_schools_ncp.stan', line 10, columns 2-22)",
-                                                      " (in 'eight_schools_ncp.stan', line 14, columns 2-16)",
-                                                      " (in 'eight_schools_ncp.stan', line 16, columns 4-41)",
+                                                      " (in 'eight_schools_ncp.stan', line 8, column 2 to column 10)",
+                                                      " (in 'eight_schools_ncp.stan', line 9, column 2 to column 20)",
+                                                      " (in 'eight_schools_ncp.stan', line 10, column 2 to column 22)",
+                                                      " (in 'eight_schools_ncp.stan', line 14, column 2 to column 16)",
+                                                      " (in 'eight_schools_ncp.stan', line 16, column 4 to column 41)",
                                                       " (in 'eight_schools_ncp.stan', line 15, column 2 to line 16, column 41)",
-                                                      " (in 'eight_schools_ncp.stan', line 20, columns 2-20)",
-                                                      " (in 'eight_schools_ncp.stan', line 21, columns 2-21)",
-                                                      " (in 'eight_schools_ncp.stan', line 22, columns 2-29)",
-                                                      " (in 'eight_schools_ncp.stan', line 23, columns 2-27)",
-                                                      " (in 'eight_schools_ncp.stan', line 2, columns 2-17)",
-                                                      " (in 'eight_schools_ncp.stan', line 3, columns 2-12)",
-                                                      " (in 'eight_schools_ncp.stan', line 4, columns 2-25)"};
+                                                      " (in 'eight_schools_ncp.stan', line 20, column 2 to column 20)",
+                                                      " (in 'eight_schools_ncp.stan', line 21, column 2 to column 21)",
+                                                      " (in 'eight_schools_ncp.stan', line 22, column 2 to column 29)",
+                                                      " (in 'eight_schools_ncp.stan', line 23, column 2 to column 27)",
+                                                      " (in 'eight_schools_ncp.stan', line 2, column 2 to column 17)",
+                                                      " (in 'eight_schools_ncp.stan', line 3, column 2 to column 12)",
+                                                      " (in 'eight_schools_ncp.stan', line 4, column 2 to column 25)"};
 
 
 class eight_schools_ncp_model : public prob_grad {
@@ -428,25 +428,25 @@ using namespace stan::math;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'one_var_per_block.stan', line 13, columns 2-30)",
-                                                      " (in 'one_var_per_block.stan', line 14, columns 2-39)",
-                                                      " (in 'one_var_per_block.stan', line 15, columns 2-36)",
-                                                      " (in 'one_var_per_block.stan', line 18, columns 2-31)",
-                                                      " (in 'one_var_per_block.stan', line 19, columns 17-42)",
-                                                      " (in 'one_var_per_block.stan', line 19, columns 2-42)",
-                                                      " (in 'one_var_per_block.stan', line 27, columns 2-27)",
-                                                      " (in 'one_var_per_block.stan', line 28, columns 17-46)",
-                                                      " (in 'one_var_per_block.stan', line 28, columns 2-46)",
-                                                      " (in 'one_var_per_block.stan', line 22, columns 2-26)",
-                                                      " (in 'one_var_per_block.stan', line 23, columns 17-47)",
-                                                      " (in 'one_var_per_block.stan', line 23, columns 2-47)",
-                                                      " (in 'one_var_per_block.stan', line 24, columns 2-34)",
-                                                      " (in 'one_var_per_block.stan', line 5, columns 2-8)",
-                                                      " (in 'one_var_per_block.stan', line 6, columns 2-8)",
-                                                      " (in 'one_var_per_block.stan', line 7, columns 2-32)",
-                                                      " (in 'one_var_per_block.stan', line 10, columns 2-41)",
-                                                      " (in 'one_var_per_block.stan', line 2, columns 30-43)",
-                                                      " (in 'one_var_per_block.stan', line 2, columns 28-44)"};
+                                                      " (in 'one_var_per_block.stan', line 13, column 2 to column 30)",
+                                                      " (in 'one_var_per_block.stan', line 14, column 2 to column 39)",
+                                                      " (in 'one_var_per_block.stan', line 15, column 2 to column 36)",
+                                                      " (in 'one_var_per_block.stan', line 18, column 2 to column 31)",
+                                                      " (in 'one_var_per_block.stan', line 19, column 17 to column 42)",
+                                                      " (in 'one_var_per_block.stan', line 19, column 2 to column 42)",
+                                                      " (in 'one_var_per_block.stan', line 27, column 2 to column 27)",
+                                                      " (in 'one_var_per_block.stan', line 28, column 17 to column 46)",
+                                                      " (in 'one_var_per_block.stan', line 28, column 2 to column 46)",
+                                                      " (in 'one_var_per_block.stan', line 22, column 2 to column 26)",
+                                                      " (in 'one_var_per_block.stan', line 23, column 17 to column 47)",
+                                                      " (in 'one_var_per_block.stan', line 23, column 2 to column 47)",
+                                                      " (in 'one_var_per_block.stan', line 24, column 2 to column 34)",
+                                                      " (in 'one_var_per_block.stan', line 5, column 2 to column 8)",
+                                                      " (in 'one_var_per_block.stan', line 6, column 2 to column 8)",
+                                                      " (in 'one_var_per_block.stan', line 7, column 2 to column 32)",
+                                                      " (in 'one_var_per_block.stan', line 10, column 2 to column 41)",
+                                                      " (in 'one_var_per_block.stan', line 2, column 30 to column 43)",
+                                                      " (in 'one_var_per_block.stan', line 2, column 28 to column 44)"};
 
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__, T1__>::type

@@ -46,7 +46,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file leukfr.stan, line 31, column 15:
+Warning: deprecated language construct used in 'leukfr.stan', line 31, column 15:
    -------------------------------------------------
     29:    for(i in 1:N) {
     30:      for(j in 1:NT) {
@@ -59,7 +59,7 @@ Warning: deprecated language construct used in file leukfr.stan, line 31, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file leukfr.stan, line 32, column 16:
+Warning: deprecated language construct used in 'leukfr.stan', line 32, column 16:
    -------------------------------------------------
     30:      for(j in 1:NT) {
     31:        Y[i, j] <- int_step(obs_t[i] - t[j] + .000000001);
@@ -72,7 +72,7 @@ Warning: deprecated language construct used in file leukfr.stan, line 32, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file leukfr.stan, line 35, column 5:
+Warning: deprecated language construct used in 'leukfr.stan', line 35, column 5:
    -------------------------------------------------
     33:      }
     34:    }
@@ -85,7 +85,7 @@ Warning: deprecated language construct used in file leukfr.stan, line 35, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file leukfr.stan, line 36, column 5:
+Warning: deprecated language construct used in 'leukfr.stan', line 36, column 5:
    -------------------------------------------------
     34:    }
     35:    c <- 0.001; 
@@ -98,7 +98,7 @@ Warning: deprecated language construct used in file leukfr.stan, line 36, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file leukfr.stan, line 46, column 9:
+Warning: deprecated language construct used in 'leukfr.stan', line 46, column 9:
    -------------------------------------------------
     44:  transformed parameters {
     45:    real<lower=0> sigma; 
@@ -111,7 +111,7 @@ Warning: deprecated language construct used in file leukfr.stan, line 46, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file leukfr.stan, line 56, column 25:
+Warning: deprecated language construct used in 'leukfr.stan', line 56, column 25:
    -------------------------------------------------
     54:      for (i in 1:N) {
     55:        if (Y[i, j] != 0) 

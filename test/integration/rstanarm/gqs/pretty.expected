@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc --include_paths="../" --auto-format gen_quantities_mvmer.stan
 
-Syntax error in 'gen_quantities_mvmer.stan', line 1, columns 2-6, parsing error:
+Syntax error in 'gen_quantities_mvmer.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real mean_PPD[M];
                ^
