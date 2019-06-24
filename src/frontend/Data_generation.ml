@@ -3,7 +3,8 @@ open Middle
 open Ast
 open Fmt
 
-let gen_num () = 2
+let gen_num () = Random.int 7 + 2
+
 let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 
 let rec repeat_th n f =
@@ -24,22 +25,23 @@ let gen_matrix n m =
 
 let gen_array elt n = {int_two with expr= ArrayExpr (repeat_th n elt)}
 
-let rec generate_value (st : untyped_expression sizedtype) : untyped_expression
-    =
-  let get_length_exn e =
+let rec generate_value m (st : untyped_expression sizedtype) :
+    untyped_expression =
+  let rec get_length_exn m e =
     match e.expr with
     | IntNumeral s -> Int.of_string s
+    | Variable s when Map.mem m s.name -> get_length_exn m (Map.find_exn m s.name)
     | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
   in
   match st with
   | SInt -> gen_int ()
   | SReal -> gen_real ()
-  | SVector e -> gen_vector (get_length_exn e)
-  | SRowVector e -> gen_row_vector (get_length_exn e)
-  | SMatrix (e1, e2) -> gen_matrix (get_length_exn e1) (get_length_exn e2)
+  | SVector e -> gen_vector (get_length_exn m e)
+  | SRowVector e -> gen_row_vector (get_length_exn m e)
+  | SMatrix (e1, e2) -> gen_matrix (get_length_exn m e1) (get_length_exn m e2)
   | SArray (st, e) ->
-      let element () = generate_value st in
-      gen_array element (get_length_exn e)
+      let element () = generate_value m st in
+      gen_array element (get_length_exn m e)
 
 let rec flatten (e : untyped_expression) =
   let flatten_expr_list l =
@@ -85,45 +87,104 @@ let rec print_value_r (e : untyped_expression) =
   | RowVectorExpr _ -> print_container e
   | _ -> failwith "This should never happen."
 
+let var_decl_id d =
+  match d.stmt with
+  | VarDecl {identifier; _} -> identifier.name
+  | _ -> failwith "This should never happen."
+
+let var_decl_gen_val m d =
+  match d.stmt with
+  | VarDecl {sizedtype; _} -> generate_value m sizedtype
+  | _ -> failwith "This should never happen."
+
+let print_data_prog (s : untyped_program) =
+  let data = Option.value ~default:[] s.datablock in
+  let l, _ =
+    List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
+  let value = (var_decl_gen_val m decl) in
+        ( l @ [var_decl_id decl ^ " <- " ^ print_value_r value]
+        , Map.set m ~key:(var_decl_id decl) ~data:value )
+    )
+  in
+  String.concat ~sep:"\n" l
+
 (* ---- TESTS ---- *)
 
-let%expect_test "data generation check" =
-  let expr = generate_value (SArray (SArray (SInt, int_n 3), int_n 4)) in
-  let str = print_value_r expr in
+
+let%expect_test "whole program data generation check" =
+  let open Parse in
+  let ast =
+    parse_string Parser.Incremental.program
+      "\
+      \        data {
+      \            int<lower=1> K;
+      \            int<lower=1> D;
+      \            int<lower=0> N;
+      \            int<lower=0,upper=1> y[N,D];
+      \            vector[K] x[N];
+      \        }
+      \        parameters {
+      \            matrix[D,K] beta;
+      \            cholesky_factor_corr[D] L_Omega;
+      \            real<lower=0,upper=1> u[N,D];
+      \        }
+      \      "
+    |> Result.map_error ~f:render_syntax_error
+    |> Result.ok_or_failwith
+  in
+  let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
-  [%expect
-    {|
-      "structure(c(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2), .Dim=c(4, 3))" |}]
+  [%expect {|
+       "K <- 7\
+      \nD <- 5\
+      \nN <- 8\
+      \ny <- structure(c(8, 7, 3, 2, 8, 3, 2, 4, 3, 3, 4, 4, 5, 8, 3, 4, 6, 4, 3, 8, 2, 8, 2, 2, 5, 8, 7, 6, 4, 3, 7, 8, 5, 8, 7, 4, 3, 6, 6, 8), .Dim=c(8, 5))\
+      \nx <- structure(c(5., 4., 3., 8., 7., 6., 3., 2., 7., 8., 2., 2., 5., 8., 3., 8., 5., 7., 7., 6., 7., 5., 6., 2., 5., 8., 5., 3., 6., 2., 2., 8., 2., 6., 5., 5., 2., 6., 8., 3., 5., 2., 5., 6., 3., 4., 5., 5., 6., 8., 7., 4., 6., 4., 5., 6.), .Dim=c(8, 7))" |}]
+
+
 
 let%expect_test "data generation check" =
   let expr =
-    generate_value (SArray (SArray (SArray (SInt, int_n 5), int_n 2), int_n 4))
+    generate_value Map.Poly.empty (SArray (SArray (SInt, int_n 3), int_n 4))
   in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "structure(c(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2), .Dim=c(4, 2, 5))" |}]
+      "structure(c(7, 5, 8, 8, 7, 3, 2, 8, 3, 2, 4, 3), .Dim=c(4, 3))" |}]
 
 let%expect_test "data generation check" =
-  let expr = generate_value (SMatrix (int_n 3, int_n 4)) in
+  let expr =
+    generate_value Map.Poly.empty
+      (SArray (SArray (SArray (SInt, int_n 5), int_n 2), int_n 4))
+  in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "structure(c(2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2.), .Dim=c(3, 4))" |}]
+      "structure(c(7, 5, 8, 8, 7, 3, 2, 8, 3, 2, 4, 3, 3, 4, 4, 5, 8, 3, 4, 6, 4, 3, 8, 2, 8, 2, 2, 5, 8, 7, 6, 4, 3, 7, 8, 5, 8, 7, 4, 3), .Dim=c(4, 2, 5))" |}]
 
 let%expect_test "data generation check" =
-  let expr = generate_value (SVector (int_n 3)) in
+  let expr = generate_value Map.Poly.empty (SMatrix (int_n 3, int_n 4)) in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "structure(c(7., 5., 8., 8., 7., 3., 2., 8., 3., 2., 4., 3.), .Dim=c(3, 4))" |}]
+
+let%expect_test "data generation check" =
+  let expr = generate_value Map.Poly.empty (SVector (int_n 3)) in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect {|
-      "c(2., 2., 2.)" |}]
+      "c(7., 5., 8.)" |}]
 
 let%expect_test "data generation check" =
-  let expr = generate_value (SArray (SVector (int_n 3), int_n 4)) in
+  let expr =
+    generate_value Map.Poly.empty (SArray (SVector (int_n 3), int_n 4))
+  in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "structure(c(2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2.), .Dim=c(4, 3))" |}]
+      "structure(c(7., 5., 8., 8., 7., 3., 2., 8., 3., 2., 4., 3.), .Dim=c(4, 3))" |}]
