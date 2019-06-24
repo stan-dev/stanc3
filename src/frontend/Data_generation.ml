@@ -34,7 +34,21 @@ let rec generate_value (st : untyped_expression sizedtype) : untyped_expression
       let element = generate_value st in
       array element (get_length_exn e)
 
-let flatten e = failwith " not yet implemented "
+let rec flatten (e : untyped_expression) =
+  let expr = e.expr in
+  let flatten_expr_list l =
+    List.fold (List.map ~f:flatten l) ~init:([], [])
+      ~f:(fun (vals, dims) (new_vals, _) ->
+        (vals @ new_vals, dims @ [Int.to_string (List.length l)]) )
+  in
+  match expr with
+  | IntNumeral s -> ([s], [])
+  | RealNumeral s -> ([s], [])
+  | ArrayExpr l -> flatten_expr_list l
+  | RowVectorExpr _ -> flatten_expr_list l
+  | _ -> failwith "This should never happen."
+
+(* TODO: insert partial evaluation *)
 
 let rec print_value_r (e : untyped_expression) =
   let expr = e.expr in
