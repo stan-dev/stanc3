@@ -112,11 +112,17 @@ let rec pp_statement (ppf : Format.formatter)
     when internal_fn_of_string f = Some FnMakeArray ->
       pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
-      let rec maybe_deep_copy vident = function
-        | {expr= Var v; _} as e when v = vident ->
+      let rec maybe_deep_copy e =
+        let recurse {expr; emeta} =
+          {expr= map_expr maybe_deep_copy expr; emeta}
+        in
+        match e with
+        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} ->
+            recurse e
+        | {expr= Var v; _} as e when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
-        | {expr; emeta} -> {expr= map_expr (maybe_deep_copy vident) expr; emeta}
+        | e -> recurse e
       in
       let rhs =
         match rhs.expr with
@@ -124,7 +130,7 @@ let rec pp_statement (ppf : Format.formatter)
           when f = string_of_internal_fn FnConstrain
                || f = string_of_internal_fn FnUnconstrain ->
             rhs
-        | _ -> maybe_deep_copy assignee rhs
+        | _ -> maybe_deep_copy rhs
       in
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
