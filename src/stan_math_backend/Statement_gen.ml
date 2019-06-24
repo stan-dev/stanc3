@@ -113,13 +113,11 @@ let rec pp_statement (ppf : Format.formatter)
       pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
       let rec maybe_deep_copy e =
-        let recurse {expr; emeta} =
-          {expr= map_expr maybe_deep_copy expr; emeta}
-        in
+        let recurse e = {e with expr= map_expr maybe_deep_copy e.expr} in
         match e with
         | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} ->
             recurse e
-        | {expr= Var v; _} as e when v = assignee ->
+        | {expr= Var v; _} when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
         | e -> recurse e
