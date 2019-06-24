@@ -3,13 +3,7 @@ open Middle
 open Ast
 open Fmt
 
-let count = ref 0
-
-let gen_num () =
-  let out = !count in
-  count := out + 1 ;
-  out
-
+let gen_num () = 2
 let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 
 let rec repeat_th n f =
@@ -53,6 +47,7 @@ let rec flatten (e : untyped_expression) =
         new_vals @ vals )
   in
   match e.expr with
+  | PostfixOp (e, Transpose) -> flatten e
   | IntNumeral s -> [s]
   | RealNumeral s -> [s]
   | ArrayExpr l -> flatten_expr_list l
@@ -62,6 +57,7 @@ let rec flatten (e : untyped_expression) =
 let rec dims e =
   let list_dims l = Int.to_string (List.length l) :: dims (List.hd_exn l) in
   match e.expr with
+  | PostfixOp (e, Transpose) -> dims e
   | IntNumeral _ -> []
   | RealNumeral _ -> []
   | ArrayExpr l -> list_dims l
@@ -89,10 +85,45 @@ let rec print_value_r (e : untyped_expression) =
   | RowVectorExpr _ -> print_container e
   | _ -> failwith "This should never happen."
 
+(* ---- TESTS ---- *)
+
 let%expect_test "data generation check" =
   let expr = generate_value (SArray (SArray (SInt, int_n 3), int_n 4)) in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "structure(c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), .Dim=c(4, 3))" |}]
+      "structure(c(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2), .Dim=c(4, 3))" |}]
+
+let%expect_test "data generation check" =
+  let expr =
+    generate_value (SArray (SArray (SArray (SInt, int_n 5), int_n 2), int_n 4))
+  in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "structure(c(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2), .Dim=c(4, 2, 5))" |}]
+
+let%expect_test "data generation check" =
+  let expr = generate_value (SMatrix (int_n 3, int_n 4)) in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "structure(c(2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2.), .Dim=c(3, 4))" |}]
+
+let%expect_test "data generation check" =
+  let expr = generate_value (SVector (int_n 3)) in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect {|
+      "c(2., 2., 2.)" |}]
+
+let%expect_test "data generation check" =
+  let expr = generate_value (SArray (SVector (int_n 3), int_n 4)) in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "structure(c(2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 2.), .Dim=c(4, 3))" |}]
