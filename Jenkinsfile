@@ -65,7 +65,8 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--num-samples=10 stat_comp_benchmarks/" develop stanc3-dev develop develop
+          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
+          CXX="${CXX}" ./compare-compilers.sh "stat_comp_benchmarks/ --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'
@@ -92,9 +93,9 @@ pipeline {
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
-          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=10" develop stanc3-dev develop develop || true
+          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
-
                 xunit([GoogleTest(
                     deleteOutputFiles: false,
                     failIfNotNew: true,
