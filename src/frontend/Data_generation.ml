@@ -42,12 +42,9 @@ let rec repeat_th n f =
   match n with 0 -> [] | m -> f () :: repeat_th (m - 1) f
 
 let wrap_int n = {expr= IntNumeral (Int.to_string n); emeta= {loc= no_span}}
-
 let int_two = wrap_int 2
-
 let wrap_real r = {expr= RealNumeral (Float.to_string r); emeta= {loc= no_span}}
 let gen_int m t = wrap_int (gen_num_int m t)
-
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
@@ -223,7 +220,8 @@ let%expect_test "data generation check" =
   let expr = generate_value Map.Poly.empty (SVector (wrap_int 3)) Identity in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
-  [%expect {|
+  [%expect
+    {|
       "c(4.1815278199399577, 6.8017664359959342, 4.8441784126802627)" |}]
 
 let%expect_test "data generation check" =
