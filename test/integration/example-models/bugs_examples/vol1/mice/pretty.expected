@@ -20,7 +20,8 @@ model {
     t_uncensored[n] ~ weibull(r, exp(-beta[group_uncensored[n]] / r));
   }
   for (n in 1 : N_censored) {
-    t2_censored[n] ~ weibull(r, exp(-beta[group_censored[n]] / r) / censor_time[n]);
+    t2_censored[n] ~ weibull(r,
+                             exp(-beta[group_censored[n]] / r) / censor_time[n]);
   }
 }
 generated quantities {

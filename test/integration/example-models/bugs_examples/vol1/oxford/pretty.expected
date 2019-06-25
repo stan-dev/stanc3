@@ -25,7 +25,8 @@ transformed parameters {
 }
 model {
   r0 ~ binomial_logit(n0, mu);
-  r1 ~ binomial_logit(n1, alpha + mu + beta1 * year + beta2 * (yearsq - 22) + b * sigma);
+  r1 ~ binomial_logit(n1,
+                      alpha + mu + beta1 * year + beta2 * (yearsq - 22) + b * sigma);
   b ~ normal(0, 1);
   mu ~ normal(0, 1000);
   alpha ~ normal(0.0, 1000);

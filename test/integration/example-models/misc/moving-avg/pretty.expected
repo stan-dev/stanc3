@@ -161,7 +161,8 @@ model {
   theta ~ cauchy(0, 2.5);
   sigma ~ cauchy(0, 2.5);
   for (t in 3 : T) 
-    y[t] ~ normal(mu + theta[1] * epsilon[t - 1] + theta[2] * epsilon[t - 2], sigma);
+    y[t] ~ normal(mu + theta[1] * epsilon[t - 1] + theta[2] * epsilon[t - 2],
+                  sigma);
 }
 
 

@@ -268,7 +268,8 @@ model {
       logit_p[i, j] ~ normal(beta, sd_p);
   for (i in 1 : R) 
     for (k in first[i] : last[i]) 
-      y[i, 1 : 2, k] ~ bivariate_poisson_log(log_lambda[i, k], inv_logit(logit_p[i, 1 : 2, k]));
+      y[i, 1 : 2, k] ~ bivariate_poisson_log(log_lambda[i, k],
+                                             inv_logit(logit_p[i, 1 : 2, k]));
 }
 generated quantities {
   int totalN[7];

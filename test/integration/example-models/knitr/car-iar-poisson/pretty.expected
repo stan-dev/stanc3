@@ -95,7 +95,8 @@ model {
   rho ~ beta(0.5, 0.5);
   singletons_re ~ normal(0.0, 1.0);
   for (i in 1 : N_components) {
-    sum(phi[component_starts[i] : (component_ends[i])]) ~ normal(0, 0.001 * nodes_per_component[i]);
+    sum(phi[component_starts[i] : (component_ends[i])]) ~ normal(0,
+                                                                 0.001 * nodes_per_component[i]);
   }
 }
 generated quantities {

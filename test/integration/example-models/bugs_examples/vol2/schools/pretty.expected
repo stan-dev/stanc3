@@ -114,8 +114,8 @@ model {
   beta ~ normal(0, 2.5);
   theta ~ normal(0, 2.5);
   phi ~ normal(0, 0.1);
-  alpha ~ multi_normal_cholesky(gamma, diag_pre_multiply(sigma_Sigma,
-                                                         L_Sigma));
+  alpha ~ multi_normal_cholesky(gamma,
+                                diag_pre_multiply(sigma_Sigma, L_Sigma));
   gamma ~ normal(0, 5);
   sigma_Sigma ~ cauchy(0, 2.5);
   L_Sigma ~ lkj_corr_cholesky(3);

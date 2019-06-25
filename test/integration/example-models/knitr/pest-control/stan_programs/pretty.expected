@@ -35,7 +35,8 @@ model {
   zeta ~ normal(0, 1);
   beta ~ normal(-0.25, 1);
   inv_phi ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps + log_sq_foot, phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps + log_sq_foot,
+                                  phi);
 }
 generated quantities {
   int y_rep[N];
@@ -83,7 +84,8 @@ model {
   zeta ~ normal(0, 1);
   beta ~ normal(-0.25, 1);
   inv_phi ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps + log_sq_foot, phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps + log_sq_foot,
+                                  phi);
 }
 generated quantities {
   int y_rep[N];
@@ -138,7 +140,8 @@ model {
   sigma_mu ~ normal(0, 1);
   alpha ~ normal(log(4), 1);
   zeta ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + log_sq_foot, phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + log_sq_foot,
+                                  phi);
 }
 generated quantities {
   int y_rep[N];
@@ -207,7 +210,8 @@ model {
   mo_raw ~ normal(0, 1);
   sigma_mo ~ normal(0, 1);
   rho_raw ~ beta(10, 5);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + mo[mo_idx] + log_sq_foot, phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + mo[mo_idx] + log_sq_foot,
+                                  phi);
 }
 generated quantities {
   int y_rep[N];
@@ -295,7 +299,8 @@ model {
   sigma_gp ~ normal(0, 1);
   sigma_noise ~ normal(0, 1);
   mo_noise_raw ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + gp[mo_idx] + log_sq_foot, phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + gp[mo_idx] + log_sq_foot,
+                                  phi);
 }
 generated quantities {
   int y_rep[N];
@@ -446,7 +451,8 @@ model {
   zeta ~ normal(0, 1);
   gamma ~ normal(0, 1);
   inv_prec ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(alphas[building_idx] + betas[building_idx] .* traps + log_sq_foot, prec);
+  complaints ~ neg_binomial_2_log(alphas[building_idx] + betas[building_idx] .* traps + log_sq_foot,
+                                  prec);
 }
 generated quantities {
   int y_rep[N];
@@ -493,7 +499,8 @@ model {
   beta ~ normal(-0.25, 1);
   beta_super ~ normal(-0.5, 1);
   inv_phi ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(alpha + beta * traps + beta_super * live_in_super + log_sq_foot, phi);
+  complaints ~ neg_binomial_2_log(alpha + beta * traps + beta_super * live_in_super + log_sq_foot,
+                                  phi);
 }
 generated quantities {
   int y_rep[N];

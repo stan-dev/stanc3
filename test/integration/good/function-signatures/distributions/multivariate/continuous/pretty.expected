@@ -1139,150 +1139,285 @@ transformed parameters {
                                                      d_matrix_array[1]);
 }
 model {
-  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                            d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                            d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                         d_matrix_array[1]);
   d_vector_array ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                            d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                            d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                         d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                         d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                                d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                                d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                             d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_vector_array,
+                                             d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                                d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                                d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                             d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                             d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                            p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                            p_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                         p_matrix_array[1]);
   p_vector_array ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                            p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                            p_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                         p_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                         p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                                p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                                p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                             p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_vector_array,
+                                             p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                                p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                                p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                             p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                             p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                            d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                            d_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                         d_matrix_array[1]);
   p_vector_array ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                            d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                            d_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                         d_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                         d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                                d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                                d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                             d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_vector_array,
+                                             d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                                d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                                d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                             d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                             d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                            p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                            p_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                         p_matrix_array[1]);
   p_vector_array ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                            p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                            p_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                         p_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                         p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                                p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                                p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                             p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_vector_array,
+                                             p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                                p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                                p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                             p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                             p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                            d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                            d_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                         d_matrix_array[1]);
   p_vector_array ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                            d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                            d_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                         d_matrix_array[1]);
+  p_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                         d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                                d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                                d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                             d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_vector_array,
+                                             d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                                d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                                d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                             d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                             d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                            p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                            p_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                         p_matrix_array[1]);
   d_vector_array ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                            p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                            p_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                         p_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                         p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                                p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                                p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                             p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_vector_array,
+                                             p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                                p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                                p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                             p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                             p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                            d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                            d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                         d_matrix_array[1]);
   d_vector_array ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                            d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                            d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                         d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                         d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array[1],
+                                                d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_vector_array,
+                                                d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_vector_array[1],
+                                             d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_vector_array,
+                                             d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array[1],
+                                                d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(p_row_vector_array,
+                                                d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array[1],
+                                             d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(p_row_vector_array,
+                                             d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                            p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                            p_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                         p_matrix_array[1]);
   d_vector_array ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                            p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                            p_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                         p_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                         p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                                p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                                p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                             p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_vector_array,
+                                             p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                                p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                                p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                             p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                             p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                            d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                            d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                         d_matrix_array[1]);
   d_vector_array ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                            d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                            d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                         d_matrix_array[1]);
+  d_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                         d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array[1],
+                                                d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_vector_array,
+                                                d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_vector_array[1],
+                                             d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_vector_array,
+                                             d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array[1],
+                                                d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_cholesky(d_row_vector_array,
+                                                d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array[1],
+                                             d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array,
+                                             d_matrix_array[1]);
 }
 
   $ ../../../../../../../../install/default/bin/stanc --auto-format multi_normal_log.stan
@@ -1749,7 +1884,8 @@ model {
   d_row_vector_array[1] ~ multi_normal(d_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal(d_row_vector_array[1],
+                                       d_matrix_array[1]);
   d_row_vector_array[1] ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
@@ -1765,7 +1901,8 @@ model {
   p_row_vector_array[1] ~ multi_normal(p_vector_array, p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_vector_array[1], p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal(p_row_vector_array[1], p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal(p_row_vector_array[1],
+                                       p_matrix_array[1]);
   p_row_vector_array[1] ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array[1], p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
@@ -1781,7 +1918,8 @@ model {
   p_row_vector_array[1] ~ multi_normal(p_vector_array, d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_vector_array[1], d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal(p_row_vector_array[1], d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal(p_row_vector_array[1],
+                                       d_matrix_array[1]);
   p_row_vector_array[1] ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array[1], d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
@@ -1797,7 +1935,8 @@ model {
   p_row_vector_array[1] ~ multi_normal(d_vector_array, p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_vector_array[1], p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal(d_row_vector_array[1], p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal(d_row_vector_array[1],
+                                       p_matrix_array[1]);
   p_row_vector_array[1] ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array[1], p_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
@@ -1813,7 +1952,8 @@ model {
   p_row_vector_array[1] ~ multi_normal(d_vector_array, d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal(d_row_vector_array[1],
+                                       d_matrix_array[1]);
   p_row_vector_array[1] ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
   p_row_vector_array ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
@@ -1829,7 +1969,8 @@ model {
   d_row_vector_array[1] ~ multi_normal(p_vector_array, p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_vector_array[1], p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal(p_row_vector_array[1], p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal(p_row_vector_array[1],
+                                       p_matrix_array[1]);
   d_row_vector_array[1] ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array[1], p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array, p_matrix_array[1]);
@@ -1845,7 +1986,8 @@ model {
   d_row_vector_array[1] ~ multi_normal(p_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal(p_row_vector_array[1], d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal(p_row_vector_array[1],
+                                       d_matrix_array[1]);
   d_row_vector_array[1] ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(p_row_vector_array, d_matrix_array[1]);
@@ -1861,7 +2003,8 @@ model {
   d_row_vector_array[1] ~ multi_normal(d_vector_array, p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_vector_array[1], p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal(d_row_vector_array[1], p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal(d_row_vector_array[1],
+                                       p_matrix_array[1]);
   d_row_vector_array[1] ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array[1], p_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array, p_matrix_array[1]);
@@ -1877,7 +2020,8 @@ model {
   d_row_vector_array[1] ~ multi_normal(d_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal(d_row_vector_array[1],
+                                       d_matrix_array[1]);
   d_row_vector_array[1] ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array[1], d_matrix_array[1]);
   d_row_vector_array ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
@@ -2352,146 +2496,236 @@ model {
   d_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                        d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                        d_matrix_array[1]);
+  d_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                     d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1],
+                                            d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array,
+                                            d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_vector_array[1],
+                                         d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                            d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                            d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                         d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_row_vector_array,
+                                         d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                        p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                        p_matrix_array[1]);
+  p_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                     p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1],
+                                            p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array,
+                                            p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(p_vector_array[1],
+                                         p_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                            p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                            p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                         p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(p_row_vector_array,
+                                         p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                        d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                        d_matrix_array[1]);
+  p_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                     d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1],
+                                            d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_vector_array,
+                                            d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(p_vector_array[1],
+                                         d_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                            d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                            d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                         d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(p_row_vector_array,
+                                         d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                        p_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                        p_matrix_array[1]);
+  p_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                     p_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1],
+                                            p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array,
+                                            p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(d_vector_array[1],
+                                         p_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                            p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                            p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                         p_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(d_row_vector_array,
+                                         p_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   p_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                        d_matrix_array[1]);
+  p_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                        d_matrix_array[1]);
+  p_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                     d_matrix_array[1]);
   p_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1],
+                                            d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_vector_array,
+                                            d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(d_vector_array[1],
+                                         d_matrix_array[1]);
   p_row_vector_array ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                            d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                            d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                         d_matrix_array[1]);
+  p_row_vector_array ~ multi_normal_prec(d_row_vector_array,
+                                         d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                        p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                        p_matrix_array[1]);
+  d_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                     p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(p_vector_array[1], p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1],
+                                            p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array,
+                                            p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(p_vector_array[1],
+                                         p_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(p_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(p_row_vector_array, p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                            p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                            p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                         p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(p_row_vector_array,
+                                         p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                        d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                        d_matrix_array[1]);
+  d_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                     d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(p_vector_array[1], d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array[1],
+                                            d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_vector_array,
+                                            d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(p_vector_array[1],
+                                         d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(p_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(p_row_vector_array, d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array[1],
+                                            d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(p_row_vector_array,
+                                            d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(p_row_vector_array[1],
+                                         d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(p_row_vector_array,
+                                         d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                        p_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                        p_matrix_array[1]);
+  d_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                     p_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_vector_array[1], p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1],
+                                            p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array,
+                                            p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_vector_array[1],
+                                         p_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(d_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_row_vector_array, p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                            p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                            p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                         p_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_row_vector_array,
+                                         p_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   d_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                        d_matrix_array[1]);
+  d_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                        d_matrix_array[1]);
+  d_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                     d_matrix_array[1]);
   d_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_vector_array[1], d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array[1],
+                                            d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_vector_array,
+                                            d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_vector_array[1],
+                                         d_matrix_array[1]);
   d_row_vector_array ~ multi_normal_prec(d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array[1],
+                                            d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_normal_prec(d_row_vector_array,
+                                            d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_row_vector_array[1],
+                                         d_matrix_array[1]);
+  d_row_vector_array ~ multi_normal_prec(d_row_vector_array,
+                                         d_matrix_array[1]);
 }
 
   $ ../../../../../../../../install/default/bin/stanc --auto-format multi_student_t_log.stan
@@ -3775,438 +4009,843 @@ transformed parameters {
                                                d_matrix_array[1]);
 }
 model {
-  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                       d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                   p_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                   p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                   p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_vector_array,
+                                       p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                       p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                   d_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                   d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                   d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_vector_array,
+                                       d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                       d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                   p_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                   p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                   p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_vector_array,
+                                       p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                       p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                   d_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                   d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_vector_array,
+                                       d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                   p_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                   p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                   p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_vector_array,
+                                       p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                       p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, p_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, p_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                   p_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                   p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                   p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_vector_array,
+                                       p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                       p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_real, d_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_real, d_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                       d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                   p_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                   p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                   p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_vector_array,
+                                       p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                       p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                   d_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                   d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                   d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_vector_array,
+                                       d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                       d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                   p_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                   p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                   p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_vector_array,
+                                       p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                       p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                   d_matrix_array[1]);
   p_vector_array ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                   d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_vector_array,
+                                       d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                   p_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                   p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                   p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_vector_array,
+                                       p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                       p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, p_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, p_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                   p_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                   p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                   p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_vector_array,
+                                       p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                       p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(d_int, d_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(d_int, d_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                       d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                   p_matrix_array[1]);
   p_vector_array ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                   p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                   p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_vector_array,
+                                       p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                       p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                   d_matrix_array[1]);
   p_vector_array ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                   d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                   d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_vector_array,
+                                       d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                       d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                   p_matrix_array[1]);
   p_vector_array ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                      p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                      p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                   p_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                   p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_vector_array,
+                                       p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                          p_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                          p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                       p_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                       p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                   d_matrix_array[1]);
   p_vector_array ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  p_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                      d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  p_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                   d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_vector_array,
+                                       d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  p_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                          d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  p_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                   p_matrix_array[1]);
   d_vector_array ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                   p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                   p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_vector_array,
+                                       p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                       p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, p_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, p_row_vector_array,
+                                       d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                   p_matrix_array[1]);
   d_vector_array ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_vector_array, p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], p_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array, p_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                      p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                      p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                   p_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                   p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_vector_array,
+                                       p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                          p_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                          p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                       p_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                       p_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                   d_matrix_array[1]);
   d_vector_array ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_vector_array, d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1], d_matrix_array[1]);
-  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                      d_matrix_array[1]);
+  d_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                      d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                   d_matrix_array[1]);
+  d_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                   d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_vector_array,
+                                       d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array[1],
+                                          d_matrix_array[1]);
+  d_row_vector_array[1] ~ multi_student_t(p_real, d_row_vector_array,
+                                          d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array[1],
+                                       d_matrix_array[1]);
+  d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array,
+                                       d_matrix_array[1]);
 }
 
   $ ../../../../../../../../install/default/bin/stanc --auto-format wishart_log.stan

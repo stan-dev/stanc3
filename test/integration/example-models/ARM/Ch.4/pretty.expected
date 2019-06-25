@@ -28,7 +28,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  kid_score ~ normal(beta[1] + beta[2] * mom_hs + beta[3] * mom_iq + beta[4] * inter, sigma);
+  kid_score ~ normal(beta[1] + beta[2] * mom_hs + beta[3] * mom_iq + beta[4] * inter,
+                     sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction_c.stan
@@ -51,7 +52,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  kid_score ~ normal(beta[1] + beta[2] * c_mom_hs + beta[3] * c_mom_iq + beta[4] * inter, sigma);
+  kid_score ~ normal(beta[1] + beta[2] * c_mom_hs + beta[3] * c_mom_iq + beta[4] * inter,
+                     sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction_c2.stan
@@ -74,7 +76,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  kid_score ~ normal(beta[1] + beta[2] * c2_mom_hs + beta[3] * c2_mom_iq + beta[4] * inter, sigma);
+  kid_score ~ normal(beta[1] + beta[2] * c2_mom_hs + beta[3] * c2_mom_iq + beta[4] * inter,
+                     sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidiq_interaction_z.stan
@@ -97,7 +100,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  kid_score ~ normal(beta[1] + beta[2] * z_mom_hs + beta[3] * z_mom_iq + beta[4] * inter, sigma);
+  kid_score ~ normal(beta[1] + beta[2] * z_mom_hs + beta[3] * z_mom_iq + beta[4] * inter,
+                     sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidscore_momwork.stan
@@ -121,7 +125,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  kid_score ~ normal(beta[1] + beta[2] * work2 + beta[3] * work3 + beta[4] * work4, sigma);
+  kid_score ~ normal(beta[1] + beta[2] * work2 + beta[3] * work3 + beta[4] * work4,
+                     sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format log10earn_height.stan
@@ -199,7 +204,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_earn ~ normal(beta[1] + beta[2] * height + beta[3] * male + beta[4] * inter, sigma);
+  log_earn ~ normal(beta[1] + beta[2] * height + beta[3] * male + beta[4] * inter,
+                    sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format logearn_interaction_z.stan
@@ -222,7 +228,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_earn ~ normal(beta[1] + beta[2] * z_height + beta[3] * male + beta[4] * inter, sigma);
+  log_earn ~ normal(beta[1] + beta[2] * z_height + beta[3] * male + beta[4] * inter,
+                    sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format logearn_logheight.stan
@@ -262,7 +269,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  weight ~ normal(beta[1] + beta[2] * diam1 + beta[3] * diam2 + beta[4] * canopy_height + beta[5] * total_height + beta[6] * density + beta[7] * group, sigma);
+  weight ~ normal(beta[1] + beta[2] * diam1 + beta[3] * diam2 + beta[4] * canopy_height + beta[5] * total_height + beta[6] * density + beta[7] * group,
+                  sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mesquite_log.stan
@@ -295,7 +303,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_weight ~ normal(beta[1] + beta[2] * log_diam1 + beta[3] * log_diam2 + beta[4] * log_canopy_height + beta[5] * log_total_height + beta[6] * log_density + beta[7] * group, sigma);
+  log_weight ~ normal(beta[1] + beta[2] * log_diam1 + beta[3] * log_diam2 + beta[4] * log_canopy_height + beta[5] * log_total_height + beta[6] * log_density + beta[7] * group,
+                      sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mesquite_va.stan
@@ -320,7 +329,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume + beta[3] * log_canopy_area + beta[4] * group, sigma);
+  log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume + beta[3] * log_canopy_area + beta[4] * group,
+                      sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mesquite_vas.stan
@@ -353,7 +363,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume + beta[3] * log_canopy_area + beta[4] * log_canopy_shape + beta[5] * log_total_height + beta[6] * log_density + beta[7] * group, sigma);
+  log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume + beta[3] * log_canopy_area + beta[4] * log_canopy_shape + beta[5] * log_total_height + beta[6] * log_density + beta[7] * group,
+                      sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mesquite_vash.stan
@@ -383,7 +394,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume + beta[3] * log_canopy_area + beta[4] * log_canopy_shape + beta[5] * log_total_height + beta[6] * group, sigma);
+  log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume + beta[3] * log_canopy_area + beta[4] * log_canopy_shape + beta[5] * log_total_height + beta[6] * group,
+                      sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format mesquite_volume.stan
@@ -434,6 +446,7 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  partyid7 ~ normal(beta[1] + beta[2] * real_ideo + beta[3] * race_adj + beta[4] * age30_44 + beta[5] * age45_64 + beta[6] * age65up + beta[7] * educ1 + beta[8] * gender + beta[9] * income, sigma);
+  partyid7 ~ normal(beta[1] + beta[2] * real_ideo + beta[3] * race_adj + beta[4] * age30_44 + beta[5] * age45_64 + beta[6] * age65up + beta[7] * educ1 + beta[8] * gender + beta[9] * income,
+                    sigma);
 }
 

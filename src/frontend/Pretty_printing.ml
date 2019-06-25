@@ -296,12 +296,12 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
          Fmt.pf ppf "increment_log_prob(%a);"
            pp_expression e)
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
-     with_hbox ppf (fun () ->
-         Fmt.pf ppf "%a ~ %a(%a)%a;"
-           pp_expression e
-           pp_identifier id
-           pp_list_of_expression es
-           pp_truncation t)
+     Fmt.pf ppf "%a ~ %a("
+       pp_expression e
+       pp_identifier id;
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a)" pp_list_of_expression es);
+     Fmt.pf ppf "%a;" pp_truncation t;
   | Break -> Fmt.pf ppf "break;"
   | Continue -> Fmt.pf ppf "continue;"
   | Return e -> with_hbox ppf (fun () ->
