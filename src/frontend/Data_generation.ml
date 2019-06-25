@@ -4,35 +4,37 @@ open Ast
 open Fmt
 
 let rec unwrap_num_exn m e =
-match e.expr with
-| IntNumeral s -> Float.of_string s
-| RealNumeral s -> Float.of_string s
-| Variable s when Map.mem m s.name ->
-    unwrap_num_exn m (Map.find_exn m s.name)
-(* TODO: insert partial evaluation here *)
-| _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
+  match e.expr with
+  | IntNumeral s -> Float.of_string s
+  | RealNumeral s -> Float.of_string s
+  | Variable s when Map.mem m s.name ->
+      unwrap_num_exn m (Map.find_exn m s.name)
+  (* TODO: insert partial evaluation here *)
+  | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
 let gen_num_int m (t : untyped_expression transformation) =
-let def_low, diff = 2, 5 in
-let low, up = match t with
-| Lower e -> unwrap_int_exn m e, unwrap_int_exn m e + diff
-| Upper e -> unwrap_int_exn m e - diff, unwrap_int_exn m e
-| LowerUpper (e1, e2) -> unwrap_int_exn m e1, unwrap_int_exn m e2
-| _ -> def_low, def_low + diff
-in 
-Random.int (up - low + 1) + low
+  let def_low, diff = (2, 5) in
+  let low, up =
+    match t with
+    | Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
+    | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
+    | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
+    | _ -> (def_low, def_low + diff)
+  in
+  Random.int (up - low + 1) + low
 
 let gen_num_real m (t : untyped_expression transformation) =
-let def_low, diff = 2., 5. in
-let low, up = match t with
-| Lower e -> unwrap_num_exn m e, unwrap_num_exn m e +. diff
-| Upper e -> unwrap_num_exn m e -. diff, unwrap_num_exn m e
-| LowerUpper (e1, e2) -> unwrap_num_exn m e1, unwrap_num_exn m e2
-| _ -> def_low, def_low +. diff
-in 
-Random.float_range low up
+  let def_low, diff = (2., 5.) in
+  let low, up =
+    match t with
+    | Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
+    | Upper e -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
+    | LowerUpper (e1, e2) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
+    | _ -> (def_low, def_low +. diff)
+  in
+  Random.float_range low up
 
 let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 
@@ -47,7 +49,7 @@ let gen_real m t =
   {int_two with expr= RealNumeral (string_of_float (gen_num_real m t) ^ ".")}
 
 let gen_row_vector m n t =
-  {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> (gen_real m t)))}
+  {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))}
 
 let gen_vector m n t =
   {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
@@ -55,6 +57,7 @@ let gen_vector m n t =
 let gen_matrix mm n m t =
   { int_two with
     expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
+
 (* TODO: special case the generation of the other constraints *)
 
 let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
