@@ -105,18 +105,22 @@ let rec pp_statement (ppf : Format.formatter)
         {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
       in
       pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
-  | Assignment (lhs, {expr= Lit (Str, s); _})
-   |Assignment (((_, []) as lhs), {expr= Lit (_, s); _}) ->
-      pf ppf "%a = %s;" pp_indexed_simple lhs s
+  | Assignment ((vident, []), ({emeta= {mtype= UInt; _}; _} as rhs))
+   |Assignment ((vident, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
+      pf ppf "%s = %a;" vident pp_expr rhs
   | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
     when internal_fn_of_string f = Some FnMakeArray ->
       pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
-      let rec maybe_deep_copy vident = function
-        | {expr= Var v; _} as e when v = vident ->
+      let rec maybe_deep_copy e =
+        let recurse e = {e with expr= map_expr maybe_deep_copy e.expr} in
+        match e with
+        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} ->
+            recurse e
+        | {expr= Var v; _} when v = assignee ->
             { e with
               expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
-        | {expr; emeta} -> {expr= map_expr (maybe_deep_copy vident) expr; emeta}
+        | e -> recurse e
       in
       let rhs =
         match rhs.expr with
@@ -124,7 +128,7 @@ let rec pp_statement (ppf : Format.formatter)
           when f = string_of_internal_fn FnConstrain
                || f = string_of_internal_fn FnUnconstrain ->
             rhs
-        | _ -> maybe_deep_copy assignee rhs
+        | _ -> maybe_deep_copy rhs
       in
       pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
         pp_expr rhs
