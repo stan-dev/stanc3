@@ -41,19 +41,30 @@ let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 let rec repeat_th n f =
   match n with 0 -> [] | m -> f () :: repeat_th (m - 1) f
 
-let wrap_int n = {expr= IntNumeral (Int.to_string n); emeta= {loc= no_span}}
+let wrap_int n =
+  { expr= IntNumeral (Int.to_string n)
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UInt} }
+
 let int_two = wrap_int 2
-let wrap_real r = {expr= RealNumeral (Float.to_string r); emeta= {loc= no_span}}
-let wrap_row_vector l = {expr= RowVectorExpr l; emeta= {loc= no_span}}
+
+let wrap_real r =
+  { expr= RealNumeral (Float.to_string r)
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UReal} }
+
+let wrap_row_vector l =
+  { expr= RowVectorExpr l
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= URowVector} }
 
 let wrap_vector l =
-  {expr= PostfixOp (wrap_row_vector l, Transpose); emeta= {loc= no_span}}
+  { expr= PostfixOp (wrap_row_vector l, Transpose)
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UVector} }
 
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
-  {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))}
+  { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UMatrix} }
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -204,8 +215,12 @@ let%expect_test "whole program data generation check" =
                   vector[K] x[N];
                     }
       |}
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
+  in
+  let ast =
+    Option.value_exn
+      (Result.ok
+         (Semantic_check.semantic_check_program
+            (Option.value_exn (Result.ok ast))))
   in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
@@ -311,21 +326,27 @@ let%expect_test "data generation check" =
       (SMatrix (wrap_int 2, wrap_int 3))
       Correlation
   in
-  print_s [%sexp (expr : untyped_expression)] ;
+  print_s [%sexp (expr : typed_expression)] ;
   [%expect
     {|
       ((expr
         (RowVectorExpr
          (((expr
             (RowVectorExpr
-             (((expr (RealNumeral 1.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>)))))))
-           (emeta ((loc <opaque>))))
+             (((expr (RealNumeral 1.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal)))))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ URowVector))))
           ((expr
             (RowVectorExpr
-             (((expr (RealNumeral 0.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 1.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>)))))))
-           (emeta ((loc <opaque>)))))))
-       (emeta ((loc <opaque>)))) |}]
+             (((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 1.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal)))))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ URowVector)))))))
+       (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt)))) |}]
