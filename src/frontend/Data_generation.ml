@@ -41,12 +41,14 @@ let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 let rec repeat_th n f =
   match n with 0 -> [] | m -> f () :: repeat_th (m - 1) f
 
-let int_n n = {expr= IntNumeral (Int.to_string n); emeta= {loc= no_span}}
-let int_two = int_n 2
-let gen_int m t = int_n (gen_num_int m t)
+let wrap_int n = {expr= IntNumeral (Int.to_string n); emeta= {loc= no_span}}
 
-let gen_real m t =
-  {int_two with expr= RealNumeral (string_of_float (gen_num_real m t) ^ ".")}
+let int_two = wrap_int 2
+
+let wrap_real r = {expr= RealNumeral (Float.to_string r); emeta= {loc= no_span}}
+let gen_int m t = wrap_int (gen_num_int m t)
+
+let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
   {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))}
@@ -181,12 +183,12 @@ let%expect_test "whole program data generation check" =
       \nD <- 1\
       \nN <- 4\
       \ny <- structure(c(0, 1, 1, 0), .Dim=c(4, 1))\
-      \nx <- structure(c(4.80196289276., 2.50029771701., 6.99021511591., 4.22162060098., 4.70796052699., 4.39608595341., 6.36428059042., 4.56121913812., 2.75342745198., 2.1638430051., 4.10860520963., 6.40024614103., 4.52757732783., 3.32785186014., 4.87959893397., 6.50768784015., 4.26274555715., 6.75512163263., 4.83062840064., 4.25261591223., 4.19269169649., 4.62839240396., 5.18401718752., 3.82634901315., 6.32804481242., 5.68173766562., 2.36527695481., 4.53572899106.), .Dim=c(4, 7))" |}]
+      \nx <- structure(c(4.80196289276064, 2.5002977170064504, 6.9902151159107628, 4.2216206009762942, 4.7079605269879039, 4.3960859534107088, 6.3642805904191038, 4.5612191381201592, 2.7534274519828044, 2.1638430051007465, 4.10860520962623, 6.4002461410324072, 4.5275773278275526, 3.3278518601429194, 4.8795989339689632, 6.5076878401532312, 4.262745557146193, 6.7551216326282217, 4.830628400636872, 4.2526159122345248, 4.1926916964909324, 4.6283924039600581, 5.1840171875153906, 3.8263490131545348, 6.32804481242085, 5.68173766561979, 2.3652769548085839, 4.5357289910613918), .Dim=c(4, 7))" |}]
 
 let%expect_test "data generation check" =
   let expr =
     generate_value Map.Poly.empty
-      (SArray (SArray (SInt, int_n 3), int_n 4))
+      (SArray (SArray (SInt, wrap_int 3), wrap_int 4))
       Identity
   in
   let str = print_value_r expr in
@@ -198,7 +200,7 @@ let%expect_test "data generation check" =
 let%expect_test "data generation check" =
   let expr =
     generate_value Map.Poly.empty
-      (SArray (SArray (SArray (SInt, int_n 5), int_n 2), int_n 4))
+      (SArray (SArray (SArray (SInt, wrap_int 5), wrap_int 2), wrap_int 4))
       Identity
   in
   let str = print_value_r expr in
@@ -209,29 +211,29 @@ let%expect_test "data generation check" =
 
 let%expect_test "data generation check" =
   let expr =
-    generate_value Map.Poly.empty (SMatrix (int_n 3, int_n 4)) Identity
+    generate_value Map.Poly.empty (SMatrix (wrap_int 3, wrap_int 4)) Identity
   in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "structure(c(4.18152781994., 6.801766436., 4.84417841268., 4.25312636945., 5.20154190324., 2.71039449004., 3.32826213258., 2.56799363086., 4.07599383565., 3.60440575089., 6.0288479434., 3.54368914437.), .Dim=c(3, 4))" |}]
+      "structure(c(4.1815278199399577, 6.8017664359959342, 4.8441784126802627, 4.25312636944623, 5.2015419032442969, 2.7103944900448411, 3.3282621325833865, 2.56799363086151, 4.0759938356540726, 3.604405750889411, 6.0288479433993629, 3.543689144366625), .Dim=c(3, 4))" |}]
 
 let%expect_test "data generation check" =
-  let expr = generate_value Map.Poly.empty (SVector (int_n 3)) Identity in
+  let expr = generate_value Map.Poly.empty (SVector (wrap_int 3)) Identity in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect {|
-      "c(4.18152781994., 6.801766436., 4.84417841268.)" |}]
+      "c(4.1815278199399577, 6.8017664359959342, 4.8441784126802627)" |}]
 
 let%expect_test "data generation check" =
   let expr =
     generate_value Map.Poly.empty
-      (SArray (SVector (int_n 3), int_n 4))
+      (SArray (SVector (wrap_int 3), wrap_int 4))
       Identity
   in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "structure(c(4.18152781994., 6.801766436., 4.84417841268., 4.25312636945., 5.20154190324., 2.71039449004., 3.32826213258., 2.56799363086., 4.07599383565., 3.60440575089., 6.0288479434., 3.54368914437.), .Dim=c(4, 3))" |}]
+      "structure(c(4.1815278199399577, 6.8017664359959342, 4.8441784126802627, 4.25312636944623, 5.2015419032442969, 2.7103944900448411, 3.3282621325833865, 2.56799363086151, 4.0759938356540726, 3.604405750889411, 6.0288479433993629, 3.543689144366625), .Dim=c(4, 3))" |}]
