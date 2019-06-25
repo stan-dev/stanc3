@@ -24,21 +24,25 @@ exception FatalError of string
 let fatal_error ?(msg = "") _ =
   raise (FatalError ("This should never happen. Please file a bug. " ^ msg))
 
+let trim_quotes s =
+  let s = String.drop_prefix s 1 in
+  String.drop_suffix s 1
+
 (** Parse a string into a location *)
 let rec parse_location str =
   let split_str =
     Str.bounded_split
-      (Str.regexp "file \\|, line \\|, column \\|, included from\n")
+      (Str.regexp ", line \\|, column \\|, included from\n")
       str 4
   in
   match split_str with
   | [fname; linenum_str; colnum_str] ->
-      { filename= fname
+      { filename= trim_quotes fname
       ; line_num= int_of_string linenum_str
       ; col_num= int_of_string colnum_str
       ; included_from= None }
   | [fname; linenum_str; colnum_str; included_from_str] ->
-      { filename= fname
+      { filename= trim_quotes fname
       ; line_num= int_of_string linenum_str
       ; col_num= int_of_string colnum_str
       ; included_from= Some (parse_location included_from_str) }
@@ -48,7 +52,7 @@ let rec parse_location str =
 let location_of_position = function
   | {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} -> (
       let split_fname =
-        Str.bounded_split (Str.regexp ", included from\nfile ") pos_fname 2
+        Str.bounded_split (Str.regexp ", included from\n") pos_fname 2
       in
       match split_fname with
       | [] -> fatal_error ()
@@ -141,16 +145,16 @@ let warn_deprecated (pos, message) =
 (* TESTS *)
 let%expect_test "location string equivalence 1" =
   let str =
-    "file xxx.stan, line 245, column 13, included from\n\
-     file yyy.stan, line 666, column 42, included from\n\
-     file zzz.stan, line 24, column 77"
+    "'xxx.stan', line 245, column 13, included from\n\
+     'yyy.stan', line 666, column 42, included from\n\
+     'zzz.stan', line 24, column 77"
   in
   print_endline (string_of_location (parse_location str)) ;
   [%expect
     {|
-      file xxx.stan, line 245, column 13, included from
-      file yyy.stan, line 666, column 42, included from
-      file zzz.stan, line 24, column 77 |}]
+      'xxx.stan', line 245, column 13, included from
+      'yyy.stan', line 666, column 42, included from
+      'zzz.stan', line 24, column 77 |}]
 
 let%expect_test "location string equivalence 2" =
   let loc : location =
@@ -167,11 +171,11 @@ let%expect_test "location string equivalence 2" =
   print_endline (string_of_location (parse_location (string_of_location loc))) ;
   [%expect
     {|
-      file xxx.stan, line 35, column 24, included from
-      file yyy.stan, line 345, column 214 |}]
+      'xxx.stan', line 35, column 24, included from
+      'yyy.stan', line 345, column 214 |}]
 
 let%expect_test "parse location from string" =
-  let loc = parse_location "file xxx.stan, line 245, column 13" in
+  let loc = parse_location "'xxx.stan', line 245, column 13" in
   print_endline loc.filename ;
   print_endline (string_of_int loc.line_num) ;
   print_endline (string_of_int loc.col_num) ;

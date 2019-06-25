@@ -36,7 +36,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file beetles_cloglog.stan, line 11, column 10:
+Warning: deprecated language construct used in 'beetles_cloglog.stan', line 11, column 10:
    -------------------------------------------------
      9:    vector[N] centered_x;
     10:    real mean_x;
@@ -49,7 +49,7 @@ Warning: deprecated language construct used in file beetles_cloglog.stan, line 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_cloglog.stan, line 12, column 14:
+Warning: deprecated language construct used in 'beetles_cloglog.stan', line 12, column 14:
    -------------------------------------------------
     10:    real mean_x;
     11:    mean_x <- mean(x);
@@ -62,7 +62,7 @@ Warning: deprecated language construct used in file beetles_cloglog.stan, line 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_cloglog.stan, line 23, column 10:
+Warning: deprecated language construct used in 'beetles_cloglog.stan', line 23, column 10:
    -------------------------------------------------
     21:    real p[N];
     22:    for (i in 1:N) 
@@ -75,7 +75,7 @@ Warning: deprecated language construct used in file beetles_cloglog.stan, line 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_cloglog.stan, line 37, column 9:
+Warning: deprecated language construct used in 'beetles_cloglog.stan', line 37, column 9:
    -------------------------------------------------
     35:    real llike[N];
     36:    real rhat[N];
@@ -88,7 +88,7 @@ Warning: deprecated language construct used in file beetles_cloglog.stan, line 3
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_cloglog.stan, line 39, column 15:
+Warning: deprecated language construct used in 'beetles_cloglog.stan', line 39, column 15:
    -------------------------------------------------
     37:    alpha <- alpha_star - beta*mean_x;              
     38:    for (i in 1:N) {
@@ -101,7 +101,7 @@ Warning: deprecated language construct used in file beetles_cloglog.stan, line 3
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_cloglog.stan, line 40, column 13:
+Warning: deprecated language construct used in 'beetles_cloglog.stan', line 40, column 13:
    -------------------------------------------------
     38:    for (i in 1:N) {
     39:      llike[i]  <- r[i]*log(p[i]) + (n[i]-r[i])*log(1-p[i]);  
@@ -153,7 +153,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 11, column 12:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 11, column 12:
    -------------------------------------------------
      9:      vector[N] centered_x;
     10:      real mean_x;
@@ -166,7 +166,7 @@ Warning: deprecated language construct used in file beetles_logit.stan, line 11,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 12, column 16:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 12, column 16:
    -------------------------------------------------
     10:      real mean_x;
     11:      mean_x <- mean(x);
@@ -179,7 +179,7 @@ Warning: deprecated language construct used in file beetles_logit.stan, line 12,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 22, column 7:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 22, column 7:
    -------------------------------------------------
     20:  transformed parameters {
     21:      vector[N] m;
@@ -192,7 +192,7 @@ Warning: deprecated language construct used in file beetles_logit.stan, line 22,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 37, column 10:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 37, column 10:
    -------------------------------------------------
     35:    real rhat[N];
     36:    for (i in 1:N)  {
@@ -205,7 +205,7 @@ Warning: deprecated language construct used in file beetles_logit.stan, line 37,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 38, column 15:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 38, column 15:
    -------------------------------------------------
     36:    for (i in 1:N)  {
     37:      p[i] <- inv_logit(m[i]);
@@ -218,7 +218,7 @@ Warning: deprecated language construct used in file beetles_logit.stan, line 38,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 39, column 13:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 39, column 13:
    -------------------------------------------------
     37:      p[i] <- inv_logit(m[i]);
     38:      llike[i]  <- r[i]*log(p[i]) + (n[i]-r[i])*log(1-p[i]);  
@@ -231,7 +231,7 @@ Warning: deprecated language construct used in file beetles_logit.stan, line 39,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_logit.stan, line 41, column 9:
+Warning: deprecated language construct used in 'beetles_logit.stan', line 41, column 9:
    -------------------------------------------------
     39:      rhat[i] <- p[i]*n[i];  // fitted values
     40:    }
@@ -281,7 +281,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file beetles_probit.stan, line 10, column 12:
+Warning: deprecated language construct used in 'beetles_probit.stan', line 10, column 12:
    -------------------------------------------------
      8:      vector[N] centered_x;
      9:      real mean_x;
@@ -294,7 +294,7 @@ Warning: deprecated language construct used in file beetles_probit.stan, line 10
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_probit.stan, line 11, column 16:
+Warning: deprecated language construct used in 'beetles_probit.stan', line 11, column 16:
    -------------------------------------------------
      9:      real mean_x;
     10:      mean_x <- mean(x);
@@ -307,7 +307,7 @@ Warning: deprecated language construct used in file beetles_probit.stan, line 11
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_probit.stan, line 22, column 12:
+Warning: deprecated language construct used in 'beetles_probit.stan', line 22, column 12:
    -------------------------------------------------
     20:      real p[N];
     21:      for (i in 1:N)
@@ -320,7 +320,7 @@ Warning: deprecated language construct used in file beetles_probit.stan, line 22
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_probit.stan, line 34, column 9:
+Warning: deprecated language construct used in 'beetles_probit.stan', line 34, column 9:
    -------------------------------------------------
     32:    real rhat[N];
     33:  
@@ -333,7 +333,7 @@ Warning: deprecated language construct used in file beetles_probit.stan, line 34
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_probit.stan, line 37, column 15:
+Warning: deprecated language construct used in 'beetles_probit.stan', line 37, column 15:
    -------------------------------------------------
     35:  
     36:    for (i in 1:N) {
@@ -346,7 +346,7 @@ Warning: deprecated language construct used in file beetles_probit.stan, line 37
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file beetles_probit.stan, line 38, column 13:
+Warning: deprecated language construct used in 'beetles_probit.stan', line 38, column 13:
    -------------------------------------------------
     36:    for (i in 1:N) {
     37:      llike[i]  <- r[i] * log(p[i]) + (n[i] - r[i]) * log(1-p[i]);

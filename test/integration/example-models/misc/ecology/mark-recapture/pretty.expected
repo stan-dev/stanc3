@@ -57,7 +57,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 18, column 9:
+Warning: deprecated language construct used in 'cjs-K.stan', line 18, column 9:
    -------------------------------------------------
     16:    int<lower=0,upper=I> n_captured[K];  // n_capt[k]: num aptured at k
     17:  
@@ -70,7 +70,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 18, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 19, column 8:
+Warning: deprecated language construct used in 'cjs-K.stan', line 19, column 8:
    -------------------------------------------------
     17:  
     18:    first <- rep_array(K+1,I);
@@ -83,7 +83,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 19, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 24, column 20:
+Warning: deprecated language construct used in 'cjs-K.stan', line 24, column 20:
    -------------------------------------------------
     22:        if (X[i,k] == 1) {
     23:          if (k < first[i]) 
@@ -96,7 +96,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 24, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 26, column 19:
+Warning: deprecated language construct used in 'cjs-K.stan', line 26, column 19:
    -------------------------------------------------
     24:            first[i] <- k;
     25:          if (k > last[i]) 
@@ -109,7 +109,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 26, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 31, column 14:
+Warning: deprecated language construct used in 'cjs-K.stan', line 31, column 14:
    -------------------------------------------------
     29:    }
     30:  
@@ -122,7 +122,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 31, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 34, column 21:
+Warning: deprecated language construct used in 'cjs-K.stan', line 34, column 21:
    -------------------------------------------------
     32:    for (i in 1:I)
     33:      for (k in 1:K)
@@ -135,7 +135,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 34, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 46, column 12:
+Warning: deprecated language construct used in 'cjs-K.stan', line 46, column 12:
    -------------------------------------------------
     44:    {
     45:      int k;
@@ -148,7 +148,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 46, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 47, column 7:
+Warning: deprecated language construct used in 'cjs-K.stan', line 47, column 7:
    -------------------------------------------------
     45:      int k;
     46:      chi[K] <- 1.0;              
@@ -161,7 +161,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 47, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 49, column 14:
+Warning: deprecated language construct used in 'cjs-K.stan', line 49, column 14:
    -------------------------------------------------
     47:      k <- K - 1;
     48:      while (k > 0) {
@@ -174,7 +174,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 49, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 50, column 9:
+Warning: deprecated language construct used in 'cjs-K.stan', line 50, column 9:
    -------------------------------------------------
     48:      while (k > 0) {
     49:        chi[k] <- (1 - phi[k]) + phi[k] * (1 - p[k+1]) * chi[k+1]; 
@@ -187,7 +187,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 50, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 58, column 25:
+Warning: deprecated language construct used in 'cjs-K.stan', line 58, column 25:
    -------------------------------------------------
     56:      if (last[i] > 0) {
     57:        for (k in (first[i]+1):last[i]) {
@@ -200,7 +200,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 58, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 60, column 27:
+Warning: deprecated language construct used in 'cjs-K.stan', line 60, column 27:
    -------------------------------------------------
     58:          increment_log_prob(log(phi[k-1]));     // i survived from k-1 to k
     59:          if (X[i,k] == 1)
@@ -213,7 +213,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 60, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 62, column 27:
+Warning: deprecated language construct used in 'cjs-K.stan', line 62, column 27:
    -------------------------------------------------
     60:            increment_log_prob(log(p[k]));       // i captured at k
     61:          else
@@ -226,7 +226,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 62, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 64, column 23:
+Warning: deprecated language construct used in 'cjs-K.stan', line 64, column 23:
    -------------------------------------------------
     62:            increment_log_prob(log1m(p[k]));     // i not captured at k
     63:        }
@@ -239,7 +239,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 64, column 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 73, column 8:
+Warning: deprecated language construct used in 'cjs-K.stan', line 73, column 8:
    -------------------------------------------------
     71:    vector<lower=0>[K] pop_hat;  // population
     72:  
@@ -252,7 +252,7 @@ Warning: deprecated language construct used in file cjs-K.stan, line 73, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs-K.stan, line 76, column 16:
+Warning: deprecated language construct used in 'cjs-K.stan', line 76, column 16:
    -------------------------------------------------
     74:  
     75:    for (k in 1:K)
@@ -291,7 +291,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file cjs.stan, line 22, column 10:
+Warning: deprecated language construct used in 'cjs.stan', line 22, column 10:
    -------------------------------------------------
     20:    //  chi[t] probability a sighting at t is last sighting
     21:    real<lower=0,upper=1> chi[3];  
@@ -304,7 +304,7 @@ Warning: deprecated language construct used in file cjs.stan, line 22, column 10
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 23, column 10:
+Warning: deprecated language construct used in 'cjs.stan', line 23, column 10:
    -------------------------------------------------
     21:    real<lower=0,upper=1> chi[3];  
     22:    chi[3] <- 1;
@@ -317,7 +317,7 @@ Warning: deprecated language construct used in file cjs.stan, line 23, column 10
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 24, column 10:
+Warning: deprecated language construct used in 'cjs.stan', line 24, column 10:
    -------------------------------------------------
     22:    chi[3] <- 1;
     23:    chi[2] <- (1 - phi[2]) + phi[2] * (1 - p[3]);
@@ -330,7 +330,7 @@ Warning: deprecated language construct used in file cjs.stan, line 24, column 10
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 27, column 19:
+Warning: deprecated language construct used in 'cjs.stan', line 27, column 19:
    -------------------------------------------------
     25:  }
     26:  model {
@@ -343,7 +343,7 @@ Warning: deprecated language construct used in file cjs.stan, line 27, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 28, column 19:
+Warning: deprecated language construct used in 'cjs.stan', line 28, column 19:
    -------------------------------------------------
     26:  model {
     27:    increment_log_prob(history[7] * (log(phi[1]) + log(p[2]) + log(phi[2]) + log(p[3])));
@@ -356,7 +356,7 @@ Warning: deprecated language construct used in file cjs.stan, line 28, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 29, column 19:
+Warning: deprecated language construct used in 'cjs.stan', line 29, column 19:
    -------------------------------------------------
     27:    increment_log_prob(history[7] * (log(phi[1]) + log(p[2]) + log(phi[2]) + log(p[3])));
     28:    increment_log_prob(history[6] * (log(phi[1]) + log(p[2]) + log(chi[2])));
@@ -369,7 +369,7 @@ Warning: deprecated language construct used in file cjs.stan, line 29, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 30, column 19:
+Warning: deprecated language construct used in 'cjs.stan', line 30, column 19:
    -------------------------------------------------
     28:    increment_log_prob(history[6] * (log(phi[1]) + log(p[2]) + log(chi[2])));
     29:    increment_log_prob(history[5] * (log(phi[1]) + log1m(p[2]) + log(phi[2]) + log(p[3])));
@@ -382,7 +382,7 @@ Warning: deprecated language construct used in file cjs.stan, line 30, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 31, column 19:
+Warning: deprecated language construct used in 'cjs.stan', line 31, column 19:
    -------------------------------------------------
     29:    increment_log_prob(history[5] * (log(phi[1]) + log1m(p[2]) + log(phi[2]) + log(p[3])));
     30:    increment_log_prob(history[4] * (log(chi[1])));
@@ -395,7 +395,7 @@ Warning: deprecated language construct used in file cjs.stan, line 31, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 32, column 19:
+Warning: deprecated language construct used in 'cjs.stan', line 32, column 19:
    -------------------------------------------------
     30:    increment_log_prob(history[4] * (log(chi[1])));
     31:    increment_log_prob(history[3] * (log(phi[2]) + log(p[3])));
@@ -408,7 +408,7 @@ Warning: deprecated language construct used in file cjs.stan, line 32, column 19
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file cjs.stan, line 37, column 9:
+Warning: deprecated language construct used in 'cjs.stan', line 37, column 9:
    -------------------------------------------------
     35:  generated quantities {
     36:    real<lower=0,upper=1> beta3;
@@ -442,7 +442,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file mark-recapture-2.stan, line 8, column 13:
+Warning: deprecated language construct used in 'mark-recapture-2.stan', line 8, column 13:
    -------------------------------------------------
      6:  transformed data {
      7:    real theta_max;
@@ -455,7 +455,7 @@ Warning: deprecated language construct used in file mark-recapture-2.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file mark-recapture-2.stan, line 9, column 13:
+Warning: deprecated language construct used in 'mark-recapture-2.stan', line 9, column 13:
    -------------------------------------------------
      7:    real theta_max;
      8:    theta_max <- M;         
@@ -468,7 +468,7 @@ Warning: deprecated language construct used in file mark-recapture-2.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file mark-recapture-2.stan, line 19, column 5:
+Warning: deprecated language construct used in 'mark-recapture-2.stan', line 19, column 5:
    -------------------------------------------------
     17:  generated quantities {
     18:    real<lower=(C - R + M)> N;            // population
@@ -504,7 +504,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file mark-recapture-3.stan, line 26, column 13:
+Warning: deprecated language construct used in 'mark-recapture-3.stan', line 26, column 13:
    -------------------------------------------------
     24:  transformed data {
     25:    real theta_max;
@@ -517,7 +517,7 @@ Warning: deprecated language construct used in file mark-recapture-3.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file mark-recapture-3.stan, line 27, column 13:
+Warning: deprecated language construct used in 'mark-recapture-3.stan', line 27, column 13:
    -------------------------------------------------
     25:    real theta_max;
     26:    theta_max <- M;         
@@ -530,7 +530,7 @@ Warning: deprecated language construct used in file mark-recapture-3.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file mark-recapture-3.stan, line 34, column 9:
+Warning: deprecated language construct used in 'mark-recapture-3.stan', line 34, column 9:
    -------------------------------------------------
     32:  transformed parameters {
     33:    real<lower=0,upper=theta_max> theta;
@@ -543,7 +543,7 @@ Warning: deprecated language construct used in file mark-recapture-3.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file mark-recapture-3.stan, line 37, column 19:
+Warning: deprecated language construct used in 'mark-recapture-3.stan', line 37, column 19:
    -------------------------------------------------
     35:  }
     36:  model {
