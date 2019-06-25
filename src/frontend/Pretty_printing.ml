@@ -7,10 +7,6 @@
 open Core_kernel
 open Ast
 
-let indent_num = ref 1
-let begin_indent _ = indent_num := 1 + !indent_num
-let exit_indent _ = indent_num := -1 + !indent_num
-let tabs () = String.make (2 * !indent_num) ' '
 let wrap_fmt fmt x = x |> fmt Format.str_formatter |> Format.flush_str_formatter
 
 let with_hbox ppf f =
