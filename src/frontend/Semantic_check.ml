@@ -164,7 +164,7 @@ let semantic_check_autodifftype at = Validate.ok at
 (* Probably nothing to do here *)
 let rec semantic_check_unsizedtype : unsizedtype -> unit Validate.t = function
   | UFun (l, rt) ->
-      (* fold over argument types accumulating errors with initial state 
+      (* fold over argument types accumulating errors with initial state
           given by validating the return type *)
       List.fold
         ~f:(fun v0 (at, ut) ->
@@ -305,7 +305,7 @@ let semantic_check_fn_stan_math ~loc id es =
       |> Validate.error
 
 let fn_kind_from_application id es =
-  (* We need to check an application here, rather than a mere name of the 
+  (* We need to check an application here, rather than a mere name of the
    function because, technically, user defined functions can shadow
    constants in StanLib. *)
   if
@@ -855,8 +855,8 @@ let semantic_check_assignment_read_only ~loc id =
       Semantic_error.cannot_assign_to_read_only loc id.name |> error
     else ok ())
 
-(* Variables from previous blocks are read-only. 
-   In particular, data and parameters never assigned to 
+(* Variables from previous blocks are read-only.
+   In particular, data and parameters never assigned to
 *)
 let semantic_check_assignment_global ~loc ~cf ~block id =
   Validate.(
@@ -1093,8 +1093,8 @@ let semantic_check_continue ~loc ~cf =
 
 (* -- Return ---------------------------------------------------------------- *)
 
-(** No returns outside of function definitions 
-    In case of void function, no return statements anywhere 
+(** No returns outside of function definitions
+    In case of void function, no return statements anywhere
 *)
 let semantic_check_return ~loc ~cf e =
   Validate.(
@@ -1211,7 +1211,7 @@ and semantic_check_loop_body ~cf loop_var loop_var_ty loop_body =
   Symbol_table.begin_scope vm ;
   let is_fresh_var = check_fresh_variable loop_var false in
   Symbol_table.enter vm loop_var.name (cf.current_block, loop_var_ty) ;
-  (* Check that function args and loop identifiers are not modified in 
+  (* Check that function args and loop identifiers are not modified in
       function. (passed by const ref) *)
   Symbol_table.set_read_only vm loop_var.name ;
   let us =
@@ -1306,8 +1306,8 @@ and try_compute_block_statement_returntype loc srt1 srt2 =
 
 and semantic_check_block ~loc ~cf stmts =
   Symbol_table.begin_scope vm ;
-  (* Any statements after a break or continue or return or reject 
-     do not count for the return type. 
+  (* Any statements after a break or continue or return or reject
+     do not count for the return type.
   *)
   let validated_stmts =
     List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
@@ -1542,7 +1542,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     >>= fun _ ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt)) ;
-    (* Check that function args and loop identifiers are not modified in 
+    (* Check that function args and loop identifiers are not modified in
     function. (passed by const ref)*)
     List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
     semantic_check_fundef_dist_rt ~loc id urt
@@ -1555,12 +1555,12 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     |> sequence
     |> apply_const (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
     >>= fun _ ->
-    (* TODO: Bob was suggesting that function arguments must be allowed to 
-        shadow user defined functions but not library functions. 
-        Should we allow for that? 
+    (* TODO: Bob was suggesting that function arguments must be allowed to
+        shadow user defined functions but not library functions.
+        Should we allow for that?
     *)
     (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
-        as if they are parameters, for the purposes of type checking. 
+        as if they are parameters, for the purposes of type checking.
     *)
     (* WARNING: SIDE EFFECTING *)
     let _ =
@@ -1630,7 +1630,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
 let semantic_check_ostatements_in_block ~cf block stmts_opt =
   let cf' = {cf with current_block= block} in
   Option.value_map stmts_opt ~default:(Validate.ok None) ~f:(fun stmts ->
-      (* I'm folding since I'm not sure if map is guaranteed to 
+      (* I'm folding since I'm not sure if map is guaranteed to
         respect the ordering of the list *)
       List.fold ~init:[] stmts ~f:(fun accu stmt ->
           let s = semantic_check_statement cf' stmt in

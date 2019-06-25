@@ -28,7 +28,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file blocker.stan, line 1, column 0:
+Warning: deprecated language construct used in 'blocker.stan', line 1, column 0:
    -------------------------------------------------
      1:  #DOC See \url{http://www.openbugs.net/Examples/Blockers.html}.
          ^
@@ -39,7 +39,7 @@ Warning: deprecated language construct used in file blocker.stan, line 1, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file blocker.stan, line 18, column 15:
+Warning: deprecated language construct used in 'blocker.stan', line 18, column 15:
    -------------------------------------------------
     16:  transformed parameters {
     17:    real<lower=0> sigma_delta; 

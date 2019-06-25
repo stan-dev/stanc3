@@ -56,7 +56,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file kidney.stan, line 1, column 0:
+Warning: deprecated language construct used in 'kidney.stan', line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
          ^
@@ -67,7 +67,7 @@ Warning: deprecated language construct used in file kidney.stan, line 1, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 2, column 0:
+Warning: deprecated language construct used in 'kidney.stan', line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
      2:  # Page 51: Kidney: Weibull regression with random efects
@@ -79,7 +79,7 @@ Warning: deprecated language construct used in file kidney.stan, line 2, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 3, column 0:
+Warning: deprecated language construct used in 'kidney.stan', line 3, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
      2:  # Page 51: Kidney: Weibull regression with random efects
@@ -92,7 +92,7 @@ Warning: deprecated language construct used in file kidney.stan, line 3, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 35, column 21:
+Warning: deprecated language construct used in 'kidney.stan', line 35, column 21:
    -------------------------------------------------
     33:    real sigma;
     34:    real yabeta_disease[4];
@@ -105,7 +105,7 @@ Warning: deprecated language construct used in file kidney.stan, line 35, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 36, column 21:
+Warning: deprecated language construct used in 'kidney.stan', line 36, column 21:
    -------------------------------------------------
     34:    real yabeta_disease[4];
     35:    yabeta_disease[1] <- 0; 
@@ -118,7 +118,7 @@ Warning: deprecated language construct used in file kidney.stan, line 36, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 37, column 21:
+Warning: deprecated language construct used in 'kidney.stan', line 37, column 21:
    -------------------------------------------------
     35:    yabeta_disease[1] <- 0; 
     36:    yabeta_disease[2] <- beta_disease2;
@@ -131,7 +131,7 @@ Warning: deprecated language construct used in file kidney.stan, line 37, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 38, column 21:
+Warning: deprecated language construct used in 'kidney.stan', line 38, column 21:
    -------------------------------------------------
     36:    yabeta_disease[2] <- beta_disease2;
     37:    yabeta_disease[3] <- beta_disease3;
@@ -144,7 +144,7 @@ Warning: deprecated language construct used in file kidney.stan, line 38, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file kidney.stan, line 39, column 9:
+Warning: deprecated language construct used in 'kidney.stan', line 39, column 9:
    -------------------------------------------------
     37:    yabeta_disease[3] <- beta_disease3;
     38:    yabeta_disease[4] <- beta_disease4;

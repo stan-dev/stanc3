@@ -215,7 +215,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file pilots.stan, line 24, column 2:
+Warning: deprecated language construct used in 'pilots.stan', line 24, column 2:
    -------------------------------------------------
     22:  }
     23:  model {

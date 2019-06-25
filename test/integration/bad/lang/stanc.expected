@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc bad1.stan
 
-Syntax error in 'bad1.stan', line 1, columns 6-7, parsing error:
+Syntax error in 'bad1.stan', line 1, column 6 to column 7, parsing error:
    -------------------------------------------------
      1:  model { 
                 ^
@@ -11,7 +11,7 @@ Variable declaration, statement or "}" expected.
 
   $ ../../../../../install/default/bin/stanc bad10.stan
 
-Semantic error in 'bad10.stan', line 2, columns 8-11:
+Semantic error in 'bad10.stan', line 2, column 8 to column 11:
    -------------------------------------------------
      1:  data {
      2:     real y__;
@@ -24,7 +24,7 @@ Identifier 'y__' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc bad11.stan
 
-Semantic error in 'bad11.stan', line 2, columns 2-12:
+Semantic error in 'bad11.stan', line 2, column 2 to column 12:
    -------------------------------------------------
      1:  parameters {
      2:    int theta;
@@ -37,7 +37,7 @@ Semantic error in 'bad11.stan', line 2, columns 2-12:
 
   $ ../../../../../install/default/bin/stanc bad2.stan
 
-Semantic error in 'bad2.stan', line 1, columns 28-36:
+Semantic error in 'bad2.stan', line 1, column 28 to column 36:
    -------------------------------------------------
      1:  data { real a[3]; } model { a = 2.0; }
                                      ^
@@ -47,7 +47,7 @@ Cannot assign to global variable 'a' declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc bad3.stan
 
-Syntax error in 'bad3.stan', line 1, columns 15-21, parsing error:
+Syntax error in 'bad3.stan', line 1, column 15 to column 21, parsing error:
    -------------------------------------------------
      1:  data { real a; matrix(2,3) b; } model { a = b; }
                               ^
@@ -58,7 +58,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../../install/default/bin/stanc bad4.stan
 
-Semantic error in 'bad4.stan', line 1, columns 38-42:
+Semantic error in 'bad4.stan', line 1, column 38 to column 42:
    -------------------------------------------------
      1:  data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
                                                ^
@@ -68,7 +68,7 @@ Lower bound of for-loop must be of type int. Instead found type real.
 
   $ ../../../../../install/default/bin/stanc bad5.stan
 
-Semantic error in 'bad5.stan', line 3, columns 6-10:
+Semantic error in 'bad5.stan', line 3, column 6 to column 10:
    -------------------------------------------------
      1:  transformed data {
      2:    real y;
@@ -82,7 +82,7 @@ Identifier 'lp__' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc bad6.stan
 
-Semantic error in 'bad6.stan', line 7, columns 3-12:
+Semantic error in 'bad6.stan', line 7, column 3 to column 12:
    -------------------------------------------------
      5:     real z;
      6:     
@@ -96,7 +96,7 @@ Cannot assign to global variable 'y' declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc bad7.stan
 
-Semantic error in 'bad7.stan', line 7, columns 2-11:
+Semantic error in 'bad7.stan', line 7, column 2 to column 11:
    -------------------------------------------------
      5:    real z;
      6:  
@@ -110,7 +110,7 @@ Cannot assign to global variable 'y' declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc bad8.stan
 
-Semantic error in 'bad8.stan', line 5, columns 4-13:
+Semantic error in 'bad8.stan', line 5, column 4 to column 13:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -123,7 +123,7 @@ Cannot assign to global variable 'y' declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc bad9.stan
 
-Semantic error in 'bad9.stan', line 5, columns 3-9:
+Semantic error in 'bad9.stan', line 5, column 3 to column 9:
    -------------------------------------------------
      3:  }
      4:  parameters {
@@ -137,7 +137,7 @@ Semantic error in 'bad9.stan', line 5, columns 3-9:
 
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan
 
-Syntax error in 'bad_bounds1.stan', line 2, columns 13-14, parsing error:
+Syntax error in 'bad_bounds1.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real<lower=1 && 2> x;
@@ -151,7 +151,7 @@ Syntax error in 'bad_bounds1.stan', line 2, columns 13-14, parsing error:
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
 
-Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, columns 41-48:
+Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------
     11:    matrix[N_2, N_1] transformed_data_matrix;
     12:  
@@ -180,7 +180,7 @@ Syntax error in 'bad_cov_exp_quad_arr_rvec_param.stan', line 12, column 0 to lin
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_data.stan
 
-Semantic error in 'bad_cov_exp_quad_arr_vec_data.stan', line 13, columns 41-48:
+Semantic error in 'bad_cov_exp_quad_arr_vec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------
     11:    matrix[N_2, N_1] transformed_data_matrix;
     12:  
@@ -209,7 +209,7 @@ Syntax error in 'bad_cov_exp_quad_arr_vec_param.stan', line 12, column 0 to line
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_data.stan
 
-Semantic error in 'bad_cov_exp_quad_len_data.stan', line 13, columns 28-75:
+Semantic error in 'bad_cov_exp_quad_len_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
     12:  
@@ -275,7 +275,7 @@ Syntax error in 'bad_cov_exp_quad_len_vec_param.stan', line 12, column 0 to line
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_data.stan
 
-Semantic error in 'bad_cov_exp_quad_rvec_arr_data.stan', line 13, columns 50-57:
+Semantic error in 'bad_cov_exp_quad_rvec_arr_data.stan', line 13, column 50 to column 57:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
     12:  
@@ -304,7 +304,7 @@ Syntax error in 'bad_cov_exp_quad_rvec_arr_param.stan', line 12, column 0 to lin
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_data.stan
 
-Semantic error in 'bad_cov_exp_quad_rvec_data.stan', line 12, columns 28-65:
+Semantic error in 'bad_cov_exp_quad_rvec_data.stan', line 12, column 28 to column 65:
    -------------------------------------------------
     10:    matrix[N_2, N_1] transformed_data_matrix;
     11:  
@@ -325,7 +325,7 @@ Instead supplied arguments of incompatible type: row_vector, real, real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_data.stan
 
-Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, columns 28-75:
+Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_2, N_1] transformed_data_matrix;
     12:  
@@ -361,7 +361,7 @@ Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 12, column 0 to lin
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_data.stan
 
-Semantic error in 'bad_cov_exp_quad_sigma_data.stan', line 13, columns 28-75:
+Semantic error in 'bad_cov_exp_quad_sigma_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
     12:  
@@ -427,7 +427,7 @@ Syntax error in 'bad_cov_exp_quad_sigma_vec_param.stan', line 12, column 0 to li
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_data.stan
 
-Semantic error in 'bad_cov_exp_quad_vec_arr_data.stan', line 13, columns 50-57:
+Semantic error in 'bad_cov_exp_quad_vec_arr_data.stan', line 13, column 50 to column 57:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
     12:  
@@ -456,7 +456,7 @@ Syntax error in 'bad_cov_exp_quad_vec_arr_param.stan', line 12, column 0 to line
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_data.stan
 
-Semantic error in 'bad_cov_exp_quad_vec_data.stan', line 12, columns 28-65:
+Semantic error in 'bad_cov_exp_quad_vec_data.stan', line 12, column 28 to column 65:
    -------------------------------------------------
     10:    matrix[N_2, N_1] transformed_data_matrix;
     11:  
@@ -477,7 +477,7 @@ Instead supplied arguments of incompatible type: vector, real, real.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_data.stan
 
-Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, columns 28-75:
+Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
     12:  
@@ -513,7 +513,7 @@ Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 12, column 0 to lin
 
   $ ../../../../../install/default/bin/stanc bad_fun_name.stan
 
-Semantic error in 'bad_fun_name.stan', line 2, columns 7-12:
+Semantic error in 'bad_fun_name.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real logit; // causes error because logit is fun name
@@ -526,7 +526,7 @@ Identifier 'logit' clashes with Stan Math library function.
 
   $ ../../../../../install/default/bin/stanc bad_model_name_var.stan
 
-Semantic error in 'bad_model_name_var.stan', line 3, columns 6-30:
+Semantic error in 'bad_model_name_var.stan', line 3, column 6 to column 30:
    -------------------------------------------------
      1:  data {
      2:    // declare matching model name should fail
@@ -540,7 +540,7 @@ Identifier 'bad_model_name_var_model' clashes with model name.
 
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 
-Syntax error in 'bad_periods_data.stan', line 2, columns 7-8, parsing error:
+Syntax error in 'bad_periods_data.stan', line 2, column 7 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real x.y;
@@ -554,7 +554,7 @@ Only top-level variable declarations are allowed in data and parameter blocks.
 
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
 
-Syntax error in 'bad_periods_gqs.stan', line 8, columns 7-8, parsing error:
+Syntax error in 'bad_periods_gqs.stan', line 8, column 7 to column 8, parsing error:
    -------------------------------------------------
      6:  }
      7:  generated quantities {
@@ -569,7 +569,7 @@ Syntax error in 'bad_periods_gqs.stan', line 8, columns 7-8, parsing error:
 
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
 
-Syntax error in 'bad_periods_local.stan', line 5, columns 7-8, parsing error:
+Syntax error in 'bad_periods_local.stan', line 5, column 7 to column 8, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -584,7 +584,7 @@ Syntax error in 'bad_periods_local.stan', line 5, columns 7-8, parsing error:
 
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
 
-Syntax error in 'bad_periods_params.stan', line 2, columns 7-8, parsing error:
+Syntax error in 'bad_periods_params.stan', line 2, column 7 to column 8, parsing error:
    -------------------------------------------------
      1:  parameters {
      2:    real x.y;
@@ -598,7 +598,7 @@ Only top-level variable declarations are allowed in data and parameter blocks.
 
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
 
-Syntax error in 'bad_periods_tdata.stan', line 2, columns 7-8, parsing error:
+Syntax error in 'bad_periods_tdata.stan', line 2, column 7 to column 8, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x.y;
@@ -612,7 +612,7 @@ Syntax error in 'bad_periods_tdata.stan', line 2, columns 7-8, parsing error:
 
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
 
-Syntax error in 'bad_periods_tparams.stan', line 2, columns 7-8, parsing error:
+Syntax error in 'bad_periods_tparams.stan', line 2, column 7 to column 8, parsing error:
    -------------------------------------------------
      1:  transformed parameters {
      2:    real x.;
@@ -626,7 +626,7 @@ Syntax error in 'bad_periods_tparams.stan', line 2, columns 7-8, parsing error:
 
   $ ../../../../../install/default/bin/stanc good_all.stan
 
-Warning: deprecated language construct used in file good_all.stan, line 1, column 0:
+Warning: deprecated language construct used in 'good_all.stan', line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
          ^
@@ -637,7 +637,7 @@ Warning: deprecated language construct used in file good_all.stan, line 1, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file good_all.stan, line 2, column 0:
+Warning: deprecated language construct used in 'good_all.stan', line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
      2:  # Page 23: Birats
@@ -649,7 +649,7 @@ Warning: deprecated language construct used in file good_all.stan, line 2, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file good_all.stan, line 3, column 0:
+Warning: deprecated language construct used in 'good_all.stan', line 3, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
      2:  # Page 23: Birats
@@ -662,7 +662,7 @@ Warning: deprecated language construct used in file good_all.stan, line 3, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file good_all.stan, line 4, column 0:
+Warning: deprecated language construct used in 'good_all.stan', line 4, column 0:
    -------------------------------------------------
      2:  # Page 23: Birats
      3:  ## 
@@ -675,7 +675,7 @@ Warning: deprecated language construct used in file good_all.stan, line 4, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Semantic error in 'good_all.stan', line 25, columns 2-8:
+Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
     23:  
     24:  model {

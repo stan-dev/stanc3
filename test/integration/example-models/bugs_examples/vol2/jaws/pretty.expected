@@ -27,7 +27,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file jaws.stan, line 1, column 0:
+Warning: deprecated language construct used in 'jaws.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Jaws: repeated measures analysis of variance
          ^
@@ -38,7 +38,7 @@ Warning: deprecated language construct used in file jaws.stan, line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file jaws.stan, line 2, column 0:
+Warning: deprecated language construct used in 'jaws.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Jaws: repeated measures analysis of variance
      2:  #  http://www.openbugs.net/Examples/Jaws.html
@@ -50,7 +50,7 @@ Warning: deprecated language construct used in file jaws.stan, line 2, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file jaws.stan, line 14, column 12:
+Warning: deprecated language construct used in 'jaws.stan', line 14, column 12:
    -------------------------------------------------
     12:  transformed data {
     13:    real mean_age;
@@ -63,7 +63,7 @@ Warning: deprecated language construct used in file jaws.stan, line 14, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file jaws.stan, line 29, column 11:
+Warning: deprecated language construct used in 'jaws.stan', line 29, column 11:
    -------------------------------------------------
     27:   
     28:    for (m in 1:M)  

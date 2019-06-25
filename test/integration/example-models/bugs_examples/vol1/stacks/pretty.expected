@@ -46,7 +46,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
          ^
@@ -57,7 +57,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 1
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 2, column 0:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -69,7 +69,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 2
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 3, column 0:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 3, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -82,7 +82,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 3
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 18, column 15:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 18, column 15:
    -------------------------------------------------
     16:    real sd_x[p];
     17:    for (j in 1:p) { 
@@ -95,7 +95,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 19, column 13:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 19, column 13:
    -------------------------------------------------
     17:    for (j in 1:p) { 
     18:      mean_x[j] <- mean(col(x,j)); 
@@ -108,7 +108,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 21, column 14:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 21, column 14:
    -------------------------------------------------
     19:      sd_x[j] <- sd(col(x,j)); 
     20:      for (i in 1:N)  
@@ -121,7 +121,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 34, column 9:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 34, column 9:
    -------------------------------------------------
     32:    real<lower=0> sigma;
     33:    vector[N] mu;
@@ -134,7 +134,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 3
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 35, column 6:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 35, column 6:
    -------------------------------------------------
     33:    vector[N] mu;
     34:    sigma <- sqrt(sigmasq);
@@ -147,7 +147,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 3
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 53, column 10:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 53, column 10:
    -------------------------------------------------
     51:  
     52:    for (j in 1:p)
@@ -160,7 +160,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 5
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 54, column 6:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 54, column 6:
    -------------------------------------------------
     52:    for (j in 1:p)
     53:      b[j] <- beta[j] / sd_x[j];
@@ -173,7 +173,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 5
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 56, column 14:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 56, column 14:
    -------------------------------------------------
     54:    b0 <- beta0 - mean_x * b;
     55:  
@@ -186,7 +186,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 5
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 57, column 14:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 57, column 14:
    -------------------------------------------------
     55:  
     56:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -199,7 +199,7 @@ Warning: deprecated language construct used in file stacks_a_normal.stan, line 5
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_a_normal.stan, line 58, column 14:
+Warning: deprecated language construct used in 'stacks_a_normal.stan', line 58, column 14:
    -------------------------------------------------
     56:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     57:    outlier_4  <- step(fabs((Y[4] - mu[4]) / sigma) - 2.5);
@@ -260,7 +260,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
          ^
@@ -271,7 +271,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 1, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 2, column 0:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -283,7 +283,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 2, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 3, column 0:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 3, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -296,7 +296,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 3, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 18, column 15:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 18, column 15:
    -------------------------------------------------
     16:    real sd_x[p];
     17:    for (j in 1:p) { 
@@ -309,7 +309,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 18,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 19, column 13:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 19, column 13:
    -------------------------------------------------
     17:    for (j in 1:p) { 
     18:      mean_x[j] <- mean(col(x,j)); 
@@ -322,7 +322,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 19,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 21, column 14:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 21, column 14:
    -------------------------------------------------
     19:      sd_x[j] <- sd(col(x,j)); 
     20:      for (i in 1:N)  
@@ -335,7 +335,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 21,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 35, column 9:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 35, column 9:
    -------------------------------------------------
     33:    vector[N] mu;
     34:  
@@ -348,7 +348,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 35,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 36, column 6:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 36, column 6:
    -------------------------------------------------
     34:  
     35:    sigma <- sqrt(2) * sigmasq;
@@ -361,7 +361,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 36,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 55, column 10:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 55, column 10:
    -------------------------------------------------
     53:  
     54:    for (j in 1:p)
@@ -374,7 +374,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 55,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 56, column 6:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 56, column 6:
    -------------------------------------------------
     54:    for (j in 1:p)
     55:      b[j] <- beta[j] / sd_x[j];
@@ -387,7 +387,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 56,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 58, column 14:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 58, column 14:
    -------------------------------------------------
     56:    b0 <- beta0 - mean_x * b;
     57:  
@@ -400,7 +400,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 58,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 59, column 14:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 59, column 14:
    -------------------------------------------------
     57:  
     58:    outlier_1  <- step(fabs((Y[1] - mu[1]) / sigma) - 2.5);
@@ -413,7 +413,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 59,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 60, column 14:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 60, column 14:
    -------------------------------------------------
     58:    outlier_1  <- step(fabs((Y[1] - mu[1]) / sigma) - 2.5);
     59:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -426,7 +426,7 @@ Warning: deprecated language construct used in file stacks_b_dexp.stan, line 60,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_b_dexp.stan, line 61, column 14:
+Warning: deprecated language construct used in 'stacks_b_dexp.stan', line 61, column 14:
    -------------------------------------------------
     59:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     60:    outlier_4  <- step(fabs((Y[4] - mu[4]) / sigma) - 2.5);
@@ -487,7 +487,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
          ^
@@ -498,7 +498,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 1, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 2, column 0:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -510,7 +510,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 2, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 3, column 0:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 3, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -523,7 +523,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 3, co
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 20, column 15:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 20, column 15:
    -------------------------------------------------
     18:  
     19:    for (j in 1:p) { 
@@ -536,7 +536,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 20, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 21, column 13:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 21, column 13:
    -------------------------------------------------
     19:    for (j in 1:p) { 
     20:      mean_x[j] <- mean(col(x,j)); 
@@ -549,7 +549,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 21, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 23, column 14:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 23, column 14:
    -------------------------------------------------
     21:      sd_x[j] <- sd(col(x,j)); 
     22:      for (i in 1:N)  
@@ -562,7 +562,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 23, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 25, column 5:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 25, column 5:
    -------------------------------------------------
     23:        z[i,j] <- (x[i,j] - mean_x[j]) / sd_x[j]; 
     24:    }
@@ -575,7 +575,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 25, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 38, column 9:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 38, column 9:
    -------------------------------------------------
     36:    vector[N] mu;
     37:  
@@ -588,7 +588,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 38, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 39, column 6:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 39, column 6:
    -------------------------------------------------
     37:  
     38:    sigma <- sqrt(d * sigmasq / (d-2)); // t errors on d degrees of freedom
@@ -601,7 +601,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 39, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 57, column 10:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 57, column 10:
    -------------------------------------------------
     55:  
     56:    for (j in 1:p)
@@ -614,7 +614,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 57, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 58, column 6:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 58, column 6:
    -------------------------------------------------
     56:    for (j in 1:p)
     57:      b[j] <- beta[j] / sd_x[j];
@@ -627,7 +627,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 58, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 60, column 14:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 60, column 14:
    -------------------------------------------------
     58:    b0 <- beta0 - mean_x * b;
     59:  
@@ -640,7 +640,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 60, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 61, column 14:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 61, column 14:
    -------------------------------------------------
     59:  
     60:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -653,7 +653,7 @@ Warning: deprecated language construct used in file stacks_c_t4.stan, line 61, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_c_t4.stan, line 62, column 14:
+Warning: deprecated language construct used in 'stacks_c_t4.stan', line 62, column 14:
    -------------------------------------------------
     60:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     61:    outlier_4  <- step(fabs((Y[4] - mu[4]) / sigma) - 2.5);
@@ -714,7 +714,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
          ^
@@ -725,7 +725,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 2, column 0:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -737,7 +737,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 3, column 0:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 3, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -750,7 +750,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 18, column 15:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 18, column 15:
    -------------------------------------------------
     16:    real sd_x[p];
     17:    for (j in 1:p) { 
@@ -763,7 +763,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 19, column 13:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 19, column 13:
    -------------------------------------------------
     17:    for (j in 1:p) { 
     18:      mean_x[j] <- mean(col(x,j)); 
@@ -776,7 +776,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 21, column 14:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 21, column 14:
    -------------------------------------------------
     19:      sd_x[j] <- sd(col(x,j)); 
     20:      for (i in 1:N)  
@@ -789,7 +789,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 36, column 9:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 36, column 9:
    -------------------------------------------------
     34:    vector[N] mu;
     35:  
@@ -802,7 +802,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 37, column 6:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 37, column 6:
    -------------------------------------------------
     35:  
     36:    sigma <- sqrt(sigmasq);
@@ -815,7 +815,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 56, column 10:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 56, column 10:
    -------------------------------------------------
     54:  
     55:    for (j in 1:p)
@@ -828,7 +828,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 57, column 6:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 57, column 6:
    -------------------------------------------------
     55:    for (j in 1:p)
     56:      b[j] <- beta[j] / sd_x[j];
@@ -841,7 +841,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 59, column 14:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 59, column 14:
    -------------------------------------------------
     57:    b0 <- beta0 - mean_x * b;
     58:  
@@ -854,7 +854,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 60, column 14:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 60, column 14:
    -------------------------------------------------
     58:  
     59:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -867,7 +867,7 @@ Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_d_normal_ridge.stan, line 61, column 14:
+Warning: deprecated language construct used in 'stacks_d_normal_ridge.stan', line 61, column 14:
    -------------------------------------------------
     59:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     60:    outlier_4  <- step(fabs((Y[4] - mu[4]) / sigma) - 2.5);
@@ -930,7 +930,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
          ^
@@ -941,7 +941,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 2, column 0:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -953,7 +953,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 3, column 0:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 3, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -966,7 +966,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 18, column 15:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 18, column 15:
    -------------------------------------------------
     16:    real sd_x[p];
     17:    for (j in 1:p) { 
@@ -979,7 +979,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 19, column 13:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 19, column 13:
    -------------------------------------------------
     17:    for (j in 1:p) { 
     18:      mean_x[j] <- mean(col(x,j)); 
@@ -992,7 +992,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 21, column 14:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 21, column 14:
    -------------------------------------------------
     19:      sd_x[j] <- sd(col(x,j)); 
     20:      for (i in 1:N)  
@@ -1005,7 +1005,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 36, column 9:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 36, column 9:
    -------------------------------------------------
     34:    real mu[N];
     35:  
@@ -1018,7 +1018,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 38, column 11:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 38, column 11:
    -------------------------------------------------
     36:    sigma <- sqrt(2) * sigmasq;
     37:    for (n in 1:N)
@@ -1031,7 +1031,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 59, column 10:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 59, column 10:
    -------------------------------------------------
     57:  
     58:    for (j in 1:p)
@@ -1044,7 +1044,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 60, column 6:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 60, column 6:
    -------------------------------------------------
     58:    for (j in 1:p)
     59:      b[j] <- beta[j] / sd_x[j];
@@ -1057,7 +1057,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 62, column 14:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 62, column 14:
    -------------------------------------------------
     60:    b0 <- beta0 - b[1] * mean_x[1] - b[2] * mean_x[2] - b[3] * mean_x[3];
     61:  
@@ -1070,7 +1070,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 63, column 14:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 63, column 14:
    -------------------------------------------------
     61:  
     62:    outlier_1  <- step(fabs((Y[1] - mu[1]) / sigma) - 2.5);
@@ -1083,7 +1083,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 64, column 14:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 64, column 14:
    -------------------------------------------------
     62:    outlier_1  <- step(fabs((Y[1] - mu[1]) / sigma) - 2.5);
     63:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -1096,7 +1096,7 @@ Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, li
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_e_dexp_ridge.stan, line 65, column 14:
+Warning: deprecated language construct used in 'stacks_e_dexp_ridge.stan', line 65, column 14:
    -------------------------------------------------
     63:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     64:    outlier_4  <- step(fabs((Y[4] - mu[4]) / sigma) - 2.5);
@@ -1161,7 +1161,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
          ^
@@ -1172,7 +1172,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 2, column 0:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -1184,7 +1184,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 3, column 0:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 3, column 0:
    -------------------------------------------------
      1:  # Stacks: robust regression and ridge regression 
      2:  # http://mathstat.helsinki.fi/openbugs/Examples/Stacks.html
@@ -1197,7 +1197,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 20, column 15:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 20, column 15:
    -------------------------------------------------
     18:  
     19:    for (j in 1:p) { 
@@ -1210,7 +1210,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 21, column 13:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 21, column 13:
    -------------------------------------------------
     19:    for (j in 1:p) { 
     20:      mean_x[j] <- mean(col(x,j)); 
@@ -1223,7 +1223,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 23, column 14:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 23, column 14:
    -------------------------------------------------
     21:      sd_x[j] <- sd(col(x,j)); 
     22:      for (i in 1:N)  
@@ -1236,7 +1236,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 25, column 5:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 25, column 5:
    -------------------------------------------------
     23:        z[i,j] <- (x[i,j] - mean_x[j]) / sd_x[j]; 
     24:    }
@@ -1249,7 +1249,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 39, column 9:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 39, column 9:
    -------------------------------------------------
     37:    vector[N] mu;
     38:  
@@ -1262,7 +1262,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 40, column 6:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 40, column 6:
    -------------------------------------------------
     38:  
     39:    sigma <- sqrt(d * sigmasq / (d-2)); // t errors on d degrees of freedom
@@ -1275,7 +1275,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 60, column 10:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 60, column 10:
    -------------------------------------------------
     58:  
     59:    for (j in 1:p)
@@ -1288,7 +1288,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 61, column 6:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 61, column 6:
    -------------------------------------------------
     59:    for (j in 1:p)
     60:      b[j] <- beta[j] / sd_x[j];
@@ -1301,7 +1301,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 63, column 14:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 63, column 14:
    -------------------------------------------------
     61:    b0 <- beta0 - mean_x * b;
     62:  
@@ -1314,7 +1314,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 64, column 14:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 64, column 14:
    -------------------------------------------------
     62:  
     63:    outlier_1  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -1327,7 +1327,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 65, column 14:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 65, column 14:
    -------------------------------------------------
     63:    outlier_1  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     64:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
@@ -1340,7 +1340,7 @@ Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stacks_f_t4_ridge.stan, line 66, column 14:
+Warning: deprecated language construct used in 'stacks_f_t4_ridge.stan', line 66, column 14:
    -------------------------------------------------
     64:    outlier_3  <- step(fabs((Y[3] - mu[3]) / sigma) - 2.5);
     65:    outlier_4  <- step(fabs((Y[4] - mu[4]) / sigma) - 2.5);
