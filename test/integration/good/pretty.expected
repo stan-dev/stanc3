@@ -2518,7 +2518,8 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format functions-good-void.stan
 functions {
-  void linear_regression_lp(vector x, vector y, real alpha, real beta, real sigma) {
+  void linear_regression_lp(vector x, vector y, real alpha, real beta,
+                            real sigma) {
     y ~ normal(x * alpha + beta, sigma);
     sigma ~ cauchy(0, 2.5);
     alpha ~ normal(0, 10);
@@ -3849,7 +3850,8 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 
   $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
 functions {
-  vector foo(vector shared_params, vector job_params, real[] data_r, int[] data_i) {
+  vector foo(vector shared_params, vector job_params, real[] data_r,
+             int[] data_i) {
     return [1, 2, 3]';
   }
   real map_rectfake(real x) {
@@ -4340,7 +4342,8 @@ functions {
     }
     return gamma;
   }
-  real[] logistic_trend(real k, real m, real[] delta, real[] t, real[] cap, real[,] A, real[] t_change, int S, int T) {
+  real[] logistic_trend(real k, real m, real[] delta, real[] t, real[] cap,
+                        real[,] A, real[] t_change, int S, int T) {
     real gamma[S];
     real Y[T];
     gamma = logistic_gamma(k, m, delta, t_change, S);
@@ -4350,7 +4353,8 @@ functions {
     }
     return Y;
   }
-  real[] linear_trend(real k, real m, real[] delta, real[] t, real[,] A, real[] t_change, int S, int T) {
+  real[] linear_trend(real k, real m, real[] delta, real[] t, real[,] A,
+                      real[] t_change, int S, int T) {
     real gamma[S];
     real Y[T];
     for (i in 1 : S) {

@@ -1,6 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation.stan
 functions {
-  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r, int[] x_i) {
+  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
+                           int[] x_i) {
     real k1;
     real k2;
     real alpha21;
@@ -14,7 +15,9 @@ functions {
     dC_dt[2] <- -k2 * C[2] + alpha21 * k1 * C[1];
     return dC_dt;
   }
-  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma, real totalC_t0, real k1, real k2, real alpha21, real alpha12, data real[] x_r, data int[] x_i) {
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma,
+                     real totalC_t0, real k1, real k2, real alpha21,
+                     real alpha12, data real[] x_r, data int[] x_i) {
     real C_t0[2];
     real theta[4];
     real C_hat[N_t, 2];
@@ -263,7 +266,8 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
 functions {
-  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r, int[] x_i) {
+  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
+                           int[] x_i) {
     real k1;
     real k2;
     real alpha21;
@@ -277,7 +281,9 @@ functions {
     dC_dt[2] <- alpha21 * k1 * C[1] - k2 * C[2];
     return dC_dt;
   }
-  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma, real totalC_t0, real k1, real k2, real alpha21, real alpha12, data real[] x_r, data int[] x_i) {
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma,
+                     real totalC_t0, real k1, real k2, real alpha21,
+                     real alpha12, data real[] x_r, data int[] x_i) {
     real C_t0[2];
     real theta[4];
     real C_hat[N_t, 2];

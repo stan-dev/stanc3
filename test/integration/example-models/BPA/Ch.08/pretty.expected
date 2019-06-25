@@ -128,7 +128,8 @@ functions {
     }
     return 0;
   }
-  real cell_prob(int n_occasions, row_vector s, row_vector r, int first, int last) {
+  real cell_prob(int n_occasions, row_vector s, row_vector r, int first,
+                 int last) {
     vector[n_occasions] pr;
     pr[first] = (1 - s[first]) * r[first];
     for (j in (first + 1) : n_occasions - 1) 

@@ -137,7 +137,8 @@ functions {
     }
     return chi;
   }
-  void jolly_seber_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi, vector gamma, matrix chi) {
+  void jolly_seber_lp(int[,] y, int[] first, int[] last, matrix p,
+                      matrix phi, vector gamma, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qgamma = 1.0 - gamma;
@@ -289,7 +290,8 @@ functions {
     }
     return chi;
   }
-  void js_super_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi, real psi, vector nu, matrix chi) {
+  void js_super_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi,
+                   real psi, vector nu, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qnu = 1.0 - nu;
@@ -443,7 +445,8 @@ functions {
     }
     return chi;
   }
-  void js_super_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi, real psi, vector nu, matrix chi) {
+  void js_super_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi,
+                   real psi, vector nu, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qnu = 1.0 - nu;
@@ -601,7 +604,8 @@ functions {
     }
     return chi;
   }
-  void jolly_seber_lp(int[,] y, int[] first, int[] last, matrix p, matrix phi, vector gamma, matrix chi) {
+  void jolly_seber_lp(int[,] y, int[] first, int[] last, matrix p,
+                      matrix phi, vector gamma, matrix chi) {
     int n_ind = dims(y)[1];
     int n_occasions = dims(y)[2];
     vector[n_occasions] qgamma = 1.0 - gamma;

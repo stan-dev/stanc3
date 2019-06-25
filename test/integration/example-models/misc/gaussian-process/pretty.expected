@@ -208,7 +208,8 @@ model {
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
 functions {
-  vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho, real sigma, real delta) {
+  vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho,
+                     real sigma, real delta) {
     int N1 = rows(y1);
     int N2 = size(x2);
     vector[N2] f2;

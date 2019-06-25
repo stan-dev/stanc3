@@ -355,10 +355,12 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
             pp_array_dims es
             pp_init init);
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
-     Fmt.pf ppf "%a %a(%a"
+     Fmt.pf ppf "%a %a("
        pp_returntype rt
-       pp_identifier id
-       (Fmt.list ~sep:comma_no_break pp_args) args;
+       pp_identifier id;
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a"
+           (Fmt.list ~sep:Fmt.comma pp_args) args;);
      match b with
      | {stmt= Skip; _} -> Fmt.pf ppf ");"
      | b -> Fmt.pf ppf ") %a" pp_statement b ;
