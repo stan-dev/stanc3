@@ -44,13 +44,9 @@ let prepare_prog (mir : typed_prog) : typed_prog_num * state_t =
 
 let pp_globals ppf location_list =
   let location_list =
-    List.map
-      ~f:(fun x ->
-        " ("
-        ^ ( if x = no_span then "found before start of program"
-          else "in " ^ string_of_location_span x )
-        ^ ")" )
-      location_list
+    " (found before start of program)"
+    :: ( List.filter ~f:(fun x -> x <> no_span) location_list
+       |> List.map ~f:(fun x -> " (in " ^ string_of_location_span x ^ ")") )
   in
   Fmt.pf ppf
     "@ static int current_statement__ = 0;@ static const std::vector<string> \
@@ -59,4 +55,5 @@ let pp_globals ppf location_list =
     location_list
 
 let pp_smeta ppf location_num =
-  Fmt.pf ppf "current_statement__ = %d;@;" location_num
+  if location_num = no_span_num then ()
+  else Fmt.pf ppf "current_statement__ = %d;@;" location_num

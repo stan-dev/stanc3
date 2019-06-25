@@ -241,28 +241,21 @@ class eight_schools_ncp_model : public prob_grad {
         current_statement__ = 4;
         assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(
                ), "assigning variable theta_tilde[(sym1__ - 1)]");}
-      current_statement__ = 0;
       vars__.push_back(mu);
-      current_statement__ = 0;
       vars__.push_back(tau);
-      current_statement__ = 0;
       for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 0;
         vars__.push_back(rvalue(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
       }
       std::vector<double> theta;
       theta = std::vector<double>(J, 0);
       
-      current_statement__ = 0;
       if (emit_transformed_parameters__) {
         current_statement__ = 7;
         for (size_t j = 1; j <= J; ++j) {
           current_statement__ = 6;
           assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"))), "assigning variable theta[(j - 1)]");
         }
-        current_statement__ = 0;
         for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-          current_statement__ = 0;
           vars__.push_back(rvalue(theta, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
         }
       } 
@@ -830,39 +823,25 @@ class one_var_per_block_model : public prob_grad {
                  rvalue(cov_matparam_sym2__, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), "pretty printed e"),
                  N), "assigning variable cov_matparam[(sym3__ - 1), (sym4__ - 1)]");
         }}
-      current_statement__ = 0;
       for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-        current_statement__ = 0;
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-          current_statement__ = 0;
           vars__.push_back(rvalue(param, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
         }}
-      current_statement__ = 0;
       for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-        current_statement__ = 0;
         for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-          current_statement__ = 0;
           for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
-            current_statement__ = 0;
             for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-              current_statement__ = 0;
               vars__.push_back(rvalue(matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
             }}}}
-      current_statement__ = 0;
       for (size_t sym5__ = 1; sym5__ <= N; ++sym5__) {
-        current_statement__ = 0;
         for (size_t sym4__ = 1; sym4__ <= N; ++sym4__) {
-          current_statement__ = 0;
           for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
-            current_statement__ = 0;
             for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-              current_statement__ = 0;
               vars__.push_back(rvalue(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), nil_index_list())))), "pretty printed e"));
             }}}}
       std::vector<Eigen::Matrix<double, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 0;
       if (emit_transformed_parameters__) {
         current_statement__ = 5;
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
@@ -878,18 +857,14 @@ class one_var_per_block_model : public prob_grad {
           current_statement__ = 6;
           assign(tparam, cons_list(index_uni(n), nil_index_list()), multiply(rvalue(param, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), 2), "assigning variable tparam[(n - 1)]");
         }
-        current_statement__ = 0;
         for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          current_statement__ = 0;
           for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-            current_statement__ = 0;
             vars__.push_back(rvalue(tparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
           }}
       } 
       std::vector<Eigen::Matrix<double, -1, 1>> gq;
       gq = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 0;
       if (emit_generated_quantities__) {
         current_statement__ = 8;
         for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
@@ -905,11 +880,8 @@ class one_var_per_block_model : public prob_grad {
           current_statement__ = 9;
           assign(gq, cons_list(index_uni(n), nil_index_list()), add(rvalue(tparam, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), rvalue(param, cons_list(index_uni(n), nil_index_list()), "pretty printed e")), "assigning variable gq[(n - 1)]");
         }
-        current_statement__ = 0;
         for (size_t sym3__ = 1; sym3__ <= N; ++sym3__) {
-          current_statement__ = 0;
           for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
-            current_statement__ = 0;
             vars__.push_back(rvalue(gq, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"));
           }}
       } 
