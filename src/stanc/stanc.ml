@@ -17,6 +17,7 @@ let pretty_print_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
 let output_file = ref ""
+let generate_data = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -35,6 +36,10 @@ let options =
       , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
+    ; ( "--debug-generate-data"
+      , Arg.Set generate_data
+      , " For debugging purposes: generate a mock dataset to run the model on"
+      )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR." )
@@ -117,7 +122,8 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp ;
-    if !print_model_cpp then print_endline cpp )
+    if !print_model_cpp then print_endline cpp ) ;
+  if !generate_data then print_endline (Data_generation.print_data_prog ast)
 
 let remove_dotstan s = String.drop_suffix s 5
 

@@ -15,7 +15,7 @@ let rec unwrap_num_exn m e =
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
 let gen_num_int m t =
-  let def_low, diff = (2, 5) in
+  let def_low, diff = (2, 20) in
   let low, up =
     match t with
     | Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
