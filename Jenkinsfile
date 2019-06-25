@@ -56,7 +56,8 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("Run stat_comp_benchmarks end-to-end") {
-            when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
+            //when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
+            when { expression { false } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -82,7 +83,7 @@ pipeline {
         // and log all the failures. It'll make a big nasty red graph
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
-            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
+            // when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -91,7 +92,8 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
+          # cat known_good_perf_all.tests shotgun_perf_all.tests ../notes/stancon_models.tests > all.tests
+          cat ../notes/stancon_models.tests > all.tests
           cat all.tests
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
