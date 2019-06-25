@@ -92,17 +92,26 @@ let gen_vector m n t =
       wrap_vector (List.map ~f:wrap_real l)
   | _ -> {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
 
+let gen_identity_matrix n m =
+  { int_two with
+    expr=
+      RowVectorExpr
+        (List.map
+           (List.range 1 (n + 1))
+           ~f:(fun k ->
+             wrap_row_vector
+               (List.map ~f:wrap_real
+                  (repeat (k - 1) 0. @ [1.0] @ repeat (m - k) 0.)) )) }
+
 let gen_matrix mm n m t =
   match t with
-  | CholeskyCorr -> failwith "Not yet implemented"
-  | CholeskyCov -> failwith "Not yet implemented"
-  | Correlation -> failwith "Not yet implemented"
-  | Covariance -> failwith "Not yet implemented"
+  | CholeskyCorr | CholeskyCov | Correlation | Covariance ->
+      gen_identity_matrix n m
   | _ ->
       { int_two with
         expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
-(* TODO: special case the generation of the other constraints *)
+(* TODO: do some proper random generation of these special matrices *)
 
 let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
 
@@ -292,7 +301,7 @@ let%expect_test "data generation check" =
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "c(-22.754416996105441, -21.384953237481529, -20.102852124837252, -18.965127814266022, -17.293120033781289, -15.060527439831858, -13.666822347901839, -11.703134102524931, -10.2214082777528, -9.18887317288761, -7.76182258355046, -5.7445423954860289, -4.3259599997076066, -2.3866539599013308, -1.3285056364150805, 0.32718743491831148, 2.499938685064599, 4.0361257413410847, 5.397831065223933, 7.6362495628801383, 9.0145913183663176, 10.529263096102628, 11.649565582711798, 12.95384722889121, 14.106514817018397, 16.003580624513088, 17.572873741306434, 19.339083166628722, 21.951702481988587, 23.498683906338368)" |}]
+      "c(-0.96832729385188365, -0.91004897647537208, -0.855488426712053, -0.8070719147445744, -0.73591866262419769, -0.64090940155884812, -0.58159948031027586, -0.498033598356894, -0.43497790423044719, -0.39103777937151057, -0.33030882131474781, -0.24446230343719536, -0.18409371422459761, -0.10156543104346247, -0.05653532094436739, 0.013923649350849741, 0.10638632763557807, 0.17175965077143784, 0.22970780349821893, 0.32496498924437173, 0.38362111488017359, 0.44807884297139466, 0.49575395920660592, 0.55125841432324352, 0.60031084605608087, 0.68104157187272929, 0.74782374244229277, 0.82298579970312025, 0.93416731632648975, 1.)" |}]
 
 let%expect_test "data generation check" =
   let expr =
@@ -302,4 +311,29 @@ let%expect_test "data generation check" =
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "c(0.74426691023292724, 2.1137306688568391, 3.395831781501117, 4.5335560920723443, 6.2055638725570788, 8.43815646650651, 9.831861558436529, 11.795549803813437, 13.277275628585567, 14.309810733450758, 15.736861322787908, 17.754141510852339, 19.172723906630761, 21.112029946437037, 22.170178269923287, 23.825871341256679, 25.998622591402967, 27.534809647679452, 28.8965149715623, 31.134933469218506, 32.513275224704685, 34.027947002440996, 35.148249489050166, 36.452531135229577, 37.605198723356764, 39.502264530851456, 41.0715576476448, 42.83776707296709, 45.450386388326955, 46.997367812676735)" |}]
+      "c(0.0158363530740582, 0.044975511762313986, 0.072255786643973488, 0.096464042627712757, 0.13204066868790115, 0.17954529922057594, 0.20920025984486204, 0.250983200821553, 0.28251104788477643, 0.30448111031424469, 0.33484558934262609, 0.37776884828140234, 0.40795314288770118, 0.44921728447826875, 0.47173233952781629, 0.50696182467542483, 0.553193163817789, 0.58587982538571892, 0.61485390174910948, 0.66248249462218589, 0.69181055744008679, 0.72403942148569733, 0.7478769796033029, 0.77562920716162176, 0.80015542302804044, 0.84052078593636459, 0.87391187122114644, 0.91149289985156012, 0.96708365816324482, 1.)" |}]
+
+let%expect_test "data generation check" =
+  let expr =
+    generate_value Map.Poly.empty
+      (SMatrix (wrap_int 2, wrap_int 3))
+      Correlation
+  in
+  print_s [%sexp (expr : untyped_expression)] ;
+  [%expect
+    {|
+      ((expr
+        (RowVectorExpr
+         (((expr
+            (RowVectorExpr
+             (((expr (RealNumeral 1.)) (emeta ((loc <opaque>))))
+              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>))))
+              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>)))))))
+           (emeta ((loc <opaque>))))
+          ((expr
+            (RowVectorExpr
+             (((expr (RealNumeral 0.)) (emeta ((loc <opaque>))))
+              ((expr (RealNumeral 1.)) (emeta ((loc <opaque>))))
+              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>)))))))
+           (emeta ((loc <opaque>)))))))
+       (emeta ((loc <opaque>)))) |}]
