@@ -80,7 +80,7 @@ pipeline {
         // do for regression testing
         // and log all the failures. It'll make a big nasty red graph
         // that becomes blue over time as we fix more models :)
-        stage("Try to run all models end-to-end") {
+        stage("Run all models end-to-end") {
             when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
@@ -92,7 +92,7 @@ pipeline {
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
-          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=10" develop stanc3-dev develop develop || true
+          CXX="${CXX}" STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=10" develop stanc3-dev develop develop
                """
 
                 xunit([GoogleTest(
