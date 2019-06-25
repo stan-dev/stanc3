@@ -198,19 +198,14 @@ let%expect_test "whole program data generation check" =
   let open Parse in
   let ast =
     parse_string Parser.Incremental.program
-      "        data {\n\
-      \                  int<lower=7> K;\n\
-      \                  int<lower=1> D;\n\
-      \                  int<lower=0> N;\n\
-      \                  int<lower=0,upper=1> y[N,D];\n\
-      \                  vector[K] x[N];\n\
-      \              }\n\
-      \              parameters {\n\
-      \                  matrix[D,K] beta;\n\
-      \                  cholesky_factor_corr[D] L_Omega;\n\
-      \                  real<lower=0,upper=1> u[N,D];\n\
-      \              }\n\
-      \            "
+      {|       data {
+                  int<lower=7> K;
+                  int<lower=1> D;
+                  int<lower=0> N;
+                  int<lower=0,upper=1> y[N,D];
+                  vector[K] x[N];
+                    }
+      |}
     |> Result.map_error ~f:render_syntax_error
     |> Result.ok_or_failwith
   in
