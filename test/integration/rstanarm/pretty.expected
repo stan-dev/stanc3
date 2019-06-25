@@ -230,7 +230,8 @@ functions {
     }
     else {
       int N_jm1 = N_j - 1;
-      return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j), log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
+      return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
+                         log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
     }
     return not_a_number();
   }
@@ -243,7 +244,8 @@ functions {
       int D_g = successes[j];
       int N_g = observations[j];
       int F_g = failures[j];
-      vector[N_g] eta_g = append_row(segment(eta1, pos1, D_g), segment(eta0, pos0, F_g));
+      vector[N_g] eta_g = append_row(segment(eta1, pos1, D_g),
+                                     segment(eta0, pos0, F_g));
       summands[j] = log_clogit_denom(N_g, D_g, eta_g);
       pos0 += F_g;
       pos1 += D_g;
@@ -329,8 +331,12 @@ data {
 transformed data {
   int NN = N[1] + N[2];
   real aux = not_a_number();
-  int<lower=1> V0[special_case ? t : 0, N[1]] = make_V(N[1], special_case ? t : 0, v0);
-  int<lower=1> V1[special_case ? t : 0, N[2]] = make_V(N[2], special_case ? t : 0, v1);
+  int<lower=1> V0[special_case ? t : 0, N[1]] = make_V(N[1],
+                                                       special_case ? t : 0,
+                                                       v0);
+  int<lower=1> V1[special_case ? t : 0, N[2]] = make_V(N[2],
+                                                       special_case ? t : 0,
+                                                       v1);
   int<lower=0> successes[clogit ? J : 0];
   int<lower=0> failures[clogit ? J : 0];
   int<lower=0> observations[clogit ? J : 0];
@@ -573,7 +579,8 @@ model {
     }
   }
   if (t > 0) {
-    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta, shape, t, p);
+    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
+                          shape, t, p);
   }
 }
 generated quantities {
@@ -937,7 +944,8 @@ data {
 }
 transformed data {
   real aux = not_a_number();
-  int<lower=1> V[special_case ? t : 0, N] = make_V(N, special_case ? t : 0, v);
+  int<lower=1> V[special_case ? t : 0, N] = make_V(N, special_case ? t : 0,
+                                                   v);
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
@@ -1140,7 +1148,8 @@ model {
     }
   }
   if (t > 0) {
-    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta, shape, t, p);
+    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
+                          shape, t, p);
   }
 }
 generated quantities {
@@ -1368,7 +1377,8 @@ functions {
     return eta;
   }
   vector pw_gauss(vector y, vector eta, real sigma, int link) {
-    return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(eta, link)) / sigma);
+    return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(
+                                                                   eta, link)) / sigma);
   }
   vector linkinv_gamma(vector eta, int link) {
     if (link == 1) 
@@ -1524,9 +1534,11 @@ functions {
   }
   vector SS_biexp(vector input, matrix Phi_) {
     if (rows(Phi_) > 1) 
-      return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input) + Phi_[ : , 3] .* exp(-exp(Phi_[ : , 4]) .* input);
+      return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input) + Phi_[ : , 3] .* exp(-exp(
+                                                                    Phi_[ : , 4]) .* input);
     else 
-      return Phi_[1, 1] * exp(-exp(Phi_[1, 2]) * input) + Phi_[1, 3] * exp(-exp(Phi_[1, 4]) * input);
+      return Phi_[1, 1] * exp(-exp(Phi_[1, 2]) * input) + Phi_[1, 3] * exp(-exp(
+                                                                    Phi_[1, 4]) * input);
   }
   vector SS_fol(vector Dose, vector input, matrix Phi_) {
     int Phi__rows = rows(Phi_);
@@ -1548,11 +1560,13 @@ functions {
   vector SS_fpl(vector input, matrix Phi_) {
     if (rows(Phi_) > 1) {
       vector[rows(Phi_)] A = Phi_[ : , 1];
-      return A + (Phi_[ : , 2] - A) ./ (1 + exp((Phi_[ : , 3] - input) ./ exp(Phi_[ : , 4])));
+      return A + (Phi_[ : , 2] - A) ./ (1 + exp((Phi_[ : , 3] - input) ./ exp(
+                                                Phi_[ : , 4])));
     }
     else {
       real A = Phi_[1, 1];
-      return A + rep_vector(Phi_[1, 2] - A, rows(input)) ./ (1 + exp((Phi_[1, 3] - input) / exp(Phi_[1, 4])));
+      return A + rep_vector(Phi_[1, 2] - A, rows(input)) ./ (1 + exp((Phi_[1, 3] - input) / exp(
+                                                                    Phi_[1, 4])));
     }
   }
   vector SS_gompertz(vector x, matrix Phi_) {
@@ -1573,7 +1587,8 @@ functions {
     if (rows(Phi_) > 1) 
       return Phi_[ : , 1] ./ (1 + exp((Phi_[ : , 2] - input) ./ exp(Phi_[ : , 3])));
     else 
-      return rep_vector(Phi_[1, 1], rows(input)) ./ (1 + exp((Phi_[1, 2] - input) / exp(Phi_[1, 3])));
+      return rep_vector(Phi_[1, 1], rows(input)) ./ (1 + exp((Phi_[1, 2] - input) / exp(
+                                                             Phi_[1, 3])));
   }
   vector SS_micmen(vector input, matrix Phi_) {
     if (rows(Phi_) > 1) 
@@ -1701,7 +1716,9 @@ transformed data {
   vector[family == 3 ? len_y : 0] sqrt_y;
   vector[family == 3 ? len_y : 0] log_y;
   real sum_log_y = family == 1 ? not_a_number() : sum(log(y));
-  int<lower=1> V[special_case ? t : 0, len_y] = make_V(len_y, special_case ? t : 0, v);
+  int<lower=1> V[special_case ? t : 0, len_y] = make_V(len_y,
+                                                       special_case ? t : 0,
+                                                       v);
   int<lower=0> hs_z;
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
@@ -1829,9 +1846,11 @@ transformed parameters {
       omega[k] = left * prior_scale_z[k] + prior_mean_z[k];
     }
   else if (prior_dist_z == 3) 
-    omega = hs_prior(z_omega, global_z, local_z, global_prior_scale, 1, square(slab_scale_z) * caux_z[1]);
+    omega = hs_prior(z_omega, global_z, local_z, global_prior_scale, 1,
+                     square(slab_scale_z) * caux_z[1]);
   else if (prior_dist_z == 4) 
-    omega = hsplus_prior(z_omega, global_z, local_z, global_prior_scale, 1, square(slab_scale_z) * caux_z[1]);
+    omega = hsplus_prior(z_omega, global_z, local_z, global_prior_scale, 1,
+                         square(slab_scale_z) * caux_z[1]);
   else if (prior_dist_z == 5) 
     omega = prior_mean_z + prior_scale_z .* sqrt(2 * S_z[1]) .* z_omega;
   else if (prior_dist_z == 6) 
@@ -1979,7 +1998,8 @@ model {
       target += GammaReg(y, eta, aux, link, sum_log_y);
     }
     else if (family == 3) {
-      target += inv_gaussian(y, linkinv_inv_gaussian(eta, link), aux, sum_log_y, sqrt_y);
+      target += inv_gaussian(y, linkinv_inv_gaussian(eta, link), aux,
+                             sum_log_y, sqrt_y);
     }
     else if (family == 4 && link_phi == 0) {
       vector[N] mu;
@@ -1991,7 +2011,8 @@ model {
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y| rows_dot_product(mu, mu_z), rows_dot_product((1 - mu), mu_z));
+      target += beta_lpdf(y| rows_dot_product(mu, mu_z), rows_dot_product((1 - mu),
+                                                                    mu_z));
     }
   }
   else if (prior_PD == 0) {
@@ -2114,7 +2135,8 @@ model {
       target += student_t_lpdf(gamma_z| prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
   }
   if (t > 0) {
-    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta, shape, t, p);
+    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
+                          shape, t, p);
   }
 }
 generated quantities {
@@ -2153,8 +2175,8 @@ generated quantities {
         eta += csr_matrix_times_vector2(N, q, w, v, u, b);
     }
     if (has_intercept == 1) {
-      if (make_lower(family, link) == negative_infinity() && make_upper(family, link) == 
-      positive_infinity()) 
+      if (make_lower(family, link) == negative_infinity() && make_upper(
+      family, link) == positive_infinity()) 
         eta += gamma[1];
       else if (family == 4 && link == 5) {
         real max_eta = max(eta);
@@ -2536,7 +2558,8 @@ data {
 }
 transformed data {
   real poisson_max = pow(2.0, 30.0);
-  int<lower=1> V[special_case ? t : 0, N] = make_V(N, special_case ? t : 0, v);
+  int<lower=1> V[special_case ? t : 0, N] = make_V(N, special_case ? t : 0,
+                                                   v);
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
@@ -2655,9 +2678,11 @@ transformed parameters {
     }
     else {
       if (family == 6) 
-        theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho, z_T);
+        theta_L = make_theta_L(len_theta_L, p, 1.0, tau, scale, zeta, rho,
+                               z_T);
       else 
-        theta_L = make_theta_L(len_theta_L, p, aux, tau, scale, zeta, rho, z_T);
+        theta_L = make_theta_L(len_theta_L, p, aux, tau, scale, zeta, rho,
+                               z_T);
       b = make_b(z_b, theta_L, p, l);
     }
   }
@@ -2786,7 +2811,8 @@ model {
   if (family == 8) 
     target += gamma_lpdf(noise[1]| aux, 1);
   if (t > 0) {
-    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta, shape, t, p);
+    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, regularization, delta,
+                          shape, t, p);
   }
 }
 generated quantities {
@@ -3098,7 +3124,8 @@ functions {
     }
     else {
       int N_jm1 = N_j - 1;
-      return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j), log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
+      return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
+                         log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
     }
     return not_a_number();
   }
@@ -3111,7 +3138,8 @@ functions {
       int D_g = successes[j];
       int N_g = observations[j];
       int F_g = failures[j];
-      vector[N_g] eta_g = append_row(segment(eta1, pos1, D_g), segment(eta0, pos0, F_g));
+      vector[N_g] eta_g = append_row(segment(eta1, pos1, D_g),
+                                     segment(eta0, pos0, F_g));
       summands[j] = log_clogit_denom(N_g, D_g, eta_g);
       pos0 += F_g;
       pos1 += D_g;
@@ -3186,7 +3214,8 @@ functions {
     return eta;
   }
   vector pw_gauss(vector y, vector eta, real sigma, int link) {
-    return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(eta, link)) / sigma);
+    return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(
+                                                                   eta, link)) / sigma);
   }
   vector linkinv_gamma(vector eta, int link) {
     if (link == 1) 
@@ -3401,14 +3430,16 @@ functions {
     else if (prior_dist == 3) {
       real c2 = square(slab_scale) * caux[1];
       if (family == 1) 
-        beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+        beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1],
+                        c2);
       else 
         beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
     else if (prior_dist == 4) {
       real c2 = square(slab_scale) * caux[1];
       if (family == 1) 
-        beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+        beta = hsplus_prior(z_beta, global, local, global_prior_scale,
+                            aux[1], c2);
       else 
         beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
@@ -3511,7 +3542,8 @@ functions {
       target += GammaReg(y_real, eta, aux[1], link, sum_log_y);
     }
     else if (family == 3) {
-      target += inv_gaussian(y_real, linkinv_inv_gaussian(eta, link), aux[1], sum_log_y, sqrt_y);
+      target += inv_gaussian(y_real, linkinv_inv_gaussian(eta, link), aux[1],
+                             sum_log_y, sqrt_y);
     }
     else if (family == 4) {
       if (link == 1) 
@@ -4005,9 +4037,12 @@ transformed data {
   real<lower=0> delta[len_concentration];
   int bCov1_idx[prior_dist_for_cov == 2 ? (bK1 + choose(bK1, 2)) : 0];
   int bCov2_idx[prior_dist_for_cov == 2 ? (bK2 + choose(bK2, 2)) : 0];
-  real sum_log_y1 = M > 0 && (family[1] == 2 || family[1] == 3) ? sum(log(yReal1)) : not_a_number();
-  real sum_log_y2 = M > 1 && (family[2] == 2 || family[2] == 3) ? sum(log(yReal2)) : not_a_number();
-  real sum_log_y3 = M > 2 && (family[3] == 2 || family[3] == 3) ? sum(log(yReal3)) : not_a_number();
+  real sum_log_y1 = M > 0 && (family[1] == 2 || family[1] == 3) ? sum(log(
+                                                                    yReal1)) : not_a_number();
+  real sum_log_y2 = M > 1 && (family[2] == 2 || family[2] == 3) ? sum(log(
+                                                                    yReal2)) : not_a_number();
+  real sum_log_y3 = M > 2 && (family[3] == 2 || family[3] == 3) ? sum(log(
+                                                                    yReal3)) : not_a_number();
   vector[M > 0 && family[1] == 3 ? yNobs[1] : 0] sqrt_y1;
   vector[M > 1 && family[2] == 3 ? yNobs[2] : 0] sqrt_y2;
   vector[M > 2 && family[3] == 3 ? yNobs[3] : 0] sqrt_y3;
@@ -4111,33 +4146,46 @@ transformed parameters {
   matrix[bK1 > 0 ? bN1 : 0, bK1] bMat1;
   matrix[bK2 > 0 ? bN2 : 0, bK2] bMat2;
   if (has_aux[1] == 1) {
-    yAux1[1] = make_aux(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_mean_for_aux[1], y_prior_scale_for_aux[1]);
+    yAux1[1] = make_aux(yAux1_unscaled[1], y_prior_dist_for_aux[1],
+                        y_prior_mean_for_aux[1], y_prior_scale_for_aux[1]);
     if (yAux1[1] > yAuxMaximum) 
       yAuxMaximum = yAux1[1];
   }
   if (yK[1] > 0) 
-    yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1, y_prior_scale1, y_prior_df1, y_global_prior_scale[1], yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1], y_slab_scale[1], y_caux1);
+    yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1,
+                       y_prior_scale1, y_prior_df1, y_global_prior_scale[1],
+                       yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1],
+                       y_slab_scale[1], y_caux1);
   if (M > 1) {
     if (has_aux[2] == 1) {
-      yAux2[1] = make_aux(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_mean_for_aux[2], y_prior_scale_for_aux[2]);
+      yAux2[1] = make_aux(yAux2_unscaled[1], y_prior_dist_for_aux[2],
+                          y_prior_mean_for_aux[2], y_prior_scale_for_aux[2]);
       if (yAux2[1] > yAuxMaximum) 
         yAuxMaximum = yAux2[1];
     }
     if (yK[2] > 0) 
-      yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2, y_prior_scale2, y_prior_df2, y_global_prior_scale[2], yGlobal2, yLocal2, yOol2, yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
+      yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2,
+                         y_prior_scale2, y_prior_df2,
+                         y_global_prior_scale[2], yGlobal2, yLocal2, yOol2,
+                         yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
   }
   if (M > 2) {
     if (has_aux[3] == 1) {
-      yAux3[1] = make_aux(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_mean_for_aux[3], y_prior_scale_for_aux[3]);
+      yAux3[1] = make_aux(yAux3_unscaled[1], y_prior_dist_for_aux[3],
+                          y_prior_mean_for_aux[3], y_prior_scale_for_aux[3]);
       if (yAux3[1] > yAuxMaximum) 
         yAuxMaximum = yAux3[1];
     }
     if (yK[3] > 0) 
-      yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3, y_prior_scale3, y_prior_df3, y_global_prior_scale[3], yGlobal3, yLocal3, yOol3, yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
+      yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3,
+                         y_prior_scale3, y_prior_df3,
+                         y_global_prior_scale[3], yGlobal3, yLocal3, yOol3,
+                         yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
   }
   if (prior_dist_for_cov == 1) {
     int mark = 1;
-    theta_L = make_theta_L(len_theta_L, p, yAuxMaximum, tau, b_prior_scale, zeta, rho, z_T);
+    theta_L = make_theta_L(len_theta_L, p, yAuxMaximum, tau, b_prior_scale,
+                           zeta, rho, z_T);
     if (bK1 > 0) 
       bMat1 = make_b_matrix(z_b, theta_L, p, l, 1);
     if (bK2 > 0) 
@@ -4153,9 +4201,16 @@ transformed parameters {
     else if (bK2 > 1) 
       bMat2 = (diag_pre_multiply(bSd2, bCholesky2) * z_bMat2)';
   }
-  e_beta = make_beta(e_z_beta, e_prior_dist, e_prior_mean, e_prior_scale, e_prior_df, e_global_prior_scale, e_global, e_local, e_ool, e_mix, rep_array(1.0, 0), 0, e_slab_scale, e_caux);
-  a_beta = make_beta(a_z_beta, a_prior_dist, a_prior_mean, a_prior_scale, a_prior_df, a_global_prior_scale, a_global, a_local, a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale, a_caux);
-  e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux, e_prior_mean_for_aux, e_prior_scale_for_aux);
+  e_beta = make_beta(e_z_beta, e_prior_dist, e_prior_mean, e_prior_scale,
+                     e_prior_df, e_global_prior_scale, e_global, e_local,
+                     e_ool, e_mix, rep_array(1.0, 0), 0, e_slab_scale,
+                     e_caux);
+  a_beta = make_beta(a_z_beta, a_prior_dist, a_prior_mean, a_prior_scale,
+                     a_prior_df, a_global_prior_scale, a_global, a_local,
+                     a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale,
+                     a_caux);
+  e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux,
+                            e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
   vector[yNeta[1]] yEta1;
@@ -4164,24 +4219,40 @@ model {
   if (M > 0) {
     int bMat1_colshift = 0;
     int bMat2_colshift = 0;
-    yEta1 = evaluate_eta(yX1, y1_Z1, y1_Z2, y1_Z1_id, y1_Z2_id, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+    yEta1 = evaluate_eta(yX1, y1_Z1, y1_Z2, y1_Z1_id, y1_Z2_id, yGamma1,
+                         yBeta1, bMat1, bMat2, bMat1_colshift,
+                         bMat2_colshift, intercept_type[1]);
   }
   if (M > 1) {
     int bMat1_colshift = bK1_len[1];
     int bMat2_colshift = bK2_len[1];
-    yEta2 = evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+    yEta2 = evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2,
+                         yBeta2, bMat1, bMat2, bMat1_colshift,
+                         bMat2_colshift, intercept_type[2]);
   }
   if (M > 2) {
     int bMat1_colshift = sum(bK1_len[1 : 2]);
     int bMat2_colshift = sum(bK2_len[1 : 2]);
-    yEta3 = evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+    yEta3 = evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3,
+                         yBeta3, bMat1, bMat2, bMat1_colshift,
+                         bMat2_colshift, intercept_type[3]);
   }
   if (prior_PD == 0) {
-    glm_lp(yReal1, yInt1, yEta1, yAux1, family[1], link[1], sum_log_y1, sqrt_y1, log_y1);
+    glm_lp(yReal1,
+    yInt1,
+    yEta1,
+    yAux1,
+    family[1],
+    link[1],
+    sum_log_y1,
+    sqrt_y1,
+    log_y1);
     if (M > 1) 
-      glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2, sqrt_y2, log_y2);
+      glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2,
+      sqrt_y2, log_y2);
     if (M > 2) 
-      glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3, sqrt_y3, log_y3);
+      glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3,
+      sqrt_y3, log_y3);
   }
   {
     vector[nrow_e_Xq] e_eta_q;
@@ -4200,17 +4271,26 @@ model {
           if (m == 1) {
             int bMat1_colshift = 0;
             int bMat2_colshift = 0;
-            eta_tmp = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta, y1_z1q_id_eta, y1_z2q_id_eta, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+            eta_tmp = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta,
+                                   y1_z1q_id_eta, y1_z2q_id_eta, yGamma1,
+                                   yBeta1, bMat1, bMat2, bMat1_colshift,
+                                   bMat2_colshift, intercept_type[1]);
           }
           else if (m == 2) {
             int bMat1_colshift = bK1_len[1];
             int bMat2_colshift = bK2_len[1];
-            eta_tmp = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta, y2_z1q_id_eta, y2_z2q_id_eta, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+            eta_tmp = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta,
+                                   y2_z1q_id_eta, y2_z2q_id_eta, yGamma2,
+                                   yBeta2, bMat1, bMat2, bMat1_colshift,
+                                   bMat2_colshift, intercept_type[2]);
           }
           else if (m == 3) {
             int bMat1_colshift = sum(bK1_len[1 : 2]);
             int bMat2_colshift = sum(bK2_len[1 : 2]);
-            eta_tmp = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta, y3_z1q_id_eta, y3_z2q_id_eta, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+            eta_tmp = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta,
+                                   y3_z1q_id_eta, y3_z2q_id_eta, yGamma3,
+                                   yBeta3, bMat1, bMat2, bMat1_colshift,
+                                   bMat2_colshift, intercept_type[3]);
           }
           if (has_assoc[1, m] == 1) {
             vector[nrow_e_Xq] val;
@@ -4234,7 +4314,8 @@ model {
                 val = eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               }
               else {
-                val = collapse_within_groups(eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel], grp_idx, grp_assoc);
+                val = collapse_within_groups(eta_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                                             grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -4250,17 +4331,29 @@ model {
               if (sel == 1) {
                 int bMat1_colshift = 0;
                 int bMat2_colshift = 0;
-                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta, y1_z1q_id_eta, y1_z2q_id_eta, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta,
+                                        y1_z1q_id_eta, y1_z2q_id_eta,
+                                        yGamma1, yBeta1, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[1]);
               }
               else if (sel == 2) {
                 int bMat1_colshift = bK1_len[1];
                 int bMat2_colshift = bK2_len[1];
-                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta, y2_z1q_id_eta, y2_z2q_id_eta, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta,
+                                        y2_z1q_id_eta, y2_z2q_id_eta,
+                                        yGamma2, yBeta2, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[2]);
               }
               else if (sel == 3) {
                 int bMat1_colshift = sum(bK1_len[1 : 2]);
                 int bMat2_colshift = sum(bK2_len[1 : 2]);
-                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta, y3_z1q_id_eta, y3_z2q_id_eta, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta,
+                                        y3_z1q_id_eta, y3_z2q_id_eta,
+                                        yGamma3, yBeta3, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[3]);
               }
               val = eta_tmp .* eta_tmp2;
               mark += 1;
@@ -4278,17 +4371,29 @@ model {
               if (sel == 1) {
                 int bMat1_colshift = 0;
                 int bMat2_colshift = 0;
-                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta, y1_z1q_id_eta, y1_z2q_id_eta, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta,
+                                        y1_z1q_id_eta, y1_z2q_id_eta,
+                                        yGamma1, yBeta1, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[1]);
               }
               else if (sel == 2) {
                 int bMat1_colshift = bK1_len[1];
                 int bMat2_colshift = bK2_len[1];
-                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta, y2_z1q_id_eta, y2_z2q_id_eta, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta,
+                                        y2_z1q_id_eta, y2_z2q_id_eta,
+                                        yGamma2, yBeta2, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[2]);
               }
               else if (sel == 3) {
                 int bMat1_colshift = sum(bK1_len[1 : 2]);
                 int bMat2_colshift = sum(bK2_len[1 : 2]);
-                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta, y3_z1q_id_eta, y3_z2q_id_eta, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta,
+                                        y3_z1q_id_eta, y3_z2q_id_eta,
+                                        yGamma3, yBeta3, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[3]);
               }
               mu_tmp2 = evaluate_mu(eta_tmp2, family[sel], link[sel]);
               val = eta_tmp .* mu_tmp2;
@@ -4306,17 +4411,26 @@ model {
           if (m == 1) {
             int bMat1_colshift = 0;
             int bMat2_colshift = 0;
-            dydt_eta_q = evaluate_eta(y1_xq_eps, y1_z1q_eps, y1_z2q_eps, y1_z1q_id_eps, y1_z2q_id_eps, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, 0);
+            dydt_eta_q = evaluate_eta(y1_xq_eps, y1_z1q_eps, y1_z2q_eps,
+                                      y1_z1q_id_eps, y1_z2q_id_eps, yGamma1,
+                                      yBeta1, bMat1, bMat2, bMat1_colshift,
+                                      bMat2_colshift, 0);
           }
           else if (m == 2) {
             int bMat1_colshift = bK1_len[1];
             int bMat2_colshift = bK2_len[1];
-            dydt_eta_q = evaluate_eta(y2_xq_eps, y2_z1q_eps, y2_z2q_eps, y2_z1q_id_eps, y2_z2q_id_eps, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, 0);
+            dydt_eta_q = evaluate_eta(y2_xq_eps, y2_z1q_eps, y2_z2q_eps,
+                                      y2_z1q_id_eps, y2_z2q_id_eps, yGamma2,
+                                      yBeta2, bMat1, bMat2, bMat1_colshift,
+                                      bMat2_colshift, 0);
           }
           else if (m == 3) {
             int bMat1_colshift = sum(bK1_len[1 : 2]);
             int bMat2_colshift = sum(bK2_len[1 : 2]);
-            dydt_eta_q = evaluate_eta(y3_xq_eps, y3_z1q_eps, y3_z2q_eps, y3_z1q_id_eps, y3_z2q_id_eps, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, 0);
+            dydt_eta_q = evaluate_eta(y3_xq_eps, y3_z1q_eps, y3_z2q_eps,
+                                      y3_z1q_id_eps, y3_z2q_id_eps, yGamma3,
+                                      yBeta3, bMat1, bMat2, bMat1_colshift,
+                                      bMat2_colshift, 0);
           }
           if (has_assoc[2, m] == 1) {
             vector[nrow_e_Xq] val;
@@ -4339,7 +4453,8 @@ model {
                 val = dydt_eta_q .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               }
               else {
-                val = collapse_within_groups(dydt_eta_q .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel], grp_idx, grp_assoc);
+                val = collapse_within_groups(dydt_eta_q .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                                             grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -4352,17 +4467,26 @@ model {
           if (m == 1) {
             int bMat1_colshift = 0;
             int bMat2_colshift = 0;
-            eta_auc_tmp = evaluate_eta(y1_xq_auc, y1_z1q_auc, y1_z2q_auc, y1_z1q_id_auc, y1_z2q_id_auc, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+            eta_auc_tmp = evaluate_eta(y1_xq_auc, y1_z1q_auc, y1_z2q_auc,
+                                       y1_z1q_id_auc, y1_z2q_id_auc, yGamma1,
+                                       yBeta1, bMat1, bMat2, bMat1_colshift,
+                                       bMat2_colshift, intercept_type[1]);
           }
           else if (m == 2) {
             int bMat1_colshift = bK1_len[1];
             int bMat2_colshift = bK2_len[1];
-            eta_auc_tmp = evaluate_eta(y2_xq_auc, y2_z1q_auc, y2_z2q_auc, y2_z1q_id_auc, y2_z2q_id_auc, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+            eta_auc_tmp = evaluate_eta(y2_xq_auc, y2_z1q_auc, y2_z2q_auc,
+                                       y2_z1q_id_auc, y2_z2q_id_auc, yGamma2,
+                                       yBeta2, bMat1, bMat2, bMat1_colshift,
+                                       bMat2_colshift, intercept_type[2]);
           }
           else if (m == 3) {
             int bMat1_colshift = sum(bK1_len[1 : 2]);
             int bMat2_colshift = sum(bK2_len[1 : 2]);
-            eta_auc_tmp = evaluate_eta(y3_xq_auc, y3_z1q_auc, y3_z2q_auc, y3_z1q_id_auc, y3_z2q_id_auc, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+            eta_auc_tmp = evaluate_eta(y3_xq_auc, y3_z1q_auc, y3_z2q_auc,
+                                       y3_z1q_id_auc, y3_z2q_id_auc, yGamma3,
+                                       yBeta3, bMat1, bMat2, bMat1_colshift,
+                                       bMat2_colshift, intercept_type[3]);
           }
           mark += 1;
           for (r in 1 : nrow_y_Xq[m]) {
@@ -4381,17 +4505,26 @@ model {
           if (m == 1) {
             int bMat1_colshift = 0;
             int bMat2_colshift = 0;
-            eta_tmp = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta, y1_z1q_id_eta, y1_z2q_id_eta, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+            eta_tmp = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta,
+                                   y1_z1q_id_eta, y1_z2q_id_eta, yGamma1,
+                                   yBeta1, bMat1, bMat2, bMat1_colshift,
+                                   bMat2_colshift, intercept_type[1]);
           }
           else if (m == 2) {
             int bMat1_colshift = bK1_len[1];
             int bMat2_colshift = bK2_len[1];
-            eta_tmp = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta, y2_z1q_id_eta, y2_z2q_id_eta, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+            eta_tmp = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta,
+                                   y2_z1q_id_eta, y2_z2q_id_eta, yGamma2,
+                                   yBeta2, bMat1, bMat2, bMat1_colshift,
+                                   bMat2_colshift, intercept_type[2]);
           }
           else if (m == 3) {
             int bMat1_colshift = sum(bK1_len[1 : 2]);
             int bMat2_colshift = sum(bK2_len[1 : 2]);
-            eta_tmp = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta, y3_z1q_id_eta, y3_z2q_id_eta, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+            eta_tmp = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta,
+                                   y3_z1q_id_eta, y3_z2q_id_eta, yGamma3,
+                                   yBeta3, bMat1, bMat2, bMat1_colshift,
+                                   bMat2_colshift, intercept_type[3]);
           }
           mu_tmp = evaluate_mu(eta_tmp, family[m], link[m]);
           if (has_assoc[4, m] == 1) {
@@ -4415,7 +4548,8 @@ model {
                 val = mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel];
               }
               else {
-                val = collapse_within_groups(mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel], grp_idx, grp_assoc);
+                val = collapse_within_groups(mu_tmp .* y_Xq_data[idx_q[m, 1] : idx_q[m, 2], sel],
+                                             grp_idx, grp_assoc);
               }
               mark += 1;
               e_eta_q += a_beta[mark] * (val - a_xbar[mark]);
@@ -4431,17 +4565,29 @@ model {
               if (sel == 1) {
                 int bMat1_colshift = 0;
                 int bMat2_colshift = 0;
-                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta, y1_z1q_id_eta, y1_z2q_id_eta, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta,
+                                        y1_z1q_id_eta, y1_z2q_id_eta,
+                                        yGamma1, yBeta1, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[1]);
               }
               else if (sel == 2) {
                 int bMat1_colshift = bK1_len[1];
                 int bMat2_colshift = bK2_len[1];
-                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta, y2_z1q_id_eta, y2_z2q_id_eta, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta,
+                                        y2_z1q_id_eta, y2_z2q_id_eta,
+                                        yGamma2, yBeta2, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[2]);
               }
               else if (sel == 3) {
                 int bMat1_colshift = sum(bK1_len[1 : 2]);
                 int bMat2_colshift = sum(bK2_len[1 : 2]);
-                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta, y3_z1q_id_eta, y3_z2q_id_eta, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta,
+                                        y3_z1q_id_eta, y3_z2q_id_eta,
+                                        yGamma3, yBeta3, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[3]);
               }
               val = mu_tmp .* eta_tmp2;
               mark += 1;
@@ -4459,17 +4605,29 @@ model {
               if (sel == 1) {
                 int bMat1_colshift = 0;
                 int bMat2_colshift = 0;
-                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta, y1_z1q_id_eta, y1_z2q_id_eta, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+                eta_tmp2 = evaluate_eta(y1_xq_eta, y1_z1q_eta, y1_z2q_eta,
+                                        y1_z1q_id_eta, y1_z2q_id_eta,
+                                        yGamma1, yBeta1, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[1]);
               }
               else if (sel == 2) {
                 int bMat1_colshift = bK1_len[1];
                 int bMat2_colshift = bK2_len[1];
-                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta, y2_z1q_id_eta, y2_z2q_id_eta, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+                eta_tmp2 = evaluate_eta(y2_xq_eta, y2_z1q_eta, y2_z2q_eta,
+                                        y2_z1q_id_eta, y2_z2q_id_eta,
+                                        yGamma2, yBeta2, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[2]);
               }
               else if (sel == 3) {
                 int bMat1_colshift = sum(bK1_len[1 : 2]);
                 int bMat2_colshift = sum(bK2_len[1 : 2]);
-                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta, y3_z1q_id_eta, y3_z2q_id_eta, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+                eta_tmp2 = evaluate_eta(y3_xq_eta, y3_z1q_eta, y3_z2q_eta,
+                                        y3_z1q_id_eta, y3_z2q_id_eta,
+                                        yGamma3, yBeta3, bMat1, bMat2,
+                                        bMat1_colshift, bMat2_colshift,
+                                        intercept_type[3]);
               }
               mu_tmp2 = evaluate_mu(eta_tmp2, family[sel], link[sel]);
               val = mu_tmp .* mu_tmp2;
@@ -4492,17 +4650,26 @@ model {
           if (m == 1) {
             int bMat1_colshift = 0;
             int bMat2_colshift = 0;
-            eta_auc_tmp = evaluate_eta(y1_xq_auc, y1_z1q_auc, y1_z2q_auc, y1_z1q_id_auc, y1_z2q_id_auc, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+            eta_auc_tmp = evaluate_eta(y1_xq_auc, y1_z1q_auc, y1_z2q_auc,
+                                       y1_z1q_id_auc, y1_z2q_id_auc, yGamma1,
+                                       yBeta1, bMat1, bMat2, bMat1_colshift,
+                                       bMat2_colshift, intercept_type[1]);
           }
           else if (m == 2) {
             int bMat1_colshift = bK1_len[1];
             int bMat2_colshift = bK2_len[1];
-            eta_auc_tmp = evaluate_eta(y2_xq_auc, y2_z1q_auc, y2_z2q_auc, y2_z1q_id_auc, y2_z2q_id_auc, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+            eta_auc_tmp = evaluate_eta(y2_xq_auc, y2_z1q_auc, y2_z2q_auc,
+                                       y2_z1q_id_auc, y2_z2q_id_auc, yGamma2,
+                                       yBeta2, bMat1, bMat2, bMat1_colshift,
+                                       bMat2_colshift, intercept_type[2]);
           }
           else if (m == 3) {
             int bMat1_colshift = sum(bK1_len[1 : 2]);
             int bMat2_colshift = sum(bK2_len[1 : 2]);
-            eta_auc_tmp = evaluate_eta(y3_xq_auc, y3_z1q_auc, y3_z2q_auc, y3_z1q_id_auc, y3_z2q_id_auc, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+            eta_auc_tmp = evaluate_eta(y3_xq_auc, y3_z1q_auc, y3_z2q_auc,
+                                       y3_z1q_id_auc, y3_z2q_id_auc, yGamma3,
+                                       yBeta3, bMat1, bMat2, bMat1_colshift,
+                                       bMat2_colshift, intercept_type[3]);
           }
           mu_auc_tmp = evaluate_mu(eta_auc_tmp, family[m], link[m]);
           mark += 1;
@@ -4536,33 +4703,51 @@ model {
       log_haz_etimes = head(log_haz_q, Nevents);
       log_haz_qtimes = tail(log_haz_q, Npat_times_qnodes);
       if (has_weights == 0 && prior_PD == 0) {
-        target += sum(log_haz_etimes) - dot_product(qwts, exp(log_haz_qtimes));
+        target += sum(log_haz_etimes) - dot_product(qwts,
+                                                    exp(log_haz_qtimes));
       }
       else if (prior_PD == 0) {
-        target += dot_product(e_weights, log_haz_etimes) - dot_product(e_weights_rep, qwts .* exp(log_haz_qtimes));
+        target += dot_product(e_weights, log_haz_etimes) - dot_product(
+        e_weights_rep, qwts .* exp(log_haz_qtimes));
       }
     }
   }
   if (has_aux[1] == 1) 
-    aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
+    aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1],
+    y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
   if (M > 1 && has_aux[2] == 1) 
-    aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
+    aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2],
+    y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
   if (M > 2 && has_aux[3] == 1) 
-    aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
+    aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3],
+    y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
   if (intercept_type[1] > 0) 
-    gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1], y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1], y_prior_df_for_intercept[1]);
+    gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1],
+    y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1],
+    y_prior_df_for_intercept[1]);
   if (M > 1 && intercept_type[2] > 0) 
-    gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2], y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2], y_prior_df_for_intercept[2]);
+    gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2],
+    y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2],
+    y_prior_df_for_intercept[2]);
   if (M > 2 && intercept_type[3] > 0) 
-    gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3], y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3], y_prior_df_for_intercept[3]);
+    gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3],
+    y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3],
+    y_prior_df_for_intercept[3]);
   if (yK[1] > 0) 
-    beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1, y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1], y_caux1);
+    beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1,
+    y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1],
+    y_caux1);
   if (M > 1 && yK[2] > 0) 
-    beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2, y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2], y_caux2);
+    beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2,
+    y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2],
+    y_caux2);
   if (M > 2 && yK[3] > 0) 
-    beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3, y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3], y_caux3);
+    beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3,
+    y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3],
+    y_caux3);
   if (prior_dist_for_cov == 1) {
-    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization, delta, b_prior_shape, t, p);
+    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization,
+                          delta, b_prior_shape, t, p);
   }
   else if (prior_dist_for_cov == 2) {
     if (bK1 > 0) {
@@ -4578,11 +4763,36 @@ model {
         target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
     }
   }
-  beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df, e_global_prior_df, e_local, e_global, e_mix, e_ool, e_slab_df, e_caux);
-  beta_lp(a_z_beta, a_prior_dist, a_prior_scale, a_prior_df, a_global_prior_df, a_local, a_global, a_mix, a_ool, a_slab_df, a_caux);
-  basehaz_lp(e_aux_unscaled, e_prior_dist_for_aux, e_prior_scale_for_aux, e_prior_df_for_aux);
+  beta_lp(e_z_beta,
+  e_prior_dist,
+  e_prior_scale,
+  e_prior_df,
+  e_global_prior_df,
+  e_local,
+  e_global,
+  e_mix,
+  e_ool,
+  e_slab_df,
+  e_caux);
+  beta_lp(a_z_beta,
+  a_prior_dist,
+  a_prior_scale,
+  a_prior_df,
+  a_global_prior_df,
+  a_local,
+  a_global,
+  a_mix,
+  a_ool,
+  a_slab_df,
+  a_caux);
+  basehaz_lp(e_aux_unscaled,
+  e_prior_dist_for_aux,
+  e_prior_scale_for_aux,
+  e_prior_df_for_aux);
   if (e_has_intercept == 1) 
-    gamma_lp(e_gamma[1], e_prior_dist_for_intercept, e_prior_mean_for_intercept, e_prior_scale_for_intercept, e_prior_df_for_intercept);
+    gamma_lp(e_gamma[1], e_prior_dist_for_intercept,
+    e_prior_mean_for_intercept, e_prior_scale_for_intercept,
+    e_prior_df_for_intercept);
 }
 generated quantities {
   real e_alpha;
@@ -4598,21 +4808,36 @@ generated quantities {
     int bMat1_colshift = 0;
     int bMat2_colshift = 0;
     if (M > 0) {
-      vector[yNeta[1]] yEta1 = evaluate_mu(evaluate_eta(yX1, y1_Z1, y1_Z2, y1_Z1_id, y1_Z2_id, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]), family[1], link[1]);
+      vector[yNeta[1]] yEta1 = evaluate_mu(evaluate_eta(yX1, y1_Z1, y1_Z2,
+                                                        y1_Z1_id, y1_Z2_id,
+                                                        yGamma1, yBeta1,
+                                                        bMat1, bMat2,
+                                                        bMat1_colshift,
+                                                        bMat2_colshift,
+                                                        intercept_type[1]),
+                                           family[1], link[1]);
       mean_PPD[1] = mean_PPD_rng(yEta1, yAux1, family[1]);
     }
     if (M > 1) {
       vector[yNeta[2]] yEta2;
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
-      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]), family[2], link[2]);
+      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
+                                       yGamma2, yBeta2, bMat1, bMat2,
+                                       bMat1_colshift, bMat2_colshift,
+                                       intercept_type[2]),
+                          family[2], link[2]);
       mean_PPD[2] = mean_PPD_rng(yEta2, yAux2, family[2]);
     }
     if (M > 2) {
       vector[yNeta[3]] yEta3;
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
-      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]), family[3], link[3]);
+      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
+                                       yGamma3, yBeta3, bMat1, bMat2,
+                                       bMat1_colshift, bMat2_colshift,
+                                       intercept_type[3]),
+                          family[3], link[3]);
       mean_PPD[3] = mean_PPD_rng(yEta3, yAux3, family[3]);
     }
   }
@@ -4626,25 +4851,29 @@ generated quantities {
     bCov1[1] = bSd1[1] * bSd1[1];
   }
   else if (prior_dist_for_cov == 2 && bK1 > 1) {
-    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(bCholesky1), bSd1))[bCov1_idx];
+    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
+                                     bCholesky1), bSd1))[bCov1_idx];
   }
   if (prior_dist_for_cov == 2 && bK2 == 1) {
     bCov2[1] = bSd2[1] * bSd2[1];
   }
   else if (prior_dist_for_cov == 2 && bK2 > 1) {
-    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(bCholesky2), bSd2))[bCov2_idx];
+    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
+                                     bCholesky2), bSd2))[bCov2_idx];
   }
   if (e_has_intercept == 1) 
-    e_alpha = e_gamma[1] + norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar, a_beta);
+    e_alpha = e_gamma[1] + norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar,
+                                                                    a_beta);
   else 
-    e_alpha = norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar, a_beta);
+    e_alpha = norm_const - dot_product(e_xbar, e_beta) - dot_product(a_xbar,
+                                                                    a_beta);
 }
 
   $ ../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined lm.stan
 functions {
   real ll_mvn_ols_qr_lp(vector theta, vector b, real intercept, real ybar, real SSR, real sigma, int N) {
-    target += -0.5 * (dot_self(theta - b) + N * square(intercept - ybar) + SSR) / 
-    square(sigma) - N * (log(sigma) + 0.91893853320467267);
+    target += -0.5 * (dot_self(theta - b) + N * square(intercept - ybar) + SSR) / square(
+    sigma) - N * (log(sigma) + 0.91893853320467267);
     return target();
   }
 }
@@ -4709,7 +4938,9 @@ model {
       real dummy;
       real shift;
       shift = dot_product(xbarR_inv[j], theta[j]);
-      dummy = ll_mvn_ols_qr_lp(theta[j], Rb[j], has_intercept == 1 ? alpha[j] + shift : shift, ybar[j], SSR[j], sigma[j], N[j]);
+      dummy = ll_mvn_ols_qr_lp(theta[j], Rb[j],
+                               has_intercept == 1 ? alpha[j] + shift : shift,
+                               ybar[j], SSR[j], sigma[j], N[j]);
     }
   }
   if (has_intercept == 1 && prior_dist_for_intercept > 0) 
@@ -4727,7 +4958,8 @@ generated quantities {
   for (j in 1 : J) {
     real shift;
     shift = dot_product(xbarR_inv[j], theta[j]);
-    mean_PPD[j] = normal_rng(has_intercept == 1 ? alpha[j] + shift : shift, sigma[j] * sqrt_inv_N[j]);
+    mean_PPD[j] = normal_rng(has_intercept == 1 ? alpha[j] + shift : shift,
+                             sigma[j] * sqrt_inv_N[j]);
     beta[j] = R_inv[j] * theta[j];
   }
 }
@@ -4964,7 +5196,8 @@ functions {
     }
     else {
       int N_jm1 = N_j - 1;
-      return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j), log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
+      return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
+                         log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
     }
     return not_a_number();
   }
@@ -4977,7 +5210,8 @@ functions {
       int D_g = successes[j];
       int N_g = observations[j];
       int F_g = failures[j];
-      vector[N_g] eta_g = append_row(segment(eta1, pos1, D_g), segment(eta0, pos0, F_g));
+      vector[N_g] eta_g = append_row(segment(eta1, pos1, D_g),
+                                     segment(eta0, pos0, F_g));
       summands[j] = log_clogit_denom(N_g, D_g, eta_g);
       pos0 += F_g;
       pos1 += D_g;
@@ -5052,7 +5286,8 @@ functions {
     return eta;
   }
   vector pw_gauss(vector y, vector eta, real sigma, int link) {
-    return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(eta, link)) / sigma);
+    return -0.5 * log(6.283185307179586232 * sigma) - 0.5 * square((y - linkinv_gauss(
+                                                                   eta, link)) / sigma);
   }
   vector linkinv_gamma(vector eta, int link) {
     if (link == 1) 
@@ -5267,14 +5502,16 @@ functions {
     else if (prior_dist == 3) {
       real c2 = square(slab_scale) * caux[1];
       if (family == 1) 
-        beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+        beta = hs_prior(z_beta, global, local, global_prior_scale, aux[1],
+                        c2);
       else 
         beta = hs_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
     else if (prior_dist == 4) {
       real c2 = square(slab_scale) * caux[1];
       if (family == 1) 
-        beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux[1], c2);
+        beta = hsplus_prior(z_beta, global, local, global_prior_scale,
+                            aux[1], c2);
       else 
         beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
     }
@@ -5377,7 +5614,8 @@ functions {
       target += GammaReg(y_real, eta, aux[1], link, sum_log_y);
     }
     else if (family == 3) {
-      target += inv_gaussian(y_real, linkinv_inv_gaussian(eta, link), aux[1], sum_log_y, sqrt_y);
+      target += inv_gaussian(y_real, linkinv_inv_gaussian(eta, link), aux[1],
+                             sum_log_y, sqrt_y);
     }
     else if (family == 4) {
       if (link == 1) 
@@ -5599,9 +5837,12 @@ transformed data {
   real<lower=0> delta[len_concentration];
   int bCov1_idx[prior_dist_for_cov == 2 ? (bK1 + choose(bK1, 2)) : 0];
   int bCov2_idx[prior_dist_for_cov == 2 ? (bK2 + choose(bK2, 2)) : 0];
-  real sum_log_y1 = M > 0 && (family[1] == 2 || family[1] == 3) ? sum(log(yReal1)) : not_a_number();
-  real sum_log_y2 = M > 1 && (family[2] == 2 || family[2] == 3) ? sum(log(yReal2)) : not_a_number();
-  real sum_log_y3 = M > 2 && (family[3] == 2 || family[3] == 3) ? sum(log(yReal3)) : not_a_number();
+  real sum_log_y1 = M > 0 && (family[1] == 2 || family[1] == 3) ? sum(log(
+                                                                    yReal1)) : not_a_number();
+  real sum_log_y2 = M > 1 && (family[2] == 2 || family[2] == 3) ? sum(log(
+                                                                    yReal2)) : not_a_number();
+  real sum_log_y3 = M > 2 && (family[3] == 2 || family[3] == 3) ? sum(log(
+                                                                    yReal3)) : not_a_number();
   vector[M > 0 && family[1] == 3 ? yNobs[1] : 0] sqrt_y1;
   vector[M > 1 && family[2] == 3 ? yNobs[2] : 0] sqrt_y2;
   vector[M > 2 && family[3] == 3 ? yNobs[3] : 0] sqrt_y3;
@@ -5688,33 +5929,46 @@ transformed parameters {
   matrix[bK1 > 0 ? bN1 : 0, bK1] bMat1;
   matrix[bK2 > 0 ? bN2 : 0, bK2] bMat2;
   if (has_aux[1] == 1) {
-    yAux1[1] = make_aux(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_mean_for_aux[1], y_prior_scale_for_aux[1]);
+    yAux1[1] = make_aux(yAux1_unscaled[1], y_prior_dist_for_aux[1],
+                        y_prior_mean_for_aux[1], y_prior_scale_for_aux[1]);
     if (yAux1[1] > yAuxMaximum) 
       yAuxMaximum = yAux1[1];
   }
   if (yK[1] > 0) 
-    yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1, y_prior_scale1, y_prior_df1, y_global_prior_scale[1], yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1], y_slab_scale[1], y_caux1);
+    yBeta1 = make_beta(z_yBeta1, y_prior_dist[1], y_prior_mean1,
+                       y_prior_scale1, y_prior_df1, y_global_prior_scale[1],
+                       yGlobal1, yLocal1, yOol1, yMix1, yAux1, family[1],
+                       y_slab_scale[1], y_caux1);
   if (M > 1) {
     if (has_aux[2] == 1) {
-      yAux2[1] = make_aux(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_mean_for_aux[2], y_prior_scale_for_aux[2]);
+      yAux2[1] = make_aux(yAux2_unscaled[1], y_prior_dist_for_aux[2],
+                          y_prior_mean_for_aux[2], y_prior_scale_for_aux[2]);
       if (yAux2[1] > yAuxMaximum) 
         yAuxMaximum = yAux2[1];
     }
     if (yK[2] > 0) 
-      yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2, y_prior_scale2, y_prior_df2, y_global_prior_scale[2], yGlobal2, yLocal2, yOol2, yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
+      yBeta2 = make_beta(z_yBeta2, y_prior_dist[2], y_prior_mean2,
+                         y_prior_scale2, y_prior_df2,
+                         y_global_prior_scale[2], yGlobal2, yLocal2, yOol2,
+                         yMix2, yAux2, family[2], y_slab_scale[2], y_caux2);
   }
   if (M > 2) {
     if (has_aux[3] == 1) {
-      yAux3[1] = make_aux(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_mean_for_aux[3], y_prior_scale_for_aux[3]);
+      yAux3[1] = make_aux(yAux3_unscaled[1], y_prior_dist_for_aux[3],
+                          y_prior_mean_for_aux[3], y_prior_scale_for_aux[3]);
       if (yAux3[1] > yAuxMaximum) 
         yAuxMaximum = yAux3[1];
     }
     if (yK[3] > 0) 
-      yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3, y_prior_scale3, y_prior_df3, y_global_prior_scale[3], yGlobal3, yLocal3, yOol3, yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
+      yBeta3 = make_beta(z_yBeta3, y_prior_dist[3], y_prior_mean3,
+                         y_prior_scale3, y_prior_df3,
+                         y_global_prior_scale[3], yGlobal3, yLocal3, yOol3,
+                         yMix3, yAux3, family[3], y_slab_scale[3], y_caux3);
   }
   if (prior_dist_for_cov == 1) {
     int mark = 1;
-    theta_L = make_theta_L(len_theta_L, p, yAuxMaximum, tau, b_prior_scale, zeta, rho, z_T);
+    theta_L = make_theta_L(len_theta_L, p, yAuxMaximum, tau, b_prior_scale,
+                           zeta, rho, z_T);
     if (bK1 > 0) 
       bMat1 = make_b_matrix(z_b, theta_L, p, l, 1);
     if (bK2 > 0) 
@@ -5738,45 +5992,77 @@ model {
   if (M > 0) {
     int bMat1_colshift = 0;
     int bMat2_colshift = 0;
-    yEta1 = evaluate_eta(yX1, y1_Z1, y1_Z2, y1_Z1_id, y1_Z2_id, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]);
+    yEta1 = evaluate_eta(yX1, y1_Z1, y1_Z2, y1_Z1_id, y1_Z2_id, yGamma1,
+                         yBeta1, bMat1, bMat2, bMat1_colshift,
+                         bMat2_colshift, intercept_type[1]);
   }
   if (M > 1) {
     int bMat1_colshift = bK1_len[1];
     int bMat2_colshift = bK2_len[1];
-    yEta2 = evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]);
+    yEta2 = evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2,
+                         yBeta2, bMat1, bMat2, bMat1_colshift,
+                         bMat2_colshift, intercept_type[2]);
   }
   if (M > 2) {
     int bMat1_colshift = sum(bK1_len[1 : 2]);
     int bMat2_colshift = sum(bK2_len[1 : 2]);
-    yEta3 = evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]);
+    yEta3 = evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3,
+                         yBeta3, bMat1, bMat2, bMat1_colshift,
+                         bMat2_colshift, intercept_type[3]);
   }
   if (prior_PD == 0) {
-    glm_lp(yReal1, yInt1, yEta1, yAux1, family[1], link[1], sum_log_y1, sqrt_y1, log_y1);
+    glm_lp(yReal1,
+    yInt1,
+    yEta1,
+    yAux1,
+    family[1],
+    link[1],
+    sum_log_y1,
+    sqrt_y1,
+    log_y1);
     if (M > 1) 
-      glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2, sqrt_y2, log_y2);
+      glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2,
+      sqrt_y2, log_y2);
     if (M > 2) 
-      glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3, sqrt_y3, log_y3);
+      glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3,
+      sqrt_y3, log_y3);
   }
   if (has_aux[1] == 1) 
-    aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1], y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
+    aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1],
+    y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
   if (M > 1 && has_aux[2] == 1) 
-    aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2], y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
+    aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2],
+    y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
   if (M > 2 && has_aux[3] == 1) 
-    aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3], y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
+    aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3],
+    y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
   if (intercept_type[1] > 0) 
-    gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1], y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1], y_prior_df_for_intercept[1]);
+    gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1],
+    y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1],
+    y_prior_df_for_intercept[1]);
   if (M > 1 && intercept_type[2] > 0) 
-    gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2], y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2], y_prior_df_for_intercept[2]);
+    gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2],
+    y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2],
+    y_prior_df_for_intercept[2]);
   if (M > 2 && intercept_type[3] > 0) 
-    gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3], y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3], y_prior_df_for_intercept[3]);
+    gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3],
+    y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3],
+    y_prior_df_for_intercept[3]);
   if (yK[1] > 0) 
-    beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1, y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1], y_caux1);
+    beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1,
+    y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1],
+    y_caux1);
   if (M > 1 && yK[2] > 0) 
-    beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2, y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2], y_caux2);
+    beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2,
+    y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2],
+    y_caux2);
   if (M > 2 && yK[3] > 0) 
-    beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3, y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3], y_caux3);
+    beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3,
+    y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3],
+    y_caux3);
   if (prior_dist_for_cov == 1) {
-    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization, delta, b_prior_shape, t, p);
+    real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization,
+                          delta, b_prior_shape, t, p);
   }
   else if (prior_dist_for_cov == 2) {
     if (bK1 > 0) {
@@ -5806,21 +6092,36 @@ generated quantities {
     int bMat1_colshift = 0;
     int bMat2_colshift = 0;
     if (M > 0) {
-      vector[yNeta[1]] yEta1 = evaluate_mu(evaluate_eta(yX1, y1_Z1, y1_Z2, y1_Z1_id, y1_Z2_id, yGamma1, yBeta1, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[1]), family[1], link[1]);
+      vector[yNeta[1]] yEta1 = evaluate_mu(evaluate_eta(yX1, y1_Z1, y1_Z2,
+                                                        y1_Z1_id, y1_Z2_id,
+                                                        yGamma1, yBeta1,
+                                                        bMat1, bMat2,
+                                                        bMat1_colshift,
+                                                        bMat2_colshift,
+                                                        intercept_type[1]),
+                                           family[1], link[1]);
       mean_PPD[1] = mean_PPD_rng(yEta1, yAux1, family[1]);
     }
     if (M > 1) {
       vector[yNeta[2]] yEta2;
       bMat1_colshift += bK1_len[1];
       bMat2_colshift += bK2_len[1];
-      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id, yGamma2, yBeta2, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[2]), family[2], link[2]);
+      yEta2 = evaluate_mu(evaluate_eta(yX2, y2_Z1, y2_Z2, y2_Z1_id, y2_Z2_id,
+                                       yGamma2, yBeta2, bMat1, bMat2,
+                                       bMat1_colshift, bMat2_colshift,
+                                       intercept_type[2]),
+                          family[2], link[2]);
       mean_PPD[2] = mean_PPD_rng(yEta2, yAux2, family[2]);
     }
     if (M > 2) {
       vector[yNeta[3]] yEta3;
       bMat1_colshift += bK1_len[2];
       bMat2_colshift += bK2_len[2];
-      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id, yGamma3, yBeta3, bMat1, bMat2, bMat1_colshift, bMat2_colshift, intercept_type[3]), family[3], link[3]);
+      yEta3 = evaluate_mu(evaluate_eta(yX3, y3_Z1, y3_Z2, y3_Z1_id, y3_Z2_id,
+                                       yGamma3, yBeta3, bMat1, bMat2,
+                                       bMat1_colshift, bMat2_colshift,
+                                       intercept_type[3]),
+                          family[3], link[3]);
       mean_PPD[3] = mean_PPD_rng(yEta3, yAux3, family[3]);
     }
   }
@@ -5834,13 +6135,15 @@ generated quantities {
     bCov1[1] = bSd1[1] * bSd1[1];
   }
   else if (prior_dist_for_cov == 2 && bK1 > 1) {
-    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(bCholesky1), bSd1))[bCov1_idx];
+    bCov1 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
+                                     bCholesky1), bSd1))[bCov1_idx];
   }
   if (prior_dist_for_cov == 2 && bK2 == 1) {
     bCov2[1] = bSd2[1] * bSd2[1];
   }
   else if (prior_dist_for_cov == 2 && bK2 > 1) {
-    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(bCholesky2), bSd2))[bCov2_idx];
+    bCov2 = to_vector(quad_form_diag(multiply_lower_tri_self_transpose(
+                                     bCholesky2), bSd2))[bCov2_idx];
   }
 }
 
@@ -5874,7 +6177,8 @@ functions {
         else if (y[n] == J) 
           ll[n] = 1 - CDF_polr(cutpoints[J - 1] - eta[n], link);
         else 
-          ll[n] = CDF_polr(cutpoints[y[n]] - eta[n], link) - CDF_polr(cutpoints[y[n] - 1] - eta[n], link);
+          ll[n] = CDF_polr(cutpoints[y[n]] - eta[n], link) - CDF_polr(cutpoints[y[n] - 1] - eta[n],
+                                                                    link);
       }
     else 
       for (n in 1 : N) {
@@ -5926,13 +6230,16 @@ functions {
     if (lower_ >= upper_) 
       reject("lower_ must be less than upper_");
     if (link == 1) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta, 1);
+      while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta,
+                                                                    1);
     else if (link == 2) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = normal_rng(eta, 1);
     else if (link == 3) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
     else if (link == 4) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(uniform_rng(0, 1)));
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
+                                                              uniform_rng(
+                                                              0, 1)));
     else if (link == 5) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
     else 
@@ -6030,7 +6337,8 @@ model {
     if (is_skewed == 0) 
       target += dot_product(weights, pw_polr(y, eta, cutpoints, link, 1.0));
     else 
-      target += dot_product(weights, pw_polr(y, eta, cutpoints, link, alpha[1]));
+      target += dot_product(weights,
+                            pw_polr(y, eta, cutpoints, link, alpha[1]));
   }
   if (is_constant == 0) 
     target += dirichlet_lpdf(pi| prior_counts);
@@ -6099,11 +6407,14 @@ generated quantities {
       if (do_residuals) {
         real ystar;
         if (y[n] == 1) 
-          ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n], link);
+          ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
+                                 link);
         else if (y[n] == J) 
-          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(), eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
+                                 ), eta[n], link);
         else 
-          ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]], eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
+                                 eta[n], link);
         residuals[n] = ystar - eta[n];
       }
     }

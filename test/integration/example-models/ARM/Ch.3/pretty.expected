@@ -53,7 +53,8 @@ model {
 }
 generated quantities {
   real kid_score_pred;
-  kid_score_pred = normal_rng(beta[1] + beta[2] * mom_hs_new + beta[3] * mom_iq_new, sigma);
+  kid_score_pred = normal_rng(beta[1] + beta[2] * mom_hs_new + beta[3] * mom_iq_new,
+                              sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidiq_validation.stan

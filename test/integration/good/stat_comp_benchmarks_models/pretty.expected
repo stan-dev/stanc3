@@ -88,7 +88,8 @@ model {
   real sigma[T];
   sigma[1] = sigma1;
   for (t in 2 : T) 
-    sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu) + beta1 * square(sigma[t - 1]));
+    sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu) + beta1 * square(
+                    sigma[t - 1]));
   y ~ normal(mu, sigma);
 }
 
@@ -110,7 +111,8 @@ generated quantities {
   vector[11] y;
   int k[11];
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(1e-10, N));
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(
+                                                                 1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     vector[N] f = multi_normal_cholesky_rng(rep_vector(0, N), L_cov);
     for (n in 1 : N) {
@@ -134,7 +136,8 @@ parameters {
 transformed parameters {
   vector[N] f;
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(1e-10, N));
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(
+                                                                 1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     f = L_cov * f_tilde;
   }
@@ -158,7 +161,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(sigma, N));
+  matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(
+                                                               sigma, N));
   matrix[N, N] L_cov = cholesky_decompose(cov);
   rho ~ gamma(25, 4);
   alpha ~ normal(0, 2);
@@ -240,7 +244,8 @@ model {
   mu ~ normal(0, 2);
   theta ~ beta(5, 5);
   for (n in 1 : N) 
-    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]), normal_lpdf(y[n]| mu[2], sigma[2]));
+    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]),
+                      normal_lpdf(y[n]| mu[2], sigma[2]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
@@ -258,7 +263,8 @@ model {
   mu ~ normal(0, 2);
   theta ~ beta(5, 5);
   for (n in 1 : N) 
-    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]), normal_lpdf(y[n]| mu[2], sigma[2]));
+    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]),
+                      normal_lpdf(y[n]| mu[2], sigma[2]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
@@ -301,7 +307,8 @@ transformed parameters {
   real C[N_t, 1];
   {
     real theta[3] = {k_a, K_m, V_m};
-    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
+    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r,
+                          x_i);
   }
 }
 model {

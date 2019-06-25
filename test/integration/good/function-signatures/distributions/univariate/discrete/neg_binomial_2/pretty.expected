@@ -21,9 +21,11 @@ transformed data {
   transformed_data_real = neg_binomial_2_log(d_int, d_real, d_row_vector);
   transformed_data_real = neg_binomial_2_log(d_int, d_real_array, d_int);
   transformed_data_real = neg_binomial_2_log(d_int, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int, d_real_array, d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int, d_real_array,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_log(d_int, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int, d_real_array,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_log(d_int, d_vector, d_int);
   transformed_data_real = neg_binomial_2_log(d_int, d_vector, d_real);
   transformed_data_real = neg_binomial_2_log(d_int, d_vector, d_real_array);
@@ -31,34 +33,52 @@ transformed data {
   transformed_data_real = neg_binomial_2_log(d_int, d_vector, d_row_vector);
   transformed_data_real = neg_binomial_2_log(d_int, d_row_vector, d_int);
   transformed_data_real = neg_binomial_2_log(d_int, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int, d_row_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int, d_row_vector,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_log(d_int, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int, d_row_vector,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_int, d_int);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_int, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_int, d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_int,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_int, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_int, d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_int,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_real, d_int);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_real, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real, d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_real, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real, d_row_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array, d_int);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real,
+                                             d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                             d_int);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                             d_real);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                             d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                             d_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_vector, d_int);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_vector,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_log(d_int_array, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_vector, d_row_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector, d_int);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_vector,
+                                             d_row_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                             d_int);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                             d_real);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                             d_real_array);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                             d_vector);
+  transformed_data_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                             d_row_vector);
 }
 parameters {
   real p_real;
@@ -89,13 +109,17 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_log(d_int, d_real, p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, d_real_array, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int, d_real_array, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, d_real_array,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, d_real_array, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, d_real_array,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int, d_real_array, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, d_real_array,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, d_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, d_vector, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, d_vector, d_real);
   transformed_param_real = neg_binomial_2_log(d_int, d_vector, d_real_array);
@@ -107,13 +131,17 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_log(d_int, d_vector, p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, d_row_vector,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, p_real, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, p_real, d_real);
   transformed_param_real = neg_binomial_2_log(d_int, p_real, d_real_array);
@@ -125,13 +153,17 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_log(d_int, p_real, p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, p_real_array, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int, p_real_array, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, p_real_array,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, p_real_array, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, p_real_array,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int, p_real_array, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, p_real_array,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, p_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, p_vector, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, p_vector, d_real);
   transformed_param_real = neg_binomial_2_log(d_int, p_vector, d_real_array);
@@ -143,94 +175,158 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_log(d_int, p_vector, p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, d_int);
   transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int, p_row_vector,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_int, d_int);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_int, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_int, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_int,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_int, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_int, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_int,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_int, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_int, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_int,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_int, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_int, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_int,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_real, d_int);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_real, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_real, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, d_int);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_vector,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, d_row_vector,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_real, d_int);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_real, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real, d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_real, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real, p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, d_int);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_vector,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_log(d_int_array, p_row_vector,
+                                              p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -452,44 +548,73 @@ transformed data {
   transformed_data_real = neg_binomial_2_log_log(d_int, d_real, d_row_vector);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array, d_int);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_vector, d_int);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_vector,
+                                                 d_real_array);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_vector,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector, d_int);
   transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int, d_int);
   transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int, d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real, d_int);
   transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real, d_row_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_int);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_row_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector, d_int);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector, d_row_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_int);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                 d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                 d_int);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                 d_real);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                 d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                 d_int);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                 d_real);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                 d_row_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                 d_int);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                 d_real);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                 d_row_vector);
 }
 parameters {
   real p_real;
@@ -511,157 +636,281 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_log_log(d_int, d_int, p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_real, d_int);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_real, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real, d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_real, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real, p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_real_array,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, d_int);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, d_row_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_real, d_int);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_real, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real, d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_real, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real, p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_real_array,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, d_int);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int, p_row_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, d_int);
   transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_int,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array, p_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_real_array,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_vector,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, d_row_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array, p_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_real_array,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_vector,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_log_log(d_int_array, p_row_vector,
+                                                  p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -685,49 +934,83 @@ transformed data {
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_int, d_row_vector);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real, d_int);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real, d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real,
+                                                  d_real_array);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real, d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real,
+                                                  d_row_vector);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_int);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                  d_real);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                  d_row_vector);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_int);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector,
+                                                  d_real_array);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_vector,
+                                                  d_row_vector);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_int);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                  d_real);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                  d_row_vector);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_int);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                  d_row_vector);
   transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_int);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_row_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_int);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_row_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_int);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_row_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_int);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                  d_real);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                  d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                  d_int);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                  d_real);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                  d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                  d_int);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                  d_real);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                  d_row_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                  d_int);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                  d_real);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                  d_real_array);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                  d_vector);
+  transformed_data_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                  d_row_vector);
 }
 parameters {
   real p_real;
@@ -740,166 +1023,302 @@ transformed parameters {
   real transformed_param_real;
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, d_int);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int,
+                                                   d_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int,
+                                                   d_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int,
+                                                   p_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int, p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_int,
+                                                   p_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, d_int);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real,
+                                                   d_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real,
+                                                   d_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real,
+                                                   p_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_real_array,
+                                                   p_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_int);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector,
+                                                   d_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector,
+                                                   d_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector,
+                                                   p_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_vector,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, d_row_vector,
+                                                   p_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, d_int);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real,
+                                                   d_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real,
+                                                   d_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real,
+                                                   p_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_real_array,
+                                                   p_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, d_int);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector,
+                                                   d_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector,
+                                                   d_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector,
+                                                   p_real_array);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_vector,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int, p_row_vector,
+                                                   p_row_vector);
   transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_int,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_real_array,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_vector,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, d_row_vector,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_real_array,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_vector,
+                                                   p_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   d_int);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   d_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   d_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   d_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   d_row_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   p_real);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   p_real_array);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   p_vector);
+  transformed_param_real = neg_binomial_2_ccdf_log(d_int_array, p_row_vector,
+                                                   p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -928,9 +1347,11 @@ transformed data {
   transformed_data_real = neg_binomial_2_cdf(d_int, d_real, d_row_vector);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array, d_int);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array, d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int, d_real_array,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_vector, d_int);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_vector, d_real);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_vector, d_real_array);
@@ -938,34 +1359,52 @@ transformed data {
   transformed_data_real = neg_binomial_2_cdf(d_int, d_vector, d_row_vector);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector, d_int);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int, d_row_vector,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int, d_int);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int, d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_int,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real, d_int);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real, d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real, d_row_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_int);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real,
+                                             d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                             d_int);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                             d_real);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                             d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                             d_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                             d_row_vector);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector, d_int);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                             d_real_array);
   transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector, d_row_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_int);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                             d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                             d_int);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                             d_real);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                             d_real_array);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                             d_vector);
+  transformed_data_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                             d_row_vector);
 }
 parameters {
   real p_real;
@@ -996,13 +1435,17 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_cdf(d_int, d_real, p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_vector, d_real);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_vector, d_real_array);
@@ -1014,13 +1457,17 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_cdf(d_int, d_vector, p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, d_row_vector,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real, d_real);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real, d_real_array);
@@ -1032,13 +1479,17 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real, p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_vector, d_real);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_vector, d_real_array);
@@ -1050,94 +1501,158 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_cdf(d_int, p_vector, p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int, p_row_vector,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_int,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_vector,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, d_row_vector,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real,
+                                              d_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real,
+                                              p_real_array);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_real_array,
+                                              p_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector,
+                                              d_row_vector);
   transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_vector,
+                                              p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              d_int);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              d_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              d_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              d_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              p_real);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              p_real_array);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              p_vector);
+  transformed_param_real = neg_binomial_2_cdf(d_int_array, p_row_vector,
+                                              p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);
@@ -1166,44 +1681,73 @@ transformed data {
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real, d_row_vector);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_int);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector, d_int);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector, d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector,
+                                                 d_real_array);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_vector,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_int);
   transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_int);
   transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                 d_row_vector);
   transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_int);
   transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_row_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_int);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_row_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_int);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_row_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_int);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_real);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_real_array);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_vector);
-  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                 d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                 d_int);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                 d_real);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                 d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                 d_int);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                 d_real);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                 d_row_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                 d_int);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                 d_real);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                 d_real_array);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                 d_vector);
+  transformed_data_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                 d_row_vector);
 }
 parameters {
   real p_real;
@@ -1225,157 +1769,281 @@ transformed parameters {
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_int, p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, d_int);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_real_array,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, d_row_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, d_int);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_real_array,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, d_int);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector,
+                                                  d_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector,
+                                                  p_real_array);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int, p_row_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_int);
   transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                  d_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_int,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_real_array,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_vector,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, d_row_vector,
+                                                  p_row_vector);
   transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector, p_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, d_int);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, d_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, d_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, d_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, d_row_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, p_real);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, p_real_array);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, p_vector);
-  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector, p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_real_array,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_vector,
+                                                  p_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  d_int);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  d_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  d_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  d_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  d_row_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  p_real);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  p_real_array);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  p_vector);
+  transformed_param_real = neg_binomial_2_cdf_log(d_int_array, p_row_vector,
+                                                  p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);

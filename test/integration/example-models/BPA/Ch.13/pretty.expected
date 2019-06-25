@@ -182,7 +182,8 @@ model {
       target += bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(y[i, 1 : last[i]]| logit_p[i, 1 : last[i]]);
     }
     else {
-      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]), bernoulli_logit_lpmf(0| logit_psi[i]));
+      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]),
+                            bernoulli_logit_lpmf(0| logit_psi[i]));
     }
   }
 }
@@ -355,7 +356,8 @@ model {
       y[i] ~ bernoulli(p);
     }
     else {
-      target += log_sum_exp(bernoulli_lpmf(1| psi) + bernoulli_lpmf(0| p) * T, bernoulli_lpmf(0| psi));
+      target += log_sum_exp(bernoulli_lpmf(1| psi) + bernoulli_lpmf(0| p) * T,
+                            bernoulli_lpmf(0| psi));
     }
   }
 }
@@ -402,7 +404,8 @@ model {
       y[i] ~ bernoulli_logit(logit_p[i]);
     }
     else {
-      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i]), bernoulli_logit_lpmf(0| logit_psi[i]));
+      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i]),
+                            bernoulli_logit_lpmf(0| logit_psi[i]));
     }
   }
 }

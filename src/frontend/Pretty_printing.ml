@@ -125,7 +125,10 @@ and pp_expression ppf {expr= e_content; _} =
   | Variable id -> pp_identifier ppf id
   | IntNumeral i -> Fmt.pf ppf "%s" i
   | RealNumeral r -> Fmt.pf ppf "%s" r
-  | FunApp (_, id, es) -> with_hbox ppf (fun () -> Fmt.pf ppf "%a(%a)" pp_identifier id pp_list_of_expression es)
+  | FunApp (_, id, es) ->
+     Fmt.pf ppf "%a(" pp_identifier id;
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a)" pp_list_of_expression es);
   | CondDistApp (id, es) -> (
     match es with
     | [] -> Errors.fatal_error ()
@@ -148,8 +151,7 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
 
 and pp_list_of_expression ppf es =
-  with_hbox ppf (fun () ->
-      Fmt.(list ~sep:comma_no_break pp_expression) ppf es)
+  Fmt.(list ~sep:comma pp_expression) ppf es
 
 and pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="

@@ -493,7 +493,8 @@ generated quantities {
   for (n in 1 : N) 
     y_rep[n] <- binomial_rng(K[n], theta[n]);
   for (n in 1 : N) 
-    y_pop_rep[n] <- binomial_rng(K[n], beta_rng(phi * kappa, (1 - phi) * kappa));
+    y_pop_rep[n] <- binomial_rng(K[n],
+                                 beta_rng(phi * kappa, (1 - phi) * kappa));
   min_y_rep <- min(y_rep);
   max_y_rep <- max(y_rep);
   mean_y_rep <- mean(to_vector(y_rep));

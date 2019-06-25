@@ -31,7 +31,8 @@ model {
     dL0[j] ~ gamma(r * (t[j + 1] - t[j]) * c, c);
     for (i in 1 : N) {
       if (Y[i, j] != 0) 
-        increment_log_prob(poisson_log(dN[i, j], Y[i, j] * exp(beta * Z[i]) * dL0[j]));
+        increment_log_prob(poisson_log(dN[i, j],
+                                       Y[i, j] * exp(beta * Z[i]) * dL0[j]));
     }
   }
 }

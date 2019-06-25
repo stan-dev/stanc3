@@ -52,7 +52,8 @@ parameters {
 }
 transformed parameters {
   real eCO2_hat[N_t];
-  eCO2_hat <- evolved_CO2(N_t, t0, ts, gamma, totalC_t0, k1, k2, alpha21, alpha12, x_r, x_i);
+  eCO2_hat <- evolved_CO2(N_t, t0, ts, gamma, totalC_t0, k1, k2, alpha21,
+                          alpha12, x_r, x_i);
 }
 model {
   gamma ~ beta(10, 1);
@@ -316,7 +317,8 @@ parameters {
 }
 transformed parameters {
   real eCO2_hat[N_t];
-  eCO2_hat <- evolved_CO2(N_t, t0, ts, gamma, totalC_t0, k1, k2, alpha21, alpha12, x_r, x_i);
+  eCO2_hat <- evolved_CO2(N_t, t0, ts, gamma, totalC_t0, k1, k2, alpha21,
+                          alpha12, x_r, x_i);
 }
 model {
   gamma ~ beta(10, 1);

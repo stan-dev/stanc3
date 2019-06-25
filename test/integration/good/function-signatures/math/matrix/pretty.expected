@@ -489,50 +489,93 @@ transformed data {
   row_vector[d_int] transformed_data_row_vector_3d_array[d_int, d_int, d_int];
   row_vector[d_int] transformed_data_row_vector_3d_array2[2 * d_int, d_int, d_int];
   transformed_data_int_array2 = append_array(d_int_array, d_int_array);
-  transformed_data_int_array2 = append_array(d_int_array, transformed_data_int_array);
-  transformed_data_int_array2 = append_array(transformed_data_int_array, d_int_array);
+  transformed_data_int_array2 = append_array(d_int_array,
+                                             transformed_data_int_array);
+  transformed_data_int_array2 = append_array(transformed_data_int_array,
+                                             d_int_array);
   transformed_data_real_array2 = append_array(d_real_array, d_real_array);
-  transformed_data_real_array2 = append_array(d_real_array, transformed_data_real_array);
-  transformed_data_real_array2 = append_array(transformed_data_real_array, d_real_array);
-  transformed_data_matrix_array2 = append_array(d_matrix_array, d_matrix_array);
-  transformed_data_matrix_array2 = append_array(d_matrix_array, transformed_data_matrix_array);
-  transformed_data_matrix_array2 = append_array(transformed_data_matrix_array, d_matrix_array);
-  transformed_data_vector_array2 = append_array(d_vector_array, d_vector_array);
-  transformed_data_vector_array2 = append_array(d_vector_array, transformed_data_vector_array);
-  transformed_data_vector_array2 = append_array(transformed_data_vector_array, d_vector_array);
-  transformed_data_row_vector_array2 = append_array(d_row_vector_array, d_row_vector_array);
-  transformed_data_row_vector_array2 = append_array(d_row_vector_array, transformed_data_row_vector_array);
-  transformed_data_row_vector_array2 = append_array(transformed_data_row_vector_array, d_row_vector_array);
-  transformed_data_int_2d_array2 = append_array(d_int_2d_array, d_int_2d_array);
-  transformed_data_int_2d_array2 = append_array(d_int_2d_array, transformed_data_int_2d_array);
-  transformed_data_int_2d_array2 = append_array(transformed_data_int_2d_array, d_int_2d_array);
-  transformed_data_real_2d_array2 = append_array(d_real_2d_array, d_real_2d_array);
-  transformed_data_real_2d_array2 = append_array(d_real_2d_array, transformed_data_real_2d_array);
-  transformed_data_real_2d_array2 = append_array(transformed_data_real_2d_array, d_real_2d_array);
-  transformed_data_matrix_2d_array2 = append_array(d_matrix_2d_array, d_matrix_2d_array);
-  transformed_data_matrix_2d_array2 = append_array(d_matrix_2d_array, transformed_data_matrix_2d_array);
-  transformed_data_matrix_2d_array2 = append_array(transformed_data_matrix_2d_array, d_matrix_2d_array);
-  transformed_data_vector_2d_array2 = append_array(d_vector_2d_array, d_vector_2d_array);
-  transformed_data_vector_2d_array2 = append_array(d_vector_2d_array, transformed_data_vector_2d_array);
-  transformed_data_vector_2d_array2 = append_array(transformed_data_vector_2d_array, d_vector_2d_array);
-  transformed_data_row_vector_2d_array2 = append_array(d_row_vector_2d_array, d_row_vector_2d_array);
-  transformed_data_row_vector_2d_array2 = append_array(d_row_vector_2d_array, transformed_data_row_vector_2d_array);
-  transformed_data_row_vector_2d_array2 = append_array(transformed_data_row_vector_2d_array, d_row_vector_2d_array);
-  transformed_data_int_3d_array2 = append_array(d_int_3d_array, d_int_3d_array);
-  transformed_data_int_3d_array2 = append_array(d_int_3d_array, transformed_data_int_3d_array);
-  transformed_data_int_3d_array2 = append_array(transformed_data_int_3d_array, d_int_3d_array);
-  transformed_data_real_3d_array2 = append_array(d_real_3d_array, d_real_3d_array);
-  transformed_data_real_3d_array2 = append_array(d_real_3d_array, transformed_data_real_3d_array);
-  transformed_data_real_3d_array2 = append_array(transformed_data_real_3d_array, d_real_3d_array);
-  transformed_data_matrix_3d_array2 = append_array(d_matrix_3d_array, d_matrix_3d_array);
-  transformed_data_matrix_3d_array2 = append_array(d_matrix_3d_array, transformed_data_matrix_3d_array);
-  transformed_data_matrix_3d_array2 = append_array(transformed_data_matrix_3d_array, d_matrix_3d_array);
-  transformed_data_vector_3d_array2 = append_array(d_vector_3d_array, d_vector_3d_array);
-  transformed_data_vector_3d_array2 = append_array(d_vector_3d_array, transformed_data_vector_3d_array);
-  transformed_data_vector_3d_array2 = append_array(transformed_data_vector_3d_array, d_vector_3d_array);
-  transformed_data_row_vector_3d_array2 = append_array(d_row_vector_3d_array, d_row_vector_3d_array);
-  transformed_data_row_vector_3d_array2 = append_array(d_row_vector_3d_array, transformed_data_row_vector_3d_array);
-  transformed_data_row_vector_3d_array2 = append_array(transformed_data_row_vector_3d_array, d_row_vector_3d_array);
+  transformed_data_real_array2 = append_array(d_real_array,
+                                              transformed_data_real_array);
+  transformed_data_real_array2 = append_array(transformed_data_real_array,
+                                              d_real_array);
+  transformed_data_matrix_array2 = append_array(d_matrix_array,
+                                                d_matrix_array);
+  transformed_data_matrix_array2 = append_array(d_matrix_array,
+                                                transformed_data_matrix_array);
+  transformed_data_matrix_array2 = append_array(transformed_data_matrix_array,
+                                                d_matrix_array);
+  transformed_data_vector_array2 = append_array(d_vector_array,
+                                                d_vector_array);
+  transformed_data_vector_array2 = append_array(d_vector_array,
+                                                transformed_data_vector_array);
+  transformed_data_vector_array2 = append_array(transformed_data_vector_array,
+                                                d_vector_array);
+  transformed_data_row_vector_array2 = append_array(d_row_vector_array,
+                                                    d_row_vector_array);
+  transformed_data_row_vector_array2 = append_array(d_row_vector_array,
+                                                    transformed_data_row_vector_array);
+  transformed_data_row_vector_array2 = append_array(transformed_data_row_vector_array,
+                                                    d_row_vector_array);
+  transformed_data_int_2d_array2 = append_array(d_int_2d_array,
+                                                d_int_2d_array);
+  transformed_data_int_2d_array2 = append_array(d_int_2d_array,
+                                                transformed_data_int_2d_array);
+  transformed_data_int_2d_array2 = append_array(transformed_data_int_2d_array,
+                                                d_int_2d_array);
+  transformed_data_real_2d_array2 = append_array(d_real_2d_array,
+                                                 d_real_2d_array);
+  transformed_data_real_2d_array2 = append_array(d_real_2d_array,
+                                                 transformed_data_real_2d_array);
+  transformed_data_real_2d_array2 = append_array(transformed_data_real_2d_array,
+                                                 d_real_2d_array);
+  transformed_data_matrix_2d_array2 = append_array(d_matrix_2d_array,
+                                                   d_matrix_2d_array);
+  transformed_data_matrix_2d_array2 = append_array(d_matrix_2d_array,
+                                                   transformed_data_matrix_2d_array);
+  transformed_data_matrix_2d_array2 = append_array(transformed_data_matrix_2d_array,
+                                                   d_matrix_2d_array);
+  transformed_data_vector_2d_array2 = append_array(d_vector_2d_array,
+                                                   d_vector_2d_array);
+  transformed_data_vector_2d_array2 = append_array(d_vector_2d_array,
+                                                   transformed_data_vector_2d_array);
+  transformed_data_vector_2d_array2 = append_array(transformed_data_vector_2d_array,
+                                                   d_vector_2d_array);
+  transformed_data_row_vector_2d_array2 = append_array(d_row_vector_2d_array,
+                                                       d_row_vector_2d_array);
+  transformed_data_row_vector_2d_array2 = append_array(d_row_vector_2d_array,
+                                                       transformed_data_row_vector_2d_array);
+  transformed_data_row_vector_2d_array2 = append_array(transformed_data_row_vector_2d_array,
+                                                       d_row_vector_2d_array);
+  transformed_data_int_3d_array2 = append_array(d_int_3d_array,
+                                                d_int_3d_array);
+  transformed_data_int_3d_array2 = append_array(d_int_3d_array,
+                                                transformed_data_int_3d_array);
+  transformed_data_int_3d_array2 = append_array(transformed_data_int_3d_array,
+                                                d_int_3d_array);
+  transformed_data_real_3d_array2 = append_array(d_real_3d_array,
+                                                 d_real_3d_array);
+  transformed_data_real_3d_array2 = append_array(d_real_3d_array,
+                                                 transformed_data_real_3d_array);
+  transformed_data_real_3d_array2 = append_array(transformed_data_real_3d_array,
+                                                 d_real_3d_array);
+  transformed_data_matrix_3d_array2 = append_array(d_matrix_3d_array,
+                                                   d_matrix_3d_array);
+  transformed_data_matrix_3d_array2 = append_array(d_matrix_3d_array,
+                                                   transformed_data_matrix_3d_array);
+  transformed_data_matrix_3d_array2 = append_array(transformed_data_matrix_3d_array,
+                                                   d_matrix_3d_array);
+  transformed_data_vector_3d_array2 = append_array(d_vector_3d_array,
+                                                   d_vector_3d_array);
+  transformed_data_vector_3d_array2 = append_array(d_vector_3d_array,
+                                                   transformed_data_vector_3d_array);
+  transformed_data_vector_3d_array2 = append_array(transformed_data_vector_3d_array,
+                                                   d_vector_3d_array);
+  transformed_data_row_vector_3d_array2 = append_array(d_row_vector_3d_array,
+                                                       d_row_vector_3d_array);
+  transformed_data_row_vector_3d_array2 = append_array(d_row_vector_3d_array,
+                                                       transformed_data_row_vector_3d_array);
+  transformed_data_row_vector_3d_array2 = append_array(transformed_data_row_vector_3d_array,
+                                                       d_row_vector_3d_array);
 }
 parameters {
   real p_real;
@@ -576,88 +619,169 @@ transformed parameters {
   row_vector[d_int] transformed_param_row_vector_3d_array2[2 * d_int, d_int, d_int];
   transformed_param_real_array2 = append_array(p_real_array, p_real_array);
   transformed_param_real_array2 = append_array(p_real_array, d_real_array);
-  transformed_param_real_array2 = append_array(transformed_param_real_array, p_real_array);
-  transformed_param_real_array2 = append_array(transformed_data_real_array, p_real_array);
+  transformed_param_real_array2 = append_array(transformed_param_real_array,
+                                               p_real_array);
+  transformed_param_real_array2 = append_array(transformed_data_real_array,
+                                               p_real_array);
   transformed_param_real_array2 = append_array(d_real_array, p_real_array);
-  transformed_param_real_array2 = append_array(p_real_array, transformed_param_real_array);
-  transformed_param_real_array2 = append_array(p_real_array, transformed_data_real_array);
-  transformed_param_matrix_array2 = append_array(p_matrix_array, p_matrix_array);
-  transformed_param_matrix_array2 = append_array(p_matrix_array, d_matrix_array);
-  transformed_param_matrix_array2 = append_array(p_matrix_array, transformed_param_matrix_array);
-  transformed_param_matrix_array2 = append_array(p_matrix_array, transformed_data_matrix_array);
-  transformed_param_matrix_array2 = append_array(d_matrix_array, p_matrix_array);
-  transformed_param_matrix_array2 = append_array(transformed_param_matrix_array, p_matrix_array);
-  transformed_param_matrix_array2 = append_array(transformed_data_matrix_array, p_matrix_array);
-  transformed_param_vector_array2 = append_array(p_vector_array, p_vector_array);
-  transformed_param_vector_array2 = append_array(p_vector_array, d_vector_array);
-  transformed_param_vector_array2 = append_array(p_vector_array, transformed_param_vector_array);
-  transformed_param_vector_array2 = append_array(p_vector_array, transformed_data_vector_array);
-  transformed_param_vector_array2 = append_array(d_vector_array, p_vector_array);
-  transformed_param_vector_array2 = append_array(transformed_param_vector_array, p_vector_array);
-  transformed_param_vector_array2 = append_array(transformed_data_vector_array, p_vector_array);
-  transformed_param_row_vector_array2 = append_array(p_row_vector_array, p_row_vector_array);
-  transformed_param_row_vector_array2 = append_array(p_row_vector_array, d_row_vector_array);
-  transformed_param_row_vector_array2 = append_array(p_row_vector_array, transformed_param_row_vector_array);
-  transformed_param_row_vector_array2 = append_array(p_row_vector_array, transformed_data_row_vector_array);
-  transformed_param_row_vector_array2 = append_array(d_row_vector_array, p_row_vector_array);
-  transformed_param_row_vector_array2 = append_array(transformed_param_row_vector_array, p_row_vector_array);
-  transformed_param_row_vector_array2 = append_array(transformed_data_row_vector_array, p_row_vector_array);
-  transformed_param_real_2d_array2 = append_array(p_real_2d_array, p_real_2d_array);
-  transformed_param_real_2d_array2 = append_array(p_real_2d_array, d_real_2d_array);
-  transformed_param_real_2d_array2 = append_array(transformed_param_real_2d_array, p_real_2d_array);
-  transformed_param_real_2d_array2 = append_array(transformed_data_real_2d_array, p_real_2d_array);
-  transformed_param_real_2d_array2 = append_array(d_real_2d_array, p_real_2d_array);
-  transformed_param_real_2d_array2 = append_array(p_real_2d_array, transformed_param_real_2d_array);
-  transformed_param_real_2d_array2 = append_array(p_real_2d_array, transformed_data_real_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array, p_matrix_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array, d_matrix_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array, transformed_param_matrix_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array, transformed_data_matrix_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(d_matrix_2d_array, p_matrix_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(transformed_param_matrix_2d_array, p_matrix_2d_array);
-  transformed_param_matrix_2d_array2 = append_array(transformed_data_matrix_2d_array, p_matrix_2d_array);
-  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array, p_vector_2d_array);
-  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array, d_vector_2d_array);
-  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array, transformed_param_vector_2d_array);
-  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array, transformed_data_vector_2d_array);
-  transformed_param_vector_2d_array2 = append_array(d_vector_2d_array, p_vector_2d_array);
-  transformed_param_vector_2d_array2 = append_array(transformed_param_vector_2d_array, p_vector_2d_array);
-  transformed_param_vector_2d_array2 = append_array(transformed_data_vector_2d_array, p_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array, p_row_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array, d_row_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array, transformed_param_row_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array, transformed_data_row_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(d_row_vector_2d_array, p_row_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(transformed_param_row_vector_2d_array, p_row_vector_2d_array);
-  transformed_param_row_vector_2d_array2 = append_array(transformed_data_row_vector_2d_array, p_row_vector_2d_array);
-  transformed_param_real_3d_array2 = append_array(p_real_3d_array, p_real_3d_array);
-  transformed_param_real_3d_array2 = append_array(p_real_3d_array, d_real_3d_array);
-  transformed_param_real_3d_array2 = append_array(transformed_param_real_3d_array, p_real_3d_array);
-  transformed_param_real_3d_array2 = append_array(transformed_data_real_3d_array, p_real_3d_array);
-  transformed_param_real_3d_array2 = append_array(d_real_3d_array, p_real_3d_array);
-  transformed_param_real_3d_array2 = append_array(p_real_3d_array, transformed_param_real_3d_array);
-  transformed_param_real_3d_array2 = append_array(p_real_3d_array, transformed_data_real_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array, p_matrix_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array, d_matrix_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array, transformed_param_matrix_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array, transformed_data_matrix_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(d_matrix_3d_array, p_matrix_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(transformed_param_matrix_3d_array, p_matrix_3d_array);
-  transformed_param_matrix_3d_array2 = append_array(transformed_data_matrix_3d_array, p_matrix_3d_array);
-  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array, p_vector_3d_array);
-  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array, d_vector_3d_array);
-  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array, transformed_param_vector_3d_array);
-  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array, transformed_data_vector_3d_array);
-  transformed_param_vector_3d_array2 = append_array(d_vector_3d_array, p_vector_3d_array);
-  transformed_param_vector_3d_array2 = append_array(transformed_param_vector_3d_array, p_vector_3d_array);
-  transformed_param_vector_3d_array2 = append_array(transformed_data_vector_3d_array, p_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array, p_row_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array, d_row_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array, transformed_param_row_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array, transformed_data_row_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(d_row_vector_3d_array, p_row_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(transformed_param_row_vector_3d_array, p_row_vector_3d_array);
-  transformed_param_row_vector_3d_array2 = append_array(transformed_data_row_vector_3d_array, p_row_vector_3d_array);
+  transformed_param_real_array2 = append_array(p_real_array,
+                                               transformed_param_real_array);
+  transformed_param_real_array2 = append_array(p_real_array,
+                                               transformed_data_real_array);
+  transformed_param_matrix_array2 = append_array(p_matrix_array,
+                                                 p_matrix_array);
+  transformed_param_matrix_array2 = append_array(p_matrix_array,
+                                                 d_matrix_array);
+  transformed_param_matrix_array2 = append_array(p_matrix_array,
+                                                 transformed_param_matrix_array);
+  transformed_param_matrix_array2 = append_array(p_matrix_array,
+                                                 transformed_data_matrix_array);
+  transformed_param_matrix_array2 = append_array(d_matrix_array,
+                                                 p_matrix_array);
+  transformed_param_matrix_array2 = append_array(transformed_param_matrix_array,
+                                                 p_matrix_array);
+  transformed_param_matrix_array2 = append_array(transformed_data_matrix_array,
+                                                 p_matrix_array);
+  transformed_param_vector_array2 = append_array(p_vector_array,
+                                                 p_vector_array);
+  transformed_param_vector_array2 = append_array(p_vector_array,
+                                                 d_vector_array);
+  transformed_param_vector_array2 = append_array(p_vector_array,
+                                                 transformed_param_vector_array);
+  transformed_param_vector_array2 = append_array(p_vector_array,
+                                                 transformed_data_vector_array);
+  transformed_param_vector_array2 = append_array(d_vector_array,
+                                                 p_vector_array);
+  transformed_param_vector_array2 = append_array(transformed_param_vector_array,
+                                                 p_vector_array);
+  transformed_param_vector_array2 = append_array(transformed_data_vector_array,
+                                                 p_vector_array);
+  transformed_param_row_vector_array2 = append_array(p_row_vector_array,
+                                                     p_row_vector_array);
+  transformed_param_row_vector_array2 = append_array(p_row_vector_array,
+                                                     d_row_vector_array);
+  transformed_param_row_vector_array2 = append_array(p_row_vector_array,
+                                                     transformed_param_row_vector_array);
+  transformed_param_row_vector_array2 = append_array(p_row_vector_array,
+                                                     transformed_data_row_vector_array);
+  transformed_param_row_vector_array2 = append_array(d_row_vector_array,
+                                                     p_row_vector_array);
+  transformed_param_row_vector_array2 = append_array(transformed_param_row_vector_array,
+                                                     p_row_vector_array);
+  transformed_param_row_vector_array2 = append_array(transformed_data_row_vector_array,
+                                                     p_row_vector_array);
+  transformed_param_real_2d_array2 = append_array(p_real_2d_array,
+                                                  p_real_2d_array);
+  transformed_param_real_2d_array2 = append_array(p_real_2d_array,
+                                                  d_real_2d_array);
+  transformed_param_real_2d_array2 = append_array(transformed_param_real_2d_array,
+                                                  p_real_2d_array);
+  transformed_param_real_2d_array2 = append_array(transformed_data_real_2d_array,
+                                                  p_real_2d_array);
+  transformed_param_real_2d_array2 = append_array(d_real_2d_array,
+                                                  p_real_2d_array);
+  transformed_param_real_2d_array2 = append_array(p_real_2d_array,
+                                                  transformed_param_real_2d_array);
+  transformed_param_real_2d_array2 = append_array(p_real_2d_array,
+                                                  transformed_data_real_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array,
+                                                    p_matrix_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array,
+                                                    d_matrix_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array,
+                                                    transformed_param_matrix_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(p_matrix_2d_array,
+                                                    transformed_data_matrix_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(d_matrix_2d_array,
+                                                    p_matrix_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(transformed_param_matrix_2d_array,
+                                                    p_matrix_2d_array);
+  transformed_param_matrix_2d_array2 = append_array(transformed_data_matrix_2d_array,
+                                                    p_matrix_2d_array);
+  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array,
+                                                    p_vector_2d_array);
+  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array,
+                                                    d_vector_2d_array);
+  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array,
+                                                    transformed_param_vector_2d_array);
+  transformed_param_vector_2d_array2 = append_array(p_vector_2d_array,
+                                                    transformed_data_vector_2d_array);
+  transformed_param_vector_2d_array2 = append_array(d_vector_2d_array,
+                                                    p_vector_2d_array);
+  transformed_param_vector_2d_array2 = append_array(transformed_param_vector_2d_array,
+                                                    p_vector_2d_array);
+  transformed_param_vector_2d_array2 = append_array(transformed_data_vector_2d_array,
+                                                    p_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array,
+                                                        p_row_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array,
+                                                        d_row_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array,
+                                                        transformed_param_row_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(p_row_vector_2d_array,
+                                                        transformed_data_row_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(d_row_vector_2d_array,
+                                                        p_row_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(transformed_param_row_vector_2d_array,
+                                                        p_row_vector_2d_array);
+  transformed_param_row_vector_2d_array2 = append_array(transformed_data_row_vector_2d_array,
+                                                        p_row_vector_2d_array);
+  transformed_param_real_3d_array2 = append_array(p_real_3d_array,
+                                                  p_real_3d_array);
+  transformed_param_real_3d_array2 = append_array(p_real_3d_array,
+                                                  d_real_3d_array);
+  transformed_param_real_3d_array2 = append_array(transformed_param_real_3d_array,
+                                                  p_real_3d_array);
+  transformed_param_real_3d_array2 = append_array(transformed_data_real_3d_array,
+                                                  p_real_3d_array);
+  transformed_param_real_3d_array2 = append_array(d_real_3d_array,
+                                                  p_real_3d_array);
+  transformed_param_real_3d_array2 = append_array(p_real_3d_array,
+                                                  transformed_param_real_3d_array);
+  transformed_param_real_3d_array2 = append_array(p_real_3d_array,
+                                                  transformed_data_real_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array,
+                                                    p_matrix_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array,
+                                                    d_matrix_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array,
+                                                    transformed_param_matrix_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(p_matrix_3d_array,
+                                                    transformed_data_matrix_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(d_matrix_3d_array,
+                                                    p_matrix_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(transformed_param_matrix_3d_array,
+                                                    p_matrix_3d_array);
+  transformed_param_matrix_3d_array2 = append_array(transformed_data_matrix_3d_array,
+                                                    p_matrix_3d_array);
+  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array,
+                                                    p_vector_3d_array);
+  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array,
+                                                    d_vector_3d_array);
+  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array,
+                                                    transformed_param_vector_3d_array);
+  transformed_param_vector_3d_array2 = append_array(p_vector_3d_array,
+                                                    transformed_data_vector_3d_array);
+  transformed_param_vector_3d_array2 = append_array(d_vector_3d_array,
+                                                    p_vector_3d_array);
+  transformed_param_vector_3d_array2 = append_array(transformed_param_vector_3d_array,
+                                                    p_vector_3d_array);
+  transformed_param_vector_3d_array2 = append_array(transformed_data_vector_3d_array,
+                                                    p_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array,
+                                                        p_row_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array,
+                                                        d_row_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array,
+                                                        transformed_param_row_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(p_row_vector_3d_array,
+                                                        transformed_data_row_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(d_row_vector_3d_array,
+                                                        p_row_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(transformed_param_row_vector_3d_array,
+                                                        p_row_vector_3d_array);
+  transformed_param_row_vector_3d_array2 = append_array(transformed_data_row_vector_3d_array,
+                                                        p_row_vector_3d_array);
 }
 model {
   p_real ~ normal(0, 1);
@@ -1651,7 +1775,8 @@ data {
 transformed data {
   row_vector[d_int] transformed_data_row_vector;
   transformed_data_row_vector = columns_dot_product(d_vector, d_vector);
-  transformed_data_row_vector = columns_dot_product(d_row_vector, d_row_vector);
+  transformed_data_row_vector = columns_dot_product(d_row_vector,
+                                                    d_row_vector);
   transformed_data_row_vector = columns_dot_product(d_matrix, d_matrix);
 }
 parameters {
@@ -1663,16 +1788,20 @@ parameters {
 transformed parameters {
   row_vector[d_int] transformed_param_row_vector;
   transformed_param_row_vector = columns_dot_product(d_vector, d_vector);
-  transformed_param_row_vector = columns_dot_product(d_row_vector, d_row_vector);
+  transformed_param_row_vector = columns_dot_product(d_row_vector,
+                                                     d_row_vector);
   transformed_param_row_vector = columns_dot_product(d_matrix, d_matrix);
   transformed_param_row_vector = columns_dot_product(p_vector, d_vector);
-  transformed_param_row_vector = columns_dot_product(p_row_vector, d_row_vector);
+  transformed_param_row_vector = columns_dot_product(p_row_vector,
+                                                     d_row_vector);
   transformed_param_row_vector = columns_dot_product(p_matrix, d_matrix);
   transformed_param_row_vector = columns_dot_product(d_vector, p_vector);
-  transformed_param_row_vector = columns_dot_product(d_row_vector, p_row_vector);
+  transformed_param_row_vector = columns_dot_product(d_row_vector,
+                                                     p_row_vector);
   transformed_param_row_vector = columns_dot_product(d_matrix, p_matrix);
   transformed_param_row_vector = columns_dot_product(p_vector, p_vector);
-  transformed_param_row_vector = columns_dot_product(p_row_vector, p_row_vector);
+  transformed_param_row_vector = columns_dot_product(p_row_vector,
+                                                     p_row_vector);
   transformed_param_row_vector = columns_dot_product(p_matrix, p_matrix);
 }
 model {
@@ -6160,13 +6289,17 @@ transformed parameters {
   row_vector[d_int] transformed_param_row_vector;
   matrix[d_int, d_int] transformed_param_matrix;
   transformed_param_matrix = mdivide_right_tri_low(d_matrix, d_matrix);
-  transformed_param_row_vector = mdivide_right_tri_low(d_row_vector, d_matrix);
+  transformed_param_row_vector = mdivide_right_tri_low(d_row_vector,
+                                                       d_matrix);
   transformed_param_matrix = mdivide_right_tri_low(p_matrix, d_matrix);
-  transformed_param_row_vector = mdivide_right_tri_low(p_row_vector, d_matrix);
+  transformed_param_row_vector = mdivide_right_tri_low(p_row_vector,
+                                                       d_matrix);
   transformed_param_matrix = mdivide_right_tri_low(d_matrix, p_matrix);
-  transformed_param_row_vector = mdivide_right_tri_low(d_row_vector, p_matrix);
+  transformed_param_row_vector = mdivide_right_tri_low(d_row_vector,
+                                                       p_matrix);
   transformed_param_matrix = mdivide_right_tri_low(p_matrix, p_matrix);
-  transformed_param_row_vector = mdivide_right_tri_low(p_row_vector, p_matrix);
+  transformed_param_row_vector = mdivide_right_tri_low(p_row_vector,
+                                                       p_matrix);
 }
 model {
   y_p ~ normal(0, 1);
@@ -7067,7 +7200,8 @@ data {
 }
 transformed data {
   matrix[d_int, d_col] transformed_data_matrix;
-  transformed_data_matrix = scale_matrix_exp_multiply(d_t, d_matrix_a, d_matrix_b);
+  transformed_data_matrix = scale_matrix_exp_multiply(d_t, d_matrix_a,
+                                                      d_matrix_b);
 }
 parameters {
   real y_p;
@@ -7076,9 +7210,12 @@ parameters {
 }
 transformed parameters {
   matrix[d_int, d_col] transformed_param_matrix;
-  transformed_param_matrix = scale_matrix_exp_multiply(d_t, p_matrix_a, p_matrix_b);
-  transformed_param_matrix = scale_matrix_exp_multiply(d_t, p_matrix_a, d_matrix_b);
-  transformed_param_matrix = scale_matrix_exp_multiply(d_t, d_matrix_a, p_matrix_b);
+  transformed_param_matrix = scale_matrix_exp_multiply(d_t, p_matrix_a,
+                                                       p_matrix_b);
+  transformed_param_matrix = scale_matrix_exp_multiply(d_t, p_matrix_a,
+                                                       d_matrix_b);
+  transformed_param_matrix = scale_matrix_exp_multiply(d_t, d_matrix_a,
+                                                       p_matrix_b);
 }
 model {
   y_p ~ normal(0, 1);
@@ -7177,9 +7314,12 @@ transformed data {
   transformed_data_vector_array_2 = segment(d_vector_array_2, d_int, d_int);
   transformed_data_vector_array_3 = segment(d_vector_array_3, d_int, d_int);
   transformed_data_row_vector = segment(d_row_vector, d_int, d_int);
-  transformed_data_row_vector_array = segment(d_row_vector_array, d_int, d_int);
-  transformed_data_row_vector_array_2 = segment(d_row_vector_array_2, d_int, d_int);
-  transformed_data_row_vector_array_3 = segment(d_row_vector_array_3, d_int, d_int);
+  transformed_data_row_vector_array = segment(d_row_vector_array, d_int,
+                                              d_int);
+  transformed_data_row_vector_array_2 = segment(d_row_vector_array_2, d_int,
+                                                d_int);
+  transformed_data_row_vector_array_3 = segment(d_row_vector_array_3, d_int,
+                                                d_int);
 }
 parameters {
   real y_p;
@@ -7224,9 +7364,12 @@ transformed parameters {
   transformed_param_vector_array_2 = segment(d_vector_array_2, d_int, d_int);
   transformed_param_vector_array_3 = segment(d_vector_array_3, d_int, d_int);
   transformed_param_row_vector = segment(d_row_vector, d_int, d_int);
-  transformed_param_row_vector_array = segment(d_row_vector_array, d_int, d_int);
-  transformed_param_row_vector_array_2 = segment(d_row_vector_array_2, d_int, d_int);
-  transformed_param_row_vector_array_3 = segment(d_row_vector_array_3, d_int, d_int);
+  transformed_param_row_vector_array = segment(d_row_vector_array, d_int,
+                                               d_int);
+  transformed_param_row_vector_array_2 = segment(d_row_vector_array_2, d_int,
+                                                 d_int);
+  transformed_param_row_vector_array_3 = segment(d_row_vector_array_3, d_int,
+                                                 d_int);
   transformed_param_real_array = segment(p_real_array, d_int, d_int);
   transformed_param_real_array_2 = segment(p_real_array_2, d_int, d_int);
   transformed_param_real_array_3 = segment(p_real_array_3, d_int, d_int);
@@ -7238,9 +7381,12 @@ transformed parameters {
   transformed_param_vector_array_2 = segment(p_vector_array_2, d_int, d_int);
   transformed_param_vector_array_3 = segment(p_vector_array_3, d_int, d_int);
   transformed_param_row_vector = segment(p_row_vector, d_int, d_int);
-  transformed_param_row_vector_array = segment(p_row_vector_array, d_int, d_int);
-  transformed_param_row_vector_array_2 = segment(p_row_vector_array_2, d_int, d_int);
-  transformed_param_row_vector_array_3 = segment(p_row_vector_array_3, d_int, d_int);
+  transformed_param_row_vector_array = segment(p_row_vector_array, d_int,
+                                               d_int);
+  transformed_param_row_vector_array_2 = segment(p_row_vector_array_2, d_int,
+                                                 d_int);
+  transformed_param_row_vector_array_3 = segment(p_row_vector_array_3, d_int,
+                                                 d_int);
 }
 model {
   y_p ~ normal(0, 1);

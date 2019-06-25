@@ -210,7 +210,13 @@ transformed parameters {
   chi = prob_uncaptured(p, phi);
 }
 model {
-  jolly_seber_lp(y, first, last, p, phi, gamma, chi);
+  jolly_seber_lp(y,
+  first,
+  last,
+  p,
+  phi,
+  gamma,
+  chi);
 }
 generated quantities {
   real psi;
@@ -361,7 +367,14 @@ transformed parameters {
 }
 model {
   beta ~ gamma(1, 1);
-  js_super_lp(y, first, last, p, phi, psi, nu, chi);
+  js_super_lp(y,
+  first,
+  last,
+  p,
+  phi,
+  psi,
+  nu,
+  chi);
 }
 generated quantities {
   int<lower=0> Nsuper;
@@ -511,7 +524,14 @@ transformed parameters {
 model {
   epsilon ~ normal(0, sigma);
   beta ~ gamma(1, 1);
-  js_super_lp(y, first, last, p, phi, psi, nu, chi);
+  js_super_lp(y,
+  first,
+  last,
+  p,
+  phi,
+  psi,
+  nu,
+  chi);
 }
 generated quantities {
   real<lower=0> sigma2;
@@ -658,7 +678,13 @@ transformed parameters {
 }
 model {
   epsilon ~ normal(0, sigma);
-  jolly_seber_lp(y, first, last, p, phi, gamma, chi);
+  jolly_seber_lp(y,
+  first,
+  last,
+  p,
+  phi,
+  gamma,
+  chi);
 }
 generated quantities {
   real sigma2;
