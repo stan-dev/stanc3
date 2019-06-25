@@ -123,7 +123,8 @@ let use_file filename =
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp ) ;
-  if !generate_data then print_endline (Data_generation.print_data_prog ast)
+  if !generate_data then
+    print_endline (Debug_data_generation.print_data_prog ast)
 
 let remove_dotstan s = String.drop_suffix s 5
 
