@@ -56,6 +56,14 @@ let gen_row_vector m n t =
   {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))}
 
 let gen_vector m n t =
+  let gen_ordered n =
+    let l = repeat_th n (fun _ -> Random.float 1.) in
+    let l =
+      List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
+          (Float.exp elt +. List.hd_exn accum) :: accum )
+    in
+    l
+  in
   match t with
   | Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -63,14 +71,17 @@ let gen_vector m n t =
       let l = List.map l ~f:(fun x -> x /. sum) in
       wrap_vector (List.map ~f:wrap_real l)
   | Ordered ->
-      let l = repeat_th n (fun _ -> Random.float 10.) in
-      let l =
-        List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
-            Float.log (elt -. List.hd_exn accum) :: accum )
+      let l = gen_ordered n in
+      let halfmax =
+        Option.value_exn (List.max_elt l ~compare:compare_float) /. 2.
       in
-      let l = List.rev l in
+      let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
       wrap_vector (List.map ~f:wrap_real l)
-  | PositiveOrdered -> failwith "Not yet implemented"
+  | PositiveOrdered ->
+      let l = gen_ordered n in
+      let max = Option.value_exn (List.max_elt l ~compare:compare_float) in
+      let l = List.map l ~f:(fun x -> x /. max) in
+      wrap_vector (List.map ~f:wrap_real l)
   | UnitVector ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum =
@@ -276,9 +287,19 @@ let%expect_test "data generation check" =
       "c(0.36406675257322474, 0.80134825556167411, 0.47465395076734407)" |}]
 
 let%expect_test "data generation check" =
-  let expr = generate_value Map.Poly.empty (SVector (wrap_int 3)) Ordered in
+  let expr = generate_value Map.Poly.empty (SVector (wrap_int 30)) Ordered in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
-      "c(1.0980105557421842, 1.3648602956428428, 5.6883568253605246)" |}]
+      "c(-22.754416996105441, -21.384953237481529, -20.102852124837252, -18.965127814266022, -17.293120033781289, -15.060527439831858, -13.666822347901839, -11.703134102524931, -10.2214082777528, -9.18887317288761, -7.76182258355046, -5.7445423954860289, -4.3259599997076066, -2.3866539599013308, -1.3285056364150805, 0.32718743491831148, 2.499938685064599, 4.0361257413410847, 5.397831065223933, 7.6362495628801383, 9.0145913183663176, 10.529263096102628, 11.649565582711798, 12.95384722889121, 14.106514817018397, 16.003580624513088, 17.572873741306434, 19.339083166628722, 21.951702481988587, 23.498683906338368)" |}]
+
+let%expect_test "data generation check" =
+  let expr =
+    generate_value Map.Poly.empty (SVector (wrap_int 30)) PositiveOrdered
+  in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "c(0.74426691023292724, 2.1137306688568391, 3.395831781501117, 4.5335560920723443, 6.2055638725570788, 8.43815646650651, 9.831861558436529, 11.795549803813437, 13.277275628585567, 14.309810733450758, 15.736861322787908, 17.754141510852339, 19.172723906630761, 21.112029946437037, 22.170178269923287, 23.825871341256679, 25.998622591402967, 27.534809647679452, 28.8965149715623, 31.134933469218506, 32.513275224704685, 34.027947002440996, 35.148249489050166, 36.452531135229577, 37.605198723356764, 39.502264530851456, 41.0715576476448, 42.83776707296709, 45.450386388326955, 46.997367812676735)" |}]
