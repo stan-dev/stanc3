@@ -62,7 +62,14 @@ let gen_vector m n t =
       let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
       let l = List.map l ~f:(fun x -> x /. sum) in
       wrap_vector (List.map ~f:wrap_real l)
-  | Ordered -> failwith "Not yet implemented"
+  | Ordered ->
+      let l = repeat_th n (fun _ -> Random.float 10.) in
+      let l =
+        List.fold (List.tl_exn l) ~init:[List.hd_exn l] ~f:(fun accum elt ->
+            Float.log (elt -. List.hd_exn accum) :: accum )
+      in
+      let l = List.rev l in
+      wrap_vector (List.map ~f:wrap_real l)
   | PositiveOrdered -> failwith "Not yet implemented"
   | UnitVector ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -267,3 +274,11 @@ let%expect_test "data generation check" =
   [%expect
     {|
       "c(0.36406675257322474, 0.80134825556167411, 0.47465395076734407)" |}]
+
+let%expect_test "data generation check" =
+  let expr = generate_value Map.Poly.empty (SVector (wrap_int 3)) Ordered in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "c(1.0980105557421842, 1.3648602956428428, 5.6883568253605246)" |}]
