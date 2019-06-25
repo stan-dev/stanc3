@@ -124,7 +124,7 @@ let use_file filename =
     Out_channel.write_all !output_file ~data:cpp ;
     if !print_model_cpp then print_endline cpp ) ;
   if !generate_data then
-    print_endline (Debug_data_generation.print_data_prog ast)
+    print_endline (Debug_data_generation.print_data_prog typed_ast)
 
 let remove_dotstan s = String.drop_suffix s 5
 
