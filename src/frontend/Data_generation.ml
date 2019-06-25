@@ -52,11 +52,22 @@ let gen_row_vector m n t =
   {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))}
 
 let gen_vector m n t =
-  {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
+  match t with
+  | Simplex -> failwith "Not yet implemented"
+  | Ordered -> failwith "Not yet implemented"
+  | PositiveOrdered -> failwith "Not yet implemented"
+  | UnitVector -> failwith "Not yet implemented"
+  | _ -> {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
 
 let gen_matrix mm n m t =
-  { int_two with
-    expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
+  match t with
+  | CholeskyCorr -> failwith "Not yet implemented"
+  | CholeskyCov -> failwith "Not yet implemented"
+  | Correlation -> failwith "Not yet implemented"
+  | Covariance -> failwith "Not yet implemented"
+  | _ ->
+      { int_two with
+        expr= RowVectorExpr (repeat_th n (fun () -> gen_row_vector mm m t)) }
 
 (* TODO: special case the generation of the other constraints *)
 
