@@ -142,8 +142,14 @@ and pp_expression ppf {expr= e_content; _} =
   (* GetLP is deprecated *)
   | GetLP -> Fmt.pf ppf "get_lp()"
   | GetTarget -> Fmt.pf ppf "target()"
-  | ArrayExpr es -> Fmt.pf ppf "{%a}" pp_list_of_expression es
-  | RowVectorExpr es -> Fmt.pf ppf "[%a]" pp_list_of_expression es
+  | ArrayExpr es ->
+     Fmt.pf ppf "{";
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a}" pp_list_of_expression es);
+  | RowVectorExpr es ->
+     Fmt.pf ppf "[";
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a]" pp_list_of_expression es);
   | Paren e -> Fmt.pf ppf "(%a)" pp_expression e
   | Indexed (e, l) ->
     match l with
