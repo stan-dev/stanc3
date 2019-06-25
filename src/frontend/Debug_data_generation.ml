@@ -3,13 +3,13 @@ open Middle
 open Ast
 open Fmt
 
-let rec unwrap_num_exn m e =
+let unwrap_num_exn m e =
+  let e = Ast_to_Mir.trans_expr e in
+  let m = Map.Poly.map m ~f:Ast_to_Mir.trans_expr in
+  let e = Analysis_and_optimization.Mir_utils.subst_expr m e in
+  let e = Analysis_and_optimization.Partial_evaluator.eval_expr e in
   match e.expr with
-  | IntNumeral s -> Float.of_string s
-  | RealNumeral s -> Float.of_string s
-  | Variable s when Map.mem m s.name ->
-      unwrap_num_exn m (Map.find_exn m s.name)
-  (* TODO: insert partial evaluation here *)
+  | Lit (_, s) -> Float.of_string s
   | _ -> raise_s [%sexp ("Cannot convert size to number." : string)]
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
@@ -41,19 +41,30 @@ let rec repeat n e = match n with 0 -> [] | m -> e :: repeat (m - 1) e
 let rec repeat_th n f =
   match n with 0 -> [] | m -> f () :: repeat_th (m - 1) f
 
-let wrap_int n = {expr= IntNumeral (Int.to_string n); emeta= {loc= no_span}}
+let wrap_int n =
+  { expr= IntNumeral (Int.to_string n)
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UInt} }
+
 let int_two = wrap_int 2
-let wrap_real r = {expr= RealNumeral (Float.to_string r); emeta= {loc= no_span}}
-let wrap_row_vector l = {expr= RowVectorExpr l; emeta= {loc= no_span}}
+
+let wrap_real r =
+  { expr= RealNumeral (Float.to_string r)
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UReal} }
+
+let wrap_row_vector l =
+  { expr= RowVectorExpr l
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= URowVector} }
 
 let wrap_vector l =
-  {expr= PostfixOp (wrap_row_vector l, Transpose); emeta= {loc= no_span}}
+  { expr= PostfixOp (wrap_row_vector l, Transpose)
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UVector} }
 
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
 let gen_row_vector m n t =
-  {int_two with expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))}
+  { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
+  ; emeta= {loc= no_span; ad_level= DataOnly; type_= UMatrix} }
 
 let gen_vector m n t =
   let gen_ordered n =
@@ -204,8 +215,12 @@ let%expect_test "whole program data generation check" =
                   vector[K] x[N];
                     }
       |}
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
+  in
+  let ast =
+    Option.value_exn
+      (Result.ok
+         (Semantic_check.semantic_check_program
+            (Option.value_exn (Result.ok ast))))
   in
   let str = print_data_prog ast in
   print_s [%sexp (str : string)] ;
@@ -311,21 +326,58 @@ let%expect_test "data generation check" =
       (SMatrix (wrap_int 2, wrap_int 3))
       Correlation
   in
-  print_s [%sexp (expr : untyped_expression)] ;
+  print_s [%sexp (expr : typed_expression)] ;
   [%expect
     {|
       ((expr
         (RowVectorExpr
          (((expr
             (RowVectorExpr
-             (((expr (RealNumeral 1.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>)))))))
-           (emeta ((loc <opaque>))))
+             (((expr (RealNumeral 1.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal)))))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ URowVector))))
           ((expr
             (RowVectorExpr
-             (((expr (RealNumeral 0.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 1.)) (emeta ((loc <opaque>))))
-              ((expr (RealNumeral 0.)) (emeta ((loc <opaque>)))))))
-           (emeta ((loc <opaque>)))))))
-       (emeta ((loc <opaque>)))) |}]
+             (((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 1.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal))))
+              ((expr (RealNumeral 0.))
+               (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UReal)))))))
+           (emeta ((loc <opaque>) (ad_level DataOnly) (type_ URowVector)))))))
+       (emeta ((loc <opaque>) (ad_level DataOnly) (type_ UInt)))) |}]
+
+let%expect_test "whole program data generation check" =
+  let open Parse in
+  let ast =
+    parse_string Parser.Incremental.program
+      {|       data {
+                  int<lower=2, upper=4> K;
+                  int<lower=K, upper=K> D;
+                  vector[K - 1] x;
+                  vector[K * D] y;
+                  vector[K ? D : K] z;
+                  vector[K ? D : K] w[(D + 2 == K) + 3];
+                }
+      |}
+  in
+  let ast =
+    Option.value_exn
+      (Result.ok
+         (Semantic_check.semantic_check_program
+            (Option.value_exn (Result.ok ast))))
+  in
+  let str = print_data_prog ast in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+       "K <- 2\
+      \nD <- 2\
+      \nx <- c(6.8017664359959342)\
+      \ny <- c(4.8441784126802627, 4.25312636944623, 5.2015419032442969, 2.7103944900448411)\
+      \nz <- c(3.3282621325833865, 2.56799363086151)\
+      \nw <- structure(c(4.0759938356540726, 3.604405750889411, 6.0288479433993629, 3.543689144366625, 4.1465170437036338, 5.8799711085519224), .Dim=c(3, 2))" |}]
