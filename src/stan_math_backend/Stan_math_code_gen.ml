@@ -378,12 +378,11 @@ let pp_unconstrained_param_names ppf p =
 let pp_transform_inits ppf p =
   let params =
     [ "const stan::io::var_context& context__"; "std::vector<int>& params_i__"
-    ; "std::vector<double>& params_r__"; "std::ostream* pstream__" ]
+    ; "std::vector<double>& vars__"; "std::ostream* pstream__" ]
   in
   let intro =
-    [ "typedef double local_scalar_t__;"
-    ; "stan::io::writer<double> writer__(params_r__, params_i__);"
-    ; "std::vector<double> vals_r__;"; "std::vector<int> vals_i__;" ]
+    [ "typedef double local_scalar_t__;"; "vars__.resize(0);"
+    ; "vars__.reserve(num_params_r__);" ]
   in
   pp_method_b ppf "void" "transform_inits" params intro p.transform_inits
 
