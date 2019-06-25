@@ -150,8 +150,6 @@ let rec dims e =
   | RowVectorExpr l -> list_dims l
   | _ -> failwith "This should never happen."
 
-(* TODO: deal with bounds *)
-
 let rec print_value_r e =
   let expr = e.expr in
   let print_container e =
