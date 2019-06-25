@@ -68,7 +68,7 @@ class eight_schools_ncp_model : public prob_grad {
       
       current_statement__ = 12;
       current_statement__ = 12;
-      assign(J, nil_index_list(), context__.vals_i("J")[(1 - 1)], "assigning variable J");
+      J = context__.vals_i("J")[(1 - 1)];
       y = std::vector<double>(J, 0);
       
       current_statement__ = 13;
@@ -79,8 +79,7 @@ class eight_schools_ncp_model : public prob_grad {
         assign(y, cons_list(index_uni(sym1__), nil_index_list()), context__.vals_r("y")
                                                                   [(pos__ - 1)], "assigning variable y[(sym1__ - 1)]");
         current_statement__ = 13;
-        assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-      }
+        pos__ = (pos__ + 1);}
       sigma = std::vector<double>(J, 0);
       
       current_statement__ = 14;
@@ -91,8 +90,7 @@ class eight_schools_ncp_model : public prob_grad {
         assign(sigma, cons_list(index_uni(sym1__), nil_index_list()), 
                context__.vals_r("sigma")[(pos__ - 1)], "assigning variable sigma[(sym1__ - 1)]");
         current_statement__ = 14;
-        assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-      }
+        pos__ = (pos__ + 1);}
       current_statement__ = 12;
       current_statement__ = 12;
       check_greater_or_equal(function__, "J", J, 0);
@@ -133,18 +131,18 @@ class eight_schools_ncp_model : public prob_grad {
       local_scalar_t__ mu;
       
       current_statement__ = 2;
-      assign(mu, nil_index_list(), in__.scalar(), "assigning variable mu");
+      mu = in__.scalar();
       local_scalar_t__ tau;
       
       current_statement__ = 3;
-      assign(tau, nil_index_list(), in__.scalar(), "assigning variable tau");
+      tau = in__.scalar();
       current_statement__ = 3;
       if (jacobian__) {
         current_statement__ = 3;
-        assign(tau, nil_index_list(), lb_constrain(tau, 0, lp__), "assigning variable tau");
+        tau = lb_constrain(tau, 0, lp__);
       } else {
         current_statement__ = 3;
-        assign(tau, nil_index_list(), lb_constrain(tau, 0), "assigning variable tau");
+        tau = lb_constrain(tau, 0);
       }
       std::vector<local_scalar_t__> theta_tilde;
       theta_tilde = std::vector<local_scalar_t__>(J, 0);
@@ -226,13 +224,13 @@ class eight_schools_ncp_model : public prob_grad {
       double mu;
       
       current_statement__ = 2;
-      assign(mu, nil_index_list(), in__.scalar(), "assigning variable mu");
+      mu = in__.scalar();
       double tau;
       
       current_statement__ = 3;
-      assign(tau, nil_index_list(), in__.scalar(), "assigning variable tau");
+      tau = in__.scalar();
       current_statement__ = 3;
-      assign(tau, nil_index_list(), lb_constrain(tau, 0), "assigning variable tau");
+      tau = lb_constrain(tau, 0);
       std::vector<double> theta_tilde;
       theta_tilde = std::vector<double>(J, 0);
       
@@ -334,14 +332,14 @@ class eight_schools_ncp_model : public prob_grad {
       
       current_statement__ = 2;
       current_statement__ = 2;
-      assign(mu, nil_index_list(), context__.vals_r("mu")[(1 - 1)], "assigning variable mu");
+      mu = context__.vals_r("mu")[(1 - 1)];
       double tau;
       
       current_statement__ = 3;
       current_statement__ = 3;
-      assign(tau, nil_index_list(), context__.vals_r("tau")[(1 - 1)], "assigning variable tau");
+      tau = context__.vals_r("tau")[(1 - 1)];
       current_statement__ = 3;
-      assign(tau, nil_index_list(), lb_free(tau, 0), "assigning variable tau");
+      tau = lb_free(tau, 0);
       std::vector<double> theta_tilde;
       theta_tilde = std::vector<double>(J, 0);
       
@@ -353,8 +351,7 @@ class eight_schools_ncp_model : public prob_grad {
         assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), 
                context__.vals_r("theta_tilde")[(pos__ - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
         current_statement__ = 4;
-        assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-      }
+        pos__ = (pos__ + 1);}
       current_statement__ = 0;
       vars__.push_back(mu);
       current_statement__ = 0;
@@ -516,11 +513,11 @@ class one_var_per_block_model : public prob_grad {
       
       current_statement__ = 15;
       current_statement__ = 15;
-      assign(N, nil_index_list(), context__.vals_i("N")[(1 - 1)], "assigning variable N");
+      N = context__.vals_i("N")[(1 - 1)];
       
       current_statement__ = 16;
       current_statement__ = 16;
-      assign(K, nil_index_list(), context__.vals_i("K")[(1 - 1)], "assigning variable K");
+      K = context__.vals_i("K")[(1 - 1)];
       datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
       current_statement__ = 17;
@@ -533,8 +530,7 @@ class one_var_per_block_model : public prob_grad {
           assign(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), 
                  context__.vals_r("datavar")[(pos__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
           current_statement__ = 17;
-          assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-        }}
+          pos__ = (pos__ + 1);}}
       tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
       
       current_statement__ = 18;
@@ -1066,8 +1062,7 @@ class one_var_per_block_model : public prob_grad {
           assign(param, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())), 
                  context__.vals_r("param")[(pos__ - 1)], "assigning variable param[(sym3__ - 1), (sym4__ - 1)]");
           current_statement__ = 2;
-          assign(pos__, nil_index_list(), (stan::model::deep_copy(pos__) + 1), "assigning variable pos__");
-        }}
+          pos__ = (pos__ + 1);}}
       current_statement__ = 2;
       for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
         current_statement__ = 2;
@@ -1094,8 +1089,7 @@ class one_var_per_block_model : public prob_grad {
               assign(matparam, cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), nil_index_list())))), 
                      context__.vals_r("matparam")[(pos__ - 1)], "assigning variable matparam[(sym3__ - 1), (sym4__ - 1), (sym5__ - 1),\n                            (sym6__ - 1)]");
               current_statement__ = 3;
-              assign(pos__, nil_index_list(), (stan::model::deep_copy(
-                     pos__) + 1), "assigning variable pos__");}}}}
+              pos__ = (pos__ + 1);}}}}
       current_statement__ = 3;
       for (size_t sym3__ = 1; sym3__ <= K; ++sym3__) {
         current_statement__ = 3;
@@ -1126,8 +1120,7 @@ class one_var_per_block_model : public prob_grad {
               assign(cov_matparam, cons_list(index_uni(sym4__), cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), cons_list(index_uni(sym7__), nil_index_list())))), 
                      context__.vals_r("cov_matparam")[(pos__ - 1)], "assigning variable cov_matparam[(sym4__ - 1), (sym5__ - 1), (sym6__ - 1),\n                                (sym7__ - 1)]");
               current_statement__ = 4;
-              assign(pos__, nil_index_list(), (stan::model::deep_copy(
-                     pos__) + 1), "assigning variable pos__");}}}}
+              pos__ = (pos__ + 1);}}}}
       current_statement__ = 4;
       for (size_t sym4__ = 1; sym4__ <= K; ++sym4__) {
         current_statement__ = 4;
