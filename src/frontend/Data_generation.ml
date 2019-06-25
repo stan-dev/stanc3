@@ -44,6 +44,11 @@ let rec repeat_th n f =
 let wrap_int n = {expr= IntNumeral (Int.to_string n); emeta= {loc= no_span}}
 let int_two = wrap_int 2
 let wrap_real r = {expr= RealNumeral (Float.to_string r); emeta= {loc= no_span}}
+let wrap_row_vector l = {expr= RowVectorExpr l; emeta= {loc= no_span}}
+
+let wrap_vector l =
+  {expr= PostfixOp (wrap_row_vector l, Transpose); emeta= {loc= no_span}}
+
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
 
@@ -52,7 +57,11 @@ let gen_row_vector m n t =
 
 let gen_vector m n t =
   match t with
-  | Simplex -> failwith "Not yet implemented"
+  | Simplex ->
+      let l = repeat_th n (fun _ -> Random.float 1.) in
+      let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
+      let l = List.map l ~f:(fun x -> x /. sum) in
+      wrap_vector (List.map ~f:wrap_real l)
   | Ordered -> failwith "Not yet implemented"
   | PositiveOrdered -> failwith "Not yet implemented"
   | UnitVector -> failwith "Not yet implemented"
@@ -235,3 +244,14 @@ let%expect_test "data generation check" =
   [%expect
     {|
       "structure(c(4.1815278199399577, 6.8017664359959342, 4.8441784126802627, 4.25312636944623, 5.2015419032442969, 2.7103944900448411, 3.3282621325833865, 2.56799363086151, 4.0759938356540726, 3.604405750889411, 6.0288479433993629, 3.543689144366625), .Dim=c(4, 3))" |}]
+
+let%expect_test "data generation check" =
+  let expr =
+    generate_value Map.Poly.empty (SVector (wrap_int 3))
+      Simplex
+  in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "c(0.22198258835220422, 0.48860644012069177, 0.289410971527104)" |}]
