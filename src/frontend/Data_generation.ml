@@ -64,7 +64,14 @@ let gen_vector m n t =
       wrap_vector (List.map ~f:wrap_real l)
   | Ordered -> failwith "Not yet implemented"
   | PositiveOrdered -> failwith "Not yet implemented"
-  | UnitVector -> failwith "Not yet implemented"
+  | UnitVector ->
+      let l = repeat_th n (fun _ -> Random.float 1.) in
+      let sum =
+        Float.sqrt
+          (List.fold l ~init:0. ~f:(fun accum elt -> accum +. (elt ** 2.)))
+      in
+      let l = List.map l ~f:(fun x -> x /. sum) in
+      wrap_vector (List.map ~f:wrap_real l)
   | _ -> {int_two with expr= PostfixOp (gen_row_vector m n t, Transpose)}
 
 let gen_matrix mm n m t =
@@ -246,12 +253,17 @@ let%expect_test "data generation check" =
       "structure(c(4.1815278199399577, 6.8017664359959342, 4.8441784126802627, 4.25312636944623, 5.2015419032442969, 2.7103944900448411, 3.3282621325833865, 2.56799363086151, 4.0759938356540726, 3.604405750889411, 6.0288479433993629, 3.543689144366625), .Dim=c(4, 3))" |}]
 
 let%expect_test "data generation check" =
-  let expr =
-    generate_value Map.Poly.empty (SVector (wrap_int 3))
-      Simplex
-  in
+  let expr = generate_value Map.Poly.empty (SVector (wrap_int 3)) Simplex in
   let str = print_value_r expr in
   print_s [%sexp (str : string)] ;
   [%expect
     {|
       "c(0.22198258835220422, 0.48860644012069177, 0.289410971527104)" |}]
+
+let%expect_test "data generation check" =
+  let expr = generate_value Map.Poly.empty (SVector (wrap_int 3)) UnitVector in
+  let str = print_value_r expr in
+  print_s [%sexp (str : string)] ;
+  [%expect
+    {|
+      "c(0.36406675257322474, 0.80134825556167411, 0.47465395076734407)" |}]
