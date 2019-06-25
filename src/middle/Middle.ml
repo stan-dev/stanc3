@@ -10,31 +10,30 @@ module Utils = Utils
 (* -- Locations and spans --------------------------------------------------- *)
 
 (** Render a location as a string *)
-let rec string_of_location ?(print_file = true) ?(print_line = true)
-    ?(print_incl = true) loc =
+let rec string_of_location ?(print_file = true) ?(print_line = true) loc =
   let open Format in
   let file = if print_file then sprintf "'%s', " loc.filename else "" in
   let line = if print_line then sprintf "line %d, " loc.line_num else "" in
   let incl =
-    match (print_incl, loc.included_from) with
-    | true, Some loc2 ->
-        sprintf ", included from\n%s" (string_of_location loc2)
-    | _ -> ""
+    match loc.included_from with
+    | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
+    | None -> ""
   in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl
 
 (** Render a location_span as a string *)
 let string_of_location_span {begin_loc; end_loc} =
-  (*
-  [%sexp (begin_loc : location)] |> Sexp.to_string_hum
-  |> print_endline ;
- *)
-  sprintf "%s to %s"
-    (string_of_location begin_loc)
-    (string_of_location
-       ~print_file:(begin_loc.filename <> end_loc.filename)
-       ~print_line:(begin_loc.line_num <> end_loc.line_num)
-       ~print_incl:false end_loc)
+  let end_loc_str =
+    match begin_loc.included_from with
+    | None ->
+        " to "
+        ^ string_of_location
+            ~print_file:(begin_loc.filename <> end_loc.filename)
+            ~print_line:(begin_loc.line_num <> end_loc.line_num)
+            end_loc
+    | Some _ -> ""
+  in
+  string_of_location begin_loc ^ end_loc_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 

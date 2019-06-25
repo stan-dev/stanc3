@@ -5,11 +5,7 @@ module Validation : module type of Validation
 module Utils : module type of Utils
 
 val string_of_location :
-     ?print_file:bool
-  -> ?print_line:bool
-  -> ?print_incl:bool
-  -> location
-  -> string
+  ?print_file:bool -> ?print_line:bool -> location -> string
 
 val string_of_location_span : Mir.location_span -> string
 val operator_of_string : string -> Mir.operator option

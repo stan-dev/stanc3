@@ -245,7 +245,7 @@ model {
 
 
 Semantic error in '../included/incl_stanc_helper_error_spread_over_files.stan', line 2, column 2, included from
-'stanc_helper_with_bad_include_error_spread_over_files.stan', line 2, column 0 to '../included/error_spread_over_files.stan', line 1, column 4:
+'stanc_helper_with_bad_include_error_spread_over_files.stan', line 2, column 0:
    -------------------------------------------------
      1:    real y;
      2:    int #include error_spread_over_files.stan
@@ -285,7 +285,7 @@ Invalid character found.
 
 Syntax error in '../included/parse-err.stan', line 2, column 2, included from
 '../included/incl_stanc_helper_parse_error.stan', line 2, column 2, included from
-'stanc_helper_with_bad_include_parse_error.stan', line 2, column 0 to column 9, parsing error:
+'stanc_helper_with_bad_include_parse_error.stan', line 2, column 0, parsing error:
    -------------------------------------------------
      1:    real z;
      2:    real w;=;
@@ -308,7 +308,7 @@ model {
 
 Semantic error in '../included/sem-err.stan', line 2, column 2, included from
 '../included/incl_stanc_helper_semantic_error.stan', line 2, column 2, included from
-'stanc_helper_with_bad_include_semantic_error.stan', line 2, column 0 to column 8:
+'stanc_helper_with_bad_include_semantic_error.stan', line 2, column 0:
    -------------------------------------------------
      1:    real z;
      2:    int w;
