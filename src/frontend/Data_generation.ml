@@ -14,7 +14,7 @@ let rec unwrap_num_exn m e =
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
-let gen_num_int m (t : untyped_expression transformation) =
+let gen_num_int m t =
   let def_low, diff = (2, 5) in
   let low, up =
     match t with
@@ -25,7 +25,7 @@ let gen_num_int m (t : untyped_expression transformation) =
   in
   Random.int (up - low + 1) + low
 
-let gen_num_real m (t : untyped_expression transformation) =
+let gen_num_real m t =
   let def_low, diff = (2., 5.) in
   let low, up =
     match t with
@@ -115,8 +115,7 @@ let gen_matrix mm n m t =
 
 let gen_array elt n _ = {int_two with expr= ArrayExpr (repeat_th n elt)}
 
-let rec generate_value m (st : untyped_expression sizedtype) t :
-    untyped_expression =
+let rec generate_value m st t =
   match st with
   | SInt -> gen_int m t
   | SReal -> gen_real m t
@@ -128,7 +127,7 @@ let rec generate_value m (st : untyped_expression sizedtype) t :
       let element () = generate_value m st t in
       gen_array element (unwrap_int_exn m e) t
 
-let rec flatten (e : untyped_expression) =
+let rec flatten e =
   let flatten_expr_list l =
     List.fold (List.map ~f:flatten l) ~init:[] ~f:(fun vals new_vals ->
         new_vals @ vals )
@@ -153,7 +152,7 @@ let rec dims e =
 
 (* TODO: deal with bounds *)
 
-let rec print_value_r (e : untyped_expression) =
+let rec print_value_r e =
   let expr = e.expr in
   let print_container e =
     let vals, dims = (flatten e, dims e) in
@@ -183,7 +182,7 @@ let var_decl_gen_val m d =
       generate_value m sizedtype transformation
   | _ -> failwith "This should never happen."
 
-let print_data_prog (s : untyped_program) =
+let print_data_prog s =
   let data = Option.value ~default:[] s.datablock in
   let l, _ =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
