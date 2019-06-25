@@ -115,6 +115,8 @@ let use_file filename =
       Errors.report_semantic_error err ;
       exit 1
   in
+  if !generate_data then
+    print_endline (Debug_data_generation.print_data_prog ast) ;
   let _ = Debugging.typed_ast_logger typed_ast in
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
@@ -122,9 +124,7 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.typed_prog)] ;
     let cpp = Format.asprintf "%a" Stan_math_code_gen.pp_prog mir in
     Out_channel.write_all !output_file ~data:cpp ;
-    if !print_model_cpp then print_endline cpp ) ;
-  if !generate_data then
-    print_endline (Debug_data_generation.print_data_prog ast)
+    if !print_model_cpp then print_endline cpp )
 
 let remove_dotstan s = String.drop_suffix s 5
 
