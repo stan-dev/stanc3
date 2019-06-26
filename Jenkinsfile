@@ -34,7 +34,7 @@ pipeline {
             steps { script { utils.killOldBuilds() } }
         }
         stage ("Build docker images"){
-            agent { label "master" }
+            agent { label "docker-registry" }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'docker-registry-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                           sh 'sudo docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'                     
