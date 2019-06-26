@@ -65,7 +65,8 @@ model {
     if (s[i] > 0) 
       target += bernoulli_lpmf(1| omega) + bernoulli_lpmf(y[i]| p_eff[i]);
     else 
-      target += log_sum_exp(bernoulli_lpmf(1| omega) + bernoulli_lpmf(0| p_eff[i]),
+      target += log_sum_exp(bernoulli_lpmf(1| omega)
+                            + bernoulli_lpmf(0| p_eff[i]),
                             bernoulli_lpmf(0| omega));
 }
 generated quantities {
@@ -101,9 +102,11 @@ model {
   eps_raw ~ normal(0, 1);
   for (i in 1 : M) 
     if (y[i] > 0) 
-      target += bernoulli_lpmf(1| omega) + binomial_logit_lpmf(y[i]| T, eps[i]);
+      target += bernoulli_lpmf(1| omega)
+                + binomial_logit_lpmf(y[i]| T, eps[i]);
     else 
-      target += log_sum_exp(bernoulli_lpmf(1| omega) + binomial_logit_lpmf(0| T, eps[i]),
+      target += log_sum_exp(bernoulli_lpmf(1| omega)
+                            + binomial_logit_lpmf(0| T, eps[i]),
                             bernoulli_lpmf(0| omega));
 }
 generated quantities {
@@ -195,9 +198,11 @@ model {
     bsize_mis[i - C] ~ normal(mu_size, sd_size) T[-6, 6];
   for (i in 1 : M) 
     if (s[i] > 0) 
-      target += bernoulli_lpmf(1| omega) + bernoulli_logit_lpmf(y[i]| logit_p[i]);
+      target += bernoulli_lpmf(1| omega)
+                + bernoulli_logit_lpmf(y[i]| logit_p[i]);
     else 
-      target += log_sum_exp(bernoulli_lpmf(1| omega) + bernoulli_logit_lpmf(0| logit_p[i]),
+      target += log_sum_exp(bernoulli_lpmf(1| omega)
+                            + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_lpmf(0| omega));
 }
 generated quantities {
@@ -253,9 +258,11 @@ model {
   eps_raw ~ normal(0, 1);
   for (i in 1 : M) 
     if (s[i] > 0) 
-      target += bernoulli_lpmf(1| omega) + bernoulli_logit_lpmf(y[i]| logit_p[i]);
+      target += bernoulli_lpmf(1| omega)
+                + bernoulli_logit_lpmf(y[i]| logit_p[i]);
     else 
-      target += log_sum_exp(bernoulli_lpmf(1| omega) + bernoulli_logit_lpmf(0| logit_p[i]),
+      target += log_sum_exp(bernoulli_lpmf(1| omega)
+                            + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_lpmf(0| omega));
 }
 generated quantities {
@@ -307,9 +314,11 @@ model {
   eps_raw ~ normal(0, 1);
   for (i in 1 : M) {
     if (s[i] > 0) 
-      target += bernoulli_lpmf(1| omega) + bernoulli_logit_lpmf(y[i]| logit_p[i]);
+      target += bernoulli_lpmf(1| omega)
+                + bernoulli_logit_lpmf(y[i]| logit_p[i]);
     else 
-      target += log_sum_exp(bernoulli_lpmf(1| omega) + bernoulli_logit_lpmf(0| logit_p[i]),
+      target += log_sum_exp(bernoulli_lpmf(1| omega)
+                            + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_lpmf(0| omega));
   }
 }

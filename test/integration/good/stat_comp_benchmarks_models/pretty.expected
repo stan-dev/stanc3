@@ -88,8 +88,8 @@ model {
   real sigma[T];
   sigma[1] = sigma1;
   for (t in 2 : T) 
-    sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu) + beta1 * square(
-                    sigma[t - 1]));
+    sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu)
+                    + beta1 * square(sigma[t - 1]));
   y ~ normal(mu, sigma);
 }
 
@@ -111,8 +111,8 @@ generated quantities {
   vector[11] y;
   int k[11];
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(
-                                                                 1e-10, N));
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+                       + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     vector[N] f = multi_normal_cholesky_rng(rep_vector(0, N), L_cov);
     for (n in 1 : N) {
@@ -136,8 +136,8 @@ parameters {
 transformed parameters {
   vector[N] f;
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(
-                                                                 1e-10, N));
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+                       + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     f = L_cov * f_tilde;
   }
@@ -161,8 +161,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(
-                                                               sigma, N));
+  matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+                     + diag_matrix(rep_vector(sigma, N));
   matrix[N, N] L_cov = cholesky_decompose(cov);
   rho ~ gamma(25, 4);
   alpha ~ normal(0, 2);

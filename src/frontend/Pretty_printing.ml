@@ -123,7 +123,10 @@ and pp_expression ppf {expr= e_content; _} =
          Format.pp_print_space ppf ();
          Fmt.pf ppf ": %a" pp_expression e3)
   | BinOp (e1, op, e2) ->
-     Fmt.pf ppf "%a %a %a" pp_expression e1 pp_operator op pp_expression e2
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a" pp_expression e1;
+         Format.pp_print_space ppf ();
+         Fmt.pf ppf "%a %a" pp_operator op pp_expression e2)
   | PrefixOp (op, e) -> Fmt.pf ppf "%a%a" pp_operator op pp_expression e
   | PostfixOp (e, op) -> Fmt.pf ppf "%a%a" pp_expression e pp_operator op
   | Variable id -> pp_identifier ppf id

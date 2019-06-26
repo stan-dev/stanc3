@@ -70,8 +70,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  log_earnings ~ normal(beta[1] + beta[2] * height + beta[3] * male + beta[4] * height_male_inter,
-                        sigma);
+  log_earnings ~ normal(beta[1] + beta[2] * height + beta[3] * male
+                        + beta[4] * height_male_inter, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells.stan

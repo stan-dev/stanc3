@@ -40,7 +40,8 @@ model {
   tau ~ gamma(0.001, 0.001);
   for (dose in 1 : Ndoses) {
     lambda[dose] ~ normal(0.0, sigma);
-    y[dose] ~ poisson_log(alpha_star + beta * centered_logx[dose] + gamma * centered_x[dose] + lambda[dose]);
+    y[dose] ~ poisson_log(alpha_star + beta * centered_logx[dose]
+                          + gamma * centered_x[dose] + lambda[dose]);
   }
 }
 
@@ -183,7 +184,8 @@ model {
   tau ~ gamma(0.001, 0.001);
   for (dose in 1 : Ndoses) {
     lambda[dose] ~ normal(0.0, sigma);
-    y[dose] ~ poisson_log(alpha + beta * log(x[dose] + 10) + gamma * x[dose] + lambda[dose]);
+    y[dose] ~ poisson_log(alpha + beta * log(x[dose] + 10) + gamma * x[dose]
+                          + lambda[dose]);
   }
 }
 

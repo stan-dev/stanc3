@@ -154,7 +154,8 @@ transformed parameters {
   epsilon[1] <- y[1] - mu;
   epsilon[2] <- y[2] - mu - theta[1] * epsilon[1];
   for (t in 3 : T) 
-    epsilon[t] <- (y[t] - mu - theta[1] * epsilon[t - 1] - theta[2] * epsilon[t - 2]);
+    epsilon[t] <- (y[t] - mu - theta[1] * epsilon[t - 1]
+                   - theta[2] * epsilon[t - 2]);
 }
 model {
   mu ~ cauchy(0, 2.5);

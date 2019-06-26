@@ -83,7 +83,8 @@ parameters {
 }
 transformed parameters {
   vector[N] re;
-  re[1 : N_connected] = sqrt(1 - rho) * theta + sqrt(rho * inv(scaling_factor)) .* phi;
+  re[1 : N_connected] = sqrt(1 - rho) * theta
+                        + sqrt(rho * inv(scaling_factor)) .* phi;
   re[(N_connected + 1) : N] = singletons_re;
 }
 model {
@@ -96,7 +97,8 @@ model {
   singletons_re ~ normal(0.0, 1.0);
   for (i in 1 : N_components) {
     sum(phi[component_starts[i] : (component_ends[i])]) ~ normal(0,
-                                                                 0.001 * nodes_per_component[i]);
+                                                                 0.001
+                                                                 * nodes_per_component[i]);
   }
 }
 generated quantities {
@@ -215,7 +217,8 @@ transformed parameters {
   real<lower=0> sigma_phi = inv(sqrt(tau_phi));
 }
 model {
-  y ~ poisson_log(log_E + beta0 + beta1 * x + phi * sigma_phi + theta * sigma_theta);
+  y ~ poisson_log(log_E + beta0 + beta1 * x + phi * sigma_phi
+                  + theta * sigma_theta);
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
   sum(phi) ~ normal(0, 0.001 * N);
   beta0 ~ normal(0, 5);
@@ -225,7 +228,8 @@ model {
   tau_phi ~ gamma(1, 1);
 }
 generated quantities {
-  vector[N] mu = exp(log_E + beta0 + beta1 * x + phi * sigma_phi + theta * sigma_theta);
+  vector[N] mu = exp(log_E + beta0 + beta1 * x + phi * sigma_phi
+                     + theta * sigma_theta);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format pois.stan

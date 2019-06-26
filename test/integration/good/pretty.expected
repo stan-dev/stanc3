@@ -2237,8 +2237,8 @@ parameters {
   real y;
 }
 model {
-  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1) + normal_ccdf_log(
-  3, 0, 1);
+  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1)
+            + normal_ccdf_log(3, 0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
@@ -4099,7 +4099,9 @@ parameters {
 }
 transformed parameters {
   real mu;
-  mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number() + positive_infinity() + negative_infinity() + machine_precision();
+  mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number()
+       + positive_infinity() + negative_infinity() + machine_precision(
+       );
 }
 model {
 
@@ -4344,8 +4346,10 @@ functions {
     real Y[T];
     gamma = logistic_gamma(k, m, delta, t_change, S);
     for (i in 1 : T) {
-      Y[i] = cap[i] / (1 + exp(-(k + dot_product(A[i], delta)) * (t[i] - (m + dot_product(
-                               A[i], gamma)))));
+      Y[i] = cap[i]
+             / (1
+                + exp(-(k + dot_product(A[i], delta))
+                      * (t[i] - (m + dot_product(A[i], gamma)))));
     }
     return Y;
   }
@@ -4357,8 +4361,8 @@ functions {
       gamma[i] = -t_change[i] * delta[i];
     }
     for (i in 1 : T) {
-      Y[i] = (k + dot_product(A[i], delta)) * t[i] + (m + dot_product(A[i],
-                                                                    gamma));
+      Y[i] = (k + dot_product(A[i], delta)) * t[i]
+             + (m + dot_product(A[i], gamma));
     }
     return Y;
   }
@@ -4405,8 +4409,8 @@ transformed parameters {
     beta_a[i] = beta[i] * s_a[i];
   }
   for (i in 1 : T) {
-    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m)) + dot_product(X[i],
-                                                                    beta_a));
+    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m))
+            + dot_product(X[i], beta_a));
   }
 }
 model {

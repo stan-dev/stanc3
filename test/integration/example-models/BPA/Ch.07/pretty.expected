@@ -21,7 +21,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -113,7 +115,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -190,7 +194,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -265,7 +271,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -359,7 +367,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -436,7 +446,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -525,7 +537,9 @@ functions {
         int t_next = t_curr + 1;
         t_curr = n_occasions - t;
         t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -670,7 +684,8 @@ transformed parameters {
     pr_j[t, t] = phi_juv[t] * p[t];
     pr_a[t, t] = phi_ad[t] * p[t];
     for (j in (t + 1) : n_occ_minus_1) {
-      pr_j[t, j] = phi_juv[t] * prod(phi_ad[(t + 1) : j]) * prod(q[t : (j - 1)]) * p[j];
+      pr_j[t, j] = phi_juv[t] * prod(phi_ad[(t + 1) : j])
+                   * prod(q[t : (j - 1)]) * p[j];
       pr_a[t, j] = prod(phi_ad[t : j]) * prod(q[t : (j - 1)]) * p[j];
     }
     pr_j[t,  : (t - 1)] = rep_vector(0, t - 1);
@@ -777,7 +792,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -852,7 +869,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -939,7 +958,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -1015,7 +1036,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -1099,7 +1122,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;

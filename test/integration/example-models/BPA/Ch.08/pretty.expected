@@ -56,7 +56,8 @@ transformed parameters {
   for (t in 1 : n_occasions) {
     pr_j[t, t] = (1 - sj[t]) * rj[t];
     for (j in (t + 2) : n_occasions) 
-      pr_j[t, j] = sj[t] * prod(segment(sa, t + 1, j - t - 1)) * (1 - sa[j]) * ra[j];
+      pr_j[t, j] = sj[t] * prod(segment(sa, t + 1, j - t - 1)) * (1 - sa[j])
+                   * ra[j];
     for (j in 1 : (t - 1)) 
       pr_j[t, j] = 0;
   }

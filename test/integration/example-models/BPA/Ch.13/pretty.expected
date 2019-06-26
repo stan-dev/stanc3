@@ -63,7 +63,8 @@ generated quantities {
   for (t in 1 : nyear) 
     n_occ[t] = sum(z[1 : nsite, t]);
   growthr[ : ny_minus_1] = psi[2 : ] ./ psi[ : ny_minus_1];
-  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1] ./ psi[2 : ];
+  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1]
+                            ./ psi[2 : ];
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format Dynocc2.stan
@@ -126,7 +127,8 @@ generated quantities {
   for (t in 1 : nyear) 
     n_occ[t] = sum(z[1 : nsite, t]);
   growthr[ : ny_minus_1] = psi[2 : ] ./ psi[ : ny_minus_1];
-  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1] ./ psi[2 : ];
+  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1]
+                            ./ psi[2 : ];
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format bluebug.stan
@@ -167,7 +169,8 @@ transformed parameters {
   matrix[R, T] logit_p;
   for (i in 1 : R) 
     logit_psi[i] = alpha_psi + beta_psi * edge[i];
-  logit_p = alpha_p + beta1_p * DATES + beta2_p * DATES2 + beta3_p * HOURS + beta4_p * HOURS2;
+  logit_p = alpha_p + beta1_p * DATES + beta2_p * DATES2 + beta3_p * HOURS
+            + beta4_p * HOURS2;
 }
 model {
   alpha_psi ~ normal(0, 10);
@@ -179,10 +182,12 @@ model {
   beta4_p ~ normal(0, 10);
   for (i in 1 : R) {
     if (sum_y[i]) {
-      target += bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(y[i, 1 : last[i]]| logit_p[i, 1 : last[i]]);
+      target += bernoulli_logit_lpmf(1| logit_psi[i])
+                + bernoulli_logit_lpmf(y[i, 1 : last[i]]| logit_p[i, 1 : last[i]]);
     }
     else {
-      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]),
+      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i])
+                            + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]),
                             bernoulli_logit_lpmf(0| logit_psi[i]));
     }
   }
@@ -404,7 +409,8 @@ model {
       y[i] ~ bernoulli_logit(logit_p[i]);
     }
     else {
-      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i]),
+      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i])
+                            + bernoulli_logit_lpmf(0| logit_p[i]),
                             bernoulli_logit_lpmf(0| logit_psi[i]));
     }
   }

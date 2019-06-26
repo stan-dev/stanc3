@@ -32,7 +32,9 @@ parameters {
 transformed parameters {
   vector[N] y_hat;
   for (i in 1 : N) 
-    y_hat[i] = a1[eth[i]] + a2[eth[i]] * x[i] + b1[age[i]] + b2[age[i]] * x[i] + c[eth[i], age[i]] + d[eth[i], age[i]] * x[i];
+    y_hat[i] = a1[eth[i]] + a2[eth[i]] * x[i] + b1[age[i]]
+               + b2[age[i]] * x[i] + c[eth[i], age[i]]
+               + d[eth[i], age[i]] * x[i];
 }
 model {
   mu_a1 ~ normal(0, 1);
@@ -98,7 +100,9 @@ transformed parameters {
   c = 0.1 * mu_c + sigma_c * eta_c;
   d = 0.01 * mu_d + sigma_d * eta_d;
   for (i in 1 : N) 
-    y_hat[i] = a1[eth[i]] + a2[eth[i]] * x_centered[i] + b1[age[i]] + b2[age[i]] * x_centered[i] + c[eth[i], age[i]] + d[eth[i], age[i]] * x_centered[i];
+    y_hat[i] = a1[eth[i]] + a2[eth[i]] * x_centered[i] + b1[age[i]]
+               + b2[age[i]] * x_centered[i] + c[eth[i], age[i]]
+               + d[eth[i], age[i]] * x_centered[i];
 }
 model {
   mu_a1 ~ normal(0, 1);
@@ -298,7 +302,8 @@ parameters {
 transformed parameters {
   vector[N] y_hat;
   for (i in 1 : N) 
-    y_hat[i] = a[county[i]] + x[i] * b[county[i]] + beta[1] * u[i] + beta[2] * inter[i];
+    y_hat[i] = a[county[i]] + x[i] * b[county[i]] + beta[1] * u[i]
+               + beta[2] * inter[i];
 }
 model {
   mu_beta ~ normal(0, 1);
@@ -339,7 +344,8 @@ transformed parameters {
   a1 = mu_a1 + sigma_a1 * eta1;
   a2 = 0.1 * mu_a2 + sigma_a2 * eta2;
   for (i in 1 : N) 
-    y_hat[i] = a1[county[i]] + x[i] * a2[county[i]] + beta[1] * u[i] + beta[2] * inter[i];
+    y_hat[i] = a1[county[i]] + x[i] * a2[county[i]] + beta[1] * u[i]
+               + beta[2] * inter[i];
 }
 model {
   beta ~ normal(0, 100);

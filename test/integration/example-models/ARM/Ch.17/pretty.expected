@@ -85,7 +85,10 @@ model {
     b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
   b_state ~ normal(b_state_hat, sigma_state);
   for (i in 1 : N) {
-    Xbeta[i] = b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_state[state[i]];
+    Xbeta[i] = b_0 + b_female * female[i] + b_black * black[i]
+               + b_female_black * female[i] * black[i] + b_age[age[i]]
+               + b_edu[edu[i]] + b_age_edu[age[i], edu[i]]
+               + b_state[state[i]];
     p[i] = fmax(0, fmin(1, inv_logit(Xbeta[i])));
   }
   y ~ bernoulli(p);
@@ -151,7 +154,11 @@ model {
   for (i in 1 : N) 
     p[i] = fmax(0,
                 fmin(1,
-                     inv_logit(b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_hat[state[i]])));
+                     inv_logit(b_0 + b_female * female[i]
+                               + b_black * black[i]
+                               + b_female_black * female[i] * black[i]
+                               + b_age[age[i]] + b_edu[edu[i]]
+                               + b_age_edu[age[i], edu[i]] + b_hat[state[i]])));
   y ~ bernoulli(p);
 }
 
@@ -227,7 +234,8 @@ model {
   b_precint_adj = b_precint - mean(b_precint);
   epsilon ~ normal(0, sigma_epsilon);
   for (i in 1 : N) 
-    lambda[i] = offeset[i] + mu + b_eth[eth[i]] + b_precint[precint[i]] + epsilon[i];
+    lambda[i] = offeset[i] + mu + b_eth[eth[i]] + b_precint[precint[i]]
+                + epsilon[i];
   stops ~ poisson_log(lambda);
 }
 
@@ -370,7 +378,9 @@ model {
   }
   for (k in 1 : K) {
     for (k_prime in 1 : K) 
-      rho_b[k, k_prime] = Sigma_b_raw[k, k_prime] / sqrt(Sigma_b_raw[k, k] * Sigma_b_raw[k_prime, k_prime]);
+      rho_b[k, k_prime] = Sigma_b_raw[k, k_prime]
+                          / sqrt(Sigma_b_raw[k, k]
+                                 * Sigma_b_raw[k_prime, k_prime]);
     sigma_b[k] = fabs(xi[k]) * sqrt(Sigma_b_raw[k, k]);
   }
   for (i in 1 : N) 
@@ -429,7 +439,9 @@ model {
   for (k in 1 : K) {
     sigma_b[k] = fabs(xi[k]) * sqrt(Sigma_b_raw[k, k]);
     for (k_prime in 1 : K) 
-      rho_b[k, k_prime] = Sigma_b_raw[k, k_prime] / sqrt(Sigma_b_raw[k, k] * Sigma_b_raw[k_prime, k_prime]);
+      rho_b[k, k_prime] = Sigma_b_raw[k, k_prime]
+                          / sqrt(Sigma_b_raw[k, k]
+                                 * Sigma_b_raw[k_prime, k_prime]);
   }
   for (i in 1 : N) 
     y_hat[i] = dot_product(row(B, county[i]), row(X, i));
@@ -740,7 +752,10 @@ model {
     b_state_hat[j] = b_region[region[j]] + b_v_prev * v_prev[j];
   b_state ~ normal(b_state_hat, sigma_state);
   for (i in 1 : N) {
-    Xbeta[i] = b_0 + b_female * female[i] + b_black * black[i] + b_female_black * female[i] * black[i] + b_age[age[i]] + b_edu[edu[i]] + b_age_edu[age[i], edu[i]] + b_state[state[i]];
+    Xbeta[i] = b_0 + b_female * female[i] + b_black * black[i]
+               + b_female_black * female[i] * black[i] + b_age[age[i]]
+               + b_edu[edu[i]] + b_age_edu[age[i], edu[i]]
+               + b_state[state[i]];
     p[i] = fmax(0, fmin(1, inv_logit(Xbeta[i])));
   }
   y ~ bernoulli(p);

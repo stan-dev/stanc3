@@ -915,7 +915,8 @@ transformed parameters {
   real mu[N];
   sigma <- sqrt(2) * sigmasq;
   for (n in 1 : N) 
-    mu[n] <- beta0 + beta[1] * z[n, 1] + beta[2] * z[n, 2] + beta[3] * z[n, 3];
+    mu[n] <- beta0 + beta[1] * z[n, 1] + beta[2] * z[n, 2]
+             + beta[3] * z[n, 3];
 }
 model {
   beta0 ~ normal(0, 316);

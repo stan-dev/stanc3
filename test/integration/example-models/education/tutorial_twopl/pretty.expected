@@ -65,7 +65,8 @@ model {
   for (j in 1 : J) 
     theta[j] <- (gamma * x[j]) + epsilon[j];
   for (n in 1 : N) 
-    eta[n] <- alpha[ii[n]] * (theta[jj[n]] - (beta[ii[n]] + delta * Ik[n] * x[jj[n]]));
+    eta[n] <- alpha[ii[n]]
+              * (theta[jj[n]] - (beta[ii[n]] + delta * Ik[n] * x[jj[n]]));
   y ~ bernoulli_logit(eta);
 }
 

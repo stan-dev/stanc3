@@ -92,7 +92,8 @@ model {
   beta ~ normal(0, 5);
   sigma ~ cauchy(0, 5);
   for (n in 1 : N) 
-    mu[n] <- alpha + if_else(x[n] < x_change, beta[1], beta[2]) * (x[n] - x_change);
+    mu[n] <- alpha
+             + if_else(x[n] < x_change, beta[1], beta[2]) * (x[n] - x_change);
   Y ~ normal(mu, sigma);
 }
 

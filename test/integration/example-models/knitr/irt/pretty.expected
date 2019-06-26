@@ -29,7 +29,8 @@ model {
   zeta ~ normal(0, 10);
   mu_delta ~ lognormal(0, 10);
   for (n in 1 : N) 
-    log_odds[n] <- delta[ii[n]] * (zeta + alpha[jj[n]] + gamma[kk[n]] - beta[ii[n]]);
+    log_odds[n] <- delta[ii[n]]
+                   * (zeta + alpha[jj[n]] + gamma[kk[n]] - beta[ii[n]]);
   y ~ bernoulli_logit(log_odds);
 }
 
@@ -511,7 +512,8 @@ generated quantities {
     theta_sim[j] <- (j - 50) / 10.0;
     z_sim[j] <- 0;
     for (i in 1 : I) 
-      z_sim[j] <- z_sim[j] + bernoulli_rng(inv_logit(a[i] * (theta_sim[j] - b[i])));
+      z_sim[j] <- z_sim[j]
+                  + bernoulli_rng(inv_logit(a[i] * (theta_sim[j] - b[i])));
   }
 }
 

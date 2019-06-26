@@ -35,8 +35,8 @@ model {
   zeta ~ normal(0, 1);
   beta ~ normal(-0.25, 1);
   inv_phi ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps + log_sq_foot,
-                                  phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps
+                                  + log_sq_foot, phi);
 }
 generated quantities {
   int y_rep[N];
@@ -84,8 +84,8 @@ model {
   zeta ~ normal(0, 1);
   beta ~ normal(-0.25, 1);
   inv_phi ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps + log_sq_foot,
-                                  phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx] + beta * traps
+                                  + log_sq_foot, phi);
 }
 generated quantities {
   int y_rep[N];
@@ -140,13 +140,15 @@ model {
   sigma_mu ~ normal(0, 1);
   alpha ~ normal(log(4), 1);
   zeta ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + log_sq_foot,
-                                  phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx]
+                                  + kappa[building_idx] .* traps
+                                  + log_sq_foot, phi);
 }
 generated quantities {
   int y_rep[N];
   for (n in 1 : N) {
-    real eta_n = mu[building_idx[n]] + kappa[building_idx[n]] * traps[n] + log_sq_foot[n];
+    real eta_n = mu[building_idx[n]] + kappa[building_idx[n]] * traps[n]
+                 + log_sq_foot[n];
     y_rep[n] = neg_binomial_2_log_safe_rng(eta_n, phi);
   }
 }
@@ -210,13 +212,15 @@ model {
   mo_raw ~ normal(0, 1);
   sigma_mo ~ normal(0, 1);
   rho_raw ~ beta(10, 5);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + mo[mo_idx] + log_sq_foot,
-                                  phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx]
+                                  + kappa[building_idx] .* traps + mo[mo_idx]
+                                  + log_sq_foot, phi);
 }
 generated quantities {
   int y_rep[N];
   for (n in 1 : N) {
-    real eta_n = mu[building_idx[n]] + kappa[building_idx[n]] * traps[n] + mo[mo_idx[n]] + log_sq_foot[n];
+    real eta_n = mu[building_idx[n]] + kappa[building_idx[n]] * traps[n]
+                 + mo[mo_idx[n]] + log_sq_foot[n];
     y_rep[n] = neg_binomial_2_log_safe_rng(eta_n, phi);
   }
 }
@@ -299,13 +303,17 @@ model {
   sigma_gp ~ normal(0, 1);
   sigma_noise ~ normal(0, 1);
   mo_noise_raw ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(mu[building_idx] + kappa[building_idx] .* traps + gp[mo_idx] + log_sq_foot,
-                                  phi);
+  complaints ~ neg_binomial_2_log(mu[building_idx]
+                                  + kappa[building_idx] .* traps + gp[mo_idx]
+                                  + log_sq_foot, phi);
 }
 generated quantities {
   int y_rep[N];
   for (n in 1 : N) 
-    y_rep[n] = neg_binomial_2_log_safe_rng(mu[building_idx[n]] + kappa[building_idx[n]] * traps[n] + gp[mo_idx[n]] + log_sq_foot[n],
+    y_rep[n] = neg_binomial_2_log_safe_rng(mu[building_idx[n]]
+                                           + kappa[building_idx[n]]
+                                             * traps[n]
+                                           + gp[mo_idx[n]] + log_sq_foot[n],
                                            phi);
 }
 
@@ -377,7 +385,8 @@ model {
   sigma_mo ~ normal(0, 1);
   rho_raw ~ beta(10, 5);
   {
-    vector[N] eta = mu[building_idx] + kappa[building_idx] .* traps + mo[mo_idx] + log_sq_foot;
+    vector[N] eta = mu[building_idx] + kappa[building_idx] .* traps
+                    + mo[mo_idx] + log_sq_foot;
     complaints ~ neg_binomial_2_log(eta, phi);
   }
 }
@@ -392,7 +401,8 @@ generated quantities {
       for (m in 2 : M_forward) 
         mo_forward[m] = normal_rng(rho * mo_forward[m - 1], sigma_mo);
       for (m in 1 : M_forward) {
-        real eta = mu[j] + kappa[j] * hypo_traps[i] + mo_forward[m] + log_sq_foot_pred[j];
+        real eta = mu[j] + kappa[j] * hypo_traps[i] + mo_forward[m]
+                   + log_sq_foot_pred[j];
         y_pred_by_month[m] = neg_binomial_2_log_safe_rng(eta, phi);
       }
       y_pred[j, i] = sum(y_pred_by_month);
@@ -451,17 +461,20 @@ model {
   zeta ~ normal(0, 1);
   gamma ~ normal(0, 1);
   inv_prec ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(alphas[building_idx] + betas[building_idx] .* traps + log_sq_foot,
-                                  prec);
+  complaints ~ neg_binomial_2_log(alphas[building_idx]
+                                  + betas[building_idx] .* traps
+                                  + log_sq_foot, prec);
 }
 generated quantities {
   int y_rep[N];
   vector[N] std_resid;
   vector[M] mo_resid = rep_vector(0, M);
   for (n in 1 : N) {
-    real eta = alphas[building_idx[n]] + betas[building_idx[n]] * traps[n] + log_sq_foot[n];
+    real eta = alphas[building_idx[n]] + betas[building_idx[n]] * traps[n]
+               + log_sq_foot[n];
     y_rep[n] = neg_binomial_2_log_safe_rng(eta, prec);
-    std_resid[n] = (y_rep[n] - eta) / sqrt(exp(eta) + exp(eta) ^ 2 * inv_prec);
+    std_resid[n] = (y_rep[n] - eta)
+                   / sqrt(exp(eta) + exp(eta) ^ 2 * inv_prec);
     mo_resid[mo_idx[n]] = mo_resid[mo_idx[n]] + std_resid[n];
   }
   for (m in 1 : M) {
@@ -499,14 +512,16 @@ model {
   beta ~ normal(-0.25, 1);
   beta_super ~ normal(-0.5, 1);
   inv_phi ~ normal(0, 1);
-  complaints ~ neg_binomial_2_log(alpha + beta * traps + beta_super * live_in_super + log_sq_foot,
+  complaints ~ neg_binomial_2_log(alpha + beta * traps
+                                  + beta_super * live_in_super + log_sq_foot,
                                   phi);
 }
 generated quantities {
   int y_rep[N];
   for (n in 1 : N) 
-    y_rep[n] = neg_binomial_2_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n],
-                                           phi);
+    y_rep[n] = neg_binomial_2_log_safe_rng(alpha + beta * traps[n]
+                                           + beta_super * live_in_super[n]
+                                           + log_sq_foot[n], phi);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression_dgp.stan
@@ -529,7 +544,9 @@ generated quantities {
     log_sq_foot[n] = normal_rng(1.5, 0.1);
     live_in_super[n] = bernoulli_rng(0.5);
     traps[n] = poisson_rng(8);
-    complaints[n] = neg_binomial_2_log_rng(alpha + log_sq_foot[n] + beta * traps[n] + beta_super * live_in_super[n],
+    complaints[n] = neg_binomial_2_log_rng(alpha + log_sq_foot[n]
+                                           + beta * traps[n]
+                                           + beta_super * live_in_super[n],
                                            inv(inv_phi));
   }
 }
@@ -559,12 +576,15 @@ model {
   beta ~ normal(-0.25, 1);
   beta_super ~ normal(-0.5, 1);
   alpha ~ normal(log(4), 1);
-  complaints ~ poisson_log(alpha + beta * traps + beta_super * live_in_super + log_sq_foot);
+  complaints ~ poisson_log(alpha + beta * traps + beta_super * live_in_super
+                           + log_sq_foot);
 }
 generated quantities {
   int y_rep[N];
   for (n in 1 : N) 
-    y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n]);
+    y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n]
+                                    + beta_super * live_in_super[n]
+                                    + log_sq_foot[n]);
 }
 
   $ ../../../../../../../install/default/bin/stanc --auto-format multiple_poisson_regression_dgp.stan
@@ -586,7 +606,8 @@ generated quantities {
     log_sq_foot[n] = normal_rng(1.5, 0.1);
     live_in_super[n] = bernoulli_rng(0.5);
     traps[n] = poisson_rng(8);
-    complaints[n] = poisson_log_rng(alpha + log_sq_foot[n] + beta * traps[n] + beta_super * live_in_super[n]);
+    complaints[n] = poisson_log_rng(alpha + log_sq_foot[n] + beta * traps[n]
+                                    + beta_super * live_in_super[n]);
   }
 }
 

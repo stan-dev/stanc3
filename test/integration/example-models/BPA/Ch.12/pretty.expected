@@ -9,7 +9,9 @@ functions {
     if (p < 0 || p > 1) 
       reject("p must be in [0,1].");
     for (u in 0 : min(n)) 
-      s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1) + poisson_log_lpmf(n[2] - u| log_theta_1) + poisson_log_lpmf(u| log_theta_0);
+      s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1)
+                 + poisson_log_lpmf(n[2] - u| log_theta_1)
+                 + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
 }
@@ -66,13 +68,15 @@ generated quantities {
         for (n in 0 : (max_y[i, k] - 1)) 
           lp[n + 1] = negative_infinity();
         for (n in max_y[i, k] : K) 
-          lp[n + 1] = poisson_log_lpmf(n| alpha_lam[k]) + binomial_lpmf(y[i, 1 : T, k]| n, p[k]);
+          lp[n + 1] = poisson_log_lpmf(n| alpha_lam[k])
+                      + binomial_lpmf(y[i, 1 : T, k]| n, p[k]);
         N[i, k] = categorical_rng(softmax(lp)) - 1;
         eval[i, k] = p[k] * N[i, k];
         for (j in 1 : T) {
           E[i, j, k] = square(y[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
           y_new[i, j, k] = binomial_rng(N[i, k], p[k]);
-          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
+          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k])
+                           / (eval[i, k] + 0.5);
         }
       }
     }
@@ -97,7 +101,9 @@ functions {
     if (p < 0 || p > 1) 
       reject("p must be in [0,1].");
     for (u in 0 : min(n)) 
-      s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1) + poisson_log_lpmf(n[2] - u| log_theta_1) + poisson_log_lpmf(u| log_theta_0);
+      s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1)
+                 + poisson_log_lpmf(n[2] - u| log_theta_1)
+                 + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
   real poisbin_lpmf(int[] y, int n, real log_lambda, real p) {
@@ -138,7 +144,8 @@ model {
     if (max_y_site[i]) {
       real lp = bernoulli_lpmf(1| omega);
       for (k in first[i] : last[i]) 
-        lp = lp + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
+        lp = lp
+             + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
       target += lp;
     }
     else {
@@ -146,7 +153,8 @@ model {
       lp[1] = bernoulli_lpmf(0| omega);
       lp[2] = bernoulli_lpmf(1| omega);
       for (k in first[i] : last[i]) 
-        lp[2] = lp[2] + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
+        lp[2] = lp[2]
+                + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
       target += log_sum_exp(lp);
     }
   }
@@ -189,7 +197,8 @@ generated quantities {
         for (j in 1 : T) {
           E[i, j, k] = square(y[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
           y_new[i, j, k] = binomial_rng(N[i, k], p[k]);
-          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
+          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k])
+                           / (eval[i, k] + 0.5);
         }
       }
     }
@@ -212,7 +221,11 @@ functions {
     if (p[1] < 0 || p[1] > 1 || p[2] < 0 || p[2] > 1) 
       reject("p must be in [0,1].");
     for (u in 0 : min(n)) 
-      s[u + 1] = poisson_log_lpmf(n[1] - u| log_lambda + log(p[1]) + log1m(p[2])) + poisson_log_lpmf(n[2] - u| log_lambda + log(p[2]) + log1m(p[1])) + poisson_log_lpmf(u| log_lambda + log(p[1]) + log(p[2]));
+      s[u + 1] = poisson_log_lpmf(n[1] - u| log_lambda + log(p[1])
+                                            + log1m(p[2]))
+                 + poisson_log_lpmf(n[2] - u| log_lambda + log(p[2])
+                                              + log1m(p[1]))
+                 + poisson_log_lpmf(u| log_lambda + log(p[1]) + log(p[2]));
     return log_sum_exp(s);
   }
 }
@@ -302,13 +315,16 @@ generated quantities {
         for (n in 0 : (max_y[i, k] - 1)) 
           lp[n + 1] = negative_infinity();
         for (n in max_y[i, k] : K) 
-          lp[n + 1] = poisson_log_lpmf(n| log_lambda[i, k]) + binomial_lpmf(y[i, 1 : T, k]| n, p[i, 1 : T, k]);
+          lp[n + 1] = poisson_log_lpmf(n| log_lambda[i, k])
+                      + binomial_lpmf(y[i, 1 : T, k]| n, p[i, 1 : T, k]);
         N[i, k] = categorical_rng(softmax(lp)) - 1;
         for (j in 1 : T) {
           eval[i, j, k] = p[i, j, k] * N[i, k];
-          E[i, j, k] = square(y[i, j, k] - eval[i, j, k]) / (eval[i, j, k] + 0.5);
+          E[i, j, k] = square(y[i, j, k] - eval[i, j, k])
+                       / (eval[i, j, k] + 0.5);
           y_new[i, j, k] = binomial_rng(N[i, k], p[i, j, k]);
-          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, j, k]) / (eval[i, j, k] + 0.5);
+          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, j, k])
+                           / (eval[i, j, k] + 0.5);
         }
         ik_p[i, k] = mean(p[i, 1 : T, k]);
       }
@@ -347,7 +363,8 @@ model {
   for (i in 1 : R) {
     vector[K - max_y[i] + 1] lp;
     for (j in 1 : (K - max_y[i] + 1)) 
-      lp[j] = poisson_lpmf(max_y[i] + j - 1| lambda) + binomial_lpmf(y[i]| max_y[i] + j - 1, p);
+      lp[j] = poisson_lpmf(max_y[i] + j - 1| lambda)
+              + binomial_lpmf(y[i]| max_y[i] + j - 1, p);
     target += log_sum_exp(lp);
   }
 }
@@ -381,7 +398,8 @@ model {
   for (i in 1 : R) {
     vector[K - max_y[i] + 1] lp;
     for (j in 1 : (K - max_y[i] + 1)) 
-      lp[j] = poisson_log_lpmf(max_y[i] + j - 1| log_lambda[i]) + binomial_logit_lpmf(y[i]| max_y[i] + j - 1, logit_p[i]);
+      lp[j] = poisson_log_lpmf(max_y[i] + j - 1| log_lambda[i])
+              + binomial_logit_lpmf(y[i]| max_y[i] + j - 1, logit_p[i]);
     target += log_sum_exp(lp);
   }
 }

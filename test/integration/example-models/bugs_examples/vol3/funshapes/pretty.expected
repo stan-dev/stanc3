@@ -294,9 +294,11 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format squaremc.stan
 parameters {
   real<lower=-1, upper=1> x_raw;
-  real<lower=-(1 - sqrt(1 - square(1 - fabs(x_raw)))), upper=(1 - sqrt(1 - square(
-                                                                    1 - fabs(
-                                                                    x_raw))))> y_raw;
+  real<lower=-(1 - sqrt(1 - square(1 - fabs(x_raw)))), upper=(1
+                                                              - sqrt(
+                                                              1
+                                                              - square(
+                                                              1 - fabs(x_raw))))> y_raw;
 }
 transformed parameters {
   real<lower=-1, upper=1> x;

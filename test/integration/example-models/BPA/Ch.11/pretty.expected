@@ -59,7 +59,8 @@ functions {
       }
       for (j in 1 : (t - 1)) 
         pr[t + nyears - 1, j] = 0;
-      pr[t + nyears - 1, nyears] = 1 - sum(pr[t + nyears - 1, 1 : ny_minus_1]);
+      pr[t + nyears - 1, nyears] = 1
+                                   - sum(pr[t + nyears - 1, 1 : ny_minus_1]);
     }
     return pr;
   }
@@ -358,7 +359,8 @@ functions {
       }
       for (j in 1 : (t - 1)) 
         pr[t + ny_minus_1, j] = 0;
-      pr[t + ny_minus_1, nyears] = 1 - sum(pr[t + ny_minus_1, 1 : ny_minus_1]);
+      pr[t + ny_minus_1, nyears] = 1
+                                   - sum(pr[t + ny_minus_1, 1 : ny_minus_1]);
     }
     return pr;
   }
@@ -519,7 +521,8 @@ functions {
       }
       for (j in 1 : (t - 1)) 
         pr[t + nyears - 1, j] = 0;
-      pr[t + nyears - 1, nyears] = 1 - sum(pr[t + ny_minus_1, 1 : ny_minus_1]);
+      pr[t + nyears - 1, nyears] = 1
+                                   - sum(pr[t + ny_minus_1, 1 : ny_minus_1]);
     }
     return pr;
   }

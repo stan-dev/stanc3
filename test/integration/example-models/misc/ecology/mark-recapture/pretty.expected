@@ -285,9 +285,11 @@ transformed parameters {
   chi[1] <- (1 - phi[1]) + phi[1] * (1 - p[2]) * chi[2];
 }
 model {
-  increment_log_prob(history[7] * (log(phi[1]) + log(p[2]) + log(phi[2]) + log(p[3])));
+  increment_log_prob(history[7]
+                     * (log(phi[1]) + log(p[2]) + log(phi[2]) + log(p[3])));
   increment_log_prob(history[6] * (log(phi[1]) + log(p[2]) + log(chi[2])));
-  increment_log_prob(history[5] * (log(phi[1]) + log1m(p[2]) + log(phi[2]) + log(p[3])));
+  increment_log_prob(history[5]
+                     * (log(phi[1]) + log1m(p[2]) + log(phi[2]) + log(p[3])));
   increment_log_prob(history[4] * (log(chi[1])));
   increment_log_prob(history[3] * (log(phi[2]) + log(p[3])));
   increment_log_prob(history[2] * log(chi[2]));

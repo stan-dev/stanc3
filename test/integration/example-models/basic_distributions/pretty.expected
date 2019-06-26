@@ -255,8 +255,8 @@ parameters {
 }
 model {
   increment_log_prob(log_sum_exp(log(theta) + normal_log(y, mu[1], sigma[1]),
-                                 log(1.0 - theta) + normal_log(y, mu[2],
-                                                               sigma[2])));
+                                 log(1.0 - theta)
+                                 + normal_log(y, mu[2], sigma[2])));
 }
 
 
@@ -694,7 +694,8 @@ transformed parameters {
   W[2, 1] <- cov;
 }
 model {
-  increment_log_prob(log(2.0 * sd1) + log(2.0 * sd2) + log(sd1 * sd2 * (1.0 - rho * rho)));
+  increment_log_prob(log(2.0 * sd1) + log(2.0 * sd2)
+                     + log(sd1 * sd2 * (1.0 - rho * rho)));
   W ~ wishart(4, S);
 }
 

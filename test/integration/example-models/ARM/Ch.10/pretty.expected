@@ -76,8 +76,9 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  watched ~ normal(beta[1] + beta[2] * encouraged + beta[3] * pretest + beta[4] * site2 + beta[5] * site3 + beta[6] * site4 + beta[7] * site5 + beta[8] * setting,
-                   sigma);
+  watched ~ normal(beta[1] + beta[2] * encouraged + beta[3] * pretest
+                   + beta[4] * site2 + beta[5] * site3 + beta[6] * site4
+                   + beta[7] * site5 + beta[8] * setting, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format sesame_multi_preds_3b.stan
@@ -106,8 +107,9 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  y ~ normal(beta[1] + beta[2] * watched_hat + beta[3] * pretest + beta[4] * site2 + beta[5] * site3 + beta[6] * site4 + beta[7] * site5 + beta[8] * setting,
-             sigma);
+  y ~ normal(beta[1] + beta[2] * watched_hat + beta[3] * pretest
+             + beta[4] * site2 + beta[5] * site3 + beta[6] * site4
+             + beta[7] * site5 + beta[8] * setting, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format sesame_one_pred_2b.stan

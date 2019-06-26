@@ -56,7 +56,8 @@ model {
   real mu[G, T];
   for (g in 1 : G) {
     for (t in 1 : T) {
-      mu[g, t] <- beta * treat[g, t] * .5 + pi * period[g, t] * .5 + kappa * carry[g, t];
+      mu[g, t] <- beta * treat[g, t] * .5 + pi * period[g, t] * .5
+                  + kappa * carry[g, t];
     }
   }
   for (i in 1 : N) {

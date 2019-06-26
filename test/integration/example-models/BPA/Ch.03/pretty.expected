@@ -50,7 +50,8 @@ parameters {
 }
 transformed parameters {
   vector[n] log_lambda;
-  log_lambda = alpha + beta1 * year + +beta2 * year_squared + +beta3 * year_cubed;
+  log_lambda = alpha + beta1 * year + +beta2 * year_squared
+               + +beta3 * year_cubed;
 }
 model {
   C ~ poisson_log(log_lambda);

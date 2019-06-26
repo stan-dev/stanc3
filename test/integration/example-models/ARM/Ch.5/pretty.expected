@@ -65,7 +65,9 @@ parameters {
   vector[6] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100 + beta[3] * c_arsenic + beta[4] * da_inter + beta[5] * assoc + beta[6] * educ4);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100
+                             + beta[3] * c_arsenic + beta[4] * da_inter
+                             + beta[5] * assoc + beta[6] * educ4);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_dae.stan
@@ -86,7 +88,8 @@ parameters {
   vector[4] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic + beta[4] * educ4);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic
+                             + beta[4] * educ4);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_dae_c.stan
@@ -111,7 +114,9 @@ parameters {
   vector[5] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100 + beta[3] * c_arsenic + beta[4] * da_inter + beta[5] * educ4);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100
+                             + beta[3] * c_arsenic + beta[4] * da_inter
+                             + beta[5] * educ4);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_dae_inter.stan
@@ -134,7 +139,8 @@ parameters {
   vector[5] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic + beta[4] * educ4 + beta[5] * inter);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic
+                             + beta[4] * educ4 + beta[5] * inter);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_dae_inter_c.stan
@@ -163,7 +169,10 @@ parameters {
   vector[7] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100 + beta[3] * c_arsenic + beta[4] * c_educ4 + beta[5] * da_inter + beta[6] * de_inter + beta[7] * ae_inter);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100
+                             + beta[3] * c_arsenic + beta[4] * c_educ4
+                             + beta[5] * da_inter + beta[6] * de_inter
+                             + beta[7] * ae_inter);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_dist.stan
@@ -213,7 +222,8 @@ parameters {
   vector[4] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic + beta[4] * inter);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * dist100 + beta[3] * arsenic
+                             + beta[4] * inter);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_interaction_c.stan
@@ -235,7 +245,8 @@ parameters {
   vector[4] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100 + beta[3] * c_arsenic + beta[4] * inter);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100
+                             + beta[3] * c_arsenic + beta[4] * inter);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_predicted.stan
@@ -264,12 +275,18 @@ parameters {
   vector[7] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100 + beta[3] * c_arsenic + beta[4] * c_educ4 + beta[5] * da_inter + beta[6] * de_inter + beta[7] * ae_inter);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100
+                             + beta[3] * c_arsenic + beta[4] * c_educ4
+                             + beta[5] * da_inter + beta[6] * de_inter
+                             + beta[7] * ae_inter);
 }
 generated quantities {
   vector[N] pred;
   for (i in 1 : N) 
-    pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i] + beta[3] * c_arsenic[i] + beta[4] * c_educ4[i] + beta[5] * da_inter[i] + beta[6] * de_inter[i] + beta[7] * ae_inter[i]);
+    pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i]
+                        + beta[3] * c_arsenic[i] + beta[4] * c_educ4[i]
+                        + beta[5] * da_inter[i] + beta[6] * de_inter[i]
+                        + beta[7] * ae_inter[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format wells_predicted_log.stan
@@ -300,11 +317,17 @@ parameters {
   vector[7] beta;
 }
 model {
-  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100 + beta[3] * c_log_arsenic + beta[4] * c_educ4 + beta[5] * da_inter + beta[6] * de_inter + beta[7] * ae_inter);
+  switched ~ bernoulli_logit(beta[1] + beta[2] * c_dist100
+                             + beta[3] * c_log_arsenic + beta[4] * c_educ4
+                             + beta[5] * da_inter + beta[6] * de_inter
+                             + beta[7] * ae_inter);
 }
 generated quantities {
   vector[N] pred;
   for (i in 1 : N) 
-    pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i] + beta[3] * c_log_arsenic[i] + beta[4] * c_educ4[i] + beta[5] * da_inter[i] + beta[6] * de_inter[i] + beta[7] * ae_inter[i]);
+    pred[i] = inv_logit(beta[1] + beta[2] * c_dist100[i]
+                        + beta[3] * c_log_arsenic[i] + beta[4] * c_educ4[i]
+                        + beta[5] * da_inter[i] + beta[6] * de_inter[i]
+                        + beta[7] * ae_inter[i]);
 }
 

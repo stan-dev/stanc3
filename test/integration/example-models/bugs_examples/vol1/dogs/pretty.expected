@@ -32,7 +32,8 @@ model {
   beta ~ normal(0.0, 316.2);
   for (dog in 1 : Ndogs) 
     for (trial in 2 : Ntrials) 
-      y[dog, trial] ~ bernoulli(exp(alpha * xa[dog, trial] + beta * xs[dog, trial]));
+      y[dog, trial] ~ bernoulli(exp(alpha * xa[dog, trial]
+                                    + beta * xs[dog, trial]));
 }
 generated quantities {
   real A;
