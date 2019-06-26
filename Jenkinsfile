@@ -33,12 +33,28 @@ pipeline {
             }
             steps { script { utils.killOldBuilds() } }
         }
+        stage ("Build docker images"){
+            agent { label "master" }
+                    steps {
+                        runShell("""
+                            ### Debian ###
+                            docker build -t registry.mc-stan.org/stanc3/debian -f docker/debian/Dockerfile
+                            docker tag registry.mc-stan.org/stanc3/debian registry.mc-stan.org/stanc3/debian:latest
+                            docker push registry.mc-stan.org/stanc3/debian:latest
+
+                            ### Alpine ### 
+                            docker build -t registry.mc-stan.org/stanc3/alpine -f docker/static/Dockerfile
+                            docker tag registry.mc-stan.org/stanc3/alpine registry.mc-stan.org/stanc3/alpine:latest
+                            docker push registry.mc-stan.org/stanc3/alpine:latest
+                        """)
+        }
         stage("Build & Test") {
             agent {
-                dockerfile {
-                    filename 'docker/debian/Dockerfile'
-                    //Forces image to ignore entrypoint
-                    args "-u root --entrypoint=\'\'"
+                    docker {
+                    image 'registry.mc-stan.org/stanc3/debian:latest'
+                    registryUrl 'https://registry.mc-stan.org'
+                    registryCredentialsId 'docker-registry-creds'
+                    args '-u root --entrypoint=\'\''
                 }
             }
             steps {
@@ -138,10 +154,11 @@ pipeline {
                 }
                 stage("Build & test a static Linux binary") {
                     agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u opam"
+                        docker {
+                            image 'registry.mc-stan.org/stanc3/alpine:latest'
+                            registryUrl 'https://registry.mc-stan.org'
+                            registryCredentialsId 'docker-registry-creds'
+                            args '-u opam --entrypoint=\'\''
                         }
                     }
                     steps {
