@@ -295,9 +295,9 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
            pp_assignmentoperator assop
            pp_expression e)
   | NRFunApp (_, id, es) ->
-     Fmt.pf ppf "%a(%a);"
-       pp_identifier id
-       pp_list_of_expression es
+     Fmt.pf ppf "%a(" pp_identifier id;
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a);" pp_list_of_expression es);
   | TargetPE e ->
      Fmt.pf ppf "target += %a;"
        pp_expression e

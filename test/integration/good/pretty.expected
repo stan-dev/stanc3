@@ -2537,11 +2537,7 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  linear_regression_lp(x,
-  y,
-  alpha,
-  beta,
-  sigma);
+  linear_regression_lp(x, y, alpha, beta, sigma);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format functions-good1.stan

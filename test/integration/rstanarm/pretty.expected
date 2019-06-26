@@ -4324,21 +4324,14 @@ model {
                          bMat2_colshift, intercept_type[3]);
   }
   if (prior_PD == 0) {
-    glm_lp(yReal1,
-    yInt1,
-    yEta1,
-    yAux1,
-    family[1],
-    link[1],
-    sum_log_y1,
-    sqrt_y1,
-    log_y1);
+    glm_lp(yReal1, yInt1, yEta1, yAux1, family[1], link[1], sum_log_y1,
+           sqrt_y1, log_y1);
     if (M > 1) 
       glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2,
-      sqrt_y2, log_y2);
+             sqrt_y2, log_y2);
     if (M > 2) 
       glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3,
-      sqrt_y3, log_y3);
+             sqrt_y3, log_y3);
   }
   {
     vector[nrow_e_Xq] e_eta_q;
@@ -4804,37 +4797,37 @@ model {
   }
   if (has_aux[1] == 1) 
     aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1],
-    y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
+           y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
   if (M > 1 && has_aux[2] == 1) 
     aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2],
-    y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
+           y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
   if (M > 2 && has_aux[3] == 1) 
     aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3],
-    y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
+           y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
   if (intercept_type[1] > 0) 
     gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1],
-    y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1],
-    y_prior_df_for_intercept[1]);
+             y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1],
+             y_prior_df_for_intercept[1]);
   if (M > 1 && intercept_type[2] > 0) 
     gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2],
-    y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2],
-    y_prior_df_for_intercept[2]);
+             y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2],
+             y_prior_df_for_intercept[2]);
   if (M > 2 && intercept_type[3] > 0) 
     gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3],
-    y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3],
-    y_prior_df_for_intercept[3]);
+             y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3],
+             y_prior_df_for_intercept[3]);
   if (yK[1] > 0) 
     beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1,
-    y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1],
-    y_caux1);
+            y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1,
+            y_slab_df[1], y_caux1);
   if (M > 1 && yK[2] > 0) 
     beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2,
-    y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2],
-    y_caux2);
+            y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2,
+            y_slab_df[2], y_caux2);
   if (M > 2 && yK[3] > 0) 
     beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3,
-    y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3],
-    y_caux3);
+            y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3,
+            y_slab_df[3], y_caux3);
   if (prior_dist_for_cov == 1) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization,
                           delta, b_prior_shape, t, p);
@@ -4853,36 +4846,18 @@ model {
         target += lkj_corr_cholesky_lpdf(bCholesky2| b2_prior_regularization);
     }
   }
-  beta_lp(e_z_beta,
-  e_prior_dist,
-  e_prior_scale,
-  e_prior_df,
-  e_global_prior_df,
-  e_local,
-  e_global,
-  e_mix,
-  e_ool,
-  e_slab_df,
-  e_caux);
-  beta_lp(a_z_beta,
-  a_prior_dist,
-  a_prior_scale,
-  a_prior_df,
-  a_global_prior_df,
-  a_local,
-  a_global,
-  a_mix,
-  a_ool,
-  a_slab_df,
-  a_caux);
-  basehaz_lp(e_aux_unscaled,
-  e_prior_dist_for_aux,
-  e_prior_scale_for_aux,
-  e_prior_df_for_aux);
+  beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df,
+          e_global_prior_df, e_local, e_global, e_mix, e_ool, e_slab_df,
+          e_caux);
+  beta_lp(a_z_beta, a_prior_dist, a_prior_scale, a_prior_df,
+          a_global_prior_df, a_local, a_global, a_mix, a_ool, a_slab_df,
+          a_caux);
+  basehaz_lp(e_aux_unscaled, e_prior_dist_for_aux, e_prior_scale_for_aux,
+             e_prior_df_for_aux);
   if (e_has_intercept == 1) 
     gamma_lp(e_gamma[1], e_prior_dist_for_intercept,
-    e_prior_mean_for_intercept, e_prior_scale_for_intercept,
-    e_prior_df_for_intercept);
+             e_prior_mean_for_intercept, e_prior_scale_for_intercept,
+             e_prior_df_for_intercept);
 }
 generated quantities {
   real e_alpha;
@@ -6124,55 +6099,48 @@ model {
                          bMat2_colshift, intercept_type[3]);
   }
   if (prior_PD == 0) {
-    glm_lp(yReal1,
-    yInt1,
-    yEta1,
-    yAux1,
-    family[1],
-    link[1],
-    sum_log_y1,
-    sqrt_y1,
-    log_y1);
+    glm_lp(yReal1, yInt1, yEta1, yAux1, family[1], link[1], sum_log_y1,
+           sqrt_y1, log_y1);
     if (M > 1) 
       glm_lp(yReal2, yInt2, yEta2, yAux2, family[2], link[2], sum_log_y2,
-      sqrt_y2, log_y2);
+             sqrt_y2, log_y2);
     if (M > 2) 
       glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3,
-      sqrt_y3, log_y3);
+             sqrt_y3, log_y3);
   }
   if (has_aux[1] == 1) 
     aux_lp(yAux1_unscaled[1], y_prior_dist_for_aux[1],
-    y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
+           y_prior_scale_for_aux[1], y_prior_df_for_aux[1]);
   if (M > 1 && has_aux[2] == 1) 
     aux_lp(yAux2_unscaled[1], y_prior_dist_for_aux[2],
-    y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
+           y_prior_scale_for_aux[2], y_prior_df_for_aux[2]);
   if (M > 2 && has_aux[3] == 1) 
     aux_lp(yAux3_unscaled[1], y_prior_dist_for_aux[3],
-    y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
+           y_prior_scale_for_aux[3], y_prior_df_for_aux[3]);
   if (intercept_type[1] > 0) 
     gamma_lp(yGamma1[1], y_prior_dist_for_intercept[1],
-    y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1],
-    y_prior_df_for_intercept[1]);
+             y_prior_mean_for_intercept[1], y_prior_scale_for_intercept[1],
+             y_prior_df_for_intercept[1]);
   if (M > 1 && intercept_type[2] > 0) 
     gamma_lp(yGamma2[1], y_prior_dist_for_intercept[2],
-    y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2],
-    y_prior_df_for_intercept[2]);
+             y_prior_mean_for_intercept[2], y_prior_scale_for_intercept[2],
+             y_prior_df_for_intercept[2]);
   if (M > 2 && intercept_type[3] > 0) 
     gamma_lp(yGamma3[1], y_prior_dist_for_intercept[3],
-    y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3],
-    y_prior_df_for_intercept[3]);
+             y_prior_mean_for_intercept[3], y_prior_scale_for_intercept[3],
+             y_prior_df_for_intercept[3]);
   if (yK[1] > 0) 
     beta_lp(z_yBeta1, y_prior_dist[1], y_prior_scale1, y_prior_df1,
-    y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1, y_slab_df[1],
-    y_caux1);
+            y_global_prior_df[1], yLocal1, yGlobal1, yMix1, yOol1,
+            y_slab_df[1], y_caux1);
   if (M > 1 && yK[2] > 0) 
     beta_lp(z_yBeta2, y_prior_dist[2], y_prior_scale2, y_prior_df2,
-    y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2, y_slab_df[2],
-    y_caux2);
+            y_global_prior_df[2], yLocal2, yGlobal2, yMix2, yOol2,
+            y_slab_df[2], y_caux2);
   if (M > 2 && yK[3] > 0) 
     beta_lp(z_yBeta3, y_prior_dist[3], y_prior_scale3, y_prior_df3,
-    y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3, y_slab_df[3],
-    y_caux3);
+            y_global_prior_df[3], yLocal3, yGlobal3, yMix3, yOol3,
+            y_slab_df[3], y_caux3);
   if (prior_dist_for_cov == 1) {
     real dummy = decov_lp(z_b, z_T, rho, zeta, tau, b_prior_regularization,
                           delta, b_prior_shape, t, p);
