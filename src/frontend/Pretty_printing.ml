@@ -253,7 +253,10 @@ and pp_transformed_type ppf (st, trans) =
 
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
-  | es -> Fmt.pf ppf "[%a]" pp_list_of_expression (List.rev es)
+  | es ->
+     Fmt.pf ppf "[";
+     with_box ppf 0 (fun () ->
+         Fmt.pf ppf "%a]" pp_list_of_expression (List.rev es));
 
 and pp_indent_unless_block ppf s = match s.stmt with
   | Block _ -> pp_statement ppf s;

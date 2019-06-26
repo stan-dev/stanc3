@@ -483,11 +483,13 @@ transformed data {
   real transformed_data_real_3d_array[d_int, d_int, d_int];
   real transformed_data_real_3d_array2[2 * d_int, d_int, d_int];
   matrix[d_int, d_int] transformed_data_matrix_3d_array[d_int, d_int, d_int];
-  matrix[d_int, d_int] transformed_data_matrix_3d_array2[2 * d_int, d_int, d_int];
+  matrix[d_int, d_int] transformed_data_matrix_3d_array2[2 * d_int, d_int,
+                                                         d_int];
   vector[d_int] transformed_data_vector_3d_array[d_int, d_int, d_int];
   vector[d_int] transformed_data_vector_3d_array2[2 * d_int, d_int, d_int];
   row_vector[d_int] transformed_data_row_vector_3d_array[d_int, d_int, d_int];
-  row_vector[d_int] transformed_data_row_vector_3d_array2[2 * d_int, d_int, d_int];
+  row_vector[d_int] transformed_data_row_vector_3d_array2[2 * d_int, d_int,
+                                                          d_int];
   transformed_data_int_array2 = append_array(d_int_array, d_int_array);
   transformed_data_int_array2 = append_array(d_int_array,
                                              transformed_data_int_array);
@@ -612,11 +614,14 @@ transformed parameters {
   real transformed_param_real_3d_array[d_int, d_int, d_int];
   real transformed_param_real_3d_array2[2 * d_int, d_int, d_int];
   matrix[d_int, d_int] transformed_param_matrix_3d_array[d_int, d_int, d_int];
-  matrix[d_int, d_int] transformed_param_matrix_3d_array2[2 * d_int, d_int, d_int];
+  matrix[d_int, d_int] transformed_param_matrix_3d_array2[2 * d_int, d_int,
+                                                          d_int];
   vector[d_int] transformed_param_vector_3d_array[d_int, d_int, d_int];
   vector[d_int] transformed_param_vector_3d_array2[2 * d_int, d_int, d_int];
-  row_vector[d_int] transformed_param_row_vector_3d_array[d_int, d_int, d_int];
-  row_vector[d_int] transformed_param_row_vector_3d_array2[2 * d_int, d_int, d_int];
+  row_vector[d_int] transformed_param_row_vector_3d_array[d_int, d_int,
+                                                          d_int];
+  row_vector[d_int] transformed_param_row_vector_3d_array2[2 * d_int, d_int,
+                                                           d_int];
   transformed_param_real_array2 = append_array(p_real_array, p_real_array);
   transformed_param_real_array2 = append_array(p_real_array, d_real_array);
   transformed_param_real_array2 = append_array(transformed_param_real_array,
