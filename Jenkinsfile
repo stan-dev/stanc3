@@ -36,6 +36,9 @@ pipeline {
         stage ("Build docker images"){
             agent { label "master" }
                     steps {
+                        withCredentials([usernamePassword(credentialsId: 'docker-registry-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                          sh 'docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'                     
+                        }
                         runShell("""
                             ### Debian ###
                             sudo docker build -t registry.mc-stan.org/stanc3/debian -f docker/debian/Dockerfile .
