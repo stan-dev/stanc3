@@ -14,6 +14,8 @@ RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 COPY ./scripts/install_build_deps.sh ./
 RUN bash -x install_build_deps.sh
 
+RUN echo Hello
+
 #Copy our script and install dev dependencies
 COPY ./scripts/install_dev_deps.sh ./
 RUN bash -x install_dev_deps.sh
