@@ -37,7 +37,7 @@ pipeline {
             agent { label "master" }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'docker-registry-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                          sh 'docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'                     
+                          sh 'sudo docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'                     
                         }
                         runShell("""
                             ### Debian ###
