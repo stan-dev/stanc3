@@ -47,6 +47,7 @@ pipeline {
                             docker tag registry.mc-stan.org/stanc3/alpine registry.mc-stan.org/stanc3/alpine:latest
                             docker push registry.mc-stan.org/stanc3/alpine:latest
                         """)
+                    }
         }
         stage("Build & Test") {
             agent {
