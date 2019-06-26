@@ -38,14 +38,14 @@ pipeline {
                     steps {
                         runShell("""
                             ### Debian ###
-                            docker build -t registry.mc-stan.org/stanc3/debian -f docker/debian/Dockerfile .
-                            docker tag registry.mc-stan.org/stanc3/debian registry.mc-stan.org/stanc3/debian:latest
-                            docker push registry.mc-stan.org/stanc3/debian:latest
+                            sudo docker build -t registry.mc-stan.org/stanc3/debian -f docker/debian/Dockerfile .
+                            sudo docker tag registry.mc-stan.org/stanc3/debian registry.mc-stan.org/stanc3/debian:latest
+                            sudo docker push registry.mc-stan.org/stanc3/debian:latest
 
                             ### Alpine ### 
-                            docker build -t registry.mc-stan.org/stanc3/alpine -f docker/static/Dockerfile .
-                            docker tag registry.mc-stan.org/stanc3/alpine registry.mc-stan.org/stanc3/alpine:latest
-                            docker push registry.mc-stan.org/stanc3/alpine:latest
+                            sudo docker build -t registry.mc-stan.org/stanc3/alpine -f docker/static/Dockerfile .
+                            sudo docker tag registry.mc-stan.org/stanc3/alpine registry.mc-stan.org/stanc3/alpine:latest
+                            sudo docker push registry.mc-stan.org/stanc3/alpine:latest
                         """)
                     }
         }
