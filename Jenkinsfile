@@ -95,7 +95,7 @@ pipeline {
           # cat known_good_perf_all.tests shotgun_perf_all.tests ../notes/stancon_models.tests > all.tests
           cat ../notes/stancon_models.tests > all.tests
           cat all.tests
-          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
                 xunit([GoogleTest(
