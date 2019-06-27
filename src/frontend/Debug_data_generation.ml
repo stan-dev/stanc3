@@ -14,10 +14,11 @@ let unwrap_num_exn m e =
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
 let gen_num_int m t =
-  let def_low, diff = (2, 4) in
+  let def_low, diff = (20, 4) in
   let low, up =
     match t with
-    | Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
+    | Lower e ->
+        (unwrap_int_exn m e + def_low, unwrap_int_exn m e + diff + def_low)
     | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
     | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
     | _ -> (def_low, def_low + diff)
