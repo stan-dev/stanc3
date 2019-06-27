@@ -157,8 +157,10 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = 7;
       for (size_t j = 1; j <= J; ++j) {
         current_statement__ = 6;
-        assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"))), "assigning variable theta[(j - 1)]");
-      }
+        assign(theta, cons_list(index_uni(j), nil_index_list()), stan::math::fma(
+               tau,
+               rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"),
+               mu), "assigning variable theta[(j - 1)]");}
       {
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(mu, 0, 5));
@@ -250,8 +252,10 @@ class eight_schools_ncp_model : public prob_grad {
         current_statement__ = 7;
         for (size_t j = 1; j <= J; ++j) {
           current_statement__ = 6;
-          assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"))), "assigning variable theta[(j - 1)]");
-        }
+          assign(theta, cons_list(index_uni(j), nil_index_list()), stan::math::fma(
+                 tau,
+                 rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"),
+                 mu), "assigning variable theta[(j - 1)]");}
         for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
           vars__.push_back(rvalue(theta, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
         }
@@ -428,6 +432,8 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'one_var_per_block.stan', line 28, column 17 to column 46)",
                                                       " (in 'one_var_per_block.stan', line 28, column 2 to column 46)",
                                                       " (in 'one_var_per_block.stan', line 22, column 2 to column 26)",
+                                                      " (in 'one_var_per_block.stan', line 23, column 17 to column 47)",
+                                                      " (in 'one_var_per_block.stan', line 23, column 2 to column 47)",
                                                       " (in 'one_var_per_block.stan', line 24, column 2 to column 34)",
                                                       " (in 'one_var_per_block.stan', line 5, column 2 to column 8)",
                                                       " (in 'one_var_per_block.stan', line 6, column 2 to column 8)",
@@ -448,7 +454,7 @@ udf1(const T0__& a, const T1__& b, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 17;
+    current_statement__ = 19;
     return (a + b);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -495,43 +501,43 @@ class one_var_per_block_model : public prob_grad {
     try {
       
       
-      current_statement__ = 13;
+      current_statement__ = 15;
       N = context__.vals_i("N")[(1 - 1)];
       
-      current_statement__ = 14;
+      current_statement__ = 16;
       K = context__.vals_i("K")[(1 - 1)];
       datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));
       
-      current_statement__ = 15;
+      current_statement__ = 17;
       pos__ = 1;
-      current_statement__ = 15;
+      current_statement__ = 17;
       for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-        current_statement__ = 15;
+        current_statement__ = 17;
         for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-          current_statement__ = 15;
+          current_statement__ = 17;
           assign(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), 
                  context__.vals_r("datavar")[(pos__ - 1)], "assigning variable datavar[(sym1__ - 1), (sym2__ - 1)]");
-          current_statement__ = 15;
+          current_statement__ = 17;
           pos__ = (pos__ + 1);}}
       tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
       
-      current_statement__ = 16;
-      tdatavar = {{2.0}};
-      current_statement__ = 15;
+      current_statement__ = 18;
+      tdatavar = {FnMakeArray__(2.0)};
+      current_statement__ = 17;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 15;
+        current_statement__ = 17;
         for (size_t sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 15;
-          current_statement__ = 15;
+          current_statement__ = 17;
+          current_statement__ = 17;
           check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
                                  rvalue(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
                                  0);}}
-      current_statement__ = 16;
+      current_statement__ = 18;
       for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 16;
+        current_statement__ = 18;
         for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
-          current_statement__ = 16;
-          current_statement__ = 16;
+          current_statement__ = 18;
+          current_statement__ = 18;
           check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
                                  rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
                                  0);}}
@@ -623,6 +629,30 @@ class one_var_per_block_model : public prob_grad {
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> cov_matparam;
       cov_matparam = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>((K + 1), Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       
+      current_statement__ = 4;
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        current_statement__ = 4;
+        for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+          current_statement__ = 4;
+          assign(cov_matparam_sym1__, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), in__.vector(
+                 (N + ((N * (N - 1)) / 2))), "assigning variable cov_matparam_sym1__[(sym2__ - 1), (sym3__ - 1)]");
+        }}
+      current_statement__ = 4;
+      for (size_t sym2__ = 1; sym2__ <= K; ++sym2__) {
+        current_statement__ = 4;
+        for (size_t sym3__ = 1; sym3__ <= (K + 1); ++sym3__) {
+          current_statement__ = 4;
+          if (jacobian__) {
+            current_statement__ = 4;
+            assign(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), cov_matrix_constrain(
+                   rvalue(cov_matparam_sym1__, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
+                   N, lp__), "assigning variable cov_matparam[(sym2__ - 1), (sym3__ - 1)]");
+          } else {
+            current_statement__ = 4;
+            assign(cov_matparam, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), cov_matrix_constrain(
+                   rvalue(cov_matparam_sym1__, cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), nil_index_list())), "pretty printed e"),
+                   N), "assigning variable cov_matparam[(sym2__ - 1), (sym3__ - 1)]");
+          }}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tparam;
       tparam = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       
@@ -644,7 +674,12 @@ class one_var_per_block_model : public prob_grad {
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> modellocal;
         modellocal = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
         
-        current_statement__ = 12;
+        current_statement__ = 13;
+        for (size_t n = 1; n <= N; ++n) {
+          current_statement__ = 12;
+          assign(modellocal, cons_list(index_uni(n), nil_index_list()), multiply(rvalue(tparam, cons_list(index_uni(n), nil_index_list()), "pretty printed e"), 2), "assigning variable modellocal[(n - 1)]");
+        }
+        current_statement__ = 14;
         lp_accum__.add(normal_lpdf<false>(0, 0, 1));
       }
     } catch (const std::exception& e) {
