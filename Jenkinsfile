@@ -16,8 +16,8 @@ def buildTagImage(String image_path, String dockerfile_path){
         #Build docker image
         sudo docker build -t "$image_path" -f "$dockerfile_path" .
 
-        first_version=\$(sudo docker image inspect registry.mc-stan.org/stanc3/debian | jq '.[0].RepoTags | first')
-        second_to_last_version=\$(sudo docker image inspect nginx | jq '.[0].RepoTags[-2]')
+        first_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags | first')
+        second_to_last_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags[-2]')
 
         if [ -z \$second_to_last_version ]; then
             echo "0.0.0" > VERSION
