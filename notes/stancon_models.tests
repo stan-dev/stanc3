@@ -59,7 +59,7 @@
 ../test/integration/example-models/knitr/pest-control/stan_programs/multiple_NB_regression.stan
 # ../test/integration/example-models/knitr/pest-control/stan_programs/multiple_NB_regression_dgp.stan
 ../test/integration/example-models/knitr/pest-control/stan_programs/multiple_poisson_regression.stan
-../test/integration/example-models/knitr/pest-control/stan_programs/multiple_poisson_regression_dgp.stan
+# ../test/integration/example-models/knitr/pest-control/stan_programs/multiple_poisson_regression_dgp.stan
 ../test/integration/example-models/knitr/pest-control/stan_programs/simple_poisson_regression.stan
 # ../test/integration/example-models/knitr/pest-control/stan_programs/simple_poisson_regression_dgp.stan
 ../test/integration/example-models/knitr/ratings/ratings_1.stan
