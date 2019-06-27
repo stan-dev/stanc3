@@ -105,6 +105,16 @@ let rec add_jacobians {stmt; smeta} =
       ; smeta }
   | _ -> {stmt= map_statement Fn.id add_jacobians stmt; smeta}
 
+let rec add_read_data_vestigial_indices {stmt; smeta} =
+  match stmt with
+  | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
+    when internal_fn_of_string f = Some FnReadData ->
+      let with_vestigial_idx =
+        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
+      in
+      {stmt= Assignment (lhs, with_vestigial_idx); smeta}
+  | _ -> {stmt= map_statement Fn.id add_read_data_vestigial_indices stmt; smeta}
+
 let trans_prog p =
   let fix_data_reads = function
     | {stmt; smeta} :: stmts ->
@@ -115,6 +125,7 @@ let trans_prog p =
         |> List.map ~f:invert_read_fors
         |> List.concat_map ~f:add_pos_reset
         |> List.map ~f:use_pos_in_readdata
+        |> List.map ~f:add_read_data_vestigial_indices
     | [] -> []
   in
   { p with
