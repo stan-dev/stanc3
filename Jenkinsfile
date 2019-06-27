@@ -24,10 +24,10 @@ def buildTagImage(String image_path, String dockerfile_path){
         elif [ "\$old_version" == "latest" ]; then
             echo "0.0.1" > VERSION
         else
-            echo "old_version: \$old_version"
+            echo \$old_version > VERSION  
         fi
-
-        echo \$old_version > VERSION  
+             
+        echo "old_version: \$old_version"
 
         #Bump the version
         sudo docker run --rm -v "\$PWD":/app treeder/bump
