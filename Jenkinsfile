@@ -21,7 +21,7 @@ def buildTagImage(String image_path, String dockerfile_path){
 
         if [ -z \$old_version ]; then
             echo "0.0.0" > VERSION
-        elif [ "\$old_version" == "latest" ]; then
+        elif [[ \$old_version == *"latest"* ]]; then
             echo "0.0.1" > VERSION
         else
             echo \$old_version > VERSION  
