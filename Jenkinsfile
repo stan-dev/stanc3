@@ -19,6 +19,10 @@ def buildTagImage(String image_path, String dockerfile_path){
         #Get last tag of docker image on local machine
         old_version=\$(sudo docker images | grep "$image_path" | awk '{print \$2}' | awk 'NR==1{print \$1}')
 
+        if [ \$old_version == *"latest"* ]; then
+            echo ":)"
+        fi
+
         if [ -z \$old_version ]; then
             echo "0.0.0" > VERSION
         elif [ \$old_version == *"latest"* ]; then
