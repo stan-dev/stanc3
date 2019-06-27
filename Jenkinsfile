@@ -5,7 +5,7 @@ def utils = new org.stan.Utils()
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
-    def output = bash (returnStdout: true, script: "${command}").trim()
+    def output = sh(returnStdout: true, script: "${command}").trim()
     return "${output}"
 }
 
