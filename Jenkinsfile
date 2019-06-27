@@ -17,7 +17,7 @@ def buildTagImage(String image_path, String dockerfile_path){
         sudo docker build -t "$image_path" -f "$dockerfile_path" .
 
         first_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags | first')
-        second_to_last_version=\$(sudo docker image inspect "$image_path" | jq 'map( .[0].RepoTags[-2] |= split(":"))[1]')
+        second_to_last_version=\$(sudo docker image inspect "$image_path" | jq 'map( .[0].RepoTags[-2] |= split(":"))')
 
         if [ -z \$second_to_last_version ]; then
             echo "0.0.0" > VERSION
