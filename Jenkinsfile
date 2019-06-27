@@ -253,8 +253,8 @@ pipeline {
                 }
             }
         }
-        always {
-            script {utils.mailBuildResults()}
-        }
+        //always {
+            //script {utils.mailBuildResults()}
+        //}
     }
 }
