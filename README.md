@@ -1,4 +1,4 @@
-# A New Stan-to-C++ Compiler 
+# A New Stan-to-C++ Compiler
 This repo contains work in progress on a new compiler for Stan, written in OCaml. To read more about why we're building this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
 We're currently able to successfully compile, link, and run [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)(listed under Test Results), but not much else.
 
@@ -8,39 +8,7 @@ We're currently able to successfully compile, link, and run [these models](https
 Stanc3 has 3 main src packages: `frontend`, `middle`, and `stan_math_backend`. The Middle contains the MIR and currently any types or functions used by the two ends.
 The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the various components together.
 
-### Distinct Stanc Phasesvariables:
-  DIR_DEV: "C:\\home\\sites\\api"
-  DIR_PROD: "C:\\home\\api\\wwwroot"
-  PROJECT: "api"
-
-stages:
-  - deploy
-
-Deploy-Development:
-  stage: deploy
-  before_script:
-    - powershell -Command "if (-Not (Test-Path -Path %DIR_DEV%)) { git clone http://gitlab-runner:%priv_auth_token%@gitlab.com/issaonline/%PROJECT%.git %DIR_DEV% }"
-    - cd %DIR_DEV%
-    - echo "---------------------------------------------------------"
-    - echo "Files that changed on the current server since last time:"
-    - git diff-index --name-status HEAD
-    - echo "---------------------------------------------------------"
-    - git checkout development
-    - git fetch
-    - git pull 
-    - git reset --hard origin/development
-    - git clean -dfx
-    - powershell -Command "if (Test-Path .gitlab-ci.yml) { Remove-Item .gitlab-ci.yml }"
-  only:
-    - development
-  tags:
-    - deploy
-    - development
-  environment:
-    name: Development
-  script:
-    - echo "Deployment on Development server complete!"
-
+### Distinct Stanc Phases
 1. Parse Stan language into AST that represents the syntax quite closely and aides in development of pretty-printers and linters
 1. Typecheck & add type information
 1. De-sugar into [Middle Intermediate Representation](https://blog.rust-lang.org/2016/04/19/MIR.html)

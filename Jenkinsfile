@@ -13,8 +13,6 @@ def buildTagImage(String image_path, String dockerfile_path){
     def function = """
         #Docker image path in repository
 
-        echo "Hey"
-
         #Build docker image
         sudo docker build -t "$image_path" -f "$dockerfile_path" .
 
@@ -43,6 +41,8 @@ def buildTagImage(String image_path, String dockerfile_path){
         sudo docker push $image_path:\$version
 
     """
+
+    println function
 
     runShell(function)
 }
