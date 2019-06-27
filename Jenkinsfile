@@ -71,7 +71,7 @@ pipeline {
         }
         stage ("Build docker images"){
             when {
-                { branch 'develop' }
+                branch 'master' 
             }
             agent { label "docker-registry" }
                     steps {
