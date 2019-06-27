@@ -28,6 +28,7 @@ def buildTagImage(String image_path, String dockerfile_path){
         fi
 
         echo "old_version: \$old_version"
+        echo "VERSION: $(cat VERSION)"
 
         #Bump the version
         sudo docker run --rm -v "\$PWD":/app treeder/bump
