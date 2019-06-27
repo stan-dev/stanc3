@@ -533,15 +533,15 @@ class one_var_per_block_model : public prob_grad {
           check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
                                  rvalue(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
                                  0);}}
-      {
-        {
+      current_statement__ = 18;
+      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        current_statement__ = 18;
+        for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
           current_statement__ = 18;
           current_statement__ = 18;
           check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
-                                 rvalue(tdatavar, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"),
-                                 0);
-        }
-      }
+                                 rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                                 0);}}
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
