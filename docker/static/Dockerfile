@@ -14,6 +14,8 @@ RUN apk update && apk add build-base bzip2 git tar curl ca-certificates openssl 
 #Switch back to the normal user
 USER opam
 
+RUN echo Hello
+
 #Init opam, create and switch to 4.07.0, update shell environment
 RUN opam init --disable-sandboxing -y
 RUN opam switch create 4.07.0
