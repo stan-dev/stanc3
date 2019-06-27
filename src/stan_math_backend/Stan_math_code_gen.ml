@@ -482,6 +482,7 @@ using namespace stan::math; |}
 let pp_prog ppf (p : (mtype_loc_ad with_expr, stmt_loc) prog) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p = Transform_Mir.trans_prog p in
+  let p = Analysis_and_optimization.Optimize.static_loop_unrolling p in
   let p, s = Locations.prepare_prog p in
   pf ppf "@[<v>@ %s@ %s@ namespace %s_namespace {@ %s@ %a@ %a@ %a@ }@ @]"
     version includes p.prog_name usings Locations.pp_globals s

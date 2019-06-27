@@ -158,10 +158,8 @@ class eight_schools_ncp_model : public prob_grad {
       current_statement__ = 7;
       for (size_t j = 1; j <= J; ++j) {
         current_statement__ = 6;
-        assign(theta, cons_list(index_uni(j), nil_index_list()), stan::math::fma(
-               tau,
-               rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"),
-               mu), "assigning variable theta[(j - 1)]");}
+        assign(theta, cons_list(index_uni(j), nil_index_list()), (mu + (tau * rvalue(theta_tilde, cons_list(index_uni(j), nil_index_list()), "pretty printed e"))), "assigning variable theta[(j - 1)]");
+      }
       {
         current_statement__ = 8;
         lp_accum__.add(normal_log<propto__>(mu, 0, 5));
@@ -525,7 +523,7 @@ class one_var_per_block_model : public prob_grad {
       tdatavar = std::vector<std::vector<double>>(1, std::vector<double>(1, 0));
       
       current_statement__ = 18;
-      tdatavar = {FnMakeArray__(2.0)};
+      tdatavar = {{2.0}};
       current_statement__ = 17;
       for (size_t sym1__ = 1; sym1__ <= K; ++sym1__) {
         current_statement__ = 17;
@@ -535,15 +533,15 @@ class one_var_per_block_model : public prob_grad {
           check_greater_or_equal(function__, "datavar[sym1__, sym2__]",
                                  rvalue(datavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
                                  0);}}
-      current_statement__ = 18;
-      for (size_t sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 18;
-        for (size_t sym2__ = 1; sym2__ <= 1; ++sym2__) {
+      {
+        {
           current_statement__ = 18;
           current_statement__ = 18;
           check_greater_or_equal(function__, "tdatavar[sym1__, sym2__]",
-                                 rvalue(tdatavar, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
-                                 0);}}
+                                 rvalue(tdatavar, cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "pretty printed e"),
+                                 0);
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(
           std::runtime_error(std::string("inside ctor") + ": " + e.what()), locations_array__[current_statement__]);
