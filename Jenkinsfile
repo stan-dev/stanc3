@@ -20,8 +20,13 @@ def buildTagImage(String image_path, String dockerfile_path){
         old_version=\$(sudo docker images | grep "$image_path" | awk '{print \$2}' | awk 'NR==1{print \$1}')
 
         #Default value
-        if [ -z old_version ]; then
+        if [ -z \$old_version ]; then
             echo "0.0.0" > VERSION
+        fi
+
+        #If we already have an image built
+        if [ "\$old_version" == "latest" ]; then
+            echo "0.0.1" > VERSION
         fi
 
         #Pipe old version to file for treeder/bump
