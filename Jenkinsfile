@@ -19,19 +19,15 @@ def buildTagImage(String image_path, String dockerfile_path){
         #Get last tag of docker image on local machine
         old_version=\$(sudo docker images | grep "$image_path" | awk '{print \$2}' | awk 'NR==1{print \$1}')
 
-        #Default value
         if [ -z \$old_version ]; then
             echo "0.0.0" > VERSION
-        fi
-
-        #If we already have an image built
-        if [ "\$old_version" == "latest" ]; then
+        elif [ "\$old_version" == "latest" ]; then
             echo "0.0.1" > VERSION
+        else
+            echo "old_version: \$old_version"
         fi
 
-        #Pipe old version to file for treeder/bump
-        echo \$old_version > VERSION
-        echo "old_version: \$old_version"
+        echo \$old_version > VERSION  
 
         #Bump the version
         sudo docker run --rm -v "\$PWD":/app treeder/bump
