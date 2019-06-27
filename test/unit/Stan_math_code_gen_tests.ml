@@ -32,7 +32,6 @@ let%expect_test "udf" =
       (void) DUMMY_VAR__;  // suppress unused var warning
 
       try {
-        current_statement__ = 0;
         return add(x, 1);
       } catch (const std::exception& e) {
         stan::lang::rethrow_located(

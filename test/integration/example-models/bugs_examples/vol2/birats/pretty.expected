@@ -26,7 +26,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file birats.stan, line 1, column 0:
+Warning: deprecated language construct used in 'birats.stan', line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
          ^
@@ -37,7 +37,7 @@ Warning: deprecated language construct used in file birats.stan, line 1, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file birats.stan, line 2, column 0:
+Warning: deprecated language construct used in 'birats.stan', line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
      2:  # Page 23: Birats
@@ -49,7 +49,7 @@ Warning: deprecated language construct used in file birats.stan, line 2, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file birats.stan, line 3, column 0:
+Warning: deprecated language construct used in 'birats.stan', line 3, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
      2:  # Page 23: Birats
@@ -62,7 +62,7 @@ Warning: deprecated language construct used in file birats.stan, line 3, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file birats.stan, line 27, column 11:
+Warning: deprecated language construct used in 'birats.stan', line 27, column 11:
    -------------------------------------------------
     25:  transformed parameters {
     26:    real<lower=0> sigma_y; 
@@ -75,7 +75,7 @@ Warning: deprecated language construct used in file birats.stan, line 27, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file birats.stan, line 37, column 6:
+Warning: deprecated language construct used in 'birats.stan', line 37, column 6:
    -------------------------------------------------
     35:    for (n in 1:N)
     36:      for (t in 1:T) 
@@ -88,7 +88,7 @@ Warning: deprecated language construct used in file birats.stan, line 37, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file birats.stan, line 40, column 6:
+Warning: deprecated language construct used in 'birats.stan', line 40, column 6:
    -------------------------------------------------
     38:        // y[n,t] ~ normal(beta[n, 1] + beta[n, 2] * (x[t] - xbar), sqrt(sigmasq_y));
     39:   

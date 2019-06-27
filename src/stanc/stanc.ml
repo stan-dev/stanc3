@@ -17,6 +17,7 @@ let pretty_print_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
 let output_file = ref ""
+let generate_data = ref false
 
 (** Some example command-line options here *)
 let options =
@@ -35,6 +36,10 @@ let options =
       , Arg.Set Debugging.typed_ast_printing
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
+    ; ( "--debug-generate-data"
+      , Arg.Set generate_data
+      , " For debugging purposes: generate a mock dataset to run the model on"
+      )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR." )
@@ -110,6 +115,8 @@ let use_file filename =
       Errors.report_semantic_error err ;
       exit 1
   in
+  if !generate_data then
+    print_endline (Debug_data_generation.print_data_prog typed_ast) ;
   let _ = Debugging.typed_ast_logger typed_ast in
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
