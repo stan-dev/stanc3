@@ -115,6 +115,30 @@ let rec add_read_data_vestigial_indices {stmt; smeta} =
       {stmt= Assignment (lhs, with_vestigial_idx); smeta}
   | _ -> {stmt= map_statement Fn.id add_read_data_vestigial_indices stmt; smeta}
 
+(* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before.
+     Note that this should not change the semantics as we are only inserting blocks around the whole body of a for-, while- or if-body.
+     These are already local scopes.
+     The blocks make sure that the program with the inserted location update is still well-formed C++ though.
+   *)
+let rec ensure_body_in_block {stmt; smeta} =
+  let in_block {stmt; smeta} =
+    { stmt=
+        ( match stmt with
+        | Block l | SList l -> Block l
+        | stmt -> Block [{stmt; smeta}] )
+    ; smeta }
+  in
+  let ensure_body_in_block_base stmt =
+    match stmt with
+    | IfElse (_, _, _) | While (_, _) | For _ ->
+        map_statement (fun x -> x) in_block stmt
+    | _ -> stmt
+  in
+  { stmt=
+      ensure_body_in_block_base
+        (map_statement (fun x -> x) ensure_body_in_block stmt)
+  ; smeta }
+
 let trans_prog p =
   let fix_data_reads = function
     | {stmt; smeta} :: stmts ->
@@ -128,9 +152,12 @@ let trans_prog p =
         |> List.map ~f:add_read_data_vestigial_indices
     | [] -> []
   in
-  { p with
-    log_prob= List.map ~f:add_jacobians p.log_prob
-  ; prog_name= escape_name p.prog_name
-  ; prepare_data= fix_data_reads p.prepare_data
-  ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
-  ; transform_inits= fix_data_reads p.transform_inits }
+  let p =
+    { p with
+      log_prob= List.map ~f:add_jacobians p.log_prob
+    ; prog_name= escape_name p.prog_name
+    ; prepare_data= fix_data_reads p.prepare_data
+    ; generate_quantities= List.map ~f:invert_read_fors p.generate_quantities
+    ; transform_inits= fix_data_reads p.transform_inits }
+  in
+  map_prog Fn.id ensure_body_in_block p
