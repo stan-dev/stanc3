@@ -70,9 +70,9 @@ pipeline {
             steps { script { utils.killOldBuilds() } }
         }
         stage ("Build docker images"){
-            when {
-                branch 'master' 
-            }
+            //when {
+            //   branch 'master' 
+            //}
             agent { label "docker-registry" }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'docker-registry-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
