@@ -5,8 +5,44 @@ def utils = new org.stan.Utils()
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
-    def output = sh (returnStdout: true, script: "${command}").trim()
+    def output = bash (returnStdout: true, script: "${command}").trim()
     return "${output}"
+}
+
+def buildTagImage(String image_path, String dockerfile_path){
+    def function = """
+        #Docker image path in repository
+
+        #Build docker image
+        sudo docker build -t ${image_path} -f ${dockerfile_path} .
+
+        #Get last tag of docker image on local machine
+        old_version=$(docker images | grep ${image_path} | awk '{print \$2}' | awk 'NR==1{print \$1}')
+
+        #Default value
+        if [ -z old_version ]; then
+            echo "0.0.0" > VERSION
+        fi
+
+        #Pipe old version to file for treeder/bump
+        echo \$old_version > VERSION
+        echo "old_version: \$old_version"
+
+        #Bump the version
+        sudo docker run --rm -v "\$PWD":/app treeder/bump
+        version=`cat VERSION`
+        echo "version: \$version"
+
+        #Tag the image
+        sudo docker tag ${image_path}:latest ${image_path}:\$version
+                 
+        #Push as latest and version
+        #sudo docker push ${image_path}:latest
+        sudo docker push ${image_path}:\$version
+
+    """
+
+    return function
 }
 
 def tagName() {
@@ -34,22 +70,20 @@ pipeline {
             steps { script { utils.killOldBuilds() } }
         }
         stage ("Build docker images"){
+            when {
+                { branch 'develop' }
+            }
             agent { label "docker-registry" }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'docker-registry-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                           sh 'sudo docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'                     
                         }
-                        runShell("""
-                            ### Debian ###
-                            sudo docker build -t registry.mc-stan.org/stanc3/debian -f docker/debian/Dockerfile .
-                            sudo docker tag registry.mc-stan.org/stanc3/debian registry.mc-stan.org/stanc3/debian:latest
-                            sudo docker push registry.mc-stan.org/stanc3/debian:latest
 
-                            ### Alpine ### 
-                            sudo docker build -t registry.mc-stan.org/stanc3/alpine -f docker/static/Dockerfile .
-                            sudo docker tag registry.mc-stan.org/stanc3/alpine registry.mc-stan.org/stanc3/alpine:latest
-                            sudo docker push registry.mc-stan.org/stanc3/alpine:latest
-                        """)
+                        //Build and Tag Debian Image
+                        buildTagImage("registry.mc-stan.org/stanc3/debian", "docker/debian/Dockerfile")
+                        //Build and Tag Debian Image
+                        buildTagImage("registry.mc-stan.org/stanc3/alpine", "docker/static/Dockerfile")
+
                     }
         }
         stage("Build & Test") {
@@ -210,6 +244,13 @@ pipeline {
         }
     }
     post {
+        success {
+            script {
+                script{
+                    println ":)"
+                }
+            }
+        }
         always {
             script {utils.mailBuildResults()}
         }
