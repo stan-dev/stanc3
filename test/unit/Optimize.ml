@@ -2024,7 +2024,7 @@ let%expect_test "partial evaluation" =
           print({453, 24, 6}[2]);
           print({453, 24, 6}[1 + 1]);
           print({453, 24, 6}[1 + i]);
-          print({{453, 24}, {6}}[1, 2]); // Still wrong
+          print({{453, 24}, {6}}[1, 2]);
           print({{453, 24}, {6}}[1][2]);
           print([[453, 24], [6]][1][2]);
           print({453, 24, 6}[2:]);
