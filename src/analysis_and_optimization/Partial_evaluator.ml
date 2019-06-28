@@ -713,19 +713,25 @@ let rec eval_expr (e : Middle.expr_typed_located) =
         | e1', e2' -> EOr (e1', e2') )
       | Indexed (e, l) -> (
         (* TODO: deal with lists of indices *)
-        match (e.expr, l) with
-        | FunApp (t, f, elts), [i]
-          when f = string_of_internal_fn FnMakeArray
-               || f = string_of_internal_fn FnMakeRowVec -> (
-          match get_indices (List.length elts) i with
-          | None -> Indexed (e, l)
-          | Some indices ->
-              if List.length indices = 1 then
-                (List.nth_exn elts (List.hd_exn indices)).expr
-              else FunApp (t, f, List.map indices ~f:(List.nth_exn elts)) )
-        | _, _ -> Indexed (eval_expr e, List.map ~f:eval_idx l) ) ) }
+        match l with
+        | [] -> Indexed (e, l)
+        | [i] -> eval_indexed_expr e l i
+        | _ -> Indexed (e, l) ) ) }
 
 and eval_idx i = map_index eval_expr i
+
+and eval_indexed_expr e l i =
+  match e.expr with
+  | FunApp (t, f, elts)
+    when f = string_of_internal_fn FnMakeArray
+         || f = string_of_internal_fn FnMakeRowVec -> (
+    match get_indices (List.length elts) i with
+    | None -> Indexed (e, l)
+    | Some indices ->
+        if List.length indices = 1 then
+          (List.nth_exn elts (List.hd_exn indices)).expr
+        else FunApp (t, f, List.map indices ~f:(List.nth_exn elts)) )
+  | _ -> Indexed (e, l)
 
 let eval_stmt_base = map_statement eval_expr (fun x -> x)
 let eval_stmt = map_rec_stmt_loc eval_stmt_base
