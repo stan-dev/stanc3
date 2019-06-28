@@ -679,7 +679,8 @@ let rec eval_expr (e : Middle.expr_typed_located) =
       | Indexed (e, l) -> (
         match (e.expr, l) with
         | FunApp (t, f, elts), i :: _
-          when f = string_of_internal_fn FnMakeArray -> (
+          when f = string_of_internal_fn FnMakeArray
+          || f = string_of_internal_fn FnMakeRowVec -> (
           match i with
           | All -> FunApp (t, f, elts)
           | Single e -> failwith "<case>"
