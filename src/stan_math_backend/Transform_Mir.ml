@@ -115,10 +115,8 @@ let rec add_read_data_vestigial_indices {stmt; smeta} =
       {stmt= Assignment (lhs, with_vestigial_idx); smeta}
   | _ -> {stmt= map_statement Fn.id add_read_data_vestigial_indices stmt; smeta}
 
-(* Make sure that all statements are safely wrapped in a block in such a way that we can insert a location update before.
-     Note that this should not change the semantics as we are only inserting blocks around the whole body of a for-, while- or if-body.
-     These are already local scopes.
-     The blocks make sure that the program with the inserted location update is still well-formed C++ though.
+(* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
+   The blocks make sure that the program with the inserted location update is still well-formed C++ though.
    *)
 let rec ensure_body_in_block {stmt; smeta} =
   let in_block {stmt; smeta} =
