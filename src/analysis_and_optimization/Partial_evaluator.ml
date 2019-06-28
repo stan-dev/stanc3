@@ -676,10 +676,18 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
         | e1', e2' -> EOr (e1', e2') )
-      | Indexed (e, l) ->
-          (* TODO: do something clever with array and matrix expressions here?
-  Note  that we could also constant fold array sizes if we keep those around on declarations. *)
-          Indexed (eval_expr e, List.map ~f:eval_idx l) ) }
+      | Indexed (e, l) -> (
+        match (e.expr, l) with
+        | FunApp (t, f, elts), i :: _
+          when f = string_of_internal_fn FnMakeArray -> (
+          match i with
+          | All -> FunApp (t, f, elts)
+          | Single e -> failwith "<case>"
+          | Upfrom _ -> failwith "<case>"
+          | Downfrom _ -> failwith "<case>"
+          | Between (_, _) -> failwith "<case>"
+          | MultiIndex _ -> failwith "<case>" )
+        | _, _ -> Indexed (eval_expr e, List.map ~f:eval_idx l) ) ) }
 
 and eval_idx i = map_index eval_expr i
 
