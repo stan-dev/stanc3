@@ -156,7 +156,6 @@ and index_var_set (ix : expr_typed_located index) : vexpr Set.Poly.t =
   | All -> Set.Poly.empty
   | Single expr -> expr_var_set expr
   | Upfrom expr -> expr_var_set expr
-  | Downfrom expr -> expr_var_set expr
   | Between (expr1, expr2) ->
       Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
@@ -250,7 +249,7 @@ let rec expr_depth (e : expr_typed_located) : int =
 and idx_depth (i : expr_typed_located index) : int =
   match i with
   | All -> 0
-  | Single e | Upfrom e | Downfrom e | MultiIndex e -> expr_depth e
+  | Single e | Upfrom e | MultiIndex e -> expr_depth e
   | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)
 
 let ad_level_sup l =
