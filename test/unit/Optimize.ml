@@ -2015,6 +2015,20 @@ let%expect_test "partial evaluation" =
           print(1+2);
           print(i + (1+2));
           print(log(1-i));
+          print({453, 24, 6}[]);
+          print({453, 24, 6}[3]);
+          print({453, 24, 6}[4]);
+          print({453, 24, 6}[0]);
+          print({453, 24, 6}[1]);
+          print({453, 24, 6}[2]);
+          print({453, 24, 6}[1 + 1]);
+          print({453, 24, 6}[1 + i]);
+          print({{453, 24}, {6}}[1, 2]); // Still wrong
+          print({{453, 24}, {6}}[1][2]);
+          print([[453, 24], [6]][1][2]);
+          print({453, 24, 6}[2:]);
+          print({453, 24, 6}[:2]);
+          print({453, 24, 6}[{1, 3}]);
         }
       }
       |}
@@ -2044,6 +2058,20 @@ let%expect_test "partial evaluation" =
             FnPrint__(3);
             FnPrint__((i + 3));
             FnPrint__(log1m(i));
+            FnPrint__(FnMakeArray__(453, 24, 6));
+            FnPrint__(6);
+            FnPrint__(FnMakeArray__(453, 24, 6)[4]);
+            FnPrint__(FnMakeArray__(453, 24, 6)[0]);
+            FnPrint__(453);
+            FnPrint__(24);
+            FnPrint__(24);
+            FnPrint__(FnMakeArray__(453, 24, 6)[(1 + i)]);
+            FnPrint__(FnMakeArray__(FnMakeArray__(453, 24), FnMakeArray__(6))[1, 2]);
+            FnPrint__(24);
+            FnPrint__(24);
+            FnPrint__(FnMakeArray__(24, 6));
+            FnPrint__(FnMakeArray__(453, 24));
+            FnPrint__(FnMakeArray__(453, 6));
           }
         }
       }
