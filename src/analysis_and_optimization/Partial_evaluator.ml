@@ -711,27 +711,41 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
         | e1', e2' -> EOr (e1', e2') )
-      | Indexed (e, l) -> (
-        (* TODO: deal with lists of indices *)
-        match l with
-        | [] -> Indexed (e, l)
-        | [i] -> eval_indexed_expr e l i
-        | _ -> Indexed (e, l) ) ) }
+      | Indexed (e, l) ->
+          let rec eval_indexed_expr expr =
+            let rec eval_indexed_expr_one_step expr =
+              match expr with
+              | Indexed (e, l) -> (
+                match l with
+                | [] -> e.expr
+                | [_] -> (
+                  match e.expr with
+                  | FunApp (t, f, elts)
+                    when f = string_of_internal_fn FnMakeArray
+                         || f = string_of_internal_fn FnMakeRowVec -> (
+                    match get_indices (List.length elts) (List.hd_exn l) with
+                    | None -> expr
+                    | Some indices ->
+                        if List.length indices = 1 then
+                          (List.nth_exn elts (List.hd_exn indices)).expr
+                        else
+                          FunApp (t, f, List.map indices ~f:(List.nth_exn elts))
+                    )
+                  | _ -> expr )
+                | i :: l' ->
+                    Indexed
+                      ( { e with
+                          expr= eval_indexed_expr_one_step (Indexed (e, [i]))
+                        }
+                      , l' ) )
+              | _ -> expr
+            in
+            let expr' = eval_indexed_expr_one_step expr in
+            if expr' = expr then expr' else eval_indexed_expr expr'
+          in
+          eval_indexed_expr (Indexed (e, l)) ) }
 
 and eval_idx i = map_index eval_expr i
-
-and eval_indexed_expr e l i =
-  match e.expr with
-  | FunApp (t, f, elts)
-    when f = string_of_internal_fn FnMakeArray
-         || f = string_of_internal_fn FnMakeRowVec -> (
-    match get_indices (List.length elts) i with
-    | None -> Indexed (e, l)
-    | Some indices ->
-        if List.length indices = 1 then
-          (List.nth_exn elts (List.hd_exn indices)).expr
-        else FunApp (t, f, List.map indices ~f:(List.nth_exn elts)) )
-  | _ -> Indexed (e, l)
 
 let eval_stmt_base = map_statement eval_expr (fun x -> x)
 let eval_stmt = map_rec_stmt_loc eval_stmt_base
