@@ -65,13 +65,48 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s -> raise_s [%sexp (s : string)] ) )
 
+let get_indices length (indices : 'e index) =
+  let make_range bot top =
+    List.range ~start:`inclusive ~stop:`inclusive bot top
+  in
+  let get_int_value e =
+    match e.expr with
+    | Lit (Int, s) ->
+        let i = int_of_string s in
+        if i <= 0 || i > length then None else Some i
+    | _ -> None
+  in
+  let get_int_values l =
+    let l = List.map l ~f:get_int_value in
+    if List.exists l ~f:(fun x -> x = None) then None
+    else Some (List.map l ~f:(fun x -> Option.value_exn x))
+  in
+  let indices =
+    match indices with
+    | All -> Some (make_range 1 length)
+    | Single e -> get_int_values [e]
+    | Upfrom e ->
+        Option.map (get_int_value e) ~f:(fun bot -> make_range bot length)
+    | Downfrom e ->
+        Option.map (get_int_value e) ~f:(fun top -> make_range 1 top)
+    | Between (e1, e2) ->
+        Option.map2 (get_int_value e1) (get_int_value e2) ~f:(fun bot top ->
+            make_range bot top )
+    | MultiIndex e -> (
+      match e.expr with
+      | FunApp (_, f, l) when f = string_of_internal_fn FnMakeArray ->
+          get_int_values l
+      | _ -> None )
+  in
+  Option.map indices ~f:(List.map ~f:(fun x -> x - 1))
+
 let rec eval_expr (e : Middle.expr_typed_located) =
+  let e = {e with expr= map_expr eval_expr e.expr} in
   { e with
     expr=
       ( match e.expr with
       | Var _ | Lit (_, _) -> e.expr
       | FunApp (t, f, l) ->
-          let l = List.map ~f:eval_expr l in
           let get_fun_or_op_rt_opt name l' =
             let argument_types =
               List.map ~f:(fun x -> (x.emeta.madlevel, x.emeta.mtype)) l'
@@ -654,12 +689,12 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               | _ -> FunApp (StanLib, op, l) )
             | _ -> FunApp (t, f, l) )
       | TernaryIf (e1, e2, e3) -> (
-        match (eval_expr e1, eval_expr e2, eval_expr e3) with
+        match (e1, e2, e3) with
         | {expr= Lit (Int, "0"); _}, _, e3' -> e3'.expr
         | {expr= Lit (Int, _); _}, e2', _ -> e2'.expr
         | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
       | EAnd (e1, e2) -> (
-        match (eval_expr e1, eval_expr e2) with
+        match (e1, e2) with
         | {expr= Lit (Int, s1); _}, {expr= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
@@ -668,7 +703,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
         | e1', e2' -> EAnd (e1', e2') )
       | EOr (e1, e2) -> (
-        match (eval_expr e1, eval_expr e2) with
+        match (e1, e2) with
         | {expr= Lit (Int, s1); _}, {expr= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
@@ -677,17 +712,17 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
         | e1', e2' -> EOr (e1', e2') )
       | Indexed (e, l) -> (
+        (* TODO: deal with lists of indices *)
         match (e.expr, l) with
-        | FunApp (t, f, elts), i :: _
+        | FunApp (t, f, elts), [i]
           when f = string_of_internal_fn FnMakeArray
-          || f = string_of_internal_fn FnMakeRowVec -> (
-          match i with
-          | All -> FunApp (t, f, elts)
-          | Single e -> failwith "<case>"
-          | Upfrom _ -> failwith "<case>"
-          | Downfrom _ -> failwith "<case>"
-          | Between (_, _) -> failwith "<case>"
-          | MultiIndex _ -> failwith "<case>" )
+               || f = string_of_internal_fn FnMakeRowVec -> (
+          match get_indices (List.length elts) i with
+          | None -> Indexed (e, l)
+          | Some indices ->
+              if List.length indices = 1 then
+                (List.nth_exn elts (List.hd_exn indices)).expr
+              else FunApp (t, f, List.map indices ~f:(List.nth_exn elts)) )
         | _, _ -> Indexed (eval_expr e, List.map ~f:eval_idx l) ) ) }
 
 and eval_idx i = map_index eval_expr i
