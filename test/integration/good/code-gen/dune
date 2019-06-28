@@ -1,6 +1,6 @@
 (rule
  (targets cpp.output)
- (deps (package stanc) (:stanfiles eight_schools_ncp.stan one_var_per_block.stan))
+ (deps (package stanc) (:stanfiles eight_schools_ncp.stan mother.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc} --print-cpp" %{stanfiles}))))
