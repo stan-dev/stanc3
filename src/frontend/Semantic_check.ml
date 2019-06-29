@@ -130,9 +130,9 @@ let check_fresh_variable_basic id is_nullary_function =
   Validate.(
     (* No shadowing! *)
     (* For some strange reason, Stan allows user declared identifiers that are
-     not of nullary function types to clash with nullary library functions.
-     No other name clashes are tolerated. Here's the logic to
-     achieve that. *)
+       not of nullary function types to clash with nullary library functions.
+       No other name clashes are tolerated. Here's the logic to
+       achieve that. *)
     if
       is_stan_math_function_name id.name
       && (is_nullary_function || stan_math_returntype id.name [] = None)
@@ -165,7 +165,7 @@ let semantic_check_autodifftype at = Validate.ok at
 let rec semantic_check_unsizedtype : unsizedtype -> unit Validate.t = function
   | UFun (l, rt) ->
       (* fold over argument types accumulating errors with initial state
-          given by validating the return type *)
+        given by validating the return type *)
       List.fold
         ~f:(fun v0 (at, ut) ->
           Validate.(
@@ -306,8 +306,8 @@ let semantic_check_fn_stan_math ~loc id es =
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
-   function because, technically, user defined functions can shadow
-   constants in StanLib. *)
+     function because, technically, user defined functions can shadow
+     constants in StanLib. *)
   if
     stan_math_returntype id.name
       (List.map ~f:(fun x -> (x.emeta.ad_level, x.emeta.type_)) es)
@@ -1405,7 +1405,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
     semantic_check_size_decl ~loc is_global ust
     >>= fun _ ->
     let ut = unsizedtype_of_sizedtype ust in
-    let _ = Symbol_table.enter vm id.name (cf.current_block, ut) in
+    Symbol_table.enter vm id.name (cf.current_block, ut) ;
     semantic_check_var_decl_initial_value ~loc ~cf id init
     |> apply_const (semantic_check_var_decl_bounds ~loc is_global ust utrans)
     |> apply_const (semantic_check_transformed_param_ty ~loc ~cf is_global ut)
@@ -1444,7 +1444,7 @@ and semantic_check_fundef_decl ~loc id body =
         if Symbol_table.check_is_unassigned vm id.name then
           error @@ Semantic_error.fn_decl_without_def loc
         else
-          let _ = Symbol_table.set_is_unassigned vm id.name in
+          let () = Symbol_table.set_is_unassigned vm id.name in
           ok ()
     | _ ->
         Symbol_table.set_is_assigned vm id.name ;
@@ -1543,7 +1543,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt)) ;
     (* Check that function args and loop identifiers are not modified in
-    function. (passed by const ref)*)
+       function. (passed by const ref)*)
     List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
     semantic_check_fundef_dist_rt ~loc id urt
     |> apply_const (semantic_check_pdf_fundef_first_arg_ty ~loc id uarg_types)
@@ -1631,7 +1631,7 @@ let semantic_check_ostatements_in_block ~cf block stmts_opt =
   let cf' = {cf with current_block= block} in
   Option.value_map stmts_opt ~default:(Validate.ok None) ~f:(fun stmts ->
       (* I'm folding since I'm not sure if map is guaranteed to
-        respect the ordering of the list *)
+         respect the ordering of the list *)
       List.fold ~init:[] stmts ~f:(fun accu stmt ->
           let s = semantic_check_statement cf' stmt in
           s :: accu )
@@ -1682,9 +1682,9 @@ let semantic_check_program
   let upb = semantic_check_ostatements_in_block ~cf Param pb in
   let utpb = semantic_check_ostatements_in_block ~cf TParam tpb in
   (* Model top level variables only assigned and read in model  *)
-  let _ = Symbol_table.begin_scope vm in
+  Symbol_table.begin_scope vm ;
   let umb = semantic_check_ostatements_in_block ~cf Model mb in
-  let _ = Symbol_table.end_scope vm in
+  Symbol_table.end_scope vm ;
   let ugb = semantic_check_ostatements_in_block ~cf GQuant gb in
   let mk_typed_prog ufb udb utdb upb utpb umb ugb : Ast.typed_program =
     { functionblock= ufb
