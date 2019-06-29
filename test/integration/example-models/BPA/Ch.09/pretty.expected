@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format agerecruitment.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format agerecruitment.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 4) return k;
@@ -110,7 +110,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ladyslipper.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ladyslipper.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 3) return k;
@@ -201,7 +201,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format lifedead.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format lifedead.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 3) return k;
@@ -287,7 +287,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ms.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ms.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 3) return k;
@@ -366,7 +366,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ms3_multinomlogit.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ms3_multinomlogit.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 4) return k;
@@ -466,7 +466,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ms_alternative1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ms_alternative1.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 3) return k;
@@ -543,7 +543,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ms_alternative2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ms_alternative2.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] != 3) return k;
@@ -606,7 +606,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format tempemi.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format tempemi.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k] == 1) return k;

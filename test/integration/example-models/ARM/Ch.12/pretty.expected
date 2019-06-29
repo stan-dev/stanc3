@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_complete_pool.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_complete_pool.stan
 data {
   int<lower=1> N;
   vector[N] x;
@@ -13,7 +13,7 @@ model {
   y ~ normal(beta[1] + beta[2] * x, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_group.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_group.stan
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -57,7 +57,7 @@ Warning: deprecated language construct used in 'radon_group.stan', line 3, colum
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_group_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_group_chr.stan
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -101,7 +101,7 @@ Warning: deprecated language construct used in 'radon_group_chr.stan', line 3, c
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_intercept.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_intercept.stan
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -150,7 +150,7 @@ Warning: deprecated language construct used in 'radon_intercept.stan', line 8, c
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_intercept_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_intercept_chr.stan
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -190,7 +190,7 @@ Warning: deprecated language construct used in 'radon_intercept_chr.stan', line 
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_no_pool.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_no_pool.stan
 data {
   int<lower=1> N;
   int<lower=1> J;
@@ -229,7 +229,7 @@ Warning: deprecated language construct used in 'radon_no_pool.stan', line 3, col
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_no_pool_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_no_pool_chr.stan
 data {
   int<lower=1> N;
   int<lower=1> J;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format air.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format air.stan
 data {
   real alpha;
   real beta;

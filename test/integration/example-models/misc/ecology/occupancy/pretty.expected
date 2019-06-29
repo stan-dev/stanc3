@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format occupancy.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format occupancy.stan
 data {
   int<lower=0> R;
   int<lower=0> T;

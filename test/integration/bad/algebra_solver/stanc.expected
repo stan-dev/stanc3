@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc bad_fun_type.stan
+  $ ../../../../../../../install/default/bin/stanc bad_fun_type.stan
 
 Semantic error in 'bad_fun_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -15,7 +15,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (real[], vector, real[], int[]) => vector, vector, vector, real[], int[].
 
-  $ ../../../../../install/default/bin/stanc bad_fun_type_control.stan
+  $ ../../../../../../../install/default/bin/stanc bad_fun_type_control.stan
 
 Semantic error in 'bad_fun_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -32,7 +32,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (real[], vector, real[], int[]) => vector, vector, vector, real[], int[], real, real, int.
 
-  $ ../../../../../install/default/bin/stanc bad_theta_type.stan
+  $ ../../../../../../../install/default/bin/stanc bad_theta_type.stan
 
 Semantic error in 'bad_theta_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -49,7 +49,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (real[], vector, real[], int[]) => vector, vector, real, real[], int[].
 
-  $ ../../../../../install/default/bin/stanc bad_theta_type_control.stan
+  $ ../../../../../../../install/default/bin/stanc bad_theta_type_control.stan
 
 Semantic error in 'bad_theta_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -66,7 +66,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (real[], vector, real[], int[]) => vector, vector, real, real[], int[], real, real, int.
 
-  $ ../../../../../install/default/bin/stanc bad_x_i_type.stan
+  $ ../../../../../../../install/default/bin/stanc bad_x_i_type.stan
 
 Semantic error in 'bad_x_i_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -83,7 +83,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, real[], real[].
 
-  $ ../../../../../install/default/bin/stanc bad_x_i_type_control.stan
+  $ ../../../../../../../install/default/bin/stanc bad_x_i_type_control.stan
 
 Semantic error in 'bad_x_i_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -100,7 +100,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, real[], real[], real, real, int.
 
-  $ ../../../../../install/default/bin/stanc bad_x_r_type.stan
+  $ ../../../../../../../install/default/bin/stanc bad_x_r_type.stan
 
 Semantic error in 'bad_x_r_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -117,7 +117,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, int[], int[].
 
-  $ ../../../../../install/default/bin/stanc bad_x_r_type_control.stan
+  $ ../../../../../../../install/default/bin/stanc bad_x_r_type_control.stan
 
 Semantic error in 'bad_x_r_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------
@@ -134,7 +134,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, int[], int[], real, real, int.
 
-  $ ../../../../../install/default/bin/stanc bad_x_r_var_type.stan
+  $ ../../../../../../../install/default/bin/stanc bad_x_r_var_type.stan
 
 Semantic error in 'bad_x_r_var_type.stan', line 31, column 10 to column 64:
    -------------------------------------------------
@@ -151,7 +151,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, real[], int[].
 
-  $ ../../../../../install/default/bin/stanc bad_x_r_var_type_control.stan
+  $ ../../../../../../../install/default/bin/stanc bad_x_r_var_type_control.stan
 
 Semantic error in 'bad_x_r_var_type_control.stan', line 31, column 10 to column 80:
    -------------------------------------------------
@@ -168,7 +168,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector, real[], int[], real, real, int.
 
-  $ ../../../../../install/default/bin/stanc bad_y_type.stan
+  $ ../../../../../../../install/default/bin/stanc bad_y_type.stan
 
 Semantic error in 'bad_y_type.stan', line 31, column 10 to column 62:
    -------------------------------------------------
@@ -185,7 +185,7 @@ Ill-typed arguments supplied to function 'algebra_solver'. Available signatures:
 ((vector, vector, data real[], data int[]) => vector, vector, vector, data real[], data int[]) => vector
 Instead supplied arguments of incompatible type: (real[], vector, real[], int[]) => vector, real, vector, real[], int[].
 
-  $ ../../../../../install/default/bin/stanc bad_y_type_control.stan
+  $ ../../../../../../../install/default/bin/stanc bad_y_type_control.stan
 
 Semantic error in 'bad_y_type_control.stan', line 31, column 10 to column 78:
    -------------------------------------------------

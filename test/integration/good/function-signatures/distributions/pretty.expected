@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format rngs.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format rngs.stan
 parameters {
   real y;
 }

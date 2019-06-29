@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format arma11.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format arma11.stan
 data {
   int<lower=1> T;
   real y[T];
@@ -77,7 +77,7 @@ Warning: deprecated language construct used in 'arma11.stan', line 18, column 12
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format arma11_alt.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format arma11_alt.stan
 data {
   int<lower=1> T;
   real y[T];
@@ -139,7 +139,7 @@ Warning: deprecated language construct used in 'arma11_alt.stan', line 22, colum
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ma2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ma2.stan
 data {
   int<lower=3> T;
   vector[T] y;
@@ -201,7 +201,7 @@ Warning: deprecated language construct used in 'ma2.stan', line 15, column 16:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format maQ.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format maQ.stan
 data {
   int<lower=0> Q;
   int<lower=3> T;
@@ -283,7 +283,7 @@ Warning: deprecated language construct used in 'maQ.stan', line 27, column 14:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format stochastic-volatility-optimized.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format stochastic-volatility-optimized.stan
 data {
   int<lower=0> T;
   vector[T] y;
@@ -360,7 +360,7 @@ Warning: deprecated language construct used in 'stochastic-volatility-optimized.
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format stochastic-volatility.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format stochastic-volatility.stan
 data {
   int<lower=0> T;
   vector[T] y;

@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format hier_multivariate.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format hier_multivariate.stan
 data {
   int<lower=0> N;
   int<lower=1> K;

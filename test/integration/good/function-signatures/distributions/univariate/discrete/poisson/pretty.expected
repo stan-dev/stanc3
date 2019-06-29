@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_ccdf_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format poisson_ccdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -52,7 +52,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -106,7 +106,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -160,7 +160,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format poisson_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -214,7 +214,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_glm.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_glm.stan
 transformed data {
   int N = 2;
   int M = 3;
@@ -243,7 +243,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_log.stan
 data {
   int d_int;
   int d_int_array[d_int];

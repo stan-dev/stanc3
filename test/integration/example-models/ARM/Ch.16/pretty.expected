@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -18,7 +18,7 @@ model {
   for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.2.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -40,7 +40,7 @@ model {
   for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.2a.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.2a.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -66,7 +66,7 @@ generated quantities {
   y_tilde = normal_rng(a[26] + b * 1, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.2b.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.2b.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -96,7 +96,7 @@ generated quantities {
   y_tilde = normal_rng(a_tilde + b * 1, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.3.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.3.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -122,7 +122,7 @@ model {
   for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.nopooling.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.nopooling.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -139,7 +139,7 @@ model {
   for (i in 1 : N) y[i] ~ normal(a[county[i]] + b * x[i], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.pooling.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.pooling.stan
 data {
   int<lower=0> N;
   vector[N] y;

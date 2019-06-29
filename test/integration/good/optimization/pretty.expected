@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format exponential_boundary.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format exponential_boundary.stan
 transformed data {
   real alpha1 = 0.2;
   real alpha2 = 0.2;
@@ -21,7 +21,7 @@ model {
   t2 ~ exponential(nu);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format rosenbrock.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format rosenbrock.stan
 parameters {
   real x;
   real y;

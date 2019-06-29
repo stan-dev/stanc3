@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format mvn_orange.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format mvn_orange.stan
 data {
   int<lower=0> K;
   int<lower=0> N;

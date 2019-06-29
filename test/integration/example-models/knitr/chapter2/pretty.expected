@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format abs_test.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format abs_test.stan
 data {
   int N;
   vector[N] y;
@@ -13,7 +13,7 @@ model {
   y ~ normal(theta, 1);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format exponential.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format exponential.stan
 data {
   int N;
   vector[N] x;
@@ -31,7 +31,7 @@ model {
   sigma ~ normal(0, 10);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format exponential_positive.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format exponential_positive.stan
 data {
   int N;
   vector[N] x;
@@ -49,7 +49,7 @@ model {
   sigma ~ normal(0, 10);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format exponential_positive_lognormal.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format exponential_positive_lognormal.stan
 data {
   int N;
   vector[N] x;
@@ -69,7 +69,7 @@ model {
   sigma ~ normal(0, 10);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format golf1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format golf1.stan
 data {
   int J;
   int n[J];
@@ -93,7 +93,7 @@ generated quantities {
   sigma_degrees = (180 / pi()) * sigma;
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
 data {
   int J;
   int n[J];
@@ -108,7 +108,7 @@ model {
   y ~ binomial_logit(n, a + b * x);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mixture.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format mixture.stan
 data {
   int K;
   int N;
@@ -131,7 +131,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format mixture_2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format mixture_2.stan
 data {
   int K;
   int N;
@@ -166,7 +166,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format normal_normal.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format normal_normal.stan
 data {
   real y;
   real<lower=0> sigma_y;
@@ -181,7 +181,7 @@ model {
   theta ~ normal(mu_0, sigma_0);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ratings_1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ratings_1.stan
 data {
   int N;
   vector[N] y;
@@ -196,7 +196,7 @@ model {
   y ~ normal(theta[movie], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ratings_2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ratings_2.stan
 data {
   int N;
   vector[N] y;
@@ -212,7 +212,7 @@ model {
   y ~ normal(theta[movie], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ratings_3.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ratings_3.stan
 data {
   int N;
   vector[N] y;
@@ -239,7 +239,7 @@ model {
   beta ~ normal(0, 1);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials.stan
 data {
   int N;
   vector[N] x;
@@ -256,7 +256,7 @@ model {
   y ~ lognormal(log(y_pred), sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials_with_priors.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials_with_priors.stan
 data {
   int N;
   vector[N] x;
@@ -276,7 +276,7 @@ model {
   sigma ~ normal(0, 1);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_first_try.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format worldcup_first_try.stan
 data {
   int N_teams;
   int N_games;
@@ -310,7 +310,7 @@ model {
   sqrt_dif ~ student_t(df, a[team_1] - a[team_2], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_first_try_noprior.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format worldcup_first_try_noprior.stan
 data {
   int N_teams;
   int N_games;
@@ -344,7 +344,7 @@ model {
   sqrt_dif ~ student_t(df, a[team_1] - a[team_2], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_fixed.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format worldcup_fixed.stan
 data {
   int N_teams;
   int N_games;
@@ -386,7 +386,7 @@ generated quantities {
   y_rep_original_scale = y_rep .* fabs(y_rep);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_no_sqrt.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format worldcup_no_sqrt.stan
 data {
   int N_teams;
   int N_games;
@@ -422,7 +422,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format worldcup_with_replication.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format worldcup_with_replication.stan
 data {
   int N_teams;
   int N_games;

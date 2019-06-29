@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format equiv.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format equiv.stan
 data {
   int<lower=0> P;
   int<lower=0> N;

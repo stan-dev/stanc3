@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format election88.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format election88.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -74,7 +74,7 @@ model {
   y ~ bernoulli_logit(Xbeta);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format election88_expansion.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format election88_expansion.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -170,7 +170,7 @@ Warning: deprecated language construct used in 'election88_expansion.stan', line
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format item_response.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format item_response.stan
 data {
   int<lower=0> K;
   int<lower=0> J;
@@ -224,7 +224,7 @@ model {
   y ~ bernoulli_logit(p);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format pilots.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format pilots.stan
 data {
   int<lower=0> N;
   int<lower=0> n_airport;
@@ -269,7 +269,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format pilots_expansion.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format pilots_expansion.stan
 data {
   int<lower=0> N;
   int<lower=0> n_airport;
@@ -316,7 +316,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -341,7 +341,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -366,7 +366,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_redundant.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_redundant.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -397,7 +397,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_redundant_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_redundant_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -430,7 +430,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format schools.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format schools.stan
 data {
   int<lower=0> N;
   vector[N] y;

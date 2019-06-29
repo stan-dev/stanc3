@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format fire.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format fire.stan
 data {
   int<lower=0> N;
   real x[N];

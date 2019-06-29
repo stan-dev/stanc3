@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format ssm.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ssm.stan
 data {
   int<lower=0> T;
   vector[T] y;
@@ -26,7 +26,7 @@ generated quantities {
   sigma2_proc = square(sigma_proc);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ssm2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ssm2.stan
 data {
   int<lower=0> T;
   vector[T] y;

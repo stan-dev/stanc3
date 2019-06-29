@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format sur.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format sur.stan
 data {
   int<lower=1> K;
   int<lower=1> J;
@@ -48,7 +48,7 @@ Warning: deprecated language construct used in 'sur.stan', line 18, column 11:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format sur_imrpoper.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format sur_imrpoper.stan
 data {
   int<lower=1> K;
   int<lower=1> J;

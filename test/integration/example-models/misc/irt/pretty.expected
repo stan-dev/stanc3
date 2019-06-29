@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format irt.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format irt.stan
 data {
   int<lower=1> J;
   int<lower=1> K;
@@ -19,7 +19,7 @@ model {
   for (n in 1 : N) y[n] ~ bernoulli_logit(alpha[jj[n]] - beta[kk[n]] + delta);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format irt2.stan
 data {
   int<lower=1> J;
   int<lower=1> K;
@@ -42,7 +42,7 @@ model {
   for (n in 1 : N) y[n] ~ bernoulli_logit(exp(log_gamma[kk[n]]) * (alpha[jj[n]] - beta[kk[n]] + delta));
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt2_multilevel.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format irt2_multilevel.stan
 data {
   int<lower=1> J;
   int<lower=1> K;
@@ -71,7 +71,7 @@ model {
   for (n in 1 : N) y[n] ~ bernoulli_logit(exp(log_gamma[kk[n]]) * (alpha[jj[n]] - beta[kk[n]] + delta));
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format irt_multilevel.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format irt_multilevel.stan
 data {
   int<lower=1> J;
   int<lower=1> K;

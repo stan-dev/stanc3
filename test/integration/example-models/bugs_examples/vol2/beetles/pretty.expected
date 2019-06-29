@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format beetles_cloglog.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format beetles_cloglog.stan
 data {
   int<lower=0> N;
   int<lower=0> n[N];
@@ -113,7 +113,7 @@ Warning: deprecated language construct used in 'beetles_cloglog.stan', line 40, 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format beetles_logit.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format beetles_logit.stan
 data {
   int<lower=0> N;
   int<lower=0> n[N];
@@ -243,7 +243,7 @@ Warning: deprecated language construct used in 'beetles_logit.stan', line 41, co
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format beetles_probit.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format beetles_probit.stan
 data {
   int<lower=0> N;
   int<lower=0> n[N];

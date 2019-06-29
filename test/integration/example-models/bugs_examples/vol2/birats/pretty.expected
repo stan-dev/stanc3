@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format birats.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format birats.stan
 data {
   int<lower=0> N;
   int<lower=0> T;

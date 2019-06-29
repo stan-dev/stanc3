@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_add.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_add.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -85,7 +85,7 @@ generated quantities {
   phi_g2 = inv_logit(gamma + beta[2]);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_age.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_age.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -157,7 +157,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_c_c.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_c_c.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -227,7 +227,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_cov_raneff.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_cov_raneff.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -313,7 +313,7 @@ generated quantities {
   phi_est = inv_logit(mu + beta * x + epsilon);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_group.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_group.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -385,7 +385,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_group_raneff.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_group_raneff.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -467,7 +467,7 @@ generated quantities {
   phi_g = inv_logit(beta);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_ind_raneff.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_ind_raneff.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -548,7 +548,7 @@ generated quantities {
   sigma2 = square(sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_mnl.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_mnl.stan
 data {
   int<lower=0> n_occasions;
   int<lower=0> marr[n_occasions - 1, n_occasions];
@@ -599,7 +599,7 @@ generated quantities {
   fit_new = sum(E_new);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_mnl_age.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_mnl_age.stan
 data {
   int<lower=0> n_occasions;
   int<lower=0> marr_j[n_occasions - 1, n_occasions];
@@ -646,7 +646,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_mnl_ran.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_mnl_ran.stan
 data {
   int<lower=0> n_occasions;
   int<lower=0> marr[n_occasions - 1, n_occasions];
@@ -706,7 +706,7 @@ generated quantities {
   fit_new = sum(E_new);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_t_t.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_t_t.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -776,7 +776,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_corr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_temp_corr.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -856,7 +856,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_fixeff.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_temp_fixeff.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -927,7 +927,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_raneff.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_temp_raneff.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;
@@ -1006,7 +1006,7 @@ generated quantities {
   sigma2 = square(sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format cjs_trap.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format cjs_trap.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;

@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format multi_logit.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_logit.stan
 data {
   int<lower=2> K;
   int<lower=2> D;

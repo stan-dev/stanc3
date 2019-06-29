@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc falling_factorial.stan
+  $ ../../../../../../../install/default/bin/stanc falling_factorial.stan
 
 Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
    -------------------------------------------------
@@ -15,7 +15,7 @@ Ill-typed arguments supplied to function 'falling_factorial'. Available signatur
 (real, int) => real
 Instead supplied arguments of incompatible type: real, real.
 
-  $ ../../../../../install/default/bin/stanc rising_factorial.stan
+  $ ../../../../../../../install/default/bin/stanc rising_factorial.stan
 
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
    -------------------------------------------------

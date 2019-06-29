@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format binormal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format binormal.stan
 transformed data {
   matrix[2, 2] Sigma;
   vector[2] mu;
@@ -94,7 +94,7 @@ Warning: deprecated language construct used in 'binormal.stan', line 10, column 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format inv_wishart.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv_wishart.stan
 transformed data {
   cov_matrix[3] S;
   S[1, 1] <- 2;
@@ -231,7 +231,7 @@ Warning: deprecated language construct used in 'inv_wishart.stan', line 5, colum
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal.stan
 parameters {
   real y;
 }
@@ -239,7 +239,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
 transformed data {
   real<lower=0, upper=1> theta;
   real mu[2];
@@ -335,7 +335,7 @@ Warning: deprecated language construct used in 'normal_mixture.stan', line 14, c
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format ordered_pair.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format ordered_pair.stan
 transformed data {
   real L;
   real H;
@@ -376,7 +376,7 @@ Warning: deprecated language construct used in 'ordered_pair.stan', line 5, colu
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format sorted_pair.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format sorted_pair.stan
 parameters {
   real<lower=-1, upper=1> x1;
   real<lower=-1, upper=1> x2;
@@ -416,7 +416,7 @@ Warning: deprecated language construct used in 'sorted_pair.stan', line 11, colu
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format triangle.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format triangle.stan
 parameters {
   real<lower=-1, upper=1> y;
 }
@@ -436,7 +436,7 @@ Warning: deprecated language construct used in 'triangle.stan', line 5, column 1
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format uniform.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format uniform.stan
 parameters {
   real<lower=0, upper=1> y;
 }
@@ -444,7 +444,7 @@ model {
   y ~ uniform(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format wishart.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format wishart.stan
 transformed data {
   cov_matrix[2] S;
   for (i in 1 : 2) for (j in 1 : 2) S[i, j] <- 0.0;
@@ -497,7 +497,7 @@ Warning: deprecated language construct used in 'wishart.stan', line 9, column 10
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format wishart2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format wishart2.stan
 transformed data {
   cov_matrix[4] S;
   S[1, 1] <- 2.9983662;
@@ -662,7 +662,7 @@ Warning: deprecated language construct used in 'wishart2.stan', line 17, column 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format wishart2x2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format wishart2x2.stan
 transformed data {
   cov_matrix[2] S;
   for (i in 1 : 2) for (j in 1 : 2) S[i, j] <- 0.0;

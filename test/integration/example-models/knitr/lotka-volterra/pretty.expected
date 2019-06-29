@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format lotka-volterra.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format lotka-volterra.stan
 functions {
   real[] dz_dt(real t, real[] z, real[] theta, real[] x_r, int[] x_i) {
     real u = z[1];

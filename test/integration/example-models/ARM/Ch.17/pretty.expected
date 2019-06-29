@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format flight_simulator_17.3.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format flight_simulator_17.3.stan
 data {
   int<lower=0> N;
   int<lower=0> n_treatment;
@@ -27,7 +27,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format latent_glm_17.7.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format latent_glm_17.7.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -93,7 +93,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format multilevel_logistic_17.4.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format multilevel_logistic_17.4.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -147,7 +147,7 @@ model {
   y ~ bernoulli(p);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format multilevel_ordered_categorical_17.6.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format multilevel_ordered_categorical_17.6.stan
 data {
   int<lower=0> N;
   int<lower=0> n_cut;
@@ -184,7 +184,7 @@ model {
   for (i in 1 : N) y[i] ~ categorical(transpose(row(P, i)));
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format multilevel_poisson_17.5.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format multilevel_poisson_17.5.stan
 data {
   int<lower=0> N;
   int<lower=0> n_eth;
@@ -219,7 +219,7 @@ model {
   stops ~ poisson_log(lambda);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_correlation_17.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_correlation_17.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -268,7 +268,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_correlation_17.2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_correlation_17.2.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -317,7 +317,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_multi_varying_coef_17.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_multi_varying_coef_17.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -362,7 +362,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_multi_varying_coef_17.2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_multi_varying_coef_17.2.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -413,7 +413,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_inter_slope_17.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_vary_inter_slope_17.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -442,7 +442,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_inter_slope_17.2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_vary_inter_slope_17.2.stan
 data {
   int<lower=0> N;
   int<lower=0> n_county;
@@ -484,7 +484,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_wishart2_17.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_wishart2_17.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -540,7 +540,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_wishart_17.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_wishart_17.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -594,7 +594,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon_wishart_17.2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_wishart_17.2.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -653,7 +653,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format robit_17.7.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format robit_17.7.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;

@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format bernoulli.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format bernoulli.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> y[N];
@@ -11,7 +11,7 @@ model {
   for (n in 1 : N) y[n] ~ bernoulli(theta);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format negative_binomial.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format negative_binomial.stan
 data {
   int<lower=1> N;
   int<lower=0> y[N];
@@ -26,7 +26,7 @@ model {
   for (i in 1 : N) y[i] ~ neg_binomial(alpha, beta);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format negative_binomial2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format negative_binomial2.stan
 data {
   int<lower=1> N;
   int<lower=0> y[N];
@@ -56,7 +56,7 @@ Warning: deprecated language construct used in 'negative_binomial2.stan', line 1
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_censored.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_censored.stan
 data {
   real U;
   int<lower=0> N_censored;
@@ -84,7 +84,7 @@ Warning: deprecated language construct used in 'normal_censored.stan', line 13, 
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_loc.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_loc.stan
 transformed data {
   real y[5];
   y[1] <- 2.0;
@@ -165,7 +165,7 @@ Warning: deprecated language construct used in 'normal_loc.stan', line 7, column
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
 data {
   int<lower=0> N;
   real y[N];
@@ -225,7 +225,7 @@ Warning: deprecated language construct used in 'normal_mixture.stan', line 24, c
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_mixture_k.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_mixture_k.stan
 data {
   int<lower=1> K;
   int<lower=1> N;
@@ -271,7 +271,7 @@ Warning: deprecated language construct used in 'normal_mixture_k.stan', line 18,
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_mixture_k_prop.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_mixture_k_prop.stan
 data {
   int<lower=1> K;
   int<lower=1> N;
@@ -357,7 +357,7 @@ Warning: deprecated language construct used in 'normal_mixture_k_prop.stan', lin
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_multi.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_multi.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -549,7 +549,7 @@ Warning: deprecated language construct used in 'normal_multi.stan', line 17, col
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../install/default/bin/stanc --auto-format normal_truncated.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format normal_truncated.stan
 data {
   real U;
   int<lower=1> N;

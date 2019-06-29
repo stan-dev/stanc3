@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format congress.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format congress.stan
 data {
   int<lower=0> N;
   vector[N] incumbency_88;
@@ -13,7 +13,7 @@ model {
   vote_88 ~ normal(beta[1] + beta[2] * vote_86 + beta[3] * incumbency_88, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings1.stan
 data {
   int<lower=0> N;
   int<lower=0, upper=1> earn_pos[N];
@@ -28,7 +28,7 @@ model {
   earn_pos ~ bernoulli_logit(beta[1] + beta[2] * height + beta[3] * male);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings2.stan
 data {
   int<lower=0> N;
   vector[N] earnings;
@@ -49,7 +49,7 @@ model {
   log_earnings ~ normal(beta[1] + beta[2] * height + beta[3] * male, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings_interactions.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_interactions.stan
 data {
   int<lower=0> N;
   vector[N] earnings;
@@ -72,7 +72,7 @@ model {
   log_earnings ~ normal(beta[1] + beta[2] * height + beta[3] * male + beta[4] * height_male_inter, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format wells.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format wells.stan
 data {
   int<lower=0> N;
   vector[N] dist;

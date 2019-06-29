@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_big.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format eta_should_be_big.stan
 transformed data {
   vector[2] y[2];
   vector[2] mu0;
@@ -22,7 +22,7 @@ model {
   for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_small.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format eta_should_be_small.stan
 transformed data {
   vector[2] y[2];
   vector[2] mu0;
@@ -46,7 +46,7 @@ model {
   for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format eta_should_fail.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format eta_should_fail.stan
 transformed data {
   vector[2] y;
   matrix[2, 2] sigma;
@@ -64,7 +64,7 @@ model {
   y ~ multi_normal(mu, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format gradient_warn.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format gradient_warn.stan
 data {
   int N;
   vector[N] p;
@@ -84,7 +84,7 @@ model {
   ;
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format hier_logistic.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_logistic.stan
 data {
   int N;
   int ids[N];
@@ -109,7 +109,7 @@ model {
   L ~ lkj_corr_cholesky(0.5);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format hier_logistic_cp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_logistic_cp.stan
 data {
   int N;
   int ids[N];
@@ -136,7 +136,7 @@ model {
   L ~ lkj_corr_cholesky(1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format multivariate_no_constraint.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multivariate_no_constraint.stan
 transformed data {
   vector[2] y[2];
   vector[2] mu0;
@@ -160,7 +160,7 @@ model {
   for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format multivariate_with_constraint.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multivariate_with_constraint.stan
 transformed data {
   vector[2] y[2];
   vector[2] mu0;
@@ -184,7 +184,7 @@ model {
   for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format univariate_no_constraint.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format univariate_no_constraint.stan
 transformed data {
   real y[2];
   real mu0;
@@ -202,7 +202,7 @@ model {
   for (n in 1 : 2) y[n] ~ normal(mu, 1.0);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format univariate_with_constraint.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format univariate_with_constraint.stan
 transformed data {
   real y[2];
   real mu0;

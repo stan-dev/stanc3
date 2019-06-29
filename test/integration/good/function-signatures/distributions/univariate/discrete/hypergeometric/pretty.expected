@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hypergeometric_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format hypergeometric_log.stan
 data {
   int d_int;
 }

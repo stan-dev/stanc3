@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format dirichlet_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format dirichlet_log.stan
 data {
   int d_int;
   vector[d_int] d_vector;
@@ -24,7 +24,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format gaussian_dlm_obs_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format gaussian_dlm_obs_log.stan
 data {
   int d_int;
   matrix[d_int, d_int] d_matrix;
@@ -176,7 +176,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format inv_wishart_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format inv_wishart_log.stan
 data {
   int d_int;
   real d_real;
@@ -215,7 +215,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format lkj_corr_cholesky_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format lkj_corr_cholesky_log.stan
 data {
   int d_int;
   real d_real;
@@ -248,7 +248,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format lkj_corr_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format lkj_corr_log.stan
 data {
   int d_int;
   real d_real;
@@ -281,7 +281,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format lkj_cov_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format lkj_cov_log.stan
 data {
   int d_int;
   real d_real;
@@ -332,7 +332,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_gp_cholesky_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format multi_gp_cholesky_log.stan
 data {
   int d_int;
   matrix[d_int, d_int] d_matrix;
@@ -374,7 +374,7 @@ model {
   d_matrix ~ multi_gp_cholesky(p_cov, p_vector);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_gp_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format multi_gp_log.stan
 data {
   int d_int;
   matrix[d_int, d_int] d_matrix;
@@ -404,7 +404,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_normal_cholesky_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format multi_normal_cholesky_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -727,7 +727,7 @@ model {
   d_row_vector_array ~ multi_normal_cholesky(d_row_vector_array, d_matrix_array[1]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_normal_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format multi_normal_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -1050,7 +1050,7 @@ model {
   d_row_vector_array ~ multi_normal(d_row_vector_array, d_matrix_array[1]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_normal_prec_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format multi_normal_prec_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -1373,7 +1373,7 @@ model {
   d_row_vector_array ~ multi_normal_prec(d_row_vector_array, d_matrix_array[1]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format multi_student_t_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format multi_student_t_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -2256,7 +2256,7 @@ model {
   d_row_vector_array ~ multi_student_t(p_real, d_row_vector_array, d_matrix_array[1]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format wishart_log.stan
+  $ ../../../../../../../../../../install/default/bin/stanc --auto-format wishart_log.stan
 data {
   int d_int;
   real d_real;

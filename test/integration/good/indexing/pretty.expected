@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc --auto-format good-empty-omni.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-empty-omni.stan
 transformed data {
   real x;
   int is[3];
@@ -515,7 +515,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-ints.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-ints.stan
 transformed data {
   real x;
   int is[3];
@@ -1032,7 +1032,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-lb.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-lb.stan
 transformed data {
   real x;
   real a[4];
@@ -1548,7 +1548,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-lub.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-lub.stan
 functions {
   void foo(int N) {
     int c[4];
@@ -2086,7 +2086,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-omni.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-omni.stan
 transformed data {
   real x;
   int is[3];
@@ -2603,7 +2603,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-omni2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-omni2.stan
 transformed data {
   real x;
   int is[3];
@@ -3120,7 +3120,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-omni3.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-omni3.stan
 transformed data {
   real x;
   int is[3];
@@ -3637,7 +3637,7 @@ model {
   y ~ normal(0, 1);
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format good-ub.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format good-ub.stan
 transformed data {
   real x;
   real a[4];

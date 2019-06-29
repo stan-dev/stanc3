@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format kidney.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format kidney.stan
 data {
   int<lower=0> NP;
   int<lower=0> N_uc;

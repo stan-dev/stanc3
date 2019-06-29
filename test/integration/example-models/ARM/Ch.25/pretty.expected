@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;
@@ -21,7 +21,7 @@ model {
   earnings ~ normal(beta[1] + beta[2] * male + beta[3] * over65 + beta[4] * white + beta[5] * immig + beta[6] * educ_r + beta[7] * workmos + beta[8] * workhrs_top + beta[9] * any_ssi + beta[10] * any_welfare + beta[11] * any_charity, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings2.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;
@@ -45,7 +45,7 @@ model {
   earnings ~ normal(beta[1] + beta[2] * interest + beta[3] * male + beta[4] * over65 + beta[5] * white + beta[6] * immig + beta[7] * educ_r + beta[8] * workmos + beta[9] * workhrs_top + beta[10] * any_ssi + beta[11] * any_welfare + beta[12] * any_charity, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings_pt1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_pt1.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;
@@ -65,7 +65,7 @@ model {
   earnings ~ bernoulli_logit(beta[1] + beta[2] * male + beta[3] * over65 + beta[4] * white + beta[5] * immig + beta[6] * educ_r + beta[7] * any_ssi + beta[8] * any_welfare + beta[9] * any_charity);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format earnings_pt2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_pt2.stan
 data {
   int<lower=0> N;
   vector[N] any_charity;

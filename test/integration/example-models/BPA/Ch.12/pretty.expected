@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format Nmix0.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Nmix0.stan
 functions {
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
     real s[min(n) + 1];
@@ -75,7 +75,7 @@ generated quantities {
   mean_abundance = exp(alpha_lam);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Nmix1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Nmix1.stan
 functions {
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
     real s[min(n) + 1];
@@ -180,7 +180,7 @@ generated quantities {
   mean_abundance = exp(alpha_lam);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Nmix2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Nmix2.stan
 functions {
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
     real s[min(n) + 1];
@@ -286,7 +286,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format binmix.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format binmix.stan
 data {
   int<lower=0> R;
   int<lower=0> T;
@@ -310,7 +310,7 @@ model {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format binmix_cov.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format binmix_cov.stan
 data {
   int<lower=0> R;
   int<lower=0> T;

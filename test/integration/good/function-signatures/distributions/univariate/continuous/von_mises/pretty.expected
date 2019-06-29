@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format von_mises_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format von_mises_log.stan
 data {
   int d_int;
   int d_int_array[d_int];

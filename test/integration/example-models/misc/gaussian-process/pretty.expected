@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-ARD.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-fit-ARD.stan
 functions {
   matrix L_cov_exp_quad_ARD(vector[] x, real alpha, vector rho, real delta) {
     int N = size(x);
@@ -44,7 +44,7 @@ model {
   y ~ normal(f, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-latent.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-fit-latent.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -75,7 +75,7 @@ model {
   y ~ normal(f, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-logit.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-fit-logit.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -106,7 +106,7 @@ model {
   z ~ bernoulli_logit(a + f);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-multi-output.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-fit-multi-output.stan
 data {
   int<lower=1> N;
   int<lower=1> D;
@@ -144,7 +144,7 @@ generated quantities {
   Omega = L_Omega * L_Omega';
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-pois.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-fit-pois.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -175,7 +175,7 @@ model {
   y ~ poisson_log(a + f);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-fit.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-fit.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -201,7 +201,7 @@ model {
   y ~ multi_normal_cholesky(mu, L_K);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
 functions {
   vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho, real sigma, real delta) {
     int N1 = rows(y1);
@@ -266,7 +266,7 @@ generated quantities {
   for (n2 in 1 : N2) y2[n2] = normal_rng(f2[n2], sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
 data {
   int<lower=1> N1;
   real x1[N1];
@@ -309,7 +309,7 @@ generated quantities {
   for (n2 in 1 : N2) z2[n2] = bernoulli_logit_rng(a + f[N1 + n2]);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-predict.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-predict.stan
 data {
   int<lower=1> N1;
   real x1[N1];
@@ -352,7 +352,7 @@ generated quantities {
   for (n2 in 1 : N2) y2[n2] = normal_rng(f[N1 + n2], sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-cholesky.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-sim-cholesky.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -377,7 +377,7 @@ generated quantities {
   y = mu + L * eta;
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-multi-output.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-sim-multi-output.stan
 data {
   int<lower=1> N;
   int<lower=1> D;
@@ -412,7 +412,7 @@ generated quantities {
   Omega = L_Omega * L_Omega';
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-multi.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-sim-multi.stan
 data {
   int<lower=1> N;
   int<lower=1> D;
@@ -430,7 +430,7 @@ model {
   y ~ multi_normal(mu, K);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-naive.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-sim-naive.stan
 data {
   int<lower=1> N;
   real x[N];
@@ -454,7 +454,7 @@ model {
   y ~ multi_normal(mu, K);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format gp-sim.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format gp-sim.stan
 data {
   int<lower=1> N;
   real x[N];

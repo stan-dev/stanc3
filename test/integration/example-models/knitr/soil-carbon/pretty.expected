@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format soil_incubation.stan
 functions {
   real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r, int[] x_i) {
     real k1;
@@ -258,7 +258,7 @@ Warning: deprecated language construct used in 'soil_incubation.stan', line 129,
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
 functions {
   real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r, int[] x_i) {
     real k1;

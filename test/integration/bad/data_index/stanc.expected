@@ -1,4 +1,4 @@
-  $ ../../../../../install/default/bin/stanc non_data_index1.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index1.stan
 
 Semantic error in 'non_data_index1.stan', line 6, column 2 to column 18:
    -------------------------------------------------
@@ -11,7 +11,7 @@ Semantic error in 'non_data_index1.stan', line 6, column 2 to column 18:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index10.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index10.stan
 
 Semantic error in 'non_data_index10.stan', line 6, column 2 to column 33:
    -------------------------------------------------
@@ -24,7 +24,7 @@ Semantic error in 'non_data_index10.stan', line 6, column 2 to column 33:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index11.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index11.stan
 
 Semantic error in 'non_data_index11.stan', line 6, column 2 to column 36:
    -------------------------------------------------
@@ -37,7 +37,7 @@ Semantic error in 'non_data_index11.stan', line 6, column 2 to column 36:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index12.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index12.stan
 
 Semantic error in 'non_data_index12.stan', line 6, column 2 to column 34:
    -------------------------------------------------
@@ -50,7 +50,7 @@ Semantic error in 'non_data_index12.stan', line 6, column 2 to column 34:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index13.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index13.stan
 
 Semantic error in 'non_data_index13.stan', line 6, column 2 to column 25:
    -------------------------------------------------
@@ -63,7 +63,7 @@ Semantic error in 'non_data_index13.stan', line 6, column 2 to column 25:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index14.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index14.stan
 
 Semantic error in 'non_data_index14.stan', line 6, column 2 to column 24:
    -------------------------------------------------
@@ -76,7 +76,7 @@ Semantic error in 'non_data_index14.stan', line 6, column 2 to column 24:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index2.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index2.stan
 
 Semantic error in 'non_data_index2.stan', line 6, column 2 to column 20:
    -------------------------------------------------
@@ -89,7 +89,7 @@ Semantic error in 'non_data_index2.stan', line 6, column 2 to column 20:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index3.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index3.stan
 
 Semantic error in 'non_data_index3.stan', line 6, column 2 to column 24:
    -------------------------------------------------
@@ -102,7 +102,7 @@ Semantic error in 'non_data_index3.stan', line 6, column 2 to column 24:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index4.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index4.stan
 
 Semantic error in 'non_data_index4.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -115,7 +115,7 @@ Semantic error in 'non_data_index4.stan', line 5, column 2 to column 23:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index5.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index5.stan
 
 Semantic error in 'non_data_index5.stan', line 6, column 2 to column 23:
    -------------------------------------------------
@@ -129,7 +129,7 @@ Semantic error in 'non_data_index5.stan', line 6, column 2 to column 23:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index6.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index6.stan
 
 Semantic error in 'non_data_index6.stan', line 6, column 2 to column 21:
    -------------------------------------------------
@@ -142,7 +142,7 @@ Semantic error in 'non_data_index6.stan', line 6, column 2 to column 21:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index7.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index7.stan
 
 Semantic error in 'non_data_index7.stan', line 6, column 2 to column 21:
    -------------------------------------------------
@@ -155,7 +155,7 @@ Semantic error in 'non_data_index7.stan', line 6, column 2 to column 21:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index8.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index8.stan
 
 Semantic error in 'non_data_index8.stan', line 6, column 2 to column 30:
    -------------------------------------------------
@@ -168,7 +168,7 @@ Semantic error in 'non_data_index8.stan', line 6, column 2 to column 30:
 
 Non-data variables are not allowed in top level size declarations.
 
-  $ ../../../../../install/default/bin/stanc non_data_index9.stan
+  $ ../../../../../../../install/default/bin/stanc non_data_index9.stan
 
 Semantic error in 'non_data_index9.stan', line 6, column 2 to column 25:
    -------------------------------------------------

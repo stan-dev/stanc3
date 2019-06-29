@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format M0.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format M0.stan
 data {
   int<lower=0> M;
   int<lower=0> T;
@@ -26,7 +26,7 @@ generated quantities {
   int<lower=C, upper=M> N = C + binomial_rng(M - C, omega_nd);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Mb.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Mb.stan
 data {
   int<lower=0> M;
   int<lower=0> T;
@@ -63,7 +63,7 @@ generated quantities {
   real trap_response = c - p;
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Mh.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Mh.stan
 data {
   int<lower=0> M;
   int<lower=0> T;
@@ -106,7 +106,7 @@ generated quantities {
   N = sum(z);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Mt.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Mt.stan
 data {
   int<lower=0> M;
   int<lower=0> T;
@@ -135,7 +135,7 @@ generated quantities {
   int<lower=C> N = C + binomial_rng(M - C, omega_nd);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format MtX.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format MtX.stan
 data {
   int<lower=0> M;
   int<lower=0> T;
@@ -186,7 +186,7 @@ generated quantities {
   N = sum(z);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Mtbh.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Mtbh.stan
 data {
   int<lower=0> M;
   int<lower=0> T;
@@ -237,7 +237,7 @@ generated quantities {
   N = sum(z);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format Mth.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format Mth.stan
 data {
   int<lower=0> M;
   int<lower=0> T;

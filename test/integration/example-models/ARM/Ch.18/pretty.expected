@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.1.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -18,7 +18,7 @@ model {
   for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.2.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -40,7 +40,7 @@ model {
   for (n in 1 : N) y[n] ~ normal(a[county[n]] + b * x[n], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.nopooling.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.nopooling.stan
 data {
   int<lower=0> N;
   int<lower=0> J;
@@ -57,7 +57,7 @@ model {
   for (i in 1 : N) y[i] ~ normal(a[county[i]] + b * x[i], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format radon.pooling.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format radon.pooling.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -72,7 +72,7 @@ model {
   y ~ normal(a + b * x, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format weight.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format weight.stan
 data {
   int<lower=0> N;
   vector[N] weight;
@@ -91,7 +91,7 @@ model {
   weight ~ normal(a + b * c_height, sigma);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format weight_censored.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format weight_censored.stan
 data {
   int<lower=0> N;
   int<lower=0> N_obs;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format std_normal_log.stan
+  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format std_normal_log.stan
 data {
   int d_int;
   int d_int_array[d_int];

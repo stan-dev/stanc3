@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format hepatitis.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format hepatitis.stan
 data {
   int<lower=0> N1;
   int<lower=0> N;
@@ -293,7 +293,7 @@ Warning: deprecated language construct used in 'hepatitis.stan', line 55, column
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format hepatitisME.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format hepatitisME.stan
 data {
   int<lower=0> N1;
   int<lower=0> N;

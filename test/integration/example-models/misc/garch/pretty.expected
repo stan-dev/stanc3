@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format arch1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format arch1.stan
 data {
   int<lower=0> T;
   real r[T];
@@ -12,7 +12,7 @@ model {
   for (t in 2 : T) r[t] ~ normal(mu, sqrt(alpha0 + alpha1 * pow(r[t - 1] - mu, 2)));
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format garch1_1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format garch1_1.stan
 data {
   int<lower=2> T;
   real r[T];
@@ -44,7 +44,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format koyck.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format koyck.stan
 data {
   int<lower=0> T;
   real y[T];

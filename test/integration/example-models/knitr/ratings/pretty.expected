@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format ratings_1.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ratings_1.stan
 data {
   int N;
   vector[N] y;
@@ -13,7 +13,7 @@ model {
   y ~ normal(theta[movie], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ratings_2.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ratings_2.stan
 data {
   int N;
   vector[N] y;
@@ -29,7 +29,7 @@ model {
   y ~ normal(theta[movie], sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format ratings_3.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format ratings_3.stan
 data {
   int N;
   vector[N] y;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format dawid-skene.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format dawid-skene.stan
 data {
   int<lower=2> K;
   int<lower=1> I;

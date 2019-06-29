@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format hiv.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format hiv.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -27,7 +27,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format hiv_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format hiv_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -60,7 +60,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format hiv_inter.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format hiv_inter.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -92,7 +92,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format hiv_inter_chr.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format hiv_inter_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;

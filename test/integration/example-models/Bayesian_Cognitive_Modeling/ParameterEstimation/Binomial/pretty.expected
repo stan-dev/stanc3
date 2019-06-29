@@ -1,4 +1,4 @@
-  $ ../../../../../../../install/default/bin/stanc --auto-format Rate_1.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format Rate_1.stan
 data {
   int<lower=1> n;
   int<lower=0> k;
@@ -11,7 +11,7 @@ model {
   k ~ binomial(n, theta);
 }
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format Rate_2.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format Rate_2.stan
 data {
   int<lower=1> n1;
   int<lower=1> n2;
@@ -46,7 +46,7 @@ Warning: deprecated language construct used in 'Rate_2.stan', line 14, column 9:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format Rate_3.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format Rate_3.stan
 data {
   int<lower=1> n1;
   int<lower=1> n2;
@@ -62,7 +62,7 @@ model {
   k2 ~ binomial(n2, theta);
 }
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format Rate_4.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format Rate_4.stan
 data {
   int<lower=1> n;
   int<lower=0> k;
@@ -108,7 +108,7 @@ Warning: deprecated language construct used in 'Rate_4.stan', line 24, column 14
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format Rate_5.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format Rate_5.stan
 data {
   int<lower=1> n1;
   int<lower=1> n2;
@@ -155,7 +155,7 @@ Warning: deprecated language construct used in 'Rate_5.stan', line 25, column 14
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../install/default/bin/stanc --auto-format Survey.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format Survey.stan
 data {
   int<lower=0> nmax;
   int<lower=0> m;

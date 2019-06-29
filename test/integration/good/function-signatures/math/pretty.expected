@@ -1,4 +1,4 @@
-  $ ../../../../../../install/default/bin/stanc --auto-format if_else.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format if_else.stan
 data {
   int d_int;
 }
@@ -91,7 +91,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../install/default/bin/stanc --auto-format while.stan
+  $ ../../../../../../../../install/default/bin/stanc --auto-format while.stan
 data {
   int d_int;
 }
