@@ -22,7 +22,7 @@ let run_capturing_output cmd =
   ignore (Unix.close_process_full (stdout, stdin, stderr)) ;
   String.concat ~sep:"\n" (List.concat out)
 
-let _ =
+let () =
   let binary = Sys.argv.(1) in
   let dirs = Array.(sub Sys.argv ~pos:2 ~len:(length Sys.argv - 2)) in
   Array.stable_sort ~compare:String.compare dirs ;
