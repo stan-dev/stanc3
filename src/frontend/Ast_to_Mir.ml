@@ -66,7 +66,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
 and trans_idx = function
   | Ast.All -> All
   | Ast.Upfrom e -> Upfrom (trans_expr e)
-  | Ast.Downfrom e -> Downfrom (trans_expr e)
+  | Ast.Downfrom e -> Between (loop_bottom, trans_expr e)
   | Ast.Between (lb, ub) -> Between (trans_expr lb, trans_expr ub)
   | Ast.Single e -> (
     match e.emeta.type_ with
