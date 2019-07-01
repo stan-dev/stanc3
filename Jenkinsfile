@@ -13,7 +13,7 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
     def function = """
 
         #Save base location
-        base_location=$(pwd)
+        base_location=\$(pwd)
 
         #Build docker image
         cd "$dockerfile_path"       
