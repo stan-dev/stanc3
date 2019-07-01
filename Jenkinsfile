@@ -16,10 +16,11 @@ def buildTagImage(String image_path, String dockerfile_path){
         #Build docker image
         sudo docker build -t "$image_path" -f "$dockerfile_path" .
 
-        first_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags[0]' | awk '{split(\$0,a,":"); print a[2]}' |  tr -d '"')
+        #first_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags[0]' | awk '{split(\$0,a,":"); print a[2]}' |  tr -d '"')
         second_to_last_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags[-2]' | awk '{split(\$0,a,":"); print a[2]}' |  tr -d '"')
 
-
+        #If there isn't any version on the current machine
+        #Default to 0.0.0 to be incremented to 0.0.1 when pushing
         if [ -z \$second_to_last_version ]; then
             echo "0.0.0" > VERSION
         else
