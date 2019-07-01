@@ -12,10 +12,13 @@ def runShell(String command){
 def buildTagImage(String registry, String repository, String dockerfile_path){
     def function = """
 
+        #Save base location
+        base_location=$(pwd)
+
         #Build docker image
-        pushd "$dockerfile_path"
+        cd "$dockerfile_path"       
         sudo docker build -t "$registry/$repository" .
-        popd
+        cd \$base_location
 
         last_version=\$(curl -u $USERNAME:$PASSWORD https://$registry/v2/$repository/tags/list | jq -S '.tags |= sort' | jq '.tags[-2]' |  tr -d '"')
 
