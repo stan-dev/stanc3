@@ -15,6 +15,7 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
         #Save base location
         base_location=\$(pwd)
 
+        #Copy scripts for Dockerfile
         cp -R scripts "$dockerfile_path/scripts"
 
         #Build docker image
@@ -39,13 +40,23 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
         sudo docker run --rm -v "\$PWD":/app treeder/bump
         version=`cat VERSION`
         echo "version: \$version"
+      
+        #Old image ID
+        old_image_id=$(docker inspect --format {{.Id}} "$registry/$repository:\$last_version")
 
-        #Tag the image
-        sudo docker tag $registry/$repository:latest $registry/$repository:\$version
+        #New image ID
+        new_image_id=$(docker inspect --format {{.Id}} "$registry/$repository:\$version")
+
+        if [[ "\$old_image_id" == "\$new_image_id" ]]; then
+            echo "There are no changed in Dockerfile, skipping."
+        else
+            #Tag the image
+            sudo docker tag $registry/$repository:latest $registry/$repository:\$version
                  
-        #Push as latest and version
-        sudo docker push $registry/$repository:latest
-        sudo docker push $registry/$repository:\$version
+            #Push as latest and version
+            sudo docker push $registry/$repository:latest
+            sudo docker push $registry/$repository:\$version
+        fi
 
     """
 
