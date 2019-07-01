@@ -18,8 +18,10 @@ model {
   vector[N] eta;
   alpha ~ lognormal(0.5, 1);
   beta ~ normal(0, 10);
-  for (j in 1 : J) theta[j] ~ normal(gamma * x[j], 1);
-  for (n in 1 : N) eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
+  for (j in 1 : J) 
+    theta[j] ~ normal(gamma * x[j], 1);
+  for (n in 1 : N) 
+    eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
   y ~ bernoulli_logit(eta);
 }
 
@@ -60,8 +62,11 @@ model {
   alpha ~ lognormal(0.5, 1);
   beta ~ normal(0, 10);
   epsilon ~ normal(0, 1);
-  for (j in 1 : J) theta[j] <- (gamma * x[j]) + epsilon[j];
-  for (n in 1 : N) eta[n] <- alpha[ii[n]] * (theta[jj[n]] - (beta[ii[n]] + delta * Ik[n] * x[jj[n]]));
+  for (j in 1 : J) 
+    theta[j] <- (gamma * x[j]) + epsilon[j];
+  for (n in 1 : N) 
+    eta[n] <- alpha[ii[n]]
+              * (theta[jj[n]] - (beta[ii[n]] + delta * Ik[n] * x[jj[n]]));
   y ~ bernoulli_logit(eta);
 }
 
@@ -113,8 +118,10 @@ model {
   alpha ~ lognormal(0.5, 1);
   beta ~ normal(0, 10);
   epsilon ~ normal(0, 1);
-  for (j in 1 : J) theta[j] <- (gamma * x[j]) + epsilon[j];
-  for (n in 1 : N) eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
+  for (j in 1 : J) 
+    theta[j] <- (gamma * x[j]) + epsilon[j];
+  for (n in 1 : N) 
+    eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
   y ~ bernoulli_logit(eta);
 }
 
@@ -163,7 +170,8 @@ model {
   alpha ~ lognormal(0.5, 1);
   beta ~ normal(0, 10);
   theta ~ normal(0, 1);
-  for (n in 1 : N) eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
+  for (n in 1 : N) 
+    eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
   y ~ bernoulli_logit(eta);
 }
 

@@ -170,8 +170,11 @@ parameters {
 }
 transformed parameters {
   vector[nmax] lp_parts;
-  for (n in 1 : nmax) if (n < nmin) lp_parts[n] <- log(1.0 / nmax) + negative_infinity();
-  else lp_parts[n] <- log(1.0 / nmax) + binomial_log(k, n, theta);
+  for (n in 1 : nmax) 
+    if (n < nmin) 
+      lp_parts[n] <- log(1.0 / nmax) + negative_infinity();
+    else 
+      lp_parts[n] <- log(1.0 / nmax) + binomial_log(k, n, theta);
 }
 model {
   increment_log_prob(log_sum_exp(lp_parts));

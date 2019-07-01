@@ -32,7 +32,9 @@ model {
   tau ~ gamma(1.0E-3, 1.0E-3);
   for (i in 1 : I) {
     b[i] ~ normal(0.0, sigma);
-    n[i] ~ binomial_logit(N[i], alpha0 + alpha1 * x1[i] + alpha2 * x2[i] + alpha12 * x1x2[i] + b[i]);
+    n[i] ~ binomial_logit(N[i],
+                          alpha0 + alpha1 * x1[i] + alpha2 * x2[i]
+                          + alpha12 * x1x2[i] + b[i]);
   }
 }
 

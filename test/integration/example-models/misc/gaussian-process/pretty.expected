@@ -64,7 +64,8 @@ model {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta;
   }
@@ -95,7 +96,8 @@ model {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta;
   }
@@ -128,7 +130,8 @@ model {
   {
     matrix[N, N] K = cov_exp_quad(x, 1.0, rho);
     matrix[N, N] L_K;
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta * diag_pre_multiply(alpha, L_Omega)';
   }
@@ -164,7 +167,8 @@ model {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta;
   }
@@ -193,7 +197,8 @@ model {
   matrix[N, N] L_K;
   matrix[N, N] K = cov_exp_quad(x, alpha, rho);
   real sq_sigma = square(sigma);
-  for (n in 1 : N) K[n, n] = K[n, n] + sq_sigma;
+  for (n in 1 : N) 
+    K[n, n] = K[n, n] + sq_sigma;
   L_K = cholesky_decompose(K);
   rho ~ inv_gamma(5, 5);
   alpha ~ normal(0, 1);
@@ -203,7 +208,8 @@ model {
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
 functions {
-  vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho, real sigma, real delta) {
+  vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho,
+                     real sigma, real delta) {
     int N1 = rows(y1);
     int N2 = size(x2);
     vector[N2] f2;
@@ -217,7 +223,8 @@ functions {
       matrix[N2, N2] diag_delta;
       matrix[N1, N1] K;
       K = cov_exp_quad(x1, alpha, rho);
-      for (n in 1 : N1) K[n, n] = K[n, n] + square(sigma);
+      for (n in 1 : N1) 
+        K[n, n] = K[n, n] + square(sigma);
       L_K = cholesky_decompose(K);
       L_div_y1 = mdivide_left_tri_low(L_K, y1);
       k_x1_x2 = cov_exp_quad(x1, x2, alpha, rho);
@@ -251,7 +258,8 @@ model {
   {
     matrix[N1, N1] K = cov_exp_quad(x1, alpha, rho);
     real sq_sigma = square(sigma);
-    for (n1 in 1 : N1) K[n1, n1] = K[n1, n1] + sq_sigma;
+    for (n1 in 1 : N1) 
+      K[n1, n1] = K[n1, n1] + sq_sigma;
     L_K = cholesky_decompose(K);
   }
   rho ~ inv_gamma(5, 5);
@@ -263,7 +271,8 @@ generated quantities {
   vector[N2] f2;
   vector[N2] y2;
   f2 = gp_pred_rng(x2, y1, x1, alpha, rho, sigma, delta);
-  for (n2 in 1 : N2) y2[n2] = normal_rng(f2[n2], sigma);
+  for (n2 in 1 : N2) 
+    y2[n2] = normal_rng(f2[n2], sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
@@ -278,8 +287,10 @@ transformed data {
   real delta = 1e-9;
   int<lower=1> N = N1 + N2;
   real x[N];
-  for (n1 in 1 : N1) x[n1] = x1[n1];
-  for (n2 in 1 : N2) x[N1 + n2] = x2[n2];
+  for (n1 in 1 : N1) 
+    x[n1] = x1[n1];
+  for (n2 in 1 : N2) 
+    x[N1 + n2] = x2[n2];
 }
 parameters {
   real<lower=0> rho;
@@ -292,7 +303,8 @@ transformed parameters {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta;
   }
@@ -306,7 +318,8 @@ model {
 }
 generated quantities {
   int z2[N2];
-  for (n2 in 1 : N2) z2[n2] = bernoulli_logit_rng(a + f[N1 + n2]);
+  for (n2 in 1 : N2) 
+    z2[n2] = bernoulli_logit_rng(a + f[N1 + n2]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict.stan
@@ -321,8 +334,10 @@ transformed data {
   real delta = 1e-9;
   int<lower=1> N = N1 + N2;
   real x[N];
-  for (n1 in 1 : N1) x[n1] = x1[n1];
-  for (n2 in 1 : N2) x[N1 + n2] = x2[n2];
+  for (n1 in 1 : N1) 
+    x[n1] = x1[n1];
+  for (n2 in 1 : N2) 
+    x[N1 + n2] = x2[n2];
 }
 parameters {
   real<lower=0> rho;
@@ -335,7 +350,8 @@ transformed parameters {
   {
     matrix[N, N] L_K;
     matrix[N, N] K = cov_exp_quad(x, alpha, rho);
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta;
   }
@@ -349,7 +365,8 @@ model {
 }
 generated quantities {
   vector[N2] y2;
-  for (n2 in 1 : N2) y2[n2] = normal_rng(f[N1 + n2], sigma);
+  for (n2 in 1 : N2) 
+    y2[n2] = normal_rng(f[N1 + n2], sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-cholesky.stan
@@ -362,7 +379,8 @@ transformed data {
   matrix[N, N] L;
   {
     matrix[N, N] K = cov_exp_quad(x, 1.0, 1.0);
-    for (n in 1 : N) K[n, n] = K[n, n] + 0.1;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + 0.1;
     L = cholesky_decompose(K);
   }
 }
@@ -399,7 +417,8 @@ model {
   {
     matrix[N, N] K = cov_exp_quad(x, 1.0, rho);
     matrix[N, N] L_K;
-    for (n in 1 : N) K[n, n] = K[n, n] + delta;
+    for (n in 1 : N) 
+      K[n, n] = K[n, n] + delta;
     L_K = cholesky_decompose(K);
     f = L_K * eta * diag_pre_multiply(alpha, L_Omega)';
   }
@@ -421,7 +440,8 @@ data {
 transformed data {
   matrix[N, N] K = cov_exp_quad(x, 1.0, 1.0);
   vector[N] mu = rep_vector(0, N);
-  for (n in 1 : N) K[n, n] = K[n, n] + 0.1;
+  for (n in 1 : N) 
+    K[n, n] = K[n, n] + 0.1;
 }
 parameters {
   vector[N] y;
@@ -462,7 +482,8 @@ data {
 transformed data {
   matrix[N, N] K = cov_exp_quad(x, 1.0, 1.0);
   vector[N] mu = rep_vector(0, N);
-  for (n in 1 : N) K[n, n] = K[n, n] + 0.1;
+  for (n in 1 : N) 
+    K[n, n] = K[n, n] + 0.1;
 }
 parameters {
   vector[N] y;

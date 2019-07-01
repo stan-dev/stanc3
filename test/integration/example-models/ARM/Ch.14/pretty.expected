@@ -15,7 +15,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = b[1] * black[i] + b[2] * female[i] + a[state[i]];
+  for (i in 1 : N) 
+    y_hat[i] = b[1] * black[i] + b[2] * female[i] + a[state[i]];
 }
 model {
   mu_a ~ normal(0, 1);
@@ -57,7 +58,11 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = beta[1] + beta[2] * black[i] + beta[3] * female[i] + beta[5] * female[i] * black[i] + beta[4] * v_prev_full[i] + a[age[i]] + b[edu[i]] + c[age_edu[i]] + d[state[i]] + e[region_full[i]];
+  for (i in 1 : N) 
+    y_hat[i] = beta[1] + beta[2] * black[i] + beta[3] * female[i]
+               + beta[5] * female[i] * black[i] + beta[4] * v_prev_full[i]
+               + a[age[i]] + b[edu[i]] + c[age_edu[i]] + d[state[i]]
+               + e[region_full[i]];
 }
 model {
   a ~ normal(0, sigma_a);
@@ -89,7 +94,8 @@ parameters {
 }
 transformed parameters {
   vector[N] y_hat;
-  for (i in 1 : N) y_hat[i] = a[group_id[i]] + b[scenario_id[i]];
+  for (i in 1 : N) 
+    y_hat[i] = a[group_id[i]] + b[scenario_id[i]];
 }
 model {
   mu_a ~ normal(0, 1);
@@ -123,7 +129,8 @@ transformed parameters {
   vector[n_scenarios] b;
   a = 10 * mu_a + eta_a * sigma_a;
   b = 10 * mu_b + eta_b * sigma_b;
-  for (i in 1 : N) y_hat[i] = a[group_id[i]] + b[scenario_id[i]];
+  for (i in 1 : N) 
+    y_hat[i] = a[group_id[i]] + b[scenario_id[i]];
 }
 model {
   mu_a ~ normal(0, 1);
