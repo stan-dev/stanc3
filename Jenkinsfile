@@ -13,7 +13,9 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
     def function = """
 
         #Build docker image
+        pushd "$dockerfile_path"
         sudo docker build -t "$registry/$repository" -f "$dockerfile_path" .
+        popd
 
         last_version=\$(curl -u $USERNAME:$PASSWORD https://$registry/v2/$repository/tags/list | jq -S '.tags |= sort' | jq '.tags[-2]' |  tr -d '"')
 
@@ -79,10 +81,10 @@ pipeline {
                           sh 'sudo docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'  
 
                           //Build and Tag Debian Image
-                          buildTagImage("registry.mc-stan.org", "stanc3/debian", "docker/debian/Dockerfile")
+                          buildTagImage("registry.mc-stan.org", "stanc3/debian", "docker/debian")
 
                           //Build and Tag Debian Image
-                          buildTagImage("registry.mc-stan.org", "stanc3/alpine", "docker/static/Dockerfile")                   
+                          buildTagImage("registry.mc-stan.org", "stanc3/alpine", "docker/static")                   
                         }
                     }
         }
