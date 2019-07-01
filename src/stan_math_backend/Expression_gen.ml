@@ -34,9 +34,11 @@ let rec stantype_prim_str = function
   | UArray t -> stantype_prim_str t
   | _ -> "double"
 
-let local_scalar ut = function
-  | DataOnly -> stantype_prim_str ut
-  | AutoDiffable -> "local_scalar_t__"
+let rec local_scalar ut ad =
+  match (ut, ad) with
+  | UArray t, _ -> local_scalar t ad
+  | _, DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
+  | _, AutoDiffable -> "local_scalar_t__"
 
 (* stub *)
 let rec pp_return_type ppf = function
@@ -83,18 +85,16 @@ let suffix_args f =
 let gen_extra_fun_args f = suffix_args f @ ["pstream__"]
 
 let rec pp_index ppf = function
-  | All -> pf ppf "stan::model::index_omni()"
-  | Single e -> pf ppf "stan::model::index_uni(%a)" pp_expr e
-  | Upfrom e -> pf ppf "stan::model::index_min(%a)" pp_expr e
-  | Downfrom e -> pf ppf "stan::model::index_max(%a)" pp_expr e
+  | All -> pf ppf "index_omni()"
+  | Single e -> pf ppf "index_uni(%a)" pp_expr e
+  | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
   | Between (e_low, e_high) ->
-      pf ppf "stan::model::index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
-  | MultiIndex e -> pf ppf "stan::model::index_multi(%a)" pp_expr e
+      pf ppf "index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
+  | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
-  | [] -> pf ppf "stan::model::nil_index_list()"
-  | idx :: idxs ->
-      pf ppf "stan::model::cons_list(%a, %a)" pp_index idx pp_indexes idxs
+  | [] -> pf ppf "nil_index_list()"
+  | idx :: idxs -> pf ppf "cons_list(%a, %a)" pp_index idx pp_indexes idxs
 
 and pp_logical_op ppf op lhs rhs =
   pf ppf "(stan::math::value(%a) %s stan::math::value(%a))" pp_expr lhs op
@@ -126,7 +126,7 @@ and gen_operator_app = function
   | Transpose ->
       fun ppf es ->
         pp_unary ppf
-          (if is_scalar (List.hd_exn es) then "transpose(%a)" else "%a")
+          (if is_scalar (List.hd_exn es) then "%a" else "transpose(%a)")
           es
   | PNot -> fun ppf es -> pp_unary ppf "logical_negation(%a)" es
   | Minus ->
@@ -206,19 +206,18 @@ and gen_distribution_app f =
 (* assumes everything well formed from parser checks *)
 and gen_fun_app ppf f es =
   let default ppf es =
-    let extra =
-      List.map
-        ~f:(fun s -> {expr= Var s; emeta= internal_meta})
-        (suffix_args f)
-    in
     let convert_hof_vars = function
       | {expr= Var name; emeta= {mtype= UFun _; _}} as e ->
           {e with expr= FunApp (StanLib, name ^ "_functor__", [])}
       | e -> e
     in
-    let es = List.map ~f:convert_hof_vars es in
+    let converted_es = List.map ~f:convert_hof_vars es in
+    let extra =
+      (suffix_args f @ if es = converted_es then [] else ["pstream__"])
+      |> List.map ~f:(fun s -> {expr= Var s; emeta= internal_meta})
+    in
     pf ppf "%s(@[<hov>%a@])" (stan_namespace_qualify f)
-      (list ~sep:comma pp_expr) (es @ extra)
+      (list ~sep:comma pp_expr) (converted_es @ extra)
   in
   let pp =
     [ Option.map ~f:gen_operator_app (operator_of_string f)
@@ -242,8 +241,7 @@ and pp_ordinary_fn ppf f es =
 
 and pp_compiler_internal_fn ut f ppf es =
   match internal_fn_of_string f with
-  | None -> failwith "Expecting internal function but found `%s`" f
-  | Some FnMakeArray -> pf ppf "{%a}" (list ~sep:comma pp_expr) es
+  | Some FnMakeArray -> pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
@@ -255,13 +253,10 @@ and pp_compiler_internal_fn ut f ppf es =
         raise_s
           [%message "emit ReadParam with " (es : mtype_loc_ad with_expr list)]
     )
-  | _ ->
-      pf ppf
-        "throw std::logic_error(\"XXX TODO Not Implemented: %s(@[<hov>%a@])\""
-        f (list ~sep:comma pp_expr) es
+  | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "stan::model::rvalue(%s, %a, %S)" vident pp_indexes indices pretty
+  pf ppf "rvalue(%s, %a, %S)" vident pp_indexes indices pretty
 
 and pp_indexed_simple ppf (vident, idcs) =
   let minus_one e =
@@ -354,7 +349,7 @@ let%expect_test "pp_expr9" =
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
   [%expect
-    {| stan::model::rvalue(a, stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list()), "pretty printed e") |}]
+    {| rvalue(a, cons_list(index_omni(), nil_index_list()), "pretty printed e") |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

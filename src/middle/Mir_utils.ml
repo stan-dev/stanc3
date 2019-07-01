@@ -6,7 +6,7 @@ open Mir
 let expr_from_idx (i : expr_typed_located index) =
   match i with
   | All -> []
-  | Single e | Upfrom e | Downfrom e | MultiIndex e -> [e]
+  | Single e | Upfrom e | MultiIndex e -> [e]
   | Between (e1, e2) -> [e1; e2]
 
 (** remove_size [st] discards size information from a sizedtype

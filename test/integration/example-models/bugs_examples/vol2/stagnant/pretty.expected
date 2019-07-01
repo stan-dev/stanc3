@@ -26,7 +26,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file stagnant.stan, line 1, column 0:
+Warning: deprecated language construct used in 'stagnant.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Change point model with very poor parameterization from BUGS, vol 2
          ^
@@ -37,7 +37,7 @@ Warning: deprecated language construct used in file stagnant.stan, line 1, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file stagnant.stan, line 38, column 13:
+Warning: deprecated language construct used in 'stagnant.stan', line 38, column 13:
    -------------------------------------------------
     36:    for (k in 1:N) {
     37:      for (n in 1:N)
@@ -50,7 +50,7 @@ Warning: deprecated language construct used in file stagnant.stan, line 38, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stagnant.stan, line 39, column 18:
+Warning: deprecated language construct used in 'stagnant.stan', line 39, column 18:
    -------------------------------------------------
     37:      for (n in 1:N)
     38:        mu[n] <- alpha + if_else(n <= k, beta[1], beta[2]) * (x[n] - x[k]);
@@ -63,7 +63,7 @@ Warning: deprecated language construct used in file stagnant.stan, line 39, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stagnant.stan, line 41, column 19:
+Warning: deprecated language construct used in 'stagnant.stan', line 41, column 19:
    -------------------------------------------------
     39:      log_probs[k] <- log(theta[k]) + normal_log(Y, mu, sigma);
     40:    }
@@ -98,7 +98,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file stagnant2.stan, line 20, column 11:
+Warning: deprecated language construct used in 'stagnant2.stan', line 20, column 11:
    -------------------------------------------------
     18:  
     19:    for (n in 1:N)

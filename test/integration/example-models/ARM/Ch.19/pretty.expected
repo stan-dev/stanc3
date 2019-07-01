@@ -168,7 +168,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file election88_expansion.stan, line 69, column 48:
+Warning: deprecated language construct used in 'election88_expansion.stan', line 69, column 48:
    -------------------------------------------------
     67:    sigma_age_edu = xi_age_edu*sigma_age_edu_raw;
     68:    sigma_state = xi_state*sigma_state_raw;

@@ -28,7 +28,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file dugongs.stan, line 25, column 9:
+Warning: deprecated language construct used in 'dugongs.stan', line 25, column 9:
    -------------------------------------------------
     23:    real sigma; 
     24:    real U3; 
@@ -41,7 +41,7 @@ Warning: deprecated language construct used in file dugongs.stan, line 25, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file dugongs.stan, line 26, column 6:
+Warning: deprecated language construct used in 'dugongs.stan', line 26, column 6:
    -------------------------------------------------
     24:    real U3; 
     25:    sigma <- 1 / sqrt(tau); 
@@ -54,7 +54,7 @@ Warning: deprecated language construct used in file dugongs.stan, line 26, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file dugongs.stan, line 31, column 10:
+Warning: deprecated language construct used in 'dugongs.stan', line 31, column 10:
    -------------------------------------------------
     29:    real m[N];
     30:    for (i in 1:N) 

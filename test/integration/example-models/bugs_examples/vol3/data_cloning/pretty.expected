@@ -39,7 +39,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file seeds.stan, line 1, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 1, column 0:
    -------------------------------------------------
      1:  # Using Data Cloning to Calculate MLEs for the Seeds Model in vol1 
          ^
@@ -50,7 +50,7 @@ Warning: deprecated language construct used in file seeds.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 2, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 2, column 0:
    -------------------------------------------------
      1:  # Using Data Cloning to Calculate MLEs for the Seeds Model in vol1 
      2:  # http://www.openbugs.net/Examples/DataCloning.html
@@ -62,7 +62,7 @@ Warning: deprecated language construct used in file seeds.stan, line 2, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 4, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 4, column 0:
    -------------------------------------------------
      2:  # http://www.openbugs.net/Examples/DataCloning.html
      3:  
@@ -75,7 +75,7 @@ Warning: deprecated language construct used in file seeds.stan, line 4, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 5, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 5, column 0:
    -------------------------------------------------
      3:  
      4:  # The basic idea is that we raise the likelihood in the 
@@ -88,7 +88,7 @@ Warning: deprecated language construct used in file seeds.stan, line 5, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 6, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 6, column 0:
    -------------------------------------------------
      4:  # The basic idea is that we raise the likelihood in the 
      5:  # posterior to the power of K so that the posterior
@@ -101,7 +101,7 @@ Warning: deprecated language construct used in file seeds.stan, line 6, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 7, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 7, column 0:
    -------------------------------------------------
      5:  # posterior to the power of K so that the posterior
      6:  # estimates would concentrate on the MLE estimates. 
@@ -114,7 +114,7 @@ Warning: deprecated language construct used in file seeds.stan, line 7, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 8, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 8, column 0:
    -------------------------------------------------
      6:  # estimates would concentrate on the MLE estimates. 
      7:  # Reference: 
@@ -127,7 +127,7 @@ Warning: deprecated language construct used in file seeds.stan, line 8, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 9, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 9, column 0:
    -------------------------------------------------
      7:  # Reference: 
      8:  #   Ecology Letters
@@ -140,7 +140,7 @@ Warning: deprecated language construct used in file seeds.stan, line 9, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 10, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 10, column 0:
    -------------------------------------------------
      8:  #   Ecology Letters
      9:  #   Subhash R. Lele Brian Dennis Frithjof Lutscher
@@ -153,7 +153,7 @@ Warning: deprecated language construct used in file seeds.stan, line 10, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 11, column 0:
+Warning: deprecated language construct used in 'seeds.stan', line 11, column 0:
    -------------------------------------------------
      9:  #   Subhash R. Lele Brian Dennis Frithjof Lutscher
     10:  #   DOI: 10.1111/j.1461-0248.2007.01047.x
@@ -166,7 +166,7 @@ Warning: deprecated language construct used in file seeds.stan, line 11, column 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 25, column 7:
+Warning: deprecated language construct used in 'seeds.stan', line 25, column 7:
    -------------------------------------------------
     23:      int K; 
     24:      vector[I] x1x2;
@@ -179,7 +179,7 @@ Warning: deprecated language construct used in file seeds.stan, line 25, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 26, column 10:
+Warning: deprecated language construct used in 'seeds.stan', line 26, column 10:
    -------------------------------------------------
     24:      vector[I] x1x2;
     25:      K <- 8; // {1, 2, 4, 8, 16, 32, 64, 128, 256}
@@ -192,7 +192,7 @@ Warning: deprecated language construct used in file seeds.stan, line 26, column 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file seeds.stan, line 40, column 11:
+Warning: deprecated language construct used in 'seeds.stan', line 40, column 11:
    -------------------------------------------------
     38:  transformed parameters {
     39:      real sigma; 

@@ -22,7 +22,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file hier-logit-centered.stan, line 21, column 14:
+Warning: deprecated language construct used in 'hier-logit-centered.stan', line 21, column 14:
    -------------------------------------------------
     19:  
     20:    for (n in 1:N)
@@ -116,7 +116,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 15, column 9:
+Warning: deprecated language construct used in 'hier-logit.stan', line 15, column 9:
    -------------------------------------------------
     13:    real sd_y;    // sample std dev successes
     14:  
@@ -129,7 +129,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 15, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 16, column 9:
+Warning: deprecated language construct used in 'hier-logit.stan', line 16, column 9:
    -------------------------------------------------
     14:  
     15:    min_y <- min(y);
@@ -142,7 +142,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 16, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 17, column 10:
+Warning: deprecated language construct used in 'hier-logit.stan', line 17, column 10:
    -------------------------------------------------
     15:    min_y <- min(y);
     16:    max_y <- max(y);
@@ -155,7 +155,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 17, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 18, column 8:
+Warning: deprecated language construct used in 'hier-logit.stan', line 18, column 8:
    -------------------------------------------------
     16:    max_y <- max(y);
     17:    mean_y <- mean(to_vector(y));
@@ -168,7 +168,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 18, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 59, column 14:
+Warning: deprecated language construct used in 'hier-logit.stan', line 59, column 14:
    -------------------------------------------------
     57:  
     58:    for (n in 1:N)
@@ -181,7 +181,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 59, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 61, column 13:
+Warning: deprecated language construct used in 'hier-logit.stan', line 61, column 13:
    -------------------------------------------------
     59:      theta[n] <- inv_logit(mu + sigma * alpha_std[n]);
     60:  
@@ -194,7 +194,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 61, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 63, column 15:
+Warning: deprecated language construct used in 'hier-logit.stan', line 63, column 15:
    -------------------------------------------------
     61:    log_p_new <- 0;
     62:    for (n in 1:N)
@@ -207,7 +207,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 63, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 66, column 10:
+Warning: deprecated language construct used in 'hier-logit.stan', line 66, column 10:
    -------------------------------------------------
     64:  
     65:    for (n in 1:N)
@@ -220,7 +220,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 66, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 68, column 23:
+Warning: deprecated language construct used in 'hier-logit.stan', line 68, column 23:
    -------------------------------------------------
     66:      z[n] <- binomial_rng(K_new[n], theta[n]);
     67:  
@@ -233,7 +233,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 68, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 70, column 19:
+Warning: deprecated language construct used in 'hier-logit.stan', line 70, column 19:
    -------------------------------------------------
     68:    some_ability_gt_350 <- (max(theta) > 0.35);
     69:    for (n in 1:N)
@@ -246,7 +246,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 70, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 72, column 23:
+Warning: deprecated language construct used in 'hier-logit.stan', line 72, column 23:
    -------------------------------------------------
     70:      avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
     71:    for (n in 1:N)
@@ -259,7 +259,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 72, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 76, column 9:
+Warning: deprecated language construct used in 'hier-logit.stan', line 76, column 9:
    -------------------------------------------------
     74:    {
     75:      int dsc[N];
@@ -272,7 +272,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 76, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 78, column 19:
+Warning: deprecated language construct used in 'hier-logit.stan', line 78, column 19:
    -------------------------------------------------
     76:      dsc <- sort_indices_desc(theta);
     77:      for (n in 1:N)
@@ -285,7 +285,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 78, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 81, column 16:
+Warning: deprecated language construct used in 'hier-logit.stan', line 81, column 16:
    -------------------------------------------------
     79:    }
     80:    for (n in 1:N)
@@ -298,7 +298,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 81, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 84, column 14:
+Warning: deprecated language construct used in 'hier-logit.stan', line 84, column 14:
    -------------------------------------------------
     82:  
     83:    for (n in 1:N)
@@ -311,7 +311,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 84, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 86, column 18:
+Warning: deprecated language construct used in 'hier-logit.stan', line 86, column 18:
    -------------------------------------------------
     84:      y_rep[n] <- binomial_rng(K[n], theta[n]);
     85:    for (n in 1:N)
@@ -324,7 +324,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 86, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 88, column 13:
+Warning: deprecated language construct used in 'hier-logit.stan', line 88, column 13:
    -------------------------------------------------
     86:      y_pop_rep[n] <- binomial_rng(K[n], inv_logit(normal_rng(mu, sigma)));
     87:  
@@ -337,7 +337,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 88, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 89, column 13:
+Warning: deprecated language construct used in 'hier-logit.stan', line 89, column 13:
    -------------------------------------------------
     87:  
     88:    min_y_rep <- min(y_rep);
@@ -350,7 +350,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 89, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 90, column 14:
+Warning: deprecated language construct used in 'hier-logit.stan', line 90, column 14:
    -------------------------------------------------
     88:    min_y_rep <- min(y_rep);
     89:    max_y_rep <- max(y_rep);
@@ -363,7 +363,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 90, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 91, column 12:
+Warning: deprecated language construct used in 'hier-logit.stan', line 91, column 12:
    -------------------------------------------------
     89:    max_y_rep <- max(y_rep);
     90:    mean_y_rep <- mean(to_vector(y_rep));
@@ -376,7 +376,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 91, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 93, column 9:
+Warning: deprecated language construct used in 'hier-logit.stan', line 93, column 9:
    -------------------------------------------------
     91:    sd_y_rep <- sd(to_vector(y_rep));
     92:  
@@ -389,7 +389,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 93, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 94, column 9:
+Warning: deprecated language construct used in 'hier-logit.stan', line 94, column 9:
    -------------------------------------------------
     92:  
     93:    p_min <- (min_y_rep >= min_y);
@@ -402,7 +402,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 94, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 95, column 10:
+Warning: deprecated language construct used in 'hier-logit.stan', line 95, column 10:
    -------------------------------------------------
     93:    p_min <- (min_y_rep >= min_y);
     94:    p_max <- (max_y_rep >= max_y);
@@ -415,7 +415,7 @@ Warning: deprecated language construct used in file hier-logit.stan, line 95, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier-logit.stan, line 96, column 8:
+Warning: deprecated language construct used in 'hier-logit.stan', line 96, column 8:
    -------------------------------------------------
     94:    p_max <- (max_y_rep >= max_y);
     95:    p_mean <- (mean_y_rep >= mean_y);
@@ -506,7 +506,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file hier.stan, line 15, column 9:
+Warning: deprecated language construct used in 'hier.stan', line 15, column 9:
    -------------------------------------------------
     13:    real sd_y;    // sample std dev successes
     14:  
@@ -519,7 +519,7 @@ Warning: deprecated language construct used in file hier.stan, line 15, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 16, column 9:
+Warning: deprecated language construct used in 'hier.stan', line 16, column 9:
    -------------------------------------------------
     14:  
     15:    min_y <- min(y);
@@ -532,7 +532,7 @@ Warning: deprecated language construct used in file hier.stan, line 16, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 17, column 10:
+Warning: deprecated language construct used in 'hier.stan', line 17, column 10:
    -------------------------------------------------
     15:    min_y <- min(y);
     16:    max_y <- max(y);
@@ -545,7 +545,7 @@ Warning: deprecated language construct used in file hier.stan, line 17, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 18, column 8:
+Warning: deprecated language construct used in 'hier.stan', line 18, column 8:
    -------------------------------------------------
     16:    max_y <- max(y);
     17:    mean_y <- mean(to_vector(y));
@@ -558,7 +558,7 @@ Warning: deprecated language construct used in file hier.stan, line 18, column 8
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 55, column 13:
+Warning: deprecated language construct used in 'hier.stan', line 55, column 13:
    -------------------------------------------------
     53:    int p_sd;
     54:  
@@ -571,7 +571,7 @@ Warning: deprecated language construct used in file hier.stan, line 55, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 57, column 15:
+Warning: deprecated language construct used in 'hier.stan', line 57, column 15:
    -------------------------------------------------
     55:    log_p_new <- 0;
     56:    for (n in 1:N)
@@ -584,7 +584,7 @@ Warning: deprecated language construct used in file hier.stan, line 57, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 60, column 10:
+Warning: deprecated language construct used in 'hier.stan', line 60, column 10:
    -------------------------------------------------
     58:    
     59:    for (n in 1:N)
@@ -597,7 +597,7 @@ Warning: deprecated language construct used in file hier.stan, line 60, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 62, column 23:
+Warning: deprecated language construct used in 'hier.stan', line 62, column 23:
    -------------------------------------------------
     60:      z[n] <- binomial_rng(K_new[n], theta[n]);
     61:  
@@ -610,7 +610,7 @@ Warning: deprecated language construct used in file hier.stan, line 62, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 64, column 19:
+Warning: deprecated language construct used in 'hier.stan', line 64, column 19:
    -------------------------------------------------
     62:    some_ability_gt_350 <- (max(theta) > 0.35);
     63:    for (n in 1:N)
@@ -623,7 +623,7 @@ Warning: deprecated language construct used in file hier.stan, line 64, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 66, column 23:
+Warning: deprecated language construct used in 'hier.stan', line 66, column 23:
    -------------------------------------------------
     64:      avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K [n] + K_new[n])) > 0.400);
     65:    for (n in 1:N)
@@ -636,7 +636,7 @@ Warning: deprecated language construct used in file hier.stan, line 66, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 70, column 9:
+Warning: deprecated language construct used in 'hier.stan', line 70, column 9:
    -------------------------------------------------
     68:    {
     69:      int dsc[N];
@@ -649,7 +649,7 @@ Warning: deprecated language construct used in file hier.stan, line 70, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 72, column 19:
+Warning: deprecated language construct used in 'hier.stan', line 72, column 19:
    -------------------------------------------------
     70:      dsc <- sort_indices_desc(theta);
     71:      for (n in 1:N)
@@ -662,7 +662,7 @@ Warning: deprecated language construct used in file hier.stan, line 72, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 75, column 16:
+Warning: deprecated language construct used in 'hier.stan', line 75, column 16:
    -------------------------------------------------
     73:    }
     74:    for (n in 1:N)
@@ -675,7 +675,7 @@ Warning: deprecated language construct used in file hier.stan, line 75, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 78, column 14:
+Warning: deprecated language construct used in 'hier.stan', line 78, column 14:
    -------------------------------------------------
     76:  
     77:    for (n in 1:N)
@@ -688,7 +688,7 @@ Warning: deprecated language construct used in file hier.stan, line 78, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 80, column 18:
+Warning: deprecated language construct used in 'hier.stan', line 80, column 18:
    -------------------------------------------------
     78:      y_rep[n] <- binomial_rng(K[n], theta[n]);
     79:    for (n in 1:N)
@@ -701,7 +701,7 @@ Warning: deprecated language construct used in file hier.stan, line 80, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 84, column 13:
+Warning: deprecated language construct used in 'hier.stan', line 84, column 13:
    -------------------------------------------------
     82:                                            (1 - phi) * kappa));
     83:  
@@ -714,7 +714,7 @@ Warning: deprecated language construct used in file hier.stan, line 84, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 85, column 13:
+Warning: deprecated language construct used in 'hier.stan', line 85, column 13:
    -------------------------------------------------
     83:  
     84:    min_y_rep <- min(y_rep);
@@ -727,7 +727,7 @@ Warning: deprecated language construct used in file hier.stan, line 85, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 86, column 14:
+Warning: deprecated language construct used in 'hier.stan', line 86, column 14:
    -------------------------------------------------
     84:    min_y_rep <- min(y_rep);
     85:    max_y_rep <- max(y_rep);
@@ -740,7 +740,7 @@ Warning: deprecated language construct used in file hier.stan, line 86, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 87, column 12:
+Warning: deprecated language construct used in 'hier.stan', line 87, column 12:
    -------------------------------------------------
     85:    max_y_rep <- max(y_rep);
     86:    mean_y_rep <- mean(to_vector(y_rep));
@@ -753,7 +753,7 @@ Warning: deprecated language construct used in file hier.stan, line 87, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 89, column 9:
+Warning: deprecated language construct used in 'hier.stan', line 89, column 9:
    -------------------------------------------------
     87:    sd_y_rep <- sd(to_vector(y_rep));
     88:  
@@ -766,7 +766,7 @@ Warning: deprecated language construct used in file hier.stan, line 89, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 90, column 9:
+Warning: deprecated language construct used in 'hier.stan', line 90, column 9:
    -------------------------------------------------
     88:  
     89:    p_min <- (min_y_rep >= min_y);
@@ -779,7 +779,7 @@ Warning: deprecated language construct used in file hier.stan, line 90, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 91, column 10:
+Warning: deprecated language construct used in 'hier.stan', line 91, column 10:
    -------------------------------------------------
     89:    p_min <- (min_y_rep >= min_y);
     90:    p_max <- (max_y_rep >= max_y);
@@ -792,7 +792,7 @@ Warning: deprecated language construct used in file hier.stan, line 91, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hier.stan, line 92, column 8:
+Warning: deprecated language construct used in 'hier.stan', line 92, column 8:
    -------------------------------------------------
     90:    p_max <- (max_y_rep >= max_y);
     91:    p_mean <- (mean_y_rep >= mean_y);
@@ -875,7 +875,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 15, column 9:
+Warning: deprecated language construct used in 'no-pool.stan', line 15, column 9:
    -------------------------------------------------
     13:    real sd_y;    // sample std dev successes
     14:  
@@ -888,7 +888,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 15, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 16, column 9:
+Warning: deprecated language construct used in 'no-pool.stan', line 16, column 9:
    -------------------------------------------------
     14:  
     15:    min_y <- min(y);
@@ -901,7 +901,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 16, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 17, column 10:
+Warning: deprecated language construct used in 'no-pool.stan', line 17, column 10:
    -------------------------------------------------
     15:    min_y <- min(y);
     16:    max_y <- max(y);
@@ -914,7 +914,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 17, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 18, column 8:
+Warning: deprecated language construct used in 'no-pool.stan', line 18, column 8:
    -------------------------------------------------
     16:    max_y <- max(y);
     17:    mean_y <- mean(to_vector(y));
@@ -927,7 +927,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 18, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 50, column 13:
+Warning: deprecated language construct used in 'no-pool.stan', line 50, column 13:
    -------------------------------------------------
     48:    int p_sd;     // posterior p-val for smaple std dev test stat
     49:  
@@ -940,7 +940,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 50, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 52, column 15:
+Warning: deprecated language construct used in 'no-pool.stan', line 52, column 15:
    -------------------------------------------------
     50:    log_p_new <- 0;
     51:    for (n in 1:N)
@@ -953,7 +953,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 52, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 55, column 10:
+Warning: deprecated language construct used in 'no-pool.stan', line 55, column 10:
    -------------------------------------------------
     53:  
     54:    for (n in 1:N)
@@ -966,7 +966,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 55, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 57, column 23:
+Warning: deprecated language construct used in 'no-pool.stan', line 57, column 23:
    -------------------------------------------------
     55:      z[n] <- binomial_rng(K_new[n], theta[n]);
     56:  
@@ -979,7 +979,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 57, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 59, column 19:
+Warning: deprecated language construct used in 'no-pool.stan', line 59, column 19:
    -------------------------------------------------
     57:    some_ability_gt_350 <- (max(theta) > 0.35);
     58:    for (n in 1:N)
@@ -992,7 +992,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 59, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 61, column 23:
+Warning: deprecated language construct used in 'no-pool.stan', line 61, column 23:
    -------------------------------------------------
     59:      avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
     60:    for (n in 1:N)
@@ -1005,7 +1005,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 61, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 65, column 9:
+Warning: deprecated language construct used in 'no-pool.stan', line 65, column 9:
    -------------------------------------------------
     63:    {
     64:      int dsc[N];
@@ -1018,7 +1018,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 65, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 67, column 19:
+Warning: deprecated language construct used in 'no-pool.stan', line 67, column 19:
    -------------------------------------------------
     65:      dsc <- sort_indices_desc(theta);
     66:      for (n in 1:N)
@@ -1031,7 +1031,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 67, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 70, column 16:
+Warning: deprecated language construct used in 'no-pool.stan', line 70, column 16:
    -------------------------------------------------
     68:    }
     69:    for (n in 1:N)
@@ -1044,7 +1044,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 70, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 73, column 14:
+Warning: deprecated language construct used in 'no-pool.stan', line 73, column 14:
    -------------------------------------------------
     71:  
     72:    for (n in 1:N)
@@ -1057,7 +1057,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 73, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 75, column 13:
+Warning: deprecated language construct used in 'no-pool.stan', line 75, column 13:
    -------------------------------------------------
     73:      y_rep[n] <- binomial_rng(K[n], theta[n]);
     74:  
@@ -1070,7 +1070,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 75, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 76, column 13:
+Warning: deprecated language construct used in 'no-pool.stan', line 76, column 13:
    -------------------------------------------------
     74:  
     75:    min_y_rep <- min(y_rep);
@@ -1083,7 +1083,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 76, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 77, column 14:
+Warning: deprecated language construct used in 'no-pool.stan', line 77, column 14:
    -------------------------------------------------
     75:    min_y_rep <- min(y_rep);
     76:    max_y_rep <- max(y_rep);
@@ -1096,7 +1096,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 77, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 78, column 12:
+Warning: deprecated language construct used in 'no-pool.stan', line 78, column 12:
    -------------------------------------------------
     76:    max_y_rep <- max(y_rep);
     77:    mean_y_rep <- mean(to_vector(y_rep));
@@ -1109,7 +1109,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 78, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 80, column 9:
+Warning: deprecated language construct used in 'no-pool.stan', line 80, column 9:
    -------------------------------------------------
     78:    sd_y_rep <- sd(to_vector(y_rep));
     79:  
@@ -1122,7 +1122,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 80, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 81, column 9:
+Warning: deprecated language construct used in 'no-pool.stan', line 81, column 9:
    -------------------------------------------------
     79:  
     80:    p_min <- (min_y_rep >= min_y);
@@ -1135,7 +1135,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 81, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 82, column 10:
+Warning: deprecated language construct used in 'no-pool.stan', line 82, column 10:
    -------------------------------------------------
     80:    p_min <- (min_y_rep >= min_y);
     81:    p_max <- (max_y_rep >= max_y);
@@ -1148,7 +1148,7 @@ Warning: deprecated language construct used in file no-pool.stan, line 82, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file no-pool.stan, line 83, column 8:
+Warning: deprecated language construct used in 'no-pool.stan', line 83, column 8:
    -------------------------------------------------
     81:    p_max <- (max_y_rep >= max_y);
     82:    p_mean <- (mean_y_rep >= mean_y);
@@ -1223,7 +1223,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file pool.stan, line 15, column 9:
+Warning: deprecated language construct used in 'pool.stan', line 15, column 9:
    -------------------------------------------------
     13:    real sd_y;    // sample std dev successes
     14:  
@@ -1236,7 +1236,7 @@ Warning: deprecated language construct used in file pool.stan, line 15, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 16, column 9:
+Warning: deprecated language construct used in 'pool.stan', line 16, column 9:
    -------------------------------------------------
     14:  
     15:    min_y <- min(y);
@@ -1249,7 +1249,7 @@ Warning: deprecated language construct used in file pool.stan, line 16, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 17, column 10:
+Warning: deprecated language construct used in 'pool.stan', line 17, column 10:
    -------------------------------------------------
     15:    min_y <- min(y);
     16:    max_y <- max(y);
@@ -1262,7 +1262,7 @@ Warning: deprecated language construct used in file pool.stan, line 17, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 18, column 8:
+Warning: deprecated language construct used in 'pool.stan', line 18, column 8:
    -------------------------------------------------
     16:    max_y <- max(y);
     17:    mean_y <- mean(to_vector(y));
@@ -1275,7 +1275,7 @@ Warning: deprecated language construct used in file pool.stan, line 18, column 8
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 49, column 9:
+Warning: deprecated language construct used in 'pool.stan', line 49, column 9:
    -------------------------------------------------
     47:    int<lower=0, upper=1> p_sd;
     48:  
@@ -1288,7 +1288,7 @@ Warning: deprecated language construct used in file pool.stan, line 49, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 51, column 13:
+Warning: deprecated language construct used in 'pool.stan', line 51, column 13:
    -------------------------------------------------
     49:    theta <- rep_vector(phi, N);
     50:  
@@ -1301,7 +1301,7 @@ Warning: deprecated language construct used in file pool.stan, line 51, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 53, column 15:
+Warning: deprecated language construct used in 'pool.stan', line 53, column 15:
    -------------------------------------------------
     51:    log_p_new <- 0;
     52:    for (n in 1:N)
@@ -1314,7 +1314,7 @@ Warning: deprecated language construct used in file pool.stan, line 53, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 56, column 10:
+Warning: deprecated language construct used in 'pool.stan', line 56, column 10:
    -------------------------------------------------
     54:  
     55:    for (n in 1:N)
@@ -1327,7 +1327,7 @@ Warning: deprecated language construct used in file pool.stan, line 56, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 58, column 23:
+Warning: deprecated language construct used in 'pool.stan', line 58, column 23:
    -------------------------------------------------
     56:      z[n] <- binomial_rng(K_new[n], theta[n]);
     57:  
@@ -1340,7 +1340,7 @@ Warning: deprecated language construct used in file pool.stan, line 58, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 60, column 19:
+Warning: deprecated language construct used in 'pool.stan', line 60, column 19:
    -------------------------------------------------
     58:    some_ability_gt_350 <- (max(theta) > 0.35);
     59:    for (n in 1:N)
@@ -1353,7 +1353,7 @@ Warning: deprecated language construct used in file pool.stan, line 60, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 62, column 23:
+Warning: deprecated language construct used in 'pool.stan', line 62, column 23:
    -------------------------------------------------
     60:      avg_gt_400[n] <- (((y[n] + z[n]) / (0.0 + K[n] + K_new[n])) > 0.400);
     61:    for (n in 1:N)
@@ -1366,7 +1366,7 @@ Warning: deprecated language construct used in file pool.stan, line 62, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 65, column 14:
+Warning: deprecated language construct used in 'pool.stan', line 65, column 14:
    -------------------------------------------------
     63:  
     64:    for (n in 1:N)
@@ -1379,7 +1379,7 @@ Warning: deprecated language construct used in file pool.stan, line 65, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 67, column 13:
+Warning: deprecated language construct used in 'pool.stan', line 67, column 13:
    -------------------------------------------------
     65:      y_rep[n] <- binomial_rng(K[n], theta[n]);
     66:  
@@ -1392,7 +1392,7 @@ Warning: deprecated language construct used in file pool.stan, line 67, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 68, column 13:
+Warning: deprecated language construct used in 'pool.stan', line 68, column 13:
    -------------------------------------------------
     66:  
     67:    min_y_rep <- min(y_rep);
@@ -1405,7 +1405,7 @@ Warning: deprecated language construct used in file pool.stan, line 68, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 69, column 14:
+Warning: deprecated language construct used in 'pool.stan', line 69, column 14:
    -------------------------------------------------
     67:    min_y_rep <- min(y_rep);
     68:    max_y_rep <- max(y_rep);
@@ -1418,7 +1418,7 @@ Warning: deprecated language construct used in file pool.stan, line 69, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 70, column 12:
+Warning: deprecated language construct used in 'pool.stan', line 70, column 12:
    -------------------------------------------------
     68:    max_y_rep <- max(y_rep);
     69:    mean_y_rep <- mean(to_vector(y_rep));
@@ -1431,7 +1431,7 @@ Warning: deprecated language construct used in file pool.stan, line 70, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 72, column 9:
+Warning: deprecated language construct used in 'pool.stan', line 72, column 9:
    -------------------------------------------------
     70:    sd_y_rep <- sd(to_vector(y_rep));
     71:  
@@ -1444,7 +1444,7 @@ Warning: deprecated language construct used in file pool.stan, line 72, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 73, column 9:
+Warning: deprecated language construct used in 'pool.stan', line 73, column 9:
    -------------------------------------------------
     71:  
     72:    p_min <- (min_y_rep >= min_y);
@@ -1457,7 +1457,7 @@ Warning: deprecated language construct used in file pool.stan, line 73, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 74, column 10:
+Warning: deprecated language construct used in 'pool.stan', line 74, column 10:
    -------------------------------------------------
     72:    p_min <- (min_y_rep >= min_y);
     73:    p_max <- (max_y_rep >= max_y);
@@ -1470,7 +1470,7 @@ Warning: deprecated language construct used in file pool.stan, line 74, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file pool.stan, line 75, column 8:
+Warning: deprecated language construct used in 'pool.stan', line 75, column 8:
    -------------------------------------------------
     73:    p_max <- (max_y_rep >= max_y);
     74:    p_mean <- (mean_y_rep >= mean_y);

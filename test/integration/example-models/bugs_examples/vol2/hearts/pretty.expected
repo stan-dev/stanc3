@@ -33,7 +33,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file hearts.stan, line 19, column 9:
+Warning: deprecated language construct used in 'hearts.stan', line 19, column 9:
    -------------------------------------------------
     17:  transformed parameters {
     18:    real<lower=0,upper=1> theta;
@@ -46,7 +46,7 @@ Warning: deprecated language construct used in file hearts.stan, line 19, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hearts.stan, line 24, column 5:
+Warning: deprecated language construct used in 'hearts.stan', line 24, column 5:
    -------------------------------------------------
     22:    real p; 
     23:    real log1m_theta;
@@ -59,7 +59,7 @@ Warning: deprecated language construct used in file hearts.stan, line 24, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hearts.stan, line 25, column 15:
+Warning: deprecated language construct used in 'hearts.stan', line 25, column 15:
    -------------------------------------------------
     23:    real log1m_theta;
     24:    p <- inv_logit(alpha); 
@@ -72,7 +72,7 @@ Warning: deprecated language construct used in file hearts.stan, line 25, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hearts.stan, line 36, column 23:
+Warning: deprecated language construct used in 'hearts.stan', line 36, column 23:
    -------------------------------------------------
     34:  
     35:      if (y[i] == 0)
@@ -85,7 +85,7 @@ Warning: deprecated language construct used in file hearts.stan, line 36, column
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file hearts.stan, line 39, column 23:
+Warning: deprecated language construct used in 'hearts.stan', line 39, column 23:
    -------------------------------------------------
     37:                               + (1 - theta) * pow(1 - p, t[i])));  
     38:      else
@@ -98,7 +98,7 @@ Warning: deprecated language construct used in file hearts.stan, line 39, column
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file hearts.stan, line 45, column 8:
+Warning: deprecated language construct used in 'hearts.stan', line 45, column 8:
    -------------------------------------------------
     43:  generated quantities {
     44:    real beta;

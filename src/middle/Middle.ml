@@ -10,45 +10,30 @@ module Utils = Utils
 (* -- Locations and spans --------------------------------------------------- *)
 
 (** Render a location as a string *)
-let rec string_of_location loc =
+let rec string_of_location ?(print_file = true) ?(print_line = true) loc =
   let open Format in
-  let included_from_str =
+  let file = if print_file then sprintf "'%s', " loc.filename else "" in
+  let line = if print_line then sprintf "line %d, " loc.line_num else "" in
+  let incl =
     match loc.included_from with
-    | None -> ""
     | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
+    | None -> ""
   in
-  sprintf "file %s, line %d, column %d%s" loc.filename loc.line_num loc.col_num
-    included_from_str
+  sprintf "%s%scolumn %d%s" file line loc.col_num incl
 
 (** Render a location_span as a string *)
-let string_of_location_span loc_sp =
-  match loc_sp with {begin_loc; end_loc} ->
-    let bf = begin_loc.filename in
-    let ef = end_loc.filename in
-    let bl = begin_loc.line_num in
-    let el = end_loc.line_num in
-    let bc = begin_loc.col_num in
-    let ec = end_loc.col_num in
-    let open Format in
-    let file_line_col_string =
-      if bf = ef then
-        sprintf "file %s, %s" bf
-          ( if bl = el then
-            sprintf "line %d, %s" bl
-              ( if bc = ec then sprintf "column %d" bc
-              else sprintf "columns %d-%d" bc ec )
-          else sprintf "line %d, column %d to line %d, column %d" bl bc el ec
-          )
-      else
-        sprintf "file %s, line %d, column %d to file %s, line %d, column %d" bf
-          bl bc ef el ec
-    in
-    let included_from_str =
-      match begin_loc.included_from with
-      | None -> ""
-      | Some loc -> sprintf ", included from\n%s" (string_of_location loc)
-    in
-    sprintf "%s%s" file_line_col_string included_from_str
+let string_of_location_span {begin_loc; end_loc} =
+  let end_loc_str =
+    match begin_loc.included_from with
+    | None ->
+        " to "
+        ^ string_of_location
+            ~print_file:(begin_loc.filename <> end_loc.filename)
+            ~print_line:(begin_loc.line_num <> end_loc.line_num)
+            end_loc
+    | Some _ -> ""
+  in
+  string_of_location begin_loc ^ end_loc_str
 
 let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
 
@@ -83,3 +68,62 @@ let rec sexp_of_expr_typed_located {expr; _} =
 
 let rec sexp_of_stmt_loc {stmt; _} =
   sexp_of_statement sexp_of_expr_typed_located sexp_of_stmt_loc stmt
+
+let rec expr_contains_fn fname accum e =
+  accum
+  ||
+  match e.expr with
+  | FunApp (_, name, _) when name = fname -> true
+  | x -> fold_expr (expr_contains_fn fname) accum x
+
+let%test "expr contains fn" =
+  internal_funapp FnReadData [] ()
+  |> expr_contains_fn (string_of_internal_fn FnReadData) false
+
+let contains_fn fname s =
+  let rec contains_fn_go fname accum {stmt; _} =
+    match stmt with
+    | NRFunApp (_, fname', _) when fname' = fname -> true
+    | _ ->
+        fold_statement (expr_contains_fn fname) (contains_fn_go fname) accum
+          stmt
+  in
+  contains_fn_go fname false s
+
+let mock_stmt stmt = {stmt; smeta= no_span}
+let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
+
+let mock_for i body =
+  For
+    { loopvar= "lv"
+    ; lower= mir_int 0
+    ; upper= mir_int i
+    ; body= mock_stmt (Block [body]) }
+  |> mock_stmt
+
+let%test "contains fn" =
+  let f =
+    mock_for 8
+      (mock_for 9
+         (mock_stmt
+            (Assignment (("v", []), internal_funapp FnReadData [] internal_meta))))
+  in
+  contains_fn
+    (string_of_internal_fn FnReadData)
+    (mock_stmt (Block [f; mock_stmt Break]))
+
+let%test "contains nrfn" =
+  let f =
+    mock_for 8
+      (mock_for 9
+         (mock_stmt
+            (NRFunApp (CompilerInternal, string_of_internal_fn FnWriteParam, []))))
+  in
+  contains_fn
+    (string_of_internal_fn FnWriteParam)
+    (mock_stmt
+       (Block
+          [ mock_stmt
+              (NRFunApp
+                 (CompilerInternal, string_of_internal_fn FnWriteParam, []))
+          ; f ]))

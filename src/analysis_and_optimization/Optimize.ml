@@ -230,9 +230,6 @@ and inline_function_index adt fim i =
   | Upfrom e ->
       let dl, sl, e = inline_function_expression adt fim e in
       (dl, sl, Upfrom e)
-  | Downfrom e ->
-      let dl, sl, e = inline_function_expression adt fim e in
-      (dl, sl, Downfrom e)
   | Between (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression adt fim e2 in
@@ -533,7 +530,7 @@ let rec can_side_effect_expr (e : expr_typed_located) =
 and can_side_effect_idx (i : expr_typed_located index) =
   match i with
   | All -> false
-  | Single e | Upfrom e | Downfrom e | MultiIndex e -> can_side_effect_expr e
+  | Single e | Upfrom e | MultiIndex e -> can_side_effect_expr e
   | Between (e1, e2) -> can_side_effect_expr e1 || can_side_effect_expr e2
 
 let is_skip_break_continue s =
@@ -790,8 +787,8 @@ let optimize_ad_levels mir =
     let initial_ad_variables =
       Set.Poly.of_list
         (List.filter_map
-           ~f:(fun (v, (_, b)) ->
-             match b with Parameters -> Some v | _ -> None )
+           ~f:(fun (v, {out_block; _}) ->
+             match out_block with Parameters -> Some v | _ -> None )
            mir.output_vars)
     in
     let ad_levels =

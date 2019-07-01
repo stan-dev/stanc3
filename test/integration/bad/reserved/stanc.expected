@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc STAN_MAJOR.stan
 
-Semantic error in file STAN_MAJOR.stan, line 2, columns 7-17:
+Semantic error in 'STAN_MAJOR.stan', line 2, column 7 to column 17:
    -------------------------------------------------
      1:  data {
      2:    real STAN_MAJOR;
@@ -13,7 +13,7 @@ Identifier 'STAN_MAJOR' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc STAN_MATH_MAJOR.stan
 
-Semantic error in file STAN_MATH_MAJOR.stan, line 2, columns 7-22:
+Semantic error in 'STAN_MATH_MAJOR.stan', line 2, column 7 to column 22:
    -------------------------------------------------
      1:  data {
      2:    real STAN_MATH_MAJOR;
@@ -26,7 +26,7 @@ Identifier 'STAN_MATH_MAJOR' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc STAN_MATH_MINOR.stan
 
-Semantic error in file STAN_MATH_MINOR.stan, line 2, columns 7-22:
+Semantic error in 'STAN_MATH_MINOR.stan', line 2, column 7 to column 22:
    -------------------------------------------------
      1:  data {
      2:    real STAN_MATH_MINOR;
@@ -39,7 +39,7 @@ Identifier 'STAN_MATH_MINOR' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc STAN_MATH_PATCH.stan
 
-Semantic error in file STAN_MATH_PATCH.stan, line 2, columns 7-22:
+Semantic error in 'STAN_MATH_PATCH.stan', line 2, column 7 to column 22:
    -------------------------------------------------
      1:  data {
      2:    real STAN_MATH_PATCH;
@@ -52,7 +52,7 @@ Identifier 'STAN_MATH_PATCH' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc STAN_MINOR.stan
 
-Semantic error in file STAN_MINOR.stan, line 2, columns 7-17:
+Semantic error in 'STAN_MINOR.stan', line 2, column 7 to column 17:
    -------------------------------------------------
      1:  data {
      2:    real STAN_MINOR;
@@ -65,7 +65,7 @@ Identifier 'STAN_MINOR' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc STAN_PATCH.stan
 
-Semantic error in file STAN_PATCH.stan, line 2, columns 7-17:
+Semantic error in 'STAN_PATCH.stan', line 2, column 7 to column 17:
    -------------------------------------------------
      1:  data {
      2:    real STAN_PATCH;
@@ -78,7 +78,7 @@ Identifier 'STAN_PATCH' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc alignas.stan
 
-Semantic error in file alignas.stan, line 2, columns 7-14:
+Semantic error in 'alignas.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real alignas;
@@ -91,7 +91,7 @@ Identifier 'alignas' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc alignof.stan
 
-Semantic error in file alignof.stan, line 2, columns 7-14:
+Semantic error in 'alignof.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real alignof;
@@ -104,7 +104,7 @@ Identifier 'alignof' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc and.stan
 
-Semantic error in file and.stan, line 2, columns 7-10:
+Semantic error in 'and.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real and;
@@ -117,7 +117,7 @@ Identifier 'and' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc and_eq.stan
 
-Semantic error in file and_eq.stan, line 2, columns 7-13:
+Semantic error in 'and_eq.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real and_eq;
@@ -130,7 +130,7 @@ Identifier 'and_eq' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc asm.stan
 
-Semantic error in file asm.stan, line 2, columns 7-10:
+Semantic error in 'asm.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real asm;
@@ -143,7 +143,7 @@ Identifier 'asm' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc auto.stan
 
-Semantic error in file auto.stan, line 2, columns 7-11:
+Semantic error in 'auto.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real auto;
@@ -156,7 +156,7 @@ Identifier 'auto' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc bitand.stan
 
-Semantic error in file bitand.stan, line 2, columns 7-13:
+Semantic error in 'bitand.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real bitand;
@@ -169,7 +169,7 @@ Identifier 'bitand' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc bitor.stan
 
-Semantic error in file bitor.stan, line 2, columns 7-12:
+Semantic error in 'bitor.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real bitor;
@@ -182,7 +182,7 @@ Identifier 'bitor' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc bool.stan
 
-Semantic error in file bool.stan, line 2, columns 7-11:
+Semantic error in 'bool.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real bool;
@@ -195,7 +195,7 @@ Identifier 'bool' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc break.stan
 
-Syntax error in file break.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'break.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real break;
@@ -209,7 +209,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc case.stan
 
-Semantic error in file case.stan, line 2, columns 7-11:
+Semantic error in 'case.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real case;
@@ -222,7 +222,7 @@ Identifier 'case' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc catch.stan
 
-Semantic error in file catch.stan, line 2, columns 7-12:
+Semantic error in 'catch.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real catch;
@@ -235,7 +235,7 @@ Identifier 'catch' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc char.stan
 
-Semantic error in file char.stan, line 2, columns 7-11:
+Semantic error in 'char.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real char;
@@ -248,7 +248,7 @@ Identifier 'char' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc char16_t.stan
 
-Semantic error in file char16_t.stan, line 2, columns 7-15:
+Semantic error in 'char16_t.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real char16_t;
@@ -261,7 +261,7 @@ Identifier 'char16_t' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc char32_t.stan
 
-Semantic error in file char32_t.stan, line 2, columns 7-15:
+Semantic error in 'char32_t.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real char32_t;
@@ -274,7 +274,7 @@ Identifier 'char32_t' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc cholesky_factor_corr.stan
 
-Syntax error in file cholesky_factor_corr.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'cholesky_factor_corr.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real cholesky_factor_corr;
@@ -288,7 +288,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc cholesky_factor_cov.stan
 
-Syntax error in file cholesky_factor_cov.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'cholesky_factor_cov.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real cholesky_factor_cov;
@@ -302,7 +302,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc class.stan
 
-Semantic error in file class.stan, line 2, columns 7-12:
+Semantic error in 'class.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real class;
@@ -315,7 +315,7 @@ Identifier 'class' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc compl.stan
 
-Semantic error in file compl.stan, line 2, columns 7-12:
+Semantic error in 'compl.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real compl;
@@ -328,7 +328,7 @@ Identifier 'compl' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc const.stan
 
-Semantic error in file const.stan, line 2, columns 7-12:
+Semantic error in 'const.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real const;
@@ -341,7 +341,7 @@ Identifier 'const' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc const_cast.stan
 
-Semantic error in file const_cast.stan, line 2, columns 7-17:
+Semantic error in 'const_cast.stan', line 2, column 7 to column 17:
    -------------------------------------------------
      1:  data {
      2:    real const_cast;
@@ -354,7 +354,7 @@ Identifier 'const_cast' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc constexpr.stan
 
-Semantic error in file constexpr.stan, line 2, columns 7-16:
+Semantic error in 'constexpr.stan', line 2, column 7 to column 16:
    -------------------------------------------------
      1:  data {
      2:    real constexpr;
@@ -367,7 +367,7 @@ Identifier 'constexpr' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc continue.stan
 
-Syntax error in file continue.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'continue.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real continue;
@@ -381,7 +381,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc corr_matrix.stan
 
-Syntax error in file corr_matrix.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'corr_matrix.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real corr_matrix;
@@ -395,7 +395,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc cov_matrix.stan
 
-Syntax error in file cov_matrix.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'cov_matrix.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real cov_matrix;
@@ -409,7 +409,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc decltype.stan
 
-Semantic error in file decltype.stan, line 2, columns 7-15:
+Semantic error in 'decltype.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real decltype;
@@ -422,7 +422,7 @@ Identifier 'decltype' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc default.stan
 
-Semantic error in file default.stan, line 2, columns 7-14:
+Semantic error in 'default.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real default;
@@ -435,7 +435,7 @@ Identifier 'default' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc delete.stan
 
-Semantic error in file delete.stan, line 2, columns 7-13:
+Semantic error in 'delete.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real delete;
@@ -448,7 +448,7 @@ Identifier 'delete' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc do.stan
 
-Semantic error in file do.stan, line 2, columns 7-9:
+Semantic error in 'do.stan', line 2, column 7 to column 9:
    -------------------------------------------------
      1:  data {
      2:    real do;
@@ -461,7 +461,7 @@ Identifier 'do' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc double.stan
 
-Semantic error in file double.stan, line 2, columns 7-13:
+Semantic error in 'double.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real double;
@@ -474,7 +474,7 @@ Identifier 'double' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc dynamic_cast.stan
 
-Semantic error in file dynamic_cast.stan, line 2, columns 7-19:
+Semantic error in 'dynamic_cast.stan', line 2, column 7 to column 19:
    -------------------------------------------------
      1:  data {
      2:    real dynamic_cast;
@@ -487,7 +487,7 @@ Identifier 'dynamic_cast' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc else.stan
 
-Syntax error in file else.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'else.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real else;
@@ -501,7 +501,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc enum.stan
 
-Semantic error in file enum.stan, line 2, columns 7-11:
+Semantic error in 'enum.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real enum;
@@ -514,7 +514,7 @@ Identifier 'enum' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc explicit.stan
 
-Semantic error in file explicit.stan, line 2, columns 7-15:
+Semantic error in 'explicit.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real explicit;
@@ -527,7 +527,7 @@ Identifier 'explicit' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc export.stan
 
-Semantic error in file export.stan, line 2, columns 7-13:
+Semantic error in 'export.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real export;
@@ -540,7 +540,7 @@ Identifier 'export' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc extern.stan
 
-Semantic error in file extern.stan, line 2, columns 7-13:
+Semantic error in 'extern.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real extern;
@@ -553,7 +553,7 @@ Identifier 'extern' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc false.stan
 
-Semantic error in file false.stan, line 2, columns 7-12:
+Semantic error in 'false.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real false;
@@ -566,7 +566,7 @@ Identifier 'false' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc float.stan
 
-Semantic error in file float.stan, line 2, columns 7-12:
+Semantic error in 'float.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real float;
@@ -579,7 +579,7 @@ Identifier 'float' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc for.stan
 
-Syntax error in file for.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'for.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real for;
@@ -593,7 +593,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc friend.stan
 
-Semantic error in file friend.stan, line 2, columns 7-13:
+Semantic error in 'friend.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real friend;
@@ -606,7 +606,7 @@ Identifier 'friend' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc fvar.stan
 
-Semantic error in file fvar.stan, line 2, columns 7-11:
+Semantic error in 'fvar.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real fvar;
@@ -619,7 +619,7 @@ Identifier 'fvar' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc goto.stan
 
-Semantic error in file goto.stan, line 2, columns 7-11:
+Semantic error in 'goto.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real goto;
@@ -632,7 +632,7 @@ Identifier 'goto' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc if.stan
 
-Syntax error in file if.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'if.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real if;
@@ -646,7 +646,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc in.stan
 
-Syntax error in file in.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'in.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real in;
@@ -660,7 +660,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc inline.stan
 
-Semantic error in file inline.stan, line 2, columns 7-13:
+Semantic error in 'inline.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real inline;
@@ -673,7 +673,7 @@ Identifier 'inline' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc int.stan
 
-Syntax error in file int.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'int.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real int;
@@ -687,7 +687,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc long.stan
 
-Semantic error in file long.stan, line 2, columns 7-11:
+Semantic error in 'long.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real long;
@@ -700,7 +700,7 @@ Identifier 'long' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc matrix.stan
 
-Syntax error in file matrix.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'matrix.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real matrix;
@@ -714,7 +714,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc mutable.stan
 
-Semantic error in file mutable.stan, line 2, columns 7-14:
+Semantic error in 'mutable.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real mutable;
@@ -727,7 +727,7 @@ Identifier 'mutable' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc namespace.stan
 
-Semantic error in file namespace.stan, line 2, columns 7-16:
+Semantic error in 'namespace.stan', line 2, column 7 to column 16:
    -------------------------------------------------
      1:  data {
      2:    real namespace;
@@ -740,7 +740,7 @@ Identifier 'namespace' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc new.stan
 
-Semantic error in file new.stan, line 2, columns 7-10:
+Semantic error in 'new.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real new;
@@ -753,7 +753,7 @@ Identifier 'new' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc noexcept.stan
 
-Semantic error in file noexcept.stan, line 2, columns 7-15:
+Semantic error in 'noexcept.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real noexcept;
@@ -766,7 +766,7 @@ Identifier 'noexcept' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc not.stan
 
-Semantic error in file not.stan, line 2, columns 7-10:
+Semantic error in 'not.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real not;
@@ -779,7 +779,7 @@ Identifier 'not' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc not_eq.stan
 
-Semantic error in file not_eq.stan, line 2, columns 7-13:
+Semantic error in 'not_eq.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real not_eq;
@@ -792,7 +792,7 @@ Identifier 'not_eq' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc nullptr.stan
 
-Semantic error in file nullptr.stan, line 2, columns 7-14:
+Semantic error in 'nullptr.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real nullptr;
@@ -805,7 +805,7 @@ Identifier 'nullptr' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc operator.stan
 
-Semantic error in file operator.stan, line 2, columns 7-15:
+Semantic error in 'operator.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real operator;
@@ -818,7 +818,7 @@ Identifier 'operator' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc or.stan
 
-Semantic error in file or.stan, line 2, columns 7-9:
+Semantic error in 'or.stan', line 2, column 7 to column 9:
    -------------------------------------------------
      1:  data {
      2:    real or;
@@ -831,7 +831,7 @@ Identifier 'or' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc or_eq.stan
 
-Semantic error in file or_eq.stan, line 2, columns 7-12:
+Semantic error in 'or_eq.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real or_eq;
@@ -844,7 +844,7 @@ Identifier 'or_eq' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc ordered.stan
 
-Syntax error in file ordered.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'ordered.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real ordered;
@@ -858,7 +858,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc positive_ordered.stan
 
-Syntax error in file positive_ordered.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'positive_ordered.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real positive_ordered;
@@ -872,7 +872,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc private.stan
 
-Semantic error in file private.stan, line 2, columns 7-14:
+Semantic error in 'private.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real private;
@@ -885,7 +885,7 @@ Identifier 'private' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc protected.stan
 
-Semantic error in file protected.stan, line 2, columns 7-16:
+Semantic error in 'protected.stan', line 2, column 7 to column 16:
    -------------------------------------------------
      1:  data {
      2:    real protected;
@@ -898,7 +898,7 @@ Identifier 'protected' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc public.stan
 
-Semantic error in file public.stan, line 2, columns 7-13:
+Semantic error in 'public.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real public;
@@ -911,7 +911,7 @@ Identifier 'public' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc real.stan
 
-Syntax error in file real.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'real.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real real;
@@ -925,7 +925,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc register.stan
 
-Semantic error in file register.stan, line 2, columns 7-15:
+Semantic error in 'register.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real register;
@@ -938,7 +938,7 @@ Identifier 'register' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc reinterpret_cast.stan
 
-Semantic error in file reinterpret_cast.stan, line 2, columns 7-23:
+Semantic error in 'reinterpret_cast.stan', line 2, column 7 to column 23:
    -------------------------------------------------
      1:  data {
      2:    real reinterpret_cast;
@@ -951,7 +951,7 @@ Identifier 'reinterpret_cast' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc repeat.stan
 
-Semantic error in file repeat.stan, line 2, columns 7-13:
+Semantic error in 'repeat.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real repeat;
@@ -964,7 +964,7 @@ Identifier 'repeat' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc return.stan
 
-Syntax error in file return.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'return.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real return;
@@ -978,7 +978,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc row_vector.stan
 
-Syntax error in file row_vector.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'row_vector.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real row_vector;
@@ -992,7 +992,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc short.stan
 
-Semantic error in file short.stan, line 2, columns 7-12:
+Semantic error in 'short.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real short;
@@ -1005,7 +1005,7 @@ Identifier 'short' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc signed.stan
 
-Semantic error in file signed.stan, line 2, columns 7-13:
+Semantic error in 'signed.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real signed;
@@ -1018,7 +1018,7 @@ Identifier 'signed' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc simplex.stan
 
-Syntax error in file simplex.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'simplex.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real simplex;
@@ -1032,7 +1032,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc sizeof.stan
 
-Semantic error in file sizeof.stan, line 2, columns 7-13:
+Semantic error in 'sizeof.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real sizeof;
@@ -1045,7 +1045,7 @@ Identifier 'sizeof' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc static.stan
 
-Semantic error in file static.stan, line 2, columns 7-13:
+Semantic error in 'static.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real static;
@@ -1058,7 +1058,7 @@ Identifier 'static' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc static_assert.stan
 
-Semantic error in file static_assert.stan, line 2, columns 7-20:
+Semantic error in 'static_assert.stan', line 2, column 7 to column 20:
    -------------------------------------------------
      1:  data {
      2:    real static_assert;
@@ -1071,7 +1071,7 @@ Identifier 'static_assert' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc static_cast.stan
 
-Semantic error in file static_cast.stan, line 2, columns 7-18:
+Semantic error in 'static_cast.stan', line 2, column 7 to column 18:
    -------------------------------------------------
      1:  data {
      2:    real static_cast;
@@ -1084,7 +1084,7 @@ Identifier 'static_cast' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc struct.stan
 
-Semantic error in file struct.stan, line 2, columns 7-13:
+Semantic error in 'struct.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real struct;
@@ -1097,7 +1097,7 @@ Identifier 'struct' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc switch.stan
 
-Semantic error in file switch.stan, line 2, columns 7-13:
+Semantic error in 'switch.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real switch;
@@ -1110,7 +1110,7 @@ Identifier 'switch' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc template.stan
 
-Semantic error in file template.stan, line 2, columns 7-15:
+Semantic error in 'template.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real template;
@@ -1123,7 +1123,7 @@ Identifier 'template' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc then.stan
 
-Semantic error in file then.stan, line 2, columns 7-11:
+Semantic error in 'then.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real then;
@@ -1136,7 +1136,7 @@ Identifier 'then' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc this.stan
 
-Semantic error in file this.stan, line 2, columns 7-11:
+Semantic error in 'this.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real this;
@@ -1149,7 +1149,7 @@ Identifier 'this' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc thread_local.stan
 
-Semantic error in file thread_local.stan, line 2, columns 7-19:
+Semantic error in 'thread_local.stan', line 2, column 7 to column 19:
    -------------------------------------------------
      1:  data {
      2:    real thread_local;
@@ -1162,7 +1162,7 @@ Identifier 'thread_local' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc throw.stan
 
-Semantic error in file throw.stan, line 2, columns 7-12:
+Semantic error in 'throw.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real throw;
@@ -1175,7 +1175,7 @@ Identifier 'throw' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc true.stan
 
-Semantic error in file true.stan, line 2, columns 7-11:
+Semantic error in 'true.stan', line 2, column 7 to column 11:
    -------------------------------------------------
      1:  data {
      2:    real true;
@@ -1188,7 +1188,7 @@ Identifier 'true' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc try.stan
 
-Semantic error in file try.stan, line 2, columns 7-10:
+Semantic error in 'try.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real try;
@@ -1201,7 +1201,7 @@ Identifier 'try' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc typedef.stan
 
-Semantic error in file typedef.stan, line 2, columns 7-14:
+Semantic error in 'typedef.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real typedef;
@@ -1214,7 +1214,7 @@ Identifier 'typedef' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc typeid.stan
 
-Semantic error in file typeid.stan, line 2, columns 7-13:
+Semantic error in 'typeid.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real typeid;
@@ -1227,7 +1227,7 @@ Identifier 'typeid' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc typename.stan
 
-Semantic error in file typename.stan, line 2, columns 7-15:
+Semantic error in 'typename.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real typename;
@@ -1240,7 +1240,7 @@ Identifier 'typename' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc union.stan
 
-Semantic error in file union.stan, line 2, columns 7-12:
+Semantic error in 'union.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real union;
@@ -1253,7 +1253,7 @@ Identifier 'union' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc unit_vector.stan
 
-Syntax error in file unit_vector.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'unit_vector.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real unit_vector;
@@ -1267,7 +1267,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc unsigned.stan
 
-Semantic error in file unsigned.stan, line 2, columns 7-15:
+Semantic error in 'unsigned.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real unsigned;
@@ -1280,7 +1280,7 @@ Identifier 'unsigned' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc until.stan
 
-Semantic error in file until.stan, line 2, columns 7-12:
+Semantic error in 'until.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real until;
@@ -1293,7 +1293,7 @@ Identifier 'until' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc using.stan
 
-Semantic error in file using.stan, line 2, columns 7-12:
+Semantic error in 'using.stan', line 2, column 7 to column 12:
    -------------------------------------------------
      1:  data {
      2:    real using;
@@ -1306,7 +1306,7 @@ Identifier 'using' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc var.stan
 
-Semantic error in file var.stan, line 2, columns 7-10:
+Semantic error in 'var.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real var;
@@ -1319,7 +1319,7 @@ Identifier 'var' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc vector.stan
 
-Syntax error in file vector.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'vector.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real vector;
@@ -1333,7 +1333,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc virtual.stan
 
-Semantic error in file virtual.stan, line 2, columns 7-14:
+Semantic error in 'virtual.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real virtual;
@@ -1346,7 +1346,7 @@ Identifier 'virtual' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc void.stan
 
-Syntax error in file void.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'void.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real void;
@@ -1360,7 +1360,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc volatile.stan
 
-Semantic error in file volatile.stan, line 2, columns 7-15:
+Semantic error in 'volatile.stan', line 2, column 7 to column 15:
    -------------------------------------------------
      1:  data {
      2:    real volatile;
@@ -1373,7 +1373,7 @@ Identifier 'volatile' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc wchar_t.stan
 
-Semantic error in file wchar_t.stan, line 2, columns 7-14:
+Semantic error in 'wchar_t.stan', line 2, column 7 to column 14:
    -------------------------------------------------
      1:  data {
      2:    real wchar_t;
@@ -1386,7 +1386,7 @@ Identifier 'wchar_t' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc while.stan
 
-Syntax error in file while.stan, line 2, columns 2-6, parsing error:
+Syntax error in 'while.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real while;
@@ -1400,7 +1400,7 @@ Identifier expected after type in top-level variable declaration.
 
   $ ../../../../../install/default/bin/stanc xor.stan
 
-Semantic error in file xor.stan, line 2, columns 7-10:
+Semantic error in 'xor.stan', line 2, column 7 to column 10:
    -------------------------------------------------
      1:  data {
      2:    real xor;
@@ -1413,7 +1413,7 @@ Identifier 'xor' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc xor_eq.stan
 
-Semantic error in file xor_eq.stan, line 2, columns 7-13:
+Semantic error in 'xor_eq.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real xor_eq;

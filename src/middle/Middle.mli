@@ -4,7 +4,9 @@ module Pretty : module type of Mir_pretty_printer
 module Validation : module type of Validation
 module Utils : module type of Utils
 
-val string_of_location : Mir.location -> string
+val string_of_location :
+  ?print_file:bool -> ?print_line:bool -> location -> string
+
 val string_of_location_span : Mir.location_span -> string
 val operator_of_string : string -> Mir.operator option
 val string_of_operator : Mir.operator -> string
@@ -82,3 +84,11 @@ val binop :
   -> operator
   -> mtype_loc_ad with_expr
   -> mtype_loc_ad with_expr
+
+val contains_fn : string -> ('a, 'b) stmt_with -> bool
+val mir_int : int -> mtype_loc_ad with_expr
+
+val mock_for :
+     int
+  -> (mtype_loc_ad, location_span) stmt_with
+  -> (mtype_loc_ad, location_span) stmt_with

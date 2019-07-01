@@ -41,7 +41,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file hierarchical_2pl.stan, line 20, column 14:
+Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 20, column 14:
    -------------------------------------------------
     18:    vector[I] beta;
     19:    for (i in 1:I) {
@@ -54,7 +54,7 @@ Warning: deprecated language construct used in file hierarchical_2pl.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hierarchical_2pl.stan, line 21, column 13:
+Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 21, column 13:
    -------------------------------------------------
     19:    for (i in 1:I) {
     20:      alpha[i] <- exp(xi[i,1]);
@@ -67,7 +67,7 @@ Warning: deprecated language construct used in file hierarchical_2pl.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hierarchical_2pl.stan, line 26, column 11:
+Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 26, column 11:
    -------------------------------------------------
     24:  model {
     25:    matrix[2,2] L_Sigma;
@@ -80,7 +80,7 @@ Warning: deprecated language construct used in file hierarchical_2pl.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hierarchical_2pl.stan, line 39, column 9:
+Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 39, column 9:
    -------------------------------------------------
     37:  generated quantities {
     38:    corr_matrix[2] Omega;

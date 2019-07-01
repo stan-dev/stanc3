@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined NKX.stan
 
-Syntax error in file NKX.stan, line 2, columns 2-5, parsing error:
+Syntax error in 'NKX.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // dimensions
      2:    int<lower=0> N;  // number of observations
@@ -14,7 +14,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined data_assoc.stan
 
-Syntax error in file data_assoc.stan, line 3, columns 2-5, parsing error:
+Syntax error in 'data_assoc.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,
      2:    //   5 = laplace, 6 = lasso
@@ -29,7 +29,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined data_betareg.stan
 
-Syntax error in file data_betareg.stan, line 2, columns 2-5, parsing error:
+Syntax error in 'data_betareg.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // betareg data
      2:    int<lower=0, upper=1> has_intercept_z;  // presence of z intercept
@@ -43,7 +43,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined data_event.stan
 
-Syntax error in file data_event.stan, line 3, columns 2-5, parsing error:
+Syntax error in 'data_event.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,
      2:    //   5 = laplace, 6 = lasso
@@ -58,7 +58,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined data_glm.stan
 
-Syntax error in file data_glm.stan, line 2, columns 2-5, parsing error:
+Syntax error in 'data_glm.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // flag indicating whether to draw from the prior
      2:    int<lower=0,upper=1> prior_PD;  // 1 = yes
@@ -72,7 +72,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined data_mvmer.stan
 
-Syntax error in file data_mvmer.stan, line 2, columns 2-5, parsing error:
+Syntax error in 'data_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // population level data
      2:    int<lower=0> yInt1[resp_type[1] == 2 ? yNobs[1] : 0]; // integer responses
@@ -86,7 +86,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined dimensions_mvmer.stan
 
-Syntax error in file dimensions_mvmer.stan, line 2, columns 2-5, parsing error:
+Syntax error in 'dimensions_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // population level dimensions
      2:    int<lower=1,upper=3> M; // num submodels with data (limit of 3)
@@ -100,7 +100,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined glmer_stuff.stan
 
-Syntax error in file glmer_stuff.stan, line 3, columns 2-5, parsing error:
+Syntax error in 'glmer_stuff.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // glmer stuff, see table 3 of
      2:    // https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
@@ -115,7 +115,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined glmer_stuff2.stan
 
-Syntax error in file glmer_stuff2.stan, line 1, columns 2-5, parsing error:
+Syntax error in 'glmer_stuff2.stan', line 1, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    int<lower=0> num_non_zero;  // number of non-zero elements in the Z matrix
               ^
@@ -128,7 +128,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined hyperparameters.stan
 
-Syntax error in file hyperparameters.stan, line 2, columns 2-8, parsing error:
+Syntax error in 'hyperparameters.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    // hyperparameter values are set to 0 if there is no prior
      2:    vector<lower=0>[K] prior_scale;
@@ -142,7 +142,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined hyperparameters_assoc.stan
 
-Syntax error in file hyperparameters_assoc.stan, line 2, columns 2-8, parsing error:
+Syntax error in 'hyperparameters_assoc.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    // hyperparameter values are set to 0 if there is no prior
      2:    vector[a_K]          a_prior_mean;
@@ -156,7 +156,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined hyperparameters_event.stan
 
-Syntax error in file hyperparameters_event.stan, line 2, columns 2-8, parsing error:
+Syntax error in 'hyperparameters_event.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    // hyperparameter values are set to 0 if there is no prior
      2:    vector[e_K]                 e_prior_mean;
@@ -170,7 +170,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined hyperparameters_mvmer.stan
 
-Syntax error in file hyperparameters_mvmer.stan, line 4, columns 2-8, parsing error:
+Syntax error in 'hyperparameters_mvmer.stan', line 4, column 2 to column 8, parsing error:
    -------------------------------------------------
      2:  
      3:    // coefficients
@@ -185,7 +185,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
   $ ../../../../../install/default/bin/stanc --include_paths="." --auto-format --allow_undefined weights_offset.stan
 
-Syntax error in file weights_offset.stan, line 2, columns 2-5, parsing error:
+Syntax error in 'weights_offset.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // weights
      2:    int<lower=0,upper=1> has_weights;  // 0 = No, 1 = Yes

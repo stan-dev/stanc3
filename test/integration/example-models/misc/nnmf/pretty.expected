@@ -39,7 +39,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file nnmf.stan, line 14, column 13:
+Warning: deprecated language construct used in 'nnmf.stan', line 14, column 13:
    -------------------------------------------------
     12:    vector[T] temp;
     13:    for (t in 1:T) 
@@ -52,7 +52,7 @@ Warning: deprecated language construct used in file nnmf.stan, line 14, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf.stan, line 15, column 9:
+Warning: deprecated language construct used in 'nnmf.stan', line 15, column 9:
    -------------------------------------------------
     13:    for (t in 1:T) 
     14:      temp[t] <- log(sum(X[t]));
@@ -65,7 +65,7 @@ Warning: deprecated language construct used in file nnmf.stan, line 15, column 9
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf.stan, line 16, column 11:
+Warning: deprecated language construct used in 'nnmf.stan', line 16, column 11:
    -------------------------------------------------
     14:      temp[t] <- log(sum(X[t]));
     15:    g_bar <- mean(temp);
@@ -78,7 +78,7 @@ Warning: deprecated language construct used in file nnmf.stan, line 16, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf.stan, line 18, column 14:
+Warning: deprecated language construct used in 'nnmf.stan', line 18, column 14:
    -------------------------------------------------
     16:    g_sigma <- sd(temp);
     17:    for (i in 1:I)
@@ -91,7 +91,7 @@ Warning: deprecated language construct used in file nnmf.stan, line 18, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf.stan, line 33, column 10:
+Warning: deprecated language construct used in 'nnmf.stan', line 33, column 10:
    -------------------------------------------------
     31:      for (i in 1:I) {
     32:        real mu;
@@ -104,7 +104,7 @@ Warning: deprecated language construct used in file nnmf.stan, line 33, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf.stan, line 35, column 12:
+Warning: deprecated language construct used in 'nnmf.stan', line 35, column 12:
    -------------------------------------------------
     33:        mu <- 0;
     34:        for (k in 1:K)
@@ -153,7 +153,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file nnmf_vec.stan, line 18, column 13:
+Warning: deprecated language construct used in 'nnmf_vec.stan', line 18, column 13:
    -------------------------------------------------
     16:    vector[T] temp;
     17:    for (t in 1:T) 
@@ -166,7 +166,7 @@ Warning: deprecated language construct used in file nnmf_vec.stan, line 18, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf_vec.stan, line 19, column 9:
+Warning: deprecated language construct used in 'nnmf_vec.stan', line 19, column 9:
    -------------------------------------------------
     17:    for (t in 1:T) 
     18:      temp[t] <- log(sum(X[t]));
@@ -179,7 +179,7 @@ Warning: deprecated language construct used in file nnmf_vec.stan, line 19, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf_vec.stan, line 20, column 11:
+Warning: deprecated language construct used in 'nnmf_vec.stan', line 20, column 11:
    -------------------------------------------------
     18:      temp[t] <- log(sum(X[t]));
     19:    g_bar <- mean(temp);
@@ -192,7 +192,7 @@ Warning: deprecated language construct used in file nnmf_vec.stan, line 20, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf_vec.stan, line 33, column 13:
+Warning: deprecated language construct used in 'nnmf_vec.stan', line 33, column 13:
    -------------------------------------------------
     31:      vector[I] mu;
     32:      for (i in 1:I) {
@@ -205,7 +205,7 @@ Warning: deprecated language construct used in file nnmf_vec.stan, line 33, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file nnmf_vec.stan, line 35, column 15:
+Warning: deprecated language construct used in 'nnmf_vec.stan', line 35, column 15:
    -------------------------------------------------
     33:        mu[i] <- 0;
     34:        for (k in 1:K) {

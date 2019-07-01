@@ -28,7 +28,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file surgical.stan, line 1, column 0:
+Warning: deprecated language construct used in 'surgical.stan', line 1, column 0:
    -------------------------------------------------
      1:  ## http://openbugs.net/Examples/Surgical.html
          ^
@@ -39,7 +39,7 @@ Warning: deprecated language construct used in file surgical.stan, line 1, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical.stan, line 2, column 0:
+Warning: deprecated language construct used in 'surgical.stan', line 2, column 0:
    -------------------------------------------------
      1:  ## http://openbugs.net/Examples/Surgical.html
      2:  ## random effects model 
@@ -51,7 +51,7 @@ Warning: deprecated language construct used in file surgical.stan, line 2, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical.stan, line 16, column 9:
+Warning: deprecated language construct used in 'surgical.stan', line 16, column 9:
    -------------------------------------------------
     14:    real<lower=0> sigma;
     15:    real<lower=0,upper=1> p[N];
@@ -64,7 +64,7 @@ Warning: deprecated language construct used in file surgical.stan, line 16, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file surgical.stan, line 18, column 10:
+Warning: deprecated language construct used in 'surgical.stan', line 18, column 10:
    -------------------------------------------------
     16:    sigma <- sqrt(sigmasq); 
     17:    for (i in 1:N)
@@ -77,7 +77,7 @@ Warning: deprecated language construct used in file surgical.stan, line 18, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file surgical.stan, line 28, column 12:
+Warning: deprecated language construct used in 'surgical.stan', line 28, column 12:
    -------------------------------------------------
     26:  generated quantities {
     27:    real pop_mean;
@@ -117,7 +117,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 1, column 0:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 1, column 0:
    -------------------------------------------------
      1:  # http://openbugs.net/Examples/Surgical.html
          ^
@@ -128,7 +128,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 2, column 0:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 2, column 0:
    -------------------------------------------------
      1:  # http://openbugs.net/Examples/Surgical.html
      2:  # random effects model
@@ -140,7 +140,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 3, column 0:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 3, column 0:
    -------------------------------------------------
      1:  # http://openbugs.net/Examples/Surgical.html
      2:  # random effects model
@@ -153,7 +153,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 4, column 0:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 4, column 0:
    -------------------------------------------------
      2:  # random effects model
      3:  # Stanified: use sigma instead of squared, move p to generated quantitites
@@ -166,7 +166,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 18, column 23:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 18, column 23:
    -------------------------------------------------
     16:  model {
     17:    mu ~ normal(0.0, 20);
@@ -179,7 +179,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 27, column 12:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 27, column 12:
    -------------------------------------------------
     25:    real<lower=0> ranks[N];
     26:    real pop_mean;
@@ -192,7 +192,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 29, column 10:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 29, column 10:
    -------------------------------------------------
     27:    pop_mean <- inv_logit(mu);
     28:    for (i in 1:N){
@@ -205,7 +205,7 @@ Warning: deprecated language construct used in file surgical_stanified.stan, lin
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file surgical_stanified.stan, line 30, column 14:
+Warning: deprecated language construct used in 'surgical_stanified.stan', line 30, column 14:
    -------------------------------------------------
     28:    for (i in 1:N){
     29:      p[i] <- inv_logit(b[i]);

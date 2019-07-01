@@ -40,30 +40,6 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
     pp_expr lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
-let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, st, pp_body) =
-  let iter d pp_body =
-    let loopvar, gensym_exit = gensym_enter () in
-    pp_for_loop ppf
-      ( loopvar
-      , loop_bottom
-      , d
-      , pp_block
-      , (pp_body, (iteratee, loopvar :: index_ids)) ) ;
-    gensym_exit ()
-  in
-  match st with
-  | SReal | SInt -> pp_body ppf (iteratee, index_ids)
-  | SRowVector d | SVector d -> iter d pp_body
-  | SMatrix (d1, d2) ->
-      iter
-        { expr= FunApp (StanLib, string_of_operator Times, [d1; d2])
-        ; emeta= internal_meta }
-        pp_body
-  | SArray (t, d) ->
-      iter d (fun ppf (i, idcs) ->
-          pf ppf "%a" pp_block
-            (pp_for_loop_iteratee ~index_ids:idcs, (i, t, pp_body)) )
-
 let rec integer_el_type = function
   | SReal | SVector _ | SMatrix _ | SRowVector _ -> false
   | SInt -> true
@@ -82,12 +58,6 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
   | Sized st -> pp_sized_decl ppf (vident, st, adtype)
   | Unsized ut -> pp_decl ppf (vident, ut, adtype)
 
-(*
-  pf ppf "@ try %a" pp_body_block body ;
-  string ppf " catch (const std::exception& e) " ;
-  pp_block ppf (pp_located_msg, err_msg)
- *)
-
 let math_fn_translations = function
   | FnPrint ->
       Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
@@ -102,44 +72,37 @@ let trans_math_fn fname =
 let rec pp_statement (ppf : Format.formatter)
     ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) =
   let pp_stmt_list = list ~sep:cut pp_statement in
+  ( match stmt with
+  | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
+  | _ -> Locations.pp_smeta ppf smeta ) ;
   match stmt with
-  | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
-    when internal_fn_of_string f = Some FnReadData ->
-      let with_vestigial_idx =
-        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
-      in
-      pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
-      (* XXX In stan2 this often generates:
-                stan::model::assign(theta,
-                            stan::model::cons_list(stan::model::index_uni(j), stan::model::nil_index_list()),
-                            (mu + (tau * get_base1(theta_tilde,j,"theta_tilde",1))),
-                            "assigning variable theta");
-            }
-        *)
-  | Assignment (lhs, {expr= Lit (Str, s); _}) ->
-      pf ppf "%a = %S;" pp_indexed_simple lhs s
-  | Assignment (lhs, {expr= Lit (_, s); _}) ->
-      pf ppf "%a = %s;" pp_indexed_simple lhs s
+  | Assignment ((vident, []), ({emeta= {mtype= UInt; _}; _} as rhs))
+   |Assignment ((vident, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
+      pf ppf "%s = %a;" vident pp_expr rhs
   | Assignment (lhs, ({expr= FunApp (CompilerInternal, f, _); _} as rhs))
     when internal_fn_of_string f = Some FnMakeArray ->
       pf ppf "%a = @[<hov>%a;@]" pp_indexed_simple lhs pp_expr rhs
   | Assignment ((assignee, idcs), rhs) ->
-      (*
-Assignment Statements
-----------------------------------------------------------------------
-If a[idxs] = b
-  if (a shows up on RHS)
-    stan::model::assign(a', idxs', stan::model::deep_copy(b'),   XXX TODO not handling deep copy yet
-                        "assigning variable " + pretty_print(a'));
-  else
-    stan::model::assign(a', idxs', b',
-                        "assigning variable " + pretty_print(a'));
-
-If a = b
-  stan::math::assign(a', b')
-*)
-      pf ppf "stan::model::assign(@[<hov>%s, %a, %a, %S@]);" assignee
-        pp_indexes idcs pp_expr rhs
+      let rec maybe_deep_copy e =
+        let recurse e = {e with expr= map_expr maybe_deep_copy e.expr} in
+        match e with
+        | {emeta= {mtype= UInt; _}; _} | {emeta= {mtype= UReal; _}; _} ->
+            recurse e
+        | {expr= Var v; _} when v = assignee ->
+            { e with
+              expr= FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
+        | e -> recurse e
+      in
+      let rhs =
+        match rhs.expr with
+        | FunApp (CompilerInternal, f, _)
+          when f = string_of_internal_fn FnConstrain
+               || f = string_of_internal_fn FnUnconstrain ->
+            rhs
+        | _ -> maybe_deep_copy rhs
+      in
+      pf ppf "assign(@[<hov>%s, %a, %a, %S@]);" assignee pp_indexes idcs
+        pp_expr rhs
         (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)

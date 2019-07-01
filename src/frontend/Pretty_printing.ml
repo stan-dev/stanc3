@@ -136,7 +136,7 @@ and pp_expression ppf {expr= e_content; _} =
      Fmt.pf ppf "%a(" pp_identifier id;
      with_box ppf 0 (fun () ->
          Fmt.pf ppf "%a)" pp_list_of_expression es);
-  | CondDistApp (id, es) -> (
+  | CondDistApp (_, id, es) -> (
     match es with
     | [] -> Errors.fatal_error ()
     | e :: es' ->
@@ -287,8 +287,7 @@ and pp_recursive_ifthenelse ppf s = match s.stmt with
 and pp_statement ppf ({stmt= s_content; _} as ss) =
   match s_content with
   | Assignment
-      { assign_identifier= id
-      ; assign_indices= lindex
+      { assign_lhs= {assign_identifier= id; assign_indices= lindex; _}
       ; assign_op= assop
       ; assign_rhs= e } ->
      let inds_fmt ppf lindex = match lindex with

@@ -29,7 +29,7 @@ type 'e expression =
   | IntNumeral of string
   | RealNumeral of string
   | FunApp of fun_kind * identifier * 'e list
-  | CondDistApp of identifier * 'e list
+  | CondDistApp of fun_kind * identifier * 'e list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
@@ -116,13 +116,32 @@ type 'e transformation =
   | Covariance
 [@@deriving sexp, compare, map, hash]
 
+type ('e, 'm) lhs_with =
+  { assign_identifier: identifier
+  ; assign_indices: 'e index list
+  ; assign_meta: 'm }
+[@@deriving sexp, hash, compare, map]
+
+type 'e untyped_lhs = ('e, located_meta) lhs_with
+[@@deriving sexp, hash, compare, map]
+
+type typed_lhs_meta =
+  { loc: Middle.location_span sexp_opaque [@compare.ignore]
+  ; id_ad_level: Middle.autodifftype
+  ; id_type_: Middle.unsizedtype
+  ; lhs_ad_level: Middle.autodifftype
+  ; lhs_type_: Middle.unsizedtype }
+[@@deriving sexp, compare, map, hash]
+
+type 'e typed_lhs = ('e, typed_lhs_meta) lhs_with
+[@@deriving sexp, hash, compare, map]
+
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
-type ('e, 's) statement =
+type ('e, 's, 'l) statement =
   | Assignment of
-      { assign_identifier: identifier
-      ; assign_indices: 'e index list
+      { assign_lhs: 'l
       ; assign_op: assignmentoperator
       ; assign_rhs: 'e }
   | NRFunApp of fun_kind * identifier * 'e list
@@ -178,12 +197,16 @@ type statement_returntype =
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
-type ('e, 'm) statement_with =
-  {stmt: ('e, ('e, 'm) statement_with) statement; smeta: 'm}
+type ('e, 'm, 'l) statement_with =
+  {stmt: ('e, ('e, 'm, 'l) statement_with, 'l) statement; smeta: 'm}
 [@@deriving sexp, compare, map, hash]
 
 (** Untyped statements, which have location_spans as meta-data *)
-type untyped_statement = (untyped_expression, located_meta) statement_with
+type untyped_statement =
+  ( untyped_expression
+  , located_meta
+  , untyped_expression untyped_lhs )
+  statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
@@ -196,7 +219,10 @@ type stmt_typed_located_meta =
 (** Typed statements also have meta-data after type checking: a location_span, as well as a statement returntype
     to check that function bodies have the right return type*)
 type typed_statement =
-  (typed_expression, stmt_typed_located_meta) statement_with
+  ( typed_expression
+  , stmt_typed_located_meta
+  , typed_expression typed_lhs )
+  statement_with
 [@@deriving sexp, compare, map, hash]
 
 let mk_typed_statement ~stmt ~loc ~return_type =
@@ -229,11 +255,20 @@ let rec untyped_expression_of_typed_expression {expr; emeta} :
   { expr= map_expression untyped_expression_of_typed_expression expr
   ; emeta= {loc= emeta.loc} }
 
+let untyped_lhs_of_typed_lhs
+    {assign_identifier; assign_indices; assign_meta= {loc; _}} =
+  { assign_identifier
+  ; assign_indices=
+      List.map
+        ~f:(map_index untyped_expression_of_typed_expression)
+        assign_indices
+  ; assign_meta= {loc} }
+
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
   { stmt=
       map_statement untyped_expression_of_typed_expression
-        untyped_statement_of_typed_statement stmt
+        untyped_statement_of_typed_statement untyped_lhs_of_typed_lhs stmt
   ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)

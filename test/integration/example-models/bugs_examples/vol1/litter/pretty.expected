@@ -32,7 +32,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file litter.stan, line 15, column 5:
+Warning: deprecated language construct used in 'litter.stan', line 15, column 5:
    -------------------------------------------------
     13:    vector[G] a;
     14:    vector[G] b;
@@ -45,7 +45,7 @@ Warning: deprecated language construct used in file litter.stan, line 15, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file litter.stan, line 16, column 5:
+Warning: deprecated language construct used in 'litter.stan', line 16, column 5:
    -------------------------------------------------
     14:    vector[G] b;
     15:    a <- mu .* a_plus_b;
@@ -58,7 +58,7 @@ Warning: deprecated language construct used in file litter.stan, line 16, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file litter.stan, line 30, column 14:
+Warning: deprecated language construct used in 'litter.stan', line 30, column 14:
    -------------------------------------------------
     28:    vector<lower=0>[G] theta;
     29:    for (g in 1:G)
@@ -101,7 +101,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file litter_old_param.stan, line 26, column 11:
+Warning: deprecated language construct used in 'litter_old_param.stan', line 26, column 11:
    -------------------------------------------------
     24:    vector<lower=0>[G] theta;
     25:    for (g in 1:G)
@@ -114,7 +114,7 @@ Warning: deprecated language construct used in file litter_old_param.stan, line 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file litter_old_param.stan, line 28, column 14:
+Warning: deprecated language construct used in 'litter_old_param.stan', line 28, column 14:
    -------------------------------------------------
     26:      mu[g] <- a[g] / (a[g] + b[g]);
     27:    for (g in 1:G)

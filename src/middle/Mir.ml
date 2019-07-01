@@ -9,10 +9,11 @@ type location =
   ; line_num: int
   ; col_num: int
   ; included_from: location option }
-[@@deriving sexp]
+[@@deriving sexp, hash, compare]
 
 (** Delimited locations *)
-type location_span = {begin_loc: location; end_loc: location} [@@deriving sexp]
+type location_span = {begin_loc: location; end_loc: location}
+[@@deriving sexp, hash, compare]
 
 (** Arithmetic and logical operators *)
 type operator =
@@ -86,7 +87,6 @@ type 'e index =
   | MatrixSingle of 'e
  *)
   | Upfrom of 'e
-  | Downfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e
 [@@deriving sexp, hash, map, fold]
@@ -138,23 +138,23 @@ type ('e, 's) statement =
       ; decl_type: 'e possiblysizedtype }
 [@@deriving sexp, hash, map, fold]
 
-type io_block =
-  | Data
-  | Parameters
-  | TransformedParameters
-  | GeneratedQuantities
+type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
 
-type 'e io_var = string * ('e sizedtype * io_block) [@@deriving sexp, map]
+type 'e outvar =
+  { out_unconstrained_st: 'e sizedtype
+  ; out_constrained_st: 'e sizedtype
+  ; out_block: io_block }
+[@@deriving sexp, map, hash]
 
 type ('e, 's) prog =
   { functions_block: 's fun_def list
-  ; input_vars: 'e io_var list
+  ; input_vars: (string * 'e sizedtype) list
   ; prepare_data: 's list (* data & transformed data decls and statements *)
   ; log_prob: 's list (*assumes data & params are in scope and ready*)
   ; generate_quantities: 's list (* assumes data & params ready & in scope*)
   ; transform_inits: 's list
-  ; output_vars: 'e io_var list
+  ; output_vars: (string * 'e outvar) list
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map]

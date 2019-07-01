@@ -124,7 +124,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 4, column 7:
+Warning: deprecated language construct used in 'probit-multi.stan', line 4, column 7:
    -------------------------------------------------
      2:    int sum_(int[,] a) {
      3:      int s;
@@ -137,7 +137,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 4, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 7, column 11:
+Warning: deprecated language construct used in 'probit-multi.stan', line 7, column 11:
    -------------------------------------------------
      5:      for (i in 1:size(a))
      6:        for (j in 1:size(a[i]))
@@ -150,7 +150,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 7, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 26, column 9:
+Warning: deprecated language construct used in 'probit-multi.stan', line 26, column 9:
    -------------------------------------------------
     24:    int<lower=1,upper=D> d_neg[size(n_neg)];
     25:  
@@ -163,7 +163,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 26, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 27, column 9:
+Warning: deprecated language construct used in 'probit-multi.stan', line 27, column 9:
    -------------------------------------------------
     25:  
     26:    N_pos <- size(n_pos);
@@ -176,7 +176,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 27, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 31, column 7:
+Warning: deprecated language construct used in 'probit-multi.stan', line 31, column 7:
    -------------------------------------------------
     29:      int i;
     30:      int j;
@@ -189,7 +189,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 31, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 32, column 7:
+Warning: deprecated language construct used in 'probit-multi.stan', line 32, column 7:
    -------------------------------------------------
     30:      int j;
     31:      i <- 1;
@@ -202,7 +202,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 32, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 36, column 20:
+Warning: deprecated language construct used in 'probit-multi.stan', line 36, column 20:
    -------------------------------------------------
     34:        for (d in 1:D) {
     35:          if (y[n,d] == 1) {
@@ -215,7 +215,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 36, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 37, column 20:
+Warning: deprecated language construct used in 'probit-multi.stan', line 37, column 20:
    -------------------------------------------------
     35:          if (y[n,d] == 1) {
     36:            n_pos[i] <- n;
@@ -228,7 +228,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 37, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 38, column 13:
+Warning: deprecated language construct used in 'probit-multi.stan', line 38, column 13:
    -------------------------------------------------
     36:            n_pos[i] <- n;
     37:            d_pos[i] <- d;
@@ -241,7 +241,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 38, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 40, column 20:
+Warning: deprecated language construct used in 'probit-multi.stan', line 40, column 20:
    -------------------------------------------------
     38:            i <- i + 1;
     39:          } else {
@@ -254,7 +254,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 40, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 41, column 20:
+Warning: deprecated language construct used in 'probit-multi.stan', line 41, column 20:
    -------------------------------------------------
     39:          } else {
     40:            n_neg[j] <- n;
@@ -267,7 +267,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 41, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 42, column 13:
+Warning: deprecated language construct used in 'probit-multi.stan', line 42, column 13:
    -------------------------------------------------
     40:            n_neg[j] <- n;
     41:            d_neg[j] <- d;
@@ -280,7 +280,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 42, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 57, column 27:
+Warning: deprecated language construct used in 'probit-multi.stan', line 57, column 27:
    -------------------------------------------------
     55:    vector[D] z[N];
     56:    for (n in 1:N_pos)
@@ -293,7 +293,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 57, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 59, column 27:
+Warning: deprecated language construct used in 'probit-multi.stan', line 59, column 27:
    -------------------------------------------------
     57:      z[n_pos[n], d_pos[n]] <- z_pos[n];
     58:    for (n in 1:N_neg)
@@ -306,7 +306,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 59, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 67, column 17:
+Warning: deprecated language construct used in 'probit-multi.stan', line 67, column 17:
    -------------------------------------------------
     65:      vector[D] beta_x[N];
     66:      for (n in 1:N) 
@@ -319,7 +319,7 @@ Warning: deprecated language construct used in file probit-multi.stan, line 67, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file probit-multi.stan, line 73, column 9:
+Warning: deprecated language construct used in 'probit-multi.stan', line 73, column 9:
    -------------------------------------------------
     71:  generated quantities {
     72:    corr_matrix[D] Omega;

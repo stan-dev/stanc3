@@ -37,7 +37,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file ice.stan, line 1, column 0:
+Warning: deprecated language construct used in 'ice.stan', line 1, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
          ^
@@ -48,7 +48,7 @@ Warning: deprecated language construct used in file ice.stan, line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file ice.stan, line 2, column 0:
+Warning: deprecated language construct used in 'ice.stan', line 2, column 0:
    -------------------------------------------------
      1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
      2:  # Page 29: Ice: non-parametric smoothing in an age-cohort model
@@ -60,7 +60,7 @@ Warning: deprecated language construct used in file ice.stan, line 2, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file ice.stan, line 39, column 27:
+Warning: deprecated language construct used in 'ice.stan', line 39, column 27:
    -------------------------------------------------
     37:  
     38:    for (i in 1:N) { 
@@ -73,7 +73,7 @@ Warning: deprecated language construct used in file ice.stan, line 39, column 27
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file ice.stan, line 40, column 15:
+Warning: deprecated language construct used in 'ice.stan', line 40, column 15:
    -------------------------------------------------
     38:    for (i in 1:N) { 
     39:      if (age[i] == 1) r[i] <- alpha1 + log(pyr[i]) + beta[year[i]];
@@ -86,7 +86,7 @@ Warning: deprecated language construct used in file ice.stan, line 40, column 15
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file ice.stan, line 49, column 14:
+Warning: deprecated language construct used in 'ice.stan', line 49, column 14:
    -------------------------------------------------
     47:    real logRR[K];
     48:    for (k in 1:K) 

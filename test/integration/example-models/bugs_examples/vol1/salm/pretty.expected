@@ -46,7 +46,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file salm.stan, line 1, column 0:
+Warning: deprecated language construct used in 'salm.stan', line 1, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Salm.html
          ^
@@ -57,7 +57,7 @@ Warning: deprecated language construct used in file salm.stan, line 1, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file salm.stan, line 2, column 0:
+Warning: deprecated language construct used in 'salm.stan', line 2, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Salm.html
      2:  ##  this matches the jags implementation
@@ -69,7 +69,7 @@ Warning: deprecated language construct used in file salm.stan, line 2, column 0:
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file salm.stan, line 16, column 12:
+Warning: deprecated language construct used in 'salm.stan', line 16, column 12:
    -------------------------------------------------
     14:      real centered_logx[Ndoses];
     15:  
@@ -82,7 +82,7 @@ Warning: deprecated language construct used in file salm.stan, line 16, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file salm.stan, line 18, column 26:
+Warning: deprecated language construct used in 'salm.stan', line 18, column 26:
    -------------------------------------------------
     16:      mean_x <- mean(x);
     17:      for (dose in 1:Ndoses)
@@ -95,7 +95,7 @@ Warning: deprecated language construct used in file salm.stan, line 18, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file salm.stan, line 21, column 20:
+Warning: deprecated language construct used in 'salm.stan', line 21, column 20:
    -------------------------------------------------
     19:  
     20:      for (dose in 1:Ndoses)
@@ -108,7 +108,7 @@ Warning: deprecated language construct used in file salm.stan, line 21, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file salm.stan, line 22, column 15:
+Warning: deprecated language construct used in 'salm.stan', line 22, column 15:
    -------------------------------------------------
     20:      for (dose in 1:Ndoses)
     21:          logx[dose] <- log(x[dose] + 10);
@@ -121,7 +121,7 @@ Warning: deprecated language construct used in file salm.stan, line 22, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file salm.stan, line 24, column 29:
+Warning: deprecated language construct used in 'salm.stan', line 24, column 29:
    -------------------------------------------------
     22:      mean_logx <- mean(logx);
     23:      for (dose in 1:Ndoses)
@@ -134,7 +134,7 @@ Warning: deprecated language construct used in file salm.stan, line 24, column 2
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file salm.stan, line 37, column 11:
+Warning: deprecated language construct used in 'salm.stan', line 37, column 11:
    -------------------------------------------------
     35:      real alpha;
     36:  
@@ -147,7 +147,7 @@ Warning: deprecated language construct used in file salm.stan, line 37, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file salm.stan, line 38, column 11:
+Warning: deprecated language construct used in 'salm.stan', line 38, column 11:
    -------------------------------------------------
     36:  
     37:      alpha <- alpha_star - beta * mean_logx - gamma * mean_x;
@@ -190,7 +190,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file salm2.stan, line 1, column 0:
+Warning: deprecated language construct used in 'salm2.stan', line 1, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Salm.html
          ^
@@ -201,7 +201,7 @@ Warning: deprecated language construct used in file salm2.stan, line 1, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file salm2.stan, line 3, column 0:
+Warning: deprecated language construct used in 'salm2.stan', line 3, column 0:
    -------------------------------------------------
      1:  ##  http://www.openbugs.net/Examples/Salm.html
      2:  
@@ -214,7 +214,7 @@ Warning: deprecated language construct used in file salm2.stan, line 3, column 0
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file salm2.stan, line 19, column 11:
+Warning: deprecated language construct used in 'salm2.stan', line 19, column 11:
    -------------------------------------------------
     17:  transformed parameters {
     18:      real<lower=0> sigma;

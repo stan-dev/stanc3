@@ -20,7 +20,19 @@ def tagName() {
 }
 pipeline {
     agent none
+    parameters {
+        booleanParam(defaultValue: false, name: 'all_tests',
+               description: "Check this box if you want to run all end-to-end tests.")
+    }
     stages {
+        stage('Kill previous builds') {
+            when {
+                not { branch 'develop' }
+                not { branch 'master' }
+                not { branch 'downstream_tests' }
+            }
+            steps { script { utils.killOldBuilds() } }
+        }
         stage("Build & Test") {
             agent {
                 dockerfile {
@@ -43,8 +55,8 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run (working) stat_comp_benchmarks end-to-end") {
-            when { not { anyOf { buildingTag(); branch 'master' } } }
+        stage("Run stat_comp_benchmarks end-to-end") {
+            when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -53,7 +65,8 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "stat_comp_benchmarks/ --tests-file=../notes/working-models.txt" develop stanc3-dev develop develop
+          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
+          CXX="${CXX}" ./compare-compilers.sh "stat_comp_benchmarks/ --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'
@@ -69,7 +82,7 @@ pipeline {
         // and log all the failures. It'll make a big nasty red graph
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
@@ -80,9 +93,9 @@ pipeline {
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
-          STANC=\$(readlink -f ../bin/stanc) ./compare-git-hashes.sh "--tests-file all.tests --num-samples=100" develop stanc3-dev develop develop || true
+          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
-
                 xunit([GoogleTest(
                     deleteOutputFiles: false,
                     failIfNotNew: true,
@@ -114,12 +127,10 @@ pipeline {
                     dune subst
                     dune build @install
                 """)
-
                         echo runShell("""
                     eval \$(opam env)
                     time dune runtest --verbose
                 """)
-
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         stash name:'mac-exe', includes:'bin/*'
                     }
@@ -130,7 +141,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u root --entrypoint=\'\'"
+                            args "-u opam"
                         }
                     }
                     steps {

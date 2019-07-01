@@ -32,7 +32,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file hmm-analytic.stan, line 14, column 19:
+Warning: deprecated language construct used in 'hmm-analytic.stan', line 14, column 19:
    -------------------------------------------------
     12:    vector<lower=0>[V] beta_post[K];
     13:    for (k in 1:K) 
@@ -45,7 +45,7 @@ Warning: deprecated language construct used in file hmm-analytic.stan, line 14, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-analytic.stan, line 16, column 29:
+Warning: deprecated language construct used in 'hmm-analytic.stan', line 16, column 29:
    -------------------------------------------------
     14:      alpha_post[k] <- alpha;
     15:    for (t in 2:T)
@@ -58,7 +58,7 @@ Warning: deprecated language construct used in file hmm-analytic.stan, line 16, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-analytic.stan, line 18, column 18:
+Warning: deprecated language construct used in 'hmm-analytic.stan', line 18, column 18:
    -------------------------------------------------
     16:      alpha_post[z[t-1],z[t]] <- alpha_post[z[t-1],z[t]] + 1;
     17:    for (k in 1:K)
@@ -71,7 +71,7 @@ Warning: deprecated language construct used in file hmm-analytic.stan, line 18, 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-analytic.stan, line 20, column 26:
+Warning: deprecated language construct used in 'hmm-analytic.stan', line 20, column 26:
    -------------------------------------------------
     18:      beta_post[k] <- beta;
     19:    for (t in 1:T)
@@ -155,7 +155,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 31, column 18:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 31, column 18:
    -------------------------------------------------
     29:      real gamma[T_unsup,K];
     30:      for (k in 1:K)
@@ -168,7 +168,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 31, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 35, column 18:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 35, column 18:
    -------------------------------------------------
     33:        for (k in 1:K) {
     34:          for (j in 1:K)
@@ -181,7 +181,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 35, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 36, column 20:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 36, column 20:
    -------------------------------------------------
     34:          for (j in 1:K)
     35:            acc[j] <- gamma[t-1,j] + log(theta[j,k]) + log(phi[k,u[t]]);
@@ -194,7 +194,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 36, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 39, column 21:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 39, column 21:
    -------------------------------------------------
     37:        }
     38:      }
@@ -207,7 +207,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 39, c
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 51, column 22:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 51, column 22:
    -------------------------------------------------
     49:      real best_total_logp;
     50:      for (k in 1:K)
@@ -220,7 +220,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 51, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 54, column 24:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 54, column 24:
    -------------------------------------------------
     52:      for (t in 2:T_unsup) {
     53:        for (k in 1:K) {
@@ -233,7 +233,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 54, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 57, column 16:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 57, column 16:
    -------------------------------------------------
     55:          for (j in 1:K) {
     56:            real logp;
@@ -246,7 +246,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 57, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 59, column 27:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 59, column 27:
    -------------------------------------------------
     57:            logp <- best_logp[t-1,j] + log(theta[j,k]) + log(phi[k,u[t]]);
     58:            if (logp > best_logp[t,k]) {
@@ -259,7 +259,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 59, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 60, column 28:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 60, column 28:
    -------------------------------------------------
     58:            if (logp > best_logp[t,k]) {
     59:              back_ptr[t,k] <- j;
@@ -272,7 +272,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 60, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 65, column 18:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 65, column 18:
    -------------------------------------------------
     63:        }
     64:      }
@@ -285,7 +285,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 65, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 68, column 25:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 68, column 25:
    -------------------------------------------------
     66:      for (k in 1:K)
     67:        if (best_logp[T_unsup,k] == log_p_y_star)
@@ -298,7 +298,7 @@ Warning: deprecated language construct used in file hmm-semisup.stan, line 68, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-semisup.stan, line 70, column 27:
+Warning: deprecated language construct used in 'hmm-semisup.stan', line 70, column 27:
    -------------------------------------------------
     68:          y_star[T_unsup] <- k;
     69:      for (t in 1:(T_unsup - 1))
@@ -350,7 +350,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file hmm-sufficient.stan, line 15, column 20:
+Warning: deprecated language construct used in 'hmm-sufficient.stan', line 15, column 20:
    -------------------------------------------------
     13:    for (k1 in 1:K) 
     14:      for (k2 in 1:K)
@@ -363,7 +363,7 @@ Warning: deprecated language construct used in file hmm-sufficient.stan, line 15
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-sufficient.stan, line 17, column 27:
+Warning: deprecated language construct used in 'hmm-sufficient.stan', line 17, column 27:
    -------------------------------------------------
     15:        trans[k1,k2] <- 0;
     16:    for (t in 2:T)
@@ -376,7 +376,7 @@ Warning: deprecated language construct used in file hmm-sufficient.stan, line 17
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-sufficient.stan, line 20, column 17:
+Warning: deprecated language construct used in 'hmm-sufficient.stan', line 20, column 17:
    -------------------------------------------------
     18:    for (k in 1:K)
     19:      for (v in 1:V)
@@ -389,7 +389,7 @@ Warning: deprecated language construct used in file hmm-sufficient.stan, line 20
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file hmm-sufficient.stan, line 22, column 22:
+Warning: deprecated language construct used in 'hmm-sufficient.stan', line 22, column 22:
    -------------------------------------------------
     20:        emit[k,v] <- 0;
     21:    for (t in 1:T)

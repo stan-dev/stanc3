@@ -18,7 +18,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file logodds-jac.stan, line 10, column 9:
+Warning: deprecated language construct used in 'logodds-jac.stan', line 10, column 9:
    -------------------------------------------------
      8:  transformed parameters {
      9:    real<lower=0, upper=1> theta;
@@ -31,7 +31,7 @@ Warning: deprecated language construct used in file logodds-jac.stan, line 10, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file logodds-jac.stan, line 16, column 19:
+Warning: deprecated language construct used in 'logodds-jac.stan', line 16, column 19:
    -------------------------------------------------
     14:      y[n] ~ bernoulli(theta);
     15:    theta ~ uniform(0, 1);
@@ -61,7 +61,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file logodds.stan, line 10, column 9:
+Warning: deprecated language construct used in 'logodds.stan', line 10, column 9:
    -------------------------------------------------
      8:  transformed parameters {
      9:    real<lower=0, upper=1> theta;

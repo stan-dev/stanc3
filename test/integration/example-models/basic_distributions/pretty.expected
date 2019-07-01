@@ -17,7 +17,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file binormal.stan, line 5, column 11:
+Warning: deprecated language construct used in 'binormal.stan', line 5, column 11:
    -------------------------------------------------
      3:      vector[2] mu;
      4:  
@@ -30,7 +30,7 @@ Warning: deprecated language construct used in file binormal.stan, line 5, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file binormal.stan, line 6, column 11:
+Warning: deprecated language construct used in 'binormal.stan', line 6, column 11:
    -------------------------------------------------
      4:  
      5:      mu[1] <- 0.0;
@@ -43,7 +43,7 @@ Warning: deprecated language construct used in file binormal.stan, line 6, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file binormal.stan, line 7, column 16:
+Warning: deprecated language construct used in 'binormal.stan', line 7, column 16:
    -------------------------------------------------
      5:      mu[1] <- 0.0;
      6:      mu[2] <- 0.0;
@@ -56,7 +56,7 @@ Warning: deprecated language construct used in file binormal.stan, line 7, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file binormal.stan, line 8, column 16:
+Warning: deprecated language construct used in 'binormal.stan', line 8, column 16:
    -------------------------------------------------
      6:      mu[2] <- 0.0;
      7:      Sigma[1,1] <- 1.0;
@@ -69,7 +69,7 @@ Warning: deprecated language construct used in file binormal.stan, line 8, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file binormal.stan, line 9, column 16:
+Warning: deprecated language construct used in 'binormal.stan', line 9, column 16:
    -------------------------------------------------
      7:      Sigma[1,1] <- 1.0;
      8:      Sigma[2,2] <- 1.0;
@@ -82,7 +82,7 @@ Warning: deprecated language construct used in file binormal.stan, line 9, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file binormal.stan, line 10, column 16:
+Warning: deprecated language construct used in 'binormal.stan', line 10, column 16:
    -------------------------------------------------
      8:      Sigma[2,2] <- 1.0;
      9:      Sigma[1,2] <- 0.10;
@@ -115,7 +115,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 3, column 11:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 3, column 11:
    -------------------------------------------------
      1:  transformed data {
      2:    cov_matrix[3] S;
@@ -128,7 +128,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 3, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 3, column 25:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 3, column 25:
    -------------------------------------------------
      1:  transformed data {
      2:    cov_matrix[3] S;
@@ -141,7 +141,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 3, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 3, column 39:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 3, column 39:
    -------------------------------------------------
      1:  transformed data {
      2:    cov_matrix[3] S;
@@ -154,7 +154,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 3, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 4, column 11:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 4, column 11:
    -------------------------------------------------
      2:    cov_matrix[3] S;
      3:    S[1, 1] <- 2; S[1, 2] <- 0; S[1, 3] <- 0; 
@@ -167,7 +167,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 4, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 4, column 25:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 4, column 25:
    -------------------------------------------------
      2:    cov_matrix[3] S;
      3:    S[1, 1] <- 2; S[1, 2] <- 0; S[1, 3] <- 0; 
@@ -180,7 +180,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 4, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 4, column 39:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 4, column 39:
    -------------------------------------------------
      2:    cov_matrix[3] S;
      3:    S[1, 1] <- 2; S[1, 2] <- 0; S[1, 3] <- 0; 
@@ -193,7 +193,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 4, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 5, column 11:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 5, column 11:
    -------------------------------------------------
      3:    S[1, 1] <- 2; S[1, 2] <- 0; S[1, 3] <- 0; 
      4:    S[2, 2] <- 1; S[2, 1] <- 0; S[2, 3] <- 0;
@@ -206,7 +206,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 5, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 5, column 26:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 5, column 26:
    -------------------------------------------------
      3:    S[1, 1] <- 2; S[1, 2] <- 0; S[1, 3] <- 0; 
      4:    S[2, 2] <- 1; S[2, 1] <- 0; S[2, 3] <- 0;
@@ -219,7 +219,7 @@ Warning: deprecated language construct used in file inv_wishart.stan, line 5, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file inv_wishart.stan, line 5, column 40:
+Warning: deprecated language construct used in 'inv_wishart.stan', line 5, column 40:
    -------------------------------------------------
      3:    S[1, 1] <- 2; S[1, 2] <- 0; S[1, 3] <- 0; 
      4:    S[2, 2] <- 1; S[2, 1] <- 0; S[2, 3] <- 0;
@@ -260,7 +260,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file normal_mixture.stan, line 6, column 9:
+Warning: deprecated language construct used in 'normal_mixture.stan', line 6, column 9:
    -------------------------------------------------
      4:    real<lower=0> sigma[2];
      5:    
@@ -273,7 +273,7 @@ Warning: deprecated language construct used in file normal_mixture.stan, line 6,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file normal_mixture.stan, line 6, column 29:
+Warning: deprecated language construct used in 'normal_mixture.stan', line 6, column 29:
    -------------------------------------------------
      4:    real<lower=0> sigma[2];
      5:    
@@ -286,7 +286,7 @@ Warning: deprecated language construct used in file normal_mixture.stan, line 6,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file normal_mixture.stan, line 7, column 9:
+Warning: deprecated language construct used in 'normal_mixture.stan', line 7, column 9:
    -------------------------------------------------
      5:    
      6:    mu[1] <- 0.0;    sigma[1] <- 0.5;
@@ -299,7 +299,7 @@ Warning: deprecated language construct used in file normal_mixture.stan, line 7,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file normal_mixture.stan, line 7, column 29:
+Warning: deprecated language construct used in 'normal_mixture.stan', line 7, column 29:
    -------------------------------------------------
      5:    
      6:    mu[1] <- 0.0;    sigma[1] <- 0.5;
@@ -312,7 +312,7 @@ Warning: deprecated language construct used in file normal_mixture.stan, line 7,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file normal_mixture.stan, line 8, column 9:
+Warning: deprecated language construct used in 'normal_mixture.stan', line 8, column 9:
    -------------------------------------------------
      6:    mu[1] <- 0.0;    sigma[1] <- 0.5;
      7:    mu[2] <- 4.0;    sigma[2] <- 3.0;
@@ -325,7 +325,7 @@ Warning: deprecated language construct used in file normal_mixture.stan, line 8,
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file normal_mixture.stan, line 14, column 19:
+Warning: deprecated language construct used in 'normal_mixture.stan', line 14, column 19:
    -------------------------------------------------
     12:  }
     13:  model {
@@ -353,7 +353,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file ordered_pair.stan, line 4, column 7:
+Warning: deprecated language construct used in 'ordered_pair.stan', line 4, column 7:
    -------------------------------------------------
      2:      real L; 
      3:      real H;
@@ -366,7 +366,7 @@ Warning: deprecated language construct used in file ordered_pair.stan, line 4, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file ordered_pair.stan, line 5, column 7:
+Warning: deprecated language construct used in 'ordered_pair.stan', line 5, column 7:
    -------------------------------------------------
      3:      real H;
      4:      L <- -5.0;
@@ -394,7 +394,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file sorted_pair.stan, line 10, column 7:
+Warning: deprecated language construct used in 'sorted_pair.stan', line 10, column 7:
    -------------------------------------------------
      8:      real a;
      9:      real b;
@@ -407,7 +407,7 @@ Warning: deprecated language construct used in file sorted_pair.stan, line 10, c
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file sorted_pair.stan, line 11, column 7:
+Warning: deprecated language construct used in 'sorted_pair.stan', line 11, column 7:
    -------------------------------------------------
      9:      real b;
     10:      a <- fmax(x1,x2);
@@ -427,7 +427,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file triangle.stan, line 5, column 19:
+Warning: deprecated language construct used in 'triangle.stan', line 5, column 19:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -463,7 +463,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file wishart.stan, line 6, column 14:
+Warning: deprecated language construct used in 'wishart.stan', line 6, column 14:
    -------------------------------------------------
      4:    for (i in 1:2)
      5:      for (j in 1:2)
@@ -476,7 +476,7 @@ Warning: deprecated language construct used in file wishart.stan, line 6, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart.stan, line 8, column 10:
+Warning: deprecated language construct used in 'wishart.stan', line 8, column 10:
    -------------------------------------------------
      6:        S[i,j] <- 0.0;
      7:  
@@ -489,7 +489,7 @@ Warning: deprecated language construct used in file wishart.stan, line 8, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart.stan, line 9, column 10:
+Warning: deprecated language construct used in 'wishart.stan', line 9, column 10:
    -------------------------------------------------
      7:  
      8:    S[1,1] <- 2.0; 
@@ -526,7 +526,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 4, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 4, column 10:
    -------------------------------------------------
      2:    cov_matrix[4] S;
      3:  
@@ -539,7 +539,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 4, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 5, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 5, column 10:
    -------------------------------------------------
      3:  
      4:    S[1,1] <- 2.9983662;
@@ -552,7 +552,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 5, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 6, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 6, column 10:
    -------------------------------------------------
      4:    S[1,1] <- 2.9983662;
      5:    S[1,2] <- 0.2898776;
@@ -565,7 +565,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 6, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 7, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 7, column 10:
    -------------------------------------------------
      5:    S[1,2] <- 0.2898776;
      6:    S[1,3] <- -2.650523;
@@ -578,7 +578,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 7, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 8, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 8, column 10:
    -------------------------------------------------
      6:    S[1,3] <- -2.650523;
      7:    S[1,4] <- 0.1055911;
@@ -591,7 +591,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 8, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 9, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 9, column 10:
    -------------------------------------------------
      7:    S[1,4] <- 0.1055911;
      8:    S[2,2] <- 11.4803610;
@@ -604,7 +604,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 9, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 10, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 10, column 10:
    -------------------------------------------------
      8:    S[2,2] <- 11.4803610;
      9:    S[2,3] <- 7.157993;
@@ -617,7 +617,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 10, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 11, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 11, column 10:
    -------------------------------------------------
      9:    S[2,3] <- 7.157993;
     10:    S[2,4] <- -3.1129955;
@@ -630,7 +630,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 11, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 12, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 12, column 10:
    -------------------------------------------------
     10:    S[2,4] <- -3.1129955;
     11:    S[3,3] <- 11.676181;
@@ -643,7 +643,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 12, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 13, column 10:
+Warning: deprecated language construct used in 'wishart2.stan', line 13, column 10:
    -------------------------------------------------
     11:    S[3,3] <- 11.676181;
     12:    S[3,4] <- -3.5866852;
@@ -656,7 +656,7 @@ Warning: deprecated language construct used in file wishart2.stan, line 13, colu
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2.stan, line 17, column 14:
+Warning: deprecated language construct used in 'wishart2.stan', line 17, column 14:
    -------------------------------------------------
     15:    for (m in 1:4)
     16:      for (n in 1:(m-1))
@@ -700,7 +700,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 17, column 14:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 17, column 14:
    -------------------------------------------------
     15:    for (i in 1:2)
     16:      for (j in 1:2)
@@ -713,7 +713,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 17, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 19, column 10:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 19, column 10:
    -------------------------------------------------
     17:        S[i,j] <- 0.0;
     18:  
@@ -726,7 +726,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 19, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 20, column 10:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 20, column 10:
    -------------------------------------------------
     18:  
     19:    S[1,1] <- 2.0;
@@ -739,7 +739,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 20, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 32, column 7:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 32, column 7:
    -------------------------------------------------
     30:    matrix[2,2] W;
     31:  
@@ -752,7 +752,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 32, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 33, column 7:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 33, column 7:
    -------------------------------------------------
     31:  
     32:    rho <- tanh(x);
@@ -765,7 +765,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 33, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 35, column 10:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 35, column 10:
    -------------------------------------------------
     33:    cov <- rho * sd1 * sd2;
     34:  
@@ -778,7 +778,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 35, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 36, column 10:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 36, column 10:
    -------------------------------------------------
     34:  
     35:    W[1,1] <- sd1 * sd1;
@@ -791,7 +791,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 36, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 37, column 10:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 37, column 10:
    -------------------------------------------------
     35:    W[1,1] <- sd1 * sd1;
     36:    W[2,2] <- sd2 * sd2;
@@ -804,7 +804,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 37, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 38, column 10:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 38, column 10:
    -------------------------------------------------
     36:    W[2,2] <- sd2 * sd2;
     37:    W[1,2] <- cov;
@@ -817,7 +817,7 @@ Warning: deprecated language construct used in file wishart2x2.stan, line 38, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file wishart2x2.stan, line 51, column 19:
+Warning: deprecated language construct used in 'wishart2x2.stan', line 51, column 19:
    -------------------------------------------------
     49:    //     | rho * sd2               rho * sd1        sd1 * sd2 * (1 - rho^2)   |
     50:  

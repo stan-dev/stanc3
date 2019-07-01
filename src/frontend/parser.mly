@@ -302,6 +302,7 @@ dims:
   | l=lhs
     {
       grammar_logger "lhs_expression" ;
+      let l = fst l in
       match snd l with
         | [] -> {expr=Variable (fst l);
                  emeta = { loc=loc_span_of_pos $startpos $endpos}
@@ -333,7 +334,7 @@ non_lhs:
     {  grammar_logger "expression_indexed" ;
        Indexed ({expr=ue;
                  emeta={loc= loc_span_of_pos $startpos(ue)
-                                                        $endpos(ue)}}, i)}
+                                             $endpos(ue)}}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -394,7 +395,7 @@ common_expression:
     { grammar_logger "get_lp" ; GetLP } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
-    {  grammar_logger "conditional_dist_app" ; CondDistApp (id, e :: args) }
+    {  grammar_logger "conditional_dist_app" ; CondDistApp (UserDefined, id, e :: args) }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }
 
@@ -482,9 +483,9 @@ printables:
 (* L-values *)
 lhs:
   | id=identifier
-    {  grammar_logger "lhs_identifier" ; (id, []) }
+    {  grammar_logger "lhs_identifier" ; ((id, []), loc_span_of_pos $startpos $endpos) }
   | l=lhs LBRACK id=indexes RBRACK
-    {  grammar_logger "lhs_index" ; (fst l, (snd l)@id) }
+    {  grammar_logger "lhs_index" ; ((fst (fst l), (snd (fst l))@id), loc_span_of_pos $startpos $endpos) }
 
 (* statements *)
 statement:
@@ -501,9 +502,10 @@ statement:
 
 atomic_statement:
   | l=lhs op=assignment_op e=expression SEMICOLON
-    {  grammar_logger "assignment_statement" ; match l with (id, indices) ->
-       Assignment {assign_identifier=id;
-                   assign_indices=indices;
+    {  grammar_logger "assignment_statement" ; match fst l with (id, indices) ->
+       Assignment {assign_lhs={assign_identifier=id;
+                               assign_indices=indices;
+                               assign_meta={loc=snd l}};
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON

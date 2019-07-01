@@ -38,7 +38,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file schools-1.stan, line 28, column 12:
+Warning: deprecated language construct used in 'schools-1.stan', line 28, column 12:
    -------------------------------------------------
     26:    real Ymu[N]; 
     27:    for(p in 1:N)
@@ -51,7 +51,7 @@ Warning: deprecated language construct used in file schools-1.stan, line 28, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools-1.stan, line 42, column 2:
+Warning: deprecated language construct used in 'schools-1.stan', line 42, column 2:
    -------------------------------------------------
     40:    Y ~ normal(Ymu,  exp(-0.5 * (theta + phi * LRT)));
     41:  
@@ -64,7 +64,7 @@ Warning: deprecated language construct used in file schools-1.stan, line 42, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-1.stan, line 47, column 2:
+Warning: deprecated language construct used in 'schools-1.stan', line 47, column 2:
    -------------------------------------------------
     45:    phi ~ normal(0, 5);
     46:  
@@ -77,7 +77,7 @@ Warning: deprecated language construct used in file schools-1.stan, line 47, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-1.stan, line 50, column 2:
+Warning: deprecated language construct used in 'schools-1.stan', line 50, column 2:
    -------------------------------------------------
     48:    alpha ~ multi_normal_prec(gamma, Omega);
     49:  
@@ -132,7 +132,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file schools-2.stan, line 29, column 12:
+Warning: deprecated language construct used in 'schools-2.stan', line 29, column 12:
    -------------------------------------------------
     27:    real Ymu[N]; 
     28:    for(p in 1:N)
@@ -145,7 +145,7 @@ Warning: deprecated language construct used in file schools-2.stan, line 29, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools-2.stan, line 43, column 2:
+Warning: deprecated language construct used in 'schools-2.stan', line 43, column 2:
    -------------------------------------------------
     41:    Y ~ normal(Ymu,  exp(-0.5 * (theta + phi * LRT)));
     42:  
@@ -158,7 +158,7 @@ Warning: deprecated language construct used in file schools-2.stan, line 43, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-2.stan, line 48, column 2:
+Warning: deprecated language construct used in 'schools-2.stan', line 48, column 2:
    -------------------------------------------------
     46:    phi ~ normal(0, 0.1);
     47:  
@@ -171,7 +171,7 @@ Warning: deprecated language construct used in file schools-2.stan, line 48, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-2.stan, line 51, column 2:
+Warning: deprecated language construct used in 'schools-2.stan', line 51, column 2:
    -------------------------------------------------
     49:    alpha ~ multi_normal_cholesky(gamma, diag_pre_multiply(sigma_Sigma, L_Sigma));
     50:  
@@ -222,7 +222,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file schools-3.stan, line 27, column 12:
+Warning: deprecated language construct used in 'schools-3.stan', line 27, column 12:
    -------------------------------------------------
     25:    real Ymu[N];
     26:    for(p in 1:N)
@@ -235,7 +235,7 @@ Warning: deprecated language construct used in file schools-3.stan, line 27, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools-3.stan, line 41, column 2:
+Warning: deprecated language construct used in 'schools-3.stan', line 41, column 2:
    -------------------------------------------------
     39:    Y ~ normal(Ymu,  exp(-0.5 * (theta + phi * LRT)));
     40:  
@@ -248,7 +248,7 @@ Warning: deprecated language construct used in file schools-3.stan, line 41, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-3.stan, line 46, column 2:
+Warning: deprecated language construct used in 'schools-3.stan', line 46, column 2:
    -------------------------------------------------
     44:    phi ~ normal(0, 5);
     45:  
@@ -261,7 +261,7 @@ Warning: deprecated language construct used in file schools-3.stan, line 46, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-3.stan, line 47, column 19:
+Warning: deprecated language construct used in 'schools-3.stan', line 47, column 19:
    -------------------------------------------------
     45:  
     46:    # Priors for random coefficients:
@@ -274,7 +274,7 @@ Warning: deprecated language construct used in file schools-3.stan, line 47, col
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 
-Warning: deprecated language construct used in file schools-3.stan, line 49, column 2:
+Warning: deprecated language construct used in 'schools-3.stan', line 49, column 2:
    -------------------------------------------------
     47:    increment_log_prob(-0.5 * (3 + M) * log_determinant(crossprod(alpha) - gamma * gamma' + R));
     48:  
@@ -332,7 +332,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file schools-4.stan, line 27, column 9:
+Warning: deprecated language construct used in 'schools-4.stan', line 27, column 9:
    -------------------------------------------------
     25:  transformed parameters {
     26:    matrix[M,3] alpha;
@@ -345,7 +345,7 @@ Warning: deprecated language construct used in file schools-4.stan, line 27, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools-4.stan, line 32, column 12:
+Warning: deprecated language construct used in 'schools-4.stan', line 32, column 12:
    -------------------------------------------------
     30:    real Ymu[N];
     31:    for(p in 1:N)
@@ -358,7 +358,7 @@ Warning: deprecated language construct used in file schools-4.stan, line 32, col
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools-4.stan, line 46, column 2:
+Warning: deprecated language construct used in 'schools-4.stan', line 46, column 2:
    -------------------------------------------------
     44:    Y ~ normal(Ymu,  exp(-0.5 * (theta + phi * LRT)));
     45:  
@@ -371,7 +371,7 @@ Warning: deprecated language construct used in file schools-4.stan, line 46, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-4.stan, line 51, column 2:
+Warning: deprecated language construct used in 'schools-4.stan', line 51, column 2:
    -------------------------------------------------
     49:    phi ~ normal(0, 0.1);
     50:  
@@ -384,7 +384,7 @@ Warning: deprecated language construct used in file schools-4.stan, line 51, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools-4.stan, line 55, column 2:
+Warning: deprecated language construct used in 'schools-4.stan', line 55, column 2:
    -------------------------------------------------
     53:    // implies: alpha ~ multi_normal(gamma, CovarianceMatrix);
     54:  
@@ -461,7 +461,7 @@ generated quantities {
 }
 
 
-Warning: deprecated language construct used in file schools.stan, line 2, column 0:
+Warning: deprecated language construct used in 'schools.stan', line 2, column 0:
    -------------------------------------------------
      1:  
      2:  # Schools: ranking school examination resutls using 
@@ -473,7 +473,7 @@ Warning: deprecated language construct used in file schools.stan, line 2, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 3, column 0:
+Warning: deprecated language construct used in 'schools.stan', line 3, column 0:
    -------------------------------------------------
      1:  
      2:  # Schools: ranking school examination resutls using 
@@ -486,7 +486,7 @@ Warning: deprecated language construct used in file schools.stan, line 3, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 4, column 0:
+Warning: deprecated language construct used in 'schools.stan', line 4, column 0:
    -------------------------------------------------
      2:  # Schools: ranking school examination resutls using 
      3:  # multivariate hierarcical models 
@@ -499,7 +499,7 @@ Warning: deprecated language construct used in file schools.stan, line 4, column
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 23, column 8:
+Warning: deprecated language construct used in 'schools.stan', line 23, column 8:
    -------------------------------------------------
     21:    cov_matrix[3] gamma_Sigma; 
     22:    cov_matrix[3] invR; 
@@ -512,7 +512,7 @@ Warning: deprecated language construct used in file schools.stan, line 23, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 24, column 15:
+Warning: deprecated language construct used in 'schools.stan', line 24, column 15:
    -------------------------------------------------
     22:    cov_matrix[3] invR; 
     23:    invR <- inverse(R); 
@@ -525,7 +525,7 @@ Warning: deprecated language construct used in file schools.stan, line 24, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 25, column 15:
+Warning: deprecated language construct used in 'schools.stan', line 25, column 15:
    -------------------------------------------------
     23:    invR <- inverse(R); 
     24:    gamma_mu[1] <- 0; 
@@ -538,7 +538,7 @@ Warning: deprecated language construct used in file schools.stan, line 25, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 26, column 15:
+Warning: deprecated language construct used in 'schools.stan', line 26, column 15:
    -------------------------------------------------
     24:    gamma_mu[1] <- 0; 
     25:    gamma_mu[2] <- 0; 
@@ -551,7 +551,7 @@ Warning: deprecated language construct used in file schools.stan, line 26, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 27, column 51:
+Warning: deprecated language construct used in 'schools.stan', line 27, column 51:
    -------------------------------------------------
     25:    gamma_mu[2] <- 0; 
     26:    gamma_mu[3] <- 0; 
@@ -564,7 +564,7 @@ Warning: deprecated language construct used in file schools.stan, line 27, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 28, column 36:
+Warning: deprecated language construct used in 'schools.stan', line 28, column 36:
    -------------------------------------------------
     26:    gamma_mu[3] <- 0; 
     27:    for (i in 1:3) for (j in 1:3) gamma_Sigma[i, j] <- 0; 
@@ -577,7 +577,7 @@ Warning: deprecated language construct used in file schools.stan, line 28, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 43, column 12:
+Warning: deprecated language construct used in 'schools.stan', line 43, column 12:
    -------------------------------------------------
     41:    real Ymu[N]; 
     42:    for(p in 1:N) {
@@ -590,7 +590,7 @@ Warning: deprecated language construct used in file schools.stan, line 43, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 57, column 2:
+Warning: deprecated language construct used in 'schools.stan', line 57, column 2:
    -------------------------------------------------
     55:    // max.var <- exp(-(theta + phi * (37.3807)))  # highest LRT score = 37.3807
     56:  
@@ -603,7 +603,7 @@ Warning: deprecated language construct used in file schools.stan, line 57, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 63, column 2:
+Warning: deprecated language construct used in 'schools.stan', line 63, column 2:
    -------------------------------------------------
     61:    phi ~ normal(0.0, 100); 
     62:  
@@ -616,7 +616,7 @@ Warning: deprecated language construct used in file schools.stan, line 63, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 65, column 2:
+Warning: deprecated language construct used in 'schools.stan', line 65, column 2:
    -------------------------------------------------
     63:    # Priors for random coefficients:
     64:    for (m in 1:M) alpha[m] ~ multi_normal(gamma, Sigma); 
@@ -629,7 +629,7 @@ Warning: deprecated language construct used in file schools.stan, line 65, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 71, column 2:
+Warning: deprecated language construct used in 'schools.stan', line 71, column 2:
    -------------------------------------------------
     69:  
     70:  generated quantities {
@@ -642,7 +642,7 @@ Warning: deprecated language construct used in file schools.stan, line 71, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 73, column 2:
+Warning: deprecated language construct used in 'schools.stan', line 73, column 2:
    -------------------------------------------------
     71:    # real alpha1[M]; 
     72:    real ranks[M]; 
@@ -655,7 +655,7 @@ Warning: deprecated language construct used in file schools.stan, line 73, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 74, column 2:
+Warning: deprecated language construct used in 'schools.stan', line 74, column 2:
    -------------------------------------------------
     72:    real ranks[M]; 
     73:    # for (m in 1:M)  alpha1[m] <- alpha[m, 1]; 
@@ -668,7 +668,7 @@ Warning: deprecated language construct used in file schools.stan, line 74, colum
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file schools.stan, line 78, column 23:
+Warning: deprecated language construct used in 'schools.stan', line 78, column 23:
    -------------------------------------------------
     76:      real greater_than[M]; 
     77:      for (k in 1:M) 
@@ -681,7 +681,7 @@ Warning: deprecated language construct used in file schools.stan, line 78, colum
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file schools.stan, line 79, column 14:
+Warning: deprecated language construct used in 'schools.stan', line 79, column 14:
    -------------------------------------------------
     77:      for (k in 1:M) 
     78:        greater_than[k] <- step(alpha[k, 1] - alpha[j, 1]); 

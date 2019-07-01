@@ -26,7 +26,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file arma11.stan, line 14, column 9:
+Warning: deprecated language construct used in 'arma11.stan', line 14, column 9:
    -------------------------------------------------
     12:    vector[T] nu;         // prediction for time t
     13:    vector[T] err;        // error for time t
@@ -39,7 +39,7 @@ Warning: deprecated language construct used in file arma11.stan, line 14, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file arma11.stan, line 15, column 10:
+Warning: deprecated language construct used in 'arma11.stan', line 15, column 10:
    -------------------------------------------------
     13:    vector[T] err;        // error for time t
     14:    nu[1] <- mu + phi * mu;   // assume err[0] == 0
@@ -52,7 +52,7 @@ Warning: deprecated language construct used in file arma11.stan, line 15, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file arma11.stan, line 17, column 11:
+Warning: deprecated language construct used in 'arma11.stan', line 17, column 11:
    -------------------------------------------------
     15:    err[1] <- y[1] - nu[1];
     16:    for (t in 2:T) {
@@ -65,7 +65,7 @@ Warning: deprecated language construct used in file arma11.stan, line 17, column
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file arma11.stan, line 18, column 12:
+Warning: deprecated language construct used in 'arma11.stan', line 18, column 12:
    -------------------------------------------------
     16:    for (t in 2:T) {
     17:      nu[t] <- mu + phi * y[t-1] + theta * err[t-1];
@@ -103,7 +103,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file arma11_alt.stan, line 1, column 0:
+Warning: deprecated language construct used in 'arma11_alt.stan', line 1, column 0:
    -------------------------------------------------
      1:  # ARMA(1,1) with Wayne Folta-style err encoding
          ^
@@ -114,7 +114,7 @@ Warning: deprecated language construct used in file arma11_alt.stan, line 1, col
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
 
-Warning: deprecated language construct used in file arma11_alt.stan, line 19, column 7:
+Warning: deprecated language construct used in 'arma11_alt.stan', line 19, column 7:
    -------------------------------------------------
     17:    theta ~ normal(0,2);
     18:    sigma ~ cauchy(0,5);
@@ -127,7 +127,7 @@ Warning: deprecated language construct used in file arma11_alt.stan, line 19, co
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file arma11_alt.stan, line 22, column 9:
+Warning: deprecated language construct used in 'arma11_alt.stan', line 22, column 9:
    -------------------------------------------------
     20:    err ~ normal(0,sigma);
     21:    for (t in 2:T) {
@@ -167,7 +167,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file ma2.stan, line 12, column 14:
+Warning: deprecated language construct used in 'ma2.stan', line 12, column 14:
    -------------------------------------------------
     10:  transformed parameters {
     11:    vector[T] epsilon;    // error terms
@@ -180,7 +180,7 @@ Warning: deprecated language construct used in file ma2.stan, line 12, column 14
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file ma2.stan, line 13, column 14:
+Warning: deprecated language construct used in 'ma2.stan', line 13, column 14:
    -------------------------------------------------
     11:    vector[T] epsilon;    // error terms
     12:    epsilon[1] <- y[1] - mu;
@@ -193,7 +193,7 @@ Warning: deprecated language construct used in file ma2.stan, line 13, column 14
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file ma2.stan, line 15, column 16:
+Warning: deprecated language construct used in 'ma2.stan', line 15, column 16:
    -------------------------------------------------
     13:    epsilon[2] <- y[2] - mu - theta[1] * epsilon[1];
     14:    for (t in 3:T)
@@ -238,7 +238,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file maQ.stan, line 14, column 16:
+Warning: deprecated language construct used in 'maQ.stan', line 14, column 16:
    -------------------------------------------------
     12:    vector[T] epsilon;    // error term at time t
     13:    for (t in 1:T) {
@@ -251,7 +251,7 @@ Warning: deprecated language construct used in file maQ.stan, line 14, column 16
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file maQ.stan, line 16, column 18:
+Warning: deprecated language construct used in 'maQ.stan', line 16, column 18:
    -------------------------------------------------
     14:      epsilon[t] <- y[t] - mu;
     15:      for (q in 1:min(t-1,Q))
@@ -264,7 +264,7 @@ Warning: deprecated language construct used in file maQ.stan, line 16, column 18
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file maQ.stan, line 25, column 12:
+Warning: deprecated language construct used in 'maQ.stan', line 25, column 12:
    -------------------------------------------------
     23:    sigma ~ cauchy(0,2.5);
     24:    for (t in 1:T) {
@@ -277,7 +277,7 @@ Warning: deprecated language construct used in file maQ.stan, line 25, column 12
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file maQ.stan, line 27, column 14:
+Warning: deprecated language construct used in 'maQ.stan', line 27, column 14:
    -------------------------------------------------
     25:      eta[t] <- mu;
     26:      for (q in 1:min(t-1,Q))
@@ -316,7 +316,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file stochastic-volatility-optimized.stan, line 14, column 5:
+Warning: deprecated language construct used in 'stochastic-volatility-optimized.stan', line 14, column 5:
    -------------------------------------------------
     12:  transformed parameters {
     13:    vector[T] h;                 // log volatility at time t
@@ -329,7 +329,7 @@ Warning: deprecated language construct used in file stochastic-volatility-optimi
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stochastic-volatility-optimized.stan, line 15, column 8:
+Warning: deprecated language construct used in 'stochastic-volatility-optimized.stan', line 15, column 8:
    -------------------------------------------------
     13:    vector[T] h;                 // log volatility at time t
     14:    h <- h_std * sigma;
@@ -342,7 +342,7 @@ Warning: deprecated language construct used in file stochastic-volatility-optimi
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stochastic-volatility-optimized.stan, line 16, column 5:
+Warning: deprecated language construct used in 'stochastic-volatility-optimized.stan', line 16, column 5:
    -------------------------------------------------
     14:    h <- h_std * sigma;
     15:    h[1] <- h[1] / sqrt(1 - phi * phi);
@@ -355,7 +355,7 @@ Warning: deprecated language construct used in file stochastic-volatility-optimi
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file stochastic-volatility-optimized.stan, line 18, column 10:
+Warning: deprecated language construct used in 'stochastic-volatility-optimized.stan', line 18, column 10:
    -------------------------------------------------
     16:    h <- h + mu;
     17:    for (t in 2:T)

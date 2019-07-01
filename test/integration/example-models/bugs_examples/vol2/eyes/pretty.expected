@@ -34,7 +34,7 @@ model {
 }
 
 
-Warning: deprecated language construct used in file eyes.stan, line 22, column 11:
+Warning: deprecated language construct used in 'eyes.stan', line 22, column 11:
    -------------------------------------------------
     20:      real lambda[2];
     21:      real sigma; 
@@ -47,7 +47,7 @@ Warning: deprecated language construct used in file eyes.stan, line 22, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file eyes.stan, line 23, column 15:
+Warning: deprecated language construct used in 'eyes.stan', line 23, column 15:
    -------------------------------------------------
     21:      real sigma; 
     22:      sigma <- sqrt(sigmasq); 
@@ -60,7 +60,7 @@ Warning: deprecated language construct used in file eyes.stan, line 23, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file eyes.stan, line 24, column 15:
+Warning: deprecated language construct used in 'eyes.stan', line 24, column 15:
    -------------------------------------------------
     22:      sigma <- sqrt(sigmasq); 
     23:      lambda[1] <- lambda_1;
@@ -73,7 +73,7 @@ Warning: deprecated language construct used in file eyes.stan, line 24, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file eyes.stan, line 34, column 12:
+Warning: deprecated language construct used in 'eyes.stan', line 34, column 12:
    -------------------------------------------------
     32:      real log_p1;
     33:      real log1m_p1;
@@ -86,7 +86,7 @@ Warning: deprecated language construct used in file eyes.stan, line 34, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file eyes.stan, line 35, column 14:
+Warning: deprecated language construct used in 'eyes.stan', line 35, column 14:
    -------------------------------------------------
     33:      real log1m_p1;
     34:      log_p1 <- log(p1);
@@ -99,7 +99,7 @@ Warning: deprecated language construct used in file eyes.stan, line 35, column 1
 assignment operator <- is deprecated in the Stan language; use = instead.
 
 
-Warning: deprecated language construct used in file eyes.stan, line 37, column 23:
+Warning: deprecated language construct used in 'eyes.stan', line 37, column 23:
    -------------------------------------------------
     35:      log1m_p1 <- log1m(p1);
     36:      for (n in 1:N)
