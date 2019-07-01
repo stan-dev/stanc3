@@ -15,6 +15,8 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
         #Save base location
         base_location=\$(pwd)
 
+        cp -R scripts "$dockerfile_path/scripts"
+
         #Build docker image
         cd "$dockerfile_path"       
         sudo docker build -t "$registry/$repository" .
