@@ -15,11 +15,11 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
         #Build docker image
         sudo docker build -t "$registry/$repository" -f "$dockerfile_path" .
 
-        last_version=\$(curl -u $USERNAME:$PASSWORD https://$registry/v2/$repository/tags/list | jq '.tags[0]' |  tr -d '"')
+        last_version=\$(curl -u $USERNAME:$PASSWORD https://$registry/v2/$repository/tags/list | jq -S '.tags |= sort' | jq '.tags[-2]' |  tr -d '"')
 
         #If there isn't any version on the current machine
         #Default to 0.0.0 to be incremented to 0.0.1 when pushing
-        if [ -z \$last_version ]; then
+        if [ -z \$last_version ] || [[ "\$last_version" == "null" ]]; then
             echo "0.0.0" > VERSION
         else
             echo \$last_version > VERSION  
