@@ -45,7 +45,7 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
         old_image_id=\$(sudo docker inspect --format {{.Id}} "$registry/$repository:\$last_version")
 
         #New image ID
-        new_image_id=\$(sudo docker inspect --format {{.Id}} "$registry/$repository:\$version")
+        new_image_id=\$(sudo docker inspect --format {{.Id}} "$registry/$repository:latest")
 
         if [[ "\$old_image_id" == "\$new_image_id" ]]; then
             echo "There are no changed in Dockerfile, skipping."
