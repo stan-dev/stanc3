@@ -9,25 +9,23 @@ def runShell(String command){
     return "${output}"
 }
 
-def buildTagImage(String image_path, String dockerfile_path){
+def buildTagImage(String registry, String repository, String dockerfile_path){
     def function = """
-        #Docker image path in repository
 
         #Build docker image
-        sudo docker build -t "$image_path" -f "$dockerfile_path" .
+        sudo docker build -t "$registry/$repository" -f "$dockerfile_path" .
 
-        #first_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags[0]' | awk '{split(\$0,a,":"); print a[2]}' |  tr -d '"')
-        second_to_last_version=\$(sudo docker image inspect "$image_path" | jq '.[0].RepoTags[-2]' | awk '{split(\$0,a,":"); print a[2]}' |  tr -d '"')
+        last_version=\$(curl -u $USERNAME:$PASSWORD https://$registry/v2/$repository/tags/list | jq '.tags[0]' |  tr -d '"')
 
         #If there isn't any version on the current machine
         #Default to 0.0.0 to be incremented to 0.0.1 when pushing
-        if [ -z \$second_to_last_version ]; then
+        if [ -z \$last_version ]; then
             echo "0.0.0" > VERSION
         else
-            echo \$second_to_last_version > VERSION  
+            echo \$last_version > VERSION  
         fi
 
-        echo "second_to_last_version: \$second_to_last_version"
+        echo "last_version: \$last_version"
         echo "VERSION: \$(cat VERSION)"
 
         #Bump the version
@@ -36,15 +34,13 @@ def buildTagImage(String image_path, String dockerfile_path){
         echo "version: \$version"
 
         #Tag the image
-        sudo docker tag $image_path:latest $image_path:\$version
+        sudo docker tag $registry/$repository:latest $registry/$repository:\$version
                  
         #Push as latest and version
-        sudo docker push $image_path:latest
-        sudo docker push $image_path:\$version
+        sudo docker push $registry/$repository:latest
+        sudo docker push $registry/$repository:\$version
 
     """
-
-    println function
 
     runShell(function)
 }
@@ -80,14 +76,14 @@ pipeline {
             agent { label "docker-registry" }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'docker-registry-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                          sh 'sudo docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'                     
+                          sh 'sudo docker login registry.mc-stan.org -u="$USERNAME" -p="$PASSWORD"'  
+
+                          //Build and Tag Debian Image
+                          buildTagImage("registry.mc-stan.org", "stanc3/debian", "docker/debian/Dockerfile")
+
+                          //Build and Tag Debian Image
+                          buildTagImage("registry.mc-stan.org", "stanc3/alpine", "docker/static/Dockerfile")                   
                         }
-
-                        //Build and Tag Debian Image
-                        buildTagImage("registry.mc-stan.org/stanc3/debian", "docker/debian/Dockerfile")
-                        //Build and Tag Debian Image
-                        buildTagImage("registry.mc-stan.org/stanc3/alpine", "docker/static/Dockerfile")
-
                     }
         }
         stage("Build & Test") {
