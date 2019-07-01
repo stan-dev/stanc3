@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format regression.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format regression.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -16,7 +16,7 @@ model {
   for (n in 1 : N) y[n] ~ normal(alpha + beta * x[n], sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format regression_std.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format regression_std.stan
 data {
   int<lower=0> N;
   vector[N] y;

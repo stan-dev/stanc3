@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format and.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format and.stan
 data {
   int d_int;
 }
@@ -33,7 +33,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format and_or_interaction.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format and_or_interaction.stan
 data {
   int d_int;
 }
@@ -54,7 +54,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format equal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format equal.stan
 data {
   int d_int;
 }
@@ -89,7 +89,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format greater_than.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format greater_than.stan
 data {
   int d_int;
 }
@@ -124,7 +124,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format greater_than_or_equal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format greater_than_or_equal.stan
 data {
   int d_int;
 }
@@ -159,7 +159,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format less_than.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format less_than.stan
 data {
   int d_int;
 }
@@ -194,7 +194,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format less_than_or_equal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format less_than_or_equal.stan
 data {
   int d_int;
 }
@@ -229,7 +229,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format not.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format not.stan
 data {
   int d_int;
 }
@@ -260,7 +260,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format not_equal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format not_equal.stan
 data {
   int d_int;
 }
@@ -295,7 +295,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format or.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format or.stan
 data {
   int d_int;
 }

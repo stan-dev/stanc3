@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format endo1.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format endo1.stan
 data {
   int n10;
   int n01;
@@ -272,7 +272,7 @@ Warning: deprecated language construct used in 'endo1.stan', line 49, column 2:
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format endo2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format endo2.stan
 data {
   int n10;
   int n01;
@@ -541,7 +541,7 @@ Warning: deprecated language construct used in 'endo2.stan', line 59, column 21:
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format endo3.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format endo3.stan
 data {
   int n10;
   int n01;

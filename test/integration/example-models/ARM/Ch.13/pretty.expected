@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_latin_square.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format earnings_latin_square.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -49,7 +49,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_latin_square_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format earnings_latin_square_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -112,7 +112,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_vary_si.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format earnings_vary_si.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -147,7 +147,7 @@ model {
   log_earn ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format earnings_vary_si_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format earnings_vary_si_chr.stan
 data {
   int<lower=0> N;
   vector[N] earn;
@@ -187,7 +187,7 @@ model {
   log_earn ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pilots.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pilots.stan
 data {
   int<lower=0> N;
   int<lower=0> n_groups;
@@ -227,7 +227,7 @@ Warning: deprecated language construct used in 'pilots.stan', line 24, column 2:
 
 Comments beginning with # are deprecated. Please use // in place of # for line comments.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pilots_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pilots_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_groups;
@@ -261,7 +261,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_inter_vary.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format radon_inter_vary.stan
 data {
   int<lower=0> N;
   int<lower=1, upper=85> county[N];
@@ -299,7 +299,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_inter_vary_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format radon_inter_vary_chr.stan
 data {
   int<lower=0> N;
   int<lower=1, upper=85> county[N];
@@ -338,7 +338,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_vary_si.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_si.stan
 data {
   int<lower=0> N;
   int<lower=1, upper=85> county[N];
@@ -366,7 +366,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format radon_vary_si_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_si_chr.stan
 data {
   int<lower=0> N;
   int<lower=1, upper=85> county[N];
@@ -398,7 +398,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format y_x.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format y_x.stan
 data {
   int<lower=0> N;
   vector[N] x;

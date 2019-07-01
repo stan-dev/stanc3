@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bernoulli-bandits-conjugate.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bernoulli-bandits-conjugate.stan
 data {
   int<lower=1> K;
   int<lower=0> N;
@@ -24,7 +24,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bernoulli-bandits-sufficient.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bernoulli-bandits-sufficient.stan
 data {
   int<lower=1> K;
   int<lower=0> N;
@@ -54,7 +54,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bernoulli-bandits.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bernoulli-bandits.stan
 data {
   int<lower=1> K;
   int<lower=0> N;

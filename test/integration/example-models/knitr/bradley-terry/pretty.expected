@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format individual-hierarchical.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format individual-hierarchical.stan
 data {
   int<lower=0> K;
   int<lower=0> N;
@@ -23,7 +23,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format individual-uniform.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format individual-uniform.stan
 data {
   int<lower=0> K;
   int<lower=0> N;
@@ -44,7 +44,7 @@ generated quantities {
   int<lower=1, upper=K> ranked[K] = sort_indices_desc(alpha);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format individual.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format individual.stan
 data {
   int<lower=0> K;
   int<lower=0> N;
@@ -67,9 +67,9 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format mle.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format mle.stan
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format team.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format team.stan
 data {
   int<lower=0> K;
   int<lower=0> J;

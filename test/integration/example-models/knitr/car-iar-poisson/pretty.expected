@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym2.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym2.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -41,7 +41,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym2_islands.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym2_islands.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -105,7 +105,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym2_offset_only.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym2_offset_only.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -145,7 +145,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym2_predictor_plus_offset.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym2_predictor_plus_offset.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -188,7 +188,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym_predictor_plus_offset.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym_predictor_plus_offset.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -227,7 +227,7 @@ generated quantities {
   vector[N] mu = exp(log_E + beta0 + beta1 * x + phi * sigma_phi + theta * sigma_theta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pois.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pois.stan
 data {
   int<lower=0> N;
   int<lower=0> y[N];
@@ -248,7 +248,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pois_icar.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pois_icar.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -277,7 +277,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pois_re.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pois_re.stan
 data {
   int<lower=0> N;
   int<lower=0> y[N];
@@ -302,7 +302,7 @@ generated quantities {
   vector[N] mu = exp(eta);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format simple_iar.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format simple_iar.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;

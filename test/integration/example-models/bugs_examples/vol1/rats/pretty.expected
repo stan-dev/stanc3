@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format rats.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format rats.stan
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -112,7 +112,7 @@ Warning: deprecated language construct used in 'rats.stan', line 45, column 10:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format rats_stanified.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format rats_stanified.stan
 data {
   int<lower=0> N;
   int<lower=0> Npts;
@@ -246,7 +246,7 @@ Warning: deprecated language construct used in 'rats_stanified.stan', line 38, c
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format rats_vec.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format rats_vec.stan
 data {
   int<lower=0> N;
   int<lower=0> T;
@@ -391,7 +391,7 @@ Warning: deprecated language construct used in 'rats_vec.stan', line 46, column 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format rats_vec_unit.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format rats_vec_unit.stan
 data {
   int<lower=0> N;
   int<lower=0> T;

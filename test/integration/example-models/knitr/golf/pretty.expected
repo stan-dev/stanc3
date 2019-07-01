@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format golf1.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format golf1.stan
 data {
   int J;
   int n[J];
@@ -22,7 +22,7 @@ generated quantities {
   sigma_degrees = (180 / pi()) * sigma;
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
 data {
   int J;
   int n[J];

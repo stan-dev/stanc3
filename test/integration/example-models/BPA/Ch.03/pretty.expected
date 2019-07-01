@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLM_Binomial.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLM_Binomial.stan
 data {
   int<lower=0> nyears;
   int<lower=0> C[nyears];
@@ -29,7 +29,7 @@ generated quantities {
   for (i in 1 : nyears) p[i] = inv_logit(logit_p[i]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLM_Poisson.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLM_Poisson.stan
 data {
   int<lower=0> n;
   int<lower=0> C[n];

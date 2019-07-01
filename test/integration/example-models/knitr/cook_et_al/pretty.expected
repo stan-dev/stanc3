@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym_predictor_only.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym_predictor_only.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -38,7 +38,7 @@ generated quantities {
   real psi = sd(phi) / (sd(theta) + sd(phi));
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format bym_predictor_plus_offset.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format bym_predictor_plus_offset.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
@@ -78,7 +78,7 @@ model {
   tau_phi ~ gamma(1, 1);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format sim_bym_data.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format sim_bym_data.stan
 data {
   int<lower=0> N;
   int<lower=0> N_edges;

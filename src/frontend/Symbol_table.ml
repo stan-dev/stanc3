@@ -31,12 +31,12 @@ let enter s str ty =
 let look s str = Hashtbl.find s.table str
 
 let begin_scope s =
-  let _ = s.scopedepth := !(s.scopedepth) + 1 in
+  s.scopedepth := !(s.scopedepth) + 1 ;
   Stack.push s.stack "-sentinel-new-scope-"
 
 (* using a string "-sentinel-new-scope-" here that can never be used as an identifier to indicate that new scope is entered *)
 let end_scope s =
-  let _ = s.scopedepth := !(s.scopedepth) - 1 in
+  s.scopedepth := !(s.scopedepth) - 1 ;
   while Stack.top_exn s.stack <> "-sentinel-new-scope-" do
     (* we pop the stack down to where we entered the current scope and remove all variables defined since from the var map *)
     Hashtbl.remove s.table (Stack.top_exn s.stack) ;

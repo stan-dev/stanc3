@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format mr_mnl.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl.stan
 data {
   int n_occasions;
   int marr[n_occasions, n_occasions + 1];
@@ -24,7 +24,7 @@ model {
   for (t in 1 : n_occasions) marr[t] ~ multinomial(pr[t]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format mr_mnl_age.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl_age.stan
 data {
   int n_occasions;
   int marr_j[n_occasions, n_occasions + 1];
@@ -70,7 +70,7 @@ model {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format mr_mnl_age3.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format mr_mnl_age3.stan
 data {
   int n_age;
   int marr_j[n_age + 1];
@@ -99,7 +99,7 @@ model {
   marr_a ~ multinomial(pr_a);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format mr_ss.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format mr_ss.stan
 functions {
   int first_capture(int[] y_i) {
     for (k in 1 : size(y_i)) if (y_i[k]) return k;

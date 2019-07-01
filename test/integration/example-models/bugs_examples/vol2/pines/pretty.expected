@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format pines-2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format pines-2.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -137,7 +137,7 @@ Warning: deprecated language construct used in 'pines-2.stan', line 43, column 1
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format pines-3.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format pines-3.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -179,7 +179,7 @@ generated quantities {
   lambda = softmax(log_py)[1];
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format pines-4.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format pines-4.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -292,7 +292,7 @@ Warning: deprecated language construct used in 'pines-4.stan', line 44, column 5
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format pines-independent.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format pines-independent.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -393,7 +393,7 @@ Warning: deprecated language construct used in 'pines-independent.stan', line 33
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format pines.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format pines.stan
 data {
   int<lower=0> N;
   vector[N] y;

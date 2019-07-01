@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format beta_proportion_ccdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format beta_proportion_ccdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -696,7 +696,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format beta_proportion_cdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format beta_proportion_cdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -1394,7 +1394,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format beta_proportion_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format beta_proportion_log.stan
 data {
   int d_int;
   int d_int_array[d_int];

@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real gamma_rate = gamma_rng(phi, phi / exp(eta));
@@ -44,7 +44,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real gamma_rate = gamma_rng(phi, phi / exp(eta));
@@ -91,7 +91,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real gamma_rate = gamma_rng(phi, phi / exp(eta));
@@ -145,7 +145,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real gamma_rate = gamma_rng(phi, phi / exp(eta));
@@ -213,7 +213,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos_gp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos_gp.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real phi_div_exp_eta;
@@ -295,7 +295,7 @@ generated quantities {
   for (n in 1 : N) y_rep[n] = neg_binomial_2_log_safe_rng(mu[building_idx[n]] + kappa[building_idx[n]] * traps[n] + gp[mo_idx[n]] + log_sq_foot[n], phi);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos_predict.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos_predict.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real gamma_rate = gamma_rng(phi, phi / exp(eta));
@@ -384,7 +384,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_resid.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_resid.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real phi_div_exp_eta;
@@ -450,7 +450,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {
     real gamma_rate = gamma_rng(phi, phi / exp(eta));
@@ -486,7 +486,7 @@ generated quantities {
   for (n in 1 : N) y_rep[n] = neg_binomial_2_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n], phi);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression_dgp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multiple_NB_regression_dgp.stan
 data {
   int<lower=1> N;
 }
@@ -510,7 +510,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format multiple_poisson_regression.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multiple_poisson_regression.stan
 functions {
   int poisson_log_safe_rng(real eta) {
     real pois_rate = exp(eta);
@@ -541,7 +541,7 @@ generated quantities {
   for (n in 1 : N) y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n] + beta_super * live_in_super[n] + log_sq_foot[n]);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format multiple_poisson_regression_dgp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multiple_poisson_regression_dgp.stan
 data {
   int<lower=1> N;
 }
@@ -564,7 +564,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format simple_poisson_regression.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format simple_poisson_regression.stan
 functions {
   int poisson_log_safe_rng(real eta) {
     real pois_rate = exp(eta);
@@ -591,7 +591,7 @@ generated quantities {
   for (n in 1 : N) y_rep[n] = poisson_log_safe_rng(alpha + beta * traps[n]);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format simple_poisson_regression_dgp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format simple_poisson_regression_dgp.stan
 data {
   int<lower=1> N;
   real<lower=0> mean_traps;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format reg_centered.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format reg_centered.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
@@ -36,7 +36,7 @@ Warning: deprecated language construct used in 'reg_centered.stan', line 23, col
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format reg_dif.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format reg_dif.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
@@ -91,7 +91,7 @@ Warning: deprecated language construct used in 'reg_dif.stan', line 27, column 1
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format reg_noncentered.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format reg_noncentered.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
@@ -144,7 +144,7 @@ Warning: deprecated language construct used in 'reg_noncentered.stan', line 25, 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format twopl.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format twopl.stan
 data {
   int<lower=1> I;
   int<lower=1> J;

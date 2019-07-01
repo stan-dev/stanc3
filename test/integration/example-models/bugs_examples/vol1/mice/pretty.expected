@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format mice.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format mice.stan
 data {
   int<lower=0> N_uncensored;
   int<lower=0> N_censored;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format anova_radon_nopred.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format anova_radon_nopred.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -29,7 +29,7 @@ generated quantities {
   s_y = sd(e_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format anova_radon_nopred_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format anova_radon_nopred_chr.stan
 data {
   int<lower=0> J;
   int<lower=0> N;

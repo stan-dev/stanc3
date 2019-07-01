@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format nnmf.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format nnmf.stan
 data {
   int<lower=0> T;
   int<lower=0> I;
@@ -111,7 +111,7 @@ Warning: deprecated language construct used in 'nnmf.stan', line 35, column 12:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format nnmf_vec.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format nnmf_vec.stan
 data {
   int<lower=0> T;
   int<lower=0> I;

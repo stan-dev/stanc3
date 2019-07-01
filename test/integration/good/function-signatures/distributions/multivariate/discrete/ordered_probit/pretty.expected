@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format ordered_probit_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format ordered_probit_log.stan
 data {
   int d_int;
   real d_real;

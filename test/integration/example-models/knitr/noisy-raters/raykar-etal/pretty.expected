@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format raykar-marginal.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format raykar-marginal.stan
 data {
   int<lower=0> N;
   int<lower=0> R;

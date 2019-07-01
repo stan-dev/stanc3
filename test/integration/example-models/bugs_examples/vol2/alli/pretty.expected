@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format alli2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format alli2.stan
 data {
   int I;
   int J;

@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hmm-analytic.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hmm-analytic.stan
 data {
   int<lower=1> K;
   int<lower=1> V;
@@ -77,7 +77,7 @@ Warning: deprecated language construct used in 'hmm-analytic.stan', line 20, col
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hmm-semisup.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hmm-semisup.stan
 data {
   int<lower=1> K;
   int<lower=1> V;
@@ -294,7 +294,7 @@ Warning: deprecated language construct used in 'hmm-semisup.stan', line 70, colu
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hmm-sufficient.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hmm-sufficient.stan
 data {
   int<lower=1> K;
   int<lower=1> V;
@@ -375,7 +375,7 @@ Warning: deprecated language construct used in 'hmm-sufficient.stan', line 22, c
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hmm.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hmm.stan
 data {
   int<lower=1> K;
   int<lower=1> V;

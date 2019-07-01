@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format soft-k-means.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format soft-k-means.stan
 data {
   int<lower=0> N;
   int<lower=1> D;

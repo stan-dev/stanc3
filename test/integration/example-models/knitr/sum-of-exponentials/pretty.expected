@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials.stan
 data {
   int N;
   vector[N] x;
@@ -15,7 +15,7 @@ model {
   y ~ lognormal(log(y_pred), sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials_with_priors.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format sum_of_exponentials_with_priors.stan
 data {
   int N;
   vector[N] x;

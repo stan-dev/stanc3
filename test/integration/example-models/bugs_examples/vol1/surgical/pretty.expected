@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format surgical.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format surgical.stan
 data {
   int<lower=0> N;
   int r[N];
@@ -87,7 +87,7 @@ Warning: deprecated language construct used in 'surgical.stan', line 28, column 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format surgical_stanified.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format surgical_stanified.stan
 data {
   int<lower=0> N;
   int r[N];

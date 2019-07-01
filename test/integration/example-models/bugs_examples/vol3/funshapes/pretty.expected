@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format circle.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format circle.stan
 parameters {
   real<lower=-1, upper=1> x;
   real<lower=-sqrt(1 - square(x)), upper=sqrt(1 - square(x))> y;
@@ -7,7 +7,7 @@ model {
 
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hsquare.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hsquare.stan
 parameters {
   real<lower=0, upper=2> x_raw;
   real<lower=0, upper=1.5> y_raw;
@@ -200,7 +200,7 @@ Warning: deprecated language construct used in 'hsquare.stan', line 47, column 7
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format parallelogram.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format parallelogram.stan
 parameters {
   real<lower=0, upper=1> x;
   real<lower=0, upper=1> y_raw;
@@ -226,7 +226,7 @@ Warning: deprecated language construct used in 'parallelogram.stan', line 11, co
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format ring.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format ring.stan
 parameters {
   real<lower=0.5, upper=1> z;
   real<lower=0, upper=2 * pi()> phi;
@@ -291,7 +291,7 @@ Warning: deprecated language construct used in 'ring.stan', line 14, column 5:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format squaremc.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format squaremc.stan
 parameters {
   real<lower=-1, upper=1> x_raw;
   real<lower=-(1 - sqrt(1 - square(1 - fabs(x_raw)))), upper=(1 - sqrt(1 - square(1 - fabs(x_raw))))> y_raw;

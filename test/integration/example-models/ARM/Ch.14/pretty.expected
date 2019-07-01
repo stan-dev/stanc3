@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format election88.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format election88.stan
 data {
   int<lower=0> N;
   int<lower=0> n_state;
@@ -24,7 +24,7 @@ model {
   y ~ bernoulli_logit(y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format election88_full.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format election88_full.stan
 data {
   int<lower=0> N;
   int<lower=0> n_age;
@@ -69,7 +69,7 @@ model {
   y ~ bernoulli_logit(y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pilots.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pilots.stan
 data {
   int<lower=0> N;
   int<lower=0> n_groups;
@@ -99,7 +99,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pilots_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pilots_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_groups;

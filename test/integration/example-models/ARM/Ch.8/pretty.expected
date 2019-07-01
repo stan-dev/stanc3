@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format grades.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format grades.stan
 data {
   int<lower=0> N;
   vector[N] final;
@@ -12,7 +12,7 @@ model {
   final ~ normal(beta[1] + beta[2] * midterm, sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format lightspeed.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format lightspeed.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -25,7 +25,7 @@ model {
   y ~ normal(beta[1], sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format roaches.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format roaches.stan
 data {
   int<lower=0> N;
   vector[N] exposure2;
@@ -45,7 +45,7 @@ model {
   y ~ poisson_log(log_expo + beta[1] + beta[2] * roach1 + beta[3] * treatment + beta[4] * senior);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format roaches_overdispersion.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format roaches_overdispersion.stan
 data {
   int<lower=0> N;
   vector[N] exposure2;
@@ -75,7 +75,7 @@ model {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format unemployment.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format unemployment.stan
 data {
   int<lower=0> N;
   vector[N] y;
@@ -89,7 +89,7 @@ model {
   y ~ normal(beta[1] + beta[2] * y_lag, sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format y_x.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format y_x.stan
 data {
   int<lower=0> N;
   vector[N] x;

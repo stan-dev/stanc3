@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLM0.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLM0.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -26,7 +26,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLM1.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLM1.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -54,7 +54,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLM2.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLM2.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -87,7 +87,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM1.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM1.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -118,7 +118,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM2.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM2.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -152,7 +152,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM3.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM3.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -189,7 +189,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM4.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM4.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -229,7 +229,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM5.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM5.stan
 data {
   int<lower=0> nobs;
   int<lower=0> nmis;
@@ -274,7 +274,7 @@ generated quantities {
   for (i in 1 : nmis) mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM_Poisson.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM_Poisson.stan
 data {
   int<lower=0> n;
   int<lower=0> C[n];
@@ -312,7 +312,7 @@ generated quantities {
   lambda = exp(log_lambda);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format GLMM_Poisson2.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format GLMM_Poisson2.stan
 data {
   int<lower=0> nsite;
   int<lower=0> nyear;

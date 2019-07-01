@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format abs.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format abs.stan
 data {
   int d_int;
   real d_real;
@@ -23,7 +23,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format acos.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format acos.stan
 data {
   int d_int;
   real d_real;
@@ -48,7 +48,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format acosh.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format acosh.stan
 data {
   int d_int;
   real d_real;
@@ -73,7 +73,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format asin.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format asin.stan
 data {
   int d_int;
   real d_real;
@@ -98,7 +98,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format asinh.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format asinh.stan
 data {
   int d_int;
   real d_real;
@@ -123,7 +123,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format atan.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format atan.stan
 data {
   int d_int;
   real d_real;
@@ -148,7 +148,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format atan2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format atan2.stan
 data {
   int d_int;
   int r_int;
@@ -183,7 +183,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format atanh.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format atanh.stan
 data {
   int d_int;
   real d_real;
@@ -208,7 +208,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format bessel_first_kind.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format bessel_first_kind.stan
 data {
   int d_int;
   int r_int;
@@ -234,7 +234,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format bessel_second_kind.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format bessel_second_kind.stan
 data {
   int d_int;
   int r_int;
@@ -260,7 +260,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format binary_log_loss.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format binary_log_loss.stan
 data {
   int d_int;
   int r_int;
@@ -286,7 +286,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format binomial_coefficient_log.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format binomial_coefficient_log.stan
 data {
   int d_int;
   int r_int;
@@ -321,7 +321,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format cbrt.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format cbrt.stan
 data {
   int d_int;
   real d_real;
@@ -346,7 +346,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format ceil.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format ceil.stan
 data {
   int d_int;
   real d_real;
@@ -371,7 +371,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format choose.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format choose.stan
 data {
   int d_int;
   int r_int;
@@ -387,7 +387,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format constants.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format constants.stan
 data {
   int d_int;
   real d_real;
@@ -416,7 +416,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format cos.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format cos.stan
 data {
   int d_int;
   real d_real;
@@ -441,7 +441,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format cosh.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format cosh.stan
 data {
   int d_int;
   real d_real;
@@ -466,7 +466,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format digamma.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format digamma.stan
 data {
   int d_int;
   real d_real;
@@ -491,7 +491,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format erf.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format erf.stan
 data {
   int d_int;
   real d_real;
@@ -516,7 +516,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format erfc.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format erfc.stan
 data {
   int d_int;
   real d_real;
@@ -541,7 +541,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format exp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format exp.stan
 data {
   int d_int;
   real d_real;
@@ -566,7 +566,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format exp2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format exp2.stan
 data {
   int d_int;
   real d_real;
@@ -591,7 +591,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format expm1.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format expm1.stan
 data {
   int d_int;
   real d_real;
@@ -616,7 +616,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format fabs.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format fabs.stan
 data {
   int d_int;
   real d_real;
@@ -641,7 +641,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format falling_factorial.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format falling_factorial.stan
 data {
   int d_int;
   int r_int;
@@ -666,7 +666,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format fdim.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format fdim.stan
 data {
   int d_int;
   int r_int;
@@ -701,7 +701,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format floor.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format floor.stan
 data {
   int d_int;
   real d_real;
@@ -726,7 +726,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format fma.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format fma.stan
 data {
   int d_int;
   int e_int;
@@ -786,7 +786,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format fmax.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format fmax.stan
 data {
   int d_int;
   int r_int;
@@ -821,7 +821,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format fmin.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format fmin.stan
 data {
   int d_int;
   int r_int;
@@ -856,7 +856,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format fmod.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format fmod.stan
 data {
   int d_int;
   int r_int;
@@ -891,7 +891,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format gamma_p.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format gamma_p.stan
 data {
   int d_int;
   int r_int;
@@ -926,7 +926,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format gamma_q.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format gamma_q.stan
 data {
   int d_int;
   int r_int;
@@ -961,7 +961,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format hypot.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format hypot.stan
 data {
   int d_int;
   int r_int;
@@ -996,7 +996,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format if_else.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format if_else.stan
 data {
   int d_int;
   real d_real;
@@ -1030,7 +1030,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inc_beta.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inc_beta.stan
 transformed data {
   real a;
   a = inc_beta(1, 1, 1);
@@ -1059,7 +1059,7 @@ model {
   b ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format int_step.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format int_step.stan
 data {
   int d_int;
   matrix[d_int, d_int] d_matrix;
@@ -1095,7 +1095,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inv.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv.stan
 data {
   int d_int;
   real d_real;
@@ -1120,7 +1120,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inv_cloglog.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv_cloglog.stan
 data {
   int d_int;
   real d_real;
@@ -1145,7 +1145,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inv_logit.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv_logit.stan
 data {
   int d_int;
   real d_real;
@@ -1170,7 +1170,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inv_phi.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv_phi.stan
 data {
   int d_int;
   real d_real;
@@ -1195,7 +1195,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inv_sqrt.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv_sqrt.stan
 data {
   int d_int;
   real d_real;
@@ -1220,7 +1220,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format inv_square.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format inv_square.stan
 data {
   int d_int;
   real d_real;
@@ -1245,7 +1245,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format is_inf.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format is_inf.stan
 data {
   int d_int;
   real d_real;
@@ -1278,7 +1278,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format is_nan.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format is_nan.stan
 data {
   int d_int;
   real d_real;
@@ -1311,7 +1311,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format lbeta.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format lbeta.stan
 data {
   int d_int;
   int r_int;
@@ -1346,7 +1346,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format lgamma.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format lgamma.stan
 data {
   int d_int;
   real d_real;
@@ -1371,7 +1371,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format lmgamma.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format lmgamma.stan
 data {
   int d_int;
   int r_int;
@@ -1397,7 +1397,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log.stan
 data {
   int d_int;
   real d_real;
@@ -1422,7 +1422,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log10.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log10.stan
 data {
   int d_int;
   real d_real;
@@ -1447,7 +1447,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log1m.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log1m.stan
 data {
   int d_int;
   real d_real;
@@ -1472,7 +1472,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log1m_exp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log1m_exp.stan
 data {
   int d_int;
   real d_real;
@@ -1497,7 +1497,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log1m_inv_logit.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log1m_inv_logit.stan
 data {
   int d_int;
   real d_real;
@@ -1522,7 +1522,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log1p.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log1p.stan
 data {
   int d_int;
   real d_real;
@@ -1547,7 +1547,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log1p_exp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log1p_exp.stan
 data {
   int d_int;
   real d_real;
@@ -1572,7 +1572,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log2.stan
 data {
   int d_int;
   real d_real;
@@ -1597,7 +1597,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log_diff_exp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log_diff_exp.stan
 data {
   int d_int;
   int r_int;
@@ -1632,7 +1632,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log_falling_factorial.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log_falling_factorial.stan
 data {
   int d_int;
   int r_int;
@@ -1667,7 +1667,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log_inv_logit.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log_inv_logit.stan
 data {
   int d_int;
   real d_real;
@@ -1692,7 +1692,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log_mix.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log_mix.stan
 data {
   int N;
   int M;
@@ -1800,7 +1800,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log_rising_factorial.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log_rising_factorial.stan
 data {
   int d_int;
   int r_int;
@@ -1835,7 +1835,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format log_sum_exp.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format log_sum_exp.stan
 data {
   int d_int;
   int r_int;
@@ -1870,7 +1870,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format logit.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format logit.stan
 data {
   int d_int;
   real d_real;
@@ -1895,7 +1895,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format max.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format max.stan
 data {
   int d_int;
   real d_real;
@@ -1917,7 +1917,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format min.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format min.stan
 data {
   int d_int;
   real d_real;
@@ -1939,7 +1939,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format modified_bessel_first_kind.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format modified_bessel_first_kind.stan
 data {
   int d_int;
   int r_int;
@@ -1965,7 +1965,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format modified_bessel_second_kind.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format modified_bessel_second_kind.stan
 data {
   int d_int;
   int r_int;
@@ -1991,7 +1991,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format multiply_log.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format multiply_log.stan
 data {
   int d_int;
   int r_int;
@@ -2026,7 +2026,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format operators_int.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format operators_int.stan
 data {
   int d_int;
 }
@@ -2055,7 +2055,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format operators_real.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format operators_real.stan
 data {
   int d_int;
   real d_real;
@@ -2136,7 +2136,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
 data {
   int d_int;
   int r_int;
@@ -2171,7 +2171,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format phi.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format phi.stan
 data {
   int d_int;
   real d_real;
@@ -2196,7 +2196,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format phi_approx.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format phi_approx.stan
 data {
   int d_int;
   real d_real;
@@ -2221,7 +2221,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format pow.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format pow.stan
 data {
   int d_int;
   int r_int;
@@ -2256,7 +2256,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format rising_factorial.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format rising_factorial.stan
 data {
   int d_int;
   int r_int;
@@ -2281,7 +2281,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format round.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format round.stan
 data {
   int d_int;
   real d_real;
@@ -2306,7 +2306,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format sin.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format sin.stan
 data {
   int d_int;
   real d_real;
@@ -2331,7 +2331,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format sinh.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format sinh.stan
 data {
   int d_int;
   real d_real;
@@ -2356,7 +2356,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format special_values.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format special_values.stan
 data {
   int d_int;
   real d_real;
@@ -2383,7 +2383,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format sqrt.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format sqrt.stan
 data {
   int d_int;
   real d_real;
@@ -2408,7 +2408,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format square.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format square.stan
 data {
   int d_int;
   real d_real;
@@ -2433,7 +2433,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format step.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format step.stan
 data {
   int d_int;
   real d_real;
@@ -2458,7 +2458,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format tan.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format tan.stan
 data {
   int d_int;
   real d_real;
@@ -2483,7 +2483,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format tanh.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format tanh.stan
 data {
   int d_int;
   real d_real;
@@ -2508,7 +2508,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format tgamma.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format tgamma.stan
 data {
   int d_int;
   real d_real;
@@ -2533,7 +2533,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format trigamma.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format trigamma.stan
 data {
   int d_int;
   real d_real;
@@ -2558,7 +2558,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format trunc.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format trunc.stan
 data {
   int d_int;
   real d_real;

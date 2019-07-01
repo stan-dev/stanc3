@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format chi_square_ccdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format chi_square_ccdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -130,7 +130,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format chi_square_cdf.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format chi_square_cdf.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -262,7 +262,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format chi_square_cdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format chi_square_cdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -394,7 +394,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format chi_square_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format chi_square_log.stan
 data {
   int d_int;
   int d_int_array[d_int];

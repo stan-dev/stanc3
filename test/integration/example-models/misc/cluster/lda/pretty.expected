@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format corr-lda.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format corr-lda.stan
 data {
   int<lower=2> K;
   int<lower=2> V;
@@ -118,7 +118,7 @@ Warning: deprecated language construct used in 'corr-lda.stan', line 45, column 
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format lda.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format lda.stan
 data {
   int<lower=2> K;
   int<lower=2> V;

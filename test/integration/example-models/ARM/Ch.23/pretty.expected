@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format educational_subsidy.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format educational_subsidy.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -34,7 +34,7 @@ model {
   y ~ bernoulli_logit(y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric.stan
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
@@ -62,7 +62,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_1a.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_1a.stan
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
@@ -102,7 +102,7 @@ model {
   y ~ normal(y_hat, sigma_y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_1a_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_1a_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_grade;
@@ -138,7 +138,7 @@ model {
   y ~ normal(y_hat, sigma_y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_1b.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_1b.stan
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
@@ -165,7 +165,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_1b_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_1b_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
@@ -194,7 +194,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_1c.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_1c.stan
 data {
   int<lower=0> N;
   int<lower=0> n_grade;
@@ -237,7 +237,7 @@ model {
   y ~ normal(y_hat, sigma_y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_1c_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_1c_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_grade;
@@ -276,7 +276,7 @@ model {
   y ~ normal(y_hat, sigma_y_hat);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_chr.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
@@ -304,7 +304,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_multi_preds.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_multi_preds.stan
 data {
   int<lower=0> N;
   vector[N] pre_test;
@@ -319,7 +319,7 @@ model {
   post_test ~ normal(beta[1] + beta[2] * treatment + beta[3] * pre_test, sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format electric_one_pred.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format electric_one_pred.stan
 data {
   int<lower=0> N;
   vector[N] post_test;
@@ -333,7 +333,7 @@ model {
   post_test ~ normal(beta[1] + beta[2] * treatment, sigma);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format sesame_street1.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format sesame_street1.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
@@ -388,7 +388,7 @@ model {
   for (i in 1 : N) yt[i] ~ multi_normal(yt_hat[i], Sigma_yt);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format sesame_street2.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format sesame_street2.stan
 data {
   int<lower=0> J;
   int<lower=0> N;

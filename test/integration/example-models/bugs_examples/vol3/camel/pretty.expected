@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format camel.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format camel.stan
 transformed data {
   vector[2] mu;
   matrix[2, 2] S;
@@ -469,7 +469,7 @@ Warning: deprecated language construct used in 'camel.stan', line 64, column 7:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format camel2.stan
+  $ ../../../../../../../install/default/bin/stanc --auto-format camel2.stan
 transformed data {
   vector[2] Y[4];
   real Y1[4];

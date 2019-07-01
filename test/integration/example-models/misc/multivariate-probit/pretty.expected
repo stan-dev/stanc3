@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format probit-multi-good.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format probit-multi-good.stan
 data {
   int<lower=1> K;
   int<lower=1> D;
@@ -46,7 +46,7 @@ generated quantities {
   Omega = multiply_lower_tri_self_transpose(L_Omega);
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format probit-multi.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format probit-multi.stan
 functions {
   int sum_(int[,] a) {
     int s;

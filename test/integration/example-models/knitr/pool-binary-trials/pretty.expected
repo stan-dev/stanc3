@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hier-logit-centered.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hier-logit-centered.stan
 data {
   int<lower=0> N;
   int<lower=0> K[N];
@@ -32,7 +32,7 @@ Warning: deprecated language construct used in 'hier-logit-centered.stan', line 
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hier-logit.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hier-logit.stan
 data {
   int<lower=0> N;
   int<lower=0> K[N];
@@ -416,7 +416,7 @@ Warning: deprecated language construct used in 'hier-logit.stan', line 96, colum
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format hier.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format hier.stan
 data {
   int<lower=0> N;
   int<lower=0> K[N];
@@ -784,7 +784,7 @@ Warning: deprecated language construct used in 'hier.stan', line 92, column 8:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format no-pool.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format no-pool.stan
 data {
   int<lower=0> N;
   int<lower=0> K[N];
@@ -1133,7 +1133,7 @@ Warning: deprecated language construct used in 'no-pool.stan', line 83, column 8
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format pool.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format pool.stan
 data {
   int<lower=0> N;
   int<lower=0> K[N];

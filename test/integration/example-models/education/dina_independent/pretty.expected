@@ -1,4 +1,4 @@
-  $ ../../../../../../../../install/default/bin/stanc --auto-format dina_independent.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format dina_independent.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
@@ -76,7 +76,7 @@ generated quantities {
   }
 }
 
-  $ ../../../../../../../../install/default/bin/stanc --auto-format dina_nostructure.stan
+  $ ../../../../../../install/default/bin/stanc --auto-format dina_nostructure.stan
 data {
   int<lower=1> I;
   int<lower=1> J;

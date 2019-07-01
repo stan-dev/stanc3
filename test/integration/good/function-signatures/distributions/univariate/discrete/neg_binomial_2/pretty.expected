@@ -1,4 +1,4 @@
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_2_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_2_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -398,7 +398,7 @@ model {
   d_int_array ~ neg_binomial_2(d_row_vector, d_row_vector);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm.stan
 transformed data {
   int N = 2;
   int M = 3;
@@ -429,7 +429,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -667,7 +667,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_ccdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_ccdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -905,7 +905,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_cdf.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_cdf.stan
 data {
   int d_int;
   int d_int_array[d_int];
@@ -1143,7 +1143,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_cdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format neg_binomial_cdf_log.stan
 data {
   int d_int;
   int d_int_array[d_int];
