@@ -271,9 +271,9 @@ and pretty_print_statement {stmt= s_content; _} =
       ^ ") " ^ pretty_print_statement s
   | Block vdsl ->
       let s1 = "{\n" in
-      let _ = begin_indent () in
+      begin_indent () ;
       let s2 = pretty_print_list_of_statements vdsl in
-      let _ = exit_indent () in
+      exit_indent () ;
       let s3 = tabs () ^ "}" in
       s1 ^ s2 ^ s3
   | VarDecl
