@@ -14,7 +14,7 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
 
         #Build docker image
         pushd "$dockerfile_path"
-        sudo docker build -t "$registry/$repository" -f "$dockerfile_path" .
+        sudo docker build -t "$registry/$repository" .
         popd
 
         last_version=\$(curl -u $USERNAME:$PASSWORD https://$registry/v2/$repository/tags/list | jq -S '.tags |= sort' | jq '.tags[-2]' |  tr -d '"')
