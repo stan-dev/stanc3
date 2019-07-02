@@ -22,7 +22,7 @@ let parse parse_fun lexbuf =
      error messages support *)
   let open MenhirLib.General in
   let module Interp = Parser.MenhirInterpreter in
-  let _ = Stack.push Preprocessor.include_stack lexbuf in
+  Stack.push Preprocessor.include_stack lexbuf ;
   let input _ =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Stack.top_exn Preprocessor.include_stack))

@@ -42,19 +42,15 @@ let try_get_new_lexbuf fname pos =
     try_open_in !include_paths (maybe_remove_quotes fname) pos
   in
   let new_lexbuf = from_channel chan in
-  let _ =
-    new_lexbuf.lex_start_p
-    <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
-  in
-  let _ = new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p in
-  let _ =
-    if dup_exists (Str.split (Str.regexp ", included from\n") path) then
-      raise
-        (Errors.SyntaxError
-           (Include
-              ( Printf.sprintf "File %s recursively included itself.\n" fname
-              , Errors.location_of_position
-                  (lexeme_start_p (Stack.top_exn include_stack)) )))
-  in
-  let _ = Stack.push include_stack new_lexbuf in
+  new_lexbuf.lex_start_p
+  <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p ;
+  if dup_exists (Str.split (Str.regexp ", included from\n") path) then
+    raise
+      (Errors.SyntaxError
+         (Include
+            ( Printf.sprintf "File %s recursively included itself.\n" fname
+            , Errors.location_of_position
+                (lexeme_start_p (Stack.top_exn include_stack)) ))) ;
+  Stack.push include_stack new_lexbuf ;
   new_lexbuf
