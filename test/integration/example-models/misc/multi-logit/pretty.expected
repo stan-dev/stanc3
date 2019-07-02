@@ -13,7 +13,8 @@ model {
   matrix[N, K] gamma;
   gamma <- x * beta';
   to_vector(beta) ~ cauchy(0, 2.5);
-  for (n in 1 : N) y[n] ~ categorical_logit(gamma[n]');
+  for (n in 1 : N) 
+    y[n] ~ categorical_logit(gamma[n]');
 }
 
 

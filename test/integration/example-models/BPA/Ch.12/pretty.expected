@@ -4,9 +4,14 @@ functions {
     real s[min(n) + 1];
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
-    if (size(n) != 2) reject("Size of n must be 2.");
-    if (p < 0 || p > 1) reject("p must be in [0,1].");
-    for (u in 0 : min(n)) s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1) + poisson_log_lpmf(n[2] - u| log_theta_1) + poisson_log_lpmf(u| log_theta_0);
+    if (size(n) != 2) 
+      reject("Size of n must be 2.");
+    if (p < 0 || p > 1) 
+      reject("p must be in [0,1].");
+    for (u in 0 : min(n)) 
+      s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1)
+                 + poisson_log_lpmf(n[2] - u| log_theta_1)
+                 + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
 }
@@ -21,9 +26,12 @@ data {
 transformed data {
   int<lower=0> max_y[R, 7];
   for (i in 1 : R) {
-    for (k in 1 : (first[i] - 1)) max_y[i, k] = 0;
-    for (k in (last[i] + 1) : 7) max_y[i, k] = 0;
-    for (k in first[i] : last[i]) max_y[i, k] = max(y[i, 1 : T, k]);
+    for (k in 1 : (first[i] - 1)) 
+      max_y[i, k] = 0;
+    for (k in (last[i] + 1) : 7) 
+      max_y[i, k] = 0;
+    for (k in first[i] : last[i]) 
+      max_y[i, k] = max(y[i, 1 : T, k]);
   }
 }
 parameters {
@@ -32,7 +40,9 @@ parameters {
 }
 model {
   alpha_lam ~ normal(0, 10);
-  for (i in 1 : R) for (k in first[i] : last[i]) y[i, 1 : T, k] ~ bivariate_poisson_log(alpha_lam[k], p[k]);
+  for (i in 1 : R) 
+    for (k in first[i] : last[i]) 
+      y[i, 1 : T, k] ~ bivariate_poisson_log(alpha_lam[k], p[k]);
 }
 generated quantities {
   int totalN[7];
@@ -55,18 +65,23 @@ generated quantities {
     for (i in 1 : R) {
       for (k in first[i] : last[i]) {
         vector[K + 1] lp;
-        for (n in 0 : (max_y[i, k] - 1)) lp[n + 1] = negative_infinity();
-        for (n in max_y[i, k] : K) lp[n + 1] = poisson_log_lpmf(n| alpha_lam[k]) + binomial_lpmf(y[i, 1 : T, k]| n, p[k]);
+        for (n in 0 : (max_y[i, k] - 1)) 
+          lp[n + 1] = negative_infinity();
+        for (n in max_y[i, k] : K) 
+          lp[n + 1] = poisson_log_lpmf(n| alpha_lam[k])
+                      + binomial_lpmf(y[i, 1 : T, k]| n, p[k]);
         N[i, k] = categorical_rng(softmax(lp)) - 1;
         eval[i, k] = p[k] * N[i, k];
         for (j in 1 : T) {
           E[i, j, k] = square(y[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
           y_new[i, j, k] = binomial_rng(N[i, k], p[k]);
-          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
+          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k])
+                           / (eval[i, k] + 0.5);
         }
       }
     }
-    for (k in 1 : 7) totalN[k] = sum(N[1 : R, k]);
+    for (k in 1 : 7) 
+      totalN[k] = sum(N[1 : R, k]);
     for (i in 1 : R) {
       fit = fit + sum(E[i]);
       fit_new = fit_new + sum(E_new[i]);
@@ -81,13 +96,19 @@ functions {
     real s[min(n) + 1];
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
-    if (size(n) != 2) reject("Size of n must be 2.");
-    if (p < 0 || p > 1) reject("p must be in [0,1].");
-    for (u in 0 : min(n)) s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1) + poisson_log_lpmf(n[2] - u| log_theta_1) + poisson_log_lpmf(u| log_theta_0);
+    if (size(n) != 2) 
+      reject("Size of n must be 2.");
+    if (p < 0 || p > 1) 
+      reject("p must be in [0,1].");
+    for (u in 0 : min(n)) 
+      s[u + 1] = poisson_log_lpmf(n[1] - u| log_theta_1)
+                 + poisson_log_lpmf(n[2] - u| log_theta_1)
+                 + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
   real poisbin_lpmf(int[] y, int n, real log_lambda, real p) {
-    if (max(y) > n) return negative_infinity();
+    if (max(y) > n) 
+      return negative_infinity();
     return poisson_log_lpmf(n| log_lambda) + binomial_lpmf(y| n, p);
   }
 }
@@ -103,9 +124,12 @@ transformed data {
   int<lower=0> max_y[R, 7];
   int<lower=0> max_y_site[R];
   for (i in 1 : R) {
-    for (k in 1 : (first[i] - 1)) max_y[i, k] = 0;
-    for (k in (last[i] + 1) : 7) max_y[i, k] = 0;
-    for (k in first[i] : last[i]) max_y[i, k] = max(y[i, 1 : T, k]);
+    for (k in 1 : (first[i] - 1)) 
+      max_y[i, k] = 0;
+    for (k in (last[i] + 1) : 7) 
+      max_y[i, k] = 0;
+    for (k in first[i] : last[i]) 
+      max_y[i, k] = max(y[i, 1 : T, k]);
     max_y_site[i] = max(max_y[i]);
   }
 }
@@ -119,14 +143,18 @@ model {
   for (i in 1 : R) {
     if (max_y_site[i]) {
       real lp = bernoulli_lpmf(1| omega);
-      for (k in first[i] : last[i]) lp = lp + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
+      for (k in first[i] : last[i]) 
+        lp = lp
+             + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
       target += lp;
     }
     else {
       real lp[2];
       lp[1] = bernoulli_lpmf(0| omega);
       lp[2] = bernoulli_lpmf(1| omega);
-      for (k in first[i] : last[i]) lp[2] = lp[2] + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
+      for (k in first[i] : last[i]) 
+        lp[2] = lp[2]
+                + bivariate_poisson_log_lpmf(y[i, 1 : T, k]| alpha_lam[k], p[k]);
       target += log_sum_exp(lp);
     }
   }
@@ -153,13 +181,15 @@ generated quantities {
       real log_p_unobs;
       for (k in first[i] : last[i]) {
         vector[K + 1] lp;
-        for (n in 0 : K) lp[n + 1] = poisbin_lpmf(y[i, 1 : T, k]| n, alpha_lam[k], p[k]);
+        for (n in 0 : K) 
+          lp[n + 1] = poisbin_lpmf(y[i, 1 : T, k]| n, alpha_lam[k], p[k]);
         N[i, k] = categorical_rng(softmax(lp)) - 1;
       }
       if (max_y_site[i] == 0) {
         log_p_unobs = log(omega) + binomial_lpmf(0| N[i], p) * T;
         if (bernoulli_rng(exp(log_p_unobs)) == 0) {
-          for (k in first[i] : last[i]) N[i, k] = 0;
+          for (k in first[i] : last[i]) 
+            N[i, k] = 0;
         }
       }
       for (k in first[i] : last[i]) {
@@ -167,11 +197,13 @@ generated quantities {
         for (j in 1 : T) {
           E[i, j, k] = square(y[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
           y_new[i, j, k] = binomial_rng(N[i, k], p[k]);
-          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k]) / (eval[i, k] + 0.5);
+          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, k])
+                           / (eval[i, k] + 0.5);
         }
       }
     }
-    for (k in 1 : 7) totalN[k] = sum(N[1 : R, k]);
+    for (k in 1 : 7) 
+      totalN[k] = sum(N[1 : R, k]);
     for (i in 1 : R) {
       fit = fit + sum(E[i]);
       fit_new = fit_new + sum(E_new[i]);
@@ -184,9 +216,16 @@ generated quantities {
 functions {
   real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
     real s[min(n) + 1];
-    if (size(n) != 2) reject("Size of n must be 2.");
-    if (p[1] < 0 || p[1] > 1 || p[2] < 0 || p[2] > 1) reject("p must be in [0,1].");
-    for (u in 0 : min(n)) s[u + 1] = poisson_log_lpmf(n[1] - u| log_lambda + log(p[1]) + log1m(p[2])) + poisson_log_lpmf(n[2] - u| log_lambda + log(p[2]) + log1m(p[1])) + poisson_log_lpmf(u| log_lambda + log(p[1]) + log(p[2]));
+    if (size(n) != 2) 
+      reject("Size of n must be 2.");
+    if (p[1] < 0 || p[1] > 1 || p[2] < 0 || p[2] > 1) 
+      reject("p must be in [0,1].");
+    for (u in 0 : min(n)) 
+      s[u + 1] = poisson_log_lpmf(n[1] - u| log_lambda + log(p[1])
+                                            + log1m(p[2]))
+                 + poisson_log_lpmf(n[2] - u| log_lambda + log(p[2])
+                                              + log1m(p[1]))
+                 + poisson_log_lpmf(u| log_lambda + log(p[1]) + log(p[2]));
     return log_sum_exp(s);
   }
 }
@@ -202,13 +241,17 @@ transformed data {
   int<lower=0> max_y[R, 7];
   int<lower=0, upper=R> num_obs_site[7];
   for (i in 1 : R) {
-    for (k in 1 : (first[i] - 1)) max_y[i, k] = 0;
-    for (k in (last[i] + 1) : 7) max_y[i, k] = 0;
-    for (k in first[i] : last[i]) max_y[i, k] = max(y[i, 1 : T, k]);
+    for (k in 1 : (first[i] - 1)) 
+      max_y[i, k] = 0;
+    for (k in (last[i] + 1) : 7) 
+      max_y[i, k] = 0;
+    for (k in first[i] : last[i]) 
+      max_y[i, k] = max(y[i, 1 : T, k]);
   }
   for (k in 1 : 7) {
     num_obs_site[k] = 0;
-    for (i in 1 : R) num_obs_site[k] = num_obs_site[k] + (y[i, 1, k] != -1);
+    for (i in 1 : R) 
+      num_obs_site[k] = num_obs_site[k] + (y[i, 1, k] != -1);
   }
 }
 parameters {
@@ -223,7 +266,9 @@ transformed parameters {
   vector[R] eps;
   matrix[R, 7] log_lambda;
   eps = sd_lam * eps_raw;
-  for (k in 1 : 7) for (i in 1 : R) log_lambda[i, k] = alpha_lam[k] + eps[i];
+  for (k in 1 : 7) 
+    for (i in 1 : R) 
+      log_lambda[i, k] = alpha_lam[k] + eps[i];
 }
 model {
   alpha_lam ~ normal(0, sqrt(10));
@@ -231,8 +276,13 @@ model {
   eps_raw ~ normal(0, 1);
   sd_lam ~ normal(1.5, 0.75);
   sd_p ~ normal(1.5, 0.75);
-  for (i in 1 : R) for (j in 1 : T) logit_p[i, j] ~ normal(beta, sd_p);
-  for (i in 1 : R) for (k in first[i] : last[i]) y[i, 1 : 2, k] ~ bivariate_poisson_log(log_lambda[i, k], inv_logit(logit_p[i, 1 : 2, k]));
+  for (i in 1 : R) 
+    for (j in 1 : T) 
+      logit_p[i, j] ~ normal(beta, sd_p);
+  for (i in 1 : R) 
+    for (k in first[i] : last[i]) 
+      y[i, 1 : 2, k] ~ bivariate_poisson_log(log_lambda[i, k],
+                                             inv_logit(logit_p[i, 1 : 2, k]));
 }
 generated quantities {
   int totalN[7];
@@ -258,17 +308,23 @@ generated quantities {
       E_new[i] = E_new[i - 1];
     }
     for (i in 1 : R) {
-      for (j in 1 : T) p[i, j] = inv_logit(logit_p[i, j]);
+      for (j in 1 : T) 
+        p[i, j] = inv_logit(logit_p[i, j]);
       for (k in first[i] : last[i]) {
         vector[K + 1] lp;
-        for (n in 0 : (max_y[i, k] - 1)) lp[n + 1] = negative_infinity();
-        for (n in max_y[i, k] : K) lp[n + 1] = poisson_log_lpmf(n| log_lambda[i, k]) + binomial_lpmf(y[i, 1 : T, k]| n, p[i, 1 : T, k]);
+        for (n in 0 : (max_y[i, k] - 1)) 
+          lp[n + 1] = negative_infinity();
+        for (n in max_y[i, k] : K) 
+          lp[n + 1] = poisson_log_lpmf(n| log_lambda[i, k])
+                      + binomial_lpmf(y[i, 1 : T, k]| n, p[i, 1 : T, k]);
         N[i, k] = categorical_rng(softmax(lp)) - 1;
         for (j in 1 : T) {
           eval[i, j, k] = p[i, j, k] * N[i, k];
-          E[i, j, k] = square(y[i, j, k] - eval[i, j, k]) / (eval[i, j, k] + 0.5);
+          E[i, j, k] = square(y[i, j, k] - eval[i, j, k])
+                       / (eval[i, j, k] + 0.5);
           y_new[i, j, k] = binomial_rng(N[i, k], p[i, j, k]);
-          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, j, k]) / (eval[i, j, k] + 0.5);
+          E_new[i, j, k] = square(y_new[i, j, k] - eval[i, j, k])
+                           / (eval[i, j, k] + 0.5);
         }
         ik_p[i, k] = mean(p[i, 1 : T, k]);
       }
@@ -295,7 +351,8 @@ data {
 }
 transformed data {
   int<lower=0> max_y[R];
-  for (i in 1 : R) max_y[i] = max(y[i]);
+  for (i in 1 : R) 
+    max_y[i] = max(y[i]);
 }
 parameters {
   real<lower=0> lambda;
@@ -305,7 +362,9 @@ model {
   lambda ~ cauchy(0, 10);
   for (i in 1 : R) {
     vector[K - max_y[i] + 1] lp;
-    for (j in 1 : (K - max_y[i] + 1)) lp[j] = poisson_lpmf(max_y[i] + j - 1| lambda) + binomial_lpmf(y[i]| max_y[i] + j - 1, p);
+    for (j in 1 : (K - max_y[i] + 1)) 
+      lp[j] = poisson_lpmf(max_y[i] + j - 1| lambda)
+              + binomial_lpmf(y[i]| max_y[i] + j - 1, p);
     target += log_sum_exp(lp);
   }
 }
@@ -320,7 +379,8 @@ data {
 }
 transformed data {
   int<lower=0> max_y[R];
-  for (i in 1 : R) max_y[i] = max(y[i]);
+  for (i in 1 : R) 
+    max_y[i] = max(y[i]);
 }
 parameters {
   real alpha0;
@@ -337,14 +397,17 @@ transformed parameters {
 model {
   for (i in 1 : R) {
     vector[K - max_y[i] + 1] lp;
-    for (j in 1 : (K - max_y[i] + 1)) lp[j] = poisson_log_lpmf(max_y[i] + j - 1| log_lambda[i]) + binomial_logit_lpmf(y[i]| max_y[i] + j - 1, logit_p[i]);
+    for (j in 1 : (K - max_y[i] + 1)) 
+      lp[j] = poisson_log_lpmf(max_y[i] + j - 1| log_lambda[i])
+              + binomial_logit_lpmf(y[i]| max_y[i] + j - 1, logit_p[i]);
     target += log_sum_exp(lp);
   }
 }
 generated quantities {
   int N[R];
   int totalN;
-  for (i in 1 : R) N[i] = poisson_log_rng(log_lambda[i]);
+  for (i in 1 : R) 
+    N[i] = poisson_log_rng(log_lambda[i]);
   totalN = sum(N);
 }
 

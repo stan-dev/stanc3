@@ -384,9 +384,7 @@ let rec free_vars_expr (e : Middle.expr_typed_located) =
 and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Set.Poly.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
-    ->
-      free_vars_expr e
+  | Middle.Single e | Middle.Upfrom e | Middle.MultiIndex e -> free_vars_expr e
   | Middle.Between (e1, e2) ->
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
@@ -485,9 +483,7 @@ let rec used_subexpressions_expr (e : Middle.expr_typed_located) =
 and used_expressions_idx_help f (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Middle.ExprSet.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
-    ->
-      f e
+  | Middle.Single e | Middle.Upfrom e | Middle.MultiIndex e -> f e
   | Middle.Between (e1, e2) -> Middle.ExprSet.union (f e1) (f e2)
 
 (** Calculate the set of expressions of an expression *)

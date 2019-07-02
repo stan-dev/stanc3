@@ -1,13 +1,16 @@
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_add.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -18,7 +21,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -36,8 +41,10 @@ transformed data {
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
   real beta1 = 0;
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -88,13 +95,16 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_age.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -105,7 +115,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -122,8 +134,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_p;
@@ -160,13 +174,16 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_c_c.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -177,7 +194,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -192,8 +211,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -230,13 +251,16 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_cov_raneff.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -247,7 +271,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -264,10 +290,15 @@ transformed data {
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
   vector<lower=0, upper=nind>[n_occasions] n_captured;
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
   n_captured = rep_vector(0, n_occasions);
-  for (t in 1 : n_occasions) for (i in 1 : nind) if (y[i, t]) n_captured[t] = n_captured[t] + 1;
+  for (t in 1 : n_occasions) 
+    for (i in 1 : nind) 
+      if (y[i, t]) 
+        n_captured[t] = n_captured[t] + 1;
 }
 parameters {
   real beta;
@@ -316,13 +347,16 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_group.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -333,7 +367,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -350,8 +386,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   vector<lower=0, upper=1>[g] phi_g;
@@ -388,13 +426,16 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_group_raneff.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -405,7 +446,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -422,8 +465,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   vector[g] beta;
@@ -470,13 +515,16 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_ind_raneff.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -489,7 +537,9 @@ functions {
         int t_next = t_curr + 1;
         t_curr = n_occasions - t;
         t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -504,8 +554,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -556,7 +608,8 @@ data {
 transformed data {
   int n_occasions_minus_1 = n_occasions - 1;
   int r[n_occasions - 1];
-  for (t in 1 : n_occasions_minus_1) r[t] = sum(marr[t]);
+  for (t in 1 : n_occasions_minus_1) 
+    r[t] = sum(marr[t]);
 }
 parameters {
   vector<lower=0, upper=1>[n_occasions_minus_1] phi;
@@ -568,13 +621,16 @@ transformed parameters {
   q = 1.0 - p;
   for (t in 1 : n_occasions_minus_1) {
     pr[t, t] = phi[t] * p[t];
-    for (j in (t + 1) : n_occasions_minus_1) pr[t, j] = prod(phi[t : j]) * prod(q[t : (j - 1)]) * p[j];
+    for (j in (t + 1) : n_occasions_minus_1) 
+      pr[t, j] = prod(phi[t : j]) * prod(q[t : (j - 1)]) * p[j];
     pr[t,  : (t - 1)] = rep_vector(0, t - 1);
   }
-  for (t in 1 : n_occasions_minus_1) pr[t, n_occasions] = 1 - sum(pr[t,  : n_occasions_minus_1]);
+  for (t in 1 : n_occasions_minus_1) 
+    pr[t, n_occasions] = 1 - sum(pr[t,  : n_occasions_minus_1]);
 }
 model {
-  for (t in 1 : n_occasions_minus_1) marr[t] ~ multinomial(pr[t]);
+  for (t in 1 : n_occasions_minus_1) 
+    marr[t] ~ multinomial(pr[t]);
 }
 generated quantities {
   real fit;
@@ -628,7 +684,8 @@ transformed parameters {
     pr_j[t, t] = phi_juv[t] * p[t];
     pr_a[t, t] = phi_ad[t] * p[t];
     for (j in (t + 1) : n_occ_minus_1) {
-      pr_j[t, j] = phi_juv[t] * prod(phi_ad[(t + 1) : j]) * prod(q[t : (j - 1)]) * p[j];
+      pr_j[t, j] = phi_juv[t] * prod(phi_ad[(t + 1) : j])
+                   * prod(q[t : (j - 1)]) * p[j];
       pr_a[t, j] = prod(phi_ad[t : j]) * prod(q[t : (j - 1)]) * p[j];
     }
     pr_j[t,  : (t - 1)] = rep_vector(0, t - 1);
@@ -654,7 +711,8 @@ data {
 transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int r[n_occasions];
-  for (t in 1 : n_occ_minus_1) r[t] = sum(marr[t]);
+  for (t in 1 : n_occ_minus_1) 
+    r[t] = sum(marr[t]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -674,14 +732,17 @@ transformed parameters {
   q = 1.0 - p;
   for (t in 1 : n_occ_minus_1) {
     pr[t, t] = phi[t] * p[t];
-    for (j in (t + 1) : n_occ_minus_1) pr[t, j] = prod(phi[t : j]) * prod(q[t : (j - 1)]) * p[j];
+    for (j in (t + 1) : n_occ_minus_1) 
+      pr[t, j] = prod(phi[t : j]) * prod(q[t : (j - 1)]) * p[j];
     pr[t,  : (t - 1)] = rep_vector(0, t - 1);
   }
-  for (t in 1 : n_occ_minus_1) pr[t, n_occasions] = 1 - sum(pr[t,  : n_occ_minus_1]);
+  for (t in 1 : n_occ_minus_1) 
+    pr[t, n_occasions] = 1 - sum(pr[t,  : n_occ_minus_1]);
 }
 model {
   epsilon ~ normal(0, sigma);
-  for (t in 1 : (n_occ_minus_1)) marr[t] ~ multinomial(pr[t]);
+  for (t in 1 : (n_occ_minus_1)) 
+    marr[t] ~ multinomial(pr[t]);
 }
 generated quantities {
   real<lower=0> sigma2;
@@ -696,11 +757,13 @@ generated quantities {
   sigma2_real = sigma2 * square(mean_phi * (1 - mean_phi));
   for (t in 1 : n_occ_minus_1) {
     expmarr[t] = r[t] * pr[t];
-    for (j in 1 : n_occasions) E_org[t, j] = square((sqrt(marr[t, j]) - sqrt(expmarr[t, j])));
+    for (j in 1 : n_occasions) 
+      E_org[t, j] = square((sqrt(marr[t, j]) - sqrt(expmarr[t, j])));
   }
   for (t in 1 : n_occ_minus_1) {
     marr_new[t] = multinomial_rng(pr[t], r[t]);
-    for (j in 1 : n_occasions) E_new[t, j] = square((sqrt(marr_new[t, j]) - sqrt(expmarr[t, j])));
+    for (j in 1 : n_occasions) 
+      E_new[t, j] = square((sqrt(marr_new[t, j]) - sqrt(expmarr[t, j])));
   }
   fit = sum(E_org);
   fit_new = sum(E_new);
@@ -709,13 +772,16 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_t_t.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -726,7 +792,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -741,8 +809,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] phi_t;
@@ -779,13 +849,16 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_corr.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -796,7 +869,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -815,8 +890,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   vector<lower=0, upper=1>[g] mean_phi;
@@ -829,7 +906,8 @@ transformed parameters {
   matrix<lower=0, upper=1>[nind, n_occ_minus_1] p;
   matrix<lower=0, upper=1>[nind, n_occasions] chi;
   vector[g] mu_phi;
-  for (u in 1 : g) mu_phi[u] = logit(mean_phi[u]);
+  for (u in 1 : g) 
+    mu_phi[u] = logit(mean_phi[u]);
   for (i in 1 : nind) {
     for (t in 1 : (first[i] - 1)) {
       phi[i, t] = 0;
@@ -844,7 +922,8 @@ transformed parameters {
 }
 model {
   Sigma ~ inv_wishart(df, R);
-  for (t in 1 : n_occ_minus_1) eta_phi[t] ~ multi_normal(mu_phi, Sigma);
+  for (t in 1 : n_occ_minus_1) 
+    eta_phi[t] ~ multi_normal(mu_phi, Sigma);
   for (i in 1 : nind) {
     if (first[i] > 0) {
       for (t in (first[i] + 1) : last[i]) {
@@ -859,13 +938,16 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_fixeff.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -876,7 +958,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -892,8 +976,10 @@ transformed data {
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
   n_occ_minus_1 = n_occasions - 1;
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   vector<lower=0, upper=1>[n_occ_minus_1] alpha;
@@ -930,13 +1016,16 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_temp_raneff.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -947,7 +1036,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -962,8 +1053,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;
@@ -1009,13 +1102,16 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format cjs_trap.stan
 functions {
   int first_capture(int[] y_i) {
-    for (k in 1 : size(y_i)) if (y_i[k]) return k;
+    for (k in 1 : size(y_i)) 
+      if (y_i[k]) 
+        return k;
     return 0;
   }
   int last_capture(int[] y_i) {
     for (k_rev in 0 : (size(y_i) - 1)) {
       int k = size(y_i) - k_rev;
-      if (y_i[k]) return k;
+      if (y_i[k]) 
+        return k;
     }
     return 0;
   }
@@ -1026,7 +1122,9 @@ functions {
       for (t in 1 : (n_occasions - 1)) {
         int t_curr = n_occasions - t;
         int t_next = t_curr + 1;
-        chi[i, t_curr] = (1 - phi[i, t_curr]) + phi[i, t_curr] * (1 - p[i, t_next - 1]) * chi[i, t_next];
+        chi[i, t_curr] = (1 - phi[i, t_curr])
+                         + phi[i, t_curr] * (1 - p[i, t_next - 1])
+                           * chi[i, t_next];
       }
     }
     return chi;
@@ -1042,8 +1140,10 @@ transformed data {
   int n_occ_minus_1 = n_occasions - 1;
   int<lower=0, upper=n_occasions> first[nind];
   int<lower=0, upper=n_occasions> last[nind];
-  for (i in 1 : nind) first[i] = first_capture(y[i]);
-  for (i in 1 : nind) last[i] = last_capture(y[i]);
+  for (i in 1 : nind) 
+    first[i] = first_capture(y[i]);
+  for (i in 1 : nind) 
+    last[i] = last_capture(y[i]);
 }
 parameters {
   real<lower=0, upper=1> mean_phi;

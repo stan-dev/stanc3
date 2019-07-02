@@ -14,7 +14,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  score1 ~ normal(beta[1] + beta[2] * party + beta[3] * x + beta[4] * inter, sigma);
+  score1 ~ normal(beta[1] + beta[2] * party + beta[3] * x + beta[4] * inter,
+                  sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ideo_reparam.stan
@@ -30,7 +31,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  score1 ~ normal(beta[1] + beta[2] * party + beta[3] * z1 + beta[4] * z2, sigma);
+  score1 ~ normal(beta[1] + beta[2] * party + beta[3] * z1 + beta[4] * z2,
+                  sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format ideo_two_pred.stan
@@ -74,7 +76,9 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  watched ~ normal(beta[1] + beta[2] * encouraged + beta[3] * pretest + beta[4] * site2 + beta[5] * site3 + beta[6] * site4 + beta[7] * site5 + beta[8] * setting, sigma);
+  watched ~ normal(beta[1] + beta[2] * encouraged + beta[3] * pretest
+                   + beta[4] * site2 + beta[5] * site3 + beta[6] * site4
+                   + beta[7] * site5 + beta[8] * setting, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format sesame_multi_preds_3b.stan
@@ -103,7 +107,9 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  y ~ normal(beta[1] + beta[2] * watched_hat + beta[3] * pretest + beta[4] * site2 + beta[5] * site3 + beta[6] * site4 + beta[7] * site5 + beta[8] * setting, sigma);
+  y ~ normal(beta[1] + beta[2] * watched_hat + beta[3] * pretest
+             + beta[4] * site2 + beta[5] * site3 + beta[6] * site4
+             + beta[7] * site5 + beta[8] * setting, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format sesame_one_pred_2b.stan

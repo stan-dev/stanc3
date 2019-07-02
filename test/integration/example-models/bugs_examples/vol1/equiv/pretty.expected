@@ -8,7 +8,9 @@ data {
 }
 transformed data {
   int T[N, P];
-  for (n in 1 : N) for (p in 1 : P) T[n, p] <- (group[n] * (2 * p - 3) + 3) / 2;
+  for (n in 1 : N) 
+    for (p in 1 : P) 
+      T[n, p] <- (group[n] * (2 * p - 3) + 3) / 2;
 }
 parameters {
   real mu;
@@ -27,7 +29,8 @@ transformed parameters {
 model {
   for (n in 1 : N) {
     vector[P] m;
-    for (p in 1 : P) m[p] <- mu + sign[T[n, p]] * phi / 2 + sign[p] * pi / 2 + delta[n];
+    for (p in 1 : P) 
+      m[p] <- mu + sign[T[n, p]] * phi / 2 + sign[p] * pi / 2 + delta[n];
     Y[n] ~ normal(m, sigma1);
   }
   delta ~ normal(0, sigma2);

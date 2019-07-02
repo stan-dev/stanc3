@@ -19,7 +19,8 @@ parameters {
 }
 model {
   mu ~ multi_normal(mu0, sigma);
-  for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
+  for (n in 1 : 2) 
+    y[n] ~ multi_normal(mu, sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_small.stan
@@ -43,7 +44,8 @@ parameters {
 }
 model {
   mu ~ multi_normal(mu0, sigma);
-  for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
+  for (n in 1 : 2) 
+    y[n] ~ multi_normal(mu, sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format eta_should_fail.stan
@@ -102,7 +104,8 @@ transformed parameters {
 }
 model {
   vector[N] mu;
-  for (i in 1 : N) mu[i] = X[i] * beta[ids[i]]';
+  for (i in 1 : N) 
+    mu[i] = X[i] * beta[ids[i]]';
   y ~ bernoulli_logit(mu);
   to_vector(beta_std) ~ normal(0, 1);
   std ~ normal(0, 1);
@@ -129,7 +132,8 @@ model {
   vector[N] mu;
   matrix[11, 11] L_std;
   L_std = diag_pre_multiply(std, L);
-  for (i in 1 : N) mu[i] = X[i] * beta[ids[i]];
+  for (i in 1 : N) 
+    mu[i] = X[i] * beta[ids[i]];
   y ~ bernoulli_logit(mu);
   beta ~ multi_normal_cholesky(mean_group, L_std);
   std ~ normal(0, 1);
@@ -157,7 +161,8 @@ parameters {
 }
 model {
   mu ~ multi_normal(mu0, sigma);
-  for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
+  for (n in 1 : 2) 
+    y[n] ~ multi_normal(mu, sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format multivariate_with_constraint.stan
@@ -181,7 +186,8 @@ parameters {
 }
 model {
   mu ~ multi_normal(mu0, sigma);
-  for (n in 1 : 2) y[n] ~ multi_normal(mu, sigma);
+  for (n in 1 : 2) 
+    y[n] ~ multi_normal(mu, sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format univariate_no_constraint.stan
@@ -199,7 +205,8 @@ parameters {
 }
 model {
   mu ~ normal(mu0, sigma);
-  for (n in 1 : 2) y[n] ~ normal(mu, 1.0);
+  for (n in 1 : 2) 
+    y[n] ~ normal(mu, 1.0);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format univariate_with_constraint.stan
@@ -217,6 +224,7 @@ parameters {
 }
 model {
   mu ~ normal(mu0, sigma);
-  for (n in 1 : 2) y[n] ~ normal(mu, 1.0);
+  for (n in 1 : 2) 
+    y[n] ~ normal(mu, 1.0);
 }
 

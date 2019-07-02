@@ -16,20 +16,24 @@ transformed data {
   int response[N, T];
   for (i in 1 : Ncum[1, 1]) {
     group[i] <- 1;
-    for (t in 1 : T) response[i, t] <- pattern[1, t];
+    for (t in 1 : T) 
+      response[i, t] <- pattern[1, t];
   }
   for (i in (Ncum[1, 1] + 1) : Ncum[1, 2]) {
     group[i] <- 2;
-    for (t in 1 : T) response[i, t] <- pattern[1, t];
+    for (t in 1 : T) 
+      response[i, t] <- pattern[1, t];
   }
   for (k in 2 : Npattern) {
     for (i in (Ncum[k - 1, 2] + 1) : Ncum[k, 1]) {
       group[i] <- 1;
-      for (t in 1 : T) response[i, t] <- pattern[k, t];
+      for (t in 1 : T) 
+        response[i, t] <- pattern[k, t];
     }
     for (i in (Ncum[k, 1] + 1) : Ncum[k, 2]) {
       group[i] <- 2;
-      for (t in 1 : T) response[i, t] <- pattern[k, t];
+      for (t in 1 : T) 
+        response[i, t] <- pattern[k, t];
     }
   }
 }
@@ -52,7 +56,8 @@ model {
   real mu[G, T];
   for (g in 1 : G) {
     for (t in 1 : T) {
-      mu[g, t] <- beta * treat[g, t] * .5 + pi * period[g, t] * .5 + kappa * carry[g, t];
+      mu[g, t] <- beta * treat[g, t] * .5 + pi * period[g, t] * .5
+                  + kappa * carry[g, t];
     }
   }
   for (i in 1 : N) {
@@ -61,7 +66,8 @@ model {
         Q[i, t, j] <- inv_logit(-(a[j] + mu[group[i], t] + b[i]));
       }
       p[i, t, 1] <- 1 - Q[i, t, 1];
-      for (j in 2 : Ncut) p[i, t, j] <- Q[i, t, j - 1] - Q[i, t, j];
+      for (j in 2 : Ncut) 
+        p[i, t, j] <- Q[i, t, j - 1] - Q[i, t, j];
       p[i, t, (Ncut + 1)] <- Q[i, t, Ncut];
       response[i, t] ~ categorical(p[i, t]);
     }
