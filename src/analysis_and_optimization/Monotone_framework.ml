@@ -796,7 +796,7 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
           T.transfer_function l (Hashtbl.find_exn analysis_in l)
         in
         if not (L.leq new_analysis_in_l' old_analysis_in_l') then
-          let _ =
+          let () =
             Hashtbl.set analysis_in ~key:l'
               ~data:(L.lub old_analysis_in_l' new_analysis_in_l')
           in

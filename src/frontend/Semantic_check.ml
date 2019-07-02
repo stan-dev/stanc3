@@ -1563,7 +1563,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
         as if they are parameters, for the purposes of type checking.
     *)
     (* WARNING: SIDE EFFECTING *)
-    let _ =
+    let _ : unit Base.List.Or_unequal_lengths.t =
       List.iter2 ~f:(Symbol_table.enter vm) uarg_names
         (List.map
            ~f:(function
