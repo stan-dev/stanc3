@@ -86,6 +86,12 @@ let pp_located_error_b ppf (body_stmts, err_msg) =
     , err_msg )
 
 let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
+  let extra =
+    if String.is_suffix fdname ~suffix:"_lp" then
+      List.map ~f:(fun n -> (AutoDiffable, n, UReal)) ["lp__"; "lp_accum__"]
+    else []
+  in
+  let fdargs = fdargs @ extra in
   let argtypetemplates =
     (* TODO: If one contains ints, we don't need to template it *)
     List.mapi ~f:(fun i _ -> sprintf "T%d__" i) fdargs

@@ -1031,10 +1031,13 @@ return foo_lccdf(y, lambda, pstream__);
 }
 };
 
-template <typename T0__>
+template <typename T0__, typename T1__, typename T2__>
 void
-unit_normal_lp(const T0__& u, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+unit_normal_lp(const T0__& u, const T1__& lp__, const T2__& lp_accum__,
+               std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1056,11 +1059,12 @@ unit_normal_lp(const T0__& u, std::ostream* pstream__) {
 }
 
 struct unit_normal_lp_functor__ {
-template <typename T0__>
+template <typename T0__, typename T1__, typename T2__>
 void
-operator()(const T0__& u, std::ostream* pstream__)  const 
+operator()(const T0__& u, const T1__& lp__, const T2__& lp_accum__,
+           std::ostream* pstream__)  const 
 {
-return unit_normal_lp(u, pstream__);
+return unit_normal_lp(u, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -1330,10 +1334,13 @@ return foo_3(t, n, pstream__);
 }
 };
 
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-foo_lp(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+template <typename T0__, typename T1__, typename T2__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__>::type
+foo_lp(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
+       std::ostream* pstream__) {
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
+          T1__,
+          T2__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1353,11 +1360,12 @@ foo_lp(const T0__& x, std::ostream* pstream__) {
 }
 
 struct foo_lp_functor__ {
-template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
-operator()(const T0__& x, std::ostream* pstream__)  const 
+template <typename T0__, typename T1__, typename T2__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__>::type
+operator()(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
+           std::ostream* pstream__)  const 
 {
-return foo_lp(x, pstream__);
+return foo_lp(x, lp__, lp_accum__, pstream__);
 }
 };
 
