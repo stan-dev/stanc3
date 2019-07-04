@@ -1349,7 +1349,7 @@ foo_lp(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
   
   try {
     current_statement__ = 312;
-    return (x + target);
+    return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
           std::runtime_error(std::string("inside UDF foo_lp") + ": " + e.what()), locations_array__[current_statement__]);

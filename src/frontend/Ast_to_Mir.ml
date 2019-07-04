@@ -45,7 +45,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
-        | GetLP | GetTarget -> Var "target"
+        | GetLP | GetTarget -> FunApp(StanLib, "target", [])
         | ArrayExpr eles ->
             FunApp
               ( CompilerInternal
