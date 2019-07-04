@@ -96,7 +96,7 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
       match argtypetemplates with
       | [] -> pf ppf "double"
       | a ->
-          pf ppf "boost::math::tools::promote_args<%a>::type"
+          pf ppf "typename boost::math::tools::promote_args<%a>::type"
             (list ~sep:comma string) a
     in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," local_scalar () ;
