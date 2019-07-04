@@ -109,9 +109,13 @@ let pp_fun_def ppf = function
           (list ~sep:comma (fmt "typename %s"))
           argtypetemplates ;
         pp_returntype ppf fdargs fdrt ;
-        pf ppf "%s(@[<hov>%a" name (list ~sep:comma pp_arg)
-          (List.zip_exn argtypetemplates fdargs) ;
-        pf ppf ", std::ostream* pstream__@]) "
+        let arg_strs =
+          List.map
+            ~f:(fun a -> strf "%a" pp_arg a)
+            (List.zip_exn argtypetemplates fdargs)
+          @ ["std::ostream* pstream__"]
+        in
+        pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
       in
       pp_sig ppf fdname ;
       match fdbody.stmt with
