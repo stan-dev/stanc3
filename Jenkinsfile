@@ -55,7 +55,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run stat_comp_benchmarks end-to-end") {
+        stage("Run small good model subset end-to-end") {
             when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
             agent { label 'linux' }
             steps {
@@ -66,7 +66,9 @@ pipeline {
                 sh """
           cd performance-tests-cmdstan
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          CXX="${CXX}" ./compare-compilers.sh "stat_comp_benchmarks/ --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
+          echo "`pwd`/test/integration/good/code-gen/mother.stan" > known_good_perf_all.tests"
+          cat known_good_perf_all.tests
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
                """
                 junit 'performance-tests-cmdstan/performance.xml'
