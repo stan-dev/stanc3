@@ -325,6 +325,34 @@ model {
   real r1 = foo_bar1(p_real);
   real r2 = foo_bar1(J);
   p_real ~ normal(0,1);
+
+  to_vector(p_real_1d_ar) ~ normal(0, 1);
+  for (n in 1:N) {
+    to_vector(p_1d_vec[n]) ~ normal(0, 1);
+    to_vector(p_1d_row_vec[n]) ~ normal(0, 1);
+    to_vector(p_1d_simplex[n]) ~ normal(0, 1);
+    for (m in 1:M) {
+      for (k in 1:K) {
+        to_vector(p_3d_vec[n, m, k]) ~ normal(0, 1);
+        to_vector(p_3d_row_vec[n, m, k]) ~ normal(0, 1);
+        to_vector(p_3d_simplex[n, m, k]) ~ normal(0, 1);
+        p_real_3d_ar[n, m, k] ~ normal(0, 1);
+      }
+    }
+  }
+  for (i in 1:4) {
+    for (j in 1:5) {
+      to_vector(p_ar_mat[i, j]) ~ normal(0, 1);
+    }
+  }
+  for (k in 1:K) {
+    to_vector(p_cfcov_33_ar[k]) ~ normal(0, 1);
+  }
+  to_vector(p_vec) ~ normal(0, 1);
+  to_vector(p_row_vec) ~ normal(0, 1);
+  to_vector(p_simplex) ~ normal(0, 1);
+  to_vector(p_cfcov_54) ~ normal(0, 1);
+  to_vector(p_cfcov_33) ~ normal(0, 1);
 }
 generated quantities {
   real gq_r1 = foo_bar1(p_real);
