@@ -321,7 +321,7 @@ let param_size transform sizedtype =
         sizedtype
   | Covariance -> shrink_eigen (fun k -> binop k Plus (k_choose_2 k)) sizedtype
 
-let read_decl dread decl_id transform sizedtype smeta decl_var =
+let read_decl dread decl_id sizedtype smeta decl_var =
   let args =
     [ mkstring smeta decl_id
     ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
@@ -339,7 +339,7 @@ let read_decl dread decl_id transform sizedtype smeta decl_var =
   let forl, st =
     match dread with
     | ReadData -> (for_scalar, sizedtype)
-    | ReadParam -> (for_eigen, param_size transform sizedtype)
+    | ReadParam -> (for_eigen, sizedtype)
   in
   forl st (assign_indexed decl_id smeta readvar) decl_var smeta
 
@@ -439,7 +439,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta sizedtype transform
   let read_stmts =
     match (dread, rhs) with
     | Some dread, _ ->
-        [read_decl dread temp_decl_id transform temp_dt smeta temp_decl_var]
+        [read_decl dread temp_decl_id temp_dt smeta temp_decl_var]
     | None, Some e -> [{stmt= Assignment ((decl_id, []), e); smeta}]
     | None, None -> []
   in
