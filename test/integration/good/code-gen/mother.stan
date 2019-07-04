@@ -236,14 +236,27 @@ transformed data {
   simplex[N] td_simplex;
   simplex[N] td_1d_simplex[N];
   simplex[N] td_3d_simplex[N,M,K];
-  cholesky_factor_cov[5,4] td_cfcov_54;
+  cholesky_factor_cov[5,5] td_cfcov_54; // TODO: Change to 5,4
   cholesky_factor_cov[3] td_cfcov_33;
+  for (i in 1:2) {
+    for (j in 1:3) {
+      for (m in 1:4) {
+        for (n in 1:5) {
+          td_ar_mat[m, n, i, j] = 0.4;}}}}
+  for (i in 1:N) {
+    td_simplex[i] = 1.0 / N;
+    for (n in 1:N) {
+      td_1d_simplex[n, i] = 1.0 / N;
+      for (m in 1:M) {
+        for (k in 1:K) {
+          td_3d_simplex[n, m, k, i] = 1.0 / N;}}}}
   for (i in 1:4) {
     for (j in 1:5) {
       matrix[2,3] l_mat = d_ar_mat[i,j];
       print("ar dim1: ",i, " ar dim2: ",j, " matrix: ", l_mat);
-    }
-  }
+    }}
+  td_cfcov_54 = diag_matrix(rep_vector(1, rows(td_cfcov_54)));
+  td_cfcov_33 = diag_matrix(rep_vector(1, rows(td_cfcov_33)));
   {
     real z;
     row_vector[2] vs;
@@ -254,8 +267,8 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_1d_ar[N];
-  real p_real_3d_ar[N,M,K];
+  real<lower=0> p_real_1d_ar[N];
+  real<lower=0> p_real_3d_ar[N,M,K];
   vector<lower=0>[N] p_vec;
   vector[N] p_1d_vec[N];
   vector[N] p_3d_vec[N,M,K];
@@ -271,9 +284,9 @@ parameters {
   cholesky_factor_cov[3] p_cfcov_33_ar[K];
 }
 transformed parameters {
-  real<lower = 0> tp_real_1d_ar[N];
-  real<lower = 0> tp_real_3d_ar[N,M,K];
-  vector<upper=1>[N] tp_vec;
+  real<lower=0> tp_real_1d_ar[N];
+  real<lower=0> tp_real_3d_ar[N,M,K];
+  vector<upper=0>[N] tp_vec;
   vector[N] tp_1d_vec[N];
   vector[N] tp_3d_vec[N,M,K];
   row_vector[N] tp_row_vec;
@@ -286,6 +299,25 @@ transformed parameters {
   cholesky_factor_cov[5,4] tp_cfcov_54;
   cholesky_factor_cov[3] tp_cfcov_33;
   cholesky_factor_cov[3] tp_cfcov_33_ar[K];
+
+  tp_real_1d_ar = p_real_1d_ar;
+  tp_real_3d_ar = p_real_3d_ar;
+  tp_1d_vec = p_1d_vec;
+  tp_3d_vec = p_3d_vec;
+
+  tp_simplex = p_simplex;
+  tp_1d_simplex = p_1d_simplex;
+  tp_3d_simplex = p_3d_simplex;
+
+  tp_cfcov_54 = p_cfcov_54;
+  tp_cfcov_33 = p_cfcov_33;
+  tp_cfcov_33_ar = p_cfcov_33_ar;
+
+  for (i in 1:2) {
+    for (j in 1:3) {
+      for (m in 1:4) {
+        for (n in 1:5) {
+          tp_ar_mat[m, n, i, j] = 0.4;}}}}
 
   for (i in 1:N) tp_vec[i] = -1.0 * p_vec[i];
 }
@@ -312,6 +344,26 @@ generated quantities {
   cholesky_factor_cov[5,4] gq_cfcov_54;
   cholesky_factor_cov[3] gq_cfcov_33;
   cholesky_factor_cov[3] gq_cfcov_33_ar[K];
+
+  gq_real_1d_ar = p_real_1d_ar;
+  gq_real_3d_ar = p_real_3d_ar;
+  gq_1d_vec = p_1d_vec;
+  gq_3d_vec = p_3d_vec;
+
+  gq_simplex = p_simplex;
+  gq_1d_simplex = p_1d_simplex;
+  gq_3d_simplex = p_3d_simplex;
+
+  gq_cfcov_54 = p_cfcov_54;
+  gq_cfcov_33 = p_cfcov_33;
+  gq_cfcov_33_ar = p_cfcov_33_ar;
+
+  for (i in 1:2) {
+    for (j in 1:3) {
+      for (m in 1:4) {
+        for (n in 1:5) {
+          gq_ar_mat[m, n, i, j] = 0.4;}}}}
+
 
   for (i in 1:N) gq_vec[i] = -1.0 * p_vec[i];
 }
