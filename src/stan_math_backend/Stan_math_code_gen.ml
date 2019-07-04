@@ -52,9 +52,12 @@ let%expect_test "arg types templated correctly" =
     promotion.*)
 let pp_returntype ppf arg_types rt =
   let scalar =
-    strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
-      (list ~sep:comma string)
-      (maybe_templated_arg_types arg_types)
+    match arg_types with
+    | [] -> "double"
+    | a ->
+        strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
+          (list ~sep:comma string)
+          (maybe_templated_arg_types a)
   in
   match rt with
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
@@ -98,6 +101,7 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
     in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," local_scalar () ;
     text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
+    (* needed?*)
     text "const static bool propto__ = true;" ;
     text "(void) propto__;" ;
     text
