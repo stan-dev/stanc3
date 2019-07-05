@@ -603,7 +603,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 262, column 4 to column 21)",
                                                       " (in 'mother.stan', line 263, column 4 to line 265, column 5)",
                                                       " (in 'mother.stan', line 264, column 6 to column 12)",
-                                                      " (in 'mother.stan', line 263, column 18 to line 265, column 5)",
                                                       " (in 'mother.stan', line 260, column 2 to line 266, column 3)",
                                                       " (in 'mother.stan', line 10, column 16 to column 17)",
                                                       " (in 'mother.stan', line 13, column 16 to column 25)",
@@ -663,18 +662,14 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 99, column 6 to line 102, column 7)",
                                                       " (in 'mother.stan', line 100, column 8 to column 14)",
                                                       " (in 'mother.stan', line 101, column 8 to column 14)",
-                                                      " (in 'mother.stan', line 99, column 20 to line 102, column 7)",
                                                       " (in 'mother.stan', line 103, column 6 to line 106, column 7)",
                                                       " (in 'mother.stan', line 104, column 8 to column 14)",
                                                       " (in 'mother.stan', line 105, column 8 to column 17)",
-                                                      " (in 'mother.stan', line 103, column 20 to line 106, column 7)",
                                                       " (in 'mother.stan', line 107, column 6 to line 113, column 7)",
                                                       " (in 'mother.stan', line 108, column 8 to line 111, column 9)",
                                                       " (in 'mother.stan', line 109, column 10 to column 16)",
                                                       " (in 'mother.stan', line 110, column 10 to column 16)",
-                                                      " (in 'mother.stan', line 108, column 22 to line 111, column 9)",
                                                       " (in 'mother.stan', line 112, column 8 to column 14)",
-                                                      " (in 'mother.stan', line 107, column 20 to line 113, column 7)",
                                                       " (in 'mother.stan', line 96, column 14 to line 114, column 5)",
                                                       " (in 'mother.stan', line 96, column 4 to line 114, column 5)",
                                                       " (in 'mother.stan', line 118, column 6 to column 13)",
@@ -682,11 +677,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 120, column 6 to line 123, column 7)",
                                                       " (in 'mother.stan', line 121, column 8 to column 14)",
                                                       " (in 'mother.stan', line 122, column 8 to column 14)",
-                                                      " (in 'mother.stan', line 120, column 20 to line 123, column 7)",
                                                       " (in 'mother.stan', line 124, column 6 to line 127, column 7)",
                                                       " (in 'mother.stan', line 125, column 8 to column 16)",
                                                       " (in 'mother.stan', line 126, column 8 to column 17)",
-                                                      " (in 'mother.stan', line 124, column 20 to line 127, column 7)",
                                                       " (in 'mother.stan', line 117, column 14 to line 128, column 5)",
                                                       " (in 'mother.stan', line 117, column 4 to line 128, column 5)",
                                                       " (in 'mother.stan', line 132, column 6 to column 13)",
@@ -694,11 +687,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 134, column 6 to line 137, column 7)",
                                                       " (in 'mother.stan', line 135, column 8 to column 14)",
                                                       " (in 'mother.stan', line 136, column 8 to column 14)",
-                                                      " (in 'mother.stan', line 134, column 20 to line 137, column 7)",
                                                       " (in 'mother.stan', line 138, column 6 to line 141, column 7)",
                                                       " (in 'mother.stan', line 139, column 8 to column 16)",
                                                       " (in 'mother.stan', line 140, column 8 to column 17)",
-                                                      " (in 'mother.stan', line 138, column 20 to line 141, column 7)",
                                                       " (in 'mother.stan', line 131, column 14 to line 142, column 5)",
                                                       " (in 'mother.stan', line 131, column 4 to line 142, column 5)",
                                                       " (in 'mother.stan', line 146, column 6 to column 13)",
@@ -706,11 +697,9 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 148, column 6 to line 151, column 7)",
                                                       " (in 'mother.stan', line 149, column 8 to column 14)",
                                                       " (in 'mother.stan', line 150, column 8 to column 14)",
-                                                      " (in 'mother.stan', line 148, column 20 to line 151, column 7)",
                                                       " (in 'mother.stan', line 152, column 6 to line 155, column 7)",
                                                       " (in 'mother.stan', line 153, column 8 to column 16)",
                                                       " (in 'mother.stan', line 154, column 8 to column 17)",
-                                                      " (in 'mother.stan', line 152, column 20 to line 155, column 7)",
                                                       " (in 'mother.stan', line 145, column 14 to line 156, column 5)",
                                                       " (in 'mother.stan', line 145, column 4 to line 156, column 5)",
                                                       " (in 'mother.stan', line 160, column 6 to column 12)",
@@ -763,12 +752,12 @@ foo(const T0__& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 188;
+    current_statement__ = 187;
     if (logical_eq(n, 0)) {
-      current_statement__ = 187;
+      current_statement__ = 186;
       return 1;
     } 
-    current_statement__ = 189;
+    current_statement__ = 188;
     return (n * foo((n - 1), pstream__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -816,11 +805,11 @@ sho(const T0__& t, const std::vector<T1__>& y,
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, 0);
     
-    current_statement__ = 193;
+    current_statement__ = 192;
     assign(dydt, cons_list(index_uni(1), nil_index_list()), rvalue(y, cons_list(index_uni(2), nil_index_list()), "pretty printed e"), "assigning variable dydt[(1 - 1)]");
-    current_statement__ = 194;
+    current_statement__ = 193;
     assign(dydt, cons_list(index_uni(2), nil_index_list()), (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "pretty printed e") - (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "pretty printed e") * rvalue(y, cons_list(index_uni(2), nil_index_list()), "pretty printed e"))), "assigning variable dydt[(2 - 1)]");
-    current_statement__ = 195;
+    current_statement__ = 194;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -853,7 +842,7 @@ foo_bar0(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 197;
+    current_statement__ = 196;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -883,7 +872,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 199;
+    current_statement__ = 198;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -915,7 +904,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 201;
+    current_statement__ = 200;
     return 2.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -947,7 +936,7 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 203;
+    current_statement__ = 202;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -979,7 +968,7 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 205;
+    current_statement__ = 204;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1011,7 +1000,7 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 207;
+    current_statement__ = 206;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1045,9 +1034,9 @@ unit_normal_lp(const T0__& u, const T1__& lp__, const T2__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 209;
+    current_statement__ = 208;
     lp_accum__.add(normal_log<false>(u, 0, 1));
-    current_statement__ = 210;
+    current_statement__ = 209;
     lp_accum__.add(uniform_log<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1079,33 +1068,33 @@ foo_1(const T0__& a, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 213;
+    current_statement__ = 212;
     while (1) {
       break;
     }
-    current_statement__ = 215;
+    current_statement__ = 214;
     while (0) {
       continue;
     }
-    current_statement__ = 217;
+    current_statement__ = 216;
     for (size_t i = 1; i <= 10; ++i) { break;}
-    current_statement__ = 219;
+    current_statement__ = 218;
     for (size_t i = 1; i <= 10; ++i) { continue;}
-    current_statement__ = 224;
+    current_statement__ = 223;
     while (1) {
       int b;
       
-      current_statement__ = 221;
+      current_statement__ = 220;
       b = 5;
       break;
     }
-    current_statement__ = 231;
+    current_statement__ = 230;
     while (1) {
-      current_statement__ = 229;
+      current_statement__ = 228;
       if (0) {
         break;
       } else {
-        current_statement__ = 227;
+        current_statement__ = 226;
         if (1) {
           break;
         } else {
@@ -1113,134 +1102,144 @@ foo_1(const T0__& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 234;
+    current_statement__ = 233;
     while (1) {
-      current_statement__ = 233;
+      current_statement__ = 232;
       while (0) {
         break;
       }
     }
-    current_statement__ = 238;
+    current_statement__ = 237;
     while (1) {
-      current_statement__ = 236;
+      current_statement__ = 235;
       for (size_t i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 257;
+    current_statement__ = 252;
     while (1) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, 0));
       
       int z;
       
-      current_statement__ = 241;
+      current_statement__ = 240;
       for (size_t sym49__ = 1; sym49__ <= stan::length(vs); ++sym49__) {
-        current_statement__ = 241;
+        std::vector<int> v;
+        current_statement__ = 240;
         v = rvalue(vs, cons_list(index_uni(sym49__), nil_index_list()), "pretty printed e");
-        current_statement__ = 242;
+        current_statement__ = 241;
         z = 0;
         break;}
-      current_statement__ = 245;
+      current_statement__ = 243;
       for (size_t sym50__ = 1; sym50__ <= stan::length(vs); ++sym50__) {
-        current_statement__ = 245;
+        std::vector<int> v;
+        current_statement__ = 243;
         v = rvalue(vs, cons_list(index_uni(sym50__), nil_index_list()), "pretty printed e");
-        current_statement__ = 246;
+        current_statement__ = 244;
         z = 0;
         continue;}
-      current_statement__ = 249;
+      current_statement__ = 246;
       for (size_t sym51__ = 1; sym51__ <= stan::length(vs); ++sym51__) {
-        current_statement__ = 249;
+        std::vector<int> v;
+        current_statement__ = 246;
         v = rvalue(vs, cons_list(index_uni(sym51__), nil_index_list()), "pretty printed e");
-        current_statement__ = 250;
+        current_statement__ = 247;
         for (size_t sym52__ = 1; sym52__ <= stan::length(v); ++sym52__) {
-          current_statement__ = 250;
+          int vv;
+          current_statement__ = 247;
           vv = rvalue(v, cons_list(index_uni(sym52__), nil_index_list()), "pretty printed e");
-          current_statement__ = 251;
+          current_statement__ = 248;
           z = 0;
           break;}
-        current_statement__ = 254;
+        current_statement__ = 250;
         z = 1;}
     }
-    current_statement__ = 269;
+    current_statement__ = 262;
     while (1) {
       local_scalar_t__ z;
       
       Eigen::Matrix<local_scalar_t__, -1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       
-      current_statement__ = 260;
+      current_statement__ = 255;
       for (size_t sym53__ = 1; sym53__ <= stan::length(vs); ++sym53__) {
-        current_statement__ = 260;
+        double v;
+        current_statement__ = 255;
         v = rvalue(vs, cons_list(index_uni(sym53__), nil_index_list()), "pretty printed e");
-        current_statement__ = 261;
+        current_statement__ = 256;
         z = 0;
         break;}
-      current_statement__ = 264;
+      current_statement__ = 258;
       for (size_t sym54__ = 1; sym54__ <= stan::length(vs); ++sym54__) {
-        current_statement__ = 264;
+        double v;
+        current_statement__ = 258;
         v = rvalue(vs, cons_list(index_uni(sym54__), nil_index_list()), "pretty printed e");
-        current_statement__ = 265;
+        current_statement__ = 259;
         z = 3.1;
         continue;}
     }
-    current_statement__ = 281;
+    current_statement__ = 272;
     while (1) {
       local_scalar_t__ z;
       
       Eigen::Matrix<local_scalar_t__, -1, 1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       
-      current_statement__ = 272;
+      current_statement__ = 265;
       for (size_t sym55__ = 1; sym55__ <= stan::length(vs); ++sym55__) {
-        current_statement__ = 272;
+        double v;
+        current_statement__ = 265;
         v = rvalue(vs, cons_list(index_uni(sym55__), nil_index_list()), "pretty printed e");
-        current_statement__ = 273;
+        current_statement__ = 266;
         z = 0;
         break;}
-      current_statement__ = 276;
+      current_statement__ = 268;
       for (size_t sym56__ = 1; sym56__ <= stan::length(vs); ++sym56__) {
-        current_statement__ = 276;
+        double v;
+        current_statement__ = 268;
         v = rvalue(vs, cons_list(index_uni(sym56__), nil_index_list()), "pretty printed e");
-        current_statement__ = 277;
+        current_statement__ = 269;
         z = 3.2;
         continue;}
     }
-    current_statement__ = 293;
+    current_statement__ = 282;
     while (1) {
       local_scalar_t__ z;
       
       Eigen::Matrix<local_scalar_t__, 1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       
-      current_statement__ = 284;
+      current_statement__ = 275;
       for (size_t sym57__ = 1; sym57__ <= stan::length(vs); ++sym57__) {
-        current_statement__ = 284;
+        double v;
+        current_statement__ = 275;
         v = rvalue(vs, cons_list(index_uni(sym57__), nil_index_list()), "pretty printed e");
-        current_statement__ = 285;
+        current_statement__ = 276;
         z = 0;
         break;}
-      current_statement__ = 288;
+      current_statement__ = 278;
       for (size_t sym58__ = 1; sym58__ <= stan::length(vs); ++sym58__) {
-        current_statement__ = 288;
+        double v;
+        current_statement__ = 278;
         v = rvalue(vs, cons_list(index_uni(sym58__), nil_index_list()), "pretty printed e");
-        current_statement__ = 289;
+        current_statement__ = 279;
         z = 3.3;
         continue;}
     }
-    current_statement__ = 301;
+    current_statement__ = 290;
     while (1) {
       int b;
       
-      current_statement__ = 295;
+      current_statement__ = 284;
       b = 5;
       {
         int c;
         
-        current_statement__ = 297;
+        current_statement__ = 286;
         c = 6;
         break;
       }
     }
-    current_statement__ = 302;
+    current_statement__ = 291;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1276,13 +1275,14 @@ foo_2(const T0__& a, std::ostream* pstream__) {
     
     int y;
     
-    current_statement__ = 306;
+    current_statement__ = 295;
     for (size_t sym59__ = 1; sym59__ <= stan::length(vs); ++sym59__) {
-      current_statement__ = 306;
+      int v;
+      current_statement__ = 295;
       v = rvalue(vs, cons_list(index_uni(sym59__), nil_index_list()), "pretty printed e");
-      current_statement__ = 307;
+      current_statement__ = 296;
       y = v;}
-    current_statement__ = 308;
+    current_statement__ = 297;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1314,7 +1314,7 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 310;
+    current_statement__ = 299;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1348,7 +1348,7 @@ foo_lp(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 312;
+    current_statement__ = 301;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1380,7 +1380,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 314;
+    current_statement__ = 303;
     FnReject__("user-specified rejection");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1419,23 +1419,23 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     
     local_scalar_t__ avg_scale;
     
-    current_statement__ = 318;
+    current_statement__ = 307;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 319;
+    current_statement__ = 308;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 321;
+    current_statement__ = 310;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 320;
+      current_statement__ = 309;
       FnReject__("user-specified rejection, difference above ", max_, " x:",
                  x, " y:", y);
     } 
-    current_statement__ = 323;
+    current_statement__ = 312;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 322;
+      current_statement__ = 311;
       FnReject__("user-specified rejection, difference below ", min_, " x:",
                  x, " y:", y);
     } 
-    current_statement__ = 324;
+    current_statement__ = 313;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1473,7 +1473,7 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 326;
+    current_statement__ = 315;
     return transpose(FnMakeRowVec__(1, 2, 3));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
@@ -1872,6 +1872,7 @@ class mother_model : public prob_grad {
         
         current_statement__ = 182;
         for (size_t sym12__ = 1; sym12__ <= stan::length(vs); ++sym12__) {
+          double v;
           current_statement__ = 182;
           v = rvalue(vs, cons_list(index_uni(sym12__), nil_index_list()), "pretty printed e");
           current_statement__ = 183;

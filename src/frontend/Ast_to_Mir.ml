@@ -45,7 +45,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
         | FunApp (fn_kind, {name; _}, args)
          |CondDistApp (fn_kind, {name; _}, args) ->
             FunApp (trans_fn_kind fn_kind, name, trans_exprs args)
-        | GetLP | GetTarget -> FunApp(StanLib, "target", [])
+        | GetLP | GetTarget -> FunApp (StanLib, "target", [])
         | ArrayExpr eles ->
             FunApp
               ( CompilerInternal
@@ -539,17 +539,37 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       let wrap expr = {expr; emeta= {mloc; mtype= UInt; madlevel= DataOnly}} in
       let iteratee = trans_expr iteratee
       and indexing_var = wrap (Var newsym) in
+      let indices =
+        match iteratee.emeta.mtype with
+        | UMatrix ->
+            [ (Ast.Single (Ast.IntNumeral "1"), UInt)
+            ; (Ast.Single (Ast.IntNumeral "1"), UInt) ]
+        | _ -> [(Ast.Single (Ast.IntNumeral "1"), UInt)]
+      in
+      let decl_type =
+        Semantic_check.inferred_unsizedtype_of_indexed_exn
+          ~loc:iteratee.emeta.mloc iteratee.emeta.mtype indices
+      in
+      let decl_loopvar =
+        Decl
+          { decl_adtype= iteratee.emeta.madlevel
+          ; decl_id= loopvar.name
+          ; decl_type= Unsized decl_type }
+      in
+      let decl_loopvar = {stmt= decl_loopvar; smeta} in
       let assign_loopvar =
         Assignment
           ( (loopvar.name, [])
           , Indexed (iteratee, [Single indexing_var]) |> wrap )
       in
       let assign_loopvar = {stmt= assign_loopvar; smeta} in
-      let body =
+      let body_stmts =
         match trans_single_stmt body with
-        | {stmt= Block body_stmts; smeta} ->
-            {stmt= Block (assign_loopvar :: body_stmts); smeta}
-        | {stmt; smeta} -> {stmt= Block [assign_loopvar; {stmt; smeta}]; smeta}
+        | {stmt= Block body_stmts; _} -> body_stmts
+        | b -> [b]
+      in
+      let body =
+        {stmt= Block (decl_loopvar :: assign_loopvar :: body_stmts); smeta}
       in
       For
         { loopvar= newsym
