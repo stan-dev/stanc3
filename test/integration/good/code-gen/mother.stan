@@ -185,7 +185,7 @@ functions {
   }
 
   void foo_4(real x) {
-    reject("user-specified rejection");
+    reject("user-specified rejection", x);
   }
 
   real relative_diff(real x, real y, real max_, real min_) {

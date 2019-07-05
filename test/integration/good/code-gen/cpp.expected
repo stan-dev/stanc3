@@ -722,7 +722,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 179, column 30 to line 181, column 3)",
                                                       " (in 'mother.stan', line 184, column 4 to column 24)",
                                                       " (in 'mother.stan', line 183, column 22 to line 185, column 3)",
-                                                      " (in 'mother.stan', line 188, column 4 to column 39)",
+                                                      " (in 'mother.stan', line 188, column 4 to column 42)",
                                                       " (in 'mother.stan', line 187, column 21 to line 189, column 3)",
                                                       " (in 'mother.stan', line 192, column 4 to column 18)",
                                                       " (in 'mother.stan', line 193, column 4 to column 19)",
@@ -1381,7 +1381,10 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   
   try {
     current_statement__ = 303;
-    FnReject__("user-specified rejection");
+    std::stringstream errmsg_stream__;
+    errmsg_stream__ << "user-specified rejection";
+    errmsg_stream__ << x;
+    throw std::domain_error(errmsg_stream__.str());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
           std::runtime_error(std::string("inside UDF foo_4") + ": " + e.what()), locations_array__[current_statement__]);
@@ -1426,14 +1429,26 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     current_statement__ = 310;
     if (logical_gt((abs_diff / avg_scale), max_)) {
       current_statement__ = 309;
-      FnReject__("user-specified rejection, difference above ", max_, " x:",
-                 x, " y:", y);
+      std::stringstream errmsg_stream__;
+      errmsg_stream__ << "user-specified rejection, difference above ";
+      errmsg_stream__ << max_;
+      errmsg_stream__ << " x:";
+      errmsg_stream__ << x;
+      errmsg_stream__ << " y:";
+      errmsg_stream__ << y;
+      throw std::domain_error(errmsg_stream__.str());
     } 
     current_statement__ = 312;
     if (logical_lt((abs_diff / avg_scale), min_)) {
       current_statement__ = 311;
-      FnReject__("user-specified rejection, difference below ", min_, " x:",
-                 x, " y:", y);
+      std::stringstream errmsg_stream__;
+      errmsg_stream__ << "user-specified rejection, difference below ";
+      errmsg_stream__ << min_;
+      errmsg_stream__ << " x:";
+      errmsg_stream__ << x;
+      errmsg_stream__ << " y:";
+      errmsg_stream__ << y;
+      throw std::domain_error(errmsg_stream__.str());
     } 
     current_statement__ = 313;
     return (abs_diff / avg_scale);
