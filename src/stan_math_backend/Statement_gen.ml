@@ -70,8 +70,6 @@ if (pstream__) {
     *pstream__ << std::endl;
 }
 *)
-  | FnPrint ->
-      Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
   | FnLength -> Some ("length", [])
   | _ -> None
 
@@ -122,6 +120,10 @@ let rec pp_statement (ppf : Format.formatter)
         pp_expr rhs
         (strf "assigning variable %a" pp_indexed_simple (assignee, idcs))
   | TargetPE e -> pf ppf "lp_accum__.add(%a);" pp_expr e
+  | NRFunApp (CompilerInternal, fname, args)
+    when fname = string_of_internal_fn FnPrint ->
+      let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
+      pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal, fname, {expr= Lit (Str, check_name); _} :: args)
     when fname = string_of_internal_fn FnCheck ->
       let args = {expr= Var "function__"; emeta= internal_meta} :: args in
@@ -134,14 +136,6 @@ let rec pp_statement (ppf : Format.formatter)
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
-  | NRFunApp (StanLib, fname, args) when fname = string_of_internal_fn FnReject
-    ->
-      (*
-        std::stringstream errmsg_stream__;
-        errmsg_stream__ << "user-specified rejection";
-        throw std::domain_error(errmsg_stream__.str());
-*)
-      pf ppf "%s(@[<hov>%a@]);" "reject" (list ~sep:comma pp_expr) args
   | NRFunApp (StanLib, fname, args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined, fname, args) ->

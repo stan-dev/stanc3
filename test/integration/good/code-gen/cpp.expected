@@ -1854,8 +1854,14 @@ class mother_model : public prob_grad {
           current_statement__ = 172;
           assign(l_mat, nil_index_list(), rvalue(d_ar_mat, cons_list(index_uni(i), cons_list(index_uni(j), nil_index_list())), "pretty printed e"), "assigning variable l_mat");
           current_statement__ = 173;
-          stan_print(pstream__, "ar dim1: ", i, " ar dim2: ", j, " matrix: ",
-                     l_mat);}}
+          if (pstream__) {
+            stan_print(pstream__, "ar dim1: ");
+            stan_print(pstream__, i);
+            stan_print(pstream__, " ar dim2: ");
+            stan_print(pstream__, j);
+            stan_print(pstream__, " matrix: ");
+            stan_print(pstream__, l_mat);
+          }}}
       current_statement__ = 178;
       assign(td_cfcov_54, nil_index_list(), diag_matrix(rep_vector(1,
                                                                    rows(
