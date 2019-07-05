@@ -23,8 +23,10 @@ transformed data {
   log_Base4_c <- log_Base4 - log_Base4_bar;
   log_Age_c <- log_Age - log_Age_bar;
   BT_c <- BT - BT_bar;
-  for (i in 1 : T) V4_c[i] <- V4[i] - V4_bar;
-  for (i in 1 : N) Trt_c[i] <- Trt[i] - Trt_bar;
+  for (i in 1 : T) 
+    V4_c[i] <- V4[i] - V4_bar;
+  for (i in 1 : N) 
+    Trt_c[i] <- Trt[i] - Trt_bar;
 }
 parameters {
   real a0;
@@ -56,12 +58,16 @@ model {
   b1 ~ normal(0, sigma_b1);
   for (n in 1 : N) {
     b[n] ~ normal(0, sigma_b);
-    y[n] ~ poisson_log(a0 + alpha_Base * log_Base4_c[n] + alpha_Trt * Trt_c[n] + alpha_BT * BT_c[n] + alpha_Age * log_Age_c[n] + b1[n] + alpha_V4 * V4_c + b[n]);
+    y[n] ~ poisson_log(a0 + alpha_Base * log_Base4_c[n]
+                       + alpha_Trt * Trt_c[n] + alpha_BT * BT_c[n]
+                       + alpha_Age * log_Age_c[n] + b1[n] + alpha_V4 * V4_c
+                       + b[n]);
   }
 }
 generated quantities {
   real alpha0;
-  alpha0 <- a0 - alpha_Base * log_Base4_bar - alpha_Trt * Trt_bar - alpha_BT * BT_bar - alpha_Age * log_Age_bar - alpha_V4 * V4_bar;
+  alpha0 <- a0 - alpha_Base * log_Base4_bar - alpha_Trt * Trt_bar
+            - alpha_BT * BT_bar - alpha_Age * log_Age_bar - alpha_V4 * V4_bar;
 }
 
 

@@ -156,11 +156,8 @@ let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UArray t
 
 let add_unqualified (name, rt, uqargts) =
-  let _ =
-    Hashtbl.add_multi stan_math_signatures ~key:name
-      ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
-  in
-  ()
+  Hashtbl.add_multi stan_math_signatures ~key:name
+    ~data:(rt, List.map ~f:(fun x -> (AutoDiffable, x)) uqargts)
 
 let add_qualified (name, rt, argts) =
   Hashtbl.add_multi stan_math_signatures ~key:name ~data:(rt, argts)
@@ -213,7 +210,7 @@ let for_vector_types s =
   done
 
 (* -- Start populating stan_math_signaturess -- *)
-let _ =
+let () =
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
   add_unary_vectorized "acos" ;

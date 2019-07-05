@@ -43,13 +43,17 @@ transformed parameters {
   real abc_tp = algebra_solverfake(2.9);
   vector[2] theta_p;
   theta_p = algebra_solver(algebra_system, x, y, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01,
+                           10);
   theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01,
+                           10);
   theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01,
+                           10);
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01, 0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01,
+                           0.01, 10);
 }
 model {
   dummy_parameter ~ normal(0, 1);
@@ -985,21 +989,27 @@ functions {
   int foo(int a) {
     while (1) break;
     while (0) continue;
-    for (i in 1 : 10) break;
-    for (i in 1 : 10) continue;
+    for (i in 1 : 10) 
+      break;
+    for (i in 1 : 10) 
+      continue;
     while (1) {
       int b;
       b = 5;
       break;
     }
     while (1) {
-      if (0) break;
-      else if (1) break;
-      else break;
+      if (0) 
+        break;
+      else if (1) 
+        break;
+      else 
+        break;
     }
     while (1) while (0) break;
     while (1) {
-      for (i in 1 : 10) break;
+      for (i in 1 : 10) 
+        break;
     }
     while (1) {
       int vs[2, 3];
@@ -1067,13 +1077,13 @@ functions {
     }
     while (1) {
       while (1) {
-
+        
       }
       break;
     }
     while (1) {
       while (1) {
-
+        
       }
       continue;
     }
@@ -1111,9 +1121,12 @@ parameters {
 }
 model {
   int x;
-  if (x) y ~ normal(0, 1);
-  else if (!x) y ~ normal(0, 1);
-  else y ~ normal(0, 1);
+  if (x) 
+    y ~ normal(0, 1);
+  else if (!x) 
+    y ~ normal(0, 1);
+  else 
+    y ~ normal(0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format conditional_op_fun_promote.stan
@@ -1399,7 +1412,8 @@ transformed parameters {
 }
 model {
   theta ~ beta(1, 1);
-  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  for (n in 1 : N) 
+    y[n] ~ bernoulli(theta);
 }
 generated quantities {
   int gq_i1 = 1 ? N : N;
@@ -1766,7 +1780,8 @@ model {
   real lm2 = 2.0;
   real lm3 = tp2;
   theta ~ beta(1, 1);
-  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  for (n in 1 : N) 
+    y[n] ~ bernoulli(theta);
 }
 generated quantities {
   real gq_d_tp1 = 1.0;
@@ -2222,7 +2237,8 @@ parameters {
   real y;
 }
 model {
-  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1) + normal_ccdf_log(3, 0, 1);
+  target += normal_log(y, 0, 1) + normal_cdf_log(2, 0, 1)
+            + normal_ccdf_log(3, 0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format duplicate-warns.stan
@@ -2287,7 +2303,8 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format fun-return-typ2.stan
 functions {
   real foo() {
-    if (1) reject("");
+    if (1) 
+      reject("");
     reject("");
   }
 }
@@ -2300,10 +2317,13 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format fun-return-typ4.stan
 functions {
   real foo() {
-    if (1) reject("");
+    if (1) 
+      reject("");
     else {
-      if (1) ;
-      else reject("");
+      if (1) 
+        ;
+      else 
+        reject("");
     }
     reject("");
   }
@@ -2445,7 +2465,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format fun_as_stmt.stan
 functions {
   void foo_lp() {
-
+    
   }
 }
 model {
@@ -2484,7 +2504,8 @@ increment_log_prob(...); is deprecated and will be removed in the future. Use ta
 functions {
   int foo(int n);
   int foo(int n) {
-    if (n == 0) return 1;
+    if (n == 0) 
+      return 1;
     return n * foo(n - 1);
   }
 }
@@ -2497,7 +2518,8 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format functions-good-void.stan
 functions {
-  void linear_regression_lp(vector x, vector y, real alpha, real beta, real sigma) {
+  void linear_regression_lp(vector x, vector y, real alpha, real beta,
+                            real sigma) {
     y ~ normal(x * alpha + beta, sigma);
     sigma ~ cauchy(0, 2.5);
     alpha ~ normal(0, 10);
@@ -2579,8 +2601,10 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format functions-promote-return.stan
 functions {
   vector foo(vector x, real y) {
-    if (y < 10) return log(x);
-    else return log(y * x);
+    if (y < 10) 
+      return log(x);
+    else 
+      return log(y * x);
   }
 }
 transformed data {
@@ -2844,7 +2868,8 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes1.stan
 functions {
   real foo() {
-    if (215) return 24;
+    if (215) 
+      return 24;
     return 24;
   }
 }
@@ -2852,14 +2877,16 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes2.stan
 functions {
   void foo() {
-    if (215) return;
+    if (215) 
+      return;
   }
 }
 
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes3.stan
 functions {
   real foo() {
-    if (215) return 24;
+    if (215) 
+      return 24;
     reject("");
   }
 }
@@ -2867,8 +2894,10 @@ functions {
   $ ../../../../install/default/bin/stanc --auto-format good_fundef_returntypes4.stan
 functions {
   real foo() {
-    if (215) return 24;
-    else reject("");
+    if (215) 
+      return 24;
+    else 
+      reject("");
   }
 }
 
@@ -3440,9 +3469,12 @@ model {
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+                              1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+                              1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+                              1e-10, 1e8);
 }
 generated quantities {
   real y_hat[T, 2];
@@ -3450,10 +3482,14 @@ generated quantities {
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+                              1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+                              1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+                              1e-10, 1e8);
+  y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+                              1e-10, 1e8);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
@@ -3484,10 +3520,14 @@ model {
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+                            1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+                            1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+                            1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+                            1e-10, 1e8);
 }
 generated quantities {
   real y_hat[T, 2];
@@ -3495,10 +3535,14 @@ generated quantities {
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10, 1e-10, 1e8);
-  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10, 1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
+                            1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
+                            1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
+                            1e-10, 1e8);
+  y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
+                            1e-10, 1e8);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
@@ -3591,7 +3635,8 @@ model {
   if (1 > 2) {
     a ~ normal(0, 1);
   }
-  else if2 ~ normal(0, 1);
+  else 
+    if2 ~ normal(0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format keywords-else.stan
@@ -3801,7 +3846,8 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 
   $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
 functions {
-  vector foo(vector shared_params, vector job_params, real[] data_r, int[] data_i) {
+  vector foo(vector shared_params, vector job_params, real[] data_r,
+             int[] data_i) {
     return [1, 2, 3]';
   }
   real map_rectfake(real x) {
@@ -3822,9 +3868,12 @@ transformed parameters {
   real abc1_p = 3;
   real abc2_p = map_rectfake(abc1_p);
   real abc3_p = map_rectfake(12);
-  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, data_r, data_i);
-  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, data_r, data_i);
-  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, data_r, data_i);
+  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, data_r,
+                                 data_i);
+  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, data_r,
+                                 data_i);
+  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, data_r,
+                                 data_i);
 }
 model {
   real abc_m = map_rectfake(abc1_p);
@@ -3832,7 +3881,8 @@ model {
 generated quantities {
   real abc1_gq = map_rectfake(12);
   real abc2_gq = map_rectfake(abc1_p);
-  vector[3] y_hat_gq = map_rect(foo, shared_params_d, job_params_d, data_r, data_i);
+  vector[3] y_hat_gq = map_rect(foo, shared_params_d, job_params_d, data_r,
+                                data_i);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format mat_assign.stan
@@ -4049,7 +4099,9 @@ parameters {
 }
 transformed parameters {
   real mu;
-  mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number() + positive_infinity() + negative_infinity() + machine_precision();
+  mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number()
+       + positive_infinity() + negative_infinity() + machine_precision(
+       );
 }
 model {
 
@@ -4096,7 +4148,8 @@ functions {
 transformed data {
   real y;
   real t[2, 2];
-  y = integrate_ode(foo, rep_array(1.0, 1), 1.0, t[1], rep_array(1.0, 1), rep_array(1.0, 1), rep_array(1, 1))[1, 1];
+  y = integrate_ode(foo, rep_array(1.0, 1), 1.0, t[1], rep_array(1.0, 1),
+                    rep_array(1.0, 1), rep_array(1, 1))[1, 1];
 }
 model {
 
@@ -4129,12 +4182,16 @@ transformed parameters {
   y_hat = integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int);
   y_hat = integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int);
   y_hat = integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int);
-  y_hat = integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
-  y_hat = integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
-  y_hat = integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01, 0.01, 10);
+  y_hat = integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01,
+                             0.01, 10);
+  y_hat = integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01,
+                            0.01, 10);
+  y_hat = integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int,
+                              0.01, 0.01, 10);
 }
 model {
-  for (t in 1 : 10) y[t] ~ normal(y_hat[t], sigma);
+  for (t in 1 : 10) 
+    y[t] ~ normal(y_hat[t], sigma);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
@@ -4283,23 +4340,29 @@ functions {
     }
     return gamma;
   }
-  real[] logistic_trend(real k, real m, real[] delta, real[] t, real[] cap, real[,] A, real[] t_change, int S, int T) {
+  real[] logistic_trend(real k, real m, real[] delta, real[] t, real[] cap,
+                        real[,] A, real[] t_change, int S, int T) {
     real gamma[S];
     real Y[T];
     gamma = logistic_gamma(k, m, delta, t_change, S);
     for (i in 1 : T) {
-      Y[i] = cap[i] / (1 + exp(-(k + dot_product(A[i], delta)) * (t[i] - (m + dot_product(A[i], gamma)))));
+      Y[i] = cap[i]
+             / (1
+                + exp(-(k + dot_product(A[i], delta))
+                      * (t[i] - (m + dot_product(A[i], gamma)))));
     }
     return Y;
   }
-  real[] linear_trend(real k, real m, real[] delta, real[] t, real[,] A, real[] t_change, int S, int T) {
+  real[] linear_trend(real k, real m, real[] delta, real[] t, real[,] A,
+                      real[] t_change, int S, int T) {
     real gamma[S];
     real Y[T];
     for (i in 1 : S) {
       gamma[i] = -t_change[i] * delta[i];
     }
     for (i in 1 : T) {
-      Y[i] = (k + dot_product(A[i], delta)) * t[i] + (m + dot_product(A[i], gamma));
+      Y[i] = (k + dot_product(A[i], delta)) * t[i]
+             + (m + dot_product(A[i], gamma));
     }
     return Y;
   }
@@ -4346,7 +4409,8 @@ transformed parameters {
     beta_a[i] = beta[i] * s_a[i];
   }
   for (i in 1 : T) {
-    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m)) + dot_product(X[i], beta_a));
+    Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m))
+            + dot_product(X[i], beta_a));
   }
 }
 model {
@@ -4390,7 +4454,8 @@ data {
 }
 transformed data {
   vector[N] y;
-  for (n in 1 : N) y[n] = normal_rng(0, 1);
+  for (n in 1 : N) 
+    y[n] = normal_rng(0, 1);
   print(y);
 }
 parameters {
@@ -5043,7 +5108,8 @@ parameters {
   vector[10] y;
 }
 model {
-  for (n in 1 : 10) y ~ normal(0, 1);
+  for (n in 1 : 10) 
+    y ~ normal(0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning1.stan

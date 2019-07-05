@@ -85,12 +85,6 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf smeta ) ;
   match stmt with
-  | Assignment (lhs, {expr= FunApp (CompilerInternal, f, _) as expr; emeta})
-    when internal_fn_of_string f = Some FnReadData ->
-      let with_vestigial_idx =
-        {expr= Indexed ({expr; emeta}, [Single loop_bottom]); emeta}
-      in
-      pp_statement ppf {stmt= Assignment (lhs, with_vestigial_idx); smeta}
   | Assignment ((vident, []), ({emeta= {mtype= UInt; _}; _} as rhs))
    |Assignment ((vident, []), ({emeta= {mtype= UReal; _}; _} as rhs)) ->
       pf ppf "%s = %a;" vident pp_expr rhs

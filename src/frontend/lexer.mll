@@ -182,7 +182,7 @@ rule token = parse
                                 if Stack.length include_stack = 1
                                 then Parser.EOF
                                 else
-                                  let _ = (Stack.pop_exn include_stack) in
+                                  let _ : lexbuf = (Stack.pop_exn include_stack) in
                                   let old_lexbuf =
                                     (Stack.top_exn include_stack) in
                                       token old_lexbuf }

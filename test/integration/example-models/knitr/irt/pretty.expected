@@ -28,7 +28,9 @@ model {
   delta ~ lognormal(mu_delta, sigma_delta);
   zeta ~ normal(0, 10);
   mu_delta ~ lognormal(0, 10);
-  for (n in 1 : N) log_odds[n] <- delta[ii[n]] * (zeta + alpha[jj[n]] + gamma[kk[n]] - beta[ii[n]]);
+  for (n in 1 : N) 
+    log_odds[n] <- delta[ii[n]]
+                   * (zeta + alpha[jj[n]] + gamma[kk[n]] - beta[ii[n]]);
   y ~ bernoulli_logit(log_odds);
 }
 
@@ -60,7 +62,8 @@ model {
   alpha ~ normal(0, 1);
   beta ~ normal(0, 5);
   delta ~ gamma(2, 2);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(delta[i] * (alpha - beta[i]));
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(delta[i] * (alpha - beta[i]));
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl.stan
@@ -76,7 +79,8 @@ parameters {
 model {
   theta ~ normal(0, 1);
   b ~ normal(-1, 2);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
 
@@ -111,7 +115,8 @@ transformed parameters {
   }
 }
 model {
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
 
@@ -177,7 +182,8 @@ parameters {
 model {
   theta ~ normal(0, 1);
   b ~ normal(-1, 2);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 generated quantities {
   int<lower=0, upper=I> z_sim[100];
@@ -186,7 +192,8 @@ generated quantities {
     theta_sim[j] <- (j - 20) / 4.0;
     z_sim[j] <- 0;
     for (i in 1 : I) {
-      if (bernoulli_logit_rng(theta_sim[j] - b[i])) z_sim[j] <- z_sim[j] + 1;
+      if (bernoulli_logit_rng(theta_sim[j] - b[i])) 
+        z_sim[j] <- z_sim[j] + 1;
     }
   }
 }
@@ -260,7 +267,8 @@ model {
   sigma_theta ~ cauchy(0, 2);
   b ~ normal(mu_b, sigma_b);
   theta ~ normal(0, sigma_theta);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
 
@@ -285,7 +293,8 @@ parameters {
   vector[J] theta;
 }
 model {
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format irt_1pl_pin.stan
@@ -331,7 +340,8 @@ parameters {
 model {
   theta ~ normal(0, 1);
   b ~ normal(-1, 2);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 generated quantities {
   int<lower=0, upper=I> z_sim[100];
@@ -340,7 +350,8 @@ generated quantities {
     theta_sim[j] <- (j - 20) / 4.0;
     z_sim[j] <- 0;
     for (i in 1 : I) {
-      if (bernoulli_logit_rng(theta_sim[j] - b[i])) z_sim[j] <- z_sim[j] + 1;
+      if (bernoulli_logit_rng(theta_sim[j] - b[i])) 
+        z_sim[j] <- z_sim[j] + 1;
     }
   }
 }
@@ -408,10 +419,12 @@ parameters {
 transformed parameters {
   vector[J] theta;
   theta[1] <- -sum(theta_raw);
-  for (j in 2 : J) theta[j] <- theta_raw[j];
+  for (j in 2 : J) 
+    theta[j] <- theta_raw[j];
 }
 model {
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
 
@@ -468,7 +481,8 @@ parameters {
 model {
   theta ~ normal(mu_theta, sigma_theta);
   b ~ normal(mu_b, sigma_b);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(theta - b[i]);
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(theta - b[i]);
 }
 
 
@@ -497,7 +511,9 @@ generated quantities {
   for (j in 1 : 100) {
     theta_sim[j] <- (j - 50) / 10.0;
     z_sim[j] <- 0;
-    for (i in 1 : I) z_sim[j] <- z_sim[j] + bernoulli_rng(inv_logit(a[i] * (theta_sim[j] - b[i])));
+    for (i in 1 : I) 
+      z_sim[j] <- z_sim[j]
+                  + bernoulli_rng(inv_logit(a[i] * (theta_sim[j] - b[i])));
   }
 }
 

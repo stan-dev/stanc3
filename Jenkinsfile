@@ -9,6 +9,15 @@ def runShell(String command){
     return "${output}"
 }
 
+def getDockerUser(){
+    if("${env.NODE_NAME}" == "gelman-group-linux"){
+        return "jenkins-slave"
+    }
+    else{
+        return "opam"
+    }
+}
+
 def tagName() {
     if (env.TAG_NAME) {
         env.TAG_NAME
@@ -143,7 +152,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u opam"
+                            args "-u ${getDockerUser()}"
                         }
                     }
                     steps {

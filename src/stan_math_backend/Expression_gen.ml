@@ -88,7 +88,6 @@ let rec pp_index ppf = function
   | All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
   | Upfrom e -> pf ppf "index_min(%a)" pp_expr e
-  | Downfrom e -> pf ppf "index_max(%a)" pp_expr e
   | Between (e_low, e_high) ->
       pf ppf "index_min_max(%a, %a)" pp_expr e_low pp_expr e_high
   | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e

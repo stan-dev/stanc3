@@ -8,7 +8,9 @@ data {
 transformed data {
   int<lower=1, upper=nrep + 1> sum_y[nsite, nyear];
   int ny_minus_1 = nyear - 1;
-  for (i in 1 : nsite) for (k in 1 : nyear) sum_y[i, k] = sum(y[i, 1 : nrep, k]) + 1;
+  for (i in 1 : nsite) 
+    for (k in 1 : nyear) 
+      sum_y[i, k] = sum(y[i, 1 : nrep, k]) + 1;
 }
 parameters {
   real<lower=0, upper=1> psi1;
@@ -32,7 +34,8 @@ model {
     gam[1, 2] = (1 - psi1) * po[2, 1, sum_y[i, 1]];
     for (t in 2 : nyear) {
       for (k in 1 : 2) {
-        for (j in 1 : 2) acc[j] = gam[t - 1, j] * ps[j, t - 1, k] * po[k, t, sum_y[i, t]];
+        for (j in 1 : 2) 
+          acc[j] = gam[t - 1, j] * ps[j, t - 1, k] * po[k, t, sum_y[i, t]];
         gam[t, k] = sum(acc);
       }
     }
@@ -52,11 +55,16 @@ generated quantities {
     gamma[k] = ps[2, k, 1];
   }
   psi[1] = psi1;
-  for (k in 2 : nyear) psi[k] = psi[k - 1] * phi[k - 1] + (1 - psi[k - 1]) * gamma[k - 1];
-  for (i in 1 : nsite) for (k in 1 : nyear) z[i, k] = bernoulli_rng(psi[k]);
-  for (t in 1 : nyear) n_occ[t] = sum(z[1 : nsite, t]);
+  for (k in 2 : nyear) 
+    psi[k] = psi[k - 1] * phi[k - 1] + (1 - psi[k - 1]) * gamma[k - 1];
+  for (i in 1 : nsite) 
+    for (k in 1 : nyear) 
+      z[i, k] = bernoulli_rng(psi[k]);
+  for (t in 1 : nyear) 
+    n_occ[t] = sum(z[1 : nsite, t]);
   growthr[ : ny_minus_1] = psi[2 : ] ./ psi[ : ny_minus_1];
-  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1] ./ psi[2 : ];
+  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1]
+                            ./ psi[2 : ];
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format Dynocc2.stan
@@ -90,7 +98,8 @@ model {
     gam[1, 2] = (1 - psi1) * po[2, 1, y[i, 1] + 1];
     for (t in 2 : nyear) {
       for (k in 1 : 2) {
-        for (j in 1 : 2) acc[j] = gam[t - 1, j] * ps[j, t - 1, k] * po[k, t, y[i, t] + 1];
+        for (j in 1 : 2) 
+          acc[j] = gam[t - 1, j] * ps[j, t - 1, k] * po[k, t, y[i, t] + 1];
         gam[t, k] = sum(acc);
       }
     }
@@ -110,11 +119,16 @@ generated quantities {
     gamma[k] = ps[2, k, 1];
   }
   psi[1] = psi1;
-  for (k in 2 : nyear) psi[k] = psi[k - 1] * phi[k - 1] + (1 - psi[k - 1]) * gamma[k - 1];
-  for (i in 1 : nsite) for (k in 1 : nyear) z[i, k] = bernoulli_rng(psi[k]);
-  for (t in 1 : nyear) n_occ[t] = sum(z[1 : nsite, t]);
+  for (k in 2 : nyear) 
+    psi[k] = psi[k - 1] * phi[k - 1] + (1 - psi[k - 1]) * gamma[k - 1];
+  for (i in 1 : nsite) 
+    for (k in 1 : nyear) 
+      z[i, k] = bernoulli_rng(psi[k]);
+  for (t in 1 : nyear) 
+    n_occ[t] = sum(z[1 : nsite, t]);
   growthr[ : ny_minus_1] = psi[2 : ] ./ psi[ : ny_minus_1];
-  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1] ./ psi[2 : ];
+  turnover[ : ny_minus_1] = (1 - psi[ : ny_minus_1]) .* gamma[ : ny_minus_1]
+                            ./ psi[2 : ];
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format bluebug.stan
@@ -135,7 +149,8 @@ transformed data {
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
-    if (sum_y[i]) occ_obs = occ_obs + 1;
+    if (sum_y[i]) 
+      occ_obs = occ_obs + 1;
   }
   DATES2 = DATES .* DATES;
   HOURS2 = HOURS .* HOURS;
@@ -152,8 +167,10 @@ parameters {
 transformed parameters {
   vector[R] logit_psi;
   matrix[R, T] logit_p;
-  for (i in 1 : R) logit_psi[i] = alpha_psi + beta_psi * edge[i];
-  logit_p = alpha_p + beta1_p * DATES + beta2_p * DATES2 + beta3_p * HOURS + beta4_p * HOURS2;
+  for (i in 1 : R) 
+    logit_psi[i] = alpha_psi + beta_psi * edge[i];
+  logit_p = alpha_p + beta1_p * DATES + beta2_p * DATES2 + beta3_p * HOURS
+            + beta4_p * HOURS2;
 }
 model {
   alpha_psi ~ normal(0, 10);
@@ -165,10 +182,13 @@ model {
   beta4_p ~ normal(0, 10);
   for (i in 1 : R) {
     if (sum_y[i]) {
-      target += bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(y[i, 1 : last[i]]| logit_p[i, 1 : last[i]]);
+      target += bernoulli_logit_lpmf(1| logit_psi[i])
+                + bernoulli_logit_lpmf(y[i, 1 : last[i]]| logit_p[i, 1 : last[i]]);
     }
     else {
-      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]), bernoulli_logit_lpmf(0| logit_psi[i]));
+      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i])
+                            + bernoulli_logit_lpmf(0| logit_p[i, 1 : last[i]]),
+                            bernoulli_logit_lpmf(0| logit_psi[i]));
     }
   }
 }
@@ -230,7 +250,8 @@ model {
     for (k in 1 : 3) {
       lp[k] = categorical_lpmf(k| phi[s]);
       for (t in 1 : T) {
-        if (y[s, t]) lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
+        if (y[s, t]) 
+          lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
       }
     }
     target += log_sum_exp(lp);
@@ -240,9 +261,13 @@ generated quantities {
   int<lower=1, upper=3> z[R];
   int occ[3, R];
   real n_occ[3];
-  for (s in 1 : R) z[s] = categorical_rng(phi[s]);
-  for (i in 1 : 3) for (s in 1 : R) occ[i, s] = (z[s] == i);
-  for (i in 1 : 3) n_occ[i] = sum(occ[i]);
+  for (s in 1 : R) 
+    z[s] = categorical_rng(phi[s]);
+  for (i in 1 : 3) 
+    for (s in 1 : R) 
+      occ[i, s] = (z[s] == i);
+  for (i in 1 : 3) 
+    n_occ[i] = sum(occ[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format owls_ms2.stan
@@ -261,7 +286,9 @@ transformed parameters {
   simplex[3] p3[T];
   simplex[3] phi[R];
   simplex[3] p[3, T];
-  for (t in 1 : T) for (i in 1 : 3) p3[t, i] = beta[i, t] / sum(beta[ : , t]);
+  for (t in 1 : T) 
+    for (i in 1 : 3) 
+      p3[t, i] = beta[i, t] / sum(beta[ : , t]);
   phi[ : , 1] = rep_array(1 - psi, R);
   phi[ : , 2] = rep_array(psi * (1 - r), R);
   phi[ : , 3] = rep_array(psi * r, R);
@@ -280,13 +307,15 @@ transformed parameters {
 model {
   real acc[3];
   vector[3] gamma[T];
-  for (t in 1 : T) beta[1 : 3, t] ~ gamma(1, 1);
+  for (t in 1 : T) 
+    beta[1 : 3, t] ~ gamma(1, 1);
   for (s in 1 : R) {
     vector[3] lp;
     for (k in 1 : 3) {
       lp[k] = categorical_lpmf(k| phi[s]);
       for (t in 1 : T) {
-        if (y[s, t]) lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
+        if (y[s, t]) 
+          lp[k] = lp[k] + categorical_lpmf(y[s, t]| p[k, t]);
       }
     }
     target += log_sum_exp(lp);
@@ -296,9 +325,13 @@ generated quantities {
   int<lower=1, upper=3> z[R];
   int occ[3, R];
   real n_occ[3];
-  for (s in 1 : R) z[s] = categorical_rng(phi[s]);
-  for (i in 1 : 3) for (s in 1 : R) occ[i, s] = (z[s] == i);
-  for (i in 1 : 3) n_occ[i] = sum(occ[i]);
+  for (s in 1 : R) 
+    z[s] = categorical_rng(phi[s]);
+  for (i in 1 : 3) 
+    for (s in 1 : R) 
+      occ[i, s] = (z[s] == i);
+  for (i in 1 : 3) 
+    n_occ[i] = sum(occ[i]);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format site-occ.stan
@@ -313,7 +346,8 @@ transformed data {
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
-    if (sum_y[i]) occ_obs = occ_obs + 1;
+    if (sum_y[i]) 
+      occ_obs = occ_obs + 1;
   }
 }
 parameters {
@@ -327,7 +361,8 @@ model {
       y[i] ~ bernoulli(p);
     }
     else {
-      target += log_sum_exp(bernoulli_lpmf(1| psi) + bernoulli_lpmf(0| p) * T, bernoulli_lpmf(0| psi));
+      target += log_sum_exp(bernoulli_lpmf(1| psi) + bernoulli_lpmf(0| p) * T,
+                            bernoulli_lpmf(0| psi));
     }
   }
 }
@@ -351,7 +386,8 @@ transformed data {
   occ_obs = 0;
   for (i in 1 : R) {
     sum_y[i] = sum(y[i]);
-    if (sum_y[i]) occ_obs = occ_obs + 1;
+    if (sum_y[i]) 
+      occ_obs = occ_obs + 1;
   }
 }
 parameters {
@@ -373,7 +409,9 @@ model {
       y[i] ~ bernoulli_logit(logit_p[i]);
     }
     else {
-      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i]) + bernoulli_logit_lpmf(0| logit_p[i]), bernoulli_logit_lpmf(0| logit_psi[i]));
+      target += log_sum_exp(bernoulli_logit_lpmf(1| logit_psi[i])
+                            + bernoulli_logit_lpmf(0| logit_p[i]),
+                            bernoulli_logit_lpmf(0| logit_psi[i]));
     }
   }
 }

@@ -254,7 +254,9 @@ parameters {
   real y;
 }
 model {
-  increment_log_prob(log_sum_exp(log(theta) + normal_log(y, mu[1], sigma[1]), log(1.0 - theta) + normal_log(y, mu[2], sigma[2])));
+  increment_log_prob(log_sum_exp(log(theta) + normal_log(y, mu[1], sigma[1]),
+                                 log(1.0 - theta)
+                                 + normal_log(y, mu[2], sigma[2])));
 }
 
 
@@ -447,7 +449,9 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format wishart.stan
 transformed data {
   cov_matrix[2] S;
-  for (i in 1 : 2) for (j in 1 : 2) S[i, j] <- 0.0;
+  for (i in 1 : 2) 
+    for (j in 1 : 2) 
+      S[i, j] <- 0.0;
   S[1, 1] <- 2.0;
   S[2, 2] <- 0.5;
 }
@@ -510,7 +514,9 @@ transformed data {
   S[3, 3] <- 11.676181;
   S[3, 4] <- -3.5866852;
   S[4, 4] <- 1.4482736;
-  for (m in 1 : 4) for (n in 1 : (m - 1)) S[m, n] <- S[n, m];
+  for (m in 1 : 4) 
+    for (n in 1 : (m - 1)) 
+      S[m, n] <- S[n, m];
 }
 parameters {
   cov_matrix[4] W;
@@ -665,7 +671,9 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../install/default/bin/stanc --auto-format wishart2x2.stan
 transformed data {
   cov_matrix[2] S;
-  for (i in 1 : 2) for (j in 1 : 2) S[i, j] <- 0.0;
+  for (i in 1 : 2) 
+    for (j in 1 : 2) 
+      S[i, j] <- 0.0;
   S[1, 1] <- 2.0;
   S[2, 2] <- 0.5;
 }
@@ -686,7 +694,8 @@ transformed parameters {
   W[2, 1] <- cov;
 }
 model {
-  increment_log_prob(log(2.0 * sd1) + log(2.0 * sd2) + log(sd1 * sd2 * (1.0 - rho * rho)));
+  increment_log_prob(log(2.0 * sd1) + log(2.0 * sd2)
+                     + log(sd1 * sd2 * (1.0 - rho * rho)));
   W ~ wishart(4, S);
 }
 

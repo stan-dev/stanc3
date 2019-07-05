@@ -384,9 +384,7 @@ let rec free_vars_expr (e : Middle.expr_typed_located) =
 and free_vars_idx (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Set.Poly.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
-    ->
-      free_vars_expr e
+  | Middle.Single e | Middle.Upfrom e | Middle.MultiIndex e -> free_vars_expr e
   | Middle.Between (e1, e2) ->
       Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
@@ -485,9 +483,7 @@ let rec used_subexpressions_expr (e : Middle.expr_typed_located) =
 and used_expressions_idx_help f (i : Middle.expr_typed_located Middle.index) =
   match i with
   | Middle.All -> Middle.ExprSet.empty
-  | Middle.Single e | Middle.Upfrom e | Middle.Downfrom e | Middle.MultiIndex e
-    ->
-      f e
+  | Middle.Single e | Middle.Upfrom e | Middle.MultiIndex e -> f e
   | Middle.Between (e1, e2) -> Middle.ExprSet.union (f e1) (f e2)
 
 (** Calculate the set of expressions of an expression *)
@@ -784,35 +780,29 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       (* STEP 1: initialize data structures *)
       let workstack = Stack.create () in
       (* TODO: does the order matter a lot for efficiency here? *)
-      let _ =
-        Map.iteri F.successors ~f:(fun ~key ~data ->
-            Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) )
-      in
+      Map.iteri F.successors ~f:(fun ~key ~data ->
+          Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) ) ;
       let analysis_in = Hashtbl.create (module F) in
-      let _ =
-        Map.iter_keys
-          ~f:(fun l ->
-            Hashtbl.add_exn analysis_in ~key:l
-              ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
-          F.successors
-      in
+      Map.iter_keys
+        ~f:(fun l ->
+          Hashtbl.add_exn analysis_in ~key:l
+            ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
+        F.successors ;
       (* STEP 2: iterate *)
-      let _ =
-        while Stack.length workstack <> 0 do
-          let l, l' = Stack.pop_exn workstack in
-          let old_analysis_in_l' = Hashtbl.find_exn analysis_in l' in
-          let new_analysis_in_l' =
-            T.transfer_function l (Hashtbl.find_exn analysis_in l)
+      while Stack.length workstack <> 0 do
+        let l, l' = Stack.pop_exn workstack in
+        let old_analysis_in_l' = Hashtbl.find_exn analysis_in l' in
+        let new_analysis_in_l' =
+          T.transfer_function l (Hashtbl.find_exn analysis_in l)
+        in
+        if not (L.leq new_analysis_in_l' old_analysis_in_l') then
+          let () =
+            Hashtbl.set analysis_in ~key:l'
+              ~data:(L.lub old_analysis_in_l' new_analysis_in_l')
           in
-          if not (L.leq new_analysis_in_l' old_analysis_in_l') then
-            let _ =
-              Hashtbl.set analysis_in ~key:l'
-                ~data:(L.lub old_analysis_in_l' new_analysis_in_l')
-            in
-            Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
-                Stack.push workstack (l', l'') )
-        done
-      in
+          Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
+              Stack.push workstack (l', l'') )
+      done ;
       (* STEP 3: present final results *)
       let analysis_in_out =
         Map.fold ~init:Map.Poly.empty

@@ -13,7 +13,8 @@ parameters {
 transformed parameters {
   vector<lower=0>[T] N_est;
   N_est[1] = N_est1;
-  for (t in 1 : (T - 1)) N_est[t + 1] = N_est[t] * lambda[t];
+  for (t in 1 : (T - 1)) 
+    N_est[t + 1] = N_est[t] * lambda[t];
 }
 model {
   lambda ~ normal(mean_lambda, sigma_proc);
@@ -42,7 +43,8 @@ parameters {
 transformed parameters {
   vector[T] logN_est;
   logN_est[1] = logN_est1;
-  for (t in 1 : (T - 1)) logN_est[t + 1] = logN_est[t] + r[t];
+  for (t in 1 : (T - 1)) 
+    logN_est[t + 1] = logN_est[t] + r[t];
 }
 model {
   logN_est1 ~ normal(5.6, 10);
@@ -64,7 +66,9 @@ generated quantities {
     pr[t] = normal_rng(mean_r, sigma_proc);
     plogN_est[t] = plogN_est[t - 1] + pr[t];
   }
-  for (t in 1 : T) N_est[t] = exp(logN_est[t]);
-  for (t in 1 : pyears) N_est[T + t] = exp(plogN_est[t]);
+  for (t in 1 : T) 
+    N_est[t] = exp(logN_est[t]);
+  for (t in 1 : pyears) 
+    N_est[T + t] = exp(plogN_est[t]);
 }
 

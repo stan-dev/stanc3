@@ -3,7 +3,8 @@ functions {
   int foo(int a) {
     int vs[2];
     int y;
-    for (v in vs) y = v;
+    for (v in vs) 
+      y = v;
     return 0;
   }
 }
@@ -19,7 +20,8 @@ functions {
   int foo(int a) {
     int vs[2];
     int y;
-    for (v in vs) y = 3;
+    for (v in vs) 
+      y = 3;
     return 0;
   }
 }
@@ -35,7 +37,8 @@ functions {
   int foo(int a) {
     int vs[2, 3];
     int y;
-    for (v in vs[1]) y = 3;
+    for (v in vs[1]) 
+      y = 3;
     return 0;
   }
 }

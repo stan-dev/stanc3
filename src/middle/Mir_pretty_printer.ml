@@ -117,7 +117,6 @@ and pp_index pp_e ppf = function
   | All -> Fmt.char ppf ':'
   | Single index -> pp_e ppf index
   | Upfrom index -> Fmt.pf ppf {|%a:|} pp_e index
-  | Downfrom index -> Fmt.pf ppf {|:%a|} pp_e index
   | Between (lower, upper) -> Fmt.pf ppf {|%a:%a|} pp_e lower pp_e upper
   | MultiIndex index -> Fmt.pf ppf {|%a|} pp_e index
 

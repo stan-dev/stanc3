@@ -16,7 +16,8 @@ model {
   for (t in (K + 1) : T) {
     real mu;
     mu = alpha;
-    for (k in 1 : K) mu = mu + beta[k] * y[t - k];
+    for (k in 1 : K) 
+      mu = mu + beta[k] * y[t - k];
     y[t] ~ normal(mu, sigma);
   }
 }
@@ -61,7 +62,8 @@ parameters {
 }
 transformed parameters {
   real theta[J];
-  for (j in 1 : J) theta[j] = mu + tau * theta_tilde[j];
+  for (j in 1 : J) 
+    theta[j] = mu + tau * theta_tilde[j];
 }
 model {
   mu ~ normal(0, 5);
@@ -85,7 +87,9 @@ parameters {
 model {
   real sigma[T];
   sigma[1] = sigma1;
-  for (t in 2 : T) sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu) + beta1 * square(sigma[t - 1]));
+  for (t in 2 : T) 
+    sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu)
+                    + beta1 * square(sigma[t - 1]));
   y ~ normal(mu, sigma);
 }
 
@@ -107,7 +111,8 @@ generated quantities {
   vector[11] y;
   int k[11];
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(1e-10, N));
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+                       + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     vector[N] f = multi_normal_cholesky_rng(rep_vector(0, N), L_cov);
     for (n in 1 : N) {
@@ -131,7 +136,8 @@ parameters {
 transformed parameters {
   vector[N] f;
   {
-    matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(1e-10, N));
+    matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+                       + diag_matrix(rep_vector(1e-10, N));
     matrix[N, N] L_cov = cholesky_decompose(cov);
     f = L_cov * f_tilde;
   }
@@ -155,7 +161,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
-  matrix[N, N] cov = cov_exp_quad(x, alpha, rho) + diag_matrix(rep_vector(sigma, N));
+  matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
+                     + diag_matrix(rep_vector(sigma, N));
   matrix[N, N] L_cov = cholesky_decompose(cov);
   rho ~ gamma(25, 4);
   alpha ~ normal(0, 2);
@@ -186,7 +193,8 @@ model {
   mu_b ~ normal(0, 5);
   sigma_b ~ cauchy(0, 2);
   b ~ normal(mu_b, sigma_b);
-  for (i in 1 : I) y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
+  for (i in 1 : I) 
+    y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_corr_gauss.stan
@@ -235,7 +243,9 @@ model {
   sigma ~ normal(0, 2);
   mu ~ normal(0, 2);
   theta ~ beta(5, 5);
-  for (n in 1 : N) target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]), normal_lpdf(y[n]| mu[2], sigma[2]));
+  for (n in 1 : N) 
+    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]),
+                      normal_lpdf(y[n]| mu[2], sigma[2]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
@@ -252,12 +262,15 @@ model {
   sigma ~ normal(0, 2);
   mu ~ normal(0, 2);
   theta ~ beta(5, 5);
-  for (n in 1 : N) target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]), normal_lpdf(y[n]| mu[2], sigma[2]));
+  for (n in 1 : N) 
+    target += log_mix(theta, normal_lpdf(y[n]| mu[1], sigma[1]),
+                      normal_lpdf(y[n]| mu[2], sigma[2]));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
 functions {
-  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
+                              int[] x_i) {
     real dydt[1];
     real k_a = theta[1];
     real K_m = theta[2];
@@ -266,7 +279,8 @@ functions {
     real V = x_r[2];
     real dose = 0;
     real elim = (V_m / V) * y[1] / (K_m + y[1]);
-    if (t > 0) dose = exp(-k_a * t) * D * k_a / V;
+    if (t > 0) 
+      dose = exp(-k_a * t) * D * k_a / V;
     dydt[1] = dose - elim;
     return dydt;
   }
@@ -294,7 +308,8 @@ transformed parameters {
   real C[N_t, 1];
   {
     real theta[3] = {k_a, K_m, V_m};
-    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
+    C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r,
+                          x_i);
   }
 }
 model {
@@ -302,16 +317,19 @@ model {
   K_m ~ cauchy(0, 1);
   V_m ~ cauchy(0, 1);
   sigma ~ cauchy(0, 1);
-  for (n in 1 : N_t) C_hat[n] ~ lognormal(log(C[n, 1]), sigma);
+  for (n in 1 : N_t) 
+    C_hat[n] ~ lognormal(log(C[n, 1]), sigma);
 }
 generated quantities {
   real C_ppc[N_t];
-  for (n in 1 : N_t) C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
+  for (n in 1 : N_t) 
+    C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
-  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
+                              int[] x_i) {
     real dydt[1];
     real k_a = theta[1];
     real K_m = theta[2];
@@ -320,7 +338,8 @@ functions {
     real V = x_r[2];
     real dose = 0;
     real elim = (V_m / V) * y[1] / (K_m + y[1]);
-    if (t > 0) dose = exp(-k_a * t) * D * k_a / V;
+    if (t > 0) 
+      dose = exp(-k_a * t) * D * k_a / V;
     dydt[1] = dose - elim;
     return dydt;
   }
@@ -334,7 +353,8 @@ transformed data {
   real sigma = 0.1;
   real x_r[2] = {30.0, 2.0};
   int x_i[0];
-  for (n in 1 : N_t) times[n] = 0.5 * n;
+  for (n in 1 : N_t) 
+    times[n] = 0.5 * n;
 }
 model {
 
@@ -347,9 +367,11 @@ generated quantities {
   real ts[N_t];
   real C[N_t, 1];
   real C_hat[N_t];
-  for (n in 1 : N_t) ts[n] = times[n];
+  for (n in 1 : N_t) 
+    ts[n] = times[n];
   C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
-  for (n in 1 : N_t) C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
+  for (n in 1 : N_t) 
+    C_hat[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
@@ -395,7 +417,8 @@ model {
   xi ~ cauchy(0, 25);
   delta ~ cauchy(0, 1);
   stoi_hat[1] ~ poisson(y0[1] - y[1, 1]);
-  for (n in 2 : N_t) stoi_hat[n] ~ poisson(y[n - 1, 1] - y[n, 1]);
+  for (n in 2 : N_t) 
+    stoi_hat[n] ~ poisson(y[n - 1, 1] - y[n, 1]);
   B_hat ~ lognormal(log(col(to_matrix(y), 4)), 0.15);
 }
 

@@ -29,7 +29,8 @@ model {
   alpha12 ~ normal(0.0, 1.0E3);
   tau ~ gamma(1.0E-3, 1.0E-3);
   b ~ normal(0.0, sigma);
-  n ~ binomial_logit(N, alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1x2 + b);
+  n ~ binomial_logit(N,
+                     alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1x2 + b);
 }
 
 
@@ -112,7 +113,8 @@ model {
   alpha12 ~ normal(0.0, 1.0);
   sigma ~ cauchy(0, 1);
   c ~ normal(0.0, sigma);
-  n ~ binomial_logit(N, alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1x2 + b);
+  n ~ binomial_logit(N,
+                     alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1x2 + b);
 }
 
 
@@ -256,7 +258,8 @@ model {
   alpha12 ~ normal(0.0, 1.0);
   sigma ~ cauchy(0, 1);
   b ~ normal(0.0, sigma);
-  n ~ binomial_logit(N, alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1x2 + b);
+  n ~ binomial_logit(N,
+                     alpha0 + alpha1 * x1 + alpha2 * x2 + alpha12 * x1x2 + b);
 }
 
 
