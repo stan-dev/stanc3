@@ -1474,7 +1474,7 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
   
   try {
     current_statement__ = 315;
-    return transpose(FnMakeRowVec__(1, 2, 3));
+    return transpose(stan::math::to_row_vector({1, 2, 3}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(
           std::runtime_error(std::string("inside UDF foo_5") + ": " + e.what()), locations_array__[current_statement__]);
@@ -2323,11 +2323,11 @@ class mother_model : public prob_grad {
       if (jacobian__) {
         current_statement__ = 15;
         assign(p_cfcov_54, nil_index_list(), cholesky_factor_constrain(
-               p_cfcov_54_sym22__, 4, lp__), "assigning variable p_cfcov_54");
+               p_cfcov_54_sym22__, 5, 4, lp__), "assigning variable p_cfcov_54");
       } else {
         current_statement__ = 15;
         assign(p_cfcov_54, nil_index_list(), cholesky_factor_constrain(
-               p_cfcov_54_sym22__, 4), "assigning variable p_cfcov_54");
+               p_cfcov_54_sym22__, 5, 4), "assigning variable p_cfcov_54");
       }
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_sym23__;
       p_cfcov_33_sym23__ = Eigen::Matrix<local_scalar_t__, -1, 1>((((3 * (3 - 1)) / 2) + ((3 - 3) * 3)));
@@ -2341,11 +2341,11 @@ class mother_model : public prob_grad {
       if (jacobian__) {
         current_statement__ = 16;
         assign(p_cfcov_33, nil_index_list(), cholesky_factor_constrain(
-               p_cfcov_33_sym23__, 3, lp__), "assigning variable p_cfcov_33");
+               p_cfcov_33_sym23__, 3, 3, lp__), "assigning variable p_cfcov_33");
       } else {
         current_statement__ = 16;
         assign(p_cfcov_33, nil_index_list(), cholesky_factor_constrain(
-               p_cfcov_33_sym23__, 3), "assigning variable p_cfcov_33");
+               p_cfcov_33_sym23__, 3, 3), "assigning variable p_cfcov_33");
       }
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_sym24__;
       p_cfcov_33_ar_sym24__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>((((3 * (3 - 1)) / 2) + ((3 - 3) * 3))));
@@ -2366,12 +2366,12 @@ class mother_model : public prob_grad {
           current_statement__ = 17;
           assign(p_cfcov_33_ar, cons_list(index_uni(sym25__), nil_index_list()), cholesky_factor_constrain(
                  rvalue(p_cfcov_33_ar_sym24__, cons_list(index_uni(sym25__), nil_index_list()), "pretty printed e"),
-                 3, lp__), "assigning variable p_cfcov_33_ar[(sym25__ - 1)]");
+                 3, 3, lp__), "assigning variable p_cfcov_33_ar[(sym25__ - 1)]");
         } else {
           current_statement__ = 17;
           assign(p_cfcov_33_ar, cons_list(index_uni(sym25__), nil_index_list()), cholesky_factor_constrain(
                  rvalue(p_cfcov_33_ar_sym24__, cons_list(index_uni(sym25__), nil_index_list()), "pretty printed e"),
-                 3), "assigning variable p_cfcov_33_ar[(sym25__ - 1)]");
+                 3, 3), "assigning variable p_cfcov_33_ar[(sym25__ - 1)]");
         }}
       std::vector<local_scalar_t__> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<local_scalar_t__>(N, 0);
@@ -3146,7 +3146,7 @@ class mother_model : public prob_grad {
       p_cfcov_54_sym40__ = in__.vector((((4 * (4 - 1)) / 2) + ((5 - 4) * 4)));
       current_statement__ = 15;
       assign(p_cfcov_54, nil_index_list(), cholesky_factor_constrain(
-             p_cfcov_54_sym40__, 4), "assigning variable p_cfcov_54");
+             p_cfcov_54_sym40__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<double, -1, 1> p_cfcov_33_sym41__;
       p_cfcov_33_sym41__ = Eigen::Matrix<double, -1, 1>((((3 * (3 - 1)) / 2) + ((3 - 3) * 3)));
       
@@ -3157,7 +3157,7 @@ class mother_model : public prob_grad {
       p_cfcov_33_sym41__ = in__.vector((((3 * (3 - 1)) / 2) + ((3 - 3) * 3)));
       current_statement__ = 16;
       assign(p_cfcov_33, nil_index_list(), cholesky_factor_constrain(
-             p_cfcov_33_sym41__, 3), "assigning variable p_cfcov_33");
+             p_cfcov_33_sym41__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<double, -1, 1>> p_cfcov_33_ar_sym42__;
       p_cfcov_33_ar_sym42__ = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>((((3 * (3 - 1)) / 2) + ((3 - 3) * 3))));
       
@@ -3175,7 +3175,7 @@ class mother_model : public prob_grad {
         current_statement__ = 17;
         assign(p_cfcov_33_ar, cons_list(index_uni(sym43__), nil_index_list()), cholesky_factor_constrain(
                rvalue(p_cfcov_33_ar_sym42__, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"),
-               3), "assigning variable p_cfcov_33_ar[(sym43__ - 1)]");}
+               3, 3), "assigning variable p_cfcov_33_ar[(sym43__ - 1)]");}
       vars__.push_back(p_real);
       for (size_t sym37__ = 1; sym37__ <= N; ++sym37__) {
         vars__.push_back(rvalue(p_real_1d_ar, cons_list(index_uni(sym37__), nil_index_list()), "pretty printed e"));

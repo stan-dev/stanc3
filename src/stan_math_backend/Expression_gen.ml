@@ -241,8 +241,13 @@ and pp_ordinary_fn ppf f es =
     (sep ^ String.concat ~sep:", " extra_args)
 
 and pp_compiler_internal_fn ut f ppf es =
+  let array_literal ppf es =
+    pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
+  in
   match internal_fn_of_string f with
-  | Some FnMakeArray -> pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es
+  | Some FnMakeArray -> array_literal ppf es
+  | Some FnMakeRowVec ->
+      pf ppf "stan::math::to_row_vector(%a)" array_literal es
   | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
   | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
   | Some FnReadData -> read_data ut ppf es
