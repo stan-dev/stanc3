@@ -59,6 +59,17 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
   | Unsized ut -> pp_decl ppf (vident, ut, adtype)
 
 let math_fn_translations = function
+  (* XXX
+if (pstream__) {
+    stan_print(pstream__,"ar dim1: ");
+    stan_print(pstream__,i);
+    stan_print(pstream__," ar dim2: ");
+    stan_print(pstream__,j);
+    stan_print(pstream__," matrix: ");
+    stan_print(pstream__,l_mat);
+    *pstream__ << std::endl;
+}
+*)
   | FnPrint ->
       Some ("stan_print", [{expr= Var "pstream__"; emeta= internal_meta}])
   | FnLength -> Some ("length", [])
@@ -123,6 +134,14 @@ let rec pp_statement (ppf : Format.formatter)
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
+  | NRFunApp (StanLib, fname, args) when fname = string_of_internal_fn FnReject
+    ->
+      (*
+        std::stringstream errmsg_stream__;
+        errmsg_stream__ << "user-specified rejection";
+        throw std::domain_error(errmsg_stream__.str());
+*)
+      pf ppf "%s(@[<hov>%a@]);" "reject" (list ~sep:comma pp_expr) args
   | NRFunApp (StanLib, fname, args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined, fname, args) ->
