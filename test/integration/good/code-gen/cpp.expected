@@ -600,7 +600,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 258, column 2 to column 62)",
                                                       " (in 'mother.stan', line 259, column 2 to column 62)",
                                                       " (in 'mother.stan', line 261, column 4 to column 11)",
-                                                      " (in 'mother.stan', line 262, column 4 to column 21)",
+                                                      " (in 'mother.stan', line 262, column 4 to column 35)",
                                                       " (in 'mother.stan', line 263, column 4 to line 265, column 5)",
                                                       " (in 'mother.stan', line 264, column 6 to column 12)",
                                                       " (in 'mother.stan', line 260, column 2 to line 266, column 3)",
@@ -1873,14 +1873,17 @@ class mother_model : public prob_grad {
                                                                    stan::model::deep_copy(
                                                                    td_cfcov_33)))), "assigning variable td_cfcov_33");
       {
+        double z;
         
-        vs = Eigen::Matrix<double, 1, -1>(2);
+        Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
+        blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
         
         current_statement__ = 182;
-        for (size_t sym12__ = 1; sym12__ <= stan::length(vs); ++sym12__) {
+        for (size_t sym12__ = 1; sym12__ <= stan::length(blocked_tdata_vs);
+             ++sym12__) {
           double v;
           current_statement__ = 182;
-          v = rvalue(vs, cons_list(index_uni(sym12__), nil_index_list()), "pretty printed e");
+          v = rvalue(blocked_tdata_vs, cons_list(index_uni(sym12__), nil_index_list()), "pretty printed e");
           current_statement__ = 183;
           z = 0;}
       }

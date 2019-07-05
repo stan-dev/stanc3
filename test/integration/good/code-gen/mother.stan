@@ -259,8 +259,8 @@ transformed data {
   td_cfcov_33 = diag_matrix(rep_vector(1, rows(td_cfcov_33)));
   {
     real z;
-    row_vector[2] vs;
-    for (v in vs) {
+    row_vector[2] blocked_tdata_vs;
+    for (v in blocked_tdata_vs) {
       z = 0;
     }
   }
