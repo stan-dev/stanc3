@@ -59,17 +59,6 @@ let pp_possibly_sized_decl ppf (vident, pst, adtype) =
   | Unsized ut -> pp_decl ppf (vident, ut, adtype)
 
 let math_fn_translations = function
-  (* XXX
-if (pstream__) {
-    stan_print(pstream__,"ar dim1: ");
-    stan_print(pstream__,i);
-    stan_print(pstream__," ar dim2: ");
-    stan_print(pstream__,j);
-    stan_print(pstream__," matrix: ");
-    stan_print(pstream__,l_mat);
-    *pstream__ << std::endl;
-}
-*)
   | FnLength -> Some ("length", [])
   | _ -> None
 
