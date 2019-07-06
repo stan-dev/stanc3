@@ -75,7 +75,7 @@ pipeline {
                 sh """
           cd performance-tests-cmdstan
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          echo "`pwd`/test/integration/good/code-gen/mother.stan" > known_good_perf_all.tests"
+          echo "`pwd`/test/integration/good/code-gen/mother.stan" > known_good_perf_all.tests
           cat known_good_perf_all.tests
           CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
