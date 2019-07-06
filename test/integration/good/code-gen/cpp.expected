@@ -3367,135 +3367,60 @@ class mother_model : public prob_grad {
               vars__.push_back(rvalue(tp_cfcov_33_ar, cons_list(index_uni(sym25__), cons_list(index_uni(sym26__), cons_list(index_uni(sym27__), nil_index_list()))), "pretty printed e"));
             }}}
       } 
-      double gq_r1;
-      
-      double gq_r2;
-      
-      std::vector<double> gq_real_1d_ar;
-      gq_real_1d_ar = std::vector<double>(N, 0);
-      
-      std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
-      gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
-      
-      Eigen::Matrix<double, -1, 1> gq_vec;
-      gq_vec = Eigen::Matrix<double, -1, 1>(N);
-      
-      std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
-      gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
-      gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      
-      Eigen::Matrix<double, 1, -1> gq_row_vec;
-      gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
-      
-      std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
-      gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
-      gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
-      
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
-      gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
-      
-      Eigen::Matrix<double, -1, 1> gq_simplex;
-      gq_simplex = Eigen::Matrix<double, -1, 1>(N);
-      
-      std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
-      gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
-      gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      
-      Eigen::Matrix<double, -1, -1> gq_cfcov_54;
-      gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
-      
-      Eigen::Matrix<double, -1, -1> gq_cfcov_33;
-      gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
-      
-      std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
-      gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
-      
       if (emit_generated_quantities__) {
+        double gq_r1;
+        
         current_statement__ = 54;
         gq_r1 = foo_bar1(p_real, pstream__);
+        double gq_r2;
+        
         current_statement__ = 55;
         gq_r2 = foo_bar1(J, pstream__);
-        current_statement__ = 56;
-        for (size_t sym31__ = 1; sym31__ <= N; ++sym31__) {
-          current_statement__ = 56;
-          current_statement__ = 56;
-          check_greater_or_equal(function__, "gq_real_1d_ar[sym31__]",
-                                 rvalue(gq_real_1d_ar, cons_list(index_uni(sym31__), nil_index_list()), "pretty printed e"),
-                                 0);}
-        current_statement__ = 57;
-        for (size_t sym31__ = 1; sym31__ <= N; ++sym31__) {
-          current_statement__ = 57;
-          for (size_t sym32__ = 1; sym32__ <= M; ++sym32__) {
-            current_statement__ = 57;
-            for (size_t sym33__ = 1; sym33__ <= K; ++sym33__) {
-              current_statement__ = 57;
-              current_statement__ = 57;
-              check_greater_or_equal(function__,
-                                     "gq_real_3d_ar[sym31__, sym32__, sym33__]",
-                                     rvalue(gq_real_3d_ar, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), cons_list(index_uni(sym33__), nil_index_list()))), "pretty printed e"),
-                                     0);}}}
-        current_statement__ = 58;
-        current_statement__ = 58;
-        check_less_or_equal(function__, "gq_vec", gq_vec, 1);
-        current_statement__ = 64;
-        for (size_t sym31__ = 1; sym31__ <= 4; ++sym31__) {
-          current_statement__ = 64;
-          for (size_t sym32__ = 1; sym32__ <= 5; ++sym32__) {
-            current_statement__ = 64;
-            current_statement__ = 64;
-            check_greater_or_equal(function__, "gq_ar_mat[sym31__, sym32__]",
-                                   rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), nil_index_list())), "pretty printed e"),
-                                   0);}}
-        current_statement__ = 64;
-        for (size_t sym31__ = 1; sym31__ <= 4; ++sym31__) {
-          current_statement__ = 64;
-          for (size_t sym32__ = 1; sym32__ <= 5; ++sym32__) {
-            current_statement__ = 64;
-            current_statement__ = 64;
-            check_less_or_equal(function__, "gq_ar_mat[sym31__, sym32__]",
-                                rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), nil_index_list())), "pretty printed e"),
-                                1);}}
-        current_statement__ = 65;
-        current_statement__ = 65;
-        check_simplex(function__, "gq_simplex", gq_simplex);
-        current_statement__ = 66;
-        for (size_t sym32__ = 1; sym32__ <= N; ++sym32__) {
-          current_statement__ = 66;
-          current_statement__ = 66;
-          check_simplex(function__, "gq_1d_simplex[sym32__]",
-                        rvalue(gq_1d_simplex, cons_list(index_uni(sym32__), nil_index_list()), "pretty printed e"));
-        }
-        current_statement__ = 67;
-        for (size_t sym33__ = 1; sym33__ <= N; ++sym33__) {
-          current_statement__ = 67;
-          for (size_t sym34__ = 1; sym34__ <= M; ++sym34__) {
-            current_statement__ = 67;
-            for (size_t sym35__ = 1; sym35__ <= K; ++sym35__) {
-              current_statement__ = 67;
-              current_statement__ = 67;
-              check_simplex(function__,
-                            "gq_3d_simplex[sym33__, sym34__, sym35__]",
-                            rvalue(gq_3d_simplex, cons_list(index_uni(sym33__), cons_list(index_uni(sym34__), cons_list(index_uni(sym35__), nil_index_list()))), "pretty printed e"));
-            }}}
-        current_statement__ = 68;
-        current_statement__ = 68;
-        check_cholesky_factor(function__, "gq_cfcov_54", gq_cfcov_54);
-        current_statement__ = 69;
-        current_statement__ = 69;
-        check_cholesky_factor(function__, "gq_cfcov_33", gq_cfcov_33);
-        current_statement__ = 70;
-        for (size_t sym36__ = 1; sym36__ <= K; ++sym36__) {
-          current_statement__ = 70;
-          current_statement__ = 70;
-          check_cholesky_factor(function__, "gq_cfcov_33_ar[sym36__]",
-                                rvalue(gq_cfcov_33_ar, cons_list(index_uni(sym36__), nil_index_list()), "pretty printed e"));
-        }
+        std::vector<double> gq_real_1d_ar;
+        gq_real_1d_ar = std::vector<double>(N, 0);
+        
+        std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
+        gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
+        
+        Eigen::Matrix<double, -1, 1> gq_vec;
+        gq_vec = Eigen::Matrix<double, -1, 1>(N);
+        
+        std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
+        gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+        
+        std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
+        gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+        
+        Eigen::Matrix<double, 1, -1> gq_row_vec;
+        gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
+        
+        std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
+        gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+        
+        std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
+        gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+        
+        std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
+        gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+        
+        Eigen::Matrix<double, -1, 1> gq_simplex;
+        gq_simplex = Eigen::Matrix<double, -1, 1>(N);
+        
+        std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
+        gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+        
+        std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
+        gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+        
+        Eigen::Matrix<double, -1, -1> gq_cfcov_54;
+        gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+        
+        Eigen::Matrix<double, -1, -1> gq_cfcov_33;
+        gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+        
+        std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
+        gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+        
         current_statement__ = 71;
         assign(gq_real_1d_ar, nil_index_list(), p_real_1d_ar, "assigning variable gq_real_1d_ar");
         current_statement__ = 72;
@@ -3600,6 +3525,81 @@ class mother_model : public prob_grad {
             for (size_t sym31__ = 1; sym31__ <= K; ++sym31__) {
               vars__.push_back(rvalue(gq_cfcov_33_ar, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), cons_list(index_uni(sym33__), nil_index_list()))), "pretty printed e"));
             }}}
+        current_statement__ = 56;
+        for (size_t sym31__ = 1; sym31__ <= N; ++sym31__) {
+          current_statement__ = 56;
+          current_statement__ = 56;
+          check_greater_or_equal(function__, "gq_real_1d_ar[sym31__]",
+                                 rvalue(gq_real_1d_ar, cons_list(index_uni(sym31__), nil_index_list()), "pretty printed e"),
+                                 0);}
+        current_statement__ = 57;
+        for (size_t sym31__ = 1; sym31__ <= N; ++sym31__) {
+          current_statement__ = 57;
+          for (size_t sym32__ = 1; sym32__ <= M; ++sym32__) {
+            current_statement__ = 57;
+            for (size_t sym33__ = 1; sym33__ <= K; ++sym33__) {
+              current_statement__ = 57;
+              current_statement__ = 57;
+              check_greater_or_equal(function__,
+                                     "gq_real_3d_ar[sym31__, sym32__, sym33__]",
+                                     rvalue(gq_real_3d_ar, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), cons_list(index_uni(sym33__), nil_index_list()))), "pretty printed e"),
+                                     0);}}}
+        current_statement__ = 58;
+        current_statement__ = 58;
+        check_less_or_equal(function__, "gq_vec", gq_vec, 1);
+        current_statement__ = 64;
+        for (size_t sym31__ = 1; sym31__ <= 4; ++sym31__) {
+          current_statement__ = 64;
+          for (size_t sym32__ = 1; sym32__ <= 5; ++sym32__) {
+            current_statement__ = 64;
+            current_statement__ = 64;
+            check_greater_or_equal(function__, "gq_ar_mat[sym31__, sym32__]",
+                                   rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), nil_index_list())), "pretty printed e"),
+                                   0);}}
+        current_statement__ = 64;
+        for (size_t sym31__ = 1; sym31__ <= 4; ++sym31__) {
+          current_statement__ = 64;
+          for (size_t sym32__ = 1; sym32__ <= 5; ++sym32__) {
+            current_statement__ = 64;
+            current_statement__ = 64;
+            check_less_or_equal(function__, "gq_ar_mat[sym31__, sym32__]",
+                                rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), nil_index_list())), "pretty printed e"),
+                                1);}}
+        current_statement__ = 65;
+        current_statement__ = 65;
+        check_simplex(function__, "gq_simplex", gq_simplex);
+        current_statement__ = 66;
+        for (size_t sym32__ = 1; sym32__ <= N; ++sym32__) {
+          current_statement__ = 66;
+          current_statement__ = 66;
+          check_simplex(function__, "gq_1d_simplex[sym32__]",
+                        rvalue(gq_1d_simplex, cons_list(index_uni(sym32__), nil_index_list()), "pretty printed e"));
+        }
+        current_statement__ = 67;
+        for (size_t sym33__ = 1; sym33__ <= N; ++sym33__) {
+          current_statement__ = 67;
+          for (size_t sym34__ = 1; sym34__ <= M; ++sym34__) {
+            current_statement__ = 67;
+            for (size_t sym35__ = 1; sym35__ <= K; ++sym35__) {
+              current_statement__ = 67;
+              current_statement__ = 67;
+              check_simplex(function__,
+                            "gq_3d_simplex[sym33__, sym34__, sym35__]",
+                            rvalue(gq_3d_simplex, cons_list(index_uni(sym33__), cons_list(index_uni(sym34__), cons_list(index_uni(sym35__), nil_index_list()))), "pretty printed e"));
+            }}}
+        current_statement__ = 68;
+        current_statement__ = 68;
+        check_cholesky_factor(function__, "gq_cfcov_54", gq_cfcov_54);
+        current_statement__ = 69;
+        current_statement__ = 69;
+        check_cholesky_factor(function__, "gq_cfcov_33", gq_cfcov_33);
+        current_statement__ = 70;
+        for (size_t sym36__ = 1; sym36__ <= K; ++sym36__) {
+          current_statement__ = 70;
+          current_statement__ = 70;
+          check_cholesky_factor(function__, "gq_cfcov_33_ar[sym36__]",
+                                rvalue(gq_cfcov_33_ar, cons_list(index_uni(sym36__), nil_index_list()), "pretty printed e"));
+        }
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(

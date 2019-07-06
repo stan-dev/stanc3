@@ -742,20 +742,11 @@ let trans_prog filename p : typed_prog =
   let gen_from_block declc block =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
-  let part_decls declc block =
-    List.partition_tf
-      ~f:(function {stmt= Decl _; _} -> true | _ -> false)
-      (gen_from_block declc block)
-  in
   let txparam_decls, txparam_stmts =
-    part_decls
+    gen_from_block
       {dread= None; dconstrain= None; dadlevel= DataOnly}
       TransformedParameters
-  in
-  let gq_decls, gq_stmts =
-    part_decls
-      {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
-      GeneratedQuantities
+    |> List.partition_tf ~f:(function {stmt= Decl _; _} -> true | _ -> false)
   in
   let generate_quantities =
     gen_from_block
@@ -765,8 +756,11 @@ let trans_prog filename p : typed_prog =
     @ compiler_if
         "emit_transformed_parameters__ || emit_generated_quantities__"
         txparam_stmts
-    @ gq_decls
-    @ compiler_if "emit_generated_quantities__" gq_stmts
+    @ compiler_if "emit_generated_quantities__"
+        (migrate_checks_to_end_of_block
+           (gen_from_block
+              {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
+              GeneratedQuantities))
   in
   let transform_inits =
     gen_from_block

@@ -179,17 +179,11 @@ let%expect_test "gen quant" =
   print_s [%sexp (m.generate_quantities : stmt_loc list)] ;
   [%expect
     {|
-    ((Decl (decl_adtype DataOnly) (decl_id mat)
-      (decl_type
-       (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
-     (IfElse (Var emit_generated_quantities__)
+    ((IfElse (Var emit_generated_quantities__)
       (Block
-       ((For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
-         (body
-          (Block
-           ((NRFunApp CompilerInternal FnCheck__
-             ((Lit Str greater_or_equal) (Lit Str mat[sym1__])
-              (Indexed (Var mat) ((Single (Var sym1__)))) (Lit Int 0)))))))
+       ((Decl (decl_adtype DataOnly) (decl_id mat)
+         (decl_type
+          (Sized (SArray (SMatrix (Lit Int 10) (Lit Int 20)) (Lit Int 5)))))
         (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
          (body
           (Block
@@ -202,5 +196,11 @@ let%expect_test "gen quant" =
                    ((NRFunApp CompilerInternal FnWriteParam__
                      ((Indexed (Var mat)
                        ((Single (Var sym1__)) (Single (Var sym2__))
-                        (Single (Var sym3__))))))))))))))))))))
+                        (Single (Var sym3__))))))))))))))))))
+        (For (loopvar sym1__) (lower (Lit Int 1)) (upper (Lit Int 5))
+         (body
+          (Block
+           ((NRFunApp CompilerInternal FnCheck__
+             ((Lit Str greater_or_equal) (Lit Str mat[sym1__])
+              (Indexed (Var mat) ((Single (Var sym1__)))) (Lit Int 0)))))))))
       ())) |}]
