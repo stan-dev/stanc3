@@ -366,7 +366,6 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
           decl_var smeta ]
 
 let rec check_decl decl_type decl_id decl_trans smeta adlevel =
-  let forl = constraint_forl decl_trans in
   let chk fn args =
     let check_id id =
       let id_str =
@@ -380,7 +379,7 @@ let rec check_decl decl_type decl_id decl_trans smeta adlevel =
       {stmt; smeta}
     in
     let mtype = remove_size decl_type in
-    forl decl_type check_id
+    for_eigen decl_type check_id
       {expr= Var decl_id; emeta= {mtype; mloc= smeta; madlevel= adlevel}}
       smeta
   in
@@ -743,21 +742,29 @@ let trans_prog filename p : typed_prog =
   let gen_from_block declc block =
     map (trans_stmt declc) (get_block block p) @ gen_writes block output_vars
   in
-  let part_decls block =
+  let part_decls declc block =
     List.partition_tf
       ~f:(function {stmt= Decl _; _} -> true | _ -> false)
-      (gen_from_block
-         {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
-         block)
+      (gen_from_block declc block)
   in
-  let txparam_decls, txparam_stmts = part_decls TransformedParameters in
-  let gq_decls, gq_stmts = part_decls GeneratedQuantities in
+  let txparam_decls, txparam_stmts =
+    part_decls
+      {dread= None; dconstrain= None; dadlevel= DataOnly}
+      TransformedParameters
+  in
+  let gq_decls, gq_stmts =
+    part_decls
+      {dread= None; dconstrain= Some Check; dadlevel= DataOnly}
+      GeneratedQuantities
+  in
   let generate_quantities =
     gen_from_block
       {dread= Some ReadParam; dconstrain= Some Constrain; dadlevel= DataOnly}
       Parameters
     @ txparam_decls
-    @ compiler_if "emit_transformed_parameters__" txparam_stmts
+    @ compiler_if
+        "emit_transformed_parameters__ || emit_generated_quantities__"
+        txparam_stmts
     @ gq_decls
     @ compiler_if "emit_generated_quantities__" gq_stmts
   in

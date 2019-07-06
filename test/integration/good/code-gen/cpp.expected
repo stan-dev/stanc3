@@ -246,7 +246,7 @@ class eight_schools_ncp_model : public prob_grad {
       std::vector<double> theta;
       theta = std::vector<double>(J, 0);
       
-      if (emit_transformed_parameters__) {
+      if (emit_transformed_parameters__ || emit_generated_quantities__) {
         current_statement__ = 7;
         for (size_t j = 1; j <= J; ++j) {
           current_statement__ = 6;
@@ -1938,29 +1938,19 @@ class mother_model : public prob_grad {
         current_statement__ = 136;
         for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
           current_statement__ = 136;
-          for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 136;
-            for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 136;
-              current_statement__ = 136;
-              check_greater_or_equal(function__,
-                                     "d_ar_mat[sym1__, sym2__, sym3__, sym4__]",
-                                     rvalue(d_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"),
-                                     0);}}}}
+          current_statement__ = 136;
+          check_greater_or_equal(function__, "d_ar_mat[sym1__, sym2__]",
+                                 rvalue(d_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                                 0);}}
       current_statement__ = 136;
       for (size_t sym1__ = 1; sym1__ <= 4; ++sym1__) {
         current_statement__ = 136;
         for (size_t sym2__ = 1; sym2__ <= 5; ++sym2__) {
           current_statement__ = 136;
-          for (size_t sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 136;
-            for (size_t sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 136;
-              current_statement__ = 136;
-              check_less_or_equal(function__,
-                                  "d_ar_mat[sym1__, sym2__, sym3__, sym4__]",
-                                  rvalue(d_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), cons_list(index_uni(sym3__), cons_list(index_uni(sym4__), nil_index_list())))), "pretty printed e"),
-                                  1);}}}}
+          current_statement__ = 136;
+          check_less_or_equal(function__, "d_ar_mat[sym1__, sym2__]",
+                              rvalue(d_ar_mat, cons_list(index_uni(sym1__), cons_list(index_uni(sym2__), nil_index_list())), "pretty printed e"),
+                              1);}}
       current_statement__ = 137;
       current_statement__ = 137;
       check_simplex(function__, "d_simplex", d_simplex);
@@ -2000,29 +1990,19 @@ class mother_model : public prob_grad {
         current_statement__ = 146;
         for (size_t sym8__ = 1; sym8__ <= 5; ++sym8__) {
           current_statement__ = 146;
-          for (size_t sym9__ = 1; sym9__ <= 2; ++sym9__) {
-            current_statement__ = 146;
-            for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-              current_statement__ = 146;
-              current_statement__ = 146;
-              check_greater_or_equal(function__,
-                                     "td_ar_mat[sym7__, sym8__, sym9__, sym10__]",
-                                     rvalue(td_ar_mat, cons_list(index_uni(sym7__), cons_list(index_uni(sym8__), cons_list(index_uni(sym9__), cons_list(index_uni(sym10__), nil_index_list())))), "pretty printed e"),
-                                     0);}}}}
+          current_statement__ = 146;
+          check_greater_or_equal(function__, "td_ar_mat[sym7__, sym8__]",
+                                 rvalue(td_ar_mat, cons_list(index_uni(sym7__), cons_list(index_uni(sym8__), nil_index_list())), "pretty printed e"),
+                                 0);}}
       current_statement__ = 146;
       for (size_t sym7__ = 1; sym7__ <= 4; ++sym7__) {
         current_statement__ = 146;
         for (size_t sym8__ = 1; sym8__ <= 5; ++sym8__) {
           current_statement__ = 146;
-          for (size_t sym9__ = 1; sym9__ <= 2; ++sym9__) {
-            current_statement__ = 146;
-            for (size_t sym10__ = 1; sym10__ <= 3; ++sym10__) {
-              current_statement__ = 146;
-              current_statement__ = 146;
-              check_less_or_equal(function__,
-                                  "td_ar_mat[sym7__, sym8__, sym9__, sym10__]",
-                                  rvalue(td_ar_mat, cons_list(index_uni(sym7__), cons_list(index_uni(sym8__), cons_list(index_uni(sym9__), cons_list(index_uni(sym10__), nil_index_list())))), "pretty printed e"),
-                                  1);}}}}
+          current_statement__ = 146;
+          check_less_or_equal(function__, "td_ar_mat[sym7__, sym8__]",
+                              rvalue(td_ar_mat, cons_list(index_uni(sym7__), cons_list(index_uni(sym8__), nil_index_list())), "pretty printed e"),
+                              1);}}
       current_statement__ = 147;
       current_statement__ = 147;
       check_simplex(function__, "td_simplex", td_simplex);
@@ -2483,40 +2463,26 @@ class mother_model : public prob_grad {
                                    rvalue(tp_real_3d_ar, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), nil_index_list()))), "pretty printed e"),
                                    0);}}}
       current_statement__ = 20;
-      for (size_t sym13__ = 1; sym13__ <= N; ++sym13__) {
-        current_statement__ = 20;
-        current_statement__ = 20;
-        check_less_or_equal(function__, "tp_vec[sym13__]",
-                            rvalue(tp_vec, cons_list(index_uni(sym13__), nil_index_list()), "pretty printed e"),
-                            0);}
+      current_statement__ = 20;
+      check_less_or_equal(function__, "tp_vec", tp_vec, 0);
       current_statement__ = 26;
       for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
         current_statement__ = 26;
         for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
           current_statement__ = 26;
-          for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
-            current_statement__ = 26;
-            for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
-              current_statement__ = 26;
-              current_statement__ = 26;
-              check_greater_or_equal(function__,
-                                     "tp_ar_mat[sym13__, sym14__, sym15__, sym16__]",
-                                     rvalue(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), "pretty printed e"),
-                                     0);}}}}
+          current_statement__ = 26;
+          check_greater_or_equal(function__, "tp_ar_mat[sym13__, sym14__]",
+                                 rvalue(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), "pretty printed e"),
+                                 0);}}
       current_statement__ = 26;
       for (size_t sym13__ = 1; sym13__ <= 4; ++sym13__) {
         current_statement__ = 26;
         for (size_t sym14__ = 1; sym14__ <= 5; ++sym14__) {
           current_statement__ = 26;
-          for (size_t sym15__ = 1; sym15__ <= 2; ++sym15__) {
-            current_statement__ = 26;
-            for (size_t sym16__ = 1; sym16__ <= 3; ++sym16__) {
-              current_statement__ = 26;
-              current_statement__ = 26;
-              check_less_or_equal(function__,
-                                  "tp_ar_mat[sym13__, sym14__, sym15__, sym16__]",
-                                  rvalue(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), cons_list(index_uni(sym15__), cons_list(index_uni(sym16__), nil_index_list())))), "pretty printed e"),
-                                  1);}}}}
+          current_statement__ = 26;
+          check_less_or_equal(function__, "tp_ar_mat[sym13__, sym14__]",
+                              rvalue(tp_ar_mat, cons_list(index_uni(sym13__), cons_list(index_uni(sym14__), nil_index_list())), "pretty printed e"),
+                              1);}}
       current_statement__ = 27;
       current_statement__ = 27;
       check_simplex(function__, "tp_simplex", tp_simplex);
@@ -3297,96 +3263,7 @@ class mother_model : public prob_grad {
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       
-      if (emit_transformed_parameters__) {
-        current_statement__ = 18;
-        for (size_t sym25__ = 1; sym25__ <= N; ++sym25__) {
-          current_statement__ = 18;
-          current_statement__ = 18;
-          check_greater_or_equal(function__, "tp_real_1d_ar[sym25__]",
-                                 rvalue(tp_real_1d_ar, cons_list(index_uni(sym25__), nil_index_list()), "pretty printed e"),
-                                 0);}
-        current_statement__ = 19;
-        for (size_t sym25__ = 1; sym25__ <= N; ++sym25__) {
-          current_statement__ = 19;
-          for (size_t sym26__ = 1; sym26__ <= M; ++sym26__) {
-            current_statement__ = 19;
-            for (size_t sym27__ = 1; sym27__ <= K; ++sym27__) {
-              current_statement__ = 19;
-              current_statement__ = 19;
-              check_greater_or_equal(function__,
-                                     "tp_real_3d_ar[sym25__, sym26__, sym27__]",
-                                     rvalue(tp_real_3d_ar, cons_list(index_uni(sym25__), cons_list(index_uni(sym26__), cons_list(index_uni(sym27__), nil_index_list()))), "pretty printed e"),
-                                     0);}}}
-        current_statement__ = 20;
-        for (size_t sym25__ = 1; sym25__ <= N; ++sym25__) {
-          current_statement__ = 20;
-          current_statement__ = 20;
-          check_less_or_equal(function__, "tp_vec[sym25__]",
-                              rvalue(tp_vec, cons_list(index_uni(sym25__), nil_index_list()), "pretty printed e"),
-                              0);}
-        current_statement__ = 26;
-        for (size_t sym25__ = 1; sym25__ <= 4; ++sym25__) {
-          current_statement__ = 26;
-          for (size_t sym26__ = 1; sym26__ <= 5; ++sym26__) {
-            current_statement__ = 26;
-            for (size_t sym27__ = 1; sym27__ <= 2; ++sym27__) {
-              current_statement__ = 26;
-              for (size_t sym28__ = 1; sym28__ <= 3; ++sym28__) {
-                current_statement__ = 26;
-                current_statement__ = 26;
-                check_greater_or_equal(function__,
-                                       "tp_ar_mat[sym25__, sym26__, sym27__, sym28__]",
-                                       rvalue(tp_ar_mat, cons_list(index_uni(sym25__), cons_list(index_uni(sym26__), cons_list(index_uni(sym27__), cons_list(index_uni(sym28__), nil_index_list())))), "pretty printed e"),
-                                       0);}}}}
-        current_statement__ = 26;
-        for (size_t sym25__ = 1; sym25__ <= 4; ++sym25__) {
-          current_statement__ = 26;
-          for (size_t sym26__ = 1; sym26__ <= 5; ++sym26__) {
-            current_statement__ = 26;
-            for (size_t sym27__ = 1; sym27__ <= 2; ++sym27__) {
-              current_statement__ = 26;
-              for (size_t sym28__ = 1; sym28__ <= 3; ++sym28__) {
-                current_statement__ = 26;
-                current_statement__ = 26;
-                check_less_or_equal(function__,
-                                    "tp_ar_mat[sym25__, sym26__, sym27__, sym28__]",
-                                    rvalue(tp_ar_mat, cons_list(index_uni(sym25__), cons_list(index_uni(sym26__), cons_list(index_uni(sym27__), cons_list(index_uni(sym28__), nil_index_list())))), "pretty printed e"),
-                                    1);}}}}
-        current_statement__ = 27;
-        current_statement__ = 27;
-        check_simplex(function__, "tp_simplex", tp_simplex);
-        current_statement__ = 28;
-        for (size_t sym26__ = 1; sym26__ <= N; ++sym26__) {
-          current_statement__ = 28;
-          current_statement__ = 28;
-          check_simplex(function__, "tp_1d_simplex[sym26__]",
-                        rvalue(tp_1d_simplex, cons_list(index_uni(sym26__), nil_index_list()), "pretty printed e"));
-        }
-        current_statement__ = 29;
-        for (size_t sym27__ = 1; sym27__ <= N; ++sym27__) {
-          current_statement__ = 29;
-          for (size_t sym28__ = 1; sym28__ <= M; ++sym28__) {
-            current_statement__ = 29;
-            for (size_t sym29__ = 1; sym29__ <= K; ++sym29__) {
-              current_statement__ = 29;
-              current_statement__ = 29;
-              check_simplex(function__,
-                            "tp_3d_simplex[sym27__, sym28__, sym29__]",
-                            rvalue(tp_3d_simplex, cons_list(index_uni(sym27__), cons_list(index_uni(sym28__), cons_list(index_uni(sym29__), nil_index_list()))), "pretty printed e"));
-            }}}
-        current_statement__ = 30;
-        current_statement__ = 30;
-        check_cholesky_factor(function__, "tp_cfcov_54", tp_cfcov_54);
-        current_statement__ = 31;
-        current_statement__ = 31;
-        check_cholesky_factor(function__, "tp_cfcov_33", tp_cfcov_33);
-        current_statement__ = 32;
-        for (size_t sym30__ = 1; sym30__ <= K; ++sym30__) {
-          current_statement__ = 32;
-          current_statement__ = 32;
-          check_cholesky_factor(function__, "tp_cfcov_33_ar[sym30__]",
-                                rvalue(tp_cfcov_33_ar, cons_list(index_uni(sym30__), nil_index_list()), "pretty printed e"));
-        }
+      if (emit_transformed_parameters__ || emit_generated_quantities__) {
         current_statement__ = 33;
         assign(tp_real_1d_ar, nil_index_list(), p_real_1d_ar, "assigning variable tp_real_1d_ar");
         current_statement__ = 34;
@@ -3564,40 +3441,26 @@ class mother_model : public prob_grad {
                                      rvalue(gq_real_3d_ar, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), cons_list(index_uni(sym33__), nil_index_list()))), "pretty printed e"),
                                      0);}}}
         current_statement__ = 58;
-        for (size_t sym31__ = 1; sym31__ <= N; ++sym31__) {
-          current_statement__ = 58;
-          current_statement__ = 58;
-          check_less_or_equal(function__, "gq_vec[sym31__]",
-                              rvalue(gq_vec, cons_list(index_uni(sym31__), nil_index_list()), "pretty printed e"),
-                              1);}
+        current_statement__ = 58;
+        check_less_or_equal(function__, "gq_vec", gq_vec, 1);
         current_statement__ = 64;
         for (size_t sym31__ = 1; sym31__ <= 4; ++sym31__) {
           current_statement__ = 64;
           for (size_t sym32__ = 1; sym32__ <= 5; ++sym32__) {
             current_statement__ = 64;
-            for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
-              current_statement__ = 64;
-              for (size_t sym34__ = 1; sym34__ <= 3; ++sym34__) {
-                current_statement__ = 64;
-                current_statement__ = 64;
-                check_greater_or_equal(function__,
-                                       "gq_ar_mat[sym31__, sym32__, sym33__, sym34__]",
-                                       rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), cons_list(index_uni(sym33__), cons_list(index_uni(sym34__), nil_index_list())))), "pretty printed e"),
-                                       0);}}}}
+            current_statement__ = 64;
+            check_greater_or_equal(function__, "gq_ar_mat[sym31__, sym32__]",
+                                   rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), nil_index_list())), "pretty printed e"),
+                                   0);}}
         current_statement__ = 64;
         for (size_t sym31__ = 1; sym31__ <= 4; ++sym31__) {
           current_statement__ = 64;
           for (size_t sym32__ = 1; sym32__ <= 5; ++sym32__) {
             current_statement__ = 64;
-            for (size_t sym33__ = 1; sym33__ <= 2; ++sym33__) {
-              current_statement__ = 64;
-              for (size_t sym34__ = 1; sym34__ <= 3; ++sym34__) {
-                current_statement__ = 64;
-                current_statement__ = 64;
-                check_less_or_equal(function__,
-                                    "gq_ar_mat[sym31__, sym32__, sym33__, sym34__]",
-                                    rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), cons_list(index_uni(sym33__), cons_list(index_uni(sym34__), nil_index_list())))), "pretty printed e"),
-                                    1);}}}}
+            current_statement__ = 64;
+            check_less_or_equal(function__, "gq_ar_mat[sym31__, sym32__]",
+                                rvalue(gq_ar_mat, cons_list(index_uni(sym31__), cons_list(index_uni(sym32__), nil_index_list())), "pretty printed e"),
+                                1);}}
         current_statement__ = 65;
         current_statement__ = 65;
         check_simplex(function__, "gq_simplex", gq_simplex);
