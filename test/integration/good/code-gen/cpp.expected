@@ -1869,6 +1869,7 @@ class mother_model : public prob_grad {
             stan_print(pstream__, j);
             stan_print(pstream__, " matrix: ");
             stan_print(pstream__, l_mat);
+            stan_print(pstream__, "\n");
           }}}
       current_statement__ = 178;
       assign(td_cfcov_54, nil_index_list(), diag_matrix(rep_vector(1,

@@ -117,6 +117,7 @@ let rec pp_statement (ppf : Format.formatter)
   | NRFunApp (CompilerInternal, fname, args)
     when fname = string_of_internal_fn FnPrint ->
       let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
+      let args = args @ [{expr= Lit (Str, "\n"); emeta= internal_meta}] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal, fname, args)
     when fname = string_of_internal_fn FnReject ->
