@@ -73,7 +73,7 @@ pipeline {
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
                 sh """
-          echo "`pwd`/test/integration/good/code-gen/mother.stan" > performance-tests-cmdstan/known_good_perf_all.tests
+          echo "`pwd`/test/integration/good/code-gen/mother.stan" >> performance-tests-cmdstan/known_good_perf_all.tests
           cd performance-tests-cmdstan
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
           cat known_good_perf_all.tests
