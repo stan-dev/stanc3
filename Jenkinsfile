@@ -73,9 +73,9 @@ pipeline {
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
                 sh """
+          echo "`pwd`/test/integration/good/code-gen/mother.stan" > performance-tests-cmdstan/known_good_perf_all.tests
           cd performance-tests-cmdstan
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          echo "`pwd`/test/integration/good/code-gen/mother.stan" > known_good_perf_all.tests
           cat known_good_perf_all.tests
           CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
