@@ -302,7 +302,7 @@ let param_size transform sizedtype =
   in
   let int num = {expr= Lit (Int, string_of_int num); emeta= internal_meta} in
   let k_choose_2 k =
-    binop (binop k Times (binop k Minus (int 1))) Divide (int 2)
+    binop (binop k Times (binop k Plus (int 1))) Divide (int 2)
   in
   match transform with
   | Ast.Identity | Lower _ | Upper _
