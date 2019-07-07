@@ -707,7 +707,8 @@ parameters {
 model {
   real w = 7;
   theta ~ beta(1, 1);
-  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  for (n in 1 : N) 
+    y[n] ~ bernoulli(theta);
   print("in model block");
   print("w: ", w);
   w *= theta;

@@ -67,7 +67,6 @@ class eight_schools_ncp_model : public prob_grad {
       
       
       current_statement__ = 12;
-      current_statement__ = 12;
       J = context__.vals_i("J")[(1 - 1)];
       y = std::vector<double>(J, 0);
       
@@ -324,11 +323,9 @@ class eight_schools_ncp_model : public prob_grad {
       double mu;
       
       current_statement__ = 2;
-      current_statement__ = 2;
       mu = context__.vals_r("mu")[(1 - 1)];
       double tau;
       
-      current_statement__ = 3;
       current_statement__ = 3;
       tau = context__.vals_r("tau")[(1 - 1)];
       current_statement__ = 3;
@@ -501,10 +498,8 @@ class one_var_per_block_model : public prob_grad {
       
       
       current_statement__ = 15;
-      current_statement__ = 15;
       N = context__.vals_i("N")[(1 - 1)];
       
-      current_statement__ = 16;
       current_statement__ = 16;
       K = context__.vals_i("K")[(1 - 1)];
       datavar = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N));

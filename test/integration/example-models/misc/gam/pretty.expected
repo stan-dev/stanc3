@@ -19,13 +19,17 @@ functions {
     matrix[rows(x), K] B;
     dx <- 1.01 * (max(x) - min(x)) / (K - q);
     t <- min(x) - dx * 0.01 + dx * range(-q, K - q - 1)';
-    for (i in 2 : K) r[i - 1] <- i;
+    for (i in 2 : K) 
+      r[i - 1] <- i;
     r[K] <- 1;
     T <- rep_matrix(t, rows(x));
     X <- rep_matrix(x, K);
     P <- (X - T) / dx;
-    for (i in 1 : rows(x)) for (j in 1 : cols(t)) B[i, j] <- (T[i, j] <= X[i, j]) && (X[i, j] < T[i, j] + dx);
-    for (k in 1 : q) B <- (P .* B + (k + 1 - P) .* B[ : , r]) / k;
+    for (i in 1 : rows(x)) 
+      for (j in 1 : cols(t)) 
+        B[i, j] <- (T[i, j] <= X[i, j]) && (X[i, j] < T[i, j] + dx);
+    for (k in 1 : q) 
+      B <- (P .* B + (k + 1 - P) .* B[ : , r]) / k;
     return B;
   }
   matrix householder(matrix A) {
@@ -46,7 +50,8 @@ functions {
         vector[n - k + 1] u;
         x <- R[k : n, k];
         u <- sqrt(x' * x) * e[1 : (n - k + 1)] + x;
-        if (x[1] < 0) u <- -u;
+        if (x[1] < 0) 
+          u <- -u;
         u <- u / sqrt(u' * u);
         {
           matrix[n - k + 1, m - k + 1] tmp;

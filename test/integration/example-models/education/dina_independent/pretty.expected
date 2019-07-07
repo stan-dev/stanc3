@@ -38,7 +38,8 @@ model {
   for (j in 1 : J) {
     for (c in 1 : C) {
       for (i in 1 : I) {
-        log_items[i] = y[j, i] * log(pi[i, c]) + (1 - y[j, i]) * log(1 - pi[i, c]);
+        log_items[i] = y[j, i] * log(pi[i, c])
+                       + (1 - y[j, i]) * log(1 - pi[i, c]);
       }
       ps[c] = log_nu[c] + sum(log_items);
     }
@@ -60,7 +61,8 @@ generated quantities {
   for (j in 1 : J) {
     for (c in 1 : C) {
       for (i in 1 : I) {
-        log_items[i] = y[j, i] * log(pi[i, c]) + (1 - y[j, i]) * log(1 - pi[i, c]);
+        log_items[i] = y[j, i] * log(pi[i, c])
+                       + (1 - y[j, i]) * log(1 - pi[i, c]);
       }
       prob_joint[c] = nu[c] * exp(sum(log_items));
     }
@@ -108,7 +110,8 @@ model {
   for (j in 1 : J) {
     for (c in 1 : C) {
       for (i in 1 : I) {
-        log_items[i] = y[j, i] * log(pi[i, c]) + (1 - y[j, i]) * log(1 - pi[i, c]);
+        log_items[i] = y[j, i] * log(pi[i, c])
+                       + (1 - y[j, i]) * log(1 - pi[i, c]);
       }
       ps[c] = log_nu[c] + sum(log_items);
     }
@@ -130,7 +133,8 @@ generated quantities {
   for (j in 1 : J) {
     for (c in 1 : C) {
       for (i in 1 : I) {
-        log_items[i] = y[j, i] * log(pi[i, c]) + (1 - y[j, i]) * log(1 - pi[i, c]);
+        log_items[i] = y[j, i] * log(pi[i, c])
+                       + (1 - y[j, i]) * log(1 - pi[i, c]);
       }
       prob_joint[c] = nu[c] * exp(sum(log_items));
     }

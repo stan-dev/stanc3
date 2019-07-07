@@ -8,7 +8,8 @@ parameters {
 }
 model {
   theta ~ beta(1, 1);
-  for (n in 1 : N) y[n] ~ bernoulli(theta);
+  for (n in 1 : N) 
+    y[n] ~ bernoulli(theta);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format negative_binomial.stan
@@ -23,7 +24,8 @@ parameters {
 model {
   alpha ~ cauchy(0, 10);
   beta ~ cauchy(0, 10);
-  for (i in 1 : N) y[i] ~ neg_binomial(alpha, beta);
+  for (i in 1 : N) 
+    y[i] ~ neg_binomial(alpha, beta);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format negative_binomial2.stan
@@ -40,7 +42,8 @@ transformed parameters {
   beta <- p_success / (1.0 - p_success);
 }
 model {
-  for (i in 1 : N) y[i] ~ neg_binomial(alpha, beta);
+  for (i in 1 : N) 
+    y[i] ~ neg_binomial(alpha, beta);
 }
 
 
@@ -67,7 +70,8 @@ parameters {
   real mu;
 }
 model {
-  for (n in 1 : N_observed) y[n] ~ normal(mu, 1.0) T[ , U];
+  for (n in 1 : N_observed) 
+    y[n] ~ normal(mu, 1.0) T[ , U];
   increment_log_prob(N_censored * log1m(normal_cdf(U, mu, 1.0)));
 }
 
@@ -97,7 +101,8 @@ parameters {
   real mu;
 }
 model {
-  for (n in 1 : 5) y[n] ~ normal(mu, 1.0);
+  for (n in 1 : 5) 
+    y[n] ~ normal(mu, 1.0);
 }
 
 
@@ -182,8 +187,12 @@ transformed parameters {
 }
 model {
   theta ~ uniform(0, 1);
-  for (k in 1 : 2) mu[k] ~ normal(0, 10);
-  for (n in 1 : N) increment_log_prob(log_sum_exp(log_theta + normal_log(y[n], mu[1], 1.0), log_one_minus_theta + normal_log(y[n], mu[2], 1.0)));
+  for (k in 1 : 2) 
+    mu[k] ~ normal(0, 10);
+  for (n in 1 : N) 
+    increment_log_prob(log_sum_exp(log_theta + normal_log(y[n], mu[1], 1.0),
+                                   log_one_minus_theta
+                                   + normal_log(y[n], mu[2], 1.0)));
 }
 
 
@@ -240,7 +249,8 @@ model {
   real ps[K];
   mu ~ normal(0, 10);
   for (n in 1 : N) {
-    for (k in 1 : K) ps[k] <- log(theta[k]) + normal_log(y[n], mu[k], sigma[k]);
+    for (k in 1 : K) 
+      ps[k] <- log(theta[k]) + normal_log(y[n], mu[k], sigma[k]);
     increment_log_prob(log_sum_exp(ps));
   }
 }
@@ -369,10 +379,11 @@ transformed data {
   row_vector[N] ry[J];
   row_vector[N] rz[J];
   matrix[N, N] inv_sigma;
-  for (n in 1 : N) for (j in 1 : J) {
-    ry[j, n] <- y[j, n];
-    rz[j, n] <- z[j, n];
-  }
+  for (n in 1 : N) 
+    for (j in 1 : J) {
+      ry[j, n] <- y[j, n];
+      rz[j, n] <- z[j, n];
+    }
   inv_sigma <- inverse_spd(sigma);
 }
 parameters {
@@ -560,6 +571,7 @@ parameters {
   real<lower=0, upper=2> sigma;
 }
 model {
-  for (n in 1 : N) y[n] ~ normal(mu, sigma) T[ , U];
+  for (n in 1 : N) 
+    y[n] ~ normal(mu, sigma) T[ , U];
 }
 

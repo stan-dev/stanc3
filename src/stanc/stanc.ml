@@ -96,7 +96,7 @@ let use_file filename =
       Errors.report_syntax_error err ;
       exit 1
   in
-  let _ = Debugging.ast_logger ast in
+  Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
@@ -117,7 +117,7 @@ let use_file filename =
   in
   if !generate_data then
     print_endline (Debug_data_generation.print_data_prog typed_ast) ;
-  let _ = Debugging.typed_ast_logger typed_ast in
+  Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
     if !dump_mir then

@@ -25,7 +25,11 @@ model {
     real log1m_p1;
     log_p1 <- log(p1);
     log1m_p1 <- log1m(p1);
-    for (n in 1 : N) increment_log_prob(log_sum_exp(log_p1 + normal_log(y[n], lambda[1], sigma), log1m_p1 + normal_log(y[n], lambda[2], sigma)));
+    for (n in 1 : N) 
+      increment_log_prob(log_sum_exp(log_p1
+                                     + normal_log(y[n], lambda[1], sigma),
+                                     log1m_p1
+                                     + normal_log(y[n], lambda[2], sigma)));
   }
 }
 

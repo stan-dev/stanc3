@@ -42,7 +42,8 @@ parameters {
   vector[4] beta;
 }
 model {
-  y ~ poisson_log(log_expo + beta[1] + beta[2] * roach1 + beta[3] * treatment + beta[4] * senior);
+  y ~ poisson_log(log_expo + beta[1] + beta[2] * roach1 + beta[3] * treatment
+                  + beta[4] * senior);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format roaches_overdispersion.stan
@@ -71,7 +72,9 @@ model {
   tau ~ gamma(0.001, 0.001);
   for (i in 1 : N) {
     lambda[i] ~ normal(0, sigma);
-    y[i] ~ poisson_log(lambda[i] + log_expo[i] + beta[1] + beta[2] * roach1[i] + beta[3] * senior[i] + beta[4] * treatment[i]);
+    y[i] ~ poisson_log(lambda[i] + log_expo[i] + beta[1]
+                       + beta[2] * roach1[i] + beta[3] * senior[i]
+                       + beta[4] * treatment[i]);
   }
 }
 

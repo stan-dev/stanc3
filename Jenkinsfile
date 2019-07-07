@@ -63,6 +63,15 @@ def buildTagImage(String registry, String repository, String dockerfile_path){
     runShell(function)
 }
 
+def getDockerUser(){
+    if("${env.NODE_NAME}" == "gelman-group-linux"){
+        return "jenkins-slave"
+    }
+    else{
+        return "opam"
+    }
+}
+
 def tagName() {
     if (env.TAG_NAME) {
         env.TAG_NAME
@@ -214,7 +223,8 @@ pipeline {
                             image 'registry.mc-stan.org/stanc3/alpine:latest'
                             registryUrl 'https://registry.mc-stan.org'
                             registryCredentialsId 'docker-registry-creds'
-                            args '-u opam --entrypoint=\'\''
+                          args "-u ${getDockerUser()} --entrypoint=\'\'"
+
                         }
                     }
                     steps {

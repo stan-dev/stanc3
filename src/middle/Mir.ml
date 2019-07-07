@@ -87,7 +87,6 @@ type 'e index =
   | MatrixSingle of 'e
  *)
   | Upfrom of 'e
-  | Downfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e
 [@@deriving sexp, hash, map, fold]

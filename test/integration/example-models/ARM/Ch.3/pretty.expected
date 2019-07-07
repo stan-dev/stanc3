@@ -15,7 +15,8 @@ parameters {
 }
 model {
   sigma ~ cauchy(0, 2.5);
-  kid_score ~ normal(beta[1] + beta[2] * mom_hs + beta[3] * mom_iq + beta[4] * inter, sigma);
+  kid_score ~ normal(beta[1] + beta[2] * mom_hs + beta[3] * mom_iq
+                     + beta[4] * inter, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidiq_multi_preds.stan
@@ -53,7 +54,8 @@ model {
 }
 generated quantities {
   real kid_score_pred;
-  kid_score_pred = normal_rng(beta[1] + beta[2] * mom_hs_new + beta[3] * mom_iq_new, sigma);
+  kid_score_pred = normal_rng(beta[1] + beta[2] * mom_hs_new
+                              + beta[3] * mom_iq_new, sigma);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format kidiq_validation.stan
