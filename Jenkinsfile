@@ -2,7 +2,6 @@
 import org.stan.Utils
 
 def utils = new org.stan.Utils()
-def docker_user = ""
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -33,21 +32,6 @@ pipeline {
                 not { branch 'downstream_tests' }
             }
             steps { script { utils.killOldBuilds() } }
-        }
-        stage("Get linux user"){
-            agent { label 'docker'}
-            steps{
-                    script{
-                        docker_user = runShell("getent passwd \"1004\" | cut -d: -f1")
-
-                        if(docker_user == "opam"){
-                            docker_user = "opam"
-                        }
-                        else{
-                            docker_user = runShell("echo \$(id -u)")
-                        }
-                }    
-            }     
         }
         stage("Build & Test") {
             agent {
@@ -157,7 +141,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u ${docker_user}"
+                            args "-u 1004"
                         }
                     }
                     steps {
