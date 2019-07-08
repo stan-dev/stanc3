@@ -34,6 +34,13 @@ pipeline {
             steps { script { utils.killOldBuilds() } }
         }
 
+        stage("Change permissions"){
+            agent { label 'gg-linux'}
+            steps{
+                runShell("sudo chown -R 1000:1000 ./")
+            }
+        }
+
         stage("Build and test static release binaries") {
             //when { anyOf { buildingTag(); branch 'master' } }
             failFast true
