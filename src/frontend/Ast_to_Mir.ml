@@ -263,8 +263,8 @@ let extra_constraint_args st = function
    |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector
    |Identity ->
       []
-  | Covariance | Correlation -> List.tl_exn (eigen_size st)
-  | CholeskyCov | CholeskyCorr -> eigen_size st
+  | Covariance | Correlation | CholeskyCorr -> [List.hd_exn (eigen_size st)]
+  | CholeskyCov -> eigen_size st
 
 let rec base_type = function
   | SArray (t, _) -> base_type t
