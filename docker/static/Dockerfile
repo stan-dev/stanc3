@@ -31,7 +31,7 @@ RUN bash -x install_build_deps.sh
 
 USER root
 
-RUN chmod opam:opam ./
+RUN chown opam:opam ./
 
 USER opam
 
