@@ -75,7 +75,6 @@ pipeline {
                 sh """
           cd performance-tests-cmdstan
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          echo "example-models/regression_tests/mother.stan" >> known_good_perf_all.tests
           cat known_good_perf_all.tests
           CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
@@ -94,7 +93,7 @@ pipeline {
         // that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
-            agent { label 'linux' }
+            agent { label 'ec2-linux' }
             steps {
                 unstash 'ubuntu-exe'
                 sh """
