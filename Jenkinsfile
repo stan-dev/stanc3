@@ -35,7 +35,7 @@ pipeline {
         }
 
         stage("Build and test static release binaries") {
-            when { anyOf { buildingTag(); branch 'master' } }
+            //when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
                 stage("Build & test a static Linux binary") {
