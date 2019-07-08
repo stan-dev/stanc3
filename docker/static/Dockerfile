@@ -29,5 +29,11 @@ RUN eval $(opam env)
 COPY ./scripts/install_build_deps.sh ./
 RUN bash -x install_build_deps.sh
 
+USER root
+
+RUN chmod opam:opam ./
+
+USER opam
+
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
