@@ -37,7 +37,7 @@ pipeline {
         stage("Change permissions"){
             agent { label 'gg-linux'}
             steps{
-                runShell("sudo chown -R 1000:1000 ./")
+                runShell("chown -R 1000:1000 ./")
             }
         }
 
