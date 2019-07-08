@@ -77,10 +77,10 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-         This stage is just gonna try to run all the models we normally
-         do for regression testing
-         and log all the failures. It'll make a big nasty red graph
-         that becomes blue over time as we fix more models :)
+         //This stage is just gonna try to run all the models we normally
+         //do for regression testing
+         //and log all the failures. It'll make a big nasty red graph
+         //that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
