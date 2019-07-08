@@ -303,7 +303,7 @@ let param_size transform sizedtype =
   in
   let int num = {expr= Lit (Int, string_of_int num); emeta= internal_meta} in
   let k_choose_2 k =
-    binop (binop k Times (binop k Plus (int 1))) Divide (int 2)
+    binop (binop k Times (binop k Minus (int 1))) Divide (int 2)
   in
   match transform with
   | Ast.Identity | Lower _ | Upper _
@@ -317,7 +317,11 @@ let param_size transform sizedtype =
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
-        (fun m n -> binop (k_choose_2 n) Plus (binop (binop m Minus n) Times n))
+        (fun m n ->
+          binop
+            (binop (k_choose_2 n) Plus n)
+            Plus
+            (binop (binop m Minus n) Times n) )
         sizedtype
   | Covariance -> shrink_eigen (fun k -> binop k Plus (k_choose_2 k)) sizedtype
 

@@ -2051,9 +2051,9 @@ class mother_model : public prob_grad {
     num_params_r__ += (N - 1);
     num_params_r__ += N * (N - 1);
     num_params_r__ += N * M * K * (N - 1);
-    num_params_r__ += (((4 * (4 + 1)) / 2) + ((5 - 4) * 4));
-    num_params_r__ += (((3 * (3 + 1)) / 2) + ((3 - 3) * 3));
-    num_params_r__ += K * (((3 * (3 + 1)) / 2) + ((3 - 3) * 3));
+    num_params_r__ += ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4));
+    num_params_r__ += ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
+    num_params_r__ += K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
     
   }
   template <bool propto__, bool jacobian__, typename T__>
@@ -2301,13 +2301,13 @@ class mother_model : public prob_grad {
                      rvalue(p_3d_simplex_sym21__, cons_list(index_uni(sym22__), cons_list(index_uni(sym23__), cons_list(index_uni(sym24__), nil_index_list()))), "pretty printed e")), "assigning variable p_3d_simplex[(sym22__ - 1), (sym23__ - 1), (sym24__ - 1)]");
             }}}}
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_sym22__;
-      p_cfcov_54_sym22__ = Eigen::Matrix<local_scalar_t__, -1, 1>((((4 * (4 + 1)) / 2) + ((5 - 4) * 4)));
+      p_cfcov_54_sym22__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       
       current_statement__ = 15;
-      p_cfcov_54_sym22__ = in__.vector((((4 * (4 + 1)) / 2) + ((5 - 4) * 4)));
+      p_cfcov_54_sym22__ = in__.vector(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       current_statement__ = 15;
       if (jacobian__) {
         current_statement__ = 15;
@@ -2319,13 +2319,13 @@ class mother_model : public prob_grad {
                p_cfcov_54_sym22__, 5, 4), "assigning variable p_cfcov_54");
       }
       Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_sym23__;
-      p_cfcov_33_sym23__ = Eigen::Matrix<local_scalar_t__, -1, 1>((((3 * (3 + 1)) / 2) + ((3 - 3) * 3)));
+      p_cfcov_33_sym23__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       
       current_statement__ = 16;
-      p_cfcov_33_sym23__ = in__.vector((((3 * (3 + 1)) / 2) + ((3 - 3) * 3)));
+      p_cfcov_33_sym23__ = in__.vector(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       current_statement__ = 16;
       if (jacobian__) {
         current_statement__ = 16;
@@ -2337,7 +2337,7 @@ class mother_model : public prob_grad {
                p_cfcov_33_sym23__, 3, 3), "assigning variable p_cfcov_33");
       }
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_sym24__;
-      p_cfcov_33_ar_sym24__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>((((3 * (3 + 1)) / 2) + ((3 - 3) * 3))));
+      p_cfcov_33_ar_sym24__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
@@ -2346,7 +2346,7 @@ class mother_model : public prob_grad {
       for (size_t sym25__ = 1; sym25__ <= K; ++sym25__) {
         current_statement__ = 17;
         assign(p_cfcov_33_ar_sym24__, cons_list(index_uni(sym25__), nil_index_list()), in__.vector(
-               (((3 * (3 + 1)) / 2) + ((3 - 3) * 3))), "assigning variable p_cfcov_33_ar_sym24__[(sym25__ - 1)]");
+               ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), "assigning variable p_cfcov_33_ar_sym24__[(sym25__ - 1)]");
       }
       current_statement__ = 17;
       for (size_t sym25__ = 1; sym25__ <= K; ++sym25__) {
@@ -3112,29 +3112,29 @@ class mother_model : public prob_grad {
                    rvalue(p_3d_simplex_sym39__, cons_list(index_uni(sym40__), cons_list(index_uni(sym41__), cons_list(index_uni(sym42__), nil_index_list()))), "pretty printed e")), "assigning variable p_3d_simplex[(sym40__ - 1), (sym41__ - 1), (sym42__ - 1)]");
           }}}
       Eigen::Matrix<double, -1, 1> p_cfcov_54_sym40__;
-      p_cfcov_54_sym40__ = Eigen::Matrix<double, -1, 1>((((4 * (4 + 1)) / 2) + ((5 - 4) * 4)));
+      p_cfcov_54_sym40__ = Eigen::Matrix<double, -1, 1>(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
       current_statement__ = 15;
-      p_cfcov_54_sym40__ = in__.vector((((4 * (4 + 1)) / 2) + ((5 - 4) * 4)));
+      p_cfcov_54_sym40__ = in__.vector(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       current_statement__ = 15;
       assign(p_cfcov_54, nil_index_list(), cholesky_factor_constrain(
              p_cfcov_54_sym40__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<double, -1, 1> p_cfcov_33_sym41__;
-      p_cfcov_33_sym41__ = Eigen::Matrix<double, -1, 1>((((3 * (3 + 1)) / 2) + ((3 - 3) * 3)));
+      p_cfcov_33_sym41__ = Eigen::Matrix<double, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       current_statement__ = 16;
-      p_cfcov_33_sym41__ = in__.vector((((3 * (3 + 1)) / 2) + ((3 - 3) * 3)));
+      p_cfcov_33_sym41__ = in__.vector(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       current_statement__ = 16;
       assign(p_cfcov_33, nil_index_list(), cholesky_factor_constrain(
              p_cfcov_33_sym41__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<double, -1, 1>> p_cfcov_33_ar_sym42__;
-      p_cfcov_33_ar_sym42__ = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>((((3 * (3 + 1)) / 2) + ((3 - 3) * 3))));
+      p_cfcov_33_ar_sym42__ = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
       
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
@@ -3143,7 +3143,7 @@ class mother_model : public prob_grad {
       for (size_t sym43__ = 1; sym43__ <= K; ++sym43__) {
         current_statement__ = 17;
         assign(p_cfcov_33_ar_sym42__, cons_list(index_uni(sym43__), nil_index_list()), in__.vector(
-               (((3 * (3 + 1)) / 2) + ((3 - 3) * 3))), "assigning variable p_cfcov_33_ar_sym42__[(sym43__ - 1)]");
+               ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), "assigning variable p_cfcov_33_ar_sym42__[(sym43__ - 1)]");
       }
       current_statement__ = 17;
       for (size_t sym43__ = 1; sym43__ <= K; ++sym43__) {
@@ -4098,17 +4098,17 @@ class mother_model : public prob_grad {
           }}
       }}
     for (size_t sym60__ = 1;
-         sym60__ <= (((4 * (4 + 1)) / 2) + ((5 - 4) * 4)); ++sym60__) {
+         sym60__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)); ++sym60__) {
       {
         param_names__.push_back(std::string() + "p_cfcov_54" + '.' + std::to_string(sym60__));
       }}
     for (size_t sym60__ = 1;
-         sym60__ <= (((3 * (3 + 1)) / 2) + ((3 - 3) * 3)); ++sym60__) {
+         sym60__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym60__) {
       {
         param_names__.push_back(std::string() + "p_cfcov_33" + '.' + std::to_string(sym60__));
       }}
     for (size_t sym60__ = 1;
-         sym60__ <= (((3 * (3 + 1)) / 2) + ((3 - 3) * 3)); ++sym60__) {
+         sym60__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym60__) {
       {
         for (size_t sym61__ = 1; sym61__ <= K; ++sym61__) {
           {
@@ -4216,17 +4216,17 @@ class mother_model : public prob_grad {
             }}
         }}
       for (size_t sym60__ = 1;
-           sym60__ <= (((4 * (4 + 1)) / 2) + ((5 - 4) * 4)); ++sym60__) {
+           sym60__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)); ++sym60__) {
         {
           param_names__.push_back(std::string() + "tp_cfcov_54" + '.' + std::to_string(sym60__));
         }}
       for (size_t sym60__ = 1;
-           sym60__ <= (((3 * (3 + 1)) / 2) + ((3 - 3) * 3)); ++sym60__) {
+           sym60__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym60__) {
         {
           param_names__.push_back(std::string() + "tp_cfcov_33" + '.' + std::to_string(sym60__));
         }}
       for (size_t sym60__ = 1;
-           sym60__ <= (((3 * (3 + 1)) / 2) + ((3 - 3) * 3)); ++sym60__) {
+           sym60__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym60__) {
         {
           for (size_t sym61__ = 1; sym61__ <= K; ++sym61__) {
             {
@@ -4338,17 +4338,17 @@ class mother_model : public prob_grad {
             }}
         }}
       for (size_t sym60__ = 1;
-           sym60__ <= (((4 * (4 + 1)) / 2) + ((5 - 4) * 4)); ++sym60__) {
+           sym60__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)); ++sym60__) {
         {
           param_names__.push_back(std::string() + "gq_cfcov_54" + '.' + std::to_string(sym60__));
         }}
       for (size_t sym60__ = 1;
-           sym60__ <= (((3 * (3 + 1)) / 2) + ((3 - 3) * 3)); ++sym60__) {
+           sym60__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym60__) {
         {
           param_names__.push_back(std::string() + "gq_cfcov_33" + '.' + std::to_string(sym60__));
         }}
       for (size_t sym60__ = 1;
-           sym60__ <= (((3 * (3 + 1)) / 2) + ((3 - 3) * 3)); ++sym60__) {
+           sym60__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym60__) {
         {
           for (size_t sym61__ = 1; sym61__ <= K; ++sym61__) {
             {

@@ -102,8 +102,8 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          echo "example-models/regression_tests/mother.stan" >> known_good_perf_all.tests
-          cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
+          echo "example-models/regression_tests/mother.stan" > all.tests
+          cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
           cat all.tests
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
