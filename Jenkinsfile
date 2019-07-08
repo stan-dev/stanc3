@@ -42,7 +42,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "--privileged --entrypoint=\'\'"
+                            args "-u 1000 --privileged --entrypoint=\'\'"
                         }
                     }
                     steps {
