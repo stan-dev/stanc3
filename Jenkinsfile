@@ -9,15 +9,6 @@ def runShell(String command){
     return "${output}"
 }
 
-def getDockerUser(){
-    if("${env.NODE_NAME}" == "gelman-group-linux"){
-        return "jenkins-slave"
-    }
-    else{
-        return "opam"
-    }
-}
-
 def tagName() {
     if (env.TAG_NAME) {
         env.TAG_NAME
@@ -86,10 +77,10 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        // This stage is just gonna try to run all the models we normally
-        // do for regression testing
-        // and log all the failures. It'll make a big nasty red graph
-        // that becomes blue over time as we fix more models :)
+         //This stage is just gonna try to run all the models we normally
+         //do for regression testing
+         //and log all the failures. It'll make a big nasty red graph
+         //that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent { label 'linux' }
@@ -150,7 +141,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u ${getDockerUser()}"
+                            args "-u 1000 --entrypoint=\'\'"
                         }
                     }
                     steps {
@@ -198,8 +189,8 @@ pipeline {
         }
     }
     post {
-        always {
-            script {utils.mailBuildResults()}
+       always {
+          script {utils.mailBuildResults()}
         }
     }
 }
