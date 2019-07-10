@@ -84,37 +84,39 @@ pipeline {
         stage("Try to run all models end-to-end") {
             when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent none
-            stage("Try to run all models end-to-end") {
-                agent { label 'linux' }
-                steps {
-                    unstash 'ubuntu-exe'
-                    sh """
+            stages {
+                stage("Try to run all models end-to-end") {
+                    agent { label 'linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
-                    sh """
+                        sh """
           cd performance-tests-cmdstan
           cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
           cat all.tests
           echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
-                    xunit([GoogleTest(
-                        deleteOutputFiles: false,
-                        failIfNotNew: true,
-                        pattern: 'performance-tests-cmdstan/performance.xml',
-                        skipNoTestFiles: false,
-                        stopProcessingIfError: false)])
-                    archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                    perfReport modePerformancePerTestCase: true,
-                        sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                        modeThroughput: false,
-                        excludeResponseTime: true,
-                        errorFailedThreshold: 100,
-                        errorUnstableThreshold: 100
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)])
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always {
+                        runShell("rm -rf ./*")
+                    } }
                 }
-                post { always {
-                    runShell("rm -rf ./*")
-                } }
             }
         }
         stage("Build and test static release binaries") {
