@@ -71,7 +71,6 @@ def getDockerUser(){
         return "opam"
     }
 }
-
 def tagName() {
     if (env.TAG_NAME) {
         env.TAG_NAME
@@ -136,64 +135,76 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Run stat_comp_benchmarks end-to-end") {
+        stage("End to end PR tests") {
             when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
-            agent { label 'linux' }
-            steps {
-                unstash 'ubuntu-exe'
-                sh """
+            agent none
+            stages {
+                stage("Run small good model subset end-to-end") {
+                    agent { label 'linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
-                sh """
+                        sh """
           cd performance-tests-cmdstan
-          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
-          CXX="${CXX}" ./compare-compilers.sh "stat_comp_benchmarks/ --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
+          echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
+          cat known_good_perf_all.tests
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
                """
-                junit 'performance-tests-cmdstan/performance.xml'
-                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport modePerformancePerTestCase: true,
-                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false
+                        junit 'performance-tests-cmdstan/performance.xml'
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false
+                    }
+                    post { always { runShell("rm -rf ./*")} }
+                }
             }
-            post { always { runShell("rm -rf ./*")} }
         }
-        // This stage is just gonna try to run all the models we normally
-        // do for regression testing
-        // and log all the failures. It'll make a big nasty red graph
-        // that becomes blue over time as we fix more models :)
-        stage("Try to run all models end-to-end") {
+        stage("End to end master tests") {
             when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
-            agent { label 'linux' }
-            steps {
-                unstash 'ubuntu-exe'
-                sh """
+            agent none
+            stages {
+                //This stage is just gonna try to run all the models we normally
+                //do for regression testing
+                //and log all the failures. It'll make a big nasty red graph
+                //that becomes blue over time as we fix more models :)
+            stage("Try to run all models end-to-end") {
+                    agent { label 'ec2-linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
-                sh """
+                        sh """
           cd performance-tests-cmdstan
-          cat known_good_perf_all.tests shotgun_perf_all.tests > all.tests
+          echo "example-models/regression_tests/mother.stan" > all.tests
+          cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
           cat all.tests
-          echo "CXXFLAGS+=-march=haswell" > cmdstan/make/local
+          echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
-                xunit([GoogleTest(
-                    deleteOutputFiles: false,
-                    failIfNotNew: true,
-                    pattern: 'performance-tests-cmdstan/performance.xml',
-                    skipNoTestFiles: false,
-                    stopProcessingIfError: false)])
-                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                perfReport modePerformancePerTestCase: true,
-                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                    modeThroughput: false,
-                    excludeResponseTime: true,
-                    errorFailedThreshold: 100,
-                    errorUnstableThreshold: 100
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)])
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always {
+                        runShell("rm -rf ./*")
+                    } }
+                }
             }
-            post { always {
-                runShell("rm -rf ./*")
-            } }
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
@@ -223,8 +234,7 @@ pipeline {
                             image 'registry.mc-stan.org/stanc3/alpine:latest'
                             registryUrl 'https://registry.mc-stan.org'
                             registryCredentialsId 'docker-registry-creds'
-                          args "-u ${getDockerUser()} --entrypoint=\'\'"
-
+                          args "-u 1000 --entrypoint=\'\'"
                         }
                     }
                     steps {
@@ -272,8 +282,8 @@ pipeline {
         }
     }
     post {
-        always {
-            script {utils.mailBuildResults()}
+       always {
+          script {utils.mailBuildResults()}
         }
     }
 }

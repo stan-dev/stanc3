@@ -5,6 +5,16 @@ FROM ocaml/opam2:alpine-3.9-ocaml-4.07
 #Switch to root user so we can install apk packages
 USER root
 
+#Add opam group
+
+RUN addgroup -g 1000 opam
+RUN addgroup -g 1004 jenkins-slave
+
+RUN delgroup opam nogroup
+
+RUN addgroup opam opam
+RUN addgroup opam jenkins-slave
+
 #Set our distro_style
 LABEL distro_style="apk"
 
