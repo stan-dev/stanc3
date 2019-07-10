@@ -194,16 +194,13 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
       | ls -> Some ls )
     | _ -> None
   in
-  let pp_statement_zeroing ppf ls =
-    let pp_decl_size_only ppf s =
-      match s.stmt with
-      | Decl {decl_id; decl_type; _} -> (
-        match decl_type with
-        | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
-        | Unsized _ -> () )
-      | _ -> pp_statement ppf s
-    in
-    pp_block ppf (list ~sep:cut pp_decl_size_only, ls)
+  let pp_stmt_topdecl_size_only ppf s =
+    match s.stmt with
+    | Decl {decl_id; decl_type; _} -> (
+      match decl_type with
+      | Sized st -> pp_set_size ppf (decl_id, st, DataOnly)
+      | Unsized _ -> () )
+    | _ -> pp_statement ppf s
   in
   pp_block ppf
     ( (fun ppf p ->
@@ -213,7 +210,9 @@ let pp_ctor ppf (p : Locations.typed_prog_num) =
         pp_unused ppf "base_rng__" ;
         pp_function__ ppf (p.prog_name, p.prog_name) ;
         pp_located_error ppf
-          (pp_statement_zeroing, p.prepare_data, "inside ctor") ;
+          ( pp_block
+          , (list ~sep:cut pp_stmt_topdecl_size_only, p.prepare_data)
+          , "inside ctor" ) ;
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
         pf ppf "%a@ "

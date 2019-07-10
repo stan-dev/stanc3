@@ -543,11 +543,10 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       let iteratee = trans_expr iteratee
       and indexing_var = wrap (Var newsym) in
       let indices =
+        let single_one = (Ast.Single (Ast.IntNumeral "1"), UInt) in
         match iteratee.emeta.mtype with
-        | UMatrix ->
-            [ (Ast.Single (Ast.IntNumeral "1"), UInt)
-            ; (Ast.Single (Ast.IntNumeral "1"), UInt) ]
-        | _ -> [(Ast.Single (Ast.IntNumeral "1"), UInt)]
+        | UMatrix -> [single_one; single_one]
+        | _ -> [single_one]
       in
       let decl_type =
         Semantic_check.inferred_unsizedtype_of_indexed_exn
