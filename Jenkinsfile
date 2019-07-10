@@ -272,15 +272,8 @@ pipeline {
         }
     }
     post {
-        success {
-            script {
-                script{
-                    println ":)"
-                }
-            }
+        always {
+            script {utils.mailBuildResults()}
         }
-        //always {
-            //script {utils.mailBuildResults()}
-        //}
     }
 }
