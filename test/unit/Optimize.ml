@@ -1527,9 +1527,9 @@ let%expect_test "constant propagation, model block local scope" =
     }
 
     generate_quantities {
-      data int i;
-      data int j;
       if(emit_generated_quantities__) {
+        data int i;
+        data int j;
         for(x in 1:i) {
           FnPrint__((i + j));
         }
@@ -3345,7 +3345,7 @@ let%expect_test "adlevel_optimization" =
         data real w;
         w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
-        if(emit_transformed_parameters__) {
+        if(emit_transformed_parameters__ || emit_generated_quantities__) {
           data int x;
           data real y;
           data real z;
@@ -3585,7 +3585,7 @@ let%expect_test "adlevel_optimization 2" =
         w = FnReadParam__("w", "scalar");
         FnWriteParam__(w);
         data real w_trans;
-        if(emit_transformed_parameters__) {
+        if(emit_transformed_parameters__ || emit_generated_quantities__) {
           w_trans = 1;
           {
             data int x;
