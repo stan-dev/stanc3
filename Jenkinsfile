@@ -56,7 +56,8 @@ pipeline {
             post { always { runShell("rm -rf ./*")} }
         }
         stage("End to end PR tests") {
-            when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
+            // when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
+            when { expression { false } }
             agent none
             stages {
                 stage("Run small good model subset end-to-end") {
@@ -68,7 +69,7 @@ pipeline {
                    """
                         sh """
           cd performance-tests-cmdstan
-          echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
+          echo "CXXFLAGS+=-march=native -fno-fast-math" > cmdstan/make/local
           cat known_good_perf_all.tests
           CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
@@ -84,7 +85,7 @@ pipeline {
             }
         }
         stage("End to end master tests") {
-            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
+            //when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
             agent none
             stages {
                 //This stage is just gonna try to run all the models we normally
@@ -103,7 +104,7 @@ pipeline {
           echo "example-models/regression_tests/mother.stan" > all.tests
           cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
           cat all.tests
-          echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
+          echo "CXXFLAGS+=-march=native -fno-fast-math" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
                         xunit([GoogleTest(
