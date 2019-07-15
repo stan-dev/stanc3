@@ -55,50 +55,48 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("End to end PR tests") {
-            when { not { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } } }
-            agent none
-            stages {
-                stage("Run small good model subset end-to-end") {
-                    agent { label 'linux' }
-                    steps {
-                        unstash 'ubuntu-exe'
-                        sh """
+        stage("Run small good model subset end-to-end") {
+            when {
+                beforeAgent true
+                not { anyOf { params.all_tests; buildingTag(); branch 'master' } }
+            }
+            agent { label 'linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
-                        sh """
+                sh """
           cd performance-tests-cmdstan
           echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
           cat known_good_perf_all.tests
           CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
                """
-                        junit 'performance-tests-cmdstan/performance.xml'
-                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                        perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                            modeThroughput: false
-                    }
-                    post { always { runShell("rm -rf ./*")} }
-                }
+                junit 'performance-tests-cmdstan/performance.xml'
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false
             }
+            post { always { runShell("rm -rf ./*")} }
         }
-        stage("End to end master tests") {
-            when { anyOf { expression { params.all_tests }; buildingTag(); branch 'master' } }
-            agent none
-            stages {
                 //This stage is just gonna try to run all the models we normally
                 //do for regression testing
                 //and log all the failures. It'll make a big nasty red graph
                 //that becomes blue over time as we fix more models :)
-            stage("Try to run all models end-to-end") {
-                    agent { label 'ec2-linux' }
-                    steps {
-                        unstash 'ubuntu-exe'
-                        sh """
+        stage("Try to run all models end-to-end") {
+            when {
+                beforeAgent true
+                anyOf { params.all_tests; buildingTag(); branch 'master' }
+            }
+            agent { label 'ec2-linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
           git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                    """
-                        sh """
+                sh """
           cd performance-tests-cmdstan
           echo "example-models/regression_tests/mother.stan" > all.tests
           cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
@@ -106,25 +104,23 @@ pipeline {
           echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)])
-                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                        perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                            modeThroughput: false,
-                            excludeResponseTime: true,
-                            errorFailedThreshold: 100,
-                            errorUnstableThreshold: 100
-                    }
-                    post { always {
-                        runShell("rm -rf ./*")
-                    } }
-                }
+                xunit([GoogleTest(
+                    deleteOutputFiles: false,
+                    failIfNotNew: true,
+                    pattern: 'performance-tests-cmdstan/performance.xml',
+                    skipNoTestFiles: false,
+                    stopProcessingIfError: false)])
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false,
+                    excludeResponseTime: true,
+                    errorFailedThreshold: 100,
+                    errorUnstableThreshold: 100
             }
+            post { always {
+                runShell("rm -rf ./*")
+            } }
         }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
