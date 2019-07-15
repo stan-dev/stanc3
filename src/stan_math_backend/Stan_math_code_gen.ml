@@ -419,6 +419,19 @@ let pp_log_prob ppf p =
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   pp_method_b ppf "T__" "log_prob" params intro p.log_prob ~outro
 
+let pp_unconstrained_types ppf {output_vars; _} =
+  let grab_unconstrained (name, {out_unconstrained_st; out_block; _}) =
+    (name, out_unconstrained_st, out_block)
+  in
+  let unconstrained_outvars = List.map ~f:grab_unconstrained output_vars in
+  let intro = ["stringstream s__;"] in
+  let outro = ["return s__.str();"] in
+  let json_str =
+    Cpp_Json.out_var_interpolated_json_str unconstrained_outvars
+  in
+  let ppbody ppf = pf ppf "s__ << %s;" json_str in
+  pp_method ppf "std::string" "get_unconstrained_types" [] intro ~outro ppbody
+
 let pp_overloads ppf () =
   pf ppf
     {|
@@ -456,12 +469,16 @@ let pp_overloads ppf () =
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
-  pf ppf "@ %a" pp_get_param_names p ;
-  pf ppf "@ %a" pp_get_dims p ;
   pf ppf "@ %a" pp_write_array p ;
+  pf ppf "@ %a" pp_transform_inits p ;
+  (* Begin metadata methods *)
+  pf ppf "@ %a" pp_get_param_names p ;
+  (* Post-data metadata methods *)
+  pf ppf "@ %a" pp_get_dims p ;
   pf ppf "@ %a" pp_constrained_param_names p ;
   pf ppf "@ %a" pp_unconstrained_param_names p ;
-  pf ppf "@ %a" pp_transform_inits p ;
+  pf ppf "@ %a" pp_unconstrained_types p ;
+  (* Boilerplate *)
   pf ppf "@ %a" pp_overloads ()
 
 let pp_model ppf (p : Locations.typed_prog_num) =

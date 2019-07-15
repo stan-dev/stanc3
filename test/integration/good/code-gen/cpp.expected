@@ -179,31 +179,6 @@ class eight_schools_ncp_model : public prob_grad {
     return lp_accum__.sum();
     } // log_prob() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__.resize(0);
-    names__.push_back("mu");
-    names__.push_back("tau");
-    names__.push_back("theta_tilde");
-    names__.push_back("theta");
-    } // get_param_names() 
-    
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.resize(0);
-    std::vector<size_t> dims__;
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(J);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(J);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    
-    } // get_dims() 
-    
   template <typename RNG>
   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
                    std::vector<int>& params_i__, std::vector<double>& vars__,
@@ -264,6 +239,76 @@ class eight_schools_ncp_model : public prob_grad {
     }
     } // write_array() 
     
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& vars__, std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      
+      double mu;
+      
+      current_statement__ = 2;
+      mu = context__.vals_r("mu")[(1 - 1)];
+      double tau;
+      
+      current_statement__ = 3;
+      tau = context__.vals_r("tau")[(1 - 1)];
+      current_statement__ = 3;
+      tau = lb_free(tau, 0);
+      std::vector<double> theta_tilde;
+      theta_tilde = std::vector<double>(J, 0);
+      
+      current_statement__ = 4;
+      pos__ = 1;
+      current_statement__ = 4;
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 4;
+        assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), 
+               context__.vals_r("theta_tilde")[(pos__ - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
+        current_statement__ = 4;
+        pos__ = (pos__ + 1);}
+      vars__.push_back(mu);
+      vars__.push_back(tau);
+      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
+        vars__.push_back(rvalue(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("mu");
+    names__.push_back("tau");
+    names__.push_back("theta_tilde");
+    names__.push_back("theta");
+    } // get_param_names() 
+    
+  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.resize(0);
+    std::vector<size_t> dims__;
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(J);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(J);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    
+    } // get_dims() 
+    
   void constrained_param_names(std::vector<std::string>& param_names__,
                                bool emit_transformed_parameters__ = true,
                                bool emit_generated_quantities__ = true) const {
@@ -310,50 +355,11 @@ class eight_schools_ncp_model : public prob_grad {
     
     } // unconstrained_param_names() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
-    typedef double local_scalar_t__;
-    vars__.resize(0);
-    vars__.reserve(num_params_r__);
-    
-    try {
-      int pos__;
-      
-      double mu;
-      
-      current_statement__ = 2;
-      mu = context__.vals_r("mu")[(1 - 1)];
-      double tau;
-      
-      current_statement__ = 3;
-      tau = context__.vals_r("tau")[(1 - 1)];
-      current_statement__ = 3;
-      tau = lb_free(tau, 0);
-      std::vector<double> theta_tilde;
-      theta_tilde = std::vector<double>(J, 0);
-      
-      current_statement__ = 4;
-      pos__ = 1;
-      current_statement__ = 4;
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 4;
-        assign(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), 
-               context__.vals_r("theta_tilde")[(pos__ - 1)], "assigning variable theta_tilde[(sym1__ - 1)]");
-        current_statement__ = 4;
-        pos__ = (pos__ + 1);}
-      vars__.push_back(mu);
-      vars__.push_back(tau);
-      for (size_t sym1__ = 1; sym1__ <= J; ++sym1__) {
-        vars__.push_back(rvalue(theta_tilde, cons_list(index_uni(sym1__), nil_index_list()), "pretty printed e"));
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
-    } // transform_inits() 
+  std::string get_unconstrained_types() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"}]";
+    return s__.str();
+    } // get_unconstrained_types() 
     
   
     template <typename RNG>
@@ -2591,332 +2597,6 @@ class mother_model : public prob_grad {
     return lp_accum__.sum();
     } // log_prob() 
     
-  void get_param_names(std::vector<std::string>& names__) const {
-    
-    names__.resize(0);
-    names__.push_back("p_real");
-    names__.push_back("p_real_1d_ar");
-    names__.push_back("p_real_3d_ar");
-    names__.push_back("p_vec");
-    names__.push_back("p_1d_vec");
-    names__.push_back("p_3d_vec");
-    names__.push_back("p_row_vec");
-    names__.push_back("p_1d_row_vec");
-    names__.push_back("p_3d_row_vec");
-    names__.push_back("p_ar_mat");
-    names__.push_back("p_simplex");
-    names__.push_back("p_1d_simplex");
-    names__.push_back("p_3d_simplex");
-    names__.push_back("p_cfcov_54");
-    names__.push_back("p_cfcov_33");
-    names__.push_back("p_cfcov_33_ar");
-    names__.push_back("tp_real_1d_ar");
-    names__.push_back("tp_real_3d_ar");
-    names__.push_back("tp_vec");
-    names__.push_back("tp_1d_vec");
-    names__.push_back("tp_3d_vec");
-    names__.push_back("tp_row_vec");
-    names__.push_back("tp_1d_row_vec");
-    names__.push_back("tp_3d_row_vec");
-    names__.push_back("tp_ar_mat");
-    names__.push_back("tp_simplex");
-    names__.push_back("tp_1d_simplex");
-    names__.push_back("tp_3d_simplex");
-    names__.push_back("tp_cfcov_54");
-    names__.push_back("tp_cfcov_33");
-    names__.push_back("tp_cfcov_33_ar");
-    names__.push_back("gq_r1");
-    names__.push_back("gq_r2");
-    names__.push_back("gq_real_1d_ar");
-    names__.push_back("gq_real_3d_ar");
-    names__.push_back("gq_vec");
-    names__.push_back("gq_1d_vec");
-    names__.push_back("gq_3d_vec");
-    names__.push_back("gq_row_vec");
-    names__.push_back("gq_1d_row_vec");
-    names__.push_back("gq_3d_row_vec");
-    names__.push_back("gq_ar_mat");
-    names__.push_back("gq_simplex");
-    names__.push_back("gq_1d_simplex");
-    names__.push_back("gq_3d_simplex");
-    names__.push_back("gq_cfcov_54");
-    names__.push_back("gq_cfcov_33");
-    names__.push_back("gq_cfcov_33_ar");
-    } // get_param_names() 
-    
-  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.resize(0);
-    std::vector<size_t> dims__;
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(4);
-    
-    dims__.push_back(5);
-    
-    dims__.push_back(2);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(5);
-    
-    dims__.push_back(4);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(3);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(K);
-    
-    dims__.push_back(3);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(4);
-    
-    dims__.push_back(5);
-    
-    dims__.push_back(2);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(5);
-    
-    dims__.push_back(4);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(3);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(K);
-    
-    dims__.push_back(3);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(4);
-    
-    dims__.push_back(5);
-    
-    dims__.push_back(2);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(N);
-    
-    dims__.push_back(M);
-    
-    dims__.push_back(K);
-    
-    dims__.push_back(N);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(5);
-    
-    dims__.push_back(4);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(3);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    dims__.push_back(K);
-    
-    dims__.push_back(3);
-    
-    dims__.push_back(3);
-    dimss__.push_back(dims__);
-    dims__.resize(0);
-    
-    } // get_dims() 
-    
   template <typename RNG>
   void write_array(RNG& base_rng__, std::vector<double>& params_r__,
                    std::vector<int>& params_i__, std::vector<double>& vars__,
@@ -3608,6 +3288,707 @@ class mother_model : public prob_grad {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array() 
+    
+  void transform_inits(const stan::io::var_context& context__,
+                       std::vector<int>& params_i__,
+                       std::vector<double>& vars__, std::ostream* pstream__) const {
+    typedef double local_scalar_t__;
+    vars__.resize(0);
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      
+      double p_real;
+      
+      current_statement__ = 2;
+      p_real = context__.vals_r("p_real")[(1 - 1)];
+      std::vector<double> p_real_1d_ar;
+      p_real_1d_ar = std::vector<double>(N, 0);
+      
+      current_statement__ = 3;
+      pos__ = 1;
+      current_statement__ = 3;
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        current_statement__ = 3;
+        assign(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), 
+               context__.vals_r("p_real_1d_ar")[(pos__ - 1)], "assigning variable p_real_1d_ar[(sym43__ - 1)]");
+        current_statement__ = 3;
+        pos__ = (pos__ + 1);}
+      current_statement__ = 3;
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        current_statement__ = 3;
+        assign(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), lb_free(
+               rvalue(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"),
+               0), "assigning variable p_real_1d_ar[(sym43__ - 1)]");}
+      std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
+      p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
+      
+      current_statement__ = 4;
+      pos__ = 1;
+      current_statement__ = 4;
+      for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+        current_statement__ = 4;
+        for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+          current_statement__ = 4;
+          for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+            current_statement__ = 4;
+            assign(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), 
+                   context__.vals_r("p_real_3d_ar")[(pos__ - 1)], "assigning variable p_real_3d_ar[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1)]");
+            current_statement__ = 4;
+            pos__ = (pos__ + 1);}}}
+      current_statement__ = 4;
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        current_statement__ = 4;
+        for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+          current_statement__ = 4;
+          for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+            current_statement__ = 4;
+            assign(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), lb_free(
+                   rvalue(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), "pretty printed e"),
+                   0), "assigning variable p_real_3d_ar[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1)]");
+          }}}
+      Eigen::Matrix<double, -1, 1> p_vec;
+      p_vec = Eigen::Matrix<double, -1, 1>(N);
+      
+      current_statement__ = 5;
+      pos__ = 1;
+      current_statement__ = 5;
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        current_statement__ = 5;
+        assign(p_vec, cons_list(index_uni(sym43__), nil_index_list()), 
+               context__.vals_r("p_vec")[(pos__ - 1)], "assigning variable p_vec[(sym43__ - 1)]");
+        current_statement__ = 5;
+        pos__ = (pos__ + 1);}
+      current_statement__ = 5;
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        current_statement__ = 5;
+        assign(p_vec, cons_list(index_uni(sym43__), nil_index_list()), lb_free(
+               rvalue(p_vec, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"),
+               0), "assigning variable p_vec[(sym43__ - 1)]");}
+      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
+      p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      
+      current_statement__ = 6;
+      pos__ = 1;
+      current_statement__ = 6;
+      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
+        current_statement__ = 6;
+        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+          current_statement__ = 6;
+          assign(p_1d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), 
+                 context__.vals_r("p_1d_vec")[(pos__ - 1)], "assigning variable p_1d_vec[(sym43__ - 1), (sym44__ - 1)]");
+          current_statement__ = 6;
+          pos__ = (pos__ + 1);}}
+      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
+      p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      
+      current_statement__ = 7;
+      pos__ = 1;
+      current_statement__ = 7;
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        current_statement__ = 7;
+        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+          current_statement__ = 7;
+          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+            current_statement__ = 7;
+            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+              current_statement__ = 7;
+              assign(p_3d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), 
+                     context__.vals_r("p_3d_vec")[(pos__ - 1)], "assigning variable p_3d_vec[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                            (sym46__ - 1)]");
+              current_statement__ = 7;
+              pos__ = (pos__ + 1);}}}}
+      Eigen::Matrix<double, 1, -1> p_row_vec;
+      p_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      
+      current_statement__ = 8;
+      pos__ = 1;
+      current_statement__ = 8;
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        current_statement__ = 8;
+        assign(p_row_vec, cons_list(index_uni(sym43__), nil_index_list()), 
+               context__.vals_r("p_row_vec")[(pos__ - 1)], "assigning variable p_row_vec[(sym43__ - 1)]");
+        current_statement__ = 8;
+        pos__ = (pos__ + 1);}
+      std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
+      p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
+      
+      current_statement__ = 9;
+      pos__ = 1;
+      current_statement__ = 9;
+      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
+        current_statement__ = 9;
+        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+          current_statement__ = 9;
+          assign(p_1d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), 
+                 context__.vals_r("p_1d_row_vec")[(pos__ - 1)], "assigning variable p_1d_row_vec[(sym43__ - 1), (sym44__ - 1)]");
+          current_statement__ = 9;
+          pos__ = (pos__ + 1);}}
+      std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
+      p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
+      
+      current_statement__ = 10;
+      pos__ = 1;
+      current_statement__ = 10;
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        current_statement__ = 10;
+        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+          current_statement__ = 10;
+          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+            current_statement__ = 10;
+            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+              current_statement__ = 10;
+              assign(p_3d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), 
+                     context__.vals_r("p_3d_row_vec")[(pos__ - 1)], "assigning variable p_3d_row_vec[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                                (sym46__ - 1)]");
+              current_statement__ = 10;
+              pos__ = (pos__ + 1);}}}}
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
+      p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
+      
+      current_statement__ = 11;
+      pos__ = 1;
+      current_statement__ = 11;
+      for (size_t sym46__ = 1; sym46__ <= 3; ++sym46__) {
+        current_statement__ = 11;
+        for (size_t sym45__ = 1; sym45__ <= 2; ++sym45__) {
+          current_statement__ = 11;
+          for (size_t sym44__ = 1; sym44__ <= 5; ++sym44__) {
+            current_statement__ = 11;
+            for (size_t sym43__ = 1; sym43__ <= 4; ++sym43__) {
+              current_statement__ = 11;
+              assign(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), 
+                     context__.vals_r("p_ar_mat")[(pos__ - 1)], "assigning variable p_ar_mat[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                            (sym46__ - 1)]");
+              current_statement__ = 11;
+              pos__ = (pos__ + 1);}}}}
+      current_statement__ = 11;
+      for (size_t sym43__ = 1; sym43__ <= 4; ++sym43__) {
+        current_statement__ = 11;
+        for (size_t sym44__ = 1; sym44__ <= 5; ++sym44__) {
+          current_statement__ = 11;
+          for (size_t sym45__ = 1; sym45__ <= 2; ++sym45__) {
+            current_statement__ = 11;
+            for (size_t sym46__ = 1; sym46__ <= 3; ++sym46__) {
+              current_statement__ = 11;
+              assign(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), lub_free(
+                     rvalue(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"),
+                     0, 1), "assigning variable p_ar_mat[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                            (sym46__ - 1)]");
+            }}}}
+      Eigen::Matrix<double, -1, 1> p_simplex;
+      p_simplex = Eigen::Matrix<double, -1, 1>(N);
+      
+      current_statement__ = 12;
+      pos__ = 1;
+      current_statement__ = 12;
+      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
+        current_statement__ = 12;
+        assign(p_simplex, cons_list(index_uni(sym44__), nil_index_list()), 
+               context__.vals_r("p_simplex")[(pos__ - 1)], "assigning variable p_simplex[(sym44__ - 1)]");
+        current_statement__ = 12;
+        pos__ = (pos__ + 1);}
+      current_statement__ = 12;
+      assign(p_simplex, nil_index_list(), simplex_free(p_simplex), "assigning variable p_simplex");
+      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
+      p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      
+      current_statement__ = 13;
+      pos__ = 1;
+      current_statement__ = 13;
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        current_statement__ = 13;
+        for (size_t sym45__ = 1; sym45__ <= N; ++sym45__) {
+          current_statement__ = 13;
+          assign(p_1d_simplex, cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())), 
+                 context__.vals_r("p_1d_simplex")[(pos__ - 1)], "assigning variable p_1d_simplex[(sym45__ - 1), (sym46__ - 1)]");
+          current_statement__ = 13;
+          pos__ = (pos__ + 1);}}
+      current_statement__ = 13;
+      for (size_t sym45__ = 1; sym45__ <= N; ++sym45__) {
+        current_statement__ = 13;
+        assign(p_1d_simplex, cons_list(index_uni(sym45__), nil_index_list()), simplex_free(
+               rvalue(p_1d_simplex, cons_list(index_uni(sym45__), nil_index_list()), "pretty printed e")), "assigning variable p_1d_simplex[(sym45__ - 1)]");
+      }
+      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
+      p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      
+      current_statement__ = 14;
+      pos__ = 1;
+      current_statement__ = 14;
+      for (size_t sym49__ = 1; sym49__ <= N; ++sym49__) {
+        current_statement__ = 14;
+        for (size_t sym48__ = 1; sym48__ <= K; ++sym48__) {
+          current_statement__ = 14;
+          for (size_t sym47__ = 1; sym47__ <= M; ++sym47__) {
+            current_statement__ = 14;
+            for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+              current_statement__ = 14;
+              assign(p_3d_simplex, cons_list(index_uni(sym46__), cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), cons_list(index_uni(sym49__), nil_index_list())))), 
+                     context__.vals_r("p_3d_simplex")[(pos__ - 1)], "assigning variable p_3d_simplex[(sym46__ - 1), (sym47__ - 1), (sym48__ - 1),\n                                (sym49__ - 1)]");
+              current_statement__ = 14;
+              pos__ = (pos__ + 1);}}}}
+      current_statement__ = 14;
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        current_statement__ = 14;
+        for (size_t sym47__ = 1; sym47__ <= M; ++sym47__) {
+          current_statement__ = 14;
+          for (size_t sym48__ = 1; sym48__ <= K; ++sym48__) {
+            current_statement__ = 14;
+            assign(p_3d_simplex, cons_list(index_uni(sym46__), cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), nil_index_list()))), simplex_free(
+                   rvalue(p_3d_simplex, cons_list(index_uni(sym46__), cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), nil_index_list()))), "pretty printed e")), "assigning variable p_3d_simplex[(sym46__ - 1), (sym47__ - 1), (sym48__ - 1)]");
+          }}}
+      Eigen::Matrix<double, -1, -1> p_cfcov_54;
+      p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      
+      current_statement__ = 15;
+      pos__ = 1;
+      current_statement__ = 15;
+      for (size_t sym48__ = 1; sym48__ <= 4; ++sym48__) {
+        current_statement__ = 15;
+        for (size_t sym47__ = 1; sym47__ <= 5; ++sym47__) {
+          current_statement__ = 15;
+          assign(p_cfcov_54, cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), nil_index_list())), 
+                 context__.vals_r("p_cfcov_54")[(pos__ - 1)], "assigning variable p_cfcov_54[(sym47__ - 1), (sym48__ - 1)]");
+          current_statement__ = 15;
+          pos__ = (pos__ + 1);}}
+      current_statement__ = 15;
+      assign(p_cfcov_54, nil_index_list(), cholesky_factor_free(p_cfcov_54), "assigning variable p_cfcov_54");
+      Eigen::Matrix<double, -1, -1> p_cfcov_33;
+      p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      
+      current_statement__ = 16;
+      pos__ = 1;
+      current_statement__ = 16;
+      for (size_t sym49__ = 1; sym49__ <= 3; ++sym49__) {
+        current_statement__ = 16;
+        for (size_t sym48__ = 1; sym48__ <= 3; ++sym48__) {
+          current_statement__ = 16;
+          assign(p_cfcov_33, cons_list(index_uni(sym48__), cons_list(index_uni(sym49__), nil_index_list())), 
+                 context__.vals_r("p_cfcov_33")[(pos__ - 1)], "assigning variable p_cfcov_33[(sym48__ - 1), (sym49__ - 1)]");
+          current_statement__ = 16;
+          pos__ = (pos__ + 1);}}
+      current_statement__ = 16;
+      assign(p_cfcov_33, nil_index_list(), cholesky_factor_free(p_cfcov_33), "assigning variable p_cfcov_33");
+      std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
+      p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      
+      current_statement__ = 17;
+      pos__ = 1;
+      current_statement__ = 17;
+      for (size_t sym51__ = 1; sym51__ <= 3; ++sym51__) {
+        current_statement__ = 17;
+        for (size_t sym50__ = 1; sym50__ <= 3; ++sym50__) {
+          current_statement__ = 17;
+          for (size_t sym49__ = 1; sym49__ <= K; ++sym49__) {
+            current_statement__ = 17;
+            assign(p_cfcov_33_ar, cons_list(index_uni(sym49__), cons_list(index_uni(sym50__), cons_list(index_uni(sym51__), nil_index_list()))), 
+                   context__.vals_r("p_cfcov_33_ar")[(pos__ - 1)], "assigning variable p_cfcov_33_ar[(sym49__ - 1), (sym50__ - 1), (sym51__ - 1)]");
+            current_statement__ = 17;
+            pos__ = (pos__ + 1);}}}
+      current_statement__ = 17;
+      for (size_t sym49__ = 1; sym49__ <= K; ++sym49__) {
+        current_statement__ = 17;
+        assign(p_cfcov_33_ar, cons_list(index_uni(sym49__), nil_index_list()), cholesky_factor_free(
+               rvalue(p_cfcov_33_ar, cons_list(index_uni(sym49__), nil_index_list()), "pretty printed e")), "assigning variable p_cfcov_33_ar[(sym49__ - 1)]");
+      }
+      vars__.push_back(p_real);
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        vars__.push_back(rvalue(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
+      }
+      for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+        for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+          for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+            vars__.push_back(rvalue(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), "pretty printed e"));
+          }}}
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        vars__.push_back(rvalue(p_vec, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
+      }
+      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
+        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+          vars__.push_back(rvalue(p_1d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+              vars__.push_back(rvalue(p_3d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        vars__.push_back(rvalue(p_row_vec, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
+      }
+      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
+        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+          vars__.push_back(rvalue(p_1d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+              vars__.push_back(rvalue(p_3d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym46__ = 1; sym46__ <= 3; ++sym46__) {
+        for (size_t sym45__ = 1; sym45__ <= 2; ++sym45__) {
+          for (size_t sym44__ = 1; sym44__ <= 5; ++sym44__) {
+            for (size_t sym43__ = 1; sym43__ <= 4; ++sym43__) {
+              vars__.push_back(rvalue(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+        vars__.push_back(rvalue(p_simplex, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
+      }
+      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
+        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+          vars__.push_back(rvalue(p_1d_simplex, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
+        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
+          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
+            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
+              vars__.push_back(rvalue(p_3d_simplex, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
+            }}}}
+      for (size_t sym44__ = 1; sym44__ <= 4; ++sym44__) {
+        for (size_t sym43__ = 1; sym43__ <= 5; ++sym43__) {
+          vars__.push_back(rvalue(p_cfcov_54, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym44__ = 1; sym44__ <= 3; ++sym44__) {
+        for (size_t sym43__ = 1; sym43__ <= 3; ++sym43__) {
+          vars__.push_back(rvalue(p_cfcov_33, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
+        }}
+      for (size_t sym45__ = 1; sym45__ <= 3; ++sym45__) {
+        for (size_t sym44__ = 1; sym44__ <= 3; ++sym44__) {
+          for (size_t sym43__ = 1; sym43__ <= K; ++sym43__) {
+            vars__.push_back(rvalue(p_cfcov_33_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), "pretty printed e"));
+          }}}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(
+          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits() 
+    
+  void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.resize(0);
+    names__.push_back("p_real");
+    names__.push_back("p_real_1d_ar");
+    names__.push_back("p_real_3d_ar");
+    names__.push_back("p_vec");
+    names__.push_back("p_1d_vec");
+    names__.push_back("p_3d_vec");
+    names__.push_back("p_row_vec");
+    names__.push_back("p_1d_row_vec");
+    names__.push_back("p_3d_row_vec");
+    names__.push_back("p_ar_mat");
+    names__.push_back("p_simplex");
+    names__.push_back("p_1d_simplex");
+    names__.push_back("p_3d_simplex");
+    names__.push_back("p_cfcov_54");
+    names__.push_back("p_cfcov_33");
+    names__.push_back("p_cfcov_33_ar");
+    names__.push_back("tp_real_1d_ar");
+    names__.push_back("tp_real_3d_ar");
+    names__.push_back("tp_vec");
+    names__.push_back("tp_1d_vec");
+    names__.push_back("tp_3d_vec");
+    names__.push_back("tp_row_vec");
+    names__.push_back("tp_1d_row_vec");
+    names__.push_back("tp_3d_row_vec");
+    names__.push_back("tp_ar_mat");
+    names__.push_back("tp_simplex");
+    names__.push_back("tp_1d_simplex");
+    names__.push_back("tp_3d_simplex");
+    names__.push_back("tp_cfcov_54");
+    names__.push_back("tp_cfcov_33");
+    names__.push_back("tp_cfcov_33_ar");
+    names__.push_back("gq_r1");
+    names__.push_back("gq_r2");
+    names__.push_back("gq_real_1d_ar");
+    names__.push_back("gq_real_3d_ar");
+    names__.push_back("gq_vec");
+    names__.push_back("gq_1d_vec");
+    names__.push_back("gq_3d_vec");
+    names__.push_back("gq_row_vec");
+    names__.push_back("gq_1d_row_vec");
+    names__.push_back("gq_3d_row_vec");
+    names__.push_back("gq_ar_mat");
+    names__.push_back("gq_simplex");
+    names__.push_back("gq_1d_simplex");
+    names__.push_back("gq_3d_simplex");
+    names__.push_back("gq_cfcov_54");
+    names__.push_back("gq_cfcov_33");
+    names__.push_back("gq_cfcov_33_ar");
+    } // get_param_names() 
+    
+  void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.resize(0);
+    std::vector<size_t> dims__;
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(4);
+    
+    dims__.push_back(5);
+    
+    dims__.push_back(2);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(5);
+    
+    dims__.push_back(4);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(K);
+    
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(4);
+    
+    dims__.push_back(5);
+    
+    dims__.push_back(2);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(5);
+    
+    dims__.push_back(4);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(K);
+    
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(4);
+    
+    dims__.push_back(5);
+    
+    dims__.push_back(2);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(N);
+    
+    dims__.push_back(M);
+    
+    dims__.push_back(K);
+    
+    dims__.push_back(N);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(5);
+    
+    dims__.push_back(4);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    dims__.push_back(K);
+    
+    dims__.push_back(3);
+    
+    dims__.push_back(3);
+    dimss__.push_back(dims__);
+    dims__.resize(0);
+    
+    } // get_dims() 
     
   void constrained_param_names(std::vector<std::string>& param_names__,
                                bool emit_transformed_parameters__ = true,
@@ -4359,380 +4740,11 @@ class mother_model : public prob_grad {
     
     } // unconstrained_param_names() 
     
-  void transform_inits(const stan::io::var_context& context__,
-                       std::vector<int>& params_i__,
-                       std::vector<double>& vars__, std::ostream* pstream__) const {
-    typedef double local_scalar_t__;
-    vars__.resize(0);
-    vars__.reserve(num_params_r__);
-    
-    try {
-      int pos__;
-      
-      double p_real;
-      
-      current_statement__ = 2;
-      p_real = context__.vals_r("p_real")[(1 - 1)];
-      std::vector<double> p_real_1d_ar;
-      p_real_1d_ar = std::vector<double>(N, 0);
-      
-      current_statement__ = 3;
-      pos__ = 1;
-      current_statement__ = 3;
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        current_statement__ = 3;
-        assign(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), 
-               context__.vals_r("p_real_1d_ar")[(pos__ - 1)], "assigning variable p_real_1d_ar[(sym43__ - 1)]");
-        current_statement__ = 3;
-        pos__ = (pos__ + 1);}
-      current_statement__ = 3;
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        current_statement__ = 3;
-        assign(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), lb_free(
-               rvalue(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"),
-               0), "assigning variable p_real_1d_ar[(sym43__ - 1)]");}
-      std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
-      p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, 0)));
-      
-      current_statement__ = 4;
-      pos__ = 1;
-      current_statement__ = 4;
-      for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-        current_statement__ = 4;
-        for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-          current_statement__ = 4;
-          for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-            current_statement__ = 4;
-            assign(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), 
-                   context__.vals_r("p_real_3d_ar")[(pos__ - 1)], "assigning variable p_real_3d_ar[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1)]");
-            current_statement__ = 4;
-            pos__ = (pos__ + 1);}}}
-      current_statement__ = 4;
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        current_statement__ = 4;
-        for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-          current_statement__ = 4;
-          for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-            current_statement__ = 4;
-            assign(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), lb_free(
-                   rvalue(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), "pretty printed e"),
-                   0), "assigning variable p_real_3d_ar[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1)]");
-          }}}
-      Eigen::Matrix<double, -1, 1> p_vec;
-      p_vec = Eigen::Matrix<double, -1, 1>(N);
-      
-      current_statement__ = 5;
-      pos__ = 1;
-      current_statement__ = 5;
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        current_statement__ = 5;
-        assign(p_vec, cons_list(index_uni(sym43__), nil_index_list()), 
-               context__.vals_r("p_vec")[(pos__ - 1)], "assigning variable p_vec[(sym43__ - 1)]");
-        current_statement__ = 5;
-        pos__ = (pos__ + 1);}
-      current_statement__ = 5;
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        current_statement__ = 5;
-        assign(p_vec, cons_list(index_uni(sym43__), nil_index_list()), lb_free(
-               rvalue(p_vec, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"),
-               0), "assigning variable p_vec[(sym43__ - 1)]");}
-      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
-      p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      
-      current_statement__ = 6;
-      pos__ = 1;
-      current_statement__ = 6;
-      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
-        current_statement__ = 6;
-        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-          current_statement__ = 6;
-          assign(p_1d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), 
-                 context__.vals_r("p_1d_vec")[(pos__ - 1)], "assigning variable p_1d_vec[(sym43__ - 1), (sym44__ - 1)]");
-          current_statement__ = 6;
-          pos__ = (pos__ + 1);}}
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
-      p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      
-      current_statement__ = 7;
-      pos__ = 1;
-      current_statement__ = 7;
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        current_statement__ = 7;
-        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-          current_statement__ = 7;
-          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-            current_statement__ = 7;
-            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-              current_statement__ = 7;
-              assign(p_3d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), 
-                     context__.vals_r("p_3d_vec")[(pos__ - 1)], "assigning variable p_3d_vec[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                            (sym46__ - 1)]");
-              current_statement__ = 7;
-              pos__ = (pos__ + 1);}}}}
-      Eigen::Matrix<double, 1, -1> p_row_vec;
-      p_row_vec = Eigen::Matrix<double, 1, -1>(N);
-      
-      current_statement__ = 8;
-      pos__ = 1;
-      current_statement__ = 8;
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        current_statement__ = 8;
-        assign(p_row_vec, cons_list(index_uni(sym43__), nil_index_list()), 
-               context__.vals_r("p_row_vec")[(pos__ - 1)], "assigning variable p_row_vec[(sym43__ - 1)]");
-        current_statement__ = 8;
-        pos__ = (pos__ + 1);}
-      std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
-      p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      
-      current_statement__ = 9;
-      pos__ = 1;
-      current_statement__ = 9;
-      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
-        current_statement__ = 9;
-        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-          current_statement__ = 9;
-          assign(p_1d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), 
-                 context__.vals_r("p_1d_row_vec")[(pos__ - 1)], "assigning variable p_1d_row_vec[(sym43__ - 1), (sym44__ - 1)]");
-          current_statement__ = 9;
-          pos__ = (pos__ + 1);}}
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
-      p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
-      
-      current_statement__ = 10;
-      pos__ = 1;
-      current_statement__ = 10;
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        current_statement__ = 10;
-        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-          current_statement__ = 10;
-          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-            current_statement__ = 10;
-            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-              current_statement__ = 10;
-              assign(p_3d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), 
-                     context__.vals_r("p_3d_row_vec")[(pos__ - 1)], "assigning variable p_3d_row_vec[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                                (sym46__ - 1)]");
-              current_statement__ = 10;
-              pos__ = (pos__ + 1);}}}}
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
-      p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
-      
-      current_statement__ = 11;
-      pos__ = 1;
-      current_statement__ = 11;
-      for (size_t sym46__ = 1; sym46__ <= 3; ++sym46__) {
-        current_statement__ = 11;
-        for (size_t sym45__ = 1; sym45__ <= 2; ++sym45__) {
-          current_statement__ = 11;
-          for (size_t sym44__ = 1; sym44__ <= 5; ++sym44__) {
-            current_statement__ = 11;
-            for (size_t sym43__ = 1; sym43__ <= 4; ++sym43__) {
-              current_statement__ = 11;
-              assign(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), 
-                     context__.vals_r("p_ar_mat")[(pos__ - 1)], "assigning variable p_ar_mat[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                            (sym46__ - 1)]");
-              current_statement__ = 11;
-              pos__ = (pos__ + 1);}}}}
-      current_statement__ = 11;
-      for (size_t sym43__ = 1; sym43__ <= 4; ++sym43__) {
-        current_statement__ = 11;
-        for (size_t sym44__ = 1; sym44__ <= 5; ++sym44__) {
-          current_statement__ = 11;
-          for (size_t sym45__ = 1; sym45__ <= 2; ++sym45__) {
-            current_statement__ = 11;
-            for (size_t sym46__ = 1; sym46__ <= 3; ++sym46__) {
-              current_statement__ = 11;
-              assign(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), lub_free(
-                     rvalue(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"),
-                     0, 1), "assigning variable p_ar_mat[(sym43__ - 1), (sym44__ - 1), (sym45__ - 1),\n                            (sym46__ - 1)]");
-            }}}}
-      Eigen::Matrix<double, -1, 1> p_simplex;
-      p_simplex = Eigen::Matrix<double, -1, 1>(N);
-      
-      current_statement__ = 12;
-      pos__ = 1;
-      current_statement__ = 12;
-      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
-        current_statement__ = 12;
-        assign(p_simplex, cons_list(index_uni(sym44__), nil_index_list()), 
-               context__.vals_r("p_simplex")[(pos__ - 1)], "assigning variable p_simplex[(sym44__ - 1)]");
-        current_statement__ = 12;
-        pos__ = (pos__ + 1);}
-      current_statement__ = 12;
-      assign(p_simplex, nil_index_list(), simplex_free(p_simplex), "assigning variable p_simplex");
-      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
-      p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      
-      current_statement__ = 13;
-      pos__ = 1;
-      current_statement__ = 13;
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        current_statement__ = 13;
-        for (size_t sym45__ = 1; sym45__ <= N; ++sym45__) {
-          current_statement__ = 13;
-          assign(p_1d_simplex, cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())), 
-                 context__.vals_r("p_1d_simplex")[(pos__ - 1)], "assigning variable p_1d_simplex[(sym45__ - 1), (sym46__ - 1)]");
-          current_statement__ = 13;
-          pos__ = (pos__ + 1);}}
-      current_statement__ = 13;
-      for (size_t sym45__ = 1; sym45__ <= N; ++sym45__) {
-        current_statement__ = 13;
-        assign(p_1d_simplex, cons_list(index_uni(sym45__), nil_index_list()), simplex_free(
-               rvalue(p_1d_simplex, cons_list(index_uni(sym45__), nil_index_list()), "pretty printed e")), "assigning variable p_1d_simplex[(sym45__ - 1)]");
-      }
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
-      p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      
-      current_statement__ = 14;
-      pos__ = 1;
-      current_statement__ = 14;
-      for (size_t sym49__ = 1; sym49__ <= N; ++sym49__) {
-        current_statement__ = 14;
-        for (size_t sym48__ = 1; sym48__ <= K; ++sym48__) {
-          current_statement__ = 14;
-          for (size_t sym47__ = 1; sym47__ <= M; ++sym47__) {
-            current_statement__ = 14;
-            for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-              current_statement__ = 14;
-              assign(p_3d_simplex, cons_list(index_uni(sym46__), cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), cons_list(index_uni(sym49__), nil_index_list())))), 
-                     context__.vals_r("p_3d_simplex")[(pos__ - 1)], "assigning variable p_3d_simplex[(sym46__ - 1), (sym47__ - 1), (sym48__ - 1),\n                                (sym49__ - 1)]");
-              current_statement__ = 14;
-              pos__ = (pos__ + 1);}}}}
-      current_statement__ = 14;
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        current_statement__ = 14;
-        for (size_t sym47__ = 1; sym47__ <= M; ++sym47__) {
-          current_statement__ = 14;
-          for (size_t sym48__ = 1; sym48__ <= K; ++sym48__) {
-            current_statement__ = 14;
-            assign(p_3d_simplex, cons_list(index_uni(sym46__), cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), nil_index_list()))), simplex_free(
-                   rvalue(p_3d_simplex, cons_list(index_uni(sym46__), cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), nil_index_list()))), "pretty printed e")), "assigning variable p_3d_simplex[(sym46__ - 1), (sym47__ - 1), (sym48__ - 1)]");
-          }}}
-      Eigen::Matrix<double, -1, -1> p_cfcov_54;
-      p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
-      
-      current_statement__ = 15;
-      pos__ = 1;
-      current_statement__ = 15;
-      for (size_t sym48__ = 1; sym48__ <= 4; ++sym48__) {
-        current_statement__ = 15;
-        for (size_t sym47__ = 1; sym47__ <= 5; ++sym47__) {
-          current_statement__ = 15;
-          assign(p_cfcov_54, cons_list(index_uni(sym47__), cons_list(index_uni(sym48__), nil_index_list())), 
-                 context__.vals_r("p_cfcov_54")[(pos__ - 1)], "assigning variable p_cfcov_54[(sym47__ - 1), (sym48__ - 1)]");
-          current_statement__ = 15;
-          pos__ = (pos__ + 1);}}
-      current_statement__ = 15;
-      assign(p_cfcov_54, nil_index_list(), cholesky_factor_free(p_cfcov_54), "assigning variable p_cfcov_54");
-      Eigen::Matrix<double, -1, -1> p_cfcov_33;
-      p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
-      
-      current_statement__ = 16;
-      pos__ = 1;
-      current_statement__ = 16;
-      for (size_t sym49__ = 1; sym49__ <= 3; ++sym49__) {
-        current_statement__ = 16;
-        for (size_t sym48__ = 1; sym48__ <= 3; ++sym48__) {
-          current_statement__ = 16;
-          assign(p_cfcov_33, cons_list(index_uni(sym48__), cons_list(index_uni(sym49__), nil_index_list())), 
-                 context__.vals_r("p_cfcov_33")[(pos__ - 1)], "assigning variable p_cfcov_33[(sym48__ - 1), (sym49__ - 1)]");
-          current_statement__ = 16;
-          pos__ = (pos__ + 1);}}
-      current_statement__ = 16;
-      assign(p_cfcov_33, nil_index_list(), cholesky_factor_free(p_cfcov_33), "assigning variable p_cfcov_33");
-      std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
-      p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
-      
-      current_statement__ = 17;
-      pos__ = 1;
-      current_statement__ = 17;
-      for (size_t sym51__ = 1; sym51__ <= 3; ++sym51__) {
-        current_statement__ = 17;
-        for (size_t sym50__ = 1; sym50__ <= 3; ++sym50__) {
-          current_statement__ = 17;
-          for (size_t sym49__ = 1; sym49__ <= K; ++sym49__) {
-            current_statement__ = 17;
-            assign(p_cfcov_33_ar, cons_list(index_uni(sym49__), cons_list(index_uni(sym50__), cons_list(index_uni(sym51__), nil_index_list()))), 
-                   context__.vals_r("p_cfcov_33_ar")[(pos__ - 1)], "assigning variable p_cfcov_33_ar[(sym49__ - 1), (sym50__ - 1), (sym51__ - 1)]");
-            current_statement__ = 17;
-            pos__ = (pos__ + 1);}}}
-      current_statement__ = 17;
-      for (size_t sym49__ = 1; sym49__ <= K; ++sym49__) {
-        current_statement__ = 17;
-        assign(p_cfcov_33_ar, cons_list(index_uni(sym49__), nil_index_list()), cholesky_factor_free(
-               rvalue(p_cfcov_33_ar, cons_list(index_uni(sym49__), nil_index_list()), "pretty printed e")), "assigning variable p_cfcov_33_ar[(sym49__ - 1)]");
-      }
-      vars__.push_back(p_real);
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        vars__.push_back(rvalue(p_real_1d_ar, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
-      }
-      for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-        for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-          for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-            vars__.push_back(rvalue(p_real_3d_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), "pretty printed e"));
-          }}}
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        vars__.push_back(rvalue(p_vec, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
-      }
-      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
-        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-          vars__.push_back(rvalue(p_1d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-              vars__.push_back(rvalue(p_3d_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
-            }}}}
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        vars__.push_back(rvalue(p_row_vec, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
-      }
-      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
-        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-          vars__.push_back(rvalue(p_1d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-              vars__.push_back(rvalue(p_3d_row_vec, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
-            }}}}
-      for (size_t sym46__ = 1; sym46__ <= 3; ++sym46__) {
-        for (size_t sym45__ = 1; sym45__ <= 2; ++sym45__) {
-          for (size_t sym44__ = 1; sym44__ <= 5; ++sym44__) {
-            for (size_t sym43__ = 1; sym43__ <= 4; ++sym43__) {
-              vars__.push_back(rvalue(p_ar_mat, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
-            }}}}
-      for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-        vars__.push_back(rvalue(p_simplex, cons_list(index_uni(sym43__), nil_index_list()), "pretty printed e"));
-      }
-      for (size_t sym44__ = 1; sym44__ <= N; ++sym44__) {
-        for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-          vars__.push_back(rvalue(p_1d_simplex, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym46__ = 1; sym46__ <= N; ++sym46__) {
-        for (size_t sym45__ = 1; sym45__ <= K; ++sym45__) {
-          for (size_t sym44__ = 1; sym44__ <= M; ++sym44__) {
-            for (size_t sym43__ = 1; sym43__ <= N; ++sym43__) {
-              vars__.push_back(rvalue(p_3d_simplex, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), cons_list(index_uni(sym46__), nil_index_list())))), "pretty printed e"));
-            }}}}
-      for (size_t sym44__ = 1; sym44__ <= 4; ++sym44__) {
-        for (size_t sym43__ = 1; sym43__ <= 5; ++sym43__) {
-          vars__.push_back(rvalue(p_cfcov_54, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym44__ = 1; sym44__ <= 3; ++sym44__) {
-        for (size_t sym43__ = 1; sym43__ <= 3; ++sym43__) {
-          vars__.push_back(rvalue(p_cfcov_33, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), nil_index_list())), "pretty printed e"));
-        }}
-      for (size_t sym45__ = 1; sym45__ <= 3; ++sym45__) {
-        for (size_t sym44__ = 1; sym44__ <= 3; ++sym44__) {
-          for (size_t sym43__ = 1; sym43__ <= K; ++sym43__) {
-            vars__.push_back(rvalue(p_cfcov_33_ar, cons_list(index_uni(sym43__), cons_list(index_uni(sym44__), cons_list(index_uni(sym45__), nil_index_list()))), "pretty printed e"));
-          }}}
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(
-          std::runtime_error(std::string("inside transform_inits") + ": " + e.what()), locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
-    } // transform_inits() 
+  std::string get_unconstrained_types() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"generated_quantities\"}]";
+    return s__.str();
+    } // get_unconstrained_types() 
     
   
     template <typename RNG>
