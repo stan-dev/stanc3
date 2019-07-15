@@ -68,7 +68,7 @@ pipeline {
                    """
                 sh """
           cd performance-tests-cmdstan
-          echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
+          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
           cat known_good_perf_all.tests
           CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
            cd ..
@@ -81,9 +81,9 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-                //This stage is just gonna try to run all the models we normally
-                //do for regression testing
-                //and log all the failures. It'll make a big nasty red graph
+        //This stage is just gonna try to run all the models we normally
+        //do for regression testing
+        //and log all the failures. It'll make a big nasty red graph
                 //that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             when {
@@ -101,7 +101,7 @@ pipeline {
           echo "example-models/regression_tests/mother.stan" > all.tests
           cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
           cat all.tests
-          echo "CXXFLAGS+=-march=core2 -fno-fast-math" > cmdstan/make/local
+          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
           CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
                """
                 xunit([GoogleTest(
@@ -120,8 +120,8 @@ pipeline {
             }
             post { always {
                 runShell("rm -rf ./*")
-            } }
-        }
+             } }
+             }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
             failFast true
