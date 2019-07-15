@@ -58,7 +58,8 @@ pipeline {
         stage("Run small good model subset end-to-end") {
             when {
                 beforeAgent true
-                not { anyOf { params.all_tests; buildingTag(); branch 'master' } }
+                not { anyOf { expression { params.all_tests};
+                             buildingTag(); branch 'master' } }
             }
             agent { label 'linux' }
             steps {
@@ -88,7 +89,8 @@ pipeline {
         stage("Try to run all models end-to-end") {
             when {
                 beforeAgent true
-                anyOf { params.all_tests; buildingTag(); branch 'master' }
+                anyOf { expression { params.all_tests};
+                       buildingTag(); branch 'master' }
             }
             agent { label 'ec2-linux' }
             steps {
