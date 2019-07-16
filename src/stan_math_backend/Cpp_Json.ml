@@ -20,17 +20,38 @@ let rec sizedtype_to_json (st : mtype_loc_ad with_expr sizedtype) :
         ; ("length", `String (emit_cpp_expr d))
         ; ("element_type", sizedtype_to_json st) ]
 
-let replace_cpp_expr s =
-  s
-  |> Str.global_replace (Str.regexp "\"") "\\\""
-  |> Str.global_replace (Str.regexp "\\\\\"<<") "\" <<"
-  |> Str.global_replace (Str.regexp ">>\\\\\"") "<< \""
-
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc
     [ ("name", `String name)
     ; ("type", sizedtype_to_json st)
     ; ("block", `String (Fmt.strf "%a" Pretty.pp_io_block block)) ]
+
+let%expect_test "outvar to json pretty" =
+  let var x = {expr= Var x; emeta= internal_meta} in
+  (* the following is equivalent to:
+     parameters {
+       vector[N] var_one[K];
+     }
+  *)
+  ("var_one", SArray (SVector (var "N"), var "K"), Parameters)
+  |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline ;
+  [%expect
+    {|
+  {
+    "name": "var_one",
+    "type": {
+      "name": "array",
+      "length": "<< K >>",
+      "element_type": { "name": "vector", "length": "<< N >>" }
+    },
+    "block": "parameters"
+  } |}]
+
+let replace_cpp_expr s =
+  s
+  |> Str.global_replace (Str.regexp "\"") "\\\""
+  |> Str.global_replace (Str.regexp "\\\\\"<<") "\" <<"
+  |> Str.global_replace (Str.regexp ">>\\\\\"") "<< \""
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 
