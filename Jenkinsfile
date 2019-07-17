@@ -33,97 +33,97 @@ pipeline {
             }
             steps { script { utils.killOldBuilds() } }
         }
-        // stage("Build & Test") {
-        //     agent {
-        //         dockerfile {
-        //             filename 'docker/debian/Dockerfile'
-        //             //Forces image to ignore entrypoint
-        //             args "-u root --entrypoint=\'\'"
-        //         }
-        //     }
-        //     steps {
-        //         sh 'printenv'
-        //         runShell("""
-        //             eval \$(opam env)
-        //             dune build @install
-        //         """)
-        //         echo runShell("eval \$(opam env); dune runtest --verbose")
-        //         sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-        //         stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
-        //     }
-        //     post { always { runShell("rm -rf ./*")} }
-        // }
-        // stage("Run small good model subset end-to-end") {
-        //     when {
-        //         beforeAgent true
-        //         not { anyOf { expression { params.all_tests};
-        //                      buildingTag(); branch 'master' } }
-        //     }
-        //     agent { label 'linux' }
-        //     steps {
-        //         unstash 'ubuntu-exe'
-        //         sh """
-        //   git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-        //            """
-        //         sh """
-        //   cd performance-tests-cmdstan
-        //   echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-        //   cat known_good_perf_all.tests
-        //   CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-        //    cd ..
-        //        """
-        //         junit 'performance-tests-cmdstan/performance.xml'
-        //         archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-        //         perfReport modePerformancePerTestCase: true,
-        //             sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-        //             modeThroughput: false
-        //     }
-        //     post { always { runShell("rm -rf ./*")} }
-        // }
-        // //This stage is just gonna try to run all the models we normally
-        // //do for regression testing
-        // //and log all the failures. It'll make a big nasty red graph
-        //         //that becomes blue over time as we fix more models :)
-        // stage("Try to run all models end-to-end") {
-        //     when {
-        //         beforeAgent true
-        //         anyOf { expression { params.all_tests};
-        //                buildingTag(); branch 'master' }
-        //     }
-        //     agent { label 'ec2-linux' }
-        //     steps {
-        //         unstash 'ubuntu-exe'
-        //         sh """
-        //   git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-        //            """
-        //         sh """
-        //   cd performance-tests-cmdstan
-        //   echo "example-models/regression_tests/mother.stan" > all.tests
-        //   cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
-        //   cat all.tests
-        //   echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-        //   CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
-        //        """
-        //         xunit([GoogleTest(
-        //             deleteOutputFiles: false,
-        //             failIfNotNew: true,
-        //             pattern: 'performance-tests-cmdstan/performance.xml',
-        //             skipNoTestFiles: false,
-        //             stopProcessingIfError: false)])
-        //         archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-        //         perfReport modePerformancePerTestCase: true,
-        //             sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-        //             modeThroughput: false,
-        //             excludeResponseTime: true,
-        //             errorFailedThreshold: 100,
-        //             errorUnstableThreshold: 100
-        //     }
-        //     post { always {
-        //         runShell("rm -rf ./*")
-        //      } }
-        //      }
+        stage("Build & Test") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+                echo runShell("eval \$(opam env); dune runtest --verbose")
+                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
+        stage("Run small good model subset end-to-end") {
+            when {
+                beforeAgent true
+                not { anyOf { expression { params.all_tests};
+                             buildingTag(); branch 'master' } }
+            }
+            agent { label 'linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
+                sh """
+          cd performance-tests-cmdstan
+          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+          cat known_good_perf_all.tests
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file=known_good_perf_all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+           cd ..
+               """
+                junit 'performance-tests-cmdstan/performance.xml'
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false
+            }
+            post { always { runShell("rm -rf ./*")} }
+        }
+        //This stage is just gonna try to run all the models we normally
+        //do for regression testing
+        //and log all the failures. It'll make a big nasty red graph
+        //that becomes blue over time as we fix more models :)
+        stage("Try to run all models end-to-end") {
+            when {
+                beforeAgent true
+                anyOf { expression { params.all_tests};
+                       buildingTag(); branch 'master' }
+            }
+            agent { label 'ec2-linux' }
+            steps {
+                unstash 'ubuntu-exe'
+                sh """
+          git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                   """
+                sh """
+          cd performance-tests-cmdstan
+          echo "example-models/regression_tests/mother.stan" > all.tests
+          cat known_good_perf_all.tests shotgun_perf_all.tests >> all.tests
+          cat all.tests
+          echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+          CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"  || true
+               """
+                xunit([GoogleTest(
+                    deleteOutputFiles: false,
+                    failIfNotNew: true,
+                    pattern: 'performance-tests-cmdstan/performance.xml',
+                    skipNoTestFiles: false,
+                    stopProcessingIfError: false)])
+                archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                perfReport modePerformancePerTestCase: true,
+                    sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                    modeThroughput: false,
+                    excludeResponseTime: true,
+                    errorFailedThreshold: 100,
+                    errorUnstableThreshold: 100
+            }
+            post { always {
+                runShell("rm -rf ./*")
+             } }
+             }
         stage("Build and test static release binaries") {
-            // when { anyOf { buildingTag(); branch 'master' } }
+            when { anyOf { buildingTag(); branch 'master' } }
             failFast true
             parallel {
                 stage("Build & test Mac OS X binary") {
