@@ -131,7 +131,7 @@ pipeline {
                     steps {
                         runShell("""
                     eval \$(opam env)
-                    bash -x install_build_deps.sh
+                    bash -x scripts/install_build_deps.sh
                     dune subst
                     dune build @install
                 """)
