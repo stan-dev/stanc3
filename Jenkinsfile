@@ -47,9 +47,7 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
-
                 echo runShell("eval \$(opam env); dune runtest --verbose")
-
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
@@ -85,7 +83,7 @@ pipeline {
         //This stage is just gonna try to run all the models we normally
         //do for regression testing
         //and log all the failures. It'll make a big nasty red graph
-                //that becomes blue over time as we fix more models :)
+        //that becomes blue over time as we fix more models :)
         stage("Try to run all models end-to-end") {
             when {
                 beforeAgent true
@@ -133,7 +131,8 @@ pipeline {
                     steps {
                         runShell("""
                     eval \$(opam env)
-                    cd scripts && bash -x install_build_deps.sh && cd ..
+                    opam update
+                    bash -x scripts/install_build_deps.sh
                     dune subst
                     dune build @install
                 """)
@@ -177,6 +176,8 @@ pipeline {
                         bat "bash -cl \"cd test/integration\""
                         bat "bash -cl \"find . -type f -name \"*.expected\" -print0 | xargs -0 dos2unix\""
                         bat "bash -cl \"cd ..\""
+                        bat "bash -cl \"eval \$(opam env) opam update\""
+                        bat "bash -cl \"eval \$(opam env) ./scripts/install_build_deps.sh\""
                         bat "bash -cl \"eval \$(opam env) make clean; dune subst; dune build -x windows; dune runtest --verbose\""
                         bat """bash -cl "rm -rf bin/*; mkdir -p bin; mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc" """
                         stash name:'windows-exe', includes:'bin/*'
