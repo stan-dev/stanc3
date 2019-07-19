@@ -443,6 +443,7 @@ let pp_constrained_types ppf {output_vars; _} =
 let pp_overloads ppf () =
   pf ppf
     {|
+    // Begin method overload boilerplate
     template <typename RNG>
     void write_array(RNG& base_rng__,
                      Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,

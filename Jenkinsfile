@@ -84,8 +84,8 @@ pipeline {
             }
             post { always {
                 runShell("rm -rf ./*")
-             } }
-             }
+            } }
+        }
         stage("Build and test static release binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
             failFast true
