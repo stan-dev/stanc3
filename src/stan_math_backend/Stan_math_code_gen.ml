@@ -431,14 +431,14 @@ let pp_unconstrained_types ppf {output_vars; _} =
     (name, out_unconstrained_st, out_block)
   in
   let outvars = List.map ~f:grab_unconstrained output_vars in
-  pp_outvar_metadata ppf ("get_unconstrained_types", outvars)
+  pp_outvar_metadata ppf ("get_unconstrained_sizedtypes", outvars)
 
 let pp_constrained_types ppf {output_vars; _} =
   let grab_constrained (name, {out_constrained_st; out_block; _}) =
     (name, out_constrained_st, out_block)
   in
   let outvars = List.map ~f:grab_constrained output_vars in
-  pp_outvar_metadata ppf ("get_constrained_types", outvars)
+  pp_outvar_metadata ppf ("get_constrained_sizedtypes", outvars)
 
 let pp_overloads ppf () =
   pf ppf
