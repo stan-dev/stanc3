@@ -10,6 +10,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 COPY ./scripts/install_ocaml.sh ./
 RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 
+RUN opam update || true
+
 #Copy our script and install build dependencies
 COPY ./scripts/install_build_deps.sh ./
 RUN bash -x install_build_deps.sh
