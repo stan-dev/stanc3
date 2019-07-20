@@ -10,18 +10,13 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 COPY ./scripts/install_ocaml.sh ./
 RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 
-RUN opam update || true
-
 #Copy our script and install build dependencies
 COPY ./scripts/install_build_deps.sh ./
-RUN bash -x install_build_deps.sh
+RUN opam update; bash -x install_build_deps.sh
 
 #Copy our script and install dev dependencies
 COPY ./scripts/install_dev_deps.sh ./
-RUN bash -x install_dev_deps.sh
-
-#this is just used for end to end tests, maybe temporary
-RUN apt-get install -y --no-install-recommends python
+RUN opam update; bash -x install_dev_deps.sh
 
 #Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
