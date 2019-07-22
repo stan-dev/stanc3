@@ -2911,9 +2911,9 @@ class mother_model : public model_base_crtp<mother_model> {
       td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       current_statement__ = 157;
-      td_int = (stan::math::value(1) || stan::math::value(2));
+      td_int = (primitive_value(1) || primitive_value(2));
       current_statement__ = 158;
-      td_int = (stan::math::value(1) && stan::math::value(2));
+      td_int = (primitive_value(1) && primitive_value(2));
       current_statement__ = 167;
       for (size_t i = 1; i <= 2; ++i) {
         current_statement__ = 165;
