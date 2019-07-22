@@ -170,7 +170,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               , [{expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "bernoulli_logit_rng", [alpha])
             | ( "binomial_lpmf"
-              , [y; {expr= FunApp (StanLib, "inv_logit", [n; alpha]); _}] ) ->
+              , [y; n; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
                 FunApp (StanLib, "binomial_logit_lpmf", [y; n; alpha])
             | ( "categorical_lpmf"
               , [y; {expr= FunApp (StanLib, "inv_logit", [alpha]); _}] ) ->
