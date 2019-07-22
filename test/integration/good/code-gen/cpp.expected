@@ -820,13 +820,13 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 273, column 14 to line 279, column 3)"};
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 foo(const T0__& n, std::ostream* pstream__) ;
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 foo(const T0__& n, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = T0__;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -852,7 +852,7 @@ foo(const T0__& n, std::ostream* pstream__) {
 
 struct foo_functor__ {
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 operator()(const T0__& n, std::ostream* pstream__)  const 
 {
 return foo(n, pstream__);
@@ -861,22 +861,21 @@ return foo(n, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<T3__>& x,
     const std::vector<T4__>& x_int, std::ostream* pstream__) ;
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type>
 sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<T3__>& x,
     const std::vector<T4__>& x_int, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -905,7 +904,8 @@ sho(const T0__& t, const std::vector<T1__>& y,
 struct sho_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type>
 operator()(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x,
            const std::vector<T4__>& x_int, std::ostream* pstream__)  const 
@@ -944,9 +944,9 @@ return foo_bar0(pstream__);
 };
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 foo_bar1(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = T0__;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -967,7 +967,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
 
 struct foo_bar1_functor__ {
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_bar1(x, pstream__);
@@ -975,10 +975,11 @@ return foo_bar1(x, pstream__);
 };
 
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -999,7 +1000,8 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct foo_bar2_functor__ {
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return foo_bar2(x, y, pstream__);
@@ -1007,10 +1009,11 @@ return foo_bar2(x, y, pstream__);
 };
 
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1031,7 +1034,8 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lpmf_functor__ {
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 operator()(const T0__& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lpmf(y, lambda, pstream__);
@@ -1039,10 +1043,11 @@ return foo_lpmf(y, lambda, pstream__);
 };
 
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1063,7 +1068,8 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lcdf_functor__ {
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 operator()(const T0__& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lcdf(y, lambda, pstream__);
@@ -1071,10 +1077,11 @@ return foo_lcdf(y, lambda, pstream__);
 };
 
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1095,7 +1102,8 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lccdf_functor__ {
 template <typename T0__, typename T1__>
-typename boost::math::tools::promote_args<T0__, T1__>::type
+typename boost::math::tools::promote_args<T0__,
+T1__>::type
 operator()(const T0__& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lccdf(y, lambda, pstream__);
@@ -1106,9 +1114,8 @@ template <typename T0__, typename T1__, typename T2__>
 void
 unit_normal_lp(const T0__& u, const T1__& lp__, const T2__& lp_accum__,
                std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1140,9 +1147,9 @@ return unit_normal_lp(u, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 foo_1(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = T0__;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1334,7 +1341,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
 
 struct foo_1_functor__ {
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return foo_1(a, pstream__);
@@ -1342,9 +1349,9 @@ return foo_1(a, pstream__);
 };
 
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 foo_2(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = T0__;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1377,7 +1384,7 @@ foo_2(const T0__& a, std::ostream* pstream__) {
 
 struct foo_2_functor__ {
 template <typename T0__>
-typename boost::math::tools::promote_args<T0__>::type
+T0__
 operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return foo_2(a, pstream__);
@@ -1385,10 +1392,11 @@ return foo_2(a, pstream__);
 };
 
 template <typename T0__, typename T1__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__,
+T1__>::type>
 foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1409,7 +1417,8 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
 
 struct foo_3_functor__ {
 template <typename T0__, typename T1__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__,
+T1__>::type>
 operator()(const T0__& t, const T1__& n, std::ostream* pstream__)  const 
 {
 return foo_3(t, n, pstream__);
@@ -1417,12 +1426,12 @@ return foo_3(t, n, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__>::type
+typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type
 foo_lp(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
        std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1443,7 +1452,8 @@ foo_lp(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
 
 struct foo_lp_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__>::type
+typename boost::math::tools::promote_args<T0__, T1__,
+T2__>::type
 operator()(const T0__& x, const T1__& lp__, const T2__& lp_accum__,
            std::ostream* pstream__)  const 
 {
@@ -1454,7 +1464,7 @@ return foo_lp(x, lp__, lp_accum__, pstream__);
 template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__>::type;
+  using local_scalar_t__ = T0__;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1486,13 +1496,12 @@ return foo_4(x, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type
 relative_diff(const T0__& x, const T1__& y, const T2__& max_,
               const T3__& min_, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1545,7 +1554,8 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
 
 struct relative_diff_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type
 operator()(const T0__& x, const T1__& y, const T2__& max_, const T3__& min_,
            std::ostream* pstream__)  const 
 {
@@ -1554,15 +1564,14 @@ return relative_diff(x, y, max_, min_, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__>::type, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, 1>
 foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
       const Eigen::Matrix<T1__, -1, 1>& job_params,
       const std::vector<T2__>& data_r, const std::vector<T3__>& data_i,
       std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__,
+T3__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1583,7 +1592,8 @@ foo_5(const Eigen::Matrix<T0__, -1, 1>& shared_params,
 
 struct foo_5_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__>::type, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, 1>
 operator()(const Eigen::Matrix<T0__, -1, 1>& shared_params,
            const Eigen::Matrix<T1__, -1, 1>& job_params,
            const std::vector<T2__>& data_r, const std::vector<T3__>& data_i,
@@ -1595,14 +1605,12 @@ return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type
 foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
               const T4__& x5, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1624,7 +1632,8 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
 struct foo_five_args_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
+T4__>::type
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, std::ostream* pstream__)  const 
 {
@@ -1634,18 +1643,15 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__,
+T6__>::type>::type
 foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
                  const T3__& x4, const T4__& x5, const T5__& lp__,
                  const T6__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__,
+T6__>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1667,8 +1673,9 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
 struct foo_five_args_lp_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__,
+T6__>::type>::type
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, const T5__& lp__, const T6__& lp_accum__,
            std::ostream* pstream__)  const 
@@ -1678,11 +1685,12 @@ return foo_five_args_lp(x1, x2, x3, x4, x5, lp__, lp_accum__, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__>::type, -1, -1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, -1>
 covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const T1__& invert,
                 std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__>::type;
+T1__>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1712,7 +1720,8 @@ covsqrt2corsqrt(const Eigen::Matrix<T0__, -1, -1>& mat, const T1__& invert,
 
 struct covsqrt2corsqrt_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__>::type, -1, -1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__,
+T1__>::type, -1, -1>
 operator()(const Eigen::Matrix<T0__, -1, -1>& mat, const T1__& invert,
            std::ostream* pstream__)  const 
 {
@@ -1734,18 +1743,10 @@ f0(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1791,8 +1792,10 @@ return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type
 f1(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -1803,18 +1806,10 @@ f1(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1837,8 +1832,10 @@ struct f1_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -1858,8 +1855,10 @@ return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>
 f2(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -1870,18 +1869,10 @@ f2(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1904,8 +1895,10 @@ struct f2_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -1925,8 +1918,10 @@ return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>>
+std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>>
 f3(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -1937,18 +1932,10 @@ f3(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1971,8 +1958,10 @@ struct f3_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>>
+std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -1992,8 +1981,10 @@ return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type
 f4(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2004,18 +1995,10 @@ f4(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2038,8 +2021,10 @@ struct f4_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2059,8 +2044,10 @@ return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>
 f5(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2071,18 +2058,10 @@ f5(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2105,8 +2084,10 @@ struct f5_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>
+std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2126,8 +2107,10 @@ return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>>
+std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>>
 f6(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2138,18 +2121,10 @@ f6(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2172,8 +2147,10 @@ struct f6_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type>>
+std::vector<std::vector<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type>>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2193,8 +2170,10 @@ return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, 1>
 f7(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2205,18 +2184,10 @@ f7(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2239,8 +2210,10 @@ struct f7_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, 1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, 1>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2260,8 +2233,10 @@ return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, 1>>
+std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, 1>>
 f8(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2272,18 +2247,10 @@ f8(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2306,8 +2273,10 @@ struct f8_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, 1>>
+std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, 1>>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2327,8 +2296,10 @@ return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, 1>>>
+std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, 1>>>
 f9(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2339,18 +2310,10 @@ f9(const T0__& a1, const std::vector<T1__>& a2,
    const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
    const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
    std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2373,8 +2336,10 @@ struct f9_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, 1>>>
+std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, 1>>>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2394,8 +2359,10 @@ return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, -1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, -1>
 f10(const T0__& a1, const std::vector<T1__>& a2,
     const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2406,18 +2373,10 @@ f10(const T0__& a1, const std::vector<T1__>& a2,
     const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
     const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2440,8 +2399,10 @@ struct f10_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, -1>
+Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, -1>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2461,8 +2422,10 @@ return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, -1>>
+std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, -1>>
 f11(const T0__& a1, const std::vector<T1__>& a2,
     const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2473,18 +2436,10 @@ f11(const T0__& a1, const std::vector<T1__>& a2,
     const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
     const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2507,8 +2462,10 @@ struct f11_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, -1>>
+std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, -1>>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,
@@ -2528,8 +2485,10 @@ return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, -1>>>
+std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, -1>>>
 f12(const T0__& a1, const std::vector<T1__>& a2,
     const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
@@ -2540,18 +2499,10 @@ f12(const T0__& a1, const std::vector<T1__>& a2,
     const std::vector<Eigen::Matrix<T10__, -1, -1>>& a11,
     const std::vector<std::vector<Eigen::Matrix<T11__, -1, -1>>>& a12,
     std::ostream* pstream__) {
-  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__,
-          T5__,
-          T6__,
-          T7__,
-          T8__,
-          T9__,
-          T10__,
-          T11__>::type;
+  using local_scalar_t__ = typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -2574,8 +2525,10 @@ struct f12_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__, typename T5__, typename T6__, typename T7__, typename T8__,
 typename T9__, typename T10__, typename T11__>
-std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__, T5__,
-       T6__, T7__, T8__, T9__, T10__, T11__>::type, -1, -1>>>
+std::vector<std::vector<Eigen::Matrix<typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, T4__,
+typename boost::math::tools::promote_args<T5__, T6__, T7__, T8__, T9__,
+typename boost::math::tools::promote_args<T10__,
+T11__>::type>::type>::type, -1, -1>>>
 operator()(const T0__& a1, const std::vector<T1__>& a2,
            const std::vector<std::vector<T2__>>& a3, const T3__& a4,
            const std::vector<T4__>& a5,

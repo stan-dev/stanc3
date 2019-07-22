@@ -48,17 +48,24 @@ let%expect_test "arg types templated correctly" =
   |> maybe_templated_arg_types |> String.concat ~sep:"," |> print_endline ;
   [%expect {| T0__ |}]
 
+let promoted_arg_type argtypetemplates =
+  (* XXX the formatting on this is messed up because we're generating strings and
+  not using ppf, which was too annoying to deal with at the time. *)
+  match argtypetemplates with
+  | [] -> "double"
+  | [a] -> a
+  | a ->
+      let promote_args a last_arg =
+        strf "typename boost::math::tools::promote_args<%a>::type"
+          (list ~sep:comma string)
+          (a @ if String.length last_arg = 0 then [] else [last_arg])
+      in
+      List.chunks_of ~length:5 a |> List.fold_right ~init:"" ~f:promote_args
+
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
-  let scalar =
-    match arg_types with
-    | [] -> "double"
-    | a ->
-        strf "typename boost::math::tools::promote_args<@[<-35>%a@]>::type"
-          (list ~sep:comma string)
-          (maybe_templated_arg_types a)
-  in
+  let scalar = promoted_arg_type (maybe_templated_arg_types arg_types) in
   match rt with
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
@@ -98,14 +105,8 @@ let pp_fun_def ppf {fdrt; fdname; fdargs; fdbody; _} =
   in
   let pp_body ppf fdbody =
     let text = pf ppf "%s@;" in
-    let local_scalar ppf () =
-      match argtypetemplates with
-      | [] -> pf ppf "double"
-      | a ->
-          pf ppf "typename boost::math::tools::promote_args<%a>::type"
-            (list ~sep:comma string) a
-    in
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," local_scalar () ;
+    pf ppf "@[<hv 8>using local_scalar_t__ = %s;@]@,"
+      (promoted_arg_type argtypetemplates) ;
     text "typedef local_scalar_t__ fun_return_scalar_t__;" ;
     (* needed?*)
     text "const static bool propto__ = true;" ;
