@@ -96,7 +96,6 @@ let use_file filename =
       Errors.report_syntax_error err ;
       exit 1
   in
-  let _ = Debugging.ast_logger ast in
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast =
