@@ -2600,6 +2600,266 @@ let%expect_test "partially evaluate glm" =
 
       } |}]
 
+
+let%expect_test "partially evaluate some functions" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+parameters {
+    matrix[3, 2] x_matrix;
+    vector[2] x_vector;
+    cov_matrix[2] x_cov;
+    real theta_u;
+    real phi_u;
+}
+model {
+    real theta = 34.;
+    real phi = 5.;
+    real x;
+    int i = 23;
+    int j = 32;
+    target += +i;
+    target += -i;
+    target += !i;
+    target += +theta;
+    target += -theta;
+    target += i+j;
+    target += i-j;
+    target += i*j;
+    target += i/j;
+    target += i==j;
+    target += i!=j;
+    target += i<j;
+    target += i<=j;
+    target += i>j;
+    target += i>=j;
+    target += i && j;
+    target += i || j;
+    target += theta + phi;
+    target += theta - phi;
+    target += theta * phi;
+    target += theta / phi;
+    target += theta == phi;
+    target += theta != phi;
+    target += theta <= phi;
+    target += theta < phi;
+    target += theta > phi;
+    target += theta >= phi;
+    target += theta && phi;
+    target += theta || phi;
+    target += bernoulli_lpmf(i| inv_logit(theta + x_matrix * x_vector));
+    target += bernoulli_lpmf(i| inv_logit(x_matrix * x_vector + theta));
+    target += bernoulli_lpmf(i| inv_logit(x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(i| (theta + x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(i| (x_matrix * x_vector + theta));
+    target += bernoulli_logit_lpmf(i| (x_matrix * x_vector));
+    target += bernoulli_lpmf(i| inv_logit(x_vector));
+    target += binomial_lpmf(i| j, inv_logit(x_vector));
+    target += categorical_lpmf(i| inv_logit(x_vector));
+    target += columns_dot_product(x_matrix, x_matrix);
+    target += dot_product(x_vector, x_vector);
+    target += inv(sqrt(x_vector));
+    target += inv(square(x_vector));
+    target += log(1 - exp(x_vector));
+    target += log(1 - inv_logit(x_vector));
+    target += log(1 - x_matrix);
+    target += log(1 + exp(x_vector));
+    target += log(1 + inv_logit(x_vector));
+    target += log(1 + x_matrix);
+    target += log(determinant(x_matrix));
+    target += log(exp(theta) - exp(theta));
+    target += log(falling_factorial(phi, i));
+    target += log(inv_logit(theta));
+    target += log(softmax(x_vector));
+    target += log(sum(exp(x_vector)));
+    target += log(theta_u + phi_u);
+    target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
+}
+      |}
+  in
+  (* TODO: a lot of these rewrites do not work yet. Fix them. *)
+  (* TODO: complete this list to capture all rewrites that should happen. *)
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = constant_propagation mir in
+  let mir = partial_evaluation mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        matrix[3, 2] x_matrix;
+        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
+        vector[2] x_vector;
+        x_vector = FnReadParam__("x_vector", "vector", 2);
+        vector[3] x_cov_sym1__;
+        matrix[2, 2] x_cov;
+        x_cov_sym1__ = FnReadParam__("x_cov_sym1__", "vector", 3);
+        x_cov = FnConstrain__(x_cov_sym1__, "cov_matrix", 2);
+        real theta_u;
+        theta_u = FnReadParam__("theta_u", "scalar");
+        real phi_u;
+        phi_u = FnReadParam__("phi_u", "scalar");
+        {
+          real theta;
+          theta = 34.;
+          real phi;
+          phi = 5.;
+          real x;
+          int i;
+          i = 23;
+          int j;
+          j = 32;
+          target += PPlus__(23);
+          target += -23;
+          target += 0;
+          target += PPlus__(34.);
+          target += -34.;
+          target += 55;
+          target += -9;
+          target += 736;
+          target += 0;
+          target += 0;
+          target += 1;
+          target += 1;
+          target += 1;
+          target += 0;
+          target += 0;
+          target += 1;
+          target += 1;
+          target += 39.;
+          target += 29.;
+          target += 170.;
+          target += 6.8;
+          target += 0;
+          target += 1;
+          target += 0;
+          target += 0;
+          target += 1;
+          target += 1;
+          target += 1;
+          target += 1;
+          target += bernoulli_lpmf(23, inv_logit((34. + (x_matrix * x_vector))));
+          target += bernoulli_lpmf(23, inv_logit(((x_matrix * x_vector) + 34.)));
+          target += bernoulli_lpmf(23, inv_logit((x_matrix * x_vector)));
+          target += bernoulli_logit_lpmf(23, (34. + (x_matrix * x_vector)));
+          target += bernoulli_logit_lpmf(23, ((x_matrix * x_vector) + 34.));
+          target += bernoulli_logit_lpmf(23, (x_matrix * x_vector));
+          target += bernoulli_logit_lpmf(23, x_vector);
+          target += binomial_logit_lpmf(23, 32, x_vector);
+          target += categorical_logit_lpmf(23, x_vector);
+          target += columns_dot_self(x_matrix);
+          target += dot_self(x_vector);
+          target += inv_sqrt(x_vector);
+          target += inv_square(x_vector);
+          target += log1m_exp(x_vector);
+          target += log1m_inv_logit(x_vector);
+          target += log1m(x_matrix);
+          target += log1p_exp(x_vector);
+          target += log1p(inv_logit(x_vector));
+          target += log1p(x_matrix);
+          target += log(determinant(x_matrix));
+          target += log_diff_exp(34., 34.);
+          target += log_falling_factorial(5., 23);
+          target += log_inv_logit(34.);
+          target += log_softmax(x_vector);
+          target += log_sum_exp(x_vector);
+          target += log((theta_u + phi_u));
+          target += multi_normal_prec_lpdf(x_vector, x_vector, x_cov);
+        }
+      }
+
+      generate_quantities {
+        data matrix[3, 2] x_matrix;
+        x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
+        data vector[2] x_vector;
+        x_vector = FnReadParam__("x_vector", "vector", 2);
+        data vector[3] x_cov_sym2__;
+        data matrix[2, 2] x_cov;
+        x_cov_sym2__ = FnReadParam__("x_cov_sym2__", "vector", 3);
+        x_cov = FnConstrain__(x_cov_sym2__, "cov_matrix", 2);
+        data real theta_u;
+        theta_u = FnReadParam__("theta_u", "scalar");
+        data real phi_u;
+        phi_u = FnReadParam__("phi_u", "scalar");
+        for(sym2__ in 1:3) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(x_matrix[sym2__, sym3__]);
+          }
+        }
+        for(sym2__ in 1:2) {
+          FnWriteParam__(x_vector[sym2__]);
+        }
+        for(sym2__ in 1:2) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(x_cov[sym2__, sym3__]);
+          }
+        }
+        FnWriteParam__(theta_u);
+        FnWriteParam__(phi_u);
+      }
+
+      transform_inits {
+        data matrix[3, 2] x_matrix;
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            x_matrix[sym3__, sym4__] = FnReadData__("x_matrix", "matrix", 3, 2)
+                                       [sym3__, sym4__];
+          }
+        }
+        data vector[2] x_vector;
+        for(sym3__ in 1:2) {
+          x_vector[sym3__] = FnReadData__("x_vector", "vector", 2)[sym3__];
+        }
+        data matrix[2, 2] x_cov;
+        for(sym4__ in 1:2) {
+          for(sym5__ in 1:2) {
+            x_cov[sym4__, sym5__] = FnReadData__("x_cov", "matrix", 2, 2)[sym4__,
+                                                                          sym5__];
+          }
+        }
+        x_cov = FnUnconstrain__(x_cov, "cov_matrix");
+        data real theta_u;
+        theta_u = FnReadData__("theta_u", "scalar");
+        data real phi_u;
+        phi_u = FnReadData__("phi_u", "scalar");
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(x_matrix[sym3__, sym4__]);
+          }
+        }
+        for(sym3__ in 1:2) {
+          FnWriteParam__(x_vector[sym3__]);
+        }
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(x_cov[sym3__, sym4__]);
+          }
+        }
+        FnWriteParam__(theta_u);
+        FnWriteParam__(phi_u);
+      }
+
+      output_vars {
+        parameters matrix[3, 2] x_matrix; //matrix[3, 2]
+        parameters vector[2] x_vector; //vector[2]
+        parameters matrix[2, 2] x_cov; //vector[3]
+        parameters real theta_u; //real
+        parameters real phi_u; //real
+      } |}]
+
 let%expect_test "lazy code motion" =
   let _ = gensym_reset_danger_use_cautiously () in
   let ast =
