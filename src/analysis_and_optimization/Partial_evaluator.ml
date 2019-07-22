@@ -663,7 +663,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
         | {expr= Lit (Int, s1); _}, {expr= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
-        | {expr= Lit (Real, s1); _}, {expr= Lit (Real, s2); _} ->
+        | {expr= Lit (_, s1); _}, {expr= Lit (_, s2); _} ->
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
         | e1', e2' -> EAnd (e1', e2') )
@@ -672,7 +672,7 @@ let rec eval_expr (e : Middle.expr_typed_located) =
         | {expr= Lit (Int, s1); _}, {expr= Lit (Int, s2); _} ->
             let i1, i2 = (Int.of_string s1, Int.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
-        | {expr= Lit (Real, s1); _}, {expr= Lit (Real, s2); _} ->
+        | {expr= Lit (_, s1); _}, {expr= Lit (_, s2); _} ->
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
         | e1', e2' -> EOr (e1', e2') )
