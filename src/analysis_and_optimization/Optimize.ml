@@ -390,10 +390,13 @@ let rec contains_top_break_or_continue {stmt; _} =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
+
 let unroll_static_loops_statement =
   let f stmt =
     match stmt with
     | For {loopvar; lower; upper; body} -> (
+      let lower = Partial_evaluator.eval_expr lower in
+      let upper = Partial_evaluator.eval_expr upper in
       match (contains_top_break_or_continue body, lower.expr, upper.expr) with
       | false, Lit (Int, low), Lit (Int, up) ->
           let range =
@@ -416,7 +419,7 @@ let unroll_static_loops_statement =
       | _ -> stmt )
     | _ -> stmt
   in
-  map_rec_stmt_loc f
+  top_down_map_rec_stmt_loc f
 
 let static_loop_unrolling mir =
   transform_program_blockwise mir unroll_static_loops_statement
@@ -610,7 +613,7 @@ let dead_code_elimination (mir : typed_prog) =
           if List.length l' = 0 then Skip else Block l'
       | SList l ->
           let l' = List.filter ~f:(fun x -> x.stmt <> Skip) l in
-          if List.length l' = 0 then Skip else SList l'
+          SList l'
     in
     let dead_code_elim_stmt =
       map_rec_stmt_loc_num flowgraph_to_mir dead_code_elim_stmt_base
