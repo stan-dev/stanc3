@@ -19,6 +19,9 @@ functions {
 parameters {
     real theta;
     real phi;
+    matrix[3, 2] x_matrix;
+    vector[2] x_vector;
+    cov_matrix[2] x_cov;
 }
 model {
     real x;
@@ -153,4 +156,31 @@ model {
     target += theta >= phi;
     target += theta && phi;
     target += theta || phi;
+    target += bernoulli_lpmf(i| inv_logit(theta + x_matrix * x_vector));
+    target += bernoulli_lpmf(i| inv_logit(x_matrix * x_vector + theta));
+    target += bernoulli_lpmf(i| inv_logit(x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(i| (theta + x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(i| (x_matrix * x_vector + theta));
+    target += bernoulli_logit_lpmf(i| (x_matrix * x_vector));
+    target += bernoulli_lpmf(i| inv_logit(x_vector));
+    target += binomial_lpmf(i| j, inv_logit(x_vector));
+    target += categorical_lpmf(i| inv_logit(x_vector));
+    target += columns_dot_product(x_matrix, x_matrix);
+    target += dot_product(x_vector, x_vector);
+    target += inv(sqrt(x_vector));
+    target += inv(square(x_vector));
+    target += log(1 - exp(x_vector));
+    target += log(1 - inv_logit(x_vector));
+    target += log(1 - x_matrix);
+    target += log(1 + exp(x_vector));
+    target += log(1 + inv_logit(x_vector));
+    target += log(1 + x_matrix);
+    target += log(determinant(x_matrix));
+    target += log(exp(theta) - exp(theta));
+    target += log(falling_factorial(phi, i));
+    target += log(inv_logit(theta));
+    target += log(softmax(x_vector));
+    target += log(sum(exp(x_vector)));
+    target += log(theta + phi);
+    target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
 }
