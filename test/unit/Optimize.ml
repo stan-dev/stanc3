@@ -1295,6 +1295,340 @@ let%expect_test "unroll nested loop" =
 
       } |}]
 
+let%expect_test "unroll nested loop 2" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|      model {
+                for (i in 1:2)
+                  for (j in i:4)
+                    for (k in j:9)
+                       print(i, j, k);
+                   }
+      |}
+  in
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = static_loop_unrolling mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+          {
+            {
+              {
+                FnPrint__(1, 1, 1);
+              }
+              {
+                FnPrint__(1, 1, 2);
+              }
+              {
+                FnPrint__(1, 1, 3);
+              }
+              {
+                FnPrint__(1, 1, 4);
+              }
+              {
+                FnPrint__(1, 1, 5);
+              }
+              {
+                FnPrint__(1, 1, 6);
+              }
+              {
+                FnPrint__(1, 1, 7);
+              }
+              {
+                FnPrint__(1, 1, 8);
+              }
+              {
+                FnPrint__(1, 1, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 2, 2);
+              }
+              {
+                FnPrint__(1, 2, 3);
+              }
+              {
+                FnPrint__(1, 2, 4);
+              }
+              {
+                FnPrint__(1, 2, 5);
+              }
+              {
+                FnPrint__(1, 2, 6);
+              }
+              {
+                FnPrint__(1, 2, 7);
+              }
+              {
+                FnPrint__(1, 2, 8);
+              }
+              {
+                FnPrint__(1, 2, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 3, 3);
+              }
+              {
+                FnPrint__(1, 3, 4);
+              }
+              {
+                FnPrint__(1, 3, 5);
+              }
+              {
+                FnPrint__(1, 3, 6);
+              }
+              {
+                FnPrint__(1, 3, 7);
+              }
+              {
+                FnPrint__(1, 3, 8);
+              }
+              {
+                FnPrint__(1, 3, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 4, 4);
+              }
+              {
+                FnPrint__(1, 4, 5);
+              }
+              {
+                FnPrint__(1, 4, 6);
+              }
+              {
+                FnPrint__(1, 4, 7);
+              }
+              {
+                FnPrint__(1, 4, 8);
+              }
+              {
+                FnPrint__(1, 4, 9);
+              }
+            }
+          }
+          {
+            {
+              {
+                FnPrint__(2, 2, 2);
+              }
+              {
+                FnPrint__(2, 2, 3);
+              }
+              {
+                FnPrint__(2, 2, 4);
+              }
+              {
+                FnPrint__(2, 2, 5);
+              }
+              {
+                FnPrint__(2, 2, 6);
+              }
+              {
+                FnPrint__(2, 2, 7);
+              }
+              {
+                FnPrint__(2, 2, 8);
+              }
+              {
+                FnPrint__(2, 2, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 3, 3);
+              }
+              {
+                FnPrint__(2, 3, 4);
+              }
+              {
+                FnPrint__(2, 3, 5);
+              }
+              {
+                FnPrint__(2, 3, 6);
+              }
+              {
+                FnPrint__(2, 3, 7);
+              }
+              {
+                FnPrint__(2, 3, 8);
+              }
+              {
+                FnPrint__(2, 3, 9);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 4, 4);
+              }
+              {
+                FnPrint__(2, 4, 5);
+              }
+              {
+                FnPrint__(2, 4, 6);
+              }
+              {
+                FnPrint__(2, 4, 7);
+              }
+              {
+                FnPrint__(2, 4, 8);
+              }
+              {
+                FnPrint__(2, 4, 9);
+              }
+            }
+          }
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
+let%expect_test "unroll nested loop 3" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|      model {
+                for (i in 1:2)
+                  for (j in i:4)
+                    for (k in j:i+j)
+                       print(i, j, k);
+                   }
+      |}
+  in
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = static_loop_unrolling mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        {
+          {
+            {
+              {
+                FnPrint__(1, 1, 1);
+              }
+              {
+                FnPrint__(1, 1, 2);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 2, 2);
+              }
+              {
+                FnPrint__(1, 2, 3);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 3, 3);
+              }
+              {
+                FnPrint__(1, 3, 4);
+              }
+            }
+            {
+              {
+                FnPrint__(1, 4, 4);
+              }
+              {
+                FnPrint__(1, 4, 5);
+              }
+            }
+          }
+          {
+            {
+              {
+                FnPrint__(2, 2, 2);
+              }
+              {
+                FnPrint__(2, 2, 3);
+              }
+              {
+                FnPrint__(2, 2, 4);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 3, 3);
+              }
+              {
+                FnPrint__(2, 3, 4);
+              }
+              {
+                FnPrint__(2, 3, 5);
+              }
+            }
+            {
+              {
+                FnPrint__(2, 4, 4);
+              }
+              {
+                FnPrint__(2, 4, 5);
+              }
+              {
+                FnPrint__(2, 4, 6);
+              }
+            }
+          }
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
 let%expect_test "unroll nested loop with break" =
   let _ = gensym_reset_danger_use_cautiously () in
   let ast =
