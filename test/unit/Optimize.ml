@@ -2600,7 +2600,6 @@ let%expect_test "partially evaluate glm" =
 
       } |}]
 
-
 let%expect_test "partially evaluate some functions" =
   let _ = gensym_reset_danger_use_cautiously () in
   let ast =
@@ -2664,21 +2663,24 @@ model {
     target += log(1 - exp(x_vector));
     target += log(1 - inv_logit(x_vector));
     target += log(1 - x_matrix);
+    target += log(1. - exp(x_vector));
+    target += log(1. - inv_logit(x_vector));
+    target += log(1. - x_matrix);
     target += log(1 + exp(x_vector));
-    target += log(1 + inv_logit(x_vector));
     target += log(1 + x_matrix);
-    target += log(determinant(x_matrix));
+    target += log(fabs(determinant(x_matrix)));
     target += log(exp(theta) - exp(theta));
     target += log(falling_factorial(phi, i));
+    target += log(rising_factorial(phi, i));
     target += log(inv_logit(theta));
     target += log(softmax(x_vector));
     target += log(sum(exp(x_vector)));
-    target += log(theta_u + phi_u);
+    target += log(exp(theta_u) + exp(phi_u));
     target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
 }
       |}
   in
-  (* TODO: a lot of these rewrites do not work yet. Fix them. *)
+  (* TODO: the rewrites for GLMs do not work yet. *)
   (* TODO: complete this list to capture all rewrites that should happen. *)
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
@@ -2767,16 +2769,19 @@ model {
           target += log1m_exp(x_vector);
           target += log1m_inv_logit(x_vector);
           target += log1m(x_matrix);
+          target += log1m_exp(x_vector);
+          target += log1m_inv_logit(x_vector);
+          target += log1m(x_matrix);
           target += log1p_exp(x_vector);
-          target += log1p(inv_logit(x_vector));
           target += log1p(x_matrix);
-          target += log(determinant(x_matrix));
+          target += log_determinant(x_matrix);
           target += log_diff_exp(34., 34.);
           target += log_falling_factorial(5., 23);
+          target += log_rising_factorial(5., 23);
           target += log_inv_logit(34.);
           target += log_softmax(x_vector);
           target += log_sum_exp(x_vector);
-          target += log((theta_u + phi_u));
+          target += log_sum_exp(theta_u, phi_u);
           target += multi_normal_prec_lpdf(x_vector, x_vector, x_cov);
         }
       }

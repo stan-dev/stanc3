@@ -390,33 +390,35 @@ let rec contains_top_break_or_continue {stmt; _} =
       | None -> false
       | Some b -> contains_top_break_or_continue b )
 
-
 let unroll_static_loops_statement =
   let f stmt =
     match stmt with
     | For {loopvar; lower; upper; body} -> (
-      let lower = Partial_evaluator.eval_expr lower in
-      let upper = Partial_evaluator.eval_expr upper in
-      match (contains_top_break_or_continue body, lower.expr, upper.expr) with
-      | false, Lit (Int, low), Lit (Int, up) ->
-          let range =
-            List.map
-              ~f:(fun i ->
-                { expr= Lit (Int, Int.to_string i)
-                ; emeta= {mtype= UInt; mloc= Middle.no_span; madlevel= DataOnly}
-                } )
-              (List.range ~start:`inclusive ~stop:`inclusive
-                 (Int.of_string low) (Int.of_string up))
-          in
-          let stmts =
-            List.map
-              ~f:(fun i ->
-                subst_args_stmt [loopvar] [i]
-                  {stmt= body.stmt; smeta= Middle.no_span} )
-              range
-          in
-          SList stmts
-      | _ -> stmt )
+        let lower = Partial_evaluator.eval_expr lower in
+        let upper = Partial_evaluator.eval_expr upper in
+        match
+          (contains_top_break_or_continue body, lower.expr, upper.expr)
+        with
+        | false, Lit (Int, low), Lit (Int, up) ->
+            let range =
+              List.map
+                ~f:(fun i ->
+                  { expr= Lit (Int, Int.to_string i)
+                  ; emeta=
+                      {mtype= UInt; mloc= Middle.no_span; madlevel= DataOnly}
+                  } )
+                (List.range ~start:`inclusive ~stop:`inclusive
+                   (Int.of_string low) (Int.of_string up))
+            in
+            let stmts =
+              List.map
+                ~f:(fun i ->
+                  subst_args_stmt [loopvar] [i]
+                    {stmt= body.stmt; smeta= Middle.no_span} )
+                range
+            in
+            SList stmts
+        | _ -> stmt )
     | _ -> stmt
   in
   top_down_map_rec_stmt_loc f

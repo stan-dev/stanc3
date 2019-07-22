@@ -194,6 +194,14 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Minus__"
                         , [ {expr= Lit (Int, "1"); _}
                           ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
+              )
+             |( "log"
+              , [ { expr=
+                      FunApp
+                        ( StanLib
+                        , "Minus__"
+                        , [ {expr= Lit (Real, "1."); _}
+                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
               ) ->
                 FunApp (StanLib, "log1m_exp", [x])
             | ( "log"
@@ -203,12 +211,25 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Minus__"
                         , [ {expr= Lit (Int, "1"); _}
                           ; {expr= FunApp (StanLib, "inv_logit", [x]); _} ] ); _
+                  } ] )
+             |( "log"
+              , [ { expr=
+                      FunApp
+                        ( StanLib
+                        , "Minus__"
+                        , [ {expr= Lit (Real, "1."); _}
+                          ; {expr= FunApp (StanLib, "inv_logit", [x]); _} ] ); _
                   } ] ) ->
                 FunApp (StanLib, "log1m_inv_logit", [x])
             | ( "log"
               , [ { expr=
                       FunApp
                         (StanLib, "Minus__", [{expr= Lit (Int, "1"); _}; x]); _
+                  } ] )
+             |( "log"
+              , [ { expr=
+                      FunApp
+                        (StanLib, "Minus__", [{expr= Lit (Real, "1."); _}; x]); _
                   } ] ) ->
                 FunApp (StanLib, "log1m", [x])
             | ( "log"
@@ -218,11 +239,24 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                         , "Plus__"
                         , [ {expr= Lit (Int, "1"); _}
                           ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
+              )
+             |( "log"
+              , [ { expr=
+                      FunApp
+                        ( StanLib
+                        , "Plus__"
+                        , [ {expr= Lit (Real, "1."); _}
+                          ; {expr= FunApp (StanLib, "exp", [x]); _} ] ); _ } ]
               ) ->
                 FunApp (StanLib, "log1p_exp", [x])
             | ( "log"
               , [ { expr=
                       FunApp (StanLib, "Plus__", [{expr= Lit (Int, "1"); _}; x]); _
+                  } ] )
+             |( "log"
+              , [ { expr=
+                      FunApp
+                        (StanLib, "Plus__", [{expr= Lit (Real, "1."); _}; x]); _
                   } ] ) ->
                 FunApp (StanLib, "log1p", [x])
             | ( "log"
