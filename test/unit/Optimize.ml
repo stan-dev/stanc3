@@ -2618,6 +2618,7 @@ model {
     real x;
     int i = 23;
     int j = 32;
+    int y_arr[3] = {32, 2, 35};
     target += +i;
     target += -i;
     target += !i;
@@ -2647,15 +2648,15 @@ model {
     target += theta >= phi;
     target += theta && phi;
     target += theta || phi;
-    target += bernoulli_lpmf(i| inv_logit(theta + x_matrix * x_vector));
-    target += bernoulli_lpmf(i| inv_logit(x_matrix * x_vector + theta));
-    target += bernoulli_lpmf(i| inv_logit(x_matrix * x_vector));
-    target += bernoulli_logit_lpmf(i| (theta + x_matrix * x_vector));
-    target += bernoulli_logit_lpmf(i| (x_matrix * x_vector + theta));
-    target += bernoulli_logit_lpmf(i| (x_matrix * x_vector));
-    target += bernoulli_lpmf(i| inv_logit(x_vector));
-    target += binomial_lpmf(i| j, inv_logit(x_vector));
-    target += categorical_lpmf(i| inv_logit(x_vector));
+    target += bernoulli_lpmf(y_arr| inv_logit(theta + x_matrix * x_vector));
+    target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector + theta));
+    target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(y_arr| (theta + x_matrix * x_vector));
+    target += bernoulli_logit_lpmf(y_arr| (x_matrix * x_vector + theta));
+    target += bernoulli_logit_lpmf(y_arr| (x_matrix * x_vector));
+    target += bernoulli_lpmf(y_arr| inv_logit(x_vector));
+    target += binomial_lpmf(y_arr| j, inv_logit(x_vector));
+    target += categorical_lpmf(y_arr| inv_logit(x_vector));
     target += columns_dot_product(x_matrix, x_matrix);
     target += dot_product(x_vector, x_vector);
     target += inv(sqrt(x_vector));
@@ -2677,10 +2678,10 @@ model {
     target += log(sum(exp(x_vector)));
     target += log(exp(theta_u) + exp(phi_u));
     target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
+    // From here.
 }
       |}
   in
-  (* TODO: the rewrites for GLMs do not work yet. *)
   (* TODO: complete this list to capture all rewrites that should happen. *)
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
@@ -2724,6 +2725,8 @@ model {
           i = 23;
           int j;
           j = 32;
+          array[int, 3] y_arr;
+          y_arr = FnMakeArray__(32, 2, 35);
           target += PPlus__(23);
           target += -23;
           target += 0;
@@ -2753,15 +2756,15 @@ model {
           target += 1;
           target += 1;
           target += 1;
-          target += bernoulli_lpmf(23, inv_logit((34. + (x_matrix * x_vector))));
-          target += bernoulli_lpmf(23, inv_logit(((x_matrix * x_vector) + 34.)));
-          target += bernoulli_lpmf(23, inv_logit((x_matrix * x_vector)));
-          target += bernoulli_logit_lpmf(23, (34. + (x_matrix * x_vector)));
-          target += bernoulli_logit_lpmf(23, ((x_matrix * x_vector) + 34.));
-          target += bernoulli_logit_lpmf(23, (x_matrix * x_vector));
-          target += bernoulli_logit_lpmf(23, x_vector);
-          target += binomial_logit_lpmf(23, 32, x_vector);
-          target += categorical_logit_lpmf(23, x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += bernoulli_logit_lpmf(y_arr, x_vector);
+          target += binomial_logit_lpmf(y_arr, 32, x_vector);
+          target += categorical_logit_lpmf(y_arr, x_vector);
           target += columns_dot_self(x_matrix);
           target += dot_self(x_vector);
           target += inv_sqrt(x_vector);
