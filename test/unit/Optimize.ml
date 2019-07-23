@@ -3745,6 +3745,105 @@ let%expect_test "lazy code motion, 12" =
 
       } |}]
 
+let%expect_test "lazy code motion, 13" =
+  let _ = gensym_reset_danger_use_cautiously () in
+  let ast =
+    Parse.parse_string Parser.Incremental.program
+      {|
+      model {
+        real temp;
+        if (2 > 3)
+          temp = 2 * 2;
+        else
+          print("hello");
+        temp =  2 * 2;
+        real temp2;
+        for (i in 2 : 3) {
+            temp2 = 2 * 3;
+            target += temp;
+            target += temp2;
+        }
+      }
+      |}
+  in
+  let ast = semantic_check_program ast in
+  let mir = Ast_to_Mir.trans_prog "" ast in
+  let mir = one_step_loop_unrolling mir in
+  let mir = lazy_code_motion mir in
+  let mir = list_collapsing mir in
+  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
+  [%expect
+    {|
+      functions {
+
+      }
+
+      input_vars {
+
+      }
+
+      prepare_data {
+
+      }
+
+      log_prob {
+        data int sym8__;
+        data int sym7__;
+        data int sym6__;
+        data int sym5__;
+        data int sym4__;
+        real sym3__;
+        real sym2__;
+        data int sym1__;
+        {
+          real temp;
+          if((2 > 3)) {
+            sym7__ = (2 * 2);
+            temp = sym7__;
+            ;
+          } else {
+            FnPrint__("hello");
+            sym7__ = (2 * 2);
+            ;
+          }
+          temp = sym7__;
+          real temp2;
+          if((2 <= 3)) {
+            {
+              {
+                sym8__ = (2 * 3);
+                temp2 = sym8__;
+                sym2__ = temp;
+                target += sym2__;
+                sym6__ = (2 + 1);
+                target += temp2;
+              }
+              for(i in sym6__:3) {
+                {
+                  temp2 = sym8__;
+                  target += sym2__;
+                  target += temp2;
+                }
+                ;
+              }
+            }
+            ;
+          } else ;
+        }
+      }
+
+      generate_quantities {
+
+      }
+
+      transform_inits {
+
+      }
+
+      output_vars {
+
+      } |}]
+
 let%expect_test "cool example: expression propagation + partial evaluation + \
                  lazy code motion + dead code elimination" =
   let _ = gensym_reset_danger_use_cautiously () in

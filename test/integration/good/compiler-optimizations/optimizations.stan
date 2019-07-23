@@ -125,4 +125,24 @@ model {
         }
         {}
     }
+    real temp;
+    if (2 > 3)
+      temp = 2 * 2;
+    else
+      print("hello");
+    temp = 2 * 2;
+    real temp2;
+    for (i in 2 : 3) {
+        temp2 = 2 * 3;
+        target += temp;
+        target += temp2;
+    }
+    real dataonlyvar = 3;
+    if (3 > 4)
+      dataonlyvar = 3 * 53;
+    target += dataonlyvar;
+    real paramvar = 3;
+    if (42 > 1)
+      paramvar = theta * 34;
+    target += paramvar;
 }
