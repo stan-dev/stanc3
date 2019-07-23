@@ -2607,8 +2607,8 @@ let%expect_test "partially evaluate some functions" =
       {|
 parameters {
     matrix[3, 2] x_matrix;
-    matrix[3, 2] y_matrix;
-    matrix[3, 2] z_matrix;
+    matrix[2, 4] y_matrix;
+    matrix[4, 2] z_matrix;
     vector[2] x_vector;
     vector[3] y_vector;
     cov_matrix[2] x_cov;
@@ -2705,7 +2705,7 @@ model {
     target += sqrt(2);
     target += sum(square(x_vector - y_vector));
     target += sum(diagonal(x_matrix));
-    target += trace(((x_matrix * transpose(y_matrix)) * z_matrix) * y_matrix);
+    target += trace(x_matrix * transpose(y_matrix) * z_matrix * y_matrix);
 }
       |}
   in
@@ -2732,10 +2732,10 @@ model {
       log_prob {
         matrix[3, 2] x_matrix;
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
-        matrix[3, 2] y_matrix;
-        y_matrix = FnReadParam__("y_matrix", "matrix", 3, 2);
-        matrix[3, 2] z_matrix;
-        z_matrix = FnReadParam__("z_matrix", "matrix", 3, 2);
+        matrix[2, 4] y_matrix;
+        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
+        matrix[4, 2] z_matrix;
+        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
         vector[2] x_vector;
         x_vector = FnReadParam__("x_vector", "vector", 2);
         vector[3] y_vector;
@@ -2850,10 +2850,10 @@ model {
       generate_quantities {
         data matrix[3, 2] x_matrix;
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
-        data matrix[3, 2] y_matrix;
-        y_matrix = FnReadParam__("y_matrix", "matrix", 3, 2);
-        data matrix[3, 2] z_matrix;
-        z_matrix = FnReadParam__("z_matrix", "matrix", 3, 2);
+        data matrix[2, 4] y_matrix;
+        y_matrix = FnReadParam__("y_matrix", "matrix", 2, 4);
+        data matrix[4, 2] z_matrix;
+        z_matrix = FnReadParam__("z_matrix", "matrix", 4, 2);
         data vector[2] x_vector;
         x_vector = FnReadParam__("x_vector", "vector", 2);
         data vector[3] y_vector;
@@ -2871,12 +2871,12 @@ model {
             FnWriteParam__(x_matrix[sym2__, sym3__]);
           }
         }
-        for(sym2__ in 1:3) {
-          for(sym3__ in 1:2) {
+        for(sym2__ in 1:2) {
+          for(sym3__ in 1:4) {
             FnWriteParam__(y_matrix[sym2__, sym3__]);
           }
         }
-        for(sym2__ in 1:3) {
+        for(sym2__ in 1:4) {
           for(sym3__ in 1:2) {
             FnWriteParam__(z_matrix[sym2__, sym3__]);
           }
@@ -2904,17 +2904,17 @@ model {
                                        [sym3__, sym4__];
           }
         }
-        data matrix[3, 2] y_matrix;
-        for(sym3__ in 1:3) {
-          for(sym4__ in 1:2) {
-            y_matrix[sym3__, sym4__] = FnReadData__("y_matrix", "matrix", 3, 2)
+        data matrix[2, 4] y_matrix;
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:4) {
+            y_matrix[sym3__, sym4__] = FnReadData__("y_matrix", "matrix", 2, 4)
                                        [sym3__, sym4__];
           }
         }
-        data matrix[3, 2] z_matrix;
-        for(sym3__ in 1:3) {
+        data matrix[4, 2] z_matrix;
+        for(sym3__ in 1:4) {
           for(sym4__ in 1:2) {
-            z_matrix[sym3__, sym4__] = FnReadData__("z_matrix", "matrix", 3, 2)
+            z_matrix[sym3__, sym4__] = FnReadData__("z_matrix", "matrix", 4, 2)
                                        [sym3__, sym4__];
           }
         }
@@ -2943,12 +2943,12 @@ model {
             FnWriteParam__(x_matrix[sym3__, sym4__]);
           }
         }
-        for(sym3__ in 1:3) {
-          for(sym4__ in 1:2) {
+        for(sym3__ in 1:2) {
+          for(sym4__ in 1:4) {
             FnWriteParam__(y_matrix[sym3__, sym4__]);
           }
         }
-        for(sym3__ in 1:3) {
+        for(sym3__ in 1:4) {
           for(sym4__ in 1:2) {
             FnWriteParam__(z_matrix[sym3__, sym4__]);
           }
@@ -2970,8 +2970,8 @@ model {
 
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
-        parameters matrix[3, 2] y_matrix; //matrix[3, 2]
-        parameters matrix[3, 2] z_matrix; //matrix[3, 2]
+        parameters matrix[2, 4] y_matrix; //matrix[2, 4]
+        parameters matrix[4, 2] z_matrix; //matrix[4, 2]
         parameters vector[2] x_vector; //vector[2]
         parameters vector[3] y_vector; //vector[3]
         parameters matrix[2, 2] x_cov; //vector[3]
