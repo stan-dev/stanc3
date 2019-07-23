@@ -2607,6 +2607,8 @@ let%expect_test "partially evaluate some functions" =
       {|
 parameters {
     matrix[3, 2] x_matrix;
+    matrix[3, 2] y_matrix;
+    matrix[3, 2] z_matrix;
     vector[2] x_vector;
     vector[3] y_vector;
     cov_matrix[2] x_cov;
@@ -2696,6 +2698,14 @@ model {
     target += poisson_log_lpmf(y_arr| (x_matrix * x_vector + theta));
     target += poisson_log_lpmf(y_arr| (x_matrix * x_vector));
     target += poisson_lpmf(y_arr| exp(x_vector));
+    target += pow(2, theta);
+    target += pow(theta, 2);
+    target += pow(theta, 0.5);
+    target += square(sd(x_vector));
+    target += sqrt(2);
+    target += sum(square(x_vector - y_vector));
+    target += sum(diagonal(x_matrix));
+    target += trace(((x_matrix * transpose(y_matrix)) * z_matrix) * y_matrix);
 }
       |}
   in
@@ -2722,6 +2732,10 @@ model {
       log_prob {
         matrix[3, 2] x_matrix;
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
+        matrix[3, 2] y_matrix;
+        y_matrix = FnReadParam__("y_matrix", "matrix", 3, 2);
+        matrix[3, 2] z_matrix;
+        z_matrix = FnReadParam__("z_matrix", "matrix", 3, 2);
         vector[2] x_vector;
         x_vector = FnReadParam__("x_vector", "vector", 2);
         vector[3] y_vector;
@@ -2822,12 +2836,24 @@ model {
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
           target += poisson_log_lpmf(y_arr, x_vector);
+          target += exp2(34.);
+          target += square(34.);
+          target += sqrt(34.);
+          target += variance(x_vector);
+          target += sqrt2();
+          target += squared_distance(x_vector, y_vector);
+          target += trace(x_matrix);
+          target += trace_gen_quad_form(x_matrix, z_matrix, y_matrix);
         }
       }
 
       generate_quantities {
         data matrix[3, 2] x_matrix;
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
+        data matrix[3, 2] y_matrix;
+        y_matrix = FnReadParam__("y_matrix", "matrix", 3, 2);
+        data matrix[3, 2] z_matrix;
+        z_matrix = FnReadParam__("z_matrix", "matrix", 3, 2);
         data vector[2] x_vector;
         x_vector = FnReadParam__("x_vector", "vector", 2);
         data vector[3] y_vector;
@@ -2843,6 +2869,16 @@ model {
         for(sym2__ in 1:3) {
           for(sym3__ in 1:2) {
             FnWriteParam__(x_matrix[sym2__, sym3__]);
+          }
+        }
+        for(sym2__ in 1:3) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(y_matrix[sym2__, sym3__]);
+          }
+        }
+        for(sym2__ in 1:3) {
+          for(sym3__ in 1:2) {
+            FnWriteParam__(z_matrix[sym2__, sym3__]);
           }
         }
         for(sym2__ in 1:2) {
@@ -2865,6 +2901,20 @@ model {
         for(sym3__ in 1:3) {
           for(sym4__ in 1:2) {
             x_matrix[sym3__, sym4__] = FnReadData__("x_matrix", "matrix", 3, 2)
+                                       [sym3__, sym4__];
+          }
+        }
+        data matrix[3, 2] y_matrix;
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            y_matrix[sym3__, sym4__] = FnReadData__("y_matrix", "matrix", 3, 2)
+                                       [sym3__, sym4__];
+          }
+        }
+        data matrix[3, 2] z_matrix;
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            z_matrix[sym3__, sym4__] = FnReadData__("z_matrix", "matrix", 3, 2)
                                        [sym3__, sym4__];
           }
         }
@@ -2893,6 +2943,16 @@ model {
             FnWriteParam__(x_matrix[sym3__, sym4__]);
           }
         }
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(y_matrix[sym3__, sym4__]);
+          }
+        }
+        for(sym3__ in 1:3) {
+          for(sym4__ in 1:2) {
+            FnWriteParam__(z_matrix[sym3__, sym4__]);
+          }
+        }
         for(sym3__ in 1:2) {
           FnWriteParam__(x_vector[sym3__]);
         }
@@ -2910,6 +2970,8 @@ model {
 
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
+        parameters matrix[3, 2] y_matrix; //matrix[3, 2]
+        parameters matrix[3, 2] z_matrix; //matrix[3, 2]
         parameters vector[2] x_vector; //vector[2]
         parameters vector[3] y_vector; //vector[3]
         parameters matrix[2, 2] x_cov; //vector[3]
