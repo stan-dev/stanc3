@@ -97,8 +97,8 @@ and pp_indexes ppf = function
   | idx :: idxs -> pf ppf "cons_list(%a, %a)" pp_index idx pp_indexes idxs
 
 and pp_logical_op ppf op lhs rhs =
-  pf ppf "(stan::math::value(%a) %s stan::math::value(%a))" pp_expr lhs op
-    pp_expr rhs
+  pf ppf "(primitive_value(%a) %s primitive_value(%a))" pp_expr lhs op pp_expr
+    rhs
 
 and pp_unary ppf fm es = pf ppf fm pp_expr (List.hd_exn es)
 and pp_binary ppf fm es = pf ppf fm pp_expr (first es) pp_expr (second es)
