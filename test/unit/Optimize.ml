@@ -2502,105 +2502,7 @@ let%expect_test "partially evaluate with equality check" =
 
       } |}]
 
-let%expect_test "partially evaluate glm" =
-  let _ = gensym_reset_danger_use_cautiously () in
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
-      model {
-        matrix[2,3] x;
-        int y[2];
-        vector[2] y_real;
-        vector[3] beta;
-        vector[2] alpha;
-        real sigma;
-        print(bernoulli_lpmf(y| inv_logit(alpha + x * beta)));
-        print(bernoulli_logit_lpmf(y| alpha + x * beta));
-        print(bernoulli_lpmf(y| inv_logit(x * beta + alpha)));
-        print(bernoulli_logit_lpmf(y| x * beta + alpha));
-        print(bernoulli_lpmf(y| inv_logit(x * beta)));
-        print(bernoulli_logit_lpmf(y| x * beta));
-        print(neg_binomial_2_lpmf(y| exp(alpha + x * beta), sigma));
-        print(neg_binomial_2_log_lpmf(y| alpha + x * beta, sigma));
-        print(neg_binomial_2_lpmf(y| exp(x * beta + alpha), sigma));
-        print(neg_binomial_2_log_lpmf(y| x * beta + alpha, sigma));
-        print(neg_binomial_2_lpmf(y| exp(x * beta), sigma));
-        print(neg_binomial_2_log_lpmf(y| x * beta, sigma));
-        print(normal_lpdf(y_real| alpha + x * beta, sigma));
-        print(normal_lpdf(y_real| x * beta + alpha, sigma));
-        print(normal_lpdf(y_real| x * beta, sigma));
-        print(poisson_lpmf(y| exp(alpha + x * beta)));
-        print(poisson_log_lpmf(y| alpha + x * beta));
-        print(poisson_lpmf(y| exp(x * beta + alpha)));
-        print(poisson_log_lpmf(y| x * beta + alpha));
-        print(poisson_lpmf(y| exp(x * beta)));
-        print(poisson_log_lpmf(y| x * beta));
-      }
-      |}
-  in
-  let ast = semantic_check_program ast in
-  let mir = Ast_to_Mir.trans_prog "" ast in
-  let mir = partial_evaluation mir in
-  Fmt.strf "@[<v>%a@]" pp_typed_prog mir |> print_endline ;
-  [%expect
-    {|
-      functions {
-
-      }
-
-      input_vars {
-
-      }
-
-      prepare_data {
-
-      }
-
-      log_prob {
-        {
-          matrix[2, 3] x;
-          array[int, 2] y;
-          vector[2] y_real;
-          vector[3] beta;
-          vector[2] alpha;
-          real sigma;
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
-          FnPrint__(bernoulli_logit_glm_lpmf(y, x, 0, beta));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, alpha, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
-          FnPrint__(neg_binomial_2_log_glm_lpmf(y, x, 0, beta, sigma));
-          FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
-          FnPrint__(normal_id_glm_lpdf(y_real, x, alpha, beta, sigma));
-          FnPrint__(normal_id_glm_lpdf(y_real, x, 0, beta, sigma));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, alpha, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
-          FnPrint__(poisson_log_glm_lpmf(y, x, 0, beta));
-        }
-      }
-
-      generate_quantities {
-
-      }
-
-      transform_inits {
-
-      }
-
-      output_vars {
-
-      } |}]
-
-let%expect_test "partially evaluate some functions" =
+let%expect_test "partially evaluate functions" =
   let _ = gensym_reset_danger_use_cautiously () in
   let ast =
     Parse.parse_string Parser.Incremental.program
@@ -2727,6 +2629,12 @@ model {
     target += log(theta) * phi;
     target += diag_matrix(x_vector) * x_cov * diag_matrix(x_vector);
     target += diag_matrix(x_vector) * (x_cov * diag_matrix(x_vector));
+    target += transpose(x_vector) * x_cov * x_vector;
+    target += transpose(x_vector) * (x_cov * x_vector);
+    target += diag_matrix(x_vector) * x_cov;
+    target += x_cov * diag_matrix(x_vector);
+    target += 0 ? x_vector : y_vector;
+    target += 7 ? x_vector : y_vector;
     }
       |}
   in
@@ -2886,6 +2794,12 @@ model {
           target += lmultiply(5., 34.);
           target += quad_form_diag(x_cov, x_vector);
           target += quad_form_diag(x_cov, x_vector);
+          target += quad_form(x_cov, x_vector);
+          target += quad_form(x_cov, x_vector);
+          target += diag_pre_multiply(x_vector, x_cov);
+          target += diag_post_multiply(x_cov, x_vector);
+          target += y_vector;
+          target += x_vector;
         }
       }
 
