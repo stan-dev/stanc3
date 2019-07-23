@@ -515,8 +515,24 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                       FunApp
                         ( StanLib
                         , "Divide__"
-                        , [{expr= Lit (Int, "1"); _}; {expr= Lit (Int, "2"); _}]
-                        ); _ } ] ) ->
+                        , [ {expr= Lit (Real, "1."); _}
+                          ; {expr= Lit (Real, "2."); _} ] ); _ } ] )
+             |( "pow"
+              , [ x
+                ; { expr=
+                      FunApp
+                        ( StanLib
+                        , "Divide__"
+                        , [ {expr= Lit (Real, "1."); _}
+                          ; {expr= Lit (Int, "2"); _} ] ); _ } ] )
+             |( "pow"
+              , [ x
+                ; { expr=
+                      FunApp
+                        ( StanLib
+                        , "Divide__"
+                        , [ {expr= Lit (Int, "1"); _}
+                          ; {expr= Lit (Real, "2."); _} ] ); _ } ] ) ->
                 FunApp (StanLib, "sqrt", [x])
             | "square", [{expr= FunApp (StanLib, "sd", [x]); _}] ->
                 FunApp (StanLib, "variance", [x])
@@ -559,25 +575,40 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 FunApp (StanLib, "trace_quad_form", [a; b])
             | ( "Minus__"
               , [ {expr= Lit (Int, "1"); _}
+                ; {expr= FunApp (StanLib, "erf", l); _} ] )
+             |( "Minus__"
+              , [ {expr= Lit (Real, "1."); _}
                 ; {expr= FunApp (StanLib, "erf", l); _} ] ) ->
                 FunApp (StanLib, "erfc", l)
             | ( "Minus__"
               , [ {expr= Lit (Int, "1"); _}
+                ; {expr= FunApp (StanLib, "erfc", l); _} ] )
+             |( "Minus__"
+              , [ {expr= Lit (Real, "1."); _}
                 ; {expr= FunApp (StanLib, "erfc", l); _} ] ) ->
                 FunApp (StanLib, "erf", l)
             | ( "Minus__"
               , [ {expr= FunApp (StanLib, "exp", l'); _}
-                ; {expr= Lit (Int, "1"); _} ] ) ->
+                ; {expr= Lit (Int, "1"); _} ] )
+             |( "Minus__"
+              , [ {expr= FunApp (StanLib, "exp", l'); _}
+                ; {expr= Lit (Real, "1."); _} ] ) ->
                 FunApp (StanLib, "expm1", l')
             | "Plus__", [{expr= FunApp (StanLib, "Times__", [x; y]); _}; z]
              |"Plus__", [z; {expr= FunApp (StanLib, "Times__", [x; y]); _}] ->
                 FunApp (StanLib, "fma", [x; y; z])
             | ( "Minus__"
               , [ {expr= Lit (Int, "1"); _}
+                ; {expr= FunApp (StanLib, "gamma_p", l); _} ] )
+             |( "Minus__"
+              , [ {expr= Lit (Real, "1."); _}
                 ; {expr= FunApp (StanLib, "gamma_p", l); _} ] ) ->
                 FunApp (StanLib, "gamma_q", l)
             | ( "Minus__"
               , [ {expr= Lit (Int, "1"); _}
+                ; {expr= FunApp (StanLib, "gamma_q", l); _} ] )
+             |( "Minus__"
+              , [ {expr= Lit (Real, "1."); _}
                 ; {expr= FunApp (StanLib, "gamma_q", l); _} ] ) ->
                 FunApp (StanLib, "gamma_p", l)
             | ( "Times__"

@@ -2701,12 +2701,26 @@ model {
     target += pow(2, theta);
     target += pow(theta, 2);
     target += pow(theta, 0.5);
+    target += pow(theta, 1./2.);
+    target += pow(theta, 1/2.);
+    target += pow(theta, 1./2);
     target += square(sd(x_vector));
     target += sqrt(2);
     target += sum(square(x_vector - y_vector));
     target += sum(diagonal(x_matrix));
     target += trace(x_matrix * transpose(y_matrix) * z_matrix * y_matrix);
-}
+    target += trace(quad_form(y_matrix, z_matrix));
+    target += 1 - erf(x_vector);
+    target += 1. - erf(x_vector);
+    target += 1 - erfc(x_vector);
+    target += 1. - erfc(x_vector);
+    target += exp(x_vector) - 1;
+    target += exp(x_vector) - 1.;
+    target += 1 - gamma_p(theta, phi);
+    target += 1. - gamma_p(theta, phi);
+    target += 1 - gamma_q(theta, phi);
+    target += 1. - gamma_q(theta, phi);
+    }
       |}
   in
   (* TODO: complete this list to capture all rewrites that should happen. *)
@@ -2839,11 +2853,25 @@ model {
           target += exp2(34.);
           target += square(34.);
           target += sqrt(34.);
+          target += sqrt(34.);
+          target += sqrt(34.);
+          target += sqrt(34.);
           target += variance(x_vector);
           target += sqrt2();
           target += squared_distance(x_vector, y_vector);
           target += trace(x_matrix);
           target += trace_gen_quad_form(x_matrix, z_matrix, y_matrix);
+          target += trace_quad_form(y_matrix, z_matrix);
+          target += erfc(x_vector);
+          target += erfc(x_vector);
+          target += erf(x_vector);
+          target += erf(x_vector);
+          target += expm1(x_vector);
+          target += expm1(x_vector);
+          target += gamma_q(34., 5.);
+          target += gamma_q(34., 5.);
+          target += gamma_p(34., 5.);
+          target += gamma_p(34., 5.);
         }
       }
 
