@@ -2727,10 +2727,10 @@ model {
           j = 32;
           array[int, 3] y_arr;
           y_arr = FnMakeArray__(32, 2, 35);
-          target += PPlus__(23);
+          target += 23;
           target += -23;
           target += 0;
-          target += PPlus__(34.);
+          target += 34.;
           target += -34.;
           target += 55;
           target += -9;

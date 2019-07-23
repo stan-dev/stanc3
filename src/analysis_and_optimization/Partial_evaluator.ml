@@ -659,12 +659,12 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 (* Constant folding for operators *)
             | op, [{expr= Lit (Int, i); _}] -> (
               match op with
-              | "PPlus_" | "PMinus__" | "PNot__" ->
+              | "PPlus__" | "PMinus__" | "PNot__" ->
                   apply_prefix_operator_int op (Int.of_string i)
               | _ -> FunApp (StanLib, op, l) )
             | op, [{expr= Lit (Real, r); _}] -> (
               match op with
-              | "PPlus_" | "PMinus__" ->
+              | "PPlus__" | "PMinus__" ->
                   apply_prefix_operator_real op (Float.of_string r)
               | _ -> FunApp (StanLib, op, l) )
             | op, [{expr= Lit (Int, i1); _}; {expr= Lit (Int, i2); _}] -> (
