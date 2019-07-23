@@ -2720,6 +2720,13 @@ model {
     target += 1. - gamma_p(theta, phi);
     target += 1 - gamma_q(theta, phi);
     target += 1. - gamma_q(theta, phi);
+    target += matrix_exp(theta * x_matrix) * y_matrix;
+    target += matrix_exp(x_matrix * theta) * y_matrix;
+    target += matrix_exp(x_matrix) * y_matrix;
+    target += phi * log(theta);
+    target += log(theta) * phi;
+    target += diag_matrix(x_vector) * x_cov * diag_matrix(x_vector);
+    target += diag_matrix(x_vector) * (x_cov * diag_matrix(x_vector));
     }
       |}
   in
@@ -2872,6 +2879,13 @@ model {
           target += gamma_q(34., 5.);
           target += gamma_p(34., 5.);
           target += gamma_p(34., 5.);
+          target += scale_matrix_exp_multiply(34., x_matrix, y_matrix);
+          target += scale_matrix_exp_multiply(34., x_matrix, y_matrix);
+          target += matrix_exp_multiply(x_matrix, y_matrix);
+          target += lmultiply(5., 34.);
+          target += lmultiply(5., 34.);
+          target += quad_form_diag(x_cov, x_vector);
+          target += quad_form_diag(x_cov, x_vector);
         }
       }
 

@@ -633,36 +633,16 @@ let rec eval_expr (e : Middle.expr_typed_located) =
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
             | "Times__", [{expr= FunApp (StanLib, "matrix_exp", [a]); _}; b] ->
                 FunApp (StanLib, "matrix_exp_multiply", [a; b])
-            | "Times__", [x; {expr= FunApp (StanLib, "log", [y]); _}] ->
-                FunApp (StanLib, "multiply_log", [x; y])
+            | "Times__", [x; {expr= FunApp (StanLib, "log", [y]); _}]
+             |"Times__", [{expr= FunApp (StanLib, "log", [y]); _}; x] ->
+                FunApp (StanLib, "lmultiply", [x; y])
             | ( "Times__"
-              , [ { expr=
-                      FunApp
-                        ( StanLib
-                        , "transpose"
-                        , [{expr= FunApp (StanLib, "diag_matrix", [v]); _}] ); _
-                  }
-                ; { expr=
-                      FunApp
-                        ( StanLib
-                        , "Times__"
-                        , [a; {expr= FunApp (StanLib, "diag_matrix", [w]); _}]
-                        ); _ } ] )
+              , [ {expr= FunApp (StanLib, "diag_matrix", [v]); _}
+                ; {expr= FunApp (StanLib, "diag_post_multiply", [a; w]); _} ] )
               when compare_expr_typed_located v w = 0 ->
                 FunApp (StanLib, "quad_form_diag", [a; v])
             | ( "Times__"
-              , [ { expr=
-                      FunApp
-                        ( StanLib
-                        , "Times__"
-                        , [ { expr=
-                                FunApp
-                                  ( StanLib
-                                  , "transpose"
-                                  , [ { expr=
-                                          FunApp (StanLib, "diag_matrix", [v]); _
-                                      } ] ); _ }
-                          ; a ] ); _ }
+              , [ {expr= FunApp (StanLib, "diag_pre_multiply", [v; a]); _}
                 ; {expr= FunApp (StanLib, "diag_matrix", [w]); _} ] )
               when compare_expr_typed_located v w = 0 ->
                 FunApp (StanLib, "quad_form_diag", [a; v])
