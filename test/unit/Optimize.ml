@@ -2608,6 +2608,7 @@ let%expect_test "partially evaluate some functions" =
 parameters {
     matrix[3, 2] x_matrix;
     vector[2] x_vector;
+    vector[3] y_vector;
     cov_matrix[2] x_cov;
     real theta_u;
     real phi_u;
@@ -2678,7 +2679,23 @@ model {
     target += log(sum(exp(x_vector)));
     target += log(exp(theta_u) + exp(phi_u));
     target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
-    // From here.
+    target += neg_binomial_2_lpmf(y_arr| exp(theta + x_matrix * x_vector), phi);
+    target += neg_binomial_2_lpmf(y_arr| exp(x_matrix * x_vector + theta), phi);
+    target += neg_binomial_2_lpmf(y_arr| exp(x_matrix * x_vector), phi);
+    target += neg_binomial_2_log_lpmf(y_arr| (theta + x_matrix * x_vector), phi);
+    target += neg_binomial_2_log_lpmf(y_arr| (x_matrix * x_vector + theta), phi);
+    target += neg_binomial_2_log_lpmf(y_arr| (x_matrix * x_vector), phi);
+    target += neg_binomial_2_lpmf(y_arr| exp(theta), phi);
+    target += normal_lpdf(y_vector| theta + x_matrix * x_vector, phi);
+    target += normal_lpdf(y_vector| x_matrix * x_vector + theta, phi);
+    target += normal_lpdf(y_vector| x_matrix * x_vector, phi);
+    target += poisson_lpmf(y_arr| exp(theta + x_matrix * x_vector));
+    target += poisson_lpmf(y_arr| exp(x_matrix * x_vector + theta));
+    target += poisson_lpmf(y_arr| exp(x_matrix * x_vector));
+    target += poisson_log_lpmf(y_arr| (theta + x_matrix * x_vector));
+    target += poisson_log_lpmf(y_arr| (x_matrix * x_vector + theta));
+    target += poisson_log_lpmf(y_arr| (x_matrix * x_vector));
+    target += poisson_lpmf(y_arr| exp(x_vector));
 }
       |}
   in
@@ -2707,6 +2724,8 @@ model {
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
         vector[2] x_vector;
         x_vector = FnReadParam__("x_vector", "vector", 2);
+        vector[3] y_vector;
+        y_vector = FnReadParam__("y_vector", "vector", 3);
         vector[3] x_cov_sym1__;
         matrix[2, 2] x_cov;
         x_cov_sym1__ = FnReadParam__("x_cov_sym1__", "vector", 3);
@@ -2786,6 +2805,23 @@ model {
           target += log_sum_exp(x_vector);
           target += log_sum_exp(theta_u, phi_u);
           target += multi_normal_prec_lpdf(x_vector, x_vector, x_cov);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
+          target += neg_binomial_2_log_lpmf(y_arr, 34., 5.);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 0, x_vector, 5.);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += poisson_log_lpmf(y_arr, x_vector);
         }
       }
 
@@ -2794,6 +2830,8 @@ model {
         x_matrix = FnReadParam__("x_matrix", "matrix", 3, 2);
         data vector[2] x_vector;
         x_vector = FnReadParam__("x_vector", "vector", 2);
+        data vector[3] y_vector;
+        y_vector = FnReadParam__("y_vector", "vector", 3);
         data vector[3] x_cov_sym2__;
         data matrix[2, 2] x_cov;
         x_cov_sym2__ = FnReadParam__("x_cov_sym2__", "vector", 3);
@@ -2809,6 +2847,9 @@ model {
         }
         for(sym2__ in 1:2) {
           FnWriteParam__(x_vector[sym2__]);
+        }
+        for(sym2__ in 1:3) {
+          FnWriteParam__(y_vector[sym2__]);
         }
         for(sym2__ in 1:2) {
           for(sym3__ in 1:2) {
@@ -2831,6 +2872,10 @@ model {
         for(sym3__ in 1:2) {
           x_vector[sym3__] = FnReadData__("x_vector", "vector", 2)[sym3__];
         }
+        data vector[3] y_vector;
+        for(sym3__ in 1:3) {
+          y_vector[sym3__] = FnReadData__("y_vector", "vector", 3)[sym3__];
+        }
         data matrix[2, 2] x_cov;
         for(sym4__ in 1:2) {
           for(sym5__ in 1:2) {
@@ -2851,6 +2896,9 @@ model {
         for(sym3__ in 1:2) {
           FnWriteParam__(x_vector[sym3__]);
         }
+        for(sym3__ in 1:3) {
+          FnWriteParam__(y_vector[sym3__]);
+        }
         for(sym3__ in 1:2) {
           for(sym4__ in 1:2) {
             FnWriteParam__(x_cov[sym3__, sym4__]);
@@ -2863,6 +2911,7 @@ model {
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
         parameters vector[2] x_vector; //vector[2]
+        parameters vector[3] y_vector; //vector[3]
         parameters matrix[2, 2] x_cov; //vector[3]
         parameters real theta_u; //real
         parameters real phi_u; //real

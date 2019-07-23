@@ -400,22 +400,6 @@ let rec eval_expr (e : Middle.expr_typed_located) =
             | ( "neg_binomial_2_rng"
               , [{expr= FunApp (StanLib, "exp", [eta]); _}; phi] ) ->
                 FunApp (StanLib, "neg_binomial_2_log_rng", [eta; phi])
-            | ( "poisson_lpmf"
-              , [ y
-                ; { expr=
-                      FunApp
-                        ( StanLib
-                        , "exp"
-                        , [ { expr=
-                                FunApp
-                                  ( StanLib
-                                  , "Plus__"
-                                  , [ alpha
-                                    ; { expr=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      } ] ); _ } ] ); _ } ] )
-              when x.emeta.mtype = UMatrix ->
-                FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "normal_lpdf"
               , [ y
                 ; { expr=
@@ -446,6 +430,22 @@ let rec eval_expr (e : Middle.expr_typed_located) =
               when x.emeta.mtype = UMatrix ->
                 FunApp
                   (StanLib, "normal_id_glm_lpdf", [y; x; zero; beta; sigma])
+            | ( "poisson_lpmf"
+              , [ y
+                ; { expr=
+                      FunApp
+                        ( StanLib
+                        , "exp"
+                        , [ { expr=
+                                FunApp
+                                  ( StanLib
+                                  , "Plus__"
+                                  , [ alpha
+                                    ; { expr=
+                                          FunApp (StanLib, "Times__", [x; beta]); _
+                                      } ] ); _ } ] ); _ } ] )
+              when x.emeta.mtype = UMatrix ->
+                FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_lpmf"
               , [ y
                 ; { expr=
