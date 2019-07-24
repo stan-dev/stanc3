@@ -8,7 +8,7 @@ module NoMeta = struct
   let pp _ _ = ()
 end
 
-module TypedLocatedMeta = struct
+module TypedMeta = struct
   type t =
     { mtype: Mir_pattern.unsizedtype
     ; mloc: Location_span.t sexp_opaque [@compare.ignore]
@@ -61,15 +61,18 @@ module Expr = struct
   end)
 
   (** Fixed-point expressions specialized to have no meta data *)
-  module NoMeta = struct include Meta.Specialize (Fixed) (NoMeta)
+  module NoMeta = struct 
+    include Meta.Specialize (Fixed) (NoMeta)
+    let remove_meta x = 
+      Fixed.map (fun _ -> ())  x
   end
 
-  module TypedLocated = struct
-    include Meta.Specialize (Fixed) (TypedLocatedMeta)
+  module Typed = struct
+    include Meta.Specialize (Fixed) (TypedMeta)
 
-    let type_of x = LabelledMeta.type_ @@ Fixed.meta x
-    let loc_of x = LabelledMeta.loc @@ Fixed.meta x
-    let adlevel_of x = LabelledMeta.label @@ Fixed.meta x
+    let type_of x = TypedMeta.type_ @@ Fixed.meta x
+    let loc_of x = TypedMeta.loc @@ Fixed.meta x
+    let adlevel_of x = TypedMeta.adlevel @@ Fixed.meta x
   end
 
   module Labelled = struct
@@ -78,12 +81,12 @@ module Expr = struct
     let label_of x = LabelledMeta.label @@ Fixed.meta x
     let type_of x = LabelledMeta.type_ @@ Fixed.meta x
     let loc_of x = LabelledMeta.loc @@ Fixed.meta x
-    let adlevel_of x = LabelledMeta.label @@ Fixed.meta x
+    let adlevel_of x = LabelledMeta.adlevel @@ Fixed.meta x
 
     module Traversable_state = Fixed.Make_traversable2 (State)
 
-    let label ?(init = 0) (expr : TypedLocated.t) : t =
-      let f {TypedLocatedMeta.madlevel; mtype; mloc} =
+    let label ?(init = 0) (expr : Typed.t) : t =
+      let f {TypedMeta.madlevel; mtype; mloc} =
         State.(
           get
           >>= fun mlabel ->
@@ -184,16 +187,19 @@ module Stmt = struct
         module Make_traversable2 = Mir_pattern.Make_traversable_statement2
       end)
 
+  
   module NoMeta = struct
     include Meta.Specialize2 (Fixed) (Expr.NoMeta) (NoMeta)
+    let remove_meta x = 
+      Fixed.map (fun _ -> ()) (fun _ -> ()) x
   end
 
-  module TypedLocated = struct
-    include Meta.Specialize2 (Fixed) (Expr.TypedLocated) (TypedLocatedMeta)
+  module Typed = struct
+    include Meta.Specialize2 (Fixed) (Expr.Typed) (TypedMeta)
 
-    let type_of x = LabelledMeta.type_ @@ Fixed.meta x
-    let loc_of x = LabelledMeta.loc @@ Fixed.meta x
-    let adlevel_of x = LabelledMeta.label @@ Fixed.meta x
+    let type_of x = TypedMeta.type_ @@ Fixed.meta x
+    let loc_of x = TypedMeta.loc @@ Fixed.meta x
+    let adlevel_of x = TypedMeta.adlevel @@ Fixed.meta x
   end
 
   module Labelled = struct
@@ -202,19 +208,19 @@ module Stmt = struct
     let label_of x = LabelledMeta.label @@ Fixed.meta x
     let type_of x = LabelledMeta.type_ @@ Fixed.meta x
     let loc_of x = LabelledMeta.loc @@ Fixed.meta x
-    let adlevel_of x = LabelledMeta.label @@ Fixed.meta x
+    let adlevel_of x = LabelledMeta.adlevel @@ Fixed.meta x
 
     module Traversable_state = Fixed.Make_traversable2 (State)
 
-    let label ?(init = 0) (stmt : TypedLocated.t) : t =
+    let label ?(init = 0) (stmt : Typed.t) : t =
       let incr_label =
         State.(get >>= fun label -> put (label + 1) >>= fun _ -> return label)
       in
-      let f {TypedLocatedMeta.madlevel; mtype; mloc} =
+      let f {TypedMeta.madlevel; mtype; mloc} =
         incr_label
         |> State.map ~f:(fun mlabel ->
                LabelledMeta.create ~mtype ~mloc ~madlevel ~mlabel () )
-      and g {TypedLocatedMeta.madlevel; mtype; mloc} =
+      and g {TypedMeta.madlevel; mtype; mloc} =
         incr_label
         |> State.map ~f:(fun mlabel ->
                LabelledMeta.create ~mtype ~mloc ~madlevel ~mlabel () )
@@ -355,4 +361,21 @@ module Stmt = struct
 
   let void = Mir_pattern.Void
   let return_ty ty = Mir_pattern.ReturnType ty
+end
+
+
+module Program = struct
+
+  module NoMeta = struct
+    type t = (Expr.NoMeta.t,Stmt.NoMeta.t) Mir_pattern.prog
+    let sexp_of_t x = Mir_pattern.sexp_of_prog Expr.NoMeta.sexp_of_t Stmt.NoMeta.sexp_of_t x
+    let t_of_sexp x = Mir_pattern.prog_of_sexp Expr.NoMeta.t_of_sexp Stmt.NoMeta.t_of_sexp x
+  end 
+
+  module Typed = struct
+    type t = (Expr.Typed.t,Stmt.Typed.t) Mir_pattern.prog
+    let sexp_of_t x = Mir_pattern.sexp_of_prog Expr.Typed.sexp_of_t Stmt.Typed.sexp_of_t x
+
+    let t_of_sexp x = Mir_pattern.prog_of_sexp Expr.Typed.t_of_sexp Stmt.Typed.t_of_sexp x
+  end 
 end
