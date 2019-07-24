@@ -27,7 +27,7 @@ module LabelledMeta = struct
     ; mloc: Location_span.t sexp_opaque [@compare.ignore]
     ; madlevel: Mir_pattern.autodifftype
     ; mlabel: Label.t [@compare.ignore] }
-  [@@deriving compare, create,sexp, hash]
+  [@@deriving compare, create, sexp, hash]
 
   let label {mlabel; _} = mlabel
   let adlevel {madlevel; _} = madlevel
@@ -82,7 +82,7 @@ module Expr = struct
 
     module Traversable_state = Fixed.Make_traversable2 (State)
 
-    let label ?(init = 0) (expr: TypedLocated.t) : t =
+    let label ?(init = 0) (expr : TypedLocated.t) : t =
       let f {TypedLocatedMeta.madlevel; mtype; mloc} =
         State.(
           get
@@ -185,13 +185,15 @@ module Stmt = struct
 
   module TypedLocated = struct
     include Meta.Specialize2 (Fixed) (Expr.TypedLocated) (TypedLocatedMeta)
+
     let type_of x = LabelledMeta.type_ @@ Fixed.meta x
     let loc_of x = LabelledMeta.loc @@ Fixed.meta x
     let adlevel_of x = LabelledMeta.label @@ Fixed.meta x
   end
 
-  module Labelled = struct 
+  module Labelled = struct
     include Meta.Specialize2 (Fixed) (Expr.Labelled) (LabelledMeta)
+
     let label_of x = LabelledMeta.label @@ Fixed.meta x
     let type_of x = LabelledMeta.type_ @@ Fixed.meta x
     let loc_of x = LabelledMeta.loc @@ Fixed.meta x
@@ -199,89 +201,85 @@ module Stmt = struct
 
     module Traversable_state = Fixed.Make_traversable2 (State)
 
-    let label ?init:(init = 0) (stmt: TypedLocated.t) : t =
+    let label ?(init = 0) (stmt : TypedLocated.t) : t =
       let incr_label =
         State.(get >>= fun label -> put (label + 1) >>= fun _ -> return label)
       in
-      let f {TypedLocatedMeta.madlevel;mtype;mloc} =
-        incr_label |> State.map ~f:(fun mlabel -> LabelledMeta.create ~mtype ~mloc ~madlevel ~mlabel ())
-      
-      and g {TypedLocatedMeta.madlevel;mtype;mloc} = 
-        incr_label |> State.map ~f:(fun mlabel -> LabelledMeta.create ~mtype ~mloc ~madlevel ~mlabel ())
+      let f {TypedLocatedMeta.madlevel; mtype; mloc} =
+        incr_label
+        |> State.map ~f:(fun mlabel ->
+               LabelledMeta.create ~mtype ~mloc ~madlevel ~mlabel () )
+      and g {TypedLocatedMeta.madlevel; mtype; mloc} =
+        incr_label
+        |> State.map ~f:(fun mlabel ->
+               LabelledMeta.create ~mtype ~mloc ~madlevel ~mlabel () )
       in
-      Traversable_state.traverse ~f ~g stmt
-      |> State.run_state ~init
-      |> fst
+      Traversable_state.traverse ~f ~g stmt |> State.run_state ~init |> fst
 
     type associations =
-      { exprs : Expr.Labelled.t Label.Map.t
-      ; stmts : t Label.Map.t
-      }
-    let empty =
-      { exprs = Label.Map.empty
-      ; stmts = Label.Map.empty
-      }
+      {exprs: Expr.Labelled.t Label.Map.t; stmts: t Label.Map.t}
+
+    let empty = {exprs= Label.Map.empty; stmts= Label.Map.empty}
 
     let rec associate ?init:(assocs = empty) (stmt : t) =
       associate_pattern
         { assocs with
-          stmts =
-            Label.Map.add_exn
-              assocs.stmts
-              ~key:(label_of stmt)
-              ~data:stmt
-      }
-      (Fixed.pattern stmt)
+          stmts= Label.Map.add_exn assocs.stmts ~key:(label_of stmt) ~data:stmt
+        }
+        (Fixed.pattern stmt)
 
     and associate_pattern assocs = function
-      | Mir_pattern.Break | Skip | Continue | Return None -> assocs   
-      | Return (Some e) | TargetPE e -> 
-        { assocs with exprs = Expr.Labelled.associate ~init:assocs.exprs e }
-    
-      | NRFunApp(_,_,args) -> 
-        { assocs with 
-            exprs  = 
-              List.fold args ~init:assocs.exprs 
-                ~f:(fun accu x -> Expr.Labelled.associate ~init:accu x)
-        }
+      | Mir_pattern.Break | Skip | Continue | Return None -> assocs
+      | Return (Some e) | TargetPE e ->
+          {assocs with exprs= Expr.Labelled.associate ~init:assocs.exprs e}
+      | NRFunApp (_, _, args) ->
+          { assocs with
+            exprs=
+              List.fold args ~init:assocs.exprs ~f:(fun accu x ->
+                  Expr.Labelled.associate ~init:accu x ) }
+      | Assignment ((_, idxs), rhs) ->
+          let exprs =
+            Expr.Labelled.(
+              associate rhs
+                ~init:(List.fold ~f:associate_index ~init:assocs.exprs idxs))
+          in
+          {assocs with exprs}
+      | IfElse (pred, body, None) | While (pred, body) ->
+          let exprs = Expr.Labelled.associate ~init:assocs.exprs pred in
+          associate ~init:{assocs with exprs} body
+      | IfElse (pred, ts, Some fs) ->
+          let exprs = Expr.Labelled.associate ~init:assocs.exprs pred in
+          let assocs' = {assocs with exprs} in
+          associate ~init:(associate ~init:assocs' ts) fs
+      | Decl {decl_type; _} -> associate_possibly_sized_type assocs decl_type
+      | For {lower; upper; body; _} ->
+          let exprs =
+            Expr.Labelled.(
+              associate ~init:(associate ~init:assocs.exprs lower) upper)
+          in
+          let assocs' = {assocs with exprs} in
+          associate ~init:assocs' body
+      | Block xs | SList xs ->
+          List.fold ~f:(fun accu x -> associate ~init:accu x) ~init:assocs xs
 
-      
-      | Assignment((_,idxs),rhs) ->
-        let exprs = 
-          Expr.Labelled.associate rhs 
-            ~init:(List.fold ~f:Expr.Labelled.associate_index ~init:assocs.exprs idxs) in 
-        { assocs with exprs = exprs}
+    and associate_possibly_sized_type assocs = function
+      | Mir_pattern.Sized st -> associate_sized_type assocs st
+      | Mir_pattern.Unsized _ -> assocs
 
-      | IfElse(pred,body,None) | While(pred,body) ->
-        let exprs = 
-          Expr.Labelled.associate ~init:assocs.exprs pred in
-        associate ~init:{ assocs with exprs = exprs } body 
-        
-      | _ -> assocs
-
-  
-  (* XXX Collapse with For? *)
-  (* | For of {loopvar: string; lower: 'e; upper: 'e; body: 's}
-  (* A Block for now corresponds tightly with a C++ block:
-     variables declared within it have local scope and are garbage collected
-     when the block ends.*)
-  | Block of 's list
-  (* SList has no semantics, just programming convenience *)
-  | SList of 's list
-  | Decl of
-      { decl_adtype: autodifftype
-      ; decl_id: string
-      ; decl_type: 'e possiblysizedtype } *)
-    
-    (* | True | False -> assocs
-    | Not b -> associate ~init:assocs b
-    | Boolop (b1, _, b2) -> associate ~init:(associate ~init:assocs b2) b1
-    | Relop (a1, _, a2) ->
-      { assocs with
-        arith_exprs =
-          Arith_expr.Labelled.associate
-            ~init:(Arith_expr.Labelled.associate ~init:assocs.arith_exprs a2)
-            a1
-      } *)
-  end 
+    and associate_sized_type assocs = function
+      | Mir_pattern.SInt | SReal -> assocs
+      | SVector e | SRowVector e ->
+          let exprs = Expr.Labelled.associate ~init:assocs.exprs e in
+          {assocs with exprs}
+      | SMatrix (e1, e2) ->
+          let exprs =
+            Expr.Labelled.(
+              associate ~init:(associate ~init:assocs.exprs e1) e2)
+          in
+          {assocs with exprs}
+      | SArray (st, e) ->
+          let exprs = Expr.Labelled.associate ~init:assocs.exprs e in
+          let assocs' = {assocs with exprs} in
+          associate_sized_type assocs' st
+  end
 end
