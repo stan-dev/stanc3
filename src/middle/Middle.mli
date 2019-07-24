@@ -1,22 +1,23 @@
-open Core_kernel
 include module type of Mir
+module Location_span : module type of Location_span
 module Pretty : module type of Mir_pretty_printer
 module Validation : module type of Validation
 module Utils : module type of Utils
+module Foldable : module type of Foldable
 
-val string_of_location :
-  ?print_file:bool -> ?print_line:bool -> location -> string
+(* val string_of_location :
+  ?print_file:bool -> ?print_line:bool -> location -> string *)
 
-val string_of_location_span : Mir.location_span -> string
-val operator_of_string : string -> Mir.operator option
-val string_of_operator : Mir.operator -> string
-val string_of_internal_fn : Mir.internal_fn -> string
-val internal_fn_of_string : string -> Mir.internal_fn option
+(* val string_of_location_span : Mir_pattern.location_span -> string *)
+(* val operator_of_string : string -> Mir_pattern.operator option
+val string_of_operator : Mir_pattern.operator -> string
+val string_of_internal_fn : Mir_pattern.internal_fn -> string
+val internal_fn_of_string : string -> Mir_pattern.internal_fn option *)
 
-val internal_funapp :
-  Mir.internal_fn -> 'a Mir.with_expr list -> 'a -> 'a Mir.with_expr
+(* val internal_funapp :
+  Mir_pattern.internal_fn -> 'a Mir_pattern.with_expr list -> 'a -> 'a Mir.with_expr *)
 
-val no_loc : Mir.location
+(* val no_loc : Mir.location
 val no_span : Mir.location_span
 val merge_spans : Mir.location_span -> Mir.location_span -> Mir.location_span
 val internal_meta : Mir.mtype_loc_ad
@@ -25,20 +26,19 @@ val remove_size : 'a Mir.sizedtype -> Mir.unsizedtype
 val zero : Mir.mtype_loc_ad Mir.with_expr
 val remove_possible_size : 'a possiblysizedtype -> unsizedtype
 val sexp_of_expr_typed_located : 'a Mir.with_expr -> Sexp.t
-val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t
+val sexp_of_stmt_loc : ('a, 'b) Mir.stmt_with -> Sexp.t *)
 val gensym : unit -> string
 val gensym_enter : unit -> string * (unit -> unit)
 val gensym_reset_danger_use_cautiously : unit -> unit
 
-val check_compatible_arguments_mod_conv :
+(* val check_compatible_arguments_mod_conv :
      string
   -> (Mir.autodifftype * Mir.unsizedtype) list
   -> (Mir.autodifftype * Mir.unsizedtype) list
-  -> bool
+  -> bool *)
 (** Check that the rhs list of function argument types can be converted to the
     lhs *)
-
-val check_of_same_type_mod_array_conv :
+(* val check_of_same_type_mod_array_conv :
   string -> Mir.unsizedtype -> Mir.unsizedtype -> bool
 (** Check that the rhs type can be converted to the lhs, where we allow
     conversion inside an array constructor *)
@@ -91,4 +91,4 @@ val mir_int : int -> mtype_loc_ad with_expr
 val mock_for :
      int
   -> (mtype_loc_ad, location_span) stmt_with
-  -> (mtype_loc_ad, location_span) stmt_with
+  -> (mtype_loc_ad, location_span) stmt_with *)

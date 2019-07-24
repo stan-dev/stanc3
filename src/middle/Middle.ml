@@ -3,39 +3,11 @@ include Stan_math_signatures
 include Type_conversion
 include Mir_utils
 open Core_kernel
+module Location_span = Location_span
 module Validation = Validation
 module Pretty = Mir_pretty_printer
 module Utils = Utils
-
-(* -- Locations and spans --------------------------------------------------- *)
-
-(** Render a location as a string *)
-let rec string_of_location ?(print_file = true) ?(print_line = true) loc =
-  let open Format in
-  let file = if print_file then sprintf "'%s', " loc.filename else "" in
-  let line = if print_line then sprintf "line %d, " loc.line_num else "" in
-  let incl =
-    match loc.included_from with
-    | Some loc2 -> sprintf ", included from\n%s" (string_of_location loc2)
-    | None -> ""
-  in
-  sprintf "%s%scolumn %d%s" file line loc.col_num incl
-
-(** Render a location_span as a string *)
-let string_of_location_span {begin_loc; end_loc} =
-  let end_loc_str =
-    match begin_loc.included_from with
-    | None ->
-        " to "
-        ^ string_of_location
-            ~print_file:(begin_loc.filename <> end_loc.filename)
-            ~print_line:(begin_loc.line_num <> end_loc.line_num)
-            end_loc
-    | Some _ -> ""
-  in
-  string_of_location begin_loc ^ end_loc_str
-
-let merge_spans left right = {begin_loc= left.begin_loc; end_loc= right.end_loc}
+module Foldable = Foldable
 
 (*-- mutable counter for symbol names --*)
 let _counter = ref 0
@@ -51,7 +23,8 @@ let gensym_enter () =
 let gensym_reset_danger_use_cautiously () = _counter := 0
 
 (** Querying stan_math_signatures for operator signatures by string name *)
-let operator_return_type_from_string op_name argtypes =
+
+(* let operator_return_type_from_string op_name argtypes =
   if op_name = "Assign" || op_name = "ArrowAssign" then
     match List.map ~f:snd argtypes with
     | [ut1; ut2] when check_of_same_type_mod_array_conv "" ut1 ut2 -> Some Void
@@ -61,9 +34,9 @@ let operator_return_type_from_string op_name argtypes =
     |> List.find_map ~f:(fun name -> stan_math_returntype name argtypes)
 
 let operator_return_type op =
-  operator_return_type_from_string (string_of_operator op)
+  operator_return_type_from_string (string_of_operator op) *)
 
-let rec sexp_of_expr_typed_located {expr; _} =
+(* let rec sexp_of_expr_typed_located {expr; _} =
   sexp_of_expr sexp_of_expr_typed_located expr
 
 let rec sexp_of_stmt_loc {stmt; _} =
@@ -91,9 +64,9 @@ let contains_fn fname s =
   contains_fn_go fname false s
 
 let mock_stmt stmt = {stmt; smeta= no_span}
-let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta}
+let mir_int i = {expr= Lit (Int, string_of_int i); emeta= internal_meta} *)
 
-let mock_for i body =
+(* let mock_for i body =
   For
     { loopvar= "lv"
     ; lower= mir_int 0
@@ -126,4 +99,4 @@ let%test "contains nrfn" =
           [ mock_stmt
               (NRFunApp
                  (CompilerInternal, string_of_internal_fn FnWriteParam, []))
-          ; f ]))
+          ; f ])) *)

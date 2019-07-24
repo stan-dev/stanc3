@@ -2,7 +2,7 @@
 
 open Core_kernel
 open Type_conversion
-open Mir
+open Mir_pattern
 
 (** The signatures hash table *)
 let stan_math_signatures = String.Table.create ()

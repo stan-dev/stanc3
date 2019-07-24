@@ -1,13 +1,13 @@
 open Core_kernel
-open Mir
+open Mir_pattern
 
 (* ===================== Some helper functions and values ====================== *)
 
-let expr_from_idx (i : expr_typed_located index) =
+(* let expr_from_idx (i : expr_typed_located index) =
   match i with
   | All -> []
   | Single e | Upfrom e | MultiIndex e -> [e]
-  | Between (e1, e2) -> [e1; e2]
+  | Between (e1, e2) -> [e1; e2] *)
 
 (** remove_size [st] discards size information from a sizedtype
     to return an unsizedtype. *)
@@ -20,8 +20,6 @@ let rec remove_size = function
   | SArray (t, _) -> UArray (remove_size t)
 
 let remove_possible_size = function Sized t -> remove_size t | Unsized t -> t
-let no_loc = {filename= ""; line_num= 0; col_num= 0; included_from= None}
-let no_span = {begin_loc= no_loc; end_loc= no_loc}
 let mk_string_of sexp_of x = Sexp.to_string (sexp_of x) ^ "__"
 let string_of_internal_fn = mk_string_of sexp_of_internal_fn
 
@@ -34,21 +32,21 @@ let mk_of_string of_sexp x =
 
 let internal_fn_of_string = mk_of_string internal_fn_of_sexp
 
-let internal_funapp ifn args emeta =
+(* let internal_funapp ifn args emeta =
   {expr= FunApp (CompilerInternal, string_of_internal_fn ifn, args); emeta}
 
 let internal_meta = {mloc= no_span; mtype= UInt; madlevel= DataOnly}
 let zero = {expr= Lit (Int, "0"); emeta= internal_meta}
-let loop_bottom = {expr= Lit (Int, "1"); emeta= internal_meta}
+let loop_bottom = {expr= Lit (Int, "1"); emeta= internal_meta} *)
 let string_of_operator = mk_string_of sexp_of_operator
 let operator_of_string = mk_of_string operator_of_sexp
 
 let%test "bad op name" = phys_equal (operator_of_string "Pluss__") None
 let%test "good op name" = operator_of_string "Plus__" = Some Plus
 
-let binop e1 binop e2 =
+(* let binop e1 binop e2 =
   { expr= FunApp (StanLib, string_of_operator binop, [e1; e2])
-  ; emeta= internal_meta }
+  ; emeta= internal_meta } *)
 
 (** remove_size [st] discards size information from a sizedtype
     to return an unsizedtype. *)

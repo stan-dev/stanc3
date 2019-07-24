@@ -1,6 +1,6 @@
 (* == Pretty printers ======================================================= *)
 open Core_kernel
-open Mir
+open Mir_pattern
 
 let pp_builtin_syntax = Fmt.(string |> styled `Yellow)
 let pp_keyword = Fmt.(string |> styled `Blue)
@@ -223,16 +223,17 @@ let pp_prog pp_e pp_s ppf prog =
   pp_output_vars pp_e ppf prog ;
   Format.close_box ()
 
-let rec pp_expr_typed_located ppf {expr; _} =
+(* let rec pp_expr_typed_located ppf {expr; _} =
   pp_expr pp_expr_typed_located ppf expr
 
 let rec pp_stmt_loc ppf {stmt; _} =
   pp_statement pp_expr_typed_located pp_stmt_loc ppf stmt
 
-let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog
+let pp_typed_prog ppf prog = pp_prog pp_expr_typed_located pp_stmt_loc ppf prog *)
 
 (** Return two lines before and after the specified location. *)
-let pp_context ppf ({filename; line_num; col_num; _} : Mir.location) =
+let pp_context ppf ({filename; line_num; col_num; _} : Location_span.location)
+    =
   try
     let open In_channel in
     let input = create filename in

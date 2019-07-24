@@ -10,14 +10,13 @@ module type Frontend = sig
   type frontend_error
 
   val render_error : frontend_error -> string
-
-  val mir_of_file :
+  (* val mir_of_file :
        opts:frontend_opts
     -> file:string
     -> (Mir.typed_prog, frontend_error) result
 
   val mir_of_string :
-    opts:frontend_opts -> str:string -> (Mir.typed_prog, frontend_error) result
+    opts:frontend_opts -> str:string -> (Mir.typed_prog, frontend_error) result *)
 end
 
 module type Backend = sig
@@ -28,9 +27,8 @@ module type Backend = sig
 
   (* the type of backend representation *)
   type repr
-
-  val mir_to_repr : opts:backend_opts -> Mir.typed_prog -> repr
-  val mir_to_string : opts:backend_opts -> Mir.typed_prog -> string
+  (* val mir_to_repr : opts:backend_opts -> Mir.typed_prog -> repr
+  val mir_to_string : opts:backend_opts -> Mir.typed_prog -> string *)
 end
 
 module type Optimization = sig
@@ -42,7 +40,7 @@ module type Optimization = sig
     string -> (optimization_opts, string) result
 
   val default_optimization_opts : optimization_opts
-  val optimize : opts:optimization_opts -> Mir.typed_prog -> Mir.typed_prog
+  (* val optimize : opts:optimization_opts -> Mir.typed_prog -> Mir.typed_prog *)
 end
 
 module Compiler = struct
@@ -60,7 +58,7 @@ module Compiler = struct
       opts:compiler_opts -> file:string -> (string, frontend_error) result
   end
 
-  module Make (F : Frontend) (O : Optimization) (B : Backend) :
+  (* module Make (F : Frontend) (O : Optimization) (B : Backend) :
     S with type frontend_error := F.frontend_error = struct
     type compiler_opts =
       { frontend_opts: F.frontend_opts
@@ -86,5 +84,5 @@ module Compiler = struct
       F.mir_of_file ~opts:opts.frontend_opts ~file
       |> Result.map ~f:(O.optimize ~opts:opts.optimization_opts)
       |> Result.map ~f:(B.mir_to_string ~opts:opts.backend_opts)
-  end
+  end *)
 end
