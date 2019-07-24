@@ -140,6 +140,11 @@ module Expr = struct
   let between e1 e2 = Mir_pattern.Between (e1, e2)
   let indexed meta e idxs = Fixed.fix meta @@ Mir_pattern.Indexed (e, idxs)
 
+  let indexed_bounds = function
+    | Mir_pattern.All -> []
+    | Single e | MultiIndex e | Upfrom e -> [e]
+    | Between (e1, e2) -> [e1; e2]
+
   let compiler_fun meta name args =
     Fixed.fix meta @@ Mir_pattern.(FunApp (CompilerInternal, name, args))
 
@@ -282,4 +287,72 @@ module Stmt = struct
           let assocs' = {assocs with exprs} in
           associate_sized_type assocs' st
   end
+
+  (* == Helpers ============================================================= *)
+
+  let assign meta name ?(idxs = []) expr =
+    Fixed.fix meta @@ Mir_pattern.Assignment ((name, idxs), expr)
+
+  let target_pe ~meta e = Fixed.fix meta @@ Mir_pattern.TargetPE e
+  let break meta = Fixed.fix meta Mir_pattern.Break
+  let continue meta = Fixed.fix meta Mir_pattern.Continue
+  let skip meta = Fixed.fix meta Mir_pattern.Skip
+  let return_ meta e = Fixed.fix meta @@ Mir_pattern.Return (Some e)
+  let return_void meta = Fixed.fix meta @@ Mir_pattern.Return None
+  let block meta xs = Fixed.fix meta @@ Mir_pattern.Block xs
+  let slist meta xs = Fixed.fix meta @@ Mir_pattern.SList xs
+  let while_ meta pred body = Fixed.fix meta @@ Mir_pattern.While (pred, body)
+
+  let if_ meta pred ?when_false ~when_true =
+    Fixed.fix meta @@ Mir_pattern.IfElse (pred, when_true, when_false)
+
+  let for_ meta loopvar lower upper body =
+    Fixed.fix meta @@ Mir_pattern.For {loopvar; lower; upper; body}
+
+  let declare_sized meta adtype name ty =
+    Fixed.fix meta
+    @@ Mir_pattern.Decl
+         {decl_adtype= adtype; decl_id= name; decl_type= Mir_pattern.Sized ty}
+
+  let declare_unsized meta adtype name ty =
+    Fixed.fix meta
+    @@ Mir_pattern.Decl
+         {decl_adtype= adtype; decl_id= name; decl_type= Mir_pattern.Unsized ty}
+
+  let stanlib_fun meta name args =
+    Fixed.fix meta @@ Mir_pattern.(NRFunApp (StanLib, name, args))
+
+  let compiler_fun meta name args =
+    Fixed.fix meta @@ Mir_pattern.(NRFunApp (CompilerInternal, name, args))
+
+  let user_fun meta name args =
+    Fixed.fix meta @@ Mir_pattern.(NRFunApp (UserDefined, name, args))
+
+  let data_only = Mir_pattern.DataOnly
+  let auto_diff = Mir_pattern.AutoDiffable
+  let uint = Mir_pattern.UInt
+  let ureal = Mir_pattern.UReal
+  let uvector = Mir_pattern.UVector
+  let urowvector = Mir_pattern.URowVector
+  let umatrix = Mir_pattern.UMatrix
+  let ufun args rty = Mir_pattern.UFun (args, rty)
+  let umathlibfun = Mir_pattern.UMathLibraryFunction
+  let uarray uty = Mir_pattern.UArray uty
+  let sint = Mir_pattern.SInt
+  let sreal = Mir_pattern.SReal
+  let svector e = Mir_pattern.SVector e
+  let srowvector e = Mir_pattern.SRowVector e
+  let smatrix erow ecol = Mir_pattern.SMatrix (erow, ecol)
+  let sarray sty e = Mir_pattern.SArray (sty, e)
+
+  let rec unsized_of_sized_type = function
+    | Mir_pattern.SInt -> Mir_pattern.UInt
+    | SReal -> UReal
+    | SVector _ -> UVector
+    | SRowVector _ -> URowVector
+    | SMatrix _ -> UMatrix
+    | SArray (t, _) -> UArray (unsized_of_sized_type t)
+
+  let void = Mir_pattern.Void
+  let return_ty ty = Mir_pattern.ReturnType ty
 end
