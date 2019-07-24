@@ -1,6 +1,7 @@
 open Core_kernel
 open State.Cps
 
+
 (* == Types of meta data we special MIR nodes with ========================== *)
 module NoMeta = struct
   type t = unit [@@deriving compare, sexp, hash]
@@ -37,6 +38,16 @@ module LabelledMeta = struct
 end
 
 (* == Fixed-point MIR data-types and their specializations ================== *)
+
+module Operator = struct 
+  type t = Mir_pattern.operator 
+  let sexp_of_t = Mir_pattern.sexp_of_operator
+  let t_of_sexp = Mir_pattern.operator_of_sexp
+  
+  let hash_fold_t = Mir_pattern.hash_fold_operator
+
+  let compare x y = Mir_pattern.compare_operator x y
+end 
 
 module Expr = struct
   (** Fixed-point of `expr` *)
@@ -161,6 +172,75 @@ module Expr = struct
   let plus meta a b = stanlib_fun meta "plus" [a; b]
   let gt meta a b = stanlib_fun meta "gt" [a; b]
 end
+
+
+module UnsizedType = struct
+  type t = Mir_pattern.unsizedtype 
+  type nonrec autodifftype = Mir_pattern.autodifftype
+  type nonrec returntype = Mir_pattern.returntype
+
+  let sexp_of_t = Mir_pattern.sexp_of_unsizedtype 
+  let t_of_sexp = Mir_pattern.unsizedtype_of_sexp
+  let hash_fold_t = Mir_pattern.hash_fold_unsizedtype
+  let pp ppf x = Mir_pretty_printer.pp_unsizedtype ppf x
+end
+
+module SizedType = struct
+
+  module Fixed  = struct
+    type 'a t = 'a Expr.Fixed.t Mir_pattern.sizedtype
+    let sexp_of_t f x = Mir_pattern.sexp_of_sizedtype f x
+    let t_of_sexp f x = Mir_pattern.sizedtype_of_sexp f x 
+    let compare f x y = Mir_pattern.compare_sizedtype f x y
+    let hash_fold_t = Mir_pattern.hash_fold_sizedtype 
+    let pp f ppf x = Mir_pretty_printer.pp_sizedtype f ppf x
+  end 
+
+  module NoMeta = struct
+    type t = NoMeta.t Fixed.t 
+    let sexp_of_t x = Fixed.sexp_of_t NoMeta.sexp_of_t x
+    let t_of_sexp x = Fixed.t_of_sexp NoMeta.t_of_sexp x
+    let compare x y = Fixed.compare NoMeta.compare x y
+    let hash_fold_t st x= Fixed.hash_fold_t NoMeta.hash_fold_t st x
+    let pp ppf x = Fixed.pp NoMeta.pp ppf x
+  end 
+
+  module Typed = struct
+    type t = TypedMeta.t Fixed.t 
+    let sexp_of_t x = Fixed.sexp_of_t TypedMeta.sexp_of_t x
+    let t_of_sexp x = Fixed.t_of_sexp TypedMeta.t_of_sexp x
+    let compare x y = Fixed.compare TypedMeta.compare x y
+    let hash_fold_t st x= Fixed.hash_fold_t TypedMeta.hash_fold_t st x
+    let pp ppf x = Fixed.pp TypedMeta.pp ppf x
+  end 
+
+
+  module Labelled = struct
+    type t = LabelledMeta.t Fixed.t 
+    let sexp_of_t x = Fixed.sexp_of_t LabelledMeta.sexp_of_t x
+    let t_of_sexp x = Fixed.t_of_sexp LabelledMeta.t_of_sexp x
+    let compare x y = Fixed.compare LabelledMeta.compare x y
+    let hash_fold_t st x= Fixed.hash_fold_t LabelledMeta.hash_fold_t st x
+    let pp ppf x = Fixed.pp LabelledMeta.pp ppf x
+  end 
+end
+
+
+module IO_Block = struct
+  type t = Mir_pattern.io_block
+  let sexp_of_t = Mir_pattern.sexp_of_io_block
+  let t_of_sexp = Mir_pattern.io_block_of_sexp
+  let hash_fold_t = Mir_pattern.hash_fold_io_block
+  let pp ppf x = Mir_pretty_printer.pp_io_block ppf x
+end 
+
+
+
+
+
+
+
+
 
 module Stmt = struct
   module Fixed =
@@ -315,6 +395,7 @@ module Stmt = struct
   let for_ meta loopvar lower upper body =
     Fixed.fix meta @@ Mir_pattern.For {loopvar; lower; upper; body}
 
+  
   let declare_sized meta adtype name ty =
     Fixed.fix meta
     @@ Mir_pattern.Decl

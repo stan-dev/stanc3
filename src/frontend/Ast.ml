@@ -3,7 +3,7 @@ open Core_kernel
 
 (** Our type for identifiers, on which we record a location *)
 type identifier =
-  {name: string; id_loc: Middle.location_span sexp_opaque [@compare.ignore]}
+  {name: string; id_loc: Middle.Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
@@ -22,9 +22,9 @@ type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
     substitute untyped_expression or typed_expression for 'e *)
 type 'e expression =
   | TernaryIf of 'e * 'e * 'e
-  | BinOp of 'e * Middle.operator * 'e
-  | PrefixOp of Middle.operator * 'e
-  | PostfixOp of 'e * Middle.operator
+  | BinOp of 'e * Middle.Operator.t * 'e
+  | PrefixOp of Middle.Operator.t* 'e
+  | PostfixOp of 'e * Middle.Operator.t
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
@@ -52,9 +52,9 @@ type untyped_expression = located_meta expr_with
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expr_meta =
-  { loc: Middle.location_span sexp_opaque [@compare.ignore]
-  ; ad_level: Middle.autodifftype
-  ; type_: Middle.unsizedtype }
+  { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
+  ; ad_level: Middle.UnsizedType.autodifftype
+  ; type_: Middle.UnsizedType.t }
 [@@deriving sexp, compare, map, hash]
 
 type typed_expression = typed_expr_meta expr_with
@@ -69,7 +69,7 @@ let expr_loc_lub exprs =
   match List.map ~f:(fun e -> e.emeta.loc) exprs with
   | [] -> raise_s [%message "Can't find location lub for empty list"]
   | [hd] -> hd
-  | x1 :: tl -> List.fold ~init:x1 ~f:Middle.merge_spans tl
+  | x1 :: tl -> List.fold ~init:x1 ~f:Middle.Location_span.merge tl
 
 let expr_ad_lub exprs =
   exprs
