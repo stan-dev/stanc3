@@ -4,7 +4,7 @@ module type S = sig
   module Pattern : Pattern.S
 
   type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
-  [@@deriving compare, fold, hash, sexp]
+  [@@deriving compare, map, fold, hash, sexp]
 
   include Foldable.S with type 'a t := 'a t
   include Pretty.S1 with type 'a t := 'a t
@@ -45,8 +45,19 @@ module Make (Pattern : Pattern.S) : S with module Pattern = Pattern = struct
 
   module Basic = struct
     type 'a t = {pattern: 'a t Pattern.t; meta: 'a}
-    [@@deriving compare, fold, hash, sexp]
+    [@@deriving compare,hash, sexp]
+    
+    let rec map f { pattern; meta } =
+      { pattern = Pattern.map (map f) pattern; meta = f meta }
+  
+    let rec fold f init { pattern; meta } =
+      Pattern.fold_left
+        ~f:(fold f)
+        ~init:(f init meta)
+        pattern
   end
+
+
 
   include Basic
   include Foldable.Make (Basic)
@@ -108,7 +119,7 @@ module type S2 = sig
   module Pattern : Pattern.S2
 
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
-  [@@deriving compare, fold, hash, sexp]
+  [@@deriving compare, map, fold, hash, sexp]
 
   include Bifoldable.S with type ('a, 'b) t := ('a, 'b) t
   include Pretty.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -174,7 +185,20 @@ module Make2 (First : S) (Pattern : Pattern.S2) :
   module First = First
 
   type ('a, 'b) t = {pattern: ('a First.t, ('a, 'b) t) Pattern.t; meta: 'b}
-  [@@deriving compare, fold, hash, sexp]
+  [@@deriving compare, hash, sexp]
+
+  let rec map f g { pattern; meta } =
+      { pattern = Pattern.map (First.map f) (map f g) pattern
+      ; meta = g meta
+      }
+
+  let rec fold f g init { pattern; meta } =
+      Pattern.fold_left
+        ~f:(fun accu x -> First.fold_left ~f ~init:accu x)
+        ~g:(fold f g )
+        ~init:(g init meta)
+        pattern
+  
 
   include Bifoldable.Make (struct
     type nonrec ('a, 'b) t = ('a, 'b) t
