@@ -436,12 +436,13 @@ let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
           default
       | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
        |Ast.Correlation | Ast.Covariance ->
-          let dt = remove_possibly_exn dt "constrain" in
+          let dt =
+            remove_possibly_exn dt "constrain" |> param_size transform
+          in
           let decl_id = decl_id ^ "_" ^ gensym () in
-          let st = param_size transform dt in
           let emeta = {decl_var.emeta with mtype= remove_size dt} in
           let stmt = Decl {decl_adtype; decl_id; decl_type= Sized dt} in
-          ((decl_id, {expr= Var decl_id; emeta}, Sized st), [{stmt; smeta}]) )
+          ((decl_id, {expr= Var decl_id; emeta}, Sized dt), [{stmt; smeta}]) )
     | _ -> default
   in
   let constrain_stmts =

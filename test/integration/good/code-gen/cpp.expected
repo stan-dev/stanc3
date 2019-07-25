@@ -3443,7 +3443,7 @@ class mother_model : public model_base_crtp<mother_model> {
                        0, 1), "assigning variable p_ar_mat[(sym2__ - 1), (sym3__ - 1), (sym4__ - 1),\n                            (sym5__ - 1)]");
               }}}}}
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex_sym2__;
-      p_simplex_sym2__ = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      p_simplex_sym2__ = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -3460,7 +3460,7 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_simplex, nil_index_list(), simplex_constrain(p_simplex_sym2__), "assigning variable p_simplex");
       }
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex_sym3__;
-      p_1d_simplex_sym3__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      p_1d_simplex_sym3__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1)));
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
@@ -3485,7 +3485,7 @@ class mother_model : public model_base_crtp<mother_model> {
                  rvalue(p_1d_simplex_sym3__, cons_list(index_uni(sym4__), nil_index_list()), "pretty printed e")), "assigning variable p_1d_simplex[(sym4__ - 1)]");
         }}
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex_sym4__;
-      p_3d_simplex_sym4__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      p_3d_simplex_sym4__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1)))));
       
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
@@ -3517,14 +3517,14 @@ class mother_model : public model_base_crtp<mother_model> {
               assign(p_3d_simplex, cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), cons_list(index_uni(sym7__), nil_index_list()))), simplex_constrain(
                      rvalue(p_3d_simplex_sym4__, cons_list(index_uni(sym5__), cons_list(index_uni(sym6__), cons_list(index_uni(sym7__), nil_index_list()))), "pretty printed e")), "assigning variable p_3d_simplex[(sym5__ - 1), (sym6__ - 1), (sym7__ - 1)]");
             }}}}
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54_sym5__;
-      p_cfcov_54_sym5__ = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_sym5__;
+      p_cfcov_54_sym5__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       
       current_statement__ = 16;
-      p_cfcov_54_sym5__ = in__.matrix(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
+      p_cfcov_54_sym5__ = in__.vector(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       current_statement__ = 16;
       if (jacobian__) {
         current_statement__ = 16;
@@ -3535,14 +3535,14 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_cfcov_54, nil_index_list(), cholesky_factor_constrain(
                p_cfcov_54_sym5__, 5, 4), "assigning variable p_cfcov_54");
       }
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33_sym6__;
-      p_cfcov_33_sym6__ = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_sym6__;
+      p_cfcov_33_sym6__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       
       current_statement__ = 17;
-      p_cfcov_33_sym6__ = in__.matrix(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
+      p_cfcov_33_sym6__ = in__.vector(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       current_statement__ = 17;
       if (jacobian__) {
         current_statement__ = 17;
@@ -3553,8 +3553,8 @@ class mother_model : public model_base_crtp<mother_model> {
         assign(p_cfcov_33, nil_index_list(), cholesky_factor_constrain(
                p_cfcov_33_sym6__, 3, 3), "assigning variable p_cfcov_33");
       }
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar_sym7__;
-      p_cfcov_33_ar_sym7__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_sym7__;
+      p_cfcov_33_ar_sym7__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
@@ -3562,7 +3562,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 18;
       for (size_t sym8__ = 1; sym8__ <= K; ++sym8__) {
         current_statement__ = 18;
-        assign(p_cfcov_33_ar_sym7__, cons_list(index_uni(sym8__), nil_index_list()), in__.matrix(
+        assign(p_cfcov_33_ar_sym7__, cons_list(index_uni(sym8__), nil_index_list()), in__.vector(
                ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), "assigning variable p_cfcov_33_ar_sym7__[(sym8__ - 1)]");
       }
       current_statement__ = 18;
@@ -3965,7 +3965,7 @@ class mother_model : public model_base_crtp<mother_model> {
                      0, 1), "assigning variable p_ar_mat[(sym8__ - 1), (sym9__ - 1), (sym10__ - 1),\n                            (sym11__ - 1)]");
             }}}}
       Eigen::Matrix<double, -1, 1> p_simplex_sym8__;
-      p_simplex_sym8__ = Eigen::Matrix<double, -1, 1>(N);
+      p_simplex_sym8__ = Eigen::Matrix<double, -1, 1>((N - 1));
       
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
@@ -3975,7 +3975,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 13;
       assign(p_simplex, nil_index_list(), simplex_constrain(p_simplex_sym8__), "assigning variable p_simplex");
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex_sym9__;
-      p_1d_simplex_sym9__ = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
+      p_1d_simplex_sym9__ = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>((N - 1)));
       
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
@@ -3993,7 +3993,7 @@ class mother_model : public model_base_crtp<mother_model> {
                rvalue(p_1d_simplex_sym9__, cons_list(index_uni(sym10__), nil_index_list()), "pretty printed e")), "assigning variable p_1d_simplex[(sym10__ - 1)]");
       }
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex_sym10__;
-      p_3d_simplex_sym10__ = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
+      p_3d_simplex_sym10__ = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>((N - 1)))));
       
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
@@ -4018,30 +4018,30 @@ class mother_model : public model_base_crtp<mother_model> {
             assign(p_3d_simplex, cons_list(index_uni(sym11__), cons_list(index_uni(sym12__), cons_list(index_uni(sym13__), nil_index_list()))), simplex_constrain(
                    rvalue(p_3d_simplex_sym10__, cons_list(index_uni(sym11__), cons_list(index_uni(sym12__), cons_list(index_uni(sym13__), nil_index_list()))), "pretty printed e")), "assigning variable p_3d_simplex[(sym11__ - 1), (sym12__ - 1), (sym13__ - 1)]");
           }}}
-      Eigen::Matrix<double, -1, -1> p_cfcov_54_sym11__;
-      p_cfcov_54_sym11__ = Eigen::Matrix<double, -1, -1>(5, 4);
+      Eigen::Matrix<double, -1, 1> p_cfcov_54_sym11__;
+      p_cfcov_54_sym11__ = Eigen::Matrix<double, -1, 1>(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       
       current_statement__ = 16;
-      p_cfcov_54_sym11__ = in__.matrix(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
+      p_cfcov_54_sym11__ = in__.vector(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       current_statement__ = 16;
       assign(p_cfcov_54, nil_index_list(), cholesky_factor_constrain(
              p_cfcov_54_sym11__, 5, 4), "assigning variable p_cfcov_54");
-      Eigen::Matrix<double, -1, -1> p_cfcov_33_sym12__;
-      p_cfcov_33_sym12__ = Eigen::Matrix<double, -1, -1>(3, 3);
+      Eigen::Matrix<double, -1, 1> p_cfcov_33_sym12__;
+      p_cfcov_33_sym12__ = Eigen::Matrix<double, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       
       current_statement__ = 17;
-      p_cfcov_33_sym12__ = in__.matrix(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
+      p_cfcov_33_sym12__ = in__.vector(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       current_statement__ = 17;
       assign(p_cfcov_33, nil_index_list(), cholesky_factor_constrain(
              p_cfcov_33_sym12__, 3, 3), "assigning variable p_cfcov_33");
-      std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar_sym13__;
-      p_cfcov_33_ar_sym13__ = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
+      std::vector<Eigen::Matrix<double, -1, 1>> p_cfcov_33_ar_sym13__;
+      p_cfcov_33_ar_sym13__ = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
       
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
@@ -4049,7 +4049,7 @@ class mother_model : public model_base_crtp<mother_model> {
       current_statement__ = 18;
       for (size_t sym14__ = 1; sym14__ <= K; ++sym14__) {
         current_statement__ = 18;
-        assign(p_cfcov_33_ar_sym13__, cons_list(index_uni(sym14__), nil_index_list()), in__.matrix(
+        assign(p_cfcov_33_ar_sym13__, cons_list(index_uni(sym14__), nil_index_list()), in__.vector(
                ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), "assigning variable p_cfcov_33_ar_sym13__[(sym14__ - 1)]");
       }
       current_statement__ = 18;
