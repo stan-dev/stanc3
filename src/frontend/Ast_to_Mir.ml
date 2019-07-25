@@ -734,8 +734,14 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       raise_s
         [%message
           "Found function definition statement outside of function block"]
+  | Ast.VarDecl {decl_type= Unsized _; _} ->
+      raise_s [%message "Don't yet support unsized declarations"]
   | Ast.VarDecl
-      {sizedtype; transformation; identifier; initial_value; is_global} ->
+      { decl_type= Sized sizedtype
+      ; transformation
+      ; identifier
+      ; initial_value
+      ; is_global } ->
       ignore is_global ;
       trans_decl declc smeta sizedtype
         (Ast.map_transformation trans_expr transformation)
@@ -835,8 +841,8 @@ let trans_prog filename p : typed_prog =
   let map f list_op = Option.value ~default:[] list_op |> List.concat_map ~f in
   let get_name_size s =
     match s.Ast.stmt with
-    | Ast.VarDecl {sizedtype; identifier; transformation; _} ->
-        [(identifier.name, trans_sizedtype sizedtype, transformation)]
+    | Ast.VarDecl {decl_type= Sized st; identifier; transformation; _} ->
+        [(identifier.name, trans_sizedtype st, transformation)]
     | _ -> []
   in
   let grab_names_sizes block =

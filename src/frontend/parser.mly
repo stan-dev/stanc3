@@ -177,7 +177,7 @@ var_decl:
     { grammar_logger "var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
       {stmt=
-         VarDecl {sizedtype= reducearray (sbt, sizes);
+         VarDecl {decl_type= Sized (reducearray (sbt, sizes));
                   transformation= Identity;
                   identifier= id;
                   initial_value=Option.map ~f:snd ae;
@@ -203,7 +203,7 @@ top_var_decl_no_assign:
       grammar_logger "top_var_decl_no_assign" ;
       let sizes = match d with None -> [] | Some l -> l in
       {stmt=
-          VarDecl {sizedtype= reducearray (fst tvt, sizes);
+         VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
                    transformation=  snd tvt;
                    identifier= id;
                    initial_value= None;
@@ -218,7 +218,7 @@ top_var_decl:
     { grammar_logger "top_var_decl" ;
       let sizes = match d with None -> [] | Some l -> l in
       {stmt=
-              VarDecl {sizedtype= reducearray (fst tvt, sizes);
+         VarDecl {decl_type= Sized (reducearray (fst tvt, sizes));
                        transformation=  snd tvt;
                        identifier= id;
                        initial_value= Option.map ~f:snd ass;
