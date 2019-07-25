@@ -83,9 +83,6 @@ type fun_kind = StanLib | CompilerInternal | UserDefined
 type 'e index =
   | All
   | Single of 'e
-  (*
-  | MatrixSingle of 'e
- *)
   | Upfrom of 'e
   | Between of 'e * 'e
   | MultiIndex of 'e

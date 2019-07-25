@@ -4,89 +4,28 @@ open Core_kernel
 open Ast_to_Mir
 
 let%expect_test "Operator-assign example" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
+  Frontend_utils.typed_ast_of_string_exn
+    {|
         model {
           real r;
           vector[2] x[4];
           x[1] ./= r;
         }
       |}
-  in
-  let semantic_check_program_exn ast =
-    Option.value_exn
-      (Result.ok
-         (Semantic_check.semantic_check_program
-            (Option.value_exn (Result.ok ast))))
-  in
-  let mir = trans_prog "" (semantic_check_program_exn ast) in
-  print_s [%sexp (mir : typed_prog)] ;
+  |> trans_prog ""
+  |> (fun {log_prob; _} -> log_prob)
+  |> Fmt.strf "@[<v>%a@]" (Fmt.list ~sep:Fmt.cut Pretty.pp_stmt_loc)
+  |> print_endline ;
   [%expect
     {|
-      ((functions_block ()) (input_vars ()) (prepare_data ())
-       (log_prob
-        (((stmt
-           (Block
-            (((stmt
-               (Decl (decl_adtype AutoDiffable) (decl_id r)
-                (decl_type (Sized SReal))))
-              (smeta <opaque>))
-             ((stmt
-               (Decl (decl_adtype AutoDiffable) (decl_id x)
-                (decl_type
-                 (Sized
-                  (SArray
-                   (SVector
-                    ((expr (Lit Int 2))
-                     (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))
-                   ((expr (Lit Int 4))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))))
-              (smeta <opaque>))
-             ((stmt
-               (Assignment
-                (x
-                 ((Single
-                   ((expr (Lit Int 1))
-                    (emeta ((mtype UInt) (mloc <opaque>) (madlevel DataOnly)))))))
-                ((expr
-                  (FunApp StanLib EltDivide__
-                   (((expr
-                      (Indexed
-                       ((expr (Var x))
-                        (emeta
-                         ((mtype (UArray UVector)) (mloc <opaque>)
-                          (madlevel AutoDiffable))))
-                       ((Single
-                         ((expr (Lit Int 1))
-                          (emeta
-                           ((mtype UInt) (mloc <opaque>) (madlevel DataOnly))))))))
-                     (emeta
-                      ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))
-                    ((expr (Var r))
-                     (emeta
-                      ((mtype UReal) (mloc <opaque>) (madlevel AutoDiffable)))))))
-                 (emeta ((mtype UVector) (mloc <opaque>) (madlevel AutoDiffable))))))
-              (smeta <opaque>)))))
-          (smeta <opaque>))))
-       (generate_quantities ()) (transform_inits ()) (output_vars ())
-       (prog_name "") (prog_path "")) |}]
+      {
+        real r;
+        array[vector[2], 4] x;
+        x[1] = (x[1] ./ r);
+      } |}]
 
 let mir_from_string s =
-  let untyped_prog =
-    Parse.parse_string Parser.Incremental.program s
-    |> Result.map_error ~f:Parse.render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  let typed_prog_result = Semantic_check.semantic_check_program untyped_prog in
-  let typed_prog =
-    typed_prog_result
-    |> Result.map_error ~f:(function
-         | x :: _ -> (Semantic_error.pp |> Fmt.to_to_string) x
-         | _ -> failwith "mir_from_string: can't happen" )
-    |> Result.ok_or_failwith
-  in
-  trans_prog "" typed_prog
+  Frontend_utils.typed_ast_of_string_exn s |> trans_prog ""
 
 let%expect_test "Prefix-Op-Example" =
   let mir =

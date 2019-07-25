@@ -5,7 +5,7 @@ open Core_kernel
 val inferred_unsizedtype_of_indexed_exn :
      loc:Middle.location_span
   -> Middle.unsizedtype
-  -> ('a Ast.index * Middle.unsizedtype) list
+  -> Ast.typed_expr_meta Ast.expr_with Ast.index list
   -> Middle.unsizedtype
 (** Infers unsized type of an `Indexed` expression  *)
 

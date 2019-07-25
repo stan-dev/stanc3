@@ -334,7 +334,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | VarDecl
-      { sizedtype= st
+      { decl_type= st
       ; transformation= trans
       ; identifier= id
       ; initial_value= init

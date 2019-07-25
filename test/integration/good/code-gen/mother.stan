@@ -479,4 +479,10 @@ generated quantities {
 
 
   for (i in 1:N) gq_vec[i] = -1.0 * p_vec[i];
+
+  // indexing tests
+  gq_1d_vec[1:N] = gq_1d_vec[d_int_1d_ar];
+  print(gq_1d_vec[d_int_1d_ar, d_int_1d_ar]);
+  // this should become
+  // gq_1d_vec[[]]
 }

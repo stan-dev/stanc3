@@ -125,7 +125,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 let add_int_index e i =
   let mtype =
     Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.mloc
-      e.emeta.mtype [(i, UInt)]
+      e.emeta.mtype [i]
   and mir_i = trans_idx i in
   let expr =
     match e.expr with
@@ -146,7 +146,8 @@ let mkfor upper bodyfn iteratee smeta =
   in
   let loopvar, reset = gensym_enter () in
   let lower = loop_bottom in
-  let stmt = Block [bodyfn (add_int_index iteratee (idx loopvar))] in
+  let stmt = Block (bodyfn (add_int_index iteratee (idx loopvar))) in
+  (* XXX make this deal with body lists ; don't autoblock*)
   reset () ;
   {stmt= For {loopvar; lower; upper; body= {stmt; smeta}}; smeta}
 
@@ -162,10 +163,11 @@ let mkfor upper bodyfn iteratee smeta =
 let rec for_scalar st bodyfn var smeta =
   match st with
   | SInt | SReal -> bodyfn var
-  | SVector d | SRowVector d -> mkfor d bodyfn var smeta
+  | SVector d | SRowVector d ->
+      mkfor d (Fn.compose List.return bodyfn) var smeta
   | SMatrix (d1, d2) ->
-      mkfor d1 (fun e -> for_scalar (SVector d2) bodyfn e smeta) var smeta
-  | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+      mkfor d1 (fun e -> [for_scalar (SVector d2) bodyfn e smeta]) var smeta
+  | SArray (t, d) -> mkfor d (fun e -> [for_scalar t bodyfn e smeta]) var smeta
 
 (** [for_eigen unsizedtype...] generates a For statement that loops
     over the eigen types in the underlying [unsizedtype]; i.e. just iterating
@@ -180,7 +182,7 @@ let rec for_scalar st bodyfn var smeta =
 let rec for_eigen st bodyfn var smeta =
   match st with
   | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> bodyfn var
-  | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+  | SArray (t, d) -> mkfor d (fun e -> [for_eigen t bodyfn e smeta]) var smeta
 
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
@@ -453,6 +455,149 @@ let unwrap_block_or_skip = function
   | x ->
       raise_s [%message "Expecting a block or skip, not" (x : stmt_loc list)]
 
+(* XXX Add a section that collapses nested Indexed nodes.
+       See https://github.com/stan-dev/stanc3/pull/212#issuecomment-514522092
+*)
+
+let rec multi_indices_to_new_var decl_id indices (emeta : Ast.typed_expr_meta)
+    obj =
+  (* Deal with indexing by int idx array and indexing by range *)
+  match indices with
+  | Ast.Single ({Ast.emeta= {Ast.type_= UArray _; _}; _} as index_array) :: tl
+    ->
+      let index_array = trans_expr index_array in
+      let smeta = index_array.emeta.mloc in
+      let bodyfn =
+        if List.is_empty tl then fun e ->
+          match e.expr with
+          | Indexed (index_array, indices) ->
+            print_s [%message "Indexed: " (index_array: mtype_loc_ad with_expr)];
+              [ { stmt=
+                    Assignment
+                      ( (decl_id, indices)
+                      , { expr= Indexed (obj, [Single e])
+                        ; emeta= index_array.emeta } )
+                ; smeta } ]
+          | _ ->
+              raise_s [%message "Should always get Indexed in mkfor bodyfn."]
+        else fun e -> multi_indices_to_new_var decl_id tl emeta
+            {expr=Indexed(obj, [Single e]); emeta=index_array.emeta}
+      in
+      let upper = internal_funapp FnLength [index_array] index_array.emeta in
+      [mkfor upper bodyfn index_array smeta]
+  | _ -> []
+
+(* This function will transform multi-indices into statements that create
+   a new var containing the result of the multi-index (and replace that
+   index expression with the var). After the function is run on a statement,
+   there should be no further references to Ast.Downfrom, Upfrom, Between,
+   or Single with an array-type index var.
+
+   We'll use a ref to keep track of the statements we want to add before
+   this one and update the ref inside.
+*)
+let rec pull_new_multi_indices_expr new_stmts (e : Ast.typed_expression) :
+    Ast.typed_expression =
+  match e.Ast.expr with
+  | Ast.Indexed (obj, indices) ->
+      let obj = trans_expr @@ pull_new_multi_indices_expr new_stmts obj in
+      let name = gensym () in
+      let decl_type =
+        Unsized
+          (Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.loc
+             e.emeta.type_ indices)
+      in
+      new_stmts :=
+        !new_stmts
+        @ [ { stmt=
+                Decl {decl_adtype= e.emeta.ad_level; decl_id= name; decl_type}
+            ; smeta= e.emeta.loc } ]
+        @ multi_indices_to_new_var name indices e.emeta obj ;
+      {expr= Ast.Variable {name; id_loc= e.emeta.loc}; emeta= e.emeta}
+  | _ -> e
+
+let%expect_test "pull out multi indices" =
+  let {Ast.transformeddatablock= td; _} =
+    Frontend_utils.typed_ast_of_string_exn
+      {| transformed data {
+    int indices[3] = {1, 2, 3};
+    matrix[20, 21] mat[30];
+    mat = mat[indices, indices];
+} |}
+  in
+  let lst_stmt = List.last_exn (Option.value_exn td) in
+  let rhs =
+    match lst_stmt.Ast.stmt with
+    | Ast.Assignment {assign_rhs; _} -> assign_rhs
+    | _ -> raise_s [%message "Didn't get an assignment"]
+  in
+  let new_stmts = ref [] in
+  let res = pull_new_multi_indices_expr new_stmts rhs in
+  print_endline
+    Fmt.(strf "replacement expr: @[<v>%a@]" Pretty_printing.pp_expression res) ;
+  print_endline
+    Fmt.(
+      strf "Mir statements:@, @[<v>%a@]"
+        (list ~sep:cut Pretty.pp_stmt_loc)
+        !new_stmts) ;
+  [%expect
+    {|
+    ("Indexed: "
+     (index_array
+      ((expr (Var indices))
+       (emeta ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))))
+    replacement expr: sym1__
+    Mir statements:
+     data matrix[] sym1__;
+     for(sym2__ in 1:FnLength__(indices)) {
+       for(sym3__ in 1:FnLength__(indices)) {
+         sym1__[sym3__] = indices[sym2__][indices[sym3__]];
+       }
+     } |}]
+
+(*
+let desugar_index_expr (e: Ast.typed_expression) =
+  let ast_expr expr = {Ast.expr; Ast.emeta= e.emeta} in
+  match e.expr with
+  (* mat[2] -> row(m, 2) *)
+  | Ast.Indexed ({emeta={type_=UMatrix; _}; _ } as obj, [Single i]) ->
+    Ast.FunApp (StanLib, {Ast.name="row"; id_loc=e.Ast.emeta.loc}, [obj; i])
+    |> ast_expr
+    (*
+https://github.com/stan-dev/stanc3/pull/212
+
+v[2:3][2] = v[3:2][1] -> v[3]
+v[2][4] -> v[2, 4]
+v[:][x] -> v[x]
+v[x][:] -> v[x]
+v[2][2:3] -> segment(v[2], 2, 3)
+v[arr][2] -> (declare new_sym, fill with v[arr] via for loop); new_sym[2]
+v[2][arr] -> (declare new_sym, fill with v[2][arr] via for loop); new_sym
+v[x][3:2] -> v[x][{3, 2}]
+
+m[2][3] -> m[2, 3]
+m[2:3] = m[2:3, :] -> block(m, 2, 1, 2, cols(m))
+m[:, 2:3] -> block(m, 1, 2, rows(m), 2)
+m[2:4][1:2] -> m[2:3]
+*)
+  | _ -> e
+ *)
+
+(*
+  let stmt = match stmt with
+  | Assignment ((vident, indices), rhs)
+    when List.exists ~f:(function Single _ -> false | _ -> true) indices ->
+
+  | TargetPE e -> (??)
+  | NRFunApp (ft, fname, args) -> (??)
+  | Return (Some { expr; emeta }) -> (??)
+  | IfElse ({ expr; emeta }, iftrue, iffalse) -> (??)
+  | While ({ expr; emeta }, body) -> (??)
+  | For { loopvar; lower; upper; body } -> (??)
+  | _ -> map_statement Fn.id pull_multi_index_stmts
+  in {stmt; smeta}
+ *)
+
 let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt = trans_stmt {declc with dread= None; dconstrain= None} in
@@ -540,21 +685,25 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.ForEach (loopvar, iteratee, body) ->
       let newsym = gensym () in
       let wrap expr = {expr; emeta= {mloc; mtype= UInt; madlevel= DataOnly}} in
-      let iteratee = trans_expr iteratee
+      let iteratee' = trans_expr iteratee
       and indexing_var = wrap (Var newsym) in
       let indices =
-        let single_one = (Ast.Single (Ast.IntNumeral "1"), UInt) in
-        match iteratee.emeta.mtype with
+        let single_one =
+          Ast.Single
+            { Ast.expr= Ast.IntNumeral "1"
+            ; emeta= {iteratee.emeta with type_= UInt} }
+        in
+        match iteratee'.emeta.mtype with
         | UMatrix -> [single_one; single_one]
         | _ -> [single_one]
       in
       let decl_type =
         Semantic_check.inferred_unsizedtype_of_indexed_exn
-          ~loc:iteratee.emeta.mloc iteratee.emeta.mtype indices
+          ~loc:iteratee'.emeta.mloc iteratee'.emeta.mtype indices
       in
       let decl_loopvar =
         Decl
-          { decl_adtype= iteratee.emeta.madlevel
+          { decl_adtype= iteratee'.emeta.madlevel
           ; decl_id= loopvar.name
           ; decl_type= Unsized decl_type }
       in
@@ -562,7 +711,7 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
       let assign_loopvar =
         Assignment
           ( (loopvar.name, [])
-          , Indexed (iteratee, [Single indexing_var]) |> wrap )
+          , Indexed (iteratee', [Single indexing_var]) |> wrap )
       in
       let assign_loopvar = {stmt= assign_loopvar; smeta} in
       let body_stmts =
@@ -577,7 +726,8 @@ let rec trans_stmt (declc : decl_context) (ts : Ast.typed_statement) =
         { loopvar= newsym
         ; lower= loop_bottom
         ; upper=
-            wrap @@ FunApp (StanLib, string_of_internal_fn FnLength, [iteratee])
+            wrap
+            @@ FunApp (StanLib, string_of_internal_fn FnLength, [iteratee'])
         ; body }
       |> swrap
   | Ast.FunDef _ ->
