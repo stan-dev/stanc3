@@ -49,7 +49,7 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*")} }
         }
-        stage("Try to run all models end-to-end") {
+        stage("Run all models end-to-end") {
             agent { label 'linux' }
             steps {
                 unstash 'ubuntu-exe'
