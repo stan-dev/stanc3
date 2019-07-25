@@ -211,12 +211,14 @@ and pp_transformation ppf = function
   | Covariance -> Fmt.pf ppf ""
 
 and pp_transformed_type ppf (pst, trans) =
-  let pst =
+  let rec discard_arrays pst =
     match pst with
     | Middle.Sized st ->
         Middle.Sized (Fn.compose fst unwind_sized_array_type st)
+    | Unsized (UArray t) -> discard_arrays (Middle.Unsized t)
     | Unsized ut -> Middle.Unsized ut
   in
+  let pst = discard_arrays pst in
   let unsizedtype_fmt =
     match pst with
     | Middle.Sized (SArray _ as st) ->
