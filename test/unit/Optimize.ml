@@ -2638,7 +2638,6 @@ model {
     }
       |}
   in
-  (* TODO: complete this list to capture all rewrites that should happen. *)
   let ast = semantic_check_program ast in
   let mir = Ast_to_Mir.trans_prog "" ast in
   let mir = constant_propagation mir in
