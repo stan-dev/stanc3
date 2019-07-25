@@ -544,7 +544,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 409, column 2 to column 29)",
                                                       " (in 'mother.stan', line 410, column 2 to column 24)",
                                                       " (in 'mother.stan', line 411, column 2 to column 23)",
-                                                      " (in 'mother.stan', line 412, column 2 to column 46)",
+                                                      " (in 'mother.stan', line 412, column 2 to column 35)",
                                                       " (in 'mother.stan', line 414, column 2 to column 41)",
                                                       " (in 'mother.stan', line 416, column 4 to column 42)",
                                                       " (in 'mother.stan', line 417, column 4 to column 46)",
@@ -595,7 +595,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 302, column 2 to column 42)",
                                                       " (in 'mother.stan', line 305, column 2 to column 13)",
                                                       " (in 'mother.stan', line 306, column 2 to column 15)",
-                                                      " (in 'mother.stan', line 307, column 2 to column 16)",
+                                                      " (in 'mother.stan', line 307, column 2 to column 34)",
                                                       " (in 'mother.stan', line 308, column 2 to column 15)",
                                                       " (in 'mother.stan', line 309, column 2 to column 20)",
                                                       " (in 'mother.stan', line 310, column 2 to column 29)",
@@ -779,7 +779,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'mother.stan', line 209, column 4 to column 14)",
                                                       " (in 'mother.stan', line 208, column 66 to line 210, column 3)",
                                                       " (in 'mother.stan', line 212, column 4 to column 14)",
-                                                      " (in 'mother.stan', line 211, column 69 to line 213, column 3)",
+                                                      " (in 'mother.stan', line 211, column 78 to line 213, column 3)",
                                                       " (in 'mother.stan', line 216, column 4 to column 35)",
                                                       " (in 'mother.stan', line 217, column 4 to column 12)",
                                                       " (in 'mother.stan', line 218, column 4 to column 16)",
@@ -1654,19 +1654,21 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-typename T4__, typename T5__, typename T6__>
+typename T4__, typename T5__, typename T6__, typename T7__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__,
-T6__>::type>::type
+T4__, typename boost::math::tools::promote_args<T5__, T6__,
+T7__>::type>::type
 foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
-                 const T3__& x4, const T4__& x5, const T5__& lp__,
-                 const T6__& lp_accum__, std::ostream* pstream__) {
+                 const T3__& x4, const T4__& x5, const T5__& x6,
+                 const T6__& lp__, const T7__& lp_accum__,
+                 std::ostream* pstream__) {
   using local_scalar_t__ = typename boost::math::tools::promote_args<T0__,
           T1__,
           T2__,
           T3__,
           T4__, typename boost::math::tools::promote_args<T5__,
-          T6__>::type>::type;
+          T6__,
+          T7__>::type>::type;
   typedef local_scalar_t__ fun_return_scalar_t__;
   const static bool propto__ = true;
   (void) propto__;
@@ -1687,15 +1689,15 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
 
 struct foo_five_args_lp_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
-typename T4__, typename T5__, typename T6__>
+typename T4__, typename T5__, typename T6__, typename T7__>
 typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__,
-T4__, typename boost::math::tools::promote_args<T5__,
-T6__>::type>::type
+T4__, typename boost::math::tools::promote_args<T5__, T6__,
+T7__>::type>::type
 operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
-           const T4__& x5, const T5__& lp__, const T6__& lp_accum__,
-           std::ostream* pstream__)  const 
+           const T4__& x5, const T5__& x6, const T6__& lp__,
+           const T7__& lp_accum__, std::ostream* pstream__)  const 
 {
-return foo_five_args_lp(x1, x2, x3, x4, x5, lp__, lp_accum__, pstream__);
+return foo_five_args_lp(x1, x2, x3, x4, x5, x6, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -2982,6 +2984,8 @@ class mother_model : public model_base_crtp<mother_model> {
       
       td_1dk = std::vector<int>(M, 0);
       
+      current_statement__ = 147;
+      assign(td_1dk, nil_index_list(), rep_array(1, M), "assigning variable td_1dk");
       
       current_statement__ = 148;
       td_a = N;
@@ -3743,8 +3747,7 @@ class mother_model : public model_base_crtp<mother_model> {
         current_statement__ = 95;
         lp_accum__.add(normal_log<propto__>(p_real, 0, 1));
         current_statement__ = 96;
-        lp_accum__.add(normal_log<propto__>(to_vector(offset_multiplier), 0,
-                                            1));
+        lp_accum__.add(normal_log<propto__>(offset_multiplier, 0, 1));
         current_statement__ = 97;
         lp_accum__.add(normal_log<propto__>(to_vector(p_real_1d_ar), 0, 1));
         current_statement__ = 110;
