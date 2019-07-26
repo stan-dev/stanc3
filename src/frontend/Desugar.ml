@@ -5,71 +5,47 @@ open Ast
        See https://github.com/stan-dev/stanc3/pull/212#issuecomment-514522092
 *)
 
-let rec multi_indices_to_new_var decl_id indices lhs_idcs
+let rec multi_indices_to_new_var decl_id indices assign_indices rhs_indices
     (emeta : Ast.typed_expr_meta) (obj : Ast.typed_expression) =
   (* Deal with indexing by int idx array and indexing by range *)
-  let loopvar, reset = Middle.gensym_enter () in
-  let lv_idx =
-    Single
-      { expr= Variable {name= loopvar; id_loc= emeta.loc}
-      ; emeta= {emeta with type_= UInt} } in
-  let assign_indices = lhs_idcs @ [lv_idx] in
   match indices with
+  | [] ->
+      { stmt=
+          Assignment
+            { assign_lhs=
+                { assign_identifier= decl_id
+                ; assign_indices
+                ; assign_meta=
+                    { id_ad_level= obj.emeta.ad_level
+                    ; lhs_ad_level= emeta.ad_level
+                    ; lhs_type_= emeta.type_
+                    ; id_type_= emeta.type_
+                    ; loc= obj.emeta.loc } }
+            ; assign_op= Assign
+            ; assign_rhs= {expr= Indexed (obj, rhs_indices); emeta= obj.emeta}
+            }
+      ; smeta= emeta.loc }
   | Ast.Single ({Ast.emeta= {Ast.type_= UArray _; _}; _} as idx_arr) :: tl ->
-      if List.is_empty tl then
-        let rhs_indices =
-          List.map
-            ~f:(fun i ->
-              Single
-                {expr= Indexed ({expr= Variable decl_id; emeta}, [i]); emeta})
-            lhs_idcs in
+      let loopvar, reset = Middle.gensym_enter () in
+      let lv_idx =
+        Single
+          { expr= Variable {name= loopvar; id_loc= emeta.loc}
+          ; emeta= {emeta with type_= UInt} }
+      in
+      let assign_indices = assign_indices @ [lv_idx] in
+      let wrap_idx i = Single {expr= Indexed (idx_arr, [i]); emeta} in
+      let rhs_indices = List.map ~f:wrap_idx assign_indices in
+      let r =
         { stmt=
-            Assignment
-              { assign_lhs=
-                  { assign_identifier= decl_id
-                  ; assign_indices
-                  ; assign_meta=
-                      { id_ad_level= obj.emeta.ad_level
-                      ; lhs_ad_level= emeta.ad_level
-                      ; lhs_type_= emeta.type_
-                      ; id_type_= emeta.type_
-                      ; loc= obj.emeta.loc } }
-              ; assign_op= Assign
-              ; assign_rhs=
-                  {expr= Indexed (obj, rhs_indices); emeta= idx_arr.emeta} }
-        ; smeta= emeta.loc }
-      else
-        let r =
-          { stmt=
-              ForEach
-                ( {name= loopvar; id_loc= emeta.loc}
-                , idx_arr
-                , multi_indices_to_new_var decl_id tl assign_indices emeta obj
-                )
-          ; smeta= obj.emeta.loc } in
-        reset () ; r
+            ForEach
+              ( {name= loopvar; id_loc= emeta.loc}
+              , idx_arr
+              , multi_indices_to_new_var decl_id tl assign_indices rhs_indices
+                  emeta obj )
+        ; smeta= obj.emeta.loc }
+      in
+      reset () ; r
   | _ -> {stmt= Skip; smeta= emeta.loc}
-
-let discard_one_outer_dim = function
-  | Middle.SArray (t, _) -> t
-  | SMatrix (_, cols) -> SVector cols
-  | SVector _ | SRowVector _ -> SReal
-  | SReal | SInt -> raise_s [%message "Can't discard outer dimension."]
-
-let rec infer_sizedtype_of_indexed obj_st index =
-  match index with
-  | Single {emeta= {type_= UInt; _}; _} -> discard_one_outer_dim obj_st
-  | _ -> obj_st
-
-let rec find_sizedtype_of_expr lookup e =
-  match e.expr with
-  | Variable v -> lookup v
-  | Indexed (obj, indices) ->
-      List.fold ~f:infer_sizedtype_of_indexed
-        ~init:(find_sizedtype_of_expr lookup obj)
-        indices
-  | GetLP | GetTarget | CondDistApp _ | RealNumeral _ -> SReal
-  | IntNumeral _ -> SInt
 
 (* This function will transform multi-indices into statements that create
    a new var containing the result of the multi-index (and replace that
@@ -86,20 +62,23 @@ let rec pull_new_multi_indices_expr new_stmts (e : typed_expression) :
   | Indexed (obj, indices) ->
       let obj = pull_new_multi_indices_expr new_stmts obj in
       let name = Middle.gensym () in
+      let identifier = {name; id_loc= e.emeta.loc} in
       let decl_type =
-        Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.loc
-          e.emeta.type_ indices in
+        Middle.Unsized
+          (Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.loc
+             e.emeta.type_ indices)
+      in
       new_stmts :=
         !new_stmts
         @ [ { stmt=
                 VarDecl
                   { decl_type
                   ; transformation= Identity
-                  ; identifier= {name; id_loc= emeta.loc}
+                  ; identifier
                   ; initial_value= None
                   ; is_global= false }
             ; smeta= e.emeta.loc } ]
-        @ multi_indices_to_new_var name indices e.emeta obj ;
+        @ [multi_indices_to_new_var identifier indices [] [] e.emeta obj] ;
       {expr= Ast.Variable {name; id_loc= e.emeta.loc}; emeta= e.emeta}
   | _ -> e
 
@@ -116,30 +95,25 @@ let%expect_test "pull out multi indices" =
   let rhs =
     match lst_stmt.Ast.stmt with
     | Ast.Assignment {assign_rhs; _} -> assign_rhs
-    | _ -> raise_s [%message "Didn't get an assignment"] in
+    | _ -> raise_s [%message "Didn't get an assignment"]
+  in
   let new_stmts = ref [] in
   let res = pull_new_multi_indices_expr new_stmts rhs in
   print_endline
     Fmt.(strf "replacement expr: @[<v>%a@]" Pretty_printing.pp_expression res) ;
   print_endline
     Fmt.(
-      strf "Mir statements:@, @[<v>%a@]"
-        (list ~sep:cut Pretty.pp_stmt_loc)
+      strf "AST statements:@, @[<v>%a@]"
+        (list ~sep:cut Pretty_printing.pp_statement)
         !new_stmts) ;
   [%expect
     {|
-    ("Indexed: "
-     (index_array
-      ((expr (Var indices))
-       (emeta ((mtype (UArray UInt)) (mloc <opaque>) (madlevel DataOnly))))))
     replacement expr: sym1__
-    Mir statements:
-     data matrix[] sym1__;
-     for(sym2__ in 1:FnLength__(indices)) {
-       for(sym3__ in 1:FnLength__(indices)) {
-         sym1__[sym3__] = indices[sym2__][indices[sym3__]];
-       }
-     } |}]
+    AST statements:
+     matrix sym1__;
+     for (sym2__ in indices)
+       for (sym3__ in indices)
+         sym1__[sym2__, sym3__] = mat[indices[sym2__], indices[sym3__]]; |}]
 
 (*
 let desugar_index_expr (e: Ast.typed_expression) =
