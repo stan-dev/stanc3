@@ -328,13 +328,15 @@ let param_size transform sizedtype =
         sizedtype
   | Covariance -> shrink_eigen (fun k -> binop k Plus (k_choose_2 k)) sizedtype
 
-let remove_possibly_exn pst action =
+let remove_possibly_exn pst action loc =
   match pst with
   | Sized st -> st
-  | Unsized _ -> raise_s [%message "Error extracting sizedtype" ~action]
+  | Unsized _ -> raise_s
+                   [%message "Error extracting sizedtype"
+                       ~action ~loc:(loc: location_span)]
 
 let read_decl dread decl_id decl_type smeta decl_var =
-  let sizedtype = remove_possibly_exn decl_type "read" in
+  let sizedtype = remove_possibly_exn decl_type "read" smeta in
   let args =
     [ mkstring smeta decl_id
     ; mkstring smeta (unsizedtype_to_string decl_var.emeta.mtype) ]
@@ -357,7 +359,7 @@ let read_decl dread decl_id decl_type smeta decl_var =
   forl st (assign_indexed decl_id smeta readvar) decl_var smeta
 
 let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
-  let st = remove_possibly_exn decl_type "constrain" in
+  let st = remove_possibly_exn decl_type "constrain" smeta in
   let mkstring = mkstring decl_var.emeta.mloc in
   match Option.map ~f:(constraint_to_string t) dconstrain with
   | None | Some "" -> []
@@ -381,7 +383,7 @@ let constrain_decl decl_type dconstrain t decl_id decl_var smeta =
           decl_var smeta ]
 
 let rec check_decl decl_type' decl_id decl_trans smeta adlevel =
-  let decl_type = remove_possibly_exn decl_type' "check" in
+  let decl_type = remove_possibly_exn decl_type' "check" smeta in
   let chk fn args =
     let check_id id =
       let id_str =
@@ -439,7 +441,7 @@ let trans_decl {dread; dconstrain; dadlevel} smeta decl_type transform
       | Ast.Simplex | Ast.UnitVector | Ast.CholeskyCorr | Ast.CholeskyCov
        |Ast.Correlation | Ast.Covariance ->
           let dt =
-            remove_possibly_exn dt "constrain" |> param_size transform
+            remove_possibly_exn dt "constrain" smeta |> param_size transform
           in
           let decl_id = decl_id ^ "_" ^ gensym () in
           let emeta = {decl_var.emeta with mtype= remove_size dt} in
@@ -674,25 +676,7 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:is_check stmts in
   not_checks @ checks
 
-let trans_prog filename p : typed_prog =
-  (*
-     1. prepare_params: add read_param calls (same call should constrain?)
-          maybe read(constrained()), constrain(read()), or read("constraint", ...)
-     1. prepare_params: add tparams 's; add checks
-     2. transform_inits: add read_param calls (same call should unconstrain?)
-     3. prepare_data: add read_data calls and checks
-     4. prepare_data: add tdata 's and checks
-     5. add write() calls to generate_quantities for params, tparams...
-             shit these are conditional depending on the flag.
-             add the flag to the call to write?
-           apparently tdata aren't written anywhere
-
-     during code gen:
-     get_param_names: scan prepare_params for Decl at top level
-     constrained_param_names: needs to tell between tparams and gqs and not
-     unconstrained param names: same, but also some funky
-        adjustments for unconstrained space: ???
-*)
+let trans_prog filename (p: Ast.typed_program) : typed_prog =
   let { Ast.functionblock
       ; datablock
       ; transformeddatablock

@@ -8,24 +8,27 @@ open Ast
 let rec multi_indices_to_new_var decl_id indices assign_indices rhs_indices
     (emeta : Ast.typed_expr_meta) (obj : Ast.typed_expression) =
   (* Deal with indexing by int idx array and indexing by range *)
+  let smeta = {loc= obj.emeta.loc; return_type= NoReturnType} in
   match indices with
   | [] ->
-      { stmt=
-          Assignment
-            { assign_lhs=
-                { assign_identifier= decl_id
-                ; assign_indices
-                ; assign_meta=
-                    { id_ad_level= obj.emeta.ad_level
-                    ; lhs_ad_level= emeta.ad_level
-                    ; lhs_type_= emeta.type_
-                    ; id_type_= emeta.type_
-                    ; loc= obj.emeta.loc } }
-            ; assign_op= Assign
-            ; assign_rhs= {expr= Indexed (obj, rhs_indices); emeta= obj.emeta}
-            }
-      ; smeta= emeta.loc }
+    [{ stmt=
+         Assignment
+           { assign_lhs=
+               { assign_identifier= decl_id
+               ; assign_indices
+               ; assign_meta=
+                   { id_ad_level= obj.emeta.ad_level
+                   ; lhs_ad_level= emeta.ad_level
+                   ; lhs_type_= emeta.type_
+                   ; id_type_= emeta.type_
+                   ; loc= obj.emeta.loc } }
+           ; assign_op= Assign
+           ; assign_rhs= {expr= Indexed (obj, rhs_indices); emeta= obj.emeta}
+           }
+     ; smeta}]
   | Ast.Single ({Ast.emeta= {Ast.type_= UArray _; _}; _} as idx_arr) :: tl ->
+    print_endline "hi" ;
+    Fmt.pr "@,@[<v>%a]@," Pretty_printing.pp_expression obj ;
       let loopvar, reset = Middle.gensym_enter () in
       let lv_idx =
         Single
@@ -36,16 +39,23 @@ let rec multi_indices_to_new_var decl_id indices assign_indices rhs_indices
       let wrap_idx i = Single {expr= Indexed (idx_arr, [i]); emeta} in
       let rhs_indices = List.map ~f:wrap_idx assign_indices in
       let r =
-        { stmt=
-            ForEach
-              ( {name= loopvar; id_loc= emeta.loc}
-              , idx_arr
-              , multi_indices_to_new_var decl_id tl assign_indices rhs_indices
-                  emeta obj )
-        ; smeta= obj.emeta.loc }
+        [{ stmt=
+             ForEach
+               ( {name= loopvar; id_loc= emeta.loc}
+               , idx_arr
+               , {stmt=Block
+                   (multi_indices_to_new_var decl_id tl assign_indices
+                      rhs_indices emeta obj); smeta} )
+         ; smeta}]
       in
       reset () ; r
-  | _ -> {stmt= Skip; smeta= emeta.loc}
+  | _ -> []
+
+let is_multi_index = function
+  | Single {Ast.emeta= {Ast.type_= UArray _; _}; _}
+  (* | Downfrom _ | Upfrom _ | Between _ | All  *)
+    -> true
+  | _ -> false
 
 (* This function will transform multi-indices into statements that create
    a new var containing the result of the multi-index (and replace that
@@ -56,18 +66,19 @@ let rec multi_indices_to_new_var decl_id indices assign_indices rhs_indices
    We'll use a ref to keep track of the statements we want to add before
    this one and update the ref inside.
 *)
-let rec pull_new_multi_indices_expr new_stmts (e : typed_expression) :
-    typed_expression =
-  match e.Ast.expr with
-  | Indexed (obj, indices) ->
+let rec pull_new_multi_indices_expr new_stmts ({expr; emeta} : typed_expression) =
+  match expr with
+  | Indexed (obj, indices)
+      when List.exists ~f:is_multi_index indices ->
+      Fmt.(pr "@[<v>%a]" (list ~sep:comma Pretty_printing.pp_index) indices) ;
       let obj = pull_new_multi_indices_expr new_stmts obj in
       let name = Middle.gensym () in
-      let identifier = {name; id_loc= e.emeta.loc} in
       let decl_type =
         Middle.Unsized
-          (Semantic_check.inferred_unsizedtype_of_indexed_exn ~loc:e.emeta.loc
-             e.emeta.type_ indices)
+          (Semantic_check.inferred_unsizedtype_of_indexed_exn
+             emeta.type_ ~loc:emeta.loc indices)
       in
+      let identifier = {name; id_loc= emeta.loc} in
       new_stmts :=
         !new_stmts
         @ [ { stmt=
@@ -77,10 +88,10 @@ let rec pull_new_multi_indices_expr new_stmts (e : typed_expression) :
                   ; identifier
                   ; initial_value= None
                   ; is_global= false }
-            ; smeta= e.emeta.loc } ]
-        @ [multi_indices_to_new_var identifier indices [] [] e.emeta obj] ;
-      {expr= Ast.Variable {name; id_loc= e.emeta.loc}; emeta= e.emeta}
-  | _ -> e
+            ; smeta= {loc= emeta.loc; return_type= NoReturnType} } ]
+        @ multi_indices_to_new_var identifier indices [] [] emeta obj ;
+      {expr= Ast.Variable {name; id_loc= emeta.loc}; emeta= emeta}
+  | _ -> {expr=map_expression (pull_new_multi_indices_expr new_stmts) expr; emeta}
 
 let%expect_test "pull out multi indices" =
   let {Ast.transformeddatablock= td; _} =
@@ -114,6 +125,13 @@ let%expect_test "pull out multi indices" =
      for (sym2__ in indices)
        for (sym3__ in indices)
          sym1__[sym2__, sym3__] = mat[indices[sym2__], indices[sym3__]]; |}]
+
+let desugar_stmt {stmt=s; smeta} =
+  let new_stmts = ref [] in
+  let stmt = map_statement (pull_new_multi_indices_expr new_stmts) Fn.id Fn.id s in
+  !new_stmts @ [{stmt; smeta}]
+
+let desugar_prog = Ast.stmt_concat_map_prog desugar_stmt
 
 (*
 let desugar_index_expr (e: Ast.typed_expression) =

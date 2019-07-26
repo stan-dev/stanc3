@@ -238,7 +238,7 @@ type 's program =
   ; transformedparametersblock: 's list option
   ; modelblock: 's list option
   ; generatedquantitiesblock: 's list option }
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Untyped programs (before type checking) *)
 type untyped_program = untyped_statement program
@@ -274,3 +274,14 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program =
   map_program untyped_statement_of_typed_statement
+
+let stmt_concat_map_prog f p =
+  let stmt_concat_map = Option.map ~f:(List.concat_map ~f) in
+  {functionblock = stmt_concat_map p.functionblock;
+  datablock = stmt_concat_map p.datablock;
+  transformeddatablock = stmt_concat_map p.transformeddatablock;
+  parametersblock = stmt_concat_map p.parametersblock;
+  transformedparametersblock = stmt_concat_map p.transformedparametersblock;
+   modelblock = stmt_concat_map p.modelblock;
+   generatedquantitiesblock= stmt_concat_map p.generatedquantitiesblock
+  }
